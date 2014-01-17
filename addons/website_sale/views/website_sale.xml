@@ -531,32 +531,7 @@
                           </tr>
                       </tbody>
                   </table>
-                  <table class='pull-right mb16' id="mycart_total" t-if="website_sale_order">
-                      <colgroup>
-                          <col width="100"/>
-                          <col width="120"/>
-                      </colgroup>
-                      <thead>
-                          <tr style="border-top: 1px solid #000" id="order_total">
-                              <th><h3>Total:</h3></th>
-                              <th class="text-right">
-                                <h3><span t-field="website_sale_order.amount_total" t-field-options='{
-                                    "widget": "monetary",
-                                    "display_currency": "website.pricelist_id.currency_id"
-                                  }'/></h3>
-                              </th>
-                          </tr>
-                          <tr class="text-muted" id="order_total_taxes">
-                              <td><abbr title="Taxes may be updated after providing shipping address">Taxes:</abbr></td>
-                              <td class="text-right">
-                                  <span t-field="website_sale_order.amount_tax" t-field-options='{
-                                      "widget": "monetary",
-                                      "display_currency": "website.pricelist_id.currency_id"
-                                  }'/>
-                              </td>
-                          </tr>
-                      </thead>
-                  </table>
+                  <t t-call="website_sale.total"/>
                   <div class="clearfix"/>
                   <a href="/shop" class="btn btn-default mb32"><span class="fa fa-long-arrow-left"/> Continue Shopping</a>
                   <a t-if="website_sale_order and website_sale_order.website_order_line" href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="fa fa-long-arrow-right"/></a>
@@ -933,30 +908,7 @@
                       </tr>
                   </tbody>
               </table>
-              <table class='pull-right mb16' id="mycart_total">
-                  <colgroup>
-                      <col width="100"/>
-                      <col width="120"/>
-                  </colgroup>
-                  <thead>
-                      <tr style="border-top: 1px solid #000" id="order_total">
-                          <th><h3>Total:</h3></th>
-                          <th class="text-right">
-                            <h3><span t-field="website_sale_order.amount_total" t-field-options='{
-                              "widget": "monetary",
-                              "display_currency": "website.pricelist_id.currency_id"
-                            }'/></h3>
-                          </th>
-                      </tr>
-                      <tr class="text-muted" id="order_total_taxes">
-                          <td>Taxes:</td>
-                          <td class="text-right"><span t-field="website_sale_order.amount_tax" t-field-options='{
-                              "widget": "monetary",
-                              "display_currency": "website.pricelist_id.currency_id"
-                          }'/></td>
-                      </tr>
-                  </thead>
-              </table>
+              <t t-call="website_sale.total"/>
               <div class="clearfix"/>
               <div class="oe_structure"/>
             </div>
@@ -1061,6 +1013,37 @@
       </div>
 
   </t>
+</template>
+
+<!-- Page Shop my cart and payment total -->
+
+<template id="total">
+    <table class='pull-right mb16' id="mycart_total" t-if="website_sale_order">
+        <colgroup>
+            <col width="100"/>
+            <col width="120"/>
+        </colgroup>
+        <thead>
+            <tr style="border-top: 1px solid #000" id="order_total">
+                <th><h3>Total:</h3></th>
+                <th class="text-right">
+                  <h3><span t-field="website_sale_order.amount_total" t-field-options='{
+                      "widget": "monetary",
+                      "display_currency": "website.pricelist_id.currency_id"
+                    }'/></h3>
+                </th>
+            </tr>
+            <tr class="text-muted" id="order_total_taxes">
+                <td><abbr title="Taxes may be updated after providing shipping address">Taxes:</abbr></td>
+                <td class="text-right">
+                    <span t-field="website_sale_order.amount_tax" t-field-options='{
+                        "widget": "monetary",
+                        "display_currency": "website.pricelist_id.currency_id"
+                    }'/>
+                </td>
+            </tr>
+        </thead>
+    </table>
 </template>
 
 </data>
