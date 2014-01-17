@@ -72,7 +72,7 @@
                                 <field name="name" class="oe_inline"/>
                                 <field name="product_tmpl_id" groups="product.group_product_variant" on_change="onchange_product_tmpl_id(product_tmpl_id,lst_price,price_margin,price_extra)" class="oe_inline" context="{'search_variants':1}"/>
                                 <span attrs="{'invisible':[('variants','=',False)]}" groups="product.group_product_variant"> - </span>
-                                <field name="variants" placeholder="Variant Name" groups="product.group_product_variant" class="oe_inline" readonly="0" attrs="{'required': [('standard_variants', '=', True)]}"/>
+                                <field name="variants" placeholder="Variant Name" groups="product.group_product_variant" class="oe_inline" readonly="0"/>
                             </h1>
                             <label for="categ_id" class="oe_edit_only"/>
                             <h2><field name="categ_id"/></h2>

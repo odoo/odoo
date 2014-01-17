@@ -339,7 +339,7 @@
                         </t>
                         <h4>
                             <b class="oe_price"
-                              t-field="product.list_price"
+                              t-field="product.product_variant_ids[0].price"
                               t-field-options='{
                                  "widget": "monetary",
                                  "display_currency": "website.pricelist_id.currency_id"
