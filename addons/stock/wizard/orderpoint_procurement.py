@@ -31,13 +31,6 @@ class procurement_compute(osv.osv_memory):
     _name = 'procurement.orderpoint.compute'
     _description = 'Automatic Order Point'
 
-    _columns = {
-           'automatic': fields.boolean('Automatic Orderpoint', help='If the stock of a product is under 0, it will act like an orderpoint'),
-    }
-
-    _defaults = {
-            'automatic': False,
-    }
 
     def _procure_calculation_orderpoint(self, cr, uid, ids, context=None):
         """
@@ -51,7 +44,7 @@ class procurement_compute(osv.osv_memory):
         #As this function is in a new thread, I need to open a new cursor, because the old one may be closed
         new_cr = self.pool.db.cursor()
         for proc in self.browse(new_cr, uid, ids, context=context):
-            proc_obj._procure_orderpoint_confirm(new_cr, uid, automatic=proc.automatic, use_new_cursor=new_cr.dbname, context=context)
+            proc_obj._procure_orderpoint_confirm(new_cr, uid, use_new_cursor=new_cr.dbname, context=context)
         #close the new cursor
         new_cr.close()
         return {}
