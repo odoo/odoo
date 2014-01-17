@@ -822,40 +822,51 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
 // ---------- Main Point of Sale Widget ----------
 
-    // this is used to notify the user that data is being synchronized on the network
-    module.SynchNotificationWidget = module.PosBaseWidget.extend({
-        template: "SynchNotificationWidget",
-        init: function(parent, options){
-            options = options || {};
-            this._super(parent, options);
-        },
-        renderElement: function() {
+    module.StatusWidget = module.PosBaseWidget.extend({
+        status: ['connected','connecting','disconnected','warning'],
+        set_status: function(status,msg){
             var self = this;
-            this._super();
+            for(var i = 0; i < this.status.length; i++){
+                this.$('.js_'+this.status[i]).addClass('oe_hidden');
+            }
+            this.$('.js_'+status).removeClass('oe_hidden');
             
-            var pending = this.pos.get('nbr_pending_orders');
-            this.set_status(pending ? 'disconnected' : 'connected',pending);
-
-            this.$el.click(function(){
-                self.pos.flush();
-            });
-        },
-        set_status: function(state,pending){
-            var self = this;
-            this.$('.js_connected, .js_connecting, .js_disconnected, .js_pending').addClass('oe_hidden');
-            this.$('.js_pending').html(pending || '');
-            if(state === 'connected'){
-                this.$('.js_connected').removeClass('oe_hidden');
-            }else if(state === 'disconnected'){
-                this.$('.js_disconnected, .js_pending').removeClass('oe_hidden');
-            }else if(state === 'connecting'){
-                this.$('.js_connecting, .js_pending').removeClass('oe_hidden');
+            if(msg){
+                this.$('.js_msg').removeClass('oe_hidden').html(msg);
+            }else{
+                this.$('.js_msg').addClass('oe_hidden').html('');
             }
         },
+    });
+
+    // this is used to notify the user that data is being synchronized on the network
+    module.SynchNotificationWidget = module.StatusWidget.extend({
+        template: 'SynchNotificationWidget',
         start: function(){
             var self = this;
             this.pos.bind('change:synch', function(pos,synch){
                 self.set_status(synch.state, synch.pending);
+            });
+            this.$el.click(function(){
+                self.pos.flush();
+            });
+        },
+    });
+
+    // this is used to notify the user if the pos is connected to the proxy
+    module.ProxyStatusWidget = module.StatusWidget.extend({
+        template: 'ProxyStatusWidget',
+        start: function(){
+            var self = this;
+            
+            this.set_status(this.pos.get('proxy_status'),'');
+
+            this.pos.bind('change:proxy_status', function(pos,status){
+                self.set_status(status,'');
+            });
+
+            this.$el.click(function(){
+                self.pos.connect_to_proxy();
             });
         },
     });
@@ -1051,8 +1062,19 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             // --------  Misc ---------
 
+            this.close_button = new module.HeaderButtonWidget(this,{
+                label: _t('Close'),
+                action: function(){ self.close(); },
+            });
+            this.close_button.appendTo(this.$('.pos-rightheader'));
+
             this.notification = new module.SynchNotificationWidget(this,{});
             this.notification.appendTo(this.$('.pos-rightheader'));
+
+            if(this.pos.config.use_proxy){
+                this.proxy_status = new module.ProxyStatusWidget(this,{});
+                this.proxy_status.appendTo(this.$('.pos-rightheader'));
+            }
 
             this.username   = new module.UsernameWidget(this,{});
             this.username.replace(this.$('.placeholder-UsernameWidget'));
@@ -1076,12 +1098,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 'keyboard_model': 'simple'
             });
             this.onscreen_keyboard.replace(this.$('.placeholder-OnscreenKeyboardWidget'));
-
-            this.close_button = new module.HeaderButtonWidget(this,{
-                label: _t('Close'),
-                action: function(){ self.close(); },
-            });
-            this.close_button.appendTo(this.$('.pos-rightheader'));
 
             this.client_button = new module.HeaderButtonWidget(this,{
                 label: _t('Self-Checkout'),

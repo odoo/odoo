@@ -698,6 +698,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // stops catching keyboard events 
         disconnect: function(){
             $('body').off('keypress', this.handler)
+        },
+        disconnect_from_proxy: function(){
             this.remote_scanning = false;
         },
         connect_to_proxy: function(){
@@ -712,11 +714,13 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                         if(!self.remote_scanning){ 
                             return; 
                         }
+                        self.pos.set('proxy_status','connected');
                         self.scan(barcode);
                         waitforbarcode();
                     },
                     function(){
                         setTimeout(waitforbarcode,5000);
+                        self.pos.set('proxy_status','disconnected');
                     });
                 });
         },

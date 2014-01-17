@@ -25,7 +25,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
             this.proxy = new module.ProxyDevice();              // used to communicate to the hardware devices via a local proxy
             this.barcode_reader = new module.BarcodeReader({'pos': this, proxy:this.proxy});  // used to read barcodes
-            this.barcode_reader.connect_to_proxy();
             this.proxy_queue = new module.JobQueue();           // used to prevent parallels communications to the proxy
             this.db = new module.PosDB();                       // a local database used to search trough products and categories & store pending orders
             this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode 
@@ -56,6 +55,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'synch':            { state:'connected', pending:0 }, 
                 'orders':           new module.OrderCollection(),
                 'selectedOrder':    null,
+                'proxy_status':     'connecting',
             });
 
             this.bind('change:synch',function(pos,synch){
@@ -76,7 +76,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
             this.ready = this.load_server_data()
                 .then(function(){
-                    return self.connect_to_posbox();
+                    if(self.config.use_proxy){
+                        return self.connect_to_proxy();
+                    }
                 });
             
         },
@@ -87,14 +89,18 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             // this.flush();
             this.proxy.close();
             this.barcode_reader.disconnect();
+            this.barcode_reader.disconnect_from_proxy();
         },
 
-        connect_to_posbox: function(){
+        connect_to_proxy: function(){
             var self = this;
+            this.barcode_reader.disconnect_from_proxy();
             this.pos_widget.loading_message(_t('Connecting to the PosBox'),0);
+            this.set('proxy_status', 'connecting');
             
             this.pos_widget.loading_skip(function(){
                     self.proxy.stop_searching();
+                    self.set('proxy_status', 'disconnected'); 
                 });
 
             return this.proxy.find_proxy({
@@ -105,6 +111,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(proxies){
                     if(proxies.length > 0){
                         self.proxy.connect(proxies[0]);
+                        if(self.config.iface_scan_via_proxy){
+                            self.barcode_reader.connect_to_proxy();
+                        }
+                        self.set('proxy_status', 'connected');
+                    }else{
+                        self.set('proxy_status', 'disconnected');
                     }
                 });
         },
@@ -175,14 +187,20 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         'pos.config',
                         ['name','journal_ids','warehouse_id','journal_id','pricelist_id',
                          'iface_self_checkout', 'iface_led', 'iface_cashdrawer',
-                         'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 'iface_vkeyboard',
-                         'iface_print_via_proxy','iface_cashdrawer','iface_invoicing','iface_big_scrollbars',
+                         'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 
+                         'iface_vkeyboard','iface_print_via_proxy','iface_scan_via_proxy',
+                         'iface_cashdrawer','iface_invoicing','iface_big_scrollbars',
                          'receipt_header','receipt_footer','proxy_ip',
                          'state','sequence_id','session_ids'],
                         [['id','=', self.pos_session.config_id[0]]]
                     );
                 }).then(function(configs){
                     self.config = configs[0];
+                    self.config.use_proxy = self.config.iface_payment_terminal || 
+                                            self.config.iface_electronic_scale ||
+                                            self.config.iface_print_via_proxy  ||
+                                            self.config.iface_scan_via_proxy   ||
+                                            self.config.iface_cashdrawer;
 
                     return self.fetch('stock.warehouse',[],[['id','=', self.config.warehouse_id[0]]]);
                 }).then(function(shops){

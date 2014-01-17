@@ -360,7 +360,7 @@ td {
 
 /*  c) The notifications indicator */
 
-.pos .oe_pos_synch-notification{
+.pos .oe_status{
     float:right; 
     color: rgba(255,255,255,0.4);
     padding: 8px;
@@ -370,20 +370,23 @@ td {
     font-style: italic;
     cursor:pointer;
 }
-.pos .oe_pos_synch-notification.oe_inactive{
+.pos .oe_status.oe_inactive{
     cursor: default;
 }
-.pos .oe_pos_synch-notification .oe_status{
+.pos .oe_status .oe_icon{
     display:inline-block;
     cursor:pointer;
-    width:16px; height:16px;
+    width:20px; height:16px;
     color: white;
 }
-.pos .oe_pos_synch-notification .oe_red{
+.pos .oe_icon.oe_red{
     color: rgb(197, 52, 0);
 }
-.pos .oe_pos_synch-notification .oe_green{
+.pos .oe_icon.oe_green{
     color: rgb(94, 185, 55);
+}
+.pos .oe_icon.oe_orange{
+    color: rgb(239, 153, 65);
 }
 
 /*  ********* Contains everything below the  bar ********* */

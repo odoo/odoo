@@ -101,16 +101,31 @@
     </t>
 
     <t t-name="SynchNotificationWidget">
-        <div class="oe_pos_synch-notification">
-            <span class='js_pending oe_hidden'>0</span>
-            <div class="js_connected oe_status oe_green">
-                <i class='fa fa-fw fa-circle'></i>
+        <div class="oe_status js_synch">
+            <span class='js_msg oe_hidden'>0</span>
+            <div class="js_connected oe_icon oe_green">
+                <i class='fa fa-fw fa-rss'></i>
             </div>
-            <div class="js_connecting oe_status oe_hidden">
+            <div class="js_connecting oe_icon oe_hidden">
                 <i class='fa fa-fw fa-spin fa-spinner'></i>
             </div>
-            <div class="js_disconnected oe_status oe_red oe_hidden">
-                <i class='fa fa-fw fa-circle'></i>
+            <div class="js_disconnected oe_icon oe_red oe_hidden">
+                <i class='fa fa-fw fa-rss'></i>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ProxyStatusWidget">
+        <div class="oe_status js_proxy">
+            <span class='js_msg oe_hidden'></span>
+            <div class="js_connected oe_icon oe_green">
+                <i class='fa fa-fw fa-sitemap'></i>
+            </div>
+            <div class="js_connecting oe_icon oe_hidden">
+                <i class='fa fa-fw fa-spin fa-spinner'></i>
+            </div>
+            <div class="js_disconnected oe_icon oe_red oe_hidden">
+                <i class='fa fa-fw fa-sitemap'></i>
             </div>
         </div>
     </t>
