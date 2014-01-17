@@ -61,16 +61,25 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 
 	toggle_measure: function (field_id) {
         var current_measure = _.findWhere(this.measures, {field:field_id});
-        if (current_measure) {
+        if (current_measure) {  // remove current_measure
+            var index = this.measures.indexOf(current_measure);
             this.measures = _.without(this.measures, current_measure);
-        } else {
+            if (this.measures.length === 0) {
+                this.nodata = true;
+            } else {
+                _.each(this.cells, function (cell) {
+                    cell.values.splice(index, 1);
+                });
+            }
+            if (this.active) { this.trigger('redraw_required'); }
+        } else {  // add a new measure
             this.measures.push({
                 field: field_id,
                 type: this.fields[field_id].type,
                 string: this.fields[field_id].string
             });
+            if (this.active) { this.update_data(); }
         }
-        if (this.active) { this.update_data(); }
 	},
 
     set: function (domain, row_groupby, col_groupby) {
@@ -400,6 +409,12 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
             cols = this.cols.groupby,
             rows = this.rows.groupby,
             visible_fields = rows.concat(cols, self.measures);
+
+        if (this.measures.length === 0) { 
+            var result = $.Deferred();
+            result.resolve()
+            return result; 
+        }
 
         var groupbys = _.map(_.range(cols.length + 1), function (i) {
             return cols.slice(0, i).concat(rows);
