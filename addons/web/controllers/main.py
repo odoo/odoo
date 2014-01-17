@@ -1055,21 +1055,17 @@ class DataSet(http.Controller):
         """
         Model = request.session.model(model)
 
-        ids = Model.search(domain, offset or 0, limit or False, sort or False,
+        records = Model.search_read(domain, fields, offset or 0, limit or False, sort or False,
                            request.context)
-        if limit and len(ids) == limit:
+        if not records:
+            return {
+                'length': 0,
+                'records': []
+            }
+        if limit and len(records) == limit:
             length = Model.search_count(domain, request.context)
         else:
-            length = len(ids) + (offset or 0)
-        if fields and fields == ['id']:
-            # shortcut read if we only want the ids
-            return {
-                'length': length,
-                'records': [{'id': id} for id in ids]
-            }
-
-        records = Model.read(ids, fields or False, request.context)
-        records.sort(key=lambda obj: ids.index(obj['id']))
+            length = len(records) + (offset or 0)
         return {
             'length': length,
             'records': records
