@@ -4,7 +4,16 @@
     var website = openerp.website;
     website.add_template_file('/website_sale/static/src/xml/website_sale.xml');
 
+    website.is_editable = true;
     website.EditorBar.include({
+        start: function() {
+            var res = this._super();
+            if ($("#wrap.js_sale").size()) {
+                this.$("button[data-action=edit]").removeClass("hidden");
+            }
+            this.$(".dropdown:has(.oe_content_menu)").removeClass("hidden");
+            return res;
+        },
         events: _.extend({}, website.EditorBar.prototype.events, {
             'click a[data-action=new_product]': function (ev) {
                 ev.preventDefault();

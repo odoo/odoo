@@ -23,6 +23,7 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import orm, fields
+from openerp.modules.registry import RegistryManager
 
 class decimal_precision(orm.Model):
     _name = 'decimal.precision'
@@ -44,23 +45,28 @@ class decimal_precision(orm.Model):
         res = cr.fetchone()
         return res[0] if res else 2
 
+    def clear_cache(self, cr):
+        """clear cache and update models. Notify other workers to restart their registry."""
+        self.precision_get.clear_cache(self)
+        for obj in self.pool.obj_list():
+            for colname, col in self.pool.get(obj)._columns.items():
+                if isinstance(col, (fields.float, fields.function)):
+                    col.digits_change(cr)
+        RegistryManager.signal_registry_change(cr.dbname)
+
     def create(self, cr, uid, data, context=None):
         res = super(decimal_precision, self).create(cr, uid, data, context=context)
-        self.precision_get.clear_cache(self)
+        self.clear_cache(cr)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(decimal_precision, self).unlink(cr, uid, ids, context=context)
-        self.precision_get.clear_cache(self)
+        self.clear_cache(cr)
         return res
 
     def write(self, cr, uid, ids, data, *args, **argv):
         res = super(decimal_precision, self).write(cr, uid, ids, data, *args, **argv)
-        self.precision_get.clear_cache(self)
-        for obj in self.pool.obj_list():
-            for colname, col in self.pool[obj]._columns.items():
-                if isinstance(col, (fields.float, fields.function)):
-                    col.digits_change(cr)
+        self.clear_cache(cr)
         return res
 
 

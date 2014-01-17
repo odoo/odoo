@@ -6,6 +6,11 @@
     website.add_template_file('/website/static/src/xml/website.menu.xml');
 
     website.EditorBar.include({
+        start: function() {
+            var res = this._super();
+            this.$(".oe_content_menu a[data-action=edit-structure]").parents("li").removeClass("hidden");
+            return res;
+        },
         events: _.extend({}, website.EditorBar.prototype.events, {
             'click a[data-action="edit-structure"]': 'editStructure',
         }),

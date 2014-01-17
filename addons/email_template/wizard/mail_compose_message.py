@@ -150,7 +150,7 @@ class mail_compose_message(osv.TransientModel):
     def _get_or_create_partners_from_values(self, cr, uid, rendered_values, context=None):
         """ Check for email_to, email_cc, partner_to """
         partner_ids = []
-        mails = tools.email_split(rendered_values.pop('email_to', '') + ' ' + rendered_values.pop('email_cc', ''))
+        mails = tools.email_split(rendered_values.pop('email_to', '')) + tools.email_split(rendered_values.pop('email_cc', ''))
         for mail in mails:
             partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
             partner_ids.append(partner_id)

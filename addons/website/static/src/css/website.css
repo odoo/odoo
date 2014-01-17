@@ -95,6 +95,12 @@ h1.text-muted, h2.text-muted, h3.text-muted {
   margin-top: 10px;
 }
 
+/* ----- BOOTSTRAP FIX ----- */
+.container .container {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 /* ----- BOOTSTRAP HACK FOR HEADER NAV BAR ----- */
 .navbar.navbar-static-top {
   margin-bottom: 0;
@@ -141,6 +147,7 @@ footer {
 
 .row {
   min-height: 32px;
+  width: 100%;
 }
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
@@ -322,6 +329,10 @@ ul.nav-stacked > li > a {
 }
 .carousel .carousel-control.right span {
   right: 10px;
+}
+
+.quotecarousel {
+  padding-bottom: 16px;
 }
 
 /* Parallax Theme */

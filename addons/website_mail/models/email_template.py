@@ -73,7 +73,10 @@ class EmailTemplate(osv.Model):
             elif node.tag == 'img' and not node.get('src', 'data').startswith('data'):
                 node.set('src', _process_link(node.get('src')))
 
-        html = lxml.etree.tostring(root, pretty_print=False)
+        html = lxml.html.tostring(root, pretty_print=False, method='html')
+        # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
+        if html.startswith('<div>') and html.endswith('</div>'):
+            html = html[5:-6]
         return html
 
     def create(self, cr, uid, values, context=None):

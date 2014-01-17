@@ -4,8 +4,8 @@
 
 <!-- Layout add nav and footer -->
 
-<template id="editor_head" inherit_id="website.editor_head" name="Shop Editor" groups="base.group_website_designer">
-  <xpath expr="//script[last()]" position="after">
+<template id="editor_head" inherit_id="website.editor_head" name="Shop Editor" groups="base.group_sale_manager">
+  <xpath expr="//script[@id='website_tour_js']" position="after">
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale.editor.js"></script>
       <script type="text/javascript" src="/website_sale/static/src/js/website.tour.shop.js"></script>
   </xpath>
@@ -88,11 +88,11 @@
           <t t-raw="head or ''"/>
       </t>
       <t t-set="additional_title">Shop</t>
-      <div id="wrap">
+      <div id="wrap" class="js_sale">
         <div class="oe_structure"/>
         <div class="container oe_website_sale">
           <div class="products_pager">
-            <div>
+            <div class="row">
               <form action="/shop/" method="get" class="pagination form-inline col-md-3">
                   <t t-call="website_sale.search" />
               </form>
@@ -189,11 +189,13 @@
               <t t-if="not bins">
                 <div class="text-center text-muted">
                   <h3 class="css_editable_display">No product found</h3>
-                  <h3 class="css_non_editable_mode_hidden">There isn't available products right know, click <a t-href="/page/website.contactus">here</a> to contact us</h3>
+                  <h3 class="css_non_editable_mode_hidden">There isn't available products right now, click <a t-href="/page/website.contactus">here</a> to contact us</h3>
                   <t groups="base.group_website_publisher">
-                    <p>Click on "Content" to define a new product or "Help" for more informations.</p>
-                    <img src="/website/static/src/img/content_here.png"/>
-                    <p>In the backend's product form contains information to simplify the sale process: price, notes in the quotation, accounting data, procurement methods, etc.</p>
+                    <t groups="base.group_sale_manager">
+                      <p>Click on "Content" to define a new product or "Help" for more informations.</p>
+                      <img src="/website/static/src/img/content_here.png"/>
+                      <p>In the backend's product form contains information to simplify the sale process: price, notes in the quotation, accounting data, procurement methods, etc.</p>
+                    </t>
                   </t>
                 </div>
               </t>
@@ -221,9 +223,10 @@
 
 <template id="add_to_basket" inherit_option_id="website_sale.products_cart" name="Add to Cart">
   <xpath expr="//div[@class='product_price']" position="inside">
-      <a t-href="/shop/add_cart/#{ product.product_variant_ids[0].id }/"><!-- class="js_add_cart_json" -->
-          <span class="fa fa-shopping-cart"/>
-      </a>
+      <form action="/shop/add_cart/" method="post" style="display: inline-block;">
+          <input name="product_id" t-att-value="product.product_variant_ids[0].id" type="hidden"/>
+          <button type="submit" class="fa fa-shopping-cart"/>
+      </form>
   </xpath>
 </template>
 
@@ -263,7 +266,7 @@
           <link rel='stylesheet' href='/website_sale/static/src/css/website_mail.css'/>
       </t>
       <t t-set="additional_title" t-value="product.name"/>
-      <div id="wrap">
+      <div id="wrap" class="js_sale">
 
         <section class="container mt8">
           <div class="row">
@@ -679,7 +682,10 @@
                       }'/>
                   </td>
                   <td class="text-center">
-                      <a t-href="/shop/add_cart/#{ product.product_variant_ids[0].id }/"><strong>Add to Cart</strong></a>
+                      <form action="/shop/add_cart/" method="post">
+                          <input name="product_id" t-att-value="product.product_variant_ids[0].id" type="hidden"/>
+                          <button type="submit" class="btn btn-link"><strong>Add to Cart</strong></button>
+                      </form>
                   </td>
               </tr>
           </tbody>
@@ -746,7 +752,7 @@
                       <label class="control-label" for="contact_name">Email</label>
                       <input type="email" name="email" class="form-control" t-att-value="checkout.get('email')"/>
                   </div>
-                  <div t-attf-class="form-group #{ error.get('phone') and 'has-error' or ''} col-lg-6">
+                  <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="phone">Phone</label>
                       <input type="tel" name="phone" class="form-control" t-att-value="checkout.get('phone')"/>
                   </div>
