@@ -23,7 +23,31 @@ $(document).ready(function () {
         return false;
     });
 
-
+    $('#modelaccept').on('shown.bs.modal', function (e) {
+        $("#signature").jSignature();
+    });
+    $('#sign_clean').on('click', function (e) {
+        $("#signature").jSignature('reset');
+    });
+    $('form.js_accept_json').submit(function(ev){
+        ev.preventDefault();
+        var $link = $(ev.currentTarget);
+        var href = $link.attr("action");
+        var order_id = href.match(/accept\/([0-9]+)/);
+        var token = href.match(/token=(.*)/);
+        var datapair = $("#signature").jSignature("getData",'image')
+        openerp.jsonRpc("/quote/accept/", 'call', {
+            'order_id': parseInt(order_id[1]),
+            'token': token[1],
+            'signer': $("#signer").val(),
+            'sign': JSON.stringify(datapair[1]),
+        })
+        .then(function (data) {
+            $('#modelaccept').modal('hide');
+            location.reload();
+        });
+        return false
+    });
     // automatically generate a menu from h1 and h1 tag in content
     var ul = null;
     var sub_li = null;

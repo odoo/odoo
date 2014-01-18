@@ -147,6 +147,7 @@
             <t t-call="website.layout">
               <t t-set="head">
                   <script type="text/javascript" src="/website_quotation/static/src/js/website_quotation.js"></script>
+                  <script type="text/javascript" src="/website_quotation/static/lib/jSignature/jSignature.min.js"></script>
                   <link rel='stylesheet' href='/website_quotation/static/src/css/website_quotation.css'/>
                   <t t-raw="head or ''"/>
               </t>
@@ -179,18 +180,25 @@
                                   <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
                                     <h4 class="modal-title">Validate Sale Order</h4>
-                                    <p><b>I agree that by signing this proposal, I accept it on the behalf of YourCompany.</b></p>
+                                    <p><b>I agree that by signing this proposal, I accept it on the behalf of <t t-esc="quotation.partner_id.company_id.name"/>.</b></p>
                                   </div>
-                                  <form id="accept" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/accept">
+                                  <form id="accept" method="POST" t-attf-action="/quote/accept/#{quotation.id}/?token=#{quotation.access_token}" class="js_accept_json">
                                       <div class="modal-body">
                                         <dl class="dl-horizontal">
-                                          <dt><h4>Your Name : </h4></dt>
-                                          <dd><h4 t-esc="quotation.partner_id.name"></h4></dd>
-                                          <dt><h4>Price : </h4></dt>
-                                          <dd><h4 data-id="total_amount" t-field="quotation.amount_total" t-field-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/></dd>
-                                          <dt><h4>Payment Term : </h4></dt>
-                                          <dd><h4 t-esc="quotation.payment_term.name"></h4></dd>
+                                            <dt><h4>Your Name : </h4></dt>
+                                            <dd><h4 t-esc="quotation.partner_id.name"></h4></dd>
+                                            <dt><h4>Price : </h4></dt>
+                                            <dd><h4 data-id="total_amount" t-field="quotation.amount_total" t-field-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/></dd>
+                                            <dt><h4>Payment Term : </h4></dt>
+                                            <dd><h4 t-esc="quotation.payment_term.name"></h4></dd>
+                                            <dt><h4>Signer Name : </h4></dt>
+                                            <dd><input type="text" id="signer" class="col-sm-4 form-control"/></dd>
                                         </dl>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">Draw Your Signature</div>
+                                            <div id="signature" class="panel-body"/>
+                                            <div class="panel-footer"><a id="sign_clean" class="btn btn-xs btn-info">Clear</a></div>
+                                        </div>
                                     </div>
                                   <div class="modal-footer">
                                         <button type="submit" class="btn btn-success">Validate Order</button> or

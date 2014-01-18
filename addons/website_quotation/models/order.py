@@ -90,6 +90,7 @@ class sale_order(osv.osv):
         'template_id': fields.many2one('sale.quote.template', 'Quote Template'),
         'website_description': fields.html('Description'),
         'options' : fields.one2many('sale.option.line', 'option_id', 'Optional Products Lines'),
+        'signer_name': fields.char('Signer Name', size=256),
     }
     _defaults = {
         'access_token': lambda self, cr, uid, ctx={}: str(uuid.uuid4())

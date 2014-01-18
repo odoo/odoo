@@ -40,12 +40,21 @@ class sale_quote(http.Controller):
         }
         return request.website.render('website_quotation.so_quotation', values)
 
-    @website.route(['/quote/<int:order_id>/<token>/accept'], type='http', auth="public")
-    def accept(self, order_id, token, **post):
-        order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
+    @website.route(['/quote/accept'], type='json', auth="public")
+    def accept(self, order_id=None, token=None, signer=None, sign=None, **post):
+        order_obj = request.registry.get('sale.order')
+        order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
         assert token == order.access_token, 'Access denied, wrong token!'
-        request.registry.get('sale.order').write(request.cr, request.uid, [order_id], {'state': 'manual'})
-        return request.redirect("/quote/%s/%s" % (order_id, token))
+        attachment = {
+            'name': 'sign.png',
+            'datas':sign,
+            'datas_fname': 'sign.png',
+            'res_model': 'sale.order',
+            'res_id': order_id,
+        }
+        request.registry['ir.attachment'].create(request.cr, request.uid, attachment, context=request.context)
+        order_obj.write(request.cr, request.uid, [order_id], {'signer_name':signer,'state': 'manual'})
+        return []
 
     @website.route(['/quote/<int:order_id>/<token>/decline'], type='http', auth="public")
     def decline(self, order_id, token, **post):
