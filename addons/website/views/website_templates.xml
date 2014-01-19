@@ -195,6 +195,14 @@
     </html>
 </template>
 
+<template id="layout_logo_show" inherit_option_id="website.layout" name="Show Logo">
+    <xpath expr="//header//a[@class='navbar-brand']" position="replace">
+        <a class="navbar-brand" href="/">
+            <img src="/website/static/src/img/odoo_logo.png"/>
+        </a>
+    </xpath>
+</template>
+
 <template id="editor_head" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher">
     <xpath expr='//t[@name="layout_head"]' position="before">
         <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
