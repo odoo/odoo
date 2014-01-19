@@ -40,6 +40,8 @@ from openerp.osv.orm import browse_record, browse_record_list
 
 _logger = logging.getLogger(__name__)
 
+MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath']
+
 class view_custom(osv.osv):
     _name = 'ir.ui.view.custom'
     _order = 'create_date desc'  # search(limit=1) should return the last customization
@@ -71,7 +73,6 @@ class view(osv.osv):
         'type': fields.selection([
             ('tree','Tree'),
             ('form','Form'),
-            ('mdx','mdx'),
             ('graph', 'Graph'),
             ('calendar', 'Calendar'),
             ('diagram','Diagram'),
@@ -186,8 +187,15 @@ class view(osv.osv):
                     self.pool.get('ir.model.data').write(cr, openerp.SUPERUSER_ID, view_.model_data_id.id, {'noupdate': True})
         return ret
 
-    # default view selection
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        default.update({
+            'model_ids': [],
+        })
+        return super(view, self).copy(cr, uid, id, default, context=context)
 
+    # default view selection
     def default_view(self, cr, uid, model, view_type, context=None):
         """ Fetches the default view for the provided (model, view_type) pair:
          view with no parent (inherit_id=Fase) with the lowest priority.
@@ -207,8 +215,9 @@ class view(osv.osv):
             return False
         return ids[0]
 
-    # inheritance
-
+    #------------------------------------------------------
+    # Inheritance mecanism
+    #------------------------------------------------------
     def get_inheriting_views_arch(self, cr, uid, view_id, model, context=None):
         """Retrieves the architecture of views that inherit from the given view, from the sets of
            views that should currently be used in the system. During the module upgrade phase it
@@ -422,8 +431,13 @@ class view(osv.osv):
 
         return dict(view, arch=etree.tostring(arch, encoding='utf-8'))
 
-    # postprocessing: groups, modifiers, ...
-
+    #------------------------------------------------------
+    # Postprocessing: translation, groups and modifiers
+    #------------------------------------------------------
+    # TODO: 
+    # - split postprocess so that it can be used instead of translate_qweb
+    # - remove group processing from ir_qweb
+    #------------------------------------------------------
     def postprocess(self, cr, user, model, node, view_id, in_tree_view, model_fields, context=None):
         """Return the description of the fields in the node.
 
@@ -685,26 +699,25 @@ class view(osv.osv):
                 raise orm.except_orm('View error', msg)
         return arch, fields
 
-    # view used as templates
-
+    #------------------------------------------------------
+    # QWeb template views
+    #------------------------------------------------------
     @tools.ormcache_context(accepted_keys=('lang','inherit_branding', 'editable', 'translatable'))
-    def read_template(self, cr, uid, id_, context=None):
-        try:
-            id_ = int(id_)
-        except ValueError:
-            if '.' not in id_:
-                raise ValueError('Invalid id: %r' % (id_,))
-            IMD = self.pool['ir.model.data']
-            m, _, n = id_.partition('.')
-            _, id_ = IMD.get_object_reference(cr, uid, m, n)
+    def read_template(self, cr, uid, xml_id, context=None):
+        if '.' not in xml_id:
+            raise ValueError('Invalid template id: %r' % (xml_id,))
 
-        arch = self.read_combined(cr, uid, id_, fields=['arch'], context=context)['arch']
+        m, n = xml_id.split('.', 1)
+        _, view_id = self.pool['ir.model.data'].get_object_reference(cr, uid, m, n)
+
+        arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
         arch_tree = etree.fromstring(arch)
 
         if 'lang' in context:
-            arch_tree = self.translate_qweb(cr, uid, id_, arch_tree, context['lang'], context)
+            arch_tree = self.translate_qweb(cr, uid, view_id, arch_tree, context['lang'], context)
+
         self.distribute_branding(arch_tree)
-        root = etree.Element('tpl')
+        root = etree.Element('templates')
         root.append(arch_tree)
         arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
         return arch
@@ -771,8 +784,6 @@ class view(osv.osv):
             text = h.unescape(text.strip())
             if len(text) < 2 or (text.startswith('<!') and text.endswith('>')):
                 return None
-            # if text == 'Our Events':
-            #     from pudb import set_trace;set_trace() ############################## Breakpoint ##############################
             return Translations._get_source(cr, uid, 'website', 'view', lang, text, id_)
 
         if arch.tag not in ['script']:
@@ -791,16 +802,18 @@ class view(osv.osv):
                 self.translate_qweb(cr, uid, id_, node, lang, context)
         return arch
 
-    def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
+    def render(self, cr, uid, xml_id, values=None, engine='ir.qweb', context=None):
         if not context:
             context = {}
 
         def loader(name):
             return self.read_template(cr, uid, name, context=context)
 
-        return self.pool[engine].render(cr, uid, id_or_xml_id, values, loader=loader, context=context)
+        return self.pool[engine].render(cr, uid, xml_id, values, loader=loader, context=context)
 
-    # maybe used to print the workflow ?
+    #------------------------------------------------------
+    # Misc
+    #------------------------------------------------------
 
     def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node, label, scale, context=None):
         nodes=[]
@@ -869,14 +882,6 @@ class view(osv.osv):
                 'blank_nodes': blank_nodes,
                 'node_parent_field': _Model_Field,}
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({
-            'model_ids': [],
-        })
-        return super(view, self).copy(cr, uid, id, default, context=context)
-
     def _validate_custom_views(self, cr, uid, model):
         """Validate architecture of custom views (= without xml id) for a given model.
             This method is called at the end of registry update.
@@ -892,4 +897,4 @@ class view(osv.osv):
         ids = map(itemgetter(0), cr.fetchall())
         return self._check_xml(cr, uid, ids)
 
-MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath']
+# vim:et:
