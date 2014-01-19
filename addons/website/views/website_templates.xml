@@ -162,7 +162,7 @@
                                     </p>
                                 </div>
                                 <t t-set="languages" t-value="website.get_languages()"/>
-                                <ul class="nav nav-pills js_language_selector" t-if="(len(languages) &gt; 1 or editable)">
+                                <ul class="list-inline js_language_selector mt16" t-if="(len(languages) &gt; 1 or editable)">
                                     <li t-foreach="languages" t-as="lg">
                                         <a t-att-href="url_for('', lang=lg[0], keep_query='*')"
                                            t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
@@ -197,7 +197,7 @@
 
 <template id="layout_logo_show" inherit_option_id="website.layout" name="Show Logo">
     <xpath expr="//header//a[@class='navbar-brand']" position="replace">
-        <a href="/" id="company_logo">
+        <a href="/" class="navbar-brand">
             <img src="/website/static/src/img/odoo_logo.png"/>
         </a>
     </xpath>
