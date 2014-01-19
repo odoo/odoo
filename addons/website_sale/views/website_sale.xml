@@ -937,12 +937,12 @@
             </div>
           </div>
 
-          <div class="js_payment mb64 row" t-if="acquirers" id="payment_method">
-              <h4>Choose your Payment Method</h4>
+          <div class="js_payment mb64" t-if="acquirers" id="payment_method">
               <div class="col-lg-5 col-sm-6">
+                  <h4>Payment Method:</h4>
                   <t t-foreach="acquirers or []" t-as="acquirer">
                       <label t-if="acquirer.button" class="oe_sale_acquirer_logo" style="display: block;">
-                          <input t-att-value="acquirer.id" type="radio" name="acquirer"/>
+                          <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer"/>
                           <img class="media-object" style="width: 60px; display: inline-block;"
                               t-att-title="acquirer.name"
                               t-att-src="'/payment_acquirer_%s/static/src/img/%s_icon.png' % (acquirer.name, acquirer.name)"/>
@@ -951,7 +951,7 @@
               </div>
               <div class="col-lg-3 col-sm-3">
                   <t t-foreach="acquirers or []" t-as="acquirer">
-                      <div t-att-data-id="acquirer.id" t-raw="acquirer.button" class="oe_sale_acquirer_button hidden"/>
+                      <div t-att-data-id="acquirer.id" t-raw="acquirer.button" class="oe_sale_acquirer_button hidden pull-right"/>
                   </t>
               </div>
           </div>
