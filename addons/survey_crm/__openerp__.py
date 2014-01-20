@@ -26,9 +26,10 @@
     'category': 'Marketing',
     'complexity': 'easy',
     'description': """
-This module adds a survey mass mailing button inside the more option of lead view
+Survey - CRM (bridge module)
 =================================================================================
-    """,
+This module adds a Survey mass mailing button inside the more option of lead/customers views
+""",
     'author': 'OpenERP SA',
     'depends': ['crm', 'survey'],
     'data': [
