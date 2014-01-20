@@ -75,14 +75,15 @@ class mrp_product_produce(osv.osv_memory):
             if not consumed_data.get(consumed.product_id.id, False):
                 consumed_data[consumed.product_id.id] = 0
             consumed_data[consumed.product_id.id] += consumed.product_qty
-        
-        print "Consumed data", consumed_data
 
         new_consume_lines = []
         
+        
+        dicts = {}
         # Find product qty to be consumed and consume it
         for scheduled in production.product_lines:
-
+            if not dicts.get(scheduled.product_id.id):
+                dicts[scheduled.product_id.id] = {}
             # total qty of consumed product we need after this consumption
             total_consume = ((product_qty + produced_qty) * scheduled.product_qty / production.product_qty)
 
@@ -104,13 +105,26 @@ class mrp_product_produce(osv.osv_memory):
                                                      prefered_domain=[('reservation_id', '=', move.id)], fallback_domain=[('reservation_id', '=', False)], context=context)
                 for quant in quants: 
                     if quant[0]:
-                        dict_new = {'product_id': scheduled.product_id.id, 'product_qty': quant[1], 'lot_id': quant[0].lot_id.id}
-                        new_consume_lines.append([0, False, dict_new])
+                        product_id = scheduled.product_id.id
+                        lot_id = quant[0].lot_id.id
+                        prod_qty = quant[1]
+                        if not product_id in dicts.keys():
+                            dicts[product_id] = {lot_id : prod_qty}
+                        elif lot_id in dicts[product_id].keys():
+                            dicts[product_id][lot_id] += prod_qty
+                        else:
+                            dicts[product_id][lot_id] = prod_qty
                         qty -= quant[1]
-            if qty > 0:
-                dict_new = {'product_id': scheduled.product_id.id, 'product_qty': qty}
-                new_consume_lines.append([0, False, dict_new])
-        
+                if qty > 0:
+                    if dicts[product_id][False]:
+                        dicts[product_id][False] += qty
+                    else:
+                        dicts[product_id][False] = qty
+                        
+        for prod in dicts.keys():
+            for lot in dicts[prod].keys():
+                dict_new = {'product_id': prod, 'product_qty':dicts[prod][lot], 'lot_id': lot}
+                new_consume_lines.append([0, False, dict_new]) #Todo for all qtys
         return {'value': {'consume_lines': new_consume_lines}}
 
 
@@ -154,6 +168,9 @@ class mrp_product_produce(osv.osv_memory):
          'product_id': _get_product_id,
          'track_production': _get_track, 
     }
+
+
+
 
     def do_produce(self, cr, uid, ids, context=None):
         production_id = context.get('active_id', False)

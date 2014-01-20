@@ -37,7 +37,9 @@ class StockMove(osv.osv):
         super(StockMove, self).check_tracking(cr, uid, move, lot_id, context=context)
         if move.product_id.track_production and (move.location_id.usage == 'production' or move.location_dest_id.usage == 'production') and not lot_id:
             raise osv.except_osv(_('Warning!'), _('You must assign a serial number for the product %s') % (move.product_id.name))
-    
+        if move.raw_material_production_id and move.location_dest_id.usage == 'production' and move.raw_material_production_id.product_id.track_production and not move.consumed_for:
+            raise osv.except_osv(_('Warning!'), _('You should not process it like this as both your raw materials and finished product require to track manufacturing.  In that case, you should be able to make the link between the raw materials and the finished products and this is not possible with this method. '))
+
     def _action_explode(self, cr, uid, move, context=None):
         """ Explodes pickings.
         @param move: Stock moves

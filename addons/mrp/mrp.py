@@ -773,7 +773,6 @@ class mrp_production(osv.osv):
         return 1
 
 
-
     def action_produce(self, cr, uid, production_id, production_qty, production_mode, wiz, context=None):
         """ To produce final product based on production mode (consume/consume&produce).
         If Production mode is consume, all stock move lines of raw materials will be done/consumed.
@@ -784,6 +783,8 @@ class mrp_production(osv.osv):
         @param production_mode: specify production mode (consume/consume&produce).
         @return: True
         """
+        
+        
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id, context=context)
         if not production.move_lines and production.state == 'ready':

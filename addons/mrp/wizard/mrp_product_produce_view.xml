@@ -17,7 +17,7 @@
                         <field name="track_production" invisible="1"/>
                         <field name="lot_id" domain="[('product_id', '=', product_id)]"
                                     context="{'default_product_id':product_id}"
-                                    attrs="{'required': [('track_production','=',True)]}"
+                                    attrs="{'required': [('track_production', '=', True), ('mode', '=', 'consume_produce')]}"
                                     groups="stock.group_tracking_lot"/>
                     </group>
                     <separator/>

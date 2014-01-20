@@ -60,6 +60,8 @@ class stock_move_consume(osv.osv_memory):
 
         return res
 
+
+
     def do_move_consume(self, cr, uid, ids, context=None):
         """ To move consumed products
         @param self: The object pointer.
@@ -115,7 +117,6 @@ class stock_move_scrap(osv.osv_memory):
                 res.update({'location_id': scrap_location_id[0]})
             else:
                 res.update({'location_id': False})
-
         return res
 
     def move_scrap(self, cr, uid, ids, context=None):
