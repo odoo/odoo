@@ -694,6 +694,7 @@ class purchase_order(osv.osv):
             'picking_type_id': order.picking_type_id.id,
             'group_id': group_id,
             'procurement_id': order_line.procurement_ids and order_line.procurement_ids[0].id or False,
+            'origin': order.name,
             'route_ids': order.picking_type_id.warehouse_id and [(6, 0, [x.id for x in order.picking_type_id.warehouse_id.route_ids])] or [],
         }]
         #if the order line has a bigger quantity than the procurement it was for (manually changed or minimal quantity), then
