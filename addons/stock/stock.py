@@ -1996,7 +1996,7 @@ class stock_inventory(osv.osv):
            :rtype: list of tuple
         """
         #default available choices
-        res_filter = [('none', ' All products of a whole location'), ('product', 'One product only')]
+        res_filter = [('none', _('All products of a whole location')), ('product', _('One product only'))]
         settings_obj = self.pool.get('stock.config.settings')
         config_ids = settings_obj.search(cr, uid, [], limit=1, order='id DESC', context=context)
         #If we don't have updated config until now, all fields are by default false and so should be not dipslayed
@@ -2007,9 +2007,9 @@ class stock_inventory(osv.osv):
         if stock_settings.group_stock_tracking_owner:
             res_filter.append(('owner', _('One owner only')))
             res_filter.append(('product_owner', _('One product for a specific owner')))
-        if stock_settings.group_stock_production_lot:
-            res_filter.append(('lot', _('One Lot/Serial Number')))
         if stock_settings.group_stock_tracking_lot:
+            res_filter.append(('lot', _('One Lot/Serial Number')))
+        if stock_settings.group_stock_packaging:
             res_filter.append(('pack', _('A Pack')))
         return res_filter
 
