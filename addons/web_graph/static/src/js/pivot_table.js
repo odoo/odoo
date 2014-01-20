@@ -87,12 +87,27 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
         var row_gbs = this.create_field_values(row_groupby),
             col_gbs = this.create_field_values(col_groupby),
             dom_changed = !_.isEqual(this.domain, domain),
+            row_subset = is_strict_beginning_of(row_gbs, this.rows.groupby),
+            col_subset = is_strict_beginning_of(col_gbs, this.cols.groupby),
             row_gb_changed = !this.equal_groupby(row_gbs, this.rows.groupby),
             col_gb_changed = !this.equal_groupby(col_gbs, this.cols.groupby);
 
         if (dom_changed) {
             this.domain = domain;
         }
+
+        if (row_subset && !dom_changed && !col_gb_changed) {
+            this.fold_with_depth(this.rows, row_gbs.length);
+            if (this.active) { this.trigger('redraw_required'); }
+            return;
+        }
+
+        if (col_subset && !dom_changed && !row_gb_changed) {
+            this.fold_with_depth(this.cols, col_gbs.length);
+            if (this.active) { this.trigger('redraw_required'); }
+            return;
+        }
+
         if (row_gb_changed || col_gb_changed) {
             this.cols.groupby = col_gbs;
             this.rows.groupby = row_gbs;
@@ -193,18 +208,20 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		});
 	},
 
+    _get_headers_with_depth: function (headers, depth) {
+        return _.filter(headers, function (header) {
+            return header.path.length === depth;
+        });
+    },
+
 	// return all columns with a path length of 'depth'
 	get_cols_with_depth: function (depth) {
-		return _.filter(this.cols.headers, function (header) {
-			return header.path.length === depth;
-		});
+        return this._get_headers_with_depth(this.cols.headers, depth);
 	},
 
 	// return all rows with a path length of 'depth'
 	get_rows_with_depth: function (depth) {
-		return _.filter(this.rows.headers, function (header) {
-			return header.path.length === depth;
-		});
+        return this._get_headers_with_depth(this.rows.headers), depth;
 	},
 
 	// return all non expanded rows
@@ -250,7 +267,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 	// ----------------------------------------------------------------------
 	// Table manipulation methods : fold/expand/swap
 	// ----------------------------------------------------------------------
-	fold: function (header) {
+	fold: function (header, silent) {
 		var ancestors = this.get_ancestors(header),
             removed_ids = _.pluck(ancestors, 'id');
 
@@ -265,10 +282,17 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
         var new_groupby_length = _.max(_.map(header.root.headers, function(g) {return g.path.length;}));
         if (new_groupby_length < header.root.groupby.length) {
 			header.root.groupby.splice(new_groupby_length);
-			this.trigger('groupby_changed');
+			if (!silent) { this.trigger('groupby_changed'); }
         }
-        this.trigger('redraw_required');
+        if (!silent) { this.trigger('redraw_required'); }
 	},
+
+    fold_with_depth: function (root, depth) {
+        var self = this;
+        _.each(this._get_headers_with_depth(root.headers, depth), function (header) {
+            self.fold(header, true);
+        });
+    },
 
 	expand: function (header_id, groupby) {
         var self = this,
@@ -568,6 +592,18 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 	},
 
 });
+
+// Utility function: returns true if the beginning of array2 is array1 and
+// if array1 is not array2
+function is_strict_beginning_of (array1, array2) {
+    if (array1.length >= array2.length) { return false; }
+    var result = true;
+    for (var i = 0; i < array1.length; i++) {
+        if (!_.isEqual(array1[i], array2[i])) { return false;} 
+    }
+    return result;
+}
+
 })();
 
 
