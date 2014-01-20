@@ -20,6 +20,9 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+#--------------------------------------------------------------------
+# QWeb template engine
+#--------------------------------------------------------------------
 
 class QWebException(Exception):
     def __init__(self, message, template=None, node=None, attribute=None):
@@ -27,7 +30,6 @@ class QWebException(Exception):
         self.template = template
         self.node = node
         self.attribute = attribute
-
 
 class QWebContext(dict):
     def __init__(self, cr, uid, data, loader=None, templates=None, context=None):
@@ -59,29 +61,30 @@ class QWebContext(dict):
 class QWeb(orm.AbstractModel):
     """QWeb Xml templating engine
 
-    The templating engine use a very simple syntax, "magic" xml attributes, to
-    produce any kind of texutal output (even non-xml).
+    The templating engine use a very simple syntax based "magic" xml
+    attributes, to produce textual output (even non-xml).
 
-    QWebXml:
-        the template engine core implements the basic magic attributes:
+    The core magic attributes are:
 
-        t-att t-raw t-esc t-if t-foreach t-set t-call t-trim
+    flow attributes:
+        t-if t-foreach t-call
 
+    output attributes:
+        t-att t-raw t-esc t-trim
 
-    - loader: function that return a template
+    assignation attribute:
+        t-set
 
-    QWeb rendering can be used for many tasks. As a result, customizations
-    made by one task context (to either the main qweb rendering or to specific
-    fields rendering) could break other tasks.
-
-    To avoid that, ``ir.qweb`` was consciously made inheritable and the "root"
-    of an object hierarchy. If you need extensions or alterations which could
-    be incompatible with other subsystems, you should create a local object
-    inheriting from ``ir.qweb`` and customize that.
+    QWeb can be extended like any OpenERP model and new attributes can be
+    added.
 
     If you need to customize t-fields rendering, subclass the ir.qweb.field
     model (and its sub-models) then override :meth:`~.get_converter_for` to
     fetch the right field converters for your qweb model.
+
+    Beware that if you need extensions or alterations which could be
+    incompatible with other subsystems, you should create a local object
+    inheriting from ``ir.qweb`` and customize that.
     """
 
     _name = 'ir.qweb'
@@ -121,7 +124,7 @@ class QWeb(orm.AbstractModel):
     def register_tag(self, tag, func):
         self._render_tag[tag] = func
 
-    def load_document(self, x, into, context):
+    def load_document(self, x, qcontext):
         """
         Loads an XML document and installs any contained template in the engine
         """
@@ -134,18 +137,20 @@ class QWeb(orm.AbstractModel):
 
         for n in dom.documentElement.childNodes:
             if n.nodeType == self.node.ELEMENT_NODE and n.getAttribute('t-name'):
-                self.add_template(into, str(n.getAttribute("t-name")), n, context)
+                name = str(n.getAttribute("t-name"))
+                 
+                qcontext.templates[name] = n
 
-    def add_template(self, into, name, node, context):
-        into[name] = node
+    def get_template(self, name, qcontext):
+        if qcontext.loader and name not in qcontext.templates:
+            xml_doc = qcontext.loader(name)
+            self.load_document(xml_doc, qcontext=qcontext)
 
-    def get_template(self, name, context):
-        if context.loader and name not in context.templates:
-            xml_doc = context.loader(name)
-            self.load_document(xml_doc, into=context.templates, context=context)
+        if name in qcontext.templates:
+            return qcontext.templates[name]
 
-        if name in context.templates:
-            return context.templates[name]
+        import pdb
+        pdb.set_trace()
 
         e = KeyError('qweb: template "%s" not found' % name)
         setattr(e, 'qweb_template', name)
@@ -191,32 +196,19 @@ class QWeb(orm.AbstractModel):
         else:
             return 0
 
-    @openerp.tools.ormcache()
-    def get_template_xmlid(self, cr, uid, id):
-        imd = self.pool['ir.model.data']
-        domain = [('model', '=', 'ir.ui.view'), ('res_id', '=', id)]
-        xmlid = imd.search_read(cr, uid, domain, ['module', 'name'])[0]
-        return '%s.%s' % (xmlid['module'], xmlid['name'])
-
     def render(self, cr, uid, id_or_xml_id, v=None, loader=None, context=None):
-        if isinstance(id_or_xml_id, list):
-            id_or_xml_id = id_or_xml_id[0]
-        tname = id_or_xml_id
-        if isinstance(id_or_xml_id, (int, long)):
-            tname = self.get_template_xmlid(cr, uid, tname)
-
         if v is None:
             v = {}
         if not isinstance(v, QWebContext):
             v = QWebContext(cr, uid, v, loader=loader, context=context)
-        v['__template__'] = tname
+        v['__template__'] = id_or_xml_id
         stack = v.get('__stack__', [])
         if stack:
             v['__caller__'] = stack[-1]
-        stack.append(tname)
+        stack.append(id_or_xml_id)
         v['__stack__'] = stack
         v['xmlid'] = str(stack[0]) # Temporary fix
-        return self.render_node(self.get_template(tname, v), v)
+        return self.render_node(self.get_template(id_or_xml_id, v), v)
 
     def render_node(self, e, v):
         r = ""
@@ -314,10 +306,13 @@ class QWeb(orm.AbstractModel):
 
     def render_att_href(self, e, an, av, v):
         return self.url_for(e, an, av, v)
+
     def render_att_src(self, e, an, av, v):
         return self.url_for(e, an, av, v)
+
     def render_att_action(self, e, an, av, v):
         return self.url_for(e, an, av, v)
+
     def url_for(self, e, an, av, v):
         if 'url_for' not in v:
             raise KeyError("qweb: no 'url_for' found in context")
@@ -384,7 +379,7 @@ class QWeb(orm.AbstractModel):
             return ""
 
     def render_tag_call(self, e, t_att, g_att, v):
-        d = v if 'import' in t_att else v.copy()
+        d = v.copy()
         d[0] = self.render_element(e, t_att, g_att, d)
 
         return self.render(None, None, self.eval_format(t_att["call"], d), d)
@@ -423,6 +418,9 @@ class QWeb(orm.AbstractModel):
         return self.pool.get('ir.qweb.field.' + field_type,
                              self.pool['ir.qweb.field'])
 
+#--------------------------------------------------------------------
+# QWeb Fields converters
+#--------------------------------------------------------------------
 
 class FieldConverter(osv.AbstractModel):
     """ Used to convert a t-field specification into an output HTML field.

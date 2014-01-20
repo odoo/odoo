@@ -600,6 +600,7 @@ class users_implied(osv.osv):
         if groups:
             # delegate addition of groups to add implied groups
             self.write(cr, uid, [user_id], {'groups_id': groups}, context)
+            self.pool['ir.ui.view'].clear_cache()
         return user_id
 
     def write(self, cr, uid, ids, values, context=None):
@@ -612,6 +613,7 @@ class users_implied(osv.osv):
                 gs = set(concat([g.trans_implied_ids for g in user.groups_id]))
                 vals = {'groups_id': [(4, g.id) for g in gs]}
                 super(users_implied, self).write(cr, uid, [user.id], vals, context)
+            self.pool['ir.ui.view'].clear_cache()
         return res
 
 #----------------------------------------------------------
