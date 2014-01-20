@@ -113,7 +113,7 @@
                 <form string="Survey" version="7.0">
                     <header groups="base.group_survey_manager">
                         <button name="action_send_survey" string="Invite people" states="open" type="object" class="oe_highlight" />
-                        <field name="state" widget="statusbar" statusbar_visible="draft,open,close,cancelled" clickable="True"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,open,close,cancel" clickable="True"/>
                     </header>
                     <sheet class="oe_survey">
                         <div class="oe_button_box oe_right" groups="base.group_survey_manager">
@@ -261,12 +261,22 @@
                 </kanban>
             </field>
         </record>
+        <record model="ir.ui.view" id="survey_calendar">
+            <field name="name">survey.calendar</field>
+            <field name="model">survey.survey</field>
+            <field name="arch" type="xml">
+                <calendar string="Surveys Calendar" date_start="date_open" date_stop="date_close" color="state">
+                    <field name="title" />
+                </calendar>
+            </field>
+        </record>
+
 
         <record model="ir.actions.act_window" id="action_survey_form">
             <field name="name">Surveys</field>
             <field name="res_model">survey.survey</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,tree,form,calendar</field>
             <field name="view_id" ref="view_survey_kanban"></field>
             <field name="search_view_id" ref="survey_search"/>
             <field name="help" type="html">
