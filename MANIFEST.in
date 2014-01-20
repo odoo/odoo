@@ -2,12 +2,11 @@ graft debian
 graft doc
 graft install
 graft openerp
-graft tests
 graft win32
 include README
 include LICENSE
 include MANIFEST.in
-include openerp-wsgi.py
-include openerp-server
+include openerp-*
+include oe*
 include setup*
 global-exclude *pyc *~    # Exclude possible garbage from previous graft.

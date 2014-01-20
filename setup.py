@@ -125,17 +125,20 @@ setuptools.setup(
           'lxml', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
           'mako',
           'mock',
-          'PIL', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
+          'pillow', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
           'psutil', # windows binary code.google.com/p/psutil/downloads/list
           'psycopg2 >= 2.2',
           'pydot',
           'pyparsing < 2',
+          'pyserial',
           'python-dateutil < 2',
           'python-ldap', # optional
           'python-openid',
           'pytz',
+          'pyusb >= 1.0.0b1',
           'pywebdav',
           'pyyaml',
+          'qrcode',
           'reportlab', # windows binary pypi.python.org/pypi/reportlab
           'simplejson',
           'unittest2',

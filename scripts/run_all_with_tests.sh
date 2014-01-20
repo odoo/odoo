@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 DATABASE=trunk
 dropdb ${DATABASE}
 REPOSITORIES=../../addons/trunk

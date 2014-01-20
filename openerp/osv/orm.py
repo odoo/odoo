@@ -77,6 +77,8 @@ from openerp.tools import SKIPPED_ELEMENT_TYPES
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
+AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
+
 def transfer_field_to_modifiers(field, modifiers):
     default_values = {}
     state_exceptions = {}
@@ -1009,7 +1011,7 @@ class BaseModel(object):
                 continue
             sm = f.store
             if sm is True:
-                sm = {self._name: (lambda self, cr, uid, ids, c={}: ids, None, 10, None)}
+                sm = {self._name: (lambda self, cr, uid, ids, c={}: ids, None, f.priority, None)}
             for object, aa in sm.items():
                 if len(aa) == 4:
                     (fnct, fields2, order, length) = aa
@@ -1785,7 +1787,7 @@ class BaseModel(object):
                     children = False
                     views = {}
                     for f in node:
-                        if f.tag in ('form', 'tree', 'graph', 'kanban'):
+                        if f.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
                             node.remove(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = self._name
@@ -1829,7 +1831,7 @@ class BaseModel(object):
             in_tree_view = node.tag == 'tree'
 
         elif node.tag == 'calendar':
-            for additional_field in ('date_start', 'date_delay', 'date_stop', 'color'):
+            for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day','attendee'):
                 if node.get(additional_field):
                     fields[node.get(additional_field)] = {}
 
@@ -2023,7 +2025,7 @@ class BaseModel(object):
             return False
 
         view = etree.Element('calendar', string=self._description)
-        etree.SubElement(view, 'field', self._rec_name_fallback(cr, user, context))
+        etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
 
         if self._date_name not in self._columns:
             date_found = False
@@ -2838,8 +2840,8 @@ class BaseModel(object):
         cr.execute('select id from '+self._table)
         ids_lst = map(lambda x: x[0], cr.fetchall())
         while ids_lst:
-            iids = ids_lst[:40]
-            ids_lst = ids_lst[40:]
+            iids = ids_lst[:AUTOINIT_RECALCULATE_STORED_FIELDS]
+            ids_lst = ids_lst[AUTOINIT_RECALCULATE_STORED_FIELDS:]
             res = f.get(cr, self, iids, k, SUPERUSER_ID, {})
             for key, val in res.items():
                 if f._multi:
@@ -4250,7 +4252,8 @@ class BaseModel(object):
                         if not src_trans:
                             src_trans = vals[f]
                             # Inserting value to DB
-                            self.write(cr, user, ids, {f: vals[f]})
+                            context_wo_lang = dict(context, lang=None)
+                            self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
                         self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
 
 
@@ -4412,7 +4415,15 @@ class BaseModel(object):
                 tocreate[v] = {}
             else:
                 tocreate[v] = {'id': vals[self._inherits[v]]}
-        (upd0, upd1, upd2) = ('', '', [])
+
+        columns = [
+            # columns will contain a list of field defined as a tuple
+            # tuple(field_name, format_string, field_value)
+            # the tuple will be used by the string formatting for the INSERT
+            # statement.
+            ('id', "nextval('%s')" % self._sequence),
+        ]
+
         upd_todo = []
         unknown_fields = []
         for v in vals.keys():
@@ -4429,15 +4440,12 @@ class BaseModel(object):
                 'No such field(s) in model %s: %s.',
                 self._name, ', '.join(unknown_fields))
 
-        # Try-except added to filter the creation of those records whose filds are readonly.
-        # Example : any dashboard which has all the fields readonly.(due to Views(database views))
-        try:
-            cr.execute("SELECT nextval('"+self._sequence+"')")
-        except:
-            raise except_orm(_('UserError'),
-                _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.'))
+        if not self._sequence:
+            raise except_orm(
+                _('UserError'),
+                _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.')
+            )
 
-        id_new = cr.fetchone()[0]
         for table in tocreate:
             if self._inherits[table] in vals:
                 del vals[self._inherits[table]]
@@ -4454,9 +4462,7 @@ class BaseModel(object):
             else:
                 self.pool[table].write(cr, user, [record_id], tocreate[table], context=parent_context)
 
-            upd0 += ',' + self._inherits[table]
-            upd1 += ',%s'
-            upd2.append(record_id)
+            columns.append((self._inherits[table], '%s', record_id))
 
         #Start : Set bool fields to be False if they are not touched(to make search more powerful)
         bool_fields = [x for x in self._columns.keys() if self._columns[x]._type=='boolean']
@@ -4493,13 +4499,13 @@ class BaseModel(object):
                 if not edit:
                     vals.pop(field)
         for field in vals:
-            if self._columns[field]._classic_write:
-                upd0 = upd0 + ',"' + field + '"'
-                upd1 = upd1 + ',' + self._columns[field]._symbol_set[0]
-                upd2.append(self._columns[field]._symbol_set[1](vals[field]))
+            current_field = self._columns[field]
+            if current_field._classic_write:
+                columns.append((field, '%s', current_field._symbol_set[1](vals[field])))
+
                 #for the function fields that receive a value, we set them directly in the database
                 #(they may be required), but we also need to trigger the _fct_inv()
-                if (hasattr(self._columns[field], '_fnct_inv')) and not isinstance(self._columns[field], fields.related):
+                if (hasattr(current_field, '_fnct_inv')) and not isinstance(current_field, fields.related):
                     #TODO: this way to special case the related fields is really creepy but it shouldn't be changed at
                     #one week of the release candidate. It seems the only good way to handle correctly this is to add an
                     #attribute to make a field `really readonly´ and thus totally ignored by the create()... otherwise
@@ -4511,17 +4517,33 @@ class BaseModel(object):
             else:
                 #TODO: this `if´ statement should be removed because there is no good reason to special case the fields
                 #related. See the above TODO comment for further explanations.
-                if not isinstance(self._columns[field], fields.related):
+                if not isinstance(current_field, fields.related):
                     upd_todo.append(field)
             if field in self._columns \
-                    and hasattr(self._columns[field], 'selection') \
+                    and hasattr(current_field, 'selection') \
                     and vals[field]:
                 self._check_selection_field_value(cr, user, field, vals[field], context=context)
         if self._log_access:
-            upd0 += ',create_uid,create_date,write_uid,write_date'
-            upd1 += ",%s,(now() at time zone 'UTC'),%s,(now() at time zone 'UTC')"
-            upd2.extend((user, user))
-        cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
+            columns.append(('create_uid', '%s', user))
+            columns.append(('write_uid', '%s', user))
+            columns.append(('create_date', "(now() at time zone 'UTC')"))
+            columns.append(('write_date', "(now() at time zone 'UTC')"))
+
+        # the list of tuples used in this formatting corresponds to
+        # tuple(field_name, format, value)
+        # In some case, for example (id, create_date, write_date) we does not
+        # need to read the third value of the tuple, because the real value is
+        # encoded in the second value (the format).
+        cr.execute(
+            """INSERT INTO "%s" (%s) VALUES(%s) RETURNING id""" % (
+                self._table,
+                ', '.join('"%s"' % f[0] for f in columns),
+                ', '.join(f[1] for f in columns)
+            ),
+            tuple([f[2] for f in columns if len(f) > 2])
+        )
+
+        id_new, = cr.fetchone()
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
         if self._parent_store and not context.get('defer_parent_store_computation'):
@@ -4560,7 +4582,9 @@ class BaseModel(object):
         self._validate(cr, user, [id_new], context)
 
         if not context.get('no_store_function', False):
-            result += self._store_get_values(cr, user, [id_new], vals.keys(), context)
+            result += self._store_get_values(cr, user, [id_new],
+                list(set(vals.keys() + self._inherits.values())),
+                context)
             result.sort()
             done = []
             for order, model_name, ids, fields2 in result:
@@ -4785,6 +4809,9 @@ class BaseModel(object):
 
            :param query: the current query object
         """
+        if uid == SUPERUSER_ID:
+            return
+
         def apply_rule(added_clause, added_params, added_tables, parent_model=None, child_object=None):
             """ :param string parent_model: string of the parent model
                 :param model child_object: model object, base of the rule application
@@ -5425,6 +5452,11 @@ class BaseModel(object):
         record_ids = self.search(cr, uid, domain or [], offset, limit or False, order or False, context or {})
         if not record_ids:
             return []
+
+        if fields and fields == ['id']:
+            # shortcut read if we only want the ids
+            return [{'id': id} for id in record_ids]
+
         result = self.read(cr, uid, record_ids, fields or [], context or {})
         # reorder read
         if len(result) >= 1:
