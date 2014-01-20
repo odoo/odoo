@@ -80,6 +80,8 @@ from openerp.tools import SKIPPED_ELEMENT_TYPES
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
+AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
+
 def transfer_field_to_modifiers(field, modifiers):
     default_values = {}
     state_exceptions = {}
@@ -839,7 +841,8 @@ class BaseModel(object):
             # process store parameter
             store = column.store
             if store is True:
-                store = {cls._name: (lambda self, cr, uid, ids, c={}: ids, None, 10, None)}
+                get_ids = lambda self, cr, uid, ids, c={}: ids
+                store = {cls._name: (get_ids, None, column.priority, None)}
             for model, spec in store.iteritems():
                 if len(spec) == 4:
                     (fnct, fields2, order, length) = spec
@@ -1534,7 +1537,7 @@ class BaseModel(object):
                     children = False
                     views = {}
                     for f in node:
-                        if f.tag in ('form', 'tree', 'graph', 'kanban'):
+                        if f.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
                             node.remove(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = self._name
@@ -1578,7 +1581,7 @@ class BaseModel(object):
             in_tree_view = node.tag == 'tree'
 
         elif node.tag == 'calendar':
-            for additional_field in ('date_start', 'date_delay', 'date_stop', 'color'):
+            for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day','attendee'):
                 if node.get(additional_field):
                     fields[node.get(additional_field)] = {}
 
@@ -1772,7 +1775,7 @@ class BaseModel(object):
             return False
 
         view = etree.Element('calendar', string=self._description)
-        etree.SubElement(view, 'field', self._rec_name_fallback(cr, user, context))
+        etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
 
         if self._date_name not in self._columns:
             date_found = False
@@ -2626,8 +2629,8 @@ class BaseModel(object):
         cr.execute('select id from '+self._table)
         ids_lst = map(lambda x: x[0], cr.fetchall())
         while ids_lst:
-            iids = ids_lst[:40]
-            ids_lst = ids_lst[40:]
+            iids = ids_lst[:AUTOINIT_RECALCULATE_STORED_FIELDS]
+            ids_lst = ids_lst[AUTOINIT_RECALCULATE_STORED_FIELDS:]
             res = f.get(cr, self, iids, k, SUPERUSER_ID, {})
             for key, val in res.items():
                 if f._multi:
@@ -4118,7 +4121,8 @@ class BaseModel(object):
                         if not src_trans:
                             src_trans = vals[f]
                             # Inserting value to DB
-                            self.write(cr, user, ids, {f: vals[f]})
+                            context_wo_lang = dict(context, lang=None)
+                            self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
                         self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
 
         # call the 'set' method of fields which are not classic_write
@@ -4469,7 +4473,9 @@ class BaseModel(object):
         recs._validate_fields(vals)
 
         if not context.get('no_store_function', False):
-            result += self._store_get_values(cr, user, [id_new], vals.keys(), context)
+            result += self._store_get_values(cr, user, [id_new],
+                list(set(vals.keys() + self._inherits.values())),
+                context)
             result.sort()
             done = []
             for order, model_name, ids, fields2 in result:
@@ -4684,6 +4690,9 @@ class BaseModel(object):
 
            :param query: the current query object
         """
+        if uid == SUPERUSER_ID:
+            return
+
         def apply_rule(added_clause, added_params, added_tables, parent_model=None, child_object=None):
             """ :param string parent_model: string of the parent model
                 :param model child_object: model object, base of the rule application
@@ -5326,6 +5335,11 @@ class BaseModel(object):
         record_ids = self.search(cr, uid, domain or [], offset, limit or False, order or False, context or {})
         if not record_ids:
             return []
+
+        if fields and fields == ['id']:
+            # shortcut read if we only want the ids
+            return [{'id': id} for id in record_ids]
+
         result = self.read(cr, uid, record_ids, fields or [], context or {})
         # reorder read
         if len(result) >= 1:

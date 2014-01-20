@@ -242,7 +242,8 @@ class reference(_column):
             model_name, res_id = value.split(',')
             if model_name in obj.pool and res_id:
                 model = obj.pool[model_name]
-                return model.name_get(cr, uid, [int(res_id)], context=context)[0][1]
+                names = model.name_get(cr, uid, [int(res_id)], context=context)
+                return names[0][1] if names else False
         return tools.ustr(value)
 
 # takes a string (encoded in utf8) and returns a string (encoded in utf8)

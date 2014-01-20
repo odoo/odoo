@@ -59,7 +59,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     def load_test(module_name, idref, mode):
         cr.commit()
         try:
-            threading.currentThread().testing = True
             _load_data(cr, module_name, idref, mode, 'test')
             return True
         except Exception:
@@ -67,7 +66,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 'module %s: an exception occurred in a test', module_name)
             return False
         finally:
-            threading.currentThread().testing = False
             if tools.config.options['test_commit']:
                 cr.commit()
             else:
@@ -104,12 +102,18 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         init mode.
 
         """
-        for filename in _get_files_of_kind(kind):
-            _logger.info("module %s: loading %s", module_name, filename)
-            noupdate = False
-            if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
-                noupdate = True
-            tools.convert_file(cr, module_name, filename, idref, mode, noupdate, kind, report)
+        try:
+            if kind in ('demo', 'test'):
+                threading.currentThread().testing = True
+            for filename in _get_files_of_kind(kind):
+                _logger.info("module %s: loading %s", module_name, filename)
+                noupdate = False
+                if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
+                    noupdate = True
+                tools.convert_file(cr, module_name, filename, idref, mode, noupdate, kind, report)
+        finally:
+            if kind in ('demo', 'test'):
+                threading.currentThread().testing = False
 
     if status is None:
         status = {}
