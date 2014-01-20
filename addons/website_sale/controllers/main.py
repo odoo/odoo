@@ -308,74 +308,6 @@ class Ecommerce(http.Controller):
 
         return request.redirect("/shop/product/%s/?enable_editor=1" % product.product_tmpl_id.id)
 
-    def add_product_to_cart(self, product_id=0, order_line_id=0, number=1, set_number=-1):
-        order_line_obj = request.registry.get('sale.order.line')
-        order_obj = request.registry.get('sale.order')
-
-        order = self.get_order()
-        if not order:
-            order = request.registry['website'].ecommerce_get_new_order(request.cr, request.uid, context=request.context)
-
-        request.context = dict(request.context, pricelist=self.get_pricelist())
-
-        # set order_line_id and product_id
-        if order_line_id:
-            order_line = None
-            for line in order.order_line:
-                if line.id == order_line_id:
-                    order_line = line
-                    break
-            if order_line:
-                product_id = order_line.product_id.id
-            else:
-                order_line_id = None
-        else:
-            order_line_ids = order_line_obj.search(
-                request.cr, SUPERUSER_ID,
-                [('order_id', '=', order.id), ('product_id', '=', product_id)], context=request.context)
-            if order_line_ids:
-                order_line_id = order_line_ids[0]
-
-        if not order_line_id and not product_id:
-            return 0
-
-        # values initialisation
-        quantity = 0
-        values = {}
-        if order_line_id:
-            order_line_val = order_line_obj.read(request.cr, SUPERUSER_ID, [order_line_id], [], context=request.context)[0]
-            if not product_id:
-                product_id = order_line_val['product_id'][0]
-            if set_number >= 0:
-                quantity = set_number
-            else:
-                quantity = order_line_val['product_uom_qty'] + number
-            if quantity < 0:
-                quantity = 0
-            order_line_ids = [order_line_id]
-        else:
-            fields = [k for k, v in order_line_obj._columns.items()]
-            values = order_line_obj.default_get(request.cr, SUPERUSER_ID, fields, context=request.context)
-            quantity = 1
-            order_line_ids = []
-
-        # change and record value
-        vals = order_line_obj._recalculate_product_values(request.cr, request.uid, order_line_ids, product_id, context=request.context)
-        values.update(vals)
-
-        values['product_uom_qty'] = quantity
-        values['product_id'] = product_id
-        values['order_id'] = order.id
-
-        if order_line_id:
-            order_line_obj.write(request.cr, SUPERUSER_ID, [order_line_id], values, context=request.context)
-            if not quantity:
-                order_line_obj.unlink(request.cr, SUPERUSER_ID, [order_line_id], context=request.context)
-        else:
-            order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, values, context=request.context)
-            order_obj.write(request.cr, SUPERUSER_ID, [order.id], {'order_line': [(4, order_line_id)]}, context=request.context)
-        return quantity
-
     @website.route(['/shop/mycart/'], type='http', auth="public", multilang=True)
     def mycart(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -413,22 +345,23 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/add_cart/'], type='http', auth="public", multilang=True, methods=['POST'])
     def add_cart(self, product_id, remove=None, **kw):
-        self.add_product_to_cart(product_id=int(product_id))
-        return request.redirect("/shop/mycart/")
-
-    @website.route(['/shop/add_cart/<model("product.product"):product>/'], type='http', auth="public", multilang=True)
-    def add_cart_product(self, product=None, product_id=None, remove=None, **kw):
-        self.add_product_to_cart(product_id=product.id)
+        request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
+            product_id=int(product_id),
+            context=request.context)
         return request.redirect("/shop/mycart/")
 
     @website.route(['/shop/change_cart/<int:order_line_id>/'], type='http', auth="public", multilang=True)
     def add_cart_order_line(self, order_line_id=None, remove=None, **kw):
-        self.add_product_to_cart(order_line_id=order_line_id, number=(remove and -1 or 1))
+        request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
+            order_line_id=order_line_id, number=(remove and -1 or 1),
+            context=request.context)
         return request.redirect("/shop/mycart/")
 
     @website.route(['/shop/add_cart_json/'], type='json', auth="public")
     def add_cart_json(self, product_id=None, order_line_id=None, remove=None):
-        quantity = self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
+        quantity = request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
+            product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1),
+            context=request.context)
         order = self.get_order()
         return [quantity,
                 order.get_number_of_products(),
@@ -437,7 +370,9 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/set_cart_json/'], type='json', auth="public")
     def set_cart_json(self, path=None, product_id=None, order_line_id=None, set_number=0, json=None):
-        return self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, set_number=set_number)
+        return request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
+            product_id=product_id, order_line_id=order_line_id, set_number=set_number,
+            context=request.context)
 
     @website.route(['/shop/checkout/'], type='http', auth="public", multilang=True)
     def checkout(self, **post):
@@ -553,8 +488,8 @@ class Ecommerce(http.Controller):
         billing_info['parent_id'] = company_id
 
         if request.uid != request.registry['website'].get_public_user(cr, uid, context):
-            partner_id = orm_user.browse(cr, uid, uid, context=context).partner_id.id
-            orm_parter.write(cr, uid, [partner_id], billing_info, context=context)
+            partner_id = orm_user.browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
+            orm_parter.write(cr, SUPERUSER_ID, [partner_id], billing_info, context=context)
         else:
             partner_id = orm_parter.create(cr, SUPERUSER_ID, billing_info, context=context)
 

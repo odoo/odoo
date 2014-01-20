@@ -78,95 +78,6 @@
   margin-bottom: 0px !important;
 }
 
-.pt128 {
-  padding-top: 128px !important;
-}
-
-.pt92 {
-  padding-top: 92px !important;
-}
-
-.pt64 {
-  padding-top: 64px !important;
-}
-
-.pt48 {
-  padding-top: 48px !important;
-}
-
-.pt32 {
-  padding-top: 32px !important;
-}
-
-.pt16 {
-  padding-top: 16px !important;
-}
-
-.pt8 {
-  padding-top: 8px !important;
-}
-
-.pt4 {
-  padding-top: 4px !important;
-}
-
-.pt0 {
-  padding-top: 0px !important;
-}
-
-.pb128 {
-  padding-bottom: 128px !important;
-}
-
-.pb92 {
-  padding-bottom: 92px !important;
-}
-
-.pb64 {
-  padding-bottom: 64px !important;
-}
-
-.pb48 {
-  padding-bottom: 48px !important;
-}
-
-.pb32 {
-  padding-bottom: 32px !important;
-}
-
-.pb16 {
-  padding-bottom: 16px !important;
-}
-
-.pb8 {
-  padding-bottom: 8px !important;
-}
-
-.pb4 {
-  padding-bottom: 4px !important;
-}
-
-.pb0 {
-  padding-bottom: 0px !important;
-}
-
-/* Grid of unequally tall elements */
-.grid > [class*="col-md"] {
-  display: inline-block;
-  float: none;
-  vertical-align: top;
-  box-sizing: border-box;
-}
-.grid > [class*="col-md"].grid-align-top > [class*="col-md"] {
-  vertical-align: top;
-}
-.grid > [class*="col-md"].grid-align-middle > [class*="col-md"] {
-  vertical-align: middle;
-}
-.grid > [class*="col-md"].grid-align-bottom > [class*="col-md"] {
-  vertical-align: bottom;
-}
-
 /* Extra Styles */
 img.shadow {
   -webkit-border-radius: 3px;
@@ -184,9 +95,27 @@ h1.text-muted, h2.text-muted, h3.text-muted {
   margin-top: 10px;
 }
 
+header a.navbar-brand.logo {
+  padding: 0 15px;
+}
+header a.navbar-brand img {
+  max-height: 50px;
+}
+
+/* ----- BOOTSTRAP FIX ----- */
+.container .container {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 /* ----- BOOTSTRAP HACK FOR HEADER NAV BAR ----- */
-.navbar.navbar-default.navbar-static-top {
+.navbar.navbar-static-top {
   margin-bottom: 0;
+}
+.navbar.navbar-static-top ul.nav > li.divider {
+  margin-top: 15px;
+  padding-top: 20px;
+  border-right: 1px solid grey;
 }
 
 /* ----- BOOTSTRAP HACK FOR STICKY FOOTER ----- */
@@ -209,7 +138,7 @@ header, main, footer {
 footer {
   height: 100%;
   background: #eff8f8;
-  background: rgba(100, 200, 200, 0.1);
+  background: rgba(200, 200, 200, 0.1);
 }
 
 #footer_container {
@@ -225,6 +154,7 @@ footer {
 
 .row {
   min-height: 32px;
+  width: 100%;
 }
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
@@ -233,7 +163,7 @@ footer {
 }
 
 .oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
-  background-image: url("/website/static/src/img/edit_here.png");
+  background-image: url("/website/static/src/img/under_construction.png");
   background-repeat: no-repeat;
   background-position: center;
   height: 220px !important;
@@ -244,7 +174,7 @@ footer {
 }
 
 .oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
-  content: "Press The Top-Left Edit Button";
+  content: "Page under construction";
   text-align: center;
   display: block;
   padding-top: 160px;
@@ -255,6 +185,10 @@ footer {
 
 .oe_structure.oe_editable.oe_empty:empty:before, .oe_editable[data-oe-type=html]:empty:before, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
   content: "Drag Building Blocks Here";
+}
+
+.css_editable_display {
+  display: none;
 }
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
@@ -334,10 +268,15 @@ ul.nav-stacked > li > a {
 }
 
 /* ---- SNIPPETS --- */
-[data-snippet-id],.colmd,.hr,.blockquote {
-    overflow: hidden;
+[data-snippet-id], .colmd, .hr, .blockquote {
+  overflow: hidden;
 }
 
+@media (max-width: 400px) {
+  [data-snippet-id] {
+    height: auto !important;
+  }
+}
 .carousel-inner {
   height: 100%;
 }
@@ -345,6 +284,7 @@ ul.nav-stacked > li > a {
   height: 100%;
   background-size: 100%;
 }
+
 .carousel .carousel-caption {
   left: auto;
   right: auto;
@@ -398,6 +338,10 @@ ul.nav-stacked > li > a {
   right: 10px;
 }
 
+.quotecarousel {
+  padding-bottom: 16px;
+}
+
 /* Parallax Theme */
 div.carousel[data-snippet-id="slider"] .carousel-indicators li {
   border: 1px solid grey;
@@ -431,7 +375,7 @@ div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
 /* Background */
 .oe_dark {
   background: #eff8f8;
-  background: rgba(100, 200, 200, 0.14);
+  background: rgba(200, 200, 200, 0.14);
   -webkit-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
   -moz-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
   box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
@@ -439,16 +383,55 @@ div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
 
 .oe_black {
   background-color: rgba(0, 0, 0, 0.9);
+  color: white;
 }
 
 .oe_green {
-  background-color: rgba(0, 128, 0, 0.8);
+  background-color: #51d466;
+  color: white;
+}
+.oe_green .text-muted {
+  color: #dddddd;
+}
+
+.oe_blue_light {
+  background-color: #4791d2;
+  color: white;
+}
+.oe_blue_light .text-muted {
+  color: #dddddd;
+}
+
+.oe_blue {
+  background-color: #34495e;
+  color: white;
+}
+
+.oe_orange {
+  background-color: #e67e22;
+  color: white;
+}
+.oe_orange .text-muted {
+  color: #dddddd;
+}
+
+.oe_purple {
+  background-color: #b163a3;
+  color: white;
+}
+.oe_purple .text-muted {
+  color: #dddddd;
 }
 
 .oe_red {
-  background-color: rgba(255, 0, 0, 0.8);
+  background-color: #f75353;
+  color: white;
+}
+.oe_red .text-muted {
+  color: #dddddd;
 }
 
+/* Misc */
 .oe_img_bg {
   background-size: 100%;
 }
@@ -507,46 +490,4 @@ span[data-oe-type="monetary"] {
   -ms-column-count: 3;
   -o-column-count: 3;
   column-count: 3;
-}
-
-.bs-callout {
-  margin: 20px 0;
-  padding: 20px;
-  border-left: 3px solid #eeeeee;
-}
-
-.bs-callout h4 {
-  margin-top: 0;
-  margin-bottom: 5px;
-}
-
-.bs-callout p:last-child {
-  margin-bottom: 0;
-}
-
-.bs-callout-danger {
-  background-color: #fdf7f7;
-  border-color: #eed3d7;
-}
-
-.bs-callout-danger h4 {
-  color: #b94a48;
-}
-
-.bs-callout-warning {
-  background-color: #faf8f0;
-  border-color: #faebcc;
-}
-
-.bs-callout-warning h4 {
-  color: #8a6d3b;
-}
-
-.bs-callout-info {
-  background-color: #f4f8fa;
-  border-color: #bce8f1;
-}
-
-.bs-callout-info h4 {
-  color: #34789a;
 }

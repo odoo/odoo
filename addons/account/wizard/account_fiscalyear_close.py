@@ -224,14 +224,6 @@ class account_fiscalyear_close(osv.osv_memory):
         query_2nd_part = ""
         query_2nd_part_args = []
         for account in obj_acc_account.browse(cr, uid, account_ids, context={'fiscalyear': fy_id}):
-            balance_in_currency = 0.0
-            if account.currency_id:
-                cr.execute('SELECT sum(COALESCE(amount_currency,0.0)) as balance_in_currency FROM account_move_line ' \
-                        'WHERE account_id = %s ' \
-                            'AND ' + query_line + ' ' \
-                            'AND currency_id = %s', (account.id, account.currency_id.id))
-                balance_in_currency = cr.dictfetchone()['balance_in_currency']
-
             company_currency_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id
             if not currency_obj.is_zero(cr, uid, company_currency_id, abs(account.balance)):
                 if query_2nd_part:
@@ -246,7 +238,7 @@ class account_fiscalyear_close(osv.osv_memory):
                        period.id,
                        account.id,
                        account.currency_id and account.currency_id.id or None,
-                       balance_in_currency,
+                       account.foreign_balance if account.currency_id else 0.0,
                        account.company_id.id,
                        'draft')
         if query_2nd_part:

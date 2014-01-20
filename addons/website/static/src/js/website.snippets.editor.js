@@ -170,6 +170,14 @@
                     self.$snippets = $html.find(".tab-content > div > div").addClass("oe_snippet");
                     self.$el.append($html);
 
+
+                    var snippets = 0;
+                    self.$snippets.each(function () {
+                        if (self.snippet_have_dropzone($(this)))
+                            snippets++;
+                    });
+                    if (!snippets) self.$button.css("display", "none");
+
                     self.make_snippet_draggable(self.$snippets);
                 });
         },
@@ -191,6 +199,12 @@
         },
         hide: function () {
             this.$el.addClass("hidden");
+        },
+
+        snippet_have_dropzone: function ($snippet) {
+            return (($snippet.data('selector-siblings') && this.dom_filter($snippet.data('selector-siblings')).size() > 0) ||
+                    ($snippet.data('selector-children') && this.dom_filter($snippet.data('selector-children')).size() > 0) ||
+                    ($snippet.data('selector-vertical-children') && this.dom_filter($snippet.data('selector-vertical-children')).size() > 0));
         },
 
         bind_snippet_click_editor: function () {

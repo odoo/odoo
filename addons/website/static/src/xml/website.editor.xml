@@ -203,4 +203,52 @@
         </button>
     </t>
 
+    <t t-name="website.editor.dialog.font-icons">
+        <t t-call="website.editor.dialog">
+            <t t-set="title">Icon:</t>
+            <form>
+                <div class="form-group">
+                    Preview: <span id="fa-preview"/>
+                </div>
+                <div class="form-group">
+                    <label for="fa-icon">icon</label>
+                    <input type="hidden" id="fa-icon" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label for="fa-size">size</label>
+                    <select id="fa-size" class="form-control">
+                        <option value="">Default</option>
+                        <option value="fa-lg">Large</option>
+                        <option value="fa-2x">x2</option>
+                        <option value="fa-3x">x3</option>
+                        <option value="fa-4x">x4</option>
+                        <option value="fa-5x">x5</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="fa-rotation">Rotation</label>
+                    <select id="fa-rotation" class="form-control">
+                        <option value="">None</option>
+                        <option value="fa-spin">Spin</option>
+                        <option value="fa-rotate-90">Rotate 90º</option>
+                        <option value="fa-rotate-180">Rotate 180º</option>
+                        <option value="fa-rotate-270">Rotate 270º</option>
+                        <option value="fa-flip-horizontal">Horizontal flip</option>
+                        <option value="fa-flip-vertical">Vertical flip</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="fa-fixed"/> fixed width
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="fa-border"/> bordered
+                    </label>
+                </div>
+            </form>
+        </t>
+    </t>
+
 </templates>
