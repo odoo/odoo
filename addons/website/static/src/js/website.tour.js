@@ -55,7 +55,7 @@
                             var index = stack.indexOf(id);
                             if (index !== -1) {
                                 var url = new website.UrlParser(window.location.href);
-                                var test = typeof url === "string" ?
+                                var test = typeof step.trigger.url === "string" ?
                                     step.trigger.url == url.pathname+url.search :
                                     step.trigger.url.test(url.pathname+url.search);
                                 if (!test) return;
