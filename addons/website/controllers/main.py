@@ -31,7 +31,7 @@ NOPE = object()
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 
 class Website(openerp.addons.web.controllers.main.Home):
-    @http.route(['/', '/2'], type='http', auth="public", website=True, multilang=True)
+    @http.route('/', type='http', auth="public", website=True, multilang=True)
     def index(self, **kw):
         try:
             main_menu = request.registry['ir.model.data'].get_object(request.cr, request.uid, 'website', 'main_menu')
