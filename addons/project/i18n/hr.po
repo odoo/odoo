@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-10-25 09:53+0000\n"
-"Last-Translator: Krešimir Jeđud <kresimir.jedud@infokom.hr>\n"
+"PO-Revision-Date: 2014-01-17 14:39+0000\n"
+"Last-Translator: Marko Carevic <Unknown>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:28+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-01-18 07:05+0000\n"
+"X-Generator: Launchpad (build 16901)\n"
 
 #. module: project
 #: view:project.project:0
@@ -226,7 +226,7 @@ msgstr "Završeno"
 #. module: project
 #: model:project.category,name:project.project_category_01
 msgid "Contact's suggestion"
-msgstr ""
+msgstr "Sugestije za kontakt"
 
 #. module: project
 #: help:project.config.settings,group_time_work_estimation_tasks:0
@@ -961,6 +961,11 @@ msgid ""
 " * Ready for next stage indicates the task is ready to be pulled to the next "
 "stage"
 msgstr ""
+"Kanban stanje zadatka ukazuje na posebne situacije koje utječu na njega: \n"
+"  * Normalno je zadana situacija \n"
+"  * Blokirani ukazuje na nešto što sprečava napredak ovog zadatka \n"
+"  * Spremno za sljedeću fazu ukazuje zadatak je spreman da se povuče na "
+"sljedeću fazu"
 
 #. module: project
 #: view:project.task:0
@@ -1459,6 +1464,8 @@ msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
 msgstr ""
+"Novo stanje vlastitog zadatka. Na čekanju će biti ponovo otvoren automatski "
+"kada delegirani zadatak bude zatvoren."
 
 #. module: project
 #: help:project.config.settings,group_manage_delegation_task:0
@@ -1625,6 +1632,10 @@ msgid ""
 "                (by default, http://ietherpad.com/).\n"
 "                This installs the module pad."
 msgstr ""
+"Omogućuje tvrtki prilagodbu koju Pad instalaciju treba koristiti za "
+"povezivanje s novim.\n"
+"                 (po defaultu, http://ietherpad.com/). \n"
+"                 Ovaj instalira modul pad."
 
 #. module: project
 #: field:project.task,id:0
@@ -1738,6 +1749,11 @@ msgid ""
 "                editing and deleting either ways.\n"
 "                This installs the module project_timesheet."
 msgstr ""
+"Ovo vam omogućuje prijenos unosa pod zadacima iz projekata na \n"
+"               evidencije rada za određeni datum i korisnika, s učinkom "
+"kreiranja, \n"
+"               uređivanje i brisanje  u oba smjera. \n"
+"               Ovo instalira modul project_timesheet."
 
 #. module: project
 #: field:project.config.settings,module_project_issue:0
@@ -1883,7 +1899,7 @@ msgstr "Efektivni sati"
 #. module: project
 #: view:report.project.task.user:0
 msgid "OverPass delay"
-msgstr ""
+msgstr "Repovi"
 
 #. module: project
 #: view:project.task.delegate:0
@@ -2008,6 +2024,12 @@ msgid ""
 "'Manufacture'.\n"
 "                This installs the module project_mrp."
 msgstr ""
+"Ova značajka automatski stvara projektne zadatke artikala usluga u prodajnim "
+"nalozima. \n"
+"                 Točnije, zadaci su kreirani za linije nabavke s proizvodom "
+"tipa 'usluge', \n"
+"                 način nabavke 'Naruči', i način opskrbe 'Proizvedi'. \n"
+"                 Ovaj instalira modul project_mrp."
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
@@ -2153,6 +2175,8 @@ msgid ""
 "If you check this field, this stage will be proposed by default on each new "
 "project. It will not assign this stage to existing projects."
 msgstr ""
+"Ako označite ovo polje, ova faza će biti predloženi kao zadana na svakom "
+"novom projektu. To neće dodijeliti ovu fazu u postojećim projektima."
 
 #. module: project
 #: field:project.task,partner_id:0
@@ -2171,6 +2195,9 @@ msgid ""
 "resource allocation.\n"
 "                This installs the module project_long_term."
 msgstr ""
+"Modul za upravljanje dugoročnim projektima koji prati planiranje, "
+"raspoređivanje i raspodjelu resursa. \n"
+"                 Ovo instalira modul project_long_term."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_closed
@@ -2203,6 +2230,8 @@ msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "                This installs the module project_issue_sheet."
 msgstr ""
+"Pruža podršku za evidenciju rada kod pitanja / grešaka u projektu. \n"
+"                 Ovo instalira modul project_issue_sheet."
 
 #. module: project
 #: view:board.board:0
@@ -2230,6 +2259,8 @@ msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
 "delegate this task"
 msgstr ""
+"Procijenjeno vrijeme za vas da potvrdite obavljeni rad od strane korisnika "
+"kojima ćete prenijeti ovaj zadatak."
 
 #. module: project
 #: view:report.project.task.user:0
