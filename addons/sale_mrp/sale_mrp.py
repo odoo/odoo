@@ -91,7 +91,7 @@ class mrp_production(osv.osv):
 class sale_order(osv.Model):
     _inherit ='sale.order'
 
-    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
-        result = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, context)
+    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
+        result = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
         result['property_ids'] = [(6, 0, [x.id for x in line.property_ids])]
         return result
