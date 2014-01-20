@@ -32,7 +32,7 @@ import uuid
 _logger = logging.getLogger(__name__)
 
 
-class survey_survey(osv.osv):
+class survey_survey(osv.Model):
     '''Settings for a multi-page/multi-question survey.
     Each survey can have one or more attached pages, and each page can display
     one or more questions.
@@ -101,8 +101,7 @@ class survey_survey(osv.osv):
             oldname='max_response_limit'),
         'state': fields.selection(
             [('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'),
-            ('cancel', 'Cancelled')], 'Status', required=1, readonly=1,
-            translate=1),
+            ('cancel', 'Cancelled')], 'Status', required=1, translate=1),
         'visible_to_user': fields.boolean('Public in website',
             help="If unchecked, only invited users will be able to open the survey."),
         'auth_required': fields.boolean('Login required',
@@ -263,10 +262,10 @@ class survey_survey(osv.osv):
             self.message_post(cr, uid, ids, body="""<p>Survey closed</p>""", context=context)
         elif new_state == 'cancel':
             self.message_post(cr, uid, ids, body="""<p>Survey cancelled</p>""", context=context)
-        return super(survey_survey, self).write(cr, uid, ids, vals, context=None)
+        return super(survey_survey, self).write(cr, uid, ids, vals, context=context)
 
 
-class survey_page(osv.osv):
+class survey_page(osv.Model):
     '''A page for a survey.
 
     Pages are essentially containers, allowing to group questions by ordered
@@ -309,7 +308,7 @@ class survey_page(osv.osv):
             context=context)
 
 
-class survey_question(osv.osv):
+class survey_question(osv.Model):
     ''' Questions that will be asked in a survey.
 
     Each question can have one of more suggested answers (eg. in case of
@@ -608,7 +607,7 @@ class survey_question(osv.osv):
         return errors
 
 
-class survey_label(osv.osv):
+class survey_label(osv.Model):
     ''' A suggested answer for a question '''
     _name = 'survey.label'
     _rec_name = 'value'
@@ -630,7 +629,7 @@ class survey_label(osv.osv):
     }
 
 
-class survey_user_input(osv.osv):
+class survey_user_input(osv.Model):
     ''' Metadata for a set of one user's answers to a particular survey '''
     _name = "survey.user_input"
     _rec_name = 'date_create'
@@ -710,7 +709,7 @@ class survey_user_input(osv.osv):
             element!'))
 
 
-class survey_user_input_line(osv.osv):
+class survey_user_input_line(osv.Model):
     _name = 'survey.user_input_line'
     _description = 'Survey User Input Line'
     _rec_name = 'date_create'
