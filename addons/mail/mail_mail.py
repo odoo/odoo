@@ -161,8 +161,9 @@ class mail_mail(osv.Model):
                 fragment['message_id'] = mail.mail_message_id.id
             elif mail.model and mail.res_id:
                 fragment.update(model=mail.model, res_id=mail.res_id)
+            
             url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
-            return _("""<small>Access your messages and documents <a style='color:inherit' href="%s">in OpenERP</a></small>""") % url
+            return _("""<span class='oe_mail_footer_access'><small>Access your messages and documents <a style='color:inherit' href="%s">in OpenERP</a></small></span>""") % url
         else:
             return None
 
@@ -240,6 +241,7 @@ class mail_mail(osv.Model):
             :return: True
         """
         ir_mail_server = self.pool.get('ir.mail_server')
+                
         for mail in self.browse(cr, SUPERUSER_ID, ids, context=context):
             try:
                 # handle attachments
@@ -283,6 +285,7 @@ class mail_mail(osv.Model):
                     res = ir_mail_server.send_email(cr, uid, msg,
                                                     mail_server_id=mail.mail_server_id.id,
                                                     context=context)
+                    
                 if res:
                     mail.write({'state': 'sent', 'message_id': res})
                     mail_sent = True

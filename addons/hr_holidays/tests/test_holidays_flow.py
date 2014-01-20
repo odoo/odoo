@@ -55,7 +55,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         self.holidays_status_0 = self.hr_holidays_status.create(cr, self.user_hrmanager_id, {
             'name': 'WithMeetingType',
             'limit': True,
-            'categ_id': self.registry('crm.meeting.type').create(cr, self.user_hrmanager_id, {'name': 'NotLimitedMeetingType'}),
+            'categ_id': self.registry('calendar.event.type').create(cr, self.user_hrmanager_id, {'name': 'NotLimitedMeetingType'}),
         })
         self.holidays_status_1 = self.hr_holidays_status.create(cr, self.user_hrmanager_id, {
             'name': 'NotLimited',

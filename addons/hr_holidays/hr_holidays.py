@@ -73,7 +73,7 @@ class hr_holidays_status(osv.osv):
 
     _columns = {
         'name': fields.char('Leave Type', size=64, required=True, translate=True),
-        'categ_id': fields.many2one('crm.meeting.type', 'Meeting Type',
+        'categ_id': fields.many2one('calendar.event.type', 'Meeting Type',
             help='Once a leave is validated, OpenERP will create a corresponding meeting of this type in the calendar.'),
         'color_name': fields.selection([('red', 'Red'),('blue','Blue'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color in Report', required=True, help='This color will be used in the leaves summary located in Reporting\Leaves by Department.'),
         'limit': fields.boolean('Allow to Override Limit', help='If you select this check box, the system allows the employees to take more leaves than the available ones for this type and will not take them into account for the "Remaining Legal Leaves" defined on the employee form.'),
@@ -176,7 +176,7 @@ class hr_holidays(osv.osv):
         'notes': fields.text('Reasons',readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'number_of_days_temp': fields.float('Allocation', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'number_of_days': fields.function(_compute_number_of_days, string='Number of Days', store=True),
-        'meeting_id': fields.many2one('crm.meeting', 'Meeting'),
+        'meeting_id': fields.many2one('calendar.event', 'Meeting'),
         'type': fields.selection([('remove','Leave Request'),('add','Allocation Request')], 'Request Type', required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}, help="Choose 'Leave Request' if someone wants to take an off-day. \nChoose 'Allocation Request' if you want to increase the number of leaves available for someone", select=True),
         'parent_id': fields.many2one('hr.holidays', 'Parent'),
         'linked_request_ids': fields.one2many('hr.holidays', 'parent_id', 'Linked Requests',),
@@ -365,7 +365,7 @@ class hr_holidays(osv.osv):
             else:
                 self.write(cr, uid, [record.id], {'manager_id': manager})
             if record.holiday_type == 'employee' and record.type == 'remove':
-                meeting_obj = self.pool.get('crm.meeting')
+                meeting_obj = self.pool.get('calendar.event')
                 meeting_vals = {
                     'name': record.name or _('Leave Request'),
                     'categ_ids': record.holiday_status_id.categ_id and [(6,0,[record.holiday_status_id.categ_id.id])] or [],
@@ -375,8 +375,12 @@ class hr_holidays(osv.osv):
                     'date': record.date_from,
                     'end_date': record.date_to,
                     'date_deadline': record.date_to,
-                    'state': 'open',            # to block that meeting date in the calendar
-                }
+                    'state': 'open',            # to block that meeting date in the calendar                    
+                }   
+                #Add the partner_id (if exist) as an attendee             
+                if record.user_id and record.user_id.partner_id:
+                    meeting_vals['partner_ids'] = [(4,record.user_id.partner_id.id)]
+                    
                 meeting_id = meeting_obj.create(cr, uid, meeting_vals)
                 self._create_resource_leave(cr, uid, [record], context=context)
                 self.write(cr, uid, ids, {'meeting_id': meeting_id})
@@ -422,7 +426,7 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_cancel(self, cr, uid, ids, context=None):
-        meeting_obj = self.pool.get('crm.meeting')
+        meeting_obj = self.pool.get('calendar.event')
         for record in self.browse(cr, uid, ids):
             # Delete the meeting
             if record.meeting_id:

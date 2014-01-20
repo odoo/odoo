@@ -46,9 +46,15 @@ class project_task_type(osv.osv):
                                'there are no records in that stage to display.'),
     }
 
+    def _get_default_project_ids(self, cr, uid, ctx={}):
+        project_id = self.pool['project.task']._get_default_project_id(cr, uid, context=ctx)
+        if project_id:
+            return [project_id]
+        return None
+
     _defaults = {
         'sequence': 1,
-        'project_ids': lambda self, cr, uid, ctx=None: self.pool['project.task']._get_default_project_id(cr, uid, context=ctx),
+        'project_ids': _get_default_project_ids,
     }
     _order = 'sequence'
 
@@ -64,7 +70,7 @@ class project(osv.osv):
         """ Installation hook: aliases, project.project """
         # create aliases for all projects and avoid constraint errors
         alias_context = dict(context, alias_model_name='project.task')
-        self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(project, self)._auto_init,
+        return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(project, self)._auto_init,
             'project.task', self._columns['alias_id'], 'id', alias_prefix='project+', alias_defaults={'project_id':'id'}, context=alias_context)
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
