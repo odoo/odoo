@@ -135,16 +135,11 @@ class Website(openerp.addons.web.controllers.main.Home):
         view_model, view_theme_id = imd.get_object_reference(
             request.cr, request.uid, 'website', 'theme')
 
-        user = request.registry['res.users'].browse(request.cr, request.uid, request.uid, request.context)
-        group_ids = [g.id for g in user.groups_id]
-
         view = request.registry.get("ir.ui.view")
         views = view._views_get(request.cr, request.uid, xml_id, request.context)
         done = {}
         result = []
         for v in views:
-            if v.groups_id and [g for g in v.groups_id if g.id not in group_ids]:
-                continue
             if v.inherit_option_id and v.inherit_option_id.id != view_theme_id or not optional:
                 if v.inherit_option_id.id not in done:
                     result.append({

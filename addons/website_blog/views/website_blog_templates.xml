@@ -98,14 +98,14 @@
 <template id="blog_post_short" name="Blog Post Summary">
     <t t-call="website_blog.index">
     <div t-if="not blog_posts">
-        <div class="text-center text-muted">
-          <h3 class="css_editable_display">No blog post found</h3>
-          <h3 class="css_non_editable_mode_hidden">There isn't available blog post right now, click <a t-href="/page/website.contactus">here</a> to contact us</h3>
-          <t groups="base.group_website_publisher">
-            <p>Click on "Content" to define a new blog post or "Help" for more informations.</p>
-            <img src="/website/static/src/img/content_here.png"/>
-          </t>
-        </div>
+        <h1>
+            No blog post yet!
+        </h1>
+        <p groups="base.group_website_publisher">
+            To create a new blog post, use the top-right menu <em>Content</em>
+            and select the menuitem <em>New Blog Post</em>.
+        </p>
+
     </div>
     <t t-foreach="blog_posts" t-as="blog_post">
       <div t-att-data-publish="blog_post.website_published and 'on' or 'off'">
@@ -218,10 +218,10 @@
 <template id="opt_blog_post_complete_comment" name="Allow Comments"
         inherit_option_id="website_blog.blog_post_complete" inherit_id="website_blog.blog_post_complete"
         groups="website_mail.group_comment">
-    <xpath expr="//ul[@id='comments-list']" position="before">
+    <xpath expr="//ul[@id='comments-list']" position="after">
         <section class="mb32 css_editable_mode_hidden">
-            <form id="comment" t-attf-action="/blogpost/comment" method="POST">
-                <input name="blog_post_id" t-att-value="blog_post.id" type="hidden"/>
+            <form id="comment" t-attf-action="/blogpost/#{blog_post.id}/comment"
+                    method="POST">
                 <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
                 <div class="pull-left mb32" style="width: 75%%">
                     <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>

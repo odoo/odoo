@@ -44,15 +44,12 @@
             <div class="row mt32 mb32">
                 <div class="col-md-9" id="middle_column">
                     <t t-if="not event_ids">
-                        <div class="text-center text-muted">
-                          <h3 class="css_editable_display">No event found</h3>
-                          <h3 class="css_non_editable_mode_hidden">There isn't available events right now, <t t-if="current_date or current_country or current_type">click <a t-href="/event">here</a> to check all events or</t> click <a t-href="/page/website.contactus">here</a> to contact us</h3>
-                          <t groups="base.group_website_publisher">
-                            <p>Click on "Content" to define a new event or "Help" for more informations.</p>
-                            <img src="/website/static/src/img/content_here.png"/>
-                            <p>In the backend's event form contains information to customize your events: location, oranizer, tikets, registrations, etc.</p>
-                          </t>
-                        </div>
+                        <p t-if="current_date or current_country or current_type">
+                            No event found in this category, check <a href="/event">all events</a>.
+                        </p>
+                        <p t-if="(current_date is None) and (current_country is None) and (current_type is None)">
+                            No events are planned for now on.
+                        </p>
                     </t>
                     <ul class="media-list">
                         <li t-foreach="event_ids" t-as="event" class="media">

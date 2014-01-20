@@ -35,6 +35,10 @@ to an appropriate local partner, based on the distance and the weight that was a
     """,
     'author': 'OpenERP SA',
     'depends': ['base_geolocalize', 'crm', 'account', 'portal'],
+    'demo': [
+        # 'res_partner_demo.xml',
+        'crm_lead_demo.xml'
+    ],
     'data': [
         'security/ir.model.access.csv',
         'res_partner_view.xml',
@@ -46,10 +50,7 @@ to an appropriate local partner, based on the distance and the weight that was a
         'portal_data.xml',
         'report/crm_lead_report_view.xml',
         'report/crm_partner_report_view.xml',
-    ],
-    'demo': [
         'res_partner_demo.xml',
-        'crm_lead_demo.xml'
     ],
     'js': [
         'static/src/js/next.js',
