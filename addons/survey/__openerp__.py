@@ -24,14 +24,14 @@
     'version': '2.0',
     'category': 'Marketing',
     'description': """
-This module is used for surveying.
-==================================
+Create beautiful web surveys and visualize answers
+==================================================
 
 It depends on the answers or reviews of some questions by different users. A
 survey may have multiple pages. Each page may contain multiple questions and
 each question may have multiple answers. Different users may give different
 answers of question and according to that survey is done. Partners are also
-sent mails with user name and password for the invitation of the survey.
+sent mails with personal token for the invitation of the survey.
     """,
     'summary': 'Create surveys, collect answers and print statistics',
     'author': 'OpenERP SA',
@@ -43,10 +43,12 @@ sent mails with user name and password for the invitation of the survey.
         'views/survey_views.xml',
         'views/survey_templates.xml',
         'wizard/survey_email_compose_message.xml',
-        'data/survey_cron.xml',
-        'data/survey_data.xml'
+        'data/survey_cron.xml'
     ],
-    #'demo': ['survey_demo.xml'],
+    'demo': ['data/survey_demo_user.xml',
+             'data/survey_demo_recruitment.xml',
+             'data/survey_demo_feedback.xml',
+             'data/survey_demo_appraisal.xml'],
     #'test': [
     #    'test/survey_test.py',
     #],
