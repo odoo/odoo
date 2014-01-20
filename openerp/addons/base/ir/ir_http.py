@@ -99,7 +99,7 @@ class ir_http(osv.AbstractModel):
 
         # check authentication level
         try:
-            auth_method = self._authenticate(getattr(func, "auth", None))
+            auth_method = self._authenticate(func.routing["auth"])
         except Exception:
             # force a Forbidden exception with the original traceback
             return self._handle_exception(

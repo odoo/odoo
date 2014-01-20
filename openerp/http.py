@@ -168,7 +168,7 @@ class WebRequest(object):
                          if not k.startswith("_ignored_"))
 
         self.func = func
-        self.func_request_type = func.exposed
+        self.func_request_type = func.routing['type']
         self.func_arguments = arguments
         self.auth_method = auth
 
@@ -207,7 +207,7 @@ class WebRequest(object):
         warnings.warn('please use request.registry and request.cr directly', DeprecationWarning)
         yield (self.registry, self.cr)
 
-def route(route, type="http", auth="user", methods=None):
+def route(route=None, **kw):
     """
     Decorator marking the decorated method as being a handler for requests. The method must be part of a subclass
     of ``Controller``.
@@ -226,16 +226,16 @@ def route(route, type="http", auth="user", methods=None):
         configuration indicating the current database nor the current user.
     :param methods: A sequence of http methods this route applies to. If not specified, all methods are allowed.
     """
-    assert type in ["http", "json"]
+    routing = kw.copy()
+    assert not 'type' in routing or routing['type'] in ("http", "json")
     def decorator(f):
-        if isinstance(route, list):
-            f.routes = route
-        else:
-            f.routes = [route]
-        f.methods = methods
-        f.exposed = type
-        if getattr(f, "auth", None) is None:
-            f.auth = auth
+        if route:
+            if isinstance(route, list):
+                routes = route
+            else:
+                routes = [route]
+            routing['routes'] = routes
+        f.routing = routing
         return f
     return decorator
 
@@ -388,11 +388,10 @@ def jsonrequest(f):
 
         Use the ``route()`` decorator instead.
     """
-    f.combine = True
     base = f.__name__.lstrip('/')
     if f.__name__ == "index":
         base = ""
-    return route([base, base + "/<path:_ignored_path>"], type="json", auth="user")(f)
+    return route([base, base + "/<path:_ignored_path>"], type="json", auth="user", combine=True)(f)
 
 class HttpRequest(WebRequest):
     """ Regular GET/POST request
@@ -444,11 +443,10 @@ def httprequest(f):
 
         Use the ``route()`` decorator instead.
     """
-    f.combine = True
     base = f.__name__.lstrip('/')
     if f.__name__ == "index":
         base = ""
-    return route([base, base + "/<path:_ignored_path>"], type="http", auth="user")(f)
+    return route([base, base + "/<path:_ignored_path>"], type="http", auth="user", combine=True)(f)
 
 #----------------------------------------------------------
 # Controller and route registration
@@ -501,13 +499,22 @@ def routing_map(modules, nodb_only, converters=None):
             o = cls()
             members = inspect.getmembers(o)
             for mk, mv in members:
-                if inspect.ismethod(mv) and getattr(mv, 'exposed', False) and (not nodb_only or nodb_only == (mv.auth == "none")):
-                    for url in mv.routes:
-                        if getattr(mv, "combine", False):
-                            url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
-                            if url.endswith("/") and len(url) > 1:
-                                url = url[: -1]
-                        routing_map.add(werkzeug.routing.Rule(url, endpoint=mv, methods=mv.methods))
+                if inspect.ismethod(mv) and hasattr(mv, 'routing'):
+                    routing = dict(type='http', auth='user', methods=None)
+                    for claz in reversed(mv.im_class.mro()):
+                        fn = getattr(claz, mv.func_name, None)
+                        if fn and hasattr(fn, 'routing'):
+                            routing.update(fn.routing)
+                    mv.routing.update(routing)
+                    assert 'routes' in mv.routing
+                    if not nodb_only or nodb_only == (mv.routing['auth'] == "none"):
+                        for url in mv.routing['routes']:
+                            if mv.routing.get("combine", False):
+                                # deprecated
+                                url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
+                                if url.endswith("/") and len(url) > 1:
+                                    url = url[: -1]
+                            routing_map.add(werkzeug.routing.Rule(url, endpoint=mv, methods=mv.routing['methods']))
     return routing_map
 
 #----------------------------------------------------------
