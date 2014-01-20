@@ -1126,8 +1126,6 @@
             var grid = [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11];
             this.grid.w = [_.map(grid, function (v) {return 'col-md-offset-'+v;}), _.map(grid, function (v) {return width/12*v;}), 12];
 
-            this.grid.s = null;
-
             return this.grid;
         },
         _drag_and_drop_after_insert_dropzone: function(){
