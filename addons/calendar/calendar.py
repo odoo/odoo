@@ -100,8 +100,15 @@ class calendar_attendee(osv.Model):
                 result[id][name] = attdata.event_id.date_deadline
         return result
 
+    STATE_SELECTION = [
+        ('needsAction', 'Needs Action'),
+        ('tentative', 'Uncertain'),
+        ('declined', 'Declined'),
+        ('accepted', 'Accepted'),
+    ]
+
     _columns = {
-        'state': fields.selection([('needsAction', 'Needs Action'), ('tentative', 'Uncertain'), ('declined', 'Declined'), ('accepted', 'Accepted')], 'Status', readonly=True, help="Status of the attendee's participation"),
+        'state': fields.selection(STATE_SELECTION, 'Status', readonly=True, help="Status of the attendee's participation"),
         'cn': fields.function(_compute_data, string='Common name', type="char", multi='cn', store=True),
         'partner_id': fields.many2one('res.partner', 'Contact', readonly="True"),
         'email': fields.char('Email', help="Email of Invited Person"),
@@ -799,7 +806,7 @@ class calendar_event(osv.Model):
         'state': fields.selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, track_visibility='onchange'),
         'name': fields.char('Meeting Subject', required=True, states={'done': [('readonly', True)]}),
         'is_attendee': fields.function(_compute, string='Attendee', type="boolean", multi='attendee'),
-        'attendee_status': fields.function(_compute, string='Attendee Status', type="selection", multi='attendee'),
+        'attendee_status': fields.function(_compute, string='Attendee Status', type="selection", selection=calendar_attendee.STATE_SELECTION, multi='attendee'),
         'display_time': fields.function(_compute, string='Event Time', type="char", multi='attendee'),
         'date': fields.datetime('Date', states={'done': [('readonly', True)]}, required=True, track_visibility='onchange'),
         'date_deadline': fields.datetime('End Date', states={'done': [('readonly', True)]}, required=True,),
