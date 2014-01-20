@@ -6,15 +6,14 @@
             <field name="arch" type="xml">
                 <form string="Stock Picking Waves" version="7.0">
                     <header>
+                        <button name="confirm_picking" states="draft" string="Confirm" type="object" class="oe_highlight"/>
                         <button name="done" states="in_progress" string="Done" type="object" class="oe_highlight"/>
                         <button name="cancel_picking" string="Cancel" type="object" states="in_progress"/>
                         <field name="state" widget="statusbar" statusbar_visible="in_progress,done"/>
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box">
-                            <button name="print_picking" string="Print all internal pickings" type="object" context="{'report':'stock.picking.list.internal'}"/>
-                            <button name="print_picking" string="Print all in/out pickings" type="object" context="{'report':'stock.picking.list'}"/>
-                            <button name="confirm_picking" string="Confirm all pickings" type="object"/>
+                            <button name="print_picking" string="Print all pickings" type="object" context="{'report':'stock.picking.list.internal'}"/>
                         </div>
                         <div class="oe_title">
                             <h1>
@@ -24,7 +23,6 @@
                         <group>
                             <group>
                                 <field name="partner_id"/>
-                                <field name="wave_type_id"/>
                             </group>
                             <group>
                                 <label for="capacity"/>
@@ -44,7 +42,8 @@
                                 <field name="date"/>
                                 <field name="min_date"/>
                                 <field name="state"/>
-                                <button name="action_done" string="Confirm picking" type="object" icon="gtk-apply" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
+                                <button name="action_assign" string="Confirm picking" type="object" icon="gtk-apply" attrs="{'invisible': [('state', 'in', ('done', 'cancel', 'confirmed', 'assigned'))]}"/>
+                                <button name="force_assign" string="Force availability" type="object" icon="gtk-go-forward" attrs="{'invisible': [('state', 'in', ('done', 'cancel', 'draft', 'assigned'))]}"/>
                                 <button name="action_cancel" string="Cancel picking" type="object" icon="gtk-cancel" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
                             </tree>
                         </field>
@@ -63,7 +62,6 @@
                     <field name="partner_id"/>
                     <field name="capacity"/>
                     <field name="capacity_uom"/>
-                    <field name="wave_type_id"/>
                     <field name="time" widget="float_time"/>
                     <field name="state"/>
                 </tree>
@@ -115,9 +113,6 @@
             <xpath expr="//field[@name='picking_type_id']" position="after">
                 <field name="wave_id"/>
             </xpath>
-            <xpath expr="//field[@name='move_type']" position="after">
-                <field name="wave_type_ids" widget="many2many_tags"/>
-            </xpath>
         </field>
         </record>
         <record model="ir.ui.view" id="view_stock_picking_wave_tree_inherit">
@@ -126,7 +121,6 @@
         <field name="inherit_id" ref="stock.vpicktree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='picking_type_id']" position="after">
-                <field name="wave_type_ids" invisible="1"/>
                 <field name="wave_id"/>
             </xpath>
         </field>
@@ -139,21 +133,7 @@
             <xpath expr="//filter[@string='Picking Type']" position="after">
                 <filter string="Wave" domain="[]" context="{'group_by':'wave_id'}"/>
             </xpath>
-            <xpath expr="//field[@name='picking_type_id']" position="after">
-                    <field name="wave_type_ids"/>
-            </xpath>
         </field>
-        </record>
-
-        <record model="ir.ui.view" id="partner_wave_type">
-            <field name="name">partner.wave.type.view</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form" />
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='active']" position="after">
-                    <field name="wave_type_ids" widget="many2many_tags"/>
-                </xpath>
-            </field>
         </record>
 
     </data>
