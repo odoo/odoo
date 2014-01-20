@@ -36,6 +36,36 @@
                                 (callback || self.moveToNextStep).apply(self);
                             });
                         };
+                    } else if (step.trigger === 'reload') {
+                        step.triggers = function (callback) {
+                            var stack = JSON.parse(localStorage.getItem("website-reloads")) || [];
+                            var index = stack.indexOf(step.stepId);
+                            if (index !== -1) {
+                                stack.splice(index,1);
+                                (callback || self.moveToNextStep).apply(self);
+                            } else {
+                                stack.push(step.stepId);
+                            }
+                            localStorage.setItem("website-reloads", JSON.stringify(stack));
+                        };
+                    } else if (step.trigger && step.trigger.url) {
+                        step.triggers = function (callback) {
+                            var stack = JSON.parse(localStorage.getItem("website-geturls")) || [];
+                            var id = step.trigger.url.toString();
+                            var index = stack.indexOf(id);
+                            if (index !== -1) {
+                                var url = new website.UrlParser(window.location.href);
+                                var test = typeof step.trigger.url === "string" ?
+                                    step.trigger.url == url.pathname+url.search :
+                                    step.trigger.url.test(url.pathname+url.search);
+                                if (!test) return;
+                                stack.splice(index,1);
+                                (callback || self.moveToNextStep).apply(self);
+                            } else {
+                                stack.push(id);
+                            }
+                            localStorage.setItem("website-geturls", JSON.stringify(stack));
+                        };
                     } else if (step.trigger === 'drag') {
                         step.triggers = function (callback) {
                             self.onSnippetDragged(callback || self.moveToNextStep);
@@ -51,6 +81,7 @@
                         } else {
                             step.triggers = function (callback) {
                                 var emitter = _.isString(step.trigger.emitter) ? $(step.trigger.emitter) : (step.trigger.emitter || $(step.element));
+                                if (!emitter.size()) throw "Emitter is undefined";
                                 emitter.on(step.trigger.id, function () {
                                     (callback || self.moveToNextStep).apply(self, arguments);
                                 });
@@ -312,20 +343,20 @@
                             }
                         }
                         setTimeout(function () {
-	                        if (step.triggers) step.triggers(next);
-	                        var $element = $(step.element);
-	                        if (step.snippet && step.trigger === 'drag') {
-	                            website.TestConsole.dragAndDropSnippet(step.snippet);
-	                        } else if (step.trigger && step.trigger.id === 'change') {
-	                            $element.trigger($.Event("change", { srcElement: $element }));
-	                        } else if (step.sampleText) {
-	                            $element.val(step.sampleText);
-	                            $element.trigger($.Event("change", { srcElement: $element }));
-	                        } else if ($element.is(":visible")) { // Click by default
-	                        	 $element.trigger($.Event("click", { srcElement: $element }));
-	                        }
-	                        if (!step.triggers) next();
-	                    }, step.delay || defaultDelay);
+                            if (step.triggers) step.triggers(next);
+                            var $element = $(step.element);
+                            if (step.snippet && step.trigger === 'drag') {
+                                website.TestConsole.dragAndDropSnippet(step.snippet);
+                            } else if (step.trigger && step.trigger.id === 'change') {
+                                $element.trigger($.Event("change", { srcElement: $element }));
+                            } else if (step.sampleText) {
+                                $element.val(step.sampleText);
+                                $element.trigger($.Event("change", { srcElement: $element }));
+                            } else if ($element.is(":visible")) { // Click by default
+                                $element.trigger($.Event("click", { srcElement: $element }));
+                            }
+                            if (!step.triggers) next();
+                        }, step.delay || defaultDelay);
                     }
                     var url = new website.UrlParser(window.location.href);
                     if (tour.path && url.pathname !== tour.path) {

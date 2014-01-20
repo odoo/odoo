@@ -638,16 +638,14 @@
                 var $selected = $(this);
                 var position = $selected.offset();
                 if ($selected.is('img')) {
-                    var image_top = position.top + parseInt($selected.css('marginTop'), 10);
-                    var image_left = position.left + parseInt($selected.css('marginLeft'), 10);
                     $link_button.hide();
                     // center button on image
                     $image_button.show().offset({
                         top: $selected.outerHeight() / 2
-                                + image_top
+                                + position.top
                                 - $image_button.outerHeight() / 2,
                         left: $selected.outerWidth() / 2
-                                + image_left
+                                + position.left
                                 - $image_button.outerWidth() / 2,
                     });
                 } else {

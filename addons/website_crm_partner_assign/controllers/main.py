@@ -9,20 +9,19 @@ from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
 from openerp.addons.website_partner.controllers import main as website_partner
-import werkzeug
 
 
 class WebsiteCrmPartnerAssign(http.Controller):
     _references_per_page = 20
 
-    @website.route([
+    @http.route([
         '/partners/',
         '/partners/page/<int:page>/',
         '/partners/country/<int:country_id>',
         '/partners/country/<country_name>-<int:country_id>',
         '/partners/country/<int:country_id>/page/<int:page>/',
         '/partners/country/<country_name>-<int:country_id>/page/<int:page>/',
-    ], type='http', auth="public", multilang=True)
+    ], type='http', auth="public", website=True, multilang=True)
     def partners(self, country_id=0, page=0, **post):
         country_obj = request.registry['res.country']
         partner_obj = request.registry['res.partner']
@@ -95,7 +94,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
         }
         return request.website.render("website_crm_partner_assign.index", values)
 
-    @website.route(['/partners/<int:partner_id>/', '/partners/<partner_name>-<int:partner_id>/'], type='http', auth="public", multilang=True)
+    @http.route(['/partners/<int:partner_id>/', '/partners/<partner_name>-<int:partner_id>/'], type='http', auth="public", website=True, multilang=True)
     def partners_ref(self, partner_id, **post):
         partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
         website.preload_records(partner)

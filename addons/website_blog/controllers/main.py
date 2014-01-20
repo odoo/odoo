@@ -23,6 +23,7 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
 from openerp.tools.translate import _
+from openerp import SUPERUSER_ID
 
 import werkzeug
 
@@ -44,10 +45,10 @@ class WebsiteBlog(http.Controller):
             group['date'] = "%s_%s" % (group['__domain'][0][2], group['__domain'][1][2])
         return groups
 
-    @website.route([
+    @http.route([
         '/blog',
         '/blog/page/<int:page>/',
-    ], type='http', auth="public", multilang=True)
+    ], type='http', auth="public", website=True, multilang=True)
     def blogs(self, page=1):
         BYPAGE = 60
         cr, uid, context = request.cr, request.uid, request.context
@@ -66,7 +67,7 @@ class WebsiteBlog(http.Controller):
             'pager': pager
         })
 
-    @website.route([
+    @http.route([
         '/blog/<model("blog.category"):category>/',
         '/blog/<model("blog.category"):category>/page/<int:page>/',
         '/blog/<model("blog.category"):category>/tag/<model("blog.tag"):tag>/',
@@ -75,7 +76,7 @@ class WebsiteBlog(http.Controller):
         '/blog/<model("blog.category"):category>/date/<string(length=21):date>/page/<int:page>/',
         '/blog/<model("blog.category"):category>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/',
         '/blog/<model("blog.category"):category>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/page/<int:page>/',
-    ], type='http', auth="public", multilang=True)
+    ], type='http', auth="public", website=True, multilang=True)
     def blog(self, category=None, tag=None, date=None, page=1, **opt):
         """ Prepare all values to display the blog.
 
@@ -151,9 +152,9 @@ class WebsiteBlog(http.Controller):
         }
         return request.website.render("website_blog.blog_post_short", values)
 
-    @website.route([
+    @http.route([
         '/blogpost/<model("blog.post"):blog_post>/',
-    ], type='http', auth="public", multilang=True)
+    ], type='http', auth="public", website=True, multilang=True)
     def blog_post(self, blog_post, tag=None, date=None, page=1, enable_editor=None, **post):
         """ Prepare all values to display the blog.
 
@@ -218,19 +219,26 @@ class WebsiteBlog(http.Controller):
         }
         return request.website.render("website_blog.blog_post_complete", values)
 
-    @website.route(['/blogpost/<int:blog_post_id>/comment'], type='http', auth="public")
-    def blog_post_comment(self, blog_post_id, **post):
+    @http.route(['/blogpost/comment'], type='http', auth="public", methods=['POST'], website=True)
+    def blog_post_comment(self, blog_post_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
         if post.get('comment'):
-            request.registry['blog.post'].message_post(
-                cr, uid, blog_post_id,
-                body=post.get('comment'),
-                type='comment',
-                subtype='mt_comment',
-                context=dict(context, mail_create_nosubcribe=True))
+            user = request.registry['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
+            group_ids = user.groups_id
+            group_id = request.registry["ir.model.data"].get_object_reference(cr, uid, 'website_mail', 'group_comment')[1]
+            if group_id in [group.id for group in group_ids]:
+                blog_post = request.registry['blog.post']
+                blog_post.check_access_rights(cr, uid, 'read')
+                blog_post.message_post(
+                    cr, SUPERUSER_ID, int(blog_post_id),
+                    body=post.get('comment'),
+                    type='comment',
+                    subtype='mt_comment',
+                    author_id=user.partner_id.id,
+                    context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
-    @website.route('/blogpost/new', type='http', auth="public", multilang=True)
+    @http.route('/blogpost/new', type='http', auth="public", website=True, multilang=True)
     def blog_post_create(self, category_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)
@@ -243,7 +251,7 @@ class WebsiteBlog(http.Controller):
             }, context=create_context)
         return werkzeug.utils.redirect("/blogpost/%s/?enable_editor=1" % new_blog_post_id)
 
-    @website.route('/blogpost/duplicate', type='http', auth="public")
+    @http.route('/blogpost/duplicate', type='http', auth="public", website=True)
     def blog_post_copy(self, blog_post_id, **post):
         """ Duplicate a blog.
 
