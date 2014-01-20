@@ -141,6 +141,7 @@ class sale_order(osv.osv):
             products += line.product_id.product_tmpl_id.recommended_products(context=context)
         return products
         
+
 class sale_option_line(osv.osv):
     _name = "sale.option.line"
     _description = "Sale Options"

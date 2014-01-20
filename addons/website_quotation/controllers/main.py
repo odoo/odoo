@@ -29,13 +29,14 @@ import werkzeug
 class sale_quote(http.Controller):
 
     @http.route(["/quote/<int:order_id>/<token>"], type='http', auth="public", website=True)
-    def view(self, order_id, token, **post):
+    def view(self, order_id, token, message=False, **post):
         # use SUPERUSER_ID allow to access/view order for public user
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
         assert token == order.access_token, 'Access denied, wrong token!'
         # TODO: if not order.template_id: return to the URL of the portal view of SO
         values = {
             'quotation': order,
+            'message': message,
             'new_post' : request.httprequest.session.get('new_post',False)
         }
         return request.website.render('website_quotation.so_quotation', values)
@@ -62,7 +63,7 @@ class sale_quote(http.Controller):
         request.registry.get('sale.order').write(request.cr, request.uid, [order_id], {'state': 'cancel'})
         if message:
             self.message_post(message, order_id)
-        return werkzeug.utils.redirect("/quote/%s/%s" % (order_id, token))
+        return werkzeug.utils.redirect("/quote/%s/%s?message=2" % (order_id, token))
 
     @http.route(['/quote/<int:order_id>/<token>/post'], type='http', auth="public", website=True)
     def post(self, order_id, token, **post):
@@ -74,7 +75,7 @@ class sale_quote(http.Controller):
         if message:
             self.message_post(message, order_id)
             request.httprequest.session['new_post'] = True
-        return werkzeug.utils.redirect("/quote/%s/%s" % (order_id, token))
+        return werkzeug.utils.redirect("/quote/%s/%s?message=1" % (order_id, token))
 
     def message_post(self , message, order_id):
         request.session.body =  message

@@ -117,8 +117,8 @@
               <form id="comment" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post" method="POST">
                   <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
                   <div class="pull-left mb32" style="width: 75%%">
-                      <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
-                       <button type="submit" class="btn btn-primary mt8">Post</button>
+                      <textarea rows="4" name="comment" class="form-control" placeholder="Send us a note..."></textarea>
+                      <button type="submit" class="btn btn-primary mt8">Send</button>
                   </div>
               </form>
           </section>
@@ -127,18 +127,16 @@
   </template>
 
   <template id="quotation_toolbar">
-      <div class="text-center hidden-print">
-          <div class="btn-group btn-group-lg" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
-              <a class="btn btn-success fa fa-check" data-toggle="modal" data-target="#modelaccept">
-                  Accept
-              </a>
-              <a class="btn btn-info fa fa-comment" type="submit" href="#discussion">
-                  Feedback
-              </a>
-              <a class="btn btn-danger fa fa-times" data-toggle="modal" data-target="#modeldecline">
-                  Reject
-              </a>
-          </div>
+      <div class="text-center hidden-print" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
+          <a class="btn btn-success fa fa-check" data-toggle="modal" data-target="#modelaccept">
+              Accept
+          </a>
+          <a class="btn btn-info fa fa-comment" type="submit" href="#discussion">
+              Feedback
+          </a>
+          <a class="btn btn-danger fa fa-times" data-toggle="modal" data-target="#modeldecline">
+              Reject
+          </a>
       </div>
   </template>
 
@@ -159,12 +157,14 @@
                               <a class="btn btn-primary btn-block fa fa-check" data-toggle="modal" data-target="#modelaccept">
                                   Accept Order
                               </a>
-                              <a class="btn btn-link" type="submit" href="#discussion">
-                                  Ask Changes
-                              </a> or 
-                              <a class="btn btn-link" data-toggle="modal" data-target="#modeldecline">
-                                  Reject
-                              </a>
+                              <div class="mt8">
+                                  <a type="submit" href="#discussion">
+                                      Ask Changes
+                                  </a> or 
+                                  <a data-toggle="modal" data-target="#modeldecline">
+                                      Reject
+                                  </a>
+                              </div>
                           </div>
                           <hr class="mt0 mb0"/>
                           <div class="hidden-print navspy" role="complementary">
@@ -175,6 +175,20 @@
                       </div>
                   </div>
                   <div class="col-md-9">
+                      <div class="alert alert-success alert-dismissable" t-if="message==1">
+                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                          Your message has been successfully sent!
+                      </div>
+                      <div class="alert alert-warning alert-dismissable" t-if="message==2">
+                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                          This quotation has been rejected. <a href="#discussion">Contact us</a> if you want a new one.
+                      </div>
+                      <div class="alert alert-warning alert-dismissable" t-if="message==3">
+                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                          This order has been validated. Thanks for your trust
+                          and do not hesitate to <a href="#discussion">contact us</a> for
+                          any question.
+                      </div>
                       <a id="introduction"/>
                       <h1 class="page-header mt16">
                           <span t-if="quotation.state in ('draft','sent','cancel')">Your Quotation</span>
