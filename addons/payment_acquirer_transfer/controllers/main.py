@@ -4,7 +4,6 @@ import pprint
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models import website
 
 _logger = logging.getLogger(__name__)
 
@@ -12,9 +11,9 @@ _logger = logging.getLogger(__name__)
 class OgoneController(http.Controller):
     _accept_url = '/payment/transfer/feedback'
 
-    @website.route([
+    @http.route([
         '/payment/transfer/feedback',
-    ], type='http', auth='admin')
+    ], type='http', auth='admin', website=True)
     def transfer_form_feedback(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
         _logger.info('Beginning form_feedback with post data %s', pprint.pformat(post))  # debug

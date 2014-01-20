@@ -32,6 +32,7 @@ from openerp import tools
 from openerp.tools.translate import _
 from urllib import urlencode, quote as quote
 
+
 _logger = logging.getLogger(__name__)
 
 try:

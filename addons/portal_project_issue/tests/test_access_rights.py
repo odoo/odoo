@@ -160,7 +160,7 @@ class TestPortalIssue(TestPortalProjectBase):
 
         # Data: subscribe Alfred, Chell and Donovan as follower
         self.project_project.message_subscribe_users(cr, uid, [pigs_id], [self.user_projectuser_id, self.user_portal_id, self.user_public_id])
-        self.project_issue.message_subscribe_users(cr, self.user_projectuser_id, [self.issue_1_id, self.issue_3_id], [self.user_portal_id, self.user_projectuser_id])
+        self.project_issue.message_subscribe_users(cr, self.user_manager_id, [self.issue_1_id, self.issue_3_id], [self.user_portal_id, self.user_projectuser_id])
 
         # Do: Alfred reads project -> ok (follower ok followers)
         # Test: followed + assigned issues visible

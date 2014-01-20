@@ -53,7 +53,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
             values = {'partner_assigned_id': False}
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             partner_ids = self.pool.get('res.partner').search(cr, SUPERUSER_ID, [('id', 'child_of', user.partner_id.commercial_partner_id.id)], context=context)
-            lead_obj.message_unsubscribe(cr, SUPERUSER_ID, context.get('active_ids'), partner_ids, context=None)
+            lead_obj.message_unsubscribe(cr, SUPERUSER_ID, context.get('active_ids', []), partner_ids, context=None)
             try:
                 stage_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', stage)[1]
             except ValueError:
@@ -62,11 +62,12 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                 values.update({'stage_id': stage_id})
         if wizard.comment:
             message += '<p>%s</p>' % wizard.comment
-        lead_obj.message_post(cr, uid, context.get('active_ids'), body=message, context=context)
+        for active_id in context.get('active_ids', []):
+            lead_obj.message_post(cr, uid, active_id, body=message, context=context)
         if values:
-            lead_obj.write(cr, SUPERUSER_ID, context.get('active_ids'), values)
+            lead_obj.write(cr, SUPERUSER_ID, context.get('active_ids', []), values)
         if wizard.interested:
-            for lead in lead_obj.browse(cr, uid, context.get('active_ids'), context=context):
+            for lead in lead_obj.browse(cr, uid, context.get('active_ids', []), context=context):
                 lead_obj.convert_opportunity(cr, SUPERUSER_ID, [lead.id], lead.partner_id and lead.partner_id.id or None, context=None)
         return {
             'type': 'ir.actions.client',

@@ -30,7 +30,7 @@ import werkzeug.utils
 controllers = controllers()
 
 class website_event(http.Controller):
-    @website.route(['/event/<model("event.event"):event>/track/<model("event.track"):track>'], type='http', auth="public", multilang=True)
+    @http.route(['/event/<model("event.event"):event>/track/<model("event.track"):track>'], type='http', auth="public", website=True, multilang=True)
     def event_track_view(self, event, track, **post):
         # TODO: not implemented
         website.preload_records(event, on_error="website_event.404")
@@ -38,7 +38,7 @@ class website_event(http.Controller):
         values = { 'track': track, 'event': track.event_id, 'main_object': track }
         return request.website.render("website_event_track.track_view", values)
 
-    @website.route(['/event/<model("event.event"):event>/agenda/'], type='http', auth="public", multilang=True)
+    @http.route(['/event/<model("event.event"):event>/agenda/'], type='http', auth="public", website=True, multilang=True)
     def event_agenda(self, event, tag=None, **post):
         website.preload_records(event, on_error="website_event.404")
         values = {
@@ -47,10 +47,10 @@ class website_event(http.Controller):
         }
         return request.website.render("website_event_track.agenda", values)
 
-    @website.route([
+    @http.route([
         '/event/<model("event.event"):event>/track/',
         '/event/<model("event.event"):event>/track/tag/<model("event.track.tag"):tag>'
-        ], type='http', auth="public", multilang=True)
+        ], type='http', auth="public", website=True, multilang=True)
     def event_tracks(self, event, tag=None, **post):
         website.preload_records(event, on_error="website_event.404")
         website.preload_records(tag)
@@ -80,13 +80,13 @@ class website_event(http.Controller):
 
 
 
-    @website.route(['/event/<model("event.event"):event>/track_proposal/'], type='http', auth="public", multilang=True)
+    @http.route(['/event/<model("event.event"):event>/track_proposal/'], type='http', auth="public", website=True, multilang=True)
     def event_track_proposal(self, event, **post):
         website.preload_records(event, on_error="website_event.404")
         values = { 'event': event }
         return request.website.render("website_event_track.event_track_proposal", values)
 
-    @website.route(['/event/<model("event.event"):event>/track_proposal/post'], type='http', auth="public", methods=['POST'], multilang=True)
+    @http.route(['/event/<model("event.event"):event>/track_proposal/post'], type='http', auth="public", methods=['POST'], website=True, multilang=True)
     def event_track_proposal_post(self, event, **post):
         cr, uid, context = request.cr, request.uid, request.context
 

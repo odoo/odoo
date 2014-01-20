@@ -22,7 +22,6 @@
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models import website
 
 
 class WebsiteMail(http.Controller):
@@ -40,7 +39,7 @@ class WebsiteMail(http.Controller):
             partner_ids = [user_obj.browse(request.cr, request.uid, request.uid, request.context).partner_id.id]
         return partner_ids
 
-    @website.route(['/website_mail/follow/'], type='json', auth="public")
+    @http.route(['/website_mail/follow/'], type='json', auth="public", website=True)
     def website_message_subscribe(self, id=0, object=None, message_is_follower="on", email=False, **post):
         _id = int(id)
         _message_is_follower = message_is_follower == 'on'

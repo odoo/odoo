@@ -2,7 +2,6 @@
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models import website
 from openerp import SUPERUSER_ID
 
 from urllib import quote_plus
@@ -16,7 +15,7 @@ class contactus(http.Controller):
         )
         return url
 
-    @website.route(['/crm/contactus'], type='http', auth="public", multilang=True)
+    @http.route(['/crm/contactus'], type='http', auth="public", website=True, multilang=True)
     def contactus(self, *arg, **post):
         required_fields = ['contact_name', 'email_from', 'description']
         post['user_id'] = False

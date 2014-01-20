@@ -3,12 +3,11 @@
 # from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models import website
 
 
 class WebsiteEmailDesigner(http.Controller):
 
-    @website.route('/website_mail/email_designer/<model("email.template"):template>/', type='http', auth="public", multilang=True)
+    @http.route('/website_mail/email_designer/<model("email.template"):template>/', type='http', auth="public", website=True, multilang=True)
     def index(self, template, **kw):
         values = {
             'template': template,
@@ -16,6 +15,6 @@ class WebsiteEmailDesigner(http.Controller):
         print template
         return request.website.render("website_mail.designer_index", values)
 
-    @website.route(['/website_mail/snippets'], type='json', auth="public")
+    @http.route(['/website_mail/snippets'], type='json', auth="public", website=True)
     def snippets(self):
         return request.website._render('website_mail.email_designer_snippets')

@@ -55,7 +55,7 @@ $(document).ready(function () {
                 }
                 set_my_cart_quantity(data[1]);
                 $link.parents(".input-group:first").find(".js_quantity").val(data[0]);
-                $('[data-oe-model="sale.order"][data-oe-field="amount_total"]').replaceWith(data[3]);
+                $('#mycart_total').replaceWith(data[3]);
             });
         return false;
     });

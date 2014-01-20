@@ -144,7 +144,7 @@ class Ecommerce(http.Controller):
                 return key_val
         return False
 
-    @website.route(['/shop/filters/'], type='http', auth="public", multilang=True)
+    @http.route(['/shop/filters/'], type='http', auth="public", website=True, multilang=True)
     def filters(self, **post):
         index = []
         filters = []
@@ -190,18 +190,18 @@ class Ecommerce(http.Controller):
         att = obj.read(request.cr, request.uid, att_ids, ["product_tmpl_id"], context=request.context)
         return [r["product_tmpl_id"][0] for r in att]
 
-    @website.route(['/shop/pricelist'], type='http', auth="public", multilang=True)
+    @http.route(['/shop/pricelist'], type='http', auth="public", website=True, multilang=True)
     def shop_promo(self, code, **post):
         assert code, 'No pricelist code provided'
         request.registry['website']._ecommerce_change_pricelist(request.cr, request.uid, code=code, context=request.context)
         return request.redirect("/shop")
 
-    @website.route([
+    @http.route([
         '/shop/',
         '/shop/page/<int:page>/',
         '/shop/category/<model("product.public.category"):category>/',
         '/shop/category/<model("product.public.category"):category>/page/<int:page>/'
-    ], type='http', auth="public", multilang=True)
+    ], type='http', auth="public", website=True, multilang=True)
     def shop(self, category=None, page=0, filters='', search='', **post):
         cr, uid, context = request.cr, request.uid, request.context
         product_obj = request.registry.get('product.template')
@@ -257,7 +257,7 @@ class Ecommerce(http.Controller):
         }
         return request.website.render("website_sale.products", values)
 
-    @website.route(['/shop/product/<model("product.template"):product>/'], type='http', auth="public", multilang=True)
+    @http.route(['/shop/product/<model("product.template"):product>/'], type='http', auth="public", website=True, multilang=True)
     def product(self, product, search='', category='', filters='', **kwargs):
         website.preload_records(product, on_error="website_sale.404")
 
@@ -286,7 +286,7 @@ class Ecommerce(http.Controller):
         }
         return request.website.render("website_sale.product", values)
 
-    @website.route(['/shop/product/comment'], type='http', auth="public", methods=['POST'])
+    @http.route(['/shop/product/comment'], type='http', auth="public", methods=['POST'], website=True)
     def product_comment(self, product_template_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         if post.get('comment'):
@@ -298,7 +298,7 @@ class Ecommerce(http.Controller):
                 context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
-    @website.route(['/shop/add_product/'], type='http', auth="user", multilang=True, methods=['POST'])
+    @http.route(['/shop/add_product/'], type='http', auth="user", methods=['POST'], website=True, multilang=True)
     def add_product(self, name="New Product", category=0, **post):
         Product = request.registry.get('product.product')
         product_id = Product.create(request.cr, request.uid, {
@@ -308,75 +308,7 @@ class Ecommerce(http.Controller):
 
         return request.redirect("/shop/product/%s/?enable_editor=1" % product.product_tmpl_id.id)
 
-    def add_product_to_cart(self, product_id=0, order_line_id=0, number=1, set_number=-1):
-        order_line_obj = request.registry.get('sale.order.line')
-        order_obj = request.registry.get('sale.order')
-
-        order = self.get_order()
-        if not order:
-            order = request.registry['website'].ecommerce_get_new_order(request.cr, request.uid, context=request.context)
-
-        request.context = dict(request.context, pricelist=self.get_pricelist())
-
-        # set order_line_id and product_id
-        if order_line_id:
-            order_line = None
-            for line in order.order_line:
-                if line.id == order_line_id:
-                    order_line = line
-                    break
-            if order_line:
-                product_id = order_line.product_id.id
-            else:
-                order_line_id = None
-        else:
-            order_line_ids = order_line_obj.search(
-                request.cr, SUPERUSER_ID,
-                [('order_id', '=', order.id), ('product_id', '=', product_id)], context=request.context)
-            if order_line_ids:
-                order_line_id = order_line_ids[0]
-
-        if not order_line_id and not product_id:
-            return 0
-
-        # values initialisation
-        quantity = 0
-        values = {}
-        if order_line_id:
-            order_line_val = order_line_obj.read(request.cr, SUPERUSER_ID, [order_line_id], [], context=request.context)[0]
-            if not product_id:
-                product_id = order_line_val['product_id'][0]
-            if set_number >= 0:
-                quantity = set_number
-            else:
-                quantity = order_line_val['product_uom_qty'] + number
-            if quantity < 0:
-                quantity = 0
-            order_line_ids = [order_line_id]
-        else:
-            fields = [k for k, v in order_line_obj._columns.items()]
-            values = order_line_obj.default_get(request.cr, SUPERUSER_ID, fields, context=request.context)
-            quantity = 1
-            order_line_ids = []
-
-        # change and record value
-        vals = order_line_obj._recalculate_product_values(request.cr, request.uid, order_line_ids, product_id, context=request.context)
-        values.update(vals)
-
-        values['product_uom_qty'] = quantity
-        values['product_id'] = product_id
-        values['order_id'] = order.id
-
-        if order_line_id:
-            order_line_obj.write(request.cr, SUPERUSER_ID, [order_line_id], values, context=request.context)
-            if not quantity:
-                order_line_obj.unlink(request.cr, SUPERUSER_ID, [order_line_id], context=request.context)
-        else:
-            order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, values, context=request.context)
-            order_obj.write(request.cr, SUPERUSER_ID, [order.id], {'order_line': [(4, order_line_id)]}, context=request.context)
-        return quantity
-
-    @website.route(['/shop/mycart/'], type='http', auth="public", multilang=True)
+    @http.route(['/shop/mycart/'], type='http', auth="public", website=True, multilang=True)
     def mycart(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
         prod_obj = request.registry.get('product.product')
@@ -411,35 +343,38 @@ class Ecommerce(http.Controller):
         }
         return request.website.render("website_sale.mycart", values)
 
-    @website.route(['/shop/add_cart/'], type='http', auth="public", multilang=True, methods=['POST'])
+    @http.route(['/shop/add_cart/'], type='http', auth="public", methods=['POST'], website=True, multilang=True)
     def add_cart(self, product_id, remove=None, **kw):
-        self.add_product_to_cart(product_id=int(product_id))
+        request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
+            product_id=int(product_id),
+            context=request.context)
         return request.redirect("/shop/mycart/")
 
-    @website.route(['/shop/add_cart/<model("product.product"):product>/'], type='http', auth="public", multilang=True)
-    def add_cart_product(self, product=None, product_id=None, remove=None, **kw):
-        self.add_product_to_cart(product_id=product.id)
-        return request.redirect("/shop/mycart/")
-
-    @website.route(['/shop/change_cart/<int:order_line_id>/'], type='http', auth="public", multilang=True)
+    @http.route(['/shop/change_cart/<int:order_line_id>/'], type='http', auth="public", website=True, multilang=True)
     def add_cart_order_line(self, order_line_id=None, remove=None, **kw):
-        self.add_product_to_cart(order_line_id=order_line_id, number=(remove and -1 or 1))
+        request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
+            order_line_id=order_line_id, number=(remove and -1 or 1),
+            context=request.context)
         return request.redirect("/shop/mycart/")
 
-    @website.route(['/shop/add_cart_json/'], type='json', auth="public")
+    @http.route(['/shop/add_cart_json/'], type='json', auth="public", website=True)
     def add_cart_json(self, product_id=None, order_line_id=None, remove=None):
-        quantity = self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
+        quantity = request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
+            product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1),
+            context=request.context)
         order = self.get_order()
         return [quantity,
                 order.get_number_of_products(),
                 order.amount_total,
                 request.website._render("website_sale.total", {'website_sale_order': order})]
 
-    @website.route(['/shop/set_cart_json/'], type='json', auth="public")
+    @http.route(['/shop/set_cart_json/'], type='json', auth="public", website=True)
     def set_cart_json(self, path=None, product_id=None, order_line_id=None, set_number=0, json=None):
-        return self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, set_number=set_number)
+        return request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
+            product_id=product_id, order_line_id=order_line_id, set_number=set_number,
+            context=request.context)
 
-    @website.route(['/shop/checkout/'], type='http', auth="public", multilang=True)
+    @http.route(['/shop/checkout/'], type='http', auth="public", website=True, multilang=True)
     def checkout(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
@@ -493,7 +428,7 @@ class Ecommerce(http.Controller):
 
         return request.website.render("website_sale.checkout", values)
 
-    @website.route(['/shop/confirm_order/'], type='http', auth="public", multilang=True)
+    @http.route(['/shop/confirm_order/'], type='http', auth="public", website=True, multilang=True)
     def confirm_order(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         order_line_obj = request.registry.get('sale.order')
@@ -549,8 +484,8 @@ class Ecommerce(http.Controller):
         billing_info['parent_id'] = company_id
 
         if request.uid != request.registry['website'].get_public_user(cr, uid, context):
-            partner_id = orm_user.browse(cr, uid, uid, context=context).partner_id.id
-            orm_parter.write(cr, uid, [partner_id], billing_info, context=context)
+            partner_id = orm_user.browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
+            orm_parter.write(cr, SUPERUSER_ID, [partner_id], billing_info, context=context)
         else:
             partner_id = orm_parter.create(cr, SUPERUSER_ID, billing_info, context=context)
 
@@ -592,7 +527,7 @@ class Ecommerce(http.Controller):
 
         return request.redirect("/shop/payment/")
 
-    @website.route(['/shop/payment/'], type='http', auth="public", multilang=True)
+    @http.route(['/shop/payment/'], type='http', auth="public", website=True, multilang=True)
     def payment(self, **post):
         """ Payment step. This page proposes several payment means based on available
         payment.acquirer. State at this point :
@@ -650,8 +585,8 @@ class Ecommerce(http.Controller):
 
         return request.website.render("website_sale.payment", values)
 
-    @website.route(['/shop/payment/transaction/<int:acquirer_id>'],
-                   type='http', methods=['POST'], auth="public")
+    @http.route(['/shop/payment/transaction/<int:acquirer_id>'],
+                   type='http', methods=['POST'], auth="public", website=True)
     def payment_transaction(self, acquirer_id, **post):
         """ Hook method that creates a payment.transaction and redirect to the
         acquirer, using post values to re-create the post action.
@@ -693,7 +628,7 @@ class Ecommerce(http.Controller):
         acquirer_total_url = '%s?%s' % (acquirer_form_post_url, urllib.urlencode(post))
         return request.redirect(acquirer_total_url)
 
-    @website.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", multilang=True)
+    @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True, multilang=True)
     def payment_get_status(self, sale_order_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
 
@@ -718,7 +653,7 @@ class Ecommerce(http.Controller):
             'state': tx.state,
         }
 
-    @website.route('/shop/payment/validate/', type='http', auth="public", multilang=True)
+    @http.route('/shop/payment/validate/', type='http', auth="public", website=True, multilang=True)
     def payment_validate(self, transaction_id=None, sale_order_id=None, **post):
         """ Method that should be called by the server when receiving an update
         for a transaction. State at this point :
@@ -759,7 +694,7 @@ class Ecommerce(http.Controller):
 
         return request.redirect('/shop/confirmation/%s' % order.id)
 
-    @website.route(['/shop/confirmation/<int:sale_order_id>'], type='http', auth="public", multilang=True)
+    @http.route(['/shop/confirmation/<int:sale_order_id>'], type='http', auth="public", website=True, multilang=True)
     def payment_confirmation(self, sale_order_id, **post):
         """ End of checkout process controller. Confirmation is basically seing
         the status of a sale.order. State at this point :
@@ -775,7 +710,7 @@ class Ecommerce(http.Controller):
 
         return request.website.render("website_sale.confirmation", {'order': order})
 
-    @website.route(['/shop/change_sequence/'], type='json', auth="public")
+    @http.route(['/shop/change_sequence/'], type='json', auth="public", website=True)
     def change_sequence(self, id, sequence):
         product_obj = request.registry.get('product.template')
         if sequence == "top":
@@ -787,7 +722,7 @@ class Ecommerce(http.Controller):
         elif sequence == "down":
             product_obj.set_sequence_down(request.cr, request.uid, [id], context=request.context)
 
-    @website.route(['/shop/change_styles/'], type='json', auth="public")
+    @http.route(['/shop/change_styles/'], type='json', auth="public", website=True)
     def change_styles(self, id, style_id):
         product_obj = request.registry.get('product.template')
         product = product_obj.browse(request.cr, request.uid, id, context=request.context)
@@ -809,7 +744,7 @@ class Ecommerce(http.Controller):
 
         return not active
 
-    @website.route(['/shop/change_size/'], type='json', auth="public")
+    @http.route(['/shop/change_size/'], type='json', auth="public", website=True)
     def change_size(self, id, x, y):
         product_obj = request.registry.get('product.template')
         product = product_obj.browse(request.cr, request.uid, id, context=request.context)

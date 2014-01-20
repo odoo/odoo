@@ -173,6 +173,14 @@
                     self.$snippets = $html.find(".tab-content > div > div").addClass("oe_snippet");
                     self.$el.append($html);
 
+
+                    var snippets = 0;
+                    self.$snippets.each(function () {
+                        if (self.snippet_have_dropzone($(this)))
+                            snippets++;
+                    });
+                    if (!snippets) self.$button.css("display", "none");
+
                     self.make_snippet_draggable(self.$snippets);
                 });
         },
@@ -194,6 +202,12 @@
         },
         hide: function () {
             this.$el.addClass("hidden");
+        },
+
+        snippet_have_dropzone: function ($snippet) {
+            return (($snippet.data('selector-siblings') && this.dom_filter($snippet.data('selector-siblings')).size() > 0) ||
+                    ($snippet.data('selector-children') && this.dom_filter($snippet.data('selector-children')).size() > 0) ||
+                    ($snippet.data('selector-vertical-children') && this.dom_filter($snippet.data('selector-vertical-children')).size() > 0));
         },
 
         bind_snippet_click_editor: function () {
@@ -1111,8 +1125,6 @@
 
             var grid = [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11];
             this.grid.w = [_.map(grid, function (v) {return 'col-md-offset-'+v;}), _.map(grid, function (v) {return width/12*v;}), 12];
-
-            this.grid.s = null;
 
             return this.grid;
         },

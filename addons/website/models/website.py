@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import fnmatch
-import functools
 import inspect
 import logging
 import math
@@ -17,18 +16,10 @@ import openerp
 from openerp.osv import orm, osv, fields
 from openerp.tools.safe_eval import safe_eval
 
-from openerp.addons.web import http
 from openerp.addons.web.http import request, LazyResponse
 from ..utils import slugify
 
 logger = logging.getLogger(__name__)
-
-def route(routes, *route_args, **route_kwargs):
-    def decorator(f):
-        f.cms = True
-        f.multilang = route_kwargs.pop('multilang', False)
-        return http.route(routes, *route_args, **route_kwargs)(f)
-    return decorator
 
 def url_for(path_or_uri, lang=None, keep_query=None):
     location = path_or_uri.strip()
@@ -101,7 +92,7 @@ class website(osv.osv):
     def _get_menu_website(self, cr, uid, ids, context=None):
         # IF a menu is changed, update all websites
         return self.search(cr, uid, [], context=context)
-        
+
     def _get_menu(self, cr, uid, ids, name, arg, context=None):
         root_domain = [('parent_id', '=', False)]
         menus = self.pool.get('website.menu').search(cr, uid, root_domain, order='id', context=context)
@@ -178,9 +169,7 @@ class website(osv.osv):
         page = self.page_for_name(cr, uid, ids, name, module=module, context=context)
 
         try:
-            return self.get_template(
-                cr, uid, ids, template=page, context=context
-            ).exists()
+           self.pool["ir.model.data"].get_object_reference(cr, uid, module, name)
         except:
             return False
 
@@ -193,6 +182,7 @@ class website(osv.osv):
     def _get_languages(self, cr, uid, id, context=None):
         website = self.browse(cr, uid, id)
         return [(lg.code, lg.name) for lg in website.language_ids]
+
     def get_languages(self, cr, uid, ids, context=None):
         return self._get_languages(cr, uid, ids[0])
 
@@ -218,28 +208,19 @@ class website(osv.osv):
             translatable=not is_master_lang,
         )
 
-    def get_template(self, cr, uid, ids, template, context=None):
-        IMD = self.pool["ir.model.data"]
-        try:
-            module, xmlid = template.split('.', 1)
-            model, id = IMD.get_object_reference(cr, uid, module, xmlid)
-        except ValueError: # catches both unpack errors and gor errors
-            module, xmlid = 'website', template
-            model, id = IMD.get_object_reference(cr, uid, module, xmlid)
-        return self.pool["ir.ui.view"].browse(cr, uid, id, context=context)
-
     def _render(self, cr, uid, ids, template, values=None, context=None):
         user = self.pool.get("res.users")
         if not context:
             context = {}
 
-        qweb_context = context.copy()
-
+        # Take a context
+        qweb_values = context.copy()
+        # add some values
         if values:
-            qweb_context.update(values)
-
-        qweb_context.update(
-            request=request, # TODO maybe rename to _request to mark this attribute as unsafe
+            qweb_values.update(values)
+        # fill some defaults
+        qweb_values.update(
+            request=request,
             json=simplejson,
             website=request.website,
             url_for=url_for,
@@ -248,17 +229,12 @@ class website(osv.osv):
             user_id=user.browse(cr, uid, uid),
             quote_plus=quote_plus,
         )
+        qweb_values.setdefault('editable', False)
 
-        context.update(
-            inherit_branding=qweb_context.setdefault('editable', False),
-        )
+        # in edit mode ir.ui.view will tag nodes
+        context['inherit_branding']=qweb_values['editable']
 
-        view = self.get_template(cr, uid, ids, template)
-
-        if 'main_object' not in qweb_context:
-            qweb_context['main_object'] = view
-        #context['debug'] = True
-        result = view.render(qweb_context, engine='website.qweb', context=context)
+        result = self.pool['ir.ui.view'].render(cr, uid, template, qweb_values, engine='website.qweb', context=context)
         return result
 
     def render(self, cr, uid, ids, template, values=None, status_code=None, context=None):
@@ -328,10 +304,10 @@ class website(osv.osv):
         converters = rule._converters.values()
 
         return (
-                'GET' in methods
-            and endpoint.exposed == 'http'
-            and endpoint.auth in ('none', 'public')
-            and getattr(endpoint, 'cms', False)
+            'GET' in methods
+            and endpoint.routing['type'] == 'http'
+            and endpoint.routing['auth'] in ('none', 'public')
+            and endpoint.routing.get('website', False)
             # preclude combinatorial explosion by only allowing a single converter
             and len(converters) <= 1
             # ensure all converters on the rule are able to generate values for
@@ -513,7 +489,6 @@ class website(osv.osv):
             html += request.website._render(template, {'object_id': object_id})
         return html
 
-
 class website_menu(osv.osv):
     _name = "website.menu"
     _description = "Website Menu"
@@ -669,3 +644,5 @@ class SeoMetadata(osv.Model):
         'website_meta_description': fields.text("Website meta description", size=160, translate=True),
         'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
+
+# vim:et:

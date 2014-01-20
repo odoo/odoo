@@ -252,10 +252,9 @@ class mail_thread(osv.AbstractModel):
                 new = set(command[2])
 
         # remove partners that are no longer followers
-        self.message_unsubscribe(cr, uid, [id], list(old-new))
-
+        self.message_unsubscribe(cr, uid, [id], list(old-new), context=context)
         # add new followers
-        self.message_subscribe(cr, uid, [id], list(new-old))
+        self.message_subscribe(cr, uid, [id], list(new-old), context=context)
 
     def _search_followers(self, cr, uid, obj, name, args, context):
         """Search function for message_follower_ids
@@ -291,7 +290,7 @@ class mail_thread(osv.AbstractModel):
         'message_is_follower': fields.function(_get_followers, type='boolean',
             fnct_search=_search_is_follower, string='Is a Follower', multi='_get_followers,'),
         'message_follower_ids': fields.function(_get_followers, fnct_inv=_set_followers,
-            fnct_search=_search_followers, type='many2many',
+            fnct_search=_search_followers, type='many2many', priority=-10,
             obj='res.partner', string='Followers', multi='_get_followers'),
         'message_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model', '=', self._name)],
@@ -344,15 +343,21 @@ class mail_thread(osv.AbstractModel):
         if context is None:
             context = {}
 
-        thread_id = super(mail_thread, self).create(cr, uid, values, context=context)
+        # subscribe uid unless asked not to
+        if not context.get('mail_create_nosubscribe'):
+            pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid).partner_id.id
+            message_follower_ids = values.get('message_follower_ids') or []  # webclient can send None or False
+            message_follower_ids.append([4, pid])
+            values['message_follower_ids'] = message_follower_ids
+            # add operation to ignore access rule checking for subscription
+            context_operation = dict(context, operation='create')
+        else:
+            context_operation = context
+        thread_id = super(mail_thread, self).create(cr, uid, values, context=context_operation)
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not context.get('mail_create_nolog'):
             self.message_post(cr, uid, thread_id, body=_('%s created') % (self._description), context=context)
-
-        # subscribe uid unless asked not to
-        if not context.get('mail_create_nosubscribe'):
-            self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
 
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
@@ -1114,11 +1119,23 @@ class mail_thread(osv.AbstractModel):
                     alternative = True
                 if part.get_content_maintype() == 'multipart':
                     continue  # skip container
-                filename = part.get_filename()  # None if normal part
+                # part.get_filename returns decoded value if able to decode, coded otherwise.
+                # original get_filename is not able to decode iso-8859-1 (for instance).
+                # therefore, iso encoded attachements are not able to be decoded properly with get_filename
+                # code here partially copy the original get_filename method, but handle more encoding
+                filename=part.get_param('filename', None, 'content-disposition')
+                if not filename:
+                    filename=part.get_param('name', None)
+                if filename:
+                    if isinstance(filename, tuple):
+                        # RFC2231
+                        filename=email.utils.collapse_rfc2231_value(filename).strip()
+                    else:
+                        filename=decode(filename)
                 encoding = part.get_content_charset()  # None if attachment
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append((decode(filename) or 'attachment', part.get_payload(decode=True)))
+                    attachments.append((filename or 'attachment', part.get_payload(decode=True)))
                     continue
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and (not alternative or not body):
@@ -1531,20 +1548,26 @@ class mail_thread(osv.AbstractModel):
 
     def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         """ Add partners to the records followers. """
+        if context is None:
+            context = {}
+
         mail_followers_obj = self.pool.get('mail.followers')
         subtype_obj = self.pool.get('mail.message.subtype')
 
         user_pid = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         if set(partner_ids) == set([user_pid]):
-            try:
-                self.check_access_rights(cr, uid, 'read')
-            except (osv.except_osv, orm.except_orm):
-                return
+            if context.get('operation', '') != 'create':
+                try:
+                    self.check_access_rights(cr, uid, 'read')
+                    self.check_access_rule(cr, uid, ids, 'read')
+                except (osv.except_osv, orm.except_orm):
+                    return False
         else:
             self.check_access_rights(cr, uid, 'write')
+            self.check_access_rule(cr, uid, ids, 'write')
 
         existing_pids_dict = {}
-        fol_ids = mail_followers_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids)])
+        fol_ids = mail_followers_obj.search(cr, SUPERUSER_ID, ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', ids), ('partner_id', 'in', partner_ids)])
         for fol in mail_followers_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context):
             existing_pids_dict.setdefault(fol.res_id, set()).add(fol.partner_id.id)
 
@@ -1586,8 +1609,10 @@ class mail_thread(osv.AbstractModel):
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         if set(partner_ids) == set([user_pid]):
             self.check_access_rights(cr, uid, 'read')
+            self.check_access_rule(cr, uid, ids, 'read')
         else:
             self.check_access_rights(cr, uid, 'write')
+            self.check_access_rule(cr, uid, ids, 'write')
         fol_obj = self.pool['mail.followers']
         fol_ids = fol_obj.search(
             cr, SUPERUSER_ID, [

@@ -29,8 +29,9 @@ logger = logging.getLogger(__name__)
 NOPE = object()
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
+
 class Website(openerp.addons.web.controllers.main.Home):
-    @website.route('/', type='http', auth="public", multilang=True)
+    @http.route('/', type='http', auth="public", website=True, multilang=True)
     def index(self, **kw):
         try:
             main_menu = request.registry['ir.model.data'].get_object(request.cr, request.uid, 'website', 'main_menu')
@@ -41,7 +42,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             pass
         return self.page("website.homepage")
 
-    @website.route('/web/login', type='http', auth="public", multilang=True)
+    @http.route(website=True, auth="public", multilang=True)
     def web_login(self, *args, **kw):
         response = super(Website, self).web_login(*args, **kw)
         if isinstance(response, LazyResponse):
@@ -49,7 +50,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             response = request.website.render(response.params['template'], values)
         return response
 
-    @website.route('/pagenew/<path:path>', type='http', auth="user")
+    @http.route('/pagenew/<path:path>', type='http', auth="user")
     def pagenew(self, path, noredirect=NOPE):
         web = request.registry['website']
         try:
@@ -67,7 +68,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
 
-    @website.route('/website/theme_change', type='http', auth="admin")
+    @http.route('/website/theme_change', type='http', auth="admin", website=True)
     def theme_change(self, theme_id=False, **kwargs):
         imd = request.registry['ir.model.data']
         view = request.registry['ir.ui.view']
@@ -89,25 +90,33 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         return request.website.render('website.themes', {'theme_changed': True})
 
-    @website.route(['/website/snippets'], type='json', auth="public")
+    @http.route(['/website/snippets'], type='json', auth="public", website=True)
     def snippets(self):
         return request.website._render('website.snippets')
 
-    @website.route('/page/<page:page>', type='http', auth="public", multilang=True)
+    @http.route('/page/<page:page>', type='http', auth="public", website=True, multilang=True)
     def page(self, page, **opt):
         values = {
             'path': page,
         }
+        # allow shortcut for /page/<website_xml_id>
+        if '.' not in page:
+            page = 'website.%s' % page
+
         try:
-            request.website.get_template(page)
-        except (Exception), e:
+            module, xmlid = page.split('.', 1)
+            model, view_id = request.registry["ir.model.data"].get_object_reference(request.cr, request.uid, module, xmlid)
+            values['main_object'] = request.registry["ir.ui.view"].browse(request.cr, request.uid, view_id, context=request.context)
+        except ValueError, e:
+            # page not found
             if request.context['editable']:
                 page = 'website.page_404'
             else:
                 return request.registry['ir.http']._handle_exception(e, 404)
+
         return request.website.render(page, values)
 
-    @website.route('/website/reset_templates', type='http', auth='user', methods=['POST'])
+    @http.route('/website/reset_templates', type='http', auth='user', methods=['POST'], website=True)
     def reset_template(self, templates, redirect='/'):
         templates = request.httprequest.form.getlist('templates')
         modules_to_update = []
@@ -123,7 +132,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         module_obj.button_immediate_upgrade(request.cr, request.uid, module_ids, context=request.context)
         return request.redirect(redirect)
 
-    @website.route('/website/customize_template_toggle', type='json', auth='user')
+    @http.route('/website/customize_template_toggle', type='json', auth='user', website=True)
     def customize_template_set(self, view_id):
         view_obj = request.registry.get("ir.ui.view")
         view = view_obj.browse(request.cr, request.uid, int(view_id),
@@ -137,7 +146,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         }, context=request.context)
         return True
 
-    @website.route('/website/customize_template_get', type='json', auth='user')
+    @http.route('/website/customize_template_get', type='json', auth='user', website=True)
     def customize_template_get(self, xml_id, optional=True):
         imd = request.registry['ir.model.data']
         view_model, view_theme_id = imd.get_object_reference(
@@ -172,7 +181,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 })
         return result
 
-    @website.route('/website/get_view_translations', type='json', auth='admin')
+    @http.route('/website/get_view_translations', type='json', auth='admin', website=True)
     def get_view_translations(self, xml_id, lang=None):
         lang = lang or request.context.get('lang')
         views = self.customize_template_get(xml_id, optional=False)
@@ -181,7 +190,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         irt = request.registry.get('ir.translation')
         return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value'], context=request.context)
 
-    @website.route('/website/set_translations', type='json', auth='admin')
+    @http.route('/website/set_translations', type='json', auth='admin', website=True)
     def set_translations(self, data, lang):
         irt = request.registry.get('ir.translation')
         for view_id, trans in data.items():
@@ -216,7 +225,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                     irt.create(request.cr, request.uid, new_trans)
         return True
 
-    @website.route('/website/attach', type='http', auth='user')
+    @http.route('/website/attach', type='http', auth='user', website=True)
     def attach(self, func, upload):
         req = request.httprequest
         if req.method != 'POST':
@@ -246,7 +255,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             window.parent['%s'](%s, %s);
         </script>""" % (func, json.dumps(url), json.dumps(message))
 
-    @website.route(['/website/publish'], type='json', auth="public")
+    @http.route(['/website/publish'], type='json', auth="public", website=True)
     def publish(self, id, object):
         _id = int(id)
         _object = request.registry[object]
@@ -263,23 +272,23 @@ class Website(openerp.addons.web.controllers.main.Home):
         obj = _object.browse(request.cr, request.uid, _id)
         return bool(obj.website_published)
 
-    @website.route(['/website/kanban/'], type='http', auth="public", methods=['POST'])
+    @http.route(['/website/kanban/'], type='http', auth="public", methods=['POST'], website=True)
     def kanban(self, **post):
         return request.website.kanban_col(**post)
 
-    @website.route(['/robots.txt'], type='http', auth="public")
+    @http.route(['/robots.txt'], type='http', auth="public", website=True)
     def robots(self):
         response = request.website.render('website.robots', {'url_root': request.httprequest.url_root})
         response.mimetype = 'text/plain'
         return response
 
-    @website.route('/sitemap', type='http', auth='public', multilang=True)
+    @http.route('/sitemap', type='http', auth='public', website=True, multilang=True)
     def sitemap(self):
         return request.website.render('website.sitemap', {
             'pages': request.website.enumerate_pages()
         })
 
-    @website.route('/sitemap.xml', type='http', auth="public")
+    @http.route('/sitemap.xml', type='http', auth="public", website=True)
     def sitemap_xml(self):
         response = request.website.render('website.sitemap_xml', {
             'pages': request.website.enumerate_pages()
@@ -297,7 +306,7 @@ class Images(http.Controller):
             response.set_data(f.read())
             return response.make_conditional(request.httprequest)
 
-    @website.route('/website/image', auth="public")
+    @http.route('/website/image', auth="public", website=True)
     def image(self, model, id, field, max_width=maxint, max_height=maxint):
         Model = request.registry[model]
 
@@ -361,6 +370,5 @@ class Images(http.Controller):
             del response.headers['Content-Length']
 
         return response
-
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

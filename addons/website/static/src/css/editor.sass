@@ -25,7 +25,7 @@
     +box-shadow(none)
 
 // }}}
-
+ 
 /* ---- OpenERP Style ---- {{{ */
 
 .oe_website_editorbar
@@ -69,6 +69,9 @@
 
 .css_editable_display
     display: block !important
+
+.css_editable_hidden
+    display: none !important
 
 .css_non_editable_mode_hidden
     display: none
@@ -177,6 +180,9 @@ ul.oe_menu_editor
 .cke_widget_wrapper
     position: static !important
 
+.cke_widget_inline
+    display: inline !important
+
 // prevent inline widgets from entirely disappearing when their (textual)
 // content is removed
 .cke_widget_editable
@@ -201,6 +207,10 @@ ul.oe_menu_editor
     left: 0
     // This z-index is due to .navbar of bootstrap
     z-index: 1000
+
+// fontawesome
+.cke_editable .fa
+    cursor: pointer
 
 // }}}
 

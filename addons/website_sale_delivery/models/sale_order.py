@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp.osv import orm, fields
+from openerp import SUPERUSER_ID
 
 
 class delivery_carrier(orm.Model):
@@ -44,5 +45,5 @@ class SaleOrder(orm.Model):
         delivery_ctx = dict(context, order_id=order.id)
         DeliveryCarrier = self.pool.get('delivery.carrier')
         delivery_ids = DeliveryCarrier.search(cr, uid, [], context=context)
-        values['deliveries'] = DeliveryCarrier.browse(cr, uid, delivery_ids, context=delivery_ctx)
+        values['deliveries'] = DeliveryCarrier.browse(cr, SUPERUSER_ID, delivery_ids, context=delivery_ctx)
         return values
