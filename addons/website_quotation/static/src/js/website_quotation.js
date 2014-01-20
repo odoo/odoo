@@ -24,11 +24,13 @@ $(document).ready(function () {
     });
 
     $('#modelaccept').on('shown.bs.modal', function (e) {
-        $("#signature").jSignature();
+        $("#signature").empty().jSignature();
     });
+
     $('#sign_clean').on('click', function (e) {
         $("#signature").jSignature('reset');
     });
+
     $('form.js_accept_json').submit(function(ev){
         ev.preventDefault();
         var $link = $(ev.currentTarget);
