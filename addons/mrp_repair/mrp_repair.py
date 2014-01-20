@@ -186,6 +186,10 @@ class mrp_repair(osv.osv):
         'pricelist_id': lambda self, cr, uid,context : self.pool.get('product.pricelist').search(cr, uid, [('type','=','sale')])[0]
     }
 
+    _sql_constraints = [
+        ('name', 'unique (name)', 'The name of the Repair Order must be unique!'),
+    ]
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
