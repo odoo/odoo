@@ -2,7 +2,6 @@
 from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
-from openerp.addons.website.models import website
 from openerp.addons.website.controllers.main import Website as controllers
 controllers = controllers()
 
@@ -10,12 +9,12 @@ import base64
 
 
 class website_hr_recruitment(http.Controller):
-    @website.route([
+    @http.route([
         '/jobs',
         '/jobs/department/<model("hr.department"):department>/office/<model("res.partner"):office>',
         '/jobs/department/<model("hr.department"):department>',
         '/jobs/office/<model("res.partner"):office>'
-        ], type='http', auth="public", multilang=True)
+        ], type='http', auth="public", website=True, multilang=True)
     def jobs(self, department=None, office=None):
         JobsObj = request.registry['hr.job']
         jobpost_ids = JobsObj.search(request.cr, request.uid, [],
@@ -47,11 +46,11 @@ class website_hr_recruitment(http.Controller):
             'office': office and office.id or None
         })
 
-    @website.route(['/job/detail/<model("hr.job"):job>'], type='http', auth="public", multilang=True)
+    @http.route(['/job/detail/<model("hr.job"):job>'], type='http', auth="public", website=True, multilang=True)
     def detail(self, job, **kwargs):
         return request.website.render("website_hr_recruitment.detail", { 'job': job, 'main_object': job })
 
-    @website.route(['/job/success'], methods=['POST'], type='http', auth="admin", multilang=True)
+    @http.route(['/job/success'], methods=['POST'], type='http', auth="admin", website=True, multilang=True)
     def success(self, **post):
         data = {
             'name': _('Online Form'),
@@ -84,7 +83,7 @@ class website_hr_recruitment(http.Controller):
             request.registry['ir.attachment'].create(request.cr, request.uid, attachment_values, context=request.context)
         return request.website.render("website_hr_recruitment.thankyou", {})
 
-    @website.route(['/job/apply'], type='http', auth="public", multilang=True)
+    @http.route(['/job/apply'], type='http', auth="public", website=True, multilang=True)
     def applyjobpost(self, job):
         [job_object] = request.registry['hr.job'].browse(
             request.cr, request.uid, [int(job)], context=request.context)
@@ -93,7 +92,7 @@ class website_hr_recruitment(http.Controller):
             'job': job_object
         })
 
-    @website.route('/job/add_job_offer/', type='http', auth="user", multilang=True, methods=['POST'])
+    @http.route('/job/add_job_offer/', type='http', auth="user", methods=['POST'], website=True, multilang=True)
     def add_job_offer(self, **kwargs):
         Job = request.registry.get('hr.job')
         job_id = Job.create(request.cr, request.uid, {

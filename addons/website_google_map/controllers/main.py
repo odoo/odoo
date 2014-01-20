@@ -3,12 +3,11 @@
 import openerp
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models import website
 from datetime import datetime
 
 class google_map(http.Controller):
 
-    @website.route(['/google_map/'], type='http', auth="admin")
+    @http.route(['/google_map/'], type='http', auth="admin", website=True)
     def google_map(self, *arg, **post):
         values = {
             'partner_ids': post.get('partner_ids', ""),
@@ -18,7 +17,7 @@ class google_map(http.Controller):
         }
         return request.website.render("website_google_map.google_map", values)
 
-    @website.route(['/google_map/partners.json'], type='http', auth="admin")
+    @http.route(['/google_map/partners.json'], type='http', auth="admin", website=True)
     def google_map_data(self, *arg, **post):
         partner_obj = request.registry['res.partner']
 
@@ -29,7 +28,7 @@ class google_map(http.Controller):
         return partner_obj.google_map_json(request.cr, openerp.SUPERUSER_ID,
                                            partner_ids, request.context)
 
-    @website.route(['/google_map/set_partner_position/'], type='http', auth="admin")
+    @http.route(['/google_map/set_partner_position/'], type='http', auth="admin", website=True)
     def google_map_set_partner_position(self, *arg, **post):
         partner_obj = request.registry['res.partner']
 

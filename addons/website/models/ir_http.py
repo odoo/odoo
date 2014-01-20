@@ -38,15 +38,15 @@ class ir_http(orm.AbstractModel):
         func = None
         try:
             func, arguments = self._find_handler()
-            request.cms = getattr(func, 'cms', False)
+            request.website_enabled = func.routing.get('website', False)
         except werkzeug.exceptions.NotFound:
             # either we have a language prefixed route, either a real 404
             # in all cases, website processes them
-            request.cms = True
+            request.website_enabled = True
 
-        if request.cms:
+        if request.website_enabled:
             if func:
-                self._authenticate(getattr(func, 'auth', None))
+                self._authenticate(func.routing['auth'])
             else:
                 self._auth_method_public()
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
@@ -82,7 +82,7 @@ class ir_http(orm.AbstractModel):
     def _handle_exception(self, exception=None, code=500):
         if isinstance(exception, werkzeug.exceptions.HTTPException) and exception.response:
             return exception.response
-        if getattr(request, 'cms', False) and request.website:
+        if getattr(request, 'website_enabled', False) and request.website:
             values = dict(
                 exception=exception,
                 traceback=traceback.format_exc(exception),

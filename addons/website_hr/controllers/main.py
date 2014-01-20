@@ -2,11 +2,10 @@
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models import website
 
 class website_hr(http.Controller):
 
-    @website.route(['/page/website.aboutus'], type='http', auth="public", multilang=True)
+    @http.route(['/page/website.aboutus'], type='http', auth="public", website=True, multilang=True)
     def blog(self, **post):
         hr_obj = request.registry['hr.employee']
         employee_ids = hr_obj.search(request.cr, request.uid, [('website_published', '=', True)],

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import fnmatch
-import functools
 import inspect
 import logging
 import math
@@ -17,18 +16,10 @@ import openerp
 from openerp.osv import orm, osv, fields
 from openerp.tools.safe_eval import safe_eval
 
-from openerp.addons.web import http
 from openerp.addons.web.http import request, LazyResponse
 from ..utils import slugify
 
 logger = logging.getLogger(__name__)
-
-def route(routes, *route_args, **route_kwargs):
-    def decorator(f):
-        f.cms = True
-        f.multilang = route_kwargs.pop('multilang', False)
-        return http.route(routes, *route_args, **route_kwargs)(f)
-    return decorator
 
 def url_for(path_or_uri, lang=None, keep_query=None):
     location = path_or_uri.strip()
@@ -313,10 +304,10 @@ class website(osv.osv):
         converters = rule._converters.values()
 
         return (
-                'GET' in methods
-            and endpoint.exposed == 'http'
-            and endpoint.auth in ('none', 'public')
-            and getattr(endpoint, 'cms', False)
+            'GET' in methods
+            and endpoint.routing['type'] == 'http'
+            and endpoint.routing['auth'] in ('none', 'public')
+            and endpoint.routing.get('website', False)
             # preclude combinatorial explosion by only allowing a single converter
             and len(converters) <= 1
             # ensure all converters on the rule are able to generate values for

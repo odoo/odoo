@@ -13,14 +13,14 @@ import urllib
 class WebsiteCustomer(http.Controller):
     _references_per_page = 20
 
-    @website.route([
+    @http.route([
         '/customers/',
         '/customers/page/<int:page>/',
         '/customers/country/<int:country_id>',
         '/customers/country/<country_name>-<int:country_id>',
         '/customers/country/<int:country_id>/page/<int:page>/',
         '/customers/country/<country_name>-<int:country_id>/page/<int:page>/',
-    ], type='http', auth="public", multilang=True)
+    ], type='http', auth="public", website=True, multilang=True)
     def customers(self, country_id=0, page=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
         partner_obj = request.registry['res.partner']
@@ -76,7 +76,7 @@ class WebsiteCustomer(http.Controller):
         }
         return request.website.render("website_customer.index", values)
 
-    @website.route(['/customers/<int:partner_id>/', '/customers/<partner_name>-<int:partner_id>/'], type='http', auth="public", multilang=True)
+    @http.route(['/customers/<int:partner_id>/', '/customers/<partner_name>-<int:partner_id>/'], type='http', auth="public", website=True, multilang=True)
     def customer(self, partner_id, **post):
         partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
         website.preload_records(partner)
