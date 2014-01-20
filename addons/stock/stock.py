@@ -749,7 +749,12 @@ class stock_picking(osv.osv):
         @return: True
         """
         pickings = self.browse(cr, uid, ids, context=context)
-        self.write(cr, uid, ids, {'state': 'confirmed'})
+        to_update = []
+        for pick in pickings:
+            if pick.state != 'confirmed':
+                to_update.append(pick.id)
+        if to_update:
+            self.write(cr, uid, to_update, {'state': 'confirmed'})
         todo = []
         for picking in pickings:
             for r in picking.move_lines:
@@ -828,7 +833,12 @@ class stock_picking(osv.osv):
         """ Changes picking state to assigned.
         @return: True
         """
-        self.write(cr, uid, ids, {'state': 'assigned'})
+        to_update = []
+        for pick in self.browse(cr, uid, ids, context=context):
+            if pick.state != 'assigned':
+                to_update.append(pick.id)
+        if to_update:
+            self.write(cr, uid, to_update, {'state': 'assigned'})
         return True
 
     def test_finished(self, cr, uid, ids):
