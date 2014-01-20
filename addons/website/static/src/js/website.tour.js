@@ -36,6 +36,18 @@
                                 (callback || self.moveToNextStep).apply(self);
                             });
                         };
+                    } else if (step.trigger === 'reload') {
+                        step.triggers = function (callback) {
+                            var pill = JSON.parse(localStorage.getItem("website-reload-pill")) || [];
+                            var index = pill.indexOf(step.stepId);
+                            if (index !== -1) {
+                                pill.splice(index,1);
+                                (callback || self.moveToNextStep).apply(self);
+                            } else {
+                                pill.push(step.stepId);
+                            }
+                            localStorage.setItem("website-reload-pill", JSON.stringify(pill));
+                        };
                     } else if (step.trigger === 'drag') {
                         step.triggers = function (callback) {
                             self.onSnippetDragged(callback || self.moveToNextStep);
