@@ -87,6 +87,7 @@ This installs the module product_expiry."""),
         'module_stock_dropshipping': fields.boolean("Manage dropshipping",
             help='\nCreates the dropship route and add more complex tests'
                  '-This installs the module stock_dropshipping.'),
+        'module_stock_picking_wave': fields.boolean('Manage picking wave', help='Install the picking wave module which will help you grouping your pickings'),
     }
 
     def _default_company(self, cr, uid, context=None):
