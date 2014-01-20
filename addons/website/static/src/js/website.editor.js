@@ -1463,6 +1463,13 @@
                 this.$('#fa-icon').val(e.target.getAttribute('data-id'));
                 this.update_preview();
             },
+            'click #fa-preview span': function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.$('#fa-size').val(e.target.getAttribute('data-size'));
+                this.update_preview();
+            }
         }),
 
         // List of FontAwesome icons in 4.0.3, extracted from the cheatsheet.
@@ -1508,7 +1515,7 @@
             for (var i = 0; i < classes.length; i++) {
                 var cls = classes[i];
                 switch(cls) {
-                case 'fa-lg':case 'fa-2x':case 'fa-3x':case 'fa-4x':case 'fa-5x':
+                case 'fa-2x':case 'fa-3x':case 'fa-4x':case 'fa-5x':
                     // size classes
                     this.$('#fa-size').val(cls);
                     continue;
@@ -1545,7 +1552,24 @@
             ];
         },
         update_preview: function () {
-            this.$('#fa-preview')[0].className = this.get_fa_classes().join(' ');
+            var $preview = this.$('#fa-preview').empty();
+            var sizes = ['', 'fa-2x', 'fa-3x', 'fa-4x', 'fa-5x'];
+            var classes = this.get_fa_classes();
+            var no_sizes = _.difference(classes, sizes).join(' ');
+            var selected = false;
+            for (var i = sizes.length - 1; i >= 0; i--) {
+                var size = sizes[i];
+
+                var $p = $('<span>')
+                        .attr('data-size', size)
+                        .addClass(size)
+                        .addClass(no_sizes);
+                if ((size && _.contains(classes, size)) || (!size && !selected)) {
+                    $p.addClass('font-icons-selected');
+                    selected = true;
+                }
+                $preview.prepend($p);
+            }
         }
     });
 

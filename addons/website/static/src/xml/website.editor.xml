@@ -207,12 +207,12 @@
         <t t-call="website.editor.dialog">
             <t t-set="title">Icon:</t>
             <form>
-                <div class="form-group">
-                    Preview: <span id="fa-preview"/>
+                <div class="form-group" id="fa-preview">
+
                 </div>
                 <div class="form-group fa">
-                    <label for="fa-icon">icon</label>
                     <input type="hidden" id="fa-icon" class="form-control"/>
+                    <input type="hidden" id="fa-size" class="form-control"/>
                     <div class="font-icons-icons">
                         <span t-foreach="widget.icons" t-as="icon"
                               class="fa font-icons-icon"
@@ -220,17 +220,6 @@
                             <t t-esc="icon.text"/>
                         </span>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="fa-size">size</label>
-                    <select id="fa-size" class="form-control">
-                        <option value="">Default</option>
-                        <option value="fa-lg">Large</option>
-                        <option value="fa-2x">x2</option>
-                        <option value="fa-3x">x3</option>
-                        <option value="fa-4x">x4</option>
-                        <option value="fa-5x">x5</option>
-                    </select>
                 </div>
                 <div class="form-group">
                     <label for="fa-rotation">Rotation</label>

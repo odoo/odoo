@@ -173,17 +173,28 @@ ul.oe_menu_editor
         visibility: visible !important
 
 // fontawesome modal
-.modal .font-icons-icons
-    font-size: 2em
-    max-height: 6em
-    overflow: auto
+.modal
+    .font-icons-icons
+        font-size: 2em
+        max-height: 6em
+        overflow: auto
 
-    .font-icons-icon
-        display: inline-block
-        width: 2em
-        padding: 0.25em
+        .font-icons-icon
+            display: inline-block
+            width: 2em
+            padding: 0.25em
+            text-align: center
+            cursor: pointer
+
+    #fa-preview
         text-align: center
-        cursor: pointer
+
+        span
+            cursor: pointer
+            padding: 0 15px
+        .font-icons-selected
+            background-color: #ddd
+
 
 .existing-attachments .pager .disabled
     display: none
