@@ -82,6 +82,7 @@ Dashboard / Reports for Project Management will include:
         'test/project_demo.yml',
         'test/project_process.yml',
         'test/task_process.yml',
+        'test/hours_process.yml',
     ],
     'installable': True,
     'auto_install': False,
