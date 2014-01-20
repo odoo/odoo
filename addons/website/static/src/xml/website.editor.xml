@@ -210,9 +210,16 @@
                 <div class="form-group">
                     Preview: <span id="fa-preview"/>
                 </div>
-                <div class="form-group">
+                <div class="form-group fa">
                     <label for="fa-icon">icon</label>
                     <input type="hidden" id="fa-icon" class="form-control"/>
+                    <div class="font-icons-icons">
+                        <span t-foreach="widget.icons" t-as="icon"
+                              class="fa font-icons-icon"
+                              t-att-data-id="icon.id">
+                            <t t-esc="icon.text"/>
+                        </span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="fa-size">size</label>

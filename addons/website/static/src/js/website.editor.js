@@ -1456,6 +1456,13 @@
         template: 'website.editor.dialog.font-icons',
         events : _.extend({}, website.editor.Dialog.prototype.events, {
             change: 'update_preview',
+            'click .font-icons-icon': function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.$('#fa-icon').val(e.target.getAttribute('data-id'));
+                this.update_preview();
+            },
         }),
 
         // List of FontAwesome icons in 4.0.3, extracted from the cheatsheet.
@@ -1474,26 +1481,7 @@
          * isn't customizable (?) and the fontawesome glyphs fail to appear.
          */
         start: function () {
-            var self = this;
-            var started = this._super();
-            this.$('#fa-icon').select2({
-                data: this.icons,
-                initSelection: function (element, callback) {
-                    var id = element.val(), match;
-                    if (id) {
-                        match = _.find(self.icons, function (item) {
-                            return item.id === id;
-                        }) || void 0;
-                    }
-
-                    callback(match);
-                },
-                formatSelection: function (object) {
-                    return $('<span class="fa fa-fw">').text(object.text);
-                },
-                formatResultCssClass: function () { return 'fa'; },
-            });
-            return started.then(this.proxy('load_data'));
+            return this._super().then(this.proxy('load_data'));
         },
         /**
          * Removes existing FontAwesome classes on the bound element, and sets
@@ -1529,15 +1517,15 @@
                 case 'fa-flip-horizontal':case 'fa-rotate-vertical':
                     this.$('#fa-rotation').val(cls);
                     continue;
-                case 'fa-fixed':
-                    this.$('#fa-fixed').prop('checked', true);
+                case 'fa-fw':
+                    this.$('#fa-fw').prop('checked', true);
                     continue;
                 case 'fa-border':
                     this.$('#fa-border').prop('checked', true);
                     continue;
                 default:
                     if (!/^fa-/.test(cls)) { continue; }
-                    this.$('#fa-icon').select2('val', cls);
+                    this.$('#fa-icon').val(cls);
                 }
             }
             this.update_preview();
@@ -1549,10 +1537,10 @@
         get_fa_classes: function () {
             return [
                 'fa',
-                this.$('#fa-icon').select2('val'),
+                this.$('#fa-icon').val(),
                 this.$('#fa-size').val(),
                 this.$('#fa-rotation').val(),
-                this.$('#fa-fixed').prop('checked') ? 'fa-fixed' : '',
+                this.$('#fa-fw').prop('checked') ? 'fa-fw' : '',
                 this.$('#fa-border').prop('checked') ? 'fa-border' : ''
             ];
         },
