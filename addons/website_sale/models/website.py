@@ -57,6 +57,73 @@ class Website(orm.Model):
     # Ecommerce quotation management
     # ************************************************************
 
+    def _ecommerce_add_product_to_cart(self, cr, uid, product_id=0, order_line_id=0, number=1, set_number=-1, context=None):
+        order = self.ecommerce_get_current_order(cr, uid, context=context)
+        if not order:
+            order = self.ecommerce_get_new_order(cr, uid, context=context)
+
+        order_line_obj = self.pool.get('sale.order.line')
+        order_obj = self.pool.get('sale.order')
+
+        context = dict(context, pricelist=self.ecommerce_get_pricelist_id(cr, uid, None, context=context))
+
+        # set order_line_id and product_id
+        if order_line_id:
+            order_line = None
+            for line in order.order_line:
+                if line.id == order_line_id:
+                    order_line = line
+                    break
+            if order_line:
+                product_id = order_line.product_id.id
+            else:
+                order_line_id = None
+        else:
+            order_line_ids = order_line_obj.search(cr, SUPERUSER_ID,
+                [('order_id', '=', order.id), ('product_id', '=', product_id)], context=context)
+            if order_line_ids:
+                order_line_id = order_line_ids[0]
+
+        if not order_line_id and not product_id:
+            return 0
+
+        # values initialisation
+        quantity = 0
+        values = {}
+        if order_line_id:
+            order_line_val = order_line_obj.read(cr, SUPERUSER_ID, [order_line_id], [], context=context)[0]
+            if not product_id:
+                product_id = order_line_val['product_id'][0]
+            if set_number >= 0:
+                quantity = set_number
+            else:
+                quantity = order_line_val['product_uom_qty'] + number
+            if quantity < 0:
+                quantity = 0
+            order_line_ids = [order_line_id]
+        else:
+            fields = [k for k, v in order_line_obj._columns.items()]
+            values = order_line_obj.default_get(cr, SUPERUSER_ID, fields, context=context)
+            quantity = 1
+            order_line_ids = []
+
+        # change and record value
+        vals = order_line_obj._recalculate_product_values(cr, uid, order_line_ids, product_id, context=context)
+        values.update(vals)
+
+        values['product_uom_qty'] = quantity
+        values['product_id'] = product_id
+        values['order_id'] = order.id
+
+        if order_line_id:
+            order_line_obj.write(cr, SUPERUSER_ID, [order_line_id], values, context=context)
+            if not quantity:
+                order_line_obj.unlink(cr, SUPERUSER_ID, [order_line_id], context=context)
+        else:
+            order_line_id = order_line_obj.create(cr, SUPERUSER_ID, values, context=context)
+            order_obj.write(cr, SUPERUSER_ID, [order.id], {'order_line': [(4, order_line_id)]}, context=context)
+        return quantity
+
     def _ecommerce_get_quotation_values(self, cr, uid, context=None):
         """ Generate the values for a new ecommerce quotation. """
         SaleOrder = self.pool.get('sale.order')
@@ -86,8 +153,7 @@ class Website(orm.Model):
 
         order_id = self._ecommerce_create_quotation(cr, uid, context=context)
         request.httprequest.session['ecommerce_order_id'] = order_id
-        order = SaleOrder.browse(cr, SUPERUSER_ID, order_id, context=context)
-        return SaleOrder.browse(cr, uid, order_id, context=dict(request.context, pricelist=order.pricelist_id.id))
+        return SaleOrder.browse(cr, SUPERUSER_ID, order_id, context=context)
 
     def ecommerce_get_current_order(self, cr, uid, context=None):
         SaleOrder = self.pool.get('sale.order')

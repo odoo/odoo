@@ -29,6 +29,7 @@ logger = logging.getLogger(__name__)
 NOPE = object()
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
+
 class Website(openerp.addons.web.controllers.main.Home):
     @website.route('/', type='http', auth="public", multilang=True)
     def index(self, **kw):
@@ -90,13 +91,21 @@ class Website(openerp.addons.web.controllers.main.Home):
         values = {
             'path': page,
         }
+        # allow shortcut for /page/<website_xml_id>
+        if '.' not in page:
+            page = 'website.%s' % page
+
         try:
-            request.website.get_template(page)
-        except (Exception), e:
+            module, xmlid = page.split('.', 1)
+            model, view_id = request.registry["ir.model.data"].get_object_reference(request.cr, request.uid, module, xmlid)
+            values['main_object'] = request.registry["ir.ui.view"].browse(request.cr, request.uid, view_id, context=request.context)
+        except ValueError, e:
+            # page not found
             if request.context['editable']:
                 page = 'website.page_404'
             else:
                 return request.registry['ir.http']._handle_exception(e, 404)
+
         return request.website.render(page, values)
 
     @website.route('/website/reset_templates', type='http', auth='user', methods=['POST'])

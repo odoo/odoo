@@ -531,29 +531,7 @@
                           </tr>
                       </tbody>
                   </table>
-                  <table class='pull-right mb16' id="mycart_total" t-if="website_sale_order">
-                      <colgroup>
-                          <col width="100"/>
-                          <col width="120"/>
-                      </colgroup>
-                      <thead>
-                          <tr style="border-top: 1px solid #000" id="order_total">
-                              <th><h3>Total:</h3></th>
-                              <th class="text-right">
-                                <h3><t t-call="website_sale.total"/></h3>
-                              </th>
-                          </tr>
-                          <tr class="text-muted" id="order_total_taxes">
-                              <td><abbr title="Taxes may be updated after providing shipping address">Taxes:</abbr></td>
-                              <td class="text-right">
-                                  <span t-field="website_sale_order.amount_tax" t-field-options='{
-                                      "widget": "monetary",
-                                      "display_currency": "website.pricelist_id.currency_id"
-                                  }'/>
-                              </td>
-                          </tr>
-                      </thead>
-                  </table>
+                  <t t-call="website_sale.total"/>
                   <div class="clearfix"/>
                   <a href="/shop" class="btn btn-default mb32"><span class="fa fa-long-arrow-left"/> Continue Shopping</a>
                   <a t-if="website_sale_order and website_sale_order.website_order_line" href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="fa fa-long-arrow-right"/></a>
@@ -930,30 +908,7 @@
                       </tr>
                   </tbody>
               </table>
-              <table class='pull-right mb16' id="mycart_total">
-                  <colgroup>
-                      <col width="100"/>
-                      <col width="120"/>
-                  </colgroup>
-                  <thead>
-                      <tr style="border-top: 1px solid #000" id="order_total">
-                          <th><h3>Total:</h3></th>
-                          <th class="text-right">
-                            <h3><span t-field="website_sale_order.amount_total" t-field-options='{
-                              "widget": "monetary",
-                              "display_currency": "website.pricelist_id.currency_id"
-                            }'/></h3>
-                          </th>
-                      </tr>
-                      <tr class="text-muted" id="order_total_taxes">
-                          <td>Taxes:</td>
-                          <td class="text-right"><span t-field="website_sale_order.amount_tax" t-field-options='{
-                              "widget": "monetary",
-                              "display_currency": "website.pricelist_id.currency_id"
-                          }'/></td>
-                      </tr>
-                  </thead>
-              </table>
+              <t t-call="website_sale.total"/>
               <div class="clearfix"/>
               <div class="oe_structure"/>
             </div>
@@ -982,12 +937,12 @@
             </div>
           </div>
 
-          <div class="js_payment mb64 row" t-if="acquirers" id="payment_method">
-              <h4>Choose your Payment Method</h4>
+          <div class="js_payment mb64" t-if="acquirers" id="payment_method">
               <div class="col-lg-5 col-sm-6">
+                  <h4>Payment Method:</h4>
                   <t t-foreach="acquirers or []" t-as="acquirer">
                       <label t-if="acquirer.button" class="oe_sale_acquirer_logo" style="display: block;">
-                          <input t-att-value="acquirer.id" type="radio" name="acquirer"/>
+                          <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer"/>
                           <img class="media-object" style="width: 60px; display: inline-block;"
                               t-att-title="acquirer.name"
                               t-att-src="'/payment_acquirer_%s/static/src/img/%s_icon.png' % (acquirer.name, acquirer.name)"/>
@@ -996,7 +951,7 @@
               </div>
               <div class="col-lg-3 col-sm-3">
                   <t t-foreach="acquirers or []" t-as="acquirer">
-                      <div t-att-data-id="acquirer.id" t-raw="acquirer.button" class="oe_sale_acquirer_button hidden"/>
+                      <div t-att-data-id="acquirer.id" t-raw="acquirer.button" class="oe_sale_acquirer_button hidden pull-right"/>
                   </t>
               </div>
           </div>
@@ -1060,11 +1015,36 @@
   </t>
 </template>
 
+<!-- Page Shop my cart and payment total -->
+
 <template id="total">
-<span t-field="website_sale_order.amount_total" t-field-options='{
-    "widget": "monetary",
-    "display_currency": "website.pricelist_id.currency_id"
-  }'/>
+    <table class='pull-right mb16' id="mycart_total" t-if="website_sale_order">
+        <colgroup>
+            <col width="100"/>
+            <col width="120"/>
+        </colgroup>
+        <thead>
+            <tr style="border-top: 1px solid #000" id="order_total">
+                <th><h3>Total:</h3></th>
+                <th class="text-right">
+                  <h3><span t-field="website_sale_order.amount_total" t-field-options='{
+                      "widget": "monetary",
+                      "display_currency": "website.pricelist_id.currency_id"
+                    }'/></h3>
+                </th>
+            </tr>
+            <tr class="text-muted" id="order_total_taxes">
+                <td><abbr title="Taxes may be updated after providing shipping address">Taxes:</abbr></td>
+                <td class="text-right">
+                    <span t-field="website_sale_order.amount_tax" t-field-options='{
+                        "widget": "monetary",
+                        "display_currency": "website.pricelist_id.currency_id"
+                    }'/>
+                </td>
+            </tr>
+        </thead>
+    </table>
 </template>
+
 </data>
 </openerp>
