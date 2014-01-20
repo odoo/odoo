@@ -19,104 +19,108 @@
             });
             this.registerSteps();
         },
-        registerSteps: function () {
+        registerStep: function (step) {
             var self = this;
-            this.tour.addSteps(_.map(this.steps, function (step) {
-                step.title = openerp.qweb.render('website.tour_popover_title', { title: step.title });
-                if (!step.element) {
-                    step.orphan = true;
-                }
-                if (step.snippet) {
-                    step.element = '#oe_snippets div.oe_snippet[data-snippet-id="'+step.snippet+'"] .oe_snippet_thumbnail';
-                }
-                if (step.trigger) {
-                    if (step.trigger === 'click') {
+            step.title = openerp.qweb.render('website.tour_popover_title', { title: step.title });
+            if (!step.element) {
+                step.orphan = true;
+            }
+            if (step.snippet) {
+                step.element = '#oe_snippets div.oe_snippet[data-snippet-id="'+step.snippet+'"] .oe_snippet_thumbnail';
+            }
+            if (step.trigger) {
+                if (step.trigger === 'click') {
+                    step.triggers = function (callback) {
+                        $(step.element).one('click', function () {
+                            (callback || self.moveToNextStep).apply(self);
+                        });
+                    };
+                } else if (step.trigger === 'reload') {
+                    step.triggers = function (callback) {
+                        var stack = JSON.parse(localStorage.getItem("website-reloads")) || [];
+                        var index = stack.indexOf(step.stepId);
+                        if (index !== -1 || window.localStorage.getItem("test-wait-reload")) {
+                            stack.splice(index,1);
+                            (callback || self.moveToNextStep).apply(self);
+                        } else {
+                            stack.push(step.stepId);
+                        }
+                        localStorage.setItem("website-reloads", JSON.stringify(stack));
+                    };
+                } else if (step.trigger.url) {
+                    step.triggers = function (callback) {
+                        var stack = JSON.parse(localStorage.getItem("website-geturls")) || [];
+                        var id = step.trigger.url.toString();
+                        var index = stack.indexOf(id);
+                        if (index !== -1) {
+                            var url = new website.UrlParser(window.location.href);
+                            var test = typeof step.trigger.url === "string" ?
+                                step.trigger.url == url.pathname+url.search :
+                                step.trigger.url.test(url.pathname+url.search);
+                            if (!test) return;
+                            stack.splice(index,1);
+                            (callback || self.moveToNextStep).apply(self);
+                        } else {
+                            stack.push(id);
+                        }
+                        localStorage.setItem("website-geturls", JSON.stringify(stack));
+                    };
+                } else if (step.trigger === 'drag') {
+                    step.triggers = function (callback) {
+                        self.onSnippetDragged(callback || self.moveToNextStep);
+                    };
+                } else if (step.trigger.id) {
+                    if (step.trigger.emitter && step.trigger.type === 'openerp') {
                         step.triggers = function (callback) {
-                            $(step.element).one('click', function () {
-                                (callback || self.moveToNextStep).apply(self);
+                            step.trigger.emitter.on(step.trigger.id, self, function customHandler () {
+                                step.trigger.emitter.off(step.trigger.id, customHandler);
+                                (callback || self.moveToNextStep).apply(self, arguments);
                             });
                         };
-                    } else if (step.trigger === 'reload') {
+                    } else {
                         step.triggers = function (callback) {
-                            var stack = JSON.parse(localStorage.getItem("website-reloads")) || [];
-                            var index = stack.indexOf(step.stepId);
-                            if (index !== -1) {
-                                stack.splice(index,1);
-                                (callback || self.moveToNextStep).apply(self);
-                            } else {
-                                stack.push(step.stepId);
-                            }
-                            localStorage.setItem("website-reloads", JSON.stringify(stack));
-                        };
-                    } else if (step.trigger && step.trigger.url) {
-                        step.triggers = function (callback) {
-                            var stack = JSON.parse(localStorage.getItem("website-geturls")) || [];
-                            var id = step.trigger.url.toString();
-                            var index = stack.indexOf(id);
-                            if (index !== -1) {
-                                var url = new website.UrlParser(window.location.href);
-                                var test = typeof step.trigger.url === "string" ?
-                                    step.trigger.url == url.pathname+url.search :
-                                    step.trigger.url.test(url.pathname+url.search);
-                                if (!test) return;
-                                stack.splice(index,1);
-                                (callback || self.moveToNextStep).apply(self);
-                            } else {
-                                stack.push(id);
-                            }
-                            localStorage.setItem("website-geturls", JSON.stringify(stack));
-                        };
-                    } else if (step.trigger === 'drag') {
-                        step.triggers = function (callback) {
-                            self.onSnippetDragged(callback || self.moveToNextStep);
-                        };
-                    } else if (step.trigger && step.trigger.id) {
-                        if (step.trigger.emitter && step.trigger.type === 'openerp') {
-                            step.triggers = function (callback) {
-                                step.trigger.emitter.on(step.trigger.id, self, function customHandler () {
-                                    step.trigger.emitter.off(step.trigger.id, customHandler);
-                                    (callback || self.moveToNextStep).apply(self, arguments);
-                                });
-                            };
-                        } else {
-                            step.triggers = function (callback) {
-                                var emitter = _.isString(step.trigger.emitter) ? $(step.trigger.emitter) : (step.trigger.emitter || $(step.element));
-                                if (!emitter.size()) throw "Emitter is undefined";
-                                emitter.on(step.trigger.id, function () {
-                                    (callback || self.moveToNextStep).apply(self, arguments);
-                                });
-                            };
-                        }
-                    } else if (step.trigger.modal) {
-                        step.triggers = function (callback) {
-                            var $doc = $(document);
-                            function onStop () {
-                                if (step.trigger.modal.stopOnClose) {
-                                    self.stop();
-                                }
-                            }
-                            $doc.on('hide.bs.modal', onStop);
-                            $doc.one('shown.bs.modal', function () {
-                                $('.modal button.btn-primary').one('click', function () {
-                                    $doc.off('hide.bs.modal', onStop);
-                                    (callback || self.moveToNextStep).apply(self, [step.trigger.modal.afterSubmit]);
-                                });
-                                (callback || self.moveToNextStep).apply(self);
+                            var emitter = _.isString(step.trigger.emitter) ? $(step.trigger.emitter) : (step.trigger.emitter || $(step.element));
+                            if (!emitter.size()) throw "Emitter is undefined";
+                            emitter.on(step.trigger.id, function () {
+                                (callback || self.moveToNextStep).apply(self, arguments);
                             });
                         };
                     }
-                }
-                step.onShow = (function () {
-                    var executed = false;
-                    return function () {
-                        if (!executed) {
-                            _.isFunction(step.onStart) && step.onStart();
-                            _.isFunction(step.triggers) && step.triggers();
-                            executed = true;
+                } else if (step.trigger.modal) {
+                    step.triggers = function (callback) {
+                        var $doc = $(document);
+                        function onStop () {
+                            if (step.trigger.modal.stopOnClose) {
+                                self.stop();
+                            }
                         }
+                        $doc.on('hide.bs.modal', onStop);
+                        $doc.one('shown.bs.modal', function () {
+                            $('.modal button.btn-primary').one('click', function () {
+                                $doc.off('hide.bs.modal', onStop);
+                                (callback || self.moveToNextStep).apply(self, [step.trigger.modal.afterSubmit]);
+                            });
+                            (callback || self.moveToNextStep).apply(self);
+                        });
                     };
-                }());
-                return step;
+                }
+            }
+            step.onShow = (function () {
+                var executed = false;
+                return function () {
+                    if (!executed) {
+                        _.isFunction(step.onStart) && step.onStart();
+                        _.isFunction(step.triggers) && step.triggers();
+                        executed = true;
+                    }
+                };
+            }());
+            return step;
+        },
+        registerSteps: function () {
+            var self = this;
+            this.tour.addSteps(_.map(this.steps, function (step) {
+                return self.registerStep(step);
             }));
         },
         reset: function () {
@@ -332,6 +336,9 @@
                     var actionSteps = _.filter(tour.steps, function (step) {
                        return step.trigger || step.sampleText;
                     });
+                    window.onbeforeunload = function () {
+                        window.localStorage.setItem("test-wait-reload", true);
+                    };
                     function executeStep (step) {
                         window.localStorage.setItem(testId, step.stepId);
                         function next () {
@@ -343,8 +350,9 @@
                             }
                         }
                         setTimeout(function () {
-                            if (step.triggers) step.triggers(next);
                             var $element = $(step.element);
+                            if (step.triggers) step.triggers(next);
+                            window.localStorage.removeItem("test-wait-reload");
                             if (step.snippet && step.trigger === 'drag') {
                                 website.TestConsole.dragAndDropSnippet(step.snippet);
                             } else if (step.trigger && step.trigger.id === 'change') {
@@ -353,13 +361,21 @@
                                 $element.val(step.sampleText);
                                 $element.trigger($.Event("change", { srcElement: $element }));
                             } else if ($element.is(":visible")) { // Click by default
-                                $element.trigger($.Event("click", { srcElement: $element }));
+                                if (step.trigger.id === 'mousedown') {
+                                    $element.trigger($.Event("mousedown", { srcElement: $element }));
+                                }
+                                var evt = document.createEvent("MouseEvents");
+                                evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                                $element[0].dispatchEvent(evt);
+                                if (step.trigger.id === 'mouseup') {
+                                    $element.trigger($.Event("mouseup", { srcElement: $element }));
+                                }
                             }
                             if (!step.triggers) next();
                         }, step.delay || defaultDelay);
                     }
                     var url = new website.UrlParser(window.location.href);
-                    if (tour.path && url.pathname !== tour.path) {
+                    if (tour.path && url.pathname !== tour.path && !window.localStorage.getItem(testId)) {
                         window.localStorage.setItem(testId, actionSteps[0].stepId);
                         window.location.href = tour.path;
                     } else {
