@@ -1,0 +1,29 @@
+# HG changeset patch
+# Parent a436864e066f91e51d30cc47f03fc42401c4296a
+diff --git a/controllers.py b/controllers.py
+--- a/controllers.py
++++ b/controllers.py
+@@ -13,7 +13,7 @@ class Home(main.Home):
+     @http.route('/', auth='none')
+     def index(self):
+         tas = [
+-            '<li><a href="/tas/?id=%d">%s</a></li>' % (i, ta['name'])
++            '<li><a href="/tas/%d/">%s</a></li>' % (i, ta['name'])
+             for i, ta in enumerate(teaching_assistants)
+         ]
+ 
+@@ -42,7 +42,7 @@ class Home(main.Home):
+         'tas': '\n'.join(tas)
+     }
+ 
+-    @http.route('/tas', auth='none')
++    @http.route('/tas/<int:id>/', auth='none')
+     def ta(self, id):
+         return """<!doctype html>
+ <html>
+@@ -54,4 +54,4 @@ class Home(main.Home):
+         <h1>%(name)s</h1>
+     </body>
+ </html>
+-""" % teaching_assistants[int(id)]
++""" % teaching_assistants[id]

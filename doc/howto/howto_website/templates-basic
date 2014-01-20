@@ -1,0 +1,108 @@
+# HG changeset patch
+# Parent 559e3266ed1eeba384445016ffd1438eed54f144
+
+diff --git a/__openerp__.py b/__openerp__.py
+--- a/__openerp__.py
++++ b/__openerp__.py
+@@ -1,4 +1,7 @@
+ {
+     'name': "Academy",
+     'category': "Tools",
++    'data': [
++        'views/templates.xml',
++    ]
+ }
+diff --git a/controllers.py b/controllers.py
+--- a/controllers.py
++++ b/controllers.py
+@@ -17,41 +17,11 @@ class Home(main.Home):
+             for i, ta in enumerate(teaching_assistants)
+         ]
+ 
+-        return """<!doctype html>
+-<html>
+-    <head>
+-        <title>AcademyAcademy</title>
+-        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+-    </head>
+-    <body class="container">
+-        <h1>Introduction to a thing</h1>
+-        <h2>Course description</h2>
+-        <p>
+-            This course will provide a basic introduction to a thing, for
+-            motivated students with no prior experience in things. The course
+-            will focus on the discovery of things and the planning and
+-            organization necessary to handle things.
+-        </p>
+-        <h2>Teaching Assistants</h2>
+-        <ul>
+-            %(tas)s
+-        </ul>
+-    </body>
+-</html>
+-""" % {
+-        'tas': '\n'.join(tas)
+-    }
++        # how in fuck do I get a db here?
++        return "" % {
++            'tas': '\n'.join(tas)
++        }
+ 
+     @http.route('/tas/<int:id>/', auth='none')
+     def ta(self, id):
+-        return """<!doctype html>
+-<html>
+-    <head>
+-        <title>AcademyAcademy TA %(name)s</title>
+-        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+-    </head>
+-    <body class="container">
+-        <h1>%(name)s</h1>
+-    </body>
+-</html>
+-""" % teaching_assistants[id]
++        return "" % teaching_assistants[id]
+diff --git a/views/templates.xml b/views/templates.xml
+new file mode 100644
+--- /dev/null
++++ b/views/templates.xml
+@@ -0,0 +1,39 @@
++<openerp>
++    <data>
++<template id="academy.index" name="Index">
++    <html>
++        <head>
++            <title>AcademyAcademy</title>
++            <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet"/>
++        </head>
++        <body class="container">
++            <h1>Introduction to a thing</h1>
++            <h2>Course description</h2>
++            <p>
++                This course will provide a basic introduction to a thing, for
++                motivated students with no prior experience in things. The course
++                will focus on the discovery of things and the planning and
++                organization necessary to handle things.
++            </p>
++            <h2>Teaching Assistants</h2>
++            <ul>
++                <t t-raw="tas"/>
++            </ul>
++        </body>
++    </html>
++</template>
++
++<template id="academy.ta" name="Teaching Assistant">
++    <html>
++        <head>
++            <title>AcademyAcademy TA <t t-esc="name"/></title>
++            <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet"/>
++        </head>
++        <body class="container">
++            <h1><t t-esc="name"/></h1>
++        </body>
++    </html>
++</template>
++
++    </data>
++</openerp>

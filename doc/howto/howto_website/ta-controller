@@ -1,0 +1,57 @@
+# HG changeset patch
+# Parent 30a859b5dc378c0da751537b1342e8d22775ad44
+
+diff --git a/controllers.py b/controllers.py
+--- a/controllers.py
++++ b/controllers.py
+@@ -1,9 +1,22 @@
+ from openerp import http
+ from openerp.addons.web.controllers import main
+ 
++teaching_assistants = [
++    {'name': "Diana Padilla"},
++    {'name': "Jody Carroll"},
++    {'name': "Lester Vaughn"},
++    {'name': "Paul Jimenez"},
++    {'name': "Tanya Harris"},
++]
++
+ class Home(main.Home):
+     @http.route('/', auth='none')
+     def index(self):
++        tas = [
++            '<li><a href="/tas/?id=%d">%s</a></li>' % (i, ta['name'])
++            for i, ta in enumerate(teaching_assistants)
++        ]
++
+         return """<!doctype html>
+ <html>
+     <head>
+@@ -19,6 +32,26 @@ class Home(main.Home):
+             will focus on the discovery of things and the planning and
+             organization necessary to handle things.
+         </p>
++        <h2>Teaching Assistants</h2>
++        <ul>
++            %(tas)s
++        </ul>
+     </body>
+ </html>
+-"""
++""" % {
++        'tas': '\n'.join(tas)
++    }
++
++    @http.route('/tas', auth='none')
++    def ta(self, id):
++        return """<!doctype html>
++<html>
++    <head>
++        <title>AcademyAcademy TA %(name)s</title>
++        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
++    </head>
++    <body class="container">
++        <h1>%(name)s</h1>
++    </body>
++</html>
++""" % teaching_assistants[int(id)]

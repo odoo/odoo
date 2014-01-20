@@ -1,0 +1,29 @@
+# HG changeset patch
+# Parent b377930cec8f9445882bb3268f9f5fac71dd8c15
+
+diff --git a/controllers.py b/controllers.py
+--- a/controllers.py
++++ b/controllers.py
+@@ -4,4 +4,21 @@ from openerp.addons.web.controllers impo
+ class Home(main.Home):
+     @http.route('/', auth='none')
+     def index(self):
+-        return "Hello, world!"
++        return """<!doctype html>
++<html>
++    <head>
++        <title>AcademyAcademy</title>
++        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
++    </head>
++    <body class="container">
++        <h1>Introduction to a thing</h1>
++        <h2>Course description</h2>
++        <p>
++            This course will provide a basic introduction to a thing, for
++            motivated students with no prior experience in things. The course
++            will focus on the discovery of things and the planning and
++            organization necessary to handle things.
++        </p>
++    </body>
++</html>
++"""

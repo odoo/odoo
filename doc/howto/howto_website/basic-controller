@@ -1,0 +1,15 @@
+# HG changeset patch
+# Parent 458a542843918f6899fe64bfe1cead00972ef68a
+
+diff --git a/controllers.py b/controllers.py
+new file mode 100644
+--- /dev/null
++++ b/controllers.py
+@@ -0,0 +1,7 @@
++from openerp import http
++from openerp.addons.web.controllers import main
++
++class Home(main.Home):
++    @http.route('/', auth='none')
++    def index(self):
++        return "Hello, world!"
