@@ -269,6 +269,10 @@
                         url:   '/shop/payment/',
                     },
                     beforeTrigger: function (tour, callback) {
+                        if ($("input[name='name']").val() === "")
+                            $("input[name='name']").val("website_sale-test-shoptest");
+                        if ($("input[name='email']").val() === "")
+                            $("input[name='email']").val("website_sale-test-shoptest@website_sale-test-shoptest.optenerp.com");
                         $("input[name='phone']").val("123");
                         $("input[name='street']").val("123");
                         $("input[name='city']").val("123");
@@ -276,11 +280,6 @@
                         $("select[name='country_id']").val("21");
                     },
                 },
-                // {
-                //     stepId:    'delivery-checkout-product',
-                //     element:   'input[name="delivery_type"]:eq(1)',
-                //     trigger:   'reload',
-                // },
                 {
                     stepId:    'acquirer-checkout-product',
                     element:   'input[name="acquirer"]',

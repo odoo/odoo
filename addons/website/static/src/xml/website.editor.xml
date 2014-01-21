@@ -207,23 +207,18 @@
         <t t-call="website.editor.dialog">
             <t t-set="title">Icon:</t>
             <form>
-                <div class="form-group">
-                    Preview: <span id="fa-preview"/>
+                <div class="form-group" id="fa-preview">
+
                 </div>
-                <div class="form-group">
-                    <label for="fa-icon">icon</label>
+                <div class="form-group font-icons fa fa-search">
                     <input type="hidden" id="fa-icon" class="form-control"/>
-                </div>
-                <div class="form-group">
-                    <label for="fa-size">size</label>
-                    <select id="fa-size" class="form-control">
-                        <option value="">Default</option>
-                        <option value="fa-lg">Large</option>
-                        <option value="fa-2x">x2</option>
-                        <option value="fa-3x">x3</option>
-                        <option value="fa-4x">x4</option>
-                        <option value="fa-5x">x5</option>
-                    </select>
+                    <input type="hidden" id="fa-size" class="form-control"/>
+                    <input type="search" class="form-control" id="icon-search"/>
+                    <div class="font-icons-icons">
+                        <t t-call="website.editor.dialog.font-icons.icons">
+                            <t t-set="icons" t-value="widget.icons"/>
+                        </t>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="fa-rotation">Rotation</label>
@@ -239,16 +234,18 @@
                 </div>
                 <div class="form-group">
                     <label>
-                        <input type="checkbox" id="fa-fixed"/> fixed width
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" id="fa-border"/> bordered
+                        <input type="checkbox" id="fa-border"/> border
                     </label>
                 </div>
             </form>
         </t>
+    </t>
+    <t t-name="website.editor.dialog.font-icons.icons">
+        <span t-foreach="icons" t-as="icon"
+              class="fa font-icons-icon"
+              t-att-data-id="icon.id">
+            <t t-esc="icon.text"/>
+        </span>
     </t>
 
 </templates>
