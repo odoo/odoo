@@ -67,6 +67,8 @@ def redirect_with_hash(url, code=303):
     # redirect. And even if IE10 pretends to support it, it still fails
     # inexplicably in case of multiple redirects (and we do have some).
     # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
+    if request.httprequest.user_agent.browser in ('firefox',):
+        return werkzeug.utils.redirect(url, code)
     return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
 
 
