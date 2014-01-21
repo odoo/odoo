@@ -3595,58 +3595,59 @@ class BaseModel(object):
 
         ids = [vals['id'] for vals in result]
 
-        # translate the fields if necessary
-        if context.get('lang'):
-            ir_translation = self.pool['ir.translation']
+        if ids:
+            # translate the fields if necessary
+            if context.get('lang'):
+                ir_translation = self.pool['ir.translation']
+                for f in fields_pre:
+                    if self._columns[f].translate:
+                        #TODO: optimize out of this loop
+                        res_trans = ir_translation._get_ids(
+                            '%s,%s' % (self._name, f), 'model', context['lang'], ids)
+                        for vals in result:
+                            vals[f] = res_trans.get(vals['id'], False) or vals[f]
+
+            # apply the symbol_get functions of the fields we just read
             for f in fields_pre:
-                if self._columns[f].translate:
-                    #TODO: optimize out of this loop
-                    res_trans = ir_translation._get_ids(
-                        '%s,%s' % (self._name, f), 'model', context['lang'], ids)
+                symbol_get = self._columns[f]._symbol_get
+                if symbol_get:
                     for vals in result:
-                        vals[f] = res_trans.get(vals['id'], False) or vals[f]
+                        vals[f] = symbol_get(vals[f])
 
-        # apply the symbol_get functions of the fields we just read
-        for f in fields_pre:
-            symbol_get = self._columns[f]._symbol_get
-            if symbol_get:
-                for vals in result:
-                    vals[f] = symbol_get(vals[f])
+            # store result in cache for POST fields
+            for vals in result:
+                record = self.browse(vals['id'])
+                record._update_cache(vals)
 
-        # store result in cache for POST fields
-        for vals in result:
-            record = self.browse(vals['id'])
-            record._update_cache(vals)
+            # determine the fields that must be processed now
+            fields_post = [f for f in field_names if not self._columns[f]._classic_write]
 
-        # determine the fields that must be processed now
-        fields_post = [f for f in field_names if not self._columns[f]._classic_write]
+            # Compute POST fields, grouped by multi
+            by_multi = defaultdict(list)
+            for f in fields_post:
+                by_multi[self._columns[f]._multi].append(f)
 
-        # Compute POST fields, grouped by multi
-        by_multi = defaultdict(list)
-        for f in fields_post:
-            by_multi[self._columns[f]._multi].append(f)
-
-        for multi, fs in by_multi.iteritems():
-            if multi:
-                res2 = self._columns[fs[0]].get(cr, self, ids, fs, user, context=context, values=result)
-                assert res2 is not None, \
-                    'The function field "%s" on the "%s" model returned None\n' \
-                    '(a dictionary was expected).' % (fs[0], self._name)
-                for vals in result:
-                    # TOCHECK : why got string instend of dict in python2.6
-                    # if isinstance(res2[vals['id']], str): res2[vals['id']] = eval(res2[vals['id']])
-                    multi_fields = res2.get(vals['id'], {})
-                    if multi_fields:
-                        for f in fs:
-                            vals[f] = multi_fields.get(f, [])
-            else:
-                for f in fs:
-                    res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=result)
+            for multi, fs in by_multi.iteritems():
+                if multi:
+                    res2 = self._columns[fs[0]].get(cr, self, ids, fs, user, context=context, values=result)
+                    assert res2 is not None, \
+                        'The function field "%s" on the "%s" model returned None\n' \
+                        '(a dictionary was expected).' % (fs[0], self._name)
                     for vals in result:
-                        if res2:
-                            vals[f] = res2[vals['id']]
-                        else:
-                            vals[f] = []
+                        # TOCHECK : why got string instend of dict in python2.6
+                        # if isinstance(res2[vals['id']], str): res2[vals['id']] = eval(res2[vals['id']])
+                        multi_fields = res2.get(vals['id'], {})
+                        if multi_fields:
+                            for f in fs:
+                                vals[f] = multi_fields.get(f, [])
+                else:
+                    for f in fs:
+                        res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=result)
+                        for vals in result:
+                            if res2:
+                                vals[f] = res2[vals['id']]
+                            else:
+                                vals[f] = []
 
         # Warn about deprecated fields now that fields_pre and fields_post are computed
         for f in field_names:
