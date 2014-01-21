@@ -473,11 +473,9 @@ class product_template(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        #TOFIX: it should be pass default={'name': _("%s (copy)") % (template['name'])}.
-        template = self.read(cr, uid, id, ['name'], context=context)
-        res = super(product_template, self).copy(cr, uid, id, default=default, context=context)
-        self.write(cr, uid, res, {'name': _("%s (copy)") % (template['name'])}, context=context)
-        return res
+        template = self.browse(cr, uid, id, context=context)
+        default['name'] = _("%s (copy)") % (template['name'])
+        return super(product_template, self).copy(cr, uid, id, default=default, context=context)
 
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
