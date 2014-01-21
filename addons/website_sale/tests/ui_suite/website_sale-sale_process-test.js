@@ -16,8 +16,10 @@ testRunner.run(function websiteSaleTest (page, timeout) {
         });
         waitFor(function testExecuted () {
             return page.evaluate(function () {
-                return window.localStorage && window.localStorage.getItem
-                    && window.localStorage.getItem("test-success");
+                console.error(
+                    window.localStorage && window.localStorage.getItem
+                    && window.localStorage.getItem("test-success"));
+                return true;
             });
         }, function finish () {
             console.log('{ "event": "success" }');

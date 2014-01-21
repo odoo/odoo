@@ -292,7 +292,7 @@
                         url:   /shop\/confirmation\//,
                     },
                     afterTrigger: function (tour) {
-                        window.localStorage.setItem("test-success", true);
+                        window.localStorage.setItem("test-success", "{}");
                     },
                 },
                 {
