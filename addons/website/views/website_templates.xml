@@ -12,12 +12,18 @@
 </template>
 
 <template id="website.submenu" name="Submenu">
-    <li t-if="not submenu.child_id">
+    <li t-if="not submenu.child_id" t-att-class="
+        ((submenu.url != '/' and request.httprequest.path.startswith(submenu.url)) or
+         request.httprequest.path == submenu.url) and 'active'
+        ">
         <a t-att-href="url_for(submenu.url)" t-ignore="true" t-att-target="'blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>
-    <li t-if="submenu.child_id" class="dropdown">
+    <li t-if="submenu.child_id" t-attf-class="dropdown #{
+        ((submenu.url != '/' and [1 for submenu in submenu.child_id if request.httprequest.path.startswith(submenu.url)]) or
+         request.httprequest.path == submenu.url) and 'active'
+        }">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             <span t-field="submenu.name"/> <span class="caret" t-ignore="true"></span>
         </a>
