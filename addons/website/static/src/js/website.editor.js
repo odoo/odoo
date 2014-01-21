@@ -611,14 +611,19 @@
          */
         setup_hover_buttons: function () {
             var editor = this.rte.editor;
-            var $link_button = this.make_hover_button(_t("Edit Link"), function () {
+            var $link_button = this.make_hover_button(_t("Change"), function () {
                 var sel = new CKEDITOR.dom.element(previous);
                 editor.getSelection().selectElement(sel);
-                link_dialog(editor);
+                if (previous.tagName.toUpperCase() === 'A') {
+                    link_dialog(editor);
+                } else if(sel.hasClass('fa')) {
+                    new website.editor.FontIconsDialog(editor, previous)
+                        .appendTo(document.body);
+                }
                 $link_button.hide();
                 previous = null;
             }, 'btn-xs');
-            var $image_button = this.make_hover_button(_t("Edit Image"), function () {
+            var $image_button = this.make_hover_button(_t("Change"), function () {
                 image_dialog(editor, new CKEDITOR.dom.element(previous));
                 $image_button.hide();
                 previous = null;
@@ -629,12 +634,12 @@
             // -ish, because when moving to the button itself ``previous`` is
             // still set to the element having triggered showing the button.
             var previous;
-            $(editor.element.$).on('mouseover', 'a, img', function (e) {
+            $(editor.element.$).on('mouseover', 'a, img, .fa', function () {
                 // Back from edit button -> ignore
                 if (previous && previous === this) { return; }
 
                 var selected = new CKEDITOR.dom.element(this);
-                if (!is_editable_node(selected)) {
+                if (!is_editable_node(selected) && !selected.hasClass('fa')) {
                     return;
                 }
 
@@ -663,7 +668,7 @@
                                 - $link_button.outerWidth() / 2
                     })
                 }
-            }).on('mouseleave', 'a, img', function (e) {
+            }).on('mouseleave', 'a, img, .fa', function (e) {
                 var current = document.elementFromPoint(e.clientX, e.clientY);
                 if (current === $link_button[0] || current === $image_button[0]) {
                     return;
@@ -1610,7 +1615,6 @@
             }
         }
     });
-
 
     website.Observer = window.MutationObserver || window.WebkitMutationObserver || window.JsMutationObserver;
     var OBSERVER_CONFIG = {
