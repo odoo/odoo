@@ -695,29 +695,6 @@ class product_product(osv.osv):
         'seller_id': fields.function(_calc_seller, type='many2one', relation="res.partner", string='Main Supplier', help="Main Supplier who has highest priority in Supplier List.", multi="seller_info"),
     }
 
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        #override of fields_view_get in order to replace the name field to product template
-        if context is None:
-            context = {}
-        res = super(product_product, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
-        #check the current user in group_product_variant
-        if view_type == 'form':
-            doc = etree.XML(res['arch'])
-            if self.pool['res.users'].has_group(cr, uid, 'product.group_product_variant'):
-                for node in doc.xpath("//field[@name='name']"):
-                    node.set('invisible', '1')
-                    node.set('required', '0')
-                    setup_modifiers(node, res['fields']['name'])
-                for node in doc.xpath("//label[@name='label_name']"):
-                    node.set('string','Product Template')
-            else:
-                for node in doc.xpath("//field[@name='product_tmpl_id']"):
-                    node.set('required', '0')
-                    setup_modifiers(node, res['fields']['name'])
-            res['arch'] = etree.tostring(doc)
-        return res
-
     def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
         if uom_id and uom_po_id:
             uom_obj=self.pool.get('product.uom')
