@@ -116,7 +116,7 @@ class TestACL(common.TransactionCase):
             with mute_logger('openerp.osv.orm'):
                 part.email
 
-        self.assertEqual(cm.exception.args[0], 'Access Denied')
+        self.assertEqual(cm.exception.args[0], 'AccessError')
 
 
 if __name__ == '__main__':

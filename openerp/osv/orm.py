@@ -3466,26 +3466,33 @@ class BaseModel(object):
             :raise AccessError: if user has no read rights on some of the given
                     records
         """
-        # check access rights (necessary for computed and related fields)
+        # check access rights
         self.check_access_rights('read')
         fields = self.check_field_access_rights('read', fields)
 
-        self_fields = self._fields
-        if all(name in self_fields for name in fields):
-            names = set(fields)
-        else:
-            # there are unknown fields, log them, and do not read them!
-            names = set(fields) & set(self_fields)
-            _logger.warning("%s.read() with unknown fields: %s", self._name,
-                            ', '.join(sorted(set(fields) - names)))
+        # split fields into stored and computed fields
+        stored, computed = [], []
+        for name in fields:
+            if name in self._columns:
+                stored.append(name)
+            elif name in self._fields:
+                computed.append(name)
+            else:
+                _logger.warning("%s.read() with unknown field '%s'", self._name, name)
 
+        # fetch stored fields from the database to the cache
+        self._read_from_database(stored)
+
+        # retrieve results from records; this takes values from the cache and
+        # computes remaining fields
         result = []
+        name_fields = [(name, self._fields[name]) for name in (stored + computed)]
+        use_name_get = (load == '_classic_read')
         for record in self:
             try:
                 values = {'id': record.id}
-                for name in names:
-                    field = self_fields[name]
-                    values[name] = field.convert_to_read(record[name])
+                for name, field in name_fields:
+                    values[name] = field.convert_to_read(record[name], use_name_get)
                 result.append(values)
             except MissingError:
                 pass
@@ -3529,22 +3536,29 @@ class BaseModel(object):
                 else:
                     records -= recomp           # do not fetch those records
 
-        # fetch records
+        # fetch records with read()
         assert self in records and field_name in fnames
-        records._read_into_cache(list(fnames))
+        try:
+            result = records.read(list(fnames), load='_classic_write')
+        except except_orm as e:
+            result = []
+
+        # check the cache, and update it if necessary
+        field = self._fields[field_name]
+        field_cache = self._scope.cache[field]
+        if self._id not in field_cache:
+            for values in result:
+                record = self.browse(values['id'])
+                record._update_cache(values)
+            if self._id not in field_cache:
+                e = AccessError("No value found for %s.%s" % (self, field))
+                self._update_cache({field_name: FailedValue(e)})
 
     @api.multi
-    def _read_into_cache(self, field_names):
-        """ Read the given fields of the records in `self` from the database. """
-        # first check access rights
-        try:
-            self.check_access_rights('read')
-            self.check_field_access_rights('read', field_names)
-        except (except_orm, AccessError) as e:
-            # store a failed value for all records in self
-            failed_values = dict.fromkeys(field_names, FailedValue(e))
-            return self._update_cache(failed_values)
-
+    def _read_from_database(self, field_names):
+        """ Read the given fields of the records in `self` from the database,
+            and store them in cache. Access errors are also stored in cache.
+        """
         cr, user, context = scope_proxy.args
 
         # Construct a clause for the security rules.
@@ -3660,8 +3674,6 @@ class BaseModel(object):
                 _('One of the documents you are trying to access has been deleted, please try again after refreshing.')
             )
             (missing - forbidden)._update_cache(FailedValue(exc))
-
-        return result
 
     # TODO check READ access
     def perm_read(self, cr, user, ids, context=None, details=True):

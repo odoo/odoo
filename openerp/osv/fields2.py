@@ -226,7 +226,7 @@ class Field(object):
         """
         return value
 
-    def convert_to_read(self, value):
+    def convert_to_read(self, value, use_name_get=True):
         """ convert `value` from the cache to a value as returned by method
             :meth:`BaseModel.read`
         """
@@ -733,7 +733,7 @@ class Reference(Selection):
             return False
         raise ValueError("Wrong value for %s: %r" % (self, value))
 
-    def convert_to_read(self, value):
+    def convert_to_read(self, value, use_name_get=True):
         return "%s,%s" % (value._name, value.id) if value else False
 
     def convert_to_export(self, value):
@@ -832,15 +832,15 @@ class Many2one(_Relational):
         else:
             return self.comodel.browse(value)
 
-    def convert_to_read(self, value):
-        if value:
+    def convert_to_read(self, value, use_name_get=True):
+        if use_name_get and value:
             # evaluate name_get() in sudo scope, because the visibility of a
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
             with value._scope.sudo():
                 return value.name_get()[0]
         else:
-            return False
+            return value.id
 
     def convert_to_write(self, value):
         return value.id
@@ -898,7 +898,7 @@ class _RelationalMulti(_Relational):
             return self.null()
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
-    def convert_to_read(self, value):
+    def convert_to_read(self, value, use_name_get=True):
         return value.unbrowse()
 
     def convert_to_write(self, value):
