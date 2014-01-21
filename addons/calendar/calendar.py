@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (c) 2011 OpenERP S.A. <http://openerp.com>
+#    Copyright (c) 2011-2014 OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -100,8 +100,15 @@ class calendar_attendee(osv.Model):
                 result[id][name] = attdata.event_id.date_deadline
         return result
 
+    STATE_SELECTION = [
+        ('needsAction', 'Needs Action'),
+        ('tentative', 'Uncertain'),
+        ('declined', 'Declined'),
+        ('accepted', 'Accepted'),
+    ]
+
     _columns = {
-        'state': fields.selection([('needsAction', 'Needs Action'), ('tentative', 'Uncertain'), ('declined', 'Declined'), ('accepted', 'Accepted')], 'Status', readonly=True, help="Status of the attendee's participation"),
+        'state': fields.selection(STATE_SELECTION, 'Status', readonly=True, help="Status of the attendee's participation"),
         'cn': fields.function(_compute_data, string='Common name', type="char", multi='cn', store=True),
         'partner_id': fields.many2one('res.partner', 'Contact', readonly="True"),
         'email': fields.char('Email', help="Email of Invited Person"),
@@ -799,7 +806,7 @@ class calendar_event(osv.Model):
         'state': fields.selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, track_visibility='onchange'),
         'name': fields.char('Meeting Subject', required=True, states={'done': [('readonly', True)]}),
         'is_attendee': fields.function(_compute, string='Attendee', type="boolean", multi='attendee'),
-        'attendee_status': fields.function(_compute, string='Attendee Status', type="selection", multi='attendee'),
+        'attendee_status': fields.function(_compute, string='Attendee Status', type="selection", selection=calendar_attendee.STATE_SELECTION, multi='attendee'),
         'display_time': fields.function(_compute, string='Event Time', type="char", multi='attendee'),
         'date': fields.datetime('Date', states={'done': [('readonly', True)]}, required=True, track_visibility='onchange'),
         'date_deadline': fields.datetime('End Date', states={'done': [('readonly', True)]}, required=True,),
@@ -824,14 +831,14 @@ class calendar_event(osv.Model):
         'fr': fields.boolean('Fri'),
         'sa': fields.boolean('Sat'),
         'su': fields.boolean('Sun'),
-        'month_by': fields.selection([('date', 'Date of month'), ('day', 'Day of month')], 'Option'),
+        'month_by': fields.selection([('date', 'Date of month'), ('day', 'Day of month')], 'Option', oldname='select1'),
         'day': fields.integer('Date of month'),
         'week_list': fields.selection([('MO', 'Monday'), ('TU', 'Tuesday'), ('WE', 'Wednesday'), ('TH', 'Thursday'), ('FR', 'Friday'), ('SA', 'Saturday'), ('SU', 'Sunday')], 'Weekday'),
         'byday': fields.selection([('1', 'First'), ('2', 'Second'), ('3', 'Third'), ('4', 'Fourth'), ('5', 'Fifth'), ('-1', 'Last')], 'By day'),
         'end_date': fields.date('Repeat Until'),
         'allday': fields.boolean('All Day', states={'done': [('readonly', True)]}),
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
-        'color_partner_id': fields.related('user_id', 'partner_id', 'id', type="int", string="colorize", store=False),  # Color of creator
+        'color_partner_id': fields.related('user_id', 'partner_id', 'id', type="integer", string="colorize", store=False),  # Color of creator
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the event alarm information without removing it."),
         'categ_ids': fields.many2many('calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags'),
         'attendee_ids': fields.one2many('calendar.attendee', 'event_id', 'Attendees', ondelete='cascade'),
