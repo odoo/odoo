@@ -135,11 +135,11 @@ class WebsiteUiSuite(unittest.TestSuite):
         except ValueError:
             result.addError(self._test, 'Unexpected message: "%s"' % "\n".join(lines))
 
-def full_path(filename):
-    return os.path.join(os.path.join(os.path.dirname(__file__), 'ui_suite'), filename)
+def full_path(pyfile, filename):
+    return os.path.join(os.path.join(os.path.dirname(pyfile), 'ui_suite'), filename)
 
 def load_tests(loader, base, _):
-    base.addTest(WebsiteUiSuite(full_path('dummy_test.js'), {}, 5.0))
-    base.addTest(WebsiteUiSuite(full_path('simple_dom_test.js'), { 'action': 'website.action_website_homepage' }, 60.0))
-    base.addTest(WebsiteUiSuite(full_path('homepage_test.js'),   { 'action': 'website.action_website_homepage' }, 60.0))
+    base.addTest(WebsiteUiSuite(full_path(__file__, 'dummy_test.js'), {}, 5.0))
+    base.addTest(WebsiteUiSuite(full_path(__file__, 'simple_dom_test.js'), { 'action': 'website.action_website_homepage' }, 60.0))
+    base.addTest(WebsiteUiSuite(full_path(__file__, 'homepage_test.js'),   { 'action': 'website.action_website_homepage' }, 60.0))
     return base
