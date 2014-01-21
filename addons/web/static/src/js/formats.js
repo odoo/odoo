@@ -191,6 +191,9 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
                         + ' ' + normalize_format(l10n.time_format));
         case 'date':
             if (typeof(value) == "string")
+                if (value.length > 10)
+                    // in case value is a datetime, strip to avoid time manipulation
+                    value = value.substring(0,10);
                 value = instance.web.auto_str_to_date(value);
             return value.toString(normalize_format(l10n.date_format));
         case 'time':
