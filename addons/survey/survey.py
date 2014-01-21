@@ -56,6 +56,17 @@ class survey_survey(osv.Model):
 
     ## Function fields ##
 
+    def _get_tot_sent_survey(self, cr, uid, ids, name, arg, context=None):
+        """ Returns the number of invitations sent for this survey, be they
+        (partially) completed or not """
+        res = dict((id, 0) for id in ids)
+        sur_res_obj = self.pool.get('survey.user_input')
+        for id in ids:
+            res[id] = sur_res_obj.search(cr, uid,  # SUPERUSER_ID,
+                [('survey_id', '=', id), ('type', '=', 'link')],
+                context=context, count=True)
+        return res
+
     def _get_tot_start_survey(self, cr, uid, ids, name, arg, context=None):
         """ Returns the number of started instances of this survey, be they
         completed or not """
@@ -63,7 +74,7 @@ class survey_survey(osv.Model):
         sur_res_obj = self.pool.get('survey.user_input')
         for id in ids:
             res[id] = sur_res_obj.search(cr, uid,  # SUPERUSER_ID,
-                [('survey_id', '=', id), ('state', '=', 'skip')],
+                ['&', ('survey_id', '=', id), '|', ('state', '=', 'skip'), ('state', '=', 'done')],
                 context=context, count=True)
         return res
 
@@ -108,6 +119,8 @@ class survey_survey(osv.Model):
             oldname="authenticate"),
         'users_can_go_back': fields.boolean('Users can go back',
             help="If checked, users can go back to previous pages."),
+        'tot_sent_survey': fields.function(_get_tot_sent_survey,
+            string="Number of sent surveys", type="integer"),
         'tot_start_survey': fields.function(_get_tot_start_survey,
             string="Number of started surveys", type="integer"),
         'tot_comp_survey': fields.function(_get_tot_comp_survey,

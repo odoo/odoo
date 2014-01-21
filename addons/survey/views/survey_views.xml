@@ -212,18 +212,21 @@
             </field>
         </record>
         <record model="ir.ui.view" id="view_survey_kanban">
-            <field name="name">event.survey.kanban</field>
+            <field name="name">survey.kanban</field>
             <field name="model">survey.survey</field>
             <field name="arch" type="xml">
                 <kanban>
-                    <field name="title"/>
-                    <field name="date_open"/>
-                    <field name="tot_comp_survey"/>
-                    <field name="user_input_limit"/>
-                    <field name="color"/>
-                    <field name="state"/>
-                    <field name="auth_required"/>
-                    <field name="public_url"/>
+                    <field name="title" />
+                    <field name="date_open" />
+                    <field name="tot_sent_survey" />
+                    <field name="tot_start_survey" />
+                    <field name="tot_comp_survey" />
+                    <field name="user_input_limit" />
+                    <field name="color" />
+                    <field name="state" />
+                    <field name="visible_to_user" />
+                    <field name="auth_required" />
+                    <field name="public_url" />
                     <templates>
                         <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_survey oe_kanban_global_click">
                             <div class="oe_dropdown_toggle oe_dropdown_kanban" t-if="widget.view.is_action_enabled('edit')">
@@ -247,14 +250,31 @@
                                     <a t-if="record.state.raw_value === 'cancel'" title="Cancelled" class="oe_kanban_status_salmon"> </a>
                                 </span>
                                 <h3 class="oe_kanban_ellipsis"><t t-esc="record.title.raw_value.toString()"></t></h3>
-                                <div><p>
-                                    <ul>
-                                        <li>Opening: <field name="date_open"/></li>
-                                        <li>Closing: <field name="date_close"/></li>
-                                    </ul>
-                                </p></div>
-                                <div class="oe_stats_box"><span><field name="tot_start_survey"/></span><br/>started</div>
-                                <div class="oe_stats_box"><span><field name="tot_comp_survey"/></span><br/>completed</div>
+                                <div t-if="record.visible_to_user.raw_value === false">
+                                    <center>
+                                        <field name="tot_sent_survey" widget="gauge" style="width:160px; height: 120px;"
+                                            options="{'max_field': 'tot_sent_survey'}"/>
+                                        <field name="tot_start_survey" widget="gauge" style="width:160px; height: 120px;"
+                                            options="{'max_field': 'tot_sent_survey'}"/>
+                                        <field name="tot_comp_survey" widget="gauge" style="width:160px; height: 120px;"
+                                            options="{'max_field': 'tot_sent_survey'}"/>
+                                    </center>
+                                </div>
+                                <div t-if="record.visible_to_user.raw_value === true">
+                                    <center>
+                                        <field name="tot_start_survey" widget="gauge" style="width:160px; height: 120px;"
+                                            options="{'max_field': 'tot_start_survey'}"/>
+                                        <field name="tot_comp_survey" widget="gauge" style="width:160px; height: 120px;"
+                                            options="{'max_field': 'tot_start_survey'}"/>
+                                    </center>
+                                </div>
+                                <div t-if="record.visible_to_user.raw_value === true">
+                                    <center><b><a t-att-href="record.public_url.raw_value"><t t-esc="record.public_url.raw_value"/></a></b></center>
+                                </div>
+                                <div>
+                                    Opening date: <field name="date_open" /><br />
+                                    Closing date: <field name="date_close" />
+                                </div>
                             </div>
                         </div>
                     </templates>
@@ -277,7 +297,6 @@
             <field name="res_model">survey.survey</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form,calendar</field>
-            <field name="view_id" ref="view_survey_kanban"></field>
             <field name="search_view_id" ref="survey_search"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">Click to create a new survey.</p>
@@ -562,7 +581,7 @@
             <field name="name">Survey User Input lines</field>
             <field name="res_model">survey.user_input_line</field>
             <field name="view_mode">tree,form</field>
-        </record> -->
+        </record>
 
 
         <!-- ACTIONS -->
