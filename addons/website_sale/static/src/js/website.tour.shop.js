@@ -197,11 +197,9 @@
                 {
                     stepId:    'display-ipod',
                     element:   '.oe_product_cart a:contains("iPod")',
-                    trigger:   'click',
-                },
-                {
-                    stepId:    'display-wait-ipod',
-                    trigger:   'reload',
+                    trigger: {
+                        url:   /shop\/product\/.*/,
+                    },
                 },
                 {
                     stepId:    'choose-ipod',
@@ -278,11 +276,11 @@
                         $("select[name='country_id']").val("21");
                     },
                 },
-                {
-                    stepId:    'delivery-checkout-product',
-                    element:   'input[name="delivery_type"]:eq(1)',
-                    trigger:   'reload',
-                },
+                // {
+                //     stepId:    'delivery-checkout-product',
+                //     element:   'input[name="delivery_type"]:eq(1)',
+                //     trigger:   'reload',
+                // },
                 {
                     stepId:    'acquirer-checkout-product',
                     element:   'input[name="acquirer"]',

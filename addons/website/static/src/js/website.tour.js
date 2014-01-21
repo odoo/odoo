@@ -39,7 +39,7 @@
                     step.triggers = function (callback) {
                         var stack = JSON.parse(localStorage.getItem("website-reloads")) || [];
                         var index = stack.indexOf(step.stepId);
-                        if (index !== -1 || window.localStorage.getItem("test-wait-reload")) {
+                        if (index !== -1) {
                             stack.splice(index,1);
                             (callback || self.moveToNextStep).apply(self);
                         } else {
@@ -336,15 +336,16 @@
                     var actionSteps = _.filter(tour.steps, function (step) {
                        return step.trigger || step.sampleText;
                     });
-                    window.onbeforeunload = function () {
-                        window.localStorage.setItem("test-wait-reload", true);
-                    };
                     function executeStep (step) {
+                        var _next = false;
                         window.localStorage.setItem(testId, step.stepId);
                         function next () {
+                            _next = true;
                             var nextStep = actionSteps.shift();
                             if (nextStep) {
-                                executeStep(nextStep);
+                                setTimeout(function () {
+                                    executeStep(nextStep);
+                                },0);
                             } else {
                                 window.localStorage.removeItem(testId);
                             }
@@ -352,7 +353,8 @@
                         setTimeout(function () {
                             var $element = $(step.element);
                             if (step.triggers) step.triggers(next);
-                            window.localStorage.removeItem("test-wait-reload");
+                            if ((step.trigger === 'reload' || step.trigger.url) && _next) return;
+                            
                             if (step.snippet && step.trigger === 'drag') {
                                 website.TestConsole.dragAndDropSnippet(step.snippet);
                             } else if (step.trigger && step.trigger.id === 'change') {
