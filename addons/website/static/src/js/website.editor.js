@@ -1469,7 +1469,21 @@
 
                 this.$('#fa-size').val(e.target.getAttribute('data-size'));
                 this.update_preview();
-            }
+            },
+            'input input#icon-search': function () {
+                var needle = this.$('#icon-search').val();
+                var icons = this.icons;
+                if (needle) {
+                    icons = _(icons).filter(function (icon) {
+                        return icon.id.substring(3).indexOf(needle) !== -1;
+                    });
+                }
+
+                this.$('div.font-icons-icons').html(
+                    openerp.qweb.render(
+                        'website.editor.dialog.font-icons.icons',
+                        {icons: icons}));
+            },
         }),
 
         // List of FontAwesome icons in 4.0.3, extracted from the cheatsheet.
@@ -1525,7 +1539,6 @@
                     this.$('#fa-rotation').val(cls);
                     continue;
                 case 'fa-fw':
-                    this.$('#fa-fw').prop('checked', true);
                     continue;
                 case 'fa-border':
                     this.$('#fa-border').prop('checked', true);
@@ -1547,7 +1560,6 @@
                 this.$('#fa-icon').val(),
                 this.$('#fa-size').val(),
                 this.$('#fa-rotation').val(),
-                this.$('#fa-fw').prop('checked') ? 'fa-fw' : '',
                 this.$('#fa-border').prop('checked') ? 'fa-border' : ''
             ];
         },

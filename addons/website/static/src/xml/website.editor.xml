@@ -210,15 +210,14 @@
                 <div class="form-group" id="fa-preview">
 
                 </div>
-                <div class="form-group fa">
+                <div class="form-group font-icons fa fa-search">
                     <input type="hidden" id="fa-icon" class="form-control"/>
                     <input type="hidden" id="fa-size" class="form-control"/>
+                    <input type="search" class="form-control" id="icon-search"/>
                     <div class="font-icons-icons">
-                        <span t-foreach="widget.icons" t-as="icon"
-                              class="fa font-icons-icon"
-                              t-att-data-id="icon.id">
-                            <t t-esc="icon.text"/>
-                        </span>
+                        <t t-call="website.editor.dialog.font-icons.icons">
+                            <t t-set="icons" t-value="widget.icons"/>
+                        </t>
                     </div>
                 </div>
                 <div class="form-group">
@@ -235,16 +234,18 @@
                 </div>
                 <div class="form-group">
                     <label>
-                        <input type="checkbox" id="fa-fixed"/> fixed width
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" id="fa-border"/> bordered
+                        <input type="checkbox" id="fa-border"/> border
                     </label>
                 </div>
             </form>
         </t>
+    </t>
+    <t t-name="website.editor.dialog.font-icons.icons">
+        <span t-foreach="icons" t-as="icon"
+              class="fa font-icons-icon"
+              t-att-data-id="icon.id">
+            <t t-esc="icon.text"/>
+        </span>
     </t>
 
 </templates>
