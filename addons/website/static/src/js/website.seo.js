@@ -25,7 +25,10 @@
                 } : htmlPage.isInBody(keyword) ? {
                     title: 'label label-info',
                     description: "This keyword is used in the page content."
-                } : { title: "", description: "" };
+                } : {
+                    title: 'label label-default',
+                    description: "This keyword is not used anywhere on the page."
+                };
     }
 
     website.seo.Suggestion = openerp.Widget.extend({
@@ -387,7 +390,7 @@
                 if (!self.canEditDescription) {
                     $modal.find('textarea[name=seo_page_description]').attr('disabled', true);
                 }
-                if (!self.canEditTitle && !canEditDescription && !canEditKeywords) {
+                if (!self.canEditTitle && !self.canEditDescription && !self.canEditKeywords) {
                     $modal.find('button[data-action=update]').attr('disabled', true);
                 }
             });
