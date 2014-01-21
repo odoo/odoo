@@ -1087,15 +1087,20 @@
         bind_data: function (text, href, new_window) {
             href = href || this.element && (this.element.data( 'cke-saved-href')
                                     ||  this.element.getAttribute('href'));
-            if (!href) { return; }
 
             if (new_window === undefined) {
-                new_window = this.element.getAttribute('target') === '_blank';
+                new_window = this.element
+                        ? this.element.getAttribute('target') === '_blank'
+                        : false;
             }
             if (text === undefined) {
-                text = this.element.getText();
+                text = this.element ? this.element.getText() : '';
             }
 
+            this.$('input#link-text').val(text);
+            this.$('input.window-new').prop('checked', new_window);
+
+            if (!href) { return; }
             var match, $control;
             if ((match = /mailto:(.+)/.exec(href))) {
                 $control = this.$('input.email-address').val(match[1]);
@@ -1105,9 +1110,6 @@
             }
 
             this.changed($control);
-
-            this.$('input#link-text').val(text);
-            this.$('input.window-new').prop('checked', new_window);
         },
         changed: function ($e) {
             this.$('.url-source').filter(':input').not($e).val('')
