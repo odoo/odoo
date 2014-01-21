@@ -85,11 +85,9 @@
                         <input type="password" name="password" id="password" class="form-control" placeholder="Password" required="required"/>
                     </div>
 
-                    <div class="oe_login_messages">
-                        <p class="alert alert-danger" t-if="authentication_failed">
-                            Wrong login/password
-                        </p>
-                    </div>
+                    <p class="alert alert-danger" t-if="error">
+                        <t t-esc="error"/>
+                    </p>
 
                     <hr/>
                     <input type="hidden" name="redirect" t-att-value="redirect"/>

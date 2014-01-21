@@ -635,7 +635,7 @@ class Home(http.Controller):
             uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
             if uid is not False:
                 return redirect_with_hash(redirect)
-            values['authentication_failed'] = True
+            values['error'] = "Wrong login/password"
         return render_bootstrap_template(request.session.db, 'web.login', values, debug=request.debug, lazy=True)
 
     @http.route('/login', type='http', auth="none")
