@@ -34,7 +34,7 @@ from openerp import tools
 import urllib
 
 class website_event(http.Controller):
-    @website.route(['/event/', '/event/page/<int:page>'], type='http', auth="public", multilang=True)
+    @http.route(['/event/', '/event/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
     def events(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         event_obj = request.registry['event.event']
@@ -161,7 +161,7 @@ class website_event(http.Controller):
 
         return request.website.render("website_event.index", values)
 
-    @website.route(['/event/<model("event.event"):event>/page/<page:page>'], type='http', auth="public", multilang=True)
+    @http.route(['/event/<model("event.event"):event>/page/<page:page>'], type='http', auth="public", website=True, multilang=True)
     def event_page(self, event, page, **post):
         website.preload_records(event, on_error="website_event.404")
         values = {
@@ -170,7 +170,7 @@ class website_event(http.Controller):
         }
         return request.website.render(page, values)
 
-    @website.route(['/event/<model("event.event"):event>'], type='http', auth="public", multilang=True)
+    @http.route(['/event/<model("event.event"):event>'], type='http', auth="public", website=True, multilang=True)
     def event(self, event, **post):
         website.preload_records(event, on_error="website_event.404")
         if event.menu_id and event.menu_id.child_id:
@@ -181,7 +181,7 @@ class website_event(http.Controller):
             target_url += '?enable_editor=1'
         return request.redirect(target_url);
 
-    @website.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", multilang=True)
+    @http.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", website=True, multilang=True)
     def event_register(self, event, **post):
         website.preload_records(event, on_error="website_event.404")
         values = {
@@ -192,16 +192,17 @@ class website_event(http.Controller):
         }
         return request.website.render("website_event.event_description_full", values)
 
-    @website.route(['/event/add_cart'], type='http', auth="public", multilang=True)
+    @http.route(['/event/add_cart'], type='http', auth="public", website=True, multilang=True)
     def add_cart(self, event_id, **post):
         user_obj = request.registry['res.users']
         order_line_obj = request.registry.get('sale.order.line')
         ticket_obj = request.registry.get('event.event.ticket')
         order_obj = request.registry.get('sale.order')
+        website = request.registry['website']
 
-        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
+        order = website.ecommerce_get_current_order(request.cr, request.uid, context=request.context)
         if not order:
-            order = request.registry['website']._get_order(request.cr, request.uid, context=request.context)
+            order = website.ecommerce_get_new_order(request.cr, request.uid, context=request.context)
 
         partner_id = user_obj.browse(request.cr, SUPERUSER_ID, request.uid,
                                      context=request.context).partner_id.id
@@ -246,7 +247,7 @@ class website_event(http.Controller):
             return request.redirect("/event/%s/" % event_id)
         return request.redirect("/shop/checkout")
 
-    @website.route(['/event/publish'], type='json', auth="public")
+    @http.route(['/event/publish'], type='json', auth="public", website=True)
     def publish(self, id, object):
         # if a user publish an event, he publish all linked res.partner
         event = request.registry[object].browse(request.cr, request.uid, int(id))
@@ -258,7 +259,7 @@ class website_event(http.Controller):
 
         return controllers.publish(id, object)
 
-    @website.route('/event/add_event/', type='http', auth="user", multilang=True, methods=['POST'])
+    @http.route('/event/add_event/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def add_event(self, event_name="New Event", **kwargs):
         Event = request.registry.get('event.event')
         date_begin = datetime.today() + timedelta(days=(15)) # FIXME: better defaults

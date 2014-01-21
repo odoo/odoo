@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-    <template id="mycart_delivery" name="Delivery Costs" inherit_id="website_sale.mycart">
+    <template id="mycart_delivery" name="Delivery Costs" inherit_id="website_sale.total">
         <xpath expr="//tr[@id='order_total_taxes']" position="after">
             <tr class="text-muted" id="order_delivery">
                 <td><abbr title="Delivery will be updated after choosing a new delivery method">Delivery:</abbr></td>
@@ -21,20 +21,8 @@
             <script type="text/javascript" src="/website_sale_delivery/static/src/js/website_sale_delivery.js"></script>
         </xpath>
 
-        <xpath expr="//tr[@id='order_total_taxes']" position="after">
-            <tr class="text-muted" id="order_delivery">
-                <td><abbr title="Delivery will be updated after choosing a new delivery method">Delivery:</abbr></td>
-                <td class="text-right">
-                    <span t-field="order.amount_delivery" t-field-options='{
-                        "widget": "monetary",
-                        "display_currency": "website.pricelist_id.currency_id"
-                    }'/>
-                </td>
-            </tr>
-        </xpath>
-
         <xpath expr="//div[@id='payment_method']" position="before">
-            <div t-if="len(deliveries)" class="row" id="delivery_carrier">
+            <div t-if="deliveries" class="row" id="delivery_carrier">
                 <h4>Choose your Delivery Method</h4>
                 <div class="col-lg-5 col-sm-6">
                     <ul class="list-unstyled">

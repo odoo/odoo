@@ -2,7 +2,6 @@
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models import website
 
 try:
     import simplejson as json
@@ -17,9 +16,9 @@ _logger = logging.getLogger(__name__)
 class AdyenController(http.Controller):
     _return_url = '/payment/adyen/return/'
 
-    @website.route([
+    @http.route([
         '/payment/adyen/return/',
-    ], type='http', auth='public')
+    ], type='http', auth='public', website=True)
     def adyen_return(self, pspReference, **post):
         """ Paypal IPN."""
         post["pspReference"] = pspReference
