@@ -239,10 +239,10 @@
     </xpath>
 </template>
 
-<template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In">
+<template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
     <xpath expr="//ul[@id='top_menu']" position="inside">
-        <li class="divider" groups="base.group_public"/>
-        <li groups="base.group_public">
+        <li class="divider"/>
+        <li>
             <a t-attf-href="/web#redirect=#{ quote_plus(url_for('', keep_query='*')) }">
                 <b>Sign in</b>
             </a>
@@ -725,7 +725,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="contact">
     <address t-ignore="true">
-        <div t-att-class='"" if "name" in fields else "css_non_editable_mode_hidden"'><span t-esc="name"/></div>
+        <div t-attf-class="'name' not in fields and 'css_non_editable_mode_hidden'"><span t-esc="name"/></div>
         <div class='css_editable_mode_hidden'>
             <div t-if="address and 'address' in fields">
                 <i class='fa fa-map-marker'/>

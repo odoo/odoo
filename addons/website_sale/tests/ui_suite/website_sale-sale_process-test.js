@@ -15,16 +15,9 @@ testRunner.run(function websiteSaleTest (page, timeout) {
             window.openerp.website.TestConsole.test('shoptest').run(true);
         });
         waitFor(function testExecuted () {
-            var after = page.evaluate(function () {
-                return window.$ && $('button[data-action=edit]').is(":visible") && {
-                    image: $('#wrap [data-snippet-id=image-text]').length,
-                    text: $('#wrap [data-snippet-id=text-block]').length,
-                };
-            });
-            var result = after && (after.image === 1) && (after.text === 1);
-            return result;
+            return page.evaluate(function () { return window.$ && $('#wrap:contains("Order Confirmed")').length; });
         }, function finish () {
-            console.log('{ "event": "success" }');
+            console.log('{ "website_sale": "success" }');
             phantom.exit();
         }, 4*timeout/5);
     }, timeout/5);

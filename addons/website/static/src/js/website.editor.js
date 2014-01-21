@@ -463,6 +463,10 @@
             $(window).on('resize', _.debounce(this.check_height.bind(this), 50));
             this.check_height();
 
+            if (website.is_editable_button) {
+                this.$("button[data-action=edit]").removeClass("hidden");
+            }
+
             return $.when(
                 this._super.apply(this, arguments),
                 this.rte.appendTo(this.$('#website-top-edit .nav.pull-right'))

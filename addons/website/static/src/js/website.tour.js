@@ -366,7 +366,7 @@
                         overlapsCrash = setTimeout(function () {
                             window.localStorage.removeItem(testId);
                             throw "Test: '" + testId + "' can't resolve stape: '" + step.stepId + "'";
-                        }, step.delay || defaultDelay);
+                        }, (step.delay || defaultDelay) + 500);
 
                         var $element = $(step.element);
                         if (step.triggers) step.triggers(next);

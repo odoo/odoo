@@ -288,8 +288,9 @@
                 {
                     stepId:    'pay-checkout-product',
                     element:   'button:contains("Pay Now")',
-                    trigger:   'click',
-
+                    trigger: {
+                        url:   /shop\/confirmation\//,
+                    },
                 },
                 {
                     stepId:    'end-test',
