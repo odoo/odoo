@@ -23,8 +23,10 @@ import math
 import re
 
 from _common import rounding
-from openerp import SUPERUSER_ID
+from lxml import etree
 
+from openerp.osv.orm import setup_modifiers
+from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
@@ -391,7 +393,7 @@ class product_template(osv.osv):
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'public_categ_id': fields.many2one('product.public.category','Public Category', help="Those categories are used to group similar products for public sales (eg.: point of sale, e-commerce)."),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
-        'standard_price': fields.float('Cost', digits_compute=dp.get_precision('Product Price'), help="Cost price of the product used for standard stock valuation in accounting and used as a base price on purchase orders.", groups="base.group_user"),
+        'standard_price': fields.float('Cost Price', digits_compute=dp.get_precision('Product Price'), help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders.", groups="base.group_user"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
         'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
@@ -467,6 +469,15 @@ class product_template(osv.osv):
                 if old_uom.category_id.id != new_uom.category_id.id:
                     raise osv.except_osv(_('Unit of Measure categories Mismatch!'), _("New Unit of Measure '%s' must belong to same Unit of Measure category '%s' as of old Unit of Measure '%s'. If you need to change the unit of measure, you may deactivate this product from the 'Procurements' tab and create a new one.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
         return super(product_template, self).write(cr, uid, ids, vals, context=context)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        #TOFIX: it should be pass default={'name': _("%s (copy)") % (template['name'])}.
+        template = self.read(cr, uid, id, ['name'], context=context)
+        res = super(product_template, self).copy(cr, uid, id, default=default, context=context)
+        self.write(cr, uid, res, {'name': _("%s (copy)") % (template['name'])}, context=context)
+        return res
 
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
@@ -574,6 +585,7 @@ class product_product(osv.osv):
         list_price = (field_value - product.price_extra) / (product.price_margin or 1.0)
         return self.write(cr, uid, [product_id], {'list_price': list_price}, context=context)
 
+
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
         for supinfo in product.seller_ids:
             if supinfo.name.id == partner_id:
@@ -664,12 +676,12 @@ class product_product(osv.osv):
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
         'default_code' : fields.char('Internal Reference', size=64, select=True),
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
-        'variants': fields.char('Variants', size=64),
+        'variants': fields.char('Variants', size=64, translate=True),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True),
         'ean13': fields.char('EAN13 Barcode', size=13, help="International Article Number used for product identification."),
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
-        'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price')),
-        'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Product Price')),
+        'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price'), help="Price Extra: Extra price for the variant on sale price. eg. 200 price extra, 1000 + 200 = 1200."),
+        'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Product Price'), help="Price Margin: Margin in percentage amount on sale price for the variant. eg. 10 price margin, 1000 * 1.1 = 1100."),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', size=128, store={
             'product.template': (_get_name_template_ids, ['name'], 10),
@@ -682,20 +694,28 @@ class product_product(osv.osv):
         'seller_qty': fields.function(_calc_seller, type='float', string='Supplier Quantity', multi="seller_info", help="This is minimum quantity to purchase from Main Supplier."),
         'seller_id': fields.function(_calc_seller, type='many2one', relation="res.partner", string='Main Supplier', help="Main Supplier who has highest priority in Supplier List.", multi="seller_info"),
     }
-    def unlink(self, cr, uid, ids, context=None):
-        unlink_ids = []
-        unlink_product_tmpl_ids = []
-        for product in self.browse(cr, uid, ids, context=context):
-            tmpl_id = product.product_tmpl_id.id
-            # Check if the product is last product of this template
-            other_product_ids = self.search(cr, uid, [('product_tmpl_id', '=', tmpl_id), ('id', '!=', product.id)], context=context)
-            if not other_product_ids:
-                unlink_product_tmpl_ids.append(tmpl_id)
-            unlink_ids.append(product.id)
-        res = super(product_product, self).unlink(cr, uid, unlink_ids, context=context)
-        # delete templates after calling super, as deleting template could lead to deleting
-        # products due to ondelete='cascade'
-        self.pool.get('product.template').unlink(cr, uid, unlink_product_tmpl_ids, context=context)
+
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        #override of fields_view_get in order to replace the name field to product template
+        if context is None:
+            context = {}
+        res = super(product_product, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        #check the current user in group_product_variant
+        if view_type == 'form':
+            doc = etree.XML(res['arch'])
+            if self.pool['res.users'].has_group(cr, uid, 'product.group_product_variant'):
+                for node in doc.xpath("//field[@name='name']"):
+                    node.set('invisible', '1')
+                    node.set('required', '0')
+                    setup_modifiers(node, res['fields']['name'])
+                for node in doc.xpath("//label[@name='label_name']"):
+                    node.set('string','Product Template')
+            else:
+                for node in doc.xpath("//field[@name='product_tmpl_id']"):
+                    node.set('required', '0')
+                    setup_modifiers(node, res['fields']['name'])
+            res['arch'] = etree.tostring(doc)
         return res
 
     def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
@@ -706,6 +726,16 @@ class product_product(osv.osv):
             if uom.category_id.id != uom_po.category_id.id:
                 return {'value': {'uom_po_id': uom_id}}
         return False
+
+    def onchange_product_tmpl_id(self, cr, uid, ids, template_id, context=None):
+        res = {}
+        if template_id:
+            template = self.pool.get('product.template').browse(cr, uid, template_id, context=context)
+            res['value'] = {
+                'name': template.name,
+                'lst_price': template.list_price,
+            }
+        return res
 
     def _check_ean_key(self, cr, uid, ids, context=None):
         for product in self.read(cr, uid, ids, ['ean13'], context=context):
@@ -776,7 +806,7 @@ class product_product(osv.osv):
                 # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
                 # Performing a quick memory merge of ids in Python will give much better performance
                 ids = set()
-                ids.update(self.search(cr, user, args + [('default_code',operator,name)], limit=limit, context=context))
+                ids.update(self.search(cr, user, args + ['|',('default_code',operator,name),('variants',operator,name)], limit=limit, context=context))
                 if not limit or len(ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
                     ids.update(self.search(cr, user, args + [('name',operator,name)], limit=(limit and (limit-len(ids)) or False) , context=context))
@@ -838,9 +868,12 @@ class product_product(osv.osv):
         # will do the other languages).
         context_wo_lang = context.copy()
         context_wo_lang.pop('lang', None)
-        product = self.read(cr, uid, id, ['name'], context=context_wo_lang)
+        product = self.read(cr, uid, id, ['name', 'list_price', 'standard_price', 'categ_id', 'variants', 'product_tmpl_id'], context=context_wo_lang)
         default = default.copy()
-        default.update(name=_("%s (copy)") % (product['name']))
+        if product['variants']:
+            default.update(variants=_("%s (copy)") % (product['variants']), product_tmpl_id=product['product_tmpl_id'][0])
+        else:
+            default.update(name=_("%s (copy)") % (product['name']), list_price=product['list_price'], standard_price=product['standard_price'], categ_id=product['categ_id'][0], product_tmpl_id=None)
 
         if context.get('variant',False):
             fields = ['product_tmpl_id', 'active', 'variants', 'default_code',
@@ -858,7 +891,9 @@ class product_product(osv.osv):
                     context=context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        if context and context.get('search_default_categ_id'):
+        if context is None:
+            context = {}
+        if context.get('search_default_categ_id'):
             args.append((('categ_id', 'child_of', context['search_default_categ_id'])))
         return super(product_product, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 

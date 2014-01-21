@@ -37,29 +37,30 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-            	<group name="delay" position="inside">
-            		<field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}"/>
-            	</group>
-            	<group name="delay" position="after">
-            		<group name="store" string="Storage Location">
+                <xpath expr="//group[@name='sale_condition']" position="inside">
+                    <label for="sale_delay"/>
+                    <div>
+                        <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}" class="oe_inline" style="vertical-align:baseline"/> days
+                    </div>
+                </xpath>
+                <xpath expr="//group[@name='status']" position="after">
+                    <group name="store" string="Storage Location">
                         <field name="loc_rack"/>
                         <field name="loc_row"/>
-                    	<field name="loc_case"/>
-                	</group>
-                </group>
-                <page position="after" string="Information">
-                    <page string="Properties">
-                        <group string="Counter-Part Locations Properties" groups="stock.group_locations">
-                            <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
-                            <field name="property_stock_production" domain="[('usage','=','production')]"/>
-                            <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
-                        </group>
-                        <group string="Accounting Entries">
-                            <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                        </group>
-                    </page>
-                </page>
+                        <field name="loc_case"/>
+                    </group>
+                </xpath>
+                <xpath expr="//group[@name='weight']" position="after">
+                    <group string="Accounting Entries">
+                        <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                        <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                    </group>
+                    <group string="Counter-Part Locations Properties" groups="stock.group_locations">
+                        <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
+                        <field name="property_stock_production" domain="[('usage','=','production')]"/>
+                        <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
+                    </group>
+                </xpath>
                 <field name="product_manager" position="attributes" version="7.0">
                     <attribute name="context">{'default_groups_ref': ['base.group_user', 'base.group_sale_manager', 'stock.group_stock_manager']}</attribute>
                 </field>
@@ -138,7 +139,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="standard_price" position="replace" version="7.0">
-                    <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
+                    <label for="standard_price" align="1.0" groups="base.group_user"/>
                     <div groups="base.group_user">
                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" nolabel="1"/>
                         <button name="%(action_view_change_standard_price)d" string="- update"
