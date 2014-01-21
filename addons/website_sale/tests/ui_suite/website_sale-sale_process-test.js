@@ -16,10 +16,10 @@ testRunner.run(function websiteSaleTest (page, timeout) {
         });
         waitFor(function testExecuted () {
             return page.evaluate(function () {
-                console.error(
-                    window.localStorage && window.localStorage.getItem
-                    && window.localStorage.getItem("test-success"));
-                return true;
+                var res = window.localStorage && window.localStorage.getItem
+                    && window.localStorage.getItem("test-success");
+            console.log('{ "error": "testExecuted", "message": "'+res+'"" }');
+                return res;
             });
         }, function finish () {
             console.log('{ "event": "success" }');

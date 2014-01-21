@@ -292,13 +292,11 @@
                         url:   /shop\/confirmation\//,
                     },
                     afterTrigger: function (tour) {
-                        window.localStorage.setItem("test-success", "{}");
+                        localStorage.setItem("test-success", "{}");
+                        throw "afterTrigger test finish, remove this throw";
+
                     },
-                },
-                {
-                    stepId:    'end-test',
-                    backdrop:  true,
-                },
+                }
             ];
             return this._super();
         },
