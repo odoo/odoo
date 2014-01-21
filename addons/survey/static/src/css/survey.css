@@ -6,8 +6,40 @@
 }
 
 .openerp .oe_kanban_survey {
-    /* Customize height and width according bootstrap3 */
     width: 212px;
     min-height: 86px !important;
-    /* End of customize */
+}
+.openerp .oe_kanban_survey .oe_kanban_survey_list{
+    width: 100%;
+}
+.openerp .oe_kanban_survey .oe_kanban_status,
+.openerp .oe_kanban_survey .oe_kanban_status_green,
+.openerp .oe_kanban_survey .oe_kanban_status_salmon,
+.openerp .oe_kanban_survey .oe_kanban_status_red {
+    display: block;
+    height: 10px;
+    width: 10px;
+    background-color: #dddddd;
+    border-radius: 5px;
+    margin-top: 3px;
+}
+.openerp .oe_kanban_survey .oe_kanban_status_green {
+    background-color: green;
+}
+.openerp .oe_kanban_survey .oe_kanban_status_salmon {
+    background-color: salmon;
+}
+.openerp .oe_kanban_survey .oe_kanban_status_red {
+    background-color: red;
+}
+.openerp .oe_kanban_survey .oe_inactive {
+    color: #aaaaaa;
+}
+
+.openerp .oe_kanban_survey .oe_stats_box {
+    width: 96px;
+    display: inline-block;
+    margin: 2px 2px 0px 0px;
+    text-align: center;
+    border: 1px solid rgba(0, 0, 0, 0.16);
 }

@@ -1,8 +1,8 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-TODAY OpenERP S.A. <http://www.openerp.com>
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,8 +19,23 @@
 #
 ##############################################################################
 
-import survey
-import controllers
-import wizard
 
+{
+    'name': 'Survey CRM',
+    'version': '2.0',
+    'category': 'Marketing',
+    'complexity': 'easy',
+    'description': """
+Survey - CRM (bridge module)
+=================================================================================
+This module adds a Survey mass mailing button inside the more option of lead/customers views
+""",
+    'author': 'OpenERP SA',
+    'depends': ['crm', 'survey'],
+    'data': [
+        'crm_view.xml',
+    ],
+    'installable': True,
+    'auto_install': True
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

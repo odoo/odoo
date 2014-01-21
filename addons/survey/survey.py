@@ -4,7 +4,7 @@
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-TODAY OpenERP S.A. <http://www.openerp.com>
 #
-#    This program is free software: you can redistribute it and/or modify
+#    This program is free software: you can redistribute it and / or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
 #    License, or (at your option) any later version.
@@ -19,760 +19,926 @@
 #
 ##############################################################################
 
-import copy
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from time import strftime
-import os
-
-from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DF
+from urlparse import urljoin
 
-class survey_type(osv.osv):
-    _name = 'survey.type'
-    _description = 'Survey Type'
-    _columns = {
-        'name': fields.char("Name", size=128, required=1, translate=True),
-        'code': fields.char("Code", size=64),
-    }
+import datetime
+import logging
+import re
+import uuid
 
-class survey(osv.osv):
-    _name = 'survey'
+_logger = logging.getLogger(__name__)
+
+
+class survey_survey(osv.Model):
+    '''Settings for a multi-page/multi-question survey.
+    Each survey can have one or more attached pages, and each page can display
+    one or more questions.
+    '''
+
+    _name = 'survey.survey'
     _description = 'Survey'
     _rec_name = 'title'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
-    def default_get(self, cr, uid, fields, context=None):
-        data = super(survey, self).default_get(cr, uid, fields, context)
-        return data
+    # Protected methods #
+
+    def _has_questions(self, cr, uid, ids, context=None):
+        """ Ensure that this survey has at least one page with at least one
+        question. """
+        for survey in self.browse(cr, uid, ids, context=context):
+            if not survey.page_ids or not [page.question_ids
+                            for page in survey.page_ids if page.question_ids]:
+                return False
+        return True
+
+    ## Function fields ##
+
+    def _get_tot_start_survey(self, cr, uid, ids, name, arg, context=None):
+        """ Returns the number of started instances of this survey, be they
+        completed or not """
+        res = dict((id, 0) for id in ids)
+        sur_res_obj = self.pool.get('survey.user_input')
+        for id in ids:
+            res[id] = sur_res_obj.search(cr, uid,  # SUPERUSER_ID,
+                [('survey_id', '=', id), ('state', '=', 'skip')],
+                context=context, count=True)
+        return res
+
+    def _get_tot_comp_survey(self, cr, uid, ids, name, arg, context=None):
+        """ Returns the number of completed instances of this survey """
+        res = dict((id, 0) for id in ids)
+        sur_res_obj = self.pool.get('survey.user_input')
+        for id in ids:
+            res[id] = sur_res_obj.search(cr, uid,  # SUPERUSER_ID,
+                [('survey_id', '=', id), ('state', '=', 'done')],
+                context=context, count=True)
+        return res
+
+    def _get_public_url(self, cr, uid, ids, name, arg, context=None):
+        """ Computes a public URL for the survey """
+        res = dict((id, 0) for id in ids)
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
+            'web.base.url')
+        for survey_browse in self.browse(cr, uid, ids, context=context):
+            res[survey_browse.id] = urljoin(base_url, "survey/start/%s/"
+                                            % survey_browse.id)
+        return res
+
+    # Model fields #
 
     _columns = {
-        'id': fields.integer('ID'),
-        'title': fields.char('Survey Title', size=128, required=1),
-        'page_ids': fields.one2many('survey.page', 'survey_id', 'Page'),
-        'date_open': fields.datetime('Survey Open Date', readonly=1),
-        'date_close': fields.datetime('Survey Close Date', readonly=1),
-        'max_response_limit': fields.integer('Maximum Answer Limit',
-                     help="Set to one if survey is answerable only once"),
-        'response_user': fields.integer('Maximum Answer per User',
-                     help="Set to one if  you require only one Answer per user"),
-        'state': fields.selection([('open', 'Open'), ('cancel', 'Cancelled'),('close', 'Closed') ], 'Status', readonly=True),
-        'responsible_id': fields.many2one('res.users', 'Responsible', help="User responsible for survey"),
-        'tot_start_survey': fields.integer("Total Started Survey", readonly=1),
-        'tot_comp_survey': fields.integer("Total Completed Survey", readonly=1),
-        'note': fields.text('Description', size=128),
-        'history': fields.one2many('survey.history', 'survey_id', 'History Lines', readonly=True),
-        'users': fields.many2many('res.users', 'survey_users_rel', 'sid', 'uid', 'Users'),
-        'send_response': fields.boolean('Email Notification on Answer'),
-        'type': fields.many2one('survey.type', 'Type'),
+        'title': fields.char('Title', size=128, required=1,
+            translate=True),
+        'res_model': fields.char('Category'),
+        'page_ids': fields.one2many('survey.page', 'survey_id', 'Pages'),
+        'date_open': fields.datetime('Opening date'),
+        'date_close': fields.datetime('Closing date'),
+        'user_input_limit': fields.integer('Automatic closing limit',
+            help="Limits the number of instances of this survey that can be completed (if set to 0, no limit is applied)",
+            oldname='max_response_limit'),
+        'state': fields.selection(
+            [('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'),
+            ('cancel', 'Cancelled')], 'Status', required=1, translate=1),
+        'visible_to_user': fields.boolean('Public in website',
+            help="If unchecked, only invited users will be able to open the survey."),
+        'auth_required': fields.boolean('Login required',
+            help="Users with a public link will be requested to login before taking part to the survey",
+            oldname="authenticate"),
+        'users_can_go_back': fields.boolean('Users can go back',
+            help="If checked, users can go back to previous pages."),
+        'tot_start_survey': fields.function(_get_tot_start_survey,
+            string="Number of started surveys", type="integer"),
+        'tot_comp_survey': fields.function(_get_tot_comp_survey,
+            string="Number of completed surveys", type="integer"),
+        'description': fields.html('Description', translate=True,
+            oldname="description", help="A long description of the purpose of the survey"),
         'color': fields.integer('Color Index'),
-        'invited_user_ids': fields.many2many('res.users', 'survey_invited_user_rel', 'sid', 'uid', 'Invited User'),
+        'user_input_ids': fields.one2many('survey.user_input', 'survey_id',
+            'User responses', readonly=1),
+        'public_url': fields.function(_get_public_url,
+            string="Public link", type="char"),
+        'email_template_id': fields.many2one('email.template',
+            'Email Template', ondelete='set null'),
+        'thank_you_message': fields.html('Thank you message', translate=True,
+            help="This message will be displayed when survey is completed")
     }
+
     _defaults = {
-        'state': lambda * a: "open",
-        'tot_start_survey': lambda * a: 0,
-        'tot_comp_survey': lambda * a: 0,
-        'send_response': lambda * a: 1,
-        'response_user': lambda * a:1,
-        'date_open': fields.datetime.now,
+        'user_input_limit': 0,
+        'state': 'draft',
+        'visible_to_user': True,
+        'auth_required': True,
+        'users_can_go_back': False,
+        'color': 0
     }
 
-    def survey_open(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, {'state': 'open', 'date_open': strftime("%Y-%m-%d %H:%M:%S")})
-        return True
+    _sql_constraints = {
+        ('positive_user_input_limit', 'CHECK (user_input_limit >= 0)', 'Automatic closing limit must be positive')
+    }
 
-    def survey_close(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, {'state': 'close', 'date_close': strftime("%Y-%m-%d %H:%M:%S") })
-        return True
-
-    def survey_cancel(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, {'state': 'cancel' })
-        return True
+    # Public methods #
 
     def copy(self, cr, uid, ids, default=None, context=None):
         vals = {}
         current_rec = self.read(cr, uid, ids, context=context)
         title = _("%s (copy)") % (current_rec.get('title'))
-        vals.update({'title':title})
-        vals.update({'history':[],'tot_start_survey':0,'tot_comp_survey':0})
-        return super(survey, self).copy(cr, uid, ids, vals, context=context)
+        vals['title'] = title
+        vals['user_input_ids'] = []
+        return super(survey_survey, self).copy(cr, uid, ids, vals,
+            context=context)
 
-    def action_print_survey(self, cr, uid, ids, context=None):
-        """
-        If response is available then print this response otherwise print survey form(print template of the survey).
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Survey IDs
-        @param context: A standard dictionary for contextual values
-        @return : Dictionary value for print survey form.
-        """
-        if context is None:
-            context = {}
-        datas = {}
-        if 'response_id' in context:
-            response_id = context.get('response_id', 0)
-            datas['ids'] = [context.get('survey_id', 0)]
+    def next_page(self, cr, uid, user_input, page_id, go_back=False, context=None):
+        '''The next page to display to the user, knowing that page_id is the id
+        of the last displayed page.
+
+        If page_id == 0, it will always return the first page of the survey.
+
+        If all the pages have been displayed and go_back == False, it will
+        return None
+
+        If go_back == True, it will return the *previous* page instead of the
+        next page.
+
+        .. note::
+            It is assumed here that a careful user will not try to set go_back
+            to True if she knows that the page to display is the first one!
+            (doing this will probably cause a giant worm to eat her house)'''
+        survey = user_input.survey_id
+        pages = list(enumerate(survey.page_ids))
+
+        # First page
+        if page_id == 0:
+            return (pages[0][1], 0, len(pages) == 1)
+
+        current_page_index = pages.index((filter(lambda p: p[1].id == page_id, pages))[0])
+
+        # All the pages have been displayed
+        if current_page_index == len(pages) - 1 and not go_back:
+            return (None, -1, False)
+        # Let's get back, baby!
+        elif go_back and survey.users_can_go_back:
+            return (pages[current_page_index - 1][1], current_page_index - 1, False)
         else:
-            response_id = self.pool.get('survey.response').search(cr, uid, [('survey_id','=', ids)], context=context)
-            datas['ids'] = ids
-        page_setting = {'orientation': 'vertical', 'without_pagebreak': 0, 'paper_size': 'letter', 'page_number': 1, 'survey_title': 1}
-        report = {}
-        if response_id and response_id[0]:
-            context.update({'survey_id': datas['ids']})
-            datas['form'] = page_setting
-            datas['model'] = 'survey.print.answer'
-            report = {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'survey.browse.response',
-                'datas': datas,
-                'context' : context,
-                'nodestroy':True,
-            }
-        else:
+            # This will show the last page
+            if current_page_index == len(pages) - 2:
+                return (pages[current_page_index + 1][1], current_page_index + 1, True)
+            # This will show a regular page
+            else:
+                return (pages[current_page_index + 1][1], current_page_index + 1, False)
 
-            datas['form'] = page_setting
-            datas['model'] = 'survey.print'
-            report = {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'survey.form',
-                'datas': datas,
-                'context' : context,
-                'nodestroy':True,
-            }
-        return report
-
-    def fill_survey(self, cr, uid, ids, context=None):
-        sur_obj = self.read(cr, uid, ids,['title', 'page_ids'], context=context)
-        for sur in sur_obj:
-            name = sur['title']
-            pages = sur['page_ids']
-            if not pages:
-                raise osv.except_osv(_('Warning!'), _('This survey has no question defined. Please define the questions and answers first.'))
-            context.update({'active':False,'survey_id': ids[0]})
+    def action_edit_survey(self, cr, uid, ids, context=None):
+        ''' Open a survey in edition view '''
+        id = ids[0]
+        context.update({
+            'survey_id': id,
+            'edit': True,
+            'ir_actions_act_window_target': 'new',
+        })
         return {
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'name': name,
+            'name': self.browse(cr, uid, id, context=context).title,
             'context': context
         }
-    def test_survey(self, cr, uid, ids, context=None):
-        sur_obj = self.read(cr, uid, ids,['title','page_ids'], context=context)
-        for sur in sur_obj:
-            name = sur['title']
-            pages = sur['page_ids']
-            if not pages:
-                raise osv.except_osv(_('Warning!'), _('This survey has no pages defined. Please define pages first.'))
-            context.update({'active':False,'survey_id': ids[0]})
+
+    def action_send_survey(self, cr, uid, ids, context=None):
+        ''' Open a window to compose an email, pre-filled with the survey
+        message '''
+        if not self._has_questions(cr, uid, ids, context=None):
+            raise osv.except_osv(_('Error!'), _('You can not send a survey that has no questions.'))
+
+        survey_browse = self.pool.get('survey.survey').browse(cr, uid, ids,
+            context=context)[0]
+        if survey_browse.state != "open":
+            raise osv.except_osv(_('Warning!'),
+                _("You cannot send invitations since the survey is not open."))
+
+        assert len(ids) == 1, 'This option should only be used for a single \
+                                survey at a time.'
+        ir_model_data = self.pool.get('ir.model.data')
+        templates = ir_model_data.get_object_reference(cr, uid,
+                                'survey', 'email_template_survey')
+        template_id = templates[1] if len(templates) > 0 else False
+        ctx = dict(context)
+
+        ctx.update({
+            'default_model': 'survey.survey',
+            'default_res_id': ids[0],
+            'default_survey_id': ids[0],
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'survey_state': survey_browse.state
+            })
         return {
+            'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'survey.question.wiz',
-            'type': 'ir.actions.act_window',
+            'res_model': 'survey.mail.compose.message',
             'target': 'new',
-            'name': name,
-            'context': context
+            'context': ctx,
         }
 
-    def edit_survey(self, cr, uid, ids, context=None):
-        sur_obj = self.read(cr, uid, ids,['title','page_ids'], context=context)
-        for sur in sur_obj:
-            name = sur['title']
-            pages = sur['page_ids']
-            if not pages:
-                raise osv.except_osv(_('Warning!'), _('This survey has no question defined. Please define the questions and answers first.'))
-            context.update({'survey_id': ids[0]})
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'survey.question.wiz',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'name': name,
-            'context': context
-        }
+    def write(self, cr, uid, ids, vals, context=None):
+        new_state = vals.get('state')
+        if new_state == 'draft':
+            vals.update({'date_open': None})
+            vals.update({'date_close': None})
+            self.message_post(cr, uid, ids, body="""<p>Survey drafted</p>""", context=context)
+        elif new_state == 'open':
+            if self._has_questions(cr, uid, ids, context=None):
+                vals.update({'date_open': fields.datetime.now(), 'date_close': None})
+                self.message_post(cr, uid, ids, body="""<p>Survey opened</p>""", context=context)
+            else:
+                raise osv.except_osv(_('Error!'), _('You can not open a survey that has no questions.'))
+        elif new_state == 'close':
+            vals.update({'date_close': fields.datetime.now()})
+            self.message_post(cr, uid, ids, body="""<p>Survey closed</p>""", context=context)
+        elif new_state == 'cancel':
+            self.message_post(cr, uid, ids, body="""<p>Survey cancelled</p>""", context=context)
+        return super(survey_survey, self).write(cr, uid, ids, vals, context=context)
 
 
-class survey_history(osv.osv):
-    _name = 'survey.history'
-    _description = 'Survey History'
-    _rec_name = 'date'
-    _columns = {
-        'survey_id': fields.many2one('survey', 'Survey'),
-        'user_id': fields.many2one('res.users', 'User', readonly=True),
-        'date': fields.datetime('Date started', readonly=1),
-    }
-    _defaults = {
-         'date': lambda * a: datetime.datetime.now()
-    }
+class survey_page(osv.Model):
+    '''A page for a survey.
 
-class survey_page(osv.osv):
+    Pages are essentially containers, allowing to group questions by ordered
+    screens.
+
+    .. note::
+        A page should be deleted if the survey it belongs to is deleted. '''
+
     _name = 'survey.page'
-    _description = 'Survey Pages'
+    _description = 'Survey Page'
     _rec_name = 'title'
     _order = 'sequence'
+
+    # Model Fields #
+
     _columns = {
-        'title': fields.char('Page Title', size=128, required=1),
-        'survey_id': fields.many2one('survey', 'Survey', ondelete='cascade'),
-        'question_ids': fields.one2many('survey.question', 'page_id', 'Questions'),
-        'sequence': fields.integer('Page Nr'),
-        'note': fields.text('Description'),
+        'title': fields.char('Page Title', size=128, required=1,
+            translate=True),
+        'survey_id': fields.many2one('survey.survey', 'Survey',
+            ondelete='cascade', required=True),
+        'question_ids': fields.one2many('survey.question', 'page_id',
+            'Questions'),
+        'sequence': fields.integer('Page number'),
+        'description': fields.html('Description',
+            help="An introductory text to your page", translate=True,
+            oldname="note"),
     }
     _defaults = {
-        'sequence': lambda * a: 1
+        'sequence': 10
     }
 
-    def default_get(self, cr, uid, fields, context=None):
-        if context is None:
-            context = {}
-        data = super(survey_page, self).default_get(cr, uid, fields, context)
-        if context.has_key('survey_id'):
-            data['survey_id'] = context.get('survey_id', False)
-        return data
-
-    def survey_save(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        search_obj = self.pool.get('ir.ui.view')
-        search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
-        surv_name_wiz = self.pool.get('survey.name.wiz')
-        surv_name_wiz.write(cr, uid, [context.get('sur_name_id',False)], {'transfer':True, 'page_no' : context.get('page_number',0) })
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'survey.question.wiz',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'search_view_id': search_id[0],
-            'context': context
-        }
+    # Public methods #
 
     def copy(self, cr, uid, ids, default=None, context=None):
         vals = {}
         current_rec = self.read(cr, uid, ids, context=context)
         title = _("%s (copy)") % (current_rec.get('title'))
-        vals.update({'title':title})
-        return super(survey_page, self).copy(cr, uid, ids, vals, context=context)
+        vals.update({'title': title})
+        return super(survey_page, self).copy(cr, uid, ids, vals,
+            context=context)
 
 
-class survey_question(osv.osv):
+class survey_question(osv.Model):
+    ''' Questions that will be asked in a survey.
+
+    Each question can have one of more suggested answers (eg. in case of
+    dropdown choices, multi-answer checkboxes, radio buttons...).'''
     _name = 'survey.question'
     _description = 'Survey Question'
     _rec_name = 'question'
     _order = 'sequence'
 
-    def _calc_response(self, cr, uid, ids, field_name, arg, context=None):
-        if len(ids) == 0:
-            return {}
-        val = {}
-        cr.execute("select question_id, count(id) as Total_response from \
-                survey_response_line where state='done' and question_id IN %s\
-                 group by question_id" ,(tuple(ids),))
-        ids1 = copy.deepcopy(ids)
-        for rec in  cr.fetchall():
-            ids1.remove(rec[0])
-            val[rec[0]] = int(rec[1])
-        for id in ids1:
-            val[id] = 0
-        return val
+    # Model fields #
 
     _columns = {
-        'page_id': fields.many2one('survey.page', 'Survey Page', ondelete='cascade', required=1),
-        'question':  fields.char('Question', size=128, required=1),
-        'answer_choice_ids': fields.one2many('survey.answer', 'question_id', 'Answer'),
-        'is_require_answer': fields.boolean('Require Answer to Question'),
-        'required_type': fields.selection([('all','All'), ('at least','At Least'), ('at most','At Most'), ('exactly','Exactly'), ('a range','A Range')], 'Respondent must answer'),
-        'req_ans': fields.integer('#Required Answer'),
-        'maximum_req_ans': fields.integer('Maximum Required Answer'),
-        'minimum_req_ans': fields.integer('Minimum Required Answer'),
-        'req_error_msg': fields.text('Error Message'),
-        'allow_comment': fields.boolean('Allow Comment Field'),
-        'sequence': fields.integer('Sequence'),
-        'tot_resp': fields.function(_calc_response, string="Total Answer"),
-        'survey': fields.related('page_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
-        'descriptive_text': fields.text('Descriptive Text', size=255),
-        'column_heading_ids': fields.one2many('survey.question.column.heading', 'question_id',' Column heading'),
-        'type': fields.selection([('multiple_choice_only_one_ans','Multiple Choice (Only One Answer)'),
-             ('multiple_choice_multiple_ans','Multiple Choice (Multiple Answer)'),
-             ('matrix_of_choices_only_one_ans','Matrix of Choices (Only One Answers Per Row)'),
-             ('matrix_of_choices_only_multi_ans','Matrix of Choices (Multiple Answers Per Row)'),
-             ('matrix_of_drop_down_menus','Matrix of Drop-down Menus'),
-             ('rating_scale','Rating Scale'),('single_textbox','Single Textbox'),
-             ('multiple_textboxes','Multiple Textboxes'),
-             ('multiple_textboxes_diff_type','Multiple Textboxes With Different Type'),
-             ('comment','Comment/Essay Box'),
-             ('numerical_textboxes','Numerical Textboxes'),('date','Date'),
-             ('date_and_time','Date and Time'),('descriptive_text','Descriptive Text'),
-             ('table','Table'),
-            ], 'Question Type',  required=1,),
-        'is_comment_require': fields.boolean('Add Comment Field'),
-        'comment_label': fields.char('Field Label', size = 255),
-        'comment_field_type': fields.selection([('char', 'Single Line Of Text'), ('text', 'Paragraph of Text')], 'Comment Field Type'),
-        'comment_valid_type': fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''),
-             ('must_be_specific_length', 'Must Be Specific Length'),
-             ('must_be_whole_number', 'Must Be A Whole Number'),
-             ('must_be_decimal_number', 'Must Be A Decimal Number'),
-             ('must_be_date', 'Must Be A Date'),
-             ('must_be_email_address', 'Must Be An Email Address'),
-             ], 'Text Validation'),
-        'comment_minimum_no': fields.integer('Minimum number'),
-        'comment_maximum_no': fields.integer('Maximum number'),
-        'comment_minimum_float': fields.float('Minimum decimal number'),
-        'comment_maximum_float': fields.float('Maximum decimal number'),
-        'comment_minimum_date': fields.date('Minimum date'),
-        'comment_maximum_date': fields.date('Maximum date'),
-        'comment_valid_err_msg': fields.text('Error message'),
-        'make_comment_field': fields.boolean('Make Comment Field an Answer Choice'),
-        'make_comment_field_err_msg': fields.text('Error message'),
-        'is_validation_require': fields.boolean('Validate Text'),
-        'validation_type': fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''),\
-             ('must_be_specific_length', 'Must Be Specific Length'),\
-             ('must_be_whole_number', 'Must Be A Whole Number'),\
-             ('must_be_decimal_number', 'Must Be A Decimal Number'),\
-             ('must_be_date', 'Must Be A Date'),\
-             ('must_be_email_address', 'Must Be An Email Address')\
-             ], 'Text Validation'),
-        'validation_minimum_no': fields.integer('Minimum number'),
-        'validation_maximum_no': fields.integer('Maximum number'),
-        'validation_minimum_float': fields.float('Minimum decimal number'),
-        'validation_maximum_float': fields.float('Maximum decimal number'),
-        'validation_minimum_date': fields.date('Minimum date'),
-        'validation_maximum_date': fields.date('Maximum date'),
-        'validation_valid_err_msg': fields.text('Error message'),
-        'numeric_required_sum': fields.integer('Sum of all choices'),
-        'numeric_required_sum_err_msg': fields.text('Error message'),
-        'rating_allow_one_column_require': fields.boolean('Allow Only One Answer per Column (Forced Ranking)'),
-        'in_visible_rating_weight': fields.boolean('Is Rating Scale Invisible?'),
-        'in_visible_menu_choice': fields.boolean('Is Menu Choice Invisible?'),
-        'in_visible_answer_type': fields.boolean('Is Answer Type Invisible?'),
-        'comment_column': fields.boolean('Add comment column in matrix'),
-        'column_name': fields.char('Column Name',size=256),
-        'no_of_rows': fields.integer('No of Rows'),
+        # Question metadata
+        'page_id': fields.many2one('survey.page', 'Survey page',
+            ondelete='cascade'),
+        'survey_id': fields.related('page_id', 'survey_id', type='many2one',
+            relation='survey.survey', string='Survey', store=True),
+        'parent_id': fields.many2one('survey.question', 'Parent question',
+            ondelete='cascade'),
+        'sequence': fields.integer(string='Sequence'),
+
+        # Question
+        'question': fields.char('Question', required=1, translate=True),
+        'description': fields.char('Description', help="Use this field to add \
+            additional explanations about your question", translate=True,
+            oldname='descriptive_text'),
+
+        # Answer
+        'type': fields.selection([('free_text', 'Long text zone'),
+                ('textbox', 'Text box'),
+                ('numerical_box', 'Numerical box'),
+                ('datetime', 'Date and Time'),
+                ('simple_choice', 'Multiple choice (one answer)'),
+                ('multiple_choice', 'Multiple choice (multiple answers)'),
+                ('matrix', 'Matrix')], 'Question Type', required=1),
+        'matrix_subtype': fields.selection([('simple', 'One choice per line'),
+            ('multiple', 'Several choices per line')], 'Matrix Type'),
+        'labels_ids': fields.one2many('survey.label',
+            'question_id', 'Suggested answers', oldname='answer_choice_ids'),
+        'labels_ids_2': fields.one2many('survey.label',
+            'question_id_2', 'Suggested answers'),
+        # labels are used for proposed choices
+        # if question.type == simple choice | multiple choice
+        #                    -> only labels_ids is used
+        # if question.type == matrix
+        #                    -> labels_ids are the columns of the matrix
+        #                    -> labels_ids_2 are the rows of the matrix
+
+        # Display options
+        'column_nb': fields.selection([('12', '1 column choices'),
+                                       ('6', '2 columns choices'),
+                                       ('4', '3 columns choices'),
+                                       ('3', '4 columns choices'),
+                                       ('2', '6 columns choices')],
+            'Number of columns'),
+        'display_mode': fields.selection([('columns', 'Columns'),
+                                          ('dropdown', 'Dropdown menu')],
+                                         'Display mode'),
+
+        # Comments
+        'comments_allowed': fields.boolean('Allow comments',
+            oldname="allow_comment"),
+        'comment_children_ids': fields.many2many('survey.question',
+            'question_comment_children_ids', 'comment_id', 'parent_id',
+            'Comment question'),  # one2one in fact
+        'comment_count_as_answer': fields.boolean('Comment field is an answer choice',
+            oldname='make_comment_field'),
+
+        # Validation
+        'validation_required': fields.boolean('Validate entry',
+            oldname='is_validation_require'),
+        'validation_type': fields.selection([
+            ('has_length', 'Must have a specific length'),
+            ('is_integer', 'Must be an integer'),
+            ('is_decimal', 'Must be a decimal number'),
+            #('is_date', 'Must be a date'),
+            ('is_email', 'Must be an email address')],
+            'Validation type', translate=True),
+        'validation_length_min': fields.integer('Minimum length'),
+        'validation_length_max': fields.integer('Maximum length'),
+        'validation_min_float_value': fields.float('Minimum value'),
+        'validation_max_float_value': fields.float('Maximum value'),
+        'validation_min_int_value': fields.integer('Minimum value'),
+        'validation_max_int_value': fields.integer('Maximum value'),
+        'validation_min_date': fields.date('Start date range'),
+        'validation_max_date': fields.date('End date range'),
+        'validation_error_msg': fields.char('Error message',
+                                            oldname='validation_valid_err_msg',
+                                            translate=True),
+
+        # Constraints on number of answers (matrices)
+        'constr_mandatory': fields.boolean('Mandatory question',
+            oldname="is_require_answer"),
+        'constr_type': fields.selection([('all', 'all'),
+            ('at least', 'at least'),
+            ('at most', 'at most'),
+            ('exactly', 'exactly'),
+            ('a range', 'a range')],
+            'Constraint on answers number', oldname='required_type'),
+        'constr_maximum_req_ans': fields.integer('Maximum Required Answer',
+            oldname='maximum_req_ans'),
+        'constr_minimum_req_ans': fields.integer('Minimum Required Answer',
+            oldname='minimum_req_ans'),
+        'constr_error_msg': fields.char("Error message",
+            oldname='req_error_msg'),
     }
     _defaults = {
-         'sequence': lambda * a: 1,
-         'type': lambda * a: 'multiple_choice_multiple_ans',
-         'req_error_msg': lambda * a: 'This question requires an answer.',
-         'required_type': lambda * a: 'at least',
-         'req_ans': lambda * a: 1,
-         'comment_field_type': lambda * a: 'char',
-         'comment_label': lambda * a: 'Other (please specify)',
-         'comment_valid_type': lambda * a: 'do_not_validate',
-         'comment_valid_err_msg': lambda * a : 'The comment you entered is in an invalid format.',
-         'validation_type': lambda * a: 'do_not_validate',
-         'validation_valid_err_msg': lambda * a : 'The comment you entered is in an invalid format.',
-         'numeric_required_sum_err_msg': lambda * a :'The choices need to add up to [enter sum here].',
-         'make_comment_field_err_msg': lambda * a : 'Please enter a comment.',
-         'in_visible_answer_type': lambda * a: 1
+        'page_id': lambda s, cr, uid, c: c.get('page_id'),
+        'sequence': 10,
+        'type': 'free_text',
+        'matrix_subtype': 'simple',
+        'column_nb': '12',
+        'display_mode': 'dropdown',
+        'constr_type': 'at least',
+        'constr_minimum_req_ans': 1,
+        'constr_maximum_req_ans': 1,
+        'constr_error_msg': lambda s, cr, uid, c:
+                _('This question requires an answer.'),
+        'validation_error_msg': lambda s, cr, uid, c: _('The answer you entered has an invalid format.'),
+        'validation_required': False,
     }
-
-    def on_change_type(self, cr, uid, ids, type, context=None):
-        val = {}
-        val['is_require_answer'] = False
-        val['is_comment_require'] = False
-        val['is_validation_require'] = False
-        val['comment_column'] = False
-
-        if type in ['multiple_textboxes_diff_type']:
-            val['in_visible_answer_type'] = False
-            return {'value': val}
-
-        if type in ['rating_scale']:
-            val.update({'in_visible_rating_weight':False, 'in_visible_menu_choice':True})
-            return {'value': val}
-
-        elif type in ['matrix_of_drop_down_menus']:
-            val.update({'in_visible_rating_weight':True, 'in_visible_menu_choice':False})
-            return {'value': val}
-
-        elif type in ['single_textbox']:
-            val.update({'in_visible_rating_weight':True, 'in_visible_menu_choice':True})
-            return {'value': val}
-
-        else:
-            val.update({'in_visible_rating_weight':True, 'in_visible_menu_choice':True,\
-                         'in_visible_answer_type':True})
-            return {'value': val}
-
-    def write(self, cr, uid, ids, vals, context=None):
-        questions = self.read(cr,uid, ids, ['answer_choice_ids', 'type', 'required_type',\
-                        'req_ans', 'minimum_req_ans', 'maximum_req_ans', 'column_heading_ids', 'page_id', 'question'])
-        for question in questions:
-            col_len = len(question['column_heading_ids'])
-            if vals.has_key('column_heading_ids'):
-                for col in vals['column_heading_ids']:
-                    if type(col[2]) == type({}):
-                        col_len += 1
-                    else:
-                        col_len -= 1
-
-            if vals.has_key('type'):
-                que_type = vals['type']
-            else:
-                que_type = question['type']
-
-            if que_type in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans',\
-                             'matrix_of_drop_down_menus', 'rating_scale']:
-                if not col_len:
-                    raise osv.except_osv(_('Warning!'),_('You must enter one or more column headings for question "%s" of page %s.') % (question['question'], question['page_id'][1]))
-            ans_len = len(question['answer_choice_ids'])
-
-            if vals.has_key('answer_choice_ids'):
-                for ans in vals['answer_choice_ids']:
-                    if type(ans[2]) == type({}):
-                        ans_len += 1
-                    else:
-                        ans_len -= 1
-
-            if que_type not in ['descriptive_text', 'single_textbox', 'comment','table']:
-                if not ans_len:
-                    raise osv.except_osv(_('Warning!'),_('You must enter one or more Answers for question "%s" of page %s.') % (question['question'], question['page_id'][1]))
-            req_type = ""
-
-            if vals.has_key('required_type'):
-                req_type = vals['required_type']
-            else:
-                req_type = question['required_type']
-
-            if que_type in ['multiple_choice_multiple_ans','matrix_of_choices_only_one_ans', \
-                        'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus',\
-                         'rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time']:
-                if req_type in ['at least', 'at most', 'exactly']:
-                    if vals.has_key('req_ans'):
-                        if not vals['req_ans'] or  vals['req_ans'] > ans_len:
-                            raise osv.except_osv(_('Warning!'),_("#Required Answer you entered \
-                                    is greater than the number of answer. \
-                                    Please use a number that is smaller than %d.") % (ans_len + 1))
-                    else:
-                        if not question['req_ans'] or  question['req_ans'] > ans_len:
-                            raise osv.except_osv(_('Warning!'),_("#Required Answer you entered is \
-                                    greater than the number of answer.\
-                                    Please use a number that is smaller than %d.") % (ans_len + 1))
-
-                if req_type == 'a range':
-                    minimum_ans = 0
-                    maximum_ans = 0
-                    if vals.has_key('minimum_req_ans'):
-                        minimum_ans = vals['minimum_req_ans']
-                        if not vals['minimum_req_ans'] or  vals['minimum_req_ans'] > ans_len:
-                            raise osv.except_osv(_('Warning!'),_("Minimum Required Answer\
-                                     you entered is greater than the number of answer.\
-                                    Please use a number that is smaller than %d.") % (ans_len + 1))
-                    else:
-                        minimum_ans = question['minimum_req_ans']
-                        if not question['minimum_req_ans'] or  question['minimum_req_ans'] > ans_len:
-                            raise osv.except_osv(_('Warning!'),_("Minimum Required Answer you\
-                                     entered is greater than the number of answer. \
-                                     Please use a number that is smaller than %d.") % (ans_len + 1))
-                    if vals.has_key('maximum_req_ans'):
-                        maximum_ans = vals['maximum_req_ans']
-                        if not vals['maximum_req_ans'] or vals['maximum_req_ans'] > ans_len:
-                            raise osv.except_osv(_('Warning!'),_("Maximum Required Answer you \
-                                    entered for your maximum is greater than the number of answer.\
-                                     Please use a number that is smaller than %d.") % (ans_len + 1))
-                    else:
-                        maximum_ans = question['maximum_req_ans']
-                        if not question['maximum_req_ans'] or question['maximum_req_ans'] > ans_len:
-                            raise osv.except_osv(_('Warning!'),_("Maximum Required Answer you\
-                                     entered for your maximum is greater than the number of answer.\
-                                      Please use a number that is smaller than %d.") % (ans_len + 1))
-                    if maximum_ans <= minimum_ans:
-                        raise osv.except_osv(_('Warning!'),_("Maximum Required Answer is greater \
-                                    than Minimum Required Answer"))
-
-            if question['type'] ==  'matrix_of_drop_down_menus' and vals.has_key('column_heading_ids'):
-                for col in vals['column_heading_ids']:
-                    if not col[2] or not col[2].has_key('menu_choice') or not col[2]['menu_choice']:
-                        raise osv.except_osv(_('Warning!'),_("You must enter one or more menu choices\
-                                 in column heading."))
-                    elif not col[2] or not col[2].has_key('menu_choice') or\
-                             col[2]['menu_choice'].strip() == '':
-                        raise osv.except_osv(_('Warning!'),_("You must enter one or more menu \
-                                choices in column heading (white spaces not allowed)."))
-
-        return super(survey_question, self).write(cr, uid, ids, vals, context=context)
-
-    def create(self, cr, uid, vals, context=None):
-        minimum_ans = 0
-        maximum_ans = 0
-        page = self.pool.get('survey.page').browse(cr, uid, int(vals.get('page_id', 0)), context=context).title
-        if vals.has_key('answer_choice_ids') and  not len(vals['answer_choice_ids']):
-            if vals.has_key('type') and vals['type'] not in ['descriptive_text', 'single_textbox', 'comment','table']:
-                raise osv.except_osv(_('Warning!'),_('You must enter one or more answers for question "%s" of page %s .') % (vals['question'], page))
-
-        if vals.has_key('column_heading_ids') and  not len(vals['column_heading_ids']):
-            if vals.has_key('type') and vals['type'] in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale']:
-                raise osv.except_osv(_('Warning!'),_('You must enter one or more column headings for question "%s" of page %s.')% (vals['question'], page))
-
-        if vals['type'] in ['multiple_choice_multiple_ans','matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time']:
-            if vals.has_key('is_require_answer') and vals.has_key('required_type') and vals['required_type'] in ['at least', 'at most', 'exactly']:
-                if vals.has_key('answer_choice_ids') and vals['req_ans'] > len(vals['answer_choice_ids']) or not vals['req_ans']:
-                    raise osv.except_osv(_('Warning!'),_("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
-
-            if vals.has_key('is_require_answer') and vals.has_key('required_type') and vals['required_type'] == 'a range':
-                minimum_ans = vals['minimum_req_ans']
-                maximum_ans = vals['maximum_req_ans']
-                if vals.has_key('answer_choice_ids') or vals['minimum_req_ans'] > len(vals['answer_choice_ids']) or not vals['minimum_req_ans']:
-                    raise osv.except_osv(_('Warning!'),_("Minimum Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
-                if vals.has_key('answer_choice_ids') or vals['maximum_req_ans'] > len(vals['answer_choice_ids']) or not vals['maximum_req_ans']:
-                    raise osv.except_osv(_('Warning!'),_("Maximum Required Answer you entered for your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
-                if maximum_ans <= minimum_ans:
-                    raise osv.except_osv(_('Warning!'),_("Maximum Required Answer is greater than Minimum Required Answer."))
-
-        if vals['type'] ==  'matrix_of_drop_down_menus':
-            for col in vals['column_heading_ids']:
-                if not col[2] or not col[2].has_key('menu_choice') or not col[2]['menu_choice']:
-                    raise osv.except_osv(_('Warning!'),_("You must enter one or more menu choices in column heading."))
-                elif not col[2] or not col[2].has_key('menu_choice') or col[2]['menu_choice'].strip() == '':
-                    raise osv.except_osv(_('Warning!'),_("You must enter one or more menu choices in column heading (white spaces not allowed)."))
-
-        res = super(survey_question, self).create(cr, uid, vals, context)
-        return res
+    _sql_constraints = [
+        ('positive_len_min', 'CHECK (validation_length_min >= 0)', 'A length must be positive!'),
+        ('positive_len_max', 'CHECK (validation_length_max >= 0)', 'A length must be positive!'),
+        ('validation_length', 'CHECK (validation_length_min <= validation_length_max)', 'Max length cannot be smaller than min length!'),
+        ('validation_float', 'CHECK (validation_min_float_value <= validation_max_float_value)', 'Max value cannot be smaller than min value!'),
+        ('validation_int', 'CHECK (validation_min_int_value <= validation_max_int_value)', 'Max value cannot be smaller than min value!'),
+        ('validation_date', 'CHECK (validation_min_date <= validation_max_date)', 'Max date cannot be smaller than min date!'),
+        ('constr_number', 'CHECK (constr_minimum_req_ans <= constr_maximum_req_ans)', 'Max number of answers cannot be smaller than min number!')
+    ]
 
     def survey_save(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        search_obj = self.pool.get('ir.ui.view')
-        search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
-        surv_name_wiz = self.pool.get('survey.name.wiz')
-        surv_name_wiz.write(cr, uid, [context.get('sur_name_id',False)], {'transfer':True, 'page_no' : context.get('page_number',False) })
+        surv_name_wiz = self.pool.get('survey.question.wiz')
+        surv_name_wiz.write(cr, uid, [context.get('wizard_id', False)],
+            {'transfer': True, 'page_no': context.get('page_number', False)})
         return {
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'search_view_id': search_id[0],
             'context': context
         }
 
-    def default_get(self, cr, uid, fields, context=None):
-        if context is None:
-            context = {}
-        data = super(survey_question, self).default_get(cr, uid, fields, context)
-        if context.has_key('page_id'):
-            data['page_id']= context.get('page_id', False)
-        return data
+    # Validation methods
 
+    def validate_question(self, cr, uid, question, post, answer_tag, context=None):
+        ''' Validate question, depending on question type and parameters '''
+        try:
+            checker = getattr(self, 'validate_' + question.type)
+        except AttributeError:
+            _logger.warning(question.type + ": This type of question has no validation method")
+            return {}
+        else:
+            return checker(cr, uid, question, post, answer_tag, context=context)
 
+    def validate_free_text(self, cr, uid, question, post, answer_tag, context=None):
+        errors = {}
+        answer = post[answer_tag].strip()
+        # Empty answer to mandatory question
+        if question.constr_mandatory and not answer:
+            errors.update({answer_tag: question.constr_error_msg})
+        return errors
 
-class survey_question_column_heading(osv.osv):
-    _name = 'survey.question.column.heading'
-    _description = 'Survey Question Column Heading'
-    _rec_name = 'title'
+    def validate_textbox(self, cr, uid, question, post, answer_tag, context=None):
+        errors = {}
+        answer = post[answer_tag].strip()
+        # Empty answer to mandatory question
+        if question.constr_mandatory and not answer:
+            errors.update({answer_tag: question.constr_error_msg})
+        # Answer validation (if properly defined)
+        if answer and question.validation_required and question.validation_type:
+            # Length of the answer must be in a range
+            if question.validation_type == "has_length":
+                if not (question.validation_length_min <= len(answer) <= question.validation_length_max):
+                    errors.update({answer_tag: question.validation_error_msg})
 
-    def _get_in_visible_rating_weight(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        if context.get('in_visible_rating_weight', False):
-            return context['in_visible_rating_weight']
-        return False
-    def _get_in_visible_menu_choice(self,cr, uid, context=None):
-        if context is None:
-            context = {}
-        if context.get('in_visible_menu_choice', False):
-            return context['in_visible_menu_choice']
-        return False
+            # Answer must be an integer in a particular range
+            elif question.validation_type == "is_integer":
+                try:
+                    intanswer = int(answer)
+                # Answer is not an integer
+                except ValueError:
+                    errors.update({answer_tag: question.validation_error_msg})
+                else:
+                    # Answer is not in the right range
+                    if not (question.validation_min_int_value <= intanswer <= question.validation_max_int_value):
+                        errors.update({answer_tag: question.validation_error_msg})
+            # Answer must be a float in a particular range
+            elif question.validation_type == "is_decimal":
+                try:
+                    floatanswer = float(answer)
+                # Answer is not an integer
+                except ValueError:
+                    errors.update({answer_tag: question.validation_error_msg})
+                else:
+                    # Answer is not in the right range
+                    if not (question.validation_min_float_value <= floatanswer <= question.validation_max_float_value):
+                        errors.update({answer_tag: question.validation_error_msg})
 
-    _columns = {
-        'title': fields.char('Column Heading', size=128, required=1),
-        'menu_choice': fields.text('Menu Choice'),
-        'rating_weight': fields.integer('Weight'),
-        'question_id': fields.many2one('survey.question', 'Question', ondelete='cascade'),
-        'in_visible_rating_weight': fields.boolean('Is Rating Scale Invisible ??'),
-        'in_visible_menu_choice': fields.boolean('Is Menu Choice Invisible??')
-    }
-    _defaults={
-       'in_visible_rating_weight': _get_in_visible_rating_weight,
-       'in_visible_menu_choice': _get_in_visible_menu_choice,
-    }
-
-class survey_answer(osv.osv):
-    _name = 'survey.answer'
-    _description = 'Survey Answer'
-    _rec_name = 'answer'
-    _order = 'sequence'
-
-    def _calc_response_avg(self, cr, uid, ids, field_name, arg, context=None):
-        val = {}
-        for rec in self.browse(cr, uid, ids, context=context):
-            cr.execute("select count(question_id) ,(select count(answer_id) \
-                from survey_response_answer sra, survey_response_line sa \
-                where sra.response_id = sa.id and sra.answer_id = %d \
-                and sa.state='done') as tot_ans from survey_response_line \
-                where question_id = %d and state = 'done'"\
-                     % (rec.id, rec.question_id.id))
-            res = cr.fetchone()
-            if res[0]:
-                avg = float(res[1]) * 100 / res[0]
+            # Answer must be a date in a particular range
+            elif question.validation_type == "is_date":
+                raise Exception("Not implemented")
+            # Answer must be an email address
+            # Note: this validation is very basic:
+            #       all the strings of the form
+            #       <something>@<anything>.<extension>
+            #       will be accepted
+            elif question.validation_type == "is_email":
+                if not re.match(r"[^@]+@[^@]+\.[^@]+", answer):
+                    errors.update({answer_tag: question.validation_error_msg})
             else:
-                avg = 0.0
-            val[rec.id] = {
-                'response': res[1],
-                'average': round(avg, 2),
-            }
-        return val
+                pass
+        return errors
 
-    def _get_in_visible_answer_type(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        return context.get('in_visible_answer_type', False)
+    def validate_numerical_box(self, cr, uid, question, post, answer_tag, context=None):
+        errors = {}
+        answer = post[answer_tag].strip()
+        # Empty answer to mandatory question
+        if question.constr_mandatory and not answer:
+            errors.update({answer_tag: question.constr_error_msg})
+        # Checks if user input is a number
+        if answer:
+            try:
+                float(answer)
+            except ValueError:
+                errors.update({answer_tag: question.constr_error_msg})
+        return errors
+
+    def validate_datetime(self, cr, uid, question, post, answer_tag, context=None):
+        errors = {}
+        answer = post[answer_tag].strip()
+        # Empty answer to mandatory question
+        if question.constr_mandatory and not answer:
+            errors.update({answer_tag: question.constr_error_msg})
+        # Checks if user input is a datetime
+        # TODO when datepicker will be available
+        return errors
+
+    def validate_simple_choice(self, cr, uid, question, post, answer_tag, context=None):
+        errors = {}
+        if question.comments_allowed:
+            comment_tag = "%s_%s" % (answer_tag, question.comment_children_ids[0].id)
+        # Empty answer to mandatory question
+        if question.constr_mandatory and not answer_tag in post:
+            errors.update({answer_tag: question.constr_error_msg})
+        if question.constr_mandatory and answer_tag in post and post[answer_tag].strip() == '':
+            errors.update({answer_tag: question.constr_error_msg})
+        # Answer is a comment and is empty
+        if question.constr_mandatory and answer_tag in post and post[answer_tag] == "-1" and question.comment_count_as_answer and comment_tag in post and not post[comment_tag].strip():
+            errors.update({answer_tag: question.constr_error_msg})
+        return errors
+
+    def validate_multiple_choice(self, cr, uid, question, post, answer_tag, context=None):
+        errors = {}
+        if question.constr_mandatory:
+            answer_candidates = dict_keys_startswith(post, answer_tag)
+            comment_flag = answer_candidates.pop(("%s_%s" % (answer_tag, -1)), None)
+            comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, question.comment_children_ids[0].id)), '').strip()
+            # There is no answer neither comments (if comments count as answer)
+            if not answer_candidates and question.comment_count_as_answer and comment_flag and comment_answer == '':
+                errors.update({answer_tag: question.constr_error_msg})
+            # There is no answer at all
+            if not answer_candidates and not comment_flag:
+                errors.update({answer_tag: question.constr_error_msg})
+        return errors
+
+    def validate_matrix(self, cr, uid, question, post, answer_tag, context=None):
+        errors = {}
+        if question.constr_mandatory:
+            lines_number = len(question.labels_ids_2)
+            answer_candidates = dict_keys_startswith(post, answer_tag)
+            #comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, question.comment_children_ids[0].id)), None)
+            # Number of lines that have been answered
+            if question.matrix_subtype == 'simple':
+                answer_number = len(answer_candidates)
+            elif question.matrix_subtype == 'multiple':
+                answer_number = len(set([sk.rsplit('_', 1)[0] for sk in answer_candidates.keys()]))
+            else:
+                raise RuntimeError("Invalid matrix subtype")
+            # Validate lines
+            if question.constr_type == 'all' and answer_number != lines_number:
+                errors.update({answer_tag: question.constr_error_msg})
+            elif question.constr_type == 'at least' and answer_number < question.constr_minimum_req_ans:
+                errors.update({answer_tag: question.constr_error_msg})
+            elif question.constr_type == 'at most' and answer_number > question.constr_maximum_req_ans:
+                errors.update({answer_tag: question.constr_error_msg})
+            elif question.constr_type == 'exactly' and answer_number != question.constr_maximum_req_ans:
+                errors.update({answer_tag: question.constr_error_msg})
+            elif question.constr_type == 'a range' and not (question.constr_minimum_req_ans <= answer_number <= question.constr_maximum_req_ans):
+                errors.update({answer_tag: question.constr_error_msg})
+            else:
+                pass  # Everything is okay
+        return errors
+
+
+class survey_label(osv.Model):
+    ''' A suggested answer for a question '''
+    _name = 'survey.label'
+    _rec_name = 'value'
+    _order = 'sequence'
+    _description = 'Survey Label'
 
     _columns = {
-        'question_id': fields.many2one('survey.question', 'Question', ondelete='cascade'),
-        'answer': fields.char('Answer', size=128, required=1),
-        'sequence': fields.integer('Sequence'),
-        'response': fields.function(_calc_response_avg, string="#Answer", multi='sums'),
-        'average': fields.function(_calc_response_avg, string="#Avg", multi='sums'),
-        'type': fields.selection([('char','Character'),('date','Date'),('datetime','Date & Time'),\
-            ('integer','Integer'),('float','Float'),('selection','Selection'),\
-            ('email','Email')], "Type of Answer",required=1),
-        'menu_choice': fields.text('Menu Choices'),
-        'in_visible_answer_type': fields.boolean('Is Answer Type Invisible??')
+        'question_id': fields.many2one('survey.question', 'Question',
+            ondelete='cascade'),
+        'question_id_2': fields.many2one('survey.question', 'Question',
+            ondelete='cascade'),
+        'sequence': fields.integer('Label Sequence order'),
+        'value': fields.char("Suggested value", translate=True,
+            required=True),
+        'quizz_marks': fields.float('Score for this answer'),
     }
-    _defaults = {
-#         'sequence' : lambda * a: 1,
-         'type' : lambda * a: 'char',
-         'in_visible_answer_type':_get_in_visible_answer_type,
+    defaults = {
+        'sequence': 100,
     }
 
-    def default_get(self, cr, uid, fields, context=None):
-        if context is None:
-            context = {}
-        data = super(survey_answer, self).default_get(cr, uid, fields, context)
-        return data
 
-
-class survey_response(osv.osv):
-    _name = "survey.response"
+class survey_user_input(osv.Model):
+    ''' Metadata for a set of one user's answers to a particular survey '''
+    _name = "survey.user_input"
     _rec_name = 'date_create'
+    _description = 'Survey User Input'
+
     _columns = {
-        'survey_id' : fields.many2one('survey', 'Survey', required=1, ondelete='cascade'),
-        'date_create' : fields.datetime('Create Date', required=1),
-        'user_id' : fields.many2one('res.users', 'User'),
-        'response_type' : fields.selection([('manually', 'Manually'), ('link', 'Link')], \
-                                    'Answer Type', required=1, readonly=1),
-        'question_ids' : fields.one2many('survey.response.line', 'response_id', 'Answer'),
-        'state' : fields.selection([('done', 'Finished '),('skip', 'Not Finished')], \
-                            'Status', readonly=True),
+        'survey_id': fields.many2one('survey.survey', 'Survey', required=True,
+                                     readonly=1, ondelete='restrict'),
+        'date_create': fields.datetime('Creation Date', required=True,
+                                       readonly=1),
+        'deadline': fields.datetime("Deadline",
+                                help="Date by which the person can open the survey and submit answers.\
+                                Warning: ",
+                                oldname="date_deadline"),
+        'type': fields.selection([('manually', 'Manually'), ('link', 'Link')],
+                                 'Answer Type', required=1, readonly=1,
+                                 oldname="response_type"),
+        'state': fields.selection([('new', 'Not started yet'),
+                                   ('skip', 'Partially completed'),
+                                   ('done', 'Completed')],
+                                  'Status',
+                                  readonly=True),
+        'test_entry': fields.boolean('Test entry', readonly=1),
+        'token': fields.char("Identification token", readonly=1, required=1),
+
+        # Optional Identification data
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=1),
+        'email': fields.char("E-mail", readonly=1),
+
+        # Displaying data
+        'last_displayed_page_id': fields.many2one('survey.page',
+                                              'Last displayed page'),
+        # The answers !
+        'user_input_line_ids': fields.one2many('survey.user_input_line',
+                                               'user_input_id', 'Answers'),
+
+        #'quizz_score': fields.function()
     }
     _defaults = {
-        'state' : lambda * a: "skip",
-        'response_type' : lambda * a: "manually",
+        'date_create': fields.datetime.now,
+        'type': 'manually',
+        'state': 'new',
+        'token': lambda s, cr, uid, c: uuid.uuid4().__str__(),
     }
 
-    def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        reads = self.read(cr, uid, ids, ['user_id','date_create'], context=context)
-        res = []
-        for record in reads:
-            name = (record['user_id'] and record['user_id'][1] or '' )+ ' (' + record['date_create'].split('.')[0] + ')'
-            res.append((record['id'], name))
-        return res
+    _sql_constraints = [
+        ('unique_token', 'UNIQUE (token)', 'A token must be unique!')
+    ]
+
+    def do_clean_emptys(self, cr, uid, automatic=False, context=None):
+        ''' Remove empty user inputs that have been created manually
+
+        .. note:
+            This function does not remove
+        '''
+        empty_user_input_ids = self.search(cr, uid, [('type', '=', 'manually'),
+                                                     ('state', '=', 'new'),
+                                                     ('date_create', '<', (datetime.datetime.now() - datetime.timedelta(hours=1)).strftime(DF))],
+                                           context=context)
+        if empty_user_input_ids:
+            self.unlink(cr, uid, empty_user_input_ids, context=context)
+
+    def action_survey_resent(self, cr, uid, ids, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        context = context or {}
+        context.update({
+            'survey_resent_token': True,
+            'default_partner_ids': record.partner_id and [record.partner_id.id] or [],
+            'default_multi_email': record.email or "",
+            'default_public': 'email_private',
+        })
+        return self.pool.get('survey.survey').action_survey_sent(cr, uid,
+            [record.survey_id.id], context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning!'),_('You cannot duplicate the resource!'))
+        raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
+            element!'))
 
 
-class survey_response_line(osv.osv):
-    _name = 'survey.response.line'
-    _description = 'Survey Response Line'
+class survey_user_input_line(osv.Model):
+    _name = 'survey.user_input_line'
+    _description = 'Survey User Input Line'
     _rec_name = 'date_create'
     _columns = {
-        'response_id': fields.many2one('survey.response', 'Answer', ondelete='cascade'),
+        'user_input_id': fields.many2one('survey.user_input', 'User Input',
+                                         ondelete='cascade', required=1),
+        'question_id': fields.many2one('survey.question', 'Question',
+                                       ondelete='restrict'),
+        'page_id': fields.related('question_id', 'page_id', type='many2one',
+                                  relation='survey.page', string="Page"),
+        'survey_id': fields.related('user_input_id', 'survey_id',
+                                    type="many2one", relation="survey.survey",
+                                    string='Survey'),
         'date_create': fields.datetime('Create Date', required=1),
-        'state': fields.selection([('draft', 'Draft'), ('done', 'Answered'),('skip', 'Skiped')],\
-                                   'Status', readonly=True),
-        'question_id': fields.many2one('survey.question', 'Question'),
-        'page_id': fields.related('question_id', 'page_id', type='many2one', \
-                                  relation='survey.page', string='Page'),
-        'response_answer_ids': fields.one2many('survey.response.answer', 'response_id', 'Answer'),
-        'response_table_ids': fields.one2many('survey.tbl.column.heading', \
-                                    'response_table_id', 'Answer'),
-        'comment': fields.text('Notes'),
-        'single_text': fields.char('Text', size=255),
+        'skipped': fields.boolean('Skipped'),
+        'answer_type': fields.selection([('text', 'Text'),
+                                         ('number', 'Number'),
+                                         ('date', 'Date'),
+                                         ('free_text', 'Free Text'),
+                                         ('suggestion', 'Suggestion')],
+                                        'Answer Type'),
+        'value_text': fields.char("Text answer"),
+        'value_number': fields.float("Numerical answer"),
+        'value_date': fields.datetime("Date answer"),
+        'value_free_text': fields.text("Free Text answer"),
+        'value_suggested': fields.many2one('survey.label', "Suggested answer"),
+        'value_suggested_row': fields.many2one('survey.label', "Row answer"),
+        'quizz_mark': fields.float("Mark given for this answer")
     }
     _defaults = {
-        'state' : lambda * a: "draft",
+        'skipped': False,
+        'date_create': fields.datetime.now()
     }
 
+    def save_lines(self, cr, uid, user_input_id, question, post, answer_tag,
+                   context=None):
+        ''' Save answers to questions, depending on question type
 
-class survey_tbl_column_heading(osv.osv):
-    _name = 'survey.tbl.column.heading'
-    _order = 'name'
-    _columns = {
-        'name': fields.integer('Row Number'),
-        'column_id': fields.many2one('survey.question.column.heading', 'Column'),
-        'value': fields.char('Value', size = 255),
-        'response_table_id': fields.many2one('survey.response.line', 'Answer', ondelete='cascade'),
-    }
+        If an answer already exists for question and user_input_id, it will be
+        overwritten (in order to maintain data consistency). '''
+        try:
+            saver = getattr(self, 'save_line_' + question.type)
+        except AttributeError:
+            _logger.error(question.type + ": This type of question has no saving function")
+            return False
+        else:
+            saver(cr, uid, user_input_id, question, post, answer_tag, context=context)
 
-
-class survey_response_answer(osv.osv):
-    _name = 'survey.response.answer'
-    _description = 'Survey Answer'
-    _rec_name = 'response_id'
-    _columns = {
-        'response_id': fields.many2one('survey.response.line', 'Answer', ondelete='cascade'),
-        'answer_id': fields.many2one('survey.answer', 'Answer', required=1, ondelete='cascade'),
-        'column_id': fields.many2one('survey.question.column.heading','Column'),
-        'answer': fields.char('Value', size =255),
-        'value_choice': fields.char('Value Choice', size =255),
-        'comment': fields.text('Notes'),
-        'comment_field': fields.char('Comment', size = 255)
-    }
-
-
-class res_users(osv.osv):
-    _inherit = "res.users"
-    _name = "res.users"
-    _columns = {
-        'survey_id': fields.many2many('survey', 'survey_users_rel', 'uid', 'sid', 'Groups'),
-    }
-
-
-class survey_request(osv.osv):
-    _name = "survey.request"
-    _order = 'date_deadline'
-    _rec_name = 'date_deadline'
-    _columns = {
-        'date_deadline': fields.date("Deadline date"),
-        'user_id': fields.many2one("res.users", "User"),
-        'email': fields.char("Email", size=64),
-        'survey_id': fields.many2one("survey", "Survey", required=1, ondelete='cascade'),
-        'response': fields.many2one('survey.response', 'Answer'),
-        'state': fields.selection([('draft','Draft'),('cancel', 'Cancelled'),('waiting_answer', 'Waiting Answer'),('done', 'Done')], 'Status', readonly=1)
-    }
-    _defaults = {
-        'state': lambda * a: 'draft',
-#        'date_deadline': lambda * a :  (datetime.now() + relativedelta(months=+1)).strftime("%Y-%m-%d %H:%M:%S")
-    }
-    def survey_req_waiting_answer(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, { 'state' : 'waiting_answer'})
+    def save_line_free_text(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'page_id': question.page_id.id,
+            'survey_id': question.survey_id.id,
+            'skipped': False,
+        }
+        if answer_tag in post and post[answer_tag].strip() != '':
+            vals.update({'answer_type': 'free_text', 'value_free_text': post[answer_tag]})
+        else:
+            vals.update({'answer_type': None, 'skipped': True})
+        old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
+                                        ('survey_id', '=', question.survey_id.id),
+                                        ('question_id', '=', question.id)],
+                              context=context)
+        if old_uil:
+            self.write(cr, uid, old_uil[0], vals, context=context)
+        else:
+            self.create(cr, uid, vals, context=context)
         return True
 
-    def survey_req_draft(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, { 'state' : 'draft'})
+    def save_line_textbox(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'page_id': question.page_id.id,
+            'survey_id': question.survey_id.id,
+            'skipped': False
+        }
+        if answer_tag in post and post[answer_tag].strip() != '':
+            vals.update({'answer_type': 'text', 'value_text': post[answer_tag]})
+        else:
+            vals.update({'answer_type': None, 'skipped': True})
+        old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
+                                        ('survey_id', '=', question.survey_id.id),
+                                        ('question_id', '=', question.id)],
+                              context=context)
+        if old_uil:
+            self.write(cr, uid, old_uil[0], vals, context=context)
+        else:
+            self.create(cr, uid, vals, context=context)
         return True
 
-    def survey_req_done(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, { 'state' : 'done'})
+    def save_line_numerical_box(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'page_id': question.page_id.id,
+            'survey_id': question.survey_id.id,
+            'skipped': False
+        }
+        if answer_tag in post and post[answer_tag].strip() != '':
+            vals.update({'answer_type': 'number', 'value_number': float(post[answer_tag])})
+        else:
+            vals.update({'answer_type': None, 'skipped': True})
+        old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
+                                        ('survey_id', '=', question.survey_id.id),
+                                        ('question_id', '=', question.id)],
+                              context=context)
+        if old_uil:
+            self.write(cr, uid, old_uil[0], vals, context=context)
+        else:
+            self.create(cr, uid, vals, context=context)
         return True
 
-    def survey_req_cancel(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, { 'state' : 'cancel'})
+    def save_line_datetime(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'page_id': question.page_id.id,
+            'survey_id': question.survey_id.id,
+            'skipped': False
+        }
+        if answer_tag in post and post[answer_tag].strip() != '':
+            vals.update({'answer_type': 'date', 'value_date': post[answer_tag]})
+        else:
+            vals.update({'answer_type': None, 'skipped': True})
+        old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
+                                        ('survey_id', '=', question.survey_id.id),
+                                        ('question_id', '=', question.id)],
+                              context=context)
+        if old_uil:
+            self.write(cr, uid, old_uil[0], vals, context=context)
+        else:
+            self.create(cr, uid, vals, context=context)
         return True
 
-    def on_change_user(self, cr, uid, ids, user_id, context=None):
-        if user_id:
-            user_obj = self.pool.get('res.users')
-            user = user_obj.browse(cr, uid, user_id, context=context)
-            return {'value': {'email': user.email}}
-        return {}
+    def save_line_simple_choice(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'page_id': question.page_id.id,
+            'survey_id': question.survey_id.id,
+            'skipped': False
+        }
+        if answer_tag in post and post[answer_tag].strip() != '':
+            vals.update({'answer_type': 'suggestion', 'value_suggested': post[answer_tag]})
+        else:
+            vals.update({'answer_type': None, 'skipped': True})
+        old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
+                                        ('survey_id', '=', question.survey_id.id),
+                                        ('question_id', '=', question.id)],
+                              context=context)
+        if old_uil:
+            self.write(cr, uid, old_uil[0], vals, context=context)
+        else:
+            self.create(cr, uid, vals, context=context)
+        return True
+
+    def save_line_multiple_choice(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'page_id': question.page_id.id,
+            'survey_id': question.survey_id.id,
+            'skipped': False
+        }
+        old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
+                                        ('survey_id', '=', question.survey_id.id),
+                                        ('question_id', '=', question.id)],
+                              context=context)
+        if old_uil:
+            self.unlink(cr, uid, old_uil, context=context)
+
+        ca = dict_keys_startswith(post, answer_tag)
+        if len(ca) > 0:
+            for a in ca:
+                vals.update({'answer_type': 'suggestion', 'value_suggested': ca[a]})
+                self.create(cr, uid, vals, context=context)
+        else:
+            vals.update({'answer_type': None, 'skipped': True})
+            self.create(cr, uid, vals, context=context)
+        return True
+
+    def save_line_matrix(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'page_id': question.page_id.id,
+            'survey_id': question.survey_id.id,
+            'skipped': False
+        }
+        old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
+                                        ('survey_id', '=', question.survey_id.id),
+                                        ('question_id', '=', question.id)],
+                              context=context)
+        if old_uil:
+            self.unlink(cr, uid, old_uil, context=context)
+
+        ca = dict_keys_startswith(post, answer_tag)
+        no_answers = True
+
+        if question.matrix_subtype == 'simple':
+            for row in question.labels_ids_2:
+                a_tag = "%s_%s" % (answer_tag, row.id)
+                if a_tag in ca:
+                    no_answers = False
+                    vals.update({'answer_type': 'suggestion', 'value_suggested': ca[a_tag], 'value_suggested_row': row.id})
+                    self.create(cr, uid, vals, context=context)
+
+        elif question.matrix_subtype == 'multiple':
+            for col in question.labels_ids:
+                for row in question.labels_ids_2:
+                    a_tag = "%s_%s_%s" % (answer_tag, row.id, col.id)
+                    if a_tag in ca:
+                        no_answers = False
+                        vals.update({'answer_type': 'suggestion', 'value_suggested': col.id, 'value_suggested_row': row.id})
+                        self.create(cr, uid, vals, context=context)
+        if no_answers:
+            vals.update({'answer_type': None, 'skipped': True})
+            self.create(cr, uid, vals, context=context)
+        return True
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+def dict_keys_startswith(dictionary, string):
+    '''Returns a dictionary containing the elements of <dict> whose keys start
+    with <string>.
+
+    .. note::
+        This function uses dictionary comprehensions (Python >= 2.7)'''
+    return {k: dictionary[k] for k in filter(lambda key: key.startswith(string), dictionary.keys())}
+
+# vim: exp and tab: smartindent: tabstop=4: softtabstop=4: shiftwidth=4:

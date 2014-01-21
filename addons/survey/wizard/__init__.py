@@ -19,12 +19,6 @@
 #
 ##############################################################################
 
-import survey_send_invitation
-import survey_print_statistics
-import survey_print_answer
-import survey_browse_answer
-import survey_selection
-import survey_answer
-import survey_print
+import survey_email_compose_message
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

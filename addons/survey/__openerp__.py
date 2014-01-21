@@ -21,44 +21,44 @@
 
 {
     'name': 'Survey',
-    'version': '1.0',
-    'category': 'Tools',
+    'version': '2.0',
+    'category': 'Marketing',
     'description': """
-This module is used for surveying.
-==================================
+Create beautiful web surveys and visualize answers
+==================================================
 
 It depends on the answers or reviews of some questions by different users. A
-survey may have multiple pages. Each page may contain multiple questions and each
-question may have multiple answers. Different users may give different answers of
-question and according to that survey is done. Partners are also sent mails with
-user name and password for the invitation of the survey.
+survey may have multiple pages. Each page may contain multiple questions and
+each question may have multiple answers. Different users may give different
+answers of question and according to that survey is done. Partners are also
+sent mails with personal token for the invitation of the survey.
     """,
+    'summary': 'Create surveys, collect answers and print statistics',
     'author': 'OpenERP SA',
-    'depends': ['mail'],
+    'website': 'https://www.openerp.com/apps/survey/',
+    'depends': ['email_template', 'mail', 'website'],
     'data': [
-        'survey_report.xml',
-        'survey_data.xml',
-        'wizard/survey_selection.xml',
-        'wizard/survey_answer.xml',
         'security/survey_security.xml',
         'security/ir.model.access.csv',
-        'survey_view.xml',
-        'wizard/survey_print_statistics.xml',
-        'wizard/survey_print_answer.xml',
-        'wizard/survey_browse_answer.xml',
-        'wizard/survey_print.xml',
-        'wizard/survey_send_invitation.xml'
+        'views/survey_views.xml',
+        'views/survey_templates.xml',
+        'wizard/survey_email_compose_message.xml',
+        'data/survey_cron.xml'
     ],
-    'demo': ['survey_demo.xml'],
-    'test': [
-        'test/draft2open2close_survey.yml',
-        'test/draft2open2close_request.yml',
-        'test/survey_question_type.yml',
-        'test/survey_report.yml',
-    ],
+    'demo': ['data/survey_demo_user.xml',
+             'data/survey_demo_recruitment.xml',
+             'data/survey_demo_feedback.xml',
+             'data/survey_demo_appraisal.xml'],
+    #'test': [
+    #    'test/survey_test.py',
+    #],
     'installable': True,
     'auto_install': False,
-    'images': ['images/survey_answers.jpeg','images/survey_pages.jpeg','images/surveys.jpeg'],   
-    'css': ['static/src/css/survey.css','static/css/survey.css'],
+    'application': True,
+    'sequence': 10,
+    'images': [],
+    'css': ['static/src/css/survey.css'],
+    'js': ['static/src/js/survey.js'],
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

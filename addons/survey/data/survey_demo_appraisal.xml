@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- Appraisal form -->
+        <record model="survey.survey" id="appraisal_form">
+            <field name="title">Self Appraisal Form</field>
+            <field name="state">draft</field>
+            <field name="visible_to_user" eval="False"/>
+            <field name="users_can_go_back" eval="True" />
+            <field name="color" eval="4" />
+            <field name="description"> </field>
+            <field name="thank_you_message"> </field>
+        </record>
+        <record model="survey.page" id="appraisal_1">
+            <field name="title">Page1</field>
+            <field name="survey_id" ref="appraisal_form" />
+            <field name="sequence">1</field>
+            <field name="description"></field>
+        </record>
+    </data>
+</openerp>
