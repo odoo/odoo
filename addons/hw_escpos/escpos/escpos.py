@@ -6,10 +6,10 @@
 @license: GPL
 '''
 
-import Image
-import qrcode
-import time
 import copy
+
+import qrcode
+from PIL import Image
 
 try:
     import jcconv
