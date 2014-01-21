@@ -32,7 +32,7 @@ class account_invoice(osv.Model):
     def invoice_validate(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids[0], context=context).invoice_line:
             if line.product_id.email_template_id:
-                self.pool.get('email.template').send_mail(cr, uid, line.product_id.email_template_id.id, uid, force_send=True, raise_exception=True, context=context)
+                self.pool.get('email.template').send_mail(cr, uid, line.product_id.email_template_id.id, ids[0], force_send=True, raise_exception=True, context=context)
         return super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
