@@ -39,7 +39,7 @@ class StockMove(osv.osv):
             raise osv.except_osv(_('Warning!'), _('You must assign a serial number for the product %s') % (move.product_id.name))
         if move.raw_material_production_id and move.location_dest_id.usage == 'production' and move.raw_material_production_id.product_id.track_production and not move.consumed_for:
             raise osv.except_osv(_('Warning!'), _('You should not process it like this as both your raw materials and finished product require to track manufacturing.  In that case, you should be able to make the link between the raw materials and the finished products and this is not possible with this method. '))
-
+    
     def _action_explode(self, cr, uid, move, context=None):
         """ Explodes pickings.
         @param move: Stock moves
@@ -103,18 +103,20 @@ class StockMove(osv.osv):
             procurement_obj.signal_button_wait_done(cr, uid, procurement_ids)
         return processed_ids
 
-    def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id = False, restrict_partner_id = False, context=None):
+    def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id = False, default_values = None, context=None):
         """ Consumed product with specific quantity from specific source location.
         @param product_qty: Consumed product quantity
         @param location_id: Source location
         @return: Consumed lines
         """
+        if default_values is None:
+            default_values = {}
         res = []
         production_obj = self.pool.get('mrp.production')
         for move in self.browse(cr, uid, ids, context=context):
             self.action_confirm(cr, uid, [move.id], context=context)
             new_moves = super(StockMove, self).action_consume(cr, uid, [move.id], product_qty, location_id, restrict_lot_id = restrict_lot_id, 
-                                                              restrict_partner_id = restrict_partner_id, context=context)
+                                                              default_values = default_values, context=context)
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for prod in production_obj.browse(cr, uid, production_ids, context=context):
                 if prod.state == 'confirmed':

@@ -796,29 +796,8 @@ class mrp_production(osv.osv):
             if (produced_product.scrapped) or (produced_product.product_id.id != production.product_id.id):
                 continue
             produced_qty += produced_product.product_qty
-        if production_mode in ['consume','consume_produce']:
-            consumed_data = {}
-
-            # Calculate already consumed qtys
-            for consumed in production.move_lines2:
-                if consumed.scrapped:
-                    continue
-                if not consumed_data.get(consumed.product_id.id, False):
-                    consumed_data[consumed.product_id.id] = 0
-                consumed_data[consumed.product_id.id] += consumed.product_qty
-        consumed_moves = []
-        for consume in wiz.consume_lines:
-            # Search move for the product
-            corresponding_move = [x for x in production.move_lines if x.product_id.id == consume.product_id.id]
-            if corresponding_move:
-                corresponding_move = corresponding_move[0]
-                if corresponding_move.product_qty > consume.product_qty:
-                    consumed_moves.append(stock_mov_obj.action_consume(cr, uid, [corresponding_move.id], consume.product_qty, corresponding_move.location_id.id, 
-                                                  restrict_lot_id = consume.lot_id.id, context=context))
-                else:
-                    consumed_moves.append(stock_mov_obj.action_consume(cr, uid, [corresponding_move.id], corresponding_move.product_qty, corresponding_move.location_id.id, 
-                                                  restrict_lot_id = consume.lot_id.id, context=context))
         
+        main_production_move = False
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
             #vals = {'state':'confirmed'}
@@ -842,9 +821,39 @@ class mrp_production(osv.osv):
                     raise osv.except_osv(_('Warning!'), _('You are going to produce total %s quantities of "%s".\nBut you can only produce up to total %s quantities.') % ((subproduct_factor * production_qty), prod_name, rest_qty))
                 if rest_qty > 0 :
                     new_moves = stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), location_id = produce_product.location_id.id, restrict_lot_id = wiz.lot_id.id, context=context)
-                    if produce_product.product_id.id == production.bom_id.product_id.id:
-                        stock_mov_obj.write(cr, uid, new_moves, {'consumed_for': produce_product.id}, context=context)
-                    
+                    if produce_product.product_id.id == production.product_id.id and new_moves:
+                        main_production_move = new_moves[0]
+#                     if produce_product.product_id.id == production.bom_id.product_id.id:
+#                         stock_mov_obj.write(cr, uid, new_moves, {'consumed_for': produce_product.id}, context=context)
+
+        if production_mode in ['consume','consume_produce']:
+            consumed_data = {}
+
+            # Calculate already consumed qtys
+            for consumed in production.move_lines2:
+                if consumed.scrapped:
+                    continue
+                if not consumed_data.get(consumed.product_id.id, False):
+                    consumed_data[consumed.product_id.id] = 0
+                consumed_data[consumed.product_id.id] += consumed.product_qty
+                
+                
+            consumed_moves = []
+            for consume in wiz.consume_lines:
+                # Search move for the product
+                corresponding_move = [x for x in production.move_lines if x.product_id.id == consume.product_id.id]
+                if corresponding_move:
+                    corresponding_move = corresponding_move[0]
+                    default_values = {}
+                    if main_production_move:
+                        default_values = {'consumed_for': main_production_move}
+                    if corresponding_move.product_qty > consume.product_qty:
+                        consumed_moves.append(stock_mov_obj.action_consume(cr, uid, [corresponding_move.id], consume.product_qty, corresponding_move.location_id.id, 
+                                                      restrict_lot_id = consume.lot_id.id, default_values = default_values, context=context))
+                    else:
+                        consumed_moves.append(stock_mov_obj.action_consume(cr, uid, [corresponding_move.id], corresponding_move.product_qty, corresponding_move.location_id.id, 
+                                                      restrict_lot_id = consume.lot_id.id, default_values = default_values, context=context))
+        
 
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
         self.signal_button_produce_done(cr, uid, [production_id])
