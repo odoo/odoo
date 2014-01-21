@@ -5477,6 +5477,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     start: function() {
         this.field_manager.on("view_content_has_changed", this, this.calc_domain);
         this.calc_domain();
+        this.on("change:value", this, this.get_selection);
         this.on("change:evaluated_selection_domain", this, this.get_selection);
         this.on("change:selection", this, function() {
             this.selection = this.get("selection");
