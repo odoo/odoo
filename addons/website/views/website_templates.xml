@@ -743,7 +743,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 
 <template id="contact">
-    <address t-ignore="true">
+    <address t-ignore="true" class="mb0">
         <div t-attf-class="'name' not in fields and 'css_non_editable_mode_hidden'"><span t-esc="name"/></div>
         <div class='css_editable_mode_hidden'>
             <div t-if="address and 'address' in fields">
