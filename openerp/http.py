@@ -483,6 +483,13 @@ class ControllerType(type):
 class Controller(object):
     __metaclass__ = ControllerType
 
+class EndPoint(object):
+    def __init__(self, method, routing):
+        self.method = method
+        self.routing = routing
+    def __call__(self, *args, **kw):
+        return self.method(*args, **kw)
+
 def routing_map(modules, nodb_only, converters=None):
     routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)
     for module in modules:
@@ -500,21 +507,22 @@ def routing_map(modules, nodb_only, converters=None):
             members = inspect.getmembers(o)
             for mk, mv in members:
                 if inspect.ismethod(mv) and hasattr(mv, 'routing'):
-                    routing = dict(type='http', auth='user', methods=None)
+                    routing = dict(type='http', auth='user', methods=None, routes=None)
                     for claz in reversed(mv.im_class.mro()):
                         fn = getattr(claz, mv.func_name, None)
                         if fn and hasattr(fn, 'routing'):
                             routing.update(fn.routing)
-                    mv.routing.update(routing)
-                    assert 'routes' in mv.routing
-                    if not nodb_only or nodb_only == (mv.routing['auth'] == "none"):
-                        for url in mv.routing['routes']:
-                            if mv.routing.get("combine", False):
+                    if not nodb_only or nodb_only == (routing['auth'] == "none"):
+                        assert routing['routes'], "Method %r has not route defined" % mv
+                        endpoint = EndPoint(mv, routing)
+                        for url in routing['routes']:
+                            if routing.get("combine", False):
                                 # deprecated
                                 url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
                                 if url.endswith("/") and len(url) > 1:
                                     url = url[: -1]
-                            routing_map.add(werkzeug.routing.Rule(url, endpoint=mv, methods=mv.routing['methods']))
+
+                            routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods']))
     return routing_map
 
 #----------------------------------------------------------
