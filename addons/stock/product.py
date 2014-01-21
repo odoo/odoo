@@ -90,13 +90,14 @@ class product_product(osv.osv):
         stock_output_acc = datas.get('stock_output_account', False)
         stock_input_acc = datas.get('stock_input_account', False)
         journal_id = datas.get('stock_journal', False)
-        product_obj=self.browse(cr, uid, ids, context=context)[0]
-        account_valuation = product_obj.categ_id.property_stock_valuation_account_id
-        account_valuation_id = account_valuation and account_valuation.id or False
-        if not account_valuation_id: raise osv.except_osv(_('Error!'), _('Specify valuation Account for Product Category: %s.') % (product_obj.categ_id.name))
         move_ids = []
         loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
-        for rec_id in ids:
+        for product in self.browse(cr, uid, ids, context=context):
+            if product.valuation != 'real_time':
+                continue
+            account_valuation = product.categ_id.property_stock_valuation_account_id
+            account_valuation_id = account_valuation and account_valuation.id or False
+            if not account_valuation_id: raise osv.except_osv(_('Error!'), _('Specify valuation Account for Product Category: %s.') % (product.categ_id.name))
             for location in location_obj.browse(cr, uid, loc_ids, context=context):
                 c = context.copy()
                 c.update({
@@ -104,7 +105,6 @@ class product_product(osv.osv):
                     'compute_child': False
                 })
 
-                product = self.browse(cr, uid, rec_id, context=c)
                 qty = product.qty_available
                 diff = product.standard_price - new_price
                 if not diff: raise osv.except_osv(_('Error!'), _("No difference between standard price and new price!"))
@@ -182,8 +182,7 @@ class product_product(osv.osv):
                                         'debit': amount_diff,
                                         'move_id': move_id
                                     })
-
-            self.write(cr, uid, rec_id, {'standard_price': new_price})
+        self.write(cr, uid, ids, {'standard_price': new_price})
 
         return move_ids
 
