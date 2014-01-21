@@ -69,6 +69,7 @@
                     </t>
                     <script type="text/javascript">
                         $(function() {
+                            var s = new openerp.init(<t t-raw="modules"/>);
                             var login_form = new openerp.web.LoginForm($('.oe_login_form'));
                         });
                     </script>
@@ -87,6 +88,9 @@
 
                     <p class="alert alert-danger" t-if="error">
                         <t t-esc="error"/>
+                    </p>
+                    <p class="alert alert-success" t-if="message">
+                        <t t-esc="message"/>
                     </p>
 
                     <hr/>
