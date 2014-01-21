@@ -791,8 +791,72 @@ class mrp_production(osv.osv):
             consumed_data[consumed.product_id.id] += consumed.product_qty
         return consumed_data
 
+    def _calculate_qty(self, cr, uid, production, product_qty = 0.0, context=None):
+        """
+            Calculates the quantity still needed to produce an extra number of products
+        """
+        quant_obj = self.pool.get("stock.quant")
+        #In case no product qty is given, take product qty of 
+        if product_qty == 0.0:
+            done = 0.0
+            for move in production.move_created_ids2:
+                if move.product_id == production.product_id:
+                    if not move.scrapped:
+                        done += move.product_qty
+            product_qty = production.product_qty - done
+        
+        produced_qty = self._get_produced_qty(cr, uid, production, context=context)
+        consumed_data = self._get_consumed_data(cr, uid, production, context=context)
+        dicts = {}
+        # Find product qty to be consumed and consume it
+        for scheduled in production.product_lines:
+            if not dicts.get(scheduled.product_id.id):
+                dicts[scheduled.product_id.id] = {}
+            # total qty of consumed product we need after this consumption
+            total_consume = ((product_qty + produced_qty) * scheduled.product_qty / production.product_qty)
 
-    def action_produce(self, cr, uid, production_id, production_qty, production_mode, wiz, context=None):
+            # qty available for consume and produce
+            qty_avail = scheduled.product_qty - consumed_data.get(scheduled.product_id.id, 0.0)
+
+            if qty_avail <= 0.0:
+                # there will be nothing to consume for this raw material
+                continue
+            
+            qty = total_consume - consumed_data.get(scheduled.product_id.id, 0.0)
+            # Search for quants related to this related move
+            move = [x for x in production.move_lines if x.product_id.id == scheduled.product_id.id]
+            #TODO: check if not already in dict_new
+            if move:
+                product_id = scheduled.product_id.id
+                move = move[0]
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, scheduled.product_id, qty, domain=[('qty', '>', 0.0)], 
+                                                     prefered_domain=[('reservation_id', '=', move.id)], fallback_domain=[('reservation_id', '=', False)], context=context)
+                for quant in quants: 
+                    if quant[0]:
+                        lot_id = quant[0].lot_id.id
+                        prod_qty = quant[1]
+                        if not product_id in dicts.keys():
+                            dicts[product_id] = {lot_id : prod_qty}
+                        elif lot_id in dicts[product_id].keys():
+                            dicts[product_id][lot_id] += prod_qty
+                        else:
+                            dicts[product_id][lot_id] = prod_qty
+                        qty -= quant[1]
+                if qty > 0:
+                    if dicts[product_id].get(False):
+                        dicts[product_id][False] += qty
+                    else:
+                        dicts[product_id][False] = qty
+        
+        consume_lines = []
+        for prod in dicts.keys():
+            for lot in dicts[prod].keys():
+                consume_lines.append({'product_id': prod, 'product_qty':dicts[prod][lot], 'lot_id': lot})
+        return consume_lines
+
+
+
+    def action_produce(self, cr, uid, production_id, production_qty, production_mode, wiz=False, context=None):
         """ To produce final product based on production mode (consume/consume&produce).
         If Production mode is consume, all stock move lines of raw materials will be done/consumed.
         If Production mode is consume & produce, all stock move lines of raw materials will be done/consumed
@@ -800,6 +864,7 @@ class mrp_production(osv.osv):
         @param production_id: the ID of mrp.production object
         @param production_qty: specify qty to produce
         @param production_mode: specify production mode (consume/consume&produce).
+        @param wizard: the mrp produce product wizard, which will tell the amount of consumed products needed
         @return: True
         """
         
@@ -835,27 +900,34 @@ class mrp_production(osv.osv):
                     prod_name = produce_product.product_id.name_get()[0][1]
                     raise osv.except_osv(_('Warning!'), _('You are going to produce total %s quantities of "%s".\nBut you can only produce up to total %s quantities.') % ((subproduct_factor * production_qty), prod_name, rest_qty))
                 if rest_qty > 0 :
-                    new_moves = stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), location_id = produce_product.location_id.id, restrict_lot_id = wiz.lot_id.id, context=context)
+                    lot_id = False
+                    if wiz:
+                        lot_id = wiz.lot_id.id
+                    new_moves = stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), location_id = produce_product.location_id.id, restrict_lot_id = lot_id, context=context)
                     if produce_product.product_id.id == production.product_id.id and new_moves:
                         main_production_move = new_moves[0]
 
         if production_mode in ['consume','consume_produce']:
-            consumed_moves = []
-            for consume in wiz.consume_lines:
+            consume_lines = []
+            if wiz:
+                for cons in wiz.consume_lines:
+                    consume_lines.append({'product_id': cons.product_id.id, 'lot_id': cons.lot_id.id, 'product_qty': cons.product_qty})
+            else:
+                consume_lines = self._calculate_qty(cr, uid, production, production_qty, context=context)
+            for consume in consume_lines:
                 # Search move for the product
-                corresponding_move = [x for x in production.move_lines if x.product_id.id == consume.product_id.id]
+                corresponding_move = [x for x in production.move_lines if x.product_id.id == consume['product_id']]
                 if corresponding_move:
                     corresponding_move = corresponding_move[0]
                     default_values = {}
                     if main_production_move:
                         default_values = {'consumed_for': main_production_move}
-                    if corresponding_move.product_qty > consume.product_qty:
-                        consumed_moves.append(stock_mov_obj.action_consume(cr, uid, [corresponding_move.id], consume.product_qty, corresponding_move.location_id.id, 
-                                                      restrict_lot_id = consume.lot_id.id, default_values = default_values, context=context))
+                    if corresponding_move.product_qty > consume['product_qty']:
+                        stock_mov_obj.action_consume(cr, uid, [corresponding_move.id], consume['product_qty'], corresponding_move.location_id.id, 
+                                                      restrict_lot_id = consume['lot_id'], default_values = default_values, context=context)
                     else:
-                        consumed_moves.append(stock_mov_obj.action_consume(cr, uid, [corresponding_move.id], corresponding_move.product_qty, corresponding_move.location_id.id, 
-                                                      restrict_lot_id = consume.lot_id.id, default_values = default_values, context=context))
-        
+                        stock_mov_obj.action_consume(cr, uid, [corresponding_move.id], corresponding_move.product_qty, corresponding_move.location_id.id, 
+                                                      restrict_lot_id = consume['lot_id'], default_values = default_values, context=context)
 
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
         self.signal_button_produce_done(cr, uid, [production_id])

@@ -54,62 +54,23 @@ class mrp_product_produce(osv.osv_memory):
     
     
     def on_change_qty(self, cr, uid, ids, product_qty, consume_lines, context=None):
-        """ Will give the initial number of consumption lines
+        """ 
+            When changing the quantity of products to be produced it will 
+            recalculate the number of raw materials needed according
+            to the scheduled products and the already consumed/produced products
+            It will return the consume lines needed for the products to be produced
+            which the user can still adapt
         """
-        quant_obj = self.pool.get("stock.quant")
         prod_obj = self.pool.get("mrp.production")
         production = prod_obj.browse(cr, uid, context['active_id'], context=context)
-        
-        produced_qty = prod_obj._get_produced_qty(cr, uid, production, context=context)
-        consumed_data = prod_obj._get_consumed_data(cr, uid, production, context=context)
+        if product_qty > 0.0:
+            consume_lines = prod_obj._calculate_qty(cr, uid, production, product_qty = product_qty, context=None)
+        else:
+            consume_lines = []
         
         new_consume_lines = []
-        dicts = {}
-        # Find product qty to be consumed and consume it
-        for scheduled in production.product_lines:
-            if not dicts.get(scheduled.product_id.id):
-                dicts[scheduled.product_id.id] = {}
-            # total qty of consumed product we need after this consumption
-            total_consume = ((product_qty + produced_qty) * scheduled.product_qty / production.product_qty)
-
-            # qty available for consume and produce
-            qty_avail = scheduled.product_qty - consumed_data.get(scheduled.product_id.id, 0.0)
-
-            if qty_avail <= 0.0:
-                # there will be nothing to consume for this raw material
-                continue
-            
-            
-            qty = total_consume - consumed_data.get(scheduled.product_id.id, 0.0)
-            # Search for quants related to this related move
-            move = [x for x in production.move_lines if x.product_id.id == scheduled.product_id.id]
-            #TODO: check if not already in dict_new
-            if move:
-                product_id = scheduled.product_id.id
-                move = move[0]
-                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, scheduled.product_id, qty, domain=[('qty', '>', 0.0)], 
-                                                     prefered_domain=[('reservation_id', '=', move.id)], fallback_domain=[('reservation_id', '=', False)], context=context)
-                for quant in quants: 
-                    if quant[0]:
-                        lot_id = quant[0].lot_id.id
-                        prod_qty = quant[1]
-                        if not product_id in dicts.keys():
-                            dicts[product_id] = {lot_id : prod_qty}
-                        elif lot_id in dicts[product_id].keys():
-                            dicts[product_id][lot_id] += prod_qty
-                        else:
-                            dicts[product_id][lot_id] = prod_qty
-                        qty -= quant[1]
-                if qty > 0:
-                    if dicts[product_id].get(False):
-                        dicts[product_id][False] += qty
-                    else:
-                        dicts[product_id][False] = qty
-                        
-        for prod in dicts.keys():
-            for lot in dicts[prod].keys():
-                dict_new = {'product_id': prod, 'product_qty':dicts[prod][lot], 'lot_id': lot}
-                new_consume_lines.append([0, False, dict_new]) #Todo for all qtys
+        for consume in consume_lines:
+            new_consume_lines.append([0, False, consume]) #Todo for all qtys
         return {'value': {'consume_lines': new_consume_lines}}
 
 
