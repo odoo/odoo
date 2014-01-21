@@ -37,16 +37,29 @@ $(document).ready(function () {
         var href = $link.attr("action");
         var order_id = href.match(/accept\/([0-9]+)/);
         var token = href.match(/token=(.*)/);
-        var datapair = $("#signature").jSignature("getData",'image')
+        var sign = false;
+        var signer_name = false;
+        if($('#signature').length > 0){
+            var isSignature=$("#signature").jSignature('getData','base30')[1].length>1?true:false;
+            if (isSignature)
+                sign = JSON.stringify($("#signature").jSignature("getData",'image')[1]);
+            signer_name = $("#name").val();
+        }
         openerp.jsonRpc("/quote/accept/", 'call', {
             'order_id': parseInt(order_id[1]),
             'token': token[1],
-            'signer': $("#signer").val(),
-            'sign': JSON.stringify(datapair[1]),
+            'signer': signer_name,
+            'sign': sign,
         })
         .then(function (data) {
-            $('#modelaccept').modal('hide');
-            location.reload();
+            if(!_.isEmpty(data)){
+                $('#modelaccept').modal('hide');
+                var url = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port : "")
+                window.location.replace(url +'/quote/'+order_id[1]+'/'+token[1]+'?message=3');
+            } else{
+                if (data[0]['signer']) $('#signer').addClass('has-error'); else $('#signer').removeClass('has-error');
+                if (data[0]['sign']) $('#drawsign').addClass('panel-danger'); else $('#drawsign').removeClass('panel-danger');
+            }
         });
         return false
     });
@@ -54,7 +67,7 @@ $(document).ready(function () {
     var ul = $('[data-id="quote_sidebar"]');
     var sub_li = null;
     var sub_ul = null;
-
+    ul.empty();
     $("section h1, section h2").each(function() {
         switch (this.tagName.toLowerCase()) {
             case "h1":

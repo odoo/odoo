@@ -37,25 +37,35 @@ class sale_quote(http.Controller):
         values = {
             'quotation': order,
             'message': message,
-            'new_post' : request.httprequest.session.get('new_post',False)
+            'new_post' : request.httprequest.session.get('new_post',False),
+            'option': self._check_option_len(order),
         }
         return request.website.render('website_quotation.so_quotation', values)
 
+    def _check_option_len(self, order):
+        for option in order.options:
+            if not option.line_id:
+                return True
+        return False
     @http.route(['/quote/accept'], type='json', auth="public", website=True)
     def accept(self, order_id=None, token=None, signer=None, sign=None, **post):
         order_obj = request.registry.get('sale.order')
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
         assert token == order.access_token, 'Access denied, wrong token!'
-        attachment = {
-            'name': 'sign.png',
-            'datas':sign,
-            'datas_fname': 'sign.png',
-            'res_model': 'sale.order',
-            'res_id': order_id,
-        }
-        request.registry['ir.attachment'].create(request.cr, request.uid, attachment, context=request.context)
-        order_obj.write(request.cr, request.uid, [order_id], {'signer_name':signer,'state': 'manual'})
-        return []
+        error = {}
+        if not signer: error['signer'] = 'missing'
+        if not sign: error['sign'] = 'missing'
+        if not error:
+            attachment = {
+                'name': 'sign.png',
+                'datas':sign,
+                'datas_fname': 'sign.png',
+                'res_model': 'sale.order',
+                'res_id': order_id,
+            }
+            request.registry['ir.attachment'].create(request.cr, request.uid, attachment, context=request.context)
+            order_obj.write(request.cr, request.uid, [order_id], {'signer_name':signer,'state': 'manual'})
+        return [error]
 
     @http.route(['/quote/<int:order_id>/<token>/decline'], type='http', auth="public", website=True)
     def decline(self, order_id, token, **post):
@@ -107,7 +117,7 @@ class sale_quote(http.Controller):
         order_line_obj.write(request.cr, SUPERUSER_ID, [line_id], {'product_uom_qty': (quantity)}, context=request.context)
         return quantity
 
-    @http.route(["/template/<model('sale.quote.template'):quote>"], type='http', auth="public", website=True)
+    @http.route(["/template/<model('sale.quote.template'):quote>"], type='http', auth="user", website=True)
     def template_view(self, quote, **post):
         values = {
             'template': quote,
@@ -135,6 +145,6 @@ class sale_quote(http.Controller):
         })
         line = request.registry.get('sale.order.line').create(request.cr, SUPERUSER_ID, vals, context=request.context)
         option_obj.write(request.cr, SUPERUSER_ID, [option.id], {'line_id': line}, context=request.context)
-        return werkzeug.utils.redirect("/quote/%s/%s" % (order.id, token))
+        return werkzeug.utils.redirect("/quote/%s/%s#pricing" % (order.id, token))
 
 
