@@ -327,6 +327,7 @@
             var testId = 'test_'+tour.id+'_tour';
             this.tours.push(tour);
             var defaultDelay = 500; //ms
+            var overlapsCrash;
             var test = {
                 id: tour.id,
                 run: function (force) {
@@ -336,45 +337,60 @@
                     var actionSteps = _.filter(tour.steps, function (step) {
                        return step.trigger || step.sampleText;
                     });
+                    window.onbeforeunload = function () {
+                        clearTimeout(overlapsCrash);
+                    };
                     function executeStep (step) {
+                        var lastStep = window.localStorage.getItem(testId);
+                        var tryStep = lastStep != step.stepId ? 0 : parseInt(window.localStorage.getItem("last-"+testId) || 0, 10)+1;
+                        window.localStorage.setItem("last-"+testId, tryStep);
+                        if (tryStep > 2) {
+                            window.localStorage.removeItem(testId);
+                            throw "Test: '" + testId + "' cycling stape: '" + step.stepId + "'";
+                        }
+
                         var _next = false;
                         window.localStorage.setItem(testId, step.stepId);
                         function next () {
+                            clearTimeout(overlapsCrash);
                             _next = true;
                             var nextStep = actionSteps.shift();
                             if (nextStep) {
                                 setTimeout(function () {
                                     executeStep(nextStep);
-                                },0);
+                                }, step.delay || defaultDelay);
                             } else {
                                 window.localStorage.removeItem(testId);
                             }
                         }
-                        setTimeout(function () {
-                            var $element = $(step.element);
-                            if (step.triggers) step.triggers(next);
-                            if ((step.trigger === 'reload' || step.trigger.url) && _next) return;
-                            
-                            if (step.snippet && step.trigger === 'drag') {
-                                website.TestConsole.dragAndDropSnippet(step.snippet);
-                            } else if (step.trigger && step.trigger.id === 'change') {
-                                $element.trigger($.Event("change", { srcElement: $element }));
-                            } else if (step.sampleText) {
-                                $element.val(step.sampleText);
-                                $element.trigger($.Event("change", { srcElement: $element }));
-                            } else if ($element.is(":visible")) { // Click by default
-                                if (step.trigger.id === 'mousedown') {
-                                    $element.trigger($.Event("mousedown", { srcElement: $element }));
-                                }
-                                var evt = document.createEvent("MouseEvents");
-                                evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-                                $element[0].dispatchEvent(evt);
-                                if (step.trigger.id === 'mouseup') {
-                                    $element.trigger($.Event("mouseup", { srcElement: $element }));
-                                }
-                            }
-                            if (!step.triggers) next();
+                        overlapsCrash = setTimeout(function () {
+                            window.localStorage.removeItem(testId);
+                            throw "Test: '" + testId + "' can't resolve stape: '" + step.stepId + "'";
                         }, step.delay || defaultDelay);
+
+                        var $element = $(step.element);
+                        if (step.triggers) step.triggers(next);
+                        if ((step.trigger === 'reload' || step.trigger.url) && _next) return;
+                        
+                        if (step.snippet && step.trigger === 'drag') {
+                            website.TestConsole.dragAndDropSnippet(step.snippet);
+                        } else if (step.trigger && step.trigger.id === 'change') {
+                            $element.trigger($.Event("change", { srcElement: $element }));
+                        } else if (step.sampleText) {
+                            $element.val(step.sampleText);
+                            $element.trigger($.Event("change", { srcElement: $element }));
+                        } else if ($element.is(":visible")) { // Click by default
+                            if (step.trigger.id === 'mousedown') {
+                                $element.trigger($.Event("mousedown", { srcElement: $element }));
+                            }
+                            var evt = document.createEvent("MouseEvents");
+                            evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                            $element[0].dispatchEvent(evt);
+                            if (step.trigger.id === 'mouseup') {
+                                $element.trigger($.Event("mouseup", { srcElement: $element }));
+                            }
+                        }
+                        if (!step.triggers) next();
                     }
                     var url = new website.UrlParser(window.location.href);
                     if (tour.path && url.pathname !== tour.path && !window.localStorage.getItem(testId)) {
