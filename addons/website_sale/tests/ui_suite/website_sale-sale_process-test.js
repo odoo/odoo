@@ -16,10 +16,10 @@ testRunner.run(function websiteSaleTest (page, timeout) {
         });
         waitFor(function testExecuted () {
             return page.evaluate(function () {
-                console.err($('#wrap:contains("Order Confirmed")'));
-                console.err("-----------------------");
-                console.err($('#wrap').text());
-                console.err("-----------------------");
+                console.error($('#wrap:contains("Order Confirmed")'));
+                console.error("-----------------------");
+                console.error($('#wrap').text());
+                console.error("-----------------------");
                 return window.$ && $('#wrap:contains("Order Confirmed")').length;
             });
         }, function finish () {
