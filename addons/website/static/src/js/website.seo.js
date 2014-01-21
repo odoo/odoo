@@ -340,7 +340,7 @@
         canEditDescription: false,
         canEditKeywords: false,
         maxTitleSize: 65,
-        maxDescriptionSize: 160,
+        maxDescriptionSize: 150,
         start: function () {
             var self = this;
             var $modal = self.$el;

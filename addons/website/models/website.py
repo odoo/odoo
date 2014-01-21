@@ -117,6 +117,7 @@ class website(osv.osv):
         'social_linkedin': fields.char('LinkedIn Account'),
         'social_youtube': fields.char('Youtube Account'),
         'social_googleplus': fields.char('Google+ Account'),
+        'google_analytics_key': fields.char('Google Analytics Key'),
         'public_user': fields.function(_get_public_user, relation='res.users', type='many2one', string='Public User'),
         'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu',
             store= {
