@@ -16,9 +16,11 @@ testRunner.run(function websiteSaleTest (page, timeout) {
         });
         waitFor(function testExecuted () {
             return page.evaluate(function () {
-                console.error($('#wrap:contains("Order Confirmed")'));
+                console.error(window.$('#wrap:contains("Order Confirmed")'));
                 console.error("-----------------------");
-                console.error($('#wrap').text());
+                console.error(window.$('#wrap').text());
+                console.error("-----------------------");
+                console.error(window.localStorage);
                 console.error("-----------------------");
                 return window.$ && $('#wrap:contains("Order Confirmed")').length;
             });

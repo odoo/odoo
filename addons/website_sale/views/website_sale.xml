@@ -946,6 +946,7 @@
                           <img class="media-object" style="width: 60px; display: inline-block;"
                               t-att-title="acquirer.name"
                               t-att-src="'/payment_acquirer_%s/static/src/img/%s_icon.png' % (acquirer.name, acquirer.name)"/>
+                              <span t-field="acquirer.name"/>
                       </label>
                   </t>
               </div>
