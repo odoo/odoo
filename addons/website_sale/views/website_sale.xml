@@ -26,7 +26,7 @@
 <!-- List of categories -->
 
 <template id="categories_recursive" name="Category list">
-  <li t-att-class="str(category.id) == search.get('category') and 'active' or ''">
+  <li t-att-class="category.id == search.get('category') and 'active' or ''">
       <a t-href="/shop/category/#{ slug(category) }/" t-field="category.name"></a>
       <ul t-if="category.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
           <t t-foreach="category.child_id" t-as="category">
