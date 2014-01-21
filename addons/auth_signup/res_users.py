@@ -69,7 +69,8 @@ class res_partner(osv.Model):
             # the parameters to encode for the query
             query = dict(db=cr.dbname)
             signup_type = context.get('signup_force_type_in_url', partner.signup_type or '')
-            query[signup_type] = 1
+            if signup_type:
+                query['mode'] = signup_type
 
             if partner.signup_token and signup_type:
                 query['token'] = partner.signup_token
