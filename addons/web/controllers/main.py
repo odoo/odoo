@@ -112,6 +112,14 @@ def serialize_exception(f):
             return werkzeug.exceptions.InternalServerError(simplejson.dumps(error))
     return wrap
 
+def redirect_with_hash(*args, **kw):
+    """
+        .. deprecated:: 8.0
+
+        Use the ``http.redirect_with_hash()`` function instead.
+    """
+    return http.redirect_with_hash(*args, **kw)
+
 def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the
     modules are listed before the module itself
