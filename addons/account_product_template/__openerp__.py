@@ -33,10 +33,11 @@ This module adds Product Template.
 Whith this module, link your products to a template to send complete information and tools to your customer. For instance, you invoice a training, link a template to this training product with training agenda and materials.
     """,
     'website': 'http://www.openerp.com',
-    'demo': [],
+    'demo': [
+        'account_product_template_demo.xml',
+    ],
     'data': [
         'account_product_view.xml',
-        'account_product_template_data.xml'
     ],
     'js': [],
     'css': [],
