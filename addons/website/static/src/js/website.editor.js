@@ -821,6 +821,28 @@
                     document.execCommand("enableInlineTableEditing", false, "false");
                 } catch (e) {}
 
+
+                // detect & setup any CKEDITOR widget within a newly dropped
+                // snippet. There does not seem to be a simple way to do it for
+                // HTML not inserted via ckeditor APIs:
+                // https://dev.ckeditor.com/ticket/11472
+                $(document.body)
+                    .off('snippet-dropped')
+                    .on('snippet-dropped', function (e, el) {
+                        // CKEDITOR data processor extended by widgets plugin
+                        // to add wrappers around upcasting elements
+                        el.outerHTML = editor.dataProcessor.toHtml(el.outerHTML, {
+                            fixForBody: false,
+                            dontFilter: true,
+                        });
+                        // then repository.initOnAll() handles the conversion
+                        // from wrapper to actual widget instance (or something
+                        // like that).
+                        setTimeout(function () {
+                            editor.widgets.initOnAll();
+                        }, 0);
+                    });
+
                 self.trigger('rte:ready');
                 def.resolve();
             });
