@@ -2715,10 +2715,12 @@ class stock_warehouse(osv.osv):
             'warehouse_id': new_id,
             'code': 'outgoing',
             'sequence_id': out_seq_id,
+            'return_picking_type_id': in_type_id,
             'default_location_src_id': output_loc.id,
             'default_location_dest_id': customer_loc.id,
             'sequence': max_sequence + 4,
             'color': color}, context=context)
+        picking_type_obj.write(cr, uid, [in_type_id], {'return_picking_type_id': out_type_id}, context=context)
         int_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Internal Transfers'),
             'warehouse_id': new_id,
