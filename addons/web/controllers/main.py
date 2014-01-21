@@ -17,8 +17,6 @@ import simplejson
 import time
 import urllib
 import urllib2
-import urlparse
-import xmlrpclib
 import zlib
 from xml.etree import ElementTree
 from cStringIO import StringIO
@@ -34,7 +32,6 @@ except ImportError:
 import openerp
 import openerp.modules.registry
 from openerp.tools.translate import _
-from openerp.tools import config
 from openerp import http
 
 from openerp.http import request, serialize_exception as _serialize_exception, LazyResponse
@@ -114,26 +111,6 @@ def serialize_exception(f):
             }
             return werkzeug.exceptions.InternalServerError(simplejson.dumps(error))
     return wrap
-
-def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=303):
-    url = path
-    if not query:
-        query = {}
-    if forward_debug and request and request.debug:
-        query['debug'] = None
-    if query:
-        url += '?' + urllib.urlencode(query)
-    if keep_hash:
-        return redirect_with_hash(url)
-    else:
-        return werkzeug.utils.redirect(url, code)
-
-def redirect_with_hash(url, code=303):
-    # Most IE and Safari versions decided not to preserve location.hash upon
-    # redirect. And even if IE10 pretends to support it, it still fails
-    # inexplicably in case of multiple redirects (and we do have some).
-    # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
-    return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
 
 def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the
@@ -590,7 +567,7 @@ class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
     def index(self, s_action=None, db=None, **kw):
-        return local_redirect('/web', query=request.params)
+        return http.local_redirect('/web', query=request.params)
 
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, db=None, **kw):
@@ -605,7 +582,7 @@ class Home(http.Controller):
         # if no db can be found til here, send to the database selector
         # the database selector will redirect to database manager if needed
         if not db:
-            return local_redirect('/web/database/selector')
+            return http.local_redirect('/web/database/selector')
 
         # always switch the session to the computed db
         if db != request.session.db:
@@ -616,7 +593,7 @@ class Home(http.Controller):
             html = render_bootstrap_template(db, "web.webclient_bootstrap")
             return request.make_response(html, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
         else:
-            return local_redirect('/web/login', query=request.params)
+            return http.local_redirect('/web/login', query=request.params)
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, db=None, **kw):
@@ -624,10 +601,10 @@ class Home(http.Controller):
             request.session.logout()
             request.session.db = db
             request.params.pop('db', None)
-            return local_redirect('/web/login', query=request.params)
+            return http.local_redirect('/web/login', query=request.params)
 
         if not request.session.db and not db:
-            return local_redirect('/web/database/selector')
+            return http.local_redirect('/web/database/selector')
 
         values = request.params.copy()
         if not redirect:
@@ -636,7 +613,7 @@ class Home(http.Controller):
         if request.httprequest.method == 'POST':
             uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
             if uid is not False:
-                return redirect_with_hash(redirect)
+                return http.redirect_with_hash(redirect)
             values['error'] = "Wrong login/password"
         return render_bootstrap_template(request.session.db, 'web.login', values, lazy=True)
 
@@ -817,7 +794,7 @@ class Database(http.Controller):
         try:
             dbs = http.db_list()
             if not dbs:
-                return local_redirect('/web/database/manager')
+                return http.local_redirect('/web/database/manager')
         except openerp.exceptions.AccessDenied:
             dbs = False
         return env.get_template("database_selector.html").render({
