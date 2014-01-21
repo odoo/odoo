@@ -49,6 +49,27 @@ request = _request_stack()
     A global proxy that always redirect to the current request object.
 """
 
+def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=303):
+    url = path
+    if not query:
+        query = {}
+    if forward_debug and request and request.debug:
+        query['debug'] = None
+    if query:
+        url += '?' + werkzeug.url_encode(query)
+    if keep_hash:
+        return redirect_with_hash(url)
+    else:
+        return werkzeug.utils.redirect(url, code)
+
+def redirect_with_hash(url, code=303):
+    # Most IE and Safari versions decided not to preserve location.hash upon
+    # redirect. And even if IE10 pretends to support it, it still fails
+    # inexplicably in case of multiple redirects (and we do have some).
+    # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
+    return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
+
+
 class WebRequest(object):
     """ Parent class for all OpenERP Web request types, mostly deals with
     initialization and setup of the request object (the dispatching itself has
