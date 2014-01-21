@@ -54,31 +54,16 @@ class mrp_product_produce(osv.osv_memory):
     
     
     def on_change_qty(self, cr, uid, ids, product_qty, consume_lines, context=None):
-        """ Will calculate number of products based on 
+        """ Will give the initial number of consumption lines
         """
         quant_obj = self.pool.get("stock.quant")
         prod_obj = self.pool.get("mrp.production")
         production = prod_obj.browse(cr, uid, context['active_id'], context=context)
         
-        produced_qty = 0
-        for produced_product in production.move_created_ids2:
-            if (produced_product.scrapped) or (produced_product.product_id.id != production.product_id.id):
-                continue
-            produced_qty += produced_product.product_qty
+        produced_qty = prod_obj._get_produced_qty(cr, uid, production, context=context)
+        consumed_data = prod_obj._get_consumed_data(cr, uid, production, context=context)
         
-        
-        #Calculate consume lines
-        consumed_data = {}
-        for consumed in production.move_lines2:
-            if consumed.scrapped:
-                continue
-            if not consumed_data.get(consumed.product_id.id, False):
-                consumed_data[consumed.product_id.id] = 0
-            consumed_data[consumed.product_id.id] += consumed.product_qty
-
         new_consume_lines = []
-        
-        
         dicts = {}
         # Find product qty to be consumed and consume it
         for scheduled in production.product_lines:
@@ -100,12 +85,12 @@ class mrp_product_produce(osv.osv_memory):
             move = [x for x in production.move_lines if x.product_id.id == scheduled.product_id.id]
             #TODO: check if not already in dict_new
             if move:
+                product_id = scheduled.product_id.id
                 move = move[0]
-                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, scheduled.product_id, qty, domain=None, 
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, scheduled.product_id, qty, domain=[('qty', '>', 0.0)], 
                                                      prefered_domain=[('reservation_id', '=', move.id)], fallback_domain=[('reservation_id', '=', False)], context=context)
                 for quant in quants: 
                     if quant[0]:
-                        product_id = scheduled.product_id.id
                         lot_id = quant[0].lot_id.id
                         prod_qty = quant[1]
                         if not product_id in dicts.keys():
@@ -116,7 +101,7 @@ class mrp_product_produce(osv.osv_memory):
                             dicts[product_id][lot_id] = prod_qty
                         qty -= quant[1]
                 if qty > 0:
-                    if dicts[product_id][False]:
+                    if dicts[product_id].get(False):
                         dicts[product_id][False] += qty
                     else:
                         dicts[product_id][False] = qty

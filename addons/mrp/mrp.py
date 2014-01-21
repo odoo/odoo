@@ -772,6 +772,25 @@ class mrp_production(osv.osv):
         """
         return 1
 
+    def _get_produced_qty(self, cr, uid, production, context=None):
+        produced_qty = 0
+        for produced_product in production.move_created_ids2:
+            if (produced_product.scrapped) or (produced_product.product_id.id != production.product_id.id):
+                continue
+            produced_qty += produced_product.product_qty
+        return produced_qty
+
+    def _get_consumed_data(self, cr, uid, production, context=None):
+        consumed_data = {}
+        # Calculate already consumed qtys
+        for consumed in production.move_lines2:
+            if consumed.scrapped:
+                continue
+            if not consumed_data.get(consumed.product_id.id, False):
+                consumed_data[consumed.product_id.id] = 0
+            consumed_data[consumed.product_id.id] += consumed.product_qty
+        return consumed_data
+
 
     def action_produce(self, cr, uid, production_id, production_qty, production_mode, wiz, context=None):
         """ To produce final product based on production mode (consume/consume&produce).
@@ -791,11 +810,7 @@ class mrp_production(osv.osv):
             # trigger workflow if not products to consume (eg: services)
             self.signal_button_produce(cr, uid, [production_id])
 
-        produced_qty = 0
-        for produced_product in production.move_created_ids2:
-            if (produced_product.scrapped) or (produced_product.product_id.id != production.product_id.id):
-                continue
-            produced_qty += produced_product.product_qty
+        produced_qty = self._get_produced_qty(cr, uid, production, context=context)
         
         main_production_move = False
         if production_mode == 'consume_produce':
@@ -823,21 +838,8 @@ class mrp_production(osv.osv):
                     new_moves = stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), location_id = produce_product.location_id.id, restrict_lot_id = wiz.lot_id.id, context=context)
                     if produce_product.product_id.id == production.product_id.id and new_moves:
                         main_production_move = new_moves[0]
-#                     if produce_product.product_id.id == production.bom_id.product_id.id:
-#                         stock_mov_obj.write(cr, uid, new_moves, {'consumed_for': produce_product.id}, context=context)
 
         if production_mode in ['consume','consume_produce']:
-            consumed_data = {}
-
-            # Calculate already consumed qtys
-            for consumed in production.move_lines2:
-                if consumed.scrapped:
-                    continue
-                if not consumed_data.get(consumed.product_id.id, False):
-                    consumed_data[consumed.product_id.id] = 0
-                consumed_data[consumed.product_id.id] += consumed.product_qty
-                
-                
             consumed_moves = []
             for consume in wiz.consume_lines:
                 # Search move for the product
