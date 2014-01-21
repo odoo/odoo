@@ -635,6 +635,9 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     </div>
                 </div>
                 <div class="col-md-4 mb32">
+                    <div groups="base.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or ''">
+                        <a class="btn btn-primary" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s' % (res_company._name, res_company.id)" title='Edit in backend'>Edit</a>
+                    </div>
                     <t t-call="website.company_description"/>
                 </div>
             </div>

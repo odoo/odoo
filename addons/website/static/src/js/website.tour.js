@@ -156,8 +156,8 @@
                 this.stop();
             } else if (index >= 0) {
                 var self = this;
-                $('.popover.tour').remove();
                 setTimeout(function () {
+                    $('.popover.tour').remove();
                     setTimeout(function () {
                         self.tour.goto(index);
                     }, 0);
@@ -346,7 +346,7 @@
                         window.localStorage.setItem("last-"+testId, tryStep);
                         if (tryStep > 2) {
                             window.localStorage.removeItem(testId);
-                            throw "Test: '" + testId + "' cycling stape: '" + step.stepId + "'";
+                            throw "Test: '" + testId + "' cycling step: '" + step.stepId + "'";
                         }
 
                         var _next = false;
@@ -365,12 +365,12 @@
                         }
                         overlapsCrash = setTimeout(function () {
                             window.localStorage.removeItem(testId);
-                            throw "Test: '" + testId + "' can't resolve stape: '" + step.stepId + "'";
+                            throw "Test: '" + testId + "' can't resolve step: '" + step.stepId + "'";
                         }, (step.delay || defaultDelay) + 500);
 
                         var $element = $(step.element);
                         if (step.triggers) step.triggers(next);
-                        if ((step.trigger === 'reload' || step.trigger.url) && _next) return;
+                        if ((step.trigger === 'reload' || (step.trigger && step.trigger.url)) && _next) return;
                         
                         if (step.snippet && step.trigger === 'drag') {
                             website.TestConsole.dragAndDropSnippet(step.snippet);

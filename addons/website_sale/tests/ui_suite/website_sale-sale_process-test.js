@@ -15,9 +15,15 @@ testRunner.run(function websiteSaleTest (page, timeout) {
             window.openerp.website.TestConsole.test('shoptest').run(true);
         });
         waitFor(function testExecuted () {
-            return page.evaluate(function () { return window.$ && $('#wrap:contains("Order Confirmed")').length; });
+            return page.evaluate(function () {
+                console.err($('#wrap:contains("Order Confirmed")'));
+                console.err("-----------------------");
+                console.err($('#wrap').text());
+                console.err("-----------------------");
+                return window.$ && $('#wrap:contains("Order Confirmed")').length;
+            });
         }, function finish () {
-            console.log('{ "website_sale": "success" }');
+            console.log('{ "event": "success" }');
             phantom.exit();
         }, 4*timeout/5);
     }, timeout/5);
