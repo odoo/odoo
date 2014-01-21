@@ -561,6 +561,8 @@ html_template = """<!DOCTYPE html>
 """
 
 def render_bootstrap_template(db, template, values=None, debug=False, lazy=False, **kw):
+    if request and request.debug:
+        debug = True
     if values is None:
         values = {}
     values.update(kw)
@@ -611,7 +613,7 @@ class Home(http.Controller):
         request.session.db = db
 
         if request.session.uid:
-            html = render_bootstrap_template(db, "web.webclient_bootstrap", debug=request.debug)
+            html = render_bootstrap_template(db, "web.webclient_bootstrap")
             return request.make_response(html, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
         else:
             return local_redirect('/web/login', query=request.params)
@@ -636,7 +638,7 @@ class Home(http.Controller):
             if uid is not False:
                 return redirect_with_hash(redirect)
             values['error'] = "Wrong login/password"
-        return render_bootstrap_template(request.session.db, 'web.login', values, debug=request.debug, lazy=True)
+        return render_bootstrap_template(request.session.db, 'web.login', values, lazy=True)
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key, redirect="/web", **kw):
