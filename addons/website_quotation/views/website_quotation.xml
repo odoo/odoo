@@ -249,18 +249,24 @@
 
                       <div class="row mt32">
                           <div class="col-md-6">
-                              <div>
-                                  <label class="col-sm-3 text-right">Bill To:</label>
-                                  <div class="col-sm-9">
+                              <div class="row">
+                                  <label class="col-sm-4 text-right">Customer:</label>
+                                  <div class="col-sm-8">
+                                      <div t-field="quotation.partner_id"/>
+                                  </div>
+                              </div>
+                              <div class="row">
+                                  <label class="col-sm-4 text-right">Bill To:</label>
+                                  <div class="col-sm-8">
                                       <div t-field="quotation.partner_invoice_id" t-field-options='{
                                           "widget": "contact",
                                           "fields": ["address", "name", "phone", "email"]
                                           }'/>
                                   </div>
                               </div>
-                              <div t-if="quotation.partner_shipping_id.id != quotation.partner_invoice_id.id">
-                                  <label class="col-sm-3 text-right">Ship To:</label>
-                                  <div class="col-sm-9">
+                              <div t-if="quotation.partner_shipping_id.id != quotation.partner_invoice_id.id" class="row">
+                                  <label class="col-sm-4 text-right">Ship To:</label>
+                                  <div class="col-sm-8">
                                       <div t-field="quotation.partner_shipping_id" t-field-options='{
                                         "widget": "contact",
                                         "fields": ["address", "name", "phone"]
