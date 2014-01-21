@@ -323,7 +323,7 @@ class website(osv.osv):
         :type rule: werkzeug.routing.Rule
         :rtype: bool
         """
-        spec = inspect.getargspec(rule.endpoint)
+        spec = inspect.getargspec(rule.endpoint.method)
 
         # if *args bail the fuck out, only dragons can live there
         if spec.varargs:
