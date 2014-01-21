@@ -51,12 +51,14 @@
                                 <field name="social_linkedin" placeholder="http://www.linkedin.com/company/openerp"/>
                                 <field name="social_youtube" placeholder="http://www.youtube.com/channel/HCU842OHPPNrQ"/>
                                 <field name="social_github" placeholder="https://youraccount.github.io"/>
-                                <field name="google_analytics_key" placeholder="UA-XXXXXXXX-1"/>
                             </group>
                             <group string="Other Info">
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="language_ids" widget="many2many_checkboxes"/>
                                 <field name="default_lang_id" widget="selection"/>
+                            </group>
+                            <group string="Website Management">
+                                <field name="google_analytics_key" placeholder="UA-XXXXXXXX-X"/>
                             </group>
                         </group>
                     </sheet>
