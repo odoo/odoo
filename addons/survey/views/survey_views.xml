@@ -131,7 +131,7 @@
                             <field name="auth_required" />
                             <field name="public_url" widget="url" attrs="{'invisible': [('visible_to_user', '=', False)]}"/>
                         </group>
-                        <field name="description" attrs="{'readonly': True}"/>
+                        <field name="description" />
                         <notebook>
                             <page string="Pages and questions">
                                 <field name="page_ids" mode="tree" attrs="{'readonly':[('state','=','close')]}" context="{'default_survey_id': active_id}" nolabel="1">
@@ -147,7 +147,7 @@
                                     <field name="user_input_limit" attrs="{'readonly':[('state','=','close')]}"/>
                                     <label string="completed surveys" colspan="2"/>
                                     <field name="users_can_go_back" colspan="4" />
-                                    <field name="thank_you_message" colspan="4" attrs="{'readonly': True}"/>
+                                    <field name="thank_you_message" colspan="4" />
                                     <field name="res_model" attrs="{'invisible': True}"/>
                                 </group>
                             </page>
@@ -300,7 +300,7 @@
                             <label for="title" class="oe_edit_only"/>
                             <h1><field name="title"/></h1>
                         </div>
-                        <field name="description" attrs="{'readonly': True}"/>
+                        <field name="description" />
                         <group nolabel="1">
                             <field name="question_ids" nolabel="1" mode="tree" context="{'default_page_id': active_id}">
                                 <tree>
