@@ -1,10 +1,11 @@
 .graph_main_content td {
     font-size: 12px;
-    /*background: #fff;*/
     margin: 45px;
     border-collapse: collapse;
-    text-align: left;
     vertical-align: middle;
+    border-bottom: 1px solid #ccc;
+    padding: 6px 8px;
+    text-align: right;
 }
 
 .graph_measure_selection .oe_selected {
@@ -12,12 +13,10 @@
 }
 
 .graph_measure_selection .oe_selected:before {
-  /*content: "W";*/
   content: "\f00c";
   width: 20px;
   display: inline-block;
   font-family: FontAwesome;
-
 }
 
 .graph_measure_selection li {
@@ -35,17 +34,10 @@
 .graph_main_content thead {
   border: 1px solid #6678b1;
     border-bottom: 2px solid #6678b1;  
-    /*color: #039;*/
 }
 
 .graph_main_content tbody td{
   border: 1px solid #ccc;
-}
-
-.graph_main_content td {
-    border-bottom: 1px solid #ccc;
-    padding: 6px 8px;
-    text-align: right;
 }
 
 td.graph_border {
@@ -77,19 +69,15 @@ span.web_graph_indent {
   font-size: 13px; 
   padding: 4px 0;
   background: #e8e8e8 !important;
-  background: #e8e8e8 !important;
-  border: 1px solid #cccccc;
   border: 1px solid rgba(0, 0, 0, 0.15);
-
-    font-color: !important black;
-  background-color: #e8e8e8;
+  font-color: !important black;
   text-shadow: none;
   background-color: #e8e8e8;
-
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
 }
+
 .graph_widget .dropdown-menu li a, .graph_widget .dropdown-menu li a:hover, .graph_widget .dropdown-menu li a:focus {
   color: black;
   text-decoration: none;
@@ -98,7 +86,6 @@ span.web_graph_indent {
 th.measure_row {
   color: black;
   font-size: 12px;
-  /*border: 0 !important;*/
   padding:0px 5px 0px 5px ;
   margin:0;
 }

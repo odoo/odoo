@@ -30,13 +30,14 @@ instance.web_graph.GraphView = instance.web.View.extend({
         var self = this,
             arch = fields_view_get.arch;
 
-        this.widget_config = { 
+        this.widget_config = {
             title: arch.attrs.string,
             stacked : (arch.attrs.stacked === 'True'),
             mode: (arch.attrs.type) ? arch.attrs.type : 'bar',
             measures: [],
             row_groupby: [],
             col_groupby: [],
+            graph_view: this,
         };
 
         _.each(arch.children, function (field) {
@@ -67,7 +68,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     do_search: function (domain, context, group_by) {
         var self = this,
-            col_group_by = this.get_col_groupbys_from_searchview();
+            col_group_by = this.get_groupbys_from_searchview('ColGroupBy', 'col_group_by');
 
         if (!this.graph_widget) {
             if (group_by.length) {
@@ -78,36 +79,23 @@ instance.web_graph.GraphView = instance.web.View.extend({
             }
             this.graph_widget = new openerp.web_graph.Graph(this, this.model, domain, this.widget_config);
             this.graph_widget.appendTo(this.$el);
-            this.graph_widget.on('groupby_changed', this, this.proxy('register_groupby'));
-            this.graph_widget.on('groupby_swapped', this, this.proxy('swap_groupby'));
-            this.ViewManager.on('switch_mode', this, function (e) { 
+            this.ViewManager.on('switch_mode', this, function (e) {
                 var domain = self.graph_widget.get_domain(),
-                    col_gb = self.get_col_groupbys_from_searchview(),
-                    row_gb = self.get_row_groupbys_from_searchview();
+                    col_gb = self.get_groupbys_from_searchview('ColGroupBy', 'col_group_by'),
+                    row_gb = self.get_groupbys_from_searchview('GroupBy', 'group_by');
 
-                if (e === 'graph') this.graph_widget.set(domain, row_gb, col_gb); 
+                if (e === 'graph') this.graph_widget.set(domain, row_gb, col_gb);
             });
-            return;
-        }
-
-        if (this.swapped) {
-            this.swapped = false;
             return;
         }
 
         this.graph_widget.set(domain, group_by, col_group_by);
     },
 
-    get_col_groupbys_from_searchview: function () {
-        var facet = this.search_view.query.findWhere({category:'ColGroupBy'}),
+    get_groupbys_from_searchview: function (cat_name, cat_field) {
+        var facet = this.search_view.query.findWhere({category:cat_name}),
             groupby_list = facet ? facet.values.models : [];
-        return _.map(groupby_list, function (g) { return g.attributes.value.attrs.context.col_group_by; });
-    },
-
-    get_row_groupbys_from_searchview: function () {
-        var facet = this.search_view.query.findWhere({category:'GroupBy'}),
-            groupby_list = facet ? facet.values.models : [];
-        return _.map(groupby_list, function (g) { return g.attributes.value.attrs.context.group_by; });
+        return _.map(groupby_list, function (g) { return g.attributes.value.attrs.context[cat_field]; });
     },
 
     do_show: function () {
@@ -120,14 +108,13 @@ instance.web_graph.GraphView = instance.web.View.extend({
     // ----------------------------------------------------------------------
 
     // add groupby to the search view
-    register_groupby: function() {
+    register_groupby: function(row_groupby, col_groupby) {
         var query = this.search_view.query;
 
         if (!_.has(this.search_view, '_s_groupby')) { return; }
 
         // add row groupbys
-        var row_groupby = this.graph_widget.get_row_groupby(),
-            row_facet = this.make_row_groupby_facets(row_groupby),
+        var row_facet = this.make_row_groupby_facets(row_groupby),
             row_search_facet = query.findWhere({category:'GroupBy'});
 
         if (row_search_facet) {
@@ -138,8 +125,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             }
         }
          // add col groupbys
-        var col_groupby = this.graph_widget.get_col_groupby(),
-            col_facet = this.make_col_groupby_facets(col_groupby),
+        var col_facet = this.make_col_groupby_facets(col_groupby),
             col_search_facet = query.findWhere({category:'ColGroupBy'});
 
         if (col_search_facet) {
@@ -149,11 +135,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 query.add(col_facet);
             }
         }
-    },
-
-    swap_groupby: function () {
-        this.swap = true;
-        this.register_groupby();
     },
 
     make_row_groupby_facets: function(groupbys) {
@@ -178,9 +159,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
         return _.map(groupbys, function (groupby) {
             var context = {};
             context[category] = groupby.field;
+            var value = (category === 'group_by') ? groupby.filter : {attrs:{domain: [], context: context}};
             return {
-                label: groupby.string, 
-                value: {attrs:{domain: [], context: context}}
+                label: groupby.string,
+                value: value
             };
         });
     },
@@ -192,7 +174,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
 });
-
 };
 
 

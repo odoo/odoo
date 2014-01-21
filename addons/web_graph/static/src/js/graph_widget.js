@@ -6,7 +6,7 @@
 var QWeb = openerp.web.qweb;
 nv.dev = false;  // sets nvd3 library in production mode
 
-openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin, {
+openerp.web_graph.Graph = openerp.web.Widget.extend({
     template: 'GraphWidget',
 
     // ----------------------------------------------------------------------
@@ -21,7 +21,9 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
         this.title = options.title || 'Graph';
         this.visible_ui = options.visible_ui || true;
         this.bar_ui = options.bar_ui || 'group';
+        this.graph_view = options.graph_view || null;
         this.pivot_options = options;
+        this.important_fields = this.get_search_fields();
     },
 
     start: function() {
@@ -39,58 +41,48 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
             this.$('.graph_heatmap label').addClass('disabled');
         }
 
-        var def1 = this.get_search_fields().then(function (f) {
-            self.important_fields = f;
-        });
-
-        var def2 = this.model.call('fields_get', []).then(function (f) {
+        return this.model.call('fields_get', []).then(function (f) {
             self.fields = f;
+            self.fields.__count = {string: 'Quantity', type: 'integer'};
             self.measure_list = self.get_measures();
             self.add_measures_to_options();
-        });
-
-        return $.when(def1, def2).then(function () {
+            self.pivot_options.row_groupby = self.create_field_values(self.pivot_options.row_groupby || []);
+            self.pivot_options.col_groupby = self.create_field_values(self.pivot_options.col_groupby || []);
+            self.pivot_options.measures = self.create_field_values(self.pivot_options.measures || [{field:'__count', type: 'integer', string:'Quantity'}]);
             self.pivot = new openerp.web_graph.PivotTable(self.model, self.domain, self.fields, self.pivot_options);
-            self.pivot.on('redraw_required', self, self.proxy('display_data'));
-            self.pivot.on('groupby_changed', self, function () { self.trigger('groupby_changed'); });
-            self.pivot.on('groupby_swapped', self, function () { self.trigger('groupby_swapped'); });
+            self.pivot.update_data().then(function () {
+                self.display_data();
+                if (self.graph_view) {
+                    self.graph_view.register_groupby(self.pivot.rows.groupby, self.pivot.cols.groupby);
+                }
+            });
             openerp.web.bus.on('click', self, function () {
                 if (self.dropdown) {
                     self.dropdown.remove();
                     self.dropdown = null;
                 }
             });
-            self.pivot.activate();
             self.put_measure_checkmarks();
-            self.trigger('groupby_changed');
         });
     },
 
     // this method gets the fields that appear in the search view, under the 
     // 'Groupby' heading
     get_search_fields: function () {
-        var options = {model:this.model, view_type: 'search'},
-            result = [];
+        var search_view = openerp.client.action_manager.inner_widget.searchview;
 
-        return openerp.web.fields_view_get(options).then(function (search_view) {
-            var groups = _.select(search_view.arch.children, function (c) {
-                return (c.tag === 'group') && (c.attrs.string != 'Display');
-            });
-            _.each(groups, function(g) {
-                _.each(g.children, function (g) {
-                    if (g.attrs.context) {
-                        var field_id = py.eval(g.attrs.context).group_by;
-                        if (field_id) {
-                            if (field_id instanceof Array) {
-                                result.concat(field_id);
-                            } else {
-                                result.push(field_id);
-                            }
-                        }
-                    }
-                });
-            });
-            return result;
+        var groupbygroups = _(search_view.inputs).select(function (g) {
+            return g instanceof openerp.web.search.GroupbyGroup;
+        });
+
+        var filters = [].concat.apply([], _.pluck(groupbygroups, 'filters'));
+
+        return _.map(filters, function (filter) {
+            return {
+                field: py.eval(filter.attrs.context).group_by,
+                string: filter.attrs.string,
+                filter: filter
+            };
         });
     },
 
@@ -119,12 +111,33 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
     // Configuration methods
     // ----------------------------------------------------------------------
     set: function (domain, row_groupby, col_groupby) {
-        if (this.pivot) {
-            this.pivot.set(domain, row_groupby, col_groupby);
-        } else {
+        if (!this.pivot) {
             this.pivot_options.domain = domain;
             this.pivot_options.row_groupby = row_groupby;
             this.pivot_options.col_groupby = col_groupby;
+            return;
+        }
+        var row_gbs = this.create_field_values(row_groupby),
+            col_gbs = this.create_field_values(col_groupby),
+            dom_changed = !_.isEqual(this.pivot.domain, domain),
+            row_gb_changed = !this.equal_groupby(row_gbs, this.pivot.rows.groupby),
+            col_gb_changed = !this.equal_groupby(col_gbs, this.pivot.cols.groupby),
+            row_reduced = is_strict_beginning_of(row_gbs, this.pivot.rows.groupby),
+            col_reduced = is_strict_beginning_of(col_gbs, this.pivot.cols.groupby);
+
+        if (!dom_changed && row_reduced && !col_gb_changed) {
+            this.pivot.fold_with_depth(this.pivot.rows, row_gbs.length);
+            this.display_data();
+            return;
+        }
+        if (!dom_changed && col_reduced && !row_gb_changed) {
+            this.pivot.fold_with_depth(this.pivot.cols, col_gbs.length);
+            this.display_data();
+            return;
+        }
+
+        if (dom_changed || row_gb_changed || col_gb_changed) {
+            this.pivot.set(domain, row_gbs, col_gbs).then(this.proxy('display_data'));
         }
     },
 
@@ -148,19 +161,38 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
         this.display_data();
     },
 
-    // returns the row groupbys as a list of fields (not the representation used
-    // internally by pivot table)
-    get_row_groupby: function () {
-        return (this.pivot) ? this.pivot.rows.groupby : this.pivot_options.row_groupby;
+    // compare groupby, ignoring the 'interval' attribute of dates... 
+    // this is necessary to avoid problems with the groupby received by the
+    // context which does not have the interval attribute.  This is ugly
+    // and need to be changed at some point
+    equal_groupby: function (groupby1, groupby2) {
+        if (groupby1.length !== groupby2.length) { return false; }
+        for (var i = 0; i < groupby1.length; i++) {
+            if (!this.equal_value(groupby1[i], groupby2[i])) { return false; }
+        }
+        return true;
     },
 
-    get_col_groupby: function () {
-        return (this.pivot) ? this.pivot.cols.groupby : this.pivot_options.col_groupby;
+    equal_value: function (val1, val2) {
+        return ((val1.field === val2.field) && (val1.string === val2.string) && (val1.type === val2.type));
     },
 
-    get_domain: function () {
-        return (this.pivot) ? this.pivot.domain : this.pivot_options.domain;
+    create_field_value: function (f) {
+        var important_field = _.findWhere(this.important_fields, {field:f}),
+            string = important_field ? important_field.string : this.fields[f].string,
+            result =  {field: f, string: string, type: this.fields[f].type };
+
+        if (important_field) {
+            result.filter = important_field.filter;
+        }
+        return result;
     },
+
+    create_field_values: function (field_ids) {
+        var self = this;
+        return _.map(field_ids, function (f) { return self.create_field_value(f); });
+    },
+
 
     // ----------------------------------------------------------------------
     // UI code
@@ -183,8 +215,14 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
     measure_selection: function (event) {
         event.preventDefault();
         event.stopPropagation();
-        var measure = event.target.attributes['data-choice'].nodeValue;
-        this.pivot.toggle_measure(measure);
+        var measure_field = event.target.attributes['data-choice'].nodeValue;
+        var measure = {
+            field: measure_field,
+            type: this.fields[measure_field].type,
+            string: this.fields[measure_field].string
+        };
+
+        this.pivot.toggle_measure(measure).then(this.proxy('display_data'));
         this.put_measure_checkmarks();
     },
 
@@ -216,16 +254,13 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
                 }
                 break;
             case 'swap_axis':
-                this.pivot.swap_axis();
+                this.swap_axis();
                 break;
             case 'expand_all':
-                this.pivot.expand_all();
+                this.pivot.expand_all().then(this.proxy('display_data'));
                 break;
             case 'update_values':
-                this.pivot.update_data();
-                break;
-            case 'export_data':
-                // Export code...  To do...
+                this.pivot.update_data().then(this.proxy('display_data'));
                 break;
         }
     },
@@ -249,16 +284,16 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
             self = this;
 
         if (header.expanded) {
-            this.pivot.fold(header);
+            this.fold(header);
         } else {
             if (header.path.length < header.root.groupby.length) {
-                this.pivot.expand(id);
+                this.expand(id);
             } else {
                 if (!this.important_fields.length) {
                     return;
                 }
                 var fields = _.map(this.important_fields, function (field) {
-                        return {id: field, value: self.fields[field].string, type:self.fields[field].type};
+                        return {id: field.field, value: field.string, type:self.fields[field.field].type};
                 });
                 this.dropdown = $(QWeb.render('field_selection', {fields:fields, header_id:id}));
                 $(event.target).after(this.dropdown);
@@ -277,10 +312,44 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
         event.preventDefault();
         if (this.fields[field_id].type === 'date' || this.fields[field_id].type === 'datetime') {
             interval = event.target.attributes['data-interval'].nodeValue;
-            this.pivot.expand(id, {field: field_id, interval: interval});
+            this.expand(id, {field: field_id, interval: interval});
         } else {
-            this.pivot.expand(id, field_id);
+            this.expand(id, field_id);
         }
+    },
+
+    // ----------------------------------------------------------------------
+    // Pivot Table integration
+    // ----------------------------------------------------------------------
+    expand: function (header_id, field_id) {
+        var self = this,
+            header = this.pivot.get_header(header_id),
+            update_groupby = !!field_id,
+            groupby = (update_groupby) ? this.create_field_value(field_id)
+                                       : header.root.groupby[header.path.length];
+
+        this.pivot.expand(header_id, groupby).then(function () {
+            if (update_groupby && self.graph_view) {
+                self.graph_view.register_groupby(self.pivot.rows.groupby, self.pivot.cols.groupby);
+            }
+            self.display_data();
+        });
+
+    },
+
+    fold: function (header) {
+        var update_groupby = this.pivot.fold(header);
+
+        this.display_data();
+        if (update_groupby && this.graph_view) {
+            this.graph_view.register_groupby(this.pivot.rows.groupby, this.pivot.cols.groupby);
+        }
+    },
+
+    swap_axis: function () {
+        this.pivot.swap_axis();
+        this.display_data();
+        this.graph_view.register_groupby(this.pivot.rows.groupby, this.pivot.cols.groupby);
     },
 
     // ----------------------------------------------------------------------
@@ -290,6 +359,8 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
         this.$('.graph_main_content svg').remove();
         this.$('.graph_main_content div').remove();
         this.table.empty();
+        this.width = this.$el.width();
+        this.height = Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width()));
 
         if (this.visible_ui) {
             this.$('.graph_header').css('display', 'block');
@@ -304,8 +375,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
             } else {
                 this.$('.graph_main_content').append($('<div><svg></svg></div>'));
                 this.svg = this.$('.graph_main_content svg')[0];
-                this.width = this.$el.width();
-                this.height = Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width()));
                 this[this.mode]();
             }
         }
@@ -642,4 +711,16 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
     },
 
 });
+
+// Utility function: returns true if the beginning of array2 is array1 and
+// if array1 is not array2
+function is_strict_beginning_of (array1, array2) {
+    if (array1.length >= array2.length) { return false; }
+    var result = true;
+    for (var i = 0; i < array1.length; i++) {
+        if (!_.isEqual(array1[i], array2[i])) { return false;} 
+    }
+    return result;
+}
+
 })();

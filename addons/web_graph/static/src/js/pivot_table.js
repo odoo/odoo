@@ -4,10 +4,8 @@
 (function () {
 'use strict';
 
-//  Pivot Table emits the events 'groupby_changed', 'groupby_swapped' and 'redraw_required' when necessary.
-//  PivotTable is initialized by default 'inactive', and require a call to activate() 
-//  after init to load initial data and start triggering events.
-openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherMixin, {
+//  PivotTable requires a call to update_data after initialization
+openerp.web_graph.PivotTable = openerp.web.Class.extend({
 
 	init: function (model, domain, fields, options) {
         openerp.EventDispatcherMixin.init.call(this);
@@ -17,11 +15,9 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		this.model = model;
 		this.fields = fields;
         this.fields.__count = {type: 'integer', string:'Quantity'};
-        this.measures = [{field:'__count', type: 'integer', string:'Quantity'}];
-		this.active = false;
-        this.rows = { groupby: this.create_field_values(options.row_groupby || []), headers: null };
-        this.cols = { groupby: this.create_field_values(options.col_groupby || []), headers: null };
-		if (options.measures) { this.set_measures(options.measures); }
+        this.measures = options.measures || [];
+        this.rows = { groupby: options.row_groupby, headers: null };
+        this.cols = { groupby: options.col_groupby, headers: null };
 	},
 
 	// ----------------------------------------------------------------------
@@ -31,36 +27,13 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
     // this.rows.groupby, this.cols.groupby : list of groupbys used for describing rows (...),
     //      a groupby is also {field:_, string:_, type:_} but it also has a interval
     //      attribute if its type is date/datetime.
-    // this.active: If PivotTable is active then it triggers events and updates 
-    //      its values when necessary
-	activate: function() {
-		this.active = true;
-		this.update_data();
-	},
-
 	set_measures: function (measures) {
-        var self = this;
-		if (!_.isEqual(measures, this.measures)) {
-			this.measures = [];
-            _.each(measures, function (m) { self._add_measure(m); });
-			if (this.active) { this.update_data(); }
-		}
+        this.measures = measures;
+        return this.update_data();
 	},
 
-	_add_measure: function (measure) {
-		if (measure.field && measure.string && measure.type) {
-			this.measures.push(measure);
-		} else {
-			this.measures.push({
-				field: measure,
-				string: this.fields[measure].string,
-				type: this.fields[measure].type,
-			});
-		}
-	},
-
-	toggle_measure: function (field_id) {
-        var current_measure = _.findWhere(this.measures, {field:field_id});
+	toggle_measure: function (measure) {
+        var current_measure = _.findWhere(this.measures, measure);
         if (current_measure) {  // remove current_measure
             var index = this.measures.indexOf(current_measure);
             this.measures = _.without(this.measures, current_measure);
@@ -71,91 +44,26 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
                     cell.values.splice(index, 1);
                 });
             }
-            if (this.active) { this.trigger('redraw_required'); }
+            return $.Deferred().resolve();
         } else {  // add a new measure
-            this.measures.push({
-                field: field_id,
-                type: this.fields[field_id].type,
-                string: this.fields[field_id].string
-            });
-            if (this.active) { this.update_data(); }
+            this.measures.push(measure);
+            return this.update_data();
         }
 	},
 
-    // return true if an update is triggered, false otherwise
     set: function (domain, row_groupby, col_groupby) {
-        var row_gbs = this.create_field_values(row_groupby),
-            col_gbs = this.create_field_values(col_groupby),
-            dom_changed = !_.isEqual(this.domain, domain),
-            row_subset = is_strict_beginning_of(row_gbs, this.rows.groupby),
-            col_subset = is_strict_beginning_of(col_gbs, this.cols.groupby),
-            row_gb_changed = !this.equal_groupby(row_gbs, this.rows.groupby),
-            col_gb_changed = !this.equal_groupby(col_gbs, this.cols.groupby);
+        var row_gb_changed = !_.isEqual(row_groupby, this.rows.groupby),
+            col_gb_changed = !_.isEqual(col_groupby, this.cols.groupby);
+        
+        this.domain = domain;
+        this.rows.groupby = row_groupby;
+        this.cols.groupby = col_groupby;
 
-        if (dom_changed) {
-            this.domain = domain;
-        }
+        if (row_gb_changed) { this.rows.headers = null; }
+        if (col_gb_changed) { this.cols.headers = null; }
 
-        if (row_subset && !dom_changed && !col_gb_changed) {
-            this.fold_with_depth(this.rows, row_gbs.length);
-            if (this.active) { this.trigger('redraw_required'); }
-            return;
-        }
-
-        if (col_subset && !dom_changed && !row_gb_changed) {
-            this.fold_with_depth(this.cols, col_gbs.length);
-            if (this.active) { this.trigger('redraw_required'); }
-            return;
-        }
-
-        if (row_gb_changed || col_gb_changed) {
-            this.cols.groupby = col_gbs;
-            this.rows.groupby = row_gbs;
-            if (row_gb_changed) {this.rows.headers = null; }
-            if (col_gb_changed) {this.cols.headers = null; }
-            if (this.active) { this.trigger('groupby_changed'); }
-        }
-        if (this.active && (row_gb_changed || col_gb_changed || dom_changed)) {
-            this.update_data();
-        }
+        return this.update_data();
     },
-
-    // compare groupby, ignoring the 'interval' attribute of dates... 
-    // this is necessary to avoid problems with the groupby received by the
-    // context which do not have the interval attribute.  This is ugly
-    // and need to be changed at some point
-    equal_groupby: function (groupby1, groupby2) {
-        if (groupby1.length !== groupby2.length) { return false; }
-        for (var i = 0; i < groupby1.length; i++) {
-            if (!this.equal_value(groupby1[i], groupby2[i])) { return false; }
-        }
-        return true;
-    },
-
-    equal_value: function (val1, val2) {
-        return ((val1.field === val2.field) && (val1.string === val2.string) && (val1.type === val2.type));
-    },
-
-    create_field_value: function (f) {
-        if (f.field && f.interval) {
-            return { field:f.field,
-                     string: this.fields[f.field].string,
-                     type:this.fields[f.field].type,
-                     interval: f.interval };
-        }
-        return (f.field && f.string && f.type) ? f : { field: f,
-                                                       string: this.fields[f].string,
-                                                       type: this.fields[f].type };
-    },
-
-    create_field_values: function (field_ids) {
-        var self = this;
-        return _.map(field_ids, function (f) { return self.create_field_value(f); });
-    },
-
-	_add_groupby: function(groupby_list, groupby) {
-        groupby_list.push(this.create_field_value(groupby));
-	},
 
 	// ----------------------------------------------------------------------
 	// Cells manipulation methods
@@ -191,21 +99,15 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
     //          expanded:_          (boolean, true if it has been expanded)
     //      }
 	is_row: function (id) {
-		return !!_.find(this.rows.headers, function (header) {
-			return header.id === id;
-		});
-	},
+        return !!_.findWhere(this.rows.headers, {id:id});
+    },
 
 	is_col: function (id) {
-		return !!_.find(this.cols.headers, function (header) {
-			return header.id === id;
-		});
+        return !!_.findWhere(this.cols.headers, {id:id});
 	},
 
 	get_header: function (id) {
-		return _.find(this.rows.headers.concat(this.cols.headers), function (header) {
-			return header.id === id;
-		});
+		return _.findWhere(this.rows.headers.concat(this.cols.headers), {id:id});
 	},
 
     _get_headers_with_depth: function (headers, depth) {
@@ -221,21 +123,17 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 
 	// return all rows with a path length of 'depth'
 	get_rows_with_depth: function (depth) {
-        return this._get_headers_with_depth(this.rows.headers), depth;
+        return this._get_headers_with_depth(this.rows.headers, depth);
 	},
 
 	// return all non expanded rows
 	get_rows_leaves: function () {
-		return _.filter(this.rows.headers, function (header) {
-			return !header.expanded;
-		});
+		return _.where(this.rows.headers, {expanded:false});
 	},
 	
 	// return all non expanded cols
 	get_cols_leaves: function () {
-		return _.filter(this.cols.headers, function (header) {
-			return !header.expanded;
-		});
+		return _.where(this.cols.headers, {expanded:false});
 	},
 	
     get_ancestors: function (header) {
@@ -267,7 +165,8 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 	// ----------------------------------------------------------------------
 	// Table manipulation methods : fold/expand/swap
 	// ----------------------------------------------------------------------
-	fold: function (header, silent) {
+	// return true if the folding changed the groupbys, false if not
+    fold: function (header) {
 		var ancestors = this.get_ancestors(header),
             removed_ids = _.pluck(ancestors, 'id');
 
@@ -279,12 +178,12 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
             return (_.contains(removed_ids, cell.x) || _.contains(removed_ids, cell.y));
         });
 
-        var new_groupby_length = _.max(_.map(header.root.headers, function(g) {return g.path.length;}));
+        var new_groupby_length = _.max(_.pluck(_.pluck(header.root.headers, 'path'), 'length'));
         if (new_groupby_length < header.root.groupby.length) {
 			header.root.groupby.splice(new_groupby_length);
-			if (!silent) { this.trigger('groupby_changed'); }
+            return true;
         }
-        if (!silent) { this.trigger('redraw_required'); }
+        return false;
 	},
 
     fold_with_depth: function (root, depth) {
@@ -294,6 +193,12 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
         });
     },
 
+    expand_all: function () {
+        this.rows.headers = null;
+        this.cols.headers = null;
+        return this.update_data();
+    },
+
 	expand: function (header_id, groupby) {
         var self = this,
             header = this.get_header(header_id),
@@ -301,10 +206,9 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 			fields = otherRoot.groupby.concat(this.measures);
 
         if (header.path.length === header.root.groupby.length) {
-            self._add_groupby(header.root.groupby, groupby);
-            this.trigger('groupby_changed');
+            header.root.groupby.push(groupby);
         }
-        groupby = [header.root.groupby[header.path.length]].concat(otherRoot.groupby);
+        groupby = [groupby].concat(otherRoot.groupby);
 
         return this.get_groups(groupby, fields, header.domain)
             .then(function (groups) {
@@ -332,7 +236,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
                     });
                 });
                 header.expanded = true;
-                self.trigger('redraw_required');
             });
 	},
 
@@ -352,8 +255,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		var temp = this.rows;
 		this.rows = this.cols;
 		this.cols = temp;
-		this.trigger('groupby_swapped');
-		this.trigger('redraw_required');
 	},
 
 	// ----------------------------------------------------------------------
@@ -374,7 +275,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 			} else {
 				self.no_data = true;
 			}
-			self.trigger('redraw_required');
 		});
 	},
 
@@ -413,12 +313,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		root.headers = updated_headers;
 	},
 
-    expand_all: function () {
-        this.rows.headers = null;
-        this.cols.headers = null;
-        this.update_data();
-    },
-
     // ----------------------------------------------------------------------
     // Data loading methods
     // ----------------------------------------------------------------------
@@ -436,9 +330,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
             visible_fields = rows.concat(cols, self.measures);
 
         if (this.measures.length === 0) {
-            var result = $.Deferred();
-            result.resolve();
-            return result;
+            return $.Deferred.resolve().promise();
         }
 
         var groupbys = _.map(_.range(cols.length + 1), function (i) {
@@ -592,17 +484,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 	},
 
 });
-
-// Utility function: returns true if the beginning of array2 is array1 and
-// if array1 is not array2
-function is_strict_beginning_of (array1, array2) {
-    if (array1.length >= array2.length) { return false; }
-    var result = true;
-    for (var i = 0; i < array1.length; i++) {
-        if (!_.isEqual(array1[i], array2[i])) { return false;} 
-    }
-    return result;
-}
 
 })();
 
