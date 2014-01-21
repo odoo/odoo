@@ -19,15 +19,17 @@
 #
 ##############################################################################
 
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp.addons.website.models import website
 from openerp import SUPERUSER_ID
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from datetime import datetime
 import werkzeug
 import json
 import logging
+from openerp.addons.web import http
+from openerp.addons.web.http import request
+#from openerp.addons.website.models import website
+from openerp.addons.website.controllers.main import Website as controllers
+controllers = controllers()
 
 
 _logger = logging.getLogger(__name__)
@@ -74,9 +76,9 @@ class WebsiteSurvey(http.Controller):
     ## ROUTES HANDLERS ##
 
     # Survey list
-    @website.route(['/survey/',
-                    '/survey/list/'],
-                   type='http', auth='public', multilang=True)
+    @http.route(['/survey/',
+                 '/survey/list/'],
+                type='http', auth='public', multilang=True, website=True)
     def list_surveys(self, **post):
         '''Lists all the public surveys'''
         cr, uid, context = request.cr, request.uid, request.context
@@ -88,9 +90,9 @@ class WebsiteSurvey(http.Controller):
         return request.website.render('survey.list', {'surveys': surveys})
 
     # Survey start
-    @website.route(['/survey/start/<model("survey.survey"):survey>',
-                    '/survey/start/<model("survey.survey"):survey>/<string:token>'],
-                   type='http', auth='public', multilang=True)
+    @http.route(['/survey/start/<model("survey.survey"):survey>',
+                 '/survey/start/<model("survey.survey"):survey>/<string:token>'],
+                type='http', auth='public', multilang=True, website=True)
     def start_survey(self, survey, token=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         survey_obj = request.registry['survey.survey']
@@ -129,9 +131,9 @@ class WebsiteSurvey(http.Controller):
             return request.redirect('/survey/fill/%s/%s' % (survey.id, user_input.token))
 
     # Survey displaying
-    @website.route(['/survey/fill/<model("survey.survey"):survey>/<string:token>',
-                    '/survey/fill/<model("survey.survey"):survey>/<string:token>/<string:prev>'],
-                   type='http', auth='public', multilang=True)
+    @http.route(['/survey/fill/<model("survey.survey"):survey>/<string:token>',
+                 '/survey/fill/<model("survey.survey"):survey>/<string:token>/<string:prev>'],
+                type='http', auth='public', multilang=True, website=True)
     def fill_survey(self, survey, token, prev=None, **post):
         '''Display and validates a survey'''
         cr, uid, context = request.cr, request.uid, request.context
@@ -178,9 +180,9 @@ class WebsiteSurvey(http.Controller):
             return request.website.render("website.403")
 
     # AJAX prefilling of a survey
-    @website.route(['/survey/prefill/<model("survey.survey"):survey>/<string:token>',
-                    '/survey/prefill/<model("survey.survey"):survey>/<string:token>/<model("survey.page"):page>'],
-                   type='http', auth='public', multilang=True)
+    @http.route(['/survey/prefill/<model("survey.survey"):survey>/<string:token>',
+                 '/survey/prefill/<model("survey.survey"):survey>/<string:token>/<model("survey.page"):page>'],
+                type='http', auth='public', multilang=True, website=True)
     def prefill(self, survey, token, page=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         user_input_line_obj = request.registry['survey.user_input_line']
@@ -218,13 +220,13 @@ class WebsiteSurvey(http.Controller):
         return json.dumps(ret)
 
     # AJAX validation of some questions
-    # @website.route(['/survey/validate/<model("survey.survey"):survey>'],
+    # @http.route(['/survey/validate/<model("survey.survey"):survey>'],
     #                type='http', auth='public', multilang=True)
     # def validate(self, survey, **post):
 
     # AJAX submission of a page
-    @website.route(['/survey/submit/<model("survey.survey"):survey>'],
-                   type='http', auth='public', multilang=True)
+    @http.route(['/survey/submit/<model("survey.survey"):survey>'],
+                type='http', auth='public', multilang=True, website=True)
     def submit(self, survey, **post):
         _logger.debug('Incoming data: %s', post)
         page_id = int(post['page_id'])
@@ -272,9 +274,9 @@ class WebsiteSurvey(http.Controller):
         return json.dumps(ret)
 
     # Printing routes
-    @website.route(['/survey/print/<model("survey.survey"):survey>/',
-                    '/survey/print/<model("survey.survey"):survey>/<string:token>/'],
-                   type='http', auth='user', multilang=True)
+    @http.route(['/survey/print/<model("survey.survey"):survey>/',
+                 '/survey/print/<model("survey.survey"):survey>/<string:token>/'],
+                type='http', auth='user', multilang=True, website=True)
     def print_survey(self, survey, token=None, **post):
         '''Display an survey in printable view; if <token> is set, it will
         grab the answers of the user_input_id that has <token>.'''
