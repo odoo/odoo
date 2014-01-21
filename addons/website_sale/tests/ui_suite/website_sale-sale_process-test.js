@@ -16,13 +16,8 @@ testRunner.run(function websiteSaleTest (page, timeout) {
         });
         waitFor(function testExecuted () {
             return page.evaluate(function () {
-                console.error(window.$('#wrap:contains("Order Confirmed")'));
-                console.error("-----------------------");
-                console.error(window.$('#wrap').text());
-                console.error("-----------------------");
-                console.error(window.localStorage);
-                console.error("-----------------------");
-                return window.$ && $('#wrap:contains("Order Confirmed")').length;
+                return window.localStorage && window.localStorage.getItem
+                    && window.localStorage.getItem("test-success");
             });
         }, function finish () {
             console.log('{ "event": "success" }');
