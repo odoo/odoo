@@ -90,8 +90,7 @@ class survey_survey(osv.Model):
     # Model fields #
 
     _columns = {
-        'title': fields.char('Title', size=128, required=1,
-            translate=True),
+        'title': fields.char('Title', required=1, translate=True),
         'res_model': fields.char('Category'),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Pages'),
         'date_open': fields.datetime('Opening date'),
@@ -282,7 +281,7 @@ class survey_page(osv.Model):
     # Model Fields #
 
     _columns = {
-        'title': fields.char('Page Title', size=128, required=1,
+        'title': fields.char('Page Title', required=1,
             translate=True),
         'survey_id': fields.many2one('survey.survey', 'Survey',
             ondelete='cascade', required=True),
