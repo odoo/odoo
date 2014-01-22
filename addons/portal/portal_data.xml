@@ -2,85 +2,13 @@
 <openerp>
     <data noupdate="1">
 
-        <!-- The portal group -->
+        <!-- The portal group add flag is_portal -->
         <record id="base.group_portal" model="res.groups">
-            <field name="name">Portal</field>
-            <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
-                They usually do not belong to the usual OpenERP groups.</field>
             <field name="is_portal" eval="True"/>
-            <!-- Insert the template user from auth_signup in the portal members group -->
-            <field name="users" eval="[(4,ref('auth_signup.default_template_user'))]"/>
         </record>
-
-        <!-- Mail group for the company's news -->
-        <record id="company_news_feed" model="mail.group">
-            <field name="name">Company News</field>
-            <field name="public">public</field>
-        </record>
-
-        <record id="action_news" model="ir.actions.client">
-            <field name="name">News</field>
-            <field name="tag">mail.wall</field>
-            <field name="res_model">mail.group</field>
-            <field name="params" eval="{
-                'domain': [
-                    ('model', '=', 'mail.group'),
-                    ('res_id', '=', ref('company_news_feed'))
-                ],
-                'context':{
-                    'search_default_message_unread': False,
-                    'default_model': 'mail.group',
-                    'default_res_id': ref('company_news_feed'),
-                },
-                'readonly': True,
-                'show_link': False,
-                'res_model': 'mail.message',
-                'thread_level': 1,
-            }"/>
-            <field name="help" type="html">
-                <p>
-                    Youd don't have unread company's news.
-                </p>
-            </field>
-        </record>
-
-        <!-- Mail group for the company's jobs -->
-        <record id="company_jobs" model="mail.group">
-            <field name="name">Company Jobs</field>
-            <field name="public">public</field>
-        </record>
-
-        <record id="action_jobs" model="ir.actions.client">
-            <field name="name">Jobs</field>
-            <field name="tag">mail.wall</field>
-            <field name="res_model">mail.group</field>
-            <field name="params" eval="{
-                'domain':[
-                    ('model', '=', 'mail.group'),
-                    ('res_id', '=', ref('company_jobs'))
-                ],
-                'context':{
-                    'search_default_message_unread': False,
-                    'default_model': 'mail.group',
-                    'default_res_id': ref('company_jobs'),
-                },
-                'readonly': True,
-                'show_link': False,
-                'res_model': 'mail.message',
-                'thread_level': 1,
-            }"/>
-            <field name="help" type="html">
-                <p>
-                    Youd don't have unread job offers.
-                </p>
-            </field>
-        </record>
-
-    </data>
-
-    <data>
         <record id="auth_signup.default_template_user" model="res.users">
             <field name="share" eval="True"/>
         </record>
+
     </data>
 </openerp>
