@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2013-TODAY OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,35 +19,10 @@
 #
 ##############################################################################
 
+from openerp.addons.resource.tests import test_resource
 
-{
-    'name': 'Employee Contracts',
-    'version': '1.0',
-    'category': 'Human Resources',
-    'description': """
-Add all information on the employee form to manage contracts.
-=============================================================
+checks = [
+    test_resource,
+]
 
-    * Contract
-    * Place of Birth,
-    * Medical Examination Date
-    * Company Vehicle
-
-You can assign several contracts per employee.
-    """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'images': ['images/hr_contract.jpeg'],
-    'depends': ['base_action_rule', 'hr'],
-    'data': [
-        'security/ir.model.access.csv',
-        'hr_contract_view.xml',
-        'hr_contract_data.xml',
-        'base_action_rule_view.xml',
-    ],
-    'demo': [],
-    'test': ['test/test_hr_contract.yml'],
-    'installable': True,
-    'auto_install': False,
-}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
