@@ -423,7 +423,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 
          if (group.attributes.grouped_on && this.fields[group.attributes.grouped_on].type === 'selection') {
              var selection = this.fields[group.attributes.grouped_on].selection,
-                 value_lookup = _.find(selection, function (val) { return val[0] === value; });
+                 value_lookup = _.where(selection, {0:value}); 
              group.attributes.value = value_lookup ? value_lookup[1] : 'undefined';
          } else if (value === false) {
              group.attributes.value = 'undefined';

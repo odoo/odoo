@@ -43,7 +43,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         return this.model.call('fields_get', []).then(function (f) {
             self.fields = f;
-            self.fields.__count = {string: 'Quantity', type: 'integer'};
             self.measure_list = self.get_measures();
             self.add_measures_to_options();
             self.pivot_options.row_groupby = self.create_field_values(self.pivot_options.row_groupby || []);
