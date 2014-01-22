@@ -30,9 +30,19 @@ class account_invoice(osv.Model):
     _inherit = 'account.invoice'
 
     def invoice_validate(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        mail_obj = self.pool.get('mail.compose.message')
+        res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
         for line in self.browse(cr, uid, ids[0], context=context).invoice_line:
             if line.product_id.email_template_id:
-                self.pool.get('email.template').send_mail(cr, uid, line.product_id.email_template_id.id, ids[0], force_send=True, raise_exception=True, context=context)
-        return super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
+                message_wiz_id = mail_obj.create(cr, uid, {
+                    'model': 'account.invoice',
+                    'res_id': ids[0],
+                    'template_id': line.product_id.email_template_id.id,
+                    'body': line.product_id.email_template_id.body_html
+                }, context=context)
+                mail_obj.send_mail(cr, uid, [message_wiz_id], context=context)
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

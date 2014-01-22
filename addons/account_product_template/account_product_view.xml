@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="list_price" position="after">
-                    <field name="email_template_id" domain="[('model','=','product.product')]"/>
+                    <field name="email_template_id" domain="[('model','=','account.invoice')]"/>
                 </field>
             </field>
         </record>
