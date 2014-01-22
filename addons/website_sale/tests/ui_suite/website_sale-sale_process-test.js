@@ -15,14 +15,11 @@ testRunner.run(function websiteSaleTest (page, timeout) {
             window.openerp.website.TestConsole.test('shoptest').run(true);
         });
         waitFor(function testExecuted () {
-            var after = page.evaluate(function () {
-                return window.$ && $('button[data-action=edit]').is(":visible") && {
-                    image: $('#wrap [data-snippet-id=image-text]').length,
-                    text: $('#wrap [data-snippet-id=text-block]').length,
-                };
+            return page.evaluate(function () {
+                var res = window.localStorage && window.localStorage.getItem
+                    && window.localStorage.getItem("test-success");
+                return res;
             });
-            var result = after && (after.image === 1) && (after.text === 1);
-            return result;
         }, function finish () {
             console.log('{ "event": "success" }');
             phantom.exit();

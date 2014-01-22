@@ -165,13 +165,13 @@
             if (step.beforeTrigger || step.afterTrigger) {
                 var fn = step.triggers;
                 step.triggers = function (callback) {
-                    if (step.beforeTrigger) step.beforeTrigger();
+                    if (step.beforeTrigger) step.beforeTrigger(self);
                     if (!step.afterTrigger) {
                         fn.call(step, callback);
                     } else {
                         fn.call(step, function () {
                             (callback || self.moveToNextStep).apply(self);
-                             step.afterTrigger();
+                             step.afterTrigger(self);
                         });
                     }
                 };
@@ -234,11 +234,11 @@
                     stepId:    'number-product',
                     element:   '.oe_mycart input.js_quantity',
                     trigger:   'reload',
-                    beforeTrigger: function (tour, callback) {
+                    beforeTrigger: function (tour) {
                         if (parseInt($(".oe_mycart input.js_quantity").val(),10) !== 1)
                             $(".oe_mycart input.js_quantity").val("1").change();
                     },
-                    afterTrigger: function (tour, callback) {
+                    afterTrigger: function (tour) {
                         if ($(".oe_mycart input.js_quantity").size() !== 1)
                             throw "Can't remove suggested item from my cart";
                         if (parseInt($(".oe_mycart input.js_quantity").val(),10) !== 1)
@@ -258,7 +258,7 @@
                     trigger: {
                         url:   '/shop/confirm_order/',
                     },
-                    beforeTrigger: function (tour, callback) {
+                    beforeTrigger: function (tour) {
                         $("input[name='phone']").val("");
                     },
                 },
@@ -268,7 +268,7 @@
                     trigger: {
                         url:   '/shop/payment/',
                     },
-                    beforeTrigger: function (tour, callback) {
+                    beforeTrigger: function (tour) {
                         if ($("input[name='name']").val() === "")
                             $("input[name='name']").val("website_sale-test-shoptest");
                         if ($("input[name='email']").val() === "")
@@ -288,14 +288,14 @@
                 {
                     stepId:    'pay-checkout-product',
                     element:   'button:contains("Pay Now")',
-                    trigger:   'click',
-
-                },
-                {
-                    stepId:    'end-test',
-                    title:     "end-test",
-                    backdrop:  true,
-                },
+                    trigger: {
+                        url:   /shop\/confirmation\//,
+                    },
+                    afterTrigger: function (tour) {
+                        window.localStorage.setItem("test-success", "{}");
+                        throw "afterTrigger test finish, remove this throw";
+                    },
+                }
             ];
             return this._super();
         },
