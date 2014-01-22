@@ -62,7 +62,7 @@
       <h5><strong><a t-href="/shop/product/#{ slug(product) }/" t-keep-query="category,search,filters" t-field="product.name"/></strong></h5>
       <div class="product_price" t-if="product.product_variant_ids">
           <b>
-              <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
+              <t t-if="abs(product.product_variant_ids[0].lst_price - product.product_variant_ids[0].price) &gt; 0.2">
                 <del class="text-danger"
                   t-field="product.product_variant_ids[0].lst_price" t-field-options='{
                        "widget": "monetary",

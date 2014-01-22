@@ -554,10 +554,15 @@ class product_product(osv.osv):
     _product_incoming_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('in',))
 
     def _product_lst_price(self, cr, uid, ids, name, arg, context=None):
-        res = {}
+        res = dict.fromkeys(ids, 0.0)
         product_uom_obj = self.pool.get('product.uom')
-        for id in ids:
-            res.setdefault(id, 0.0)
+
+        # retrieve pricelist
+        pricelist = None
+        if context.get('pricelist'):
+            pricelist = self.pool['product.pricelist'].browse(cr, uid, context.get('pricelist'), context=context)
+            base_currency = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id
+
         for product in self.browse(cr, uid, ids, context=context):
             if 'uom' in context:
                 uom = product.uos_id or product.uom_id
@@ -565,7 +570,11 @@ class product_product(osv.osv):
                         uom.id, product.list_price, context['uom'])
             else:
                 res[product.id] = product.list_price
-            res[product.id] =  (res[product.id] or 0.0) * (product.price_margin or 1.0) + product.price_extra
+            res[product.id] = (res[product.id] or 0.0) * (product.price_margin or 1.0) + product.price_extra
+            # update the result, according to the eventual pricelist currency
+            if pricelist and pricelist.currency_id:
+                res[product.id] = self.pool['res.currency'].compute(
+                    cr, uid, base_currency.id, pricelist.currency_id.id, res[product.id], round=False, context=context)
         return res
 
     def _save_product_lst_price(self, cr, uid, product_id, field_name, field_value, arg, context=None):
