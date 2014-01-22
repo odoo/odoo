@@ -707,7 +707,7 @@ class Ecommerce(http.Controller):
         order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
         assert order.website_session_id == request.httprequest.session['website_session_id']
 
-        self._ecommerce_change_pricelist(cr, uid, None, context=None)
+        request.registry['website']._ecommerce_change_pricelist(cr, uid, None, context=None)
 
         return request.website.render("website_sale.confirmation", {'order': order})
 

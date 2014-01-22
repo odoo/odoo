@@ -380,39 +380,42 @@
                                 window.localStorage.removeItem(testId);
                             }
                         }
+
                         overlapsCrash = setTimeout(function () {
                             throwError("Test: '" + testId + "' can't resolve step: '" + step.stepId + "'");
                         }, (step.delay || defaultDelay) + 1000);
 
-                        var $element = $(step.element);
-                        if (step.triggers) {
-                            try {
-                                step.triggers(next);
-                            } catch (e) {
-                                throwError(e);
+                        setTimeout(function () {
+                            var $element = $(step.element);
+                            if (step.triggers) {
+                                try {
+                                    step.triggers(next);
+                                } catch (e) {
+                                    throwError(e);
+                                }
                             }
-                        }
-                        if ((step.trigger === 'reload' || (step.trigger && step.trigger.url)) && _next) return;
-                        
-                        if (step.snippet && step.trigger === 'drag') {
-                            website.TestConsole.dragAndDropSnippet(step.snippet);
-                        } else if (step.trigger && step.trigger.id === 'change') {
-                            $element.trigger($.Event("change", { srcElement: $element }));
-                        } else if (step.sampleText) {
-                            $element.val(step.sampleText);
-                            $element.trigger($.Event("change", { srcElement: $element }));
-                        } else if ($element.is(":visible")) { // Click by default
-                            if (step.trigger.id === 'mousedown') {
-                                $element.trigger($.Event("mousedown", { srcElement: $element }));
+                            if ((step.trigger === 'reload' || (step.trigger && step.trigger.url)) && _next) return;
+                            
+                            if (step.snippet && step.trigger === 'drag') {
+                                website.TestConsole.dragAndDropSnippet(step.snippet);
+                            } else if (step.trigger && step.trigger.id === 'change') {
+                                $element.trigger($.Event("change", { srcElement: $element }));
+                            } else if (step.sampleText) {
+                                $element.val(step.sampleText);
+                                $element.trigger($.Event("change", { srcElement: $element }));
+                            } else if ($element.is(":visible")) { // Click by default
+                                if (step.trigger.id === 'mousedown') {
+                                    $element.trigger($.Event("mousedown", { srcElement: $element }));
+                                }
+                                var evt = document.createEvent("MouseEvents");
+                                evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                                $element[0].dispatchEvent(evt);
+                                if (step.trigger.id === 'mouseup') {
+                                    $element.trigger($.Event("mouseup", { srcElement: $element }));
+                                }
                             }
-                            var evt = document.createEvent("MouseEvents");
-                            evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-                            $element[0].dispatchEvent(evt);
-                            if (step.trigger.id === 'mouseup') {
-                                $element.trigger($.Event("mouseup", { srcElement: $element }));
-                            }
-                        }
-                        if (!step.triggers) next();
+                            if (!step.triggers) next();
+                        },0);
                     }
                     var url = new website.UrlParser(window.location.href);
                     if (tour.path && url.pathname !== tour.path && !window.localStorage.getItem(testId)) {
