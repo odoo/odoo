@@ -119,8 +119,8 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         var row_gbs = this.create_field_values(row_groupby),
             col_gbs = this.create_field_values(col_groupby),
             dom_changed = !_.isEqual(this.pivot.domain, domain),
-            row_gb_changed = !this.equal_groupby(row_gbs, this.pivot.rows.groupby),
-            col_gb_changed = !this.equal_groupby(col_gbs, this.pivot.cols.groupby),
+            row_gb_changed = !_.isEqual(row_gbs, this.pivot.rows.groupby),
+            col_gb_changed = !_.isEqual(col_gbs, this.pivot.cols.groupby),
             row_reduced = is_strict_beginning_of(row_gbs, this.pivot.rows.groupby),
             col_reduced = is_strict_beginning_of(col_gbs, this.pivot.cols.groupby);
 
@@ -160,45 +160,27 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.display_data();
     },
 
-    // compare groupby, ignoring the 'interval' attribute of dates... 
-    // this is necessary to avoid problems with the groupby received by the
-    // context which does not have the interval attribute.  This is ugly
-    // and need to be changed at some point
-    equal_groupby: function (groupby1, groupby2) {
-        if (groupby1.length !== groupby2.length) { return false; }
-        for (var i = 0; i < groupby1.length; i++) {
-            if (!this.equal_value(groupby1[i], groupby2[i])) { return false; }
-        }
-        return true;
-    },
-
-    equal_value: function (val1, val2) {
-        return ((val1.field === val2.field) && (val1.string === val2.string) && (val1.type === val2.type));
-    },
-
     create_field_value: function (f) {
-        var field = f.field || ((_.contains(f, ':')) ? f.split(':')[0] : f),
-            important_field = _.findWhere(this.important_fields, {field:field}),
-            string = important_field ? important_field.string : this.fields[field].string,
-            result =  {field: field, string: string, type: this.fields[field].type };
+        var field = (_.contains(f, ':')) ? f.split(':')[0] : f,
+            groupby_field = _.findWhere(this.important_fields, {field:field}),
+            string = groupby_field ? groupby_field.string : this.fields[field].string,
+            result =  {field: f, string: string, type: this.fields[field].type };
 
-        if (important_field) {
-            result.filter = important_field.filter;
+        if (groupby_field) {
+            result.filter = groupby_field.filter;
         }
-        if (f.interval) {
-            result.interval = f.interval;
-        }
-        if (_.contains(f, ':')) {
-            result.interval = f.split(':')[1];
-        }
+
         return result;
     },
 
     create_field_values: function (field_ids) {
-        var self = this;
-        return _.map(field_ids, function (f) { return self.create_field_value(f); });
+        return _.map(field_ids, this.proxy('create_field_value'));
     },
 
+
+    get_col_groupbys: function () {
+        return _.pluck(this.pivot.cols.groupby, 'field');
+    },
 
     // ----------------------------------------------------------------------
     // UI code
@@ -314,25 +296,24 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     field_selection: function (event) {
         var id = event.target.attributes['data-id'].nodeValue,
             field_id = event.target.attributes['data-field-id'].nodeValue,
-            interval;
+            interval,
+            groupby = this.create_field_value(field_id);
         event.preventDefault();
         if (this.fields[field_id].type === 'date' || this.fields[field_id].type === 'datetime') {
             interval = event.target.attributes['data-interval'].nodeValue;
-            this.expand(id, {field: field_id, interval: interval});
-        } else {
-            this.expand(id, field_id);
+            groupby.field =  groupby.field + ':' + interval;
         }
+        this.expand(id, groupby);
     },
 
     // ----------------------------------------------------------------------
     // Pivot Table integration
     // ----------------------------------------------------------------------
-    expand: function (header_id, field_id) {
+    expand: function (header_id, groupby) {
         var self = this,
             header = this.pivot.get_header(header_id),
-            update_groupby = !!field_id,
-            groupby = (update_groupby) ? this.create_field_value(field_id)
-                                       : header.root.groupby[header.path.length];
+            update_groupby = !!groupby,
+            groupby = groupby || header.root.groupby[header.path.length];
 
         this.pivot.expand(header_id, groupby).then(function () {
             if (update_groupby && self.graph_view) {

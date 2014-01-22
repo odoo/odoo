@@ -25,8 +25,9 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	// ----------------------------------------------------------------------
     // this.measures: list of measure [measure], measure = {field: _, string: _, type: _}
     // this.rows.groupby, this.cols.groupby : list of groupbys used for describing rows (...),
-    //      a groupby is also {field:_, string:_, type:_} but it also has a interval
-    //      attribute if its type is date/datetime.
+    //      a groupby is also {field:_, string:_, type:_} 
+    //      If its type is date/datetime, field can have the corresponding interval in its description,
+    //      for example 'create_date:week'.
 	set_measures: function (measures) {
         this.measures = measures;
         return this.update_data();
@@ -221,7 +222,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
                     // make cells
                     _.each(self.get_ancestors_and_self(group), function (data) {
                         var values = _.map(self.measures, function (m) {
-                            console.log('m.field', m.field);
                             return data.attributes.aggregates[m.field];
                         });
                         var other = _.find(otherRoot.headers, function (h) {
@@ -231,8 +231,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
                                 return _.isEqual(_.rest(data.path), h.path);
                                 }
                             });
-                        console.log('dbg', child.id, other.id, values);
-                        if (_.isEqual(values, [46125])) debugger;
                         if (other) {
                             self.add_cell(child.id, other.id, values);
                         }
@@ -381,14 +379,11 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	_query_db: function (groupby, fields, domain, path) {
 		var self = this,
             field_ids = _.without(_.pluck(fields, 'field'), '__count'),
-            formatted_groupby = (groupby.interval) ? groupby.field + ':' + groupby.interval : groupby.field;
+            fields = _.map(field_ids, function(f) { return self.raw_field(f); });
 
-        fields = _.map(field_ids, function (field) {
-            return (_.contains(field, ':')) ? field.split(':')[0] : field;
-        });
 		return this.model.query(field_ids)
 			.filter(domain)
-			.group_by(formatted_groupby)
+			.group_by(groupby.field)
 			.then(function (results) {
 				var groups = _.filter(results, function (group) {
 					return group.attributes.length > 0;

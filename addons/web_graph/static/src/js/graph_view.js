@@ -20,10 +20,16 @@ instance.web_graph.GraphView = instance.web.View.extend({
     // Init stuff
     // ----------------------------------------------------------------------
     init: function(parent, dataset, view_id, options) {
+        var self = this;
         this._super(parent, dataset, view_id, options);
         this.dataset = dataset;
         this.model = new instance.web.Model(dataset.model, {group_by_no_leaf: true});
         this.search_view = parent.searchview;
+        this.col_search_field = {
+            get_context: function() { return { col_group_by: self.graph_widget.get_col_groupbys()};},
+            get_domain: function () {},
+            get_groupby: function () {},
+        };
     },
 
     view_loading: function (fields_view_get) {
@@ -68,7 +74,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     do_search: function (domain, context, group_by) {
         var self = this,
-            col_group_by = this.get_groupbys_from_searchview('ColGroupBy', 'col_group_by');
+            col_group_by = context.col_group_by || this.get_groupbys_from_searchview('ColGroupBy', 'col_group_by');
 
         if (!this.graph_widget) {
             if (group_by.length) {
@@ -95,10 +101,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
         var facet = this.search_view.query.findWhere({category:cat_name}),
             groupby_list = facet ? facet.values.models : [];
         return _.map(groupby_list, function (g) { 
-            if (cat_name === 'GroupBy') {
-                return py.eval(g.attributes.value.attrs.context).group_by;
+            var context = g.attributes.value.attrs.context;
+            if (_.isString(context)) {
+                return py.eval(context).group_by;
             } else {
-                return g.attributes.value.attrs.context[cat_field]; 
+                return context[cat_field]; 
             }
         });
     },
@@ -156,15 +163,21 @@ instance.web_graph.GraphView = instance.web.View.extend({
             category:'ColGroupBy',
             values: this.make_groupby_values(groupbys, 'col_group_by'),
             icon:'f',
-            field: this.search_field
+            field: this.col_search_field
         };
     },
 
     make_groupby_values: function (groupbys, category) {
         return _.map(groupbys, function (groupby) {
             var context = {};
-            context[category] = groupby.interval ? groupby.field + ':' + groupby.interval : groupby.field;
-            var value = (category === 'group_by') ? groupby.filter : {attrs:{domain: [], context: context}};
+            context[category] = groupby.field;
+            var value;
+            if (category === 'group_by' && groupby.type !== 'date' && groupby.type !== 'datetime') {
+                value = groupby.filter;
+            } else {
+                value = {attrs: {domain: [], context: context}};
+            }
+            // var value = (category === 'group_by') ? groupby.filter : {attrs:{domain: [], context: context}};
             return {
                 label: groupby.string,
                 value: value
@@ -172,11 +185,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
         });
     },
 
-    search_field: {
-        get_context: function() {},
-        get_domain: function () {},
-        get_groupby: function () {},
-    },
 
 });
 };
