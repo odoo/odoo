@@ -58,7 +58,7 @@ def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=3
     if query:
         url += '?' + werkzeug.url_encode(query)
     if keep_hash:
-        return redirect_with_hash(url)
+        return redirect_with_hash(url, code)
     else:
         return werkzeug.utils.redirect(url, code)
 
