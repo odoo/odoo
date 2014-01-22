@@ -2018,6 +2018,7 @@ class stock_inventory(osv.osv):
         'date': fields.datetime('Inventory Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Create Date."),
         'date_done': fields.datetime('Date done', help="Inventory Validation Date."),
         'line_ids': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=False, states={'done': [('readonly', True)]}, help="Inventory Lines."),
+        'line_view_ids': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=False, domain=['|',('th_qty', '>=', 0),('th_qty', '=', False)], states={'done': [('readonly', True)]}, help="Inventory Lines."),
         'move_ids': fields.one2many('stock.move', 'inventory_id', 'Created Moves', help="Inventory Moves."),
         'state': fields.selection([('draft', 'Draft'), ('cancel', 'Cancelled'), ('confirm', 'In Progress'), ('done', 'Validated')], 'Status', readonly=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -2073,6 +2074,10 @@ class stock_inventory(osv.osv):
             context = {}
         move_obj = self.pool.get('stock.move')
         for inv in self.browse(cr, uid, ids, context=context):
+            if inv.line_ids:
+                for inventory_line in inv.line_ids:
+                    if inventory_line.product_qty < 0 and inventory_line.th_qty >= 0:
+                        raise osv.except_osv(_('Warning'),_('You cannot have a negative product quantity in an inventory line'))
             if not inv.move_ids:
                 self.action_check(cr, uid, [inv.id], context=context)
             inv.refresh()
