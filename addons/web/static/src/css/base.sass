@@ -747,108 +747,6 @@ $sheet-padding: 16px
         padding: 5px
         width: 32px
     // }}}
-    // Login {{{
-    .oe_login
-        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
-        text-align: center
-        font-size: 14px
-        height: 100%
-        ul, li
-            margin: 0
-            list-style-type: none
-            padding: 0 0 4px 0
-        button
-            cursor: pointer
-            padding: 6px 16px
-            border: 1px solid #222
-            color: white
-            margin: 0
-            @include vertical-gradient(#b92020, #600606)
-            @include radius(4px)
-            @include box-shadow((0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset))
-        input, select
-            width: 252px
-            font-family: "Lucida Grande", Helvetica, Verdana, Arial
-            border: 1px solid #999999
-            background: whitesmoke
-            @include box-shadow(inset 0 1px 4px rgba(0, 0, 0, 0.4))
-            @include radius(3px)
-        input
-            margin-bottom: 9px
-            padding: 5px 6px
-        select
-            padding: 1px
-        .oe_login_dbpane
-            position: fixed
-            top: 0
-            right: 8px
-            padding: 5px 10px
-            color: #eee
-            border: solid 1px #333
-            background: #1e1e1e
-            background: rgba(30,30,30,0.94)
-            @include radius(0 0 8px 8px)
-            input
-                padding: 2px 4px
-                margin: 4px 0
-        .oe_login_bottom
-            position: absolute
-            top: 50%
-            left: 0
-            right: 0
-            bottom: 0
-            text-shadow: 0 1px 1px #999999
-            @include vertical-gradient(#b41616, #600606)
-        .oe_login_pane
-            position: absolute
-            top: 50%
-            left: 50%
-            margin: -160px -166px
-            border: solid 1px #333333
-            background: #1e1e1e
-            background: rgba(30,30,30,0.94)
-            padding: 22px 32px
-            color: #eee
-            text-align: left
-            @include radius(8px)
-            @include box-shadow(0 0 18px rgba(0, 0, 0, 0.9))
-            h2
-                margin-top: 0
-                font-size: 18px
-        .oe_login_logo
-            position: absolute
-            top: -70px
-            left: 0
-            width: 100%
-            margin: 0 auto
-            text-align: center
-        .oe_login_footer
-            position: absolute
-            bottom: -40px
-            left: 0
-            width: 100%
-            text-align: center
-            a
-                color: #eee
-                margin: 0 6px
-                &:hover
-                    text-decoration: underline
-            span
-                font-weight: bold
-                font-size: 16px
-        .oe_login_error_message
-            display: none
-            background-color: #b41616
-            color: #eee
-            padding: 14px 18px
-            margin-top: 15px
-            text-align: center
-            @include radius(4px)
-            @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.8))
-    .oe_login_invalid
-        .oe_login_error_message
-            display: inline-block
-    // }}}
     // DatabaseManager {{{
     .oe_database_manager
         background: #fff
@@ -2697,6 +2595,38 @@ div.ui-widget-overlay
     .db_option_table
         td
             padding-bottom: 10px !important
+
+// Server side single forms {{{
+@mixin single-form($width: 400px)
+    padding: 10px
+    position: absolute
+    left: 50%
+    top: 50%
+    width: $width
+    /* Set margins to offset 50% of the w/h */
+    margin-top: -($width / 2)
+    margin-left: -($width / 2)
+
+body.oe_single_form
+    background: #eee url(/web/static/src/img/form_sheetbg.png)
+    height: 100%
+
+    .oe_single_form_logo
+        padding: 10px
+        text-align: center
+        margin-bottom: 10px
+
+    .oe_single_form_footer
+        position: absolute
+        bottom: -30px
+        right: 0px
+        width: 100%
+        text-align: center
+
+    .oe_single_form_container
+        @include single-form(400px)
+
+// }}}
 
 // Internet Explorer 9+ specifics {{{
 .openerp_ie
