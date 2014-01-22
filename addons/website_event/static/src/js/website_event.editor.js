@@ -7,10 +7,8 @@
     website.is_editable = true;
     website.EditorBar.include({
         start: function() {
+            website.is_editable_button = website.is_editable_button || !!$("#wrap.js_event").size();
             var res = this._super();
-            if ($("#wrap.js_event").size()) {
-                this.$("button[data-action=edit]").removeClass("hidden");
-            }
             this.$(".dropdown:has(.oe_content_menu)").removeClass("hidden");
             return res;
         },

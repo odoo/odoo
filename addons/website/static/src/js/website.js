@@ -67,6 +67,7 @@
     var dom_ready = website.dom_ready = $.Deferred();
     $(document).ready(function () {
         website.is_editable = website.is_editable || $('html').data('editable');
+        website.is_editable_button= website.is_editable_button || $('html').data('editable');
         dom_ready.resolve();
     });
 

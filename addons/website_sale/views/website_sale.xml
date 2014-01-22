@@ -26,7 +26,7 @@
 <!-- List of categories -->
 
 <template id="categories_recursive" name="Category list">
-  <li t-att-class="str(category.id) == search.get('category') and 'active' or ''">
+  <li t-att-class="category.id == search.get('category') and 'active' or ''">
       <a t-href="/shop/category/#{ slug(category) }/" t-field="category.name"></a>
       <ul t-if="category.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
           <t t-foreach="category.child_id" t-as="category">
@@ -282,7 +282,7 @@
                   <t t-call="website_sale.search" />
               </form>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-4" groups="base.group_sale_manager">
                 <t t-call="website.publish_management">
                   <t t-set="object" t-value="product"/>
                   <t t-set="publish_edit" t-value="True"/>
@@ -713,7 +713,7 @@
           <div class="row">
           <div class="col-md-8 oe_mycart">
               <h3 class="page-header mt16">Billing Information
-                  <small t-if="user_id.id == website.public_user.id"> or
+                  <small groups="base.group_public"> or
                       <a t-if="not partner" t-attf-href="/web#action=redirect&amp;url=#{ request.httprequest.url }">sign in</a>
                   </small>
               </h3>
@@ -946,6 +946,7 @@
                           <img class="media-object" style="width: 60px; display: inline-block;"
                               t-att-title="acquirer.name"
                               t-att-src="'/payment_acquirer_%s/static/src/img/%s_icon.png' % (acquirer.name, acquirer.name)"/>
+                              <span t-field="acquirer.name"/>
                       </label>
                   </t>
               </div>

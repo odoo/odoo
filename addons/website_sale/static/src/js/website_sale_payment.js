@@ -7,5 +7,6 @@ $(document).ready(function () {
         $("div.oe_sale_acquirer_button[data-id]", $payment).addClass("hidden");
         $("div.oe_sale_acquirer_button[data-id='"+payment_id+"']", $payment).removeClass("hidden");
     });
+    $payment.find("input[name='acquirer']:checked").click();
 
 });

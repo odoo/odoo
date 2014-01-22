@@ -463,6 +463,10 @@
             $(window).on('resize', _.debounce(this.check_height.bind(this), 50));
             this.check_height();
 
+            if (website.is_editable_button) {
+                this.$("button[data-action=edit]").removeClass("hidden");
+            }
+
             return $.when(
                 this._super.apply(this, arguments),
                 this.rte.appendTo(this.$('#website-top-edit .nav.pull-right'))
@@ -607,14 +611,19 @@
          */
         setup_hover_buttons: function () {
             var editor = this.rte.editor;
-            var $link_button = this.make_hover_button(_t("Edit Link"), function () {
+            var $link_button = this.make_hover_button(_t("Change"), function () {
                 var sel = new CKEDITOR.dom.element(previous);
                 editor.getSelection().selectElement(sel);
-                link_dialog(editor);
+                if (previous.tagName.toUpperCase() === 'A') {
+                    link_dialog(editor);
+                } else if(sel.hasClass('fa')) {
+                    new website.editor.FontIconsDialog(editor, previous)
+                        .appendTo(document.body);
+                }
                 $link_button.hide();
                 previous = null;
             }, 'btn-xs');
-            var $image_button = this.make_hover_button(_t("Edit Image"), function () {
+            var $image_button = this.make_hover_button(_t("Change"), function () {
                 image_dialog(editor, new CKEDITOR.dom.element(previous));
                 $image_button.hide();
                 previous = null;
@@ -625,12 +634,12 @@
             // -ish, because when moving to the button itself ``previous`` is
             // still set to the element having triggered showing the button.
             var previous;
-            $(editor.element.$).on('mouseover', 'a, img', function (e) {
+            $(editor.element.$).on('mouseover', 'a, img, .fa', function () {
                 // Back from edit button -> ignore
                 if (previous && previous === this) { return; }
 
                 var selected = new CKEDITOR.dom.element(this);
-                if (!is_editable_node(selected)) {
+                if (!is_editable_node(selected) && !selected.hasClass('fa')) {
                     return;
                 }
 
@@ -659,7 +668,7 @@
                                 - $link_button.outerWidth() / 2
                     })
                 }
-            }).on('mouseleave', 'a, img', function (e) {
+            }).on('mouseleave', 'a, img, .fa', function (e) {
                 var current = document.elementFromPoint(e.clientX, e.clientY);
                 if (current === $link_button[0] || current === $image_button[0]) {
                     return;
@@ -816,6 +825,28 @@
                     document.execCommand("enableObjectResizing", false, "false");
                     document.execCommand("enableInlineTableEditing", false, "false");
                 } catch (e) {}
+
+
+                // detect & setup any CKEDITOR widget within a newly dropped
+                // snippet. There does not seem to be a simple way to do it for
+                // HTML not inserted via ckeditor APIs:
+                // https://dev.ckeditor.com/ticket/11472
+                $(document.body)
+                    .off('snippet-dropped')
+                    .on('snippet-dropped', function (e, el) {
+                        // CKEDITOR data processor extended by widgets plugin
+                        // to add wrappers around upcasting elements
+                        el.outerHTML = editor.dataProcessor.toHtml(el.outerHTML, {
+                            fixForBody: false,
+                            dontFilter: true,
+                        });
+                        // then repository.initOnAll() handles the conversion
+                        // from wrapper to actual widget instance (or something
+                        // like that).
+                        setTimeout(function () {
+                            editor.widgets.initOnAll();
+                        }, 0);
+                    });
 
                 self.trigger('rte:ready');
                 def.resolve();
@@ -1056,15 +1087,20 @@
         bind_data: function (text, href, new_window) {
             href = href || this.element && (this.element.data( 'cke-saved-href')
                                     ||  this.element.getAttribute('href'));
-            if (!href) { return; }
 
             if (new_window === undefined) {
-                new_window = this.element.getAttribute('target') === '_blank';
+                new_window = this.element
+                        ? this.element.getAttribute('target') === '_blank'
+                        : false;
             }
             if (text === undefined) {
-                text = this.element.getText();
+                text = this.element ? this.element.getText() : '';
             }
 
+            this.$('input#link-text').val(text);
+            this.$('input.window-new').prop('checked', new_window);
+
+            if (!href) { return; }
             var match, $control;
             if ((match = /mailto:(.+)/.exec(href))) {
                 $control = this.$('input.email-address').val(match[1]);
@@ -1074,9 +1110,6 @@
             }
 
             this.changed($control);
-
-            this.$('input#link-text').val(text);
-            this.$('input.window-new').prop('checked', new_window);
         },
         changed: function ($e) {
             this.$('.url-source').filter(':input').not($e).val('')
@@ -1456,6 +1489,34 @@
         template: 'website.editor.dialog.font-icons',
         events : _.extend({}, website.editor.Dialog.prototype.events, {
             change: 'update_preview',
+            'click .font-icons-icon': function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.$('#fa-icon').val(e.target.getAttribute('data-id'));
+                this.update_preview();
+            },
+            'click #fa-preview span': function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.$('#fa-size').val(e.target.getAttribute('data-size'));
+                this.update_preview();
+            },
+            'input input#icon-search': function () {
+                var needle = this.$('#icon-search').val();
+                var icons = this.icons;
+                if (needle) {
+                    icons = _(icons).filter(function (icon) {
+                        return icon.id.substring(3).indexOf(needle) !== -1;
+                    });
+                }
+
+                this.$('div.font-icons-icons').html(
+                    openerp.qweb.render(
+                        'website.editor.dialog.font-icons.icons',
+                        {icons: icons}));
+            },
         }),
 
         // List of FontAwesome icons in 4.0.3, extracted from the cheatsheet.
@@ -1474,26 +1535,7 @@
          * isn't customizable (?) and the fontawesome glyphs fail to appear.
          */
         start: function () {
-            var self = this;
-            var started = this._super();
-            this.$('#fa-icon').select2({
-                data: this.icons,
-                initSelection: function (element, callback) {
-                    var id = element.val(), match;
-                    if (id) {
-                        match = _.find(self.icons, function (item) {
-                            return item.id === id;
-                        }) || void 0;
-                    }
-
-                    callback(match);
-                },
-                formatSelection: function (object) {
-                    return $('<span class="fa fa-fw">').text(object.text);
-                },
-                formatResultCssClass: function () { return 'fa'; },
-            });
-            return started.then(this.proxy('load_data'));
+            return this._super().then(this.proxy('load_data'));
         },
         /**
          * Removes existing FontAwesome classes on the bound element, and sets
@@ -1520,7 +1562,7 @@
             for (var i = 0; i < classes.length; i++) {
                 var cls = classes[i];
                 switch(cls) {
-                case 'fa-lg':case 'fa-2x':case 'fa-3x':case 'fa-4x':case 'fa-5x':
+                case 'fa-2x':case 'fa-3x':case 'fa-4x':case 'fa-5x':
                     // size classes
                     this.$('#fa-size').val(cls);
                     continue;
@@ -1529,15 +1571,14 @@
                 case 'fa-flip-horizontal':case 'fa-rotate-vertical':
                     this.$('#fa-rotation').val(cls);
                     continue;
-                case 'fa-fixed':
-                    this.$('#fa-fixed').prop('checked', true);
+                case 'fa-fw':
                     continue;
                 case 'fa-border':
                     this.$('#fa-border').prop('checked', true);
                     continue;
                 default:
                     if (!/^fa-/.test(cls)) { continue; }
-                    this.$('#fa-icon').select2('val', cls);
+                    this.$('#fa-icon').val(cls);
                 }
             }
             this.update_preview();
@@ -1549,18 +1590,33 @@
         get_fa_classes: function () {
             return [
                 'fa',
-                this.$('#fa-icon').select2('val'),
+                this.$('#fa-icon').val(),
                 this.$('#fa-size').val(),
                 this.$('#fa-rotation').val(),
-                this.$('#fa-fixed').prop('checked') ? 'fa-fixed' : '',
                 this.$('#fa-border').prop('checked') ? 'fa-border' : ''
             ];
         },
         update_preview: function () {
-            this.$('#fa-preview')[0].className = this.get_fa_classes().join(' ');
+            var $preview = this.$('#fa-preview').empty();
+            var sizes = ['', 'fa-2x', 'fa-3x', 'fa-4x', 'fa-5x'];
+            var classes = this.get_fa_classes();
+            var no_sizes = _.difference(classes, sizes).join(' ');
+            var selected = false;
+            for (var i = sizes.length - 1; i >= 0; i--) {
+                var size = sizes[i];
+
+                var $p = $('<span>')
+                        .attr('data-size', size)
+                        .addClass(size)
+                        .addClass(no_sizes);
+                if ((size && _.contains(classes, size)) || (!size && !selected)) {
+                    $p.addClass('font-icons-selected');
+                    selected = true;
+                }
+                $preview.prepend($p);
+            }
         }
     });
-
 
     website.Observer = window.MutationObserver || window.WebkitMutationObserver || window.JsMutationObserver;
     var OBSERVER_CONFIG = {

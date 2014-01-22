@@ -43,19 +43,24 @@
                                 <div class="form-group">
                                     <label for="seo_page_description" class="col-lg-2 control-label">Description</label>
                                     <div class="col-lg-8">
-                                        <textarea name="seo_page_description" class="form-control" rows="3" cols="70" size="160"/>
+                                        <textarea name="seo_page_description" class="form-control" rows="3" cols="70" t-att-maxlength="widget.maxDescriptionSize"/>
                                     </div>
                                 </div>
                             </div>
                         </section>
+                        <section>
+                            <h3 class="page-header">3. Preview <small>how your page will be listed on Google</small></h3>
+                            <div class="js_seo_preview"></div>
+                        </section>
                         <!--
                         <section class="js_image_section">
-                            <h3 class="page-header">3. Describe your images</h3>
+                            <h3 class="page-header">4. Describe your images</h3>
                             <div class="row js_seo_image_list">
                             </div>
                         </section>
                         -->
-                    </div><div class="modal-footer">
+                    </div>
+                    <div class="modal-footer">
                         <button type="button" data-action="update" class="btn btn-primary">Save</button>
                         or
                         <a data-action="discard" data-dismiss="modal" href="#" >Discard</a>
@@ -109,6 +114,28 @@
             <img t-att-src="widget.src" class="img-rounded thumbnail"/>
             <input type="text" class="form-control" t-att-src="widget.src" t-att-value="widget.alt" placeholder="Description..."/>
         </div>
+    </t>
+
+    <t t-name="website.seo_preview">
+        <li class="oe_seo_preview_g">
+            <div class="rc">
+                <span class="altcts"></span>
+                <h3 class="r">
+                    <a t-att-href="url">
+                        <em><t t-esc="widget.title"/></em>
+                    </a>
+                </h3>
+                <div class="s">
+                    <div>
+                        <div class="f kv" style="white-space:nowrap">
+                            <cite><t t-esc="widget.url"/></cite>
+                        </div>
+                        <div class="f slp"></div>
+                        <span class="st"><t t-esc="widget.description"/></span>
+                    </div>
+                </div>
+            </div>
+        </li>
     </t>
 
 </templates>

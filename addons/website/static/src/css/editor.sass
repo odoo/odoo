@@ -172,6 +172,43 @@ ul.oe_menu_editor
         display: inline-block !important
         visibility: visible !important
 
+// fontawesome modal
+.modal
+    .font-icons-icons
+        font-size: 2em
+        max-height: 6em
+        overflow: auto
+
+        .font-icons-icon
+            display: inline-block
+            width: 2em
+            padding: 0.25em
+            text-align: center
+            cursor: pointer
+
+    .font-icons
+        position: relative
+        display: block
+
+        &:before
+            +opacity(0.7)
+            position: absolute
+            top: 2px
+            left: 3px
+            font-size: 2em
+    #icon-search
+        padding-left: 2.5em
+
+    #fa-preview
+        text-align: center
+
+        span
+            cursor: pointer
+            padding: 0 15px
+        .font-icons-selected
+            background-color: #ddd
+
+
 .existing-attachments .pager .disabled
     display: none
 
@@ -276,6 +313,47 @@ $highlighted_text_color: #ffffff
     .oe_seo_keyword
         padding: .2em .4em .2em .5em
         +border-radius(.4em)
+    li.oe_seo_preview_g
+        line-height: 1.2
+        list-style: none
+        list-style-image: none
+        list-style-position: outside
+        list-style-type: none
+        font-size: small
+        font-family: arial,sans-serif
+        h3
+            font-size: medium
+        .r
+            margin: 0
+            font-size: 16px
+            font-style: normal
+            font-weight: normal
+            overflow: hidden
+            text-overflow: ellipsis
+            -webkit-text-overflow: ellipsis
+            white-space: nowrap
+            a
+                color: rgb(30, 15, 190)
+                text-decoration: underline
+                text-transform: none
+                em
+                    font-style: normal !important
+        .s
+            color: #444
+            max-width: 42em
+        .kv,.slp
+            display: block
+            margin-bottom: 1px
+        .f
+            color: #666
+            margin-bottom: 1px
+            cite
+                color: #006621
+                font-style: normal
+                font-size: 14px
+        .st
+            line-height: 1.24
+
 
 // }}}
 

@@ -60,7 +60,9 @@
                     placement: 'right',
                     title:     "Create Event",
                     content:   "Click <em>Continue</em> to create the event.",
-                    trigger:   'click',
+                    trigger:   {
+                        url:   /event\/[0-9]+\/register/
+                    },
                 },
                 {
                     stepId:    'event-page',
@@ -137,7 +139,7 @@
                     title:     "Save your modifications",
                     content:   "Once you click on save, your event is updated.",
                     template:  self.popover({ fixed: true }),
-                    trigger:   'click',
+                    trigger:   'reload',
                 },
                 {
                     stepId:    'publish-event',

@@ -6,6 +6,7 @@
     website.EditorBar.include({
         start: function () {
             this.registerTour(new website.EditorShopTour(this));
+            this.registerTour(new website.EditorShopTest(this));
             return this._super();
         },
     });
@@ -153,6 +154,153 @@
         },
         trigger: function () {
             return (this.resume() && this.testUrl(/^\/shop\/product\/[0-9]+\//)) || this._super();
+        },
+    });
+
+
+    website.Test = website.Tour.extend({
+        registerStep: function (step) {
+            var self = this;
+            var step = this._super(step);
+            if (step.beforeTrigger || step.afterTrigger) {
+                var fn = step.triggers;
+                step.triggers = function (callback) {
+                    if (step.beforeTrigger) step.beforeTrigger(self);
+                    if (!step.afterTrigger) {
+                        fn.call(step, callback);
+                    } else {
+                        fn.call(step, function () {
+                            (callback || self.moveToNextStep).apply(self);
+                             step.afterTrigger(self);
+                        });
+                    }
+                };
+            }
+            return step;
+        }
+    });
+
+
+    website.EditorShopTest = website.Test.extend({
+        id: 'shoptest',
+        name: "Try to by 3 products",
+        path: '/shop',
+        init: function (editor) {
+            var self = this;
+            self.steps = [
+                {
+                    stepId:    'begin-test',
+                    title:     'begin-test',
+                    template:  self.popover({ next: "Start Test"}),
+                    backdrop:  true,
+                },
+                {
+                    stepId:    'display-ipod',
+                    element:   '.oe_product_cart a:contains("iPod")',
+                    trigger: {
+                        url:   /shop\/product\/.*/,
+                    },
+                },
+                {
+                    stepId:    'choose-ipod',
+                    element:   'input[name="product_id"]:not([checked])',
+                    trigger: {
+                        id: 'mouseup',
+                    },
+                },
+                {
+                    stepId:    'add-ipod',
+                    element:   'form[action="/shop/add_cart/"] button',
+                    trigger: {
+                        url:   '/shop/mycart/',
+                    },
+                },
+                {
+                    stepId:    'add-suggested-product',
+                    element:   'form[action="/shop/add_cart/"] button:contains("Add to Cart")',
+                    trigger:   'reload',
+                },
+                {
+                    stepId:    'more-product',
+                    element:   '.oe_mycart a.js_add_cart_json:eq(1)',
+                    trigger:   'click',
+                },
+                {
+                    stepId:    'less-product',
+                    element:   '.oe_mycart a.js_add_cart_json:eq(2)',
+                    trigger:   'reload',
+                },
+                {
+                    stepId:    'number-product',
+                    element:   '.oe_mycart input.js_quantity',
+                    trigger:   'reload',
+                    beforeTrigger: function (tour) {
+                        if (parseInt($(".oe_mycart input.js_quantity").val(),10) !== 1)
+                            $(".oe_mycart input.js_quantity").val("1").change();
+                    },
+                    afterTrigger: function (tour) {
+                        if ($(".oe_mycart input.js_quantity").size() !== 1)
+                            throw "Can't remove suggested item from my cart";
+                        if (parseInt($(".oe_mycart input.js_quantity").val(),10) !== 1)
+                            throw "Can't defined number of items in my cart";
+                    },
+                },
+                {
+                    stepId:    'go-checkout-product',
+                    element:   'a[href="/shop/checkout/"]',
+                    trigger: {
+                        url:   '/shop/checkout/',
+                    },
+                },
+                {
+                    stepId:    'confirm-false-checkout-product',
+                    element:   'form[action="/shop/confirm_order/"] button',
+                    trigger: {
+                        url:   '/shop/confirm_order/',
+                    },
+                    beforeTrigger: function (tour) {
+                        $("input[name='phone']").val("");
+                    },
+                },
+                {
+                    stepId:    'confirm-checkout-product',
+                    element:   'form[action="/shop/confirm_order/"] button',
+                    trigger: {
+                        url:   '/shop/payment/',
+                    },
+                    beforeTrigger: function (tour) {
+                        if ($("input[name='name']").val() === "")
+                            $("input[name='name']").val("website_sale-test-shoptest");
+                        if ($("input[name='email']").val() === "")
+                            $("input[name='email']").val("website_sale-test-shoptest@website_sale-test-shoptest.optenerp.com");
+                        $("input[name='phone']").val("123");
+                        $("input[name='street']").val("123");
+                        $("input[name='city']").val("123");
+                        $("input[name='zip']").val("123");
+                        $("select[name='country_id']").val("21");
+                    },
+                },
+                {
+                    stepId:    'acquirer-checkout-product',
+                    element:   'input[name="acquirer"]',
+                    trigger:   'mouseup',
+                },
+                {
+                    stepId:    'pay-checkout-product',
+                    element:   'button:contains("Pay Now")',
+                    trigger: {
+                        url:   /shop\/confirmation\//,
+                    },
+                    afterTrigger: function (tour) {
+                        window.localStorage.setItem("test-success", "{}");
+                        throw "afterTrigger test finish, remove this throw";
+                    },
+                }
+            ];
+            return this._super();
+        },
+        trigger: function () {
+            return (this.resume() && this.testUrl(/^\/shop\//)) || this._super();
         },
     });
 
