@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-TODAY OpenERP SA (http://www.openerp.com)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -23,7 +23,6 @@ import datetime
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
-# import pytz
 
 from faces import *
 from openerp import tools
@@ -33,8 +32,19 @@ from openerp.tools.translate import _
 
 
 class resource_calendar(osv.osv):
+    """ Calendar model for a resource. It has
+
+     - attendance_ids: list of resource.calendar.attendance that are a working
+                       interval in a given weekday.
+     - leave_ids: list of leaves linked to this calendar. A leave can be general
+                  or linked to a specific resource, depending on its resource_id.
+
+    All methods in this class use intervals. An interval is a tuple holding
+    (begin_datetime, end_datetime). A list of intervals is therefore a list of
+    tuples, holding several intervals of work or leaves. """
     _name = "resource.calendar"
     _description = "Resource Calendar"
+
     _columns = {
         'name': fields.char("Name", size=64, required=True),
         'company_id': fields.many2one('res.company', 'Company', required=False),
@@ -60,8 +70,7 @@ class resource_calendar(osv.osv):
 
         :param list intervals: list of intervals; each interval is a tuple
                                (datetime_from, datetime_to)
-        :return list cleaned: list of sorted intervals without overlap
-        """
+        :return list cleaned: list of sorted intervals without overlap """
         intervals = sorted(intervals, key=itemgetter(0))  # sort on first datetime
         cleaned = []
         working_interval = None
@@ -81,7 +90,7 @@ class resource_calendar(osv.osv):
     def interval_remove_leaves(self, interval, leave_intervals):
         """ Utility method that remove leave intervals from a base interval:
 
-         - clean the leave intrevals, to have an ordered list of not-overlapping
+         - clean the leave intervals, to have an ordered list of not-overlapping
            intervals
          - initiate the current interval to be the base interval
          - for each leave interval:
@@ -101,8 +110,7 @@ class resource_calendar(osv.osv):
         :param list leave_intervals: a list of tuples (beginning datetime, ending datetime)
                                     that are intervals to remove from the base interval
         :return list intervals: a list of tuples (begin datetime, end datetime)
-                                that are the remaining valid intervals
-        """
+                                that are the remaining valid intervals """
         if not interval:
             return interval
         if leave_intervals is None:
@@ -135,13 +143,16 @@ class resource_calendar(osv.osv):
         submitted accordingly.
 
         :param list intervals:  a list of tuples (beginning datetime, ending datetime)
-        :param int/float hours: number of hours to schedule
+        :param int/float hours: number of hours to schedule. It will be converted
+                                into a timedelta, but should be submitted as an
+                                int or float.
         :param boolean remove_at_end: remove extra hours at the end of the last
                                       matching interval. Otherwise, do it at the
                                       beginning.
 
-        :return list results: a list of intervals
-        """
+        :return list results: a list of intervals. If the number of hours to schedule
+        is greater than the possible scheduling in the intervals, no extra-scheduling
+        is done, and results == intervals. """
         results = []
         res = datetime.timedelta()
         limit = datetime.timedelta(hours=hour)
@@ -177,8 +188,11 @@ class resource_calendar(osv.osv):
         """ Get following date of day_date, based on resource.calendar. If no
         calendar is provided, just return the next day.
 
+        :param int id: id of a resource.calendar. If not given, simply add one day
+                       to the submitted date.
         :param date day_date: current day as a date
-        """
+
+        :return date: next day of calendar, or just next day """
         if not id:
             return day_date + relativedelta(days=1)
         weekdays = self.get_weekdays(cr, uid, id, context)
@@ -200,8 +214,11 @@ class resource_calendar(osv.osv):
         """ Get previous date of day_date, based on resource.calendar. If no
         calendar is provided, just return the previous day.
 
+        :param int id: id of a resource.calendar. If not given, simply remove
+                       one day from the submitted date.
         :param date day_date: current day as a date
-        """
+
+        :return date: previous day of calendar, or just previous day """
         if not id:
             return day_date + relativedelta(days=-1)
         weekdays = self.get_weekdays(cr, uid, id, context)
@@ -254,8 +271,8 @@ class resource_calendar(osv.osv):
 
     def get_working_intervals_of_day(self, cr, uid, id, start_dt=None, end_dt=None,
                                      leaves=None, compute_leaves=False, resource_id=None,
-                                     context=None, default_interval=None):
-        """Get the working intervals of the day based on calendar. This method
+                                     default_interval=None, context=None):
+        """ Get the working intervals of the day based on calendar. This method
         handle leaves that come directly from the leaves parameter or can be computed.
 
         :param int id: resource.calendar id; take the first one if is a list
@@ -287,8 +304,7 @@ class resource_calendar(osv.osv):
                                        is returned when id is None.
 
         :return list intervals: a list of tuples (start_datetime, end_datetime)
-                                of work intervals
-        """
+                                of work intervals """
         if isinstance(id, (list, tuple)):
             id = id[0]
 
@@ -336,28 +352,47 @@ class resource_calendar(osv.osv):
 
     def get_working_hours_of_date(self, cr, uid, id, start_dt=None, end_dt=None,
                                   leaves=None, compute_leaves=False, resource_id=None,
-                                  context=None):
-        """Get the working hours of the day based on calendar. This method uses
+                                  default_interval=None, context=None):
+        """ Get the working hours of the day based on calendar. This method uses
         get_working_intervals_of_day to have the work intervals of the day. It
         then calculates the number of hours contained in those intervals. """
         res = datetime.timedelta()
-        intervals = self.get_working_intervals_of_day(cr, uid, id, start_dt, end_dt, leaves, compute_leaves, resource_id, context)
+        intervals = self.get_working_intervals_of_day(
+            cr, uid, id,
+            start_dt, end_dt, leaves,
+            compute_leaves, resource_id,
+            default_interval, context)
         for interval in intervals:
             res += interval[1] - interval[0]
         return (res.total_seconds() / 3600.0)
 
+    def get_working_hours(self, cr, uid, id, start_dt, end_dt, compute_leaves=False,
+                          resource_id=None, default_interval=None, context=None):
+        hours = 0.0
+        for day in rrule.rrule(rrule.DAILY, dtstart=start_dt,
+                               until=end_dt + datetime.timedelta(days=1),
+                               byweekday=self.get_weekdays(cr, uid, id, context=context)):
+            hours += self.get_working_hours_of_date(
+                cr, uid, id, start_dt=day,
+                compute_leaves=compute_leaves, resource_id=resource_id,
+                default_interval=default_interval,
+                context=context)
+        return hours
+
     # --------------------------------------------------
     # Hours scheduling
+    # Note: do not support calendar being None
     # --------------------------------------------------
 
     def _schedule_hours(self, cr, uid, id, hours, day_dt=None,
                         compute_leaves=False, resource_id=None,
                         context=None):
-        """Schedule hours of work, using a calendar and an optional resource to
+        """ Schedule hours of work, using a calendar and an optional resource to
         compute working and leave days. This method can be used backwards, i.e.
         scheduling days before a deadline.
 
-        :param int hours: number of hours to schedule
+        :param int hours: number of hours to schedule. Use a negative number to
+                          compute a backwards scheduling.
         :param datetime day_dt: reference date to compute working days. If days is
                                 > 0 date is the starting date. If days is < 0
                                 date is the ending date.
@@ -422,25 +457,20 @@ class resource_calendar(osv.osv):
 
         return intervals
 
-    def schedule_hours_get_date(self, cr, uid, id, hours, day_dt=None, compute_leaves=False, resource_id=None, context=None):
-        """Wrapper on _schedule_hours: return the beginning/ending datetime of
+    def schedule_hours_get_date(self, cr, uid, id, hours, day_dt=None,
+                                compute_leaves=False, resource_id=None,
+                                context=None):
+        """ Wrapper on _schedule_hours: return the beginning/ending datetime of
         an hours scheduling. """
         res = self._schedule_hours(cr, uid, id, hours, day_dt, compute_leaves, resource_id, context)
         return res[0][0]
 
-    def schedule_hours(self, cr, uid, id, hours, day_dt=None, compute_leaves=False, resource_id=None, context=None):
-        """Wrapper on _schedule_hours: return the working intervals of an hours
+    def schedule_hours(self, cr, uid, id, hours, day_dt=None,
+                       compute_leaves=False, resource_id=None,
+                       context=None):
+        """ Wrapper on _schedule_hours: return the working intervals of an hours
         scheduling. """
         return self._schedule_hours(cr, uid, id, hours, day_dt, compute_leaves, resource_id, context)
-
-    def get_working_hours(self, cr, uid, id, start_dt, end_dt, compute_leaves=False,
-                          resource_id=None, context=None):
-        hours = 0.0
-        for day in rrule.rrule(rrule.DAILY, dtstart=start_dt,
-                               until=end_dt + datetime.timedelta(days=1),
-                               byweekday=self.get_weekdays(cr, uid, id, context=context)):
-            hours += self.get_working_hours_of_date(cr, uid, id, start_dt=day, compute_leaves=compute_leaves, resource_id=resource_id)
-        return hours
 
     # --------------------------------------------------
     # Days scheduling
@@ -452,8 +482,8 @@ class resource_calendar(osv.osv):
         compute working and leave days. This method can be used backwards, i.e.
         scheduling days before a deadline.
 
-        :param int days: number of days to schedule. Use a negative number to compute
-                         a backwards scheduling.
+        :param int days: number of days to schedule. Use a negative number to
+                         compute a backwards scheduling.
         :param date day_date: reference date to compute working days. If days is > 0
                               date is the starting date. If days is < 0 date is the
                               ending date.
@@ -494,8 +524,8 @@ class resource_calendar(osv.osv):
             working_intervals = self.get_working_intervals_of_day(
                 cr, uid, id, current_datetime,
                 compute_leaves=compute_leaves, resource_id=resource_id,
-                context=context,
-                default_interval=default_interval)
+                default_interval=default_interval,
+                context=context)
             if id is None or working_intervals:  # no calendar -> no working hours, but day is considered as worked
                 planned_days += 1
                 intervals += working_intervals
