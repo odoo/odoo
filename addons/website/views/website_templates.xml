@@ -251,7 +251,7 @@
     <xpath expr="//ul[@id='top_menu']" position="inside">
         <li class="divider" t-if="user_id.id == website.public_user.id"/>
         <li t-if="user_id.id == website.public_user.id">
-            <a t-attf-href="/web/login?redirect=#{ quote_plus(url_for('', keep_query='*')) }">
+            <a t-attf-href="/web/login">
                 <b>Sign in</b>
             </a>
         </li>
