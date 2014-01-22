@@ -161,7 +161,7 @@ class view(osv.osv):
         if not values.get('name'):
             values['name'] = "%s %s" % (values['model'], values['type'])
 
-        self.clear_cache(self)
+        self.read_template.clear_cache(self)
         return super(view, self).create(cr, uid, values, context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -185,7 +185,6 @@ class view(osv.osv):
             for view_ in self.browse(cr, uid, ids, context=context):
                 if view_.model_data_id:
                     self.pool.get('ir.model.data').write(cr, openerp.SUPERUSER_ID, view_.model_data_id.id, {'noupdate': True})
-        self.clear_cache()
         return ret
 
     def copy(self, cr, uid, id, default=None, context=None):
