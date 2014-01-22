@@ -167,7 +167,7 @@
       </tr>
     </blockTable>
     <section>
-      <para style="terp_default_2">[[ repeatIn(o.inventory_line_id, 'p') ]]</para>
+      <para style="terp_default_2">[[ repeatIn(o.line_ids, 'p') ]]</para>
       <blockTable colWidths="58.0,87.0,212.0,91.0,91.0" style="Table8">
         <tr>
           <td>
@@ -201,7 +201,7 @@
           <para style="terp_default_Bold_9">Total:</para>
         </td>
         <td>
-          <para style="terp_default_Bold_Right_9">[[ formatLang(qty_total(o.inventory_line_id)['quantity']) ]] [[ qty_total(o.inventory_line_id)['uom'] ]]</para>
+          <para style="terp_default_Bold_Right_9">[[ formatLang(qty_total(o.line_ids)['quantity']) ]] [[ qty_total(o.line_ids)['uom'] ]]</para>
         </td>
         <td>
           <para style="terp_default_Bold_Right_9">
