@@ -81,7 +81,7 @@ class Home(openerp.addons.web.controllers.main.Home):
                     qcontext['error'] = _("Could not reset your password")
                     _logger.exception('error when resetting password')
             else:
-                values = {key: qcontext.get(key) for key in ('login', 'name', 'password')}
+                values = dict((key, qcontext.get(key)) for key in ('login', 'name', 'password'))
                 res_users.signup(request.cr, openerp.SUPERUSER_ID, values, token)
                 request.cr.commit()
                 return super(Home, self).web_login(*args, **kw)
