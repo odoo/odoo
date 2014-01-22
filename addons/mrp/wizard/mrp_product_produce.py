@@ -70,7 +70,7 @@ class mrp_product_produce(osv.osv_memory):
         
         new_consume_lines = []
         for consume in consume_lines:
-            new_consume_lines.append([0, False, consume]) #Todo for all qtys
+            new_consume_lines.append([0, False, consume])
         return {'value': {'consume_lines': new_consume_lines}}
 
 

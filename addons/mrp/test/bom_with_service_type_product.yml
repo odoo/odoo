@@ -49,10 +49,12 @@
   !python {model: mrp.product.produce}: |
     context.update({'active_id': ref('mrp_production_servicetype_mo1')})
 -
-  !record {model: mrp.product.produce, id: mrp_product_produce_1}:
+  !record {model: mrp.product.produce, id: mrp_product_produce_1, view: mrp.view_mrp_product_produce_wizard}:
     mode: 'consume_produce'
 -
   !python {model: mrp.product.produce}: |
+    lines = self.on_change_qty(cr, uid, [ref('mrp_product_produce_1')], 1.0, [], context=context)
+    self.write(cr, uid, [ref('mrp_product_produce_1')], lines['value'], context=context)
     self.do_produce(cr, uid, [ref('mrp_product_produce_1')], context=context)
 -
   I check production order after produced.
@@ -117,6 +119,9 @@
     mode: 'consume_produce'
 -
   !python {model: mrp.product.produce}: |
+    qty = self.browse(cr, uid, ref('mrp_product_produce_2')).product_qty
+    lines = self.on_change_qty(cr, uid, [ref('mrp_product_produce_2')], qty, [], context=context)
+    self.write(cr, uid, [ref('mrp_product_produce_2')], lines['value'], context=context)
     self.do_produce(cr, uid, [ref('mrp_product_produce_2')], context=context)
 -
   I check production order after produced.
