@@ -129,11 +129,19 @@ Let's move our 2 pseudo-templates from inline strings to actual templates:
 
 .. patch::
 
-.. FIXME how can I access a QWeb template from a auth=none controller?
-         explicitly fetch a registry using request.session.db? That's a bit
-         horrendous now innit?
+.. todo:: how can I access a QWeb template from a auth=none
+          controller? explicitly fetch a registry using
+          request.session.db? That's a bit horrendous now innit?
 
 .. todo:: reload/update of module?
+
+This simplifies the controller code by moving data formatting out of
+it, and generally makes it simpler for designers to edit the markup.
+
+.. todo:: link to section about reusing/altering existing stuff,
+          template overriding
+
+
 
 .. _bootstrap: http://getbootstrap.com
 
