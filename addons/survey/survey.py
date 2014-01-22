@@ -581,9 +581,10 @@ class survey_question(osv.Model):
         if question.constr_mandatory:
             answer_candidates = dict_keys_startswith(post, answer_tag)
             comment_flag = answer_candidates.pop(("%s_%s" % (answer_tag, -1)), None)
-            comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, question.comment_children_ids[0].id)), '').strip()
+            if question.comments_allowed:
+                comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, question.comment_children_ids[0].id)), '').strip()
             # There is no answer neither comments (if comments count as answer)
-            if not answer_candidates and question.comment_count_as_answer and comment_flag and comment_answer == '':
+            if not answer_candidates and question.comment_count_as_answer and comment_flag and comment_answer:
                 errors.update({answer_tag: question.constr_error_msg})
             # There is no answer at all
             if not answer_candidates and not comment_flag:
