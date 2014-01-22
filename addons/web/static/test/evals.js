@@ -265,6 +265,41 @@ openerp.testing.section('eval.types', {
                     instance.web.pyeval.context()),
             "2012-02-14 23:59:59");
     });
+    test('datetime.tojson', function (instance) {
+        var result = py.eval(
+            'datetime.datetime(2012, 2, 15, 1, 7, 31)',
+            instance.web.pyeval.context());
+        ok(result instanceof Date);
+        equal(result.getFullYear(), 2012);
+        equal(result.getMonth(), 1);
+        equal(result.getDate(), 15);
+        equal(result.getHours(), 1);
+        equal(result.getMinutes(), 7);
+        equal(result.getSeconds(), 31);
+    });
+    test('datetime.combine', function (instance) {
+        var result = py.eval(
+            'datetime.datetime.combine(datetime.date(2012, 2, 15),' +
+            '                          datetime.time(1, 7, 13))' +
+            '   .strftime("%Y-%m-%d %H:%M:%S")',
+            instance.web.pyeval.context());
+        equal(result, "2012-02-15 01:07:13");
+
+        result = py.eval(
+            'datetime.datetime.combine(datetime.date(2012, 2, 15),' +
+            '                          datetime.time())' +
+            '   .strftime("%Y-%m-%d %H:%M:%S")',
+            instance.web.pyeval.context());
+        equal(result, '2012-02-15 00:00:00');
+    });
+    test('datetime.replace', function (instance) {
+        var result = py.eval(
+            'datetime.datetime(2012, 2, 15, 1, 7, 13)' +
+            '   .replace(hour=0, minute=0, second=0)' +
+            '   .strftime("%Y-%m-%d %H:%M:%S")',
+            instance.web.pyeval.context());
+        equal(result, "2012-02-15 00:00:00");
+    });
 });
 openerp.testing.section('eval.edc', {
     dependencies: ['web.data'],
