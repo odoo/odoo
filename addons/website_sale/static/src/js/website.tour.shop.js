@@ -292,9 +292,8 @@
                         url:   /shop\/confirmation\//,
                     },
                     afterTrigger: function (tour) {
-                        localStorage.setItem("test-success", "{}");
+                        window.localStorage.setItem("test-success", "{}");
                         throw "afterTrigger test finish, remove this throw";
-
                     },
                 }
             ];

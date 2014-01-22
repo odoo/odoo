@@ -18,7 +18,6 @@ testRunner.run(function websiteSaleTest (page, timeout) {
             return page.evaluate(function () {
                 var res = window.localStorage && window.localStorage.getItem
                     && window.localStorage.getItem("test-success");
-            console.log('{ "error": "testExecuted", "message": "'+res+'"" }');
                 return res;
             });
         }, function finish () {
