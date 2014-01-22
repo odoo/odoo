@@ -65,19 +65,13 @@ $(document).ready(function () {
         ev.preventDefault();
         var $label = $(ev.currentTarget);
         var $price = $label.parent("form").find(".oe_price .oe_currency_value");
-        var $variant_price = $label.find(".oe_variant_price .oe_currency_value");
-        if (!$variant_price.data("price")) {
-            $variant_price.data("price", parseFloat($variant_price.text()));
+        if (!$price.data("price")) {
+            $price.data("price", parseFloat($price.text()));
         }
-        $price.html($variant_price.data("price"));
+        $price.html($price.data("price")+parseFloat($label.find(".badge span").text() || 0));
     });
-    //Trigger mouseup event of the checked radio button.
-    $('form.js_add_cart_json label input.variant_radio').each(function() {
-        if (this.checked) {
-            $(this).parent().trigger('mouseup'); 
-            }
-    });
-    
+
+
     $(".js_slider").each(function() {
         var $slide = $(this);
         var $slider = $('<div>'+
