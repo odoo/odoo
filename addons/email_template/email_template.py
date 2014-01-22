@@ -376,8 +376,8 @@ class email_template(osv.osv):
 
         # create a mail_mail based on values, without attachments
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
-        assert values.get('email_from'), 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
-
+        if not values.get('email_from'):
+            raise osv.except_osv(_('Warning!'),_("Sender email is missing or empty after template rendering. Specify one to deliver your message"))
         # process email_recipients field that is a comma separated list of partner_ids -> recipient_ids
         # NOTE: only usable if force_send is True, because otherwise the value is
         # not stored on the mail_mail, and therefore lost -> fixed in v8
