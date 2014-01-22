@@ -94,11 +94,18 @@
             }).then(function (views) {
                 self.loadViews.call(self, views);
                 self.open.call(self);
-                // cf. fp's direct request
-	            if (views.length >= 2) {
-	            	var mainTemplate = views[1];
-	            	self.$('#ace-view-list').val(mainTemplate.id).trigger('change');
-	            }
+                var curentHash = window.location.hash;
+                var indexOfView = curentHash.indexOf("?view=");
+                if (indexOfView >= 0) {
+                    var viewId = parseInt(curentHash.substring(indexOfView + 6, curentHash.length), 10);
+                    self.$('#ace-view-list').val(viewId).change();
+                } else {
+                    if (views.length >= 2) {
+                        var mainTemplate = views[1];
+                        self.$('#ace-view-list').val(mainTemplate.id).trigger('change');
+                    }
+                    window.location.hash = hash;
+                }
             });
 
             var $editor = self.$('.ace_editor');
@@ -282,14 +289,6 @@
         },
         open: function () {
             this.$el.removeClass('oe_ace_closed').addClass('oe_ace_open');
-            var curentHash = window.location.hash;
-            var indexOfView = curentHash.indexOf("?view=");
-            if (indexOfView >= 0) {
-                var viewId = parseInt(curentHash.substring(indexOfView + 6, curentHash.length), 10);
-                this.$('#ace-view-list').val(viewId).change();
-            } else {
-                window.location.hash = hash;
-            }
         },
         close: function () {
             window.location.hash = "";
