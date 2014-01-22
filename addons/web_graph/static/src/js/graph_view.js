@@ -80,8 +80,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.graph_widget = new openerp.web_graph.Graph(this, this.model, domain, this.widget_config);
             this.graph_widget.appendTo(this.$el);
             this.ViewManager.on('switch_mode', this, function (e) {
-                var domain = self.graph_widget.get_domain(),
-                    col_gb = self.get_groupbys_from_searchview('ColGroupBy', 'col_group_by'),
+                var col_gb = self.get_groupbys_from_searchview('ColGroupBy', 'col_group_by'),
                     row_gb = self.get_groupbys_from_searchview('GroupBy', 'group_by');
 
                 if (e === 'graph') this.graph_widget.set(domain, row_gb, col_gb);
@@ -95,7 +94,13 @@ instance.web_graph.GraphView = instance.web.View.extend({
     get_groupbys_from_searchview: function (cat_name, cat_field) {
         var facet = this.search_view.query.findWhere({category:cat_name}),
             groupby_list = facet ? facet.values.models : [];
-        return _.map(groupby_list, function (g) { return g.attributes.value.attrs.context[cat_field]; });
+        return _.map(groupby_list, function (g) { 
+            if (cat_name === 'GroupBy') {
+                return py.eval(g.attributes.value.attrs.context).group_by;
+            } else {
+                return g.attributes.value.attrs.context[cat_field]; 
+            }
+        });
     },
 
     do_show: function () {
@@ -158,7 +163,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
     make_groupby_values: function (groupbys, category) {
         return _.map(groupbys, function (groupby) {
             var context = {};
-            context[category] = groupby.field;
+            context[category] = groupby.interval ? groupby.field + ':' + groupby.interval : groupby.field;
             var value = (category === 'group_by') ? groupby.filter : {attrs:{domain: [], context: context}};
             return {
                 label: groupby.string,

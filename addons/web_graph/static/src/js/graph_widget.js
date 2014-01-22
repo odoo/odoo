@@ -177,12 +177,19 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     },
 
     create_field_value: function (f) {
-        var important_field = _.findWhere(this.important_fields, {field:f}),
-            string = important_field ? important_field.string : this.fields[f].string,
-            result =  {field: f, string: string, type: this.fields[f].type };
+        var field = f.field || ((_.contains(f, ':')) ? f.split(':')[0] : f),
+            important_field = _.findWhere(this.important_fields, {field:field}),
+            string = important_field ? important_field.string : this.fields[field].string,
+            result =  {field: field, string: string, type: this.fields[field].type };
 
         if (important_field) {
             result.filter = important_field.filter;
+        }
+        if (f.interval) {
+            result.interval = f.interval;
+        }
+        if (_.contains(f, ':')) {
+            result.interval = f.split(':')[1];
         }
         return result;
     },

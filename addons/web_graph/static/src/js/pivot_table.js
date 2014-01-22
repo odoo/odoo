@@ -221,6 +221,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
                     // make cells
                     _.each(self.get_ancestors_and_self(group), function (data) {
                         var values = _.map(self.measures, function (m) {
+                            console.log('m.field', m.field);
                             return data.attributes.aggregates[m.field];
                         });
                         var other = _.find(otherRoot.headers, function (h) {
@@ -230,6 +231,8 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
                                 return _.isEqual(_.rest(data.path), h.path);
                                 }
                             });
+                        console.log('dbg', child.id, other.id, values);
+                        if (_.isEqual(values, [46125])) debugger;
                         if (other) {
                             self.add_cell(child.id, other.id, values);
                         }
@@ -378,37 +381,14 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	_query_db: function (groupby, fields, domain, path) {
 		var self = this,
             field_ids = _.without(_.pluck(fields, 'field'), '__count'),
-            context = {};
+            formatted_groupby = (groupby.interval) ? groupby.field + ':' + groupby.interval : groupby.field;
 
-        if (groupby.interval) {
-            context.datetime_format = {};
-            var display_format;
-            switch (groupby.interval) {
-                case 'day':
-                    display_format = 'dd MMMM YYYY';
-                    break;
-                case 'week':
-                    display_format = 'w YYYY';
-                    break;
-                case 'month':
-                    display_format = 'MMMM YYYY';
-                    break;
-                case 'quarter':
-                    display_format = 'QQQ YYYY';
-                    break;
-                case 'year':
-                    display_format = 'YYYY';
-                    break;
-            }
-            context.datetime_format[groupby.field] = {
-                interval: groupby.interval,
-                display_format: display_format
-            };
-        }
+        fields = _.map(field_ids, function (field) {
+            return (_.contains(field, ':')) ? field.split(':')[0] : field;
+        });
 		return this.model.query(field_ids)
 			.filter(domain)
-            .context(context)
-			.group_by(groupby.field)
+			.group_by(formatted_groupby)
 			.then(function (results) {
 				var groups = _.filter(results, function (group) {
 					return group.attributes.length > 0;
@@ -417,25 +397,32 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 			});
 	},
 
+    // if field is a fieldname, returns field, if field is field_id:interval, retuns field_id
+    raw_field: function (field) {
+        return (_.contains(field, ':')) ? field.split(':')[0] : field;
+    },
+
     // add the path to the group and sanitize the value...
-	format_group: function (group, current_path) {
-         var value = group.attributes.value;
+    format_group: function (group, current_path) {
+        var attrs = group.attributes,
+            value = attrs.value,
+            grouped_on = attrs.grouped_on ? this.raw_field(attrs.grouped_on) : false;
 
-         if (group.attributes.grouped_on && this.fields[group.attributes.grouped_on].type === 'selection') {
-             var selection = this.fields[group.attributes.grouped_on].selection,
-                 value_lookup = _.where(selection, {0:value}); 
-             group.attributes.value = value_lookup ? value_lookup[1] : 'undefined';
-         } else if (value === false) {
-             group.attributes.value = 'undefined';
-         } else if (value instanceof Array) {
-             group.attributes.value = value[1];
-         }
+        if (grouped_on && this.fields[grouped_on].type === 'selection') {
+            var selection = this.fields[grouped_on].selection,
+                value_lookup = _.where(selection, {0:value}); 
+            group.attributes.value = value_lookup ? value_lookup[1] : 'undefined';
+        } else if (value === false) {
+            group.attributes.value = 'undefined';
+        } else if (value instanceof Array) {
+            group.attributes.value = value[1];
+        }
 
-        group.path = value ? (current_path || []).concat(group.attributes.value) : [];
+        group.path = (value !== undefined) ? (current_path || []).concat(group.attributes.value) : [];
         group.attributes.aggregates.__count = group.attributes.length;
 
-		return group;
-	},
+        return group;
+    },
 
 	format_data: function (total, col_data, row_data, cell_data) {
 		var self = this,
@@ -476,7 +463,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 			var row = _.find(rows, function (header) { return _.isEqual(header.path, path.slice(index)); });
 			var col = _.find(cols, function (header) { return _.isEqual(header.path, path.slice(0, index)); });
 			self.add_cell(row.id, col.id, values);
-
 			if (group.children) {
 				self.make_cells (group.children, index, path, rows, cols);
 			}
