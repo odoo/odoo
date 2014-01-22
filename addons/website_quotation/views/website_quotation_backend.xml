@@ -28,6 +28,7 @@
                 </xpath>
                 <xpath expr="//field[@name='client_order_ref']" position="after">
                     <field name="template_id" on_change="onchange_template_id(template_id)"/>
+                    <field name="validity_date"/>
                     <field name="website_description" invisible="1"/>
                 </xpath>
             </field>
@@ -49,6 +50,11 @@
                                 <field name="name"/>
                             </h1>
                         </div>
+                        <group>
+                            <group>
+                               <field name="number_of_days"/>
+                            </group>
+                        </group>
                         <notebook>
                             <page string="Lines">
                             <field name="quote_line">

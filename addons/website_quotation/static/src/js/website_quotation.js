@@ -89,5 +89,13 @@ $(document).ready(function () {
             }
     });
 
+var target_date = new Date($('#validity_date').val());
+
+setInterval(function () {
+    var current_date = new Date();
+    var days_left = Math.floor((target_date - current_date)/86400000);
+    $('#countdown').html('<span><i class="fa fa-clock-o fa-2x"/><span class="day_counter">'+((days_left > 0) ? days_left : 0)+'</span><small class="days_left">Days</small></span>')
+}, 1000);
+
 //vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
 });

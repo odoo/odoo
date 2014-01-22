@@ -22,7 +22,7 @@
 from openerp.osv import osv, fields
 import uuid
 import time
-
+import datetime
 
 class sale_quote_template(osv.osv):
     _name = "sale.quote.template"
@@ -33,6 +33,7 @@ class sale_quote_template(osv.osv):
         'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quote Template Lines'),
         'note': fields.text('Terms and conditions'),
         'options': fields.one2many('sale.option.line', 'temp_option_id', 'Optional Products Lines'),
+        'number_of_days': fields.integer('Number of Days'),
     }
 
     def open_template(self, cr, uid, quote_id, context=None):
@@ -85,16 +86,29 @@ class sale_order_line(osv.osv):
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
+
+    def _get_total(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for order in self.browse(cr, uid, ids, context=context):
+            total = 0.0
+            for line in order.order_line:
+                total += (line.product_uom_qty * line.price_unit)
+            res[order.id] = total
+        return res
+
     _columns = {
         'access_token': fields.char('Security Token', size=256, required=True),
         'template_id': fields.many2one('sale.quote.template', 'Quote Template'),
         'website_description': fields.html('Description'),
         'options' : fields.one2many('sale.option.line', 'option_id', 'Optional Products Lines'),
         'signer_name': fields.char('Signer Name', size=256),
+        'validity_date': fields.date('Validity Date'),
+        'before_discount': fields.function(_get_total, string='Amount Before Discount', type="float")
     }
     _defaults = {
         'access_token': lambda self, cr, uid, ctx={}: str(uuid.uuid4())
     }
+
     def open_quotation(self, cr, uid, quote_id, context=None):
         quote = self.browse(cr, uid, quote_id[0], context=context)
         return {
@@ -102,9 +116,6 @@ class sale_order(osv.osv):
             'target': 'self',
             'url': '/quote/%s/%s' % (quote.id, quote.access_token)
         }
-
-    def _get_sale_order_line(self, cr, uid, template_id, context=None):
-        """create order line from selected quote template line."""
 
     def onchange_template_id(self, cr, uid, ids, template_id, context=None):
         lines = []
@@ -130,7 +141,10 @@ class sale_order(osv.osv):
                 'discount': option.discount,
                 'website_description': option.website_description,
             }))
-        data = {'order_line': lines, 'website_description': quote_template.website_description, 'note': quote_template.note, 'options': options}
+        date = False
+        if quote_template.number_of_days > 0:
+            date = (datetime.datetime.now() + datetime.timedelta(quote_template.number_of_days)).strftime("%Y-%m-%d")
+        data = {'order_line': lines, 'website_description': quote_template.website_description, 'note': quote_template.note, 'options': options, 'validity_date': date}
         return {'value': data}
 
     def recommended_products(self, cr, uid, ids, context=None):

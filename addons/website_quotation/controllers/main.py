@@ -24,7 +24,7 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
 import werkzeug
-
+import datetime
 
 class sale_quote(http.Controller):
 
@@ -39,6 +39,7 @@ class sale_quote(http.Controller):
             'message': message,
             'new_post' : request.httprequest.session.get('new_post',False),
             'option': self._check_option_len(order),
+            'date_diff': (datetime.datetime.now() > datetime.datetime.strptime(order.validity_date , '%Y-%m-%d'))
         }
         return request.website.render('website_quotation.so_quotation', values)
 
@@ -47,6 +48,7 @@ class sale_quote(http.Controller):
             if not option.line_id:
                 return True
         return False
+    
     @http.route(['/quote/accept'], type='json', auth="public", website=True)
     def accept(self, order_id=None, token=None, signer=None, sign=None, **post):
         order_obj = request.registry.get('sale.order')
