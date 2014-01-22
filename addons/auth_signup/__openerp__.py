@@ -34,13 +34,14 @@ Allow users to sign up and reset their password
     'depends': [
         'base_setup',
         'email_template',
+        'web',
     ],
     'data': [
         'auth_signup_data.xml',
         'res_config.xml',
         'res_users_view.xml',
+        'views/auth_signup_login.xml',
     ],
     'js': ['static/src/js/auth_signup.js'],
-    'qweb': ['static/src/xml/auth_signup.xml'],
     'bootstrap': True,
 }
