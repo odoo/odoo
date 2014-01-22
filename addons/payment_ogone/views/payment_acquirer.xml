@@ -5,7 +5,7 @@
         <record id="acquirer_form_ogone" model="ir.ui.view">
             <field name="name">acquirer.form.ogone</field>
             <field name="model">payment.acquirer</field>
-            <field name="inherit_id" ref="payment_acquirer.acquirer_form"/>
+            <field name="inherit_id" ref="payment.acquirer_form"/>
             <field name="arch" type="xml">
                 <xpath expr='//group[@name="acquirer_display"]' position='after'>
                     <group attrs="{'invisible': [('name', '!=', 'ogone')]}">
@@ -22,7 +22,7 @@
         <record id="transaction_form_ogone" model="ir.ui.view">
             <field name="name">acquirer.transaction.form.ogone</field>
             <field name="model">payment.transaction</field>
-            <field name="inherit_id" ref="payment_acquirer.transaction_form"/>
+            <field name="inherit_id" ref="payment.transaction_form"/>
             <field name="arch" type="xml">
                 <xpath expr='//notebook' position='inside'>
                     <page string="Ogone TX Details">
