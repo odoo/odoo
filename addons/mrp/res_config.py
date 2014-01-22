@@ -44,12 +44,6 @@ class mrp_config_settings(osv.osv_memory):
                  'Without this module: A + B + C -> D.\n'
                  'With this module: A + B + C -> D + E.\n'
                  '-This installs the module mrp_byproduct.'),
-        'module_stock_no_autopicking': fields.boolean("Manage manual picking to fulfill manufacturing orders ",
-            help='This module allows an intermediate picking process to provide raw materials to production orders.\n'
-                 'For example to manage production made by your suppliers (sub-contracting).\n'
-                 'To achieve this, set the assembled product which is sub-contracted to "No Auto-Picking" '
-                 'and put the location of the supplier in the routing of the assembly operation.\n'
-                 '-This installs the module stock_no_autopicking.'),
         'group_mrp_routings': fields.boolean("Manage routings and work orders ",
             implied_group='mrp.group_mrp_routings',
             help='Routings allow you to create and manage the manufacturing operations that should be followed '
