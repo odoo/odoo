@@ -650,42 +650,52 @@ def cr_uid_ids_context(method):
     return cr_uid_ids_context_wrapper
 
 
-def old(new_method=None):
-    """ Decorate an old-style method to wrap it together with the (new-style)
-        `new_method`. No wrapping is done if no value is given for `new_method`.
+def _make_wrapper(method, old_api, new_api):
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        if _has_cursor(args, kwargs):
+            return old_api(self, *args, **kwargs)
+        else:
+            return new_api(self, *args, **kwargs)
+    return wrapper
+
+
+def old(method):
+    """ Decorate `method` so that it accepts the old-style api only. The
+        returned wrapper provides a decorator `new` for the corresponding
+        new-style api implementation; the result combines both implementations.
+        This is useful to provide explicitly both implementations of a method.::
+
+            @old
+            def stuff(self, cr, uid, context=None):
+                ...
+
+            @stuff.new
+            def stuff(self):
+                ...
     """
-    if not new_method:
-        return lambda old_method: old_method
-
-    def decorate(old_method):
-        @wraps(new_method)
-        def wrapper(self, *args, **kwargs):
-            if _has_cursor(args, kwargs):
-                return old_method(self, *args, **kwargs)
-            else:
-                return new_method(self, *args, **kwargs)
-        return wrapper
-
-    return decorate
+    wrapper = _make_wrapper(method, method, None)
+    wrapper.new = lambda new_api: _make_wrapper(method, method, new_api)
+    return wrapper
 
 
-def new(old_method=None):
-    """ Decorate an new-style method to wrap it together with the (old-style)
-        `old_method`. No wrapping is done if no value is given for `old_method`.
+def new(method):
+    """ Decorate `method` so that it accepts the new-style api only. The
+        returned wrapper provides a decorator `old` for the corresponding
+        old-style api implementation; the result combines both implementations.
+        This is useful to provide explicitly both implementations of a method.::
+
+            @new
+            def stuff(self):
+                ...
+
+            @stuff.old
+            def stuff(self, cr, uid, context=None):
+                ...
     """
-    if not old_method:
-        return lambda new_method: new_method
-
-    def decorate(new_method):
-        @wraps(old_method)
-        def wrapper(self, *args, **kwargs):
-            if _has_cursor(args, kwargs):
-                return old_method(self, *args, **kwargs)
-            else:
-                return new_method(self, *args, **kwargs)
-        return wrapper
-
-    return decorate
+    wrapper = _make_wrapper(method, None, method)
+    wrapper.old = lambda old_api: _make_wrapper(method, old_api, method)
+    return wrapper
 
 
 def noguess(method):

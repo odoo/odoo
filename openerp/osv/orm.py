@@ -3454,7 +3454,7 @@ class BaseModel(object):
         return fields
 
     # new-style implementation of read(); old-style is defined below
-    @api.new()
+    @api.new
     def read(self, fields=None, load='_classic_read'):
         """ Read the given fields for the records in `self`.
 
@@ -3499,8 +3499,8 @@ class BaseModel(object):
 
         return result
 
-    # make a method wrapper from both new-style and old-style implementations
-    @api.old(read)
+    # add explicit old-style implementation to read()
+    @read.old
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         records = self.browse(cr, user, ids, context)
         with records._scope:
