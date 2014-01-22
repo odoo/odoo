@@ -14,15 +14,5 @@ testRunner.run(function websiteSaleTest (page, timeout) {
         page.evaluate(function () {
             window.openerp.website.TestConsole.test('shoptest').run(true);
         });
-        waitFor(function testExecuted () {
-            return page.evaluate(function () {
-                var res = window.localStorage && window.localStorage.getItem
-                    && window.localStorage.getItem("shoptest-test-success");
-                return res;
-            });
-        }, function finish () {
-            console.log('{ "event": "success" }');
-            phantom.exit();
-        }, 4*timeout/5);
     }, timeout/5);
 });
