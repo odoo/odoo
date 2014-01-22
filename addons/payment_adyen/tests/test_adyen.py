@@ -3,9 +3,9 @@
 from lxml import objectify
 import urlparse
 
-from openerp.addons.payment_acquirer.models.payment_acquirer import ValidationError
-from openerp.addons.payment_acquirer.tests.common import PaymentAcquirerCommon
-from openerp.addons.payment_acquirer_adyen.controllers.main import AdyenController
+from openerp.addons.payment.models.payment_acquirer import ValidationError
+from openerp.addons.payment.tests.common import PaymentAcquirerCommon
+from openerp.addons.payment_adyen.controllers.main import AdyenController
 from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
@@ -18,7 +18,7 @@ class AdyenCommon(PaymentAcquirerCommon):
         self.base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url')
 
         # get the adyen account
-        model, self.adyen_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_acquirer_adyen', 'payment_acquirer_adyen')
+        model, self.adyen_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_adyen', 'payment_acquirer_adyen')
 
         # some CC (always use expiration date 06 / 2016, cvc 737, cid 7373 (amex))
         self.amex = (('370000000000002', '7373'))
@@ -84,12 +84,12 @@ class AdyenForm(AdyenCommon):
                 'adyen: wrong value for input %s: received %s instead of %s' % (form_input.get('name'), form_input.get('value'), form_values[form_input.get('name')])
             )
 
-    @mute_logger('openerp.addons.payment_acquirer_paypal.models.paypal', 'ValidationError')
-    def test_20_paypal_form_management(self):
-        cr, uid, context = self.cr, self.uid, {}
-        # be sure not to do stupid things
-        adyen = self.payment_acquirer.browse(self.cr, self.uid, self.adyen_id, None)
-        self.assertEqual(adyen.env, 'test', 'test without test env')
+    # @mute_logger('openerp.addons.payment_adyen.models.adyen', 'ValidationError')
+    # def test_20_paypal_form_management(self):
+    #     cr, uid, context = self.cr, self.uid, {}
+    #     # be sure not to do stupid things
+    #     adyen = self.payment_acquirer.browse(self.cr, self.uid, self.adyen_id, None)
+    #     self.assertEqual(adyen.env, 'test', 'test without test env')
 
 # {'authResult': u'AUTHORISED',
 #  'merchantReference': u'SO014',

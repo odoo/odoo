@@ -28,8 +28,8 @@ class PaymentAcquirer(osv.Model):
     to have required fields that depend on a specific acquirer.
 
     Each acquirer has a link to an ir.ui.view record that is a template of
-    a button used to display the payment form. See examples in ``payment_acquirer_ogone``
-    and ``payment_acquirer_paypal`` modules.
+    a button used to display the payment form. See examples in ``payment_ogone``
+    and ``payment_paypal`` modules.
 
     Methods that should be added in an acquirer-specific implementation:
 

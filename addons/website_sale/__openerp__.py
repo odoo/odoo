@@ -9,7 +9,7 @@ OpenERP E-Commerce
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'sale', 'payment_acquirer'],
+    'depends': ['website', 'sale', 'payment'],
     'data': [
         'data/website_sale_data.xml',
         'views/website_sale.xml',

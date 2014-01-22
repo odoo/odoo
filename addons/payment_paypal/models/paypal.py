@@ -10,8 +10,8 @@ import urlparse
 import urllib
 import urllib2
 
-from openerp.addons.payment_acquirer.models.payment_acquirer import ValidationError
-from openerp.addons.payment_acquirer_paypal.controllers.main import PaypalController
+from openerp.addons.payment.models.payment_acquirer import ValidationError
+from openerp.addons.payment_paypal.controllers.main import PaypalController
 from openerp.osv import osv, fields
 from openerp.tools.float_utils import float_compare
 
@@ -25,8 +25,8 @@ class AcquirerPaypal(osv.Model):
         """ Paypal URLS """
         if env == 'prod':
             return {
-                'paypal_form_url': 'https://www.sandbox.paypal.com/cgi-bin/webscr',
-                'paypal_rest_url': 'https://api.sandbox.paypal.com/v1/oauth2/token',
+                'paypal_form_url': 'https://www.paypal.com/cgi-bin/webscr',
+                'paypal_rest_url': 'https://api.paypal.com/v1/oauth2/token',
             }
         else:
             return {

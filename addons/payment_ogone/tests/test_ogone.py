@@ -4,9 +4,9 @@ from lxml import objectify
 import time
 import urlparse
 
-from openerp.addons.payment_acquirer.models.payment_acquirer import ValidationError
-from openerp.addons.payment_acquirer.tests.common import PaymentAcquirerCommon
-from openerp.addons.payment_acquirer_ogone.controllers.main import OgoneController
+from openerp.addons.payment.models.payment_acquirer import ValidationError
+from openerp.addons.payment.tests.common import PaymentAcquirerCommon
+from openerp.addons.payment_ogone.controllers.main import OgoneController
 from openerp.tools import mute_logger
 
 
@@ -18,7 +18,7 @@ class OgonePayment(PaymentAcquirerCommon):
         self.base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url')
 
         # get the adyen account
-        model, self.ogone_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_acquirer_ogone', 'payment_acquirer_ogone')
+        model, self.ogone_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_ogone', 'payment_acquirer_ogone')
 
     def test_10_ogone_form_render(self):
         cr, uid, context = self.cr, self.uid, {}
@@ -105,7 +105,7 @@ class OgonePayment(PaymentAcquirerCommon):
                 'ogone: wrong value for form input %s: received %s instead of %s' % (form_input.get('name'), form_input.get('value'), form_values[form_input.get('name')])
             )
 
-    @mute_logger('openerp.addons.payment_acquirer_ogone.models.ogone', 'ValidationError')
+    @mute_logger('openerp.addons.payment_ogone.models.ogone', 'ValidationError')
     def test_20_ogone_form_management(self):
         cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid thing

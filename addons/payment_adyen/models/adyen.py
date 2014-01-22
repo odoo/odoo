@@ -10,8 +10,8 @@ import hmac
 import logging
 import urlparse
 
-from openerp.addons.payment_acquirer.models.payment_acquirer import ValidationError
-from openerp.addons.payment_acquirer_adyen.controllers.main import AdyenController
+from openerp.addons.payment.models.payment_acquirer import ValidationError
+from openerp.addons.payment_adyen.controllers.main import AdyenController
 from openerp.osv import osv, fields
 from openerp.tools import float_round
 

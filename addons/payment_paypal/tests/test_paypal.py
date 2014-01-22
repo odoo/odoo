@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.payment_acquirer.models.payment_acquirer import ValidationError
-from openerp.addons.payment_acquirer.tests.common import PaymentAcquirerCommon
-from openerp.addons.payment_acquirer_paypal.controllers.main import PaypalController
-from openerp.osv.orm import except_orm
+from openerp.addons.payment.models.payment_acquirer import ValidationError
+from openerp.addons.payment.tests.common import PaymentAcquirerCommon
+from openerp.addons.payment_paypal.controllers.main import PaypalController
 from openerp.tools import mute_logger
 
 from lxml import objectify
@@ -18,7 +17,7 @@ class PaypalCommon(PaymentAcquirerCommon):
         self.base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url')
 
         # get the paypal account
-        model, self.paypal_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_acquirer_paypal', 'payment_acquirer_paypal')
+        model, self.paypal_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_paypal', 'payment_acquirer_paypal')
         # tde+seller@openerp.com - tde+buyer@openerp.com - tde+buyer-it@openerp.com
 
         # some CC
@@ -152,7 +151,7 @@ class PaypalForm(PaypalCommon):
                 self.assertEqual(form_input.get('value'), '1.56', 'paypal: wrong computed fees')
         self.assertTrue(handling_found, 'paypal: fees_active did not add handling input in rendered form')
 
-    @mute_logger('openerp.addons.payment_acquirer_paypal.models.paypal', 'ValidationError')
+    @mute_logger('openerp.addons.payment_paypal.models.paypal', 'ValidationError')
     def test_20_paypal_form_management(self):
         cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid things
