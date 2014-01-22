@@ -3,7 +3,7 @@
 -->
 <openerp>
     <data>
-        <template id="auth_signup.login" inherit_id="web.login" name="Login (overloaded by auth_signup)">
+        <template id="auth_signup.login" inherit_id="web.login" name="Sign up - Reset Password">
             <xpath expr="//button[@type='submit']" position="before">
                 <a t-if="signup" t-attf-href="?mode=signup{{ '&amp;debug' if debug else '' }}" class="btn btn-link pull-right">Sign up</a>
                 <a t-if="reset" t-attf-href="?mode=reset{{ '&amp;debug' if debug else '' }}" class="btn btn-link pull-right">Reset Password</a>
