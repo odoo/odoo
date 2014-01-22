@@ -471,6 +471,7 @@ class mrp_repair(osv.osv):
                 move_id = move_obj.create(cr, uid, {
                     'name': move.name,
                     'product_id': move.product_id.id,
+                    'restrict_lot_id': move.lot_id.id,
                     'product_uom_qty': move.product_uom_qty,
                     'product_uom': move.product_uom.id,
                     'partner_id': repair.address_id and repair.address_id.id or False,
@@ -606,6 +607,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, select=True),
         'move_id': fields.many2one('stock.move', 'Inventory Move', readonly=True),
+        'lot_id': fields.many2one('stock.production.lot', 'Lot'),
         'state': fields.selection([
                     ('draft','Draft'),
                     ('confirmed','Confirmed'),
