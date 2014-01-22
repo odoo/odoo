@@ -84,6 +84,7 @@ class WebsiteSurvey(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         survey_obj = request.registry['survey.survey']
         survey_ids = survey_obj.search(cr, uid, [('state', '=', 'open'),
+                                                 ('visible_to_user', '=', True),
                                                  ('page_ids', '!=', 'None')],
                                        context=context)
         surveys = survey_obj.browse(cr, uid, survey_ids, context=context)
