@@ -139,7 +139,7 @@ class mrp_repair(osv.osv):
             \n* The \'Cancelled\' status is used when user cancel repair order.'),
         'location_id': fields.many2one('stock.location', 'Current Location', select=True, readonly=True, states={'draft':[('readonly',False)], 'confirmed':[('readonly',True)]}),
         'location_dest_id': fields.many2one('stock.location', 'Delivery Location', readonly=True, states={'draft':[('readonly',False)], 'confirmed':[('readonly',True)]}),
-        'quant_id': fields.many2one('stock.quant', 'Quant',required=True, domain="[('product_id','=',product_id)]", readonly=True, states={'draft':[('readonly',False)]}),
+        'quant_id': fields.many2one('stock.quant', 'Quant',required=True, domain="[('product_id','=',product_id), ('qty', '>', 0.0)]", readonly=True, states={'draft':[('readonly',False)]}),
         'guarantee_limit': fields.date('Warranty Expiration', help="The warranty expiration limit is computed as: last move date + warranty defined on selected product. If the current date is below the warranty expiration limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards.", states={'confirmed':[('readonly',True)]}),
         'operations' : fields.one2many('mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', help='Pricelist of the selected partner.'),
@@ -221,22 +221,16 @@ class mrp_repair(osv.osv):
         """
         data = {}
         data['value'] = {'guarantee_limit': False, 'location_id': False, 'partner_id': False}
-        if prod_id and 
         if not prod_id and not quant_id:
             return data
         if quant_id:
-            move =  self.pool.get('stock.move').browse(cr, uid, move_id)
-            product = self.pool.get('product.product').browse(cr, uid, prod_id)
-            limit = datetime.strptime(move.date_expected, '%Y-%m-%d %H:%M:%S') + relativedelta(months=int(product.warranty))
+            quant =  self.pool.get('stock.quant').browse(cr, uid, quant_id)
+            product = quant.product_id
+            data['value']['product_id'] = product.id
+            limit = quant.in_date and datetime.strptime(quant.in_date, '%Y-%m-%d %H:%M:%S') or datetime.strptime(quant.create_date, '%Y-%m-%d %H:%M:%S') + relativedelta(months=int(product.warranty))
             data['value']['guarantee_limit'] = limit.strftime('%Y-%m-%d')
-            data['value']['location_id'] = move.location_dest_id.id
-            data['value']['location_dest_id'] = move.location_dest_id.id
-            if move.partner_id:
-                data['value']['partner_id'] = move.partner_id.id
-            else:
-                data['value']['partner_id'] = False
-            d = self.onchange_partner_id(cr, uid, ids, data['value']['partner_id'], data['value']['partner_id'])
-            data['value'].update(d['value'])
+            data['value']['location_id'] = quant.location_id.id
+            data['value']['location_dest_id'] = quant.location_id.id
         return data
 
     def button_dummy(self, cr, uid, ids, context=None):
@@ -268,39 +262,6 @@ class mrp_repair(osv.osv):
                 }
         }
 
-    def onchange_lot_id(self, cr, uid, ids, lot, product_id):
-        """ On change of Serial Number sets the values of source location,
-        destination location, move and guarantee limit.
-        @param lot: Changed id of Serial Number.
-        @param product_id: Product id from current record.
-        @return: Dictionary of values.
-        """
-        move_obj = self.pool.get('stock.move')
-        data = {}
-        data['value'] = {
-            'location_id': False,
-            'location_dest_id': False,
-            'move_id': False,
-            'guarantee_limit': False
-        }
-
-        if not lot:
-            return data
-
-        if not len(move_ids):
-            return data
-
-        def get_last_move(lst_move):
-            while lst_move.move_dest_id and lst_move.move_dest_id.state == 'done':
-                lst_move = lst_move.move_dest_id
-            return lst_move
-
-        move_id = move_ids[0]
-        move = get_last_move(move_obj.browse(cr, uid, move_id))
-        data['value']['move_id'] = move.id
-        d = self.onchange_move_id(cr, uid, ids, product_id, move.id)
-        data['value'].update(d['value'])
-        return data
 
     def action_cancel_draft(self, cr, uid, ids, *args):
         """ Cancels repair order when it is in 'Draft' state.
@@ -544,6 +505,9 @@ class mrp_repair(osv.osv):
                     'state': 'assigned',
                 })
                 pick_obj.signal_button_confirm(cr, uid, [picking])
+                quants = [(repair.quant_id, repair.quant_id.qty)]
+                move = move_obj.browse(cr, uid, move_id, context=context)
+                self.pool.get("stock.quant").quants_reserve(cr, uid, quants, move, context=context)
                 self.write(cr, uid, [repair.id], {'state': 'done', 'picking_id': picking})
                 res[repair.id] = picking
             else:
@@ -609,7 +573,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         if not default: default = {}
-        default.update( {'invoice_line_id': False, 'move_id': False, 'invoiced': False, 'state': 'draft'})
+        default.update( {'invoice_line_id': False, 'quant_id': False, 'invoiced': False, 'state': 'draft'})
         return super(mrp_repair_line, self).copy_data(cr, uid, id, default, context)
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
