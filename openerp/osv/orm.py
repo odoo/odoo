@@ -2613,21 +2613,14 @@ class BaseModel(object):
         :param uid: current user id
         :param domain: list specifying search criteria [['field_name', 'operator', 'value'], ...]
         :param list fields: list of fields present in the list view specified on the object
-        :param list groupby: fields by which the records will be grouped
+        :param list groupby: list of groupby descriptions by which the records will be grouped.  
+                A groupby description is either a field (then it will be grouped by that field)
+                or a string 'field:groupby_function'.  Right now, the only functions supported
+                are 'day', 'week', 'month', 'quarter' or 'year', and they only make sense for 
+                date/datetime fields.
         :param int offset: optional number of records to skip
         :param int limit: optional max number of records to return
-        :param dict context: context arguments, like lang, time zone. A special
-                             context key exist for datetime fields : ``datetime_format``.
-                             context[``datetime_format``] = {
-                                'field_name': {
-                                    groupby_format: format for to_char (default: yyyy-mm)
-                                    display_format: format for displaying the value
-                                                    in the result (default: MMM yyyy)
-                                    interval: day, month or year; used for begin
-                                              and end date of group_by intervals
-                                              computation (default: month)
-                                }
-                             }
+        :param dict context: context arguments, like lang, time zone. 
         :param list orderby: optional ``order by`` specification, for
                              overriding the natural sort ordering of the
                              groups, see also :py:meth:`~osv.osv.osv.search`
@@ -2656,6 +2649,12 @@ class BaseModel(object):
         if groupby:
             if isinstance(groupby, list):
                 groupby = groupby[0]
+            splitted_groupby = groupby.split(':')
+            if len(splitted_groupby) == 2:
+                groupby = splitted_groupby[0]
+                groupby_function = splitted_groupby[1]
+            else:
+                groupby_function = False
             qualified_groupby_field = self._inherits_join_calc(groupby, query)
 
         if groupby:
@@ -2672,13 +2671,22 @@ class BaseModel(object):
             if fget.get(groupby):
                 groupby_type = fget[groupby]['type']
                 if groupby_type in ('date', 'datetime'):
-                    if context.get('datetime_format') and isinstance(context['datetime_format'], dict) \
-                            and context['datetime_format'].get(groupby) and isinstance(context['datetime_format'][groupby], dict):
-                        display_format = context['datetime_format'][groupby].get('display_format', 'MMMM yyyy')
-                        interval = context['datetime_format'][groupby].get('interval', 'month')
+                    if groupby_function:
+                        interval = groupby_function
                     else:
-                        display_format = 'MMMM yyyy'
                         interval = 'month'
+
+                    if interval == 'day':
+                        display_format = 'dd MMMM YYYY' 
+                    elif interval == 'week':
+                        display_format = 'w'
+                    elif interval == 'month':
+                        display_format = 'MMMM'
+                    elif interval == 'quarter':
+                        display_format = 'QQQ'
+                    elif interval == 'year':
+                        display_format = 'YYYY'
+
                     group_by_params = {
                         'display_format': display_format,
                         'interval': interval,
