@@ -20,7 +20,7 @@ import openerp
 from openerp.osv import fields
 from openerp.addons.website.models import website
 from openerp.addons.web import http
-from openerp.addons.web.http import request
+from openerp.addons.web.http import request, LazyResponse
 
 from ..utils import slugify
 
@@ -41,6 +41,14 @@ class Website(openerp.addons.web.controllers.main.Home):
         except:
             pass
         return self.page("website.homepage")
+
+    @http.route(website=True, auth="public", multilang=True)
+    def web_login(self, *args, **kw):
+        response = super(Website, self).web_login(*args, **kw)
+        if isinstance(response, LazyResponse):
+            values = dict(response.params['values'], disable_footer=True)
+            response = request.website.render(response.params['template'], values)
+        return response
 
     @http.route('/pagenew/<path:path>', type='http', auth="user")
     def pagenew(self, path, noredirect=NOPE):

@@ -295,6 +295,7 @@
         },
     });
 
+
     website.EditorBar.include({
         tours: [],
         init: function () {
@@ -340,13 +341,23 @@
                     window.onbeforeunload = function () {
                         clearTimeout(overlapsCrash);
                     };
+                    function throwError (message) {
+                        console.log(JSON.parse(window.localStorage.getItem("test-report")));
+                        test.reset();
+                        throw message;
+                    }
                     function executeStep (step) {
+                        // check if they are a cycle
                         var lastStep = window.localStorage.getItem(testId);
-                        var tryStep = lastStep != step.stepId ? 0 : parseInt(window.localStorage.getItem("last-"+testId) || 0, 10)+1;
-                        window.localStorage.setItem("last-"+testId, tryStep);
+                        var tryStep = lastStep != step.stepId ? 0 : (+(window.localStorage.getItem("test-last-"+testId) || 0) + 1);
+                        window.localStorage.setItem("test-last-"+testId, tryStep);
                         if (tryStep > 2) {
-                            window.localStorage.removeItem(testId);
-                            throw "Test: '" + testId + "' cycling step: '" + step.stepId + "'";
+                            throwError("Test: '" + testId + "' cycling step: '" + step.stepId + "'");
+                        }
+
+                        // set last time for report
+                        if (tryStep == 0 || !window.localStorage.getItem("test-last-time")) {
+                            window.localStorage.setItem("test-last-time", new Date().getTime());
                         }
 
                         var _next = false;
@@ -354,6 +365,12 @@
                         function next () {
                             clearTimeout(overlapsCrash);
                             _next = true;
+
+                            // set report
+                            var report = JSON.parse(window.localStorage.getItem("test-report")) || {};
+                            report[step.stepId] = (new Date().getTime() - window.localStorage.getItem("test-last-time")) + " ms";
+                            window.localStorage.setItem("test-report", JSON.stringify(report));
+
                             var nextStep = actionSteps.shift();
                             if (nextStep) {
                                 setTimeout(function () {
@@ -363,34 +380,42 @@
                                 window.localStorage.removeItem(testId);
                             }
                         }
-                        overlapsCrash = setTimeout(function () {
-                            window.localStorage.removeItem(testId);
-                            throw "Test: '" + testId + "' can't resolve step: '" + step.stepId + "'";
-                        }, (step.delay || defaultDelay) + 500);
 
-                        var $element = $(step.element);
-                        if (step.triggers) step.triggers(next);
-                        if ((step.trigger === 'reload' || (step.trigger && step.trigger.url)) && _next) return;
-                        
-                        if (step.snippet && step.trigger === 'drag') {
-                            website.TestConsole.dragAndDropSnippet(step.snippet);
-                        } else if (step.trigger && step.trigger.id === 'change') {
-                            $element.trigger($.Event("change", { srcElement: $element }));
-                        } else if (step.sampleText) {
-                            $element.val(step.sampleText);
-                            $element.trigger($.Event("change", { srcElement: $element }));
-                        } else if ($element.is(":visible")) { // Click by default
-                            if (step.trigger.id === 'mousedown') {
-                                $element.trigger($.Event("mousedown", { srcElement: $element }));
+                        overlapsCrash = setTimeout(function () {
+                            throwError("Test: '" + testId + "' can't resolve step: '" + step.stepId + "'");
+                        }, (step.delay || defaultDelay) + 1000);
+
+                        setTimeout(function () {
+                            var $element = $(step.element);
+                            if (step.triggers) {
+                                try {
+                                    step.triggers(next);
+                                } catch (e) {
+                                    throwError(e);
+                                }
                             }
-                            var evt = document.createEvent("MouseEvents");
-                            evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-                            $element[0].dispatchEvent(evt);
-                            if (step.trigger.id === 'mouseup') {
-                                $element.trigger($.Event("mouseup", { srcElement: $element }));
+                            if ((step.trigger === 'reload' || (step.trigger && step.trigger.url)) && _next) return;
+                            
+                            if (step.snippet && step.trigger === 'drag') {
+                                website.TestConsole.dragAndDropSnippet(step.snippet);
+                            } else if (step.trigger && step.trigger.id === 'change') {
+                                $element.trigger($.Event("change", { srcElement: $element }));
+                            } else if (step.sampleText) {
+                                $element.val(step.sampleText);
+                                $element.trigger($.Event("change", { srcElement: $element }));
+                            } else if ($element.is(":visible")) { // Click by default
+                                if (step.trigger.id === 'mousedown') {
+                                    $element.trigger($.Event("mousedown", { srcElement: $element }));
+                                }
+                                var evt = document.createEvent("MouseEvents");
+                                evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                                $element[0].dispatchEvent(evt);
+                                if (step.trigger.id === 'mouseup') {
+                                    $element.trigger($.Event("mouseup", { srcElement: $element }));
+                                }
                             }
-                        }
-                        if (!step.triggers) next();
+                            if (!step.triggers) next();
+                        },0);
                     }
                     var url = new website.UrlParser(window.location.href);
                     if (tour.path && url.pathname !== tour.path && !window.localStorage.getItem(testId)) {
@@ -415,6 +440,12 @@
                 },
                 reset: function () {
                     window.localStorage.removeItem(testId);
+                    window.localStorage.removeItem("test-report");
+                    for (var k in window.localStorage) {
+                        if (window.localStorage[k].indexOf("test-last")) {
+                            window.localStorage.removeItem(k);
+                        }
+                    }
                 },
             };
             website.TestConsole.tests.push(test);

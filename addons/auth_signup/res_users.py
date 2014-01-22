@@ -66,19 +66,20 @@ class res_partner(osv.Model):
                 self.signup_prepare(cr, uid, [partner.id], context=context)
                 partner.refresh()
 
-            # the parameters to encode for the query and fragment part of url
-            query = {'db': cr.dbname}
+            # the parameters to encode for the query
+            query = dict(db=cr.dbname)
             signup_type = context.get('signup_force_type_in_url', partner.signup_type or '')
-            fragment = {'action': action, 'type': signup_type}
+            if signup_type:
+                query['mode'] = signup_type
 
             if partner.signup_token and signup_type:
-                fragment['token'] = partner.signup_token
+                query['token'] = partner.signup_token
             elif partner.user_ids:
-                fragment['db'] = cr.dbname
-                fragment['login'] = partner.user_ids[0].login
+                query['login'] = partner.user_ids[0].login
             else:
                 continue        # no signup token, no user, thus no signup url!
 
+            fragment = dict()
             if view_type:
                 fragment['view_type'] = view_type
             if menu_id:
@@ -88,7 +89,7 @@ class res_partner(osv.Model):
             if res_id:
                 fragment['id'] = res_id
 
-            res[partner.id] = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+            res[partner.id] = urljoin(base_url, "/web/login?%s#%s" % (urlencode(query), urlencode(fragment)))
 
         return res
 

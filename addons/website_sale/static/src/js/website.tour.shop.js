@@ -292,8 +292,7 @@
                         url:   /shop\/confirmation\//,
                     },
                     afterTrigger: function (tour) {
-                        window.localStorage.setItem("test-success", "{}");
-                        throw "afterTrigger test finish, remove this throw";
+                        console.log('{ "event": "success" }');
                     },
                 }
             ];
