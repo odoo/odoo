@@ -1182,6 +1182,9 @@
                 if($parent.find("[data-snippet-id='colmd']").length > 1) {
                     return false;
                 } else {
+                    if (!$parent.data("snippet-editor")) {
+                        this.parent.create_overlay($parent);
+                    }
                     $parent.data("snippet-editor").on_remove();
                 }
             }
