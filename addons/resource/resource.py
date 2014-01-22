@@ -176,8 +176,11 @@ class resource_calendar(osv.osv):
         calendar = self.browse(cr, uid, id, context=None)
         return [att for att in calendar.attendance_ids if int(att.dayofweek) in weekdays]
 
-    def get_weekdays(self, cr, uid, id, context=None):
-        """ Return the list of weekdays that contain at least one working interval """
+    def get_weekdays(self, cr, uid, id, default_weekdays=None, context=None):
+        """ Return the list of weekdays that contain at least one working interval.
+        If no id is given (no calendar), return default weekdays. """
+        if id is None:
+            return default_weekdays if default_weekdays is not None else [0, 1, 2, 3, 4]
         calendar = self.browse(cr, uid, id, context=None)
         weekdays = set()
         for attendance in calendar.attendance_ids:
@@ -381,12 +384,11 @@ class resource_calendar(osv.osv):
 
     # --------------------------------------------------
     # Hours scheduling
-    # Note: do not support calendar being None
     # --------------------------------------------------
 
     def _schedule_hours(self, cr, uid, id, hours, day_dt=None,
                         compute_leaves=False, resource_id=None,
-                        context=None):
+                        default_interval=None, context=None):
         """ Schedule hours of work, using a calendar and an optional resource to
         compute working and leave days. This method can be used backwards, i.e.
         scheduling days before a deadline.
@@ -403,6 +405,12 @@ class resource_calendar(osv.osv):
                                 computing the leaves. If not set, only general
                                 leaves are computed. If set, generic and
                                 specific leaves are computed.
+        :param tuple default_interval: if no id, try to return a default working
+                                       day using default_interval[0] as beginning
+                                       hour, and default_interval[1] as ending hour.
+                                       Example: default_interval = (8, 16).
+                                       Otherwise, a void list of working intervals
+                                       is returned when id is None.
 
         :return tuple (datetime, intervals): datetime is the beginning/ending date
                                              of the schedulign; intervals are the
@@ -420,7 +428,7 @@ class resource_calendar(osv.osv):
         iterations = 0
         current_datetime = day_dt
 
-        call_args = dict(compute_leaves=compute_leaves, resource_id=resource_id, context=context)
+        call_args = dict(compute_leaves=compute_leaves, resource_id=resource_id, default_interval=default_interval, context=context)
 
         while float_compare(remaining_hours, 0.0, precision_digits=2) in (1, 0) and iterations < 1000:
             if backwards:
@@ -430,7 +438,7 @@ class resource_calendar(osv.osv):
 
             working_intervals = self.get_working_intervals_of_day(cr, uid, id, **call_args)
 
-            if id is None:  # no calendar -> consider working 8 hours
+            if id is None and not working_interval:  # no calendar -> consider working 8 hours
                 remaining_hours -= 8.0
             elif working_intervals:
                 if backwards:
@@ -459,18 +467,18 @@ class resource_calendar(osv.osv):
 
     def schedule_hours_get_date(self, cr, uid, id, hours, day_dt=None,
                                 compute_leaves=False, resource_id=None,
-                                context=None):
+                                default_interval=None, context=None):
         """ Wrapper on _schedule_hours: return the beginning/ending datetime of
         an hours scheduling. """
-        res = self._schedule_hours(cr, uid, id, hours, day_dt, compute_leaves, resource_id, context)
-        return res[0][0]
+        res = self._schedule_hours(cr, uid, id, hours, day_dt, compute_leaves, resource_id, default_interval, context)
+        return res and res[0][0] or False
 
     def schedule_hours(self, cr, uid, id, hours, day_dt=None,
                        compute_leaves=False, resource_id=None,
-                       context=None):
+                       default_interval=None, context=None):
         """ Wrapper on _schedule_hours: return the working intervals of an hours
         scheduling. """
-        return self._schedule_hours(cr, uid, id, hours, day_dt, compute_leaves, resource_id, context)
+        return self._schedule_hours(cr, uid, id, hours, day_dt, compute_leaves, resource_id, default_interval, context)
 
     # --------------------------------------------------
     # Days scheduling
@@ -544,7 +552,7 @@ class resource_calendar(osv.osv):
         """ Wrapper on _schedule_days: return the beginning/ending datetime of
         a days scheduling. """
         res = self._schedule_days(cr, uid, id, days, day_date, compute_leaves, resource_id, default_interval, context)
-        return res and res[-1][1] or []
+        return res and res[-1][1] or False
 
     def schedule_days(self, cr, uid, id, days, day_date=None, compute_leaves=False,
                       resource_id=None, default_interval=None, context=None):
@@ -573,21 +581,23 @@ class resource_calendar(osv.osv):
         return self.schedule_hours(
             cr, uid, id, hours * -1.0,
             day_dt=dt_from.replace(minute=0, second=0),
-            compute_leaves=True, resource_id=resource
+            compute_leaves=True, resource_id=resource,
+            default_interval=(8, 16)
         )
 
     def interval_get_multi(self, cr, uid, date_and_hours_by_cal, resource=False, byday=True):
         """ Used in mrp_operations/mrp_operations.py (default parameters) and in
         interval_get()
 
-        :deprecated: OpenERP saas-3. Use get_working_hours_of_date instead. Note:
+        :deprecated: OpenERP saas-3. Use schedule_hours instead. Note:
         Byday was not used. Since saas-3, counts Leave hours instead of all-day leaves."""
         res = {}
         for dt_str, hours, calendar_id in date_and_hours_by_cal:
             result = self.schedule_hours(
                 cr, uid, calendar_id, hours,
                 day_dt=datetime.datetime.strptime(dt_str, '%Y-%m-%d %H:%M:%S').replace(minute=0, second=0),
-                compute_leaves=True, resource_id=resource
+                compute_leaves=True, resource_id=resource,
+                default_interval=(8, 16)
             )
             res[(dt_str, hours, calendar_id)] = result
         return res
@@ -597,7 +607,8 @@ class resource_calendar(osv.osv):
         crm/crm_lead.py (res given).
 
         :deprecated: OpenERP saas-3. Use get_working_hours instead."""
-        res = self.interval_get_multi(cr, uid, [(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)], resource, byday)[(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)]
+        res = self.interval_get_multi(
+            cr, uid, [(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)], resource, byday)[(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)]
         return res
 
     def interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource=False):
@@ -611,7 +622,10 @@ class resource_calendar(osv.osv):
 
         :deprecated: OpenERP saas-3. Use get_working_hours instead. Note: since saas-3,
         now resets hour/minuts. Now counts leave hours instead of all-day leaves."""
-        return self.get_working_hours(cr, uid, id, dt_from, dt_to, compute_leaves=(not exclude_leaves), resource_id=resource_id, context=context)
+        return self.get_working_hours(
+            cr, uid, id, dt_from, dt_to,
+            compute_leaves=(not exclude_leaves), resource_id=resource_id,
+            default_interval=(8, 16), context=context)
 
 
 class resource_calendar_attendance(osv.osv):

@@ -406,6 +406,19 @@ class TestResource(TestResourceCommon):
             compute_leaves=True, resource_id=self.resource1_id)
         self.assertEqual(res, 33.0, 'resource_calendar: wrong get_working_hours computation')
 
+        # --------------------------------------------------
+        # Test4: misc
+        # --------------------------------------------------
+
+        # Test without calendar and default_interval
+        res = self.resource_calendar.get_working_hours(
+            cr, uid, None,
+            self.date1.replace(hour=6, minute=0),
+            self.date2.replace(hour=23, minute=0),
+            compute_leaves=True, resource_id=self.resource1_id,
+            default_interval=(8, 16))
+        self.assertEqual(res, 32.0, 'resource_calendar: wrong get_working_hours computation')
+
     def test_50_calendar_schedule_days(self):
         """ Testing calendar days scheduling """
         cr, uid = self.cr, self.uid
@@ -424,9 +437,9 @@ class TestResource(TestResourceCommon):
         self.assertEqual(res.date(), datetime.strptime('2013-03-01 00:0:00', _format).date(), 'resource_calendar: wrong days scheduling')
 
         # --------------------------------------------------
-        # Test2: without calendar and default scheduling
+        # Test2: misc
         # --------------------------------------------------
 
-        # Without calendar, should only count days -> 12 -> 16, 5 days
+        # Without calendar, should only count days -> 12 -> 16, 5 days with default intervals
         res = self.resource_calendar.schedule_days_get_date(cr, uid, None, 5, day_date=self.date1, default_interval=(8, 16))
         self.assertEqual(res, datetime.strptime('2013-02-16 16:00:00', _format), 'resource_calendar: wrong days scheduling')
