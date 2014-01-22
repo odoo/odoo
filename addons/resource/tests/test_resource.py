@@ -293,7 +293,7 @@ class TestResource(TestResourceCommon):
         self.assertEqual(td.total_seconds() / 3600.0, 40.0, 'resource_calendar: wrong hours scheduling')
 
         # --------------------------------------------------
-        # Test1: schedule hours forward (old interval_get)
+        # Test2: schedule hours forward (old interval_get)
         # --------------------------------------------------
 
         # res = self.resource_calendar.interval_get(cr, uid, self.calendar_id, self.date1, 40, resource=False, byday=True)
@@ -366,22 +366,54 @@ class TestResource(TestResourceCommon):
             td += item[1] - item[0]
         self.assertEqual(td.total_seconds() / 3600.0, 40.0, 'resource_calendar: wrong hours scheduling')
 
-        res = self.resource_calendar._interval_hours_get(cr, uid, self.calendar_id, self.date1.replace(hour=6, minute=0), self.date2.replace(hour=23, minute=0) + relativedelta(days=7), resource_id=self.resource1_id, exclude_leaves=False)
-        # print res
+        # --------------------------------------------------
+        # Test3: working hours (old _interval_hours_get)
+        # --------------------------------------------------
 
-        res = self.resource_calendar.get_working_hours(cr, uid, self.calendar_id, self.date1.replace(hour=6, minute=0), self.date2.replace(hour=23, minute=0) + relativedelta(days=7), compute_leaves=False, resource_id=self.resource1_id)
-        # print res
+        # old API: resource without leaves
+        # res: 2 weeks -> 40 hours
+        res = self.resource_calendar._interval_hours_get(
+            cr, uid, self.calendar_id,
+            self.date1.replace(hour=6, minute=0),
+            self.date2.replace(hour=23, minute=0) + relativedelta(days=7),
+            resource_id=self.resource1_id, exclude_leaves=True)
+        self.assertEqual(res, 40.0, 'resource_calendar: wrong _interval_hours_get compatibility computation')
 
-        res = self.resource_calendar._interval_hours_get(cr, uid, self.calendar_id, self.date1.replace(hour=6, minute=0), self.date2.replace(hour=23, minute=0) + relativedelta(days=7), resource_id=self.resource1_id, exclude_leaves=True)
-        # print res
+        # new API: resource without leaves
+        # res: 2 weeks -> 40 hours
+        res = self.resource_calendar.get_working_hours(
+            cr, uid, self.calendar_id,
+            self.date1.replace(hour=6, minute=0),
+            self.date2.replace(hour=23, minute=0) + relativedelta(days=7),
+            compute_leaves=False, resource_id=self.resource1_id)
+        self.assertEqual(res, 40.0, 'resource_calendar: wrong get_working_hours computation')
 
-        res = self.resource_calendar.get_working_hours(cr, uid, self.calendar_id, self.date1.replace(hour=6, minute=0), self.date2.replace(hour=23, minute=0) + relativedelta(days=7), compute_leaves=True, resource_id=self.resource1_id)
-        # print res
+        # old API: resource and leaves
+        # res: 2 weeks -> 40 hours - (3+4) leave hours
+        res = self.resource_calendar._interval_hours_get(
+            cr, uid, self.calendar_id,
+            self.date1.replace(hour=6, minute=0),
+            self.date2.replace(hour=23, minute=0) + relativedelta(days=7),
+            resource_id=self.resource1_id, exclude_leaves=False)
+        self.assertEqual(res, 33.0, 'resource_calendar: wrong _interval_hours_get compatibility computation')
+
+        # new API: resource and leaves
+        # res: 2 weeks -> 40 hours - (3+4) leave hours
+        res = self.resource_calendar.get_working_hours(
+            cr, uid, self.calendar_id,
+            self.date1.replace(hour=6, minute=0),
+            self.date2.replace(hour=23, minute=0) + relativedelta(days=7),
+            compute_leaves=True, resource_id=self.resource1_id)
+        self.assertEqual(res, 33.0, 'resource_calendar: wrong get_working_hours computation')
 
     def test_50_calendar_schedule_days(self):
         """ Testing calendar days scheduling """
         cr, uid = self.cr, self.uid
         _format = '%Y-%m-%d %H:%M:%S'
+
+        # --------------------------------------------------
+        # Test1: with calendar
+        # --------------------------------------------------
 
         res = self.resource_calendar.schedule_days_get_date(cr, uid, self.calendar_id, 5, day_date=self.date1)
         self.assertEqual(res.date(), datetime.strptime('2013-02-26 00:0:00', _format).date(), 'resource_calendar: wrong days scheduling')
@@ -392,10 +424,9 @@ class TestResource(TestResourceCommon):
         self.assertEqual(res.date(), datetime.strptime('2013-03-01 00:0:00', _format).date(), 'resource_calendar: wrong days scheduling')
 
         # --------------------------------------------------
-        # Misc
+        # Test2: without calendar and default scheduling
         # --------------------------------------------------
 
-        # # Without calendar, should only count days
-        # print '---------------'
-        # res = self.resource_calendar.schedule_days_get_date(cr, uid, None, 5, day_date=self.date1)
-        # print res
+        # Without calendar, should only count days -> 12 -> 16, 5 days
+        res = self.resource_calendar.schedule_days_get_date(cr, uid, None, 5, day_date=self.date1, default_interval=(8, 16))
+        self.assertEqual(res, datetime.strptime('2013-02-16 16:00:00', _format), 'resource_calendar: wrong days scheduling')

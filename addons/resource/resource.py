@@ -254,7 +254,7 @@ class resource_calendar(osv.osv):
 
     def get_working_intervals_of_day(self, cr, uid, id, start_dt=None, end_dt=None,
                                      leaves=None, compute_leaves=False, resource_id=None,
-                                     context=None):
+                                     context=None, default_interval=None):
         """Get the working intervals of the day based on calendar. This method
         handle leaves that come directly from the leaves parameter or can be computed.
 
@@ -279,12 +279,16 @@ class resource_calendar(osv.osv):
                                 computing the leaves. If not set, only general
                                 leaves are computed. If set, generic and
                                 specific leaves are computed.
+        :param tuple default_interval: if no id, try to return a default working
+                                       day using default_interval[0] as beginning
+                                       hour, and default_interval[1] as ending hour.
+                                       Example: default_interval = (8, 16).
+                                       Otherwise, a void list of working intervals
+                                       is returned when id is None.
 
         :return list intervals: a list of tuples (start_datetime, end_datetime)
                                 of work intervals
         """
-        if id is None:
-            return []
         if isinstance(id, (list, tuple)):
             id = id[0]
 
@@ -304,6 +308,12 @@ class resource_calendar(osv.osv):
 
         intervals = []
         work_dt = start_dt.replace(hour=0, minute=0, second=0)
+
+        # no calendar: try to use the default_interval, then return directly
+        if id is None:
+            if default_interval:
+                intervals.append((start_dt.replace(hour=default_interval[0]), start_dt.replace(hour=default_interval[1])))
+            return intervals
 
         working_intervals = []
         for calendar_working_day in self.get_attendances_for_weekdays(cr, uid, id, [start_dt.weekday()], context):
@@ -336,6 +346,10 @@ class resource_calendar(osv.osv):
             res += interval[1] - interval[0]
         return (res.total_seconds() / 3600.0)
 
+    # --------------------------------------------------
+    # Hours scheduling
+    # --------------------------------------------------
+
     def _schedule_hours(self, cr, uid, id, hours, day_dt=None,
                         compute_leaves=False, resource_id=None,
                         context=None):
@@ -343,7 +357,7 @@ class resource_calendar(osv.osv):
         compute working and leave days. This method can be used backwards, i.e.
         scheduling days before a deadline.
 
-        :param timedelta hours: number of hours to schedule
+        :param int hours: number of hours to schedule
         :param datetime day_dt: reference date to compute working days. If days is
                                 > 0 date is the starting date. If days is < 0
                                 date is the ending date.
@@ -381,7 +395,7 @@ class resource_calendar(osv.osv):
 
             working_intervals = self.get_working_intervals_of_day(cr, uid, id, **call_args)
 
-            if id is None:  # no calendar -> consider 8 working hours
+            if id is None:  # no calendar -> consider working 8 hours
                 remaining_hours -= 8.0
             elif working_intervals:
                 if backwards:
@@ -419,7 +433,8 @@ class resource_calendar(osv.osv):
         scheduling. """
         return self._schedule_hours(cr, uid, id, hours, day_dt, compute_leaves, resource_id, context)
 
-    def get_working_hours(self, cr, uid, id, start_dt, end_dt, compute_leaves=False, resource_id=None, context=None):
+    def get_working_hours(self, cr, uid, id, start_dt, end_dt, compute_leaves=False,
+                          resource_id=None, context=None):
         hours = 0.0
         for day in rrule.rrule(rrule.DAILY, dtstart=start_dt,
                                until=end_dt + datetime.timedelta(days=1),
@@ -427,11 +442,18 @@ class resource_calendar(osv.osv):
             hours += self.get_working_hours_of_date(cr, uid, id, start_dt=day, compute_leaves=compute_leaves, resource_id=resource_id)
         return hours
 
-    def _schedule_days(self, cr, uid, id, days, day_date=None, compute_leaves=False, resource_id=None, context=None):
+    # --------------------------------------------------
+    # Days scheduling
+    # --------------------------------------------------
+
+    def _schedule_days(self, cr, uid, id, days, day_date=None, compute_leaves=False,
+                       resource_id=None, default_interval=None, context=None):
         """Schedule days of work, using a calendar and an optional resource to
         compute working and leave days. This method can be used backwards, i.e.
         scheduling days before a deadline.
 
+        :param int days: number of days to schedule. Use a negative number to compute
+                         a backwards scheduling.
         :param date day_date: reference date to compute working days. If days is > 0
                               date is the starting date. If days is < 0 date is the
                               ending date.
@@ -442,13 +464,19 @@ class resource_calendar(osv.osv):
                                 computing the leaves. If not set, only general
                                 leaves are computed. If set, generic and
                                 specific leaves are computed.
+        :param tuple default_interval: if no id, try to return a default working
+                                       day using default_interval[0] as beginning
+                                       hour, and default_interval[1] as ending hour.
+                                       Example: default_interval = (8, 16).
+                                       Otherwise, a void list of working intervals
+                                       is returned when id is None.
 
         :return tuple (datetime, intervals): datetime is the beginning/ending date
                                              of the schedulign; intervals are the
                                              working intervals of the scheduling.
 
-        TDE NOTE: Why not using rrule.rrule ? Because rrule does not seem to
-        allow getting back in time.
+        Implementation note: rrule.rrule is not used because rrule it des not seem
+        to allow getting back in time.
         """
         if day_date is None:
             day_date = datetime.datetime.now()
@@ -463,7 +491,11 @@ class resource_calendar(osv.osv):
             current_datetime = day_date.replace(hour=0, minute=0, second=0)
 
         while planned_days < days and iterations < 1000:
-            working_intervals = self.get_working_intervals_of_day(cr, uid, id, current_datetime, compute_leaves=compute_leaves, resource_id=resource_id, context=context)
+            working_intervals = self.get_working_intervals_of_day(
+                cr, uid, id, current_datetime,
+                compute_leaves=compute_leaves, resource_id=resource_id,
+                context=context,
+                default_interval=default_interval)
             if id is None or working_intervals:  # no calendar -> no working hours, but day is considered as worked
                 planned_days += 1
                 intervals += working_intervals
@@ -477,33 +509,37 @@ class resource_calendar(osv.osv):
 
         return intervals
 
-    def schedule_days_get_date(self, cr, uid, id, days, day_date=None, compute_leaves=False, resource_id=None, context=None):
-        """Wrapper on _schedule_days: return the beginning/ending datetime of
+    def schedule_days_get_date(self, cr, uid, id, days, day_date=None, compute_leaves=False,
+                               resource_id=None, default_interval=None, context=None):
+        """ Wrapper on _schedule_days: return the beginning/ending datetime of
         a days scheduling. """
-        res = self._schedule_days(cr, uid, id, days, day_date, compute_leaves, resource_id, context)
-        return res[-1][1]
+        res = self._schedule_days(cr, uid, id, days, day_date, compute_leaves, resource_id, default_interval, context)
+        return res and res[-1][1] or []
 
-    def schedule_days(self, cr, uid, id, days, day_date=None, compute_leaves=False, resource_id=None, context=None):
-        """Wrapper on _schedule_days: return the working intervals of a days
+    def schedule_days(self, cr, uid, id, days, day_date=None, compute_leaves=False,
+                      resource_id=None, default_interval=None, context=None):
+        """ Wrapper on _schedule_days: return the working intervals of a days
         scheduling. """
-        return self._schedule_days(cr, uid, id, days, day_date, compute_leaves, resource_id, context)
+        return self._schedule_days(cr, uid, id, days, day_date, compute_leaves, resource_id, default_interval, context)
 
     # --------------------------------------------------
     # Compatibility / to clean / to remove
     # --------------------------------------------------
 
     def working_hours_on_day(self, cr, uid, resource_calendar_id, day, context=None):
-        """ Compatibility method - will be removed for OpenERP v8.
-        Computation was done for the whole day, ignoring hour/minutes.
-        Used in hr_payroll/hr_payroll.py """
+        """ Used in hr_payroll/hr_payroll.py
+
+        :deprecated: OpenERP saas-3. Use get_working_hours_of_date instead. Note:
+        since saas-3, take hour/minutes into account, not just the whole day."""
         if isinstance(day, datetime.datetime):
             day = day.replace(hour=0, minute=0)
         return self.get_working_hours_of_date(cr, uid, resource_calendar_id.id, start_dt=day, context=None)
 
     def interval_min_get(self, cr, uid, id, dt_from, hours, resource=False):
-        """ Compatibility method - will be removed for OpenERP v8.
-        Schedule hours backwards.  Note: now count leave hours instead of all-day leaves.
-        Used in mrp_operations/mrp_operations.py. """
+        """ Schedule hours backwards. Used in mrp_operations/mrp_operations.py.
+
+        :deprecated: OpenERP saas-3. Use schedule_hours instead. Note: since
+        saas-3, counts leave hours instead of all-day leaves."""
         return self.schedule_hours(
             cr, uid, id, hours * -1.0,
             day_dt=dt_from.replace(minute=0, second=0),
@@ -511,9 +547,11 @@ class resource_calendar(osv.osv):
         )
 
     def interval_get_multi(self, cr, uid, date_and_hours_by_cal, resource=False, byday=True):
-        """ Compatibility method - will be removed for OpenERP v8.
-        Note: used in mrp_operations/mrp_operations.py (default parameters) and in interval_get()
-        Byday was not used. Now counts Leave hours instead of all-day leaves. """
+        """ Used in mrp_operations/mrp_operations.py (default parameters) and in
+        interval_get()
+
+        :deprecated: OpenERP saas-3. Use get_working_hours_of_date instead. Note:
+        Byday was not used. Since saas-3, counts Leave hours instead of all-day leaves."""
         res = {}
         for dt_str, hours, calendar_id in date_and_hours_by_cal:
             result = self.schedule_hours(
@@ -525,20 +563,25 @@ class resource_calendar(osv.osv):
         return res
 
     def interval_get(self, cr, uid, id, dt_from, hours, resource=False, byday=True):
-        """ Compatibility method - will be removed for OpenERP v8. Unifier of interval_get_multi.
-        Used in: mrp_operations/mrp_operations.py, crm/crm_lead.py (res given) """
+        """ Unifier of interval_get_multi. Used in: mrp_operations/mrp_operations.py,
+        crm/crm_lead.py (res given).
+
+        :deprecated: OpenERP saas-3. Use get_working_hours instead."""
         res = self.interval_get_multi(cr, uid, [(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)], resource, byday)[(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)]
         return res
 
     def interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource=False):
-        """ Compatibility method - will be removed for OpenERP v8. Unused wrapper """
+        """ Unused wrapper.
+
+        :deprecated: OpenERP saas-3. Use get_working_hours instead."""
         return self._interval_hours_get(cr, uid, id, dt_from, dt_to, resource_id=resource)
 
     def _interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource_id=False, timezone_from_uid=None, exclude_leaves=True, context=None):
-        """ Compatibility method - will be removed for OpenERP v8.
-        Computes working hours between two dates, taking always same hour/minuts.
-        Note: now resets hour/minuts. Now counts leave hours instead of all-day leaves. """
-        return self.get_working_hours(cr, uid, id, dt_from, dt_to, compute_leaves=exclude_leaves, resource_id=resource_id, context=context)
+        """ Computes working hours between two dates, taking always same hour/minuts.
+
+        :deprecated: OpenERP saas-3. Use get_working_hours instead. Note: since saas-3,
+        now resets hour/minuts. Now counts leave hours instead of all-day leaves."""
+        return self.get_working_hours(cr, uid, id, dt_from, dt_to, compute_leaves=(not exclude_leaves), resource_id=resource_id, context=context)
 
 
 class resource_calendar_attendance(osv.osv):

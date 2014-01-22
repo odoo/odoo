@@ -52,7 +52,7 @@ class TestResourceCommon(common.TransactionCase):
         self.leave3_end = datetime.strptime('2013-03-01 11:30:00', '%Y-%m-%d %H:%M:%S')
 
         # Resource data
-        # Calendar working days: 1 (8-16), 4 (8-13, 21-22)
+        # Calendar working days: 1 (8-16 -> 8hours), 4 (8-13, 16-23 -> 12hours)
         self.calendar_id = self.resource_calendar.create(
             cr, uid, {
                 'name': 'TestCalendar',
