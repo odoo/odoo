@@ -60,8 +60,9 @@
             <field name="arch" type="xml">
                 <form string="Product" version="7.0">
                     <sheet>
-                        <field name="is_only_child" invisible="0"/>
-                        <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
+                        <field name="is_only_child" invisible="1"/>
+                        <field name="image_medium" widget="image" class="oe_avatar oe_left"
+                            attrs="{'readonly': [('is_only_child', '=', False)]}"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name" name='label_name' string="Product Name"
@@ -73,17 +74,16 @@
                                 <field name="name" class="oe_inline"
                                     attrs="{'required': [('is_only_child', '=', True)],
                                             'invisible': [('is_only_child', '=', False)]}"/>
-                                <field name="product_tmpl_id" class="oe_inline"
-                                    attrs="{'required': [('is_only_child', '=', False)],
-                                            'invisible': [('is_only_child', '=', True)]}"
-                                    on_change="onchange_product_tmpl_id(product_tmpl_id)"/>
+                                <field name="product_tmpl_id" class="oe_inline" readonly="1" required="0"
+                                    attrs="{'invisible': [('is_only_child', '=', True)]}"/>
                                 <span attrs="{'invisible':[('variants','=',False)]}" groups="product.group_product_variant"> - </span>
                                 <field name="variants" placeholder="Variant Name"
                                     groups="product.group_product_variant" class="oe_inline"/>
                             </h1>
                             <span attrs="{'invisible': [('is_only_child', '=', True)]}">
-                                Manage some of the product attributes on the
-                                <a>template form</a>
+                                <p>Generic product settings are managed on
+                                    <button name="open_product_template" type="object" string="the template" class="oe_link"/>
+                                </p>
                             </span>
                             <label for="categ_id" class="oe_edit_only"/>
                             <h2><field name="categ_id" attrs="{'readonly': [('is_only_child', '=', False)]}"/></h2>

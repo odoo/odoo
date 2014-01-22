@@ -23,12 +23,10 @@ import math
 import re
 
 from _common import rounding
-from lxml import etree
 
-from openerp.osv.orm import setup_modifiers
 from openerp import SUPERUSER_ID
 from openerp import tools
-from openerp.osv import osv, fields
+from openerp.osv import osv, orm, fields
 from openerp.tools.translate import _
 
 import openerp.addons.decimal_precision as dp
@@ -519,6 +517,13 @@ class product_template(osv.osv):
 
 
 class product_product(osv.osv):
+    _name = "product.product"
+    _description = "Product"
+    _table = "product_product"
+    _inherits = {'product.template': 'product_tmpl_id'}
+    _inherit = ['mail.thread']
+    _order = 'default_code,name_template'
+
     def view_header_get(self, cr, uid, view_id, view_type, context=None):
         if context is None:
             context = {}
@@ -648,7 +653,6 @@ class product_product(osv.osv):
             }
         return result
 
-
     def _get_name_template_ids(self, cr, uid, ids, context=None):
         result = set()
         template_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', ids)])
@@ -656,19 +660,6 @@ class product_product(osv.osv):
             result.add(el)
         return list(result)
 
-    _defaults = {
-        'active': lambda *a: 1,
-        'price_extra': lambda *a: 0.0,
-        'price_margin': lambda *a: 1.0,
-        'color': 0,
-    }
-
-    _name = "product.product"
-    _description = "Product"
-    _table = "product_product"
-    _inherits = {'product.template': 'product_tmpl_id'}
-    _inherit = ['mail.thread']
-    _order = 'default_code,name_template'
     _columns = {
         'qty_available': fields.function(_product_qty_available, type='float', string='Quantity On Hand'),
         'virtual_available': fields.function(_product_virtual_available, type='float', string='Quantity Available'),
@@ -692,13 +683,20 @@ class product_product(osv.osv):
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', size=128, store={
             'product.template': (_get_name_template_ids, ['name'], 10),
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
-
-            }, select=True),
+        }, select=True),
         'color': fields.integer('Color Index'),
         'seller_info_id': fields.function(_calc_seller, type='many2one', relation="product.supplierinfo", string="Supplier Info", multi="seller_info"),
         'seller_delay': fields.function(_calc_seller, type='integer', string='Supplier Lead Time', multi="seller_info", help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
         'seller_qty': fields.function(_calc_seller, type='float', string='Supplier Quantity', multi="seller_info", help="This is minimum quantity to purchase from Main Supplier."),
         'seller_id': fields.function(_calc_seller, type='many2one', relation="res.partner", string='Main Supplier', help="Main Supplier who has highest priority in Supplier List.", multi="seller_info"),
+    }
+
+    _defaults = {
+        'active': lambda *a: 1,
+        'price_extra': lambda *a: 0.0,
+        'price_margin': lambda *a: 1.0,
+        'color': 0,
+        'is_only_child': True,
     }
 
     def unlink(self, cr, uid, ids, context=None):
@@ -726,21 +724,10 @@ class product_product(osv.osv):
                 return {'value': {'uom_po_id': uom_id}}
         return False
 
-    def onchange_product_tmpl_id(self, cr, uid, ids, template_id, context=None):
-        res = {}
-        if template_id:
-            template = self.pool.get('product.template').browse(cr, uid, template_id, context=context)
-            res['value'] = {
-                'name': template.name,
-                'lst_price': template.list_price,
-            }
-        return res
-
     def _check_ean_key(self, cr, uid, ids, context=None):
         for product in self.read(cr, uid, ids, ['ean13'], context=context):
             res = check_ean(product['ean13'])
         return res
-
 
     _constraints = [(_check_ean_key, 'You provided an invalid "EAN13 Barcode" reference. You may use the "Internal Reference" field instead.', ['ean13'])]
 
@@ -895,6 +882,15 @@ class product_product(osv.osv):
         if context.get('search_default_categ_id'):
             args.append((('categ_id', 'child_of', context['search_default_categ_id'])))
         return super(product_product, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
+
+    def open_product_template(self, cr, uid, ids, context=None):
+        """ Utility method used to add an "Open Template" button in product views """
+        product = self.browse(cr, uid, ids[0], context=context)
+        return {'type': 'ir.actions.act_window',
+                'res_model': 'product.template',
+                'view_mode': 'form',
+                'res_id': product.product_tmpl_id.id,
+                'target': 'new'}
 
 
 class product_packaging(osv.osv):
