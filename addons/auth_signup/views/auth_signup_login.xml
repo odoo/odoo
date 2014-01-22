@@ -5,12 +5,12 @@
     <data>
         <template id="auth_signup.login" inherit_id="web.login" name="Login (overloaded by auth_signup)">
             <xpath expr="//button[@type='submit']" position="before">
-                <a t-if="signup" t-attf-href="?mode=signup{{ '&amp;debug' if debug else '' }}" class="btn btn-default pull-left">Sign up</a>
-                <a t-if="reset" t-attf-href="?mode=reset{{ '&amp;debug' if debug else '' }}" class="btn btn-default pull-left">Reset Password</a>
+                <a t-if="signup" t-attf-href="?mode=signup{{ '&amp;debug' if debug else '' }}" class="btn btn-link pull-right">Sign up</a>
+                <a t-if="reset" t-attf-href="?mode=reset{{ '&amp;debug' if debug else '' }}" class="btn btn-link pull-right">Reset Password</a>
             </xpath>
         </template>
 
-        <template id="auth_signup.signup" name="Sinup">
+        <template id="auth_signup.signup" name="Sign up">
             <t t-call="web.login_layout">
                 <t t-set="head">
                     <t t-foreach="css" t-as="css_file">
@@ -62,14 +62,13 @@
                         <t t-esc="message"/>
                     </p>
 
-                    <hr/>
                     <input type="hidden" name="redirect" t-att-value="redirect"/>
                     <input type="hidden" name="mode" t-att-value="mode"/>
                     <input type="hidden" name="token" t-att-value="token"/>
                     <div class="clearfix oe_login_buttons">
-                        <a href="/web/login" class="btn btn-default pull-left">Back to Login</a>
-                        <button type="submit" class="btn btn-primary pull-right">
-                            <t t-if="mode == 'signup'">Signup</t>
+                        <a href="/web/login" class="btn btn-link pull-right">Back to Login</a>
+                        <button type="submit" class="btn btn-primary pull-left">
+                            <t t-if="mode == 'signup'">Sign up</t>
                             <t t-if="mode == 'reset'">Reset password</t>
                         </button>
                     </div>
