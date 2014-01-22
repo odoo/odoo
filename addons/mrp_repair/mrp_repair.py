@@ -139,7 +139,7 @@ class mrp_repair(osv.osv):
             \n* The \'Cancelled\' status is used when user cancel repair order.'),
         'location_id': fields.many2one('stock.location', 'Current Location', select=True, readonly=True, states={'draft':[('readonly',False)], 'confirmed':[('readonly',True)]}),
         'location_dest_id': fields.many2one('stock.location', 'Delivery Location', readonly=True, states={'draft':[('readonly',False)], 'confirmed':[('readonly',True)]}),
-        'move_id': fields.many2one('stock.move', 'Move',required=True, domain="[('product_id','=',product_id)]", readonly=True, states={'draft':[('readonly',False)]}),
+        'quant_id': fields.many2one('stock.quant', 'Quant',required=True, domain="[('product_id','=',product_id)]", readonly=True, states={'draft':[('readonly',False)]}),
         'guarantee_limit': fields.date('Warranty Expiration', help="The warranty expiration limit is computed as: last move date + warranty defined on selected product. If the current date is below the warranty expiration limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards.", states={'confirmed':[('readonly',True)]}),
         'operations' : fields.one2many('mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', help='Pricelist of the selected partner.'),
@@ -205,25 +205,26 @@ class mrp_repair(osv.osv):
         @return: Dictionary of values.
         """
         return {'value': {
-                    'move_id': False,
+                    'quant_id': False,
                     'guarantee_limit' :False,
                     'location_id':  False,
                     'location_dest_id': False,
                 }
         }
 
-    def onchange_move_id(self, cr, uid, ids, prod_id=False, move_id=False):
+    def onchange_quant_id(self, cr, uid, ids, prod_id=False, quant_id=False):
         """ On change of move id sets values of guarantee limit, source location,
         destination location, partner and partner address.
         @param prod_id: Id of product in current record.
-        @param move_id: Changed move.
+        @param quant_id: Quant to handle
         @return: Dictionary of values.
         """
         data = {}
         data['value'] = {'guarantee_limit': False, 'location_id': False, 'partner_id': False}
-        if not prod_id:
+        if prod_id and 
+        if not prod_id and not quant_id:
             return data
-        if move_id:
+        if quant_id:
             move =  self.pool.get('stock.move').browse(cr, uid, move_id)
             product = self.pool.get('product.product').browse(cr, uid, prod_id)
             limit = datetime.strptime(move.date_expected, '%Y-%m-%d %H:%M:%S') + relativedelta(months=int(product.warranty))
