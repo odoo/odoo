@@ -205,5 +205,5 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'date_to': (datetime.today() + relativedelta(days=7)),
             'number_of_days_temp': 4,
         })
-        with self.assertRaises(except_orm):
+        with self.assertRaises(Warning):
             self.hr_holidays.signal_workflow(cr, self.user_hrmanager_id, [hol2_id], 'confirm')
