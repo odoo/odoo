@@ -1,9 +1,79 @@
+/* --- Fonts --- */
+
 @font-face{
     font-family: 'Inconsolata';
     src: url(../fonts/Inconsolata.otf);
 }
 
-.point-of-sale {
+/* --- Styling of OpenERP Elements --- */
+.ui-dialog{
+    background: white;
+    padding: 10px;
+    border-radius: 3px;
+    font-family: sans-serif;
+    box-shadow: 0px 10px 40px rgba(0,0,0,0.4);
+}
+.ui-dialog button{
+    padding: 8px;
+    min-width: 48px;
+}
+.ui-dialog .ui-icon-closethick{
+    float: right;
+}
+/* --- Generic Restyling and Resets --- */
+
+html {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    font-family: sans-serif;
+}
+table {
+    border-spacing: 0px;
+    border-collapse: collapse;
+}
+td {
+    padding: 0px;
+}
+
+.oe_hidden{
+    display: none !important;
+}
+.clearfix:after {
+    content:" ";
+    display: block;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+    clear: both;
+}
+
+
+.pos input::-webkit-outer-spin-button,
+.pos input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.pos button{
+    box-shadow: none;
+    outline: none;
+    border: none;
+    font-family: 'Lato';
+}
+.pos button:hover{
+    background: default;
+}
+
+.pos .oe_hidden{
+    display: none !important;
+}
+
+.pos ul, .pos li  {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.pos {
     padding: 0;
     margin: 0;
     background-color: #f0eeee;
@@ -15,49 +85,16 @@
     top: 0;
     width: 100%;
     height: 100%;
-    text-shadow: none;
     -webkit-user-select: none;
        -moz-user-select: none;
             user-select: none;
-}
-
-.point-of-sale .oe_hidden{
-    display: none !important;
-}
-
-.point-of-sale ul, .point-of-sale li  {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-}
-
-.point-of-sale .shadow-top{
-    position: absolute;
-    top:0;
-    left:0;
-    right:0;
-    height:10px;
-    background: -webkit-linear-gradient(top,rgba(0,0,0,0.09),rgba(0,0,0,0));
-    background:    -moz-linear-gradient(top,rgba(0,0,0,0.09),rgba(0,0,0,0));
-    background:     -ms-linear-gradient(top,rgba(0,0,0,0.09),rgba(0,0,0,0));
-    background:         linear-gradient(top,rgba(0,0,0,0.09),rgba(0,0,0,0));
-}
-
-.point-of-sale .darker-shadow-top{
-    position: absolute;
-    top:0;
-    left:0;
-    right:0;
-    height:10px;
-    background: -webkit-linear-gradient(top,rgba(0,0,0,0.15),rgba(0,0,0,0));
-    background:    -moz-linear-gradient(top,rgba(0,0,0,0.15),rgba(0,0,0,0));
-    background:     -ms-linear-gradient(top,rgba(0,0,0,0.15),rgba(0,0,0,0));
-    background:         linear-gradient(top,rgba(0,0,0,0.15),rgba(0,0,0,0));
+    text-shadow: none;
+    overflow: hidden;
 }
 
 /*  ********* The black loading screen ********* */
 
-.point-of-sale .loader{
+.pos .loader{
     background-color: #222;
     position:absolute;
     left:0px;
@@ -66,46 +103,144 @@
     height:100%;
     z-index: 999;
     text-align: center;
+    font-family: Lato;
+    color: #555555;
+}
+
+.pos .loader-feedback{
+    width: 400px;
+    height: 160px;
+    margin: -60px -200px;
+    position: absolute;
+    left: 50%; top: 50%;
+    text-align: center;
+}
+.pos .loader-feedback h1{
+    font-weight: 300;
+}
+.pos .loader-feedback .progressbar{
+    background: rgb(73,73,73);
+    height: 1px;
+}
+.pos .loader-feedback .progressbar > .progress{
+    height: 100%;
+    background: white;
+    width: 0%;
+    box-shadow: 0px 0px 5px rgba(255,255,255,0.35);
+}
+.pos .loader-feedback .button{
+    display: inline-block;
+    margin: 25px auto;
+    line-height: 42px;
+    padding: 0px 16px;
+    font-size: 20px;
+    font-weight: 300;
+    border: solid 1px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.pos .loader-feedback .button:active{
+    color: #222;
+    background: #555555;
+}
+/*  ********* Generic Layout Constructs  ********* */
+
+.pos .window{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    display: table;
+    border: none;
+}
+.pos .window .subwindow{
+    display: table-row;
+    width: 100%;
+    height: 100%;
+}
+.pos .window .subwindow.collapsed{
+    height: 0px;
+}
+.pos .subwindow .subwindow-container{
+    display: table-cell;
+    position: relative;
+}
+/* firefox seems to ignore the relative positionning of the subwindow-container
+ * putting this inside subwindow-container fixes it.
+ */ 
+.pos .subwindow .subwindow-container-fix{
+    height: 100%;
+    position: relative;
+}
+
+/* ---- Scrollers ----- */
+
+.pos .scroller-container{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+.pos .scroller{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.pos .scroller.horizontal{
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+.pos .scroller-content{
+    -webkit-transform: translate3d(0,0,0);
+}
+.pos .scroller-container ::-webkit-scrollbar{
+    width:  10px;
+    height: 10px;
+}
+.pos .scroller-container ::-webkit-scrollbar-track{
+    background: rgb(224,224,224);
+    border-left: solid 1px rgb(200,200,200);
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.pos .scroller-container ::-webkit-scrollbar-thumb{
+    background: rgb(168,168,168);
+    min-height: 30px;
 }
 
 /*  ********* Generic element styling  ********* */
 
-.point-of-sale a {
+.pos a {
     text-decoration: none;
     color: #555555;
 }
-.point-of-sale button, .point-of-sale a.button {
+.pos button, .pos a.button {
     display: inline-block;
     cursor: pointer;
     padding: 4px 10px;
     font-size: 11px;
     border: 1px solid #cacaca;
-    border-radius: 4px;
     background: #e2e2e2;
-    background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#e2e2e2));
-    background: -moz-linear-gradient(#f0f0f0, #e2e2e2);
-    background:  -ms-linear-gradient(#f0f0f0, #e2e2e2);
-    background:      linear-gradient(#f0f0f0, #e2e2e2);
+    border-radius: 3px;
 }
-.point-of-sale ul, .point-of-sale ol {
+.pos ul, .pos ol {
     padding: 0;
     margin: 0;
 }
-.point-of-sale li {
+.pos li {
     list-style-type: none;
 }
-.point-of-sale .pos-right-align {
+.pos .pos-right-align {
     text-align: right;
 }
-.point-of-sale .pos-center-align {
+.pos .pos-center-align {
     text-align: center;
 }
-.point-of-sale .pos-right-align input {
-    text-align: right;
-    border: 1px solid #cecbcb;
-    border-radius: 4px;
-}
-.point-of-sale .pos-disc-font {
+.pos .pos-disc-font {
     font-size: 12px;
     font-style:italic;
     color: #808080;
@@ -114,7 +249,7 @@
 /*  ********* The black header bar ********* */
 
 
-.point-of-sale #topheader {
+.pos .pos-topheader {
     position:absolute;
     left:0;
     top:0;
@@ -124,14 +259,11 @@
     padding:0;
     color: gray;
     background: #393939;
-    background: -moz-linear-gradient(#7b7979, #393939);
-    background: -webkit-gradient(linear, left top, left bottom, from(#7b7979), to(#393939));
-    z-index: 2; /* Customize according bootstrap3 navbar */
 }
 
 /*  a) The left part of the top-bar */
 
-.point-of-sale #branding{
+.pos .pos-branding{
     position: absolute;
     display: table-cell;
     left:0;
@@ -145,13 +277,13 @@
     line-height:100%;
     vertical-align: middle;
 }
-.point-of-sale #branding img {
+.pos .pos-logo {
     height: 32px;
     width: 116px;
     margin-left:5px;
     vertical-align:middle;
 } 
-.point-of-sale #branding .username{
+.pos .pos-branding .username{
     float:right;
     color:#DDD;
     font-size:16px;
@@ -162,7 +294,7 @@
 
 /*  b) The right part of the top-bar */
 
-.point-of-sale #rightheader {
+.pos .pos-rightheader {
     position: absolute;
     left:440px;
     right:0;
@@ -170,54 +302,45 @@
     height:100%;
 }
 
-.point-of-sale #rightheader button {
+.pos .order-button{
     color: #273072;
     height:27px;
     margin:3px;
     margin-right:0px;
     border: 1px solid #353A7E;
     background: #7f82ac;
-    background: -webkit-gradient(linear, left top, left bottom, from(#b2b3d7), to(#7f82ac));
-    background: -moz-linear-gradient(#b2b3d7, #7f82ac);
-    background:  -ms-linear-gradient(#b2b3d7, #7f82ac);
-    background:      linear-gradient(#b2b3d7, #7f82ac);
+    text-shadow: none;
+    border-radius: 3px;
+}
+.pos .order-button.selected{
+    font-weight: 900;
+    background: #666997;
+    color: rgb(236, 237, 255);
 }
 
-.point-of-sale #rightheader button.square{
+.pos .order-button.square{
     width: 32px;
     margin-left:4px;
 }
 
-.point-of-sale div#order-selector {
-    display: inline;
+.pos .order-selector {
+    display: inline-block;
 }
-.point-of-sale ol#orders {
-    display: inline;
+.pos .orders {
+    display: inline-block;
+    vertical-align: top;
     margin-left: 8px;
-}
-.point-of-sale li.order-selector-button {
-    display: inline;
-}
-.point-of-sale li.selected-order button {
-    font-weight: 900;
-    background: #7174A8 !important;
-    color: rgb(236, 237, 255) !important;
-    text-shadow: 0px 1px rgba(0, 0, 0, 0.31);
-    -webkit-box-shadow: 0px 1px 2px rgb(63, 66, 139) inset;
-       -moz-box-shadow: 0px 1px 2px rgb(63, 66, 139) inset;
-        -ms-box-shadow: 0px 1px 2px rgb(63, 66, 139) inset;
-            box-shadow: 0px 1px 2px rgb(63, 66, 139) inset;
 }
 
 /*  c) The session buttons */
 
-.point-of-sale #rightheader .header-button{
+.pos .pos-rightheader .header-button{
     float:right;
     height:32px;
     padding-left:10px;
     padding-right:10px;
-    border-right:  1px solid #3a3a3a;
-    border-left:  1px solid #3a3a3a;
+    border-right:  1px solid #292929;
+    border-left:  1px solid #292929;
     color:#DDD;
     line-height:32px;
     text-align:center;
@@ -227,18 +350,17 @@
     -webkit-transition-duration: 0.2s;
     -webkit-transition-timing-function: ease-out;
 }
-.point-of-sale #rightheader .header-button:last-child{
+.pos .pos-rightheader .header-button:last-child{
     border-left:  1px solid #3a3a3a;
 }
-.point-of-sale #rightheader .header-button:active{
+.pos .pos-rightheader .header-button:active{
     background: rgba(0,0,0,0.2);
-    text-shadow: #000 0px 0px 3px;
     color:#EEE;
 }
 
 /*  c) The notifications indicator */
 
-.point-of-sale .oe_pos_synch-notification{
+.pos .oe_pos_synch-notification{
     float:right; 
     color: rgba(255,255,255,0.4);
     padding: 8px;
@@ -248,17 +370,17 @@
     font-style: italic;
     cursor:pointer;
 }
-.point-of-sale .oe_pos_synch-notification.oe_inactive{
+.pos .oe_pos_synch-notification.oe_inactive{
     cursor: default;
 }
-.point-of-sale .oe_pos_synch-notification .oe_status_red{
+.pos .oe_pos_synch-notification .oe_status_red{
     display:inline-block;
     cursor:pointer;
     width:16px; height:16px;
     background: url("../img/gtk-no.png") no-repeat ;
 }
 
-.point-of-sale .oe_pos_synch-notification .oe_status_green{
+.pos .oe_pos_synch-notification .oe_status_green{
     display:inline-block;
     width:16px; height:16px;
     background: url("../img/gtk-yes.png") no-repeat;
@@ -266,7 +388,7 @@
 
 /*  ********* Contains everything below the  bar ********* */
 
-.point-of-sale #content {
+.pos .pos-content {
     width: 100%;
     position: absolute;
     top: 34px;
@@ -276,7 +398,7 @@
 
 /*  ********* The leftpane contains the order, numpad and paypad ********* */
 
-.point-of-sale #leftpane {
+.pos .pos-leftpane {
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
         -ms-box-sizing: border-box;
@@ -285,23 +407,17 @@
     left:0;
     width:440px;
     top:0px;
-    /*bottom:105px;*/
     bottom:0;
     border-right: solid 1px #CECBCB;
-    background-color: white;
 }
-.point-of-sale #leftpane footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+.pos .pos-leftpane .pads {
     background: #F0EEEE;
     white-space: nowrap;
 }
 
 /*  ********* The paypad contains the payment buttons ********* */
 
-.point-of-sale #paypad {
+.pos .paypad {
     padding: 8px 4px 8px 8px;
     display: inline-block;
     text-align: center;
@@ -311,7 +427,7 @@
     overflow-y: auto;
     overflow-x: hidden;
 }
-.point-of-sale #paypad button {
+.pos .paypad button {
     height: 39px;
     display: block;
     width: 100%;
@@ -319,54 +435,42 @@
     font-weight: bold;
     vertical-align: middle;
     color: #555555;
-    border-top: 1px solid #efefef;
     font-size: 14px;
 }
-.point-of-sale #paypad button:active, 
-.point-of-sale #numpad button:active, 
-.point-of-sale #numpad .selected-mode, 
-.point-of-sale .popup  button:active{
+.pos .paypad button:active, 
+.pos .numpad button:active, 
+.pos .numpad .selected-mode, 
+.pos .popup  button:active{
     border: none;
     color: white;
     background: #7f82ac;
-    background: -webkit-gradient(linear, left top, left bottom, from(#9d9fc5), to(#7f82ac));
-    background: -moz-linear-gradient(#9d9fc5, #7f82ac);
-    background:  -ms-linear-gradient(#9d9fc5, #7f82ac);
-    background:      linear-gradient(#9d9fc5, #7f82ac);
-    text-shadow: 0px 0px 5px rgba(255,255,255,0.21);
-    -webkit-box-shadow:  0px 0px 2px rgba(0,0,0,0.3) inset, 0px 1px 2px rgba(0,0,0,0.1);
-       -moz-box-shadow:  0px 0px 2px rgba(0,0,0,0.3) inset, 0px 1px 2px rgba(0,0,0,0.1);
-        -ms-box-shadow:  0px 0px 2px rgba(0,0,0,0.3) inset, 0px 1px 2px rgba(0,0,0,0.1);
-         -o-box-shadow:  0px 0px 2px rgba(0,0,0,0.3) inset, 0px 1px 2px rgba(0,0,0,0.1);
-            box-shadow:  0px 0px 2px rgba(0,0,0,0.3) inset, 0px 1px 2px rgba(0,0,0,0.1);
 }
 
 /*  ********* The Numpad ********* */
 
-.point-of-sale #numpad {
+.pos .numpad {
     padding: 8px 8px 8px 4px;
     display: inline-block;
     text-align: center;
 }
-.point-of-sale #numpad button {
+.pos .numpad button {
     height: 50px;
     width: 50px;
     margin: 0px 0px 4px 0px;
     font-weight: bold;
     vertical-align: middle;
     color: #555555;
-    border-top: 1px solid #efefef;
 }
-.point-of-sale .input-button {
+.pos .input-button {
     font-size: 24px;
 }
-.point-of-sale .mode-button, .point-of-sale #numpad-delete, .point-of-sale #numpad-minus {
+.pos .mode-button {
     font-size: 14px;
 }
 
 /*  ********* The right pane contains the screens and headers ********* */
 
-.point-of-sale #rightpane {
+.pos .rightpane {
     position: absolute;
     top: 0;
     /*bottom: 105px;*/
@@ -374,24 +478,26 @@
     left: 440px;
     right: 0;
     vertical-align: top;
+    -webkit-transform: translate3d(0,0,0);
 }
 
-.point-of-sale #rightpane header {
+.pos .rightpane-header {
     padding: 0;
-    height: 32px;
+    height: 48px;
     border-bottom: 1px solid #c7c7c7;
     background: #d3d3d3;
-    background: -moz-linear-gradient(white, #d3d3d3);
-    background: -webkit-gradient(linear, left top, left bottom, from(white), to(#d3d3d3));
+    text-align: center;
 }
 
 /*  ********* The product list  ********* */
 
-.point-of-sale .product-list {
-    padding:10px !important;
+.pos .product-list {
+    padding: 10px;
+    text-align: left;
+    -webkit-transform: translate3d(0,0,0);
 }
 
-.point-of-sale .product-list-scroller{
+.pos .product-list-scroller{
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
         -ms-box-sizing: border-box;
@@ -399,8 +505,12 @@
     width:100%;
     height:100%;
     overflow: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    -webkit-transform: translate3d(0,0,0);
+
 }
-.point-of-sale .product-list-container {
+.pos .product-list-container {
     position:absolute;
     top:0px;
     bottom:0px;
@@ -410,85 +520,89 @@
 
 /*  a) the product list navigation bar */
 
-.point-of-sale .breadcrumb li {
-    float: left;
-    line-height: 32px;
-    height: 32px;
+.pos .breadcrumbs{
+    display: inline-block;
+    text-align: left;
+    float:left;
 }
-.point-of-sale .breadcrumb li:last-child {
+.pos .breadcrumb{
+    float: left;
+    display: inline-block;
+    line-height: 48px;
+    height: 48px;
+    min-width: 48px;
+}
+.pos .breadcrumb:last-child {
     padding-right: 3px;
     border-right: 1px solid #c5c5c5;
 }
-.point-of-sale .breadcrumb a {
+.pos .breadcrumb-button {
     display: inline-block;
     padding: 0 9px;
     vertical-align: top;
-    text-shadow: #f7f7f7 0 1px 1px;
-    color: #555555;
-    font-weight: bold;
+    color: #808080;
+    font-size: 14px;
+    cursor: pointer;
 }
-.point-of-sale .bc-arrow {
-    height: 33px;
+.pos .breadcrumb-arrow{
+    width: 28px;
 }
-.point-of-sale .homeimg {
-    width: 19px;
-    height: 19px;
-    margin: 6px 0;
+.pos .breadcrumb-homeimg {
+    width: 27px;
+    margin: 12px 6px;
 }
 
 /*  b) the search box */
 
-.point-of-sale .searchbox {
+.pos .searchbox {
     position: absolute;
     right: 2px;
 }
-.point-of-sale .searchbox input {
-    width: 130px;
-    border-radius: 11px;
+.pos .searchbox input {
+    width: 100px;
     border: 1px solid #cecbcb;
-    padding: 3px 19px;
+    padding: 10px 20px;
+    padding-left: 38px;
     margin: 6px;
-    background: url("../img/search.png") no-repeat 5px;
+    background: url("../img/search.png") no-repeat 15px;
     background-color: white;
+    border-radius: 20px;
+    font-family: Lato;
+    font-size: 13px;
 }
-.point-of-sale .search-clear {
+.pos .searchbox input:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
+    color: rgb(153, 153, 255);
+}
+.pos .search-clear {
     position: absolute;
+    width: 30px;
+    height: 30px;
     top: 11px;
-    right: 11px;
+    left: 11px;
     cursor: pointer;
-    display: none;
 }
 
 /*  c) the categories list */
 
-.point-of-sale #categories {
-    /*background:#f0f0f0;*/
+.pos .categories {
     position: relative;
-    background-image: url('../img/bg.png');
-    border-bottom: 2px solid #e0e0e0;
+    border-bottom: 1px solid #cecece;
 }
-.point-of-sale #categories .white-gradient{
-    position: absolute;
-    top:50%;
-    left:0;
-    right:0;
-    bottom:0;
-    background: -webkit-linear-gradient(bottom,rgba(255,255,255,0.5),rgba(255,255,255,0));
-    background:    -moz-linear-gradient(bottom,rgba(255,255,255,0.5),rgba(255,255,255,0));
-    background:     -ms-linear-gradient(bottom,rgba(255,255,255,0.5),rgba(255,255,255,0));
-    background:         linear-gradient(bottom,rgba(255,255,255,0.5),rgba(255,255,255,0));
-}
-.point-of-sale #categories h4 {
+.pos .categories h4 {
     display: inline-block;
     margin: 9px 5px;
 }
 
-.point-of-sale .category-list{
-    padding:10px !important;
+.pos .category-list{
+    text-align: left;
+    padding: 10px;
+    background: rgb(229, 229, 229);
 }
 /*  d) the category button */
 
-.point-of-sale .category-button {
+.pos .category-button {
     position: relative;
     vertical-align: top;
     display: inline-block;
@@ -497,42 +611,30 @@
     width: 120px;
     height:120px;
     background:#fff;
-    border: 1px solid #fff;
+    border: 1px solid #d7d7d7;
     border-radius: 3px;
-    -webkit-box-shadow: 0px 2px 0px #E9E9E9, 0px 3px 8px rgba(0, 0, 0, 0.34);
-       -moz-box-shadow: 0px 2px 0px #E9E9E9, 0px 3px 8px rgba(0, 0, 0, 0.34);
-            box-shadow: 0px 2px 0px #E9E9E9, 0px 3px 8px rgba(0, 0, 0, 0.34);
+    border-bottom-width: 3px;
     cursor: pointer;
 }
 
-.point-of-sale .category-simple-button{
+.pos .category-simple-button{
     position: relative;
     display: inline-block;
     font-size: 14px;
     margin-right:10px;
-    padding:5px;
+    padding: 5px 12px;
+    line-height: 24px;
+    border-radius: 3px;
 
     cursor: pointer;
     border: 1px solid #cacaca;
-    border-radius: 4px;
 
     background: #e2e2e2;
-    background: -webkit-linear-gradient(#f0f0f0, #e2e2e2);
-    background:    -moz-linear-gradient(#f0f0f0, #e2e2e2);
-    background:     -ms-linear-gradient(#f0f0f0, #e2e2e2);
-    background:         linear-gradient(#f0f0f0, #e2e2e2);
-    -webkit-box-shadow: 0px 2px 2px rgba(0,0,0, 0.1);
-       -moz-box-shadow: 0px 2px 2px rgba(0,0,0, 0.1);
-            box-shadow: 0px 2px 2px rgba(0,0,0, 0.1);
 }
-.point-of-sale .category-simple-button:active{
+.pos .category-simple-button:active{
     color: white;
     background: #7f82ac;
     border: 1px solid #7f82ac;
-    background: -webkit-linear-gradient(#9d9fc5, #7f82ac);
-    background:    -moz-linear-gradient(#9d9fc5, #7f82ac);
-    background:     -ms-linear-gradient(#9d9fc5, #7f82ac);
-    background:         linear-gradient(#9d9fc5, #7f82ac);
 
     -webkit-transition-property: background, border;
     -webkit-transition-duration: 0.2s;
@@ -541,7 +643,7 @@
 
 
 
-.point-of-sale .category-button .category-img {
+.pos .category-button .category-img {
     position: relative;
     width: 120px;
     height: 100px;
@@ -549,12 +651,13 @@
     cursor: pointer;
 }
 
-.point-of-sale .category-button .category-img img {
+.pos .category-button .category-img img {
     max-height: 100px;
     max-width:  120px;
+    vertical-align: middle;
 }
 
-.point-of-sale .category-button .category-name {
+.pos .category-button .category-name {
     position: absolute;
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
@@ -564,9 +667,6 @@
     top: auto;
     line-height: 14px;
     width: 100%;
-    background: -webkit-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
-    background:    -moz-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
-    background:     -ms-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
     /* for some reason the -90deg orientation doesn't match the -webkit-linear-gradient. It should be 180deg here.
      * webkit also insists on rendering *both* gradients instead of only the native one. So it doesn't looks right. ugh. 
     background:         linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1)); */
@@ -578,7 +678,7 @@
 
 /*  e) the product */
 
-.point-of-sale .product {
+.pos .product {
     position:relative;
     vertical-align: top;
     display: inline-block;
@@ -588,15 +688,14 @@
     width: 120px;
     height:120px;
     background:#fff;
-    border: 1px solid #fff;
+    border: 1px solid #e2e2e2;
     border-radius: 3px;
+    border-bottom-width: 3px;
     overflow: hidden;
-    -webkit-box-shadow: 0px 2px 0px #dad8e4, 0px 1px 8px #636480; 
-       -moz-box-shadow: 0px 2px 0px #dad8e4, 0px 1px 8px #636480; 
-            box-shadow: 0px 2px 0px #dad8e4, 0px 1px 8px #636480; 
+    cursor: pointer;
 }
 
-.point-of-sale .product .product-img {
+.pos .product .product-img {
     position: relative;
     width: 120px;
     height: 100px;
@@ -604,12 +703,13 @@
     text-align: center;
 }
 
-.point-of-sale .product .product-img img {
+.pos .product .product-img img {
     max-height: 100px;
     max-width:  120px;
+    vertical-align: middle;
 }
 
-.point-of-sale .product .price-tag {
+.pos .product .price-tag {
     position: absolute;
     top: 2px;
     right: 2px;
@@ -618,11 +718,10 @@
     line-height: 13px;
     background: #7f82ac;
     padding: 2px 5px;
-    border-radius: 3px;
-    box-shadow: 0px 1px 0px #9A9CC5, 0px 3px 0px #7E86AC, 0px 3px 3px rgba(12, 14, 68, 0.67);
+    border-radius: 2px;
 }
 
-.point-of-sale .product .product-name {
+.pos .product .product-name {
     position: absolute;
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
@@ -648,35 +747,30 @@
 
 /*  ********* The Screens  ********* */
 
-.point-of-sale .screen {
+.pos .screen {
     position:absolute;
     text-align: center;
     top:0px;
     bottom:0px;
     width:100%;
-    background-image: -webkit-radial-gradient(rgba(255, 255, 255, 0),rgba(51, 17, 124, 0.25)), url('../img/grid.png');
-    box-shadow: 0px 36px 24px rgba(0, 0, 0, 0.14) inset;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
 }
-.point-of-sale .screen header h2 {
+.pos .screen header h2 {
     margin-top: 0px;
     padding-top: 7px;
-    font-size: 1.5em /* Customize font according bootstrap3 */
 }
-.point-of-sale .screen p{
+.pos .screen p{
     font-size: 18px;
 }
-.point-of-sale .dialog{
+.pos .dialog{
     width: 500px;
     margin-left: auto;
     margin-right: auto;
     margin-top: 50px;
-    padding: 40px;
-    background-color: #f8f8f8;
-    border-radius: 4px;
     text-align: center;
-    box-shadow: 0px 1px 0px white,0px -1px 0px white, 0px 4px 0px #DFDFDF, 0px 10px 30px rgba(0, 0, 0, 0.21);
 }
-.point-of-sale .dialog p{
+.pos .dialog p{
     font-size: 25px;
     margin-top: 10px;
     color: #5a5a5a;
@@ -684,159 +778,192 @@
 
 /* a) Layout for the Product Screen */
 
-.point-of-sale .screen .layout-table {
+.pos .screen .layout-table {
     border:none;
     width:100%;
     height:100%;
 }
 
-.point-of-sale .screen .header-row {
+.pos .screen .header-row {
     border:none;
     width:100%;
     height:0px;
 }
 
-.point-of-sale .screen .header-cell{
+.pos .screen .header-cell{
     border:none;
     width:100%;
     height:0px;
 }
-.point-of-sale .screen .content-row {
+.pos .screen .content-row {
     width:100%;
     height:100%;
 }
-.point-of-sale .screen .content-cell{
+.pos .screen .content-cell{
     width:100%;
 }
-.point-of-sale .screen .content-cell .content-container{
+.pos .screen .content-cell .content-container{
     height:100%;
     position:relative;
 }
 
 /* b) The payment screen */
 
-.point-of-sale .pos-step-container {
+
+.pos .pos-payment-container {
     display: inline-block;
-    font-size: 1.5em;
+    font-size: 16px;
+    text-align: left;
+    width: 360px;
 }
-.point-of-sale .greyed-out{
-    color: #AAA;
+.pos .payment-due-total {
+    text-align: center;
+    font-weight: bold;
+    font-size: 48px;
+    margin: 27px;
+    text-shadow: 0px 2px rgb(202, 202, 202);
 }
-.point-of-sale .pos-step-container input{
-    font-size: 1em;
+.pos .paymentline{
+    position: relative;
+    padding: 8px;
+    border-box: 3px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    border-radius: 3px;
+}
+.pos .paymentline-name{
+    margin-bottom: 8px;
+}
+.pos .paymentline-input{
+    font-size: 20px;
+    font-family: Lato;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
     outline: none;
     border: none;
-    padding: 0px 8px;
-    padding-top: 8px;
-    margin-left: 16px;
-    border-radius: 5px;
+    padding: 6px 8px;
     background: white;
-    box-shadow: 0px -1px 0px #E2E2E2 inset,0px 1px 0px white inset, 0px 4px 0px #DDD inset, 0px 4px 8px rgba(0, 0, 0, 0.55) inset;
-    color: #4c4c4c; 
+    color: #484848;
+    text-align: right;
+    border-radius: 3px;
+    box-shadow: 0px 2px rgba(143, 143, 143, 0.3) inset;
+}
+
+.pos .paymentline-input:focus{
+    color: rgb(130, 124, 255);
+    box-shadow: 0px 2px rgba(219, 219, 219, 0.3) inset;
     -webkit-animation: all 250ms linear;
 }
 
-.point-of-sale .pos-step-container input:focus{
-    box-shadow: 0px -1px 0px #C9CFFD inset,0px 1px 0px #B8C8FC inset, 0px 4px 0px #9FD5FF inset, 0px 4px 9px rgba(0, 31, 255, 0.55) inset;
-    color: #5d7ad6;
-    -webkit-animation: all 250ms linear;
+.paymentline-delete {
+    width: 32px;
+    height: 32px;
+    padding: 5px;
+    text-align: center;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    position: absolute;
+    bottom: 10px;
+    left: 8px;
+    cursor: pointer;
 }
 
-.point-of-sale .pos-payment-container {
-    text-align: left;
-    min-width: 500px;
-    margin-top: 50px;
-    padding: 40px;
-    background-color: #f8f8f8;
-    border-radius: 4px;
-    box-shadow: 0px 1px 0px white,0px -1px 0px white, 0px 4px 0px #DFDFDF, 0px 10px 30px rgba(0, 0, 0, 0.21);
-}
-.point-of-sale .pos-payment-container .left-block{
+.pos .pos-payment-container .left-block{
     display: inline-block;
     width:49%;
     margin:0;
     padding:0;
     text-align:left;
 }
-.point-of-sale .pos-payment-container .header{
-    margin-top: 0px;
-    margin-bottom:20px;
-    font-weight: bold;
-}
-.point-of-sale .pos-payment-container .infoline{
+.pos .pos-payment-container .infoline{
     margin-top:5px;
     margin-bottom:5px;
+    padding: 0px 8px;
+    opacity: 0.5;
 }
-.point-of-sale .pos-payment-container .right-block{
+.pos .pos-payment-container .infoline.bigger{
+    opacity: 1;
+    font-size: 20px;
+}
+.pos .pos-payment-container .right-block{
     display: inline-block;
     width:49%;
     margin:0;
     padding:0;
     text-align:right;
 }
-.point-of-sale .pos-payment-container table {
-    width: 100%;
-    margin-bottom: 20px;
-}
-.point-of-sale .pos-payment-container td {
-    vertical-align: middle;
-}
-.point-of-sale .pos-payment-container .paymentline-type {
-    font-size: 1em;
-    font-weight: bold;
-    margin-right:10px;
+.pos .paymentline.selected{
+    background: rgb(220,220,220);
 }
 
 /* c) The receipt screen */
 
-.point-of-sale .pos-receipt-container {
+.pos .pos-receipt-container {
     font-size: 0.75em;
 }
 
-.point-of-sale .pos-sale-ticket {
+.pos .pos-sale-ticket {
     text-align: left;
     width: 300px;
     background-color: white;
     margin: 20px;
     padding: 15px;
+    font-size: 14px;
     padding-bottom:30px;
     display: inline-block;
     font-family: "Inconsolata";
-    border-radius: 2px;
-    box-shadow: 0px 1px 0px white, 0px 3px 0px #C1B9D6, 0px 8px 16px rgba(0, 0, 0, 0.3);
+    border: solid 1px rgb(220,220,220);
+    border-radius: 3px;
+    overflow: hidden;
 }
-.point-of-sale .pos-sale-ticket .emph{
+.pos .pos-sale-ticket pre{
+    font-family: "Inconsolata";
+}
+.pos .pos-sale-ticket .emph{
     font-size: 20px;
     margin:5px;
 }
-.point-of-sale .pos-sale-ticket table {
+.pos .pos-sale-ticket table {
     width: 100%;
     border: 0;
     table-layout: fixed;
 }
-.point-of-sale .pos-sale-ticket table td {
+.pos .pos-sale-ticket table td {
     border: 0;
     word-wrap: break-word;
 }
 
 @media print {
-    .point-of-sale{
-        background: white !important;
-    }
-    .point-of-sale #topheader, .point-of-sale #leftpane {
+    .oe_leftbar,
+    .pos .pos-topheader, 
+    .pos .pos-leftpane, 
+    .pos .keyboard_frame {
         display: none !important;
     }
-    .point-of-sale #content {
-        top: 0px !important;
+    .pos,
+    .pos .pos-content,
+    .pos .rightpane,
+    .pos .screen, 
+    .pos .window, 
+    .pos .window .subwindow, 
+    .pos .subwindow .subwindow-container{
+        display: block;
+        position: static;
+        height: auto;
     }
-    .point-of-sale #rightpane {
+    .pos{
+        background: white !important;
+    }
+    .pos .rightpane {
         left: 0px !important;
         background-color: white;
     }
-    #receipt-screen header {
+    .pos .receipt-screen header {
         display: none !important;
     }
-    #receipt-screen {
+    .pos .receipt-screen {
         text-align: left;
     }
     .pos-actionbar {
@@ -845,12 +972,12 @@
     .debug-widget{
         display: none !important;
     }
-    .point-of-sale *{
+    .pos *{
         text-shadow: none !important;
         box-shadow: none !important;
         background: transparent !important;
     }
-    .point-of-sale .pos-sale-ticket{
+    .pos .pos-sale-ticket{
         margin: 0;
         margin-left: auto !important;
         margin-right: auto !important;
@@ -862,20 +989,16 @@
 
 /* d) The Scale screen */
 
-.point-of-sale .scale-screen .display{
+.pos .scale-screen .display{
     position:relative;
-    width:600px;
+    width: 550px;
     height:190px;
     margin-top: 100px;
     margin-left: auto;
     margin-right: auto;
-    padding: 40px;
-    background: #f1f1f1;
-    box-shadow: 0px 1px 0px white, 0px -1px 0px white, 0px 4px 0px #dfdfdf, 0px 10px 30px rgba(0,0,0,0.21);
-    border-radius: 4px;
 }
 
-.point-of-sale .scale-screen .product-picture {
+.pos .scale-screen .product-picture {
     position: relative;
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
@@ -892,17 +1015,17 @@
     background:#fff;
     border: 1px solid #fff;
     border-radius: 3px;
-    box-shadow: 0px 2px 0px #e9e9e9, 0px 2px 8px rgba(0,0,0,0.2);
+    box-shadow: 0px 2px rgb(228, 228, 228);
 }
 
-.point-of-sale .scale-screen .product-picture img{
-    max-width: 178px;
-    max-height:178px;
+.pos .scale-screen .product-picture img{
+    max-width:  178px;
+    max-height: 178px;
     vertical-align: middle;
     cursor:pointer;
 }
 
-.point-of-sale .scale-screen .product-picture .product-price{
+.pos .scale-screen .product-picture .product-price{
     position: absolute;
     top:8px;
     right:8px;
@@ -911,54 +1034,53 @@
     line-height:1;
     color:white;
     background: #7f82ac;
-    padding: 2px 5px;
+    padding: 4px 5px;
     border-radius: 3px;
     cursor:pointer;
 }
 
-.point-of-sale .scale-screen .product-name {
+.pos .scale-screen .product-name {
     position: absolute;
-    left:40px;
-    top:50px;
-    height:50px;
-    font-size:36px;
-    line-height:50px;
-    text-align:right;
-    right:275px;
+    left: 0px;
+    right: 210px;
+    top: 10px;
+    height: 50px;
+    font-size: 36px;
+    line-height: 50px;
+    text-align: right;
     color: #8d8d8d;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.point-of-sale .scale-screen .weight{
-    position: absolute;
-    left: 40px;
-    height: 90px;
-    bottom: 55px;
-    right: 260px;
-    padding: 6px;
-    padding-right: 33px;
-    padding-top: 11px;
-    background: white;
-    border-radius: 3px;
-    box-shadow: 0px -1px #E2E2E2 inset,0px 1px white inset, 0px 4px #E6E4E4 inset, 0px 4px 8px rgba(0, 0, 0, 0.4) inset;
-
+.pos .scale-screen .weight{
+   position: absolute;
+   left: 0;
+   top: 80px;
+   height: 90px;
+   bottom: 55px;
+   right: 210px;
+   padding: 6px;
+   padding-right: 33px;
+   padding-top: 11px;
+   background: white;
+   border-radius: 3px;
+   box-shadow: 0px 2px rgb(228, 228, 228) inset;
 }
-.point-of-sale .scale-screen .weight p{
+.pos .scale-screen .weight p{
     display: inline-block;
     text-align:right;
     line-height: 90px;
-    font-size: 70px;
+    font-size: 56px;
     width: 100%;
     height: 100%;
     margin: 0;
     margin-right: 18px;
     font-family: "Inconsolata";
     color: #6c6c6c;
-    text-shadow: 0px 3px 3px rgba(0,0,0, 0.2);
 }
 
 /* e) The Welcome Screen */
-.point-of-sale .goodbye-message{
+.pos .goodbye-message{
     position: absolute;
     left:50%;
     top:40%;
@@ -973,34 +1095,31 @@
     font-weight:bold;
     background-color: #F0EEEE;
     border: 1px solid #E0DDDD;
-    -webkit-box-shadow: 0px 10px 20px rgba(0,0,0, 0.3);
-       -moz-box-shadow: 0px 10px 20px rgba(0,0,0, 0.3);
-        -ms-box-shadow: 0px 10px 20px rgba(0,0,0, 0.3);
+    border-radius: 3px;
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.4);
     z-index:1150;
 }
 
 /*  ********* The OrderWidget  ********* */
 
-.point-of-sale .order-container{
+.pos .order-container{
     position: absolute;
     top: 0px;
-    bottom: 232px;
     width:100%;
+    height: 100%;
     background: #F0EEEE;
 }
 
-.point-of-sale .order-scroller{
+.pos .order-scroller{
     width:100%;
     height:100%;
     overflow:hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
-.point-of-sale .order{
+.pos .order{
     background: white;
-    background: -webkit-linear-gradient(0deg,rgba(245,245,245,1),rgba(255,255,255,1), rgba(245,245,245,1));
-    background:    -moz-linear-gradient(0deg,rgba(245,245,245,1),rgba(255,255,255,1), rgba(245,245,245,1));
-    background:     -ms-linear-gradient(0deg,rgba(245,245,245,1),rgba(255,255,255,1), rgba(245,245,245,1));
-    background:         linear-gradient(0deg,rgba(245,245,245,1),rgba(255,255,255,1), rgba(245,245,245,1));
     padding-bottom:15px;
     padding-top:15px;
     margin-left:16px;
@@ -1008,14 +1127,12 @@
     margin-top:16px;
     margin-bottom:16px;
     font-size:16px;
-    border-radius: 2px;
-    -webkit-box-shadow: 0px 1px 0px white, 0px 3px 0px #DFDFDF, 0px 7px 16px rgba(0, 0, 0, 0.20);
-       -moz-box-shadow: 0px 1px 0px white, 0px 3px 0px #DFDFDF, 0px 7px 16px rgba(0, 0, 0, 0.20);
-            box-shadow: 0px 1px 0px white, 0px 3px 0px #DFDFDF, 0px 7px 16px rgba(0, 0, 0, 0.20);
-
+    border-radius: 3px;
+    border: solid 1px rgb(220,220,220);
+    -webkit-transform: translate3d(0,0,0);
 }
 
-.point-of-sale .order .empty{
+.pos .order .empty{
     text-align:center;
     margin-top: 15px;
     margin-bottom: 5px;
@@ -1023,14 +1140,14 @@
     font-weight: normal;
 }
 
-.point-of-sale .order .summary{
+.pos .order .summary{
     width:100%;
     text-align:right;
     font-weight: bold;
     margin-top:20px;
     margin-bottom:10px;
 }
-.point-of-sale .order .summary .line{
+.pos .order .summary .line{
     float: right;
     margin-right:15px;
     margin-left: 15px;
@@ -1038,12 +1155,12 @@
     border-top: solid 2px;
     border-color:#777;
 }
-.point-of-sale .order .summary .line .subentry{
-    font-size: 10px;
+.pos .order .summary .line .subentry{
+    font-size: 14px;
     font-weight: normal;
     text-align: center;
 }
-.point-of-sale .order .summary .line.empty{
+.pos .order .summary .line.empty{
     text-align: right;
     border-color:#BBB;
     color:#999;
@@ -1051,7 +1168,7 @@
 
 /*  ********* The OrderLineWidget  ********* */
 
-.point-of-sale .order .orderline{
+.pos .order .orderline{
     width:100%;
     margin:0px;
     padding-top:3px;
@@ -1067,25 +1184,25 @@
        -moz-transition: background 250ms ease-in-out;
             transition: background 250ms ease-in-out;
 }
-.point-of-sale .order .orderline:active{
+.pos .order .orderline:active{
     background: rgba(140,143,183,0.05);
     -webkit-transition: background 50ms ease-in-out;
        -moz-transition: background 50ms ease-in-out;
             transition: background 50ms ease-in-out;
 }
-.point-of-sale .order .orderline.empty:active{
+.pos .order .orderline.empty:active{
     background: transparent;
     cursor: default;
 }
 
-.point-of-sale .order .orderline.selected{
+.pos .order .orderline.selected{
     background: rgba(140,143,183,0.2);
     -webkit-transition: background 250ms ease-in-out;
        -moz-transition: background 250ms ease-in-out;
             transition: background 250ms ease-in-out;
     cursor: default;
 }
-.point-of-sale .order .orderline .product-name{
+.pos .order .orderline .product-name{
     padding:0;
     display:inline-block;
     font-weight: bold;
@@ -1093,16 +1210,16 @@
     overflow:hidden;
     text-overflow: ellipsis;
 }
-.point-of-sale .order .orderline .price{
+.pos .order .orderline .price{
     padding:0;
     font-weight: bold;
     float:right;
 }
-.point-of-sale .order .orderline .info-list{
+.pos .order .orderline .info-list{
     color: #888;
     margin-left:10px;
 }
-.point-of-sale .order .orderline .info-list em{
+.pos .order .orderline .info-list em{
     color: #777;
     font-weight: bold;
     font-style:normal;
@@ -1110,33 +1227,18 @@
 
 /*  ********* The ActionBarWidget  ********* */
 
-.point-of-sale .pos-actionbar{
-    position:absolute;
-    left:    0;
-    bottom:  0px;
+.pos .pos-actionbar{
     height: 105px;
-    width:  100%;
-    margin: 0;
     background: #f5f5f5;    /*#ebebeb;*/
-    border-top: solid 1px #afafb6;
+    border-top: solid 1px #cecece;
     z-index:900;
 }
 
-.point-of-sale .pos-actionbar ul{
+.pos .pos-actionbar ul{
     list-style:  none;
 }
 
-.point-of-sale .pos-actionbar-left-pane{
-    height: 100%;
-    width:  434px;
-    margin: 0px;
-    padding-left:3px;
-    padding-right:3px;
-    border-right: solid 1px #dfdfdf;
-    float:  left;
-}
-
-.point-of-sale .pos-actionbar-button-list{
+.pos .pos-actionbar-button-list{
     height: 100%;
     margin: 0px;
     padding-left:3px;
@@ -1144,7 +1246,7 @@
     overflow:hidden;
 }
 
-.point-of-sale .pos-actionbar .button{
+.pos .pos-actionbar .button{
     width: 90px;
     height: 90px;
     text-align:center;
@@ -1158,62 +1260,43 @@
     cursor: pointer;
 
     border: 1px solid #cacaca;
-    border-radius: 4px;
+    border-radius: 3px;
 
     background: #e2e2e2;
-    background: -webkit-linear-gradient(#f0f0f0, #e2e2e2);
-    background:    -moz-linear-gradient(#f0f0f0, #e2e2e2);
-    background:     -ms-linear-gradient(#f0f0f0, #e2e2e2);
-    background:         linear-gradient(#f0f0f0, #e2e2e2);
-    -webkit-box-shadow: 0px 2px 2px rgba(0,0,0, 0.1);
-       -moz-box-shadow: 0px 2px 2px rgba(0,0,0, 0.1);
-            box-shadow: 0px 2px 2px rgba(0,0,0, 0.1);
 }
-.point-of-sale .pos-actionbar .button .label{
+.pos .pos-actionbar .button .label{
     margin-top: 37px;
 }
-.point-of-sale .pos-actionbar .button .icon{
+.pos .pos-actionbar .button .icon{
     margin-top: 10px;
 }
-.point-of-sale .pos-actionbar .button:active{
+.pos .pos-actionbar .button:active{
     color: white;
     background: #7f82ac;
     border: 1px solid #7f82ac;
-    background: -webkit-linear-gradient(#9d9fc5, #7f82ac);
-    background:    -moz-linear-gradient(#9d9fc5, #7f82ac);
-    background:     -ms-linear-gradient(#9d9fc5, #7f82ac);
-    background:         linear-gradient(#9d9fc5, #7f82ac);
 
     -webkit-transition-property: background, border;
     -webkit-transition-duration: 0.2s;
     -webkit-transition-timing-function: ease-out;
 }
 
-.point-of-sale .pos-actionbar .button.disabled *{
+.pos .pos-actionbar .button.disabled{
     opacity: 0.5;
 }
-.point-of-sale .pos-actionbar .button.disabled:active{
+.pos .pos-actionbar .button.disabled:active{
     border: 1px solid #cacaca;
-    border-radius: 4px;
     color: #555;
     cursor: default;
 
     background: #e2e2e2;
-    background: -webkit-linear-gradient(#f0f0f0, #e2e2e2);
-    background:    -moz-linear-gradient(#f0f0f0, #e2e2e2);
-    background:     -ms-linear-gradient(#f0f0f0, #e2e2e2);
-    background:         linear-gradient(#f0f0f0, #e2e2e2);
-    -webkit-box-shadow: 0px 2px 2px rgba(0,0,0, 0.1);
-       -moz-box-shadow: 0px 2px 2px rgba(0,0,0, 0.1);
-            box-shadow: 0px 2px 2px rgba(0,0,0, 0.1);
 }
 
-.point-of-sale .pos-actionbar .button.rightalign{
+.pos .pos-actionbar .button.rightalign{
     float:right;
 }
 /*  ********* The Debug Widget  ********* */
 
-.point-of-sale .debug-widget{
+.pos .debug-widget{
     z-index:100000;
     position: absolute;
     right: 10px;
@@ -1223,12 +1306,11 @@
     
     background: rgba(0,0,0,0.82);
     color: white;
-    text-shadow: none;
     padding-bottom: 10px;
-    box-shadow: 0px 3px 20px rgba(0,0,0,0.3);
-    cursor:move;
+    cursor: move;
+    -webkit-transform: translate3d(0,0,0);
 }
-.point-of-sale .debug-widget .toggle{
+.pos .debug-widget .toggle{
     position: absolute;
     font-size: 16px;
     cursor:pointer;
@@ -1237,17 +1319,17 @@
     padding:10px;
     padding-right:15px;
 }
-.point-of-sale .debug-widget .content{
+.pos .debug-widget .content{
     overflow: hidden;
 }
-.point-of-sale .debug-widget h1{
+.pos .debug-widget h1{
     background:black;
     padding-top: 10px;
     padding-left: 10px;
     margin-top:0;
     margin-bottom:0;
 }
-.point-of-sale .debug-widget .category{
+.pos .debug-widget .category{
     background: black;
     padding-left: 10px;
     margin: 0px;
@@ -1255,29 +1337,35 @@
     padding-top:3px;
     padding-bottom:3px;
 }
-.point-of-sale .debug-widget .button{
+.pos .debug-widget .button{
     padding: 5px;
     padding-left: 15px;
     display: block;
     cursor:pointer;
 }
-.point-of-sale .debug-widget .button:active{
+.pos .debug-widget .button:active{
     background: rgba(96,21,177,0.45);
 }
-.point-of-sale .debug-widget input{
+.pos .debug-widget input{
     margin-left:10px;
     margin-top:7px;
+    padding: 4px;
+    width: 180px;
+    border: none;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    border-radius: 3px;
 }
-.point-of-sale .debug-widget .status{
+.pos .debug-widget .status{
     padding: 5px;
     padding-left: 15px;
     display: block;
     cursor:default;
 }
-.point-of-sale .debug-widget .status.on{
+.pos .debug-widget .status.on{
     background-color: #6cd11d;
 }
-.point-of-sale .debug-widget .event{
+.pos .debug-widget .event{
     padding: 5px;
     padding-left: 15px;
     display: block;
@@ -1287,7 +1375,7 @@
 
 /*  ********* The PopupWidgets  ********* */
 
-.point-of-sale .modal-dialog{
+.pos .modal-dialog{
     position: absolute;
     left: 0;
     top: 0;
@@ -1296,7 +1384,7 @@
     background-color: rgba(0,0,0,0.5);
     z-index:1000;
 }
-.point-of-sale .modal-dialog .popup{
+.pos .modal-dialog .popup{
     position: absolute;
     left:50%;
     top:50%;
@@ -1310,11 +1398,11 @@
     font-size:20px;
     font-weight:bold;
     background-color: #F0EEEE;
-    border-radius: 4px;
-    box-shadow: 0px -1px white, 0px 1px white, 0px 4px #949494, 0px 10px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.4);
     z-index:1200;
 }
-.point-of-sale .popup .footer{
+.pos .popup .footer{
     position:absolute;
     bottom:0;
     left:0;
@@ -1322,7 +1410,7 @@
     height:60px;
     border-top: 1px solid #E0DDDD;
 }
-.point-of-sale .popup .button{
+.pos .popup .button{
     float:right;
     width: 110px;
     height: 40px;
@@ -1338,32 +1426,20 @@
     cursor: pointer;
 
     border: 1px solid #cacaca;
-    border-radius: 4px;
 
     background: #e2e2e2;
-    background: -webkit-linear-gradient(#f0f0f0, #e2e2e2);
-    background:    -moz-linear-gradient(#f0f0f0, #e2e2e2);
-    background:     -ms-linear-gradient(#f0f0f0, #e2e2e2);
-    background:         linear-gradient(#f0f0f0, #e2e2e2);
-    -webkit-box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
-       -moz-box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
-            box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
 }
-.point-of-sale .popup .button:active{
+.pos .popup .button:active{
     color: white;
     background: #7f82ac;
     border: 1px solid #7f82ac;
-    background: -webkit-linear-gradient(#9d9fc5, #7f82ac);
-    background:    -moz-linear-gradient(#9d9fc5, #7f82ac);
-    background:     -ms-linear-gradient(#9d9fc5, #7f82ac);
-    background:         linear-gradient(#9d9fc5, #7f82ac);
 
     -webkit-transition-property: background, border;
     -webkit-transition-duration: 0.2s;
     -webkit-transition-timing-function: ease-out;
 }
 
-.point-of-sale .popup .button.big-left{
+.pos .popup .button.big-left{
     position:absolute;
     top: 120px;
     left:40px;
@@ -1372,7 +1448,7 @@
     line-height:180px;
 }
 
-.point-of-sale .popup .button.big-right{
+.pos .popup .button.big-right{
     position:absolute;
     top: 120px;
     right:40px;
@@ -1381,78 +1457,58 @@
     line-height:180px;
 }
 
-/*  ********* The ScrollBarWidget  ********* */
+/*  ********* The Webkit Scrollbar  ********* */
 
-.point-of-sale .scrollbar{  
-    position:absolute;
-    top:7px;
-    right:7px;
-    width:48px;
-    bottom:7px;
-    background: rgba(0,0,0,0.1);
+.pos *::-webkit-scrollbar{
+    width:  10px;
+    height: 10px;
+}
+.pos *::-webkit-scrollbar-track{
+    background: rgb(224,224,224);
+    border-left: solid 1px rgb(200,200,200);
+}
+.pos *::-webkit-scrollbar-thumb{
+    background: rgb(168,168,168);
+    min-height: 30px;
+}
 
+.pos.big-scrollbars *::-webkit-scrollbar{
+    width:  40px;
+    height: 40px;
 }
-.point-of-sale .scrollbar .button{
-    width:100%;
-    height: 48px;
-    line-height: 38px;
-    text-align: center;
-    font-size:48px;
-    border-radius: 4px;
-    cursor: pointer;
-    -webkit-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none;
-    transition: all 250ms ease-in-out;
+.pos.big-scrollbars *::-webkit-scrollbar-track{
+    background: rgb(224,224,224);
+    border-left: none;
 }
-.point-of-sale .scrollbar .button{
-    color:white;
-    background: rgba(0,0,0,0.6);
-    -webkit-box-shadow: 0px 1px 4px rgba(0,0,0,0.01);
-       -moz-box-shadow: 0px 1px 4px rgba(0,0,0,0.01);
-            box-shadow: 0px 1px 4px rgba(0,0,0,0.01);
-    text-shadow: rgba(255,255,255,0.5) 0px 0px 10px;
-    -webkit-transition: all 250ms ease-in-out;
-       -moz-transition: all 250ms ease-in-out;
-            transition: all 250ms ease-in-out;
+.pos.big-scrollbars *::-webkit-scrollbar-thumb{
+    background: rgb(168,168,168);
+    min-height: 40px;
+    border-radius: 3px;
 }
-.point-of-sale .scrollbar .button:active{
-    text-shadow: rgba(255,255,255,0.8) 0px 0px 15px;
+.pos.big-scrollbars *::-webkit-scrollbar-button{
+    width:  40px;
+    height: 40px;
+    border-radius: 3px;
+    background: rgb(210,210,210);
+    background-size: cover;
 }
-.point-of-sale .scrollbar .button.disabled{
-    background: rgba(0,0,0,0.3);
-    color:rgba(255,255,255,0.5);
-    -webkit-transition: all 250ms ease-in-out;
-       -moz-transition: all 250ms ease-in-out;
-            transition: all 250ms ease-in-out;
+.pos.big-scrollbars *::-webkit-scrollbar-button:decrement{
+    background-image: url('../img/scroll-up.png');
 }
-.point-of-sale .scrollbar .down-button{
-    position:absolute;
-    bottom:0px;
+.pos.big-scrollbars *::-webkit-scrollbar-button:increment{
+    background-image: url('../img/scroll-down.png');
 }
-.point-of-sale .scrollbar .up-button{
-    position:absolute;
-    top:0px;
-}
-.point-of-sale .scrollbar .scroller{
-    position:absolute;
-    top:33%;
-    bottom:50%;
-    width:100%;
-    background: rgba(0,0,0,0.1);
-    border-radius: 4px;
-}
+
 
 /*  ********* Unsupported Browser Page ********* */
 
-.point-of-sale .not-supported-browser{
+.pos .not-supported-browser{
     position: absolute;
     z-index: 100000;
     top: 0; bottom: 0; left: 0; right: 0;
     background: #2C2C2C;
 }
-.point-of-sale .not-supported-browser .message{
+.pos .not-supported-browser .message{
     width:600px;
     margin-top: 100px;
     margin-left: auto;
@@ -1461,8 +1517,6 @@
     color: #d3d3d3;
     font-size: 14px;
 }
-.point-of-sale .not-supported-browser img{
+.pos .not-supported-browser img{
     border-collapse: separate;
-    box-shadow: 0px 3px 38px rgba(0,0,0,0.3);
-    border-radius: 3px;
 }

@@ -301,7 +301,7 @@ class hr_applicant(osv.Model):
         if applicant.department_id and applicant.department_id.manager_id and applicant.department_id.manager_id.user_id and applicant.department_id.manager_id.user_id.partner_id:
             applicant_ids.append(applicant.department_id.manager_id.user_id.partner_id.id)
         category = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'categ_meet_interview', context)
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
         res['context'] = {
             'default_partner_ids': applicant_ids,
             'default_user_id': uid,

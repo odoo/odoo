@@ -13,8 +13,8 @@ function openerp_pos_tests(instance, module){ //module is instance.point_of_sale
         // randomly switch product categories
         this.category_switch = function(interval){
             queue.schedule(function(){
-                var breadcrumbs = $('.breadcrumb a');
-                var categories  = $('li.category-button');
+                var breadcrumbs = $('.breadcrumb-button');
+                var categories  = $('.category-button');
                 if(categories.length > 0){
                     var rnd = Math.floor(Math.random()*categories.length);
                     categories.eq(rnd).click();
@@ -35,12 +35,12 @@ function openerp_pos_tests(instance, module){ //module is instance.point_of_sale
 
                 while(order_size--){
                     order_queue.schedule(function(){
-                        var products = $('.product a');
+                        var products = $('.product');
                         if(products.length > 0){
                             var rnd = Math.floor(Math.random()*products.length);
                             products.eq(rnd).click();
                         }
-                    },{duration:250});
+                    },{duration:20});
                 }
                 order_queue.finished().then(function(){
                         $('.deleteorder-button').click();
@@ -60,19 +60,20 @@ function openerp_pos_tests(instance, module){ //module is instance.point_of_sale
 
                 while(order_size--){
                     order_queue.schedule(function(){
-                        var products = $('.product a');
+                        var products = $('.product');
                         if(products.length > 0){
                             var rnd = Math.floor(Math.random()*products.length);
                             products.eq(rnd).click();
                         }
-                    },{duration:250});
+                    },{duration:50});
                 }
                 order_queue.schedule(function(){
                     $('.paypad-button:first').click();
                 },{duration:250});
                 order_queue.schedule(function(){
-                    $('.paymentline-amount input:first').val(10000);
-                    $('.paymentline-amount input:first').keyup();
+                    $('.paymentline-input:first').val(10000);
+                    $('.paymentline-input:first').keydown();
+                    $('.paymentline-input:first').keyup();
                 },{duration:250});
                 order_queue.schedule(function(){
                     $('.pos-actionbar-button-list .button:eq(2)').click();
