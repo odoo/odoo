@@ -10,6 +10,9 @@ function waitFor (ready, callback, timeout, timeoutMessageCallback) {
                 var message = timeoutMessageCallback ? timeoutMessageCallback() : "Timeout after "+timeout+" ms";
                 console.log('{ "event": "error", "message": "'+message+'" }');
                 console.log("Waiting for...\n"+ready);
+                if (window.localStorage.getItem("test-report")) {
+                    console.log(JSON.parse(website.localStorage.getItem("test-report")));
+                }
                 phantom.exit(1);
             } else {
                 clearInterval(interval);

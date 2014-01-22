@@ -17,7 +17,7 @@ testRunner.run(function websiteSaleTest (page, timeout) {
         waitFor(function testExecuted () {
             return page.evaluate(function () {
                 var res = window.localStorage && window.localStorage.getItem
-                    && window.localStorage.getItem("test-success");
+                    && window.localStorage.getItem("shoptest-test-success");
                 return res;
             });
         }, function finish () {
