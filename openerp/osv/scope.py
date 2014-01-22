@@ -315,8 +315,10 @@ class DraftSwitch(object):
     def __call__(self):
         old = self._state
         self._state = True
-        yield
-        self._state = old
+        try:
+            yield
+        finally:
+            self._state = old
 
 
 #
