@@ -60,30 +60,35 @@
             <field name="arch" type="xml">
                 <form string="Product" version="7.0">
                     <sheet>
+                        <field name="is_only_child" invisible="0"/>
                         <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name" name='label_name' string="Product Name"
-                                    groups="product.group_product_mono"/>
+                                    attrs="{'invisible': [('is_only_child', '=', False)]}"/>
                                 <label for="name" name='label_name' string="Product Template"
-                                    groups="product.gorup_product_variant"/>
+                                    attrs="{'invisible': [('is_only_child', '=', True)]}"/>
                             </div>
                             <h1>
                                 <field name="name" class="oe_inline"
-                                    required="0"
-                                    groups="product.group_product_mono"/>
+                                    attrs="{'required': [('is_only_child', '=', True)],
+                                            'invisible': [('is_only_child', '=', False)]}"/>
                                 <field name="product_tmpl_id" class="oe_inline"
-                                    groups="product.group_product_variant"
+                                    attrs="{'required': [('is_only_child', '=', False)],
+                                            'invisible': [('is_only_child', '=', True)]}"
                                     on_change="onchange_product_tmpl_id(product_tmpl_id)"/>
                                 <span attrs="{'invisible':[('variants','=',False)]}" groups="product.group_product_variant"> - </span>
                                 <field name="variants" placeholder="Variant Name"
-                                    readonly="0"
                                     groups="product.group_product_variant" class="oe_inline"/>
                             </h1>
+                            <span attrs="{'invisible': [('is_only_child', '=', True)]}">
+                                Manage some of the product attributes on the
+                                <a>template form</a>
+                            </span>
                             <label for="categ_id" class="oe_edit_only"/>
-                            <h2><field name="categ_id"/></h2>
+                            <h2><field name="categ_id" attrs="{'readonly': [('is_only_child', '=', False)]}"/></h2>
                             <label for="public_categ_id" class="oe_edit_only"/>
-                            <h3><field name="public_categ_id"/></h3>
+                            <h3><field name="public_categ_id" attrs="{'readonly': [('is_only_child', '=', False)]}"/></h3>
                             <div name="options" groups="base.group_user">
                                 <field name="sale_ok"/>
                                 <label for="sale_ok"/>
@@ -95,9 +100,14 @@
                             <page string="Information">
                                 <group>
                                     <group>
-                                        <field name="type"/>
-                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
-                                        <field name="lst_price" string="Public Sale Price"/>
+                                        <field name="type"
+                                            attrs="{'invisible': [('is_only_child', '=', False)]}"/>
+                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"
+                                            attrs="{'invisible': [('is_only_child', '=', False)]}"/>
+                                        <field name="lst_price" string="Public Sale Price"
+                                            attrs="{'readonly': [('is_only_child', '=', False)]}"/>
+                                        <field name="price_extra"
+                                            attrs="{'invisible': [('is_only_child', '=', True)]}"/>
                                     </group>
                                     <group>
                                         <field name="default_code"/>
@@ -105,19 +115,24 @@
                                         <div name="ean">
                                             <field name="ean13" placeholder="e.g. 5901234123457"/>
                                         </div>
-                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                        <field name="company_id" groups="base.group_multi_company" widget="selection"
+                                            attrs="{'invisible': [('is_only_child', '=', False)]}"/>
                                     </group>
                                 </group>
-                                <field name="description" placeholder="describe the product characteristics..."/>
+                                <field name="description" placeholder="describe the product characteristics..."
+                                    attrs="{'readonly': [('is_only_child', '=', False)]}"/>
                             </page>
                             <page string="Procurements" groups="base.group_user">
                                 <group name="procurement">
                                     <group name="general">
-                                        <field name="cost_method" groups="product.group_costing_method"/>
-                                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
+                                        <field name="cost_method" groups="product.group_costing_method"
+                                            attrs="{'readonly': [('is_only_child', '=', False)]}"/>
+                                        <field name="standard_price"
+                                            attrs="{'readonly': ['|', ('cost_method','=','average'), ('is_only_child', '=', False)]}"/>
                                     </group>
                                     <group name="procurement_uom" groups="product.group_uom" string="Purchase">
-                                        <field name="uom_po_id"/>
+                                        <field name="uom_po_id"
+                                            attrs="{'readonly': [('is_only_child', '=', False)]}"/>
                                     </group>
                                 </group>
                                 <separator string="Description for Suppliers"/>
@@ -126,14 +141,19 @@
                             <page string="Inventory" groups="base.group_user">
                                 <group name="inventory">
                                     <group name="status" string="Status">
-                                        <field name="state"/>
+                                        <field name="state"
+                                            attrs="{'readonly': [('is_only_child', '=', False)]}"/>
                                         <field name="product_manager"
-                                        context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_manager']}"/>
+                                            attrs="{'readonly': [('is_only_child', '=', False)]}"
+                                            context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_manager']}"/>
                                     </group>
                                     <group name="Weights" groups="product.group_stock_packaging" string="Weights">
-                                        <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
-                                        <field name="weight" attrs="{'readonly':[('type','=','service')]}"/>
-                                        <field name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
+                                        <field digits="(14, 3)" name="volume"
+                                            attrs="{'readonly': ['|', ('type','=','service'), ('is_only_child', '=', False)]}"/>
+                                        <field name="weight"
+                                            attrs="{'readonly': ['|', ('type','=','service'), ('is_only_child', '=', False)]}"/>
+                                        <field name="weight_net" 
+                                            attrs="{'readonly': ['|', ('type','=','service'), ('is_only_child', '=', False)]}"/>
                                     </group>
                                 </group>
                             </page>
@@ -141,17 +161,21 @@
                                 <group name="sale">
                                     <group string="Sale Conditions">
                                         <label for="warranty"/>
-                                        <div>
+                                        <div attrs="{'readonly': [('is_only_child', '=', False)]}">
                                             <field name="warranty" class="oe_inline"/> months
                                         </div>
                                     </group>
                                     <group groups="product.group_uos" string="Unit of Measure">
-                                        <field name="uos_id"/>
-                                        <field name="uos_coeff"/>
-                                        <field name="mes_type"/>
+                                        <field name="uos_id"
+                                            attrs="{'readonly': [('is_only_child', '=', False)]}"/>
+                                        <field name="uos_coeff"
+                                            attrs="{'readonly': [('is_only_child', '=', False)]}"/>
+                                        <field name="mes_type"
+                                            attrs="{'readonly': [('is_only_child', '=', False)]}"/>
                                     </group>
                                 </group>
-                                <field name="packaging" groups="product.group_stock_packaging">
+                                <field name="packaging" groups="product.group_stock_packaging"
+                                        attrs="{'readonly': [('is_only_child', '=', False)]}">
                                     <form string="Packaging" version="7.0">
                                         <group col="4">
                                             <field name="ean"/>
@@ -174,7 +198,8 @@
                                     </form>
                                 </field>
                                 <separator string="Description for Quotations"/>
-                                <field name="description_sale" placeholder="note to be displayed on quotations..."/>
+                                <field name="description_sale" placeholder="note to be displayed on quotations..."
+                                    attrs="{'readonly': [('is_only_child', '=', False)]}"/>
                             </page>
                         </notebook>
                     </sheet>

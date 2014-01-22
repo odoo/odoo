@@ -615,6 +615,12 @@ class product_product(osv.osv):
                     (data['name'] or '') + (data['variants'] and (' - '+data['variants']) or '')
         return res
 
+    def _is_only_child(self, cr, uid, ids, name, arg, context=None):
+        res = dict.fromkeys(ids, True)
+        for product in self.browse(cr, uid, ids, context=context):
+            if product.product_tmpl_id and len(product.product_tmpl_id.product_variant_ids) > 1:
+                res[product.id] = False
+        return res
 
     def _get_main_product_supplier(self, cr, uid, product, context=None):
         """Determines the main (best) product supplier for ``product``,
@@ -676,6 +682,8 @@ class product_product(osv.osv):
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'variants': fields.char('Variants', size=64, translate=True),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True),
+        'is_only_child': fields.function(
+            _is_only_child, type='boolean', string='Sole child of the parent template'),
         'ean13': fields.char('EAN13 Barcode', size=13, help="International Article Number used for product identification."),
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price'), help="Price Extra: Extra price for the variant on sale price. eg. 200 price extra, 1000 + 200 = 1200."),

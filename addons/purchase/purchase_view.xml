@@ -552,7 +552,8 @@
             <field name="arch" type="xml">
                 <div name="options" position="inside">
                     <field name="purchase_ok"/>
-                    <label for="purchase_ok"/>
+                    <label for="purchase_ok"
+                        attrs="{'readonly': [('is_only_child', '=', False)]}"/>
                 </div>
                 <group name="procurement" position="after">
                      <separator string="Suppliers"/>

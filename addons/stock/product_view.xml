@@ -122,9 +122,9 @@
                 </group>
                 <group name="Weights" position="after">
                      <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties">
-                         <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
-                         <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
-                         <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
+                         <field name="property_stock_procurement" attrs="{'readonly':['|', '|', ('type','=','service'), ('is_only_child', '=', False), ('is_only_child', '=', False)]}" domain="[('usage','=','procurement')]"/>
+                         <field name="property_stock_production" attrs="{'readonly':['|', '|', ('type','=','service'), ('is_only_child', '=', False), ('is_only_child', '=', False)]}" domain="[('usage','=','production')]"/>
+                         <field name="property_stock_inventory"  attrs="{'readonly':['|', '|', ('type','=','service'), ('is_only_child', '=', False), ('is_only_child', '=', False)]}" domain="[('usage','=','inventory')]"/>
                      </group>
                 </group>
                 <field name="product_manager" position="attributes" version="7.0">
@@ -163,9 +163,13 @@
                             <field name="valuation" attrs="{'readonly':[('type', '=', 'service')]}"/>
                         </group>
                         <group colspan="2" col="2">
-                            <field name="property_stock_account_input" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
+                            <field name="property_stock_account_input"
+                                attrs="{'invisible':[('valuation', '!=', 'real_time')],
+                                        'readonly': [('is_only_child', '=', False)]}"
                                 domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <field name="property_stock_account_output" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
+                            <field name="property_stock_account_output"
+                                attrs="{'invisible':[('valuation', '!=', 'real_time')],
+                                        'readonly': [('is_only_child', '=', False)]}"
                                 domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         </group>
                     </group>
