@@ -47,7 +47,6 @@ very handy when used in combination with the module 'share'.
         'portal_view.xml',
         'wizard/portal_wizard_view.xml',
         'wizard/share_wizard_view.xml',
-        'acquirer_view.xml',
         'security/ir.model.access.csv',
     ],
     'demo': ['portal_demo.xml'],

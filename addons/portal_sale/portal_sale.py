@@ -34,11 +34,12 @@ class sale_order(osv.Model):
 
     def _portal_payment_block(self, cr, uid, ids, fieldname, arg, context=None):
         result = dict.fromkeys(ids, False)
-        payment_acquirer = self.pool.get('portal.payment.acquirer')
+        payment_acquirer = self.pool['payment.acquirer']
         for this in self.browse(cr, uid, ids, context=context):
             if this.state not in ('draft', 'cancel') and not this.invoiced:
-                result[this.id] = payment_acquirer.render_payment_block(cr, uid, this, this.name,
-                    this.pricelist_id.currency_id, this.amount_total, context=context)
+                result[this.id] = payment_acquirer.render_payment_block(
+                    cr, uid, this.name, this.amount_total, this.pricelist_id.currency_id.id,
+                    partner_id=this.partner_id.id, context=context)
         return result
 
     def action_quotation_send(self, cr, uid, ids, context=None):
@@ -87,8 +88,9 @@ class account_invoice(osv.Model):
         payment_acquirer = self.pool.get('portal.payment.acquirer')
         for this in self.browse(cr, uid, ids, context=context):
             if this.type == 'out_invoice' and this.state not in ('draft', 'done') and not this.reconciled:
-                result[this.id] = payment_acquirer.render_payment_block(cr, uid, this, this.number,
-                    this.currency_id, this.residual, context=context)
+                result[this.id] = payment_acquirer.render_payment_block(
+                    cr, uid, this.number, this.residual, this.currency_id.id,
+                    partner_id=this.partner_id.id, context=context)
         return result
 
     def action_invoice_sent(self, cr, uid, ids, context=None):

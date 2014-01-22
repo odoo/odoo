@@ -3,7 +3,8 @@
 import logging
 
 from openerp.osv import osv, fields
-from openerp.tools import float_round
+from openerp.tools import float_round, float_repr
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -185,7 +186,7 @@ class PaymentAcquirer(osv.Model):
 
          - acquirer: the payment.acquirer browse record
          - user: the current user browse record
-         - currency: currency browse record
+         - currency_id: id of the transaction currency
          - amount: amount of the transaction
          - reference: reference of the transaction
          - partner: the current partner browse record, if any (not necessarily set)
@@ -252,6 +253,37 @@ class PaymentAcquirer(osv.Model):
 
         # because render accepts view ids but not qweb -> need to use the xml_id
         return self.pool['ir.ui.view'].render(cr, uid, acquirer.view_template_id.xml_id, qweb_context, engine='ir.qweb', context=context)
+
+    def _wrap_payment_block(self, cr, uid, html_block, amount, currency_id, context=None):
+        payment_header = _('Pay safely online')
+        amount_str = float_repr(amount, self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
+        currency = self.pool['res.currency'].browse(cr, uid, currency_id, context=context)
+        currency_str = currency.symbol or currency.name
+        amount = u"%s %s" % ((currency_str, amount_str) if currency.position == 'before' else (amount_str, currency_str))
+        result = """<div class="payment_acquirers">
+                         <div class="payment_header">
+                             <div class="payment_amount">%s</div>
+                             %s
+                         </div>
+                         %%s
+                     </div>""" % (amount, payment_header)
+        return result % html_block
+
+    def render_payment_block(self, cr, uid, reference, amount, currency_id, tx_id=None, partner_id=False, partner_values=None, tx_values=None, context=None):
+        html_forms = []
+        # TDE FIXME: change this domain, see with CHM about 'dynamic/static' acquirer
+        acquirer_ids = self.search(cr, uid, [('portal_published', '=', True), ('name', '!=', 'transfer')], context=context)
+        for acquirer_id in acquirer_ids:
+            button = self.render(
+                cr, uid, acquirer_id,
+                reference, amount, currency_id,
+                tx_id, partner_id, partner_values, tx_values,
+                context)
+            html_forms.append(button)
+        if not html_forms:
+            return ''
+        html_block = '\n'.join(filter(None, html_forms))
+        return self._wrap_payment_block(cr, uid, html_block, amount, currency_id, context=context)
 
 
 class PaymentTransaction(osv.Model):
