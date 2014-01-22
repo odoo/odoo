@@ -7,7 +7,7 @@
     'version': '1.0',
     'description': """Paypal Payment Acquirer""",
     'author': 'OpenERP SA',
-    'depends': ['payment_acquirer'],
+    'depends': ['payment'],
     'data': [
         'views/paypal.xml',
         'views/payment_acquirer.xml',

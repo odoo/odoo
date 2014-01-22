@@ -7,7 +7,7 @@
     'version': '1.0',
     'description': """Ogone Payment Acquirer""",
     'author': 'OpenERP SA',
-    'depends': ['payment_acquirer'],
+    'depends': ['payment'],
     'data': [
         'views/ogone.xml',
         'views/payment_acquirer.xml',

@@ -7,7 +7,7 @@
     'version': '1.0',
     'description': """Adyen Payment Acquirer""",
     'author': 'OpenERP SA',
-    'depends': ['payment_acquirer'],
+    'depends': ['payment'],
     'data': [
         'views/adyen.xml',
         'views/payment_acquirer.xml',

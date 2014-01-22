@@ -7,7 +7,7 @@
     'version': '1.0',
     'description': """Transfer Payment Acquirer""",
     'author': 'OpenERP SA',
-    'depends': ['payment_acquirer'],
+    'depends': ['payment'],
     'data': [
         'views/transfer.xml',
         'data/transfer.xml',
