@@ -268,10 +268,13 @@
                                             options="{'max_field': 'tot_start_survey'}"/>
                                     </center>
                                 </div>
-                                <div t-if="record.visible_to_user.raw_value === true">
-                                    <center><b><a t-att-href="record.public_url.raw_value"><t t-esc="record.public_url.raw_value"/></a></b></center>
-                                </div>
                                 <div>
+                                    <center><b>
+                                        <a t-if="record.visible_to_user.raw_value === true" t-att-href="record.public_url.raw_value"><t t-esc="record.public_url.raw_value"/></a>
+                                        <t t-if="record.visible_to_user.raw_value === false">Survey only on invitation</t>
+                                    </b></center>
+                                </div>
+                                <div style="margin-top:15px">
                                     Opening date: <field name="date_open" /><br />
                                     Closing date: <field name="date_close" />
                                 </div>
