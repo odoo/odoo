@@ -500,13 +500,14 @@
                                   <div class="text-muted" t-field="line.product_id.description_sale"/>
                               </td>
                               <td class="text-center">
-                                 <del class="text-danger" t-if="line.product_id.lst_price &gt; line.price_unit">
-                                     <span t-field="line.product_id.lst_price" t-field-options='{
+                                <t t-if="abs(line.product_id.lst_price - line.price_unit) &gt; 0.2">
+                                  <del class="text-danger"
+                                    t-field="line.product_id.lst_price" t-field-options='{
                                          "widget": "monetary",
                                          "display_currency": "website.pricelist_id.currency_id"
-                                     }'/>
-                                 </del>
-                                 <span t-field="line.price_unit" t-field-options='{
+                                    }'/>&amp;nbsp;
+                                </t>
+                                <span t-field="line.price_unit"  t-field-options='{
                                      "widget": "monetary",
                                      "display_currency": "website.pricelist_id.currency_id"
                                  }'/>
@@ -654,10 +655,17 @@
                       <div class="text-muted" t-field="product.description_sale"/>
                   </td>
                   <td>
-                      <span t-field="product.lst_price" t-field-options='{
-                          "widget": "monetary",
-                          "display_currency": "website.pricelist_id.currency_id"
-                      }'/>
+                      <t t-if="abs(product.lst_price - product.price) &gt; 0.2">
+                        <del class="text-danger"
+                          t-field="product.lst_price" t-field-options='{
+                               "widget": "monetary",
+                               "display_currency": "website.pricelist_id.currency_id"
+                          }'/>&amp;nbsp;
+                      </t>
+                      <span t-field="product.price"  t-field-options='{
+                           "widget": "monetary",
+                           "display_currency": "website.pricelist_id.currency_id"
+                       }'/>
                   </td>
                   <td class="text-center">
                       <form action="/shop/add_cart/" method="post">
@@ -677,7 +685,7 @@
       <p>
           Have a coupon code? Fill in this field and apply.
       </p>
-      <form t-if="website_sale_order and website_sale_order.website_order_line" action="/shop/mycart/" method="post" class="mb32">
+      <form t-if="website_sale_order and website_sale_order.website_order_line" action="/shop/pricelist/" method="post" class="mb32">
           <div class="input-group">
               <input name="promo" class='form-control' type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or ''"/>
               <div class="input-group-btn">
