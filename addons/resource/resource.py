@@ -670,7 +670,7 @@ class resource_resource(osv.osv):
         """
         Return a list of  Resource Class objects for the resources allocated to the phase.
 
-        TDE NOTE: used in project/project.py
+        NOTE: Used in project/project.py
         """
         resource_objs = {}
         user_pool = self.pool.get('res.users')
@@ -699,7 +699,7 @@ class resource_resource(osv.osv):
         @param resource_id : resource working on phase/task
         @param resource_calendar : working calendar of the resource
 
-        TDE NOTE: used in project/project.py, and in generate_resources
+        NOTE: used in project/project.py, and in generate_resources
         """
         resource_calendar_leaves_pool = self.pool.get('resource.calendar.leaves')
         leave_list = []
@@ -726,7 +726,7 @@ class resource_resource(osv.osv):
         Change the format of working calendar from 'Openerp' format to bring it into 'Faces' format.
         @param calendar_id : working calendar of the project
 
-        TDE NOTE: used in project/project.py
+        NOTE: used in project/project.py
         """
         if not calendar_id:
             # Calendar is not specified: working days: 24/7
