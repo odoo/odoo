@@ -763,7 +763,7 @@ class mrp_production(osv.osv):
                 # qty available for consume and produce
                 qty_avail = scheduled.product_qty - consumed_data.get(scheduled.product_id.id, 0.0)
 
-                if qty_avail <= 0.0:
+                if float_compare(qty_avail, 0, precision_rounding=scheduled.product_id.uom_id.rounding) <= 0:
                     # there will be nothing to consume for this raw material
                     continue
 
@@ -775,7 +775,7 @@ class mrp_production(osv.osv):
                         # if qtys we have to consume is more than qtys available to consume
                         prod_name = scheduled.product_id.name_get()[0][1]
                         raise osv.except_osv(_('Warning!'), _('You are going to consume total %s quantities of "%s".\nBut you can only consume up to total %s quantities.') % (qty, prod_name, qty_avail))
-                    if qty <= 0.0:
+                    if float_compare(qty, 0, precision_rounding=scheduled.product_id.uom_id.rounding) <= 0:                        
                         # we already have more qtys consumed than we need
                         continue
 
