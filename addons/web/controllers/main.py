@@ -812,6 +812,7 @@ class Database(http.Controller):
 
     @http.route('/web/database/manager', type='http', auth="none")
     def manager(self, **kw):
+        # TODO: migrate the webclient's database manager to server side views
         request.session.logout()
         js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', debug=request.debug))
         css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', debug=request.debug))
