@@ -109,13 +109,11 @@ def serialize_exception(f):
     return wrap
 
 def redirect_with_hash(url, code=303):
-    if request.httprequest.user_agent.browser in ('msie', 'safari'): 
-        # Most IE and Safari versions decided not to preserve location.hash upon
-        # redirect. And even if IE10 pretends to support it, it still fails
-        # inexplicably in case of multiple redirects (and we do have some).
-        # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
-        return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
-    return werkzeug.utils.redirect(url, code)
+    # Most IE and Safari versions decided not to preserve location.hash upon
+    # redirect. And even if IE10 pretends to support it, it still fails
+    # inexplicably in case of multiple redirects (and we do have some).
+    # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
+    return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
 
 def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the
@@ -1057,21 +1055,17 @@ class DataSet(http.Controller):
         """
         Model = request.session.model(model)
 
-        ids = Model.search(domain, offset or 0, limit or False, sort or False,
+        records = Model.search_read(domain, fields, offset or 0, limit or False, sort or False,
                            request.context)
-        if limit and len(ids) == limit:
+        if not records:
+            return {
+                'length': 0,
+                'records': []
+            }
+        if limit and len(records) == limit:
             length = Model.search_count(domain, request.context)
         else:
-            length = len(ids) + (offset or 0)
-        if fields and fields == ['id']:
-            # shortcut read if we only want the ids
-            return {
-                'length': length,
-                'records': [{'id': id} for id in ids]
-            }
-
-        records = Model.read(ids, fields or False, request.context)
-        records.sort(key=lambda obj: ids.index(obj['id']))
+            length = len(records) + (offset or 0)
         return {
             'length': length,
             'records': records
