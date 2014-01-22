@@ -836,7 +836,7 @@
                     .on('snippet-dropped', function (e, el) {
                         // CKEDITOR data processor extended by widgets plugin
                         // to add wrappers around upcasting elements
-                        el.outerHTML = editor.dataProcessor.toHtml(el.outerHTML, {
+                        el.innerHTML = editor.dataProcessor.toHtml(el.innerHTML, {
                             fixForBody: false,
                             dontFilter: true,
                         });
