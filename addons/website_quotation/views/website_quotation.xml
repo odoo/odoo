@@ -49,7 +49,7 @@
                               t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
                       </td>
                       <td>
-                          <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json pull-right hidden-print" t-if="line.is_optional">
+                          <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json pull-right hidden-print" t-if="line.option_line_id">
                               <span class="fa fa-trash-o"></span>
                           </a>
                       </td>
@@ -172,7 +172,7 @@
                           <hr class="mt0 mb0"/>
                           <t t-call="website_quotation.navigation_menu"/>
                           <hr class="mt0 mb0"/>
-                          <div class="text-center hidden-print">
+                          <div t-if="not date_diff" class="text-center hidden-print">
                               <input type="hidden" t-att-value="quotation.validity_date" id="validity_date"/>
                               <div class="mt8" t-if="(quotation.before_discount - quotation.amount_total) > 0.0">
                                 <strong>This offer at </strong>

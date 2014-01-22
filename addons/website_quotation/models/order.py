@@ -74,7 +74,7 @@ class sale_order_line(osv.osv):
     _description = "Sales Order Line"
     _columns = {
         'website_description': fields.html('Line Description'),
-        'is_optional': fields.boolean('Optional Product')
+        'option_line_id':fields.one2many('sale.option.line', 'line_id', 'Optional Products Lines'),
     }
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False, qty_uos=0, uos=False, name='', partner_id=False, lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
         res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty, uom, qty_uos, uos, name, partner_id, lang, update_tax, date_order, packaging, fiscal_position, flag, context)

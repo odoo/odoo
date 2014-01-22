@@ -143,7 +143,6 @@ class sale_quote(http.Controller):
             'product_uom_qty': option.quantity,
             'product_uom_id': option.uom_id.id,
             'discount': option.discount,
-            'is_optional': True,
         })
         line = request.registry.get('sale.order.line').create(request.cr, SUPERUSER_ID, vals, context=request.context)
         option_obj.write(request.cr, SUPERUSER_ID, [option.id], {'line_id': line}, context=request.context)
