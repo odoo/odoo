@@ -9,7 +9,7 @@
     'author': 'OpenERP SA',
     'depends': [
         'website',
-        'payment_acquirer',
+        'payment',
     ],
     'data': [
         'views/website_payment_templates.xml',
