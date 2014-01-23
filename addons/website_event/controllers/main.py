@@ -23,7 +23,6 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.translate import _
-from openerp.addons.website.models import website
 from openerp.addons.website.controllers.main import Website as controllers
 controllers = controllers()
 
@@ -163,7 +162,6 @@ class website_event(http.Controller):
 
     @http.route(['/event/<model("event.event"):event>/page/<page:page>'], type='http', auth="public", website=True, multilang=True)
     def event_page(self, event, page, **post):
-        website.preload_records(event, on_error="website_event.404")
         values = {
             'event': event,
             'main_object': event
@@ -172,7 +170,6 @@ class website_event(http.Controller):
 
     @http.route(['/event/<model("event.event"):event>'], type='http', auth="public", website=True, multilang=True)
     def event(self, event, **post):
-        website.preload_records(event, on_error="website_event.404")
         if event.menu_id and event.menu_id.child_id:
             target_url = event.menu_id.child_id[0].url
         else:
@@ -183,7 +180,6 @@ class website_event(http.Controller):
 
     @http.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", website=True, multilang=True)
     def event_register(self, event, **post):
-        website.preload_records(event, on_error="website_event.404")
         values = {
             'event': event,
             'main_object': event,

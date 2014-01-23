@@ -21,7 +21,6 @@
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models import website
 from openerp.addons.website.controllers.main import Website as controllers
 
 import re
@@ -33,14 +32,11 @@ class website_event(http.Controller):
     @http.route(['/event/<model("event.event"):event>/track/<model("event.track"):track>'], type='http', auth="public", website=True, multilang=True)
     def event_track_view(self, event, track, **post):
         # TODO: not implemented
-        website.preload_records(event, on_error="website_event.404")
-        website.preload_records(track)
         values = { 'track': track, 'event': track.event_id, 'main_object': track }
         return request.website.render("website_event_track.track_view", values)
 
     @http.route(['/event/<model("event.event"):event>/agenda/'], type='http', auth="public", website=True, multilang=True)
     def event_agenda(self, event, tag=None, **post):
-        website.preload_records(event, on_error="website_event.404")
         values = {
             'event': event,
             'main_object': event,
@@ -52,8 +48,6 @@ class website_event(http.Controller):
         '/event/<model("event.event"):event>/track/tag/<model("event.track.tag"):tag>'
         ], type='http', auth="public", website=True, multilang=True)
     def event_tracks(self, event, tag=None, **post):
-        website.preload_records(event, on_error="website_event.404")
-        website.preload_records(tag)
         searches = {}
 
         if tag:
@@ -82,7 +76,6 @@ class website_event(http.Controller):
 
     @http.route(['/event/<model("event.event"):event>/track_proposal/'], type='http', auth="public", website=True, multilang=True)
     def event_track_proposal(self, event, **post):
-        website.preload_records(event, on_error="website_event.404")
         values = { 'event': event }
         return request.website.render("website_event_track.event_track_proposal", values)
 
