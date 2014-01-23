@@ -213,6 +213,12 @@ class email_template(osv.osv):
         'auto_delete': True,
     }
 
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(email_template, self).default_get(cr, uid, fields, context)
+        if context.get('default_model'):
+            res['model_id'] = self.pool.get('ir.model').search(cr, uid, [('model', '=', context.get('default_model'))], context=context)[0]
+        return res
+
     def create_action(self, cr, uid, ids, context=None):
         action_obj = self.pool.get('ir.actions.act_window')
         data_obj = self.pool.get('ir.model.data')

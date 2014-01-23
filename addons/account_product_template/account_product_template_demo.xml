@@ -4,9 +4,8 @@
         <record id="online_training_template" model="email.template">
             <field name="name">Online Training</field>
             <field name="email_from">${(user.email or '')|safe}</field>
-            <field name="partner_to">${object.partner_id.id}</field>
             <field name="subject">Online Training</field>
-            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="model_id" ref="product.model_product_template"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[ 
                 <html>
