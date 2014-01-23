@@ -854,36 +854,29 @@ class product_product(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
-            context={}
+            context = {}
 
         if not default:
             default = {}
 
         # Craft our own `<name> (copy)` in en_US (self.copy_translation()
         # will do the other languages).
-        context_wo_lang = context.copy()
+        context_wo_lang = dict(context)
         context_wo_lang.pop('lang', None)
-        product = self.read(cr, uid, id, ['name', 'list_price', 'standard_price', 'categ_id', 'variants', 'product_tmpl_id'], context=context_wo_lang)
-        default = default.copy()
-        if product['variants']:
-            default.update(variants=_("%s (copy)") % (product['variants']), product_tmpl_id=product['product_tmpl_id'][0])
-        else:
-            default.update(name=_("%s (copy)") % (product['name']), list_price=product['list_price'], standard_price=product['standard_price'], categ_id=product['categ_id'][0], product_tmpl_id=None)
+        product = self.read(cr, uid, id, ['name', 'variants', 'product_tmpl_id'], context=context_wo_lang)
+        default = dict(default)
+        if product['variants'] or context.get('variant'):
+            # if we copy a variant or create one, we keep the same template
+            name = default.pop('name', None)
+            variant = product['variants'] or name or product['name']
+            default.update({
+                'variants': _("%s (copy)") % (variant,),
+                'product_tmpl_id': product['product_tmpl_id'][0],
+            })
+        elif 'name' not in default:
+            default['name'] = _("%s (copy)") % (product['name'],)
 
-        if context.get('variant',False):
-            fields = ['product_tmpl_id', 'active', 'variants', 'default_code',
-                    'price_margin', 'price_extra']
-            data = self.read(cr, uid, id, fields=fields, context=context)
-            for f in fields:
-                if f in default:
-                    data[f] = default[f]
-            data['product_tmpl_id'] = data.get('product_tmpl_id', False) \
-                    and data['product_tmpl_id'][0]
-            del data['id']
-            return self.create(cr, uid, data)
-        else:
-            return super(product_product, self).copy(cr, uid, id, default=default,
-                    context=context)
+        return super(product_product, self).copy(cr, uid, id, default=default, context=context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
