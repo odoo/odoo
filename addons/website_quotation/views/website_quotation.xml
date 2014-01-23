@@ -237,7 +237,7 @@
                               </p>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" disabled="#{salesperson and '' or disabled}" class="btn btn-primary">Sign Order</button> or
+                                <button type="submit" t-attf-class="btn btn-primary #{salesperson and 'disabled' or ''}">Sign Order</button> or
                                 <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
                             </div>
                           </form>
