@@ -42,7 +42,9 @@ class sale_quote(http.Controller):
             'message': message,
             'new_post' : request.httprequest.session.get('new_post',False),
             'option': self._check_option_len(order),
-            'date_diff': order.validity_date and (datetime.datetime.now() > datetime.datetime.strptime(order.validity_date , '%Y-%m-%d')) or False
+            'date_diff': order.validity_date and (datetime.datetime.now() > datetime.datetime.strptime(order.validity_date , '%Y-%m-%d')) or False,
+            'salesperson' : False if token else True
+    
         }
         return request.website.render('website_quotation.so_quotation', values)
 
