@@ -29,7 +29,7 @@ import openerp.tools.config
 import openerp.modules.registry
 from openerp import http
 from openerp.http import request
-from openerp.osv import osv, fields
+from openerp.osv import osv, fields, expression
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
@@ -249,11 +249,31 @@ class im_user(osv.osv):
             res[obj["id"]] = obj["im_last_status"] and (last_update + delta) > current
         return res
 
+    def _status_search(self, cr, uid, obj, name, domain, context=None):
+        current = datetime.datetime.now()
+        delta = datetime.timedelta(0, DISCONNECTION_TIMER)
+        field, operator, value = domain[0]
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            value = not value
+        if value:
+            return ['&', ('im_last_status', '=', True), ('im_last_status_update', '>', (current - delta).strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
+        else:
+            return ['|', ('im_last_status', '=', False), ('im_last_status_update', '<=', (current - delta).strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
+
     def search_users(self, cr, uid, text_search, fields, limit, context=None):
         my_id = self.get_my_id(cr, uid, None, context)
-        found = self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False]],
+        group_employee = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')[1]
+        found = self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False], ["im_status", "=", True], ["user_id.groups_id", "in", [group_employee]]],
             order="name asc", limit=limit, context=context)
-        return self.read(cr, uid, found, fields, context=context)
+        if len(found) < limit:
+            found += self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False], ["im_status", "=", True], ["id", "not in", found]],
+                order="name asc", limit=limit, context=context)
+        if len(found) < limit:
+            found += self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False], ["im_status", "=", False], ["id", "not in", found]],
+                order="name asc", limit=limit-len(found), context=context)
+        users = self.read(cr, uid, found, fields, context=context)
+        users.sort(key=lambda obj: found.index(obj['id']))
+        return users
 
     def im_connect(self, cr, uid, uuid=None, context=None):
         assert_uuid(uuid)
@@ -308,7 +328,7 @@ class im_user(osv.osv):
         'im_last_received': fields.integer(string="Instant Messaging Last Received Message"),
         'im_last_status': fields.boolean(strint="Instant Messaging Last Status"),
         'im_last_status_update': fields.datetime(string="Instant Messaging Last Status Update"),
-        'im_status': fields.function(_im_status, string="Instant Messaging Status", type='boolean'),
+        'im_status': fields.function(_im_status, string="Instant Messaging Status", type='boolean', fnct_search=_status_search),
     }
 
     _defaults = {
