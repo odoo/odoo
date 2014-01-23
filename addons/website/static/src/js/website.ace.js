@@ -261,8 +261,9 @@
                 self.reloadPage.call(self);
             }).fail(function (source, error) {
                 var message = _.isString(error) ? error
-                    : (error.data.arguments[0] === "Access Denied") ? "Access denied: please sign in"
-                    : error.message;
+                    : (error && error.data && error.data.arguments && error.data.arguments[0] === "Access Denied") ? "Access denied: please sign in"
+                    : (error && error.message) ? error.message
+                    : "Unexpected error";
                 self.displayError.call(self, message);
             });
         },

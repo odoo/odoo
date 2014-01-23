@@ -125,6 +125,10 @@ class website(osv.osv):
             })
     }
 
+    # cf. Wizard hack in website_views.xml
+    def noop(self, *args, **kwargs):
+        pass
+
     def write(self, cr, uid, ids, vals, context=None):
         self._get_languages.clear_cache(self)
         return super(website, self).write(cr, uid, ids, vals, context)
