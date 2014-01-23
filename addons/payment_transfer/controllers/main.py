@@ -13,7 +13,7 @@ class OgoneController(http.Controller):
 
     @http.route([
         '/payment/transfer/feedback',
-    ], type='http', auth='admin', website=True)
+    ], type='http', auth='admin')
     def transfer_form_feedback(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
         _logger.info('Beginning form_feedback with post data %s', pprint.pformat(post))  # debug

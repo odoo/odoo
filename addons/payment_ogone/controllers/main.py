@@ -19,7 +19,7 @@ class OgoneController(http.Controller):
         '/payment/ogone/decline', '/payment/ogone/test/decline',
         '/payment/ogone/exception', '/payment/ogone/test/exception',
         '/payment/ogone/cancel', '/payment/ogone/test/cancel',
-    ], type='http', auth='admin', website=True)
+    ], type='http', auth='admin')
     def ogone_form_feedback(self, **post):
         """ Ogone contacts using GET, at least for accept """
         _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug

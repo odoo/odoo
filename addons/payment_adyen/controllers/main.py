@@ -18,7 +18,7 @@ class AdyenController(http.Controller):
 
     @http.route([
         '/payment/adyen/return/',
-    ], type='http', auth='public', website=True)
+    ], type='http', auth='admin')
     def adyen_return(self, pspReference, **post):
         """ Paypal IPN."""
         post["pspReference"] = pspReference
