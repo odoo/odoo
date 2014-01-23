@@ -3,14 +3,14 @@
 -->
 <openerp>
     <data>
-        <template id="auth_signup.login" inherit_id="web.login" name="Login (overloaded by auth_signup)">
+        <template id="auth_signup.login" inherit_id="web.login" name="Sign up - Reset Password">
             <xpath expr="//button[@type='submit']" position="before">
-                <a t-if="signup" t-attf-href="?mode=signup{{ '&amp;debug' if debug else '' }}" class="btn btn-default pull-left">Sign up</a>
-                <a t-if="reset" t-attf-href="?mode=reset{{ '&amp;debug' if debug else '' }}" class="btn btn-default pull-left">Reset Password</a>
+                <a t-if="signup" t-attf-href="?mode=signup{{ '&amp;debug' if debug else '' }}" class="btn btn-link pull-right">Sign up</a>
+                <a t-if="reset" t-attf-href="?mode=reset{{ '&amp;debug' if debug else '' }}" class="btn btn-link pull-right">Reset Password</a>
             </xpath>
         </template>
 
-        <template id="auth_signup.signup" name="Sinup">
+        <template id="auth_signup.signup" name="Sign up">
             <t t-call="web.login_layout">
                 <t t-set="head">
                     <t t-foreach="css" t-as="css_file">
@@ -31,14 +31,14 @@
 
                 <form class="oe_signup_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post">
                     <div class="form-group field-name" t-if="not reset_without_token">
-                        <label for="name" class="control-label">Name</label>
-                        <input type="text" name="name" t-att-value="name" id="name" class="form-control" placeholder="Enter your name"
+                        <label for="name" class="control-label">Your Name</label>
+                        <input type="text" name="name" t-att-value="name" id="name" class="form-control" placeholder="e.g. John Doe"
                             required="required" autofocus="autofocus" t-att-disabled="'disabled' if mode == 'reset' and token else None"/>
                     </div>
 
                     <div class="form-group field-login">
-                        <label for="login" class="control-label">Username (email)</label>
-                        <input type="text" name="login" t-att-value="login" id="login" class="form-control" placeholder="Enter login"
+                        <label for="login" class="control-label">Your Email</label>
+                        <input type="text" name="login" t-att-value="login" id="login" class="form-control"
                             t-att-autofocus="'autofocus' if reset_without_token else None"
                             required="required" t-att-disabled="'disabled' if mode == 'reset' and token else None"/>
                         <input type="hidden" name="login" t-att-value="login" t-if="mode == 'reset' and token"/>
@@ -46,13 +46,13 @@
 
                     <div class="form-group field-password" t-if="not reset_without_token">
                         <label for="password" class="control-label">Password</label>
-                        <input type="password" name="password" id="password" class="form-control" placeholder="Password"
+                        <input type="password" name="password" id="password" class="form-control"
                             required="required" t-att-autofocus="'autofocus' if mode == 'reset' and token else None"/>
                     </div>
 
                     <div class="form-group field-confirm_password" t-if="not reset_without_token">
                         <label for="confirm_password" class="control-label">Confirm Password</label>
-                        <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Confirm your password" required="required"/>
+                        <input type="password" name="confirm_password" id="confirm_password" class="form-control" required="required"/>
                     </div>
 
                     <p class="alert alert-danger" t-if="error">
@@ -62,14 +62,13 @@
                         <t t-esc="message"/>
                     </p>
 
-                    <hr/>
                     <input type="hidden" name="redirect" t-att-value="redirect"/>
                     <input type="hidden" name="mode" t-att-value="mode"/>
                     <input type="hidden" name="token" t-att-value="token"/>
                     <div class="clearfix oe_login_buttons">
-                        <a href="/web/login" class="btn btn-default pull-left">Back to Login</a>
-                        <button type="submit" class="btn btn-primary pull-right">
-                            <t t-if="mode == 'signup'">Signup</t>
+                        <a href="/web/login" class="btn btn-link pull-right">Back to Login</a>
+                        <button type="submit" class="btn btn-primary pull-left">
+                            <t t-if="mode == 'signup'">Sign up</t>
                             <t t-if="mode == 'reset'">Reset password</t>
                         </button>
                     </div>

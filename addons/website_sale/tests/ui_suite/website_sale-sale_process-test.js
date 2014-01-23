@@ -14,5 +14,5 @@ testRunner.run(function websiteSaleTest (page, timeout) {
         page.evaluate(function () {
             window.openerp.website.TestConsole.test('shoptest').run(true);
         });
-    }, timeout/5);
+    }, timeout);
 });

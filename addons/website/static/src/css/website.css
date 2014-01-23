@@ -162,29 +162,19 @@ footer {
   background-image: url("/website/static/src/img/drag_here.png");
 }
 
-.oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
-  background-image: url("/website/static/src/img/under_construction.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  height: 220px !important;
-}
-
 .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
   position: static;
 }
 
+.oe_structure.oe_editable.oe_empty:empty:before, .oe_editable[data-oe-type=html]:empty:before, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
+  content: "Drag Building Blocks Here";
+}
+
 .oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
-  content: "Page under construction";
-  text-align: center;
+  content: " ";
   display: block;
   padding-top: 160px;
   padding-bottom: 30px;
-  color: grey;
-  font-size: 24px;
-}
-
-.oe_structure.oe_editable.oe_empty:empty:before, .oe_editable[data-oe-type=html]:empty:before, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
-  content: "Drag Building Blocks Here";
 }
 
 .css_editable_display {

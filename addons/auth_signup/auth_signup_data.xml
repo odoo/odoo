@@ -10,7 +10,7 @@
             <field name="password"></field>
             <field name="active" eval="False"/>
             <!-- Avoid auto-including this user in any default group, just like a typical portal member -->
-            <field name="groups_id" eval="[(4,ref('base.group_portal')]"/>
+            <field name="groups_id" eval="[(4,ref('base.group_portal'))]"/>
             <!-- allow signuped users to have a alias -->
             <field name="alias_name">_usertemplate</field>
         </record>
