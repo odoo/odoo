@@ -1084,7 +1084,12 @@ class DataSet(openerpweb.Controller):
             }
 
         records = Model.read(ids, fields or False, req.context)
-        records.sort(key=lambda obj: ids.index(obj['id']))
+
+        index = {}
+        for r in records:
+            index[r['id']] = r
+        records = [index[x] for x in ids if x in index]
+
         return {
             'length': length,
             'records': records
