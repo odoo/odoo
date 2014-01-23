@@ -29,7 +29,6 @@ import re
 import socket
 import threading
 import time
-import xml
 from email.utils import getaddresses
 
 import openerp
@@ -97,7 +96,10 @@ def html_sanitize(src, silent=True, strict=False):
         cleaner = clean.Cleaner(**kwargs)
         cleaned = cleaner.clean_html(src)
         # MAKO compatibility: $, { and } inside quotes are escaped, preventing correct mako execution
-        cleaned = xml.sax.saxutils.unescape(cleaned, {'%24': '$', '%7B': '{', '%7D': '}', '%20': ' '})
+        cleaned = cleaned.replace('%24', '$')
+        cleaned = cleaned.replace('%7B', '{')
+        cleaned = cleaned.replace('%7D', '}')
+        cleaned = cleaned.replace('%20', ' ')
     except etree.ParserError, e:
         if 'empty' in str(e):
             return ""
