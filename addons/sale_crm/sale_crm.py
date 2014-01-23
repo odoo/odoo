@@ -43,8 +43,8 @@ class sale_order(osv.osv):
     _inherit = 'sale.order'
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
-        'categ_ids': fields.many2many('crm.case.categ', 'sale_order_category_rel', 'order_id', 'category_id', 'Categories', \
-            domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]", context="{'object_name': 'crm.lead'}")
+        'categ_ids': fields.many2many('crm.case.categ', 'sale_order_category_rel', 'order_id', 'category_id', 'Tags', \
+            domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]", context="{'object_name': 'crm.lead'}",help="Classify and analyse your lead/opportunities category like: Training, Service")
     }
 
     def _get_default_section_id(self, cr, uid, context=None):
