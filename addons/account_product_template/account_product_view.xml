@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
+        <record id="view_email_template_form_edit" model="ir.ui.view">
+            <field name="name">email.template.form</field>
+            <field name="model">email.template</field>
+            <field name="sequence">100</field>
+            <field name="arch" type="xml">
+                <form string="Templates" version="7.0">
+                    <sheet>
+                        <field name="email_from" invisible="1"/>
+                        <field name="partner_to" invisible="1"/>
+                        <field name="subject" invisible="1"/>
+                        <field name="model_id" invisible="1"/>
+                        <h3>Body</h3>
+                        <field name="body_html" placeholder="Rich-text/HTML content of the message (placeholders may be used here)"/>
+                        <field name="attachment_ids" nolabel="1" widget="many2many_binary"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
         <record id="product_normal_form_view_template" model="ir.ui.view">
             <field name="name">product.normal.procurement.locations.inherit</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="list_price" position="after">
-                    <field name="email_template_id" domain="[('model','=','account.invoice')]"/>
+                    <field name="email_template_id" domain="[('model','=','account.invoice')]" context="{'form_view_ref':'account_product_template.view_email_template_form_edit','default_subject':name}"/>
                 </field>
             </field>
         </record>
