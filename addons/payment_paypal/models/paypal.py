@@ -135,12 +135,15 @@ class AcquirerPaypal(osv.Model):
         """
         res = dict.fromkeys(ids, False)
         parameters = urllib.urlencode({'grant_type': 'client_credentials'})
-        request = urllib2.Request('https://api.sandbox.paypal.com/v1/oauth2/token', parameters)
-        # add other headers (https://developer.paypal.com/webapps/developer/docs/integration/direct/make-your-first-call/)
-        request.add_header('Accept', 'application/json')
-        request.add_header('Accept-Language', 'en_US')
 
         for acquirer in self.browse(cr, uid, ids, context=context):
+            tx_url = self._get_paypal_urls(cr, uid, acquirer.env)['paypal_rest_url']
+            request = urllib2.Request(tx_url, parameters)
+
+            # add other headers (https://developer.paypal.com/webapps/developer/docs/integration/direct/make-your-first-call/)
+            request.add_header('Accept', 'application/json')
+            request.add_header('Accept-Language', 'en_US')
+
             # add authorization header
             base64string = base64.encodestring('%s:%s' % (
                 acquirer.paypal_api_username,
