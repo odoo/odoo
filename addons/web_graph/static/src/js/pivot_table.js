@@ -211,33 +211,32 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
         }
         groupby = [groupby].concat(otherRoot.groupby);
 
-        return this.get_groups(groupby, fields, header.domain)
-            .then(function (groups) {
-                _.each(groups.reverse(), function (group) {
-                    // make header
-                    var child = self.make_header(group, header);
-                    child.expanded = false;
-                    header.children.splice(0,0, child);
-                    header.root.headers.splice(header.root.headers.indexOf(header) + 1, 0, child);
-                    // make cells
-                    _.each(self.get_ancestors_and_self(group), function (data) {
-                        var values = _.map(self.measures, function (m) {
-                            return data.attributes.aggregates[m.field];
-                        });
-                        var other = _.find(otherRoot.headers, function (h) {
-                            if (header.root === self.cols) {
-                                return _.isEqual(data.path.slice(1), h.path);
-                            } else {
-                                return _.isEqual(_.rest(data.path), h.path);
-                                }
-                            });
-                        if (other) {
-                            self.add_cell(child.id, other.id, values);
-                        }
+        return this.get_groups(groupby, fields, header.domain).then(function (groups) {
+            _.each(groups.reverse(), function (group) {
+                // make header
+                var child = self.make_header(group, header);
+                child.expanded = false;
+                header.children.splice(0,0, child);
+                header.root.headers.splice(header.root.headers.indexOf(header) + 1, 0, child);
+                // make cells
+                _.each(self.get_ancestors_and_self(group), function (data) {
+                    var values = _.map(self.measures, function (m) {
+                        return data.attributes.aggregates[m.field];
                     });
+                    var other = _.find(otherRoot.headers, function (h) {
+                        if (header.root === self.cols) {
+                            return _.isEqual(data.path.slice(1), h.path);
+                        } else {
+                            return _.isEqual(_.rest(data.path), h.path);
+                            }
+                        });
+                    if (other) {
+                        self.add_cell(child.id, other.id, values);
+                    }
                 });
-                header.expanded = true;
             });
+            header.expanded = true;
+        });
 	},
 
 	make_header: function (group, parent) {
@@ -406,7 +405,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
         if (grouped_on && this.fields[grouped_on].type === 'selection') {
             var selection = this.fields[grouped_on].selection,
                 value_lookup = _.where(selection, {0:value}); 
-            group.attributes.value = value_lookup ? value_lookup[1] : 'undefined';
+            group.attributes.value = value_lookup ? value_lookup[0][1] : 'undefined';
         } else if (value === false) {
             group.attributes.value = 'undefined';
         } else if (value instanceof Array) {
