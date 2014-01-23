@@ -1075,6 +1075,8 @@ class mute_logger(object):
 
     def __enter__(self):
         for logger in self.loggers:
+            assert isinstance(logger, basestring),\
+                "A logger name must be a string, got %s" % type(logger)
             logging.getLogger(logger).addFilter(self)
 
     def __exit__(self, exc_type=None, exc_val=None, exc_tb=None):

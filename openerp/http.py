@@ -35,6 +35,7 @@ import werkzeug.wsgi
 
 import openerp
 from openerp.service import security, model as service_model
+import openerp.tools
 
 _logger = logging.getLogger(__name__)
 
@@ -1027,10 +1028,12 @@ class Root(object):
                 if db:
                     openerp.modules.registry.RegistryManager.check_registry_signaling(db)
                     try:
-                        ir_http = request.registry['ir.http']
+                        with openerp.tools.mute_logger('openerp.sql_db'):
+                            ir_http = request.registry['ir.http']
                     except psycopg2.OperationalError:
-                        # psycopg2 error. At this point, that's mean the database does not exists
-                        # anymore. We unlog the user and failback in nodb mode
+                        # psycopg2 error. At this point, that means the
+                        # database probably does not exists anymore. Log the
+                        # user out and fall back to nodb
                         request.session.logout()
                         result = _dispatch_nodb()
                     else:
