@@ -348,6 +348,8 @@
                     }
                     function executeStep (step) {
                         // check if they are a cycle
+                        console.log(window.localStorage.getItem("test-report"));
+
                         var lastStep = window.localStorage.getItem(testId);
                         var tryStep = lastStep != step.stepId ? 0 : (+(window.localStorage.getItem("test-last-"+testId) || 0) + 1);
                         window.localStorage.setItem("test-last-"+testId, tryStep);
