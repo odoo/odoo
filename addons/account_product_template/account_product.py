@@ -26,6 +26,20 @@ class product_template(osv.osv):
         'email_template_id': fields.many2one('email.template','Product Email Template'),
     }
 
+class email_template(osv.osv):
+    _inherit = 'email.template'
+
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(email_template, self).default_get(cr, uid, fields, context)
+        if context.get('form_view_ref') == 'account_product_template.view_email_template_form_product':
+            res['email_from'] = '${(user.email)|safe}'
+            res['email_to'] = '${(object.partner_id.email)|safe}'
+            res['partner_to'] = '${object.partner_id.id}'
+            res['name'] = context.get('product_name')
+            res['subject'] = context.get('product_name')
+            res['model_id'] = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'account.invoice')], context=context)
+        return res
+
 class account_invoice(osv.Model):
     _inherit = 'account.invoice'
 
