@@ -239,11 +239,11 @@ class QWeb(orm.AbstractModel):
                             t_render = attribute_name[2:]
                         template_attributes[attribute_name[2:]] = attribute_value
                 else:
-                    generated_attributes += ' %s="%s"' % (attribute_name, werkzeug.utils.escape(av))
+                    generated_attributes += ' %s="%s"' % (attribute_name, werkzeug.utils.escape(attribute_value))
 
             if 'debug' in template_attributes:
                 debugger = template_attributes.get('debug', 'pdb')
-                __import__(debugger).set_trace() # pdb, ipdb, pudb, ...
+                __import__(debugger).set_trace()  # pdb, ipdb, pudb, ...
             if t_render:
                 result = self._render_tag[t_render](self, element, template_attributes, generated_attributes, qwebcontext)
             else:
