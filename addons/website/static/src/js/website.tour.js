@@ -342,7 +342,7 @@
                         clearTimeout(overlapsCrash);
                     };
                     function throwError (message) {
-                        console.log(JSON.parse(window.localStorage.getItem("test-report")));
+                        console.log(window.localStorage.getItem("test-report"));
                         test.reset();
                         throw message;
                     }
