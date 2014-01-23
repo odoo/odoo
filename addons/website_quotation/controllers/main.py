@@ -28,18 +28,21 @@ import datetime
 
 class sale_quote(http.Controller):
 
-    @http.route(["/quote/<int:order_id>/<token>"], type='http', auth="public", website=True)
-    def view(self, order_id, token, message=False, **post):
+    @http.route([
+        "/quote/<int:order_id>",
+        "/quote/<int:order_id>/<token>"
+    ], type='http', auth="public", website=True)
+    def view(self, order_id, token=None, message=False, **post):
         # use SUPERUSER_ID allow to access/view order for public user
-        order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
-        assert token == order.access_token, 'Access denied, wrong token!'
+        order = request.registry.get('sale.order').browse(request.cr, token and SUPERUSER_ID or request.uid, order_id)
+        if token: assert token == order.access_token, 'Access denied, wrong token!'
         # TODO: if not order.template_id: return to the URL of the portal view of SO
         values = {
             'quotation': order,
             'message': message,
             'new_post' : request.httprequest.session.get('new_post',False),
             'option': self._check_option_len(order),
-            'date_diff': (datetime.datetime.now() > datetime.datetime.strptime(order.validity_date , '%Y-%m-%d'))
+            'date_diff': order.validity_date and (datetime.datetime.now() > datetime.datetime.strptime(order.validity_date , '%Y-%m-%d')) or False
         }
         return request.website.render('website_quotation.so_quotation', values)
 
@@ -89,14 +92,13 @@ class sale_quote(http.Controller):
             request.httprequest.session['new_post'] = True
         return werkzeug.utils.redirect("/quote/%s/%s?message=1" % (order_id, token))
 
-    def message_post(self , message, order_id):
+    def message_post(self , message, order_id, type='comment'):
         request.session.body =  message
         cr, uid, context = request.cr, request.uid, request.context
         if 'body' in request.session and request.session.body:
             request.registry.get('sale.order').message_post(cr, uid, order_id,
                     body=request.session.body,
-                    type='comment',
-                    subtype='mt_comment',
+                    type=type,
                     context=context,
                 )
             request.session.body = False

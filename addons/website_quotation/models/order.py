@@ -33,7 +33,7 @@ class sale_quote_template(osv.osv):
         'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quote Template Lines'),
         'note': fields.text('Terms and conditions'),
         'options': fields.one2many('sale.option.line', 'temp_option_id', 'Optional Products Lines'),
-        'number_of_days': fields.integer('Number of Days'),
+        'number_of_days': fields.integer('Quotation Period Validity'),
     }
 
     def open_template(self, cr, uid, quote_id, context=None):
@@ -114,7 +114,7 @@ class sale_order(osv.osv):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': '/quote/%s/%s' % (quote.id, quote.access_token)
+            'url': '/quote/%s' % (quote.id)
         }
 
     def onchange_template_id(self, cr, uid, ids, template_id, context=None):

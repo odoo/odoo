@@ -426,41 +426,36 @@
   </template>
 
   <template id="so_template" name="SO Template">
-      <t t-call="website.layout">
-          <div class="container">
-              <div class="row">
-                <div class="col-md-4" id="sidebar">
-                    <ul class="nav nav-pills nav-stacked">
-                        <li class="active"><a href="#template_introduction" data-toggle="tab">Contact Data</a></li>
-                        <li><a href="#template_introduction" data-toggle="tab">Our Offer</a></li>
-                        <t t-foreach="template.quote_line" t-as="line">
-                            <li><a t-att-href="'#%s'% line.id" data-toggle="tab"><t t-raw="line.product_id.name_template"/> </a></li>
-                        </t>
-                        <li><a href="#templateterms" data-toggle="tab">Terms &amp; Conditions</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-8 tab-content">
-                    <div id="template_introduction" t-field="template.website_description"/>
-
-                    <t t-foreach="template.quote_line" t-as="line">
-                        <section class="tab-pane" t-att-id="line.id">
-                            <div t-field="line.website_description" class="oe_structure"/>
-                        </section>
-                    </t>
-                    <section id="templateterms" class="tab-pane">
-                        <div class="container panel panel-default">
-                            <div class="row panel-body">
-                                <div class="text-center">
-                                    <h2 class="page-header">Terms &amp; Conditions</h2>
-                                    <p class="lead" t-field="template.note"/>
-                                </div>
+    <t t-call="website.layout">
+        <t t-set="head">
+            <script type="text/javascript" src="/website_quotation/static/src/js/website_quotation.js"></script>
+            <link rel='stylesheet' href='/website_quotation/static/src/css/website_quotation.css'/>
+            <t t-raw="head or ''"/>
+        </t>
+        <body data-spy="scroll" data-target=".navspy">
+            <div class="container">
+                <div class="row mt16">
+                    <div class="col-md-3">
+                        <div class="bs-sidebar">
+                            <div class="hidden-print navspy" role="complementary">
+                                <ul class="nav bs-sidenav" data-id="quote_sidebar">
+                                </ul>
                             </div>
                         </div>
-                    </section>
+                    </div>
+                    <div class="col-md-9">
+                        <div id="template_introduction" t-field="template.website_description"/>
+                            <t t-foreach="template.quote_line" t-as="line"/>
+                            <div class="oe_structure"/>
+                            <section id="terms" class="container" t-if="template.note">
+                                <h2 class="page-header">Terms &amp; Conditions</h2>
+                                <p t-field="template.note"/>
+                            </section>
+                        </div>
+                    </div>
                 </div>
-              </div>
-          </div>
-      </t>
+            </body>
+        </t>
   </template>
 
 </data>
