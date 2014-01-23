@@ -37,7 +37,7 @@ class sale_quote(http.Controller):
         order = request.registry.get('sale.order').browse(request.cr, token and SUPERUSER_ID or request.uid, order_id)
         if token: assert token == order.access_token, 'Access denied, wrong token!'
         if request.uid == self.get_public_user(request.cr, SUPERUSER_ID, request.context):
-            if request.httprequest.session.get('viewd',False):
+            if not request.httprequest.session.get('viewd',False):
                 self.message_post('Quotation viewed by Customer', order_id, 'comment')
                 request.httprequest.session['viewd'] = True
         # TODO: if not order.template_id: return to the URL of the portal view of SO
