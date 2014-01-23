@@ -245,23 +245,42 @@ class TxPaypal(osv.Model):
     # --------------------------------------------------
 
     def _paypal_try_url(self, request, tries=3, context=None):
-        try:
-            res = urllib2.urlopen(request)
-        except urllib2.HTTPError as e:
-            res = e.read()
-            e.close()
-            if tries and res and json.loads(res)['name'] == 'INTERNAL_SERVICE_ERROR':
-                _logger.warning('Failed contacting Paypal, retrying (%s remaining)' % tries)
-                return self._paypal_try_url(request, tries=tries - 1, context=context)
-            raise
-        except:
-            raise
+        """ Try to contact Paypal. Due to some issues, internal service errors
+        seem to be quite frequent. Several tries are done before considering
+        the communication as failed.
 
+         .. versionadded:: pre-v8 saas-3
+         .. warning::
+
+            Experimental code. You should not use it before OpenERP v8 official
+            release.
+        """
+        done, res = False, None
+        while (not done and tries):
+            try:
+                res = urllib2.urlopen(request)
+                done = True
+            except urllib2.HTTPError as e:
+                res = e.read()
+                e.close()
+                if tries and res and json.loads(res)['name'] == 'INTERNAL_SERVICE_ERROR':
+                    _logger.warning('Failed contacting Paypal, retrying (%s remaining)' % tries)
+            tries = tries - 1
+        if not res:
+            pass
+            # raise openerp.exceptions.
         result = res.read()
         res.close()
         return result
 
     def _paypal_s2s_send(self, cr, uid, values, cc_values, context=None):
+        """
+         .. versionadded:: pre-v8 saas-3
+         .. warning::
+
+            Experimental code. You should not use it before OpenERP v8 official
+            release.
+        """
         tx_id = self.create(cr, uid, values, context=context)
         tx = self.browse(cr, uid, tx_id, context=context)
 
@@ -301,9 +320,10 @@ class TxPaypal(osv.Model):
                 }]
             }
         else:
+            # TODO: complete redirect URLs
             data['redirect_urls'] = {
-                'return_url': 'http://example.com/your_redirect_url/',
-                'cancel_url': 'http://example.com/your_cancel_url/',
+                # 'return_url': 'http://example.com/your_redirect_url/',
+                # 'cancel_url': 'http://example.com/your_cancel_url/',
             },
             data['payer'] = {
                 'payment_method': 'paypal',
@@ -315,10 +335,24 @@ class TxPaypal(osv.Model):
         return (tx_id, result)
 
     def _paypal_s2s_get_invalid_parameters(self, cr, uid, tx, data, context=None):
+        """
+         .. versionadded:: pre-v8 saas-3
+         .. warning::
+
+            Experimental code. You should not use it before OpenERP v8 official
+            release.
+        """
         invalid_parameters = []
         return invalid_parameters
 
     def _paypal_s2s_validate(self, cr, uid, tx, data, context=None):
+        """
+         .. versionadded:: pre-v8 saas-3
+         .. warning::
+
+            Experimental code. You should not use it before OpenERP v8 official
+            release.
+        """
         values = json.loads(data)
         status = values.get('state')
         if status in ['approved']:
@@ -348,6 +382,13 @@ class TxPaypal(osv.Model):
             return False
 
     def _paypal_s2s_get_tx_status(self, cr, uid, tx, context=None):
+        """
+         .. versionadded:: pre-v8 saas-3
+         .. warning::
+
+            Experimental code. You should not use it before OpenERP v8 official
+            release.
+        """
         # TDETODO: check tx.paypal_txn_id is set
         headers = {
             'Content-Type': 'application/json',

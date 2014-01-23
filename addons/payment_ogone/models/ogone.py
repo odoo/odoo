@@ -212,7 +212,14 @@ class PaymentTxOgone(osv.Model):
     # --------------------------------------------------
 
     def ogone_s2s_create_alias(self, cr, uid, id, values, context=None):
-        """ Purpose: create an alias via batch """
+        """ Create an alias at Ogone via batch.
+
+         .. versionadded:: pre-v8 saas-3
+         .. warning::
+
+            Experimental code. You should not use it before OpenERP v8 official
+            release.
+        """
         tx = self.browse(cr, uid, id, context=context)
         assert tx.type == 'server2server', 'Calling s2s dedicated method for a %s acquirer' % tx.type
         alias = 'OPENERP-%d-%d' % (tx.partner_id.id, tx.id)
@@ -265,6 +272,14 @@ class PaymentTxOgone(osv.Model):
         return True
 
     def ogone_s2s_generate_values(self, cr, uid, id, custom_values, context=None):
+        """ Generate valid Ogone values for a s2s tx.
+
+         .. versionadded:: pre-v8 saas-3
+         .. warning::
+
+            Experimental code. You should not use it before OpenERP v8 official
+            release.
+        """
         tx = self.browse(cr, uid, id, context=context)
         tx_data = {
             'PSPID': tx.acquirer_id.ogone_pspid,
@@ -295,9 +310,23 @@ class PaymentTxOgone(osv.Model):
         return tx_data
 
     def ogone_s2s_feedback(self, cr, uid, data, context=None):
+        """
+         .. versionadded:: pre-v8 saas-3
+         .. warning::
+
+            Experimental code. You should not use it before OpenERP v8 official
+            release.
+        """
         pass
 
     def ogone_s2s_execute(self, cr, uid, id, values, context=None):
+        """
+         .. versionadded:: pre-v8 saas-3
+         .. warning::
+
+            Experimental code. You should not use it before OpenERP v8 official
+            release.
+        """
         tx = self.browse(cr, uid, id, context=context)
 
         tx_data = self.ogone_s2s_generate_values(cr, uid, id, values, context=context)
