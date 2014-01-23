@@ -9,7 +9,6 @@
             <tree string="Repairs order" colors="gray:state in ('done','cancel');black:state not in ('done','cancel');blue:state=='draft'">
                 <field name="name" />
                 <field name="product_id" />
-                <field name="quant_id"/>
                 <field name="partner_id"/>
                 <field name="address_id"/>
                 <field name="location_id" groups="stock.group_locations"/>
@@ -47,13 +46,10 @@
                             <field name="product_id" on_change="onchange_product_id(product_id)" domain="[('type','!=','service')]"/>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id,address_id)" attrs="{'required':[('invoice_method','!=','none')]}"/>
                             <field name="address_id" groups="sale.group_delivery_invoice_address"/>
-                            <field name="quant_id" on_change="onchange_quant_id(product_id, quant_id)" context="{'default_product_id':product_id}"/>
-                            <field name="location_id" attrs="{'required':[('deliver_bool','=', True)]}" groups="stock.group_locations"/>
+                            <field name="location_id" on_change="onchange_location_id(location_id)" groups="stock.group_locations"/>
                         </group>
                         <group>
                             <field name="guarantee_limit"/>
-                            <field name="deliver_bool"/>
-                            <field name="picking_type_id" attrs="{'invisible': [('deliver_bool','=', False)], 'required': [('deliver_bool', '=', True)]}"/>
                             <field name="repaired" groups="base.group_no_one"/>
                             <field name="invoiced" groups="base.group_no_one"/>
                         </group>
@@ -171,12 +167,12 @@
                     <page string="Extra Info">
                         <group>
                             <group>
-                                <field name="picking_id"/>
+                                <field name="move_id"/>
                                 <field name="invoice_id" context="{'form_view_ref': 'account.invoice_form'}"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </group>
                             <group>
-                                <field name="location_dest_id" attrs="{'required':[('deliver_bool','=', True)]}" groups="stock.group_locations"/>
+                                <field name="location_dest_id" groups="stock.group_locations"/>
                             </group>
                         </group>
                     </page>

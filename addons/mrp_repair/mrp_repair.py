@@ -25,7 +25,6 @@ from dateutil.relativedelta import relativedelta
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
-# TODO: replace move_id by quant_id everywhere
 
 class mrp_repair(osv.osv):
     _name = 'mrp.repair'
@@ -137,9 +136,9 @@ class mrp_repair(osv.osv):
             \n* The \'To be Invoiced\' status is used to generate the invoice before or after repairing done. \
             \n* The \'Done\' status is set when repairing is completed.\
             \n* The \'Cancelled\' status is used when user cancel repair order.'),
-        'location_id': fields.many2one('stock.location', 'Current Location', select=True, readonly=True, states={'draft':[('readonly',False)], 'confirmed':[('readonly',True)]}),
-        'location_dest_id': fields.many2one('stock.location', 'Delivery Location', readonly=True, states={'draft':[('readonly',False)], 'confirmed':[('readonly',True)]}),
-        'quant_id': fields.many2one('stock.quant', 'Quant',required=True, domain="[('product_id','=',product_id), ('qty', '>', 0.0)]", readonly=True, states={'draft':[('readonly',False)]}),
+        'location_id': fields.many2one('stock.location', 'Current Location', select=True, required = True, readonly=True, states={'draft':[('readonly',False)], 'confirmed':[('readonly',True)]}),
+        'location_dest_id': fields.many2one('stock.location', 'Delivery Location', readonly=True, required = True, states={'draft':[('readonly',False)], 'confirmed':[('readonly',True)]}),
+        'lot_id': fields.many2one('stock.production.lot', 'Lot', domain="[('product_id','=', product_id)]", help="Lot chosen"),
         'guarantee_limit': fields.date('Warranty Expiration', help="The warranty expiration limit is computed as: last move date + warranty defined on selected product. If the current date is below the warranty expiration limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards.", states={'confirmed':[('readonly',True)]}),
         'operations' : fields.one2many('mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', help='Pricelist of the selected partner.'),
@@ -151,13 +150,11 @@ class mrp_repair(osv.osv):
            ], "Invoice Method",
             select=True, required=True, states={'draft':[('readonly',False)]}, readonly=True, help='Selecting \'Before Repair\' or \'After Repair\' will allow you to generate invoice before or after the repair is done respectively. \'No invoice\' means you don\'t want to generate invoice for this repair order.'),
         'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
-        'picking_id': fields.many2one('stock.picking', 'Picking',readonly=True),
+        'move_id': fields.many2one('stock.move', 'Move',readonly=True),
         'fees_lines': fields.one2many('mrp.repair.fee', 'repair_id', 'Fees Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'internal_notes': fields.text('Internal Notes'),
         'quotation_notes': fields.text('Quotation Notes'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'deliver_bool': fields.boolean('Deliver', help="Check this box if you want to manage the delivery once the product is repaired and create a picking with selected product. Note that you can select the locations in the Info tab, if you have the extended view.", states={'confirmed':[('readonly',True)]}),
-        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type'),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'repaired': fields.boolean('Repaired', readonly=True),
         'amount_untaxed': fields.function(_amount_untaxed, string='Untaxed Amount',
@@ -175,15 +172,16 @@ class mrp_repair(osv.osv):
                 'mrp.repair': (lambda self, cr, uid, ids, c={}: ids, ['operations'], 10),
                 'mrp.repair.line': (_get_lines, ['price_unit', 'price_subtotal', 'product_id', 'tax_id', 'product_uom_qty', 'product_uom'], 10),
             }),
+        'product_qty': fields.integer('Quantity', help='Product Qty'), 
     }
 
     _defaults = {
         'state': lambda *a: 'draft',
-        'deliver_bool': lambda *a: True,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'mrp.repair'),
         'invoice_method': lambda *a: 'none',
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.repair', context=context),
-        'pricelist_id': lambda self, cr, uid,context : self.pool.get('product.pricelist').search(cr, uid, [('type','=','sale')])[0]
+        'pricelist_id': lambda self, cr, uid,context : self.pool.get('product.pricelist').search(cr, uid, [('type','=','sale')])[0],
+        'product_qty': 1.0, 
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -194,7 +192,7 @@ class mrp_repair(osv.osv):
             'repaired':False,
             'invoiced':False,
             'invoice_id': False,
-            'picking_id': False,
+            'move_id': False,
             'name': self.pool.get('ir.sequence').get(cr, uid, 'mrp.repair'),
         })
         return super(mrp_repair, self).copy(cr, uid, id, default, context)
@@ -205,33 +203,15 @@ class mrp_repair(osv.osv):
         @return: Dictionary of values.
         """
         return {'value': {
-                    'quant_id': False,
                     'guarantee_limit' :False,
-                    'location_id':  False,
-                    'location_dest_id': False,
+                    'lot_id': False,
                 }
         }
-
-    def onchange_quant_id(self, cr, uid, ids, prod_id=False, quant_id=False):
-        """ On change of move id sets values of guarantee limit, source location,
-        destination location, partner and partner address.
-        @param prod_id: Id of product in current record.
-        @param quant_id: Quant to handle
-        @return: Dictionary of values.
+        
+    def onchange_location_id(self, cr, uid, ids, location_id=None):
+        """ On change of location
         """
-        data = {}
-        data['value'] = {'guarantee_limit': False, 'location_id': False, 'partner_id': False}
-        if not prod_id and not quant_id:
-            return data
-        if quant_id:
-            quant =  self.pool.get('stock.quant').browse(cr, uid, quant_id)
-            product = quant.product_id
-            data['value']['product_id'] = product.id
-            limit = quant.in_date and datetime.strptime(quant.in_date, '%Y-%m-%d %H:%M:%S') or datetime.strptime(quant.create_date, '%Y-%m-%d %H:%M:%S') + relativedelta(months=int(product.warranty))
-            data['value']['guarantee_limit'] = limit.strftime('%Y-%m-%d')
-            data['value']['location_id'] = quant.location_id.id
-            data['value']['location_dest_id'] = quant.location_id.id
-        return data
+        return {'value': {'location_dest_id': location_id}}
 
     def button_dummy(self, cr, uid, ids, context=None):
         return True
@@ -459,13 +439,12 @@ class mrp_repair(osv.osv):
         return True
 
     def action_repair_done(self, cr, uid, ids, context=None):
-        """ Creates stock move and picking for repair order.
-        @return: Picking ids.
+        """ Creates stock move for operation and stock move for final product of repair order.
+        @return: Move ids of final products
         """
         res = {}
         move_obj = self.pool.get('stock.move')
         repair_line_obj = self.pool.get('mrp.repair.line')
-        pick_obj = self.pool.get('stock.picking')
         for repair in self.browse(cr, uid, ids, context=context):
             for move in repair.operations:
                 move_id = move_obj.create(cr, uid, {
@@ -481,38 +460,20 @@ class mrp_repair(osv.osv):
                 })
                 move_obj.action_done(cr, uid, [move_id], context=context)
                 repair_line_obj.write(cr, uid, [move.id], {'move_id': move_id, 'state': 'done'}, context=context)
-            if repair.deliver_bool:
-                if not repair.picking_type_id:
-                    raise osv.except_osv(_('Warning!'), _('No picking type set.'))
-                pick_name = self.pool.get('ir.sequence').get_id(cr, uid, repair.picking_type_id.sequence_id.id, 'id', context=context)
-                picking = pick_obj.create(cr, uid, {
-                    'name': pick_name,
-                    'origin': repair.name,
-                    'state': 'draft',
-                    'move_type': 'one',
-                    'partner_id': repair.address_id and repair.address_id.id or False,
-                    'note': repair.internal_notes,
-                    'invoice_state': 'none',
-                    'picking_type_id': repair.picking_type_id.id,
-                })
-                move_id = move_obj.create(cr, uid, {
-                    'name': repair.name,
-                    'picking_id': picking,
-                    'product_id': repair.product_id.id,
-                    'product_uom': repair.product_id.uom_id.id,
-                    'partner_id': repair.address_id and repair.address_id.id or False,
-                    'location_id': repair.location_id.id,
-                    'location_dest_id': repair.location_dest_id.id,
-                    'state': 'assigned',
-                })
-                pick_obj.signal_button_confirm(cr, uid, [picking])
-                quants = [(repair.quant_id, repair.quant_id.qty)]
-                move = move_obj.browse(cr, uid, move_id, context=context)
-                self.pool.get("stock.quant").quants_reserve(cr, uid, quants, move, context=context)
-                self.write(cr, uid, [repair.id], {'state': 'done', 'picking_id': picking})
-                res[repair.id] = picking
-            else:
-                self.write(cr, uid, [repair.id], {'state': 'done'})
+            move_id = move_obj.create(cr, uid, {
+                'name': repair.name,
+                'product_id': repair.product_id.id,
+                'product_uom': repair.product_id.uom_id.id,
+                'partner_id': repair.address_id and repair.address_id.id or False,
+                'location_id': repair.location_id.id,
+                'location_dest_id': repair.location_dest_id.id,
+                'restrict_lot_id': repair.lot_id.id,
+                'product_qty': repair.product_qty, 
+            })
+            move_obj.signal_button_confirm(cr, uid, [move_id])
+            move_obj.action_done(cr, uid, [move_id], context=context)
+            self.write(cr, uid, [repair.id], {'state': 'done', 'move_id': move_id}, context=context)
+            res[repair.id] = move_id
         return res
 
 
@@ -574,7 +535,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         if not default: default = {}
-        default.update( {'invoice_line_id': False, 'quant_id': False, 'invoiced': False, 'state': 'draft'})
+        default.update( {'invoice_line_id': False, 'move_id': False, 'invoiced': False, 'state': 'draft'})
         return super(mrp_repair_line, self).copy_data(cr, uid, id, default, context)
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
