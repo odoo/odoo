@@ -36,6 +36,10 @@ class sale_quote(http.Controller):
         # use SUPERUSER_ID allow to access/view order for public user
         order = request.registry.get('sale.order').browse(request.cr, token and SUPERUSER_ID or request.uid, order_id)
         if token: assert token == order.access_token, 'Access denied, wrong token!'
+        if request.uid == self.get_public_user(request.cr, SUPERUSER_ID, request.context):
+            if request.httprequest.session.get('viewd',False):
+                self.message_post('Quotation viewed by Customer', order_id, 'comment')
+                request.httprequest.session['viewd'] = True
         # TODO: if not order.template_id: return to the URL of the portal view of SO
         values = {
             'quotation': order,
@@ -47,6 +51,10 @@ class sale_quote(http.Controller):
     
         }
         return request.website.render('website_quotation.so_quotation', values)
+
+    def get_public_user(self, cr, uid, context=None):
+        res = request.registry.get('ir.model.data').get_object_reference(cr, uid, 'website', 'public_user')
+        return res and res[1] or False
 
     def _check_option_len(self, order):
         for option in order.options:
@@ -79,7 +87,7 @@ class sale_quote(http.Controller):
         message = post.get('decline_message')
         request.registry.get('sale.order').write(request.cr, request.uid, [order_id], {'state': 'cancel'})
         if message:
-            self.message_post(message, order_id)
+            self.message_post(message, order_id, 'comment', 'mail.mt_comment')
         return werkzeug.utils.redirect("/quote/%s/%s?message=2" % (order_id, token))
 
     @http.route(['/quote/<int:order_id>/<token>/post'], type='http', auth="public", website=True)
@@ -90,17 +98,18 @@ class sale_quote(http.Controller):
         message = post.get('comment')
         assert token == order.access_token, 'Access denied, wrong token!'
         if message:
-            self.message_post(message, order_id)
+            self.message_post(message, order_id,'comment','mail.mt_comment')
             request.httprequest.session['new_post'] = True
         return werkzeug.utils.redirect("/quote/%s/%s?message=1" % (order_id, token))
 
-    def message_post(self , message, order_id, type='comment'):
+    def message_post(self , message, order_id, type='comment', subtype=False):
         request.session.body =  message
         cr, uid, context = request.cr, request.uid, request.context
         if 'body' in request.session and request.session.body:
             request.registry.get('sale.order').message_post(cr, uid, order_id,
                     body=request.session.body,
                     type=type,
+                    subtype=subtype,
                     context=context,
                 )
             request.session.body = False
