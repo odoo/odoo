@@ -48,7 +48,11 @@ class account_invoice(osv.Model):
             context = {}
         mail_obj = self.pool.get('mail.compose.message')
         res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
-        for line in self.browse(cr, uid, ids[0], context=context).invoice_line:
+        invoice = self.browse(cr, uid, ids[0], context=context)
+        for line in invoice.invoice_line:
+            # fetch the partner's id and subscribe the partner to the invoice
+            if invoice.partner_id.id not in invoice.message_follower_ids:
+                self.message_subscribe(cr, uid, [invoice.id], [invoice.partner_id.id], context=context)
             if line.product_id.email_template_id:
                 message_wiz_id = mail_obj.create(cr, uid, {
                     'model': 'account.invoice',
