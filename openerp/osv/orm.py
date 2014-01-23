@@ -1832,7 +1832,8 @@ class BaseModel(object):
                     _logger.warning('%r requires a fully-qualified external id (got: %r for model %s). '
                         'Please use the complete `module.view_id` form instead.', view_ref_key, view_ref,
                         self._name)
-            else:
+
+            if not view_id:
                 # otherwise try to find the lowest priority matching ir.ui.view
                 view_id = View.default_view(cr, uid, self._name, view_type, context=context)
 
