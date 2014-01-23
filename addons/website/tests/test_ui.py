@@ -47,7 +47,8 @@ class WebsiteUiSuite(unittest.TestSuite):
         self._ignore_filters = [
             # Ignore phantomjs warnings
             "*** WARNING:",
-
+            # Disabled because of the 'web_hello' addon
+            "hello",
             # Fixes an issue with PhantomJS 1.9.2 on OS X 10.9 (Mavericks)
             # cf. https://github.com/ariya/phantomjs/issues/11418
             "CoreText performance note",

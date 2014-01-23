@@ -336,6 +336,8 @@ class Ecommerce(http.Controller):
             index = random.randrange(0, len(suggested_ids))
             suggested_products.append(suggested_ids.pop(index))
 
+        context = dict(context or {}, pricelist=request.registry['website'].ecommerce_get_pricelist_id(cr, uid, None, context=context))
+
         values = {
             'int': int,
             'suggested_products': prod_obj.browse(cr, uid, suggested_products, context),

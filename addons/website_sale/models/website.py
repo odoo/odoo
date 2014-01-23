@@ -158,10 +158,12 @@ class Website(orm.Model):
 
         order_id = self._ecommerce_create_quotation(cr, uid, context=context)
         request.httprequest.session['ecommerce_order_id'] = order_id
+        context = dict(context or {}, pricelist=self.ecommerce_get_pricelist_id(cr, uid, None, context=context))
         return SaleOrder.browse(cr, SUPERUSER_ID, order_id, context=context)
 
     def ecommerce_get_current_order(self, cr, uid, context=None):
         SaleOrder = self.pool.get('sale.order')
+        context = dict(context or {}, pricelist=self.ecommerce_get_pricelist_id(cr, uid, None, context=context))
         order_id = request.httprequest.session.get('ecommerce_order_id')
         if not order_id:
             request.httprequest.session['ecommerce_order_id'] = False
