@@ -94,11 +94,18 @@
             }).then(function (views) {
                 self.loadViews.call(self, views);
                 self.open.call(self);
-                // cf. fp's direct request
-	            if (views.length >= 2) {
-	            	var mainTemplate = views[1];
-	            	self.$('#ace-view-list').val(mainTemplate.id).trigger('change');
-	            }
+                var curentHash = window.location.hash;
+                var indexOfView = curentHash.indexOf("?view=");
+                if (indexOfView >= 0) {
+                    var viewId = parseInt(curentHash.substring(indexOfView + 6, curentHash.length), 10);
+                    self.$('#ace-view-list').val(viewId).change();
+                } else {
+                    if (views.length >= 2) {
+                        var mainTemplate = views[1];
+                        self.$('#ace-view-list').val(mainTemplate.id).trigger('change');
+                    }
+                    window.location.hash = hash;
+                }
             });
 
             var $editor = self.$('.ace_editor');
@@ -253,7 +260,9 @@
             $.when.apply($, requests).then(function () {
                 self.reloadPage.call(self);
             }).fail(function (source, error) {
-                var message = (error.data.arguments[0] === "Access Denied") ? "Access denied: please sign in" : error.message;
+                var message = _.isString(error) ? error
+                    : (error.data.arguments[0] === "Access Denied") ? "Access denied: please sign in"
+                    : error.message;
                 self.displayError.call(self, message);
             });
         },
@@ -266,7 +275,7 @@
                     args: [[session.id], { 'arch':  xml.xml }, website.get_context()],
                 });
             } else {
-                return $.Deferred().fail("Malformed XML document");
+                return $.Deferred().reject(null, "Malformed XML document");
             }
         },
         updateHash: function () {
@@ -282,14 +291,6 @@
         },
         open: function () {
             this.$el.removeClass('oe_ace_closed').addClass('oe_ace_open');
-            var curentHash = window.location.hash;
-            var indexOfView = curentHash.indexOf("?view=");
-            if (indexOfView >= 0) {
-                var viewId = parseInt(curentHash.substring(indexOfView + 6, curentHash.length), 10);
-                this.$('#ace-view-list').val(viewId).change();
-            } else {
-                window.location.hash = hash;
-            }
         },
         close: function () {
             window.location.hash = "";

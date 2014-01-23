@@ -12,12 +12,18 @@
 </template>
 
 <template id="website.submenu" name="Submenu">
-    <li t-if="not submenu.child_id">
+    <li t-if="not submenu.child_id" t-att-class="
+        ((submenu.url != '/' and request.httprequest.path.startswith(submenu.url)) or
+         request.httprequest.path == submenu.url) and 'active'
+        ">
         <a t-att-href="url_for(submenu.url)" t-ignore="true" t-att-target="'blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>
-    <li t-if="submenu.child_id" class="dropdown">
+    <li t-if="submenu.child_id" t-attf-class="dropdown #{
+        ((submenu.url != '/' and [1 for submenu in submenu.child_id if request.httprequest.path.startswith(submenu.url)]) or
+         request.httprequest.path == submenu.url) and 'active'
+        }">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             <span t-field="submenu.name"/> <span class="caret" t-ignore="true"></span>
         </a>
@@ -96,8 +102,8 @@
                                     <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                         <t t-call="website.submenu"/>
                                     </t>
-                                    <li class="divider" t-if="user_id.id != website.public_user.id"/>
-                                    <li class="dropdown" t-ignore="true" t-if="user_id.id != website.public_user.id">
+                                    <li class="divider" groups="base.group_user,base.group_portal"/>
+                                    <li class="dropdown" t-ignore="true" groups="base.group_user,base.group_portal">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                             <b>
                                                 <span t-esc="user_id.name"/>
@@ -191,6 +197,16 @@
                     </div>
                 </footer>
             </div>
+            <t t-if="website.google_analytics_key">
+                <script>
+                    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+                    function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+                    e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+                    e.src='//www.google-analytics.com/analytics.js';
+                    r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+                    ga('create','<t t-esc="website.google_analytics_key"/>');ga('send','pageview');
+                </script>
+            </t>
         </body>
     </html>
 </template>
@@ -239,11 +255,19 @@
     </xpath>
 </template>
 
-<template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In">
+<template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout">
+    <xpath expr="t" position="replace">
+        <t t-call="website.layout">
+            <div class="oe_website_login_container" t-raw="0"/>
+        </t>
+    </xpath>
+</template>
+
+<template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
     <xpath expr="//ul[@id='top_menu']" position="inside">
-        <li class="divider" t-if="user_id.id == website.public_user.id"/>
-        <li t-if="user_id.id == website.public_user.id">
-            <a t-attf-href="/web#redirect=#{ quote_plus(url_for('', keep_query='*')) }">
+        <li class="divider"/>
+        <li>
+            <a t-attf-href="/web/login">
                 <b>Sign in</b>
             </a>
         </li>
@@ -635,6 +659,9 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     </div>
                 </div>
                 <div class="col-md-4 mb32">
+                    <div groups="base.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or ''">
+                        <a class="btn btn-primary" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s' % (res_company._name, res_company.id)" title='Edit in backend'>Edit</a>
+                    </div>
                     <t t-call="website.company_description"/>
                 </div>
             </div>
@@ -724,8 +751,8 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 
 <template id="contact">
-    <address t-ignore="true">
-        <div t-att-class='"" if "name" in fields else "css_non_editable_mode_hidden"'><span t-esc="name"/></div>
+    <address t-ignore="true" class="mb0">
+        <div t-attf-class="'name' not in fields and 'css_non_editable_mode_hidden'"><span t-esc="name"/></div>
         <div class='css_editable_mode_hidden'>
             <div t-if="address and 'address' in fields">
                 <i class='fa fa-map-marker'/>

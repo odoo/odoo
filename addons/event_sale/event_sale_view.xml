@@ -8,10 +8,11 @@
              <field name="arch" type="xml">
                 <div name="options" position="inside">
                     <field name="event_ok" on_change="onchange_event_ok(type, event_ok, context)"/>
-                    <label for="event_ok"/>
+                    <label for="event_ok"
+                        attrs="{'readonly': [('is_only_child', '=', False)]}"/>
                 </div>
                 <div name='ean' position="after">
-                    <field name="event_type_id" attrs="{'readonly': [('event_ok', '=', False)]}"/>
+                    <field name="event_type_id" attrs="{'readonly': ['|', ('event_ok', '=', False), ('is_only_child', '=', False)]}"/>
                 </div>
              </field>
         </record>

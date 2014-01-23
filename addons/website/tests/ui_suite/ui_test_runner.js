@@ -10,6 +10,9 @@ function waitFor (ready, callback, timeout, timeoutMessageCallback) {
                 var message = timeoutMessageCallback ? timeoutMessageCallback() : "Timeout after "+timeout+" ms";
                 console.log('{ "event": "error", "message": "'+message+'" }');
                 console.log("Waiting for...\n"+ready);
+                if (window.localStorage.getItem("test-report")) {
+                    console.log(JSON.parse(website.localStorage.getItem("test-report")));
+                }
                 phantom.exit(1);
             } else {
                 clearInterval(interval);
@@ -17,7 +20,7 @@ function waitFor (ready, callback, timeout, timeoutMessageCallback) {
             }
         }
     }, 100);
-};
+}
 
 function run (test) {
     var options = JSON.parse(phantom.args);
@@ -27,15 +30,16 @@ function run (test) {
     var scheme = options.scheme ? options.scheme+'://' : 'http://';
     var host = options.host ? options.host : 'localhost';
     var port = options.port ? ':'+options.port : '';
-    var path = options.path ? options.path : '/web';
+    var path = options.path ? options.path : '/login';
 
     var queryParams = [];
     if (options.db) queryParams.push('db='+options.db);
+    if (options.user) queryParams.push('login='+options.user);
+    if (options.password) queryParams.push('key='+options.password);
+    if (options.redirect) queryParams.push('redirect='+options.redirect);
     var query = queryParams.length > 0 ? '?'+queryParams.join('&') : '';
 
     var hashParams = [];
-    if (options.user) hashParams.push('login='+options.user);
-    if (options.password) hashParams.push('password='+options.password);
     if (options.action) hashParams.push('action='+options.action);
     var hash = hashParams.length > 0 ? '#'+hashParams.join('&') : '';
 

@@ -44,7 +44,7 @@
                 <button type="image" name="submit" width="100px"
                     t-att-class="submit_class">
                     <img t-if="not submit_txt" src="/payment_acquirer_ogone/static/src/img/ogone_icon.png"/>
-                    <span t-if="submit_txt"><t t-esc="submit_txt"/></span>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>
                 </button>
             </form>
         </template>

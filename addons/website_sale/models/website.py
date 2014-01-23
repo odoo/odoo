@@ -51,7 +51,7 @@ class Website(orm.Model):
             values.update(order.onchange_pricelist_id(pricelist_id, None)['value'])
             order.write(values)
             for line in order.order_line:
-                self.add_product_to_cart(order_line_id=line.id, number=0)
+                self._ecommerce_add_product_to_cart(cr, uid, order_line_id=line.id, number=0)
 
     # ************************************************************
     # Ecommerce quotation management
@@ -65,7 +65,7 @@ class Website(orm.Model):
         order_line_obj = self.pool.get('sale.order.line')
         order_obj = self.pool.get('sale.order')
 
-        context = dict(context, pricelist=self.ecommerce_get_pricelist_id(cr, uid, None, context=context))
+        context = dict(context or {}, pricelist=self.ecommerce_get_pricelist_id(cr, uid, None, context=context))
 
         # set order_line_id and product_id
         if order_line_id:
@@ -122,6 +122,11 @@ class Website(orm.Model):
         else:
             order_line_id = order_line_obj.create(cr, SUPERUSER_ID, values, context=context)
             order_obj.write(cr, SUPERUSER_ID, [order.id], {'order_line': [(4, order_line_id)]}, context=context)
+
+        order = self.ecommerce_get_current_order(cr, uid, context=context)
+        if not order or not order.order_line:
+            self._ecommerce_change_pricelist(cr, uid, None, context=context)
+
         return quantity
 
     def _ecommerce_get_quotation_values(self, cr, uid, context=None):
@@ -211,4 +216,4 @@ class Website(orm.Model):
         return super(Website, self).preprocess_request(cr, uid, ids, request, context=None)
 
     def ecommerce_get_product_domain(self):
-        return [("sale_ok", "=", True)]
+        return [("sale_ok", "=", True),("product_variant_ids","!=",False)]

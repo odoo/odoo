@@ -191,10 +191,9 @@ class Ecommerce(http.Controller):
         return [r["product_tmpl_id"][0] for r in att]
 
     @http.route(['/shop/pricelist'], type='http', auth="public", website=True, multilang=True)
-    def shop_promo(self, code, **post):
-        assert code, 'No pricelist code provided'
-        request.registry['website']._ecommerce_change_pricelist(request.cr, request.uid, code=code, context=request.context)
-        return request.redirect("/shop")
+    def shop_promo(self, promo=None, **post):
+        request.registry['website']._ecommerce_change_pricelist(request.cr, request.uid, code=promo, context=request.context)
+        return request.redirect("/shop/mycart/")
 
     @http.route([
         '/shop/',
@@ -246,7 +245,7 @@ class Ecommerce(http.Controller):
             'range': range,
             'search': {
                 'search': search,
-                'category': category,
+                'category': category and category.id,
                 'filters': filters,
             },
             'pager': pager,
@@ -707,6 +706,8 @@ class Ecommerce(http.Controller):
 
         order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
         assert order.website_session_id == request.httprequest.session['website_session_id']
+
+        request.registry['website']._ecommerce_change_pricelist(cr, uid, None, context=context or {})
 
         return request.website.render("website_sale.confirmation", {'order': order})
 

@@ -62,7 +62,9 @@
                     placement: 'right',
                     title:     "Create Blog Post",
                     content:   "Click <em>Continue</em> to create the blog post.",
-                    trigger:   'click',
+                    trigger: {
+                        url:   /blogpost\/[0-9]+\/.*/,
+                    },
                 },
                 {
                     stepId:    'post-page',
@@ -139,7 +141,7 @@
                     title:     "Save Your Blog",
                     content:   "Click the <em>Save</em> button to record changes on the page.",
                     template:  self.popover({ fixed: true }),
-                    trigger:   'click',
+                    trigger:   'reload',
                 },
                 {
                     stepId:    'publish-post',

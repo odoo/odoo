@@ -67,6 +67,7 @@
     var dom_ready = website.dom_ready = $.Deferred();
     $(document).ready(function () {
         website.is_editable = website.is_editable || $('html').data('editable');
+        website.is_editable_button= website.is_editable_button || $('html').data('editable');
         dom_ready.resolve();
     });
 
@@ -262,7 +263,7 @@
     dom_ready.then(function () {
 
         /* ----- BOOTSTRAP  STUFF ---- */
-        $('.js_tooltip').bstooltip();
+        // $('.js_tooltip').bstooltip();
 
         /* ----- PUBLISHING STUFF ---- */
         $(document).on('click', '.js_publish_management .js_publish_btn', function () {

@@ -404,11 +404,7 @@ class Contact(orm.AbstractModel):
         field_browse = self.pool[column._obj].browse(cr, openerp.SUPERUSER_ID, id, context={"show_address": True})
         value = werkzeug.utils.escape( field_browse.name_get()[0][1] )
 
-        IMD = self.pool["ir.model.data"]
-        model, id = IMD.get_object_reference(cr, uid, "website", "contact")
-        view = self.pool["ir.ui.view"].browse(cr, uid, id, context=context)
-
-        html = view.render({
+        val = {
             'name': value.split("\n")[0],
             'address': werkzeug.utils.escape("\n".join(value.split("\n")[1:])),
             'phone': field_browse.phone,
@@ -417,7 +413,9 @@ class Contact(orm.AbstractModel):
             'email': field_browse.email,
             'fields': opf,
             'options': options
-        }, engine='website.qweb', context=context)
+        }
+
+        html = self.pool["ir.ui.view"].render(cr, uid, "website.contact", val, engine='website.qweb', context=context)
 
         return ir_qweb.HTMLSafe(html)
 
