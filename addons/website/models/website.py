@@ -209,6 +209,13 @@ class website(osv.osv):
             translatable=not is_master_lang,
         )
 
+    def get_template(self, cr, uid, ids, template, context=None):
+        if '.' not in template:
+            template = 'website.%s' % template
+        module, xmlid = template.split('.', 1)
+        model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
+        return self.pool["ir.ui.view"].browse(cr, uid, view_id, context=context)
+
     def _render(self, cr, uid, ids, template, values=None, context=None):
         user = self.pool.get("res.users")
         if not context:
@@ -233,10 +240,13 @@ class website(osv.osv):
         qweb_values.setdefault('editable', False)
 
         # in edit mode ir.ui.view will tag nodes
-        context['inherit_branding']=qweb_values['editable']
+        context['inherit_branding'] = qweb_values['editable']
 
-        result = self.pool['ir.ui.view'].render(cr, uid, template, qweb_values, engine='website.qweb', context=context)
-        return result
+        view = self.get_template(cr, uid, ids, template)
+
+        if 'main_object' not in qweb_values:
+            qweb_values['main_object'] = view
+        return view.render(qweb_values, engine='website.qweb', context=context)
 
     def render(self, cr, uid, ids, template, values=None, status_code=None, context=None):
         def callback(template, values, context):

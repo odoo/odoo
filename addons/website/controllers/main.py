@@ -104,9 +104,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             page = 'website.%s' % page
 
         try:
-            module, xmlid = page.split('.', 1)
-            model, view_id = request.registry["ir.model.data"].get_object_reference(request.cr, request.uid, module, xmlid)
-            values['main_object'] = request.registry["ir.ui.view"].browse(request.cr, request.uid, view_id, context=request.context)
+            request.website.get_template(page)
         except ValueError, e:
             # page not found
             if request.context['editable']:
