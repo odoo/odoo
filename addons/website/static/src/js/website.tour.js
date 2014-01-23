@@ -327,7 +327,7 @@
             var self = this;
             var testId = 'test_'+tour.id+'_tour';
             this.tours.push(tour);
-            var defaultDelay = 500; //ms
+            var defaultDelay = 1000; //ms
             var overlapsCrash;
             var test = {
                 id: tour.id,
@@ -363,7 +363,6 @@
                         var _next = false;
                         window.localStorage.setItem(testId, step.stepId);
                         function next () {
-                            clearTimeout(overlapsCrash);
                             _next = true;
 
                             // set report
@@ -377,15 +376,16 @@
                                     executeStep(nextStep);
                                 }, step.delay || defaultDelay);
                             } else {
+                                clearTimeout(overlapsCrash);
                                 window.localStorage.removeItem(testId);
                             }
                         }
-
-                        overlapsCrash = setTimeout(function () {
-                            throwError("Test: '" + testId + "' can't resolve step: '" + step.stepId + "'");
-                        }, (step.delay || defaultDelay) + 1000);
-
                         setTimeout(function () {
+                            clearTimeout(overlapsCrash);
+                            overlapsCrash = setTimeout(function () {
+                                throwError("Test: '" + testId + "' can't resolve step: '" + step.stepId + "'");
+                            }, (step.delay || defaultDelay) + 1000);
+
                             var $element = $(step.element);
                             if (step.triggers) {
                                 try {

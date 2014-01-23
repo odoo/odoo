@@ -272,7 +272,7 @@
           <div class="row">
             <div class="col-sm-4">
                 <ol class="breadcrumb">
-                    <li><a href="/shop" t-keep-query="search,filters">Products</a></li>
+                    <li><a href="/shop" t-keep-query="search,filters" onclick="history.go(-1); return false;">Products</a></li>
                     <li t-if="search.get('category')"><a t-href="/shop/" t-keep-query="category,search,filters"><span t-field="category.name"/></a></li>
                     <li class="active"><span t-field="product.name"/></li>
                 </ol>
@@ -579,7 +579,7 @@
 
 <template id="products_characteristics" inherit_id="website_sale.products" inherit_option_id="website_sale.products" name="Product Characteristic's Filters" groups="product.group_product_characteristics">
   <xpath expr="//div[@id='products_grid_before']" position="inside">
-      <form t-action="/shop/filters/" method="post" t-keep-query="category,search">
+      <form t-action="/shop/filters/" class="characteristics" method="post" t-keep-query="category,search">
           <ul class="nav nav-pills nav-stacked mt16">
               <t t-set="characteristic_ids" t-value="Ecommerce.get_characteristic_ids()"/>
               <t t-foreach="characteristic_ids" t-as="characteristic_id">
@@ -611,8 +611,6 @@
                 </t>
               </t>
           </ul>
-          <button class="btn btn-xs btn-primary mt16">Apply filter</button>
-          <a t-href="/shop/" t-keep-query="category,search" class="btn btn-xs btn-default mt16">Cancel filter</a>
       </form>
   </xpath>
   <xpath expr="//div[@id='products_grid_before']" position="attributes">
