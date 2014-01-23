@@ -367,7 +367,8 @@ class stock_quant(osv.osv):
             if not quant:
                 break
             new_quant = self.move_single_quant(cr, uid, quant, location_to, qty, move, context=context)
-            self._quant_reconcile_negative(cr, uid, quant, context=context)
+            if not move.move_dest_id:
+                self._quant_reconcile_negative(cr, uid, quant, context=context)
             quant = new_quant
 
     def quants_get_prefered_domain(self, cr, uid, location, product, qty, domain=None, prefered_domain=False, fallback_domain=False, restrict_lot_id=False, restrict_partner_id=False, context=None):
