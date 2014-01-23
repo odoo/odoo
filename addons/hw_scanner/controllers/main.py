@@ -5,13 +5,14 @@ import time
 from os import listdir
 from os.path import join
 from threading import Thread
+from select import select
 from Queue import Queue, Empty
+
 import openerp
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
-from openerp.tools.translate import _
-
 from openerp import http
 from openerp.http import request
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -21,7 +22,6 @@ except ImportError:
     _logger.error('OpenERP module hw_scanner depends on the evdev python module')
     evdev = None
 
-from select import select
 
 class Scanner(Thread):
     def __init__(self):
@@ -175,8 +175,9 @@ class Scanner(Thread):
                 except Exception as e:
                     _logger.error('Could not read Barcode Scanner Events:\n Exception: '+str(e))
 
-s = Scanner()
-s.start()
+if not openerp.tools.config["stop_after_init"]:
+    s = Scanner()
+    s.start()
 
 class ScannerDriver(hw_proxy.Proxy):
     @http.route('/hw_proxy/is_scanner_connected', type='json', auth='admin')
