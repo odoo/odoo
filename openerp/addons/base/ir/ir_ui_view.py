@@ -782,14 +782,27 @@ class view(osv.osv):
                 self.translate_qweb(cr, uid, id_, node, lang, context)
         return arch
 
-    def render(self, cr, uid, xml_id, values=None, engine='ir.qweb', context=None):
+    @openerp.tools.ormcache()
+    def get_view_xmlid(self, cr, uid, id):
+        imd = self.pool['ir.model.data']
+        domain = [('model', '=', 'ir.ui.view'), ('res_id', '=', id)]
+        xmlid = imd.search_read(cr, uid, domain, ['module', 'name'])[0]
+        return '%s.%s' % (xmlid['module'], xmlid['name'])
+
+    def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
+        if isinstance(id_or_xml_id, list):
+            id_or_xml_id = id_or_xml_id[0]
+        tname = id_or_xml_id
+        if isinstance(tname, (int, long)):
+            tname = self.get_view_xmlid(cr, uid, tname)
+
         if not context:
             context = {}
 
         def loader(name):
             return self.read_template(cr, uid, name, context=context)
 
-        return self.pool[engine].render(cr, uid, xml_id, values, loader=loader, context=context)
+        return self.pool[engine].render(cr, uid, tname, values, loader=loader, context=context)
 
     #------------------------------------------------------
     # Misc
