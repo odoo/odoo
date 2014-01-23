@@ -14,5 +14,5 @@
     'data': [
         'views/website_payment_templates.xml',
     ],
-    'auto_install': True,
+    'auto_install': False,
 }
