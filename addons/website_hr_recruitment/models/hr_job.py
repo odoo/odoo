@@ -15,6 +15,10 @@ class hr_job(osv.osv):
             res[job.id] = "%s/job/detail/%s/" % (base_url, job.id)
         return res
 
+    def job_open(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'website_published': False}, context=context)
+        return super(hr_job, self).job_open(cr, uid, ids, context)
+
     _columns = {
         'website_published': fields.boolean('Available in the website'),
         'website_description': fields.html('Description for the website'),
