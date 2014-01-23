@@ -98,6 +98,15 @@ class survey_survey(osv.Model):
                                             % survey_browse.id)
         return res
 
+    def _get_result_url(self, cr, uid, ids, name, arg, context=None):
+        """ Computes a result URL for the survey """
+        res = dict((id, 0) for id in ids)
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
+            'web.base.url')
+        for survey_browse in self.browse(cr, uid, ids, context=context):
+            res[survey_browse.id] = urljoin(base_url, "survey/results/%s/"
+                                            % survey_browse.id)
+        return res
     # Model fields #
 
     _columns = {
@@ -132,6 +141,8 @@ class survey_survey(osv.Model):
             'User responses', readonly=1),
         'public_url': fields.function(_get_public_url,
             string="Public link", type="char"),
+        'result_url': fields.function(_get_result_url,
+            string="Result link", type="char"),
         'email_template_id': fields.many2one('email.template',
             'Email Template', ondelete='set null'),
         'thank_you_message': fields.html('Thank you message', translate=True,
@@ -426,6 +437,8 @@ class survey_question(osv.Model):
             oldname='minimum_req_ans'),
         'constr_error_msg': fields.char("Error message",
             oldname='req_error_msg'),
+        'user_input_line_ids': fields.one2many('survey.user_input_line',
+                                               'question_id', 'Answers',domain=[('skipped','=',False)]),
     }
     _defaults = {
         'page_id': lambda s, cr, uid, c: c.get('page_id'),

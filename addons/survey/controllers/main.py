@@ -29,6 +29,9 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 #from openerp.addons.website.models import website
 from openerp.addons.website.controllers.main import Website as controllers
+import itertools
+import math
+from collections import Counter
 controllers = controllers()
 
 
@@ -286,6 +289,78 @@ class WebsiteSurvey(http.Controller):
                                        'token': token,
                                        'page_nr': 0})
 
+    @http.route(['/survey/results/<model("survey.survey"):survey>'],type='http', auth='user', multilang=True, website=True)
+    def survey_reporting(self, survey, token=None, **post):
+        return request.website.render('survey.result',
+                                      {'survey': survey,
+                                       'prepare_result':self.prepare_result,
+                                       'get_input_summary':self.get_input_summary,
+                                       'get_graph_data':self.get_graph_data,
+                                       'page_range':self.page_range
+                                       })
+
+    def page_range(self, total_record):
+        total = math.ceil( total_record/5.0 )
+        return range(1, int( total+1 ))
+
+    def prepare_result(self, question):
+        if question.type in ['simple_choice', 'multiple_choice'] :
+            result_summary = {}
+            [ result_summary.update({ label.id : {'text':label.value, 'count':0} }) for label in question.labels_ids ]
+            for input_line in question.user_input_line_ids:
+                if result_summary.get(input_line.value_suggested.id) and not input_line.skipped:
+                    result_summary[input_line.value_suggested.id]['count'] += 1
+            result_summary = result_summary.values()
+        if question.type == 'matrix':
+            rows, answers, res = {}, {}, {}
+            [ rows.update({ label.id : label.value}) for label in question.labels_ids_2 ]
+            [ answers.update({label.id: label.value}) for label in question.labels_ids ]
+            for cell in itertools.product(rows.keys(), answers.keys()):
+                res[cell] = 0
+            for input_line in question.user_input_line_ids:
+                if not input_line.skipped:
+                    res[(input_line.value_suggested_row.id,input_line.value_suggested.id)] += 1
+            result_summary= {'answers':answers,'rows':rows,'result':res}
+        if question.type == 'numerical_box':
+            result_summary = {}
+            all_inputs = []
+            for input_line in question.user_input_line_ids:
+                if not input_line.skipped:
+                    all_inputs.append(input_line.value_number)
+            result_summary.update({
+                                   'average':round(sum(all_inputs)/len(all_inputs),2),
+                                   'max':round(max(all_inputs),2),
+                                   'min':round(min(all_inputs),2),
+                                   'most_comman':Counter(all_inputs).most_common(5),
+                                   })
+        return result_summary
+    
+    def get_graph_data(self, question):
+        result = []
+        if question.type in ['simple_choice', 'multiple_choice']:
+            result.append({'key':str(question.question),
+                           'values':self.prepare_result(question)})
+        if question.type == 'matrix':
+            data = self.prepare_result(question)
+            for answer in data['answers']:
+                values = []
+                for res in data['result']:
+                    if res[1] == answer:
+                        values.append({'text': data['rows'][res[0]], 'count': data['result'][res]})
+                result.append({'key':data['answers'].get(answer),'values':values})
+        return json.dumps(result)
+        
+    def get_input_summary(self, question):
+        result = {}
+        if question.page_id.survey_id.user_input_ids:
+            result['total_inputs'] = len(question.page_id.survey_id.user_input_ids)
+            question_input_ids = []
+            for user_input in question.user_input_line_ids:
+                if not user_input.skipped:
+                    question_input_ids.append(user_input.user_input_id.id)
+            result['answered'] = len(set(question_input_ids))
+            result['skipped'] = result['total_inputs'] - result['answered']
+        return result
 
 def dict_soft_update(dictionary, key, value):
     ''' Insert the pair <key>: <value> into the <dictionary>. If <key> is

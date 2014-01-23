@@ -42,6 +42,7 @@ sent mails with personal token for the invitation of the survey.
         'security/ir.model.access.csv',
         'views/survey_views.xml',
         'views/survey_templates.xml',
+        'views/survey_result.xml',
         'wizard/survey_email_compose_message.xml',
         'data/survey_cron.xml'
     ],

@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <template id="result" name="Survey Result">
+        <t t-call="website.layout">
+            <div class="container">
+                <link href="/survey/static/src/lib/nvd3/nv.d3.css" rel="stylesheet" type="text/css"></link>
+                <script src="/survey/static/src/lib/nvd3/lib/d3.v3.js"></script>
+                <script src="/survey/static/src/lib/nvd3/nv.d3.js"></script>
+                         <style>
+                            .only_left_radius{
+                                border-top-right-radius:2em;
+                                border-bottom-right-radius:2em;
+                            }
+                            
+                            .only_right_radius{
+                                border-top-left-radius:2em;
+                                border-bottom-left-radius:2em;
+                            }
+                         </style>
+                <h1>Survey Result</h1>
+                <h2><span t-field='survey.title'></span></h2>
+                <div t-foreach='survey.page_ids' t-as='page' class="panel panel-primary">
+                    <div class="panel-heading"><h3 class="panel-title" t-field='page.title'></h3></div>
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1">
+                            <div t-foreach='page.question_ids' t-as='question' class="panel panel-default mt16">
+                                <t t-set="input_summary" t-value="get_input_summary(question)"/>
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        <b>Question </b>
+                                        <span t-field='question.question'></span>
+                                        <span class="pull-right">
+                                            <span class="label label-success"><span t-esc="input_summary['answered']"></span> Answered</span> 
+                                            <span class="label label-danger"><span t-esc="input_summary['skipped']"></span> Skipped</span>
+                                        </span>
+                                    </h3>
+                                </div>
+                                <t t-if="question.type in ['textbox', 'free_text']">
+                                    <t t-call="survey.result_text"></t>
+                                </t>
+                                <t t-if="question.type in ['simple_choice', 'multiple_choice']">
+                                    <t t-call="survey.result_choice"></t>
+                                </t>
+                                <t t-if="question.type == 'matrix'">
+                                    <t t-call="survey.result_matrix"></t>
+                                </t>
+                                <t t-if="question.type == 'numerical_box'">
+                                    <t t-call="survey.result_number"></t>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Result for free_text and textbox -->
+    <template id="result_text" name="Text Result">
+        <table class="table table-hover" t-att-id="'table_question_'+str(question.id)">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>User Responses</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="hidden" t-foreach="question.user_input_line_ids" t-as="user_input">
+                    <td><t t-esc="user_input_index+1"></t></td>
+                    <t t-if="question.type == 'free_text'">
+                        <td>
+                            <span t-field="user_input.value_free_text"></span><br/>
+                            <small><p t-field="user_input.date_create" class="fa fa-calendar oe_date text-muted"></p></small>
+                        </td>
+                    </t>
+                    <t t-if="question.type == 'textbox'">
+                        <td>
+                            <span t-field="user_input.value_text"></span><br/>
+                            <small><p t-field="user_input.date_create" class="fa fa-calendar oe_date text-muted"></p></small>
+                        </td>
+                    </t>
+                </tr>
+            </tbody>
+        </table>
+        <!-- Pagination Element -->
+        <ul t-att-id="'pagination_'+str(question.id)" class="pagination" >
+            <t t-if="len(question.user_input_line_ids) > 5">
+                <li t-foreach="page_range(len(question.user_input_line_ids))" t-as="num">
+                    <a href="#" t-esc="num"></a>
+                </li>
+            </t>
+        </ul>
+        <!-- Dynamic Script for Pagination Element -->
+        <script>
+            $( document ).ready(function() {
+                $('#table_question_<t t-esc="question.id"></t> tbody tr:lt(5)').removeClass('hidden');
+                $('#<t t-esc="'pagination_'+str(question.id)"></t> li:first').addClass('active');
+                $('#<t t-esc="'pagination_'+str(question.id)"></t> li a').click(function(event){
+                    event.preventDefault();
+                    $('#<t t-esc="'pagination_'+str(question.id)"></t> li').removeClass('active');
+                    $(this).parent('li').addClass('active');
+                    $('#table_question_<t t-esc="question.id"></t> tbody tr').addClass('hidden');
+                    var num = $(this).text();
+                    min = (5 * (num-1))-1;
+                    if (min == -1){
+                        $('#table_question_<t t-esc="question.id"></t> tbody tr:lt('+5 * num+')').removeClass('hidden');
+                    }
+                    else{
+                        $('#table_question_<t t-esc="question.id"></t> tbody tr:lt('+5 * num+'):gt('+min+')').removeClass('hidden');
+                    }
+                });
+            });
+        </script>
+    </template>
+
+    <!-- Result for simple_choice and multiple_choice -->
+    <template id="result_choice" name="Choice Result">
+        <div>
+            <!-- Tabs -->
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a t-att-href="'#graph_question_'+str(question.id)" data-toggle="tab">
+                        <i class="fa fa-bar-chart-o"></i> Graph
+                    </a>
+                </li>
+                <li>
+                    <a t-att-href="'#data_question_'+str(question.id)" data-toggle="tab">
+                        <i class="fa fa-list-alt"></i> Data
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active" t-att-id="'graph_question_'+str(question.id)">
+                    <!-- Dynamic script for single bar chart -->
+                    <script>
+                        var question_<t t-esc="question.id"></t> = <t t-esc="get_graph_data(question)"></t>;
+                        nv.addGraph(function() {
+                            var chart = nv.models.discreteBarChart()
+                                .x(function(d) { return d.text })
+                                .y(function(d) { return d.count })
+                                .staggerLabels(true)
+                                .tooltips(false)
+                                .showValues(true)
+                            
+                            // Custom Tick fuction for replacing long text with '...'
+                            var customtick_function = function(d){ 
+                                if(this.hasOwnProperty('window') || d.length &lt; 35){
+                                    return d;
+                                } 
+                                else{
+                                    return d.slice(0,35)+'...';
+                                }
+                            }
+
+                            chart.xAxis
+                                .tickFormat(customtick_function);
+                            
+                            chart.yAxis
+                                .tickFormat(d3.format('d'));
+
+                            d3.select('#graph_question_<t t-esc="question.id"></t> svg')
+                                .datum(question_<t t-esc="question.id"></t>)
+                                .transition().duration(500)
+                                .call(chart);
+
+                            nv.utils.windowResize(chart.update);
+                            return chart;
+                        });
+                    </script>
+                    <!-- svg element for drawing bar chart -->
+                    <svg style="height:20em"></svg>
+                </div>
+                <div class="tab-pane" t-att-id="'data_question_'+str(question.id)">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Answer Choices</th>
+                                <th>User Responses</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="prepare_result(question)" t-as="user_input">
+                                <td>
+                                    <p t-esc="user_input['text']"></p>
+                                </td>
+                                <td>
+                                    <span t-esc="round(user_input['count']*100.0/input_summary['answered'],2)"></span> %
+                                    <span t-esc="user_input['count']" class="label label-primary">Vote</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Result for matrix -->
+    <template id="result_matrix" name="Matrix Result">
+        <t t-set="matrix_result" t-value="prepare_result(question)" />
+        <!-- Tabs -->
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a t-att-href="'#graph_question_'+str(question.id)" data-toggle="tab">
+                    <i class="fa fa-bar-chart-o"></i>
+                    Graph
+                </a>
+            </li>
+            <li>
+                <a t-att-href="'#data_question_'+str(question.id)" data-toggle="tab">
+                    <i class="fa fa-list-alt"></i>
+                    Data
+                </a>
+            </li>
+        </ul>
+    
+        <div class="tab-content">
+            <div class="tab-pane active with-3d-shadow with-transitions" t-att-id="'graph_question_'+str(question.id)">
+                <!-- Dynamic script for Multi bar chart -->
+                <script>
+                    var question_<t t-esc="question.id"></t> = <t t-esc="get_graph_data(question)"></t>;
+                    nv.addGraph(function(){
+                        var chart = nv.models.multiBarChart()
+                            .x(function(d) { return d.text })
+                            .y(function(d) { return d.count })
+                            .staggerLabels(true);
+
+                        // Replacing Library's Default Tooltip with our Custom One
+                        chart.tooltip(function(key, x, y, e, graph) {
+                            return '<h5 class="panel-primary"><div class="panel-heading">' + x + '</div></h5>' +
+                            '<p>'+ '<b>Responses : </b>' + key + '</p>' +
+                            '<p>' + "<b>Total Vote : </b>" + y + '</p>'  
+                        })
+
+                        // Custom Tick fuction for replacing long text with '...'
+                        var customtick_function = function(d){ 
+                            if(this.hasOwnProperty('window') || d.length &lt; 25){
+                                return d;
+                            } 
+                            else{
+                                return d.slice(0,25)+'...';
+                            }
+                        }
+
+                        chart.xAxis
+                            .tickFormat(customtick_function);
+                        chart.yAxis
+                            .tickFormat(d3.format('d'));
+
+                        d3.select('#graph_question_<t t-esc="question.id"></t> svg')
+                            .datum(question_<t t-esc="question.id"></t>)
+                            .transition().duration(500).call(chart);
+
+                        nv.utils.windowResize(chart.update);
+                        return chart;
+                    });
+                </script>
+                <!-- svg element for drawing Multibar chart -->
+                <svg style="height:20em"></svg>
+            </div>
+            <div class="tab-pane" t-att-id="'data_question_'+str(question.id)">
+                <table class="table table-hover text-right">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="text-right" t-foreach="matrix_result['answers']" t-as="answer_id">
+                                <span t-esc="matrix_result['answers'][answer_id]"></span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="matrix_result['rows']" t-as="row_id">
+                            <td>
+                                <span t-esc="matrix_result['rows'][row_id]"></span>
+                            </td>
+                            <td t-foreach="matrix_result['answers']" t-as="answer_id">
+                                <span t-esc="round(matrix_result['result'][(row_id,answer_id)]*100.0/input_summary['answered'],2)"></span> %
+                                <span class="label label-primary" t-esc="matrix_result['result'][(row_id,answer_id)]"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </template>
+    <template id="result_number" name="Number Result">
+        <t t-set="number_result" t-value="prepare_result(question)" />
+         <span class="pull-right">
+             <span class="label label-default only_right_radius">Maximum </span> <span class="label label-success only_left_radius" t-esc="number_result['max']"></span>
+             <span class="label label-default only_right_radius">Minimum </span> <span class="label label-danger only_left_radius" t-esc="number_result['min']"></span>
+             <span class="label label-default only_right_radius">Average </span> <span class="label label-warning only_left_radius" t-esc="number_result['average']"></span>
+         </span>
+         <h3>Most Common <span t-esc="len(number_result['most_comman'])"></span></h3>
+         <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>User Responce</th>
+                            <th>Occurence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="number_result['most_comman']" t-as="row">
+                            <td>
+                                <span t-esc="row[0]"></span>
+                            </td>
+                            <td>
+                                <span t-esc="row[1]"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+    </template>
+</data>
+</openerp>
