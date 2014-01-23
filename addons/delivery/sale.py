@@ -20,8 +20,6 @@
 ##############################################################################
 
 import time
-
-from openerp.addons import decimal_precision
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -40,39 +38,10 @@ class sale_order_line(osv.Model):
 
 class sale_order(osv.Model):
     _inherit = 'sale.order'
-
-    def _amount_all_wrapper(self, cr, uid, ids, field_name, arg, context=None):
-        """ Wrapper because of direct method passing as parameter for function fields """
-        return self._amount_all(cr, uid, ids, field_name, arg, context=context)
-
-    def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
-        res = super(sale_order, self)._amount_all(cr, uid, ids, field_name, arg, context=context)
-        Currency = self.pool.get('res.currency')
-        for order in self.browse(cr, uid, ids, context=context):
-            line_amount = sum([line.price_subtotal for line in order.order_line if line.is_delivery])
-            currency = order.pricelist_id.currency_id
-            res[order.id]['amount_delivery'] = Currency.round(cr, uid, currency, line_amount)
-        return res
-
-    def _get_order(self, cr, uid, ids, context=None):
-        result = {}
-        for line in self.pool.get('sale.order.line').browse(cr, uid, ids, context=context):
-            result[line.order_id.id] = True
-        return result.keys()
-
     _columns = {
         'carrier_id': fields.many2one(
             "delivery.carrier", string="Delivery Method",
             help="Complete this field if you plan to invoice the shipping based on picking."),
-        'amount_delivery': fields.function(
-            _amount_all_wrapper, type='float', digits_compute=decimal_precision.get_precision('Account'),
-            string='Delivery Amount',
-            store={
-                'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
-                'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
-            },
-            multi='sums', help="The amount without tax.", track_visibility='always'
-        ),
     }
 
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
