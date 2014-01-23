@@ -175,16 +175,18 @@ class Scanner(Thread):
                 except Exception as e:
                     _logger.error('Could not read Barcode Scanner Events:\n Exception: '+str(e))
 
-if not openerp.tools.config["stop_after_init"]:
-    s = Scanner()
-    s.start()
+s = Scanner()
 
 class ScannerDriver(hw_proxy.Proxy):
     @http.route('/hw_proxy/is_scanner_connected', type='json', auth='admin')
     def is_scanner_connected(self):
+        if not s.isAlive():
+            s.start()
         return s.get_device() != None
     
     @http.route('/hw_proxy/scanner', type='json', auth='admin')
     def scanner(self):
+        if not s.isAlive():
+            s.start()
         return s.get_barcode()
         
