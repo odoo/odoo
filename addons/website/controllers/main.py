@@ -50,7 +50,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             response = request.website.render(response.params['template'], values)
         return response
 
-    @http.route('/pagenew/<path:path>', type='http', auth="user")
+    @http.route('/pagenew/<path:path>', type='http', auth="user", website=True)
     def pagenew(self, path, noredirect=NOPE):
         web = request.registry['website']
         try:
