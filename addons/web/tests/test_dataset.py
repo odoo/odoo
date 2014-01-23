@@ -22,6 +22,11 @@ class TestDataSetController(unittest2.TestCase):
 
     def test_regular_find(self):
         self.search.return_value = [1, 2, 3]
+        self.read.return_value = [
+            {'id': 1, 'name': 'foo'},
+            {'id': 2, 'name': 'bar'},
+            {'id': 3, 'name': 'qux'}
+        ]
 
         self.dataset.do_search_read(self.request, 'fake.model')
         self.read.assert_called_once_with(

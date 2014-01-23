@@ -1085,9 +1085,7 @@ class DataSet(openerpweb.Controller):
 
         records = Model.read(ids, fields or False, req.context)
 
-        index = {}
-        for r in records:
-            index[r['id']] = r
+        index = dict((r['id'], r) for r in records)
         records = [index[x] for x in ids if x in index]
 
         return {
