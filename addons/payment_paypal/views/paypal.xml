@@ -3,7 +3,7 @@
     <data noupdate="0">
 
         <template id="paypal_acquirer_button">
-            <form t-if="acquirer.paypal_email_id" t-att-action="tx_url" method="post" target="_self">
+            <form t-if="acquirer.paypal_email_account" t-att-action="tx_url" method="post" target="_self">
                 <input type="hidden" name="cmd" t-att-value="tx_values['cmd']"/>
                 <input type="hidden" name="business" t-att-value="tx_values['business']"/>
                 <input type="hidden" name="item_name" t-att-value="tx_values['item_name']"/>

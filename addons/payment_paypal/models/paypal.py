@@ -35,8 +35,8 @@ class AcquirerPaypal(osv.Model):
             }
 
     _columns = {
-        'paypal_email_id': fields.char('Email ID', required_if_provider='paypal'),
-        'paypal_seller_id': fields.char('Seller ID', required_if_provider='paypal'),
+        'paypal_email_account': fields.char('Paypal Email ID', required_if_provider='paypal'),
+        'paypal_seller_account': fields.char('Paypal Seller ID', required_if_provider='paypal'),
         'paypal_use_ipn': fields.boolean('Use IPN'),
         # Server 2 server
         'paypal_api_enabled': fields.boolean('Use Rest API'),
@@ -82,7 +82,7 @@ class AcquirerPaypal(osv.Model):
         paypal_tx_values = dict(tx_values)
         paypal_tx_values.update({
             'cmd': '_xclick',
-            'business': acquirer.paypal_email_id,
+            'business': acquirer.paypal_email_account,
             'item_name': tx_values['reference'],
             'item_number': tx_values['reference'],
             'amount': tx_values['amount'],
@@ -193,10 +193,10 @@ class TxPaypal(osv.Model):
         if tx.partner_reference and data.get('payer_id') != tx.partner_reference:
             invalid_parameters.append(('payer_id', data.get('payer_id'), tx.partner_reference))
         # check seller
-        if data.get('receiver_email') != tx.acquirer_id.paypal_email_id:
-            invalid_parameters.append(('receiver_email', data.get('receiver_email'), tx.acquirer_id.paypal_email_id))
-        if data.get('receiver_id') != tx.acquirer_id.paypal_seller_id:
-            invalid_parameters.append(('receiver_id', data.get('receiver_id'), tx.acquirer_id.paypal_seller_id))
+        if data.get('receiver_email') != tx.acquirer_id.paypal_email_account:
+            invalid_parameters.append(('receiver_email', data.get('receiver_email'), tx.acquirer_id.paypal_email_account))
+        if data.get('receiver_id') != tx.acquirer_id.paypal_seller_account:
+            invalid_parameters.append(('receiver_id', data.get('receiver_id'), tx.acquirer_id.paypal_seller_account))
 
         return invalid_parameters
 
