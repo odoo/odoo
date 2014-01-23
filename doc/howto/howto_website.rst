@@ -141,7 +141,28 @@ it, and generally makes it simpler for designers to edit the markup.
 .. todo:: link to section about reusing/altering existing stuff,
           template overriding
 
+OpenERP's Website support
+-------------------------
 
+.. introduce the website module, add as dependency to academy, update db
+.. RTE edition of pages, snippets
+.. edition of own template pages?
+.. ?? customize ??
+
+Storing data in OpenERP
+-----------------------
+
+.. calendar model
+.. demo data for events dates
+.. access & formatting
+.. sending & storing comments (?)
+
+Administration and ERP Integration
+----------------------------------
+
+.. create menu, action
+   .. improve generated views
+.. create list & form views for events
 
 .. _bootstrap: http://getbootstrap.com
 
