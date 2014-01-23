@@ -676,14 +676,21 @@ class sale_order(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             proc_ids = []
             vals = self._prepare_procurement_group(cr, uid, order, context=context)
-            group_id = self.pool.get("procurement.group").create(cr, uid, vals, context=context)
+            if not order.procurement_group_id:
+                group_id = self.pool.get("procurement.group").create(cr, uid, vals, context=context)
+                order.write({'procurement_group_id': group_id}, context=context)
 
-            order.write({'procurement_group_id': group_id}, context=context)
+            fixed = True
             for line in order.order_line:
-                #cancel existing procurements if any (possible when after a shipping exception the user choose to recreate), to avoid duplicates
+                #Try to fix exception procurement (possible when after a shipping exception the user choose to recreate)
                 if line.procurement_ids:
-                    procurement_obj.cancel(cr, uid, [x.id for x in line.procurement_ids if x.state != 'cancel'], context=context)
-                if sale_line_obj.need_procurement(cr, uid, [line.id], context=context):
+                    #first check them to see if they are in exception or not
+                    procurement_obj.check(cr, uid, [x.id for x in line.procurement_ids if x.state not in ['cancel', 'done']])
+                    line.refresh()
+                    #run procurement that are in exception
+                    if not procurement_obj.run(cr, uid, [x.id for x in line.procurement_ids if x.state == 'exception'], context=context):
+                        fixed = False
+                elif sale_line_obj.need_procurement(cr, uid, [line.id], context=context):
                     if (line.state == 'done') or not line.product_id:
                         continue
                     vals = self._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
@@ -691,10 +698,11 @@ class sale_order(osv.osv):
                     proc_ids.append(proc_id)
             #Confirm procurement order such that rules will be applied on it
             #note that the workflow ensure proc_ids isn't an empty list
-            procurement_obj.run(cr, uid, proc_ids, context=context)
+            if proc_ids:
+                procurement_obj.run(cr, uid, proc_ids, context=context)
             # FP NOTE: do we need this? isn't it the workflow that should set this
             val = {}
-            if order.state == 'shipping_except':
+            if order.state == 'shipping_except' and fixed:
                 val['state'] = 'progress'
                 val['shipped'] = False
 
