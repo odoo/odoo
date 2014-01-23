@@ -744,9 +744,10 @@
         <menuitem icon="STOCK_PRINT" action="action_report_pos_details"
                 id="menu_pos_details" parent="menu_point_rep" sequence="6" />
 
-        <record model="ir.actions.client" id="action_pos_pos">
+        <record model="ir.actions.act_url" id="action_pos_pos">
             <field name="name">Start Point of Sale</field>
-            <field name="tag">pos.ui</field>
+            <field name="url">/pos/web/</field>
+            <field name="target">self</field>
         </record>
 
         <!-- Top menu item -->
@@ -772,6 +773,7 @@
                         <group col="4">
                             <field name="warehouse_id" widget="selection" groups="stock.group_locations" />
                             <field name="pricelist_id" groups="product.group_sale_pricelist"/>
+                            <field name="currency_id" invisible="1"/>
                             <field name="journal_id" widget="selection"/>
                             <field name="group_by" groups="account.group_account_user"/>
                             <field name="sequence_id" readonly="1" groups="base.group_no_one"/>
@@ -785,7 +787,7 @@
                                 <field name="cash_control" />
                             </tree>
                         </field>
-                        <group string="Material Interfaces" >
+                        <group string="Settings" >
                             <group>
                                 <field name="iface_self_checkout" />
                                 <field name="iface_cashdrawer" />
@@ -795,8 +797,14 @@
                             <group>
                                 <field name="iface_electronic_scale" />
                                 <field name="iface_vkeyboard" />
-                                <field name="iface_print_via_proxy" />
+                                <field name="iface_big_scrollbars" />
+                                <field name="proxy_ip" />
                             </group>
+                        </group>
+                        <group string="Receipt" >
+                            <field name="iface_print_via_proxy" />
+                            <field name="receipt_header" placeholder="A custom receipt header message"/>
+                            <field name="receipt_footer" placeholder="A custom receipt header footage"/>
                         </group>
                     </sheet>
 
@@ -878,9 +886,9 @@
                             class="oe_highlight" />
                         <button name="close" type="workflow" string="Validate Closing &amp; Post Entries" states="closing_control"
                             class="oe_highlight" />
-                        <div class="oe_right">
-                            <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1" />
-                        </div>
+                        
+                        <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1" />
+                        
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box">
@@ -895,6 +903,7 @@
                             <field name="cash_control" invisible="1" />
                             <group>
                                 <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'point_of_sale.group_pos_manager', 'base.group_sale_manager']}"/>
+                                <field name="currency_id" invisible="1"/>
                                 <field name="config_id"/>
                             </group>
                             <group>
@@ -903,7 +912,7 @@
                             </group>
                             <newline/>
                             <group string="Opening Cash Control" attrs="{'invisible' : [('cash_control', '=', False)]}">
-                                <field name="opening_details_ids" nolabel="1" colspan="2" attrs="{'readonly' : [('state', 'not in', ('opening_control',))]}">
+                                <field name="opening_details_ids" nolabel="1" colspan="2" attrs="{'readonly' : [('state', '!=', 'opening_control')]}">
                                     <tree string="Opening Cashbox Lines" editable="bottom">
                                         <field name="pieces" readonly="1" />
                                         <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening)" />
@@ -912,20 +921,22 @@
                                 </field>
                             </group>
                             <group string="Closing Cash Control" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '=', 'opening_control')]}">
-                                <field name="details_ids" nolabel="1" colspan="2">
+                                <field name="details_ids" nolabel="1" colspan="2" attrs="{'readonly' : [('state', '=', 'closed')]}">
                                     <tree string="Cashbox Lines" editable="bottom">
                                         <field name="pieces" readonly="1" />
-                                        <field name="number_closing" />
-                                        <field name="subtotal_closing"/>
+                                        <field name="number_closing" on_change="on_change_sub_closing(pieces, number_closing)"/>
+                                        <field name="subtotal_closing" string="Closing Subtotal" sum="Total"/>
                                     </tree>
                                 </field>
                             </group>
 
                             <div attrs="{'invisible' : [('cash_control', '=', False)]}">
                                 <group class="oe_subtotal_footer oe_right">
-                                    <field name="cash_register_balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator"/>
-                                    <field name="cash_register_total_entry_encoding"  attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions"/>
-                                    <field name="cash_register_balance_end" attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="= Theoretical Balance"/>
+                                    <field name="cash_register_balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <label for="cash_register_total_entry_encoding" attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions" class="oe_force_bold oe_opening_total"/>
+                                    <field name="cash_register_total_entry_encoding" nolabel="1" attrs="{'invisible' : [('state', '=', 'opening_control')]}" class="oe_bold oe_pos_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <label for="cash_register_balance_end" attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="= Theoretical Closing Balance" class="oe_force_bold oe_opening_total"/>
+                                    <field name="cash_register_balance_end" nolabel="1" attrs="{'invisible' : [('state', '=', 'opening_control')]}" class="oe_bold oe_pos_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 </group>
                                 <div class="oe_clear"/>
                                 <div attrs="{'invisible' : ['|', ('cash_journal_id', '=', False), ('state', '!=', 'opening_control')]}" class="oe_view_nocontent" groups="point_of_sale.group_pos_manager">
@@ -936,14 +947,17 @@
                                     </p>
                                 </div>
                             </div>
-
-
-                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '=', 'opening_control')]}">
-                                <field name="cash_register_balance_end_real" class="oe_subtotal_footer_separator"/>
-                                <field name="cash_register_difference"  class="oe_subtotal_footer_separator"/>
-                            </group>
+                            <div>
+                                <group class="oe_subtotal_footer oe_right" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '=', 'opening_control')]}">
+                                    <field name="cash_register_balance_end_real" string="Real Closing Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                                <group/>
+                                <group/>
+                                <group class="oe_subtotal_footer oe_right" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '=', 'opening_control')]}">
+                                    <field name="cash_register_difference" class="oe_subtotal_footer_separator oe_right oe_pos_total oe_pos_difference" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                            </div>
                         </group>
-
                         <separator string="Summary by Payment Methods" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
                         <field name="statement_ids" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
                             <tree string="Statements">

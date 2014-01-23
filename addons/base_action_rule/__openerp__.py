@@ -35,7 +35,7 @@ trigger an automatic reminder email.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'mail'],
+    'depends': ['base', 'resource', 'mail'],
     'data': [
         'base_action_rule_view.xml',
         'security/ir.model.access.csv',
