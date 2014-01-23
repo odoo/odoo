@@ -272,7 +272,7 @@
           <div class="row">
             <div class="col-sm-4">
                 <ol class="breadcrumb">
-                    <li><a href="/shop">Products</a></li>
+                    <li><a href="/shop" t-keep-query="search,filters">Products</a></li>
                     <li t-if="search.get('category')"><a t-href="/shop/" t-keep-query="category,search,filters"><span t-field="category.name"/></a></li>
                     <li class="active"><span t-field="product.name"/></li>
                 </ol>
