@@ -53,18 +53,14 @@ class PaypalController(http.Controller):
             _logger.warning('Paypal: unrecognized paypal answer, received %s instead of VERIFIED or INVALID' % resp.text)
         return res
 
-    @http.route([
-        '/payment/paypal/ipn/',
-    ], type='http', auth='public', methods=['POST'], website=True)
+    @http.route('/payment/paypal/ipn/', type='http', auth='admin', methods=['POST'])
     def paypal_ipn(self, **post):
         """ Paypal IPN. """
         _logger.info('Beginning Paypal IPN form_feedback with post data %s', pprint.pformat(post))  # debug
         self.paypal_validate_data(**post)
         return ''
 
-    @http.route([
-        '/payment/paypal/dpn',
-    ], type='http', auth="public", methods=['POST'], website=True)
+    @http.route('/payment/paypal/dpn', type='http', auth="admin", methods=['POST'])
     def paypal_dpn(self, **post):
         """ Paypal DPN """
         _logger.info('Beginning Paypal DPN form_feedback with post data %s', pprint.pformat(post))  # debug
@@ -72,9 +68,7 @@ class PaypalController(http.Controller):
         self.paypal_validate_data(**post)
         return request.redirect(return_url)
 
-    @http.route([
-        '/payment/paypal/cancel',
-    ], type='http', auth="public", website=True)
+    @http.route('/payment/paypal/cancel', type='http', auth="admin")
     def paypal_cancel(self, **post):
         """ When the user cancels its Paypal payment: GET on this route """
         cr, uid, context = request.cr, request.uid, request.context
