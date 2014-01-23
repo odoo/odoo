@@ -2339,9 +2339,9 @@ instance.web.Legend = instance.web.Widget.extend({
         this.options = options; 
     },
     prepare_kanban_state_legend: function(){
-    	return [{ 'name': 'normal', 'legend_name': ' Normal', 'legend': '<img src="/web/static/src/img/icons/gtk-normal.png"/>' },
-                { 'name': 'blocked', 'legend_name': ' Blocked', 'legend': '<img src="/web/static/src/img/icons/gtk-no.png"/>' },
-                { 'name': 'done', 'legend_name': ' Done', 'legend': '<img src="/web/static/src/img/icons/gtk-yes.png"/>' }]
+    	return [{ 'name': 'normal', 'legend_name': ' Normal', 'legend_class': 'btn-default' },
+                { 'name': 'blocked', 'legend_name': ' Blocked', 'legend_class': 'btn-danger' },
+                { 'name': 'done', 'legend_name': ' Done', 'legend_class': 'btn-success' }]
     },
     prepare_priority_legend: function(){
         var data = [];

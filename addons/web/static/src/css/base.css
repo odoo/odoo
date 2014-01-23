@@ -659,10 +659,6 @@
   display: block;
   color: gray;
 }
-.openerp .ui-tabs .oe_notebook.ui-tabs-nav li.ui-tabs-active { 
-  border-bottom: none;
-  padding-bottom: 1px;
-}
 .openerp .oe_notebook > li.ui-tabs-active > a {
   color: #4c4c4c;
 }
@@ -687,6 +683,10 @@
   text-decoration: none;
   background-color: #eeeeee;
   border-color: #eeeeee #eeeeee #dddddd;
+}
+.openerp .ui-tabs .oe_notebook.ui-tabs-nav li.ui-tabs-active {
+  border-bottom: none;
+  padding-bottom: 1px;
 }
 .openerp .oe_notebook > li.ui-state-active > a, .openerp .oe_notebook > li.ui-state-active > a:hover {
   background-color: white;
@@ -3575,40 +3575,34 @@ h5 {
   color: #eeeeee;
 }
 
-.dropdown-menu.with-arrow {
+.dropdown-menu.state {
   background: white;
   background: white !important;
+  min-width: 73px;
 }
 
-.dropdown-menu.with-arrow:before {
-  position: absolute;
-  top: -12px;
-  left: 0px;
-  display: inline-block;
-  border-right: 12px solid transparent;
-  border-bottom: 12px solid #cccccc;
-  border-left: 12px solid transparent;
-  border-bottom-color: rgba(0, 0, 0, 0.2);
-  content: "";
-}
-
-.dropdown-menu.with-arrow:after {
-  position: absolute;
-  top: -11px;
-  left: 1px;
-  display: inline-block;
-  border-right: 11px solid transparent;
-  border-bottom: 11px solid white;
-  border-left: 11px solid transparent;
-  content: "";
-}
-
-.dropdown-menu.with-arrow li a {
-  color: black;
-}
-.dropdown-menu.with-arrow li a, .dropdown-menu.with-arrow li a:hover, .dropdown-menu.with-arrow li a:focus {
+.dropdown-menu.state li a, .dropdown-menu.state li a:hover, .dropdown-menu.state li a:focus {
   text-decoration: none;
+  color: #333333;
+  padding-left: 5px;
+  padding-right: 0px;
 }
+
+.btn.btn-xs.btn-danger {
+  color: white;
+  text-decoration: none !important;
+}
+
+.btn.btn-xs.btn-default {
+  color: #333333;
+  text-decoration: none !important;
+}
+
+.btn.btn-xs.btn-success {
+  color: white;
+  text-decoration: none !important;
+}
+
 .ui-icon {
   width: 18px;
   height: 18px;
