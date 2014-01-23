@@ -7,9 +7,10 @@
     'version': '1.0',
     'description': """Payment Acquirer Base Module""",
     'author': 'OpenERP SA',
-    'depends': ['mail'],
+    'depends': ['mail', 'account'],
     'data': [
         'views/payment_acquirer.xml',
+        'views/res_config_view.xml',
         'security/ir.model.access.csv',
     ],
     'installable': True,

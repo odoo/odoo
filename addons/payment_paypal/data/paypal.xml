@@ -4,6 +4,7 @@
 
         <record id="payment_acquirer_paypal" model="payment.acquirer">
             <field name="name">paypal</field>
+            <field name="company_id" ref="base.main_company"/>
             <field name="view_template_id" ref="paypal_acquirer_button"/>
             <field name="env">test</field>
             <field name="message"><![CDATA[
@@ -14,5 +15,6 @@
             <field name="paypal_api_password">dummy</field>
         </record>
 
+        <function model="payment.acquirer" name="_migrate_paypal_account"/>
     </data>
 </openerp>

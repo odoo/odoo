@@ -36,8 +36,10 @@ class AcquirerPaypal(osv.Model):
 
     _columns = {
         'paypal_email_account': fields.char('Paypal Email ID', required_if_provider='paypal'),
-        'paypal_seller_account': fields.char('Paypal Seller ID', required_if_provider='paypal'),
-        'paypal_use_ipn': fields.boolean('Use IPN'),
+        'paypal_seller_account': fields.char(
+            'Paypal Seller ID',
+            help='The Seller ID is used to ensure communications coming from Paypal are valid and secured.'),
+        'paypal_use_ipn': fields.boolean('Use IPN', help='Paypal Instant Payment Notification'),
         # Server 2 server
         'paypal_api_enabled': fields.boolean('Use Rest API'),
         'paypal_api_username': fields.char('Rest API Username'),
@@ -55,6 +57,23 @@ class AcquirerPaypal(osv.Model):
         'fees_int_var': 3.9,
         'paypal_api_enabled': False,
     }
+
+    def _migrate_paypal_account(self, cr, uid, context=None):
+        """ COMPLETE ME """
+        cr.execute('SELECT id, paypal_account FROM res_company')
+        res = cr.fetchall()
+        for (company_id, company_paypal_account) in res:
+            if company_paypal_account:
+                company_paypal_ids = self.search(cr, uid, [('company_id', '=', company_id), ('name', '=', 'paypal')], limit=1, context=context)
+                if company_paypal_ids:
+                    self.write(cr, uid, company_paypal_ids, {'paypal_email_account': company_paypal_account}, context=context)
+                else:
+                    paypal_view = self.pool['ir.model.data'].get_object(cr, uid, 'payment_paypal', 'paypal_acquirer_button')
+                    self.create(cr, uid, {
+                        'paypal_email_account': company_paypal_account,
+                        'view_template_id': paypal_view.id,
+                    }, context=context)
+        return True
 
     def paypal_compute_fees(self, cr, uid, id, amount, currency_id, country_id, context=None):
         """ Compute paypal fees.
@@ -195,7 +214,7 @@ class TxPaypal(osv.Model):
         # check seller
         if data.get('receiver_email') != tx.acquirer_id.paypal_email_account:
             invalid_parameters.append(('receiver_email', data.get('receiver_email'), tx.acquirer_id.paypal_email_account))
-        if data.get('receiver_id') != tx.acquirer_id.paypal_seller_account:
+        if tx.acquirer_id.paypal_seller_account and data.get('receiver_id') != tx.acquirer_id.paypal_seller_account:
             invalid_parameters.append(('receiver_id', data.get('receiver_id'), tx.acquirer_id.paypal_seller_account))
 
         return invalid_parameters

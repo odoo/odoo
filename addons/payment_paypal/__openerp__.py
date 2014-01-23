@@ -11,6 +11,7 @@
     'data': [
         'views/paypal.xml',
         'views/payment_acquirer.xml',
+        'views/res_config_view.xml',
         'data/paypal.xml',
     ],
     'installable': True,
