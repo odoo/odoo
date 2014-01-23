@@ -7,15 +7,13 @@
             <field name="priority">100</field>
             <field name="arch" type="xml">
                 <form string="Templates" version="7.0">
-                    <sheet>
-                        <field name="email_from" invisible="1"/>
-                        <field name="partner_to" invisible="1"/>
-                        <field name="subject" invisible="1"/>
-                        <field name="model_id" invisible="1"/>
-                        <h3>Body</h3>
-                        <field name="body_html" placeholder="Rich-text/HTML content of the message (placeholders may be used here)"/>
-                        <field name="attachment_ids" nolabel="1" widget="many2many_binary"/>
-                    </sheet>
+                    <field name="email_from" invisible="1"/>
+                    <field name="partner_to" invisible="1"/>
+                    <field name="subject" invisible="1"/>
+                    <field name="model_id" invisible="1"/>
+                    <h3>Body</h3>
+                    <field name="body_html" placeholder="Rich-text/HTML content of the message (placeholders may be used here)"/>
+                    <field name="attachment_ids" nolabel="1" widget="many2many_binary"/>
                 </form>
             </field>
         </record>
