@@ -9,9 +9,6 @@ function waitFor (ready, callback, timeout, timeoutMessageCallback) {
             if(!condition) {
                 var message = timeoutMessageCallback ? timeoutMessageCallback() : "Timeout after "+timeout+" ms";
                 console.log('{ "event": "error", "message": "'+message+'" }');
-                if (window.localStorage.getItem("test-report")) {
-                    console.log(JSON.parse(website.localStorage.getItem("test-report")));
-                }
                 console.log("Waiting for...\n"+ready);
                 phantom.exit(1);
             } else {
@@ -58,9 +55,7 @@ function run (test) {
         phantom.exit(1);
     };
     page.onConsoleMessage = function(message) {
-        /* Disabled because of the 'web_hello' addon */
-        //console.log(message);
-        //phantom.exit(1);
+        console.log(message);
     };
 
     page.onCallback = function(data) {
