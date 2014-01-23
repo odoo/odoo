@@ -2018,7 +2018,6 @@ class stock_inventory(osv.osv):
         'date': fields.datetime('Inventory Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Create Date."),
         'date_done': fields.datetime('Date done', help="Inventory Validation Date."),
         'line_ids': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=False, states={'done': [('readonly', True)]}, help="Inventory Lines."),
-        'line_view_ids': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=False, domain=['|',('th_qty', '>=', 0),('th_qty', '=', False)], states={'done': [('readonly', True)]}, help="Inventory Lines."),
         'move_ids': fields.one2many('stock.move', 'inventory_id', 'Created Moves', help="Inventory Moves.", states={'done': [('readonly', True)]}),
         'state': fields.selection([('draft', 'Draft'), ('cancel', 'Cancelled'), ('confirm', 'In Progress'), ('done', 'Validated')], 'Status', readonly=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -2076,7 +2075,7 @@ class stock_inventory(osv.osv):
         for inv in self.browse(cr, uid, ids, context=context):
             if inv.line_ids:
                 for inventory_line in inv.line_ids:
-                    if inventory_line.product_qty < 0 and inventory_line.th_qty >= 0:
+                    if inventory_line.product_qty < 0:
                         raise osv.except_osv(_('Warning'),_('You cannot have a negative product quantity in an inventory line'))
             if not inv.move_ids:
                 self.action_check(cr, uid, [inv.id], context=context)
@@ -2185,17 +2184,26 @@ class stock_inventory(osv.osv):
            GROUP BY product_id, location_id, lot_id, package_id, partner_id
         ''', args)
         vals = []
+        negative_product_ids = []
         for product_line in cr.dictfetchall():
             #replace the None the dictionary by False, because falsy values are tested later on
             for key, value in product_line.items():
                 if not value:
                     product_line[key] = False
+            if product_line['product_qty'] < 0:
+                negative_product_ids.append(product_line['product_id'])
             product_line['inventory_id'] = inventory.id
             product_line['th_qty'] = product_line['product_qty']
             if product_line['product_id']:
                 product = product_obj.browse(cr, uid, product_line['product_id'], context=context)
                 product_line['product_uom_id'] = product.uom_id.id
             vals.append(product_line)
+
+        if negative_product_ids:
+            summary = ''
+            for product in self.pool.get('product.product').browse(cr, uid, negative_product_ids, context=context):
+                summary += '- '+product.name+'\n'
+            raise osv.except_osv(_('Warning'),_('These products have a negative qty, please fix them before doing an inventory\n%s' % (summary)))
         return vals
 
 class stock_inventory_line(osv.osv):
