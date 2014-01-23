@@ -41,6 +41,22 @@ class crm_lead2opportunity_partner(osv.osv_memory):
     def onchange_action(self, cr, uid, ids, action, context=None):
         return {'value': {'partner_id': False if action != 'exist' else self._find_matching_partner(cr, uid, context=context)}}
 
+    def _get_duplicated_leads(self, cr, uid, partner_id, email, context=None):
+        lead_obj = self.pool.get('crm.lead')
+        results = []
+        if partner_id:
+            # Search for opportunities that have the same partner and that arent done or cancelled
+            ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), '|', ('probability', '=', False), ('probability', '<', '100')])
+            for id in ids:
+                results.append(id)
+        email = re.findall(r'([^ ,<@]+@[^> ,]+)', email or '')
+        if email:
+            ids = lead_obj.search(cr, uid, [('email_from', '=ilike', email[0]), '|', ('probability', '=', False), ('probability', '<', '100')])
+            for id in ids:
+                results.append(id)
+        return list(set(results))
+
+
     def default_get(self, cr, uid, fields, context=None):
         """
         Default get for name, opportunity_ids.
@@ -51,24 +67,15 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
         res = super(crm_lead2opportunity_partner, self).default_get(cr, uid, fields, context=context)
         if context.get('active_id'):
-            tomerge = set([int(context['active_id'])])
+            tomerge = [int(context['active_id'])]
 
             email = False
             partner_id = res.get('partner_id')
             lead = lead_obj.browse(cr, uid, int(context['active_id']), context=context)
 
             #TOFIX: use mail.mail_message.to_mail
-            email = re.findall(r'([^ ,<@]+@[^> ,]+)', lead.email_from or '')
-
-            if partner_id:
-                # Search for opportunities that have the same partner and that arent done or cancelled
-                ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), '|', ('probability', '=', False), ('probability', '<', '100')])
-                for id in ids:
-                    tomerge.add(id)
-            if email:
-                ids = lead_obj.search(cr, uid, [('email_from', '=ilike', email[0]), '|', ('probability', '=', False), ('probability', '<', '100')])
-                for id in ids:
-                    tomerge.add(id)
+            tomerge.extend(self._get_duplicated_leads(cr, uid, partner_id, email))
+            tomerge = list(set(tomerge))
 
             if 'action' in fields:
                 res.update({'action' : partner_id and 'exist' or 'create'})
@@ -77,7 +84,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             if 'name' in fields:
                 res.update({'name' : len(tomerge) >= 2 and 'merge' or 'convert'})
             if 'opportunity_ids' in fields and len(tomerge) >= 2:
-                res.update({'opportunity_ids': list(tomerge)})
+                res.update({'opportunity_ids': tomerge})
             if lead.user_id:
                 res.update({'user_id': lead.user_id.id})
             if lead.section_id:
@@ -116,11 +123,11 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             context = {}
         lead = self.pool.get('crm.lead')
         res = False
-        partner_ids_map = self._create_partner(cr, uid, ids, context=context)
         lead_ids = vals.get('lead_ids', [])
         team_id = vals.get('section_id', False)
+        data = self.browse(cr, uid, ids, context=context)[0]
         for lead_id in lead_ids:
-            partner_id = partner_ids_map.get(lead_id, False)
+            partner_id = self._create_partner(cr, uid, lead_id, data.action, data.partner_id, context=context)
             # FIXME: cannot pass user_ids as the salesman allocation only works in batch
             res = lead.convert_opportunity(cr, uid, [lead_id], partner_id, [], team_id, context=context)
         # FIXME: must perform salesman allocation in batch separately here
@@ -152,7 +159,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
         return self.pool.get('crm.lead').redirect_opportunity_view(cr, uid, lead_ids[0], context=context)
 
-    def _create_partner(self, cr, uid, ids, context=None):
+    def _create_partner(self, cr, uid, lead_id, action, partner_id, context=None):
         """
         Create partner based on action.
         :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
@@ -163,10 +170,14 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         if context is None:
             context = {}
         lead = self.pool.get('crm.lead')
-        lead_ids = context.get('active_ids', [])
-        data = self.browse(cr, uid, ids, context=context)[0]
-        partner_id = data.partner_id and data.partner_id.id or False
-        return lead.handle_partner_assignation(cr, uid, lead_ids, data.action, partner_id, context=context)
+        if action == 'each_exist_or_create':
+            ctx = dict(context)
+            ctx['active_id'] = lead_id
+            partner_id = self._find_matching_partner(cr, uid, context=ctx)
+            action = 'create'
+            print partner_id
+        res = lead.handle_partner_assignation(cr, uid, [lead_id], action, partner_id, context=context)
+        return res.get(lead_id)
 
 class crm_lead2opportunity_mass_convert(osv.osv_memory):
     _name = 'crm.lead2opportunity.partner.mass'
@@ -176,6 +187,15 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
     _columns = {
         'user_ids':  fields.many2many('res.users', string='Salesmen'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'deduplicate': fields.boolean('Apply deduplication', help='Merge with existing leads/opportunities of each partner'),
+        'action': fields.selection([
+                ('each_exist_or_create', 'Use existing partner or create'),
+                ('nothing', 'Do not link to a customer')
+            ], 'Related Customer', required=True),
+    }
+
+    _defaults = {
+        'deduplicate': True,
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -184,12 +204,36 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
             # avoid forcing the partner of the first lead as default
             res['partner_id'] = False
         if 'action' in fields:
-            res['action'] = 'create'
+            res['action'] = 'each_exist_or_create'
         if 'name' in fields:
             res['name'] = 'convert'
         if 'opportunity_ids' in fields:
             res['opportunity_ids'] = False
         return res
+
+    def on_change_action(self, cr, uid, ids, action, context=None):
+        vals = {}
+        if action != 'exist':
+            vals = {'value': {'partner_id': False}} 
+        return vals
+
+    def on_change_deduplicate(self, cr, uid, ids, deduplicate, context=None):
+        if context is None:
+            context = {}
+        active_leads = self.pool['crm.lead'].browse(cr, uid, context['active_ids'], context=context)
+        partner_ids = [(lead.partner_id.id, lead.partner_id and lead.partner_id.email or lead.email_from) for lead in active_leads]
+        partners_duplicated_leads = {}
+        for partner_id, email in partner_ids:
+            duplicated_leads = self._get_duplicated_leads(cr, uid, partner_id, email)
+            if len(duplicated_leads) > 1:
+                partners_duplicated_leads.setdefault((partner_id, email), []).extend(duplicated_leads)
+        leads_with_duplicates = []
+        for lead in active_leads:
+            lead_tuple = (lead.partner_id.id, lead.partner_id.email if lead.partner_id else lead.email_from)
+            if len(partners_duplicated_leads.get(lead_tuple, [])) > 1:
+                leads_with_duplicates.append(lead.id)
+        return {'value': {'opportunity_ids': leads_with_duplicates}}
+
 
     def _convert_opportunity(self, cr, uid, ids, vals, context=None):
         """
@@ -208,6 +252,21 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
         return super(crm_lead2opportunity_mass_convert, self)._convert_opportunity(cr, uid, ids, vals, context=context)
 
     def mass_convert(self, cr, uid, ids, context=None):
-        return self.action_apply(cr, uid, ids, context=context)
+        data = self.browse(cr, uid, ids, context=context)[0]
+        ctx = dict(context)
+        if data.name == 'convert' and data.deduplicate:
+            merged_lead_ids = []
+            remaining_lead_ids = []
+            for lead in data.opportunity_ids:
+                duplicated_lead_ids = self._get_duplicated_leads(cr, uid, lead.partner_id.id, lead.partner_id and lead.partner_id.email or lead.email_from)
+                if len(duplicated_lead_ids) > 1:
+                    lead_id = self.pool.get('crm.lead').merge_opportunity(cr, uid, duplicated_lead_ids, False, False, context=context)
+                    merged_lead_ids.extend(duplicated_lead_ids)
+                    remaining_lead_ids.append(lead_id)
+            active_ids = set(context.get('active_ids', []))
+            active_ids = active_ids.difference(merged_lead_ids)
+            active_ids = active_ids.union(remaining_lead_ids)
+            ctx['active_ids'] = list(active_ids)
+        return self.action_apply(cr, uid, ids, context=ctx)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
