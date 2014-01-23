@@ -7,7 +7,6 @@ import werkzeug
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models import website
 
 PPG = 20                        # Products Per Page
 PPR = 4                         # Products Per Row
@@ -258,8 +257,6 @@ class Ecommerce(http.Controller):
 
     @http.route(['/shop/product/<model("product.template"):product>/'], type='http', auth="public", website=True, multilang=True)
     def product(self, product, search='', category='', filters='', **kwargs):
-        website.preload_records(product, on_error="website_sale.404")
-
         category_obj = request.registry.get('product.public.category')
 
         category_ids = category_obj.search(request.cr, request.uid, [], context=request.context)

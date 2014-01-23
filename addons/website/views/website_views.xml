@@ -10,14 +10,46 @@
     </data>
 
     <data>
-        <record id="action_website_form" model="ir.actions.act_window">
-            <field name="name">Websites</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">website</field>
-            <field name="view_type">form</field>
-            <field name="help">Create and manage the companies websites.</field>
+
+        <record id="view_website_form" model="ir.ui.view">
+            <field name="name">website.form</field>
+            <field name="model">website</field>
+            <field name="arch" type="xml">
+                <form string="Website Settings" version="7.0">
+                     <header>
+                        <button string="Apply" type="object" name="noop" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="noop" class="oe_link"/>
+                    </header>
+                    <div name="domain">
+                        <separator string="Domain"/>
+                        <group name="domain">
+                            <field name="name" class="oe_inline"/>
+                            <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"/>
+                        </group>
+                    </div>
+                    <div name="social_media">
+                        <separator string="Social Media"/>
+                        <group name="social_media">
+                            <field name="social_twitter" placeholder="https://twitter.com/openerp"/>
+                            <field name="social_facebook" placeholder="https://facebook.com/openerp"/>
+                            <field name="social_googleplus" placeholder="https://plus.google.com/+openerp"/>
+                            <field name="social_linkedin" placeholder="http://www.linkedin.com/company/openerp"/>
+                            <field name="social_youtube" placeholder="http://www.youtube.com/channel/HCU842OHPPNrQ"/>
+                            <field name="social_github" placeholder="https://youraccount.github.io"/>
+                        </group>
+                    </div>
+                    <div name="other">
+                        <separator string="Other Info"/>
+                        <group name="other">
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="language_ids" widget="many2many_checkboxes"/>
+                            <field name="default_lang_id" widget="selection"/>
+                        </group>
+                    </div>
+                </form>
+            </field>
         </record>
-        <menuitem action="action_website_form" id="menu_action_website_form" parent="base.menu_res_company_global"/>
 
         <record id="view_website_tree" model="ir.ui.view">
             <field name="name">website.tree</field>
@@ -31,40 +63,17 @@
             </field>
         </record>
 
-        <record id="view_website_form" model="ir.ui.view">
-            <field name="name">website.form</field>
-            <field name="model">website</field>
-            <field name="arch" type="xml">
-                <form string="Website" version="7.0">
-                    <sheet>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1>
-                                <field name="name" class="oe_inline"/>
-                            </h1>
-                        </div>
-                        <group>
-                            <group string="Social Icons">
-                                <field name="social_twitter" placeholder="https://twitter.com/openerp"/>
-                                <field name="social_facebook" placeholder="https://facebook.com/openerp"/>
-                                <field name="social_googleplus" placeholder="https://plus.google.com/+openerp"/>
-                                <field name="social_linkedin" placeholder="http://www.linkedin.com/company/openerp"/>
-                                <field name="social_youtube" placeholder="http://www.youtube.com/channel/HCU842OHPPNrQ"/>
-                                <field name="social_github" placeholder="https://youraccount.github.io"/>
-                            </group>
-                            <group string="Other Info">
-                                <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="language_ids" widget="many2many_checkboxes"/>
-                                <field name="default_lang_id" widget="selection"/>
-                            </group>
-                            <group string="Website Management">
-                                <field name="google_analytics_key" placeholder="UA-XXXXXXXX-X"/>
-                            </group>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
+        <record id="action_website_form" model="ir.actions.act_window">
+            <field name="name">Website Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">website</field>
+            <field name="res_id">1</field>
+            <field name="view_mode">form</field>
+            <field name="help">Create and manage the companies websites.</field>
+            <field name="target">inline</field>
         </record>
+        <menuitem action="action_website_form" id="menu_action_website_form" parent="base.menu_config"/>
+
         <record id="view_base_language_install" model="ir.ui.view">
             <field name="name">view_base_language_install.inherit</field>
             <field name="model">base.language.install</field>

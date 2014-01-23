@@ -4,7 +4,6 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models import website
 import werkzeug
 
 
@@ -38,7 +37,6 @@ class WebsitePartner(http.Controller):
     def partner(self, partner_id, **post):
         """ Route for displaying a single partner / customer. """
         partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
-        website.preload_records(partner)
         values = get_partner_template_value(partner)
         if not values:
             raise werkzeug.exceptions.NotFound

@@ -24,7 +24,7 @@ Re-implement openerp's file import system:
     'category': 'Uncategorized',
     'website': 'http://www.openerp.com',
     'author': 'OpenERP SA',
-    'depends': ['web', 'select2'],
+    'depends': ['web'],
     'installable': True,
     'auto_install': True,
     'data': [
