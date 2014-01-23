@@ -43,6 +43,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         return this.model.call('fields_get', []).then(function (f) {
             self.fields = f;
+            self.fields.__count = {field:'__count', type: 'integer', string:'Quantity'};
             self.measure_list = self.get_measures();
             self.add_measures_to_options();
             self.pivot_options.row_groupby = self.create_field_values(self.pivot_options.row_groupby || []);
@@ -87,7 +88,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
     // Extracts the integer/float fields which are not 'id'
     get_measures: function() {
-        var measures = [{field:'__count', type: 'integer', string:'Quantity'}];
+        var measures = [];
         _.each(this.fields, function (f, id) {
             if (((f.type === 'integer') || (f.type === 'float')) && (id !== 'id')) {
                 measures.push({field:id, type: f.type, string: f.string});

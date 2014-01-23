@@ -173,7 +173,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             context[category] = groupby.field;
             var value;
             if (category === 'group_by' && groupby.type !== 'date' && groupby.type !== 'datetime') {
-                value = groupby.filter;
+                value = groupby.filter || {attrs: {domain: [], context: context}};
             } else {
                 value = {attrs: {domain: [], context: context}};
             }
