@@ -518,7 +518,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
                 uids = set()
                 for group in groups:
                     uids.update(map(int, group.users))
-                implied_group.write({'users': [(3, uid) for uid in uids]})
+                implied_group.write({'users': [(3, u) for u in uids]})
 
         # other fields: execute all methods that start with 'set_'
         for method in dir(self):
