@@ -24,7 +24,7 @@ $(document).ready(function () {
     });
 
     $('#modelaccept').on('shown.bs.modal', function (e) {
-        $("#signature").empty().jSignature();
+        $("#signature").empty().jSignature({'decor-color' : '#D1D0CE'});
     });
 
     $('#sign_clean').on('click', function (e) {
