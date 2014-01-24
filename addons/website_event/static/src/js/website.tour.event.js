@@ -159,7 +159,7 @@
                 },
                 {
                     stepId:    'edit-event-backend',
-                    element:   '.js_publish_management ul>li>a',
+                    element:   '.js_publish_management ul>li>a:last',
                     placement: 'left',
                     title:     "Customize your event",
                     content:   "Click here to edit your event in the backend.",
