@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+import re
 import traceback
 
 import werkzeug
@@ -12,6 +13,10 @@ from openerp.http import request
 from openerp.osv import orm
 
 logger = logging.getLogger(__name__)
+
+class RequestUID(object):
+    def __init__(self, **kw):
+        self.__dict__.update(kw)
 
 class ir_http(orm.AbstractModel):
     _inherit = 'ir.http'
@@ -79,6 +84,22 @@ class ir_http(orm.AbstractModel):
 
         return self._dispatch()
 
+    def _postprocess_args(self, arguments):
+        url = request.httprequest.url
+        for arg in arguments.itervalues():
+            if isinstance(arg, orm.browse_record) and isinstance(arg._uid, RequestUID):
+                placeholder = arg._uid
+                arg._uid = request.uid
+                try:
+                    good_slug = slug(arg)
+                    if str(arg.id) != placeholder.value and placeholder.value != good_slug:
+                        # TODO: properly recompose the url instead of using replace()
+                        url = url.replace(placeholder.value, good_slug)
+                except KeyError:
+                    return self._handle_exception(werkzeug.exceptions.NotFound())
+        if url != request.httprequest.url:
+            werkzeug.exceptions.abort(werkzeug.utils.redirect(url))
+
     def _handle_exception(self, exception=None, code=500):
         if isinstance(exception, werkzeug.exceptions.HTTPException) and exception.response:
             return exception.response
@@ -130,6 +151,12 @@ class ModelConverter(ir.ir_http.ModelConverter):
 
     def to_url(self, value):
         return slug(value)
+
+    def to_python(self, value):
+        m = re.match(self.regex, value)
+        _uid = RequestUID(value=value, match=m, converter=self)
+        return request.registry[self.model].browse(
+            request.cr, _uid, int(m.group(1)), context=request.context)
 
     def generate(self, cr, uid, query=None, context=None):
         return request.registry[self.model].name_search(
