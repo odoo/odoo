@@ -650,19 +650,19 @@ class Ecommerce(http.Controller):
         tx = request.registry['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
         state = tx.state
         if state == 'done':
-            message = '<h3>Your payment has been received.</h3>'
+            message = '<p>Your payment has been received.</p>'
         elif state == 'cancel':
-            message = '<h3>The payment seems to have been canceled.</h3>'
-        elif state == 'pending' and tx.validation == 'manual':
-            message = '<h3>Your transaction is waiting confirmation.</h3>'
-            message += tx.post_msg
+            message = '<p>The payment seems to have been canceled.</p>'
+        elif state == 'pending' and tx.acquirer_id.validation == 'manual':
+            message = '<p>Your transaction is waiting confirmation.</p>'
+            message += tx.acquirer_id.post_msg
         else:
-            message = '<h3>Your transaction is waiting confirmation.</h3>'
+            message = '<p>Your transaction is waiting confirmation.</p>'
 
         return {
             'state': state,
             'message': message,
-            'validation': tx.validation
+            'validation': tx.acquirer_id.validation
         }
 
     @http.route('/shop/payment/validate/', type='http', auth="public", website=True, multilang=True)
