@@ -630,7 +630,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         var data = _.map(this.pivot.get_cols_leaves(), function (col) {
             var values = _.map(self.pivot.get_rows_with_depth(dim_x), function (row) {
-                return {x: row.title, y: self.pivot.get_values(row.id,col.id, 0)};
+                return {x: row.title, y: self.pivot.get_values(row.id,col.id)[0] || 0};
             });
             var title = _.map(col.path, function (p) {
                 return p || 'Undefined';
