@@ -41,6 +41,8 @@ class base_config_settings(osv.osv_memory):
         'module_base_import': fields.boolean("Allow users to import data from CSV files"),
         'module_google_drive': fields.boolean('Attach Google documents to any record',
                                               help="""This installs the module google_docs."""),
+        'module_google_calendar': fields.boolean('Allow the users to synchronize their calendar  with Google Calendar',
+                                              help="""This installs the module google_calendar."""),
         'font': fields.many2one('res.font', string="Report Font", help="Set the font into the report header, it will be used as default font in the RML reports of the user company"),
     }
     
@@ -68,7 +70,7 @@ class base_config_settings(osv.osv_memory):
     
     def set_base_defaults(self, cr, uid, ids, context=None):
         ir_model_data = self.pool.get('ir.model.data')
-        wizard = self.browse(cr, uid, ids)[0]
+        wizard = self.browse(cr, uid, ids, context)[0]
         if wizard.font:
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             font_name = wizard.font.name
@@ -76,7 +78,7 @@ class base_config_settings(osv.osv_memory):
         return {}
 
     def act_discover_fonts(self, cr, uid, ids, context=None):
-        return self.pool.get("res.font").discover_fonts(cr, uid, ids, context)
+        return self.pool.get("res.font").font_scan(cr, uid, context=context)
 
 # Preferences wizard for Sales & CRM.
 # It is defined here because it is inherited independently in modules sale, crm,

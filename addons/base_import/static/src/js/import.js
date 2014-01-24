@@ -373,7 +373,7 @@ openerp.base_import = function (instance) {
                     return $.when([{
                         type: 'error',
                         record: false,
-                        message: error.data.fault_code,
+                        message: error.data.arguments[1],
                     }]);
                 }) ;
         },

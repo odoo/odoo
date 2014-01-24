@@ -19,7 +19,9 @@
 #
 ##############################################################################
 
+import base64
 import re
+
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import osv
@@ -260,6 +262,12 @@ class mail_compose_message(osv.TransientModel):
 
             for res_id, mail_values in all_mail_values.iteritems():
                 if mass_mail_mode and not wizard.post:
+                    m2m_attachment_ids = self.pool['mail.thread']._message_preprocess_attachments(
+                        cr, uid, mail_values.pop('attachments', []),
+                        mail_values.pop('attachment_ids', []),
+                        'mail.message', 0,
+                        context=context)
+                    mail_values['attachment_ids'] = m2m_attachment_ids
                     self.pool.get('mail.mail').create(cr, uid, mail_values, context=context)
                 else:
                     subtype = 'mail.mt_comment'
@@ -298,7 +306,12 @@ class mail_compose_message(osv.TransientModel):
             if mass_mail_mode and wizard.model:
                 email_dict = rendered_values[res_id]
                 mail_values['partner_ids'] += email_dict.pop('partner_ids', [])
-                mail_values['attachments'] = email_dict.pop('attachments', [])
+                # process attachments: should not be encoded before being processed by message_post / mail_mail create
+                attachments = []
+                if email_dict.get('attachments'):
+                    for name, enc_cont in email_dict.pop('attachments'):
+                        attachments.append((name, base64.b64decode(enc_cont)))
+                mail_values['attachments'] = attachments
                 attachment_ids = []
                 for attach_id in mail_values.pop('attachment_ids'):
                     new_attach_id = self.pool.get('ir.attachment').copy(cr, uid, attach_id, {'res_model': self._name, 'res_id': wizard.id}, context=context)

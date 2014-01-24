@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import openerp
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -72,12 +74,13 @@ class sale_configuration(osv.osv_memory):
         }
 
     def set_sale_defaults(self, cr, uid, ids, context=None):
+        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+            raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
         ir_values = self.pool.get('ir.values')
-        ir_model_data = self.pool.get('ir.model.data')
         wizard = self.browse(cr, uid, ids)[0]
 
         default_picking_policy = 'one' if wizard.default_picking_policy else 'direct'
-        ir_values.set_default(cr, uid, 'sale.order', 'picking_policy', default_picking_policy)
+        ir_values.set_default(cr, SUPERUSER_ID, 'sale.order', 'picking_policy', default_picking_policy)
         res = super(sale_configuration, self).set_sale_defaults(cr, uid, ids, context)
         return res
     

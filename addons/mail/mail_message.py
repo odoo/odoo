@@ -201,7 +201,7 @@ class mail_message(osv.Model):
 
     def _get_default_from(self, cr, uid, context=None):
         this = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
-        if this.alias_domain:
+        if this.alias_name and this.alias_domain:
             return '%s <%s@%s>' % (this.name, this.alias_name, this.alias_domain)
         elif this.email:
             return '%s <%s>' % (this.name, this.email)
@@ -817,12 +817,11 @@ class mail_message(osv.Model):
         return email_reply_to
 
     def _get_message_id(self, cr, uid, values, context=None):
-        message_id = None
-        if not values.get('message_id') and values.get('reply_to'):
+        if values.get('reply_to'):
             message_id = tools.generate_tracking_message_id('reply_to')
-        elif not values.get('message_id') and values.get('res_id') and values.get('model'):
+        elif values.get('res_id') and values.get('model'):
             message_id = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
-        elif not values.get('message_id'):
+        else:
             message_id = tools.generate_tracking_message_id('private')
         return message_id
 
@@ -833,7 +832,7 @@ class mail_message(osv.Model):
 
         if 'email_from' not in values:  # needed to compute reply_to
             values['email_from'] = self._get_default_from(cr, uid, context=context)
-        if not values.get('message_id'):
+        if 'message_id' not in values:
             values['message_id'] = self._get_message_id(cr, uid, values, context=context)
         if 'reply_to' not in values:
             values['reply_to'] = self._get_reply_to(cr, uid, values, context=context)

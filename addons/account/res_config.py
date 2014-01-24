@@ -22,13 +22,12 @@
 import time
 import datetime
 from dateutil.relativedelta import relativedelta
-from operator import itemgetter
-from os.path import join as opj
 
+import openerp
+from openerp import SUPERUSER_ID
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
-from openerp import tools
 
 class account_config_settings(osv.osv_memory):
     _name = 'account.config.settings'
@@ -276,11 +275,13 @@ class account_config_settings(osv.osv_memory):
 
     def set_default_taxes(self, cr, uid, ids, context=None):
         """ set default sale and purchase taxes for products """
+        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+            raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
         ir_values = self.pool.get('ir.values')
         config = self.browse(cr, uid, ids[0], context)
-        ir_values.set_default(cr, uid, 'product.product', 'taxes_id',
+        ir_values.set_default(cr, SUPERUSER_ID, 'product.product', 'taxes_id',
             config.default_sale_tax and [config.default_sale_tax.id] or False, company_id=config.company_id.id)
-        ir_values.set_default(cr, uid, 'product.product', 'supplier_taxes_id',
+        ir_values.set_default(cr, SUPERUSER_ID, 'product.product', 'supplier_taxes_id',
             config.default_purchase_tax and [config.default_purchase_tax.id] or False, company_id=config.company_id.id)
 
     def set_chart_of_accounts(self, cr, uid, ids, context=None):

@@ -23,6 +23,7 @@ from datetime import datetime, timedelta
 import time
 import logging
 
+import openerp
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -77,6 +78,11 @@ class base_action_rule(osv.osv):
             "trigger date, like sending a reminder 15 minutes before a meeting."),
         'trg_date_range_type': fields.selection([('minutes', 'Minutes'), ('hour', 'Hours'),
                                 ('day', 'Days'), ('month', 'Months')], 'Delay type'),
+        'trg_date_calendar_id': fields.many2one(
+            'resource.calendar', 'Use Calendar',
+            help='When calculating a day-based timed condition, it is possible to use a calendar to compute the date based on working days.',
+            ondelete='set null',
+        ),
         'act_user_id': fields.many2one('res.users', 'Set Responsible'),
         'act_followers': fields.many2many("res.partner", string="Add Followers"),
         'server_action_ids': fields.many2many('ir.actions.server', string='Server Actions',
@@ -222,6 +228,7 @@ class base_action_rule(osv.osv):
     def create(self, cr, uid, vals, context=None):
         res_id = super(base_action_rule, self).create(cr, uid, vals, context=context)
         self._register_hook(cr, [res_id])
+        openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -229,6 +236,7 @@ class base_action_rule(osv.osv):
             ids = [ids]
         super(base_action_rule, self).write(cr, uid, ids, vals, context=context)
         self._register_hook(cr, ids)
+        openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return True
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
@@ -237,6 +245,18 @@ class base_action_rule(osv.osv):
             model = self.pool.get('ir.model').browse(cr, uid, model_id, context=context)
             data.update({'model': model.model})
         return {'value': data}
+
+    def _check_delay(self, cr, uid, action, record, record_dt, context=None):
+        if action.trg_date_calendar_id and action.trg_date_range_type == 'day':
+            start_dt = get_datetime(record_dt)
+            action_dt = self.pool['resource.calendar'].schedule_days_get_date(
+                cr, uid, action.trg_date_calendar_id.id, action.trg_date_range,
+                day_date=start_dt, compute_leaves=True, context=context
+            )
+        else:
+            delay = DATE_RANGE_FUNCTION[action.trg_date_range_type](action.trg_date_range)
+            action_dt = get_datetime(record_dt) + delay
+        return action_dt
 
     def _check(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
         """ This Function is called by scheduler. """
@@ -264,14 +284,12 @@ class base_action_rule(osv.osv):
             else:
                 get_record_dt = lambda record: record[date_field]
 
-            delay = DATE_RANGE_FUNCTION[action.trg_date_range_type](action.trg_date_range)
-
             # process action on the records that should be executed
             for record in model.browse(cr, uid, record_ids, context=context):
                 record_dt = get_record_dt(record)
                 if not record_dt:
                     continue
-                action_dt = get_datetime(record_dt) + delay
+                action_dt = self._check_delay(cr, uid, action, record, record_dt, context=context)
                 if last_run and (last_run <= action_dt < now) or (action_dt < now):
                     try:
                         self._process(cr, uid, action, [record.id], context=context)

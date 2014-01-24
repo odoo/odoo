@@ -13,8 +13,6 @@ openerp.point_of_sale = function(instance) {
 
     openerp_pos_keyboard(instance,module);   // import  pos_keyboard_widget.js
 
-    openerp_pos_scrollbar(instance,module);  // import pos_scrollbar_widget.js
-
     openerp_pos_screens(instance,module);    // import pos_screens.js
 
     openerp_pos_devices(instance,module);    // import pos_devices.js

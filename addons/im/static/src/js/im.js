@@ -80,7 +80,7 @@
             });
         },
         calc_box: function() {
-            var $topbar = instance.client.$(".oe_topbar");
+            var $topbar = instance.client.$(".navbar"); // .oe_topbar is replaced with .navbar of bootstrap3
             var top = $topbar.offset().top + $topbar.height();
             top = Math.max(top - $(window).scrollTop(), 0);
             this.$el.css("top", top);

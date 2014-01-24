@@ -6,6 +6,7 @@ openerp.mail = function (session) {
 
     openerp_mail_followers(session, mail);          // import mail_followers.js
     openerp_FieldMany2ManyTagsEmail(session);       // import manyy2many_tags_email.js
+    openerp_announcement(session);
 
     /**
      * ------------------------------------------------------------
@@ -834,7 +835,9 @@ openerp.mail = function (session) {
                 // go to the parented message
                 var message = this.parent_thread.parent_message;
                 var parent_message = message.parent_id ? message.parent_thread.parent_message : message;
-                var messages = [parent_message].concat(parent_message.get_childs());
+                if(parent_message){
+                    var messages = [parent_message].concat(parent_message.get_childs());
+                }
             } else if (this.options.emails_from_on_composer) {
                 // get all wall messages if is not a mail.Wall
                 _.each(this.options.root_thread.messages, function (msg) {messages.push(msg); messages.concat(msg.get_childs());});
@@ -1435,7 +1438,7 @@ openerp.mail = function (session) {
         message_fetch: function (replace_domain, replace_context, ids, callback) {
             return this.ds_message.call('message_read', [
                     // ids force to read
-                    ids == false ? undefined : ids, 
+                    ids === false ? undefined : ids, 
                     // domain + additional
                     (replace_domain ? replace_domain : this.domain), 
                     // ids allready loaded
@@ -1811,7 +1814,7 @@ openerp.mail = function (session) {
             if ('display_log_button' in this.options) {
                 this.node.params.display_log_button = this.options.display_log_button;
             }
-            this.domain = this.node.params && this.node.params.domain || [];
+            this.domain = (this.node.params && this.node.params.domain) || (this.field && this.field.domain) || [];
 
             if (!this.ParentViewManager.is_action_enabled('edit')) {
                 this.node.params.show_link = false;

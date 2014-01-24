@@ -106,7 +106,7 @@ class report_custom(report_rml):
         <date>%s</date>
         <company>%s</company>
         </header>
-        '''  % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),registry['res.users'].browse(cr,uid,uid).company_id.name)
+        '''  % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),toxml(registry['res.users'].browse(cr,uid,uid).company_id.name))
 
         xml='''<?xml version="1.0" encoding="UTF-8" ?>
         <report>

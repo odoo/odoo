@@ -44,7 +44,7 @@ Con la Colaboración de
 			],
     "demo_xml": [
 			],
-    "update_xml": [
+    "data": [
 			],
     "active": False,
     "installable": True,

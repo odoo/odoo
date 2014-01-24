@@ -26,7 +26,7 @@ from operator import itemgetter
 
 from lxml import etree
 
-from openerp import netsvc
+from openerp import workflow
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
@@ -193,6 +193,8 @@ class account_move_line(osv.osv):
             if obj_line.analytic_account_id:
                 if not obj_line.journal_id.analytic_journal_id:
                     raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
+                if obj_line.analytic_lines:
+                    acc_ana_line_obj.unlink(cr,uid,[obj.id for obj in obj_line.analytic_lines])
                 vals_line = self._prepare_analytic_line(cr, uid, obj_line, context=context)
                 acc_ana_line_obj.create(cr, uid, vals_line)
         return True
@@ -847,18 +849,17 @@ class account_move_line(osv.osv):
                    (tuple(ids), ))
         r = cr.fetchall()
         #TODO: move this check to a constraint in the account_move_reconcile object
+        if len(r) != 1:
+            raise osv.except_osv(_('Error'), _('Entries are not of the same account or already reconciled ! '))
         if not unrec_lines:
             raise osv.except_osv(_('Error!'), _('Entry is already reconciled.'))
         account = account_obj.browse(cr, uid, account_id, context=context)
+        if not account.reconcile:
+            raise osv.except_osv(_('Error'), _('The account is not defined to be reconciled !'))
         if r[0][1] != None:
             raise osv.except_osv(_('Error!'), _('Some entries are already reconciled.'))
 
-        if context.get('fy_closing'):
-            # We don't want to generate any write-off when being called from the
-            # wizard used to close a fiscal year (and it doesn't give us any
-            # writeoff_acc_id).
-            pass
-        elif (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
+        if (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
            (account.currency_id and (not currency_obj.is_zero(cr, uid, account.currency_id, currency))):
             if not writeoff_acc_id:
                 raise osv.except_osv(_('Warning!'), _('You have to provide an account for the write off/exchange difference entry.'))
@@ -932,11 +933,10 @@ class account_move_line(osv.osv):
             'line_id': map(lambda x: (4, x, False), ids),
             'line_partial_ids': map(lambda x: (3, x, False), ids)
         })
-        wf_service = netsvc.LocalService("workflow")
         # the id of the move.reconcile is written in the move.line (self) by the create method above
         # because of the way the line_id are defined: (4, x, False)
         for id in ids:
-            wf_service.trg_trigger(uid, 'account.move.line', id, cr)
+            workflow.trg_trigger(uid, 'account.move.line', id, cr)
 
         if lines and lines[0]:
             partner_id = lines[0].partner_id and lines[0].partner_id.id or False
@@ -1198,7 +1198,7 @@ class account_move_line(osv.osv):
                         break
             # Automatically convert in the account's secondary currency if there is one and
             # the provided values were not already multi-currency
-            if account.currency_id and (vals.get('amount_currency', False) is False) and account.currency_id.id != account.company_id.currency_id.id:
+            if account.currency_id and 'amount_currency' not in vals and account.currency_id.id != account.company_id.currency_id.id:
                 vals['currency_id'] = account.currency_id.id
                 ctx = {}
                 if 'date' in vals:
@@ -1207,20 +1207,6 @@ class account_move_line(osv.osv):
                     account.currency_id.id, vals.get('debit', 0.0)-vals.get('credit', 0.0), context=ctx)
         if not ok:
             raise osv.except_osv(_('Bad Account!'), _('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
-
-        if vals.get('analytic_account_id',False):
-            if journal.analytic_journal_id:
-                vals['analytic_lines'] = [(0,0, {
-                        'name': vals['name'],
-                        'date': vals.get('date', time.strftime('%Y-%m-%d')),
-                        'account_id': vals.get('analytic_account_id', False),
-                        'unit_amount': vals.get('quantity', 1.0),
-                        'amount': vals.get('debit', 0.0) or vals.get('credit', 0.0),
-                        'general_account_id': vals.get('account_id', False),
-                        'journal_id': journal.analytic_journal_id.id,
-                        'ref': vals.get('ref', False),
-                        'user_id': uid
-            })]
 
         result = super(account_move_line, self).create(cr, uid, vals, context=context)
         # CREATE Taxes

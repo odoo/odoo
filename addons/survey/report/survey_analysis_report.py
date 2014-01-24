@@ -43,9 +43,9 @@ class survey_analysis(report_rml):
                         <pageGraphics>
                         <fill color="black"/>
                         <stroke color="black"/>
-                        <setFont name="DejaVu Sans" size="8"/>
+                        <setFont name="DejaVuSans" size="8"/>
                         <drawString x="1.3cm" y="28.3cm"> """+to_xml(rml_obj.formatLang(time.strftime("%Y-%m-%d %H:%M:%S"),date_time=True))+"""</drawString>
-                        <setFont name="DejaVu Sans Bold" size="10"/>
+                        <setFont name="DejaVuSans-Bold" size="10"/>
                         <drawString x="9.8cm" y="28.3cm">"""+ to_xml(company.name) +"""</drawString>
                         <stroke color="#000000"/>
                         <lines>1.3cm 28.1cm 20cm 28.1cm</lines>

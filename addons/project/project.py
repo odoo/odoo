@@ -46,9 +46,15 @@ class project_task_type(osv.osv):
                                'there are no records in that stage to display.'),
     }
 
+    def _get_default_project_ids(self, cr, uid, ctx={}):
+        project_id = self.pool['project.task']._get_default_project_id(cr, uid, context=ctx)
+        if project_id:
+            return [project_id]
+        return None
+
     _defaults = {
         'sequence': 1,
-        'project_ids': lambda self, cr, uid, ctx=None: self.pool['project.task']._get_default_project_id(cr, uid, context=ctx),
+        'project_ids': _get_default_project_ids,
     }
     _order = 'sequence'
 
@@ -64,7 +70,7 @@ class project(osv.osv):
         """ Installation hook: aliases, project.project """
         # create aliases for all projects and avoid constraint errors
         alias_context = dict(context, alias_model_name='project.task')
-        self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(project, self)._auto_init,
+        return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(project, self)._auto_init,
             'project.task', self._columns['alias_id'], 'id', alias_prefix='project+', alias_defaults={'project_id':'id'}, context=alias_context)
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
@@ -78,12 +84,6 @@ class project(osv.osv):
                 return [(r[0]) for r in cr.fetchall()]
         return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
             context=context, count=count)
-
-    def _complete_name(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = (m.parent_id and (m.parent_id.name + '/') or '') + m.name
-        return res
 
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         partner_obj = self.pool.get('res.partner')
@@ -234,7 +234,6 @@ class project(osv.osv):
     _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
 
     _columns = {
-        'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Contract/Analytic', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
@@ -479,7 +478,7 @@ def Project():
 """       % (
             project.id,
             project.date_start or time.strftime('%Y-%m-%d'), working_days,
-            '|'.join(['User_'+str(x) for x in puids])
+            '|'.join(['User_'+str(x) for x in puids]) or 'None'
         )
         vacation = calendar_id and tuple(resource_pool.compute_vacation(cr, uid, calendar_id, context=context)) or False
         if vacation:
@@ -771,7 +770,7 @@ class task(osv.osv):
         'date_end': fields.datetime('Ending Date',select=True),
         'date_deadline': fields.date('Deadline',select=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
-        'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select="1", track_visibility='onchange'),
+        'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select="1", track_visibility='onchange', change_default=True),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
         'notes': fields.text('Notes'),
@@ -789,7 +788,7 @@ class task(osv.osv):
             }),
         'progress': fields.function(_hours_get, string='Working Time Progress (%)', multi='hours', group_operator="avg", help="If the task has a progress of 99.99% you should close the task if it's finished or reevaluate the time",
             store = {
-                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours','state'], 10),
+                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours', 'state', 'stage_id'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
         'delay_hours': fields.function(_hours_get, string='Delay Hours', multi='hours', help="Computed as difference between planned hours by the project manager and the total hours of the task.",
