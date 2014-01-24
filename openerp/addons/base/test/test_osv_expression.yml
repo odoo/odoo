@@ -530,4 +530,34 @@
     !python {model: res.partner }: |
         res_ids = self.search(cr, uid, [('child_ids.country_id','=','Belgium'),('active','=',False)])
         assert len(res_ids) != 0, "Record not Found with country Belgium and active False."
+-
+    Check that we can exclude translated fields (bug lp:1071710)
+-
+    !python {model: res.country}: |
+        # first install french language
+        Modules = self.pool.get('ir.module.module')
+        base = Modules.browse(cr, uid, Modules.search(cr, uid, [('name', '=', 'base')])[0])
+        
+        # hack: mark module as installed to allow install of the translation
+        base_state = base.state
+        base.write({'state': 'installed'})
+        base.update_translations('fr_FR')
+        base.write({'state': base_state})
 
+        # tests
+        be_id = self.search(cr, uid, [('name', '=', 'Belgium')])[0]
+
+        ctx = {'lang': 'fr_FR'}
+        not_be = self.search(cr, uid, [('name', '!=', 'Belgique')], context=ctx)
+
+        assert be_id not in not_be, "Search match failed"
+
+        # indirect search via m2o
+        Partners = self.pool.get('res.partner')
+        agrolait = Partners.search(cr, uid, [('name', '=', 'Agrolait')])[0]
+
+        not_be = Partners.search(cr, uid, [('country_id', '!=', 'Belgium')])
+        assert agrolait not in not_be, "Search match failed (m2o)"
+
+        not_be = Partners.search(cr, uid, [('country_id', '!=', 'Belgique')], context=ctx)
+        assert agrolait not in not_be, "Search match failed (m2o)"

@@ -5,9 +5,9 @@
 		<!--logo-->
 		<fill color="black"/>
         <stroke color="black"/>
-        <setFont name="DejaVu Sans" size="8"/>
+        <setFont name="DejaVuSans" size="8"/>
         <drawString x="1.3cm" y="19.5cm"><xsl:value-of select="//header-date"/></drawString>
-        <setFont name="DejaVu Sans Bold" size="10"/>
+        <setFont name="DejaVuSans-Bold" size="10"/>
         <drawString x="13.8cm" y="19.5cm"><xsl:value-of select="//company"/></drawString>
         <stroke color="#000000"/>
         <lines size="8">1.3cm 19.3cm 28.5cm 19.3cm</lines>

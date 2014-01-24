@@ -32,14 +32,6 @@ from openerp import SUPERUSER_ID
 
 MENU_ITEM_SEPARATOR = "/"
 
-def one_in(setA, setB):
-    """Check the presence of an element of setA in setB
-    """
-    for x in setA:
-        if x in setB:
-            return True
-    return False
-
 class ir_ui_menu(osv.osv):
     _name = 'ir.ui.menu'
 

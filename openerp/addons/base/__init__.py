@@ -20,6 +20,7 @@
 ##############################################################################
 
 import ir
+import workflow
 import module
 import res
 import report

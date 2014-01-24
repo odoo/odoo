@@ -39,7 +39,6 @@
 
 """
 
-import babel.dates
 import calendar
 import collections
 import copy
@@ -54,6 +53,8 @@ import time
 import traceback
 import types
 
+import babel.dates
+import dateutil.parser
 import psycopg2
 from lxml import etree
 
@@ -75,6 +76,8 @@ from openerp.tools import SKIPPED_ELEMENT_TYPES
 
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
+
+AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
 
 def transfer_field_to_modifiers(field, modifiers):
     default_values = {}
@@ -382,10 +385,12 @@ class browse_record(object):
                     self.__logger.debug(''.join(traceback.format_stack()))
                 raise KeyError(error_msg)
 
+            prefetchable = lambda f: f._classic_write and f._prefetch and not f.groups and not f.deprecated
+
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
-            if col._prefetch and not col.groups:
+            if prefetchable(col):
                 # gen the list of "local" (ie not inherited) fields which are classic or many2one
-                field_filter = lambda x: x[1]._classic_write and x[1]._prefetch and not x[1].groups
+                field_filter = lambda x: prefetchable(x[1])
                 fields_to_fetch = filter(field_filter, self._table._columns.items())
                 # gen the list of inherited fields
                 inherits = map(lambda x: (x[0], x[1][2]), self._table._inherit_fields.items())
@@ -398,7 +403,15 @@ class browse_record(object):
             ids = filter(lambda id: name not in self._data[id], self._data.keys())
             # read the results
             field_names = map(lambda x: x[0], fields_to_fetch)
-            field_values = self._table.read(self._cr, self._uid, ids, field_names, context=self._context, load="_classic_write")
+            try:
+                field_values = self._table.read(self._cr, self._uid, ids, field_names, context=self._context, load="_classic_write")
+            except (openerp.exceptions.AccessError, except_orm):
+                if len(ids) == 1:
+                    raise
+                # prefetching attempt failed, perhaps we're violating ACL restrictions involuntarily
+                _logger.info('Prefetching attempt for fields %s on %s failed for ids %s, re-trying just for id %s', field_names, self._model._name, ids, self._id)
+                ids = [self._id]
+                field_values = self._table.read(self._cr, self._uid, ids, field_names, context=self._context, load="_classic_write")
 
             # TODO: improve this, very slow for reports
             if self._fields_process:
@@ -998,7 +1011,7 @@ class BaseModel(object):
                 continue
             sm = f.store
             if sm is True:
-                sm = {self._name: (lambda self, cr, uid, ids, c={}: ids, None, 10, None)}
+                sm = {self._name: (lambda self, cr, uid, ids, c={}: ids, None, f.priority, None)}
             for object, aa in sm.items():
                 if len(aa) == 4:
                     (fnct, fields2, order, length) = aa
@@ -1009,8 +1022,10 @@ class BaseModel(object):
                     raise except_orm('Error',
                         ('Invalid function definition %s in object %s !\nYou must use the definition: store={object:(fnct, fields, priority, time length)}.' % (store_field, self._name)))
                 self.pool._store_function.setdefault(object, [])
-                self.pool._store_function[object].append((self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
-                self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
+                t = (self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length)
+                if not t in self.pool._store_function[object]:
+                    self.pool._store_function[object].append((self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
+                    self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
 
         for (key, _, msg) in self._sql_constraints:
             self.pool._sql_error[self._table+'_'+key] = msg
@@ -1772,7 +1787,7 @@ class BaseModel(object):
                     children = False
                     views = {}
                     for f in node:
-                        if f.tag in ('form', 'tree', 'graph', 'kanban'):
+                        if f.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
                             node.remove(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = self._name
@@ -1816,7 +1831,7 @@ class BaseModel(object):
             in_tree_view = node.tag == 'tree'
 
         elif node.tag == 'calendar':
-            for additional_field in ('date_start', 'date_delay', 'date_stop', 'color'):
+            for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day','attendee'):
                 if node.get(additional_field):
                     fields[node.get(additional_field)] = {}
 
@@ -2010,7 +2025,7 @@ class BaseModel(object):
             return False
 
         view = etree.Element('calendar', string=self._description)
-        etree.SubElement(view, 'field', self._rec_name_fallback(cr, user, context))
+        etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
 
         if self._date_name not in self._columns:
             date_found = False
@@ -2150,8 +2165,8 @@ class BaseModel(object):
                             attribute = (child.get('name'), child.text and child.text.encode('utf8') or None)
                             if attribute[1]:
                                 node.set(attribute[0], attribute[1])
-                            else:
-                                del(node.attrib[attribute[0]])
+                            elif attribute[0] in node.attrib:
+                                del node.attrib[attribute[0]]
                     else:
                         sib = node.getnext()
                         for child in spec:
@@ -2736,7 +2751,8 @@ class BaseModel(object):
                         d['__context'] = {'group_by': groupby_list[1:]}
             if groupby and groupby in fget:
                 if d[groupby] and fget[groupby]['type'] in ('date', 'datetime'):
-                    groupby_datetime = datetime.datetime.strptime(alldata[d['id']][groupby], '%Y-%m-%d')
+                    _default = datetime.datetime(1970, 1, 1)    # force starts of month
+                    groupby_datetime = dateutil.parser.parse(alldata[d['id']][groupby], default=_default)
                     d[groupby] = babel.dates.format_date(
                         groupby_datetime, format=group_by_params.get('display_format', 'MMMM yyyy'), locale=context.get('lang', 'en_US'))
                     if group_by_params.get('interval') == 'month':
@@ -2824,8 +2840,8 @@ class BaseModel(object):
         cr.execute('select id from '+self._table)
         ids_lst = map(lambda x: x[0], cr.fetchall())
         while ids_lst:
-            iids = ids_lst[:40]
-            ids_lst = ids_lst[40:]
+            iids = ids_lst[:AUTOINIT_RECALCULATE_STORED_FIELDS]
+            ids_lst = ids_lst[AUTOINIT_RECALCULATE_STORED_FIELDS:]
             res = f.get(cr, self, iids, k, SUPERUSER_ID, {})
             for key, val in res.items():
                 if f._multi:
@@ -2885,8 +2901,12 @@ class BaseModel(object):
         """
         Record the creation of a constraint for this model, to make it possible
         to delete it later when the module is uninstalled. Type can be either
-        'f' or 'u' depending on the constraing being a foreign key or not.
+        'f' or 'u' depending on the constraint being a foreign key or not.
         """
+        if not self._module:
+            # no need to save constraints for custom models as they're not part
+            # of any module
+            return
         assert type in ('f', 'u')
         cr.execute("""
             SELECT 1 FROM ir_model_constraint, ir_module_module
@@ -3663,11 +3683,6 @@ class BaseModel(object):
         if fields_to_read is None:
             fields_to_read = self._columns.keys()
 
-        # Construct a clause for the security rules.
-        # 'tables' hold the list of tables necessary for the SELECT including the ir.rule clauses,
-        # or will at least contain self._table.
-        rule_clause, rule_params, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
-
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = [f for f in fields_to_read if
                            f == self.CONCURRENCY_CHECK_FIELD
@@ -3688,6 +3703,11 @@ class BaseModel(object):
                     return 'length(%s) as "%s"' % (f_qual, f)
                 return f_qual
 
+            # Construct a clause for the security rules.
+            # 'tables' hold the list of tables necessary for the SELECT including the ir.rule clauses,
+            # or will at least contain self._table.
+            rule_clause, rule_params, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
+
             fields_pre2 = map(convert_field, fields_pre)
             order_by = self._parent_order or self._order
             select_fields = ','.join(fields_pre2 + ['%s.id' % self._table])
@@ -3702,6 +3722,7 @@ class BaseModel(object):
                 self._check_record_rules_result_count(cr, user, sub_ids, result_ids, 'read', context=context)
                 res.extend(results)
         else:
+            self.check_access_rule(cr, user, ids, 'read', context=context)
             res = map(lambda x: {'id': x}, ids)
 
         if context.get('lang'):
@@ -4231,7 +4252,8 @@ class BaseModel(object):
                         if not src_trans:
                             src_trans = vals[f]
                             # Inserting value to DB
-                            self.write(cr, user, ids, {f: vals[f]})
+                            context_wo_lang = dict(context, lang=None)
+                            self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
                         self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
 
 
@@ -4393,7 +4415,15 @@ class BaseModel(object):
                 tocreate[v] = {}
             else:
                 tocreate[v] = {'id': vals[self._inherits[v]]}
-        (upd0, upd1, upd2) = ('', '', [])
+
+        columns = [
+            # columns will contain a list of field defined as a tuple
+            # tuple(field_name, format_string, field_value)
+            # the tuple will be used by the string formatting for the INSERT
+            # statement.
+            ('id', "nextval('%s')" % self._sequence),
+        ]
+
         upd_todo = []
         unknown_fields = []
         for v in vals.keys():
@@ -4410,15 +4440,12 @@ class BaseModel(object):
                 'No such field(s) in model %s: %s.',
                 self._name, ', '.join(unknown_fields))
 
-        # Try-except added to filter the creation of those records whose filds are readonly.
-        # Example : any dashboard which has all the fields readonly.(due to Views(database views))
-        try:
-            cr.execute("SELECT nextval('"+self._sequence+"')")
-        except:
-            raise except_orm(_('UserError'),
-                _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.'))
+        if not self._sequence:
+            raise except_orm(
+                _('UserError'),
+                _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.')
+            )
 
-        id_new = cr.fetchone()[0]
         for table in tocreate:
             if self._inherits[table] in vals:
                 del vals[self._inherits[table]]
@@ -4435,9 +4462,7 @@ class BaseModel(object):
             else:
                 self.pool[table].write(cr, user, [record_id], tocreate[table], context=parent_context)
 
-            upd0 += ',' + self._inherits[table]
-            upd1 += ',%s'
-            upd2.append(record_id)
+            columns.append((self._inherits[table], '%s', record_id))
 
         #Start : Set bool fields to be False if they are not touched(to make search more powerful)
         bool_fields = [x for x in self._columns.keys() if self._columns[x]._type=='boolean']
@@ -4474,13 +4499,13 @@ class BaseModel(object):
                 if not edit:
                     vals.pop(field)
         for field in vals:
-            if self._columns[field]._classic_write:
-                upd0 = upd0 + ',"' + field + '"'
-                upd1 = upd1 + ',' + self._columns[field]._symbol_set[0]
-                upd2.append(self._columns[field]._symbol_set[1](vals[field]))
+            current_field = self._columns[field]
+            if current_field._classic_write:
+                columns.append((field, '%s', current_field._symbol_set[1](vals[field])))
+
                 #for the function fields that receive a value, we set them directly in the database
                 #(they may be required), but we also need to trigger the _fct_inv()
-                if (hasattr(self._columns[field], '_fnct_inv')) and not isinstance(self._columns[field], fields.related):
+                if (hasattr(current_field, '_fnct_inv')) and not isinstance(current_field, fields.related):
                     #TODO: this way to special case the related fields is really creepy but it shouldn't be changed at
                     #one week of the release candidate. It seems the only good way to handle correctly this is to add an
                     #attribute to make a field `really readonly´ and thus totally ignored by the create()... otherwise
@@ -4492,17 +4517,33 @@ class BaseModel(object):
             else:
                 #TODO: this `if´ statement should be removed because there is no good reason to special case the fields
                 #related. See the above TODO comment for further explanations.
-                if not isinstance(self._columns[field], fields.related):
+                if not isinstance(current_field, fields.related):
                     upd_todo.append(field)
             if field in self._columns \
-                    and hasattr(self._columns[field], 'selection') \
+                    and hasattr(current_field, 'selection') \
                     and vals[field]:
                 self._check_selection_field_value(cr, user, field, vals[field], context=context)
         if self._log_access:
-            upd0 += ',create_uid,create_date,write_uid,write_date'
-            upd1 += ",%s,(now() at time zone 'UTC'),%s,(now() at time zone 'UTC')"
-            upd2.extend((user, user))
-        cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
+            columns.append(('create_uid', '%s', user))
+            columns.append(('write_uid', '%s', user))
+            columns.append(('create_date', "(now() at time zone 'UTC')"))
+            columns.append(('write_date', "(now() at time zone 'UTC')"))
+
+        # the list of tuples used in this formatting corresponds to
+        # tuple(field_name, format, value)
+        # In some case, for example (id, create_date, write_date) we does not
+        # need to read the third value of the tuple, because the real value is
+        # encoded in the second value (the format).
+        cr.execute(
+            """INSERT INTO "%s" (%s) VALUES(%s) RETURNING id""" % (
+                self._table,
+                ', '.join('"%s"' % f[0] for f in columns),
+                ', '.join(f[1] for f in columns)
+            ),
+            tuple([f[2] for f in columns if len(f) > 2])
+        )
+
+        id_new, = cr.fetchone()
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
         if self._parent_store and not context.get('defer_parent_store_computation'):
@@ -4541,7 +4582,9 @@ class BaseModel(object):
         self._validate(cr, user, [id_new], context)
 
         if not context.get('no_store_function', False):
-            result += self._store_get_values(cr, user, [id_new], vals.keys(), context)
+            result += self._store_get_values(cr, user, [id_new],
+                list(set(vals.keys() + self._inherits.values())),
+                context)
             result.sort()
             done = []
             for order, model_name, ids, fields2 in result:
@@ -4581,9 +4624,9 @@ class BaseModel(object):
             return browse_null()
 
     def _store_get_values(self, cr, uid, ids, fields, context):
-        """Returns an ordered list of fields.functions to call due to
+        """Returns an ordered list of fields.function to call due to
            an update operation on ``fields`` of records with ``ids``,
-           obtained by calling the 'store' functions of these fields,
+           obtained by calling the 'store' triggers of these fields,
            as setup by their 'store' attribute.
 
            :return: [(priority, model_name, [record_ids,], [function_fields,])]
@@ -4592,42 +4635,46 @@ class BaseModel(object):
         stored_functions = self.pool._store_function.get(self._name, [])
 
         # use indexed names for the details of the stored_functions:
-        model_name_, func_field_to_compute_, id_mapping_fnct_, trigger_fields_, priority_ = range(5)
+        model_name_, func_field_to_compute_, target_ids_func_, trigger_fields_, priority_ = range(5)
 
-        # only keep functions that should be triggered for the ``fields``
+        # only keep store triggers that should be triggered for the ``fields``
         # being written to.
-        to_compute = [f for f in stored_functions \
+        triggers_to_compute = [f for f in stored_functions \
                 if ((not f[trigger_fields_]) or set(fields).intersection(f[trigger_fields_]))]
 
-        mapping = {}
-        for function in to_compute:
-            # use admin user for accessing objects having rules defined on store fields
-            target_ids = [id for id in function[id_mapping_fnct_](self, cr, SUPERUSER_ID, ids, context) if id]
+        to_compute_map = {}
+        target_id_results = {}
+        for store_trigger in triggers_to_compute:
+            target_func_id_ = id(store_trigger[target_ids_func_])
+            if not target_func_id_ in target_id_results:
+                # use admin user for accessing objects having rules defined on store fields
+                target_id_results[target_func_id_] = [i for i in store_trigger[target_ids_func_](self, cr, SUPERUSER_ID, ids, context) if i]
+            target_ids = target_id_results[target_func_id_]
 
             # the compound key must consider the priority and model name
-            key = (function[priority_], function[model_name_])
+            key = (store_trigger[priority_], store_trigger[model_name_])
             for target_id in target_ids:
-                mapping.setdefault(key, {}).setdefault(target_id,set()).add(tuple(function))
+                to_compute_map.setdefault(key, {}).setdefault(target_id,set()).add(tuple(store_trigger))
 
-        # Here mapping looks like:
-        # { (10, 'model_a') : { target_id1: [ (function_1_tuple, function_2_tuple) ], ... }
-        #   (20, 'model_a') : { target_id2: [ (function_3_tuple, function_4_tuple) ], ... }
-        #   (99, 'model_a') : { target_id1: [ (function_5_tuple, function_6_tuple) ], ... }
+        # Here to_compute_map looks like:
+        # { (10, 'model_a') : { target_id1: [ (trigger_1_tuple, trigger_2_tuple) ], ... }
+        #   (20, 'model_a') : { target_id2: [ (trigger_3_tuple, trigger_4_tuple) ], ... }
+        #   (99, 'model_a') : { target_id1: [ (trigger_5_tuple, trigger_6_tuple) ], ... }
         # }
 
         # Now we need to generate the batch function calls list
         # call_map =
         #   { (10, 'model_a') : [(10, 'model_a', [record_ids,], [function_fields,])] }
         call_map = {}
-        for ((priority,model), id_map) in mapping.iteritems():
-            functions_ids_maps = {}
+        for ((priority,model), id_map) in to_compute_map.iteritems():
+            trigger_ids_maps = {}
             # function_ids_maps =
             #   { (function_1_tuple, function_2_tuple) : [target_id1, target_id2, ..] }
-            for id, functions in id_map.iteritems():
-                functions_ids_maps.setdefault(tuple(functions), []).append(id)
-            for functions, ids in functions_ids_maps.iteritems():
-                call_map.setdefault((priority,model),[]).append((priority, model, ids,
-                                                                 [f[func_field_to_compute_] for f in functions]))
+            for target_id, triggers in id_map.iteritems():
+                trigger_ids_maps.setdefault(tuple(triggers), []).append(target_id)
+            for triggers, target_ids in trigger_ids_maps.iteritems():
+                call_map.setdefault((priority,model),[]).append((priority, model, target_ids,
+                                                                 [t[func_field_to_compute_] for t in triggers]))
         ordered_keys = call_map.keys()
         ordered_keys.sort()
         result = []
@@ -4762,6 +4809,9 @@ class BaseModel(object):
 
            :param query: the current query object
         """
+        if uid == SUPERUSER_ID:
+            return
+
         def apply_rule(added_clause, added_params, added_tables, parent_model=None, child_object=None):
             """ :param string parent_model: string of the parent model
                 :param model child_object: model object, base of the rule application
@@ -4971,8 +5021,8 @@ class BaseModel(object):
             context = {}
 
         # avoid recursion through already copied records in case of circular relationship
-        seen_map = context.setdefault('__copy_data_seen',{})
-        if id in seen_map.setdefault(self._name,[]):
+        seen_map = context.setdefault('__copy_data_seen', {})
+        if id in seen_map.setdefault(self._name, []):
             return
         seen_map[self._name].append(id)
 
@@ -4984,15 +5034,6 @@ class BaseModel(object):
                     default['state'] = self._defaults['state'](self, cr, uid, context)
                 else:
                     default['state'] = self._defaults['state']
-
-        context_wo_lang = context.copy()
-        if 'lang' in context:
-            del context_wo_lang['lang']
-        data = self.read(cr, uid, [id,], context=context_wo_lang)
-        if data:
-            data = data[0]
-        else:
-            raise IndexError( _("Record #%d of %s not found, cannot copy!") %( id, self._name))
 
         # build a black list of fields that should not be copied
         blacklist = set(MAGIC_COLUMNS + ['parent_left', 'parent_right'])
@@ -5006,7 +5047,20 @@ class BaseModel(object):
                     blacklist.update(set(self.pool[other]._all_columns) - set(self._columns))
                 else:
                     blacklist_given_fields(self.pool[other])
+            # blacklist deprecated fields
+            for name, field in obj._columns.items():
+                if field.deprecated:
+                    blacklist.add(name)
+
         blacklist_given_fields(self)
+
+        fields_to_read = [f for f in self.check_field_access_rights(cr, uid, 'read', None)
+                          if f not in blacklist]
+        data = self.read(cr, uid, [id], fields_to_read, context=context)
+        if data:
+            data = data[0]
+        else:
+            raise IndexError(_("Record #%d of %s not found, cannot copy!") % (id, self._name))
 
         res = dict(default)
         for f, colinfo in self._all_columns.items():
@@ -5048,36 +5102,50 @@ class BaseModel(object):
         # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         fields = self.fields_get(cr, uid, context=context)
 
-        translation_records = []
         for field_name, field_def in fields.items():
+            # removing the lang to compare untranslated values
+            context_wo_lang = dict(context, lang=None)
+            old_record, new_record = self.browse(cr, uid, [old_id, new_id], context=context_wo_lang)
             # we must recursively copy the translations for o2o and o2m
             if field_def['type'] == 'one2many':
                 target_obj = self.pool[field_def['relation']]
-                old_record, new_record = self.read(cr, uid, [old_id, new_id], [field_name], context=context)
                 # here we rely on the order of the ids to match the translations
                 # as foreseen in copy_data()
-                old_children = sorted(old_record[field_name])
-                new_children = sorted(new_record[field_name])
+                old_children = sorted(r.id for r in old_record[field_name])
+                new_children = sorted(r.id for r in new_record[field_name])
                 for (old_child, new_child) in zip(old_children, new_children):
                     target_obj.copy_translations(cr, uid, old_child, new_child, context=context)
             # and for translatable fields we keep them for copy
             elif field_def.get('translate'):
-                trans_name = ''
                 if field_name in self._columns:
                     trans_name = self._name + "," + field_name
+                    target_id = new_id
+                    source_id = old_id
                 elif field_name in self._inherit_fields:
                     trans_name = self._inherit_fields[field_name][0] + "," + field_name
-                if trans_name:
-                    trans_ids = trans_obj.search(cr, uid, [
-                            ('name', '=', trans_name),
-                            ('res_id', '=', old_id)
-                    ])
-                    translation_records.extend(trans_obj.read(cr, uid, trans_ids, context=context))
+                    # get the id of the parent record to set the translation
+                    inherit_field_name = self._inherit_fields[field_name][1]
+                    target_id = new_record[inherit_field_name].id
+                    source_id = old_record[inherit_field_name].id
+                else:
+                    continue
 
-        for record in translation_records:
-            del record['id']
-            record['res_id'] = new_id
-            trans_obj.create(cr, uid, record, context=context)
+                trans_ids = trans_obj.search(cr, uid, [
+                        ('name', '=', trans_name),
+                        ('res_id', '=', source_id)
+                ])
+                user_lang = context.get('lang')
+                for record in trans_obj.read(cr, uid, trans_ids, context=context):
+                    del record['id']
+                    # remove source to avoid triggering _set_src
+                    del record['source']
+                    record.update({'res_id': target_id})
+                    if user_lang and user_lang == record['lang']:
+                        # 'source' to force the call to _set_src
+                        # 'value' needed if value is changed in copy(), want to see the new_value
+                        record['source'] = old_record[field_name]
+                        record['value'] = new_record[field_name]
+                    trans_obj.create(cr, uid, record, context=context)
 
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -5384,6 +5452,11 @@ class BaseModel(object):
         record_ids = self.search(cr, uid, domain or [], offset, limit or False, order or False, context or {})
         if not record_ids:
             return []
+
+        if fields and fields == ['id']:
+            # shortcut read if we only want the ids
+            return [{'id': id} for id in record_ids]
+
         result = self.read(cr, uid, record_ids, fields or [], context or {})
         # reorder read
         if len(result) >= 1:

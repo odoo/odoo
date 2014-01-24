@@ -34,7 +34,11 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
-class groups(osv.osv):
+#----------------------------------------------------------
+# Basic res.groups and res.users
+#----------------------------------------------------------
+
+class res_groups(osv.osv):
     _name = "res.groups"
     _description = "Access Groups"
     _rec_name = 'full_name'
@@ -81,28 +85,26 @@ class groups(osv.osv):
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         # add explicit ordering if search is sorted on full_name
         if order and order.startswith('full_name'):
-            ids = super(groups, self).search(cr, uid, args, context=context)
+            ids = super(res_groups, self).search(cr, uid, args, context=context)
             gs = self.browse(cr, uid, ids, context)
             gs.sort(key=lambda g: g.full_name, reverse=order.endswith('DESC'))
             gs = gs[offset:offset+limit] if limit else gs[offset:]
             return map(int, gs)
-        return super(groups, self).search(cr, uid, args, offset, limit, order, context, count)
+        return super(res_groups, self).search(cr, uid, args, offset, limit, order, context, count)
 
     def copy(self, cr, uid, id, default=None, context=None):
         group_name = self.read(cr, uid, [id], ['name'])[0]['name']
         default.update({'name': _('%s (copy)')%group_name})
-        return super(groups, self).copy(cr, uid, id, default, context)
+        return super(res_groups, self).copy(cr, uid, id, default, context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if 'name' in vals:
             if vals['name'].startswith('-'):
                 raise osv.except_osv(_('Error'),
                         _('The name of the group can not start with "-"'))
-        res = super(groups, self).write(cr, uid, ids, vals, context=context)
+        res = super(res_groups, self).write(cr, uid, ids, vals, context=context)
         self.pool['ir.model.access'].call_cache_clearing_methods(cr)
         return res
-
-groups()
 
 class res_users(osv.osv):
     """ User class. A res.users record models an OpenERP user and is different
@@ -167,14 +169,8 @@ class res_users(osv.osv):
     }
 
     def on_change_login(self, cr, uid, ids, login, context=None):
-        return {'value': {'email': login}}
-
-    def on_change_company_id(self, cr, uid, ids, company_id):
-        return {'warning' : {
-                    'title': _("Company Switch Warning"),
-                    'message': _("Please keep in mind that documents currently displayed may not be relevant after switching to another company. If you have unsaved changes, please make sure to save and close all forms before switching to a different company. (You can click on Cancel in the User Preferences now)"),
-                }
-        }
+        v = {'email': login} if tools.single_email_re.match(login) else {}
+        return {'value': v}
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
@@ -516,12 +512,13 @@ class res_users(osv.osv):
                    (uid, module, ext_id))
         return bool(cr.fetchone())
 
-
+#----------------------------------------------------------
+# Implied groups
 #
-# Extension of res.groups and res.users with a relation for "implied" or
-# "inherited" groups.  Once a user belongs to a group, it automatically belongs
-# to the implied groups (transitively).
-#
+# Extension of res.groups and res.users with a relation for "implied"
+# or "inherited" groups.  Once a user belongs to a group, it
+# automatically belongs to the implied groups (transitively).
+#----------------------------------------------------------
 
 class cset(object):
     """ A cset (constrained set) is a set of elements that may be constrained to
@@ -549,7 +546,6 @@ def concat(ls):
     res = []
     for l in ls: res.extend(l)
     return res
-
 
 
 class groups_implied(osv.osv):
@@ -618,6 +614,8 @@ class users_implied(osv.osv):
                 super(users_implied, self).write(cr, uid, [user.id], vals, context)
         return res
 
+#----------------------------------------------------------
+# Vitrual checkbox and selection for res.user form view
 #
 # Extension of res.groups and res.users for the special groups view in the users
 # form.  This extension presents groups with selection and boolean widgets:
@@ -638,6 +636,7 @@ class users_implied(osv.osv):
 #       any of ID1, ..., IDk is in 'groups_id'
 # - selection field 'sel_groups_ID1_..._IDk' is ID iff
 #       ID is in 'groups_id' and ID is maximal in the set {ID1, ..., IDk}
+#----------------------------------------------------------
 
 def name_boolean_group(id): return 'in_group_' + str(id)
 def name_boolean_groups(ids): return 'in_groups_' + '_'.join(map(str, ids))
@@ -659,7 +658,6 @@ def partition(f, xs):
     for x in xs:
         (yes if f(x) else nos).append(x)
     return yes, nos
-
 
 
 class groups_view(osv.osv):
@@ -765,7 +763,6 @@ class users_view(osv.osv):
 
     def create(self, cr, uid, values, context=None):
         self._set_reified_groups(values)
-
         return super(users_view, self).create(cr, uid, values, context)
 
     def write(self, cr, uid, ids, values, context=None):
@@ -814,7 +811,7 @@ class users_view(osv.osv):
                 if len(group_split) != 2:
                     raise osv.except_osv(_('Invalid context value'), _('Invalid context default_groups_ref value (model.name_id) : "%s"') % group_xml_id)
                 try:
-                    temp, group_id = ir_model_data.get_object_reference(cr, uid,  group_split[0], group_split[1])
+                    temp, group_id = ir_model_data.get_object_reference(cr, uid, group_split[0], group_split[1])
                 except ValueError:
                     group_id = False
                 groups += [group_id]
@@ -822,14 +819,19 @@ class users_view(osv.osv):
         return values
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        if not fields:
-            fields = self.fields_get(cr, uid, context=context).keys()
-        group_fields, fields = partition(is_reified_group, fields)
-        if not 'groups_id' in fields:
+        fields_get = fields if fields is not None else self.fields_get(cr, uid, context=context).keys()
+        group_fields, _ = partition(is_reified_group, fields_get)
+
+        inject_groups_id = group_fields and fields and 'groups_id' not in fields
+        if inject_groups_id:
             fields.append('groups_id')
         res = super(users_view, self).read(cr, uid, ids, fields, context=context, load=load)
-        for values in (res if isinstance(res, list) else [res]):
-            self._get_reified_groups(group_fields, values)
+
+        if res and group_fields:
+            for values in (res if isinstance(res, list) else [res]):
+                self._get_reified_groups(group_fields, values)
+                if inject_groups_id:
+                    values.pop('groups_id', None)
         return res
 
     def _get_reified_groups(self, fields, values):
@@ -857,6 +859,7 @@ class users_view(osv.osv):
                     'selection': [(False, '')] + [(g.id, g.name) for g in gs],
                     'help': '\n'.join(tips),
                     'exportable': False,
+                    'selectable': False,
                 }
             else:
                 # boolean group fields
@@ -866,7 +869,71 @@ class users_view(osv.osv):
                         'string': g.name,
                         'help': g.comment,
                         'exportable': False,
+                        'selectable': False,
                     }
         return res
+
+#----------------------------------------------------------
+# change password wizard
+#----------------------------------------------------------
+
+class change_password_wizard(osv.TransientModel):
+    """
+        A wizard to manage the change of users' passwords
+    """
+
+    _name = "change.password.wizard"
+    _description = "Change Password Wizard"
+    _columns = {
+        'user_ids': fields.one2many('change.password.user', 'wizard_id', string='Users'),
+    }
+
+    def default_get(self, cr, uid, fields, context=None):
+        if context == None:
+            context = {}
+        user_ids = context.get('active_ids', [])
+        wiz_id = context.get('active_id', None)
+        res = []
+        users = self.pool.get('res.users').browse(cr, uid, user_ids, context=context)
+        for user in users:
+            res.append((0, 0, {
+                'wizard_id': wiz_id,
+                'user_id': user.id,
+                'user_login': user.login,
+            }))
+        return {'user_ids': res}
+
+
+    def change_password_button(self, cr, uid, id, context=None):
+        wizard = self.browse(cr, uid, id, context=context)[0]
+        user_ids = []
+        for user in wizard.user_ids:
+            user_ids.append(user.id)
+        self.pool.get('change.password.user').change_password_button(cr, uid, user_ids, context=context)
+        return {
+            'type': 'ir.actions.act_window_close',
+        }
+
+class change_password_user(osv.TransientModel):
+    """
+        A model to configure users in the change password wizard
+    """
+
+    _name = 'change.password.user'
+    _description = 'Change Password Wizard User'
+    _columns = {
+        'wizard_id': fields.many2one('change.password.wizard', string='Wizard', required=True),
+        'user_id': fields.many2one('res.users', string='User', required=True),
+        'user_login': fields.char('User Login', readonly=True),
+        'new_passwd': fields.char('New Password'),
+    }
+    _defaults = {
+        'new_passwd': '',
+    }
+
+    def change_password_button(self, cr, uid, ids, context=None):
+        for user in self.browse(cr, uid, ids, context=context):
+            self.pool.get('res.users').write(cr, uid, user.user_id.id, {'password': user.new_passwd})
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -684,7 +684,7 @@ def trans_generate(lang, modules, cr):
             except AttributeError, exc:
                 _logger.error("name error in %s: %s", xml_name, str(exc))
                 continue
-            objmodel = registry[obj.model]
+            objmodel = registry.get(obj.model)
             if not objmodel or not field_name in objmodel._columns:
                 continue
             field_def = objmodel._columns[field_name]
@@ -961,6 +961,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             irt_cursor.push(dic)
 
         irt_cursor.finish()
+        trans_obj.clear_caches()
         if verbose:
             _logger.info("translation file loaded succesfully")
     except IOError:

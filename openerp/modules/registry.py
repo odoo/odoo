@@ -199,15 +199,16 @@ class RegistryManager(object):
     @classmethod
     def get(cls, db_name, force_demo=False, status=None, update_module=False):
         """ Return a registry for a given database name."""
-        try:
-            return cls.registries[db_name]
-        except KeyError:
-            return cls.new(db_name, force_demo, status,
-                           update_module)
-        finally:
-            # set db tracker - cleaned up at the WSGI
-            # dispatching phase in openerp.service.wsgi_server.application
-            threading.current_thread().dbname = db_name
+        with cls.registries_lock:
+            try:
+                return cls.registries[db_name]
+            except KeyError:
+                return cls.new(db_name, force_demo, status,
+                               update_module)
+            finally:
+                # set db tracker - cleaned up at the WSGI
+                # dispatching phase in openerp.service.wsgi_server.application
+                threading.current_thread().dbname = db_name
 
     @classmethod
     def new(cls, db_name, force_demo=False, status=None,
@@ -305,18 +306,16 @@ class RegistryManager(object):
                 r, c = cr.fetchone()
                 # Check if the model registry must be reloaded (e.g. after the
                 # database has been updated by another process).
-                if registry.base_registry_signaling_sequence != r:
+                if registry.base_registry_signaling_sequence > 1 and registry.base_registry_signaling_sequence != r:
                     changed = True
                     _logger.info("Reloading the model registry after database signaling.")
                     registry = cls.new(db_name)
-                    registry.base_registry_signaling_sequence = r
                 # Check if the model caches must be invalidated (e.g. after a write
                 # occured on another process). Don't clear right after a registry
                 # has been reload.
-                elif registry.base_cache_signaling_sequence != c:
+                elif registry.base_cache_signaling_sequence > 1 and registry.base_cache_signaling_sequence != c:
                     changed = True
                     _logger.info("Invalidating all model caches after database signaling.")
-                    registry.base_cache_signaling_sequence = c
                     registry.clear_caches()
                     registry.reset_any_cache_cleared()
                     # One possible reason caches have been invalidated is the
@@ -326,6 +325,8 @@ class RegistryManager(object):
                         for column in model._columns.values():
                             if hasattr(column, 'digits_change'):
                                 column.digits_change(cr)
+                registry.base_registry_signaling_sequence = r
+                registry.base_cache_signaling_sequence = c
             finally:
                 cr.close()
         return changed

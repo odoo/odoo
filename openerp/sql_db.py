@@ -27,9 +27,6 @@ the database, *not* a database abstraction toolkit. Database abstraction is what
 the ORM does, in fact.
 """
 
-
-__all__ = ['db_connect', 'close_db']
-
 from functools import wraps
 import logging
 import psycopg2.extensions
@@ -457,10 +454,10 @@ class ConnectionPool(object):
             raise PoolError('This connection does not below to the pool')
 
     @locked
-    def close_all(self, dsn):
+    def close_all(self, dsn=None):
         _logger.info('%r: Close all connections to %r', self, dsn)
         for i, (cnx, used) in tools.reverse_enumerate(self._connections):
-            if dsn_are_equals(cnx.dsn, dsn):
+            if dsn is None or dsn_are_equals(cnx.dsn, dsn):
                 cnx.close()
                 self._connections.pop(i)
 
@@ -521,6 +518,11 @@ def close_db(db_name):
     global _Pool
     if _Pool:
         _Pool.close_all(dsn(db_name))
+
+def close_all():
+    global _Pool
+    if _Pool:
+        _Pool.close_all()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

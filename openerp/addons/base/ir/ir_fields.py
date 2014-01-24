@@ -184,7 +184,7 @@ class ir_fields_converter(orm.Model):
 
     def _str_id(self, cr, uid, model, column, value, context=None):
         return value, []
-    _str_to_char = _str_to_text = _str_to_binary = _str_id
+    _str_to_reference = _str_to_char = _str_to_text = _str_to_binary = _str_id
 
     def _str_to_date(self, cr, uid, model, column, value, context=None):
         try:
@@ -253,7 +253,7 @@ class ir_fields_converter(orm.Model):
         if not isinstance(selection, (tuple, list)):
             # FIXME: Don't pass context to avoid translations?
             #        Or just copy context & remove lang?
-            selection = selection(model, cr, uid)
+            selection = selection(model, cr, uid, context=None)
         for item, label in selection:
             labels = self._get_translations(
                 cr, uid, ('selection', 'model', 'code'), label, context=context)

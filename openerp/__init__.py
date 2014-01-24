@@ -30,7 +30,6 @@ evented = False
 if sys.modules.get("gevent") is not None:
     evented = True
 
-
 # Make sure the OpenERP server runs in UTC. This is especially necessary
 # under Windows as under Linux it seems the real import of time is
 # sufficiently deferred so that setting the TZ environment variable

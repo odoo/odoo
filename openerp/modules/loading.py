@@ -59,7 +59,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     def load_test(module_name, idref, mode):
         cr.commit()
         try:
-            threading.currentThread().testing = True
             _load_data(cr, module_name, idref, mode, 'test')
             return True
         except Exception:
@@ -67,7 +66,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 'module %s: an exception occurred in a test', module_name)
             return False
         finally:
-            threading.currentThread().testing = False
             if tools.config.options['test_commit']:
                 cr.commit()
             else:
@@ -104,12 +102,18 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         init mode.
 
         """
-        for filename in _get_files_of_kind(kind):
-            _logger.info("module %s: loading %s", module_name, filename)
-            noupdate = False
-            if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
-                noupdate = True
-            tools.convert_file(cr, module_name, filename, idref, mode, noupdate, kind, report)
+        try:
+            if kind in ('demo', 'test'):
+                threading.currentThread().testing = True
+            for filename in _get_files_of_kind(kind):
+                _logger.info("module %s: loading %s", module_name, filename)
+                noupdate = False
+                if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
+                    noupdate = True
+                tools.convert_file(cr, module_name, filename, idref, mode, noupdate, kind, report)
+        finally:
+            if kind in ('demo', 'test'):
+                threading.currentThread().testing = False
 
     if status is None:
         status = {}
@@ -166,11 +170,15 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 # upgrading the module information
                 modobj.write(cr, SUPERUSER_ID, [module_id], modobj.get_values_from_terp(package.data))
             _load_data(cr, module_name, idref, mode, kind='data')
-            if hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed'):
+            has_demo = hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed')
+            if has_demo:
                 status['progress'] = (index + 0.75) / len(graph)
                 _load_data(cr, module_name, idref, mode, kind='demo')
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
 
+            migrations.migrate_module(package, 'post')
+
+            if has_demo:
                 # launch tests only in demo mode, as most tests will depend
                 # on demo data. Other tests can be added into the regular
                 # 'data' section, but should probably not alter the data,
@@ -185,8 +193,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     report.record_result(openerp.modules.module.run_unit_tests(module_name))
 
             processed_modules.append(package.name)
-
-            migrations.migrate_module(package, 'post')
 
             ver = adapt_version(package.data['version'])
             # Set new modules and dependencies
@@ -340,7 +346,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if processed_modules:
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
-                if model in registry and not registry[model].is_transient():
+                if model in registry and not registry[model].is_transient() and not isinstance(registry[model], openerp.osv.orm.AbstractModel):
                     _logger.warning('The model %s has no access rules, consider adding one. E.g. access_%s,access_%s,model_%s,,1,1,1,1',
                         model, model.replace('.', '_'), model.replace('.', '_'), model.replace('.', '_'))
 
