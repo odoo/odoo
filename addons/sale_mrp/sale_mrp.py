@@ -74,8 +74,8 @@ class mrp_production(osv.osv):
             if move.move_dest_id:
                 return get_parent_move(move.move_dest_id)
             return move
-        
-        res =  super(mrp_production, self)._hook_create_post_procurement(cr, uid, production, procurement_id, context)
+
+        res = super(mrp_production, self)._hook_create_post_procurement(cr, uid, production, procurement_id, context)
         if production.move_prod_id:
             parent_move_line = get_parent_move(production.move_prod_id)
             if parent_move_line and parent_move_line.sale_line_id:
@@ -88,4 +88,18 @@ class mrp_production(osv.osv):
     }
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class sale_order(osv.Model):
+    _inherit = 'sale.order'
+
+    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
+        result = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
+        result['property_ids'] = [(6, 0, [x.id for x in line.property_ids])]
+        return result
+
+
+class sale_order_line(osv.osv):
+
+    _inherit = 'sale.order.line'
+    _columns = {
+        'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft': [('readonly', False)]}),
+    }

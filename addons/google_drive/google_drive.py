@@ -120,7 +120,7 @@ class config(osv.Model):
             res['url'] = content['alternateLink']
             key = self._get_key_from_url(res['url'])
             request_url = "https://www.googleapis.com/drive/v2/files/%s/permissions?emailMessage=This+is+a+drive+file+created+by+OpenERP&sendNotificationEmails=false&access_token=%s" % (key, access_token)
-            data = {'role': 'reader', 'type': 'anyone', 'value': '', 'withLink': True}
+            data = {'role': 'writer', 'type': 'anyone', 'value': '', 'withLink': True}
             try:
                 req = urllib2.Request(request_url, json.dumps(data), headers)
                 urllib2.urlopen(req)
@@ -133,7 +133,7 @@ class config(osv.Model):
                     req = urllib2.Request(request_url, json.dumps(data), headers)
                     urllib2.urlopen(req)
                 except urllib2.HTTPError:
-                    raise self.pool.get('res.config.settings').get_config_warning(cr, _("The permission 'writer' for your email '%s' has not been written on the document. Is this email a valid Google Account ?" % user.email), context=context)
+                    pass
         return res 
 
     def get_google_drive_config(self, cr, uid, res_model, res_id, context=None):

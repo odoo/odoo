@@ -56,11 +56,6 @@ class procurement_order(osv.osv):
             return True
         return super(procurement_order, self)._check(cr, uid, procurement, context=context)
 
-    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
-        result = super(procurement_order, self)._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, context)
-        result['property_ids'] = [(6, 0, [x.id for x in line.property_ids])]
-        return result
-
     def check_bom_exists(self, cr, uid, ids, context=None):
         """ Finds the bill of material for the product from procurement order.
         @return: True or False

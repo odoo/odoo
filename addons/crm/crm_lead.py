@@ -914,7 +914,7 @@ class crm_lead(format_address, osv.osv):
         :return dict: dictionary value for created Meeting view
         """
         opportunity = self.browse(cr, uid, ids[0], context)
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
         res['context'] = {
             'default_opportunity_id': opportunity.id,
             'default_partner_id': opportunity.partner_id and opportunity.partner_id.id or False,
@@ -1049,11 +1049,13 @@ class crm_lead(format_address, osv.osv):
     def schedule_phonecall_send_note(self, cr, uid, ids, phonecall_id, action, context=None):
         phonecall = self.pool.get('crm.phonecall').browse(cr, uid, [phonecall_id], context=context)[0]
         if action == 'log':
-            prefix = 'Logged'
+            message = _('Logged a call for %(date)s. %(description)s')
         else:
-            prefix = 'Scheduled'
-        suffix = ' %s' % phonecall.description
-        message = _("%s a call for %s.%s") % (prefix, phonecall.date, suffix)
+            message = _('Scheduled a call for %(date)s. %(description)s')
+        phonecall_date = datetime.strptime(phonecall.date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        phonecall_usertime = fields.datetime.context_timestamp(cr, uid, phonecall_date, context=context).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        html_time = "<time datetime='%s+00:00'>%s</time>" % (phonecall.date, phonecall_usertime)
+        message = message % dict(date=html_time, description=phonecall.description)
         return self.message_post(cr, uid, ids, body=message, context=context)
 
     def log_meeting(self, cr, uid, ids, meeting_subject, meeting_date, duration, context=None):

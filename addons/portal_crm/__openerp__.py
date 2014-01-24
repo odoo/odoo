@@ -33,6 +33,7 @@ This module adds a contact page (with a contact form creating a lead when submit
     'depends': ['crm','portal'],
     'data': [
         'contact_view.xml',
+        'security/ir.model.access.csv',
     ],
     'test': [
         'test/contact_form.yml',
