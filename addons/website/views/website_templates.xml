@@ -52,12 +52,13 @@
             <t t-if="not title">
                 <t t-set="title"><t t-raw="res_company.name"/><t t-if="additional_title"> - <t t-raw="additional_title"/></t></t>
             </t>
-            <title><t t-esc="title"/></title>
+            <meta name="viewport" content="width=device-width, user-scalable=no"/>
             <meta name="openerp.company" t-att-value="res_company.name"/>
             <meta name="description" t-att-value="main_object and 'website_meta_description' in main_object
                 and main_object.website_meta_description or website_meta_description"/>
             <meta name="keywords" t-att-value="main_object and 'website_meta_keywords' in main_object
                 and main_object.website_meta_keywords or website_meta_keywords"/>
+            <title><t t-esc="title"/></title>
 
             <!-- Load stylesheets before scripts to avoid blocking -->
             <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
