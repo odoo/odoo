@@ -104,14 +104,7 @@ class ir_http(osv.AbstractModel):
                 convert_exception_to(
                     werkzeug.exceptions.Forbidden))
 
-        # post process arg to set uid on browse records
-        for arg in arguments.itervalues():
-            if isinstance(arg, orm.browse_record) and arg._uid is UID_PLACEHOLDER:
-                arg._uid = request.uid
-                try:
-                    arg[arg._rec_name]
-                except KeyError:
-                    return self._handle_exception(werkzeug.exceptions.NotFound())
+        self._postprocess_args(arguments)
 
         # set and execute handler
         try:
@@ -123,6 +116,16 @@ class ir_http(osv.AbstractModel):
             return self._handle_exception(e)
 
         return result
+
+    def _postprocess_args(self, arguments):
+        """ post process arg to set uid on browse records """
+        for arg in arguments.itervalues():
+            if isinstance(arg, orm.browse_record) and arg._uid is UID_PLACEHOLDER:
+                arg._uid = request.uid
+                try:
+                    arg[arg._rec_name]
+                except KeyError:
+                    return self._handle_exception(werkzeug.exceptions.NotFound())
 
     def routing_map(self):
         if not hasattr(self, '_routing_map'):
