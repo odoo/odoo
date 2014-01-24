@@ -305,7 +305,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             groupby = this.create_field_value(field_id);
         event.preventDefault();
         if (this.fields[field_id].type === 'date' || this.fields[field_id].type === 'datetime') {
-            interval = event.target.getAttributes('data-interval');
+            interval = event.target.getAttribute('data-interval');
             groupby.field =  groupby.field + ':' + interval;
         }
         this.expand(id, groupby);
