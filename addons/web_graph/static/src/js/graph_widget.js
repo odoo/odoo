@@ -281,6 +281,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
                 if (!this.important_fields.length) {
                     return;
                 }
+                
                 var fields = _.map(this.important_fields, function (field) {
                         return {id: field.field, value: field.string, type:self.fields[field.field].type};
                 });
