@@ -1055,17 +1055,20 @@ class stock_picking(osv.osv):
                 todo_move_ids = []
                 toassign_move_ids = []
                 for move in picking.move_lines:
-                    if move.state == 'draft':
+                    if move.state in ('done', 'cancel'):
+                        #ignore stock moves cancelled or already done
+                        continue
+                    elif move.state == 'draft':
                         toassign_move_ids.append(move.id)
                     if move.remaining_qty == 0:
                         if move.state in ('draft', 'assigned', 'confirmed'):
                             todo_move_ids.append(move.id)
-                    elif move.remaining_qty > 0 and move.state not in  ['done', 'cancel']:
+                    elif move.remaining_qty > 0:
                         new_move = stock_move_obj.split(cr, uid, move, move.remaining_qty, context=context)
                         todo_move_ids.append(move.id)
                         #Assign move as it was assigned before
                         toassign_move_ids.append(new_move)
-                    elif move.state not in ['done', 'cancel']:
+                    elif move.state:
                         #this should never happens
                         raise
                 self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
@@ -1240,6 +1243,12 @@ class stock_move(osv.osv):
                 res.add(quant.reservation_id.id)
         return list(res)
 
+    def _get_move_ids(self, cr, uid, ids, context=None):
+        res = []
+        for picking in self.browse(cr, uid, ids, context=context):
+            res += [x.id for x in picking.move_lines]
+        return res
+
     _columns = {
         'name': fields.char('Description', required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
@@ -1278,7 +1287,7 @@ class stock_move(osv.osv):
         'move_orig_ids': fields.one2many('stock.move', 'move_dest_id', 'Original Move', help="Optional: previous stock move when chaining them", select=True),
 
         'picking_id': fields.many2one('stock.picking', 'Reference', select=True, states={'done': [('readonly', True)]}),
-        'picking_priority': fields.related('picking_id', 'priority', type='selection', selection=[('0', 'Low'), ('1', 'Normal'), ('2', 'High')], string='Picking Priority'),
+        'picking_priority': fields.related('picking_id', 'priority', type='selection', selection=[('0', 'Low'), ('1', 'Normal'), ('2', 'High')], string='Picking Priority', store={'stock.picking': (_get_move_ids, ['priority'], 10)}),
         'note': fields.text('Notes'),
         'state': fields.selection([('draft', 'New'),
                                    ('cancel', 'Cancelled'),
@@ -1987,7 +1996,7 @@ class stock_inventory(osv.osv):
            :rtype: list of tuple
         """
         #default available choices
-        res_filter = [('none', ' All products of a whole location'), ('product', 'One product only')]
+        res_filter = [('none', _('All products of a whole location')), ('product', _('One product only'))]
         settings_obj = self.pool.get('stock.config.settings')
         config_ids = settings_obj.search(cr, uid, [], limit=1, order='id DESC', context=context)
         #If we don't have updated config until now, all fields are by default false and so should be not dipslayed
@@ -1998,9 +2007,9 @@ class stock_inventory(osv.osv):
         if stock_settings.group_stock_tracking_owner:
             res_filter.append(('owner', _('One owner only')))
             res_filter.append(('product_owner', _('One product for a specific owner')))
-        if stock_settings.group_stock_production_lot:
-            res_filter.append(('lot', _('One Lot/Serial Number')))
         if stock_settings.group_stock_tracking_lot:
+            res_filter.append(('lot', _('One Lot/Serial Number')))
+        if stock_settings.group_stock_packaging:
             res_filter.append(('pack', _('A Pack')))
         return res_filter
 
@@ -2188,6 +2197,14 @@ class stock_inventory_line(osv.osv):
     _name = "stock.inventory.line"
     _description = "Inventory Line"
     _rec_name = "inventory_id"
+    _order = "inventory_id, location_name, product_code, product_name, prod_lot_id"
+
+    def _get_product_name_change(self, cr, uid, ids, context=None):
+        return self.pool.get('stock.inventory.line').search(cr, uid, [('product_id', 'in', ids)], context=context)
+
+    def _get_location_change(self, cr, uid, ids, context=None):
+        return self.pool.get('stock.inventory.line').search(cr, uid, [('location_id', 'in', ids)], context=context)
+
     _columns = {
         'inventory_id': fields.many2one('stock.inventory', 'Inventory', ondelete='cascade', select=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True, select=True),
@@ -2200,6 +2217,15 @@ class stock_inventory_line(osv.osv):
         'state': fields.related('inventory_id', 'state', type='char', string='Status', readonly=True),
         'th_qty': fields.float('Theoretical Quantity', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Owner'),
+        'product_name': fields.related('product_id', 'name', type='char', string='Product name', store={
+                                                                                            'product.product': (_get_product_name_change, ['name', 'default_code'], 20),
+                                                                                            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['product_id'], 20),}),
+        'product_code': fields.related('product_id', 'default_code', type='char', string='Product code', store={
+                                                                                            'product.product': (_get_product_name_change, ['name', 'default_code'], 20),
+                                                                                            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['product_id'], 20),}),
+        'location_name': fields.related('location_id', 'complete_name', type='char', string='Location name', store={
+                                                                                            'stock.location': (_get_location_change, ['name', 'location_id', 'active'], 20),
+                                                                                            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['location_id'], 20),}),
     }
 
     _defaults = {
@@ -2650,11 +2676,11 @@ class stock_warehouse(osv.osv):
             vals[values['field']] = location_id
 
         #create new sequences
-        in_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence in'), 'prefix': vals.get('code', '') + '\IN\\', 'padding': 5}, context=context)
-        out_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence out'), 'prefix': vals.get('code', '') + '\OUT\\', 'padding': 5}, context=context)
-        pack_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence packing'), 'prefix': vals.get('code', '') + '\PACK\\', 'padding': 5}, context=context)
-        pick_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence picking'), 'prefix': vals.get('code', '') + '\PICK\\', 'padding': 5}, context=context)
-        int_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence internal'), 'prefix': vals.get('code', '') + '\INT\\', 'padding': 5}, context=context)
+        in_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence in'), 'prefix': vals.get('code', '') + '/IN/', 'padding': 5}, context=context)
+        out_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence out'), 'prefix': vals.get('code', '') + '/OUT/', 'padding': 5}, context=context)
+        pack_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence packing'), 'prefix': vals.get('code', '') + '/PACK/', 'padding': 5}, context=context)
+        pick_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence picking'), 'prefix': vals.get('code', '') + '/PICK/', 'padding': 5}, context=context)
+        int_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence internal'), 'prefix': vals.get('code', '') + '/INT/', 'padding': 5}, context=context)
 
         #create WH
         new_id = super(stock_warehouse, self).create(cr, uid, vals=vals, context=context)
@@ -2901,7 +2927,7 @@ class stock_location_path(osv.osv):
 
     def _get_rules(self, cr, uid, ids, context=None):
         res = []
-        for route in self.browse(cr, uid, ids):
+        for route in self.browse(cr, uid, ids, context=context):
             res += [x.id for x in route.push_ids]
         return res
 
