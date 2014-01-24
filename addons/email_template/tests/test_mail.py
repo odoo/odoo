@@ -64,7 +64,7 @@ class test_message_compose(TestMail):
             'body_html': '${object.description}',
             'user_signature': True,
             'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])],
-            'email_to': 'b@b.b c@c.c',
+            'email_to': 'b@b.b, c@c.c',
             'email_cc': 'd@d.d'
             })
 
@@ -192,7 +192,7 @@ class test_message_compose(TestMail):
         email_template.write(cr, uid, [email_template_id], {
             'model_id': user_model_id,
             'body_html': '${object.login}',
-            'email_to': '${object.email} c@c',
+            'email_to': '${object.email}, c@c',
             'partner_to': '%i,%i' % (p_b_id, p_c_id),
             'email_cc': 'd@d',
             })
@@ -217,7 +217,7 @@ class test_message_compose(TestMail):
             'subject': '${object.name}',
             'body_html': '${object.description}',
             'user_signature': True,
-            'email_to': 'b@b.b c@c.c',
+            'email_to': 'b@b.b, c@c.c',
             'email_cc': 'd@d.d',
             'partner_to': '${user.partner_id.id},%s,%s,-1' % (self.user_raoul.partner_id.id, self.user_bert.partner_id.id)
         })
@@ -226,7 +226,7 @@ class test_message_compose(TestMail):
         msg_id = email_template.send_mail(cr, uid, email_template_id, self.group_pigs_id, context=context)
         mail = self.mail_mail.browse(cr, uid, msg_id, context=context)
         self.assertEqual(mail.subject, 'Pigs', 'email_template: send_mail: wrong subject')
-        self.assertEqual(mail.email_to, 'b@b.b c@c.c', 'email_template: send_mail: wrong email_to')
+        self.assertEqual(mail.email_to, 'b@b.b, c@c.c', 'email_template: send_mail: wrong email_to')
         self.assertEqual(mail.email_cc, 'd@d.d', 'email_template: send_mail: wrong email_cc')
         self.assertEqual(
             set([partner.id for partner in mail.recipient_ids]),
