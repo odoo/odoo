@@ -21,15 +21,16 @@
 
 
 {
-    'name' : 'Account Product Template',
-    'depends' : ['account'],
-    'author' : 'OpenERP SA',
+    'name': 'Product Email Template',
+    'depends': ['account'],
+    'author': 'OpenERP SA',
     'category': 'Accounting & Finance',
     'description': """
-This module adds Product Template.
-==================================
+Add email templates to products to be send on invoice confirmation
+==================================================================
 
-Whith this module, link your products to a template to send complete information and tools to your customer. For instance, you invoice a training, link a template to this training product with training agenda and materials.
+With this module, link your products to a template to send complete information and tools to your customer.
+For instance when invoicing a training, the training agenda and materials will automatically be send to your customers.'
     """,
     'website': 'http://www.openerp.com',
     'demo': [
@@ -38,12 +39,6 @@ Whith this module, link your products to a template to send complete information
     'data': [
         'account_product_view.xml',
     ],
-    'js': [],
-    'css': [],
-    'qweb' : [],
-    'images': [],
     'installable': True,
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
