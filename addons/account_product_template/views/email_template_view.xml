@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="view_email_template_form_product" model="ir.ui.view">
-            <field name="name">email.template.form</field>
+        <record model="ir.ui.view" id="email_template_form_simplified">
+            <field name="name">email.template.form.simplified</field>
             <field name="model">email.template</field>
             <field name="priority">100</field>
             <field name="arch" type="xml">
-                <form string="Templates" version="7.0">
-                    <h3>Body</h3>
-                    <field name="body_html" placeholder="Rich-text/HTML content of the message (placeholders may be used here)"/>
-                    <field name="attachment_ids" nolabel="1" widget="many2many_binary"/>
+                <form string="Email Template" version="7.0">
+                    <group>
+                        <field name="partner_to" invisible="1"/>
+                        <field name="subject" invisible="1"/>
+                        <field name="name" invisible="1"/>
+                        <field name="model" invisible="1"/>
+                        <h3 colspan="2">Body</h3>
+                        <field name="body_html" nolabel="1" colspan="2"
+                            placeholder="Rich-text/HTML content of the message (placeholders may be used here)"/>
+                        <field name="attachment_ids" nolabel="1" colspan="2"
+                            widget="many2many_binary"/>
+                    </group>
                 </form>
             </field>
         </record>
