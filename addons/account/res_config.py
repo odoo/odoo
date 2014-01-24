@@ -105,6 +105,9 @@ class account_config_settings(osv.osv_memory):
         'module_account_followup': fields.boolean('Manage customer payment follow-ups',
             help='This allows to automate letters for unpaid invoices, with multi-level recalls.\n'
                  '-This installs the module account_followup.'),
+        'module_product_email_template': fields.boolean('Send products tools and information at the invoice confirmation',
+            help='With this module, link your products to a template to send complete information and tools to your customer.\n'
+                 'For instance when invoicing a training, the training agenda and materials will automatically be send to your customers.'),
         'group_proforma_invoices': fields.boolean('Allow pro-forma invoices',
             implied_group='account.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),
