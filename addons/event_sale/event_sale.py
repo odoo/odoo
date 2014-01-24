@@ -143,7 +143,8 @@ class event_event(osv.osv):
     def check_registration_limits(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context=context):
             if event.event_ticket_ids:
-                event.event_ticket_ids.check_registration_limits_before(0)
+                for ticket in event.event_ticket_ids:
+                    ticket.check_registration_limits_before(0)
         return super(event_event, self).check_registration_limits(cr, uid, ids, context=context)
 
 

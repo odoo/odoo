@@ -415,7 +415,7 @@ class Contact(orm.AbstractModel):
             'options': options
         }
 
-        html = self.pool["ir.ui.view"].render(cr, uid, "website.contact", val, engine='website.qweb', context=context)
+        html = self.pool["ir.ui.view"].render(cr, uid, "website.contact", val, engine='website.qweb', context=context).decode('utf8')
 
         return ir_qweb.HTMLSafe(html)
 
