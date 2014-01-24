@@ -58,6 +58,25 @@
             </t>
         </template>
 
+        <template id="web.database_select" name="Database select widget">
+            <script type="text/javascript">
+                function dbchanged(db) {
+                    document.location = "/web/login?<t t-if="debug">debug&amp;</t>db=" + db;
+                }
+            </script>
+            <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
+                <label for="db" class="control-label">Database</label>
+                <select name="db" id="db" class="form-control" required="required" autofocus="autofocus" onchange="dbchanged(this.value)">
+                    <option></option>
+                    <t t-foreach="databases" t-as="db">
+                        <option t-att-selected="'selected' if db == current_db else None">
+                            <t t-esc="db"/>
+                        </option>
+                    </t>
+                </select>
+            </div>
+        </template>
+
         <template id="web.login" name="Login">
             <t t-call="web.login_layout">
                 <t t-set="head">
@@ -76,6 +95,9 @@
                 </t>
 
                 <form class="oe_login_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post">
+
+                    <t t-call="web.database_select"/>
+
                     <div class="form-group field-login">
                         <label for="login" class="control-label">Email</label>
                         <input type="text" name="login" t-att-value="login" id="login" class="form-control" required="required" autofocus="autofocus"/>

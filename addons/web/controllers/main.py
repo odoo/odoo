@@ -552,6 +552,11 @@ def render_bootstrap_template(db, template, values=None, debug=False, lazy=False
         values = {}
     values.update(kw)
     values['debug'] = debug
+    values['current_db'] = db
+    try:
+        values['databases'] = http.db_list()
+    except openerp.exceptions.AccessDenied:
+        values['databases'] = None
 
     for res in ['js', 'css']:
         if res not in values:
