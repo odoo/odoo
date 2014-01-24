@@ -57,8 +57,8 @@ class PaymentAcquirer(osv.Model):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'pre_msg': fields.html('Message', help='Message displayed to explain and help the payment process.'),
         'post_msg': fields.html('Thanks Message', help='Message displayed after having done the payment process.'),
-        'process': fields.selection(
-            [('static', 'Static'), ('dynamic', 'Dynamic')],
+        'validation': fields.selection(
+            [('manual', 'Manual'), ('automatic', 'Automatic')],
             string='Process Method',
             help='Static payments are payments like transfer, that require manual steps.'),
         'view_template_id': fields.many2one('ir.ui.view', 'Form Button Template', required=True),
@@ -79,7 +79,7 @@ class PaymentAcquirer(osv.Model):
     _defaults = {
         'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
         'env': 'test',
-        'process': 'dynamic',
+        'validation': 'dynamic',
         'website_published': True,
     }
 

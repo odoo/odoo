@@ -635,6 +635,7 @@ class Ecommerce(http.Controller):
         if not order:
             return {
                 'state': 'error',
+                'message': '<p>There seems to be an error with your request.</p>',
             }
 
         tx_ids = request.registry['payment.transaction'].search(
@@ -643,11 +644,25 @@ class Ecommerce(http.Controller):
             ], context=context)
         if not tx_ids:
             return {
-                'state': 'error'
+                'state': 'error',
+                'message': '<p>There seems to be an error with your request.</p>',
             }
         tx = request.registry['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
+        state = tx.state
+        if state == 'done':
+            message = '<h3>Your payment has been received.</h3>'
+        elif state == 'cancel':
+            message = '<h3>The payment seems to have been canceled.</h3>'
+        elif state == 'pending' and tx.validation == 'manual':
+            message = '<h3>Your transaction is waiting confirmation.</h3>'
+            message += tx.post_msg
+        else:
+            message = '<h3>Your transaction is waiting confirmation.</h3>'
+
         return {
-            'state': tx.state,
+            'state': state,
+            'message': message,
+            'validation': tx.validation
         }
 
     @http.route('/shop/payment/validate/', type='http', auth="public", website=True, multilang=True)

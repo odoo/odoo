@@ -960,7 +960,10 @@
               </div>
               <div class="col-lg-3 col-sm-3">
                   <t t-foreach="acquirers or []" t-as="acquirer">
-                      <div t-att-data-id="acquirer.id" t-raw="acquirer.button" class="oe_sale_acquirer_button hidden pull-right"/>
+                      <div t-att-data-id="acquirer.id" class="oe_sale_acquirer_button hidden pull-right">
+                        <div t-raw="acquirer.button"/>
+                        <div t-field="acquirer.pre_msg"/>
+                      </div>
                   </t>
               </div>
           </div>
