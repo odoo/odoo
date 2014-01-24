@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import pprint
+import werkzeug
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
@@ -18,4 +19,4 @@ class OgoneController(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         _logger.info('Beginning form_feedback with post data %s', pprint.pformat(post))  # debug
         request.registry['payment.transaction'].form_feedback(cr, uid, post, 'transfer', context)
-        return request.redirect(post.pop('return_url', '/'))
+        return werkzeug.utils.redirect(post.pop('return_url', '/'))
