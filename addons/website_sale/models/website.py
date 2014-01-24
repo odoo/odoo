@@ -145,14 +145,7 @@ class Website(orm.Model):
         """ Create a new quotation used in the ecommerce (event, sale) """
         SaleOrder = self.pool.get('sale.order')
         quotation_values = self._ecommerce_get_quotation_values(cr, uid, context=context)
-
-        section_ids = request.registry["crm.case.section"].search(
-            request.cr, SUPERUSER_ID, [("code", "=", "Website")], context=context)
-        if section_ids:
-            quotation_values['section_id'] = section_ids[0]
-
         quotation_values['user_id'] = False
-
         return SaleOrder.create(cr, SUPERUSER_ID, quotation_values, context=context)
 
     def ecommerce_get_new_order(self, cr, uid, context=None):
