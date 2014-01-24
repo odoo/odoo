@@ -52,7 +52,7 @@
             <t t-if="not title">
                 <t t-set="title"><t t-raw="res_company.name"/><t t-if="additional_title"> - <t t-raw="additional_title"/></t></t>
             </t>
-            <meta name="viewport" content="width=device-width, user-scalable=no"/>
+            <meta name="viewport" content="initial-scale=1"/>
             <meta name="openerp.company" t-att-value="res_company.name"/>
             <meta name="description" t-att-value="main_object and 'website_meta_description' in main_object
                 and main_object.website_meta_description or website_meta_description"/>
