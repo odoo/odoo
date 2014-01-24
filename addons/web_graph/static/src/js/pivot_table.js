@@ -8,7 +8,6 @@
 openerp.web_graph.PivotTable = openerp.web.Class.extend({
 
 	init: function (model, domain, fields, options) {
-        openerp.EventDispatcherMixin.init.call(this);
 		this.cells = [];
 		this.domain = domain;
 		this.no_data = true;
@@ -79,9 +78,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	},
 
 	get_values: function (id1, id2, default_values) {
-		var cell = _.find(this.cells, function (c) {
-					return ((c.x == Math.min(id1, id2)) && (c.y == Math.max(id1, id2)));
-				});
+		var cell = _.findWhere(this.cells, {x: Math.min(id1, id2), y: Math.max(id1, id2)});
 		return (cell !== undefined) ? cell.values : (default_values || new Array(this.measures.length));
 	},
 
@@ -149,10 +146,8 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
     },
 
 	get_total: function (header) {
-		if (header) {
-			return this.get_values(header.id, this.get_other_root(header).headers[0].id);
-		}
-		return this.get_values(this.rows.headers[0].id, this.cols.headers[0].id);
+        return (header) ? this.get_values(header.id, this.get_other_root(header).headers[0].id)
+                        : this.get_values(this.rows.headers[0].id, this.cols.headers[0].id);
 	},
 
 	get_other_root: function (header) {
@@ -190,7 +185,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
     fold_with_depth: function (root, depth) {
         var self = this;
         _.each(this._get_headers_with_depth(root.headers, depth), function (header) {
-            self.fold(header, true);
+            self.fold(header);
         });
     },
 
@@ -338,25 +333,24 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
         });
         groupbys.push([]);
 
-        var def_array = _.map(groupbys, function (groupby) {
+        var get_data_requests = _.map(groupbys, function (groupby) {
             return self.get_groups(groupby, visible_fields, self.domain);
         });
 
-        return $.when.apply(null, def_array).then(function () {
+        return $.when.apply(null, get_data_requests).then(function () {
             var data = Array.prototype.slice.call(arguments),
                 row_data = data[0],
                 col_data = (cols.length !== 0) ? data[data.length - 2] : [],
-                total = data[data.length - 1][0];
+                has_data = data[data.length - 1][0];
 
-            return (total === undefined) ? undefined
-                    : self.format_data(total, col_data, row_data, data);
+            return has_data && self.format_data(col_data, row_data, data);
         });
     },
 
 	get_groups: function (groupbys, fields, domain, path) {
-        path = path || [];
 		var self = this,
             groupby = (groupbys.length) ? groupbys[0] : [];
+        path = path || [];
 
 		return this._query_db(groupby, fields, domain, path).then(function (groups) {
             if (groupbys.length > 1) {
@@ -393,7 +387,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 
     // if field is a fieldname, returns field, if field is field_id:interval, retuns field_id
     raw_field: function (field) {
-        return (_.contains(field, ':')) ? field.split(':')[0] : field;
+        return field.split(':')[0];
     },
 
     // add the path to the group and sanitize the value...
@@ -418,7 +412,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
         return group;
     },
 
-	format_data: function (total, col_data, row_data, cell_data) {
+	format_data: function (col_data, row_data, cell_data) {
 		var self = this,
 			dim_row = this.rows.groupby.length,
 			dim_col = this.cols.groupby.length,
@@ -450,12 +444,10 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		_.each(data, function (group) {
 			var attr = group.attributes,
 				path = attr.grouped_on ? current_path.concat(attr.value) : current_path,
-				values = _.map(self.measures, function (measure) {
-					return (measure.field === '__count') ? attr.length : attr.aggregates[measure.field];
-				});
+				values = _.map(self.measures, function (measure) { return attr.aggregates[measure.field]; }),
+                row = _.find(rows, function (header) { return _.isEqual(header.path, path.slice(index)); }),
+                col = _.find(cols, function (header) { return _.isEqual(header.path, path.slice(0, index)); });
 
-			var row = _.find(rows, function (header) { return _.isEqual(header.path, path.slice(index)); });
-			var col = _.find(cols, function (header) { return _.isEqual(header.path, path.slice(0, index)); });
 			self.add_cell(row.id, col.id, values);
 			if (group.children) {
 				self.make_cells (group.children, index, path, rows, cols);

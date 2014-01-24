@@ -39,7 +39,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.widget_config = {
             title: arch.attrs.string,
             stacked : (arch.attrs.stacked === 'True'),
-            mode: (arch.attrs.type) ? arch.attrs.type : 'bar',
+            mode: arch.attrs.type || 'bar',
             measures: [],
             row_groupby: [],
             col_groupby: [],
@@ -181,15 +181,12 @@ instance.web_graph.GraphView = instance.web.View.extend({
             } else {
                 value = {attrs: {domain: [], context: context}};
             }
-            // var value = (category === 'group_by') ? groupby.filter : {attrs:{domain: [], context: context}};
             return {
                 label: groupby.string,
                 value: value
             };
         });
     },
-
-
 });
 };
 

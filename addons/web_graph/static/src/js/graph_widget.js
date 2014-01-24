@@ -27,14 +27,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
     start: function() {
         var self = this;
-        this.table = $('<table></table>');
+        this.table = $('<table>');
         this.$('.graph_main_content').append(this.table);
 
-        var index = 0;
-        if (this.mode === 'bar') { index = 1; }
-        if (this.mode === 'line') { index = 2; }
-        if (this.mode === 'chart') { index = 3; }
-        this.$('.graph_mode_selection label').eq(index).addClass('active');
+        var indexes = {'pivot': 0, 'bar': 1, 'line': 2, 'chart': 3};
+        this.$('.graph_mode_selection label').eq(indexes[this.mode]).addClass('active');
 
         if (this.mode !== 'pivot') {
             this.$('.graph_heatmap label').addClass('disabled');
@@ -69,21 +66,27 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // this method gets the fields that appear in the search view, under the 
     // 'Groupby' heading
     get_search_fields: function () {
-        var self = this;
-        var search_view = openerp.client.action_manager.inner_widget.searchview;
+        var self = this,
+            parent = this.getParent();
+
+        while (!(parent instanceof openerp.web.ViewManager)) {
+            parent = parent.getParent();
+        }
+
+        var search_view = parent.searchview;
 
         var groupbygroups = _(search_view.inputs).select(function (g) {
             return g instanceof openerp.web.search.GroupbyGroup;
         });
 
-        var filters = [].concat.apply([], _.pluck(groupbygroups, 'filters'));
+        var filters = _.flatten(_.pluck(groupbygroups, 'filters'), true);
 
         return _.uniq(_.map(filters, function (filter) {
-            console.log(filter);
             var field = py.eval(filter.attrs.context).group_by,
                 raw_field = field.split(':')[0],
-                string = (field === raw_field) ? filter.attrs.string : self.fields[raw_field].string,
-                filter = (field === raw_field) ? filter : undefined;
+                string = (field === raw_field) ? filter.attrs.string : self.fields[raw_field].string;
+            
+            filter = (field === raw_field) ? filter : undefined;
 
             return { field: raw_field, string: string, filter: filter };
         }), false, function (filter) {return filter.field;});
@@ -91,23 +94,20 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
     // Extracts the integer/float fields which are not 'id'
     get_measures: function() {
-        var measures = [];
-        _.each(this.fields, function (f, id) {
+        return _.compact(_.map(this.fields, function (f, id) {
             if (((f.type === 'integer') || (f.type === 'float')) && (id !== 'id')) {
-                measures.push({field:id, type: f.type, string: f.string});
+                return {field:id, type: f.type, string: f.string};
             }
-        });
-        return measures;
+        }));
     },
 
     add_measures_to_options: function() {
-        var measure_selection = this.$('.graph_measure_selection');
-        _.each(this.measure_list, function (measure) {
-            var choice = $('<a></a>').attr('data-choice', measure.field)
+        this.$('.graph_measure_selection').append(
+        _.map(this.measure_list, function (measure) {
+            return $('<li>').append($('<a>').attr('data-choice', measure.field)
                                      .attr('href', '#')
-                                     .append(measure.string);
-            measure_selection.append($('<li></li>').append(choice));
-        });
+                                     .text(measure.string));
+        }));
     },
 
     // ----------------------------------------------------------------------
@@ -200,14 +200,14 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
     mode_selection: function (event) {
         event.preventDefault();
-        var mode = event.currentTarget.attributes['data-mode'].nodeValue;
+        var mode = event.currentTarget.getAttribute('data-mode');
         this.set_mode(mode);
     },
 
     measure_selection: function (event) {
         event.preventDefault();
         event.stopPropagation();
-        var measure_field = event.target.attributes['data-choice'].nodeValue;
+        var measure_field = event.target.getAttribute('data-choice');
         var measure = {
             field: measure_field,
             type: this.fields[measure_field].type,
@@ -232,7 +232,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
     option_selection: function (event) {
         event.preventDefault();
-        switch (event.currentTarget.attributes['data-choice'].nodeValue) {
+        switch (event.currentTarget.getAttribute('data-choice')) {
             case 'bar_grouped':
                 this.bar_ui = 'group';
                 if (this.mode === 'bar') {
@@ -259,7 +259,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
     heatmap_mode_selection: function (event) {
         event.preventDefault();
-        var mode = event.currentTarget.attributes['data-mode'].nodeValue;
+        var mode = event.currentTarget.getAttribute('data-mode');
         if (this.heatmap_mode === mode) {
             event.stopPropagation();
             this.set_heatmap_mode('none');
@@ -271,7 +271,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     header_cell_clicked: function (event) {
         event.preventDefault();
         event.stopPropagation();
-        var id = event.target.attributes['data-id'].nodeValue,
+        var id = event.target.getAttribute('data-id'),
             header = this.pivot.get_header(id),
             self = this;
 
@@ -288,7 +288,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
                 var fields = _.map(this.important_fields, function (field) {
                         return {id: field.field, value: field.string, type:self.fields[field.field.split(':')[0]].type};
                 });
-                debugger;
                 this.dropdown = $(QWeb.render('field_selection', {fields:fields, header_id:id}));
                 $(event.target).after(this.dropdown);
                 this.dropdown.css({position:'absolute',
@@ -300,13 +299,13 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     },
 
     field_selection: function (event) {
-        var id = event.target.attributes['data-id'].nodeValue,
-            field_id = event.target.attributes['data-field-id'].nodeValue,
+        var id = event.target.getAttribute('data-id'),
+            field_id = event.target.getAttribute('data-field-id'),
             interval,
             groupby = this.create_field_value(field_id);
         event.preventDefault();
         if (this.fields[field_id].type === 'date' || this.fields[field_id].type === 'datetime') {
-            interval = event.target.attributes['data-interval'].nodeValue;
+            interval = event.target.getAttributes('data-interval');
             groupby.field =  groupby.field + ':' + interval;
         }
         this.expand(id, groupby);
@@ -318,8 +317,9 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     expand: function (header_id, groupby) {
         var self = this,
             header = this.pivot.get_header(header_id),
-            update_groupby = !!groupby,
-            groupby = groupby || header.root.groupby[header.path.length];
+            update_groupby = !!groupby;
+        
+        groupby = groupby || header.root.groupby[header.path.length];
 
         this.pivot.expand(header_id, groupby).then(function () {
             if (update_groupby && self.graph_view) {
@@ -355,18 +355,14 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.width = this.$el.width();
         this.height = Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width()));
 
-        if (this.visible_ui) {
-            this.$('.graph_header').css('display', 'block');
-        } else {
-            this.$('.graph_header').css('display', 'none');
-        }
+        this.$('.graph_header').toggle(this.visible_ui);
         if (this.pivot.no_data) {
             this.$('.graph_main_content').append($(QWeb.render('graph_no_data')));
         } else {
             if (this.mode === 'pivot') {
                 this.draw_table();
             } else {
-                this.$('.graph_main_content').append($('<div><svg></svg></div>'));
+                this.$('.graph_main_content').append($('<div><svg>'));
                 this.svg = this.$('.graph_main_content svg')[0];
                 this[this.mode]();
             }
@@ -388,23 +384,23 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     },
 
     make_border_cell: function (colspan, rowspan, headercell) {
-        var tag = (headercell) ? $('<th></th>') : $('<td></td>');
+        var tag = (headercell) ? $('<th>') : $('<td>');
         return tag.addClass('graph_border')
-                             .attr('colspan', (colspan) ? colspan : 1)
-                             .attr('rowspan', (rowspan) ? rowspan : 1);
+                             .attr('colspan', colspan || 1)
+                             .attr('rowspan', rowspan || 1);
     },
 
     make_header_title: function (header) {
-        return $('<span> </span>')
+        return $('<span> ')
             .addClass('web_graph_click')
             .attr('href', '#')
             .addClass((header.expanded) ? 'fa fa-minus-square' : 'fa fa-plus-square')
-            .append((header.title !== undefined) ? header.title : 'Undefined');
+            .text(' ' + (header.title || 'Undefined'));
     },
 
     draw_top_headers: function () {
         var self = this,
-            thead = $('<thead></thead>'),
+            thead = $('<thead>'),
             pivot = this.pivot,
             height = _.max(_.map(pivot.cols.headers, function(g) {return g.path.length;})),
             header_cells = [[this.make_border_cell(1, height, true)]];
@@ -445,12 +441,12 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         } else {
             make_cells(pivot.main_col().children, 1);
             if (pivot.get_cols_leaves().length > 1) {
-                header_cells[0].push(self.make_border_cell(pivot.measures.length, height, true).append('Total').css('font-weight', 'bold'));
+                header_cells[0].push(self.make_border_cell(pivot.measures.length, height, true).text('Total').css('font-weight', 'bold'));
             }
         }
 
         _.each(header_cells, function (cells) {
-            thead.append($('<tr></tr>').append(cells));
+            thead.append($('<tr>').append(cells));
         });
         
         if (pivot.measures.length >= 2) {
@@ -460,30 +456,28 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         self.table.append(thead);
     },
 
+    make_measure_cells: function () {
+        return _.map(this.pivot.measures, function (measure) {
+            return $('<th>').addClass('measure_row').text(measure.string);
+        });
+    },
+
     make_measure_row: function() {
-        var measures = this.pivot.measures,
+        var self = this,
             cols = this.pivot.cols.headers,
             measure_cells,
-            measure_row = $('<tr></tr>');
+            measure_row = $('<tr>');
 
-        measure_row.append($('<th></th>'));
+        measure_row.append($('<th>'));
 
         _.each(cols, function (col) {
             if (!col.children.length) {
-                for (var i = 0; i < measures.length; i++) {
-                    measure_cells = $('<th></th>').addClass('measure_row');
-                    measure_cells.append(measures[i].string);
-                    measure_row.append(measure_cells);
-                }
+                measure_row.append(self.make_measure_cells());
             }
         });
 
         if (this.pivot.get_cols_leaves().length > 1) {
-            for (var i = 0; i < measures.length; i++) {
-                measure_cells = $('<th></th>').addClass('measure_row');
-                measure_cells.append(measures[i].string);
-                measure_row.append(measure_cells);
-            }
+            measure_row.append(self.make_measure_cells());
         }
         return measure_row;
     },
@@ -492,19 +486,19 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         var self = this,
             pivot = this.pivot,
             measure_types = _.pluck(this.pivot.measures, 'type'),
-            html_row = $('<tr></tr>'),
+            html_row = $('<tr>'),
             row_header = this.make_border_cell(1,1)
                 .append(this.make_header_title(row).attr('data-id', row.id))
                 .addClass('graph_border');
 
         for (var i = 0; i < row.path.length; i++) {
-            row_header.prepend($('<span/>', {class:'web_graph_indent'}));
+            row_header.prepend($('<span>', {class:'web_graph_indent'}));
         }
 
         html_row.append(row_header);
 
         _.each(pivot.cols.headers, function (col) {
-            if (col.children.length === 0) {
+            if (!col.children.length) {
                 var values = pivot.get_values(row.id, col.id);
                 for (var i = 0; i < values.length; i++) {
                     html_row.append(make_cell(values[i], measure_types[i], i, col));
@@ -523,26 +517,18 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.table.append(html_row);
 
         function make_cell (value, measure_type, index, col) {
-            var color,
-                total,
-                cell = $('<td></td>');
+            var cell = $('<td>');
             if (value === undefined) {
                 return cell;
             }
-            cell.append(openerp.web.format_value(value, {type: measure_type}));
-            if (self.heatmap_mode === 'both') {
-                total = pivot.get_total()[index];
-                color = Math.floor(90 + 165*(total - Math.abs(value))/total);
-                cell.css('background-color', $.Color(255, color, color));
-            }
-            if (self.heatmap_mode === 'row') {
-                total = pivot.get_total(row)[index];
-                color = Math.floor(90 + 165*(total - Math.abs(value))/total);
-                cell.css('background-color', $.Color(255, color, color));
-            }
-            if (self.heatmap_mode === 'col') {
-                total = pivot.get_total(col)[index];
-                color = Math.floor(90 + 165*(total - Math.abs(value))/total);
+            cell.text(openerp.web.format_value(value, {type: measure_type}));
+            var total = (self.heatmap_mode === 'both') ? pivot.get_total()[index]
+                  : (self.heatmap_mode === 'row')  ? pivot.get_total(row)[index]
+                  : (self.heatmap_mode === 'col')  ? pivot.get_total(col)[index]
+                  : undefined;
+
+            if (self.heatmap_mode !== 'none') {
+                var color = Math.floor(90 + 165*(total - Math.abs(value))/total);
                 cell.css('background-color', $.Color(255, color, color));
             }
             return cell;
@@ -711,9 +697,8 @@ function is_strict_beginning_of (array1, array2) {
     if (array1.length >= array2.length) { return false; }
     var result = true;
     for (var i = 0; i < array1.length; i++) {
-        if (!_.isEqual(array1[i], array2[i])) { return false;} 
+        if (!_.isEqual(array1[i], array2[i])) { return false;}
     }
     return result;
 }
-
 })();
