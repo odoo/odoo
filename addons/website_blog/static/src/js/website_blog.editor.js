@@ -19,11 +19,11 @@
                     window_title: "New Blog Post",
                     select: "Select Blog",
                     init: function (field) {
-                        return website.session.model('blog.category')
+                        return website.session.model('blog.blog')
                                 .call('name_search', [], { context: website.get_context() });
                     },
                 }).then(function (cat_id) {
-                    document.location = '/blogpost/new?category_id=' + cat_id;
+                    document.location = '/blogpost/new?blog_id=' + cat_id;
                 });
             }
         }),

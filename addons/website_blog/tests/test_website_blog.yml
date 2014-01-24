@@ -1,9 +1,9 @@
 -
-    In order to test the document_page in OpenERP, I create a new page to category blog_category_1
+    In order to test the document_page in OpenERP, I create a new page to blog blog_blog_1
 -
     !record {model: blog.post, id: test_page0}:
       name: Test Page0
-      category_id: blog_category_1
+      blog_id: blog_blog_1
       content: 'Test content
 
       The Open ERP wiki allows you to manage your enterprise contents using wiki
@@ -13,10 +13,10 @@
       FAQs, quality manuals, technical references, etc.'
 
 # -
-#     I check the category index contains my page.
+#     I check the blog index contains my page.
 # -
     # !python {model: blog.post}: |
-    #   res = self.read(cr, uid, [ref('blog_category_1')], ['display_content'])
+    #   res = self.read(cr, uid, [ref('blog_blog_1')], ['display_content'])
     #   assert res[0]['display_content'].find('Test Page') > 1
 -
     !record {model: blog.post, id: test_page0}:

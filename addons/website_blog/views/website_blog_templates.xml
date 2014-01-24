@@ -12,7 +12,7 @@
 <!-- Layout add nav and footer -->
 <template id="header_footer_custom" inherit_id="website.layout" name="Footer News Blog Link">
     <xpath expr="//footer//div[@name='info']/ul" position="inside">
-        <li><a t-href="/blog/%(website_blog.blog_category_1)d/">News</a></li>
+        <li><a t-href="/blog/%(website_blog.blog_blog_1)d/">News</a></li>
     </xpath>
 </template>
 
@@ -62,8 +62,8 @@
                         <div class="text-muted">
                             <span class="fa fa-calendar"> <span t-field="blog.create_date"/> &amp;nbsp;</span>
                             <span class="fa fa-folder-open"> In
-                                <a t-href="/blog/#{ slug(blog.category_id) }">
-                                <span t-field="blog.category_id"/>
+                                <a t-href="/blog/#{ slug(blog.blog_id) }">
+                                <span t-field="blog.blog_id"/>
                                 </a> &amp;nbsp;
                             </span>
                         </div>
@@ -147,7 +147,7 @@
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
             <t t-foreach="blog_post.tag_ids" t-as="tag">
-                <a t-href="/blog/#{ slug(category) }/tag/#{ slug(tag) }" t-esc="tag.name"/> &amp;nbsp;
+                <a t-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }" t-esc="tag.name"/> &amp;nbsp;
             </t>
         </p>
     </xpath>
@@ -160,10 +160,10 @@
     <div class="row">
       <div class="col-sm-9">
           <ol class="breadcrumb">
-              <li><a t-href="/blog/#{ slug(category) }"><span t-field="category.name"/></a></li>
-              <li t-if="tag"><a t-href="/blog/#{ slug(category) }/tag/#{ slug(tag) }"><span t-field="tag.name"/></a></li>
-              <li t-if="tag and date"><a t-href="/blog/#{ slug(category) }/tag/#{ slug(tag) }/date/#{ date }" t-esc="date_name"/></li>
-              <li t-if="not tag and date"><a t-href="/blog/#{ slug(category) }/date/#{ date }" t-esc="date_name"/></li>
+              <li><a t-href="/blog/#{ slug(blog) }"><span t-field="blog.name"/></a></li>
+              <li t-if="tag"><a t-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }"><span t-field="tag.name"/></a></li>
+              <li t-if="tag and date"><a t-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }/date/#{ date }" t-esc="date_name"/></li>
+              <li t-if="not tag and date"><a t-href="/blog/#{ slug(blog) }/date/#{ date }" t-esc="date_name"/></li>
               <li class="active"><span t-field="blog_post.name"/></li>
           </ol>
       </div><div class="col-sm-3">
@@ -243,11 +243,11 @@
     </xpath>
 </template>
 
-<!-- Options: Blog Post: show category -->
-<template id="opt_blog_post_complete_category" name="Blog Category"
+<!-- Options: Blog Post: show blog -->
+<template id="opt_blog_post_complete_blog" name="Blog"
         inherit_option_id="website_blog.blog_post_complete">
     <xpath expr="//span[@class='fa fa-calendar oe_date']" position="after">
-        <span class="fa fa-folder-open"> In <span t-field="blog_post.category_id"/> &amp;nbsp;</span>
+        <span class="fa fa-folder-open"> In <span t-field="blog_post.blog_id"/> &amp;nbsp;</span>
     </xpath>
 </template>
 
@@ -258,7 +258,7 @@
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
             <t t-foreach="blog_post.tag_ids" t-as="tag">
-                <a t-href="/blog/#{ slug(category) }/tag/#{ slug(tag) }" t-esc="tag.name"/> &amp;nbsp;
+                <a t-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }" t-esc="tag.name"/> &amp;nbsp;
             </t>
         </p>
     </xpath>
@@ -294,7 +294,7 @@
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="tags" t-as="tag_id">
             <li t-att-class="tag and tag_id.id == tag.id and 'active' or None" style="display: inline-block;">
-                <a t-href="/blog/#{ slug(category) }/tag/#{ slug(tag_id) }"><span t-field="tag_id.name"/></a>
+                <a t-href="/blog/#{ slug(blog) }/tag/#{ slug(tag_id) }"><span t-field="tag_id.name"/></a>
             </li>
             </t>
         </ul>
@@ -314,7 +314,7 @@
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="nav_list" t-as="months">
             <li t-att-class="months['date'] == date and 'active' or None">
-                <a t-ignore="True" t-href="/blog/#{ slug(category) }/#{ tag and 'tag/%s/' % slug(tag) or '' }date/#{ months['date'] }"><t t-esc="months['create_date']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
+                <a t-ignore="True" t-href="/blog/#{ slug(blog) }/#{ tag and 'tag/%s/' % slug(tag) or '' }date/#{ months['date'] }"><t t-esc="months['create_date']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
             </li>
             </t>
         </ul>
@@ -350,11 +350,11 @@
     </xpath>
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
-            <h4>Follow us<small t-if="category">: <t t-esc="category.name"/></small></h4>
-            <t t-if="category">
+            <h4>Follow us<small t-if="blog">: <t t-esc="blog.name"/></small></h4>
+            <t t-if="blog">
                 <t t-call="website_mail.follow">
                     <t t-set="email" t-value="user_id.email"/>
-                    <t t-set="object" t-value="category"/>
+                    <t t-set="object" t-value="blog"/>
                 </t>
             </t>
             <p class="text-muted mb0 mt16">
@@ -372,8 +372,8 @@
     </xpath>
 </template>
 
-<!-- Option: Right Column: categories -->
-<template id="opt_blog_rc_categories" name="Our Blogs" priority="6"
+<!-- Option: Right Column: blogs -->
+<template id="opt_blog_rc_blogs" name="Our Blogs" priority="6"
         inherit_option_id="website_blog.index">
     <xpath expr="//div[@id='blog_left_column']" position="attributes">
         <attribute name="class">col-lg-8 col-sm-8</attribute>
@@ -382,10 +382,10 @@
         <section class="mt32 mb32">
         <h4>Our Blogs</h4>
         <ul class="nav nav-pills nav-stacked">
-            <t t-foreach="categories" t-as="nav_category">
-                <li t-att-class="nav_category.id == category.id and 'active' or ''">
-                    <a t-href="/blog/#{ slug(nav_category) }">
-                        <span t-field="nav_category.name"/>
+            <t t-foreach="blogs" t-as="nav_blog">
+                <li t-att-class="nav_blog.id == blog.id and 'active' or ''">
+                    <a t-href="/blog/#{ slug(nav_blog) }">
+                        <span t-field="nav_blog.name"/>
                     </a>
                 </li>
             </t>
