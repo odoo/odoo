@@ -402,12 +402,12 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
             value = attrs.value,
             grouped_on = attrs.grouped_on ? this.raw_field(attrs.grouped_on) : false;
 
-        if (grouped_on && this.fields[grouped_on].type === 'selection') {
+        if (value === false) {
+            group.attributes.value = 'undefined';
+        } else if (grouped_on && this.fields[grouped_on].type === 'selection') {
             var selection = this.fields[grouped_on].selection,
                 value_lookup = _.where(selection, {0:value}); 
             group.attributes.value = value_lookup ? value_lookup[0][1] : 'undefined';
-        } else if (value === false) {
-            group.attributes.value = 'undefined';
         } else if (value instanceof Array) {
             group.attributes.value = value[1];
         }

@@ -23,7 +23,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.bar_ui = options.bar_ui || 'group';
         this.graph_view = options.graph_view || null;
         this.pivot_options = options;
-        this.important_fields = this.get_search_fields();
     },
 
     start: function() {
@@ -44,6 +43,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         return this.model.call('fields_get', []).then(function (f) {
             self.fields = f;
             self.fields.__count = {field:'__count', type: 'integer', string:'Quantity'};
+            self.important_fields = self.get_search_fields();
             self.measure_list = self.get_measures();
             self.add_measures_to_options();
             self.pivot_options.row_groupby = self.create_field_values(self.pivot_options.row_groupby || []);
@@ -69,6 +69,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // this method gets the fields that appear in the search view, under the 
     // 'Groupby' heading
     get_search_fields: function () {
+        var self = this;
         var search_view = openerp.client.action_manager.inner_widget.searchview;
 
         var groupbygroups = _(search_view.inputs).select(function (g) {
@@ -77,13 +78,15 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         var filters = [].concat.apply([], _.pluck(groupbygroups, 'filters'));
 
-        return _.map(filters, function (filter) {
-            return {
-                field: py.eval(filter.attrs.context).group_by,
-                string: filter.attrs.string,
-                filter: filter
-            };
-        });
+        return _.uniq(_.map(filters, function (filter) {
+            console.log(filter);
+            var field = py.eval(filter.attrs.context).group_by,
+                raw_field = field.split(':')[0],
+                string = (field === raw_field) ? filter.attrs.string : self.fields[raw_field].string,
+                filter = (field === raw_field) ? filter : undefined;
+
+            return { field: raw_field, string: string, filter: filter };
+        }), false, function (filter) {return filter.field;});
     },
 
     // Extracts the integer/float fields which are not 'id'
@@ -281,10 +284,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
                 if (!this.important_fields.length) {
                     return;
                 }
-                
+
                 var fields = _.map(this.important_fields, function (field) {
-                        return {id: field.field, value: field.string, type:self.fields[field.field].type};
+                        return {id: field.field, value: field.string, type:self.fields[field.field.split(':')[0]].type};
                 });
+                debugger;
                 this.dropdown = $(QWeb.render('field_selection', {fields:fields, header_id:id}));
                 $(event.target).after(this.dropdown);
                 this.dropdown.css({position:'absolute',
