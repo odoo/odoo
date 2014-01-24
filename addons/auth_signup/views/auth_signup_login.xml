@@ -30,6 +30,8 @@
                 <t t-set="reset_without_token" t-value="mode == 'reset' and not token"/>
 
                 <form class="oe_signup_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post">
+                    <t t-call="web.database_select"/>
+
                     <div class="form-group field-name" t-if="not reset_without_token">
                         <label for="name" class="control-label">Your Name</label>
                         <input type="text" name="name" t-att-value="name" id="name" class="form-control" placeholder="e.g. John Doe"
