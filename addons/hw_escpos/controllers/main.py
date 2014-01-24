@@ -49,19 +49,23 @@ class EscposDriver(hw_proxy.Proxy):
     
     @http.route('/hw_proxy/open_cashbox', type='json', auth='admin')
     def open_cashbox(self):
-        print 'ESC/POS: OPEN CASHBOX'
+        _logger.info('ESC/POS: OPEN CASHBOX') 
         eprint = self.get_escpos_printer()
         if eprint != None:
             eprint.cashdraw(2)
             eprint.cashdraw(5)
+        else:
+            _logger.error('ESC/POS: OPEN CASHBOX: could not find printer') 
         
     @http.route('/hw_proxy/print_receipt', type='json', auth='admin')
     def print_receipt(self, receipt):
-        print 'ESC/POS: PRINT RECEIPT'
+        _logger.info('ESC/POS: PRINT RECEIPT') 
         eprint = self.get_escpos_printer()
         if eprint != None:
             self.print_receipt_body(eprint,receipt)
             eprint.cut()
+        else:
+            _logger.error('ESC/POS: PRINT RECEIPT: could not find printer') 
     
     def print_receipt_body(self,eprint,receipt):
 
