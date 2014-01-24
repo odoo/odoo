@@ -49,6 +49,7 @@
                                 <field name="product_qty" class="oe_inline"/> 
                                 <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(product_id, product_uom)" class="oe_inline"/>
                             </div>
+                            <field name="lot_id" domain="[('product_id','=',product_id]" context="{'default_product_id': product_id}" groups="stock.track_grouping_lot"/>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id,address_id)" attrs="{'required':[('invoice_method','!=','none')]}"/>
                             <field name="address_id" groups="sale.group_delivery_invoice_address"/>
                             <field name="location_id" on_change="onchange_location_id(location_id)" groups="stock.group_locations"/>
