@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-
 try:
     import simplejson as json
 except ImportError:
     import json
 import logging
 import pprint
+import werkzeug
+
+from openerp.addons.web import http
+from openerp.addons.web.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -28,4 +29,4 @@ class AdyenController(http.Controller):
         if not return_url:
             custom = json.loads(post.pop('merchantReturnData', '{}'))
             return_url = custom.pop('return_url', '/')
-        return request.redirect(return_url)
+        return werkzeug.utils.redirect(return_url)

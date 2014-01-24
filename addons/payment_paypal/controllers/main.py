@@ -8,6 +8,7 @@ import logging
 import pprint
 import urllib
 import urllib2
+import werkzeug
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
@@ -66,7 +67,7 @@ class PaypalController(http.Controller):
         _logger.info('Beginning Paypal DPN form_feedback with post data %s', pprint.pformat(post))  # debug
         return_url = self._get_return_url(**post)
         self.paypal_validate_data(**post)
-        return request.redirect(return_url)
+        return werkzeug.utils.redirect(return_url)
 
     @http.route('/payment/paypal/cancel', type='http', auth="admin")
     def paypal_cancel(self, **post):
@@ -74,4 +75,4 @@ class PaypalController(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         _logger.info('Beginning Paypal cancel with post data %s', pprint.pformat(post))  # debug
         return_url = self._get_return_url(**post)
-        return request.redirect(return_url)
+        return werkzeug.utils.redirect(return_url)
