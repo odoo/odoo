@@ -163,7 +163,7 @@ class event_sponsors_type(osv.osv):
         "sequence": fields.integer('Sequence')
     }
 
-class event_sponsors_type(osv.osv):
+class event_sponsors(osv.osv):
     _name = "event.sponsor"
     _order = "sequence"
     _columns = {
@@ -175,7 +175,10 @@ class event_sponsors_type(osv.osv):
 
     def has_access_to_partner(self, cr, uid, ids, context=None):
         try:
-            self.browse(cr, uid, ids[0], context=context).partner_id.name
+            partner = self.pool.get("res.partner")
+            partner.check_access_rights(cr, uid, 'read')
+            partner_id = self.browse(cr, uid, ids[0], context=context).partner_id.id
+            partner.check_access_rule(cr, uid, [partner_id], 'read', context=context)
             return True
         except:
             return False
