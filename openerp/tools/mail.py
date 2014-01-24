@@ -95,6 +95,13 @@ def html_sanitize(src, silent=True, strict=False):
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
         cleaner = clean.Cleaner(**kwargs)
         cleaned = cleaner.clean_html(src)
+        # MAKO compatibility: $, { and } inside quotes are escaped, preventing correct mako execution
+        cleaned = cleaned.replace('%24', '$')
+        cleaned = cleaned.replace('%7B', '{')
+        cleaned = cleaned.replace('%7D', '}')
+        cleaned = cleaned.replace('%20', ' ')
+        cleaned = cleaned.replace('%5B', '[')
+        cleaned = cleaned.replace('%5D', ']')
     except etree.ParserError, e:
         if 'empty' in str(e):
             return ""
