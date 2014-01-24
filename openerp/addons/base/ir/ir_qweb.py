@@ -116,30 +116,32 @@ class QWeb(orm.AbstractModel):
         :param str prefix:
         :return: dict
         """
+        n_prefix = len(prefix)
         return dict(
-            (name[len(prefix):].replace('_', '-'), getattr(type(self), name))
+            (name[n_prefix:].replace('_', '-'), getattr(type(self), name))
             for name in dir(self)
-            if name.startswith(prefix))
+            if name.startswith(prefix)
+        )
 
     def register_tag(self, tag, func):
         self._render_tag[tag] = func
 
-    def load_document(self, x, qcontext):
+    def load_document(self, document, qcontext):
         """
         Loads an XML document and installs any contained template in the engine
         """
-        if hasattr(x, 'documentElement'):
-            dom = x
-        elif x.startswith("<?xml"):
-            dom = xml.dom.minidom.parseString(x)
+        if hasattr(document, 'documentElement'):
+            dom = document
+        elif document.startswith("<?xml"):
+            dom = xml.dom.minidom.parseString(document)
         else:
-            dom = xml.dom.minidom.parse(x)
+            dom = xml.dom.minidom.parse(document)
 
-        for n in dom.documentElement.childNodes:
-            if n.nodeType == self.node.ELEMENT_NODE and n.getAttribute('t-name'):
-                name = str(n.getAttribute("t-name"))
+        for node in dom.documentElement.childNodes:
+            if node.nodeType == self.node.ELEMENT_NODE and node.getAttribute('t-name'):
+                name = str(node.getAttribute("t-name"))
                  
-                qcontext.templates[name] = n
+                qcontext.templates[name] = node
 
     def get_template(self, name, qcontext):
         if qcontext.loader and name not in qcontext.templates:
@@ -149,132 +151,130 @@ class QWeb(orm.AbstractModel):
         if name in qcontext.templates:
             return qcontext.templates[name]
 
-        import pdb
-        pdb.set_trace()
+        exception_to_raise = KeyError('qweb: template "%s" not found' % name)
+        setattr(exception_to_raise, 'qweb_template', name)
+        raise exception_to_raise
 
-        e = KeyError('qweb: template "%s" not found' % name)
-        setattr(e, 'qweb_template', name)
-        raise e
-
-    def eval(self, expr, v):
+    def eval(self, expr, qwebcontext):
         try:
-            return v.safe_eval(expr)
+            return qwebcontext.safe_eval(expr)
         except Exception, e:
             # add qweb metdata on exception
             setattr(e, 'qweb_eval', expr)
-            setattr(e, 'qweb_template', v.get('__template__'))
+            setattr(e, 'qweb_template', qwebcontext.get('__template__'))
             raise
 
-    def eval_object(self, expr, v):
-        return self.eval(expr, v)
+    def eval_object(self, expr, qwebcontext):
+        return self.eval(expr, qwebcontext)
 
-    def eval_str(self, expr, v):
+    def eval_str(self, expr, qwebcontext):
         if expr == "0":
-            return v.get(0, '')
-        val = self.eval(expr, v)
+            return qwebcontext.get(0, '')
+        val = self.eval(expr, qwebcontext)
         if isinstance(val, unicode):
             return val.encode("utf8")
         return str(val)
 
-    def eval_format(self, expr, v):
+    def eval_format(self, expr, qwebcontext):
         expr, replacements = self._format_regex.subn(
-            lambda m: self.eval_str(m.group(1) or m.group(2), v),
-            expr)
+            lambda m: self.eval_str(m.group(1) or m.group(2), qwebcontext),
+            expr
+        )
 
         if replacements:
             return expr
 
         try:
-            return str(expr % v)
+            return str(expr % qwebcontext)
         except:
             raise Exception("QWeb: format error '%s' " % expr)
 
-    def eval_bool(self, expr, v):
-        val = self.eval(expr, v)
-        if val:
-            return 1
-        else:
-            return 0
+    def eval_bool(self, expr, qwebcontext):
+        return int(bool(self.eval(expr, qwebcontext)))
 
-    def render(self, cr, uid, id_or_xml_id, v=None, loader=None, context=None):
-        if v is None:
-            v = {}
-        if not isinstance(v, QWebContext):
-            v = QWebContext(cr, uid, v, loader=loader, context=context)
-        v['__template__'] = id_or_xml_id
-        stack = v.get('__stack__', [])
+    def render(self, cr, uid, id_or_xml_id, qwebcontext=None, loader=None, context=None):
+        if qwebcontext is None:
+            qwebcontext = {}
+
+        if not isinstance(qwebcontext, QWebContext):
+            qwebcontext = QWebContext(cr, uid, qwebcontext, loader=loader, context=context)
+
+        qwebcontext['__template__'] = id_or_xml_id
+        stack = qwebcontext.get('__stack__', [])
         if stack:
-            v['__caller__'] = stack[-1]
+            qwebcontext['__caller__'] = stack[-1]
         stack.append(id_or_xml_id)
-        v['__stack__'] = stack
-        v['xmlid'] = str(stack[0]) # Temporary fix
-        return self.render_node(self.get_template(id_or_xml_id, v), v)
+        qwebcontext['__stack__'] = stack
+        qwebcontext['xmlid'] = str(stack[0]) # Temporary fix
+        return self.render_node(self.get_template(id_or_xml_id, qwebcontext), qwebcontext)
 
-    def render_node(self, e, v):
-        r = ""
-        if e.nodeType == self.node.TEXT_NODE or e.nodeType == self.node.CDATA_SECTION_NODE:
-            r = e.data.encode("utf8")
-        elif e.nodeType == self.node.ELEMENT_NODE:
-            g_att = ""
+    def render_node(self, element, qwebcontext):
+        result = ""
+        if element.nodeType == self.node.TEXT_NODE or element.nodeType == self.node.CDATA_SECTION_NODE:
+            result = element.data.encode("utf8")
+        elif element.nodeType == self.node.ELEMENT_NODE:
+            generated_attributes = ""
             t_render = None
-            t_att = {}
-            for (an, av) in e.attributes.items():
-                an = str(an)
-                if an == "groups":
-                    can_see = self.user_has_groups(v['request'].cr, v['uid'], groups=av)
+            template_attributes = {}
+            for (attribute_name, attribute_value) in element.attributes.items():
+                attribute_name = str(attribute_name)
+                if attribute_name == "groups":
+                    can_see = self.user_has_groups(qwebcontext['request'].cr, qwebcontext['uid'], groups=attribute_value)
                     if not can_see:
                         return ''
                     continue
-                if isinstance(av, unicode):
-                    av = av.encode("utf8")
+
+                if isinstance(attribute_value, unicode):
+                    attribute_value = attribute_value.encode("utf8")
                 else:
-                    av = av.nodeValue.encode("utf8")
-                if an.startswith("t-"):
-                    for i in self._render_att:
-                        if an[2:].startswith(i):
-                            g_att += self._render_att[i](self, e, an, av, v)
+                    attribute_value = attribute_value.nodeValue.encode("utf8")
+
+                if attribute_name.startswith("t-"):
+                    for attribute in self._render_att:
+                        if attribute_name[2:].startswith(attribute):
+                            generated_attributes += self._render_att[attribute](self, element, attribute_name, attribute_value, qwebcontext)
                             break
                     else:
-                        if an[2:] in self._render_tag:
-                            t_render = an[2:]
-                        t_att[an[2:]] = av
+                        if attribute_name[2:] in self._render_tag:
+                            t_render = attribute_name[2:]
+                        template_attributes[attribute_name[2:]] = attribute_value
                 else:
-                    g_att += ' %s="%s"' % (an, werkzeug.utils.escape(av))
+                    generated_attributes += ' %s="%s"' % (attribute_name, werkzeug.utils.escape(attribute_value))
 
-            if 'debug' in t_att:
-                debugger = t_att.get('debug', 'pdb')
-                __import__(debugger).set_trace() # pdb, ipdb, pudb, ...
+            if 'debug' in template_attributes:
+                debugger = template_attributes.get('debug', 'pdb')
+                __import__(debugger).set_trace()  # pdb, ipdb, pudb, ...
             if t_render:
-                r = self._render_tag[t_render](self, e, t_att, g_att, v)
+                result = self._render_tag[t_render](self, element, template_attributes, generated_attributes, qwebcontext)
             else:
-                r = self.render_element(e, t_att, g_att, v)
-        if isinstance(r, unicode):
-            return r.encode('utf-8')
-        return r
+                result = self.render_element(element, template_attributes, generated_attributes, qwebcontext)
+        if isinstance(result, unicode):
+            return result.encode('utf-8')
+        return result
 
-    def render_element(self, e, t_att, g_att, v, inner=None):
-        # e: element
-        # t_att: t-* attributes
-        # g_att: generated attributes
-        # v: values
+    def render_element(self, element, template_attributes, generated_attributes, qwebcontext, inner=None):
+        # element: element
+        # template_attributes: t-* attributes
+        # generated_attributes: generated attributes
+        # qwebcontext: values
         # inner: optional innerXml
         if inner:
             g_inner = inner
         else:
             g_inner = []
-            for n in e.childNodes:
+            for current_node in element.childNodes:
                 try:
-                    g_inner.append(self.render_node(n, v))
+                    g_inner.append(self.render_node(current_node, qwebcontext))
                 except Exception, ex:
                     # add qweb metdata on exception
                     if not getattr(ex, 'qweb_template', None):
-                        setattr(e, 'qweb_template', v.get('__template__'))
+                        setattr(element, 'qweb_template', qwebcontext.get('__template__'))
                     if not getattr(ex, 'qweb_node', None):
-                        setattr(ex, 'qweb_node', e)
+                        setattr(ex, 'qweb_node', element)
                     raise
-        name = str(e.nodeName)
+        name = str(element.nodeName)
         inner = "".join(g_inner)
-        trim = t_att.get("trim", 0)
+        trim = template_attributes.get("trim", 0)
         if trim == 0:
             pass
         elif trim == 'left':
@@ -287,132 +287,132 @@ class QWeb(orm.AbstractModel):
             return inner
         elif len(inner) or name not in self._void_elements:
             return "<%s%s>%s</%s>" % tuple(
-                v if isinstance(v, str) else v.encode('utf-8')
-                for v in (name, g_att, inner, name))
+                qwebcontext if isinstance(qwebcontext, str) else qwebcontext.encode('utf-8')
+                for qwebcontext in (name, generated_attributes, inner, name)
+            )
         else:
-            return "<%s%s/>" % (name, g_att)
+            return "<%s%s/>" % (name, generated_attributes)
 
     # Attributes
-    def render_att_att(self, e, an, av, v):
-        if an.startswith("t-attf-"):
-            att, val = an[7:], self.eval_format(av, v)
-        elif an.startswith("t-att-"):
-            att, val = an[6:], self.eval(av, v)
+    def render_att_att(self, element, attribute_name, attribute_value, qwebcontext):
+        if attribute_name.startswith("t-attf-"):
+            att, val = attribute_name[7:], self.eval_format(attribute_value, qwebcontext)
+        elif attribute_name.startswith("t-att-"):
+            att, val = attribute_name[6:], self.eval(attribute_value, qwebcontext)
             if isinstance(val, unicode):
                 val = val.encode("utf8")
         else:
-            att, val = self.eval_object(av, v)
+            att, val = self.eval_object(attribute_value, qwebcontext)
         return val and ' %s="%s"' % (att, werkzeug.utils.escape(val)) or " "
 
-    def render_att_href(self, e, an, av, v):
-        return self.url_for(e, an, av, v)
+    def render_att_href(self, element, attribute_name, attribute_value, qwebcontext):
+        return self.url_for(element, attribute_name, attribute_value, qwebcontext)
 
-    def render_att_src(self, e, an, av, v):
-        return self.url_for(e, an, av, v)
+    def render_att_src(self, element, attribute_name, attribute_value, qwebcontext):
+        return self.url_for(element, attribute_name, attribute_value, qwebcontext)
 
-    def render_att_action(self, e, an, av, v):
-        return self.url_for(e, an, av, v)
+    def render_att_action(self, element, attribute_name, attribute_value, qwebcontext):
+        return self.url_for(element, attribute_name, attribute_value, qwebcontext)
 
-    def url_for(self, e, an, av, v):
-        if 'url_for' not in v:
+    def url_for(self, element, attribute_name, attribute_value, qwebcontext):
+        if 'url_for' not in qwebcontext:
             raise KeyError("qweb: no 'url_for' found in context")
         # Temporary implementation of t-keep-query until qweb py v2
-        keep_query = e.attributes.get('t-keep-query')
+        keep_query = element.attributes.get('t-keep-query')
         if keep_query:
-            params = self.eval_format(keep_query.value, v)
+            params = self.eval_format(keep_query.value, qwebcontext)
             keep_query = [q.strip() for q in params.split(',')]
-        path = str(v['url_for'](self.eval_format(av, v), keep_query=keep_query))
-        return ' %s="%s"' % (an[2:], werkzeug.utils.escape(path))
+        path = str(qwebcontext['url_for'](self.eval_format(attribute_value, qwebcontext), keep_query=keep_query))
+        return ' %s="%s"' % (attribute_name[2:], werkzeug.utils.escape(path))
 
     # Tags
-    def render_tag_raw(self, e, t_att, g_att, v):
-        inner = self.eval_str(t_att["raw"], v)
-        return self.render_element(e, t_att, g_att, v, inner)
+    def render_tag_raw(self, element, template_attributes, generated_attributes, qwebcontext):
+        inner = self.eval_str(template_attributes["raw"], qwebcontext)
+        return self.render_element(element, template_attributes, generated_attributes, qwebcontext, inner)
 
-    def render_tag_esc(self, e, t_att, g_att, v):
-        inner = werkzeug.utils.escape(self.eval_str(t_att["esc"], v))
-        return self.render_element(e, t_att, g_att, v, inner)
+    def render_tag_esc(self, element, template_attributes, generated_attributes, qwebcontext):
+        inner = werkzeug.utils.escape(self.eval_str(template_attributes["esc"], qwebcontext))
+        return self.render_element(element, template_attributes, generated_attributes, qwebcontext, inner)
 
-    def render_tag_foreach(self, e, t_att, g_att, v):
-        expr = t_att["foreach"]
-        enum = self.eval_object(expr, v)
+    def render_tag_foreach(self, element, template_attributes, generated_attributes, qwebcontext):
+        expr = template_attributes["foreach"]
+        enum = self.eval_object(expr, qwebcontext)
         if enum is not None:
-            var = t_att.get('as', expr).replace('.', '_')
-            d = v.copy()
+            var = template_attributes.get('as', expr).replace('.', '_')
+            copy_qwebcontext = qwebcontext.copy()
             size = -1
             if isinstance(enum, (list, tuple)):
                 size = len(enum)
             elif hasattr(enum, 'count'):
                 size = enum.count()
-            d["%s_size" % var] = size
-            d["%s_all" % var] = enum
+            copy_qwebcontext["%s_size" % var] = size
+            copy_qwebcontext["%s_all" % var] = enum
             index = 0
             ru = []
             for i in enum:
-                d["%s_value" % var] = i
-                d["%s_index" % var] = index
-                d["%s_first" % var] = index == 0
-                d["%s_even" % var] = index % 2
-                d["%s_odd" % var] = (index + 1) % 2
-                d["%s_last" % var] = index + 1 == size
+                copy_qwebcontext["%s_value" % var] = i
+                copy_qwebcontext["%s_index" % var] = index
+                copy_qwebcontext["%s_first" % var] = index == 0
+                copy_qwebcontext["%s_even" % var] = index % 2
+                copy_qwebcontext["%s_odd" % var] = (index + 1) % 2
+                copy_qwebcontext["%s_last" % var] = index + 1 == size
                 if index % 2:
-                    d["%s_parity" % var] = 'odd'
+                    copy_qwebcontext["%s_parity" % var] = 'odd'
                 else:
-                    d["%s_parity" % var] = 'even'
-                if 'as' in t_att:
-                    d[var] = i
+                    copy_qwebcontext["%s_parity" % var] = 'even'
+                if 'as' in template_attributes:
+                    copy_qwebcontext[var] = i
                 elif isinstance(i, dict):
-                    d.update(i)
-                ru.append(self.render_element(e, t_att, g_att, d))
+                    copy_qwebcontext.update(i)
+                ru.append(self.render_element(element, template_attributes, generated_attributes, copy_qwebcontext))
                 index += 1
             return "".join(ru)
         else:
-            template = v.get('__template__')
-            e = NameError("QWeb: foreach enumerator %r is not defined while rendering template %r" % (expr, template))
-            e.qweb_template = template
-            raise e
+            template = qwebcontext.get('__template__')
+            exception_to_raise = NameError("QWeb: foreach enumerator %r is not defined while rendering template %r" % (expr, template))
+            exception_to_raise.qweb_template = template
+            raise exception_to_raise
 
-    def render_tag_if(self, e, t_att, g_att, v):
-        if self.eval_bool(t_att["if"], v):
-            return self.render_element(e, t_att, g_att, v)
-        else:
-            return ""
-
-    def render_tag_call(self, e, t_att, g_att, v):
-        d = v.copy()
-        d[0] = self.render_element(e, t_att, g_att, d)
-
-        return self.render(None, None, self.eval_format(t_att["call"], d), d)
-
-    def render_tag_set(self, e, t_att, g_att, v):
-        if "value" in t_att:
-            v[t_att["set"]] = self.eval_object(t_att["value"], v)
-        elif "valuef" in t_att:
-            v[t_att["set"]] = self.eval_format(t_att["valuef"], v)
-        else:
-            v[t_att["set"]] = self.render_element(e, t_att, g_att, v)
+    def render_tag_if(self, element, template_attributes, generated_attributes, qwebcontext):
+        if self.eval_bool(template_attributes["if"], qwebcontext):
+            return self.render_element(element, template_attributes, generated_attributes, qwebcontext)
         return ""
 
-    def render_tag_field(self, e, t_att, g_att, v):
+    def render_tag_call(self, element, template_attributes, generated_attributes, qwebcontext):
+        d = qwebcontext.copy()
+        d[0] = self.render_element(element, template_attributes, generated_attributes, d)
+
+        return self.render(None, None, self.eval_format(template_attributes["call"], d), d)
+
+    def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
+        if "value" in template_attributes:
+            qwebcontext[template_attributes["set"]] = self.eval_object(template_attributes["value"], qwebcontext)
+        elif "valuef" in template_attributes:
+            qwebcontext[template_attributes["set"]] = self.eval_format(template_attributes["valuef"], qwebcontext)
+        else:
+            qwebcontext[template_attributes["set"]] = self.render_element(element, template_attributes, generated_attributes, qwebcontext)
+        return ""
+
+    def render_tag_field(self, element, template_attributes, generated_attributes, qwebcontext):
         """ eg: <span t-record="browse_record(res.partner, 1)" t-field="phone">+1 555 555 8069</span>"""
-        node_name = e.nodeName
+        node_name = element.nodeName
         assert node_name not in ("table", "tbody", "thead", "tfoot", "tr", "td",
                                  "li", "ul", "ol", "dl", "dt", "dd"),\
             "RTE widgets do not work correctly on %r elements" % node_name
         assert node_name != 't',\
             "t-field can not be used on a t element, provide an actual HTML node"
 
-        record, field_name = t_att["field"].rsplit('.', 1)
-        record = self.eval_object(record, v)
+        record, field_name = template_attributes["field"].rsplit('.', 1)
+        record = self.eval_object(record, qwebcontext)
 
         column = record._model._all_columns[field_name].column
-        options = json.loads(t_att.get('field-options') or '{}')
+        options = json.loads(template_attributes.get('field-options') or '{}')
         field_type = get_field_type(column, options)
 
         converter = self.get_converter_for(field_type)
 
-        return converter.to_html(v.cr, v.uid, field_name, record, options,
-                                 e, t_att, g_att, v, context=v.context)
+        return converter.to_html(qwebcontext.cr, qwebcontext.uid, field_name, record, options,
+                                 element, template_attributes, generated_attributes, qwebcontext, context=qwebcontext.context)
 
     def get_converter_for(self, field_type):
         return self.pool.get('ir.qweb.field.' + field_type,
@@ -500,6 +500,7 @@ class FieldConverter(osv.AbstractModel):
         except Exception:
             _logger.warning("Could not get field %s for model %s",
                             field_name, record._model._name, exc_info=True)
+            content = None
 
         g_att += ''.join(
             ' %s="%s"' % (name, werkzeug.utils.escape(value))
