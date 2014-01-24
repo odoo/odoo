@@ -6,14 +6,19 @@
 @license: GPL
 '''
 
+try: 
+    import qrcode
+except ImportError:
+    qrcode = None
+
+import time
 import copy
 
-import qrcode
 from PIL import Image
 
 try:
     import jcconv
-except:
+except ImportError:
     jcconv = None
     print 'ESC/POS: please install jcconv for improved Japanese receipt printing:'
     print ' # pip install jcconv'
