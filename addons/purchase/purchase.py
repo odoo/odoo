@@ -21,7 +21,7 @@
 
 import time
 import pytz
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, workflow
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import attrgetter
@@ -266,7 +266,7 @@ class purchase_order(osv.osv):
     _name = "purchase.order"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Purchase Order"
-    _order = "name desc"
+    _order = 'date_order desc, id desc'
 
     def create(self, cr, uid, vals, context=None):
         if vals.get('name','/')=='/':
@@ -1377,6 +1377,7 @@ class account_invoice(osv.Model):
         po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
         for po_id in po_ids:
             purchase_order_obj.message_post(cr, user_id, po_id, body=_("Invoice received"), context=context)
+            workflow.trg_write(uid, 'purchase.order', po_id, cr)
         return res
 
     def confirm_paid(self, cr, uid, ids, context=None):

@@ -1074,7 +1074,7 @@
                     <button name="action_confirm" states="draft" string="Process Later" type="object" class="oe_highlight"/>
                     <button name="action_done" states="draft,assigned,confirmed" string="Process Entirely" type="object" class="oe_highlight"/>
                     <button name="force_assign" states="confirmed" string="Set Available" type="object" class="oe_highlight"/>
-                    <button name="action_cancel" states="assigned,confirmed" string="Cancel Move" type="object"/>
+                    <button name="action_cancel" states="draft,assigned,confirmed" string="Cancel Move" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
                 </header>
                 <sheet>
@@ -1764,7 +1764,7 @@
             <field name="name">Quants</field>
             <field name="res_model">stock.quant</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="help">This analysis gives you a fast overview on the current stock level of your products and their today's inventory value.</field>
         </record>
 
@@ -1777,15 +1777,17 @@
                     <div class="oe_right oe_button_box">
                         <button name="action_view_quant_history" type="object" string="Quant History"/>                            
                     </div>
-                    <field name="product_id"/>
-                    <field name="qty"/>
-                    <field name="lot_id" groups="stock.group_tracking_lot"/>
-                    <field name="package_id" groups="stock.group_tracking_lot"/>
-                    <field name="location_id"/>
-                    <field name="in_date"/>
-                    <field name="reservation_id"/>
-                    <field name="propagated_from_id"/>
-                    <field name="owner_id" groups="stock.group_tracking_owner"/>
+                    <group>
+                        <field name="product_id"/>
+                        <field name="qty"/>
+                        <field name="lot_id" groups="stock.group_tracking_lot"/>
+                        <field name="package_id" groups="stock.group_tracking_lot"/>
+                        <field name="location_id"/>
+                        <field name="in_date"/>
+                        <field name="reservation_id"/>
+                        <field name="propagated_from_id"/>
+                        <field name="owner_id" groups="stock.group_tracking_owner"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -1846,7 +1848,7 @@
             <field name="res_model">stock.warehouse.orderpoint</field>
         </record>
         <record model="ir.actions.act_window" id="product_open_quants">
-            <field name="context">{'search_default_product_id': active_id}</field>
+            <field name="context">{'search_default_product_id': active_id, 'search_default_locationgroup':1}</field>
             <field name="name">Quants</field>
             <field name="res_model">stock.quant</field>
         </record>
@@ -1889,10 +1891,9 @@
                 </xpath>
                 
                 <xpath expr="//div[@name='buttons']" position="inside">
-                   <button string="Inventory" name="%(action_product_location_tree)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations"/>
+                   <button string="Inventory" name="%(product_open_quants)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations"/>
                    <button string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user"/>
                    <button string="Orderpoints" name="%(product_open_orderpoint)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}"/>
-                   <button string="Quants" name="%(product_open_quants)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="base.group_no_one"/>
                 </xpath>
                 
                 <xpath expr="//group[@string='Sale Conditions']" position="inside">
