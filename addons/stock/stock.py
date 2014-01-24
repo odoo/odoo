@@ -1180,22 +1180,14 @@ class stock_production_lot(osv.osv):
         for quant in quant_obj.browse(cr, uid, quants, context=context):
             for move in quant.history_ids:
                 moves.add(move.id)
-#         import pdb
-#         pdb.set_trace()
         if moves:
-#             ir_model_data = self.pool.get('ir.model.data')
-#             try: 
-#                 template_id = ir_model_data.get_object_reference(cr, uid, 'stock', 'view_move_tree')[1]
-#             except:
-#                 template_id = False
             return { 
                 'domain': "[('id','in',["+','.join(map(str, list(moves)))+"])]",
                 'name': 'Traceability',
-                'view_mode': 'tree, form',
-                'view_type': 'tree',
+                'view_mode': 'tree,form',
+                'view_type': 'form',
                 'res_model': 'stock.move',
                 'type': 'ir.actions.act_window',
-                'nodestroy':True,
                     }
         else:
             return False
