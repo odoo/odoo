@@ -79,7 +79,7 @@ class PaymentAcquirer(osv.Model):
     _defaults = {
         'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
         'env': 'test',
-        'validation': 'dynamic',
+        'validation': 'automatic',
         'website_published': True,
     }
 
@@ -277,8 +277,7 @@ class PaymentAcquirer(osv.Model):
 
     def render_payment_block(self, cr, uid, reference, amount, currency_id, tx_id=None, partner_id=False, partner_values=None, tx_values=None, context=None):
         html_forms = []
-        # TDE FIXME: change this domain, see with CHM about 'dynamic/static' acquirer
-        acquirer_ids = self.search(cr, uid, [('website_published', '=', True), ('name', '!=', 'transfer')], context=context)
+        acquirer_ids = self.search(cr, uid, [('website_published', '=', True), ('validation', '=', 'automatic')], context=context)
         for acquirer_id in acquirer_ids:
             button = self.render(
                 cr, uid, acquirer_id,
