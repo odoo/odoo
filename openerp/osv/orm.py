@@ -2687,10 +2687,6 @@ class BaseModel(object):
                     elif interval == 'year':
                         display_format = 'YYYY'
 
-                    group_by_params = {
-                        'display_format': display_format,
-                        'interval': interval,
-                    }
                     qualified_groupby_field = "date_trunc('%s',%s)" % (interval, qualified_groupby_field)
                     flist = "%s as %s " % (qualified_groupby_field, groupby)
                 elif groupby_type == 'boolean':
@@ -2759,15 +2755,15 @@ class BaseModel(object):
                         _default = datetime.datetime(1970, 1, 1)    # force starts of month
                         groupby_datetime = dateutil.parser.parse(groupby_datetime, default=_default)
                     d[groupby] = babel.dates.format_date(
-                        groupby_datetime, format=group_by_params.get('display_format', 'MMMM yyyy'), locale=context.get('lang', 'en_US'))
+                        groupby_datetime, format=display_format, locale=context.get('lang', 'en_US'))
                     domain_dt_begin = groupby_datetime
-                    if group_by_params.get('interval') == 'quarter':
+                    if interval == 'quarter':
                         domain_dt_end = groupby_datetime + dateutil.relativedelta.relativedelta(months=3)
-                    elif group_by_params.get('interval') == 'month':
+                    elif interval == 'month':
                         domain_dt_end = groupby_datetime + dateutil.relativedelta.relativedelta(months=1)
-                    elif group_by_params.get('interval') == 'week':
+                    elif interval == 'week':
                         domain_dt_end = groupby_datetime + datetime.timedelta(days=7)
-                    elif group_by_params.get('interval') == 'day':
+                    elif interval == 'day':
                         domain_dt_end = groupby_datetime + datetime.timedelta(days=1)
                     else:
                         domain_dt_end = groupby_datetime + dateutil.relativedelta.relativedelta(years=1)
