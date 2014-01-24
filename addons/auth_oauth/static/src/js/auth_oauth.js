@@ -3,6 +3,7 @@ openerp.auth_oauth = function(instance) {
         _lt = instance.web._lt;
     var QWeb = instance.web.qweb;
 
+    /* TODO: make this a server side controller
     instance.web.Login.include({
         start: function(parent, params) {
             var self = this;
@@ -76,5 +77,5 @@ openerp.auth_oauth = function(instance) {
             };
         },
     });
-
+    */
 };

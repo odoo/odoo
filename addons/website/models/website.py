@@ -71,23 +71,6 @@ def urlplus(url, params):
 def quote_plus(value):
     return urllib.quote_plus(value.encode('utf-8') if isinstance(value, unicode) else str(value))
 
-def preload_records(*args, **kwargs):
-    """ This helper allows to check the existence and prefetch one or many browse_records at once.
-        If the browse record(s) does not exists in the db it will raise a LazyResponse
-    """
-    field = kwargs.pop('field', 'name')
-    on_error = kwargs.pop('on_error', 'website.404')
-    error_code = kwargs.pop('error_code', 404)
-    try:
-        for arg in args:
-            if isinstance(arg, orm.browse_record):
-                arg[field]
-            elif isinstance(arg, orm.browse_record_list):
-                [record[field] for record in arg]
-    except:
-        lazy_error = request.website.render(on_error, status_code=error_code)
-        raise werkzeug.exceptions.HTTPException(response=lazy_error)
-
 class website(osv.osv):
     def _get_menu_website(self, cr, uid, ids, context=None):
         # IF a menu is changed, update all websites
@@ -117,12 +100,17 @@ class website(osv.osv):
         'social_linkedin': fields.char('LinkedIn Account'),
         'social_youtube': fields.char('Youtube Account'),
         'social_googleplus': fields.char('Google+ Account'),
+        'google_analytics_key': fields.char('Google Analytics Key'),
         'public_user': fields.function(_get_public_user, relation='res.users', type='many2one', string='Public User'),
         'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu',
             store= {
                 'website.menu': (_get_menu_website, ['sequence','parent_id','website_id'], 10)
             })
     }
+
+    # cf. Wizard hack in website_views.xml
+    def noop(self, *args, **kwargs):
+        pass
 
     def write(self, cr, uid, ids, vals, context=None):
         self._get_languages.clear_cache(self)
@@ -208,6 +196,13 @@ class website(osv.osv):
             translatable=not is_master_lang,
         )
 
+    def get_template(self, cr, uid, ids, template, context=None):
+        if '.' not in template:
+            template = 'website.%s' % template
+        module, xmlid = template.split('.', 1)
+        model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
+        return self.pool["ir.ui.view"].browse(cr, uid, view_id, context=context)
+
     def _render(self, cr, uid, ids, template, values=None, context=None):
         user = self.pool.get("res.users")
         if not context:
@@ -232,10 +227,13 @@ class website(osv.osv):
         qweb_values.setdefault('editable', False)
 
         # in edit mode ir.ui.view will tag nodes
-        context['inherit_branding']=qweb_values['editable']
+        context['inherit_branding'] = qweb_values['editable']
 
-        result = self.pool['ir.ui.view'].render(cr, uid, template, qweb_values, engine='website.qweb', context=context)
-        return result
+        view = self.get_template(cr, uid, ids, template)
+
+        if 'main_object' not in qweb_values:
+            qweb_values['main_object'] = view
+        return view.render(qweb_values, engine='website.qweb', context=context)
 
     def render(self, cr, uid, ids, template, values=None, status_code=None, context=None):
         def callback(template, values, context):
@@ -322,7 +320,7 @@ class website(osv.osv):
         :type rule: werkzeug.routing.Rule
         :rtype: bool
         """
-        spec = inspect.getargspec(rule.endpoint)
+        spec = inspect.getargspec(rule.endpoint.method)
 
         # if *args bail the fuck out, only dragons can live there
         if spec.varargs:

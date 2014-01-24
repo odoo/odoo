@@ -13,9 +13,13 @@
             var self = this;
             this.initial_content = {};
             return this._super.apply(this, arguments).then(function () {
+                self.$("button[data-action=edit]").removeClass("hidden");
                 self.$('button[data-action=edit]')
-                    .text("Translate")
-                    .after(openerp.qweb.render('website.TranslatorAdditionalButtons'));
+                    .text("Translate");
+                if (website.is_editable_button) {
+                    self.$('button[data-action=edit]')
+                        .after(openerp.qweb.render('website.TranslatorAdditionalButtons'));
+                }
                 self.$('.js_hide_on_translate').hide();
             });
         },

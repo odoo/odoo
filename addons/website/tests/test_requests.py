@@ -48,8 +48,8 @@ class CrawlSuite(unittest2.TestSuite):
         self.opener.add_handler(urllib2.UnknownHandler())
         self.opener.add_handler(urllib2.HTTPHandler())
         self.opener.add_handler(urllib2.HTTPSHandler())
-        self.opener.add_handler(RedirectHandler())
         self.opener.add_handler(urllib2.HTTPCookieProcessor())
+        self.opener.add_handler(RedirectHandler())
 
         self._authenticate(user, password)
         self.user = user

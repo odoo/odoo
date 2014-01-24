@@ -71,8 +71,15 @@ $(document).ready(function () {
         $price.html($price.data("price")+parseFloat($label.find(".badge span").text() || 0));
     });
 
+    // characteristics
 
-    $(".js_slider").each(function() {
+    var js_slider_time = null;
+    var $form = $("form.characteristics");
+    $form.on("change", "label input", function () {
+        clearTimeout(js_slider_time);
+        $form.submit();
+    });
+    $(".js_slider", $form).each(function() {
         var $slide = $(this);
         var $slider = $('<div>'+
                 '<input type="hidden" name="att-'+$slide.data("id")+'-minmem" value="'+$slide.data("min")+'"/>'+
@@ -95,9 +102,10 @@ $(document).ready(function () {
                 $slide.data("value-min") ? +$slide.data("value-min") : +$slide.data("min"),
                 $slide.data("value-max") ? +$slide.data("value-max") : +$slide.data("max")
             ],
-            slide: function( event, ui ) {
+            change: function( event, ui ) {
                 $min.val( ui.values[ 0 ] );
                 $max.val( ui.values[ 1 ] );
+                $form.submit();
             }
         });
         $min.val( $slider.slider( "values", 0 ) );

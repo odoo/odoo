@@ -5,7 +5,6 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
-from openerp.addons.website.models import website
 from openerp.addons.website_partner.controllers import main as website_partner
 import urllib
 
@@ -79,7 +78,6 @@ class WebsiteCustomer(http.Controller):
     @http.route(['/customers/<int:partner_id>/', '/customers/<partner_name>-<int:partner_id>/'], type='http', auth="public", website=True, multilang=True)
     def customer(self, partner_id, **post):
         partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
-        website.preload_records(partner)
         values = website_partner.get_partner_template_value(partner)
         if not values:
             return self.customers(**post)

@@ -1,5 +1,6 @@
 openerp.auth_oauth_signup = function(instance) {
 
+    /* TODO: make this a server side controller
     // override Login._oauth_state to add the signup token in the state
     instance.web.Login.include({
         _oauth_state: function(provider) {
@@ -10,5 +11,6 @@ openerp.auth_oauth_signup = function(instance) {
             return state;
         },
     });
+    */
 
 };

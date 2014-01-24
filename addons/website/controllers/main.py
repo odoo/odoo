@@ -20,7 +20,7 @@ import openerp
 from openerp.osv import fields
 from openerp.addons.website.models import website
 from openerp.addons.web import http
-from openerp.addons.web.http import request
+from openerp.addons.web.http import request, LazyResponse
 
 from ..utils import slugify
 
@@ -42,7 +42,15 @@ class Website(openerp.addons.web.controllers.main.Home):
             pass
         return self.page("website.homepage")
 
-    @http.route('/pagenew/<path:path>', type='http', auth="user")
+    @http.route(website=True, auth="public", multilang=True)
+    def web_login(self, *args, **kw):
+        response = super(Website, self).web_login(*args, **kw)
+        if isinstance(response, LazyResponse):
+            values = dict(response.params['values'], disable_footer=True)
+            response = request.website.render(response.params['template'], values)
+        return response
+
+    @http.route('/pagenew/<path:path>', type='http', auth="user", website=True)
     def pagenew(self, path, noredirect=NOPE):
         web = request.registry['website']
         try:
@@ -96,9 +104,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             page = 'website.%s' % page
 
         try:
-            module, xmlid = page.split('.', 1)
-            model, view_id = request.registry["ir.model.data"].get_object_reference(request.cr, request.uid, module, xmlid)
-            values['main_object'] = request.registry["ir.ui.view"].browse(request.cr, request.uid, view_id, context=request.context)
+            request.website.get_template(page)
         except ValueError, e:
             # page not found
             if request.context['editable']:

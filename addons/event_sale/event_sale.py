@@ -117,16 +117,16 @@ class event_event(osv.osv):
         return result
 
     def _get_tickets(self, cr, uid, context={}):
-        md = self.pool.get('ir.model.data')
+        imd = self.pool.get('ir.model.data')
         try:
-            dummy, res_id = md.get_object_reference(cr, uid, 'event_sale', 'product_product_event')
+            product = imd.get_object(cr, uid, 'event_sale', 'product_product_event')
         except ValueError:
             return []
         return [{
-                'name': _('Subscription'),
-                'product_id': res_id,
-                'price': 0,
-            }]
+            'name': _('Subscription'),
+            'product_id': product.id,
+            'price': 0,
+        }]
 
     _columns = {
         'event_ticket_ids': fields.one2many('event.event.ticket', "event_id", "Event Ticket"),
@@ -196,13 +196,14 @@ class event_ticket(osv.osv):
         'register_prospect': fields.function(_get_register, string='Unconfirmed Registrations', type='integer', multi='register_numbers'),
         'register_attended': fields.function(_get_register, string='# of Participations', type='integer', multi='register_numbers'),
     }
+
     def _default_product_id(self, cr, uid, context={}):
-        md = self.pool.get('ir.model.data')
+        imd = self.pool.get('ir.model.data')
         try:
-            dummy, res_id = md.get_object_reference(cr, uid, 'event_sale', 'product_product_event')
+            product = imd.get_object(cr, uid, 'event_sale', 'product_product_event')
         except ValueError:
             return False
-        return res_id
+        return product.id
 
     _defaults = {
         'product_id': _default_product_id
