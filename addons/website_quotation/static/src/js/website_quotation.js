@@ -42,7 +42,9 @@ $(document).ready(function () {
         if($('#signature').length > 0){
             var isSignature=$("#signature").jSignature('getData','base30')[1].length>1?true:false;
             if (isSignature)
+            {
                 sign = JSON.stringify($("#signature").jSignature("getData",'image')[1]);
+            }
             signer_name = $("#name").val();
         }
         openerp.jsonRpc("/quote/accept/", 'call', {
@@ -52,7 +54,7 @@ $(document).ready(function () {
             'sign': sign,
         })
         .then(function (data) {
-            if(!_.isEmpty(data)){
+            if(_.isEmpty(data[0])){
                 $('#modelaccept').modal('hide');
                 var url = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port : "")
                 window.location.replace(url +'/quote/'+order_id[1]+'/'+token[1]+'?message=3');
