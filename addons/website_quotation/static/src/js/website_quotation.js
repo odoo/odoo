@@ -67,7 +67,6 @@ $(document).ready(function () {
     var ul = $('[data-id="quote_sidebar"]');
     var sub_li = null;
     var sub_ul = null;
-    ul.empty();
     $("section h1, section h2").each(function() {
         switch (this.tagName.toLowerCase()) {
             case "h1":
