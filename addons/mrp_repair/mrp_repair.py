@@ -117,6 +117,9 @@ class mrp_repair(osv.osv):
     _columns = {
         'name': fields.char('Repair Reference',size=24, required=True, states={'confirmed':[('readonly',True)]}),
         'product_id': fields.many2one('product.product', string='Product to Repair', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'product_qty': fields.float('Product Quantity', help='Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), 
+                                    required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id' : fields.many2one('res.partner', 'Partner', select=True, help='Choose partner for whom the order will be invoiced and delivered.', states={'confirmed':[('readonly',True)]}),
         'address_id': fields.many2one('res.partner', 'Delivery Address', domain="[('parent_id','=',partner_id)]", states={'confirmed':[('readonly',True)]}),
         'default_address_id': fields.function(_get_default_address, type="many2one", relation="res.partner"),
@@ -172,7 +175,6 @@ class mrp_repair(osv.osv):
                 'mrp.repair': (lambda self, cr, uid, ids, c={}: ids, ['operations'], 10),
                 'mrp.repair.line': (_get_lines, ['price_unit', 'price_subtotal', 'product_id', 'tax_id', 'product_uom_qty', 'product_uom'], 10),
             }),
-        'product_qty': fields.integer('Quantity', help='Product Qty'), 
     }
 
     _defaults = {
@@ -181,7 +183,7 @@ class mrp_repair(osv.osv):
         'invoice_method': lambda *a: 'none',
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.repair', context=context),
         'pricelist_id': lambda self, cr, uid,context : self.pool.get('product.pricelist').search(cr, uid, [('type','=','sale')])[0],
-        'product_qty': 1.0, 
+        'product_qty': 1.0,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -202,12 +204,27 @@ class mrp_repair(osv.osv):
         @param product_id: Changed product
         @return: Dictionary of values.
         """
+        product = False
+        if product_id:
+            product = self.pool.get("product.product").browse(cr, uid, product_id)
         return {'value': {
                     'guarantee_limit' :False,
                     'lot_id': False,
+                    'product_uom': product and product.uom_id.id or False,
                 }
         }
-        
+    
+    def onchange_product_uom(self, cr, uid, ids, product_id, product_uom, context=None):
+        res = {'value':{}}
+        if not product_uom or not product_id:
+            return res
+        product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+        uom = self.pool.get('product.uom').browse(cr, uid, product_uom, context=context)
+        if uom.category_id.id != product.uom_id.category_id.id:
+            res['warning'] = {'title': _('Warning'), 'message': _('The Product Unit of Measure you chose has a different category than in the product form.')}
+            res['value'].update({'product_uom': product.uom_id.id})
+        return res
+    
     def onchange_location_id(self, cr, uid, ids, location_id=None):
         """ On change of location
         """
@@ -463,12 +480,12 @@ class mrp_repair(osv.osv):
             move_id = move_obj.create(cr, uid, {
                 'name': repair.name,
                 'product_id': repair.product_id.id,
-                'product_uom': repair.product_id.uom_id.id,
+                'product_uom': repair.product_uom.id,
+                'product_qty': repair.product_qty,
                 'partner_id': repair.address_id and repair.address_id.id or False,
                 'location_id': repair.location_id.id,
                 'location_dest_id': repair.location_dest_id.id,
                 'restrict_lot_id': repair.lot_id.id,
-                'product_qty': repair.product_qty, 
             })
             move_obj.signal_button_confirm(cr, uid, [move_id])
             move_obj.action_done(cr, uid, [move_id], context=context)
