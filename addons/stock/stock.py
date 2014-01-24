@@ -1162,6 +1162,45 @@ class stock_production_lot(osv.osv):
         ('name_ref_uniq', 'unique (name, ref)', 'The combination of Serial Number and internal reference must be unique !'),
     ]
 
+    def action_traceability(self, cr, uid, ids, context=None):
+        """ It traces the information of a product
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: List of IDs selected
+        @param context: A standard dictionary
+        @return: A dictionary of values
+        """
+        if not ids or len(ids) == 0:
+            return False #TODO give warning instead
+        quant_obj = self.pool.get("stock.quant")
+        move_obj = self.pool.get("stock.move")
+        quants = quant_obj.search(cr, uid, [('lot_id', 'in', ids)], context=context)
+        moves = set()
+        for quant in quant_obj.browse(cr, uid, quants, context=context):
+            for move in quant.history_ids:
+                moves.add(move.id)
+#         import pdb
+#         pdb.set_trace()
+        if moves:
+#             ir_model_data = self.pool.get('ir.model.data')
+#             try: 
+#                 template_id = ir_model_data.get_object_reference(cr, uid, 'stock', 'view_move_tree')[1]
+#             except:
+#                 template_id = False
+            return { 
+                'domain': "[('id','in',["+','.join(map(str, list(moves)))+"])]",
+                'name': 'Traceability',
+                'view_mode': 'tree, form',
+                'view_type': 'tree',
+                'res_model': 'stock.move',
+                'type': 'ir.actions.act_window',
+                'nodestroy':True,
+                    }
+        else:
+            return False
+        
+
 
 # ----------------------------------------------------
 # Move
