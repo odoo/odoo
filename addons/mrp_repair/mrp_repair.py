@@ -186,6 +186,10 @@ class mrp_repair(osv.osv):
         'product_qty': 1.0,
     }
 
+    _sql_constraints = [
+        ('name', 'unique (name)', 'The name of the Repair Order must be unique!'),
+    ]
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
