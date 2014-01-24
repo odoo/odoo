@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval as eval
 import openerp.addons.decimal_precision as dp
 
 class product_product(osv.osv):
@@ -99,13 +100,13 @@ class product_product(osv.osv):
         )
 
     def _get_domain_dates(self, cr, uid, ids, context):
-        from_date = context.get('from_date',False)
-        to_date = context.get('to_date',False)
+        from_date = context.get('from_date', False)
+        to_date = context.get('to_date', False)
         domain = []
         if from_date:
-            domain.append(('date','>=',from_date))
+            domain.append(('date', '>=', from_date))
         if to_date:
-            domain.append(('date','<=',to_date))
+            domain.append(('date', '<=', to_date))
         return domain
 
     def _product_available(self, cr, uid, ids, field_names=None, arg=False, context=None):
@@ -114,26 +115,25 @@ class product_product(osv.osv):
 
         domain_products = [('product_id', 'in', ids)]
         domain_quant, domain_move_in, domain_move_out = self._get_domain_locations(cr, uid, ids, context=context)
-        domain_move_in += self._get_domain_dates(cr, uid, ids, context=context) + [('state','not in',('done','cancel'))] + domain_products
-        domain_move_out += self._get_domain_dates(cr, uid, ids, context=context) + [('state','not in',('done','cancel'))] + domain_products
+        domain_move_in += self._get_domain_dates(cr, uid, ids, context=context) + [('state', 'not in', ('done', 'cancel'))] + domain_products
+        domain_move_out += self._get_domain_dates(cr, uid, ids, context=context) + [('state', 'not in', ('done', 'cancel'))] + domain_products
         domain_quant += domain_products
         if context.get('lot_id') or context.get('owner_id') or context.get('package_id'):
             if context.get('lot_id'):
-                domain_quant.append(('lot_id','=',context['lot_id']))
+                domain_quant.append(('lot_id', '=', context['lot_id']))
             if context.get('owner_id'):
-                domain_quant.append(('owner_id','=',context['owner_id']))
+                domain_quant.append(('owner_id', '=', context['owner_id']))
             if context.get('package_id'):
-                domain_quant.append(('package_id','=',context['package_id']))
-            moves_in  = []
+                domain_quant.append(('package_id', '=', context['package_id']))
+            moves_in = []
             moves_out = []
         else:
-#             if field_names in ['incoming_qty', 'outgoing_qty', 'virtual_available']:
-            moves_in  = self.pool.get('stock.move').read_group(cr, uid, domain_move_in, ['product_id', 'product_qty'], ['product_id'], context=context)
+            moves_in = self.pool.get('stock.move').read_group(cr, uid, domain_move_in, ['product_id', 'product_qty'], ['product_id'], context=context)
             moves_out = self.pool.get('stock.move').read_group(cr, uid, domain_move_out, ['product_id', 'product_qty'], ['product_id'], context=context)
-            
+
         quants = self.pool.get('stock.quant').read_group(cr, uid, domain_quant, ['product_id', 'qty'], ['product_id'], context=context)
         quants = dict(map(lambda x: (x['product_id'][0], x['qty']), quants))
-            
+
         moves_in = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_in))
         moves_out = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_out))
 
@@ -144,16 +144,39 @@ class product_product(osv.osv):
                 'incoming_qty': moves_in.get(id, 0.0),
                 'outgoing_qty': moves_out.get(id, 0.0),
                 'virtual_available': quants.get(id, 0.0) + moves_in.get(id, 0.0) - moves_out.get(id, 0.0),
-            }            
-            
+            }
+
+        return res
+
+    def _search_product_quantity(self, cr, uid, obj, name, domain, context):
+        res = []
+        for field, operator, value in domain:
+            #to prevent sql injections
+            assert field in ('qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'), 'Invalid domain left operand'
+            assert operator in ('<', '>', '=', '<=', '>='), 'Invalid domain operator'
+            assert isinstance(value, (float, int)), 'Invalid domain right operand'
+
+            if operator == '=':
+                operator = '=='
+
+            product_ids = self.search(cr, uid, [], context=context)
+            ids = []
+            if product_ids:
+                #TODO: use a query instead of this browse record which is probably making the too much requests, but don't forget
+                #the context that can be set with a location, an owner...
+                for element in self.browse(cr, uid, product_ids, context=context):
+                    if eval(str(element[field]) + operator + str(value)):
+                        ids.append(element.id)
+            res.append(('id', 'in', ids))
         return res
 
     _columns = {
         'reception_count': fields.function(_stock_move_count, string="Reception", type='integer', multi='pickings'),
         'delivery_count': fields.function(_stock_move_count, string="Delivery", type='integer', multi='pickings'),
         'qty_available': fields.function(_product_available, multi='qty_available',
-            type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
+            type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Quantity On Hand',
+            fnct_search=_search_product_quantity,
             help="Current quantity of products.\n"
                  "In a context with a single Stock Location, this includes "
                  "goods stored at this Location, or any of its children.\n"
@@ -165,8 +188,9 @@ class product_product(osv.osv):
                  "Otherwise, this includes goods stored in any Stock Location "
                  "with 'internal' type."),
         'virtual_available': fields.function(_product_available, multi='qty_available',
-            type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
-            string='Forecasted Quantity',
+            type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
+            string='Forecast Quantity',
+            fnct_search=_search_product_quantity,
             help="Forecast quantity (computed as Quantity On Hand "
                  "- Outgoing + Incoming)\n"
                  "In a context with a single Stock Location, this includes "
@@ -179,8 +203,9 @@ class product_product(osv.osv):
                  "Otherwise, this includes goods stored in any Stock Location "
                  "with 'internal' type."),
         'incoming_qty': fields.function(_product_available, multi='qty_available',
-            type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
+            type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Incoming',
+            fnct_search=_search_product_quantity,
             help="Quantity of products that are planned to arrive.\n"
                  "In a context with a single Stock Location, this includes "
                  "goods arriving to this Location, or any of its children.\n"
@@ -193,8 +218,9 @@ class product_product(osv.osv):
                  "Otherwise, this includes goods arriving to any Stock "
                  "Location with 'internal' type."),
         'outgoing_qty': fields.function(_product_available, multi='qty_available',
-            type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
+            type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Outgoing',
+            fnct_search=_search_product_quantity,
             help="Quantity of products that are planned to leave.\n"
                  "In a context with a single Stock Location, this includes "
                  "goods leaving this Location, or any of its children.\n"
