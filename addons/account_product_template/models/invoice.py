@@ -6,12 +6,9 @@ from openerp.osv import osv
 class account_invoice(osv.Model):
     _inherit = 'account.invoice'
 
-    def invoice_validate(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
+    def invoice_validate_send_email(self, cr, uid, ids, context=None):
         mail_msg_obj = self.pool['mail.compose.message']
         template_obj = self.pool['email.template']
-        res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
         for invoice in self.browse(cr, uid, ids, context=context):
             # send template only on customer invoice
             if invoice.type != 'out_invoice':
@@ -29,4 +26,11 @@ class account_invoice(osv.Model):
                         'body': mail.body_html,
                     }, context=context)
                     mail_msg_obj.send_mail(cr, uid, [message_wiz_id], context=context)
+        return True
+
+    def invoice_validate(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
+        self.invoice_validate_send_email(cr, uid, ids, context=context)
         return res
