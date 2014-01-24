@@ -6,8 +6,9 @@
     website.EditorBar.include({
         start: function () {
             this.registerTour(new website.EditorShopTour(this));
+            var res = this._super();
             this.registerTour(new website.EditorShopTest(this));
-            return this._super();
+            return res;
         },
     });
 

@@ -18,7 +18,7 @@ class Website(orm.Model):
             context=context)
         order = self.ecommerce_get_current_order(cr, uid, context=context)
         return self._check_carrier_quotation(cr, uid, order, context=context) and quantity or None
-    
+  
     def _check_carrier_quotation(self, cr, uid, order, context=None):
         # check to add or remove carrier_id
         carrier_id = False
@@ -30,11 +30,14 @@ class Website(orm.Model):
         if not carrier_id:
             order.write({'carrier_id': None}, context=context)
             self.pool['sale.order']._delivery_unset(cr, SUPERUSER_ID, order, context=context)
-            return None
+            return True
         elif not order.carrier_id:
             carrier_ids = self.pool.get('delivery.carrier').search(cr, uid, [], context=context)
-            order.write({'carrier_id': carrier_ids[0]}, context=context)
-            order.delivery_set(context=context)
-            return None
+            carrier_id = carrier_ids and carrier_ids[0]
+            order.write({'carrier_id': carrier_id}, context=context)
+            if carrier_id:
+                order.delivery_set(context=context)
+            else:
+                self.pool['sale.order']._delivery_unset(cr, SUPERUSER_ID, order, context=context)
 
-        return carrier_id
+        return bool(carrier_id)

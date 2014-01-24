@@ -517,9 +517,8 @@ class Ecommerce(http.Controller):
             'partner_invoice_id': partner_id,
             'partner_shipping_id': shipping_id or partner_id
         }
-        print order_info
         order_info.update(registry.get('sale.order').onchange_partner_id(cr, SUPERUSER_ID, [], partner_id, context=context)['value'])
-        print order_info
+        order_info.pop('user_id')
 
         order_line_obj.write(cr, SUPERUSER_ID, [order.id], order_info, context=context)
 

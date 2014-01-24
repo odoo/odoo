@@ -375,7 +375,7 @@
                     });
                 },
                 stop: function(ev, ui){
-                    if (action === 'insert' && ! dropped && $('.oe_drop_zone')) {
+                    if (action === 'insert' && ! dropped && $('.oe_drop_zone') && ui.position.top > 50) {
                         var el = $('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
                         if (el.length) {
                             el.after($toInsert);

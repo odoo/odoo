@@ -854,36 +854,29 @@ class product_product(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
-            context={}
+            context = {}
 
         if not default:
             default = {}
 
         # Craft our own `<name> (copy)` in en_US (self.copy_translation()
         # will do the other languages).
-        context_wo_lang = context.copy()
+        context_wo_lang = dict(context)
         context_wo_lang.pop('lang', None)
-        product = self.read(cr, uid, id, ['name', 'list_price', 'standard_price', 'categ_id', 'variants', 'product_tmpl_id'], context=context_wo_lang)
-        default = default.copy()
-        if product['variants']:
-            default.update(variants=_("%s (copy)") % (product['variants']), product_tmpl_id=product['product_tmpl_id'][0])
-        else:
-            default.update(name=_("%s (copy)") % (product['name']), list_price=product['list_price'], standard_price=product['standard_price'], categ_id=product['categ_id'][0], product_tmpl_id=None)
+        product = self.read(cr, uid, id, ['name', 'variants', 'product_tmpl_id'], context=context_wo_lang)
+        default = dict(default)
+        if product['variants'] or context.get('variant'):
+            # if we copy a variant or create one, we keep the same template
+            name = default.pop('name', None)
+            variant = product['variants'] or name or product['name']
+            default.update({
+                'variants': _("%s (copy)") % (variant,),
+                'product_tmpl_id': product['product_tmpl_id'][0],
+            })
+        elif 'name' not in default:
+            default['name'] = _("%s (copy)") % (product['name'],)
 
-        if context.get('variant',False):
-            fields = ['product_tmpl_id', 'active', 'variants', 'default_code',
-                    'price_margin', 'price_extra']
-            data = self.read(cr, uid, id, fields=fields, context=context)
-            for f in fields:
-                if f in default:
-                    data[f] = default[f]
-            data['product_tmpl_id'] = data.get('product_tmpl_id', False) \
-                    and data['product_tmpl_id'][0]
-            del data['id']
-            return self.create(cr, uid, data)
-        else:
-            return super(product_product, self).copy(cr, uid, id, default=default,
-                    context=context)
+        return super(product_product, self).copy(cr, uid, id, default=default, context=context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
@@ -988,7 +981,7 @@ class product_supplierinfo(osv.osv):
         'product_uom': fields.related('product_tmpl_id', 'uom_po_id', type='many2one', relation='product.uom', string="Supplier Unit of Measure", readonly="1", help="This comes from the product form."),
         'min_qty': fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this supplier, expressed in the supplier Product Unit of Measure if not empty, in the default unit of measure of the product otherwise."),
         'qty': fields.function(_calc_qty, store=True, type='float', string='Quantity', multi="qty", help="This is a quantity which is converted into Default Unit of Measure."),
-        'product_tmpl_id' : fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade', select=True),
+        'product_tmpl_id' : fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade', select=True, oldname='product_id'),
         'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist'),
         'company_id':fields.many2one('res.company','Company',select=1),

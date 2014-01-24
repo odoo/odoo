@@ -16,9 +16,16 @@ class contactus(http.Controller):
         return url
 
     @http.route(['/crm/contactus'], type='http', auth="public", website=True, multilang=True)
-    def contactus(self, *arg, **post):
+    def contactus(self, description=None, partner_name=None, phone=None, contact_name=None, email_from=None, name=None):
+        post = {}
+        post['description'] = description
+        post['partner_name'] = partner_name
+        post['phone'] = phone
+        post['contact_name'] = contact_name
+        post['email_from'] = email_from
+        post['name'] = name
+
         required_fields = ['contact_name', 'email_from', 'description']
-        post['user_id'] = False
         error = set()
         values = dict((key, post.get(key)) for key in post)
         values['error'] = error
@@ -33,6 +40,13 @@ class contactus(http.Controller):
         # if not given: subject is contact name
         if not post.get('name'):
             post['name'] = post.get('contact_name')
+
+        section_ids = request.registry["crm.case.section"].search(
+            request.cr, SUPERUSER_ID, [("code", "=", "Website")], context=request.context)
+        if section_ids:
+            post['section_id'] = section_ids[0]
+            
+        post['user_id'] = False
 
         request.registry['crm.lead'].create(request.cr, SUPERUSER_ID, post, request.context)
         company = request.website.company_id

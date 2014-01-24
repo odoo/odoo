@@ -43,7 +43,7 @@
                         modal: {
                             stopOnClose: true,
                             afterSubmit: 'event-page',
-                        }
+                        },
                     },
                 },
                 {
@@ -60,8 +60,8 @@
                     placement: 'right',
                     title:     "Create Event",
                     content:   "Click <em>Continue</em> to create the event.",
-                    trigger:   {
-                        url:   /event\/[0-9]+\/register/
+                    trigger: {
+                        url:        /event\/[0-9]+\/register/
                     },
                 },
                 {
@@ -148,11 +148,10 @@
                     title:     "Publish your event",
                     content:   "Click to publish your event.",
                     trigger:   'click',
-                    delay:     5000,
                 },
                 {
                     stepId:    'customize-event',
-                    element:   '.js_publish_management button#dopprod-8',
+                    element:   '.js_publish_management button[data-toggle="dropdown"]',
                     placement: 'left',
                     title:     "Customize your event",
                     content:   "Click here to customize your event further.",
@@ -160,7 +159,7 @@
                 },
                 {
                     stepId:    'edit-event-backend',
-                    element:   '.js_publish_management ul>li>a',
+                    element:   '.js_publish_management ul>li>a:last',
                     placement: 'left',
                     title:     "Customize your event",
                     content:   "Click here to edit your event in the backend.",
