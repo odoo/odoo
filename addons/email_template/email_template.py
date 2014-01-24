@@ -76,6 +76,12 @@ class email_template(osv.osv):
     _description = 'Email Templates'
     _order = 'name'
 
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(email_template, self).default_get(cr, uid, fields, context)
+        if res.get('model'):
+            res['model_id'] = self.pool['ir.model'].search(cr, uid, [('model', '=', res.pop('model'))], context=context)[0]
+        return res
+
     def render_template_batch(self, cr, uid, template, model, res_ids, context=None):
         """Render the given template text, replace mako expressions ``${expr}``
            with the result of evaluating these expressions with
@@ -212,12 +218,6 @@ class email_template(osv.osv):
     _defaults = {
         'auto_delete': True,
     }
-
-    def default_get(self, cr, uid, fields, context=None):
-        res = super(email_template, self).default_get(cr, uid, fields, context)
-        if context.get('default_model'):
-            res['model_id'] = self.pool.get('ir.model').search(cr, uid, [('model', '=', context.get('default_model'))], context=context)[0]
-        return res
 
     def create_action(self, cr, uid, ids, context=None):
         action_obj = self.pool.get('ir.actions.act_window')
