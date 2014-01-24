@@ -665,6 +665,11 @@ class sale_order(osv.osv):
             res.append(sale_line_obj.need_procurement(cr, uid, [line.id for line in order.order_line], context=context))
         return any(res)
 
+    def action_ignore_delivery_exception(self, cr, uid, ids, context=None):
+        for sale_order in self.browse(cr, uid, ids, context=context):
+            self.write(cr, uid, ids, {'state': 'progress' if sale_order.invoice_exists else 'manual'}, context=context)
+        return True
+
     def action_ship_create(self, cr, uid, ids, context=None):
         """Create the required procurements to supply sales order lines, also connecting
         the procurements to appropriate stock moves in order to bring the goods to the
