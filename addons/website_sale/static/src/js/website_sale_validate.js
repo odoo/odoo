@@ -11,22 +11,15 @@ $(document).ready(function () {
         return openerp.jsonRpc('/shop/payment/get_status/' + order_id, 'call', {
         }).then(function (result) {
             var tx_node = $('div.oe_website_sale_tx_status');
-            var txt = '<h3>Your transaction is waiting confirmation.</h3>';
             _poll_nbr += 1;
-            if (result.state == 'pending' && _poll_nbr <= 5) {
-                txt = "<h3>Your transaction is waiting confirmation.</h3>";
+            if (result.state == 'pending' && result.validation == 'automatic' && _poll_nbr <= 5) {
+                var txt = result.mesage;
                 setTimeout(function () {
                     payment_transaction_poll_status();
                 }, 1000);
             }
-            else if (result.state == 'done') {
-                txt = "<h3>Your payment has been received.</h3>";
-            }
-            else if (result.state == 'pending') {
-                txt = "<h3>Your transaction is waiting confirmation. You may try to refresh this page.</h3>";
-            }
-            else if (result.state == 'cancel') {
-                txt =  "<h3>The payment seems to have been canceled.</h3>";
+            else {
+                var txt = result.message;
             }
             tx_node.html(txt);
         });

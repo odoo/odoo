@@ -564,7 +564,7 @@ class Ecommerce(http.Controller):
         if tx:
             acquirer_ids = [tx.acquirer_id.id]
         else:
-            acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('portal_published', '=', True)], context=context)
+            acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True)], context=context)
         values['acquirers'] = payment_obj.browse(cr, uid, acquirer_ids, context=context)
         render_ctx = dict(context, submit_class='btn btn-primary', submit_txt='Pay Now')
         for acquirer in values['acquirers']:
@@ -635,6 +635,7 @@ class Ecommerce(http.Controller):
         if not order:
             return {
                 'state': 'error',
+                'message': '<p>There seems to be an error with your request.</p>',
             }
 
         tx_ids = request.registry['payment.transaction'].search(
@@ -643,11 +644,25 @@ class Ecommerce(http.Controller):
             ], context=context)
         if not tx_ids:
             return {
-                'state': 'error'
+                'state': 'error',
+                'message': '<p>There seems to be an error with your request.</p>',
             }
         tx = request.registry['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
+        state = tx.state
+        if state == 'done':
+            message = '<p>Your payment has been received.</p>'
+        elif state == 'cancel':
+            message = '<p>The payment seems to have been canceled.</p>'
+        elif state == 'pending' and tx.acquirer_id.validation == 'manual':
+            message = '<p>Your transaction is waiting confirmation.</p>'
+            message += tx.acquirer_id.post_msg
+        else:
+            message = '<p>Your transaction is waiting confirmation.</p>'
+
         return {
-            'state': tx.state,
+            'state': state,
+            'message': message,
+            'validation': tx.acquirer_id.validation
         }
 
     @http.route('/shop/payment/validate/', type='http', auth="public", website=True, multilang=True)
