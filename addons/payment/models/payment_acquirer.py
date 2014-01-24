@@ -55,13 +55,18 @@ class PaymentAcquirer(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'message': fields.html('Message', help='Message displayed to help payment and validation'),
+        'pre_msg': fields.html('Message', help='Message displayed to explain and help the payment process.'),
+        'post_msg': fields.html('Thanks Message', help='Message displayed after having done the payment process.'),
+        'process': fields.selection(
+            [('static', 'Static'), ('dynamic', 'Dynamic')],
+            string='Process Method',
+            help='Static payments are payments like transfer, that require manual steps.'),
         'view_template_id': fields.many2one('ir.ui.view', 'Form Button Template', required=True),
         'env': fields.selection(
             [('test', 'Test'), ('prod', 'Production')],
             string='Environment'),
-        'portal_published': fields.boolean(
-            'Visible in Portal',
+        'website_published': fields.boolean(
+            'Visible in Portal / Website',
             help="Make this payment acquirer available (Customer invoices, etc.)"),
         # Fees
         'fees_active': fields.boolean('Compute fees'),
@@ -74,7 +79,8 @@ class PaymentAcquirer(osv.Model):
     _defaults = {
         'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
         'env': 'test',
-        'portal_published': True,
+        'process': 'dynamic',
+        'website_published': True,
     }
 
     def _check_required_if_provider(self, cr, uid, ids, context=None):
@@ -272,7 +278,7 @@ class PaymentAcquirer(osv.Model):
     def render_payment_block(self, cr, uid, reference, amount, currency_id, tx_id=None, partner_id=False, partner_values=None, tx_values=None, context=None):
         html_forms = []
         # TDE FIXME: change this domain, see with CHM about 'dynamic/static' acquirer
-        acquirer_ids = self.search(cr, uid, [('portal_published', '=', True), ('name', '!=', 'transfer')], context=context)
+        acquirer_ids = self.search(cr, uid, [('website_published', '=', True), ('name', '!=', 'transfer')], context=context)
         for acquirer_id in acquirer_ids:
             button = self.render(
                 cr, uid, acquirer_id,
