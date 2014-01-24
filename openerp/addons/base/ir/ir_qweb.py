@@ -500,6 +500,7 @@ class FieldConverter(osv.AbstractModel):
         except Exception:
             _logger.warning("Could not get field %s for model %s",
                             field_name, record._model._name, exc_info=True)
+            content = None
 
         g_att += ''.join(
             ' %s="%s"' % (name, werkzeug.utils.escape(value))
