@@ -65,7 +65,7 @@ $(document).ready(function () {
         });
         return false
     });
-    // automatically generate a menu from h1 and h1 tag in content
+    // automatically generate a menu from h1 and h2 tag in content
     var ul = $('[data-id="quote_sidebar"]');
     var sub_li = null;
     var sub_ul = null;
@@ -73,7 +73,7 @@ $(document).ready(function () {
         switch (this.tagName.toLowerCase()) {
             case "h1":
                 id = _.uniqueId('quote_header_')
-                $(this.parentNode).attr('id',id)
+                $(this.parentNode).attr('id',id);
                 sub_li = $("<li>").html('<a href="#'+id+'">'+$(this).text()+'</a>').appendTo(ul);
                 sub_ul = null;
                 break;
