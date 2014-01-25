@@ -130,7 +130,7 @@ class sale_order(osv.osv):
                 'discount': line.discount,
                 'product_uom_qty': line.product_uom_qty,
                 'product_id': line.product_id.id,
-                'product_uom_id': line.product_id.uom_id.id,
+                'product_uom': line.product_uom_id.id,
                 'website_description': line.website_description,
                 'state': 'draft',
             }))
