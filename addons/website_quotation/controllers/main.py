@@ -57,7 +57,7 @@ class sale_quote(http.Controller):
             'order_valid': (not order.validity_date) or (now <= order.validity_date),
             'days_valid': max(days, 0)
         }
-        return request.website.render('website_quotation.so_quotation', values)
+        return request.website.render('website_quote.so_quotation', values)
 
     @http.route(['/quote/accept'], type='json', auth="public", website=True)
     def accept(self, order_id=None, token=None, signer=None, sign=None, **post):
@@ -133,7 +133,7 @@ class sale_quote(http.Controller):
     @http.route(["/quote/template/<model('sale.quote.template'):quote>"], type='http', auth="user", website=True)
     def template_view(self, quote, **post):
         values = { 'template': quote }
-        return request.website.render('website_quotation.so_template', values)
+        return request.website.render('website_quote.so_template', values)
 
     @http.route(["/quote/add_line/<int:option_id>/<int:order_id>/<token>"], type='http', auth="public", website=True)
     def add(self, option_id, order_id, token, **post):
