@@ -40,7 +40,8 @@ class sale_quote(http.Controller):
         order = request.registry.get('sale.order').browse(request.cr, token and SUPERUSER_ID or request.uid, order_id)
         now = time.strftime('%Y-%m-%d')
         if token:
-            assert token == order.access_token, 'Access denied!'
+            if token != order.access_token:
+                return request.website.render('website.404')
             # Log only once a day
             if request.httprequest.session.get('view_quote',False)!=now:
                 request.httprequest.session['view_quote'] = now
@@ -62,7 +63,8 @@ class sale_quote(http.Controller):
     def accept(self, order_id=None, token=None, signer=None, sign=None, **post):
         order_obj = request.registry.get('sale.order')
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
-        assert token == order.access_token, 'Access denied, wrong token!'
+        if token != order.access_token:
+            return request.website.render('website.404')
         attachments=sign and [('signature.png', sign)] or []
         order_obj.signal_order_confirm(request.cr, SUPERUSER_ID, [order_id], context=request.context)
         message = _('Order signed by %s') % (signer,)
@@ -73,8 +75,8 @@ class sale_quote(http.Controller):
     def decline(self, order_id, token, **post):
         order_obj = request.registry.get('sale.order')
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
-        assert token == order.access_token, 'Access denied, wrong token!'
-
+        if token != order.access_token:
+            return request.website.render('website.404')
         request.registry.get('sale.order').action_cancel(request.cr, SUPERUSER_ID, [order_id])
         message = post.get('decline_message')
         if message:
@@ -87,7 +89,8 @@ class sale_quote(http.Controller):
         order_obj = request.registry.get('sale.order')
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
         message = post.get('comment')
-        assert token == order.access_token, 'Access denied, wrong token!'
+        if token != order.access_token:
+            return request.website.render('website.404')
         if message:
             self.__message_post(message, order_id, type='comment', subtype='mt_comment')
         return werkzeug.utils.redirect("/quote/%s/%s?message=1" % (order_id, token))
@@ -111,7 +114,8 @@ class sale_quote(http.Controller):
     @http.route(['/quote/update_line'], type='json', auth="public", website=True)
     def update(self, line_id=None, remove=False, unlink=False, order_id=None, token=None, **post):
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, int(order_id))
-        assert token == order.access_token, 'Access denied, wrong token!'
+        if token != order.access_token:
+            return request.website.render('website.404')
         if order.state not in ('draft','sent'):
             return False
         line_id=int(line_id)
@@ -135,7 +139,8 @@ class sale_quote(http.Controller):
     def add(self, option_id, order_id, token, **post):
         vals = {}
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
-        assert token == order.access_token, 'Access denied, wrong token!'
+        if token != order.access_token:
+            return request.website.render('website.404')
         option_obj = request.registry.get('sale.order.option')
         option = option_obj.browse(request.cr, SUPERUSER_ID, option_id)
 
