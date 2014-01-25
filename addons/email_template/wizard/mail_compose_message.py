@@ -50,7 +50,7 @@ class mail_compose_message(osv.TransientModel):
             res.update(
                 self.onchange_template_id(
                     cr, uid, [], context['default_template_id'], res.get('composition_mode'),
-                    res.get('model'), res.get('res_id'), context=context
+                    res.get('model'), res.get('res_id', context.get('active_id')), context=context
                 )['value']
             )
         return res

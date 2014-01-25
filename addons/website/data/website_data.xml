@@ -27,7 +27,7 @@
         </record>
 
         <record id="public_user" model="res.users">
-            <field name="name">public</field>
+            <field name="name">Anonymous</field>
             <field name="login">public</field>
             <field name="password">public</field>
             <!-- Avoid auto-including this demo user in any default group -->
@@ -84,7 +84,7 @@
 
         <record id="menu_website" model="ir.ui.menu">
             <field name="name">Website</field>
-            <field name="sequence" eval="11"/>
+            <field name="sequence" eval="400"/>
             <field name="action" ref="action_website"/>
         </record>
         <record id="base.open_menu" model="ir.actions.todo">
