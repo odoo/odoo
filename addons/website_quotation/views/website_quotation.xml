@@ -157,9 +157,10 @@
                               <a t-if="order_valid" class="btn btn-primary btn-block fa fa-check" data-toggle="modal" data-target="#modelaccept">
                                   Accept Order
                               </a>
-                             <a t-if="not order_valid">
-                                 <strong>This offer expired!.</strong> <a href="#discussion">Contact us</a> for new quote.
-                             </a>
+                              <a t-if="not order_valid">
+                                  <strong>This offer expired!.</strong>
+                                  <br/><a href="#discussion">Contact us</a> for new quote.
+                              </a>
                               <div class="mt8">
                                   <a type="submit" href="#discussion">
                                       Ask Changes
@@ -174,19 +175,29 @@
                           <hr class="mt0 mb0"/>
                           <div t-if="order_valid" class="text-center hidden-print">
                               <input type="hidden" t-att-value="quotation.validity_date" id="validity_date"/>
-                              <div class="mt8" t-if="(quotation.before_discount - quotation.amount_total) > 0.0">
-                                <strong>This offer at </strong>
-                                <em t-field="quotation.amount_total" 
-                                      t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'></em>
-                                <em t-field="quotation.before_discount"
-                                      t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'
-                                      style="text-decoration: line-through"
-                                      class="text-danger"></em>
-                            </div>
-                            <strong class="text-center" t-if="(quotation.before_discount - quotation.amount_total) > 0.0">Expire in :</strong>
-                            <strong class="text-center" t-if="not((quotation.before_discount - quotation.amount_total) > 0.0)">This offer Expire in:</strong>
-                            <div id="countdown"/>
-                            <strong t-if="(quotation.before_discount - quotation.amount_total) > 0.0" class="text-center">(<t t-esc="(quotation.before_discount - quotation.amount_total)"/> Discount)</strong>
+                              <div class="mt8">
+                                  <strong>This offer expires in</strong>
+                                  <div class="fa fa-clock-o fa-2x day_counter mt8 mb16">
+                                      <t t-esc="days_valid"/>
+                                      <t t-if="days_valid &gt; 1">
+                                          days
+                                      </t>
+                                      <t t-if="days_valid &lt;= 1">
+                                          day
+                                      </t>
+                                  </div>
+                              </div>
+
+
+                              <div class="text-center mb16" t-if="quotation.before_discount > quotation.amount_total">
+                                  <p class="text-muted mb8">Your advantage:</p>
+                                  <strong t-field="quotation.amount_total" 
+                                        t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
+                                  <strong t-field="quotation.before_discount"
+                                        t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'
+                                        style="text-decoration: line-through"
+                                        class="text-danger"/>
+                              </div>
                          </div>
                       </div>
                   </div>

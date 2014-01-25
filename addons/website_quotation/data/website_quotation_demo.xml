@@ -291,10 +291,11 @@
 
         <record id="website_sale_order_line_1" model="sale.quote.line">
             <field name="quote_id" ref="website_quote_template_1"/>
-            <field name="name">Fuctional Training</field>
+            <field name="name">Functional Training</field>
             <field name="product_id" ref="product_product_quote_1"/>
             <field name="product_uom_qty">1</field>
             <field name="price_unit">12950.00</field>
+            <field name="discount">10.00</field>
             <field name="website_description" type="html">
                 <section data-snippet-id="title">
                     <h1>Online Training + Certification</h1>
@@ -463,7 +464,7 @@
             <field name="template_id" ref="website_quote_template_1"/>
             <field name="name">Advanced CRM Functional</field>
             <field name="product_id" ref="product_product_quote_3"/>
-            <field name="product_uom_qty">1</field>
+            <field name="quantity">1</field>
             <field name="uom_id" ref="product.product_uom_unit"/>
             <field name="price_unit">9000.00</field>
             <field name="discount">10</field>
@@ -569,7 +570,7 @@
             <field name="template_id" ref="website_quote_template_1"/>
             <field name="name">Functional Webinar</field>
             <field name="product_id" ref="product_product_quote_4"/>
-            <field name="product_uom_qty">1</field>
+            <field name="quantity">1</field>
             <field name="uom_id" ref="product.product_uom_unit"/>
             <field name="price_unit">18000.00</field>
             <field name="website_description" type="html">

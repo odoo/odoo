@@ -20,7 +20,7 @@
                                     <field name="quantity"/>
                                     <field name="uom_id"/>
                                     <field name="price_unit"/>
-                                    <field name="discount"/>
+                                    <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="website_description" invisible="1"/>
                             </tree>
                         </field>
@@ -41,7 +41,7 @@
             <field name="arch" type="xml">
                 <form string="Sale Quotation Template" version="7.0">
                     <sheet>
-                         <button string="Edit Template" type="object" name="open_template" class="oe_link oe_right"/>
+                        <button string="Edit Template" type="object" name="open_template" class="oe_link oe_right"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
@@ -50,7 +50,10 @@
                         </div>
                         <group>
                             <group>
-                               <field name="number_of_days"/>
+                               <label for="number_of_days"/>
+                               <div id="number_of_days">
+                                   <field name="number_of_days" class="oe_inline"/> days
+                               </div>
                             </group>
                         </group>
                         <notebook>
@@ -66,6 +69,10 @@
                                                     name="product_uom_qty" class="oe_inline"/>
                                             </div>
                                             <field name="price_unit"/>
+                                            <label for="discount" groups="sale.group_discount_per_so_line"/>
+                                            <div groups="sale.group_discount_per_so_line">
+                                                <field name="discount" class="oe_inline"/> %%
+                                            </div>
                                         </group>
                                     </group>
                                     <notebook colspan="4">
@@ -94,7 +101,7 @@
                                 <field name="quantity"/>
                                 <field name="uom_id"/>
                                 <field name="price_unit"/>
-                                <field name="discount"/>
+                                <field name="discount" groups="sale.group_discount_per_so_line"/>
                                 <field name="website_description" invisible="1"/>
                               </tree>
                             </field>

@@ -41,11 +41,15 @@ class sale_quote(http.Controller):
             assert token == order.access_token, 'Access denied!'
             body=_('Quotation viewed by customer')
             self.__message_post(body, order_id, type='comment')
+        days = 0
+        if order.validity_date:
+            days = (datetime.datetime.strptime(order.validity_date, '%Y-%m-%d') - datetime.datetime.now()).days
         values = {
             'quotation': order,
             'message': message,
             'option': bool(filter(lambda x: not x.line_id, order.options)),
             'order_valid': (not order.validity_date) or (datetime.datetime.now().strftime('%Y-%m-%d') <= order.validity_date),
+            'days_valid': max(days, 0)
         }
         return request.website.render('website_quotation.so_quotation', values)
 
@@ -129,7 +133,7 @@ class sale_quote(http.Controller):
         vals = {}
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
         assert token == order.access_token, 'Access denied, wrong token!'
-        option_obj = request.registry.get('sale.option.line')
+        option_obj = request.registry.get('sale.order.option')
         option = option_obj.browse(request.cr, SUPERUSER_ID, option_id)
         vals.update({
             'price_unit': option.price_unit,
