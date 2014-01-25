@@ -37,7 +37,8 @@ class sale_quote(http.Controller):
     def view(self, order_id, token=None, message=False, **post):
         # use SUPERUSER_ID allow to access/view order for public user
         order = request.registry.get('sale.order').browse(request.cr, token and SUPERUSER_ID or request.uid, order_id)
-        if token: 
+        print order.name
+        if token:
             assert token == order.access_token, 'Access denied!'
             body=_('Quotation viewed by customer')
             self.message_post(body, order_id, type='comment')
@@ -57,7 +58,7 @@ class sale_quote(http.Controller):
             if not option.line_id:
                 return True
         return False
-    
+
     @http.route(['/quote/accept'], type='json', auth="public", website=True)
     def accept(self, order_id=None, token=None, signer=None, sign=None, **post):
         order_obj = request.registry.get('sale.order')

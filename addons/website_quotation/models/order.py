@@ -32,7 +32,7 @@ class sale_quote_template(osv.osv):
         'website_description': fields.html('Description'),
         'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quote Template Lines'),
         'note': fields.text('Terms and conditions'),
-        'options': fields.one2many('sale.option.line', 'temp_option_id', 'Optional Products Lines'),
+        'options': fields.one2many('sale.option.line', 'template_id', 'Optional Products Lines'),
         'number_of_days': fields.integer('Quotation Period Validity'),
     }
 
@@ -42,7 +42,6 @@ class sale_quote_template(osv.osv):
             'target': 'self',
             'url': '/template/%d' % quote_id[0]
         }
-
 
 class sale_quote_line(osv.osv):
     _name = "sale.quote.line"
@@ -74,7 +73,7 @@ class sale_order_line(osv.osv):
     _description = "Sales Order Line"
     _columns = {
         'website_description': fields.html('Line Description'),
-        'option_line_id':fields.one2many('sale.option.line', 'line_id', 'Optional Products Lines'),
+        'option_line_id':fields.one2many('sale.order.option', 'line_id', 'Optional Products Lines'),
     }
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False, qty_uos=0, uos=False, name='', partner_id=False, lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
         res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty, uom, qty_uos, uos, name, partner_id, lang, update_tax, date_order, packaging, fiscal_position, flag, context)
@@ -100,7 +99,7 @@ class sale_order(osv.osv):
         'access_token': fields.char('Security Token', size=256, required=True),
         'template_id': fields.many2one('sale.quote.template', 'Quote Template'),
         'website_description': fields.html('Description'),
-        'options' : fields.one2many('sale.option.line', 'option_id', 'Optional Products Lines'),
+        'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines'),
         'signer_name': fields.char('Signer Name', size=256),
         'validity_date': fields.date('Validity Date'),
         'before_discount': fields.function(_get_total, string='Amount Before Discount', type="float")
@@ -156,15 +155,42 @@ class sale_order(osv.osv):
         return products
         
 
+
+class sale_quote_option(osv.osv):
+    _name = "sale.quote.option"
+    _description = "Quote Option"
+    _columns = {
+        'template_id': fields.many2one('sale.quote.template', 'Quotation Template Reference', ondelete='cascade', select=True, required=True),
+        'name': fields.text('Description', required=True, translate=True),
+        'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)]),
+        'website_description': fields.html('Option Description', translate=True),
+        'price_unit': fields.float('Unit Price', required=True),
+        'discount': fields.float('Discount (%)'),
+        'uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
+        'quantity': fields.float('Quantity', required=True),
+    }
+    _defaults = {
+        'quantity': 1,
+    }
+    def on_change_product_id(self, cr, uid, ids, product, context=None):
+        vals = {}
+        product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
+        vals.update({
+            'price_unit': product_obj.list_price,
+            'website_description': product_obj.product_tmpl_id.website_description,
+            'name': product_obj.name,
+            'uom_id': product_obj.product_tmpl_id.uom_id.id,
+        })
+        return {'value': vals}
+
 class sale_option_line(osv.osv):
-    _name = "sale.option.line"
+    _name = "sale.order.option"
     _description = "Sale Options"
     _columns = {
-        'option_id': fields.many2one('sale.order', 'Sale Order Reference', ondelete='cascade', select=True),
-        'temp_option_id': fields.many2one('sale.quote.template', 'Quotation Template Reference', ondelete='cascade', select=True),
+        'order_id': fields.many2one('sale.order', 'Sale Order Reference', ondelete='cascade', select=True),
         'line_id': fields.many2one('sale.order.line', on_delete="set null"),
         'name': fields.text('Description', required=True),
-        'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
+        'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)]),
         'website_description': fields.html('Line Description'),
         'price_unit': fields.float('Unit Price', required=True),
         'discount': fields.float('Discount (%)'),
@@ -175,7 +201,6 @@ class sale_option_line(osv.osv):
     _defaults = {
         'quantity': 1,
     }
-
     def on_change_product_id(self, cr, uid, ids, product, context=None):
         vals = {}
         product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)

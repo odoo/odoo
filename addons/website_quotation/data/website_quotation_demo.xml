@@ -459,8 +459,8 @@
             </field>
         </record>
 
-        <record id="website_sale_option_line_1" model="sale.option.line">
-            <field name="temp_option_id" ref="website_quote_template_1"/>
+        <record id="website_sale_option_line_1" model="sale.quote.option">
+            <field name="template_id" ref="website_quote_template_1"/>
             <field name="name">Advanced CRM Functional</field>
             <field name="product_id" ref="product_product_quote_3"/>
             <field name="product_uom_qty">1</field>
@@ -565,8 +565,8 @@
             </field>
         </record>
 
-        <record id="website_sale_option_line_2" model="sale.option.line">
-            <field name="temp_option_id" ref="website_quote_template_1"/>
+        <record id="website_sale_option_line_2" model="sale.quote.option">
+            <field name="template_id" ref="website_quote_template_1"/>
             <field name="name">Functional Webinar</field>
             <field name="product_id" ref="product_product_quote_4"/>
             <field name="product_uom_qty">1</field>
