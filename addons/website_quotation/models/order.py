@@ -105,7 +105,7 @@ class sale_order(osv.osv):
         'website_description': fields.html('Description'),
         'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines'),
         'validity_date': fields.date('Validity Date'),
-        'before_discount': fields.function(_get_total, string='Amount Before Discount', type="float",
+        'amount_undiscounted': fields.function(_get_total, string='Amount Before Discount', type="float",
             digits_compute=dp.get_precision('Account'))
     }
     _defaults = {

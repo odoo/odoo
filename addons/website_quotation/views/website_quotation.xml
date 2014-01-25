@@ -190,11 +190,11 @@
                               </div>
 
 
-                              <div class="text-center mb16" t-if="quotation.before_discount &gt; quotation.amount_total">
+                              <div class="text-center mb16" t-if="quotation.amount_undiscounted &gt; quotation.amount_total">
                                   <p class="text-muted mb8">Your advantage:</p>
                                   <strong t-field="quotation.amount_total" 
                                         t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
-                                  <strong t-field="quotation.before_discount"
+                                  <strong t-field="quotation.amount_undiscounted"
                                         t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'
                                         style="text-decoration: line-through"
                                         class="text-danger"/>
