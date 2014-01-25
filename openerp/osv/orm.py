@@ -3863,7 +3863,7 @@ class BaseModel(object):
                     for (parent_pright, parent_id) in parents:
                         if parent_id == id:
                             break
-                        position = parent_pright + 1
+                        position = parent_pright and parent_pright + 1 or 1
 
                     # It's the first node of the parent
                     if not position:
