@@ -37,13 +37,13 @@ class sale_quote(http.Controller):
         # use SUPERUSER_ID allow to access/view order for public user
         # only if he knows the private token
         order = request.registry.get('sale.order').browse(request.cr, token and SUPERUSER_ID or request.uid, order_id)
-        if token:
+        if token and not message:
             assert token == order.access_token, 'Access denied!'
             body=_('Quotation viewed by customer')
             self.__message_post(body, order_id, type='comment')
         days = 0
         if order.validity_date:
-            days = (datetime.datetime.strptime(order.validity_date, '%Y-%m-%d') - datetime.datetime.now()).days
+            days = (datetime.datetime.strptime(order.validity_date, '%Y-%m-%d') - datetime.datetime.now()).days + 1
         values = {
             'quotation': order,
             'message': message,

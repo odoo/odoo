@@ -52,23 +52,6 @@
             <field name="default_code">QF13</field>
         </record>
 
-        <record id="product_template_quote_4" model="product.template">
-            <field name="name">Advanced Account Functional </field>
-            <field name="categ_id" ref="product.product_category_6"/>
-            <field name="public_categ_id" ref="product.Computer_all_in_one"/>
-            <field name="standard_price">50000.0</field>
-            <field name="list_price">750000.0</field>
-            <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_unit"/>
-            <field name="uom_po_id" ref="product.product_uom_unit"/>
-            <field name="description_sale">Learn directly from our team and network of OpenERP experts. Choose from the available training sessions for a better functional understanding of OpenERP</field>
-        </record>
-
-        <record id="product_product_quote_4" model="product.product">
-            <field name="product_tmpl_id" ref="product_template_quote_4"/>
-            <field name="default_code">QF14</field>
-        </record>
-
         <record id="website_quote_template_1" model="sale.quote.template">
             <field name="name">Partnership Contract</field>
             <field name="website_description" type="xml">
@@ -150,31 +133,6 @@
                             </div>
                         </div>
                     </div>
-                </section>
-
-                <section data-snippet-id="text-block">
-                    <h2>Enterprise commissions</h2>
-                    <p>
-                        As an official partner, you benefit from OpenERP Enterprise
-                        commissions, according to your partner grade, as well as
-                        dedicated services restricted to partners like the technical
-                        support.
-                    </p>
-                    <table class="table table-hover">
-                    <tr>
-                        <th>Grade</th>
-                        <th>Your Commission</th>
-                    </tr><tr>
-                        <td>Ready</td>
-                        <td></td>
-                    </tr><tr>
-                        <td>Silver</td>
-                        <td></td>
-                    </tr><tr>
-                        <td>Gold</td>
-                        <td></td>
-                    </tr>
-                    </table>
                 </section>
 
                 <section data-snippet-id="text-block">
@@ -294,6 +252,7 @@
             <field name="name">Functional Training</field>
             <field name="product_id" ref="product_product_quote_1"/>
             <field name="product_uom_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="price_unit">12950.00</field>
             <field name="discount">10.00</field>
             <field name="website_description" type="html">
@@ -338,6 +297,7 @@
             <field name="name">Technical Training</field>
             <field name="product_id" ref="product_product_quote_2"/>
             <field name="product_uom_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="price_unit">00.00</field>
             <field name="website_description" type="html">
                 <section data-snippet-id="title">
@@ -466,6 +426,7 @@
             <field name="product_id" ref="product_product_quote_3"/>
             <field name="quantity">1</field>
             <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="price_unit">9000.00</field>
             <field name="discount">10</field>
             <field name="website_description" type="html">
@@ -554,146 +515,6 @@
                                 <h2>Requirements</h2>
 
                                 <ul><li>Bring your own laptop.</li>
-                                    <li>Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended.</li>
-                                    <li>Participants preferably have a functional knowledge of our software (see Functional Training).</li>
-                                </ul><p></p>
-
-                                <p>To get more information, visit the <a href="http://openerp.com/">OpenERP Official Website</a>.</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </field>
-        </record>
-
-        <record id="website_sale_option_line_2" model="sale.quote.option">
-            <field name="template_id" ref="website_quote_template_1"/>
-            <field name="name">Functional Webinar</field>
-            <field name="product_id" ref="product_product_quote_4"/>
-            <field name="quantity">1</field>
-            <field name="uom_id" ref="product.product_uom_unit"/>
-            <field name="price_unit">18000.00</field>
-            <field name="website_description" type="html">
-                <section data-snippet-id="title">
-                    <h1>Functional Webinar</h1>
-                </section>
-                <section data-snippet-id="text-image">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12 text-center mb8 mt0" data-snippet-id="colmd">
-                                <h2>Course Summary</h2>
-                            </div>
-
-                            <div class="col-md-12 mt16 mb0" data-snippet-id="colmd">
-                                <p><span style="text-align: -webkit-center; ">This course is dedicated to developers who need to grasp knowledge of the <strong>business applications development </strong>process. This course is for new developers or for IT professionals eager to learn more about technical aspects.</span></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12 text-center mt0 mb16" data-snippet-id="colmd">
-                                <h2>What you will learn?</h2>
-                            </div>
-
-                            <div class="col-md-4" data-snippet-id="colmd">
-                                <div class="panel panel-info">
-                                    <div class="panel-heading text-center">
-                                        <h2 style="margin: 0">Day 1</h2>
-
-                                        <p class="text-muted" style="margin: 0">Introduction to Javascript</p>
-                                    </div>
-
-                                    <ul class="list-group">
-                                        <li class="list-group-item">Hello World</li>
-                                        <li class="list-group-item">Variables &amp; Operators</li>
-                                        <li class="list-group-item">Dive into Strings</li>
-                                        <li class="list-group-item">Functions</li>
-                                        <li class="list-group-item">Loops</li>
-                                        <li class="list-group-item">Arrays</li>
-                                    </ul>
-                                    <div class="panel-footer text-center">
-                                        <p class="text-muted"><i>You will be able to develop simple dynamic compenents in HTML pages.</i></p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4" data-snippet-id="colmd">
-                                <div class="panel panel-info">
-                                    <div class="panel-heading text-center">
-                                        <h2 style="margin: 0">Day 2</h2>
-
-                                        <p class="text-muted" style="margin: 0">OpenERP Web Client</p>
-                                    </div>
-
-                                    <ul class="list-group">
-                                        <li class="list-group-item">Introduction to JQuery</li>
-                                        <li class="list-group-item">Advanced JQuery</li>
-                                        <li class="list-group-item">Underscore</li>
-                                        <li class="list-group-item">Introduction to QWeb</li>
-                                        <li class="list-group-item">Controlers and Views</li>
-                                        <li class="list-group-item">Bootstrap CSS</li>
-                                        <li class="list-group-item">Calling the ORM</li>
-                                    </ul>
-                                    <div class="panel-footer text-center">
-                                        <p class="text-muted"><i>You will be able to create dynamic page interacting with the ORM.</i></p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4" data-snippet-id="colmd">
-                                <div class="panel panel-info">
-                                    <div class="panel-heading text-center">
-                                        <h2 style="margin: 0">Day 3</h2>
-
-                                        <p class="text-muted" style="margin: 0">Building a Full Application</p>
-                                    </div>
-
-                                    <ul class="list-group">
-                                        <li class="list-group-item">Modules</li>
-                                        <li class="list-group-item">Python Objects</li>
-                                        <li class="list-group-item">Report Engine</li>
-                                        <li class="list-group-item">Workflows</li>
-                                        <li class="list-group-item">Training Center Module</li>
-                                        <li class="list-group-item">Integrated Help</li>
-                                        <li class="list-group-item">How to Debug</li>
-                                    </ul>
-                                    <div class="panel-footer text-center">
-                                        <p class="text-muted"><i>You will be able to develop a full application with backend and user interface.</i></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12 text-center mb16 mt0" data-snippet-id="colmd">
-                                <h2>Requirements</h2>
-                            </div>
-
-                            <div class="col-md-12 mb16 mt16" data-snippet-id="colmd">
-                                <p><strong>Objectives:</strong></p>
-
-                                <p><strong>Having attended this course, participants should be able to:</strong></p>
-
-                                <ul>
-                                    <li>Understand the development concepts and architecture;</li>
-                                    <li>Install and administer your own server;</li>
-                                    <li>Develop a new module for a particular application.</li>
-                                </ul><p></p>
-
-                                <p><strong>Our prices include:</strong></p>
-
-                                <ul>
-                                    <li>drinks and lunch;</li>
-                                    <li>training material.</li>
-                                </ul><p></p>
-
-                                <p><strong>Requirements:</strong></p>
-
-                                <ul>
-                                    <li>Bring your own laptop.</li>
                                     <li>Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended.</li>
                                     <li>Participants preferably have a functional knowledge of our software (see Functional Training).</li>
                                 </ul><p></p>

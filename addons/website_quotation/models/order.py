@@ -55,6 +55,7 @@ class sale_quote_line(osv.osv):
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
         'product_uom_qty': fields.float('Quantity', required=True, digits_compute= dp.get_precision('Product UoS')),
+        'product_uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
     }
     _defaults = {
         'product_uom_qty': 1,
@@ -104,7 +105,8 @@ class sale_order(osv.osv):
         'website_description': fields.html('Description'),
         'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines'),
         'validity_date': fields.date('Validity Date'),
-        'before_discount': fields.function(_get_total, string='Amount Before Discount', type="float")
+        'before_discount': fields.function(_get_total, string='Amount Before Discount', type="float",
+            digits_compute=dp.get_precision('Account'))
     }
     _defaults = {
         'access_token': lambda self, cr, uid, ctx={}: str(uuid.uuid4())

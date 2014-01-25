@@ -11,7 +11,7 @@
                   <tr>
                       <th>Products</th>
                       <th>Quantity</th>
-                      <th>Discount(%)</th>
+                      <th></th>
                       <th class="text-right">Unit Price</th>
                       <th class="text-right">Price</th>
                   </tr>
@@ -23,13 +23,14 @@
                       </td>
                       <td>
                           <div id="quote_qty">
-                              <t t-esc="line.product_uom_qty"/>
+                              <span t-field="line.product_uom_qty"/>
+                              <span t-field="line.product_uom"/>
                           </div>
                       </td>
                       <td>
-                          <div id="quote_discount" t-if="line.discount">
-                              <t t-esc="line.discount"/>
-                          </div>
+                          <strong t-if="line.discount" class="text-info">
+                              <t t-esc="((line.discount % 1) and '%s' or '%d') % line.discount"/>% discount
+                          </strong>
                       </td>
                       <td>
                           <strong class="text-right">
@@ -39,7 +40,7 @@
                                   t-att-class="line.discount and 'text-danger' or ''"/>
                               <!-- TODO: apply monetary widget formating -->
                               <div t-if="line.discount">
-                                  <t t-esc="'%.2f' % ((1-line.discount) * line.price_unit)"/>
+                                  <t t-esc="'%.2f' % ((1-line.discount / 100.0) * line.price_unit)"/>
                               </div>
                           </strong>
                       </td>
@@ -175,7 +176,7 @@
                           <hr class="mt0 mb0"/>
                           <div t-if="order_valid" class="text-center hidden-print">
                               <input type="hidden" t-att-value="quotation.validity_date" id="validity_date"/>
-                              <div class="mt8">
+                              <div class="mt8" t-if="days_valid &gt; 0">
                                   <strong>This offer expires in</strong>
                                   <div class="fa fa-clock-o fa-2x day_counter mt8 mb16">
                                       <t t-esc="days_valid"/>
@@ -189,7 +190,7 @@
                               </div>
 
 
-                              <div class="text-center mb16" t-if="quotation.before_discount > quotation.amount_total">
+                              <div class="text-center mb16" t-if="quotation.before_discount &gt; quotation.amount_total">
                                   <p class="text-muted mb8">Your advantage:</p>
                                   <strong t-field="quotation.amount_total" 
                                         t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
@@ -393,8 +394,8 @@
                 <thead>
                     <tr>
                         <th>Products</th>
-                        <th>Discription</th>
-                        <th>Discount(%)</th>
+                        <th>Description</th>
+                        <th></th>
                         <th class="text-right">Price</th>
                     </tr>
                 </thead>
@@ -408,9 +409,9 @@
                                 <div t-field="option.name"/>
                             </td>
                             <td>
-                                <div id="quote_discount" t-if="option.discount">
-                                    <t t-esc="option.discount"/>
-                                </div>
+                                <strong t-if="option.discount" class="text-info">
+                                    <t t-esc="((option.discount % 1) and '%s' or '%d') % option.discount"/>% discount
+                                </strong>
                             </td>
                             <td>
                                 <strong class="text-right">
@@ -419,7 +420,7 @@
                                     t-att-style="option.discount and 'text-decoration: line-through' or ''"
                                     t-att-class="option.discount and 'text-danger' or ''"/>
                                     <div t-if="option.discount">
-                                        <t t-esc="'%.2f' % ((1-option.discount) * option.price_unit)"/>
+                                        <t t-esc="'%.2f' % ((1-option.discount / 100.0) * option.price_unit)"/>
                                     </div>
                                 </strong>
                             </td>
