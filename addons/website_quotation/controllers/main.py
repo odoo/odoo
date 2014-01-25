@@ -29,35 +29,25 @@ import datetime
 from openerp.tools.translate import _
 
 class sale_quote(http.Controller):
-
     @http.route([
         "/quote/<int:order_id>",
         "/quote/<int:order_id>/<token>"
     ], type='http', auth="public", website=True)
     def view(self, order_id, token=None, message=False, **post):
         # use SUPERUSER_ID allow to access/view order for public user
+        # only if he knows the private token
         order = request.registry.get('sale.order').browse(request.cr, token and SUPERUSER_ID or request.uid, order_id)
-        print order.name
         if token:
             assert token == order.access_token, 'Access denied!'
             body=_('Quotation viewed by customer')
-            self.message_post(body, order_id, type='comment')
-        # TODO: if not order.template_id: return to the URL of the portal view of SO
+            self.__message_post(body, order_id, type='comment')
         values = {
             'quotation': order,
             'message': message,
-            'new_post' : request.httprequest.session.get('new_post',False),
-            'option': self._check_option_len(order),
-            'date_diff': order.validity_date and (datetime.datetime.now() > datetime.datetime.strptime(order.validity_date , '%Y-%m-%d')) or False,
-            'salesperson' : False if token else True
+            'option': bool(filter(lambda x: not x.line_id, order.options)),
+            'order_valid': (not order.validity_date) or (datetime.datetime.now().strftime('%Y-%m-%d') <= order.validity_date),
         }
         return request.website.render('website_quotation.so_quotation', values)
-
-    def _check_option_len(self, order):
-        for option in order.options:
-            if not option.line_id:
-                return True
-        return False
 
     @http.route(['/quote/accept'], type='json', auth="public", website=True)
     def accept(self, order_id=None, token=None, signer=None, sign=None, **post):
@@ -68,23 +58,22 @@ class sale_quote(http.Controller):
         if not signer: error['signer'] = 'missing'
         if not sign: error['sign'] = 'missing'
         if not error:
-            attachment = {
-                'name': 'sign.png',
-                'datas':sign,
-                'datas_fname': 'sign.png',
-                'res_model': 'sale.order',
-                'res_id': order_id,
-            }
-            request.registry['ir.attachment'].create(request.cr, request.uid, attachment, context=request.context)
-            order_obj.write(request.cr, request.uid, [order_id], {'signer_name':signer,'state': 'manual'})
+            order_obj.signal_order_confirm(request.cr, SUPERUSER_ID, [order_id], context=request.context)
+            message = _('Order signed by %s') % (signer,)
+            self.__message_post(message, order_id, type='comment', subtype='mt_comment',
+                attachments=[('signature.png', sign)])
         return [error]
 
     @http.route(['/quote/<int:order_id>/<token>/decline'], type='http', auth="public", website=True)
     def decline(self, order_id, token, **post):
+        order_obj = request.registry.get('sale.order')
+        order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
+        assert token == order.access_token, 'Access denied, wrong token!'
+
+        request.registry.get('sale.order').action_cancel(request.cr, SUPERUSER_ID, [order_id])
         message = post.get('decline_message')
-        request.registry.get('sale.order').write(request.cr, request.uid, [order_id], {'state': 'cancel'})
         if message:
-            self.message_post(message, order_id, type='comment', subtype='mt_comment')
+            self.__message_post(message, order_id, type='comment', subtype='mt_comment')
         return werkzeug.utils.redirect("/quote/%s/%s?message=2" % (order_id, token))
 
     @http.route(['/quote/<int:order_id>/<token>/post'], type='http', auth="public", website=True)
@@ -95,11 +84,10 @@ class sale_quote(http.Controller):
         message = post.get('comment')
         assert token == order.access_token, 'Access denied, wrong token!'
         if message:
-            self.message_post(message, order_id, type='comment', subtype='mt_comment')
-            request.httprequest.session['new_post'] = True
+            self.__message_post(message, order_id, type='comment', subtype='mt_comment')
         return werkzeug.utils.redirect("/quote/%s/%s?message=1" % (order_id, token))
 
-    def message_post(self , message, order_id, type='comment', subtype=False):
+    def __message_post(self, message, order_id, type='comment', subtype=False, attachments=[]):
         request.session.body =  message
         cr, uid, context = request.cr, request.uid, request.context
         user = request.registry['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
@@ -110,6 +98,7 @@ class sale_quote(http.Controller):
                     subtype=subtype,
                     author_id=user.partner_id.id,
                     context=context,
+                    attachments=attachments
                 )
             request.session.body = False
         return True
@@ -121,23 +110,19 @@ class sale_quote(http.Controller):
         if unlink:
             request.registry.get('sale.order.line').unlink(request.cr, SUPERUSER_ID, [int(line_id)], context=request.context)
             return False
-        val = self._update_order_line(line_id=int(line_id), number=(remove and -1 or 1))
-        return [str(val), str(order.amount_total)]
+        line_id=ine(line_id)
+        number=(remove and -1 or 1)
 
-    def _update_order_line(self, line_id, number):
         order_line_obj = request.registry.get('sale.order.line')
         order_line_val = order_line_obj.read(request.cr, SUPERUSER_ID, [line_id], [], context=request.context)[0]
         quantity = order_line_val['product_uom_qty'] + number
         order_line_obj.write(request.cr, SUPERUSER_ID, [line_id], {'product_uom_qty': (quantity)}, context=request.context)
-        return quantity
+        return [str(quantity), str(order.amount_total)]
 
     @http.route(["/template/<model('sale.quote.template'):quote>"], type='http', auth="user", website=True)
     def template_view(self, quote, **post):
-        values = {
-            'template': quote,
-        }
+        values = { 'template': quote }
         return request.website.render('website_quotation.so_template', values)
-        
 
     @http.route(["/quote/add_line/<int:option_id>/<int:order_id>/<token>"], type='http', auth="public", website=True)
     def add(self, option_id, order_id, token, **post):

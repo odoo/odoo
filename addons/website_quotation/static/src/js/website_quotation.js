@@ -40,7 +40,7 @@ $(document).ready(function () {
         var sign = false;
         var signer_name = false;
         if($('#signature').length > 0){
-            var isSignature=$("#signature").jSignature('getData','base30')[1].length>1?true:false;
+            var isSignature=$("#signature").jSignature('getData','image')[1].length>1?true:false;
             if (isSignature)
             {
                 sign = JSON.stringify($("#signature").jSignature("getData",'image')[1]);

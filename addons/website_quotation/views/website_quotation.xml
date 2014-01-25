@@ -154,10 +154,10 @@
                   <div class="col-md-3">
                       <div class="bs-sidebar">
                           <div class="text-center hidden-print" t-if="quotation.state in ('draft', 'sent', 'waiting_date')" style="padding: 10px">
-                              <a t-if="not date_diff" class="btn btn-primary btn-block fa fa-check" data-toggle="modal" data-target="#modelaccept">
+                              <a t-if="order_valid" class="btn btn-primary btn-block fa fa-check" data-toggle="modal" data-target="#modelaccept">
                                   Accept Order
                               </a>
-                             <a t-if="date_diff">
+                             <a t-if="not order_valid">
                                  <strong>This offer expired!.</strong> <a href="#discussion">Contact us</a> for new quote.
                              </a>
                               <div class="mt8">
@@ -172,7 +172,7 @@
                           <hr class="mt0 mb0"/>
                           <t t-call="website_quotation.navigation_menu"/>
                           <hr class="mt0 mb0"/>
-                          <div t-if="not date_diff" class="text-center hidden-print">
+                          <div t-if="order_valid" class="text-center hidden-print">
                               <input type="hidden" t-att-value="quotation.validity_date" id="validity_date"/>
                               <div class="mt8" t-if="(quotation.before_discount - quotation.amount_total) > 0.0">
                                 <strong>This offer at </strong>
@@ -224,7 +224,7 @@
                               <h4 class="modal-title">Validate Order</h4>
                             </div>
                             <div class="modal-body">
-                              <p t-if="not salesperson">
+                              <p>
                                   I agree that by signing this proposal, I
                                   accept it on the behalf of <b t-field="quotation.company_id"/>,
                                   for an amount of 
@@ -232,12 +232,9 @@
                                     t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
                                   with payment terms: <b t-field="quotation.payment_term"/>.
                               </p>
-                              <p t-if="salesperson">
-                                Only customer can validate this quotation.
-                              </p>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" t-attf-class="btn btn-primary #{salesperson and 'disabled' or ''}">Sign Order</button> or
+                                <button type="submit" t-attf-class="btn btn-primary">Sign Order</button> or
                                 <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
                             </div>
                           </form>
@@ -359,11 +356,11 @@
   <!-- Options:Quotation Signature -->
   <template id="opt_quotation_signature" name="Signature" inherit_option_id="website_quotation.so_quotation" inherit_id="website_quotation.so_quotation">
       <xpath expr="//div[@class='modal-body']" position="inside">
-        <div id="signer" class="form-group" t-if="not salesperson">
+        <div id="signer" class="form-group">
             <label class="control-label" for="name">Your Name:</label>
             <input type="text" name="signer" id="name" class="form-control"/>
         </div>
-        <div class="panel panel-default mt16 mb0" id="drawsign" t-if="not salesperson">
+        <div class="panel panel-default mt16 mb0" id="drawsign">
             <div class="panel-heading">
                 <div class="pull-right">
                     <a id="sign_clean" class="btn btn-xs">Clear</a>

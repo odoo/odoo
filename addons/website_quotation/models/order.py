@@ -100,7 +100,6 @@ class sale_order(osv.osv):
         'template_id': fields.many2one('sale.quote.template', 'Quote Template'),
         'website_description': fields.html('Description'),
         'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines'),
-        'signer_name': fields.char('Signer Name', size=256),
         'validity_date': fields.date('Validity Date'),
         'before_discount': fields.function(_get_total, string='Amount Before Discount', type="float")
     }
