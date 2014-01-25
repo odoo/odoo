@@ -37,34 +37,27 @@ $(document).ready(function () {
         var href = $link.attr("action");
         var order_id = href.match(/accept\/([0-9]+)/);
         var token = href.match(/token=(.*)/);
-        var sign = false;
-        var signer_name = false;
-        if($('#signature').length > 0){
-            var isSignature=$("#signature").jSignature('getData','image')[1].length>1?true:false;
-            if (isSignature)
-            {
-                sign = JSON.stringify($("#signature").jSignature("getData",'image')[1]);
-            }
-            signer_name = $("#name").val();
-        }
+
+        var signer_name = $("#name").val();
+        var sign = $("#signature").jSignature("getData",'image')[1];
+        $('#signer').toggleClass('has-error', ! signer_name);
+        $('#drawsign').toggleClass('panel-error', ! sign.length);
+
+        if (! signer_name)
+            return false;
+
         openerp.jsonRpc("/quote/accept/", 'call', {
             'order_id': parseInt(order_id[1]),
             'token': token[1],
             'signer': signer_name,
-            'sign': sign,
-        })
-        .then(function (data) {
-            if(_.isEmpty(data[0])){
-                $('#modelaccept').modal('hide');
-                var url = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port : "")
-                window.location.replace(url +'/quote/'+order_id[1]+'/'+token[1]+'?message=3');
-            } else{
-                if (data[0]['signer']) $('#signer').addClass('has-error'); else $('#signer').removeClass('has-error');
-                if (data[0]['sign']) $('#drawsign').addClass('panel-danger'); else $('#drawsign').removeClass('panel-danger');
-            }
+            'sign': sign?JSON.stringify(sign):false,
+        }).then(function (data) {
+            $('#modelaccept').modal('hide');
+            window.location.replace(url +'/quote/'+order_id[1]+'/'+token[1]+'?message=3');
         });
         return false
     });
+
     // automatically generate a menu from h1 and h2 tag in content
     var ul = $('[data-id="quote_sidebar"]');
     var sub_li = null;

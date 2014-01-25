@@ -58,15 +58,11 @@ class sale_quote(http.Controller):
         order_obj = request.registry.get('sale.order')
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
         assert token == order.access_token, 'Access denied, wrong token!'
-        error = {}
-        if not signer: error['signer'] = 'missing'
-        if not sign: error['sign'] = 'missing'
-        if not error:
-            order_obj.signal_order_confirm(request.cr, SUPERUSER_ID, [order_id], context=request.context)
-            message = _('Order signed by %s') % (signer,)
-            self.__message_post(message, order_id, type='comment', subtype='mt_comment',
-                attachments=[('signature.png', sign)])
-        return [error]
+        attachments=sign and [('signature.png', sign)] or []
+        order_obj.signal_order_confirm(request.cr, SUPERUSER_ID, [order_id], context=request.context)
+        message = _('Order signed by %s') % (signer,)
+        self.__message_post(message, order_id, type='comment', subtype='mt_comment', attachments=attachments)
+        return True
 
     @http.route(['/quote/<int:order_id>/<token>/decline'], type='http', auth="public", website=True)
     def decline(self, order_id, token, **post):
