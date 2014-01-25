@@ -113,17 +113,19 @@
   <template id="chatter">
       <h1 class="page-header hidden-print">History</h1>
       <ul class="media-list hidden-print" id="comments-list">
-          <li t-foreach="quotation.message_ids" t-as="message" class="media">
-              <div class="media-body">
-                  <img class="media-object pull-left" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
+          <t t-foreach="quotation.message_ids" t-as="message">
+              <li class="media" t-if="message.type &lt;&gt; 'comment' or message.subtype_id">
                   <div class="media-body">
-                      <h5 class="media-heading">
-                          <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
-                      </h5>
-                      <div t-field="message.body"/>
+                      <img class="media-object pull-left" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
+                      <div class="media-body">
+                          <h5 class="media-heading">
+                              <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
+                          </h5>
+                          <div t-field="message.body"/>
+                      </div>
                   </div>
-              </div>
-          </li>
+              </li>
+          </t>
       </ul>
   </template>
 
@@ -219,7 +221,6 @@
                       </div>
                   </div>
                   <div class="col-md-9">
-                      <p>Message <t t-esc="message"/></p>
                       <div class="alert alert-success alert-dismissable" t-if="message==1">
                           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                           Your message has been successfully sent!
