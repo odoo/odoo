@@ -41,7 +41,7 @@ class sale_quote_template(osv.osv):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': '/template/%d' % quote_id[0]
+            'url': '/quote/template/%d' % quote_id[0]
         }
 
 class sale_quote_line(osv.osv):
