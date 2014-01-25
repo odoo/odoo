@@ -6,11 +6,12 @@
           <h1 class="page-header">Pricing</h1>
       </section>
       <section id="quote">
-          <table class="table table-hover">
+          <table class="table">
               <thead>
                   <tr>
                       <th>Products</th>
                       <th>Quantity</th>
+                      <th>Taxes</th>
                       <th></th>
                       <th class="text-right">Unit Price</th>
                       <th class="text-right">Price</th>
@@ -25,6 +26,11 @@
                           <div id="quote_qty">
                               <span t-field="line.product_uom_qty"/>
                               <span t-field="line.product_uom"/>
+                          </div>
+                      </td>
+                      <td>
+                          <div t-foreach="line.tax_id" t-as="tax">
+                              <t t-esc="tax.name"/>
                           </div>
                       </td>
                       <td>
@@ -56,14 +62,24 @@
                       </td>
                   </tr>
                   <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td><h3 class="text-right">Total</h3></td>
-                      <td class="text-right" colspan="2">
-                          <h3>
-                              <strong data-id="total_amount" t-field="quotation.amount_total" t-field-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/>
-                          </h3>
+                      <td></td><td></td><td></td><td></td>
+                      <td class="text-right"><strong>Subtotal:</strong></td>
+                      <td class="text-right">
+                          <strong data-id="total_amount" t-field="quotation.amount_untaxed" t-field-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td></td><td></td><td></td><td></td>
+                      <td class="text-right">Taxes:</td>
+                      <td class="text-right">
+                          <span data-id="total_amount" t-field="quotation.amount_tax" t-field-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td></td><td></td><td></td><td></td>
+                      <td class="text-right"><strong>Total:</strong></td>
+                      <td class="text-right">
+                          <strong data-id="total_amount" t-field="quotation.amount_total" t-field-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/>
                       </td>
                   </tr>
               </tbody>
@@ -158,11 +174,11 @@
                               <a t-if="order_valid" class="btn btn-primary btn-block fa fa-check" data-toggle="modal" data-target="#modelaccept">
                                   Accept Order
                               </a>
-                              <a t-if="not order_valid">
-                                  <strong>This offer expired!.</strong>
-                                  <br/><a href="#discussion">Contact us</a> for new quote.
+                              <a t-if="not order_valid" href="#discussion" class="btn btn-info btn-block">
+                                  <strong>This offer expired!</strong><br/>
+                                  Contact us for new quote.
                               </a>
-                              <div class="mt8">
+                              <div class="mt8" t-if="order_valid">
                                   <a type="submit" href="#discussion">
                                       Ask Changes
                                   </a> or 
@@ -203,6 +219,7 @@
                       </div>
                   </div>
                   <div class="col-md-9">
+                      <p>Message <t t-esc="message"/></p>
                       <div class="alert alert-success alert-dismissable" t-if="message==1">
                           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                           Your message has been successfully sent!
@@ -450,26 +467,51 @@
                     <div class="col-md-3">
                         <div class="bs-sidebar">
                             <div class="hidden-print navspy" role="complementary">
-                                <ul class="nav bs-sidenav" data-id="quote_sidebar">
-                                </ul>
+                                <ul class="nav bs-sidenav" data-id="quote_sidebar"/>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-9">
-                        <div id="template_introduction" t-field="template.website_description"/>
-                            <t t-foreach="template.quote_line" t-as="line">
-                                <a t-att-id="line.id"/>
-                                <div t-field="line.website_description"/>
-                            </t>
-                            <div class="oe_structure"/>
-                            <section id="terms" class="container" t-if="template.note">
-                                <h2 class="page-header">Terms &amp; Conditions</h2>
-                                <p t-field="template.note"/>
-                            </section>
+                        <div class="alert alert-info alert-dismissable" t-ignore="True">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                            <p>
+                                <strong>Template Header:</strong> this content
+                                will appear on all quotations using this
+                                template.
+                            </p>
+                            <p class="text-muted">
+                                Titles with style <i>Heading 1</i> and
+                                <i>Heading 2</i> will be used to generate the
+                                table of content automatically.
+                            </p>
                         </div>
+                        <div id="template_introduction" t-field="template.website_description"/>
+                        <t t-foreach="template.quote_line" t-as="line">
+                            <div class="alert alert-info alert-dismissable" t-ignore="True">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                                Product: <strong t-esc="line.product_id.name"/>:
+                                this content will appear on the quotation only if this
+                                product is put on the quote.
+                            </div>
+                            <div t-field="line.website_description"/>
+                        </t>
+                        <t t-foreach="template.options" t-as="option_line">
+                            <div class="alert alert-info alert-dismissable" t-ignore="True">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                                Optional Product: <strong t-esc="option_line.product_id.name"/>:
+                                this content will appear on the quotation only if this
+                                product is used in the quote.
+                            </div>
+                            <div t-field="option_line.website_description"/>
+                        </t>
+                        <section id="terms" class="container" t-if="template.note">
+                            <h1 class="page-header" t-ignore="True">Terms &amp; Conditions</h1>
+                            <p t-field="template.note"/>
+                        </section>
                     </div>
                 </div>
-            </body>
+            </div>
+        </body>
         </t>
   </template>
 

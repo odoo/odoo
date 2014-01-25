@@ -31,7 +31,7 @@ class sale_quote_template(osv.osv):
     _description = "Sale Quotation Template"
     _columns = {
         'name': fields.char('Quotation Template', size=256, required=True),
-        'website_description': fields.html('Description'),
+        'website_description': fields.html('Description', translate=True),
         'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quote Template Lines'),
         'note': fields.text('Terms and conditions'),
         'options': fields.one2many('sale.quote.option', 'template_id', 'Optional Products Lines'),
@@ -49,9 +49,9 @@ class sale_quote_line(osv.osv):
     _description = "Quotation Template Lines"
     _columns = {
         'quote_id': fields.many2one('sale.quote.template', 'Quotation Template Reference', required=True, ondelete='cascade', select=True),
-        'name': fields.text('Description', required=True),
-        'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
-        'website_description': fields.html('Line Description'),
+        'name': fields.text('Description', required=True, translate=True),
+        'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True),
+        'website_description': fields.html('Line Description', translate=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
         'product_uom_qty': fields.float('Quantity', required=True, digits_compute= dp.get_precision('Product UoS')),
@@ -66,6 +66,7 @@ class sale_quote_line(osv.osv):
         product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
         vals.update({
             'price_unit': product_obj.list_price,
+            'product_uom_id': product_obj.uom_id.id,
             'website_description': product_obj.website_description,
             'name': product_obj.name,
         })
@@ -120,11 +121,18 @@ class sale_order(osv.osv):
             'url': '/quote/%s' % (quote.id)
         }
 
-    def onchange_template_id(self, cr, uid, ids, template_id, context=None):
+    def onchange_template_id(self, cr, uid, ids, template_id, partner=False, fiscal_position=False, context=None):
         lines = []
         quote_template = self.pool.get('sale.quote.template').browse(cr, uid, template_id, context=context)
         for line in quote_template.quote_line:
-            lines.append((0, 0, {
+            res = self.pool.get('sale.order.line').product_id_change(cr, uid, False,
+                False, line.product_id.id, line.product_uom_qty, line.product_uom_id.id, line.product_uom_qty,
+                line.product_uom_id.id, line.name, partner, False, True, time.strftime('%Y-%m-%d'),
+                False, fiscal_position, True, context)
+            data = res.get('value', {})
+            if 'tax_id' in data:
+                data['tax_id'] = [(6, 0, data['tax_id'])]
+            data.update({
                 'name': line.name,
                 'price_unit': line.price_unit,
                 'discount': line.discount,
@@ -133,7 +141,8 @@ class sale_order(osv.osv):
                 'product_uom': line.product_uom_id.id,
                 'website_description': line.website_description,
                 'state': 'draft',
-            }))
+            })
+            lines.append((0, 0, data))
         options = []
         for option in quote_template.options:
             options.append((0, 0, {
@@ -167,7 +176,7 @@ class sale_quote_option(osv.osv):
     _columns = {
         'template_id': fields.many2one('sale.quote.template', 'Quotation Template Reference', ondelete='cascade', select=True, required=True),
         'name': fields.text('Description', required=True, translate=True),
-        'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)]),
+        'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True),
         'website_description': fields.html('Option Description', translate=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),

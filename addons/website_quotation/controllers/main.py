@@ -25,6 +25,7 @@ from openerp.addons.web.http import request
 from openerp.addons.website.models import website
 import werkzeug
 import datetime
+import time
 
 from openerp.tools.translate import _
 
@@ -37,16 +38,17 @@ class sale_quote(http.Controller):
         # use SUPERUSER_ID allow to access/view order for public user
         # only if he knows the private token
         order = request.registry.get('sale.order').browse(request.cr, token and SUPERUSER_ID or request.uid, order_id)
-        if token and not message:
+        if token:
             assert token == order.access_token, 'Access denied!'
-            body=_('Quotation viewed by customer')
-            self.__message_post(body, order_id, type='comment')
+            if not message:
+                body=_('Quotation viewed by customer')
+                self.__message_post(body, order_id, type='comment')
         days = 0
         if order.validity_date:
             days = (datetime.datetime.strptime(order.validity_date, '%Y-%m-%d') - datetime.datetime.now()).days + 1
         values = {
             'quotation': order,
-            'message': message,
+            'message': message and int(message) or False,
             'option': bool(filter(lambda x: not x.line_id, order.options)),
             'order_valid': (not order.validity_date) or (datetime.datetime.now().strftime('%Y-%m-%d') <= order.validity_date),
             'days_valid': max(days, 0)
@@ -133,14 +135,25 @@ class sale_quote(http.Controller):
         assert token == order.access_token, 'Access denied, wrong token!'
         option_obj = request.registry.get('sale.order.option')
         option = option_obj.browse(request.cr, SUPERUSER_ID, option_id)
+
+        res = request.registry.get('sale.order.line').product_id_change(request.cr, SUPERUSER_ID, order_id,
+            False, option.product_id.id, option.quantity, option.uom_id.id, option.quantity, option.uom_id.id,
+            option.name, order.partner_id.id, False, True, time.strftime('%Y-%m-%d'),
+            False, order.fiscal_position.id, True, request.context)
+        vals = res.get('value', {})
+        if 'tax_id' in vals:
+            vals['tax_id'] = [(6, 0, vals['tax_id'])]
+
         vals.update({
             'price_unit': option.price_unit,
             'website_description': option.website_description,
             'name': option.name,
             'order_id': order.id,
             'product_id' : option.product_id.id,
+            'product_uos_qty': option.quantity,
+            'product_uos': option.uom_id.id,
             'product_uom_qty': option.quantity,
-            'product_uom_id': option.uom_id.id,
+            'product_uom': option.uom_id.id,
             'discount': option.discount,
         })
         line = request.registry.get('sale.order.line').create(request.cr, SUPERUSER_ID, vals, context=request.context)
