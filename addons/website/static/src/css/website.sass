@@ -120,10 +120,10 @@ footer
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 
 .oe_structure.oe_editable.oe_empty:empty, .oe_editable[data-oe-type=html]:empty, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
-    background-image: url('/website/static/src/img/drag_here.png')
+    background-image: url('/website/static/src/img/drag_here.png') !important
 
 .oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
-    background-image: none /*url('/website/static/src/img/under_construction.png')*/
+    background-image: none
     background-repeat: no-repeat
     background-position: center
     height: 220px !important
@@ -141,8 +141,7 @@ footer
     font-size: 24px
 
 .oe_structure.oe_editable.oe_empty:empty:before, .oe_editable[data-oe-type=html]:empty:before, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before
-    content: 'Drag Building Blocks Here'
-
+    content: 'Drag Building Blocks Here' !important
 
 .css_editable_display
     display: none
