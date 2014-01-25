@@ -107,6 +107,8 @@ class sale_quote(http.Controller):
     def update(self, line_id=None, remove=False, unlink=False, order_id=None, token=None, **post):
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, int(order_id))
         assert token == order.access_token, 'Access denied, wrong token!'
+        if order.state not in ('draft','sent'):
+            return False
         if unlink:
             request.registry.get('sale.order.line').unlink(request.cr, SUPERUSER_ID, [int(line_id)], context=request.context)
             return False
