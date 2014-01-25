@@ -109,10 +109,10 @@ class sale_quote(http.Controller):
         assert token == order.access_token, 'Access denied, wrong token!'
         if order.state not in ('draft','sent'):
             return False
+        line_id=int(line_id)
         if unlink:
-            request.registry.get('sale.order.line').unlink(request.cr, SUPERUSER_ID, [int(line_id)], context=request.context)
+            request.registry.get('sale.order.line').unlink(request.cr, SUPERUSER_ID, [line_id], context=request.context)
             return False
-        line_id=ine(line_id)
         number=(remove and -1 or 1)
 
         order_line_obj = request.registry.get('sale.order.line')
