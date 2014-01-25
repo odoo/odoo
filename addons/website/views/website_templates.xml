@@ -103,7 +103,7 @@
                                     <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                         <t t-call="website.submenu"/>
                                     </t>
-                                    <li class="divider" groups="base.group_user,base.group_portal"/>
+                                    <li class="divider" groups="base.group_user,base.group_portal" t-ignore="true"/>
                                     <li class="dropdown" t-ignore="true" groups="base.group_user,base.group_portal">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                             <b>
