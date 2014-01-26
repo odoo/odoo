@@ -42,6 +42,10 @@ class Proxy(http.Controller):
             'Access-Control-Allow-Methods': 'GET',
             })
 
+    @http.route('/hw_proxy/handshake', type='json', auth='admin')
+    def handshake(self):
+        return True
+
     @http.route('/hw_proxy/status', type='http', auth='admin')
     def status_http(self):
         resp = '<html>\n<body>\n<h1>Hardware Proxy Status</h1>\n'
@@ -71,14 +75,9 @@ class Proxy(http.Controller):
             'Access-Control-Allow-Methods': 'GET',
             })
 
-    @http.route('/hw_proxy/status', type='json', auth='admin')
+    @http.route('/hw_proxy/status_json', type='json', auth='admin')
     def status_json(self):
-        return request.make_response(simplejson.dumps(self.get_status()),{
-            'Cache-Control': 'no-cache', 
-            'Content-Type': 'text/html; charset=utf-8',
-            'Access-Control-Allow-Origin':  '*',
-            'Access-Control-Allow-Methods': 'GET',
-            })
+        return self.get_status()
 
     @http.route('/hw_proxy/scan_item_success', type='json', auth='admin')
     def scan_item_success(self, ean):

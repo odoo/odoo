@@ -105,38 +105,80 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.bypass_proxy = false;
 
             this.connection = null; 
-            this.connected = new $.Deferred();
-            this.status    = 'disconnected';
+            this.connected  = null;
+            this.host       = '';
+            this.keptalive  = false;
+            this.status = {};
 
-            window.proxy = this;
+            this.status_callback = options.status_callback || null;
+            this.set_connection_status('disconnected');
+
+            window.hw_proxy = this;
         },
-        close: function(){
-            if(this.status !== 'disconnected'){
+        set_connection_status: function(status,drivers){
+            this.status.status = status;
+            this.status.drivers = status === 'disconnected' ? {} : this.status.drivers;
+            this.status.drivers = drivers ? drivers : this.status.drivers;
+            if(this.status_callback){
+                this.status_callback(status,drivers);
+            }
+        },
+        disconnect: function(){
+            if(this.status.status !== 'disconnected'){
                 this.connection.destroy();
-                this.status = 'disconnected';
+                this.set_connection_status('disconnected');
             }
         },
         connect : function(url){
             var self = this;
             this.connection = new instance.web.Session(undefined,url);
-            this.status = 'connecting';
+            this.host   = url;
+            this.set_connection_status('connecting',{});
+            if(this.connected){
+                this.connected.reject();
+            }
+            this.connected = new $.Deferred();
 
-            return this.message('handshake').then(function(){
-                    self.status = 'connected';
-                    localStorage['hw_proxy_url'] = url;
-                    self.connected.resolve();
+            return this.message('handshake').then(function(response){
+                    if(response){
+                        self.set_connection_status('connected');
+                        localStorage['hw_proxy_url'] = url;
+                        self.connected.resolve();
+                        self.keepalive();
+                    }else{
+                        self.set_connection_status('disconnected');
+                        self.connected.reject();
+                        console.error('Connection refused by the Proxy');
+                    }
                 },function(){
-                    self.status = 'disconnected';
+                    self.set_connection_status('disconnected');
                     self.connected.reject();
                     console.error('Could not connect to the Proxy');
                 });
+        },
+        keepalive: function(){
+            var self = this;
+            if(!this.keptalive){
+                this.keptalive = true;
+                function status(){
+                    self.connection.rpc('/hw_proxy/status_json',{})       
+                        .then(function(driver_status){
+                            self.set_connection_status('connected',driver_status);
+                        },function(){
+                            self.set_connection_status('disconnected');
+                        }).always(function(){
+                            setTimeout(status,5000);
+                        });
+                }
+                status();
+            };
         },
         message : function(name,params){
             var callbacks = this.notifications[name] || [];
             for(var i = 0; i < callbacks.length; i++){
                 callbacks[i](params);
             }
-            if(this.status !== 'disconnected'){
+            if(this.status.status !== 'disconnected'){
                 return this.connection.rpc('/hw_proxy/' + name, params || {});       
             }else{
                 return (new $.Deferred()).reject();
@@ -245,8 +287,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
             this.notifications[name].push(callback);
         },
-
-        
         
         //a product has been scanned and recognized with success
         // ean is a parsed ean object
@@ -702,7 +742,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         disconnect_from_proxy: function(){
             this.remote_scanning = false;
         },
-        connect_to_proxy: function(){
+        connect_to_proxy: function(){ //FIXME prevent double connections
             var self = this;
             this.remote_scanning = true;
 
@@ -714,13 +754,11 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                         if(!self.remote_scanning){ 
                             return; 
                         }
-                        self.pos.set('proxy_status','connected');
                         self.scan(barcode);
                         waitforbarcode();
                     },
                     function(){
                         setTimeout(waitforbarcode,5000);
-                        self.pos.set('proxy_status','disconnected');
                     });
                 });
         },

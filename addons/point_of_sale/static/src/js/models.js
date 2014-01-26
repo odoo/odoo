@@ -55,7 +55,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'synch':            { state:'connected', pending:0 }, 
                 'orders':           new module.OrderCollection(),
                 'selectedOrder':    null,
-                'proxy_status':     'connecting',
+                'proxy_status':     {status: 'connecting', drivers: {}},
             });
 
             this.bind('change:synch',function(pos,synch){
@@ -92,16 +92,23 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.barcode_reader.disconnect_from_proxy();
         },
 
+        set_proxy_status: function(status,drivers){
+            this.set('proxy_status',{status:status,drivers:drivers || {}});
+        },
         connect_to_proxy: function(){
             var self = this;
             this.barcode_reader.disconnect_from_proxy();
             this.pos_widget.loading_message(_t('Connecting to the PosBox'),0);
-            this.set('proxy_status', 'connecting');
+            this.set_proxy_status('connecting');
             
             this.pos_widget.loading_skip(function(){
                     self.proxy.stop_searching();
-                    self.set('proxy_status', 'disconnected'); 
+                    this.set_proxy_status('disconnected');
                 });
+
+            this.proxy.status_callback = function(status,driver_status){
+                self.set_proxy_status(status,driver_status);
+            };
 
             return this.proxy.find_proxy({
                     force_ip: self.config.proxy_ip || undefined,
@@ -114,9 +121,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         if(self.config.iface_scan_via_proxy){
                             self.barcode_reader.connect_to_proxy();
                         }
-                        self.set('proxy_status', 'connected');
+                        self.set_proxy_status('connected');
                     }else{
-                        self.set('proxy_status', 'disconnected');
+                        self.set_proxy_status('disconnected');
                     }
                 });
         },

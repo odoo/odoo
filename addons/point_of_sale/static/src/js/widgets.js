@@ -856,13 +856,39 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
     // this is used to notify the user if the pos is connected to the proxy
     module.ProxyStatusWidget = module.StatusWidget.extend({
         template: 'ProxyStatusWidget',
+        set_smart_status: function(status){
+            if(status.status === 'connected'){
+                var warning = false;
+                var msg = ''
+                if(this.pos.config.iface_scan_via_proxy){
+                    var scanner = status.drivers.scanner ? status.drivers.scanner.status : false;
+                    if( scanner != 'connected' && scanner != 'connecting'){
+                        warning = true;
+                        msg += _t('Scanner');
+                    }
+                }
+                if( this.pos.config.iface_print_via_proxy || 
+                    this.pos.config.iface_cashdrawer ){
+                    var printer = status.drivers.escpos ? status.drivers.escpos.status : false;
+                    if( printer != 'connected' && printer != 'connecting'){
+                        warning = true;
+                        msg = msg ? msg + ' & ' : msg;
+                        msg += _t('Printer');
+                    }
+                }
+                msg = msg ? msg + ' ' + _t('Offline') : msg;
+                this.set_status(warning ? 'warning' : 'connected', msg);
+            }else{
+                this.set_status(status.status,'');
+            }
+        },
         start: function(){
             var self = this;
             
-            this.set_status(this.pos.get('proxy_status'),'');
+            this.set_smart_status(this.pos.get('proxy_status'));
 
             this.pos.bind('change:proxy_status', function(pos,status){
-                self.set_status(status,'');
+                self.set_smart_status(status);
             });
 
             this.$el.click(function(){
