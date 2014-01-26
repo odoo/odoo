@@ -127,7 +127,6 @@ class BlogPost(osv.Model):
             'blog.post.history', 'post_id',
             'History', help='Last post modifications'
         ),
-        'menu_id': fields.many2one('ir.ui.menu', "Menu", readonly=True),
         # creation / update stuff
         'create_date': fields.datetime(
             'Created on',
