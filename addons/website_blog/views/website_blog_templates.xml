@@ -16,7 +16,7 @@
     </xpath>
 </template>
 
-<!-- Blog Post Summary -->
+<!-- Overview of all blog posts -->
 <template id="latest_blogs" name="Latest Blogs">
     <t t-call="website.layout">
         <div id="wrap">
@@ -157,16 +157,18 @@
 <template id="blog_post_complete" name="Blog Post">
     <t t-call="website_blog.index">
 
-    <div class="row">
-      <div class="col-sm-9">
-          <ol class="breadcrumb">
-              <li><a t-href="/blog/#{ slug(blog) }"><span t-field="blog.name"/></a></li>
-              <li t-if="tag"><a t-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }"><span t-field="tag.name"/></a></li>
-              <li t-if="tag and date"><a t-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }/date/#{ date }" t-esc="date_name"/></li>
-              <li t-if="not tag and date"><a t-href="/blog/#{ slug(blog) }/date/#{ date }" t-esc="date_name"/></li>
-              <li class="active"><span t-field="blog_post.name"/></li>
-          </ol>
-      </div><div class="col-sm-3">
+    <div class="container" id="title">
+        <h1 class="text-center" t-field="blog_post.name"/>
+        <p class="post-meta text-muted text-center" name="blog_post_data">
+            <span class="fa fa-calendar oe_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
+            <span t-if="len(blog_post.message_ids) &gt; 0" class="fa fa-comment-o"> With
+                <a t-attf-href="#comments">
+                    <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
+                    <t t-if="len(blog_post.message_ids) > 1"><t t-esc="len(blog_post.message_ids)"/> comments</t>
+                </a>
+            </span>
+        </p>
+
         <t t-call="website.publish_management">
             <t t-set="object" t-value="blog_post"/>
             <t t-set="publish_edit" t-value="True"/>
@@ -177,44 +179,51 @@
                 <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
             </li>
         </t>
-      </div>
     </div>
 
-    <div class="clearfix"/>
-
-    <h1 class="text-center" t-field="blog_post.name"/>
-    <p class="post-meta text-muted text-center" name="blog_post_data">
-        <span class="fa fa-calendar oe_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
-        <span t-if="len(blog_post.message_ids) &gt; 0" class="fa fa-comment-o"> With
-            <a t-attf-href="#comments">
-                <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
-                <t t-if="len(blog_post.message_ids) > 1"><t t-esc="len(blog_post.message_ids)"/> comments</t>
-            </a>
-        </span>
-    </p>
-
     <div t-field="blog_post.content" class="mt16"/>
-    <hr class="mb32"/>
 
-    <a id="comments"/>
-    <ul class="media-list" id="comments-list">
-        <li t-foreach="blog_post.website_message_ids" t-as="message" class="media">
-            <div class="media-body">
-                <img class="media-object pull-left" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
+    <section id="comments" class="container">
+        <ul class="media-list" id="comments-list">
+            <li t-foreach="blog_post.website_message_ids" t-as="message" class="media">
                 <div class="media-body">
-                    <t t-call="website.publish_short">
-                        <t t-set="object" t-value="message"/>
-                    </t>
-                    <h5 class="media-heading">
-                        <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
-                    </h5>
-                    <div t-field="message.body"/>
+                    <img class="media-object pull-left" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
+                    <div class="media-body">
+                        <t t-call="website.publish_short">
+                            <t t-set="object" t-value="message"/>
+                        </t>
+                        <h5 class="media-heading">
+                            <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
+                        </h5>
+                        <div t-field="message.body"/>
+                    </div>
                 </div>
-            </div>
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </section>
     </t>
 </template>
+
+<template id="blog_breadcrumb" name="Breadcrumb"
+        inherit_option_id="website_blog.blog_post_complete">
+    <xpath expr="//div[@id='title']" position="before">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-9">
+                <ol class="breadcrumb">
+                    <li><a t-href="/blog/#{ slug(blog) }"><span t-field="blog.name"/></a></li>
+                    <li t-if="tag"><a t-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }"><span t-field="tag.name"/></a></li>
+                    <li t-if="tag and date"><a t-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }/date/#{ date }" t-esc="date_name"/></li>
+                    <li t-if="not tag and date"><a t-href="/blog/#{ slug(blog) }/date/#{ date }" t-esc="date_name"/></li>
+                    <li class="active"><span t-field="blog_post.name"/></li>
+                </ol>
+            </div><div class="col-sm-3">
+            </div>
+          </div>
+        </div>
+    </xpath>
+</template>
+
 
 <!-- Options: Blog Post: user can reply -->
 <template id="opt_blog_post_complete_comment" name="Allow Comments"
@@ -271,23 +280,32 @@
             <link rel='stylesheet' href='/website_blog/static/src/css/website_blog.css'/>
         </t>
         <div id="wrap" class="js_blog">
-            <div class="oe_structure"></div>
-            <div class="container mt16 js_website_blog">
-                <div class="row">
-                    <div class="col-lg-12 col-sm-12" id="blog_left_column">
-                        <t t-raw="0"/>
-                    </div>
-                    <div class="col-lg-3 col-lg-offset-1 col-sm-4" id="blog_right_column"/>
-                </div>
-            </div>
+            <t t-raw="0"/>
             <div class="oe_structure"></div>
         </div>
     </t>
 </template>
 
+<!-- Option: Right Column for extra info -->
+
+<template id="index_right" name="Right Column"
+        inherit_option_id="website_blog.index">
+    <xpath expr="//div[@id='wrap']" position="replace">
+        <div class="container mt16 js_website_blog">
+            <div class="row">
+                <div class="col-lg-8 col-sm-8" id="blog_left_column">
+                    <t t-raw="0"/>
+                </div>
+                <div class="col-lg-3 col-lg-offset-1 col-sm-4" id="blog_right_column"/>
+            </div>
+        </div>
+        <div class="oe_structure"></div>
+    </xpath>
+</template>
+
 <!-- Option: Right Column: tags -->
 <template id="opt_blog_rc_tags" name="Tags"
-        inherit_option_id="website_blog.index" inherit_id="website_blog.index">
+        inherit_option_id="website_blog.index_right">
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
         <h4>Tags</h4>
@@ -304,10 +322,7 @@
 
 <!-- Option: Right Column: archives -->
 <template id="opt_blog_rc_history" name="Archives"
-        inherit_option_id="website_blog.index" inherit_id="website_blog.index">
-    <xpath expr="//div[@id='blog_left_column']" position="attributes">
-        <attribute name="class">col-lg-8 col-sm-8</attribute>
-    </xpath>
+        inherit_option_id="website_blog.index_right">
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
         <h4>Archives</h4>
@@ -324,10 +339,7 @@
 
 <!-- Option: Right Column: about us -->
 <template id="opt_blog_rc_about_us" name="About Us" priority="2"
-        inherit_option_id="website_blog.index" inherit_id="website_blog.index">
-    <xpath expr="//div[@id='blog_left_column']" position="attributes">
-        <attribute name="class">col-lg-8 col-sm-8</attribute>
-    </xpath>
+        inherit_option_id="website_blog.index_right">
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
         <h4>About us</h4>
@@ -344,10 +356,7 @@
 
 <!-- Option: Right Column: follow us -->
 <template id="opt_blog_rc_follow_us" name="Follow us" priority="4"
-        inherit_option_id="website_blog.index" inherit_id="website_blog.index">
-    <xpath expr="//div[@id='blog_left_column']" position="attributes">
-        <attribute name="class">col-lg-8 col-sm-8</attribute>
-    </xpath>
+        inherit_option_id="website_blog.index_right">
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
             <h4>Follow us<small t-if="blog">: <t t-esc="blog.name"/></small></h4>
@@ -374,10 +383,7 @@
 
 <!-- Option: Right Column: blogs -->
 <template id="opt_blog_rc_blogs" name="Our Blogs" priority="6"
-        inherit_option_id="website_blog.index">
-    <xpath expr="//div[@id='blog_left_column']" position="attributes">
-        <attribute name="class">col-lg-8 col-sm-8</attribute>
-    </xpath>
+        inherit_option_id="website_blog.index_right">
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32 mb32">
         <h4>Our Blogs</h4>
