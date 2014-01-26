@@ -32,7 +32,7 @@ _logger = logging.getLogger(__name__)
 class EscposDriver(Thread):
     def __init__(self):
         Thread.__init__(self)
-        self.queue = None
+        self.queue = Queue()
         self.status = {'status':'connecting', 'messages':[]}
 
         self.supported_printers = [
