@@ -265,18 +265,8 @@ class product_category(osv.osv):
     _parent_order = 'sequence, name'
     _order = 'parent_left'
 
-    def _check_recursion(self, cr, uid, ids, context=None):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from product_category where id IN %s',(tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
     ]
     def child_get(self, cr, uid, ids):
         return [ids]
@@ -286,18 +276,9 @@ class product_public_category(osv.osv):
     _name = "product.public.category"
     _description = "Public Category"
     _order = "sequence, name"
-    def _check_recursion(self, cr, uid, ids, context=None):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from product_public_category where id IN %s',(tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
     ]
 
     def name_get(self, cr, uid, ids, context=None):
