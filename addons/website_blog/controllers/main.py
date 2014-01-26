@@ -27,10 +27,6 @@ from openerp import SUPERUSER_ID
 import werkzeug
 
 
-MONTHS = [None, _('January'), _('February'), _('March'), _('April'),
-    _('May'), _('June'), _('July'), _('August'), _('September'),
-    _('October'), _('November'), _('December')]
-
 
 class WebsiteBlog(http.Controller):
     _blog_post_per_page = 6
@@ -199,6 +195,10 @@ class WebsiteBlog(http.Controller):
         tag_obj = request.registry['blog.tag']
         tag_ids = tag_obj.search(cr, uid, [], context=context)
         tags = tag_obj.browse(cr, uid, tag_ids, context=context)
+
+        MONTHS = [None, _('January'), _('February'), _('March'), _('April'),
+            _('May'), _('June'), _('July'), _('August'), _('September'),
+            _('October'), _('November'), _('December')]
 
         values = {
             'blog': blog_post.blog_id,
