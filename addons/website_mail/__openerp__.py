@@ -44,5 +44,5 @@
         'static/src/xml/website_mail.xml'
     ],
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
 }
