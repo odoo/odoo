@@ -91,7 +91,9 @@ class BlogPost(osv.Model):
         return res
 
     _columns = {
-        'name': fields.char('Title', required=True),
+        'name': fields.char('Title', required=True, translate=True),
+        'subtitle': fields.char('Subtitle', translate=True),
+        'content_image': fields.binary('Background Image'),
         'blog_id': fields.many2one(
             'blog.blog', 'Blog',
             required=True, ondelete='cascade',
@@ -99,7 +101,7 @@ class BlogPost(osv.Model):
         'tag_ids': fields.many2many(
             'blog.tag', string='Tags',
         ),
-        'content': fields.html('Content'),
+        'content': fields.html('Content', translate=True),
         'shortened_content': fields.function(
             get_shortened_content,
             type='html',
