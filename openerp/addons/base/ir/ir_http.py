@@ -41,9 +41,6 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
         self.regex = '([0-9,]+)'
 
     def to_python(self, value):
-        # TODO:
-        # - raise routing.ValidationError() if no browse record can be createdm
-        # - support slug
         return request.registry[self.model].browse(request.cr, UID_PLACEHOLDER, [int(i) for i in value.split(',')], context=request.context)
 
     def to_url(self, value):
