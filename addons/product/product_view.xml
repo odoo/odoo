@@ -33,14 +33,12 @@
             <field name="model">product.product</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')" string="Products">
+                <tree string="Products">
                     <field name="default_code"/>
                     <field name="name"/>
                     <field name="categ_id" invisible="1"/>
                     <field name="type" invisible="1"/>
                     <field name="uom_id" string="Unit of Measure" groups="product.group_uom"/>
-                    <field name="qty_available"/>
-                    <field name="virtual_available"/>
                     <field name="lst_price"/>
                     <field name="price" invisible="not context.get('pricelist',False)"/>
                     <field name="standard_price" invisible="1"/>
