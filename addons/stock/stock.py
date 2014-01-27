@@ -1164,6 +1164,34 @@ class stock_production_lot(osv.osv):
         ('name_ref_uniq', 'unique (name, ref)', 'The combination of Serial Number and internal reference must be unique !'),
     ]
 
+    def action_traceability(self, cr, uid, ids, context=None):
+        """ It traces the information of lots
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: List of IDs selected
+        @param context: A standard dictionary
+        @return: A dictionary of values
+        """
+        quant_obj = self.pool.get("stock.quant")
+        move_obj = self.pool.get("stock.move")
+        quants = quant_obj.search(cr, uid, [('lot_id', 'in', ids)], context=context)
+        moves = set()
+        for quant in quant_obj.browse(cr, uid, quants, context=context):
+            moves |= {move.id for move in quant.history_ids}
+        if moves:
+            return { 
+                'domain': "[('id','in',["+','.join(map(str, list(moves)))+"])]",
+                'name': _('Traceability'),
+                'view_mode': 'tree,form',
+                'view_type': 'form',
+                'context': {'tree_view_ref': 'stock.view_move_tree'},
+                'res_model': 'stock.move',
+                'type': 'ir.actions.act_window',
+                    }
+        return False
+        
+
 
 # ----------------------------------------------------
 # Move

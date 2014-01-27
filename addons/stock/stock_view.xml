@@ -191,8 +191,7 @@
             <field name="arch" type="xml">
                 <form string="Serial Number" version="7.0">
                     <div class="oe_button_box oe_right">
-                        <button name="action_traceability" string="Upstream Traceability" type="object"/>
-                        <button name="action_traceability" string="Downstream Traceability" type="object"/>
+                        <button name="action_traceability" string="Traceability" type="object" attrs="{'invisible': [('quant_ids','=',[])]}"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -261,9 +260,9 @@
                 Click to add a serial number.
               </p><p>
                 This is the list of all the production lots you recorded. When
-                you select a lot, you can get the upstream or downstream
+                you select a lot, you can get the 
                 traceability of the products contained in lot. By default, the
-                list is filtred on the serial numbers that are available in
+                list is filtered on the serial numbers that are available in
                 your warehouse but you can uncheck the 'Available' button to
                 get all the lots you produced, received or delivered to
                 customers.
