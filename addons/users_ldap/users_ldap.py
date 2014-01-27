@@ -98,6 +98,9 @@ class CompanyLDAP(osv.osv):
         filter = filter_format(conf['ldap_filter'], (login,))
         try:
             results = self.query(conf, filter)
+
+            # Get rid of (None, attrs) for searchResultReference replies
+            results = [i for i in results if i[0]]
             if results and len(results) == 1:
                 dn = results[0][0]
                 conn = self.connect(conf)
