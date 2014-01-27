@@ -94,7 +94,7 @@ class publisher_warranty_contract(osv.osv):
             # old behavior based on res.log; now on mail.message, that is not necessarily installed
             IMD = self.pool['ir.model.data']
             user = self.pool['res.users'].browse(cr, SUPERUSER_ID, SUPERUSER_ID)
-            poster = IMD.get_object(cr, SUPERUSER_ID, 'mail', 'group_all_employees', context=context, check=False)
+            poster = IMD.get_object(cr, SUPERUSER_ID, 'mail', 'group_all_employees', context=context, raise_exception=False)
             if not (poster and poster.exists()):
                 if not user.exists():
                     return True
