@@ -86,6 +86,7 @@ class ir_http(osv.AbstractModel):
         return auth_method
 
     def _handle_exception(self, exception):
+        # If handle exception return something different than None, it will be used as a response
         raise
 
     def _dispatch(self):
@@ -104,7 +105,10 @@ class ir_http(osv.AbstractModel):
                 convert_exception_to(
                     werkzeug.exceptions.Forbidden))
 
-        self._postprocess_args(arguments)
+        processing = self._postprocess_args(arguments)
+        if processing:
+            return processing
+
 
         # set and execute handler
         try:
