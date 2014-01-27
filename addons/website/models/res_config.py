@@ -19,19 +19,14 @@ class website_config_settings(osv.osv_memory):
         'social_linkedin': fields.related('website_id', 'social_linkedin', type="char", string='LinkedIn Account'),
         'social_youtube': fields.related('website_id', 'social_youtube', type="char", string='Youtube Account'),
         'social_googleplus': fields.related('website_id', 'social_googleplus', type="char", string='Google+ Account'),
-
-        'module_website_sale': fields.boolean('E-Commerce', help='Sell Your Products Online'),
-        'module_website_blog': fields.boolean('Blog', help='News, Blogs, Announces, Discussions'),
-        'module_website_event': fields.boolean('Event', help='Schedule, Promote and Sell Events'),
-        'module_website_hr_recruitment': fields.boolean('Job Position', help='Promote Your Job Positions'),
     }
 
-    def on_change_website_id(self, cr, uid, ids, id, context=None):
-        website_data = self.pool.get('website').read(cr, uid, [id], [], context=context)[0]
+    def on_change_website_id(self, cr, uid, ids, website_id, context=None):
+        website_data = self.pool.get('website').read(cr, uid, [website_id], [], context=context)[0]
         values = {}
         for fname, v in website_data.items():
-            if self._columns.get(fname):
-                values[fname] = v and self._columns[fname]._type == 'many2one' and v[0] or v
+            if fname in self._columns:
+                values[fname] = v[0] if v and self._columns[fname]._type == 'many2one' else v
         return {'value' : values}
 
     _defaults = {
