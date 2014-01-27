@@ -76,9 +76,10 @@
                                             'invisible': [('is_only_child', '=', False)]}"/>
                                 <field name="product_tmpl_id" class="oe_inline" readonly="1" required="0"
                                     attrs="{'invisible': [('is_only_child', '=', True)]}"/>
-                                <span attrs="{'invisible':[('variants','=',False)]}" groups="product.group_product_variant"> - </span>
-                                <field name="variants" placeholder="Variant Name"
-                                    groups="product.group_product_variant" class="oe_inline"/>
+                                <span groups="product.group_product_variant"
+                                    attrs="{'invisible': [('is_only_child', '=', True), ('variants', '=', False)]}">
+                                    - <field name="variants" placeholder="Variant Name" class="oe_inline"/>
+                                </span>
                             </h1>
                             <span attrs="{'invisible': [('is_only_child', '=', True)]}">
                                 <p>Generic product settings are managed on
