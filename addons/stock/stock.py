@@ -1173,8 +1173,6 @@ class stock_production_lot(osv.osv):
         @param context: A standard dictionary
         @return: A dictionary of values
         """
-        if not ids or len(ids) == 0:
-            return False #TODO give warning instead
         quant_obj = self.pool.get("stock.quant")
         move_obj = self.pool.get("stock.move")
         quants = quant_obj.search(cr, uid, [('lot_id', 'in', ids)], context=context)
