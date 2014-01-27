@@ -33,7 +33,7 @@ import openerp.addons.decimal_precision as dp
 
 def ean_checksum(eancode):
     """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
-    if len(eancode) <> 13:
+    if len(eancode) != 13:
         return -1
     oddsum=0
     evensum=0
@@ -56,7 +56,7 @@ def check_ean(eancode):
     """returns True if eancode is a valid ean13 string, or null"""
     if not eancode:
         return True
-    if len(eancode) <> 13:
+    if len(eancode) != 13:
         return False
     try:
         int(eancode)
@@ -121,7 +121,7 @@ class product_uom(osv.osv):
 
     def create(self, cr, uid, data, context=None):
         if 'factor_inv' in data:
-            if data['factor_inv'] <> 1:
+            if data['factor_inv'] != 1:
                 data['factor'] = self._compute_factor_inv(data['factor_inv'])
             del(data['factor_inv'])
         return super(product_uom, self).create(cr, uid, data, context)
@@ -171,7 +171,7 @@ class product_uom(osv.osv):
     def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, context=None):
         if context is None:
             context = {}
-        if from_unit.category_id.id <> to_unit.category_id.id:
+        if from_unit.category_id.id != to_unit.category_id.id:
             if context.get('raise-exception', True):
                 raise osv.except_osv(_('Error!'), _('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (from_unit.name,to_unit.name,))
             else:
@@ -189,7 +189,7 @@ class product_uom(osv.osv):
             from_unit, to_unit = uoms[0], uoms[-1]
         else:
             from_unit, to_unit = uoms[-1], uoms[0]
-        if from_unit.category_id.id <> to_unit.category_id.id:
+        if from_unit.category_id.id != to_unit.category_id.id:
             return price
         amount = price * from_unit.factor
         if to_uom_id:
@@ -473,7 +473,7 @@ class product_template(osv.osv):
 
     def _check_uom(self, cursor, user, ids, context=None):
         for product in self.browse(cursor, user, ids, context=context):
-            if product.uom_id.category_id.id <> product.uom_po_id.category_id.id:
+            if product.uom_id.category_id.id != product.uom_po_id.category_id.id:
                 return False
         return True
 
