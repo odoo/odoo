@@ -79,10 +79,18 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             return g instanceof openerp.web.search.GroupbyGroup;
         });
 
-        var filters = _.flatten(_.pluck(groupbygroups, 'filters'), true);
+        var filters = _.flatten(_.pluck(groupbygroups, 'filters'), true),
+            groupbys = _.flatten(_.map(filters, function (filter) {
+                var groupby = py.eval(filter.attrs.context).group_by;
+                if (!(groupby instanceof Array)) { groupby = [groupby]; }
+                return _.map(groupby, function(g) { 
+                    return {field: g, filter: filter}; 
+                });
+            }));
 
-        return _.uniq(_.map(filters, function (filter) {
-            var field = py.eval(filter.attrs.context).group_by,
+        return _.uniq(_.map(groupbys, function (groupby) {
+            var field = groupby.field,
+                filter = groupby.filter,
                 raw_field = field.split(':')[0],
                 string = (field === raw_field) ? filter.attrs.string : self.fields[raw_field].string;
             
@@ -465,7 +473,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     make_measure_row: function() {
         var self = this,
             cols = this.pivot.cols.headers,
-            measure_cells,
             measure_row = $('<tr>');
 
         measure_row.append($('<th>'));
