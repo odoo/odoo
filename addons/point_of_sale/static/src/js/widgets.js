@@ -885,10 +885,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         start: function(){
             var self = this;
             
-            this.set_smart_status(this.pos.get('proxy_status'));
+            this.set_smart_status(this.pos.proxy.get('status'));
 
-            this.pos.bind('change:proxy_status', function(pos,status){
-                self.set_smart_status(status);
+            this.pos.proxy.on('change:status',this,function(eh,status){ //FIXME remove duplicate changes 
+                self.set_smart_status(status.newValue);
             });
 
             this.$el.click(function(){

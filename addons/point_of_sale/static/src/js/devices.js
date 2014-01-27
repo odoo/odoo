@@ -81,8 +81,9 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
     // connected to the Point of Sale. As the communication only goes from the POS to the proxy,
     // methods are used both to signal an event, and to fetch information. 
 
-    module.ProxyDevice  = instance.web.Class.extend({
-        init: function(options){
+    module.ProxyDevice  = instance.web.Class.extend(openerp.PropertiesMixin,{
+        init: function(parent,options){
+            openerp.PropertiesMixin.init.call(this,parent);
             var self = this;
             options = options || {};
             url = options.url || 'http://localhost:8069';
@@ -105,56 +106,67 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.bypass_proxy = false;
 
             this.connection = null; 
-            this.connected  = null;
             this.host       = '';
             this.keptalive  = false;
-            this.status = {};
 
-            this.status_callback = options.status_callback || null;
+            this.set('status',{});
+
             this.set_connection_status('disconnected');
 
             window.hw_proxy = this;
         },
         set_connection_status: function(status,drivers){
-            this.status.status = status;
-            this.status.drivers = status === 'disconnected' ? {} : this.status.drivers;
-            this.status.drivers = drivers ? drivers : this.status.drivers;
-            if(this.status_callback){
-                this.status_callback(status,drivers);
-            }
+            oldstatus = this.get('status');
+            newstatus = {};
+            newstatus.status = status;
+            newstatus.drivers = status === 'disconnected' ? {} : oldstatus.drivers;
+            newstatus.drivers = drivers ? drivers : newstatus.drivers;
+            this.set('status',newstatus);
         },
         disconnect: function(){
-            if(this.status.status !== 'disconnected'){
+            if(this.get('status').status !== 'disconnected'){
                 this.connection.destroy();
                 this.set_connection_status('disconnected');
             }
         },
-        connect : function(url){
+        connect: function(url){
             var self = this;
             this.connection = new instance.web.Session(undefined,url);
             this.host   = url;
             this.set_connection_status('connecting',{});
-            if(this.connected){
-                this.connected.reject();
-            }
-            this.connected = new $.Deferred();
 
             return this.message('handshake').then(function(response){
                     if(response){
                         self.set_connection_status('connected');
                         localStorage['hw_proxy_url'] = url;
-                        self.connected.resolve();
                         self.keepalive();
                     }else{
                         self.set_connection_status('disconnected');
-                        self.connected.reject();
                         console.error('Connection refused by the Proxy');
                     }
                 },function(){
                     self.set_connection_status('disconnected');
-                    self.connected.reject();
                     console.error('Could not connect to the Proxy');
                 });
+        },
+        autoconnect: function(opts){
+            var self = this;
+            this.set_connection_status('connecting',{});
+            var success = new $.Deferred();
+            this.find_proxy(opts)
+                .then(function(proxies){
+                    if(proxies.length > 0){
+                        self.connect(proxies[0])
+                            .then(function(){
+                                success.resolve();
+                            },function(){
+                                success.reject();
+                            });
+                    }else{
+                        success.reject();
+                    }
+                });
+            return success;
         },
         keepalive: function(){
             var self = this;
@@ -178,7 +190,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             for(var i = 0; i < callbacks.length; i++){
                 callbacks[i](params);
             }
-            if(this.status.status !== 'disconnected'){
+            if(this.get('status').status !== 'disconnected'){
                 return this.connection.rpc('/hw_proxy/' + name, params || {});       
             }else{
                 return (new $.Deferred()).reject();
@@ -204,6 +216,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             var parallel = 8;
             var threads  = [];
             var progress = 0;
+
+            this.set_connection_status('connecting');
 
             if(options.force_ip){
                 urls.push(options.force_ip);
@@ -277,6 +291,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
         stop_searching: function(){
             this.searching_for_proxy = false;
+            this.set_connection_status('disconnected');
         },
 
         // this allows the client to be notified when a proxy call is made. The notification 
@@ -505,6 +520,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.pos = attributes.pos;
             this.action_callback = {};
             this.proxy = attributes.proxy;
+            this.remote_scanning = false;
+            this.remote_active = 0;
 
             this.action_callback_stack = [];
 
@@ -513,6 +530,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.price_prefix_set    = attributes.price_prefix_set    ||  {'23':''};
             this.cashier_prefix_set  = attributes.cashier_prefix_set  ||  {'041':''};
             this.client_prefix_set   = attributes.client_prefix_set   ||  {'042':''};
+
         },
 
         save_callbacks: function(){
@@ -742,25 +760,32 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         disconnect_from_proxy: function(){
             this.remote_scanning = false;
         },
-        connect_to_proxy: function(){ //FIXME prevent double connections
+        connect_to_proxy: function(){ //FIXME prevent connection losses 
             var self = this;
             this.remote_scanning = true;
+            if(this.remote_active >= 1){
+                return;
+            }
+            this.remote_active = 1;
 
-            this.proxy.connected.then(function waitforbarcode(){
-                if(!self.remote_scanning){
-                    return; 
-                }
+            function waitforbarcode(){
                 return self.proxy.connection.rpc('/hw_proxy/scanner',{}).then(function(barcode){
+                        self.scan(barcode);
                         if(!self.remote_scanning){ 
+                            this.remote_active = 0;
                             return; 
                         }
-                        self.scan(barcode);
                         waitforbarcode();
                     },
                     function(){
+                        if(!self.remote_scanning){
+                            this.remote_active = 0;
+                            return;
+                        }
                         setTimeout(waitforbarcode,5000);
                     });
-                });
+            }
+            waitforbarcode();
         },
     });
 
