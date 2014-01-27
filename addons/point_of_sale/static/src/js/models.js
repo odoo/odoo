@@ -23,7 +23,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.flush_mutex = new $.Mutex();                   // used to make sure the orders are sent to the server once at time
             this.pos_widget = attributes.pos_widget;
 
-            this.proxy = new module.ProxyDevice();              // used to communicate to the hardware devices via a local proxy
+            this.proxy = new module.ProxyDevice(this);              // used to communicate to the hardware devices via a local proxy
             this.barcode_reader = new module.BarcodeReader({'pos': this, proxy:this.proxy});  // used to read barcodes
             this.proxy_queue = new module.JobQueue();           // used to prevent parallels communications to the proxy
             this.db = new module.PosDB();                       // a local database used to search trough products and categories & store pending orders
@@ -55,7 +55,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'synch':            { state:'connected', pending:0 }, 
                 'orders':           new module.OrderCollection(),
                 'selectedOrder':    null,
-                'proxy_status':     'connecting',
             });
 
             this.bind('change:synch',function(pos,synch){
@@ -91,32 +90,21 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.barcode_reader.disconnect();
             this.barcode_reader.disconnect_from_proxy();
         },
-
         connect_to_proxy: function(){
             var self = this;
             this.barcode_reader.disconnect_from_proxy();
             this.pos_widget.loading_message(_t('Connecting to the PosBox'),0);
-            this.set('proxy_status', 'connecting');
-            
             this.pos_widget.loading_skip(function(){
                     self.proxy.stop_searching();
-                    self.set('proxy_status', 'disconnected'); 
                 });
-
-            return this.proxy.find_proxy({
+            this.proxy.autoconnect({
                     force_ip: self.config.proxy_ip || undefined,
                     progress: function(prog){ 
                         self.pos_widget.loading_progress(prog);
                     },
-                }).then(function(proxies){
-                    if(proxies.length > 0){
-                        self.proxy.connect(proxies[0]);
-                        if(self.config.iface_scan_via_proxy){
-                            self.barcode_reader.connect_to_proxy();
-                        }
-                        self.set('proxy_status', 'connected');
-                    }else{
-                        self.set('proxy_status', 'disconnected');
+                }).then(function(){
+                    if(self.config.iface_scan_via_proxy){
+                        self.barcode_reader.connect_to_proxy();
                     }
                 });
         },

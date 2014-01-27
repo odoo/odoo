@@ -26,7 +26,9 @@ except ImportError:
 class Scanner(Thread):
     def __init__(self):
         Thread.__init__(self)
+        self.status = {'status':'connecting', 'messages':[]}
         self.input_dir = '/dev/input/by-id/'
+        self.barcodes = Queue()
         self.keymap = {
             2: ("1","!"),
             3: ("2","@"),
@@ -84,6 +86,24 @@ class Scanner(Thread):
             57:(" "," "),
         }
 
+    def set_status(self, status, message = None):
+        if status == self.status['status']:
+            if message != None and message != self.status['messages'][-1]:
+                self.status['messages'].append(message)
+        else:
+            self.status['status'] = status
+            if message:
+                self.status['messages'] = [message]
+            else:
+                self.status['messages'] = []
+
+        if status == 'error' and message:
+            _logger.error('Barcode Scanner Error: '+message)
+        elif status == 'disconnected' and message:
+            _logger.warning('Disconnected Barcode Scanner: '+message)
+
+            
+
     def get_device(self):
         try:
             if not evdev:
@@ -92,14 +112,16 @@ class Scanner(Thread):
             keyboards = [ device for device in devices if 'kbd' in device ]
             scanners  = [ device for device in devices if ('barcode' in device.lower()) or ('scanner' in device.lower()) ]
             if len(scanners) > 0:
+                self.set_status('connected','Connected to '+scanners[0])
                 return evdev.InputDevice(join(self.input_dir,scanners[0]))
             elif len(keyboards) > 0:
+                self.set_status('connected','Connected to '+keyboards[0])
                 return evdev.InputDevice(join(self.input_dir,keyboards[0]))
             else:
-                _logger.error('Could not find the Barcode Scanner')
+                self.set_status('disconnected','Barcode Scanner Not Found')
                 return None
         except Exception as e:
-            _logger.error('Found the Barcode Scanner, but unable to access it\n Exception: ' + str(e))
+            self.set_status('error',str(e))
             return None
 
     @http.route('/hw_proxy/Vis_scanner_connected', type='json', auth='admin')
@@ -120,6 +142,9 @@ class Scanner(Thread):
                     return barcode
             except Empty:
                 return ''
+    
+    def get_status(self):
+        return self.status
 
     def run(self):
         """ This will start a loop that catches all keyboard events, parse barcode
@@ -138,7 +163,7 @@ class Scanner(Thread):
                 try:
                     device.ungrab() 
                 except Exception as e:
-                    _logger.error('Unable to release barcode scanner\n Exception:'+str(e))
+                    self.set_status('error',str(e))
             device = self.get_device()
             if not device:
                 time.sleep(5)   # wait until a suitable device is plugged
@@ -173,17 +198,13 @@ class Scanner(Thread):
                                         shift = False
 
                 except Exception as e:
-                    _logger.error('Could not read Barcode Scanner Events:\n Exception: '+str(e))
+                    self.set_status('error',str(e))
 
 s = Scanner()
 
+hw_proxy.drivers['scanner'] = s
+
 class ScannerDriver(hw_proxy.Proxy):
-    @http.route('/hw_proxy/is_scanner_connected', type='json', auth='admin')
-    def is_scanner_connected(self):
-        if not s.isAlive():
-            s.start()
-        return s.get_device() != None
-    
     @http.route('/hw_proxy/scanner', type='json', auth='admin')
     def scanner(self):
         if not s.isAlive():
