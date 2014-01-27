@@ -10,6 +10,8 @@ import random
 import math
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
 import subprocess
+from threading import Thread
+from Queue import Queue, Empty
 
 try:
     import usb.core
@@ -27,11 +29,16 @@ from openerp.addons.web.controllers.main import manifest_list, module_boot, html
 
 _logger = logging.getLogger(__name__)
 
-class EscposDriver(hw_proxy.Proxy):
-    
-    supported_printers = [
-        { 'vendor' : 0x04b8, 'product' : 0x0e03, 'name' : 'Epson TM-T20' }
-    ]
+class EscposDriver(Thread):
+    def __init__(self):
+        Thread.__init__(self)
+        self.queue = Queue()
+        self.status = {'status':'connecting', 'messages':[]}
+
+        self.supported_printers = [
+            { 'vendor' : 0x04b8, 'product' : 0x0e03, 'name' : 'Epson TM-T20' },
+            { 'vendor' : 0x04b8, 'product' : 0x0202, 'name' : 'Epson TM-T70' },
+        ]
 
     def connected_usb_devices(self,devices):
         connected = []
@@ -41,28 +48,74 @@ class EscposDriver(hw_proxy.Proxy):
         return connected
     
     def get_escpos_printer(self):
-        printers = self.connected_usb_devices(self.supported_printers)
-        if len(printers) > 0:
-            return escpos.printer.Usb(printers[0]['vendor'], printers[0]['product'])
-        else:
+        try:
+            printers = self.connected_usb_devices(self.supported_printers)
+            if len(printers) > 0:
+                self.set_status('connected','Connected to '+printers[0]['name'])
+                return escpos.printer.Usb(printers[0]['vendor'], printers[0]['product'])
+            else:
+                self.set_status('disconnected','Printer Not Found')
+                return None
+        except Exception as e:
+            self.set_status('error',str(e))
             return None
-    
-    @http.route('/hw_proxy/open_cashbox', type='json', auth='admin')
-    def open_cashbox(self):
-        print 'ESC/POS: OPEN CASHBOX'
-        eprint = self.get_escpos_printer()
-        if eprint != None:
-            eprint.cashdraw(2)
-            eprint.cashdraw(5)
-        
-    @http.route('/hw_proxy/print_receipt', type='json', auth='admin')
-    def print_receipt(self, receipt):
-        print 'ESC/POS: PRINT RECEIPT'
-        eprint = self.get_escpos_printer()
-        if eprint != None:
-            self.print_receipt_body(eprint,receipt)
-            eprint.cut()
-    
+
+    def get_status(self):
+        self.push_task('status')
+        return self.status
+
+    def open_cashbox(printer):
+        printer.cashdraw(2)
+        printer.cashdraw(5)
+
+    def set_status(self, status, message = None):
+        if status == self.status['status']:
+            if message != None and message != self.status['messages'][-1]:
+                self.status['messages'].append(message)
+        else:
+            self.status['status'] = status
+            if message:
+                self.status['messages'] = [message]
+            else:
+                self.status['messages'] = []
+
+        if status == 'error' and message:
+            _logger.error('ESC/POS Error: '+message)
+        elif status == 'disconnected' and message:
+            _logger.warning('ESC/POS Device Disconnected: '+message)
+
+    def run(self):
+        self.queue = Queue()
+        while True:
+            try:
+                timestamp, task, data = self.queue.get(True)
+
+                printer = self.get_escpos_printer()
+
+                if printer == None:
+                    if task != 'status':
+                        self.queue.put((timestamp,task,data))
+                    time.sleep(5)
+                    continue
+                elif task == 'receipt': 
+                    if timestamp >= time.time() - 1 * 60 * 60:
+                        self.print_receipt_body(printer,data)
+                        printer.cut()
+                elif task == 'cashbox':
+                    if timestamp >= time.time() * 12:
+                        self.open_cashbox(printer)
+                elif task == 'status':
+                    pass
+
+            except Exception as e:
+                self.set_status('error', str(e))
+                _logger.error(e);
+
+    def push_task(self,task, data = None):
+        if not self.isAlive():
+            self.start()
+        self.queue.put((time.time(),task,data))
+
     def print_receipt_body(self,eprint,receipt):
 
         def check(string):
@@ -203,4 +256,20 @@ class EscposDriver(hw_proxy.Proxy):
                     +'/'+ str(receipt['date']['year']).zfill(4)
                     +' '+ str(receipt['date']['hour']).zfill(2)
                     +':'+ str(receipt['date']['minute']).zfill(2) )
+
+driver = EscposDriver()
+
+hw_proxy.drivers['escpos'] = driver
         
+class EscposProxy(hw_proxy.Proxy):
+    
+    @http.route('/hw_proxy/open_cashbox', type='json', auth='admin')
+    def open_cashbox(self):
+        _logger.info('ESC/POS: OPEN CASHBOX') 
+        driver.push_task('cashbox')
+        
+    @http.route('/hw_proxy/print_receipt', type='json', auth='admin')
+    def print_receipt(self, receipt):
+        _logger.info('ESC/POS: PRINT RECEIPT') 
+        driver.push_task('receipt',receipt)
+    
