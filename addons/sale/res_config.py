@@ -121,7 +121,7 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
             res['time_unit'] = user.company_id.project_time_mode_id.id
         else:
             product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant', check=False)
-            if product.exists():
+            if product and product.exists():
                 res['time_unit'] = product.uom_id.id
         return res
 
@@ -139,7 +139,7 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
 
         if wizard.time_unit:
             product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant', check=False)
-            if product.exists():
+            if product and product.exists():
                 product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
             else:
                 _logger.warning("Product with xml_id 'product.product_product_consultant' not found, UoMs not updated!")
