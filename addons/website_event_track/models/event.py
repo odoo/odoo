@@ -127,7 +127,7 @@ class event_event(osv.osv):
         'tag_ids': fields.many2many('event.tag', string='Tags'),
         'track_ids': fields.one2many('event.track', 'event_id', 'Tracks'),
         'sponsor_ids': fields.one2many('event.sponsor', 'event_id', 'Sponsorships'),
-        'blog_id': fields.many2one('blog.category', 'Event Blog'),
+        'blog_id': fields.many2one('blog.blog', 'Event Blog'),
         'show_track_proposal': fields.boolean('Talks Proposals'),
         'show_tracks': fields.boolean('Multiple Tracks'),
         'show_blog': fields.boolean('News'),
