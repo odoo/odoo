@@ -31,10 +31,9 @@ class view(osv.osv):
             if isinstance(view, basestring):
                 mod_obj = self.pool.get("ir.model.data")
                 m, n = view.split('.')
-                _, view = mod_obj.get_object_reference(cr, uid, m, n)
+                view = mod_obj.get_object(cr, uid, m, n, context=context)
             elif isinstance(view, (int, long)):
-                view_obj = self.pool.get("ir.ui.view")
-                view = view_obj.browse(cr, uid, view, context=context)
+                view = self.pool.get("ir.ui.view").browse(cr, uid, view, context=context)
             return view
 
         try:
@@ -50,8 +49,10 @@ class view(osv.osv):
         todo = view.inherit_children_ids
         if options:
             todo += filter(lambda x: not x.inherit_id, view.inherited_option_ids)
+        # Keep options in a determinitic order whatever their enabled disabled status
+        todo.sort(lambda x,y:cmp(x.id,y.id))
         for child_view in todo:
-            for r in self._views_get(cr, uid, child_view, options=options, context=context, root=False, stack_result=result):
+            for r in self._views_get(cr, uid, child_view, options=bool(child_view.inherit_id), context=context, root=False, stack_result=result):
                 if r not in result:
                     result.append(r)
         node = etree.fromstring(view.arch)
