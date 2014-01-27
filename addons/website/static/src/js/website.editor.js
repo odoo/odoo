@@ -423,7 +423,7 @@
                         menu.append('<li><a data-action="ace" href="#">HTML Editor</a></li>');
                         menu.append('<li class="js_change_theme"><a href="/page/website.themes">Change Theme</a></li>');
                         menu.append('<li><a href="/web#return_label=Website&action=website.action_module_website">Install Apps</a></li>');
-                        menu.append('<li><a href="/web#return_label=Website&action=website.action_website_form">Website Settings</a></li>');
+                        menu.append('<li><a href="/web#return_label=Website&action=website.action_website_configuration">Website Settings</a></li>');
                         self.trigger('rte:customize_menu_ready');
                     }
                 );

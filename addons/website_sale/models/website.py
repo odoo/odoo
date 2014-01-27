@@ -11,9 +11,7 @@ class Website(orm.Model):
     def _get_pricelist(self, cr, uid, ids, field_name, arg, context=None):
         # FIXME: oh god kill me now
         pricelist_id = self.ecommerce_get_pricelist_id(cr, uid, ids, context=context)
-        return dict.fromkeys(
-            ids, self.pool['product.pricelist'].browse(
-                cr, SUPERUSER_ID, pricelist_id, context=context))
+        return dict.fromkeys(ids, pricelist_id)
 
     _columns = {
         'pricelist_id': fields.function(

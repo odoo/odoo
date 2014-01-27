@@ -63,17 +63,6 @@
             </field>
         </record>
 
-        <record id="action_website_form" model="ir.actions.act_window">
-            <field name="name">Website Settings</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">website</field>
-            <field name="res_id">1</field>
-            <field name="view_mode">form</field>
-            <field name="help">Create and manage the companies websites.</field>
-            <field name="target">inline</field>
-        </record>
-        <menuitem action="action_website_form" id="menu_action_website_form" parent="base.menu_config"/>
-
         <record id="view_base_language_install" model="ir.ui.view">
             <field name="name">view_base_language_install.inherit</field>
             <field name="model">base.language.install</field>
