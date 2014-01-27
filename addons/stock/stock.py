@@ -171,12 +171,14 @@ class stock_location_route(osv.osv):
         'warehouse_selectable': fields.boolean('Applicable on Warehouse'),
         'supplied_wh_id': fields.many2one('stock.warehouse', 'Supplied Warehouse'),
         'supplier_wh_id': fields.many2one('stock.warehouse', 'Supplier Warehouse'),
+        'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this route is shared between all companies'),
     }
 
     _defaults = {
         'sequence': lambda self, cr, uid, ctx: 0,
         'active': True,
         'product_selectable': True,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.location.route', context=c),
     }
 
 
