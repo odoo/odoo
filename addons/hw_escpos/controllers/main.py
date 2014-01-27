@@ -182,7 +182,7 @@ class EscposDriver(Thread):
         if check(receipt['shop']['name']):
             eprint.text(receipt['shop']['name'] + '\n')
         if check(receipt['company']['contact_address']):
-            eprint.text(receipt['company']['contact address'] + '\n')
+            eprint.text(receipt['company']['contact_address'] + '\n')
         if check(receipt['company']['phone']):
             eprint.text('Tel:' + receipt['company']['phone'] + '\n')
         if check(receipt['company']['vat']):
