@@ -1165,7 +1165,7 @@ class stock_production_lot(osv.osv):
     ]
 
     def action_traceability(self, cr, uid, ids, context=None):
-        """ It traces the information of a product
+        """ It traces the information of lots
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
@@ -1180,20 +1180,18 @@ class stock_production_lot(osv.osv):
         quants = quant_obj.search(cr, uid, [('lot_id', 'in', ids)], context=context)
         moves = set()
         for quant in quant_obj.browse(cr, uid, quants, context=context):
-            for move in quant.history_ids:
-                moves.add(move.id)
+            moves |= {move.id for move in quant.history_ids}
         if moves:
             return { 
                 'domain': "[('id','in',["+','.join(map(str, list(moves)))+"])]",
-                'name': 'Traceability',
+                'name': _('Traceability'),
                 'view_mode': 'tree,form',
                 'view_type': 'form',
                 'context': {'tree_view_ref': 'stock.view_move_tree'},
                 'res_model': 'stock.move',
                 'type': 'ir.actions.act_window',
                     }
-        else:
-            return False
+        return False
         
 
 
