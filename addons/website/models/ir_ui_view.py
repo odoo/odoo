@@ -28,14 +28,15 @@ class view(osv.osv):
             stack_result = []
 
         def view_obj(view):
-            if type(view) in (str, unicode):
+            if isinstance(view, basestring):
                 mod_obj = self.pool.get("ir.model.data")
                 m, n = view.split('.')
                 _, view = mod_obj.get_object_reference(cr, uid, m, n)
-            if type(view) == int:
+            elif isinstance(view, (int, long)):
                 view_obj = self.pool.get("ir.ui.view")
                 view = view_obj.browse(cr, uid, view, context=context)
             return view
+
         try:
             view = view_obj(view)
         except ValueError:
