@@ -27,7 +27,7 @@ _logger = logging.getLogger(__name__)
 
 class QWebException(Exception):
     def __init__(self, message, template=None, node=None, expression=None, inner=None):
-        self.message = message
+        Exception.__init__(self, message)
         self.template = template
         self.node = node
         self.expression = expression
