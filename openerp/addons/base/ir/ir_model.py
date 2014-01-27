@@ -884,24 +884,24 @@ class ir_model_data(osv.osv):
             raise ValueError('Not enough access rights on the external ID: %s.%s' % (module, xml_id))
         return model, False
 
-    def get_object(self, cr, uid, module, xml_id, context=None, check=True):
+    def get_object(self, cr, uid, module, xml_id, context=None, raise_exception=True):
         """ Returns a browsable record for the given module name and xml_id.
             If not found, raise a ValueError or return a browse_null, depending
-            on the value of `check`.
+            on the value of `raise_exception`.
 
-            :param check: when true, check whether record exists and raise a
-                ValueError if it does not; otherwise return a browse_null or
-                non-existing record.
+            :param raise_exception: when true, check whether record exists and
+                raise a ValueError if it does not; otherwise return a browse_null
+                or non-existing record.
         """
         try:
             res_model, res_id = self.get_object_reference(cr, uid, module, xml_id)
             record = self.pool[res_model].browse(cr, uid, res_id, context=context)
         except ValueError:
-            if check:
+            if raise_exception:
                 raise
             return browse_null()
 
-        if check and not record.exists():
+        if raise_exception and not record.exists():
             raise ValueError('No record found for unique ID %s.%s. It may have been deleted.' % (module, xml_id))
         return record
 
