@@ -184,7 +184,7 @@
 
     website.EditorShopTest = website.Test.extend({
         id: 'shoptest',
-        name: "Try to by 3 products",
+        name: "Try to by products",
         path: '/shop',
         init: function (editor) {
             var self = this;
@@ -300,7 +300,7 @@
             return this._super();
         },
         trigger: function () {
-            return (this.resume() && this.testUrl(/^\/shop\//)) || this._super();
+            return (this.resume() && this.testUrl(/\/shop\//)) || this._super();
         },
     });
 
