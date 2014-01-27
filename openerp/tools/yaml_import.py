@@ -452,7 +452,7 @@ class YamlInterpreter(object):
                             "does not exist in the source view %r (of object "
                             "%r). This field will be ignored (and thus not "
                             "populated) when clients saves the new record" % (
-                                key, match.group(1), view_info['name'], model._name
+                                key, match.group(1), view_info.get('name', '?'), model._name
                             ))
                         if key not in fields:
                             # do not shadow values explicitly set in yaml.
