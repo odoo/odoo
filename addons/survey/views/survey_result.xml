@@ -36,7 +36,7 @@
                                         </span>
                                     </h3>
                                 </div>
-                                <t t-if="question.type in ['textbox', 'free_text']">
+                                <t t-if="question.type in ['textbox', 'free_text', 'datetime']">
                                     <t t-call="survey.result_text"></t>
                                 </t>
                                 <t t-if="question.type in ['simple_choice', 'multiple_choice']">
@@ -56,7 +56,7 @@
         </t>
     </template>
 
-    <!-- Result for free_text and textbox -->
+    <!-- Result for free_text,textbox and datetime -->
     <template id="result_text" name="Text Result">
         <table class="table table-hover" t-att-id="'table_question_'+str(question.id)">
             <thead>
@@ -78,6 +78,11 @@
                         <td>
                             <span t-field="user_input.value_text"></span><br/>
                             <small><p t-field="user_input.date_create" class="fa fa-calendar oe_date text-muted"></p></small>
+                        </td>
+                    </t>
+                    <t t-if="question.type == 'datetime'">
+                        <td>
+                            <span  class="oe_date" t-field="user_input.value_date"></span><br/>
                         </td>
                     </t>
                 </tr>
@@ -289,6 +294,11 @@
     <!-- Result for Numeric Data -->
     <template id="result_number" name="Number Result">
         <t t-set="number_result" t-value="prepare_result(question)" />
+        <span class="pull-right mt8">
+            <span class="label label-default only_right_radius">Maximum </span> <span class="label label-success only_left_radius" t-esc="number_result['max']"></span>
+            <span class="label label-default only_right_radius">Minimum </span> <span class="label label-danger only_left_radius" t-esc="number_result['min']"></span>
+            <span class="label label-default only_right_radius">Average </span> <span class="label label-warning only_left_radius" t-esc="number_result['average']"></span>
+        </span>
         <ul class="nav nav-tabs">
             <li class="active">
                 <a t-att-href="'#most_common_'+str(question.id)" data-toggle="tab">
@@ -299,19 +309,13 @@
             <li>
                 <a t-att-href="'#data_question_'+str(question.id)" data-toggle="tab">
                     <i class="fa fa-list-alt"></i>
-                    Data
+                    All Data
                 </a>
             </li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active with-3d-shadow with-transitions" t-att-id="'most_common_'+str(question.id)">
-                <span class="pull-right">
-                <span class="label label-default only_right_radius">Maximum </span> <span class="label label-success only_left_radius" t-esc="number_result['max']"></span>
-                <span class="label label-default only_right_radius">Minimum </span> <span class="label label-danger only_left_radius" t-esc="number_result['min']"></span>
-                <span class="label label-default only_right_radius">Average </span> <span class="label label-warning only_left_radius" t-esc="number_result['average']"></span>
-                </span>
-                <h3>Most Common <span t-esc="len(number_result['most_comman'])"></span></h3>
-                 <table class="table table-hover">
+                <table class="table table-hover">
                      <thead>
                          <tr>
                              <th>User Responce</th>
@@ -328,7 +332,7 @@
                              </td>
                          </tr>
                      </tbody>
-                 </table>
+                </table>
             </div>
             <div class="tab-pane" t-att-id="'data_question_'+str(question.id)">
                 <table class="table table-hover" t-att-id="'table_question_'+str(question.id)">
