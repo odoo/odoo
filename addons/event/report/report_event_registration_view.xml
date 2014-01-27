@@ -22,7 +22,7 @@
                     <field name="registration_state" invisible="1"/>
                     <field name="name_registration" invisible="1"/>
                     <field name="user_id_registration" invisible="1"/>
-                    <field name="register_max" invisible="context.get('max_reg_event_visible', True)"/>
+                    <field name="seats_max" invisible="context.get('max_reg_event_visible', True)"/>
                     <field name="company_id" invisible="1"/>
                 </tree>
             </field>
@@ -36,7 +36,7 @@
                     <field name="event_id"/>
                     <field name="draft_state" operator="+"/>
                     <field name="confirm_state" operator="+"/>
-                    <field name="register_max" operator="+"/>
+                    <field name="seats_max" operator="+"/>
                 </graph>
             </field>
         </record>

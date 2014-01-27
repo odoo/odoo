@@ -91,8 +91,6 @@ class sale_order_line(osv.osv):
                 }
 
                 if order_line.event_ticket_id:
-                    if order_line.event_ticket_id.register_avail != 9999 and dic['nb_register'] > order_line.event_ticket_id.register_avail:
-                        raise osv.except_osv(_('Error!'), _('There are not enough tickets available (%s) for %s' % (order_line.event_ticket_id.register_avail, order_line.event_ticket_id.name)))
                     message = _("The registration has been created for event <i>%s</i> with the ticket <i>%s</i> from the Sale Order %s. ") % (order_line.event_id.name, order_line.event_ticket_id.name, order_line.order_id.name)
                 else:
                     message = _("The registration has been created for event <i>%s</i> from the Sale Order %s. ") % (order_line.event_id.name, order_line.order_id.name)
@@ -110,78 +108,53 @@ class sale_order_line(osv.osv):
 class event_event(osv.osv):
     _inherit = 'event.event'
 
-    def _get_register_max(self, cr, uid, ids, field_name, arg, context=None):
+    def _get_seats_max(self, cr, uid, ids, field_name, arg, context=None):
         result = dict.fromkeys(ids, 0)
         for rec in self.browse(cr, uid, ids, context=context):
-            result[rec.id] = sum([ep.register_max for ep in rec.event_ticket_ids])
+            result[rec.id] = sum([ticket.seats_max for ticket in rec.event_ticket_ids])
         return result
 
     def _get_tickets(self, cr, uid, context={}):
-        imd = self.pool.get('ir.model.data')
         try:
-            product = imd.get_object(cr, uid, 'event_sale', 'product_product_event')
+            product = self.pool.get('ir.model.data').get_object(cr, uid, 'event_sale', 'product_product_event')
+            return [{
+                'name': _('Subscription'),
+                'product_id': product.id,
+                'price': 0,
+            }]
         except ValueError:
-            return []
-        return [{
-            'name': _('Subscription'),
-            'product_id': product.id,
-            'price': 0,
-        }]
+            pass
+        return []
 
     _columns = {
         'event_ticket_ids': fields.one2many('event.event.ticket', "event_id", "Event Ticket"),
-        'register_max': fields.function(_get_register_max,
-            string='Maximum Registrations',
+        'seats_max': fields.function(_get_seats_max,
+            string='Maximum Avalaible Seats',
             help="The maximum registration level is equal to the sum of the maximum registration of event ticket." +
             "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
-            type='integer')
+            type='integer',
+            readonly=True,
+            store=True)
     }
     _defaults = {
         'event_ticket_ids': _get_tickets
     }
 
-    def check_registration_limits(self, cr, uid, ids, context=None):
-        for event in self.browse(cr, uid, ids, context=context):
-            if event.event_ticket_ids:
-                for ticket in event.event_ticket_ids:
-                    ticket.check_registration_limits_before(0)
-        return super(event_event, self).check_registration_limits(cr, uid, ids, context=context)
-
-
 class event_ticket(osv.osv):
     _name = 'event.event.ticket'
 
-    def _get_register(self, cr, uid, ids, fields, args, context=None):
-        """Get Confirm or uncofirm register value.
-        @param ids: List of Event Ticket registration type's id
-        @param fields: List of function fields(register_current and register_prospect).
-        @param context: A standard dictionary for contextual values
-        @return: Dictionary of function fields value.
+    def _get_seats(self, cr, uid, ids, fields, args, context=None):
+        """Get reserved, available, reserved but unconfirmed and used seats for each event tickets.
+        @return: Dictionary of function field values.
         """
-        res = {}
-        for event in self.browse(cr, uid, ids, context=context):
-            res[event.id] = {}
-            reg_open = reg_done = reg_draft =0
-            for registration in event.registration_ids:
-                if registration.state == 'open':
-                    reg_open += registration.nb_register
-                elif registration.state == 'done':
-                    reg_done += registration.nb_register
-                elif registration.state == 'draft':
-                    reg_draft += registration.nb_register
-            for field in fields:
-                number = 0
-                if field == 'register_current':
-                    number = reg_open
-                elif field == 'register_attended':
-                    number = reg_done
-                elif field == 'register_prospect':
-                    number = reg_draft
-                elif field == 'register_avail':
-                    #the number of ticket is unlimited if the event.register_max field is not set.
-                    #In that cas we arbitrary set it to 9999, it is used in the kanban view to special case the display of the 'subscribe' button
-                    number = event.register_max - reg_open if event.register_max != 0 else 9999
-                res[event.id][field] = number
+        res = dict([(i, {}) for i in ids])
+        for ticket in self.browse(cr, uid, ids, context=context):
+            res[ticket.id]['seats_reserved'] = sum(reg.nb_register for reg in ticket.registration_ids if reg.state == "open")
+            res[ticket.id]['seats_used'] = sum(reg.nb_register for reg in ticket.registration_ids if reg.state == "done")
+            res[ticket.id]['seats_unconfirmed'] = sum(reg.nb_register for reg in ticket.registration_ids if reg.state == "draft")
+            res[ticket.id]['seats_available'] = ticket.seats_max - \
+                (res[ticket.id]['seats_reserved'] + res[ticket.id]['seats_used']) \
+                if ticket.seats_max > 0 else None
         return res
 
     _columns = {
@@ -191,11 +164,11 @@ class event_ticket(osv.osv):
         'registration_ids': fields.one2many('event.registration', 'event_ticket_id', 'Registrations'),
         'deadline': fields.date("Sales End"),
         'price': fields.float('Price'),
-        'register_max': fields.integer('Maximum Registrations'),
-        'register_current': fields.function(_get_register, string='Current Registrations', type='integer', multi='register_numbers'),
-        'register_avail': fields.function(_get_register, string='Available Registrations', type='integer', multi='register_numbers'),
-        'register_prospect': fields.function(_get_register, string='Unconfirmed Registrations', type='integer', multi='register_numbers'),
-        'register_attended': fields.function(_get_register, string='# of Participations', type='integer', multi='register_numbers'),
+        'seats_max': fields.integer('Maximum Avalaible Seats', oldname='register_max', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )"),
+        'seats_reserved': fields.function(_get_seats, string='Reserved Seats', type='integer', multi='seats_reserved'),
+        'seats_available': fields.function(_get_seats, string='Available Seats', type='integer', multi='seats_reserved'),
+        'seats_unconfirmed': fields.function(_get_seats, string='Unconfirmed Seat Reservations', type='integer', multi='seats_reserved'),
+        'seats_used': fields.function(_get_seats, string='Number of Participations', type='integer', multi='seats_reserved'),
     }
 
     def _default_product_id(self, cr, uid, context={}):
@@ -210,15 +183,15 @@ class event_ticket(osv.osv):
         'product_id': _default_product_id
     }
 
-
-    def check_registration_limits_before(self, cr, uid, ids, number, context=None):
+    def _check_seats_limit(self, cr, uid, ids, context=None):
         for ticket in self.browse(cr, uid, ids, context=context):
-            if ticket.register_max:
-                if not ticket.register_avail:
-                    raise osv.except_osv(_('Warning!'),_('No Tickets Available for "%s"' % ticket.name))
-                elif number + ticket.register_current > ticket.register_max:
-                    raise osv.except_osv(_('Warning!'), _('There only %d tickets available for "%s"' % (ticket.register_avail, ticket.name)))
+            if ticket.seats_max and ticket.seats_available < 0:
+                return False
         return True
+
+    _constraints = [
+        (_check_seats_limit, 'No more available tickets.', ['registration_ids','seats_max']),
+    ]
 
     def onchange_product_id(self, cr, uid, ids, product_id=False, context=None):
         return {'value': {'price': self.pool.get("product.product").browse(cr, uid, product_id).list_price or 0}}
@@ -231,10 +204,13 @@ class event_registration(osv.osv):
         'event_ticket_id': fields.many2one('event.event.ticket', 'Event Ticket'),
     }
 
-    def registration_open(self, cr, uid, ids, context=None):
-        """ Open Registration
-        """
+    def _check_ticket_seats_limit(self, cr, uid, ids, context=None):
         for registration in self.browse(cr, uid, ids, context=context):
-            if registration.event_ticket_id:
-                registration.event_ticket_id.check_registration_limits_before(1)
-        return super(event_registration, self).registration_open(cr, uid, ids, context=context)
+            if registration.event_ticket_id.seats_max and \
+                registration.event_ticket_id.seats_available < (registration.state == 'draft' and registration.nb_register or 0):
+                return False
+        return True
+
+    _constraints = [
+        (_check_ticket_seats_limit, 'No more available tickets.', ['event_ticket_id','nb_register','state']),
+    ]
