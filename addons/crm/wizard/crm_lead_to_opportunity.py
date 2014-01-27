@@ -257,7 +257,7 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
         if data.name == 'convert' and data.deduplicate:
             merged_lead_ids = []
             remaining_lead_ids = []
-            for lead in data.opportunity_ids:
+            for lead in self.pool['crm.lead'].browse(cr, uid, context.get('active_ids', []), context=context):
                 duplicated_lead_ids = self._get_duplicated_leads(cr, uid, lead.partner_id.id, lead.partner_id and lead.partner_id.email or lead.email_from)
                 if len(duplicated_lead_ids) > 1:
                     lead_id = self.pool.get('crm.lead').merge_opportunity(cr, uid, duplicated_lead_ids, False, False, context=context)
