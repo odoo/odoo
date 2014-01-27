@@ -6,10 +6,10 @@
             <field name="name">report.stock.move.graph</field>
             <field name="model">report.stock.move</field>
             <field name="arch" type="xml">
-                <graph string="Moves Analysis" type="bar">
-                    <field name="day"/>
-                    <field name="product_qty" operator="+"/>
-                    <field name="categ_id" group="True"/>
+                <graph string="Moves Analysis" type="bar" stacked="True">
+                    <field name="day" type="row"/>
+                    <field name="product_qty" type="measure"/>
+                    <field name="categ_id" type="row"/>
                 </graph>
             </field>
         </record>

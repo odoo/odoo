@@ -34,18 +34,8 @@ class hr_recruitment_report(osv.Model):
 
     _columns = {
         'user_id': fields.many2one('res.users', 'User', readonly=True),
-        'nbr': fields.integer('# of Applications', readonly=True),
-        # TDE TODO: use MONTHS
-        'month':fields.selection([('01', 'January'), ('02', 'February'), \
-                                  ('03', 'March'), ('04', 'April'),\
-                                  ('05', 'May'), ('06', 'June'), \
-                                  ('07', 'July'), ('08', 'August'),\
-                                  ('09', 'September'), ('10', 'October'),\
-                                  ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
-        'year': fields.char('Year', size=4, readonly=True),
-        'date_create': fields.date('Create Date', readonly=True),
+        'date_create': fields.datetime('Create Date', readonly=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
         'date_closed': fields.date('Closed', readonly=True),
         'job_id': fields.many2one('hr.job', 'Applied Job',readonly=True),
@@ -70,7 +60,7 @@ class hr_recruitment_report(osv.Model):
             create or replace view hr_recruitment_report as (
                  select
                      min(s.id) as id,
-                     date_trunc('day',s.create_date) as date_create,
+                     s.create_date as date_create,
                      date_trunc('day',s.date_closed) as date_closed,
                      date_trunc('day',s.date_last_stage_update) as date_last_stage_update,
                      to_char(s.create_date, 'YYYY') as year,
@@ -94,9 +84,6 @@ class hr_recruitment_report(osv.Model):
                      count(*) as nbr
                  from hr_applicant s
                  group by
-                     to_char(s.create_date, 'YYYY'),
-                     to_char(s.create_date, 'MM'),
-                     to_char(s.create_date, 'YYYY-MM-DD') ,
                      date_trunc('day',s.create_date),
                      date_trunc('day',s.date_closed),
                      s.date_open,
@@ -117,3 +104,5 @@ class hr_recruitment_report(osv.Model):
         """)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+
