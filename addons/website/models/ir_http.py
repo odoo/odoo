@@ -8,6 +8,7 @@ import werkzeug.routing
 
 import openerp
 from openerp.addons.base import ir
+from openerp.addons.base.ir import ir_qweb
 from openerp.addons.website.models.website import slug
 from openerp.http import request
 from openerp.osv import orm
@@ -109,21 +110,21 @@ class ir_http(orm.AbstractModel):
                 traceback=traceback.format_exc(exception),
             )
             if exception:
-                if isinstance(exception, openerp.exceptions.AccessError):
+                current_exception = exception
+                if isinstance(exception, ir_qweb.QWebException):
+                    values.update(qweb_exception=exception)
+                    if exception.inner:
+                        current_exception = exception.inner
+                if isinstance(current_exception, openerp.exceptions.AccessError):
                     code = 403
                 else:
                     code = getattr(exception, 'code', code)
-                values.update(
-                    qweb_template=getattr(exception, 'qweb_template', None),
-                    qweb_node=getattr(exception, 'qweb_node', None),
-                    qweb_eval=getattr(exception, 'qweb_eval', None),
-                )
             if code == 500:
                 logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
-                if values['qweb_template']:
+                if values.get('qweb_exception'):
                     view = request.registry.get("ir.ui.view")
-                    views = view._views_get(request.cr, request.uid, values['qweb_template'], request.context)
-                    to_reset = [view for view in views if view.model_data_id.noupdate == True]
+                    views = view._views_get(request.cr, request.uid, values['qweb_exception'].template, request.context)
+                    to_reset = [v for v in views if v.model_data_id.noupdate is True]
                     values['views'] = to_reset
             elif code == 403:
                 logger.warn("403 Forbidden:\n\n%s", values['traceback'])

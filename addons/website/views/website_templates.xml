@@ -455,7 +455,7 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default" t-if="qweb_template">
+        <div class="panel panel-default" t-if="qweb_exception">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_qweb">
@@ -466,11 +466,11 @@
             <div id="error_qweb" class="panel-collapse collapse">
                 <div class="panel-body">
                     <p>
-                        The error occured while rendering the template <code t-esc="qweb_template"/>
-                        <t t-if="qweb_eval">and evaluating the following expression: <code t-esc="qweb_eval"/></t>
+                        The error occured while rendering the template <code t-esc="qweb_exception.template"/>
+                        <t t-if="qweb_exception.expression">and evaluating the following expression: <code t-esc="qweb_exception.expression"/></t>
                     </p>
-                    <t t-if="qweb_node">
-                        <pre id="exception_node" t-esc="qweb_node.toxml()"/>
+                    <t t-if="qweb_exception.node">
+                        <pre id="exception_node" t-esc="qweb_exception.node.toxml()"/>
                     </t>
                 </div>
             </div>
@@ -567,9 +567,9 @@
                     </div>
 
                     <div class="container" t-if="views">
-                        <div class="alert alert-danger" t-if="qweb_template and editable">
+                        <div class="alert alert-danger" t-if="qweb_exception and editable">
                             <h4>Template fallback</h4>
-                            <p>An error occured while rendering the template <code t-esc="qweb_template"/>.</p>
+                            <p>An error occured while rendering the template <code t-esc="qweb_exception.template"/>.</p>
                             <p>If this error is caused by a change of yours in the templates, you have the possibility to reset one or more templates to their <strong>factory settings</strong>.</p>
                             <form action="/website/reset_templates" method="post">
                                 <ul class="oe_template_fallback">
