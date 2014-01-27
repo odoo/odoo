@@ -15,11 +15,8 @@ Howto: build a website with OpenERP
    For production deployment, see the dedicated guides
    :ref:`using-gunicorn` and :ref:`using-mod-wsgi`.
 
-Minimal website module
-======================
-
 Hello, world!
--------------
+=============
 
 In OpenERP, doing things takes the form of creating modules, and these
 modules customize the behavior of the OpenERP installation. The first
@@ -83,7 +80,7 @@ output:
    file.
 
 Data input: URL and query
--------------------------
+=========================
 
 Being able to build a static page in code is nice, but makes for limited
 usefulness (you could do that with static files in the first place, after all).
@@ -112,7 +109,7 @@ a ``404 Not Found`` instead of generating a server error when the conversion
 fails).
 
 Templating: better experience in editing
-----------------------------------------
+========================================
 
 So far we've created HTML output by munging together Python strings using
 string concatenation and formatting. It works, but is not exactly fun to edit
@@ -133,8 +130,6 @@ Let's move our 2 pseudo-templates from inline strings to actual templates:
           controller? explicitly fetch a registry using
           request.session.db? That's a bit horrendous now innit?
 
-.. todo:: reload/update of module?
-
 This simplifies the controller code by moving data formatting out of
 it, and generally makes it simpler for designers to edit the markup.
 
@@ -142,23 +137,184 @@ it, and generally makes it simpler for designers to edit the markup.
           template overriding
 
 OpenERP's Website support
--------------------------
+=========================
 
-.. introduce the website module, add as dependency to academy, update db
-.. RTE edition of pages, snippets
-.. edition of own template pages?
-.. ?? customize ??
+OpenERP 8 is bundled with new modules dedicated specifically to
+building websites (whether it be simply sets of pages or more complex
+components such as blogs).
+
+First, we'll install the ``website`` module: ``oe install website``.
+
+.. todo:: is it possible that the page has *not* been replaced?
+
+If you navigate to `your openerp`_, your basic page has now been
+replaced by the generic empty index page. Because you are not
+logged-in yet, the page has no content and just basic placeholders in
+the header and footer. Click on the :guilabel:`Sign In` link, fill in
+your credentials (``admin``/``admin`` by default), click
+:guilabel:`Log in`.
+
+You're now in OpenERP "proper", the backend/administrative
+interface. We'll deal with it in :ref:`a latter section
+<howto-website-administration>`, for how click on the
+:guilabel:`Website` menu item, in the top-left of the browser between
+:guilabel:`Messaging` and :guilabel:`Settings`.
+
+You're back to your website, but are now an administrator and thus
+have access to the advanced edition features of an OpenERP-build
+website. Let's quickly run through them.
+
+Mobile Preview
+--------------
+
+.. todo:: insert menu bar, mobile preview icon outlined
+
+Because the OpenERP website system is built with bootstrap_, it is
+easy to build "responsive" websites reacting to the size of the screen
+and making best use of the available space.
+
+The mobile preview does not give you the exact rendering of a
+smartphone (if there's such a thing), but it goes some of the way and
+lets you know if it's completely unusable without having to actually
+switch to a smartphone and try to find out how to see your site with
+it (especially during edition).
+
+.. todo:: screenshot of page in desktop v mobile preview layout
+
+Promote
+-------
+
+Lets you easily configure how your page should advertise its existence
+to search engines: keywords matching the page's subject, nice titles
+and descriptions for visitors finding the page via search engines.
+
+.. todo:: screenshot promote
+
+Content
+-------
+
+The content menu provides "top level" operations: manipulation of the
+main menu (creation of new links, submenus, etc...) and creation of
+high-level objects. At the moment only pages (they're the top-level
+object for the ``website`` module), but installing the recruitment
+module will add an entry to quick-create a new job offer, and the
+events module one for a new event.
+
+Customize
+---------
+
+The customize menu provides a number of loosely associated features,
+broadly split in two sections:
+
+Templates configuration
+```````````````````````
+
+Some templates provide alternative versions/structures. These
+alternative version can be toggled from the template configuration
+checkboxes. Two of these are bundled in ``website``, providing an
+alternative blank footer to fill, and the other one replacing your
+company's name by your company's logo in the navigation bar.
+
+Theming
+```````
+
+As previously mentioned, OpenERP's website module uses bootstrap_ for
+much of its basic styles and layout. This, in turns, allows using
+existing bootstrap themes to alter the color scheme of your website.
+
+:guilabel:`Change Theme` opens a picker to a few bundled Bootstrap
+themes, and lets you change the look of your site quickly and
+on-the-fly.
+
+.. todo:: creating or installing new boostrap themes?
+
+HTML Editor
+```````````
+
+Opens a full-blown code editor on the current template, and lets you
+easily edit templates in-place, either for a quick fix which is
+simpler to perform in code yet from the page, or to try things out
+before moving them to template files.
+
+Help
+----
+
+Lists available tutorials, step-by-step lessons in using the website.
+``website`` only provides :guilabel:`Insert a banner` which shows some
+basic features of the website (snippets, edition, mobile preview)
+while guiding the user through. Other modules can provide additional
+tutorials for their advanced features.
+
+Edit
+----
+
+Starts up the rich text editor, which lets you alter page text, add
+links and images, change colors, etc…
+
+Snippets
+````````
+
+:guilabel:`Insert Blocks` opens the snippets UI: pre-built layout
+blocks which you can then fill with your own content (text, pictures,
+…). Simply select a snippet and drag-and-drop it on your page. Guides
+should appear when you start dragging a snippet, showing where the
+snippet can be dropped.
+
+Building your pages with OpenERP Website
+========================================
+
+As we've seen, your index page has "disappeared" and been replaced by
+the one provided by ``website``. The page is not lost, but because
+``website`` was installed after ``academy`` module, its page takes
+over routing.
+
+To fix, that, we can simply add ``website`` as a dependency to
+``academy`` (that is, tell OpenERP that ``academy`` needs ``website``
+to work right):
+
+.. needs -u all to update metadata
+
+.. patch::
+
+.. todo:: website dispatch overrides blows up on auth=none (implicitly
+          inherits website's index -> ``website_enabled`` -> tries to
+          access ``request.registry['website']`` even though
+          ``request.registry is None`` because ``auth='none'``)
+
+          also template issues (see above) (enabled website to "fix")
+
+Reload `your openerp`_. Your old index page is back, however none of
+the website edition tools are available. That is because much of these
+tools are inserted and enabled by the website layout template. Let's
+use that instead of our own page structure:
+
+.. patch::
+
+* ``website.layout`` is the main Website layout, it provides standard
+  headers and footers as well as integration with various
+  customization tools.
+
+* there's quite a bit of complex markup, used as hooks for various
+  features (e.g. snippets). Although technically not entirely
+  necessary, some things will not work if they're not there.
+
+* if you go in the HTML editor (:menuselection:`Customize --> HTML
+  Editor`), you can see and edit your template
+
+.. todo:: website template generator
 
 Storing data in OpenERP
------------------------
+=======================
 
 .. calendar model
 .. demo data for events dates
 .. access & formatting
 .. sending & storing comments (?)
 
+.. _howto-website-administration:
+
 Administration and ERP Integration
-----------------------------------
+==================================
 
 .. create menu, action
    .. improve generated views
@@ -169,3 +325,5 @@ Administration and ERP Integration
 .. _converter patterns: http://werkzeug.pocoo.org/docs/routing/#rule-format
 
 .. _templates: http://en.wikipedia.org/wiki/Web_template
+
+.. _your openerp: http://localhost:8069/

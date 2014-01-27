@@ -1,0 +1,82 @@
+# HG changeset patch
+# Parent c7be40a51aa39a1562ad0d8e3f75e56ca4ab47fc
+
+diff --git a/views/templates.xml b/views/templates.xml
+--- a/views/templates.xml
++++ b/views/templates.xml
+@@ -1,42 +1,42 @@
+ <openerp>
+     <data>
+ <template id="academy.index" name="Index">
+-    <html>
+-        <head>
+-            <title>AcademyAcademy</title>
+-            <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet"/>
+-        </head>
+-        <body class="container">
+-            <h1>Introduction to a thing</h1>
+-            <h2>Course description</h2>
+-            <p>
+-                This course will provide a basic introduction to a thing, for
+-                motivated students with no prior experience in things. The course
+-                will focus on the discovery of things and the planning and
+-                organization necessary to handle things.
+-            </p>
+-            <h2>Teaching Assistants</h2>
+-            <ul>
+-                <li t-foreach="tas" t-as="ta">
+-                    <a t-att-href="url_for('/tas/%d/' % ta_index)">
+-                        <t t-esc="ta['name']"/>
+-                    </a>
+-                </li>
+-            </ul>
+-        </body>
+-    </html>
++    <t t-call="website.layout">
++        <div id="wrap">
++            <div class="oe_structure"/>
++            <div class="oe_structure">
++                <div class="container">
++                    <h1>Introduction to a thing</h1>
++                    <h2>Course description</h2>
++                    <p>
++                        This course will provide a basic introduction to a thing, for
++                        motivated students with no prior experience in things. The course
++                        will focus on the discovery of things and the planning and
++                        organization necessary to handle things.
++                    </p>
++                    <h2>Teaching Assistants</h2>
++                    <ul>
++                        <li t-foreach="tas" t-as="ta">
++                            <a t-att-href="url_for('/tas/%d/' % ta_index)">
++                                <t t-esc="ta['name']"/>
++                            </a>
++                        </li>
++                    </ul>
++                </div>
++            </div>
++            <div class="oe_structure"/>
++        </div>
++    </t>
+ </template>
+ 
+ <template id="academy.ta" name="Teaching Assistant">
+-    <html>
+-        <head>
+-            <title>AcademyAcademy TA <t t-esc="name"/></title>
+-            <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet"/>
+-        </head>
+-        <body class="container">
+-            <h1><t t-esc="name"/></h1>
+-        </body>
+-    </html>
++    <t t-call="website.layout">
++        <div id="wrap">
++            <div class="container">
++                <h1><t t-esc="name"/></h1>
++            </div>
++        </div>
++    </t>
+ </template>
+ 
+     </data>
