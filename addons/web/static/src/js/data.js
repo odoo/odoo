@@ -129,11 +129,14 @@ instance.web.Query = instance.web.Class.extend({
         if (_.isEmpty(grouping) && !ctx['group_by_no_leaf']) {
             return null;
         }
+        var raw_fields = _.map(grouping.concat(this._fields || []), function (field) {
+            return (_.contains(field, ':')) ? field.split(':')[0] : field;
+        });
 
         var self = this;
         return this._model.call('read_group', {
             groupby: grouping,
-            fields: _.uniq(grouping.concat(this._fields || [])),
+            fields: _.uniq(raw_fields),
             domain: this._model.domain(this._filter),
             context: ctx,
             offset: this._offset,
@@ -233,12 +236,14 @@ instance.web.QueryGroup = instance.web.Class.extend({
 
         var group_size = fixed_group[grouping_field + '_count'] || fixed_group.__count || 0;
         var leaf_group = fixed_group.__context.group_by.length === 0;
+        var raw_field = (_.contains(grouping_field, ':')) ? grouping_field.split(':')[0] : grouping_field;
+
         this.attributes = {
             folded: !!(fixed_group.__fold),
             grouped_on: grouping_field,
             // if terminal group (or no group) and group_by_no_leaf => use group.__count
             length: group_size,
-            value: fixed_group[grouping_field],
+            value: fixed_group[raw_field],
             // A group is open-able if it's not a leaf in group_by_no_leaf mode
             has_children: !(leaf_group && fixed_group.__context['group_by_no_leaf']),
 
