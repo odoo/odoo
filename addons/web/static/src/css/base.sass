@@ -369,6 +369,7 @@ $sheet-padding: 16px
         font-family: "entypoRegular" !important
         font-size: 34px
         font-weight: 300 !important
+        line-height: 100%
     .oe_left
         float: left
         margin-right: 8px
@@ -1639,13 +1640,8 @@ $sheet-padding: 16px
                 padding: 0 16px
     // }}}
     // FormView.header {{{
-    .oe_form header
-        position: relative
-        border-bottom: 1px solid #cacaca
+    .oe_form > :not(.oe_form_nosheet) header
         padding-left: 2px
-        @include vertical-gradient(#fcfcfc, #dedede)
-        > span
-            margin-left: 4px
         ul
             display: inline-block
             float: right
@@ -1654,6 +1650,14 @@ $sheet-padding: 16px
             float: left
             &:first-child
                 margin-left: 6px
+
+    .oe_form  header
+        border-bottom: 1px solid #cacaca
+        padding-left: 2px
+        @include vertical-gradient(#fcfcfc, #dedede)
+        > span
+            margin-left: 4px        
+        
     // }}}
     // FormView.custom tags and classes {{{
     .oe_form
@@ -1981,7 +1985,7 @@ $sheet-padding: 16px
                 .oe_e
                     position: relative
                     top: -1px
-                    left: -9px
+                    left: -9px                    
             input.oe_form_binary_file
                 display: inline-block
                 margin-left: -85px
