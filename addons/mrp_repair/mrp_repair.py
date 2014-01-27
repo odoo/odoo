@@ -152,8 +152,8 @@ class mrp_repair(osv.osv):
             ("after_repair","After Repair")
            ], "Invoice Method",
             select=True, required=True, states={'draft':[('readonly',False)]}, readonly=True, help='Selecting \'Before Repair\' or \'After Repair\' will allow you to generate invoice before or after the repair is done respectively. \'No invoice\' means you don\'t want to generate invoice for this repair order.'),
-        'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
-        'move_id': fields.many2one('stock.move', 'Move',readonly=True, help="Move created by the repair order"),
+        'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True, track_visibility="onchange"),
+        'move_id': fields.many2one('stock.move', 'Move',readonly=True, help="Move created by the repair order", track_visibility="onchange"),
         'fees_lines': fields.one2many('mrp.repair.fee', 'repair_id', 'Fees Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'internal_notes': fields.text('Internal Notes'),
         'quotation_notes': fields.text('Quotation Notes'),
@@ -177,14 +177,23 @@ class mrp_repair(osv.osv):
             }),
     }
 
+    def _default_stock_location(self, cr, uid, context=None):
+        try:
+            warehouse = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'warehouse0')
+            return warehouse.lot_stock_id.id
+        except:
+            return False
+
     _defaults = {
         'state': lambda *a: 'draft',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'mrp.repair'),
         'invoice_method': lambda *a: 'none',
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.repair', context=context),
-        'pricelist_id': lambda self, cr, uid,context : self.pool.get('product.pricelist').search(cr, uid, [('type','=','sale')])[0],
+        'pricelist_id': lambda self, cr, uid, context: self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')])[0],
         'product_qty': 1.0,
+        'location_id': _default_stock_location,
     }
+
 
     _sql_constraints = [
         ('name', 'unique (name)', 'The name of the Repair Order must be unique!'),
@@ -467,6 +476,7 @@ class mrp_repair(osv.osv):
         move_obj = self.pool.get('stock.move')
         repair_line_obj = self.pool.get('mrp.repair.line')
         for repair in self.browse(cr, uid, ids, context=context):
+            move_ids = []
             for move in repair.operations:
                 move_id = move_obj.create(cr, uid, {
                     'name': move.name,
@@ -479,7 +489,7 @@ class mrp_repair(osv.osv):
                     'location_dest_id': move.location_dest_id.id,
                     'state': 'assigned',
                 })
-                move_obj.action_done(cr, uid, [move_id], context=context)
+                move_ids.append(move_id)
                 repair_line_obj.write(cr, uid, [move.id], {'move_id': move_id, 'state': 'done'}, context=context)
             move_id = move_obj.create(cr, uid, {
                 'name': repair.name,
@@ -491,7 +501,8 @@ class mrp_repair(osv.osv):
                 'location_dest_id': repair.location_dest_id.id,
                 'restrict_lot_id': repair.lot_id.id,
             })
-            move_obj.action_done(cr, uid, [move_id], context=context)
+            move_ids.append(move_id)
+            move_obj.action_done(cr, uid, move_ids, context=context)
             self.write(cr, uid, [repair.id], {'state': 'done', 'move_id': move_id}, context=context)
             res[repair.id] = move_id
         return res
