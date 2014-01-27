@@ -117,7 +117,7 @@ class mrp_repair(osv.osv):
     _columns = {
         'name': fields.char('Repair Reference',size=24, required=True, states={'confirmed':[('readonly',True)]}),
         'product_id': fields.many2one('product.product', string='Product to Repair', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'product_qty': fields.float('Product Quantity', help='Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), 
+        'product_qty': fields.float('Product Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), 
                                     required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id' : fields.many2one('res.partner', 'Partner', select=True, help='Choose partner for whom the order will be invoiced and delivered.', states={'confirmed':[('readonly',True)]}),
@@ -139,9 +139,9 @@ class mrp_repair(osv.osv):
             \n* The \'To be Invoiced\' status is used to generate the invoice before or after repairing done. \
             \n* The \'Done\' status is set when repairing is completed.\
             \n* The \'Cancelled\' status is used when user cancel repair order.'),
-        'location_id': fields.many2one('stock.location', 'Current Location', select=True, required = True, readonly=True, states={'draft':[('readonly',False)], 'confirmed':[('readonly',True)]}),
-        'location_dest_id': fields.many2one('stock.location', 'Delivery Location', readonly=True, required = True, states={'draft':[('readonly',False)], 'confirmed':[('readonly',True)]}),
-        'lot_id': fields.many2one('stock.production.lot', 'Lot', domain="[('product_id','=', product_id)]", help="Lot chosen"),
+        'location_id': fields.many2one('stock.location', 'Current Location', select=True, required=True, readonly=True, states={'draft':[('readonly',False)], 'confirmed':[('readonly',True)]}),
+        'location_dest_id': fields.many2one('stock.location', 'Delivery Location', readonly=True, required=True, states={'draft':[('readonly',False)], 'confirmed':[('readonly',True)]}),
+        'lot_id': fields.many2one('stock.production.lot', 'Repaired Lot', domain="[('product_id','=', product_id)]", help="Products repaired are all belonging to this lot"),
         'guarantee_limit': fields.date('Warranty Expiration', help="The warranty expiration limit is computed as: last move date + warranty defined on selected product. If the current date is below the warranty expiration limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards.", states={'confirmed':[('readonly',True)]}),
         'operations' : fields.one2many('mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', help='Pricelist of the selected partner.'),
@@ -153,7 +153,7 @@ class mrp_repair(osv.osv):
            ], "Invoice Method",
             select=True, required=True, states={'draft':[('readonly',False)]}, readonly=True, help='Selecting \'Before Repair\' or \'After Repair\' will allow you to generate invoice before or after the repair is done respectively. \'No invoice\' means you don\'t want to generate invoice for this repair order.'),
         'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
-        'move_id': fields.many2one('stock.move', 'Move',readonly=True),
+        'move_id': fields.many2one('stock.move', 'Move',readonly=True, help="Move created by the repair order"),
         'fees_lines': fields.one2many('mrp.repair.fee', 'repair_id', 'Fees Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'internal_notes': fields.text('Internal Notes'),
         'quotation_notes': fields.text('Quotation Notes'),
@@ -219,7 +219,7 @@ class mrp_repair(osv.osv):
         }
     
     def onchange_product_uom(self, cr, uid, ids, product_id, product_uom, context=None):
-        res = {'value':{}}
+        res = {'value': {}}
         if not product_uom or not product_id:
             return res
         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
@@ -491,7 +491,6 @@ class mrp_repair(osv.osv):
                 'location_dest_id': repair.location_dest_id.id,
                 'restrict_lot_id': repair.lot_id.id,
             })
-            move_obj.signal_button_confirm(cr, uid, [move_id])
             move_obj.action_done(cr, uid, [move_id], context=context)
             self.write(cr, uid, [repair.id], {'state': 'done', 'move_id': move_id}, context=context)
             res[repair.id] = move_id
