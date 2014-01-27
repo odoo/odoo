@@ -275,11 +275,6 @@
                         </div>
                       </div>
 
-                      <div class="alert alert-warning alert-dismissable" t-if="quotation.state == 'cancel'">
-                          <button type="button" class="close hidden-print" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-                          <strong>This quotation has been canceled.</strong> Contact us to get a new quote.
-                      </div>
-
                       <div class="modal fade" id="modeldecline" role="dialog" aria-hidden="true">
                         <div class="modal-dialog">
                           <form id="decline" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/decline" class="modal-content">
@@ -380,7 +375,7 @@
   </template>
 
   <template id="navigation_menu">
-    <div class="hidden-print navspy" data-editable="0" role="complementary">
+    <div class="hidden-print navspy" t-ignore="true" role="complementary">
         <ul class="nav bs-sidenav" data-id="quote_sidebar">
             <li><a href="#introduction">Introduction</a></li>
         </ul>
@@ -467,7 +462,7 @@
                 <div class="row mt16">
                     <div class="col-md-3">
                         <div class="bs-sidebar">
-                            <div class="hidden-print navspy" role="complementary">
+                            <div class="hidden-print navspy" role="complementary" t-ignore="True">
                                 <ul class="nav bs-sidenav" data-id="quote_sidebar"/>
                             </div>
                         </div>
