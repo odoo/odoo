@@ -129,6 +129,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 this.set_connection_status('disconnected');
             }
         },
+
+        // connects to the specified url
         connect: function(url){
             var self = this;
             this.connection = new instance.web.Session(undefined,url);
@@ -149,35 +151,43 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                     console.error('Could not connect to the Proxy');
                 });
         },
-        autoconnect: function(opts){
+
+        // find a proxy and connects to it. for options see find_proxy
+        autoconnect: function(options){
             var self = this;
             this.set_connection_status('connecting',{});
             var success = new $.Deferred();
-            this.find_proxy(opts)
+            this.find_proxy(options)
                 .then(function(proxies){
                     if(proxies.length > 0){
                         self.connect(proxies[0])
                             .then(function(){
                                 success.resolve();
                             },function(){
+                                self.set_connection_status('disconnected');
                                 success.reject();
                             });
                     }else{
+                        self.set_connection_status('disconnected');
                         success.reject();
                     }
                 });
             return success;
         },
+
+        // starts a loop that updates the connection status
         keepalive: function(){
             var self = this;
             if(!this.keptalive){
                 this.keptalive = true;
                 function status(){
-                    self.connection.rpc('/hw_proxy/status_json',{})       
+                    self.connection.rpc('/hw_proxy/status_json',{},{timeout:500})       
                         .then(function(driver_status){
                             self.set_connection_status('connected',driver_status);
                         },function(){
-                            self.set_connection_status('disconnected');
+                            if(self.get('status').status !== 'connecting'){
+                                self.set_connection_status('disconnected');
+                            }
                         }).always(function(){
                             setTimeout(status,5000);
                         });
@@ -185,6 +195,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 status();
             };
         },
+
         message : function(name,params){
             var callbacks = this.notifications[name] || [];
             for(var i = 0; i < callbacks.length; i++){
@@ -197,18 +208,15 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
         },
 
-        test_connection: function(host,timeout){
-            return $.ajax({
-                url: host + '/hw_proxy/hello',
-                method: 'GET',
-                timeout: timeout || 10000,
-            });
-        },
-
+        // returns as a deferred a list of valid hosts urls that can be used as proxy.
+        // options:
+        //   - port: what port to listen to (default 8069)
+        //   - force_ip : limit the search to the specified ip
+        //   - progress(fac) : callback for search progress ( fac in [0,1] ) 
         find_proxy: function(options){
             options = options || {};
             var self  = this;
-            var port  = ':8069';
+            var port  = ':' + (options.port || '8069');
             var urls  = [];
             var found = false;
             var proxies = [];
@@ -249,8 +257,11 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 if(!url){ 
                     done.resolve();
                 }
-                var c = self.test_connection(url, 300) 
-                    .done(function(){
+                var c = $.ajax({
+                        url: url + '/hw_proxy/hello',
+                        method: 'GET',
+                        timeout: 300, 
+                    }).done(function(){
                         found = true;
                         update_progress();
                         proxies.push(url);
@@ -757,10 +768,10 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         disconnect: function(){
             $('body').off('keypress', this.handler)
         },
-        disconnect_from_proxy: function(){
-            this.remote_scanning = false;
-        },
-        connect_to_proxy: function(){ //FIXME prevent connection losses 
+
+        // the barcode scanner will listen on the hw_proxy/scanner interface for 
+        // scan events until disconnect_from_proxy is called
+        connect_to_proxy: function(){ 
             var self = this;
             this.remote_scanning = true;
             if(this.remote_active >= 1){
@@ -769,23 +780,29 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.remote_active = 1;
 
             function waitforbarcode(){
-                return self.proxy.connection.rpc('/hw_proxy/scanner',{}).then(function(barcode){
-                        self.scan(barcode);
+                return self.proxy.connection.rpc('/hw_proxy/scanner',{},{timeout:7500})
+                    .then(function(barcode){
                         if(!self.remote_scanning){ 
-                            this.remote_active = 0;
+                            self.remote_active = 0;
                             return; 
                         }
+                        self.scan(barcode);
                         waitforbarcode();
                     },
                     function(){
                         if(!self.remote_scanning){
-                            this.remote_active = 0;
+                            self.remote_active = 0;
                             return;
                         }
                         setTimeout(waitforbarcode,5000);
                     });
             }
             waitforbarcode();
+        },
+
+        // the barcode scanner will stop listening on the hw_proxy/scanner remote interface
+        disconnect_from_proxy: function(){
+            this.remote_scanning = false;
         },
     });
 
