@@ -76,6 +76,12 @@ class email_template(osv.osv):
     _description = 'Email Templates'
     _order = 'name'
 
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(email_template, self).default_get(cr, uid, fields, context)
+        if res.get('model'):
+            res['model_id'] = self.pool['ir.model'].search(cr, uid, [('model', '=', res.pop('model'))], context=context)[0]
+        return res
+
     def render_template_batch(self, cr, uid, template, model, res_ids, context=None):
         """Render the given template text, replace mako expressions ``${expr}``
            with the result of evaluating these expressions with
