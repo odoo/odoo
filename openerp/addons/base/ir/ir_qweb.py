@@ -6,6 +6,7 @@ import json
 import logging
 import math
 import re
+import sys
 import xml  # FIXME use lxml and etree
 
 import babel
@@ -25,11 +26,15 @@ _logger = logging.getLogger(__name__)
 #--------------------------------------------------------------------
 
 class QWebException(Exception):
-    def __init__(self, message, template=None, node=None, attribute=None):
+    def __init__(self, message, template=None, node=None, expression=None, inner=None):
         self.message = message
         self.template = template
         self.node = node
-        self.attribute = attribute
+        self.expression = expression
+        self.inner = inner
+
+class QWebTemplateNotFound(QWebException):
+    pass
 
 class QWebContext(dict):
     def __init__(self, cr, uid, data, loader=None, templates=None, context=None):
@@ -144,25 +149,25 @@ class QWeb(orm.AbstractModel):
                 qcontext.templates[name] = node
 
     def get_template(self, name, qcontext):
+        origin_template = qcontext.get('__caller__') or qcontext['__stack__'][0]
         if qcontext.loader and name not in qcontext.templates:
-            xml_doc = qcontext.loader(name)
+            try:
+                xml_doc = qcontext.loader(name)
+            except ValueError, e:
+                raise QWebTemplateNotFound("Loader could not find template %r" % name, template=origin_template, inner=e)
             self.load_document(xml_doc, qcontext=qcontext)
 
         if name in qcontext.templates:
             return qcontext.templates[name]
 
-        exception_to_raise = KeyError('qweb: template "%s" not found' % name)
-        setattr(exception_to_raise, 'qweb_template', name)
-        raise exception_to_raise
+        raise QWebTemplateNotFound("Template %r not found" % name, template=origin_template)
 
     def eval(self, expr, qwebcontext):
         try:
             return qwebcontext.safe_eval(expr)
         except Exception, e:
-            # add qweb metdata on exception
-            setattr(e, 'qweb_eval', expr)
-            setattr(e, 'qweb_template', qwebcontext.get('__template__'))
-            raise
+            template = qwebcontext.get('__template__')
+            raise QWebException("Could not evaluate expression %r" % expr, expression=expr, template=template, inner=e)
 
     def eval_object(self, expr, qwebcontext):
         return self.eval(expr, qwebcontext)
@@ -186,8 +191,9 @@ class QWeb(orm.AbstractModel):
 
         try:
             return str(expr % qwebcontext)
-        except:
-            raise Exception("QWeb: format error '%s' " % expr)
+        except Exception, e:
+            template = qwebcontext.get('__template__')
+            raise QWebException("Format error for expression %r" % expr, expression=expr, template=template, inner=e)
 
     def eval_bool(self, expr, qwebcontext):
         return int(bool(self.eval(expr, qwebcontext)))
@@ -265,13 +271,11 @@ class QWeb(orm.AbstractModel):
             for current_node in element.childNodes:
                 try:
                     g_inner.append(self.render_node(current_node, qwebcontext))
-                except Exception, ex:
-                    # add qweb metdata on exception
-                    if not getattr(ex, 'qweb_template', None):
-                        setattr(element, 'qweb_template', qwebcontext.get('__template__'))
-                    if not getattr(ex, 'qweb_node', None):
-                        setattr(ex, 'qweb_node', element)
+                except QWebException:
                     raise
+                except Exception, e:
+                    template = qwebcontext.get('__template__')
+                    raise QWebException("Could not render element %r" % element.nodeName, node=element, template=template, inner=e), None, sys.exc_info()[2]
         name = str(element.nodeName)
         inner = "".join(g_inner)
         trim = template_attributes.get("trim", 0)
@@ -316,7 +320,8 @@ class QWeb(orm.AbstractModel):
 
     def url_for(self, element, attribute_name, attribute_value, qwebcontext):
         if 'url_for' not in qwebcontext:
-            raise KeyError("qweb: no 'url_for' found in context")
+            template = qwebcontext.get('__template__')
+            raise QWebException("No 'url_for()' found in rendering context for node %r" % element.nodeName, node=element, template=template)
         # Temporary implementation of t-keep-query until qweb py v2
         keep_query = element.attributes.get('t-keep-query')
         if keep_query:
@@ -369,9 +374,7 @@ class QWeb(orm.AbstractModel):
             return "".join(ru)
         else:
             template = qwebcontext.get('__template__')
-            exception_to_raise = NameError("QWeb: foreach enumerator %r is not defined while rendering template %r" % (expr, template))
-            exception_to_raise.qweb_template = template
-            raise exception_to_raise
+            raise QWebException("foreach enumerator %r is not defined while rendering template %r" % (expr, template), template=template)
 
     def render_tag_if(self, element, template_attributes, generated_attributes, qwebcontext):
         if self.eval_bool(template_attributes["if"], qwebcontext):
