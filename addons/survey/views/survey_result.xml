@@ -285,32 +285,100 @@
             </div>
         </div>
     </template>
+
+    <!-- Result for Numeric Data -->
     <template id="result_number" name="Number Result">
         <t t-set="number_result" t-value="prepare_result(question)" />
-         <span class="pull-right">
-             <span class="label label-default only_right_radius">Maximum </span> <span class="label label-success only_left_radius" t-esc="number_result['max']"></span>
-             <span class="label label-default only_right_radius">Minimum </span> <span class="label label-danger only_left_radius" t-esc="number_result['min']"></span>
-             <span class="label label-default only_right_radius">Average </span> <span class="label label-warning only_left_radius" t-esc="number_result['average']"></span>
-         </span>
-         <h3>Most Common <span t-esc="len(number_result['most_comman'])"></span></h3>
-         <table class="table table-hover">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a t-att-href="'#most_common_'+str(question.id)" data-toggle="tab">
+                    <i class="fa fa-list-ol"></i>
+                    Most Common <span t-esc="len(number_result['most_comman'])"></span>
+                </a>
+            </li>
+            <li>
+                <a t-att-href="'#data_question_'+str(question.id)" data-toggle="tab">
+                    <i class="fa fa-list-alt"></i>
+                    Data
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active with-3d-shadow with-transitions" t-att-id="'most_common_'+str(question.id)">
+                <span class="pull-right">
+                <span class="label label-default only_right_radius">Maximum </span> <span class="label label-success only_left_radius" t-esc="number_result['max']"></span>
+                <span class="label label-default only_right_radius">Minimum </span> <span class="label label-danger only_left_radius" t-esc="number_result['min']"></span>
+                <span class="label label-default only_right_radius">Average </span> <span class="label label-warning only_left_radius" t-esc="number_result['average']"></span>
+                </span>
+                <h3>Most Common <span t-esc="len(number_result['most_comman'])"></span></h3>
+                 <table class="table table-hover">
+                     <thead>
+                         <tr>
+                             <th>User Responce</th>
+                             <th>Occurence</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         <tr t-foreach="number_result['most_comman']" t-as="row">
+                             <td>
+                                 <span t-esc="row[0]"></span>
+                             </td>
+                             <td>
+                                 <span t-esc="row[1]"></span>
+                             </td>
+                         </tr>
+                     </tbody>
+                 </table>
+            </div>
+            <div class="tab-pane" t-att-id="'data_question_'+str(question.id)">
+                <table class="table table-hover" t-att-id="'table_question_'+str(question.id)">
                     <thead>
                         <tr>
-                            <th>User Responce</th>
-                            <th>Occurence</th>
+                            <th>#</th>
+                            <th>User Responses</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr t-foreach="number_result['most_comman']" t-as="row">
-                            <td>
-                                <span t-esc="row[0]"></span>
-                            </td>
-                            <td>
-                                <span t-esc="row[1]"></span>
-                            </td>
+                        <tr class="hidden" t-foreach="question.user_input_line_ids" t-as="user_input">
+                            <td><t t-esc="user_input_index+1"></t></td>
+                                <td>
+                                    <span t-field="user_input.value_number"></span><br/>
+                                    <small><p t-field="user_input.date_create" class="fa fa-calendar oe_date text-muted"></p></small>
+                                </td>
                         </tr>
                     </tbody>
                 </table>
+                <!-- Pagination Element -->
+                <ul t-att-id="'pagination_'+str(question.id)" class="pagination" >
+                    <t t-if="len(question.user_input_line_ids) > 5">
+                        <li t-foreach="page_range(len(question.user_input_line_ids))" t-as="num">
+                            <a href="#" t-esc="num"></a>
+                        </li>
+                    </t>
+                </ul>
+                <!-- Dynamic Script for Pagination Element -->
+                <script>
+                    $( document ).ready(function() {
+                        $('#table_question_<t t-esc="question.id"></t> tbody tr:lt(5)').removeClass('hidden');
+                        $('#<t t-esc="'pagination_'+str(question.id)"></t> li:first').addClass('active');
+                        $('#<t t-esc="'pagination_'+str(question.id)"></t> li a').click(function(event){
+                            event.preventDefault();
+                            $('#<t t-esc="'pagination_'+str(question.id)"></t> li').removeClass('active');
+                            $(this).parent('li').addClass('active');
+                            $('#table_question_<t t-esc="question.id"></t> tbody tr').addClass('hidden');
+                            var num = $(this).text();
+                            min = (5 * (num-1))-1;
+                            if (min == -1){
+                                $('#table_question_<t t-esc="question.id"></t> tbody tr:lt('+5 * num+')').removeClass('hidden');
+                            }
+                            else{
+                                $('#table_question_<t t-esc="question.id"></t> tbody tr:lt('+5 * num+'):gt('+min+')').removeClass('hidden');
+                            }
+                        });
+                    });
+                </script>
+            </div>
+        </div>
     </template>
 </data>
 </openerp>
