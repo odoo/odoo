@@ -1186,6 +1186,7 @@ class stock_production_lot(osv.osv):
                 'name': 'Traceability',
                 'view_mode': 'tree,form',
                 'view_type': 'form',
+                'context': {'tree_view_ref': 'stock.view_move_tree'},
                 'res_model': 'stock.move',
                 'type': 'ir.actions.act_window',
                     }

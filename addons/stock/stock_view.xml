@@ -191,7 +191,7 @@
             <field name="arch" type="xml">
                 <form string="Serial Number" version="7.0">
                     <div class="oe_button_box oe_right">
-                        <button name="action_traceability" string="Traceability" type="object"/>
+                        <button name="action_traceability" string="Traceability" type="object" attrs="{'invisible': [('quant_ids','=',[])]}"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
