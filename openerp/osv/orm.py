@@ -607,32 +607,30 @@ class BaseModel(object):
               >>> str(datetime.datetime.utcnow())
               '2013-06-18 08:31:32.821177'
         """
+        def add(name, field):
+            """ add `field` with the given `name` if it does not exist yet """
+            if name not in cls._columns and name not in cls._fields:
+                cls._add_field(name, field)
+
         # this field 'id' must override any other column or field
         cls._add_field('id', fields2.Id())
 
-        # create display_name if not present yet
-        if 'display_name' not in cls._columns and 'display_name' not in cls._fields:
-            cls._add_field('display_name',
-                fields2.Char(string='Name', store=False,
-                    compute='_compute_display_name',
-                    inverse='_inverse_display_name',
-                    search='_search_display_name'))
+        add('display_name', fields2.Char(string='Name', store=False,
+            compute='_compute_display_name', inverse='_inverse_display_name',
+            search='_search_display_name'))
 
         if cls._log_access:
-            # FIXME: what if these fields are already defined on the class?
-            cls._add_field('create_uid', fields2.Many2one('res.users'))
-            cls._add_field('create_date', fields2.Datetime())
-
-            cls._add_field('write_uid', fields2.Many2one('res.users'))
-            cls._add_field('write_date', fields2.Datetime())
-
-            compute_concurrency_field = 'compute_concurrency_field_with_access'
-
+            add('create_uid', fields2.Many2one('res.users', string='Created by'))
+            add('create_date', fields2.Datetime(string='Created on'))
+            add('write_uid', fields2.Many2one('res.users', string='Last Updated by'))
+            add('write_date', fields2.Datetime(string='Last Updated on'))
+            last_modified_name = 'compute_concurrency_field_with_access'
         else:
-            compute_concurrency_field = "compute_concurrency_field"
+            last_modified_name = 'compute_concurrency_field'
 
-        cls._add_field(cls.CONCURRENCY_CHECK_FIELD,
-            fields2.Datetime(compute=compute_concurrency_field, store=False))
+        # this field must override any other column or field
+        cls._add_field(cls.CONCURRENCY_CHECK_FIELD, fields2.Datetime(
+            string='Last Modified on', store=False, compute=last_modified_name))
 
     @api.one
     def compute_concurrency_field(self):
