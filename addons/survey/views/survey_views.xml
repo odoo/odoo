@@ -177,7 +177,7 @@
             <field name="name">survey_tree</field>
             <field name="model">survey.survey</field>
             <field name="arch" type="xml">
-                <tree colors="gray:state == 'close'" string="Survey">
+                <tree colors="blue:state == 'close';grey:state == 'draft';red:state == 'cancel'" string="Survey">
                     <field name="title" />
                     <field name="state" />
                     <field name="date_open" string="Opening date" />
