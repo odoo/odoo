@@ -81,8 +81,9 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
     // connected to the Point of Sale. As the communication only goes from the POS to the proxy,
     // methods are used both to signal an event, and to fetch information. 
 
-    module.ProxyDevice  = instance.web.Class.extend({
-        init: function(options){
+    module.ProxyDevice  = instance.web.Class.extend(openerp.PropertiesMixin,{
+        init: function(parent,options){
+            openerp.PropertiesMixin.init.call(this,parent);
             var self = this;
             options = options || {};
             url = options.url || 'http://localhost:8069';
@@ -104,33 +105,204 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.notifications = {};
             this.bypass_proxy = false;
 
+            this.connection = null; 
+            this.host       = '';
+            this.keptalive  = false;
+
+            this.set('status',{});
+
+            this.set_connection_status('disconnected');
+
+            window.hw_proxy = this;
+        },
+        set_connection_status: function(status,drivers){
+            oldstatus = this.get('status');
+            newstatus = {};
+            newstatus.status = status;
+            newstatus.drivers = status === 'disconnected' ? {} : oldstatus.drivers;
+            newstatus.drivers = drivers ? drivers : newstatus.drivers;
+            this.set('status',newstatus);
+        },
+        disconnect: function(){
+            if(this.get('status').status !== 'disconnected'){
+                this.connection.destroy();
+                this.set_connection_status('disconnected');
+            }
+        },
+
+        // connects to the specified url
+        connect: function(url){
+            var self = this;
             this.connection = new instance.web.Session(undefined,url);
-            this.connection.session_id = _.uniqueId('posproxy');
-            this.test_connection();
-            window.proxy = this;
-            
+            this.host   = url;
+            this.set_connection_status('connecting',{});
+
+            return this.message('handshake').then(function(response){
+                    if(response){
+                        self.set_connection_status('connected');
+                        localStorage['hw_proxy_url'] = url;
+                        self.keepalive();
+                    }else{
+                        self.set_connection_status('disconnected');
+                        console.error('Connection refused by the Proxy');
+                    }
+                },function(){
+                    self.set_connection_status('disconnected');
+                    console.error('Could not connect to the Proxy');
+                });
         },
-        close: function(){
-            this.connection.destroy();
+
+        // find a proxy and connects to it. for options see find_proxy
+        autoconnect: function(options){
+            var self = this;
+            this.set_connection_status('connecting',{});
+            var success = new $.Deferred();
+            this.find_proxy(options)
+                .then(function(proxies){
+                    if(proxies.length > 0){
+                        self.connect(proxies[0])
+                            .then(function(){
+                                success.resolve();
+                            },function(){
+                                self.set_connection_status('disconnected');
+                                success.reject();
+                            });
+                    }else{
+                        self.set_connection_status('disconnected');
+                        success.reject();
+                    }
+                });
+            return success;
         },
+
+        // starts a loop that updates the connection status
+        keepalive: function(){
+            var self = this;
+            if(!this.keptalive){
+                this.keptalive = true;
+                function status(){
+                    self.connection.rpc('/hw_proxy/status_json',{},{timeout:500})       
+                        .then(function(driver_status){
+                            self.set_connection_status('connected',driver_status);
+                        },function(){
+                            if(self.get('status').status !== 'connecting'){
+                                self.set_connection_status('disconnected');
+                            }
+                        }).always(function(){
+                            setTimeout(status,5000);
+                        });
+                }
+                status();
+            };
+        },
+
         message : function(name,params){
             var callbacks = this.notifications[name] || [];
             for(var i = 0; i < callbacks.length; i++){
                 callbacks[i](params);
             }
-            if(this.connected){
-                return this.connection.rpc('/pos/' + name, params || {});       
+            if(this.get('status').status !== 'disconnected'){
+                return this.connection.rpc('/hw_proxy/' + name, params || {});       
             }else{
                 return (new $.Deferred()).reject();
             }
         },
-        test_connection: function(){
-            var self = this;
-            this.connected = true;
-            return this.message('test_connection').fail(function(){
-                    self.connected = false;
-                    console.error('Could not connect to the Proxy');
-                });
+
+        // returns as a deferred a list of valid hosts urls that can be used as proxy.
+        // options:
+        //   - port: what port to listen to (default 8069)
+        //   - force_ip : limit the search to the specified ip
+        //   - progress(fac) : callback for search progress ( fac in [0,1] ) 
+        find_proxy: function(options){
+            options = options || {};
+            var self  = this;
+            var port  = ':' + (options.port || '8069');
+            var urls  = [];
+            var found = false;
+            var proxies = [];
+            var done  = new $.Deferred();
+            var parallel = 8;
+            var threads  = [];
+            var progress = 0;
+
+            this.set_connection_status('connecting');
+
+            if(options.force_ip){
+                urls.push(options.force_ip);
+            }else{
+                if(localStorage['hw_proxy_url']){
+                    urls.push(localStorage['hw_proxy_url']);
+                }
+
+                urls.push('http://localhost'+port);
+
+                for(var i = 0; i < 256; i++){
+                    urls.push('http://192.168.0.'+i+port);
+                    urls.push('http://192.168.1.'+i+port);
+                    urls.push('http://192.168.2.'+i+port);
+                    urls.push('http://10.0.0.'+i+port);
+                }
+            }
+
+            var prog_inc = 1/urls.length; 
+
+            function update_progress(){
+                progress = found ? 1 : progress + prog_inc;
+                if(options.progress){
+                    options.progress(progress);
+                }
+            }
+
+            function thread(url,done){
+                if(!url){ 
+                    done.resolve();
+                }
+                var c = $.ajax({
+                        url: url + '/hw_proxy/hello',
+                        method: 'GET',
+                        timeout: 300, 
+                    }).done(function(){
+                        found = true;
+                        update_progress();
+                        proxies.push(url);
+                        done.resolve(url);
+                    })
+                    .fail(function(){
+                        update_progress();
+                        var next_url = urls.shift();
+                        if(found ||! self.searching_for_proxy || !next_url){
+                            done.resolve();
+                        }else{
+                            thread(next_url,done);
+                        }
+                    });
+                return done;
+            }
+
+            this.searching_for_proxy = true;
+
+            for(var i = 0; i < Math.min(parallel,urls.length); i++){
+                threads.push(thread(urls.shift(),new $.Deferred()));
+            }
+            
+            var done = new $.Deferred();
+            
+            $.when.apply($,threads).then(function(){
+                var urls = [];
+                for(var i = 0; i < arguments.length; i++){
+                    if(arguments[i]){
+                        urls.push(arguments[i]);
+                    }
+                }
+                done.resolve(urls);
+            });
+
+            return done;
+        },
+
+        stop_searching: function(){
+            this.searching_for_proxy = false;
+            this.set_connection_status('disconnected');
         },
 
         // this allows the client to be notified when a proxy call is made. The notification 
@@ -141,8 +313,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
             this.notifications[name].push(callback);
         },
-
-        
         
         //a product has been scanned and recognized with success
         // ean is a parsed ean object
@@ -360,6 +530,9 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         init: function(attributes){
             this.pos = attributes.pos;
             this.action_callback = {};
+            this.proxy = attributes.proxy;
+            this.remote_scanning = false;
+            this.remote_active = 0;
 
             this.action_callback_stack = [];
 
@@ -368,6 +541,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.price_prefix_set    = attributes.price_prefix_set    ||  {'23':''};
             this.cashier_prefix_set  = attributes.cashier_prefix_set  ||  {'041':''};
             this.client_prefix_set   = attributes.client_prefix_set   ||  {'042':''};
+
         },
 
         save_callbacks: function(){
@@ -516,16 +690,20 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             return parse_result;
         },
         
-        scan: function(type,code){
-            if (type === 'ean13'){
+        scan: function(code){
+            if(code.length < 3){
+                return;
+            }else if(code.length === 13 && /^\d+$/.test(code)){
                 var parse_result = this.parse_ean(code);
-            }else if(type === 'reference'){
+            }else if(this.pos.db.get_product_by_reference(code)){
                 var parse_result = {
                     encoding: 'reference',
                     type: 'unit',
                     code: code,
                     prefix: '',
                 };
+            }else{
+                return;
             }
 
             if (parse_result.type === 'error') {    //most likely a checksum error, raise warning
@@ -538,12 +716,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 if(this.action_callback[parse_result.type]){
                     this.action_callback[parse_result.type](parse_result);
                 }
-            }
-        },
-
-        on_reference: function(code){
-            if(this.action_callback['reference']){
-                this.action_callback['reference'](code);
             }
         },
 
@@ -583,11 +755,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 // Internal Ref 5449 vs EAN13 5449000...
 
                 timeout = setTimeout(function(){
-                    if(code.length === 13 && onlynumbers){
-                        self.scan('ean13',code);
-                    }else if(code.length >= 3 && self.pos.db.get_product_by_reference(code)){
-                        self.scan('reference',code);
-                    }
+                    self.scan(code);
                     code = "";
                     onlynumbers = true;
                 },100);
@@ -599,6 +767,42 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // stops catching keyboard events 
         disconnect: function(){
             $('body').off('keypress', this.handler)
+        },
+
+        // the barcode scanner will listen on the hw_proxy/scanner interface for 
+        // scan events until disconnect_from_proxy is called
+        connect_to_proxy: function(){ 
+            var self = this;
+            this.remote_scanning = true;
+            if(this.remote_active >= 1){
+                return;
+            }
+            this.remote_active = 1;
+
+            function waitforbarcode(){
+                return self.proxy.connection.rpc('/hw_proxy/scanner',{},{timeout:7500})
+                    .then(function(barcode){
+                        if(!self.remote_scanning){ 
+                            self.remote_active = 0;
+                            return; 
+                        }
+                        self.scan(barcode);
+                        waitforbarcode();
+                    },
+                    function(){
+                        if(!self.remote_scanning){
+                            self.remote_active = 0;
+                            return;
+                        }
+                        setTimeout(waitforbarcode,5000);
+                    });
+            }
+            waitforbarcode();
+        },
+
+        // the barcode scanner will stop listening on the hw_proxy/scanner remote interface
+        disconnect_from_proxy: function(){
+            this.remote_scanning = false;
         },
     });
 

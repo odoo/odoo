@@ -22,9 +22,9 @@
          <field name="name">account.treasury.report.graph</field>
          <field name="model">account.treasury.report</field>
          <field name="arch" type="xml">
-             <graph string="Treasury Analysis" type="bar">
-                <field name="period_id"/>
-                <field name="balance" operator="+"/>
+             <graph string="Treasury Analysis" type="pivot">
+                <field name="period_id" type="row"/>
+                <field name="balance" type="measure"/>
              </graph>
          </field>
     </record>
@@ -43,9 +43,9 @@
         <field name="name">Treasury Analysis</field>
         <field name="res_model">account.treasury.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
+        <field name="view_mode">graph</field>
         <field name="search_view_id" ref="view_account_treasury_report_search"/>
-        <field name="view_id" ref="view_account_treasury_report_tree"/>
+        <field name="view_id" ref="view_account_treasury_report_graph"/>
         <field name="context">{'group_by':[], 'group_by_no_leaf':0}</field>
         <field name="help">From this view, have an analysis of your treasury. It sums the balance of every accounting entries made on liquidity accounts per period.</field>
     </record>

@@ -41,6 +41,8 @@ class base_config_settings(osv.osv_memory):
         'module_base_import': fields.boolean("Allow users to import data from CSV files"),
         'module_google_drive': fields.boolean('Attach Google documents to any record',
                                               help="""This installs the module google_docs."""),
+        'module_google_calendar': fields.boolean('Allow the users to synchronize their calendar  with Google Calendar',
+                                              help="""This installs the module google_calendar."""),
         'font': fields.many2one('res.font', string="Report Font", help="Set the font into the report header, it will be used as default font in the RML reports of the user company"),
     }
     

@@ -223,7 +223,7 @@ class MergePartnerAutomatic(osv.TransientModel):
         update_records = functools.partial(update_records, context=context)
 
         for partner in src_partners:
-            update_records('base.calendar', src=partner, field_model='model_id.model')
+            update_records('calendar', src=partner, field_model='model_id.model')
             update_records('ir.attachment', src=partner, field_model='res_model')
             update_records('mail.followers', src=partner, field_model='res_model')
             update_records('mail.message', src=partner)

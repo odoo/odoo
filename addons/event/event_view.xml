@@ -424,9 +424,9 @@
             <field name="name">Registration Graph</field>
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
-                <graph string="Registration" type="bar" orientation="horizontal">
-                    <field name="event_id"/>
-                    <field name= "nb_register" operator="+"/>
+                <graph string="Registration" type="bar">
+                    <field name="event_id" type="row"/>
+                    <field name= "nb_register" type="measure"/>
                 </graph>
             </field>
         </record>

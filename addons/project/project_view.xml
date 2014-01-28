@@ -591,9 +591,8 @@
             <field name="model">project.task</field>
             <field name="arch" type="xml">
                 <graph string="Project Tasks" type="bar">
-                    <field name="project_id"/>
-                    <field name="planned_hours" operator="+"/>
-                    <field name="delay_hours" operator="+"/>
+                    <field name="project_id" type="row"/>
+                    <field name="planned_hours" type="measure"/>
                 </graph>
             </field>
         </record>
