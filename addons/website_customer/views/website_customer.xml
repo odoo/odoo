@@ -41,12 +41,12 @@
                         <div class="row">
                             <t t-foreach="partners_data" t-as="partner_data" class="media">
                                 <div class="col-md-2">
-                                    <a t-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
+                                    <a t-att-href="url_for('/customers/{0}/'.format(slug([partner_data.get('id'), partner_data.get('name')])))">
                                         <img class="img img-thumbnail" t-attf-src="data:image/png;base64,#{partner_data.get('image')}"/>
                                     </a>
                                 </div><div class="col-md-10">
                                     <h4>
-                                        <a t-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/" t-esc="partner_data.get('name')"/>
+                                        <a t-att-href="url_for('/customers/{0}/'.format(slug([partner_data.get('id'), partner_data.get('name')])))" t-esc="partner_data.get('name')"/>
                                     </h4>
                                     <div t-raw="partner_data.get('website_short_description')"/>
                                 </div>
@@ -78,7 +78,7 @@
             <t t-foreach="countries" t-as="country_dict">
                 <t t-if="country_dict['country_id']">
                     <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
-                        <a t-href="/customers/#{ country_dict['country_id'][0] and 'country/%s/' % slug(country_dict['country_id']) or '' }">
+                        <a t-att-href="url_for('/customers/{0}'.format(country_dict['country_id'][0] and 'country/%s/' % slug(country_dict['country_id']) or ''))">
                             <span class="badge pull-right" t-esc="country_dict['country_id_count']"/>
                             <t t-esc="country_dict['country_id'][1]"/>
                         </a>
@@ -171,7 +171,7 @@
                         </div>
                     </address>
                     <div>
-                        <a t-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/#references/" t-if="implemented_partner_ids">
+                        <a t-att-href="url_for('/customers/{0}/#references/'.format(slug([partner_data.get('id'), partner_data.get('name')])))" t-if="implemented_partner_ids">
                             <t t-esc="len(implemented_partner_ids)"/> references
                         </a>
                     </div>
@@ -186,11 +186,11 @@
         <t t-if="implemented_partners_data">
             <h3 id="references">References</h3>
             <div t-foreach="implemented_partners_data" t-as="partner_data" class="media thumbnail">
-                <a class="pull-left" t-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
+                <a class="pull-left" t-att-href="url_for('/customers/{0}/'.format(slug([partner_data.get('id'), partner_data.get('name')])))">
                     <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data.get('image_small')}"/>
                 </a>
                 <div class="media-body" style="min-height: 64px;">
-                    <a class="media-heading" t-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
+                    <a class="media-heading" t-att-href="url_for('/customers/{0}/'.format(slug([partner_data.get('id'), partner_data.get('name')])))">
                         <t t-if="partner_data.get('parent_id')"><span t-esc="partner_data.get('parent_id')[1]"/></t> <span t-esc="partner_data.get('name')"/>
                     </a>
                     <div t-if="partner_data.get('website_short_description')" t-raw="partner_data.get('website_short_description')"/>

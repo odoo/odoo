@@ -34,7 +34,7 @@
                     <li t-att-class="'' if membership else 'active'"><a href="/members/">All</a></li>
                     <t t-foreach="memberships" t-as="membership_id">
                         <li t-att-class="membership and membership_id.id == membership.id and 'active' or ''">
-                            <a t-href="/members/association/#{ membership_id.id }"><t t-esc="membership_id.name"/></a>
+                            <a t-att-href="url_for('/members/association/{0}'.format(membership_id.id))"><t t-esc="membership_id.name"/></a>
                         </li>
                     </t>
                 </ul>
@@ -61,11 +61,11 @@
                         </t>
                         <t t-set="partner_data" t-value="partners_data[membership_line_id.partner.id]"/>
                         <div class="media">
-                            <a class="pull-left" t-href="/members/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
+                            <a class="pull-left" t-att-href="url_for('/members/{0}/'.format(slug([partner_data.get('id'), partner_data.get('name')])))">
                                 <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data.get('image_small')}"/>
                             </a>
                             <div class="media-body" style="min-height: 64px;">
-                                <a class="media-heading" t-href="/members/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/"><t t-if="partner_data.get('parent_id')"><span t-esc="partner_data.get('parent_id')[1]"/></t> <span t-esc="partner_data.get('name')"/></a>
+                                <a class="media-heading" t-att-href="url_for('/members/{0}/'.format(slug([partner_data.get('id'), partner_data.get('name')])))"><t t-if="partner_data.get('parent_id')"><span t-esc="partner_data.get('parent_id')[1]"/></t> <span t-esc="partner_data.get('name')"/></a>
                                 <div t-raw="partner_data.get('website_short_description')"/>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
             <li class="nav-header"><h3>Location</h3></li>
             <t t-foreach="countries">
                 <li t-if="country_id" t-att-class="post.get('country_id', '0') == str(country_id and country_id[0]) and 'active' or ''">
-                    <a t-href="/members/#{ membership and 'association/%s/' % membership.id or '' }#{ country_id[0] and 'country/%s/' % slug(country_id) or '' }#{ search }"><t t-esc="country_id[1]"/>
+                    <a t-att-href="url_for('/members/{0}{1}{2}'.format(membership and 'association/%s/' % membership.id or '', country_id[0] and 'country/%s/' % slug(country_id) or '', search))"><t t-esc="country_id[1]"/>
                         <span class="badge pull-right"><t t-esc="country_id_count"/></span>
                     </a>
                 </li>
