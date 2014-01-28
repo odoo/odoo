@@ -292,6 +292,8 @@ class stock_quant(osv.osv):
         toreserve = []
         #split quants if needed
         for quant, qty in quants:
+            if qty < 0.0:
+                raise osv.except_osv(_('Error!'), _('You can not reserve negative quants. '))
             if not quant:
                 continue
             self._quant_split(cr, uid, quant, qty, context=context)
