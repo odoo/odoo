@@ -407,14 +407,16 @@ class Ecommerce(http.Controller):
             'error': {},
         }
         checkout = values['checkout']
-        error = values['error']
 
         partner = None
         public_id = request.registry['website'].get_public_user(cr, uid, context)
         if not request.uid == public_id:
             partner = orm_user.browse(cr, uid, uid, context).partner_id
-        elif order.partner_id and (not order.partner_id.user_ids or public_id not in [u.id for u in order.partner_id.user_ids]):
-            partner = orm_partner.browse(cr, SUPERUSER_ID, order.partner_id.id, context)
+        elif order.partner_id:
+            domain = [("active", "=", False), ("partner_id", "=", order.partner_id.id)]
+            user_ids = request.registry['res.users'].search(cr, SUPERUSER_ID, domain, context=context)
+            if not user_ids or public_id not in user_ids:
+                partner = orm_partner.browse(cr, SUPERUSER_ID, order.partner_id.id, context)
 
         if partner:
             partner_info = info.from_partner(partner)
@@ -442,7 +444,7 @@ class Ecommerce(http.Controller):
         if tx and tx.state != 'draft':
             return request.redirect('/shop/payment/confirmation/%s' % order.id)
 
-        orm_parter = registry.get('res.partner')
+        orm_partner = registry.get('res.partner')
         orm_user = registry.get('res.users')
         orm_country = registry.get('res.country')
         country_ids = orm_country.search(cr, SUPERUSER_ID, [], context=context)
@@ -476,17 +478,25 @@ class Ecommerce(http.Controller):
         company_name = checkout['company']
         company_id = None
         if post['company']:
-            company_ids = orm_parter.search(cr, SUPERUSER_ID, [("name", "ilike", company_name), ('is_company', '=', True)], context=context)
-            company_id = (company_ids and company_ids[0]) or orm_parter.create(cr, SUPERUSER_ID, {'name': company_name, 'is_company': True}, context)
+            company_ids = orm_partner.search(cr, SUPERUSER_ID, [("name", "ilike", company_name), ('is_company', '=', True)], context=context)
+            company_id = (company_ids and company_ids[0]) or orm_partner.create(cr, SUPERUSER_ID, {'name': company_name, 'is_company': True}, context)
 
         billing_info = dict((k, v) for k,v in checkout.items() if "shipping_" not in k and k != "company")
         billing_info['parent_id'] = company_id
 
-        if request.uid != request.registry['website'].get_public_user(cr, uid, context):
+        public_id = request.registry['website'].get_public_user(cr, uid, context)
+        if request.uid != public_id:
             partner_id = orm_user.browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
-            orm_parter.write(cr, SUPERUSER_ID, [partner_id], billing_info, context=context)
+        elif order.partner_id:
+            domain = [("active", "=", False), ("partner_id", "=", order.partner_id.id)]
+            user_ids = request.registry['res.users'].search(cr, SUPERUSER_ID, domain, context=context)
+            if not user_ids or public_id not in user_ids:
+                partner_id = order.partner_id.id
+    
+        if partner_id:
+            orm_partner.write(cr, SUPERUSER_ID, [partner_id], billing_info, context=context)
         else:
-            partner_id = orm_parter.create(cr, SUPERUSER_ID, billing_info, context=context)
+            partner_id = orm_partner.create(cr, SUPERUSER_ID, billing_info, context=context)
 
         shipping_id = None
         if post.get('shipping_different'):
@@ -505,12 +515,12 @@ class Ecommerce(http.Controller):
             domain = [(key, '_id' in key and '=' or 'ilike', '_id' in key and value and int(value) or value)
                       for key, value in shipping_info.items() if key in info.mandatory_billing_fields + ["type", "parent_id"]]
 
-            shipping_ids = orm_parter.search(cr, SUPERUSER_ID, domain, context=context)
+            shipping_ids = orm_partner.search(cr, SUPERUSER_ID, domain, context=context)
             if shipping_ids:
                 shipping_id = shipping_ids[0]
-                orm_parter.write(cr, SUPERUSER_ID, [shipping_id], shipping_info, context)
+                orm_partner.write(cr, SUPERUSER_ID, [shipping_id], shipping_info, context)
             else:
-                shipping_id = orm_parter.create(cr, SUPERUSER_ID, shipping_info, context)
+                shipping_id = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context)
 
         order_info = {
             'partner_id': partner_id,
