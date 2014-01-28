@@ -822,28 +822,78 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
 // ---------- Main Point of Sale Widget ----------
 
-    // this is used to notify the user that data is being synchronized on the network
-    module.SynchNotificationWidget = module.PosBaseWidget.extend({
-        template: "SynchNotificationWidget",
-        init: function(parent, options){
-            options = options || {};
-            this._super(parent, options);
-        },
-        renderElement: function() {
+    module.StatusWidget = module.PosBaseWidget.extend({
+        status: ['connected','connecting','disconnected','warning'],
+        set_status: function(status,msg){
             var self = this;
-            this._super();
+            for(var i = 0; i < this.status.length; i++){
+                this.$('.js_'+this.status[i]).addClass('oe_hidden');
+            }
+            this.$('.js_'+status).removeClass('oe_hidden');
+            
+            if(msg){
+                this.$('.js_msg').removeClass('oe_hidden').html(msg);
+            }else{
+                this.$('.js_msg').addClass('oe_hidden').html('');
+            }
+        },
+    });
+
+    // this is used to notify the user that data is being synchronized on the network
+    module.SynchNotificationWidget = module.StatusWidget.extend({
+        template: 'SynchNotificationWidget',
+        start: function(){
+            var self = this;
+            this.pos.bind('change:synch', function(pos,synch){
+                self.set_status(synch.state, synch.pending);
+            });
             this.$el.click(function(){
                 self.pos.flush();
             });
         },
+    });
+
+    // this is used to notify the user if the pos is connected to the proxy
+    module.ProxyStatusWidget = module.StatusWidget.extend({
+        template: 'ProxyStatusWidget',
+        set_smart_status: function(status){
+            if(status.status === 'connected'){
+                var warning = false;
+                var msg = ''
+                if(this.pos.config.iface_scan_via_proxy){
+                    var scanner = status.drivers.scanner ? status.drivers.scanner.status : false;
+                    if( scanner != 'connected' && scanner != 'connecting'){
+                        warning = true;
+                        msg += _t('Scanner');
+                    }
+                }
+                if( this.pos.config.iface_print_via_proxy || 
+                    this.pos.config.iface_cashdrawer ){
+                    var printer = status.drivers.escpos ? status.drivers.escpos.status : false;
+                    if( printer != 'connected' && printer != 'connecting'){
+                        warning = true;
+                        msg = msg ? msg + ' & ' : msg;
+                        msg += _t('Printer');
+                    }
+                }
+                msg = msg ? msg + ' ' + _t('Offline') : msg;
+                this.set_status(warning ? 'warning' : 'connected', msg);
+            }else{
+                this.set_status(status.status,'');
+            }
+        },
         start: function(){
             var self = this;
-            this.pos.bind('change:nbr_pending_operations', function(){
-                self.renderElement();
+            
+            this.set_smart_status(this.pos.proxy.get('status'));
+
+            this.pos.proxy.on('change:status',this,function(eh,status){ //FIXME remove duplicate changes 
+                self.set_smart_status(status.newValue);
             });
-        },
-        get_nbr_pending: function(){
-            return this.pos.get('nbr_pending_operations');
+
+            this.$el.click(function(){
+                self.pos.connect_to_proxy();
+            });
         },
     });
 
@@ -1038,8 +1088,19 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             // --------  Misc ---------
 
+            this.close_button = new module.HeaderButtonWidget(this,{
+                label: _t('Close'),
+                action: function(){ self.close(); },
+            });
+            this.close_button.appendTo(this.$('.pos-rightheader'));
+
             this.notification = new module.SynchNotificationWidget(this,{});
             this.notification.appendTo(this.$('.pos-rightheader'));
+
+            if(this.pos.config.use_proxy){
+                this.proxy_status = new module.ProxyStatusWidget(this,{});
+                this.proxy_status.appendTo(this.$('.pos-rightheader'));
+            }
 
             this.username   = new module.UsernameWidget(this,{});
             this.username.replace(this.$('.placeholder-UsernameWidget'));
@@ -1063,12 +1124,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 'keyboard_model': 'simple'
             });
             this.onscreen_keyboard.replace(this.$('.placeholder-OnscreenKeyboardWidget'));
-
-            this.close_button = new module.HeaderButtonWidget(this,{
-                label: _t('Close'),
-                action: function(){ self.close(); },
-            });
-            this.close_button.appendTo(this.$('.pos-rightheader'));
 
             this.client_button = new module.HeaderButtonWidget(this,{
                 label: _t('Self-Checkout'),
