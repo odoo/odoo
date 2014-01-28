@@ -654,27 +654,35 @@ class Ecommerce(http.Controller):
             cr, uid, [
                 '|', ('sale_order_id', '=', order.id), ('reference', '=', order.name)
             ], context=context)
+
         if not tx_ids:
-            return {
-                'state': 'error',
-                'message': '<p>There seems to be an error with your request.</p>',
-            }
-        tx = request.registry['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
-        state = tx.state
-        if state == 'done':
-            message = '<p>Your payment has been received.</p>'
-        elif state == 'cancel':
-            message = '<p>The payment seems to have been canceled.</p>'
-        elif state == 'pending' and tx.acquirer_id.validation == 'manual':
-            message = '<p>Your transaction is waiting confirmation.</p>'
-            message += tx.acquirer_id.post_msg
+            if order.amount_total:
+                return {
+                    'state': 'error',
+                    'message': '<p>There seems to be an error with your request.</p>',
+                }
+            else:
+                state = 'done'
+                message = ""
+                validation = None
         else:
-            message = '<p>Your transaction is waiting confirmation.</p>'
+            tx = request.registry['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
+            state = tx.state
+            if state == 'done':
+                message = '<p>Your payment has been received.</p>'
+            elif state == 'cancel':
+                message = '<p>The payment seems to have been canceled.</p>'
+            elif state == 'pending' and tx.acquirer_id.validation == 'manual':
+                message = '<p>Your transaction is waiting confirmation.</p>'
+                message += tx.acquirer_id.post_msg
+            else:
+                message = '<p>Your transaction is waiting confirmation.</p>'
+            validation = tx.acquirer_id.validation
 
         return {
             'state': state,
             'message': message,
-            'validation': tx.acquirer_id.validation
+            'validation': validation
         }
 
     @http.route('/shop/payment/validate/', type='http', auth="public", website=True, multilang=True)
@@ -690,8 +698,6 @@ class Ecommerce(http.Controller):
 
         if transaction_id is None:
             tx = context.get('website_sale_transaction')
-            if not tx:
-                return request.redirect('/shop/')
         else:
             tx = request.registry['payment.transaction'].browse(cr, uid, transaction_id, context=context)
 
@@ -701,7 +707,10 @@ class Ecommerce(http.Controller):
             order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
             assert order.website_session_id == request.httprequest.session['website_session_id']
 
-        if tx.state == 'done':
+        if not tx and order.amount_total:
+            return request.redirect('/shop/')
+
+        if not order.amount_total or tx.state == 'done':
             # confirm the quotation
             sale_order_obj.action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
             # send by email

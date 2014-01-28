@@ -5,7 +5,7 @@
         <template id="adyen_acquirer_button">
             <form t-if="acquirer.adyen_merchant_account" t-att-action="tx_url" method="post" target="_self">
                 <input type="hidden" name="merchantReference" t-att-value="tx_values['merchantReference']"/>
-                <input type="hidden" name="paymentAmount" t-att-value="tx_values['paymentAmount']"/>
+                <input type="hidden" name="paymentAmount" t-att-value="tx_values['paymentAmount'] or '0.0'"/>
                 <input type="hidden" name="currencyCode" t-att-value="tx_values['currencyCode']"/>
                 <input type="hidden" name="shipBeforeDate" t-att-value="tx_values['shipBeforeDate']"/>
                 <input type="hidden" name="skinCode" t-att-value="tx_values['skinCode']"/>

@@ -938,7 +938,7 @@
             </div>
           </div>
 
-          <div class="js_payment mb64 row" t-if="acquirers" id="payment_method">
+          <div class="js_payment mb64 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
               <div class="col-lg-5 col-sm-6">
                   <h4>Payment Method:</h4>
                   <ul class="list-unstyled">
@@ -961,6 +961,15 @@
                       </div>
                   </t>
               </div>
+          </div>
+          <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
+            <div class="col-lg-8 col-sm-8">
+              <form target="_self" action="/shop/payment/validate/" method="post" class="pull-right">
+                  <button width="100px" class="btn btn-primary" name="submit">
+                    <span>Pay Now <span class="fa fa-long-arrow-right"></span></span>
+                  </button>
+              </form>
+            </div>
           </div>
 
         </div>
