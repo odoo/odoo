@@ -4,22 +4,6 @@ import functools
 from openerp import exceptions
 from . import common
 
-class Fixtures(object):
-    def __init__(self, *args):
-        self.fixtures = args
-
-    def __call__(self, fn):
-        @functools.wraps(fn)
-        def wrapper(case):
-            for model, vars in self.fixtures:
-                case.registry(model).create(
-                    case.cr, common.ADMIN_USER_ID, vars, {})
-
-            fn(case)
-        return wrapper
-def fixtures(*args):
-    return Fixtures(*args)
-
 def noid(d):
     """ Removes `id` key from a dict so we don't have to keep these things
     around when trying to match
@@ -27,19 +11,26 @@ def noid(d):
     if 'id' in d: del d['id']
     return d
 
-class TestGetFilters(common.TransactionCase):
+class FiltersCase(common.TransactionCase):
+    def build(self, model, *args):
+        Model = self.registry(model)
+        for vars in args:
+            Model.create(self.cr, common.ADMIN_USER_ID, vars, {})
+
+class TestGetFilters(FiltersCase):
     def setUp(self):
         super(TestGetFilters, self).setUp()
-        self.USER = self.registery('res.users').name_search(self.cr, self.uid, 'demo')[0]
+        self.USER = self.registry('res.users').name_search(self.cr, self.uid, 'demo')[0]
         self.USER_ID = self.USER[0]
 
-    @fixtures(
-        ('ir.filters', dict(name='a', user_id=USER_ID, model_id='ir.filters')),
-        ('ir.filters', dict(name='b', user_id=USER_ID, model_id='ir.filters')),
-        ('ir.filters', dict(name='c', user_id=USER_ID, model_id='ir.filters')),
-        ('ir.filters', dict(name='d', user_id=USER_ID, model_id='ir.filters')),
-    )
     def test_own_filters(self):
+        self.build(
+            'ir.filters',
+            dict(name='a', user_id=self.USER_ID, model_id='ir.filters'),
+            dict(name='b', user_id=self.USER_ID, model_id='ir.filters'),
+            dict(name='c', user_id=self.USER_ID, model_id='ir.filters'),
+            dict(name='d', user_id=self.USER_ID, model_id='ir.filters'))
+
         filters = self.registry('ir.filters').get_filters(
             self.cr, self.USER_ID, 'ir.filters')
 
@@ -50,13 +41,15 @@ class TestGetFilters(common.TransactionCase):
             dict(name='d', is_default=False, user_id=self.USER, domain='[]', context='{}'),
         ])
 
-    @fixtures(
-        ('ir.filters', dict(name='a', user_id=False, model_id='ir.filters')),
-        ('ir.filters', dict(name='b', user_id=False, model_id='ir.filters')),
-        ('ir.filters', dict(name='c', user_id=False, model_id='ir.filters')),
-        ('ir.filters', dict(name='d', user_id=False, model_id='ir.filters')),
-    )
     def test_global_filters(self):
+        self.build(
+            'ir.filters',
+            dict(name='a', user_id=False, model_id='ir.filters'),
+            dict(name='b', user_id=False, model_id='ir.filters'),
+            dict(name='c', user_id=False, model_id='ir.filters'),
+            dict(name='d', user_id=False, model_id='ir.filters'),
+        )
+
         filters = self.registry('ir.filters').get_filters(
             self.cr, self.USER_ID, 'ir.filters')
 
@@ -67,13 +60,14 @@ class TestGetFilters(common.TransactionCase):
             dict(name='d', is_default=False, user_id=False, domain='[]', context='{}'),
         ])
 
-    @fixtures(
-        ('ir.filters', dict(name='a', user_id=False, model_id='ir.filters')),
-        ('ir.filters', dict(name='b', user_id=common.ADMIN_USER_ID, model_id='ir.filters')),
-        ('ir.filters', dict(name='c', user_id=USER_ID, model_id='ir.filters')),
-        ('ir.filters', dict(name='d', user_id=common.ADMIN_USER_ID, model_id='ir.filters')),
-    )
     def test_no_third_party_filters(self):
+        self.build(
+            'ir.filters',
+            dict(name='a', user_id=False, model_id='ir.filters'),
+            dict(name='b', user_id=common.ADMIN_USER_ID, model_id='ir.filters'),
+            dict(name='c', user_id=self.USER_ID, model_id='ir.filters'),
+            dict(name='d', user_id=common.ADMIN_USER_ID, model_id='ir.filters')  )
+
         filters = self.registry('ir.filters').get_filters(
             self.cr, self.USER_ID, 'ir.filters')
 
@@ -82,10 +76,10 @@ class TestGetFilters(common.TransactionCase):
             dict(name='c', is_default=False, user_id=self.USER, domain='[]', context='{}'),
         ])
 
-class TestOwnDefaults(common.TransactionCase):
+class TestOwnDefaults(FiltersCase):
     def setUp(self):
         super(TestOwnDefaults, self).setUp()
-        self.USER = self.registery('res.users').name_search(self.cr, self.uid, 'demo')[0]
+        self.USER = self.registry('res.users').name_search(self.cr, self.uid, 'demo')[0]
         self.USER_ID = self.USER[0]                 
 
     def test_new_no_filter(self):
@@ -107,15 +101,17 @@ class TestOwnDefaults(common.TransactionCase):
                  domain='[]', context='{}')
         ])
 
-    @fixtures(
-        ('ir.filters', dict(name='a', user_id=USER_ID, model_id='ir.filters')),
-        ('ir.filters', dict(name='b', user_id=USER_ID, model_id='ir.filters')),
-    )
     def test_new_filter_not_default(self):
         """
         When creating a @is_default filter with existing non-default filters,
         the new filter gets the flag
         """
+        self.build(
+            'ir.filters',
+            dict(name='a', user_id=self.USER_ID, model_id='ir.filters'),
+            dict(name='b', user_id=self.USER_ID, model_id='ir.filters'),
+        )
+
         Filters = self.registry('ir.filters')
         Filters.create_or_replace(self.cr, self.USER_ID, {
             'name': 'c',
@@ -131,15 +127,17 @@ class TestOwnDefaults(common.TransactionCase):
             dict(name='c', user_id=self.USER, is_default=True, domain='[]', context='{}'),
         ])
 
-    @fixtures(
-        ('ir.filters', dict(name='a', user_id=USER_ID, model_id='ir.filters')),
-        ('ir.filters', dict(name='b', is_default=True, user_id=USER_ID, model_id='ir.filters')),
-    )
     def test_new_filter_existing_default(self):
         """
         When creating a @is_default filter where an existing filter is already
         @is_default, the flag should be *moved* from the old to the new filter
         """
+        self.build(
+            'ir.filters',
+            dict(name='a', user_id=self.USER_ID, model_id='ir.filters'),
+            dict(name='b', is_default=True, user_id=self.USER_ID, model_id='ir.filters'),
+        )
+
         Filters = self.registry('ir.filters')
         Filters.create_or_replace(self.cr, self.USER_ID, {
             'name': 'c',
@@ -155,15 +153,17 @@ class TestOwnDefaults(common.TransactionCase):
             dict(name='c', user_id=self.USER, is_default=True, domain='[]', context='{}'),
         ])
 
-    @fixtures(
-        ('ir.filters', dict(name='a', user_id=USER_ID, model_id='ir.filters')),
-        ('ir.filters', dict(name='b', is_default=True, user_id=USER_ID, model_id='ir.filters')),
-    )
     def test_update_filter_set_default(self):
         """
         When updating an existing filter to @is_default, if an other filter
         already has the flag the flag should be moved
         """
+        self.build(
+            'ir.filters',
+            dict(name='a', user_id=self.USER_ID, model_id='ir.filters'),
+            dict(name='b', is_default=True, user_id=self.USER_ID, model_id='ir.filters'),
+        )
+
         Filters = self.registry('ir.filters')
         Filters.create_or_replace(self.cr, self.USER_ID, {
             'name': 'a',
@@ -178,21 +178,23 @@ class TestOwnDefaults(common.TransactionCase):
             dict(name='b', user_id=self.USER, is_default=False, domain='[]', context='{}'),
         ])
 
-class TestGlobalDefaults(common.TransactionCase):
+class TestGlobalDefaults(FiltersCase):
     def setUp(self):
         super(TestGlobalDefaults, self).setUp()
-        self.USER = self.registery('res.users').name_search(self.cr, self.uid, 'demo')[0]
+        self.USER = self.registry('res.users').name_search(self.cr, self.uid, 'demo')[0]
         self.USER_ID = self.USER[0]
 
-    @fixtures(
-        ('ir.filters', dict(name='a', user_id=False, model_id='ir.filters')),
-        ('ir.filters', dict(name='b', user_id=False, model_id='ir.filters')),
-    )
     def test_new_filter_not_default(self):
         """
         When creating a @is_default filter with existing non-default filters,
         the new filter gets the flag
         """
+        self.build(
+            'ir.filters',
+            dict(name='a', user_id=False, model_id='ir.filters'),
+            dict(name='b', user_id=False, model_id='ir.filters'),
+        )
+
         Filters = self.registry('ir.filters')
         Filters.create_or_replace(self.cr, self.USER_ID, {
             'name': 'c',
@@ -208,15 +210,17 @@ class TestGlobalDefaults(common.TransactionCase):
             dict(name='c', user_id=False, is_default=True, domain='[]', context='{}'),
         ])
 
-    @fixtures(
-        ('ir.filters', dict(name='a', user_id=False, model_id='ir.filters')),
-        ('ir.filters', dict(name='b', is_default=True, user_id=False, model_id='ir.filters')),
-    )
     def test_new_filter_existing_default(self):
         """
         When creating a @is_default filter where an existing filter is already
         @is_default, an error should be generated
         """
+        self.build(
+            'ir.filters',
+            dict(name='a', user_id=False, model_id='ir.filters'),
+            dict(name='b', is_default=True, user_id=False, model_id='ir.filters'),
+        )
+
         Filters = self.registry('ir.filters')
         with self.assertRaises(exceptions.Warning):
             Filters.create_or_replace(self.cr, self.USER_ID, {
@@ -226,15 +230,17 @@ class TestGlobalDefaults(common.TransactionCase):
                 'is_default': True,
             })
 
-    @fixtures(
-        ('ir.filters', dict(name='a', user_id=False, model_id='ir.filters')),
-        ('ir.filters', dict(name='b', is_default=True, user_id=False, model_id='ir.filters')),
-    )
     def test_update_filter_set_default(self):
         """
         When updating an existing filter to @is_default, if an other filter
         already has the flag an error should be generated
         """
+        self.build(
+            'ir.filters',
+            dict(name='a', user_id=False, model_id='ir.filters'),
+            dict(name='b', is_default=True, user_id=False, model_id='ir.filters'),
+        )
+
         Filters = self.registry('ir.filters')
 
         with self.assertRaises(exceptions.Warning):
@@ -245,14 +251,16 @@ class TestGlobalDefaults(common.TransactionCase):
                 'is_default': True,
             })
 
-    @fixtures(
-        ('ir.filters', dict(name='a', user_id=False, model_id='ir.filters')),
-        ('ir.filters', dict(name='b', is_default=True, user_id=False, model_id='ir.filters')),
-    )
     def test_update_default_filter(self):
         """
         Replacing the current default global filter should not generate any error
         """
+        self.build(
+            'ir.filters',
+            dict(name='a', user_id=False, model_id='ir.filters'),
+            dict(name='b', is_default=True, user_id=False, model_id='ir.filters'),
+        )
+
         Filters = self.registry('ir.filters')
         context_value = "{'some_key': True}"
         Filters.create_or_replace(self.cr, self.USER_ID, {
