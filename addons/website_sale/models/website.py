@@ -8,16 +8,13 @@ from openerp import SUPERUSER_ID
 class Website(orm.Model):
     _inherit = 'website'
 
-    def _get_pricelist(self, cr, uid, ids, field_name, arg, context=None):
-        # FIXME: oh god kill me now
-        pricelist_id = self.ecommerce_get_pricelist_id(cr, uid, ids, context=context)
-        return dict.fromkeys(
-            ids, self.pool['product.pricelist'].browse(
-                cr, SUPERUSER_ID, pricelist_id, context=context))
+    def _get_pricelist_id(self, cr, uid, ids, field_name, arg, context=None):
+        pricelist_id = self.ecommerce_get_pricelist_id(cr, uid, None, context=context)
+        return dict.fromkeys(ids, pricelist_id)
 
     _columns = {
         'pricelist_id': fields.function(
-            _get_pricelist, type='many2one', obj='product.pricelist')
+            _get_pricelist_id, type='many2one', obj='product.pricelist')
     }
 
     # ************************************************************

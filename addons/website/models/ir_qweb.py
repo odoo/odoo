@@ -410,6 +410,8 @@ class Contact(orm.AbstractModel):
             'phone': field_browse.phone,
             'mobile': field_browse.mobile,
             'fax': field_browse.fax,
+            'city': field_browse.city,
+            'country_id': field_browse.country_id and field_browse.country_id.name_get()[0][1],
             'email': field_browse.email,
             'fields': opf,
             'options': options

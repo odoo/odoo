@@ -227,8 +227,6 @@ class website_event(http.Controller):
             values['order_id'] = order.id
             values['name'] = "%s: %s" % (ticket.event_id.name, ticket.name)
 
-            ticket.check_registration_limits_before(quantity)
-
             # change and record value
             pricelist_id = order.pricelist_id and order.pricelist_id.id or False
             _values = order_line_obj.product_id_change(

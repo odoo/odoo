@@ -24,7 +24,7 @@
              <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_id']" position="after">
                     <field name="event_id" domain="['|', ('type','=', False),('type', '=', event_type_id)]" attrs="{'invisible': [('event_ok', '=', False)],'required': [('event_ok', '!=', False)]}"/>
-                    <field name="event_ticket_id" domain="[('event_id', '=', event_id), ('register_avail', '>', 0)]" attrs="{'invisible': [('event_id', '=', False)]}"
+                    <field name="event_ticket_id" domain="[('event_id', '=', event_id), ('seats_available', '>', 0)]" attrs="{'invisible': [('event_id', '=', False)]}"
                         on_change="onchange_event_ticket_id(event_ticket_id, context)"/>
                     <field name="event_type_id" invisible="1"/>
                     <field name="event_ok" invisible="1"/>
@@ -51,13 +51,16 @@
                                     <field name="product_id" on_change='onchange_product_id(product_id)'/>
                                     <field name="deadline"/>
                                     <field name="price"/>
-                                    <field name="register_max"/>
-                                    <field name="register_current"/>
-                                    <field name="register_prospect"/>
+                                    <field name="seats_max"/>
+                                    <field name="seats_reserved"/>
+                                    <field name="seats_unconfirmed"/>
                                 </tree>
                             </field>
                         </page>
                     </xpath>
+                    <field name="nb_register" position="after">
+                        <field name="event_ticket_id" domain="[('event_id', '=', context.get('event_id'))]"/>
+                    </field>
                </data>
             </field>
         </record>
