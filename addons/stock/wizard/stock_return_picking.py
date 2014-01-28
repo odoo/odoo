@@ -62,18 +62,30 @@ class stock_return_picking(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False
         pick_obj = self.pool.get('stock.picking')
         pick = pick_obj.browse(cr, uid, record_id, context=context)
+        quant_obj = self.pool.get("stock.quant")
+        move_obj = self.pool.get("stock.move")
         if pick:
             if pick.state != 'done':
                 raise osv.except_osv(_('Warning!'), _("You may only return pickings that are Done!"))
-            for line in pick.move_lines:
-                qty = line.product_uom_qty
-                if line.returned_move_ids:
-                    for returned_move in line.returned_move_ids:
-                        if returned_move.product_id.id == line.product_id.id:
-                            qty -= returned_move.product_uom_qty
-
-                if qty > 0:
-                    result1.append({'product_id': line.product_id.id, 'quantity': qty, 'move_id': line.id})
+            #Check if chained moves are not done already.  In the mean time, sum the quants in that location
+            all_moves = []
+            quants = []
+            for move in pick.move_lines:
+                if move.move_dest_id:
+                    #Backorder moves
+                    moves = move_obj.search(cr, uid, [('split_from', '=', move.move_dest_id.id)], context=context)
+                    moves = [move.move_dest_id] + move_obj.browse(cr, uid, moves, context=context)
+                    if all([x.state in ['done'] for x in moves]):
+                        raise osv.except_osv(_('Warning!'), _('You can not reverse when the chained moves are done!'))
+                #Search quants
+                quant_search = quant_obj.search(cr, uid, ['&', '&', ('history_ids', 'in', move.id), ('qty', '>', 0.0), 
+                                                            ('location_id', '=', move.location_dest_id.id), ], context=context)
+                #('reservation_id.origin_returned_move_id', '!=', move.id)
+                quants += [(move.id, x) for x in quant_obj.browse(cr, uid, quant_search, context=context)]
+            
+            for quant in quants:
+                result1.append({'product_id': quant[1].product_id.id, 'quantity': quant[1].qty, 'move_id': quant[0]})
+            
             if len(result1) == 0:
                 raise osv.except_osv(_('Warning!'), _("No products to return (only lines in Done state and not fully returned yet can be returned)!"))
             if 'product_return_moves' in fields:
@@ -95,13 +107,18 @@ class stock_return_picking(osv.osv_memory):
         #Create new picking for returned products
         pick_type_id = pick.picking_type_id.return_picking_type_id and pick.picking_type_id.return_picking_type_id.id or pick.picking_type_id.id
         
+        # Cancel assignment of existing chained assigned moves
+        moves_to_unreserve = [x.move_dest_id.id for x in pick.move_lines if x.move_dest_id and x.move_dest_id.state == "assigned"]
+        if moves_to_unreserve:
+            move_obj.do_unreserve(cr, uid, moves_to_unreserve, context=context)
+        
         new_picking = pick_obj.copy(cr, uid, pick.id, {
             'move_lines': [],
             'picking_type_id': pick_type_id,
             'state': 'draft',
             'origin': pick.name,
         },context=context)
-                
+        
         for data_get in data_obj.browse(cr, uid, data['product_return_moves'], context=context):
             move = data_get.move_id
             if not move:

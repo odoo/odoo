@@ -819,14 +819,6 @@ class stock_picking(osv.osv):
             self.pool.get('stock.move').force_assign(cr, uid, move_ids, context=context)
         return True
 
-    def cancel_assign(self, cr, uid, ids, context=None):
-        """ Cancels picking for the moves that are in the assigned state
-        @return: True
-        """
-        for pick in self.browse(cr, uid, ids, context=context):
-            move_ids = [x.id for x in pick.move_lines if x not in ['done', 'cancel']]
-            self.pool.get('stock.move').cancel_assign(cr, uid, move_ids, context=context)
-        return True
 
     def action_cancel(self, cr, uid, ids, context=None):
         for pick in self.browse(cr, uid, ids, context=context):
@@ -1307,6 +1299,7 @@ class stock_move(osv.osv):
         'price_unit': fields.float('Unit Price', help="Technical field used to record the product cost set by the user during a picking confirmation (when costing method used is 'average price' or 'real'). Value given in company currency and in product uom."),  # as it's a technical field, we intentionally don't provide the digits attribute
 
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
+        'split_from': fields.many2one('stock.move', string="Move Split From", select=True),
         'backorder_id': fields.related('picking_id', 'backorder_id', type='many2one', relation="stock.picking", string="Back Order of", select=True),
         'origin': fields.char("Source"),
         'procure_method': fields.selection([('make_to_stock', 'Make to Stock'), ('make_to_order', 'Make to Order')], 'Procurement Method', required=True, help="Make to Stock: When needed, the product is taken from the stock or we wait for replenishment. \nMake to Order: When needed, the product is purchased or produced."),
@@ -1697,11 +1690,6 @@ class stock_move(osv.osv):
         """
         return self.write(cr, uid, ids, {'state': 'assigned'})
 
-    def cancel_assign(self, cr, uid, ids, context=None):
-        """ Changes the state to confirmed.
-        @return: True
-        """
-        return self.write(cr, uid, ids, {'state': 'confirmed'})
 
     def check_tracking(self, cr, uid, move, lot_id, context=None):
         """ Checks if serial number is assigned to stock move or not and raise an error if it had to.
@@ -1961,7 +1949,8 @@ class stock_move(osv.osv):
             'move_dest_id': False,
             'reserved_quant_ids': [],
             'restrict_lot_id': restrict_lot_id,
-            'restrict_partner_id': restrict_partner_id
+            'restrict_partner_id': restrict_partner_id,
+            'split_from': move.id,
         }
         if context.get('source_location_id'):
             defaults['location_id'] = context['source_location_id']
