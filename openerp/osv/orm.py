@@ -2687,7 +2687,8 @@ class BaseModel(object):
                     elif interval == 'year':
                         display_format = 'YYYY'
 
-                    qualified_groupby_field = "date_trunc('%s',%s)" % (interval, qualified_groupby_field)
+                    timezone = context.get('tz', 'UTC')
+                    qualified_groupby_field = "date_trunc('%s',timezone('%s', %s))" % (interval, timezone, qualified_groupby_field)
                     flist = "%s as %s " % (qualified_groupby_field, groupby)
                 elif groupby_type == 'boolean':
                     qualified_groupby_field = "coalesce(%s,false)" % qualified_groupby_field
