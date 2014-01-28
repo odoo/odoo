@@ -66,8 +66,8 @@
                     stepId:    'edit-price',
                     element:   '.product_price',
                     placement: 'left',
-                    title:     "Change the public price",
-                    content:   "Edit the sale price of this product by clicking on the amount. The price is the sale price used in all sale orders when selling this product.",
+                    title:     "Change the price",
+                    content:   "Edit the price of this product by clicking on the amount.",
                     template:  self.popover({ next: "OK" }),
                 },
                 {
@@ -89,30 +89,37 @@
                 },
                 {
                     stepId:    'upload-image',
-                    element:   'button.filepicker',
-                    placement: 'left',
-                    title:     "Upload image",
-                    content:   "Click on 'Upload an image from your computer' to pick an image describing your product.",
-                    template:  self.popover({ next: "OK" }),
-                    triggers: function () {
-                        $(document).on('hide.bs.modal', function () {
-                            self.moveToStep('add-block');
-                        });
-                    }
+                    element:   '.well a.pull-right',
+                    placement: 'bottom',
+                    title:     "Select an Image",
+                    content:   "Let's select an existing image.",
+                    template:  self.popover({ fixed: true }),
+                    trigger:   'click',
+                },
+                {
+                    stepId:    'select-image',
+                    element:   'img[alt=imac]',
+                    placement: 'bottom',
+                    title:     "Select an Image",
+                    content:   "Let's select an imac image.",
+                    template:  self.popover({ fixed: true }),
+                    trigger:   'click',
                 },
                 {
                     stepId:    'save-image',
                     element:   'button.save',
-                    placement: 'right',
-                    title:     "Save the image",
-                    content:   "Click 'Save Changes' to add the image to the product decsription.",
+                    placement: 'bottom',
+                    title:     "Save the Image",
+                    content:   "Click to add the image to the product decsription.",
+                    template:  self.popover({ fixed: true }),
+                    trigger:   'click',
                 },
                 {
                     stepId:    'add-block',
                     element:   'button[data-action=snippet]',
                     placement: 'bottom',
-                    title:     "Describe the product for your audience",
-                    content:   "Insert blocks like text-image, or gallery to fully describe the product and make your visitors want to buy this product.",
+                    title:     "Describe the Product",
+                    content:   "Insert blocks like text-image, or gallery to fully describe the product.",
                     template:  self.popover({ fixed: true }),
                     trigger:   'click',
                 },
