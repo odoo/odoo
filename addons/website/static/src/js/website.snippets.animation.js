@@ -3,21 +3,28 @@
 
     var website = openerp.website;
     website.snippet = {};
+    website.snippet.readyAnimation = [];
 
     website.snippet.start_animation = function () {
-        $("[data-snippet-id]").each(function() {
-            var $snipped_id = $(this);
-            if (    !$snipped_id.parents("#oe_snippets").length &&
-                    !$snipped_id.parent("body").length &&
-                    !$snipped_id.data("snippet-view") &&
-                    website.snippet.animationRegistry[$snipped_id.data("snippet-id")]) {
-                var snippet = new website.snippet.animationRegistry[$snipped_id.data("snippet-id")]($snipped_id);
-                $snipped_id.data("snippet-view", snippet);
+        for (var k in website.snippet.animationRegistry) {
+            var Animation = website.snippet.animationRegistry[k];
+            var selector = "[data-snippet-id='"+k+"']";
+            if (Animation.prototype.selector) {
+                selector += ", " + Animation.prototype.selector;
             }
-        });
+            $(selector).each(function() {
+                var $snipped_id = $(this);
+                if (    !$snipped_id.parents("#oe_snippets").length &&
+                        !$snipped_id.parent("body").length &&
+                        !$snipped_id.data("snippet-view")) {
+                    website.snippet.readyAnimation.push($snipped_id);
+                    $snipped_id.data("snippet-view", new Animation($snipped_id));
+                }
+            });
+        }
     };
     website.snippet.stop_animation = function () {
-        $("[data-snippet-id]").each(function() {
+        $(website.snippet.readyAnimation).each(function() {
             var $snipped_id = $(this);
             if ($snipped_id.data("snippet-view")) {
                 $snipped_id.data("snippet-view").stop();
@@ -30,6 +37,7 @@
 
     website.snippet.animationRegistry = {};
     website.snippet.Animation = openerp.Class.extend({
+        selector: false,
         $: function () {
             return this.$el.find.apply(this.$el, arguments);
         },
@@ -51,14 +59,15 @@
         },
     });
 
-    website.snippet.animationRegistry.carousel =
     website.snippet.animationRegistry.slider = website.snippet.Animation.extend({
+        selector: ".carousel",
         start: function () {
             this.$target.carousel({interval: 10000});
         },
     });
 
     website.snippet.animationRegistry.parallax = website.snippet.Animation.extend({
+        parallax: ".parallax",
         start: function () {
             var self = this;
             setTimeout(function () {self.set_values();});

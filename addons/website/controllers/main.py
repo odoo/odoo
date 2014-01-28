@@ -22,11 +22,8 @@ from openerp.addons.website.models import website
 from openerp.addons.web import http
 from openerp.addons.web.http import request, LazyResponse
 
-from ..utils import slugify
-
 logger = logging.getLogger(__name__)
 
-NOPE = object()
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 
@@ -51,20 +48,10 @@ class Website(openerp.addons.web.controllers.main.Home):
         return response
 
     @http.route('/pagenew/<path:path>', type='http', auth="user", website=True)
-    def pagenew(self, path, noredirect=NOPE):
-        web = request.registry['website']
-        try:
-            path = web.new_page(request.cr, request.uid, path, context=request.context)
-        except psycopg2.IntegrityError:
-            logger.exception('Unable to create ir_model_data for page %s', path)
-            response = request.website.render('website.creation_failed', {
-                    'page': path,
-                    'path': '/page/' + request.website.page_for_name(name=path)
-                })
-            response.status_code = 409
-            return response
-        url = "/page/" + path
-        if noredirect is not NOPE:
+    def pagenew(self, path, noredirect=False):
+        xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
+        url = "/page/" + xml_id
+        if noredirect:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
 
