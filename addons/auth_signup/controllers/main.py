@@ -22,9 +22,11 @@ import logging
 
 import openerp
 import openerp.addons.web.controllers.main as webmain
+from openerp.addons.auth_signup.res_user import SignupError
 from openerp import http
 from openerp.http import request, LazyResponse
 from openerp.tools.translate import _
+from openerp.tools import exception_to_unicode
 
 _logger = logging.getLogger(__name__)
 
@@ -77,15 +79,22 @@ class Home(openerp.addons.web.controllers.main.Home):
                     res_users.reset_password(request.cr, openerp.SUPERUSER_ID, login)
                     qcontext['message'] = _("An email has been sent with credentials to reset your password")
                     response.params['template'] = 'web.login'
-                except:
+                except Exception:
                     qcontext['error'] = _("Could not reset your password")
                     _logger.exception('error when resetting password')
             else:
                 values = dict((key, qcontext.get(key)) for key in ('login', 'name', 'password'))
-                res_users.signup(request.cr, openerp.SUPERUSER_ID, values, token)
-                request.cr.commit()
+                try:
+                    self._signup_with_values(token, values)
+                    request.cr.commit()
+                except SignupError, e:
+                    qcontext['error'] = exception_to_unicode(e)
                 return super(Home, self).web_login(*args, **kw)
 
         return response
+
+    def _signup_with_values(self, token, values):
+        request.registry['res.users'].signup(request.cr, openerp.SUPERUSER_ID, values, token)
+
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
