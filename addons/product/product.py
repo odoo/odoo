@@ -33,7 +33,7 @@ import openerp.addons.decimal_precision as dp
 
 def ean_checksum(eancode):
     """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
-    if len(eancode) <> 13:
+    if len(eancode) != 13:
         return -1
     oddsum=0
     evensum=0
@@ -56,7 +56,7 @@ def check_ean(eancode):
     """returns True if eancode is a valid ean13 string, or null"""
     if not eancode:
         return True
-    if len(eancode) <> 13:
+    if len(eancode) != 13:
         return False
     try:
         int(eancode)
@@ -121,7 +121,7 @@ class product_uom(osv.osv):
 
     def create(self, cr, uid, data, context=None):
         if 'factor_inv' in data:
-            if data['factor_inv'] <> 1:
+            if data['factor_inv'] != 1:
                 data['factor'] = self._compute_factor_inv(data['factor_inv'])
             del(data['factor_inv'])
         return super(product_uom, self).create(cr, uid, data, context)
@@ -171,7 +171,7 @@ class product_uom(osv.osv):
     def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, context=None):
         if context is None:
             context = {}
-        if from_unit.category_id.id <> to_unit.category_id.id:
+        if from_unit.category_id.id != to_unit.category_id.id:
             if context.get('raise-exception', True):
                 raise osv.except_osv(_('Error!'), _('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (from_unit.name,to_unit.name,))
             else:
@@ -189,7 +189,7 @@ class product_uom(osv.osv):
             from_unit, to_unit = uoms[0], uoms[-1]
         else:
             from_unit, to_unit = uoms[-1], uoms[0]
-        if from_unit.category_id.id <> to_unit.category_id.id:
+        if from_unit.category_id.id != to_unit.category_id.id:
             return price
         amount = price * from_unit.factor
         if to_uom_id:
@@ -473,7 +473,7 @@ class product_template(osv.osv):
 
     def _check_uom(self, cursor, user, ids, context=None):
         for product in self.browse(cursor, user, ids, context=context):
-            if product.uom_id.category_id.id <> product.uom_po_id.category_id.id:
+            if product.uom_id.category_id.id != product.uom_po_id.category_id.id:
                 return False
         return True
 
@@ -780,11 +780,11 @@ class product_product(osv.osv):
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
                 # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
                 # Performing a quick memory merge of ids in Python will give much better performance
-                ids = set()
-                ids.update(self.search(cr, user, args + ['|',('default_code',operator,name),('variants',operator,name)], limit=limit, context=context))
+                ids = set(self.search(cr, user, args + [('default_code', operator, name)], limit=limit, context=context))
                 if not limit or len(ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
-                    ids.update(self.search(cr, user, args + [('name',operator,name)], limit=(limit and (limit-len(ids)) or False) , context=context))
+                    limit2 = (limit - len(ids)) if limit else False
+                    ids.update(self.search(cr, user, args + [('name', operator, name)], limit=limit2, context=context))
                 ids = list(ids)
             if not ids:
                 ptrn = re.compile('(\[(.*?)\])')
@@ -833,28 +833,19 @@ class product_product(osv.osv):
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
-
-        if not default:
-            default = {}
+        context = context or {}
+        default = dict(default or {})
 
         # Craft our own `<name> (copy)` in en_US (self.copy_translation()
         # will do the other languages).
-        context_wo_lang = dict(context)
+        context_wo_lang = dict(context or {})
         context_wo_lang.pop('lang', None)
-        product = self.read(cr, uid, id, ['name', 'variants', 'product_tmpl_id'], context=context_wo_lang)
-        default = dict(default)
-        if product['variants'] or context.get('variant'):
+        product = self.browse(cr, uid, id, context_wo_lang)
+        if context.get('variant'):
             # if we copy a variant or create one, we keep the same template
-            name = default.pop('name', None)
-            variant = product['variants'] or name or product['name']
-            default.update({
-                'variants': _("%s (copy)") % (variant,),
-                'product_tmpl_id': product['product_tmpl_id'][0],
-            })
+            default['product_tmpl_id'] = product.product_tmpl_id.id
         elif 'name' not in default:
-            default['name'] = _("%s (copy)") % (product['name'],)
+            default['name'] = _("%s (copy)") % (product.name,)
 
         return super(product_product, self).copy(cr, uid, id, default=default, context=context)
 

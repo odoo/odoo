@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 import copy
-from urlparse import urlparse
 
 from lxml import etree, html
 
 from openerp.osv import osv, fields
-from openerp.addons.base import ir
 
 class view(osv.osv):
     _inherit = "ir.ui.view"
@@ -24,21 +22,25 @@ class view(osv.osv):
     # Returns all views (called and inherited) related to a view
     # Used by translation mechanism, SEO and optional templates
     def _views_get(self, cr, uid, view, options=True, context=None, root=True, stack_result=None):
-        if  not context:
+        if not context:
             context = {}
-        if  not stack_result:
+        if not stack_result:
             stack_result = []
 
         def view_obj(view):
-            if type(view) in (str, unicode):
+            if isinstance(view, basestring):
                 mod_obj = self.pool.get("ir.model.data")
                 m, n = view.split('.')
-                _, view = mod_obj.get_object_reference(cr, uid, m, n)
-            if type(view) == int:
-                view_obj = self.pool.get("ir.ui.view")
-                view = view_obj.browse(cr, uid, view, context=context)
+                view = mod_obj.get_object(cr, uid, m, n, context=context)
+            elif isinstance(view, (int, long)):
+                view = self.pool.get("ir.ui.view").browse(cr, uid, view, context=context)
             return view
-        view = view_obj(view)
+
+        try:
+            view = view_obj(view)
+        except ValueError:
+            # Shall we log that ?
+            return []
 
         while root and view.inherit_id:
             view = view.inherit_id
@@ -47,13 +49,18 @@ class view(osv.osv):
         todo = view.inherit_children_ids
         if options:
             todo += filter(lambda x: not x.inherit_id, view.inherited_option_ids)
+        # Keep options in a determinitic order whatever their enabled disabled status
+        todo.sort(lambda x,y:cmp(x.id,y.id))
         for child_view in todo:
-            for r in self._views_get(cr, uid, child_view, options=options, context=context, root=False, stack_result=result):
+            for r in self._views_get(cr, uid, child_view, options=bool(child_view.inherit_id), context=context, root=False, stack_result=result):
                 if r not in result:
                     result.append(r)
         node = etree.fromstring(view.arch)
         for child in node.xpath("//t[@t-call]"):
-            call_view = view_obj(child.get('t-call'))
+            try:
+                call_view = view_obj(child.get('t-call'))
+            except ValueError:
+                continue
             if call_view not in result:
                 result += self._views_get(cr, uid, call_view, options=options, context=context, stack_result=result)
         return result

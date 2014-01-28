@@ -23,9 +23,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.flush_mutex = new $.Mutex();                   // used to make sure the orders are sent to the server once at time
             this.pos_widget = attributes.pos_widget;
 
-            this.proxy = new module.ProxyDevice();              // used to communicate to the hardware devices via a local proxy
+            this.proxy = new module.ProxyDevice(this);              // used to communicate to the hardware devices via a local proxy
             this.barcode_reader = new module.BarcodeReader({'pos': this, proxy:this.proxy});  // used to read barcodes
-            this.barcode_reader.connect_to_proxy();
             this.proxy_queue = new module.JobQueue();           // used to prevent parallels communications to the proxy
             this.db = new module.PosDB();                       // a local database used to search trough products and categories & store pending orders
             this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode 
@@ -53,9 +52,18 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
             // these dynamic attributes can be watched for change by other models or widgets
             this.set({
-                'nbr_pending_operations': 0,    
+                'synch':            { state:'connected', pending:0 }, 
                 'orders':           new module.OrderCollection(),
                 'selectedOrder':    null,
+            });
+
+            this.bind('change:synch',function(pos,synch){
+                clearTimeout(self.synch_timeout);
+                self.synch_timeout = setTimeout(function(){
+                    if(synch.state !== 'disconnected' && synch.pending > 0){
+                        self.set('synch',{state:'disconnected', pending:synch.pending});
+                    }
+                },3000);
             });
 
             this.get('orders').bind('remove', function(order,_unused_,options){ 
@@ -67,7 +75,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
             this.ready = this.load_server_data()
                 .then(function(){
-                    return self.connect_to_posbox();
+                    if(self.config.use_proxy){
+                        return self.connect_to_proxy();
+                    }
                 });
             
         },
@@ -78,24 +88,23 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             // this.flush();
             this.proxy.close();
             this.barcode_reader.disconnect();
+            this.barcode_reader.disconnect_from_proxy();
         },
-
-        connect_to_posbox: function(){
+        connect_to_proxy: function(){
             var self = this;
+            this.barcode_reader.disconnect_from_proxy();
             this.pos_widget.loading_message(_t('Connecting to the PosBox'),0);
-            
             this.pos_widget.loading_skip(function(){
                     self.proxy.stop_searching();
                 });
-
-            return this.proxy.find_proxy({
+            this.proxy.autoconnect({
                     force_ip: self.config.proxy_ip || undefined,
                     progress: function(prog){ 
                         self.pos_widget.loading_progress(prog);
                     },
-                }).then(function(proxies){
-                    if(proxies.length > 0){
-                        self.proxy.connect(proxies[0]);
+                }).then(function(){
+                    if(self.config.iface_scan_via_proxy){
+                        self.barcode_reader.connect_to_proxy();
                     }
                 });
         },
@@ -125,13 +134,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         'phone',
                         'partner_id',
                     ],
-                    [['id','=',users[0].company_id[0]]]);
+                    [['id','=',users[0].company_id[0]]],
+                    {show_address_only: true});
                 }).then(function(companies){
                     self.company = companies[0];
-
-                    return self.fetch('res.partner',['contact_address'],[['id','=',companies[0].partner_id[0]]]);
-                }).then(function(company_partners){
-                    self.company.contact_address = company_partners[0].contact_address;
 
                     return self.fetch('product.uom', null, null);
                 }).then(function(units){
@@ -166,14 +172,20 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         'pos.config',
                         ['name','journal_ids','warehouse_id','journal_id','pricelist_id',
                          'iface_self_checkout', 'iface_led', 'iface_cashdrawer',
-                         'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 'iface_vkeyboard',
-                         'iface_print_via_proxy','iface_cashdrawer','iface_invoicing','iface_big_scrollbars',
+                         'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 
+                         'iface_vkeyboard','iface_print_via_proxy','iface_scan_via_proxy',
+                         'iface_cashdrawer','iface_invoicing','iface_big_scrollbars',
                          'receipt_header','receipt_footer','proxy_ip',
                          'state','sequence_id','session_ids'],
                         [['id','=', self.pos_session.config_id[0]]]
                     );
                 }).then(function(configs){
                     self.config = configs[0];
+                    self.config.use_proxy = self.config.iface_payment_terminal || 
+                                            self.config.iface_electronic_scale ||
+                                            self.config.iface_print_via_proxy  ||
+                                            self.config.iface_scan_via_proxy   ||
+                                            self.config.iface_cashdrawer;
 
                     return self.fetch('stock.warehouse',[],[['id','=', self.config.warehouse_id[0]]]);
                 }).then(function(shops){
@@ -197,13 +209,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(packagings){
                     self.db.add_packagings(packagings);
 
-                    return self.fetch('pos.category', ['id','name','parent_id','child_id','image'])
+                    return self.fetch('product.public.category', ['id','name','parent_id','child_id','image'])
                 }).then(function(categories){
                     self.db.add_categories(categories);
 
                     return self.fetch(
                         'product.product', 
-                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code',
+                        ['name', 'list_price','price','public_categ_id', 'taxes_id', 'ean13', 'default_code',
                          'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description'],
                         [['sale_ok','=',true],['available_in_pos','=',true]],
                         {pricelist: self.pricelist.id} // context for price
@@ -296,7 +308,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var order_id = this.db.add_order(order.export_as_JSON());
             var pushed = new $.Deferred();
 
-            this.set('nbr_pending_operations',self.db.get_orders().length);
+            this.set('synch',{state:'connecting', pending:self.db.get_orders().length});
 
             this.flush_mutex.exec(function(){
                 var flushed = self._flush_all_orders();
@@ -329,7 +341,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
             var order_id = this.db.add_order(order.export_as_JSON());
 
-            this.set('nbr_pending_operations',self.db.get_orders().length);
+            this.set('synch',{state:'connecting', pending:self.db.get_orders().length});
 
             this.flush_mutex.exec(function(){
                 var done = new $.Deferred(); // holds the mutex
@@ -396,6 +408,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             options = options || {};
             timeout = typeof options.timeout === 'number' ? options.timeout : 7500;
 
+            this.set('synch',{state:'connecting', pending: this.get('synch').pending});
+
             var order  = this.db.get_order(order_id);
             order.to_invoice = options.to_invoice || false;
 
@@ -417,7 +431,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
             rpc.done(function(){
                 self.db.remove_order(order_id);
-                self.set('nbr_pending_operations',self.db.get_orders().length);
+                var pending = self.db.get_orders().length;
+                self.set('synch',{state: pending ? 'connecting' : 'connected', pending:pending});
             });
 
             return rpc;
@@ -954,7 +969,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     email: company.email,
                     website: company.website,
                     company_registry: company.company_registry,
-                    contact_address: company.contact_address, 
+                    contact_address: company.partner_id[1], 
                     vat: company.vat,
                     name: company.name,
                     phone: company.phone,

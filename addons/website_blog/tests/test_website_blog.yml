@@ -12,12 +12,6 @@
 
       FAQs, quality manuals, technical references, etc.'
 
-# -
-#     I check the blog index contains my page.
-# -
-    # !python {model: blog.post}: |
-    #   res = self.read(cr, uid, [ref('blog_blog_1')], ['display_content'])
-    #   assert res[0]['display_content'].find('Test Page') > 1
 -
     !record {model: blog.post, id: test_page0}:
       content: 'Test updated content
@@ -37,18 +31,3 @@
       hist_obj = model.pool.get('blog.post.history')
       ids = hist_obj.search(cr, uid, [('post_id', '=', ref("test_page0"))])
       model.get_diff(cr, uid, {'active_ids': ids[:] })
-# -
-#     I click the "create menu" link and i fill the form.
-# -
-    # !record {model: document.page.create.menu, id: test_create_menu0}:
-    #   menu_name: Wiki Test menu
-    #   menu_parent_id: base.menu_base_partner
-# -
-#     I create a Menu by clicking on "create menu"
-# -
-    # !python {model: document.page.create.menu}: |
-    #   ids = [ref("test_create_menu0")]
-    #   context['active_id'] = ref('test_page0')
-    #   self.document_page_menu_create(cr, uid, ids, context)
-
-
