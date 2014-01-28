@@ -1,5 +1,5 @@
 ﻿/*
- Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+ Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
  For licensing, see LICENSE.md or http://ckeditor.com/license
 */
 CKEDITOR.dialog.add("colordialog",function(t){function n(){f.getById(o).removeStyle("background-color");p.getContentElement("picker","selectedColor").setValue("");j&&j.removeAttribute("aria-selected");j=null}function u(a){var a=a.data.getTarget(),b;if("td"==a.getName()&&(b=a.getChild(0).getHtml()))j=a,j.setAttribute("aria-selected",!0),p.getContentElement("picker","selectedColor").setValue(b)}function y(a){for(var a=a.replace(/^#/,""),b=0,c=[];2>=b;b++)c[b]=parseInt(a.substr(2*b,2),16);return"#"+
