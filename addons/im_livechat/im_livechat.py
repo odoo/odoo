@@ -40,10 +40,10 @@ class LiveChatController(http.Controller):
 
     def _auth(self, db):
         reg = openerp.modules.registry.RegistryManager.get(db)
-        uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, "anonymous", "anonymous", None])
+        uid = request.uid
         return reg, uid
 
-    @http.route('/im_livechat/loader', auth="none")
+    @http.route('/im_livechat/loader', auth="public")
     def loader(self, **kwargs):
         p = json.loads(kwargs["p"])
         db = p["db"]
@@ -59,7 +59,7 @@ class LiveChatController(http.Controller):
             return request.make_response(env.get_template("loader.js").render(info),
                  headers=[('Content-Type', "text/javascript")])
 
-    @http.route('/im_livechat/web_page', auth="none")
+    @http.route('/im_livechat/web_page', auth="public")
     def web_page(self, **kwargs):
         p = json.loads(kwargs["p"])
         db = p["db"]
@@ -72,7 +72,7 @@ class LiveChatController(http.Controller):
             return request.make_response(env.get_template("web_page.html").render(info),
                  headers=[('Content-Type', "text/html")])
 
-    @http.route('/im_livechat/available', type='json', auth="none")
+    @http.route('/im_livechat/available', type='json', auth="public")
     def available(self, db, channel):
         reg, uid = self._auth(db)
         with reg.cursor() as cr:
