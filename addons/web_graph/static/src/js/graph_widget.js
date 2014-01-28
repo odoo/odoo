@@ -21,7 +21,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.domain = domain;
         this.mode = options.mode || 'pivot';  // pivot, bar, pie, line
         this.heatmap_mode = options.heatmap_mode || 'none';
-        this.title = options.title || 'Graph';
         this.visible_ui = options.visible_ui || true;
         this.bar_ui = options.bar_ui || 'group';
         this.graph_view = options.graph_view || null;
@@ -384,12 +383,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // Drawing the table
     // ----------------------------------------------------------------------
     draw_table: function () {
-        this.pivot.main_row().title = _t('Total');
-        if (this.pivot.measures.length == 1) {
-            this.pivot.main_col().title = this.pivot.measures[0].string;
-        } else {
-            this.pivot.main_col().title = _t(this.title);
-        }
         this.draw_top_headers();
         _.each(this.pivot.rows.headers, this.proxy('draw_row'));
     },

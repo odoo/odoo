@@ -238,7 +238,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	},
 
 	make_header: function (group, parent) {
-		var title = parent ? group.attributes.value : '';
+		var title = parent ? group.attributes.value : _t('Total');
         return {
 			id: _.uniqueId(),
 			path: parent ? parent.path.concat(title) : [],
