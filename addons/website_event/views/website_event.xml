@@ -46,7 +46,7 @@
                     <t t-if="not event_ids">
                         <div class="text-center text-muted">
                           <h3 class="css_editable_display">No event found</h3>
-                          <h3 class="css_editable_hidden">There isn't available events right now, <t t-if="current_date or current_country or current_type">click <a t-att-href="url_for('/event')">here</a> to check all events or</t> click <a t-att-href="url_for('/page/website.contactus')">here</a> to contact us</h3>
+                          <h3 class="css_editable_hidden">There isn't available events right now, <t t-if="current_date or current_country or current_type">click <a t-href="/event">here</a> to check all events or</t> click <a t-href="/page/website.contactus">here</a> to contact us</h3>
                           <t groups="base.group_website_publisher">
                             <t groups="event.group_event_manager">
                                 <p>Click on "Content" to define a new event or "Help" for more informations.</p>
@@ -60,9 +60,7 @@
                         <li t-foreach="event_ids" t-as="event" class="media">
                             <div class="media-body">
                                 <h4 class="media-heading">
-                                    <a t-att-class="event.state == 'done' and 'text-success'" t-att-href="url_for('/event/{0}/{1}'.format(slug(event), (not event.menu_id) and 'register/' or ''))">
-                                        <span t-field="event.name"> </span>
-                                    </a>
+                                    <a t-att-class="event.state == 'done' and 'text-success'" t-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register/' or ''}"><span t-field="event.name"> </span></a>
                                     <small t-if="not event.website_published" class="label label-danger">not published</small>
                                 </h4>
                                 <div>
@@ -138,7 +136,7 @@
             <ul class="nav nav-pills nav-stacked">
                 <t t-foreach="dates" t-as="date">
                     <li t-att-class="searches.get('date') == date[0] and 'active' or ''" t-if="date[3] or (date[0] in ('old','all'))">
-                        <a t-att-href="url_for('/event/?date={0}'.format(date[0]), keep_query=['country', 'type'])"><t t-esc="date[1]"/>
+                        <a t-href="/event/?date=#{ date[0] }" t-keep-query="country,type"><t t-esc="date[1]"/>
                             <span t-if="date[3]" class="badge pull-right"><t t-esc="date[3]"/></span>
                         </a>
                     </li>
@@ -153,7 +151,7 @@
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="types">
                 <li t-if="type" t-att-class="searches.get('type') == str(type and type[0]) and 'active' or ''">
-                    <a t-att-href="url_for('/event/?type={0}'.format(type[0]), keep_query=['country', 'date'])"><t t-esc="type[1]"/>
+                    <a t-href="/event/?type=#{ type[0] }" t-keep-query="country,date"><t t-esc="type[1]"/>
                         <span class="badge pull-right"><t t-esc="type_count"/></span>
                     </a>
                 </li>
@@ -166,7 +164,7 @@
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="countries">
                 <li t-if="country_id" t-att-class="searches.get('country') == str(country_id and country_id[0]) and 'active' or ''">
-                    <a t-att-href="url_for('/event/?country={0}'.format(country_id[0]), keep_query=['type', 'date'])"><t t-esc="country_id[1]"/>
+                    <a t-href="/event/?country=#{ country_id[0] }" t-keep-query="type,date"><t t-esc="country_id[1]"/>
                         <span class="badge pull-right"><t t-esc="country_id_count"/></span>
                     </a>
                 </li>
@@ -185,10 +183,10 @@
                     <ol class="breadcrumb mb0" t-if="not event.menu_id">
                         <li><a href="/event">All Events</a></li>
                         <li t-if="event.type">
-                            <a t-att-href="url_for('/event?type={0}'.format(event.type.id))" t-esc="event.type.name"/>
+                            <a t-href="/event?type=#{event.type.id}" t-esc="event.type.name"/>
                         </li>
                         <li t-if="event.country_id">
-                            <a t-att-href="url_for('/event?country={0}'.format(event.country_id.id))" t-esc="event.country_id.name"/>
+                            <a t-href="/event?country=#{event.country_id.id}" t-esc="event.country_id.name"/>
                         </li>
                         <li class="active">
                             <span t-field="event.name"/>
@@ -260,7 +258,7 @@
                 <div class="container">
                     <h1 class="mt32">Event not found!</h1>
                     <p>Sorry, the requested event is not available anymore.</p>
-                    <p><a t-att-href="url_for('/event/')">Return to the event list.</a></p>
+                    <p><a t-href="/event/">Return to the event list.</a></p>
                 </div>
             </div>
         </div>
