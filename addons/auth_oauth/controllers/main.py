@@ -47,10 +47,7 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
             providers = []
         for provider in providers:
             return_url = request.httprequest.url_root + 'auth_oauth/signin'
-            state = dict(
-                d=request.session.db,
-                p=provider['id']
-            )
+            state = self.get_state(provider)
             params = dict(
                 debug=request.debug,
                 response_type='token',
@@ -63,10 +60,17 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
 
         return providers
 
+    def get_state(self, provider):
+        return dict(
+            d=request.session.db,
+            p=provider['id']
+        )
+
     @http.route()
     def web_login(self, *args, **kw):
         # TODO: ensure_db()
         request.disable_db = False
+        providers = self.list_providers()
 
         response = super(OAuthLogin, self).web_login(*args, **kw)
         if isinstance(response, LazyResponse):
@@ -80,14 +84,9 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
             else:
                 error = None
             response.params['values'].update(
-                providers=self.list_providers(),
+                providers=providers,
                 error=error,
             )
-
-            # TODO: code in old js controller that should be converted in auth_oauth_signup
-            # if (this.oauth_providers.length === 1 && params.type === 'signup') {
-            #     this.do_oauth_sign_in(this.oauth_providers[0]);
-            # }
 
         return response
 
