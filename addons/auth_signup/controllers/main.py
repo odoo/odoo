@@ -22,7 +22,7 @@ import logging
 
 import openerp
 import openerp.addons.web.controllers.main as webmain
-from openerp.addons.auth_signup.res_user import SignupError
+from openerp.addons.auth_signup.res_users import SignupError
 from openerp import http
 from openerp.http import request, LazyResponse
 from openerp.tools.translate import _
