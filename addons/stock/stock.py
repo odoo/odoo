@@ -1112,9 +1112,13 @@ class stock_picking(osv.osv):
         Used in the barcode scanner UI and the normal interface as well. """
         stock_operation_obj = self.pool.get('stock.pack.operation')
         package_obj = self.pool.get('stock.quant.package')
+        stock_move_obj = self.pool.get('stock.move')
         for picking_id in picking_ids:
             operation_ids = stock_operation_obj.search(cr, uid, [('picking_id', '=', picking_id), ('result_package_id', '=', False)], context=context)
             if operation_ids:
+                for operation in stock_operation_obj.browse(cr, uid, operation_ids, context=context):
+                    for move in operation.linked_move_operation_ids:
+                        stock_move_obj.check_tracking(cr, uid, move.move_id, operation.package_id.id if operation.package_id else operation.lot_id.id, context=None)
                 package_id = package_obj.create(cr, uid, {}, context=context)
                 stock_operation_obj.write(cr, uid, operation_ids, {'result_package_id': package_id}, context=context)
         return True
@@ -1835,7 +1839,7 @@ class stock_move(osv.osv):
             fallback_domain = [('reservation_id', '=', False)]
             #first, process the move per linked operation first because it may imply some specific domains to consider
             for record in move.linked_move_operation_ids:
-                self.check_tracking(cr, uid, move, record.operation_id.lot_id.id, context=context)
+                self.check_tracking(cr, uid, move, record.operation_id.package_id.id if record.operation_id.package_id else record.operation_id.lot_id.id, context=context)
                 dom = main_domain + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, record.qty, domain=dom, prefered_domain=prefered_domain, fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 package_id = False
