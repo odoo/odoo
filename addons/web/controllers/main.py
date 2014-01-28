@@ -583,41 +583,18 @@ class Home(http.Controller):
         return http.local_redirect('/web', query=request.params)
 
     @http.route('/web', type='http', auth="none")
-    def web_client(self, s_action=None, db=None, **kw):
-        # if db not provided, use the session one
-        if not db:
-            db = request.session.db
-
-        # if no database provided and no database in session, use monodb
-        if not db:
-            db = http.db_monodb(request.httprequest)
-
-        # if no db can be found til here, send to the database selector
-        # the database selector will redirect to database manager if needed
-        if not db:
-            return http.local_redirect('/web/database/selector')
-
-        # always switch the session to the computed db
-        if db != request.session.db:
-            request.session.logout()
-        request.session.db = db
+    def web_client(self, s_action=None, **kw):
+        http.ensure_db()
 
         if request.session.uid:
-            html = render_bootstrap_template(db, "web.webclient_bootstrap")
+            html = render_bootstrap_template(request.session.db, "web.webclient_bootstrap")
             return request.make_response(html, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
         else:
             return http.local_redirect('/web/login', query=request.params)
 
     @http.route('/web/login', type='http', auth="none")
-    def web_login(self, redirect=None, db=None, **kw):
-        if db and db != request.session.db:
-            request.session.logout()
-            request.session.db = db
-            request.params.pop('db', None)
-            return http.local_redirect('/web/login', query=request.params)
-
-        if not request.session.db and not db:
-            return http.local_redirect('/web/database/selector')
+    def web_login(self, redirect=None, **kw):
+        http.ensure_db(with_registry=True)
 
         values = request.params.copy()
         if not redirect:
@@ -1026,7 +1003,7 @@ class Session(http.Controller):
 
     @http.route('/web/session/logout', type='http', auth="none")
     def logout(self, redirect='/web'):
-        request.session.logout()
+        request.session.logout(keep_db=True)
         return werkzeug.utils.redirect(redirect, 303)
 
 class Menu(http.Controller):
