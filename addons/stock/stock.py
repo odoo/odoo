@@ -2191,7 +2191,13 @@ class stock_inventory(osv.osv):
                 if not value:
                     product_line[key] = False
             if product_line['product_qty'] < 0:
-                negative_product_ids.append(product_line['product_id'])
+                summary = 'Product: '+self.pool.get('product.product').browse(cr, uid, product_line['product_id'], context=context).name+'\n'
+                summary += 'Quantity: '+str(product_line['product_qty'])+'\n'
+                summary += 'Location: '+self.pool.get('stock.location').browse(cr, uid, product_line['location_id'], context=context).complete_name+'\n'
+                summary += ('Partner: '+self.pool.get('res.partner').browse(cr, uid, product_line['partner_id'],context=context).name+'\n') if product_line['partner_id'] else ''
+                summary += ('Lot: '+self.pool.get('stock.production.lot').browse(cr, uid, product_line['prod_lot_id'], context=context).name+'\n') if product_line['prod_lot_id'] else ''
+                summary += ('Package: '+self.pool.get('stock.quant.package').browse(cr, uid, product_line['package_id'], context=context).name+'\n') if product_line['package_id'] else ''
+                raise osv.except_osv(_('Warning'),_('This product has a negative qty, please fix it before doing an inventory\n%s' % (summary)))
             product_line['inventory_id'] = inventory.id
             product_line['th_qty'] = product_line['product_qty']
             if product_line['product_id']:
@@ -2199,11 +2205,6 @@ class stock_inventory(osv.osv):
                 product_line['product_uom_id'] = product.uom_id.id
             vals.append(product_line)
 
-        if negative_product_ids:
-            summary = ''
-            for product in self.pool.get('product.product').browse(cr, uid, negative_product_ids, context=context):
-                summary += '- '+product.name+'\n'
-            raise osv.except_osv(_('Warning'),_('These products have a negative qty, please fix them before doing an inventory\n%s' % (summary)))
         return vals
 
 class stock_inventory_line(osv.osv):
