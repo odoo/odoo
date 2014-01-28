@@ -46,7 +46,8 @@ synchronization with other companies.
     'data': [
         'security/share_security.xml',
         'res_users_view.xml',
-        'wizard/share_wizard_view.xml'
+        'wizard/share_wizard_view.xml',
+        'share_demo.xml',
     ],
     'installable': True,
     'auto_install': True,

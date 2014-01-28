@@ -31,13 +31,6 @@ class ir_http(orm.AbstractModel):
             page=PageConverter,
         )
 
-    def _auth_method_public(self):
-        if not request.session.uid:
-            request.uid = request.registry['website'].get_public_user(
-                request.cr, openerp.SUPERUSER_ID, request.context)
-        else:
-            request.uid = request.session.uid
-
     def _dispatch(self):
         first_pass = not hasattr(request, 'website')
         request.website = None
