@@ -130,9 +130,10 @@ class StockMove(osv.osv):
                 ctx = context.copy()
                 if location_id:
                     ctx['source_location_id'] = location_id
-                res.append(self.split(cr, uid, move, move_qty - quantity_rest, restrict_lot_id=restrict_lot_id, 
-                                      restrict_partner_id=restrict_partner_id, context=ctx))
-                #TODO need to add consumed_for here
+                new_mov = self.split(cr, uid, move, move_qty - quantity_rest, restrict_lot_id=restrict_lot_id, 
+                                      restrict_partner_id=restrict_partner_id, context=ctx)
+                self.write(cr, uid, new_mov, {'consumed_for': consumed_for},context=context)
+                res.append(new_mov)
             else:
                 res.append(move.id)
                 if location_id:

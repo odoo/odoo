@@ -1900,14 +1900,12 @@ class stock_move(osv.osv):
         return res
 
 
-    def split(self, cr, uid, move, qty, restrict_lot_id=False, default_values = None, context=None):
+    def split(self, cr, uid, move, qty, restrict_lot_id=False, restrict_partner_id=False, context=None):
         """ Splits qty from move move into a new move
         :param move: browse record
         :param qty: float. quantity to split (given in product UoM)
         :param context: dictionay. can contains the special key 'source_location_id' in order to force the source location when copying the move
         """
-        if default_values is None:
-            default_values = {}
         if move.product_qty <= qty or qty == 0:
             return move.id
 
@@ -1920,9 +1918,7 @@ class stock_move(osv.osv):
         if move.state in ('done', 'cancel'):
             raise osv.except_osv(_('Error'), _('You cannot split a move done'))
 
-        
-        defaults = default_values.copy()
-        defaults.update({
+        defaults = {
             'product_uom_qty': uom_qty,
             'product_uos_qty': uos_qty,
             'state': move.state,
@@ -1930,7 +1926,8 @@ class stock_move(osv.osv):
             'move_dest_id': False,
             'reserved_quant_ids': [],
             'restrict_lot_id': restrict_lot_id,
-        })
+            'restrict_partner_id': restrict_partner_id
+        }
         if context.get('source_location_id'):
             defaults['location_id'] = context['source_location_id']
         new_move = self.copy(cr, uid, move.id, defaults)
@@ -1949,6 +1946,8 @@ class stock_move(osv.osv):
 
         self.action_confirm(cr, uid, [new_move], context=context)
         return new_move
+
+
 
 class stock_inventory(osv.osv):
     _name = "stock.inventory"

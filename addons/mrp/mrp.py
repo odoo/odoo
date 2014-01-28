@@ -920,14 +920,12 @@ class mrp_production(osv.osv):
                 if corresponding_move:
                     corresponding_move = corresponding_move[0]
                     default_values = {}
-                    if main_production_move:
-                        default_values = {'consumed_for': main_production_move}
                     if corresponding_move.product_qty > consume['product_qty']:
                         stock_mov_obj.action_consume(cr, uid, [corresponding_move.id], consume['product_qty'], corresponding_move.location_id.id, 
-                                                      restrict_lot_id = consume['lot_id'], default_values = default_values, context=context)
+                                                      restrict_lot_id = consume['lot_id'], consumed_for = main_production_move, context=context)
                     else:
                         stock_mov_obj.action_consume(cr, uid, [corresponding_move.id], corresponding_move.product_qty, corresponding_move.location_id.id, 
-                                                      restrict_lot_id = consume['lot_id'], default_values = default_values, context=context)
+                                                      restrict_lot_id = consume['lot_id'], consumed_for = main_production_move, context=context)
 
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
         self.signal_button_produce_done(cr, uid, [production_id])
