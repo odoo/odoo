@@ -823,13 +823,33 @@ var genericJsonRpc = function(fct_name, params, fct) {
     });
 };
 
+/**
+ * Replacer function for JSON.stringify, serializes Date objects to UTC
+ * datetime in the OpenERP Server format.
+ *
+ * However, if a serialized value has a toJSON method that method is called
+ * *before* the replacer is invoked. Date#toJSON exists, and thus the value
+ * passed to the replacer is a string, the original Date has to be fetched
+ * on the parent object (which is provided as the replacer's context).
+ *
+ * @param {String} k
+ * @param {Object} v
+ * @returns {Object}
+ */
+function date_to_utc(k, v) {
+    var value = this[k];
+    if (!(value instanceof Date)) { return v; }
+
+    return openerp.datetime_to_str(value);
+}
+
 openerp.jsonRpc = function(url, fct_name, params, settings) {
     return genericJsonRpc(fct_name, params, function(data) {
         return $.ajax(url, _.extend({}, settings, {
             url: url,
             dataType: 'json',
             type: 'POST',
-            data: JSON.stringify(data),
+            data: JSON.stringify(data, date_to_utc),
             contentType: 'application/json'
         }));
     });
@@ -838,7 +858,7 @@ openerp.jsonRpc = function(url, fct_name, params, settings) {
 openerp.jsonpRpc = function(url, fct_name, params, settings) {
     settings = settings || {};
     return genericJsonRpc(fct_name, params, function(data) {
-        var payload_str = JSON.stringify(data);
+        var payload_str = JSON.stringify(data, date_to_utc);
         var payload_url = $.param({r:payload_str});
         var force2step = settings.force2step || false;
         delete settings.force2step;
