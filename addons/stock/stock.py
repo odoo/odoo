@@ -1899,41 +1899,6 @@ class stock_move(osv.osv):
         self.action_done(cr, uid, res, context=context)
         return res
 
-    def action_consume(self, cr, uid, ids, quantity, location_id=False, restrict_lot_id=False, default_values = None, context=None):
-        """ Consumed product with specific quantity from specific source location. This correspond to a split of the move (or write if the quantity to consume is >= than the quantity of the move) followed by an action_done
-        @param ids: ids of stock move object to be consumed
-        @param quantity : specify consume quantity (given in move UoM)
-        @param location_id : specify source location
-        @return: Consumed lines
-        """
-        if default_values is None:
-            default_values = {}
-        uom_obj = self.pool.get('product.uom')
-        if context is None:
-            context = {}
-        if quantity <= 0:
-            raise osv.except_osv(_('Warning!'), _('Please provide proper quantity.'))
-        res = []
-        for move in self.browse(cr, uid, ids, context=context):
-            move_qty = move.product_qty
-            uom_qty = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, quantity, move.product_uom.id)
-            if move_qty <= 0:
-                raise osv.except_osv(_('Error!'), _('Cannot consume a move with negative or zero quantity.'))
-            quantity_rest = move.product_qty - uom_qty
-            if quantity_rest > 0:
-                ctx = context.copy()
-                if location_id:
-                    ctx['source_location_id'] = location_id
-                res.append(self.split(cr, uid, move, move_qty - quantity_rest, restrict_lot_id=restrict_lot_id, 
-                                      default_values = default_values, context=ctx))
-            else:
-                res.append(move.id)
-                if location_id:
-                    vals = default_values.copy()
-                    vals.update({'location_id': location_id, 'restrict_lot_id': restrict_lot_id})
-                    self.write(cr, uid, [move.id], vals, context=context)
-        self.action_done(cr, uid, res, context=context)
-        return res
 
     def split(self, cr, uid, move, qty, restrict_lot_id=False, default_values = None, context=None):
         """ Splits qty from move move into a new move

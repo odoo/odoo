@@ -103,26 +103,50 @@ class StockMove(osv.osv):
             procurement_obj.signal_button_wait_done(cr, uid, procurement_ids)
         return processed_ids
 
-    def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id = False, default_values = None, context=None):
+
+
+    def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id = False, restrict_partner_id = False, 
+                       consumed_for = False, context=None):
         """ Consumed product with specific quantity from specific source location.
         @param product_qty: Consumed product quantity
         @param location_id: Source location
         @return: Consumed lines
         """
-        if default_values is None:
-            default_values = {}
         res = []
         production_obj = self.pool.get('mrp.production')
+        uom_obj = self.pool.get('product.uom')
+        
+        if product_qty <= 0:
+            raise osv.except_osv(_('Warning!'), _('Please provide proper quantity.'))
         for move in self.browse(cr, uid, ids, context=context):
-            self.action_confirm(cr, uid, [move.id], context=context)
-            new_moves = super(StockMove, self).action_consume(cr, uid, [move.id], product_qty, location_id, restrict_lot_id = restrict_lot_id, 
-                                                              default_values = default_values, context=context)
+            if move.state == 'draft':
+                self.action_confirm(cr, uid, [move.id], context=context)
+            move_qty = move.product_qty
+            uom_qty = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, product_qty, move.product_uom.id)
+            if move_qty <= 0:
+                raise osv.except_osv(_('Error!'), _('Cannot consume a move with negative or zero quantity.'))
+            quantity_rest = move.product_qty - uom_qty
+            if quantity_rest > 0:
+                ctx = context.copy()
+                if location_id:
+                    ctx['source_location_id'] = location_id
+                res.append(self.split(cr, uid, move, move_qty - quantity_rest, restrict_lot_id=restrict_lot_id, 
+                                      restrict_partner_id=restrict_partner_id, context=ctx))
+                #TODO need to add consumed_for here
+            else:
+                res.append(move.id)
+                if location_id:
+                    self.write(cr, uid, [move.id], {'location_id': location_id, 'restrict_lot_id': restrict_lot_id, 
+                                                    'restrict_partner_id': restrict_partner_id, 
+                                                    'consumed_for': consumed_for}, context=context)
+            self.action_done(cr, uid, res, context=context)
+            
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for prod in production_obj.browse(cr, uid, production_ids, context=context):
                 if prod.state == 'confirmed':
                     production_obj.force_production(cr, uid, [prod.id])
             production_obj.signal_button_produce(cr, uid, production_ids)
-            for new_move in new_moves:
+            for new_move in res:
                 if new_move != move.id:
                     #This move is not already there in move lines of production order
                     production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
