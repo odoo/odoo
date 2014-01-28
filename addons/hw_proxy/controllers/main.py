@@ -7,6 +7,7 @@ import openerp
 import time
 import random
 import subprocess
+import simplejson
 import werkzeug
 import werkzeug.wrappers
 _logger = logging.getLogger(__name__)
@@ -17,13 +18,23 @@ from openerp.http import request
 from openerp.addons.web.controllers.main import manifest_list, module_boot, html_template
 
 
+# drivers modules must add to drivers an object with a get_status() method 
+# so that 'status' can return the status of all active drivers
+drivers = {}
+
 class Proxy(http.Controller):
     def __init__(self):
         self.scale = 'closed'
         self.scale_weight = 0.0
 
+    def get_status(self):
+        statuses = {}
+        for driver in drivers:
+            statuses[driver] = drivers[driver].get_status()
+        return statuses
+
     @http.route('/hw_proxy/hello', type='http', auth='admin')
-    def helloajx(self):
+    def hello(self):
         return request.make_response('ping', {
             'Cache-Control': 'no-cache', 
             'Content-Type': 'text/html; charset=utf-8',
@@ -34,6 +45,39 @@ class Proxy(http.Controller):
     @http.route('/hw_proxy/handshake', type='json', auth='admin')
     def handshake(self):
         return True
+
+    @http.route('/hw_proxy/status', type='http', auth='admin')
+    def status_http(self):
+        resp = '<html>\n<body>\n<h1>Hardware Proxy Status</h1>\n'
+        statuses = self.get_status()
+        for driver in statuses:
+
+            status = statuses[driver]
+
+            if status['status'] == 'connecting':
+                color = 'black'
+            elif status['status'] == 'connected':
+                color = 'green'
+            else:
+                color = 'red'
+
+            resp += "<h2 style='color:"+color+";'>"+driver+' : '+status['status']+"</h2>\n"
+            resp += "<ul>\n"
+            for msg in status['messages']:
+                resp += '<li>'+msg+'</li>\n'
+            resp += "</ul>\n"
+        resp += "<script>\n\tsetTimeout(function(){window.location.reload();},30000);\n</script>\n</body>\n</html>\n\n"
+
+        return request.make_response(resp,{
+            'Cache-Control': 'no-cache', 
+            'Content-Type': 'text/html; charset=utf-8',
+            'Access-Control-Allow-Origin':  '*',
+            'Access-Control-Allow-Methods': 'GET',
+            })
+
+    @http.route('/hw_proxy/status_json', type='json', auth='admin')
+    def status_json(self):
+        return self.get_status()
 
     @http.route('/hw_proxy/scan_item_success', type='json', auth='admin')
     def scan_item_success(self, ean):

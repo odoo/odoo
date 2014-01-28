@@ -26,7 +26,7 @@ class EDI(openerp.http.Controller):
             'init': 's.edi.edi_import("%s");' % safe_url,
         }
 
-    @openerp.http.route('/edi/import_edi_url', type='http', auth='none')
+    @openerp.http.route('/edi/import_edi_url', type='json', auth='none')
     def import_edi_url(self, url):
         req = openerp.http.request
         result = req.session.proxy('edi').import_edi_url(req.session._db, req.session._uid, req.session._password, url)
