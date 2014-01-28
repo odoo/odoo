@@ -1,32 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-    <record id="view_analytic_entries_report_tree" model="ir.ui.view">
-        <field name="name">analytic.entries.report.tree</field>
-        <field name="model">analytic.entries.report</field>
-        <field name="arch" type="xml">
-            <tree string="Analytic Entries Analysis" create="false">
-                <field name="date" invisible="1"/>
-                <field name="year" invisible="1"/>
-                <field name="day" invisible="1"/>
-                <field name="month" invisible="1"/>
-                <field name="user_id" invisible="1"/>
-                <field name="name" invisible="1"/>
-                <field name="partner_id" invisible="1"/>
-                <field name="company_id" invisible="1" groups="base.group_multi_company"/>
-                <field name="currency_id" invisible="1"/>
-                <field name="account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
-                <field name="general_account_id" invisible="1"/>
-                <field name="journal_id" invisible="1"/>
-                <field name="product_id" invisible="1"/>
-                <field name="product_uom_id" invisible="1"/>
-                <field name="nbr" sum="Entries"/>
-                <field name="unit_amount" sum="Quantity"/>
-                <field name="amount" sum="Amount"/>
-            </tree>
-        </field>
-    </record>
-
     <record id="view_analytic_entries_report_search" model="ir.ui.view">
         <field name="name">analytic.entries.report.search</field>
         <field name="model">analytic.entries.report</field>
@@ -58,8 +32,8 @@
          <field name="name">account.analytic.entries.graph</field>
          <field name="model">analytic.entries.report</field>
          <field name="arch" type="xml">
-             <graph string="Analytic Entries Analysis" type="bar">
-                <field name="user_id"/>
+             <graph string="Analytic Entries Analysis" type="pivot">
+                <field name="user_id" type="row"/>
                 <field name="unit_amount" operator="+"/>
                 <field name="amount" operator="+"/>
              </graph>
@@ -69,7 +43,7 @@
         <field name="name">Analytic Entries Analysis</field>
         <field name="res_model">analytic.entries.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
+        <field name="view_mode">graph</field>
         <field name="context">{'search_default_year':1,'search_default_month':1, 'group_by_no_leaf':1, 'search_default_Account':1, 'search_default_Month':1, 'group_by':[]}</field>
         <field name="search_view_id" ref="view_analytic_entries_report_search"/>
         <field name="help">From this view, have an analysis of your different analytic entries following the analytic account you defined matching your business need. Use the tool search to analyse information about analytic entries generated in the system.</field>

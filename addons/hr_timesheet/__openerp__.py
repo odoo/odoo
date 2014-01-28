@@ -49,8 +49,6 @@ up a management by affair.
         'hr_timesheet_report.xml',
         'hr_timesheet_wizard.xml',
         'process/hr_timesheet_process.xml',
-        'wizard/hr_timesheet_print_employee_view.xml',
-        'wizard/hr_timesheet_print_users_view.xml',
         'wizard/hr_timesheet_sign_in_out_view.xml',
         'hr_timesheet_installer.xml',
         'hr_timesheet_data.xml'
@@ -59,7 +57,6 @@ up a management by affair.
     'test': [
         'test/hr_timesheet_users.yml',
         'test/test_hr_timesheet.yml',
-        'test/hr_timesheet_report.yml',
         'test/hr_timesheet_demo.yml',
     ],
     'installable': True,
