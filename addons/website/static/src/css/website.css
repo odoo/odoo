@@ -1,3 +1,4 @@
+@charset "utf-8";
 /*       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY
  *
  * css for editor buttons, openerp widget included in the website and other
@@ -102,6 +103,19 @@ header a.navbar-brand img {
   max-height: 50px;
 }
 
+/* ----- Snippets Styles ----- */
+.readable {
+  font-size: 120%;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ----- EDITOR ----- */
+.css_non_editable_mode_hidden {
+  display: none;
+}
+
 /* ----- BOOTSTRAP FIX ----- */
 .container .container {
   padding-left: 0;
@@ -159,22 +173,32 @@ footer {
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 .oe_structure.oe_editable.oe_empty:empty, .oe_editable[data-oe-type=html]:empty, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
-  background-image: url("/website/static/src/img/drag_here.png");
+  background-image: url("/website/static/src/img/drag_here.png") !important;
+}
+
+.oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
+  background-image: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 220px !important;
 }
 
 .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
   position: static;
 }
 
-.oe_structure.oe_editable.oe_empty:empty:before, .oe_editable[data-oe-type=html]:empty:before, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
-  content: "Drag Building Blocks Here";
-}
-
 .oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
   content: " ";
+  text-align: center;
   display: block;
   padding-top: 160px;
   padding-bottom: 30px;
+  color: grey;
+  font-size: 24px;
+}
+
+.oe_structure.oe_editable.oe_empty:empty:before, .oe_editable[data-oe-type=html]:empty:before, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
+  content: "Drag Building Blocks Here" !important;
 }
 
 .css_editable_display {

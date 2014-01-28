@@ -33,7 +33,7 @@ import openerp.addons.decimal_precision as dp
 
 def ean_checksum(eancode):
     """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
-    if len(eancode) <> 13:
+    if len(eancode) != 13:
         return -1
     oddsum=0
     evensum=0
@@ -56,7 +56,7 @@ def check_ean(eancode):
     """returns True if eancode is a valid ean13 string, or null"""
     if not eancode:
         return True
-    if len(eancode) <> 13:
+    if len(eancode) != 13:
         return False
     try:
         int(eancode)
@@ -83,7 +83,7 @@ class product_uom_categ(osv.osv):
     _name = 'product.uom.categ'
     _description = 'Product uom categ'
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
     }
 
 class product_uom(osv.osv):
@@ -121,14 +121,14 @@ class product_uom(osv.osv):
 
     def create(self, cr, uid, data, context=None):
         if 'factor_inv' in data:
-            if data['factor_inv'] <> 1:
+            if data['factor_inv'] != 1:
                 data['factor'] = self._compute_factor_inv(data['factor_inv'])
             del(data['factor_inv'])
         return super(product_uom, self).create(cr, uid, data, context)
 
     _order = "name"
     _columns = {
-        'name': fields.char('Unit of Measure', size=64, required=True, translate=True),
+        'name': fields.char('Unit of Measure', required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'Category', required=True, ondelete='cascade',
             help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."),
         'factor': fields.float('Ratio', required=True,digits=(12, 12),
@@ -171,7 +171,7 @@ class product_uom(osv.osv):
     def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, context=None):
         if context is None:
             context = {}
-        if from_unit.category_id.id <> to_unit.category_id.id:
+        if from_unit.category_id.id != to_unit.category_id.id:
             if context.get('raise-exception', True):
                 raise osv.except_osv(_('Error!'), _('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (from_unit.name,to_unit.name,))
             else:
@@ -189,7 +189,7 @@ class product_uom(osv.osv):
             from_unit, to_unit = uoms[0], uoms[-1]
         else:
             from_unit, to_unit = uoms[-1], uoms[0]
-        if from_unit.category_id.id <> to_unit.category_id.id:
+        if from_unit.category_id.id != to_unit.category_id.id:
             return price
         amount = price * from_unit.factor
         if to_uom_id:
@@ -214,7 +214,7 @@ class product_ul(osv.osv):
     _name = "product.ul"
     _description = "Shipping Unit"
     _columns = {
-        'name' : fields.char('Name', size=64,select=True, required=True, translate=True),
+        'name' : fields.char('Name', select=True, required=True, translate=True),
         'type' : fields.selection([('unit','Unit'),('pack','Pack'),('box', 'Box'), ('pallet', 'Pallet')], 'Type', required=True),
     }
 
@@ -245,7 +245,7 @@ class product_category(osv.osv):
     _name = "product.category"
     _description = "Product Category"
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True, select=True),
+        'name': fields.char('Name', required=True, translate=True, select=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('product.category','Parent Category', select=True, ondelete='cascade'),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
@@ -265,18 +265,8 @@ class product_category(osv.osv):
     _parent_order = 'sequence, name'
     _order = 'parent_left'
 
-    def _check_recursion(self, cr, uid, ids, context=None):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from product_category where id IN %s',(tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
     ]
     def child_get(self, cr, uid, ids):
         return [ids]
@@ -286,18 +276,9 @@ class product_public_category(osv.osv):
     _name = "product.public.category"
     _description = "Public Category"
     _order = "sequence, name"
-    def _check_recursion(self, cr, uid, ids, context=None):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from product_public_category where id IN %s',(tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
     ]
 
     def name_get(self, cr, uid, ids, context=None):
@@ -326,7 +307,7 @@ class product_public_category(osv.osv):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('product.public.category','Parent Category', select=True),
         'child_id': fields.one2many('product.public.category', 'parent_id', string='Children Categories'),
@@ -375,7 +356,7 @@ class product_template(osv.osv):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     _columns = {
-        'name': fields.char('Name', size=128, required=True, translate=True, select=True),
+        'name': fields.char('Name', required=True, translate=True, select=True),
         'product_manager': fields.many2one('res.users','Product Manager'),
         'description': fields.text('Description',translate=True,
             help="A precise description of the Product, used only for internal information purposes."),
@@ -492,7 +473,7 @@ class product_template(osv.osv):
 
     def _check_uom(self, cursor, user, ids, context=None):
         for product in self.browse(cursor, user, ids, context=context):
-            if product.uom_id.category_id.id <> product.uom_po_id.category_id.id:
+            if product.uom_id.category_id.id != product.uom_po_id.category_id.id:
                 return False
         return True
 
@@ -519,7 +500,6 @@ class product_template(osv.osv):
 class product_product(osv.osv):
     _name = "product.product"
     _description = "Product"
-    _table = "product_product"
     _inherits = {'product.template': 'product_tmpl_id'}
     _inherit = ['mail.thread']
     _order = 'default_code,name_template'
@@ -678,9 +658,9 @@ class product_product(osv.osv):
         'lst_price' : fields.function(_product_lst_price, fnct_inv=_save_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
-        'default_code' : fields.char('Internal Reference', size=64, select=True),
+        'default_code' : fields.char('Internal Reference', select=True),
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
-        'variants': fields.char('Variants', size=64, translate=True),
+        'variants': fields.char('Variants', translate=True),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True),
         'is_only_child': fields.function(
             _is_only_child, type='boolean', string='Sole child of the parent template'),
@@ -689,7 +669,7 @@ class product_product(osv.osv):
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price'), help="Price Extra: Extra price for the variant on sale price. eg. 200 price extra, 1000 + 200 = 1200."),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Product Price'), help="Price Margin: Margin in percentage amount on sale price for the variant. eg. 10 price margin, 1000 * 1.1 = 1100."),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
-        'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', size=128, store={
+        'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', store={
             'product.template': (_get_name_template_ids, ['name'], 10),
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
         }, select=True),
@@ -800,11 +780,11 @@ class product_product(osv.osv):
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
                 # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
                 # Performing a quick memory merge of ids in Python will give much better performance
-                ids = set()
-                ids.update(self.search(cr, user, args + ['|',('default_code',operator,name),('variants',operator,name)], limit=limit, context=context))
+                ids = set(self.search(cr, user, args + [('default_code', operator, name)], limit=limit, context=context))
                 if not limit or len(ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
-                    ids.update(self.search(cr, user, args + [('name',operator,name)], limit=(limit and (limit-len(ids)) or False) , context=context))
+                    limit2 = (limit - len(ids)) if limit else False
+                    ids.update(self.search(cr, user, args + [('name', operator, name)], limit=limit2, context=context))
                 ids = list(ids)
             if not ids:
                 ptrn = re.compile('(\[(.*?)\])')
@@ -853,28 +833,19 @@ class product_product(osv.osv):
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
-
-        if not default:
-            default = {}
+        context = context or {}
+        default = dict(default or {})
 
         # Craft our own `<name> (copy)` in en_US (self.copy_translation()
         # will do the other languages).
-        context_wo_lang = dict(context)
+        context_wo_lang = dict(context or {})
         context_wo_lang.pop('lang', None)
-        product = self.read(cr, uid, id, ['name', 'variants', 'product_tmpl_id'], context=context_wo_lang)
-        default = dict(default)
-        if product['variants'] or context.get('variant'):
+        product = self.browse(cr, uid, id, context_wo_lang)
+        if context.get('variant'):
             # if we copy a variant or create one, we keep the same template
-            name = default.pop('name', None)
-            variant = product['variants'] or name or product['name']
-            default.update({
-                'variants': _("%s (copy)") % (variant,),
-                'product_tmpl_id': product['product_tmpl_id'][0],
-            })
+            default['product_tmpl_id'] = product.product_tmpl_id.id
         elif 'name' not in default:
-            default['name'] = _("%s (copy)") % (product['name'],)
+            default['name'] = _("%s (copy)") % (product.name,)
 
         return super(product_product, self).copy(cr, uid, id, default=default, context=context)
 
@@ -902,7 +873,7 @@ class product_packaging(osv.osv):
     _order = 'sequence'
     _columns = {
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of packaging."),
-        'name' : fields.text('Description', size=64),
+        'name' : fields.text('Description'),
         'qty' : fields.float('Quantity by Package',
             help="The total number of products you can put by pallet or box."),
         'ul' : fields.many2one('product.ul', 'Type of Package', required=True),
@@ -910,10 +881,8 @@ class product_packaging(osv.osv):
         'rows' : fields.integer('Number of Layers', required=True,
             help='The number of layers on a pallet or box'),
         'product_id' : fields.many2one('product.product', 'Product', select=1, ondelete='cascade', required=True),
-        'ean' : fields.char('EAN', size=14,
-            help="The EAN code of the package unit."),
-        'code' : fields.char('Code', size=14,
-            help="The code of the transport unit."),
+        'ean' : fields.char('EAN', size=14, help="The EAN code of the package unit."),
+        'code' : fields.char('Code', help="The code of the transport unit."),
         'weight': fields.float('Total Package Weight',
             help='The weight of a full package, pallet or box.'),
         'weight_ul': fields.float('Empty Package Weight'),
@@ -975,8 +944,8 @@ class product_supplierinfo(osv.osv):
 
     _columns = {
         'name' : fields.many2one('res.partner', 'Supplier', required=True,domain = [('supplier','=',True)], ondelete='cascade', help="Supplier of this product"),
-        'product_name': fields.char('Supplier Product Name', size=128, help="This supplier's product name will be used when printing a request for quotation. Keep empty to use the internal one."),
-        'product_code': fields.char('Supplier Product Code', size=64, help="This supplier's product code will be used when printing a request for quotation. Keep empty to use the internal one."),
+        'product_name': fields.char('Supplier Product Name', help="This supplier's product name will be used when printing a request for quotation. Keep empty to use the internal one."),
+        'product_code': fields.char('Supplier Product Code', help="This supplier's product code will be used when printing a request for quotation. Keep empty to use the internal one."),
         'sequence' : fields.integer('Sequence', help="Assigns the priority to the list of product supplier."),
         'product_uom': fields.related('product_tmpl_id', 'uom_po_id', type='many2one', relation='product.uom', string="Supplier Unit of Measure", readonly="1", help="This comes from the product form."),
         'min_qty': fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this supplier, expressed in the supplier Product Unit of Measure if not empty, in the default unit of measure of the product otherwise."),
@@ -1037,7 +1006,7 @@ class product_supplierinfo(osv.osv):
 class pricelist_partnerinfo(osv.osv):
     _name = 'pricelist.partnerinfo'
     _columns = {
-        'name': fields.char('Description', size=64),
+        'name': fields.char('Description'),
         'suppinfo_id': fields.many2one('product.supplierinfo', 'Partner Information', required=True, ondelete='cascade'),
         'min_quantity': fields.float('Quantity', required=True, help="The minimal quantity to trigger this rule, expressed in the supplier Unit of Measure if any or in the default Unit of Measure of the product otherrwise."),
         'price': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price'), help="This price will be considered as a price for the supplier Unit of Measure if any or the default Unit of Measure of the product otherwise"),

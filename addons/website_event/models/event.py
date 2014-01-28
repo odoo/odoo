@@ -19,20 +19,11 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, osv, fields
+from openerp.osv import osv, fields
 from openerp import SUPERUSER_ID
-from openerp.addons.web.http import request
 
 from openerp.tools.translate import _
 import re
-
-
-# defined for access rules
-class product(osv.osv):
-    _inherit = 'product.product'
-    _columns = {
-        'event_ticket_ids': fields.one2many('event.event.ticket', 'product_id', 'Event Tickets'),
-    }
 
 
 class event(osv.osv):
@@ -110,6 +101,8 @@ class event(osv.osv):
         'website_url': fields.function(_website_url, string="Website url", type="char"),
         'show_menu': fields.function(_get_show_menu, fnct_inv=_set_show_menu, type='boolean', string='Dedicated Menu'),
         'menu_id': fields.many2one('website.menu', 'Event Menu'),
+        'country_id': fields.related('address_id', 'country_id',
+                type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}, store=True),
     }
     _defaults = {
         'show_menu': False,
@@ -126,19 +119,3 @@ class event(osv.osv):
         if partner.address_id:
             return self.browse(cr, SUPERUSER_ID, ids[0], context=context).address_id.google_map_link()
 
-class sale_order_line(osv.osv):
-    _inherit = "sale.order.line"
-
-    def _recalculate_product_values(self, cr, uid, ids, product_id=0, context=None):
-        if not ids:
-            return super(sale_order_line, self)._recalculate_product_values(cr, uid, ids, product_id, context=context)
-
-        order_line = self.browse(cr, SUPERUSER_ID, ids[0], context=context)
-        assert order_line.order_id.website_session_id == request.httprequest.session['website_session_id']
-
-        product = product_id and self.pool.get('product.product').browse(cr, uid, product_id, context=context) or order_line.product_id
-        res = super(sale_order_line, self)._recalculate_product_values(cr, uid, ids, product.id, context=context)
-        if product.event_type_id and order_line.event_ticket_id and order_line.event_ticket_id.price != product.lst_price:
-            res.update({'price_unit': order_line.event_ticket_id.price})
-
-        return res

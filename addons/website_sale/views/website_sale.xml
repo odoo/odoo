@@ -516,14 +516,14 @@
                                   <div class="input-group">
                                       <span class="input-group-addon">
                                           <a t-href="../change_cart/#{ line.id }/?remove=True" class="mb8 js_add_cart_json">
-                                              <i class="fa fa-minus-square"></i>
+                                              <i class="fa fa-minus"></i>
                                           </a>
                                       </span>
                                       <input type="text" class="js_quantity form-control"
                                           t-att-data-id="line.id" t-att-value="int(line.product_uom_qty)"/>
                                       <span class="input-group-addon">
                                           <a t-href="../change_cart/#{ line.id }/" class="mb8 float_left js_add_cart_json">
-                                              <i class="fa fa-plus-square"></i>
+                                              <i class="fa fa-plus"></i>
                                           </a>
                                       </span>
                                   </div>
@@ -534,7 +534,6 @@
                   </table>
                   <t t-call="website_sale.total"/>
                   <div class="clearfix"/>
-                  <a href="/shop" class="btn btn-default mb32"><span class="fa fa-long-arrow-left"/> Continue Shopping</a>
                   <a t-if="website_sale_order and website_sale_order.website_order_line" href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="fa fa-long-arrow-right"/></a>
                   <div class="oe_structure"/>
               </div>
@@ -557,6 +556,14 @@
       </div>
   </t>
 </template>
+
+
+<template id="continue_shopping" inherit_id="website_sale.mycart" inherit_option_id="website_sale.mycart" name="Continue Shopping Button">
+  <xpath expr="//a[@href='/shop/checkout/']" position="before">
+    <a href="/shop" class="btn btn-default mb32"><span class="fa fa-long-arrow-left"/>Continue Shopping</a>
+  </xpath>
+</template>
+
 
 <!-- Page Shop -->
 
@@ -960,7 +967,10 @@
               </div>
               <div class="col-lg-3 col-sm-3">
                   <t t-foreach="acquirers or []" t-as="acquirer">
-                      <div t-att-data-id="acquirer.id" t-raw="acquirer.button" class="oe_sale_acquirer_button hidden pull-right"/>
+                      <div t-att-data-id="acquirer.id" class="oe_sale_acquirer_button hidden pull-right">
+                        <div t-raw="acquirer.button"/>
+                        <div t-field="acquirer.pre_msg"/>
+                      </div>
                   </t>
               </div>
           </div>
@@ -989,7 +999,7 @@
               <li class="text-muted">Payment<span class="chevron"></span></li>
               <li class="text-primary">Confirmation<span class="chevron"></span></li>
           </ul>
-          <h1 class="mb32">Order Confirmed</h1>
+          <h1 class="mb32">Order <em t-field="order.name"/> Confirmed</h1>
           <div class="row">
               <div class="col-md-8 oe_mycart">
                   <h2>Thank you for your order.</h2>

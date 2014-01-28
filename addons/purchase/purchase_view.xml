@@ -551,9 +551,8 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <div name="options" position="inside">
-                    <field name="purchase_ok"/>
-                    <label for="purchase_ok"
-                        attrs="{'readonly': [('is_only_child', '=', False)]}"/>
+                    <field name="purchase_ok" attrs="{'readonly': [('is_only_child', '=', False)]}"/>
+                    <label for="purchase_ok"/>
                 </div>
                 <group name="procurement" position="after">
                      <separator string="Suppliers"/>

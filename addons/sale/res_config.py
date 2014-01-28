@@ -93,6 +93,8 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
             help='This adds the \'Margin\' on sales order.\n'
                  'This gives the profitability by calculating the difference between the Unit Price and Cost Price.\n'
                  '-This installs the module sale_margin.'),
+        'module_website_quote': fields.boolean("Allow online quotations and templates",
+            help='This adds the online quotation'),
         'module_sale_journal': fields.boolean("Allow batch invoicing of delivery orders through journals",
             help='Allows you to categorize your sales and deliveries (picking lists) between different journals, '
                  'and perform batch operations on journals.\n'
@@ -118,8 +120,8 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             res['time_unit'] = user.company_id.project_time_mode_id.id
         else:
-            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
-            if product.exists():
+            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant', raise_exception=False)
+            if product and product.exists():
                 res['time_unit'] = product.uom_id.id
         return res
 
@@ -136,8 +138,8 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         wizard = self.browse(cr, uid, ids)[0]
 
         if wizard.time_unit:
-            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
-            if product.exists():
+            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant', raise_exception=False)
+            if product and product.exists():
                 product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
             else:
                 _logger.warning("Product with xml_id 'product.product_product_consultant' not found, UoMs not updated!")

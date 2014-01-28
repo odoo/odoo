@@ -47,17 +47,17 @@
                     },
                 },
                 {
-                    stepId:    'choose-category',
+                    stepId:    'choose-blog',
                     element:   '.modal select',
                     placement: 'right',
                     title:     "Which Blog?",
-                    content:   "Blog posts are organized in multiple categories (news, job offers, events, etc). Select <em>News</em> and click <em>Continue</em>.",
+                    content:   "Blog posts are organized in multiple blogs (news, job offers, events, etc). Select <em>News</em> and click <em>Continue</em>.",
                     trigger: {
                         id: 'change',
                     },
                 },
                 {
-                    stepId:    'continue-category',
+                    stepId:    'continue-blog',
                     element:   '.modal button.btn-primary',
                     placement: 'right',
                     title:     "Create Blog Post",

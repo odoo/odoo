@@ -76,9 +76,10 @@
                                             'invisible': [('is_only_child', '=', False)]}"/>
                                 <field name="product_tmpl_id" class="oe_inline" readonly="1" required="0"
                                     attrs="{'invisible': [('is_only_child', '=', True)]}"/>
-                                <span attrs="{'invisible':[('variants','=',False)]}" groups="product.group_product_variant"> - </span>
-                                <field name="variants" placeholder="Variant Name"
-                                    groups="product.group_product_variant" class="oe_inline"/>
+                                <span groups="product.group_product_variant"
+                                    attrs="{'invisible': [('is_only_child', '=', True), ('variants', '=', False)]}">
+                                    - <field name="variants" placeholder="Variant Name" class="oe_inline"/>
+                                </span>
                             </h1>
                             <span attrs="{'invisible': [('is_only_child', '=', True)]}">
                                 <p>Generic product settings are managed on
@@ -262,7 +263,7 @@
             </field>
         </record>
         <record id="product_normal_action_sell" model="ir.actions.act_window">
-            <field name="name">All Products</field>
+            <field name="name">Products</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -307,7 +308,7 @@
         </record>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
-        <menuitem action="product.product_normal_action_sell" id="product.menu_products" parent="base.menu_product" sequence="1"/>
+        <menuitem id="product.menu_products" action="product.product_normal_action_sell" parent="base.menu_product" sequence="1"/>
 
         <record id="product_normal_action_puchased" model="ir.actions.act_window">
             <field name="name">Products</field>
@@ -404,7 +405,7 @@
             action="product_category_action"
             id="product.menu_products_category"
             parent="base.menu_product"
-            sequence="2" groups="base.group_no_one"/>
+            sequence="30" groups="base.group_no_one"/>
         <record id="product_category_action_form" model="ir.actions.act_window">
             <field name="name">Product Categories</field>
             <field name="type">ir.actions.act_window</field>
@@ -957,7 +958,7 @@
         </record>
 
         <record id="product_template_action" model="ir.actions.act_window">
-            <field name="name">Product Templates</field>
+            <field name="name">Templates</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.template</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -967,7 +968,7 @@
 
         <menuitem action="product_template_action"
             id="menu_product_template_action"
-            parent="base.menu_product" sequence="0" 
+            parent="base.menu_product" sequence="20" 
             groups="product.group_product_variant"/>
 
     </data>

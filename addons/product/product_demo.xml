@@ -40,7 +40,7 @@
         </record>
         <record id="product_category_9" model="product.category">
             <field name="parent_id" ref="product.product_category_1"/>
-            <field name="name">Softwares</field>
+            <field name="name">Software</field>
         </record>
         <record id="product_category_10" model="product.category">
             <field name="parent_id" ref="product_category_3"/>
@@ -130,9 +130,9 @@
           <field name="parent_id" ref="devices"/>
           <field name="name">Headset</field>
         </record>
-        <record id="Softwares" model="product.public.category">
+        <record id="Software" model="product.public.category">
           <field name="parent_id" ref="devices"/>
-          <field name="name">Softwares</field>
+          <field name="name">Software</field>
         </record>
 
         <record id="laptops" model="product.public.category">
@@ -848,7 +848,7 @@ QWERTY keyboard</field>
         <record id="product_template_40" model="product.template">
             <field name="name">Windows 7 Professional</field>
             <field name="categ_id" ref="product_category_9"/>
-            <field name="public_categ_id" ref="Softwares"/>
+            <field name="public_categ_id" ref="Software"/>
             <field name="standard_price">330.0</field>
             <field name="list_price">470.0</field>
             <field name="type">consu</field>
@@ -864,7 +864,7 @@ QWERTY keyboard</field>
         <record id="product_template_41" model="product.template">
             <field name="name">Windows Home Server 2011</field>
             <field name="categ_id" ref="product_category_9"/>
-            <field name="public_categ_id" ref="Softwares"/>
+            <field name="public_categ_id" ref="Software"/>
             <field name="standard_price">540.0</field>
             <field name="list_price">620.0</field>
             <field name="type">consu</field>
@@ -880,7 +880,7 @@ QWERTY keyboard</field>
         <record id="product_template_42" model="product.template">
             <field name="name">Office Suite</field>
             <field name="categ_id" ref="product_category_9"/>
-            <field name="public_categ_id" ref="Softwares"/>
+            <field name="public_categ_id" ref="Software"/>
             <field name="standard_price">110.0</field>
             <field name="list_price">170.0</field>
             <field name="type">consu</field>
@@ -897,7 +897,7 @@ QWERTY keyboard</field>
         <record id="product_template_43" model="product.template">
             <field name="name">Zed+ Antivirus</field>
             <field name="categ_id" ref="product_category_9"/>
-            <field name="public_categ_id" ref="Softwares"/>
+            <field name="public_categ_id" ref="Software"/>
             <field name="standard_price">235.0</field>
             <field name="list_price">280.0</field>
             <field name="type">consu</field>
@@ -913,7 +913,7 @@ QWERTY keyboard</field>
         <record id="product_template_44" model="product.template">
             <field name="name">GrapWorks Software</field>
             <field name="categ_id" ref="product_category_9"/>
-            <field name="public_categ_id" ref="Softwares"/>
+            <field name="public_categ_id" ref="Software"/>
             <field name="standard_price">155.0</field>
             <field name="list_price">173.0</field>
             <field name="type">consu</field>
@@ -1252,13 +1252,6 @@ QWERTY keyboard</field>
             <field name="delay">7</field>
             <field name="min_qty">1</field>
         </record>
-
-        <!--record id="product_supplierinfo_38" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_template_48"/>
-            <field name="name" ref="base.res_partner_8"/>
-            <field name="delay">7</field>
-            <field name="min_qty">1</field>
-        </record-->
 
         <record id="product_supplierinfo_39" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_template_18"/>
