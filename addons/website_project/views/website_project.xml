@@ -26,7 +26,7 @@
 <!-- Project --> 
 <template id="task_kanban_card" name="TaskKanban">
     <div class="thumbnail">
-        <a t-href="/project/task/#{object_id.id}/"><span t-field="object_id.name"/></a>
+        <a t-href="/web#model=project.task&amp;id=#{object_id.id}"><span t-field="object_id.name"/></a>
         <div>
             Assigned to <span t-field="object_id.user_id"/>
         </div>
