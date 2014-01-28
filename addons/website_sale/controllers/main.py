@@ -707,7 +707,7 @@ class Ecommerce(http.Controller):
             order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
             assert order.website_session_id == request.httprequest.session['website_session_id']
 
-        if not tx and order.amount_total:
+        if not tx or not order:
             return request.redirect('/shop/')
 
         if not order.amount_total or tx.state == 'done':
