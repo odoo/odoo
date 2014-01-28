@@ -49,6 +49,7 @@ class website_event(website_event):
         for key, value in post.items():
             try:
                 quantity = int(value)
+                assert quantity > 0
             except:
                 quantity = None
             ticket_id = key.split("-")[0] == 'ticket' and int(key.split("-")[1]) or None
