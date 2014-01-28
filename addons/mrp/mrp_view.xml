@@ -726,7 +726,7 @@
                                             <field name="product_qty"  string="Quantity"/>
                                             <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                             <field name="state" invisible="1"/>
-                                            <button name="%(stock.move_consume)d"
+                                            <button name="%(mrp.move_consume)d"
                                                 string="Consume Products" type="action"
                                                 icon="gtk-go-forward" context="{'consume': True}"
                                                 states="draft,waiting,confirmed,assigned"

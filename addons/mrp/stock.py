@@ -151,7 +151,6 @@ class StockMove(osv.osv):
                 if new_move != move.id:
                     #This move is not already there in move lines of production order
                     production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
-                res.append(new_move)
         return res
 
     def action_scrap(self, cr, uid, ids, product_qty, location_id, restrict_lot_id = False, restrict_partner_id = False, context=None):
