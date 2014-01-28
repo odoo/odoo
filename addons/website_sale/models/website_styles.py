@@ -26,5 +26,5 @@ class website_product_style(osv.Model):
     _name = "website.product.style"
     _columns = {
         'name' : fields.char('Style Name', required=True, translate=True),
-        'html_class': fields.char('HTML Classes', size=64),
+        'html_class': fields.char('HTML Classes'),
     }
