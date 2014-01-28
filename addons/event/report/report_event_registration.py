@@ -58,7 +58,6 @@ class report_event_registration(osv.osv):
                 r.user_id AS user_id_registration,
                 r.name AS name_registration,
                 e.company_id AS company_id,
-                e.main_speaker_id AS speaker_id,
                 e.date_begin AS event_date,
                 count(e.id) AS nbevent,
                 CASE WHEN r.state IN ('draft') THEN r.nb_register ELSE 0 END AS draft_state,
@@ -84,8 +83,6 @@ class report_event_registration(osv.osv):
                 event_state,
                 e.company_id,
                 e.seats_max,
-                e.main_speaker_id,
-                e.register_max,
                 name_registration
         )
         """)
