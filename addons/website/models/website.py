@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import fnmatch
 import inspect
+import itertools
 import logging
 import math
-import itertools
+import re
 import urllib
 import urlparse
 
@@ -11,13 +12,16 @@ import simplejson
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.wrappers
+# optional python-slugify import (https://github.com/un33k/python-slugify)
+try:
+    import slugify as slugify_lib
+except ImportError:
+    slugify_lib = None
 
 import openerp
 from openerp.osv import orm, osv, fields
 from openerp.tools.safe_eval import safe_eval
-
 from openerp.addons.web.http import request, LazyResponse
-from ..utils import slugify
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +52,13 @@ def url_for(path_or_uri, lang=None, keep_query=None):
                 location += '?%s' % params
 
     return location
+
+def slugify(s, max_length=None):
+    if slugify_lib:
+        return slugify_lib.slugify(s, max_length)
+    spaceless = re.sub(r'\s+', '-', s)
+    specialless = re.sub(r'[^-_A-Za-z0-9]', '', spaceless)
+    return specialless[:max_length]
 
 def slug(value):
     if isinstance(value, orm.browse_record):
@@ -117,37 +128,36 @@ class website(osv.osv):
         return super(website, self).write(cr, uid, ids, vals, context)
 
     def new_page(self, cr, uid, name, template='website.default_page', ispage=True, context=None):
-        context=context or {}
-        # completely arbitrary max_length
-        idname = slugify(name, max_length=50)
-
+        context = context or {}
         imd = self.pool.get('ir.model.data')
         view = self.pool.get('ir.ui.view')
+        template_module, template_name = template.split('.')
 
-        module, tmp_page = template.split('.')
-        view_model, view_id = imd.get_object_reference(cr, uid, module, tmp_page)
+        # completely arbitrary max_length
+        page_name = slugify(name, max_length=50)
+        page_xmlid = "%s.%s" % (template_module, page_name)
 
-        cr.execute('SAVEPOINT new_page')
         try:
-            newview_id = view.copy(cr, uid, view_id, context=context)
-            newview = view.browse(cr, uid, newview_id, context=context)
-            newview.write({
-                'arch': newview.arch.replace(template, "%s.%s" % (module, idname)),
-                'name': name,
+            # existing page
+            imd.get_object_reference(cr, uid, template_module, page_name)
+        except ValueError:
+            # new page
+            _, template_id = imd.get_object_reference(cr, uid, template_module, template_name)
+            page_id = view.copy(cr, uid, template_id, context=context)
+            page = view.browse(cr, uid, page_id, context=context)
+            page.write({
+                'arch': page.arch.replace(template, page_xmlid),
+                'name': page_name,
                 'page': ispage,
             })
             imd.create(cr, uid, {
-                'name': idname,
-                'module': module,
+                'name': page_name,
+                'module': template_module,
                 'model': 'ir.ui.view',
-                'res_id': newview_id,
+                'res_id': page_id,
                 'noupdate': True
             }, context=context)
-            cr.execute('RELEASE SAVEPOINT new_page')
-            return "%s.%s" % (module, idname)
-        except:
-            cr.execute("ROLLBACK TO SAVEPOINT new_page")
-            raise
+        return page_xmlid
 
     def page_for_name(self, cr, uid, ids, name, module='website', context=None):
         # whatever
