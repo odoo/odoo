@@ -109,7 +109,7 @@ class plugin_handler(osv.osv_memory):
                 notify = _("Mail successfully pushed, a new %s has been created.") % model
         else:
             email_from = msg.get('email_from')
-            if email_from:
+            if not email_from:
                 author_id = False
             else:
                 authors = mail_thread_obj.message_find_partner_from_emails(cr, uid, [res_id], [email_from])
