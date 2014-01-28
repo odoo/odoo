@@ -173,7 +173,7 @@ class website(osv.osv):
 
     def get_public_user(self, cr, uid, context=None):
         uid = openerp.SUPERUSER_ID
-        res = self.pool['ir.model.data'].get_object_reference(cr, uid, 'website', 'public_user')
+        res = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'public_user')
         return res and res[1] or False
 
     @openerp.tools.ormcache(skiparg=3)

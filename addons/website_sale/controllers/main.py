@@ -484,6 +484,7 @@ class Ecommerce(http.Controller):
         billing_info = dict((k, v) for k,v in checkout.items() if "shipping_" not in k and k != "company")
         billing_info['parent_id'] = company_id
 
+        partner_id = None
         public_id = request.registry['website'].get_public_user(cr, uid, context)
         if request.uid != public_id:
             partner_id = orm_user.browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
@@ -492,7 +493,7 @@ class Ecommerce(http.Controller):
             user_ids = request.registry['res.users'].search(cr, SUPERUSER_ID, domain, context=context)
             if not user_ids or public_id not in user_ids:
                 partner_id = order.partner_id.id
-    
+
         if partner_id:
             orm_partner.write(cr, SUPERUSER_ID, [partner_id], billing_info, context=context)
         else:
