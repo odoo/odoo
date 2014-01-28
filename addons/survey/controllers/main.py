@@ -27,7 +27,6 @@ import json
 import logging
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-#from openerp.addons.website.models import website
 from openerp.addons.website.controllers.main import Website as controllers
 controllers = controllers()
 
@@ -74,21 +73,6 @@ class WebsiteSurvey(http.Controller):
         return None
 
     ## ROUTES HANDLERS ##
-
-    # Survey list
-    @http.route(['/survey/',
-                 '/survey/list/'],
-                type='http', auth='public', multilang=True, website=True)
-    def list_surveys(self, **post):
-        '''Lists all the public surveys'''
-        cr, uid, context = request.cr, request.uid, request.context
-        survey_obj = request.registry['survey.survey']
-        survey_ids = survey_obj.search(cr, uid, [('state', '=', 'open'),
-                                                 ('visible_to_user', '=', True),
-                                                 ('page_ids', '!=', 'None')],
-                                       context=context)
-        surveys = survey_obj.browse(cr, uid, survey_ids, context=context)
-        return request.website.render('survey.list', {'surveys': surveys})
 
     # Survey start
     @http.route(['/survey/start/<model("survey.survey"):survey>',
