@@ -180,6 +180,8 @@ class survey_survey(osv.Model):
         elif new_state == 'close':
             vals.update({'date_close': fields.datetime.now()})
             self.message_post(cr, uid, ids, body="""<p>Survey closed</p>""", context=context)
+            # Purge the tests records
+            self.pool.get('survey.user_input').purge_tests(cr, uid, context=context)
         elif new_state == 'cancel':
             self.message_post(cr, uid, ids, body="""<p>Survey cancelled</p>""", context=context)
         return super(survey_survey, self).write(cr, uid, ids, vals, context=context)
@@ -752,6 +754,11 @@ class survey_user_input(osv.Model):
                                            context=context)
         if empty_user_input_ids:
             self.unlink(cr, uid, empty_user_input_ids, context=context)
+
+    def purge_tests(self, cr, uid, context=None):
+        ''' Remove the test entries '''
+        old_tests = self.search(cr, uid, [('test_entry', '=', True)], context=context)
+        return self.unlink(cr, uid, old_tests, context=context)
 
     def action_survey_resent(self, cr, uid, ids, context=None):
         ''' Sent again the invitation '''

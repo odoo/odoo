@@ -83,6 +83,15 @@ class WebsiteSurvey(http.Controller):
         survey_obj = request.registry['survey.survey']
         user_input_obj = request.registry['survey.user_input']
 
+        # Test mode
+        if token and token == "phantom":
+            _logger.error("[survey] Phantom mode")
+            user_input_id = user_input_obj.create(cr, uid, {'survey_id': survey.id, 'test_entry': True}, context=context)
+            user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
+            data = {'survey': survey, 'page': None, 'token': user_input.token}
+            return request.website.render('survey.survey_init', data)
+        # END Test mode
+
         # Controls if the survey can be displayed
         errpage = self._check_bad_cases(cr, uid, request, survey_obj, survey, user_input_obj, context=context)
         if errpage:

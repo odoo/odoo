@@ -68,7 +68,7 @@
             <field name="name">survey_user_input_tree</field>
             <field name="model">survey.user_input</field>
             <field name="arch" type="xml">
-                <tree string="Survey User inputs" version="7.0" create="false">
+                <tree string="Survey User inputs" version="7.0" colors="lightgrey:test_entry == True" create="false">
                     <field name="survey_id"/>
                     <field name="date_create"/>
                     <field name="deadline"/>
@@ -76,6 +76,7 @@
                     <field name="email"/>
                     <field name="type"/>
                     <field name="state"/>
+                    <field name="test_entry" invisible="True"/>
                 </tree>
             </field>
         </record>
