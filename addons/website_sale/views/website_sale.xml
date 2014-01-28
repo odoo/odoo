@@ -54,12 +54,12 @@
     <div class="ribbon btn btn-danger">Sale</div>
   </div>
   <div class="oe_product_image">
-      <a t-href="/shop/product/#{ slug(product) }/" t-keep-query="category,search,filters">
+      <a t-href="/shop/product/{{ slug(product) }}/?{{ keep_query('category', 'search', 'filters') }}">
           <span t-field="product.image" t-field-options='{"widget": "image"}'/>
       </a>
   </div>
   <section>
-      <h5><strong><a t-href="/shop/product/#{ slug(product) }/" t-keep-query="category,search,filters" t-field="product.name"/></strong></h5>
+      <h5><strong><a t-href="/shop/product/{{ slug(product) }}/?{{ keep_query('category', 'search', 'filters') }}" t-field="product.name"/></strong></h5>
       <div class="product_price" t-if="product.product_variant_ids">
           <b>
               <t t-if="abs(product.product_variant_ids[0].lst_price - product.product_variant_ids[0].price) &gt; 0.2">
@@ -272,8 +272,8 @@
           <div class="row">
             <div class="col-sm-4">
                 <ol class="breadcrumb">
-                    <li><a href="/shop" t-keep-query="search,filters" onclick="history.go(-1); return false;">Products</a></li>
-                    <li t-if="search.get('category')"><a t-href="/shop/" t-keep-query="category,search,filters"><span t-field="category.name"/></a></li>
+                    <li><a t-attf-href="/shop?{{ keep_query('search', 'filters') }}" onclick="history.go(-1); return false;">Products</a></li>
+                    <li t-if="search.get('category')"><a t-attf-href="/shop/?{{ keep_query('search', 'filters', 'category') }}" t-field="category.name"/></li>
                     <li class="active"><span t-field="product.name"/></li>
                 </ol>
             </div>
@@ -580,7 +580,7 @@
 
 <template id="products_characteristics" inherit_id="website_sale.products" inherit_option_id="website_sale.products" name="Product Characteristic's Filters" groups="product.group_product_characteristics">
   <xpath expr="//div[@id='products_grid_before']" position="inside">
-      <form t-action="/shop/filters/" class="characteristics" method="post" t-keep-query="category,search">
+      <form t-attf-action="/shop/filters/?{{ keep_query('category', 'search') }}" class="characteristics" method="post">
           <ul class="nav nav-pills nav-stacked mt16">
               <t t-set="characteristic_ids" t-value="Ecommerce.get_characteristic_ids()"/>
               <t t-foreach="characteristic_ids" t-as="characteristic_id">
