@@ -27,7 +27,6 @@ from openerp.addons.web.http import request
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 import datetime
 from openerp.osv import osv, fields, expression
-import time
 import logging
 import json
 import select
@@ -202,7 +201,7 @@ class im_session(osv.osv):
         return res
 
     _columns = {
-        'user_ids': fields.many2many('im.user'),
+        'user_ids': fields.many2many('im.user', 'im_session_im_user_rel', 'im_session_id', 'im_user_id', 'Users'),
         "name": fields.function(_calc_name, string="Name", type='char'),
     }
 
@@ -224,6 +223,9 @@ class im_session(osv.osv):
                 'user_ids': [(6, 0, users)]
             }, context=context)
         return self.read(cr, uid, session_id, context=context)
+
+    def get_session_users(self, cr, uid, session_id, context=None):
+        return self.read(cr, openerp.SUPERUSER_ID, session_id, ['user_ids'], context=context)
 
     def add_to_session(self, cr, uid, session_id, user_id, uuid=None, context=None):
         my_id = self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
@@ -259,7 +261,7 @@ class im_user(osv.osv):
             return ['&', ('im_last_status', '=', True), ('im_last_status_update', '>', (current - delta).strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
         else:
             return ['|', ('im_last_status', '=', False), ('im_last_status_update', '<=', (current - delta).strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
-
+    # TODO: Remove fields arg in trunk. Also in im.js.
     def search_users(self, cr, uid, text_search, fields, limit, context=None):
         my_id = self.get_my_id(cr, uid, None, context)
         group_employee = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')[1]
@@ -271,7 +273,7 @@ class im_user(osv.osv):
         if len(found) < limit:
             found += self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False], ["im_status", "=", False], ["id", "not in", found]],
                 order="name asc", limit=limit-len(found), context=context)
-        users = self.read(cr, uid, found, fields, context=context)
+        users = self.read(cr,openerp.SUPERUSER_ID, found, ["name", "user_id", "uuid", "im_status"], context=context)
         users.sort(key=lambda obj: found.index(obj['id']))
         return users
 
@@ -319,6 +321,9 @@ class im_user(osv.osv):
                 continue
         return res
 
+    def get_users(self, cr, uid, ids, context=None):
+        return self.read(cr,openerp.SUPERUSER_ID, ids, ["name", "im_status", "uuid"], context=context)
+
     _columns = {
         'name': fields.function(_get_name, type='char', size=200, string="Name", store=True, readonly=True),
         'assigned_name': fields.char(string="Assigned Name", size=200, required=False),
@@ -341,3 +346,16 @@ class im_user(osv.osv):
         ('user_uniq', 'unique (user_id)', 'Only one chat user per OpenERP user.'),
         ('uuid_uniq', 'unique (uuid)', 'Chat identifier already used.'),
     ]
+
+class res_users(osv.osv):
+    _inherit = "res.users"
+
+    def _get_im_user(self, cr, uid, ids, field_name, arg, context=None):
+        result = dict.fromkeys(ids, False)
+        for index, im_user in enumerate(self.pool['im.user'].search_read(cr, uid, domain=[('user_id', 'in', ids)], fields=['name', 'user_id'], context=context)):
+            result[ids[index]] = im_user.get('user_id') and (im_user['user_id'][0], im_user['name']) or False
+        return result
+
+    _columns = {
+        'im_user_id' : fields.function(_get_im_user, type='many2one', string="IM User", relation="im.user"),
+    }
