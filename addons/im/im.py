@@ -184,8 +184,8 @@ class im_message(osv.osv):
     def post(self, cr, uid, message, to_session_id, technical=False, uuid=None, context=None):
         assert_uuid(uuid)
         my_id = self.pool.get('im.user').get_my_id(cr, uid, uuid)
-        session = self.pool.get('im.session').browse(cr, uid, to_session_id, context)
-        to_ids = [x.id for x in session.user_ids if x.id != my_id]
+        session_user_ids = self.pool.get('im.session').get_session_users(cr, uid, to_session_id, context=context).get("user_ids", [])
+        to_ids = [user_id for user_id in session_user_ids if user_id != my_id]
         self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from_id': my_id,
             'to_id': [(6, 0, to_ids)], 'session_id': to_session_id, 'technical': technical}, context=context)
         notify_channel(cr, "im_channel", {'type': 'message', 'receivers': [my_id] + to_ids})
