@@ -400,11 +400,11 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
             grouped_on = attrs.grouped_on ? this.raw_field(attrs.grouped_on) : false;
 
         if (value === false) {
-            group.attributes.value = _t('undefined');
+            group.attributes.value = _t('Undefined');
         } else if (grouped_on && this.fields[grouped_on].type === 'selection') {
             var selection = this.fields[grouped_on].selection,
                 value_lookup = _.where(selection, {0:value}); 
-            group.attributes.value = value_lookup ? value_lookup[0][1] : _t('undefined');
+            group.attributes.value = value_lookup ? value_lookup[0][1] : _t('Undefined');
         } else if (value instanceof Array) {
             group.attributes.value = value[1];
         }
