@@ -131,7 +131,11 @@ class QWeb(orm.AbstractModel):
     def register_tag(self, tag, func):
         self._render_tag[tag] = func
 
-    def load_document(self, document, qcontext):
+    def add_template(self, qwebcontext, name, node):
+        """Add a parsed template in the context. Used to preprocess templates."""
+        qwebcontext.templates[name] = node
+
+    def load_document(self, document, qwebcontext):
         """
         Loads an XML document and installs any contained template in the engine
         """
@@ -145,20 +149,19 @@ class QWeb(orm.AbstractModel):
         for node in dom.documentElement.childNodes:
             if node.nodeType == self.node.ELEMENT_NODE and node.getAttribute('t-name'):
                 name = str(node.getAttribute("t-name"))
-                 
-                qcontext.templates[name] = node
+                self.add_template(qwebcontext, name, node)
 
-    def get_template(self, name, qcontext):
-        origin_template = qcontext.get('__caller__') or qcontext['__stack__'][0]
-        if qcontext.loader and name not in qcontext.templates:
+    def get_template(self, name, qwebcontext):
+        origin_template = qwebcontext.get('__caller__') or qwebcontext['__stack__'][0]
+        if qwebcontext.loader and name not in qwebcontext.templates:
             try:
-                xml_doc = qcontext.loader(name)
+                xml_doc = qwebcontext.loader(name)
             except ValueError, e:
                 raise QWebTemplateNotFound("Loader could not find template %r" % name, template=origin_template, inner=e)
-            self.load_document(xml_doc, qcontext=qcontext)
+            self.load_document(xml_doc, qwebcontext=qwebcontext)
 
-        if name in qcontext.templates:
-            return qcontext.templates[name]
+        if name in qwebcontext.templates:
+            return qwebcontext.templates[name]
 
         raise QWebTemplateNotFound("Template %r not found" % name, template=origin_template)
 
@@ -238,7 +241,8 @@ class QWeb(orm.AbstractModel):
                 if attribute_name.startswith("t-"):
                     for attribute in self._render_att:
                         if attribute_name[2:].startswith(attribute):
-                            generated_attributes += self._render_att[attribute](self, element, attribute_name, attribute_value, qwebcontext)
+                            att, val = self._render_att[attribute](self, element, attribute_name, attribute_value, qwebcontext)
+                            generated_attributes += val and ' %s="%s"' % (att, werkzeug.utils.escape(val)) or " "
                             break
                     else:
                         if attribute_name[2:] in self._render_tag:
@@ -275,7 +279,7 @@ class QWeb(orm.AbstractModel):
                     raise
                 except Exception, e:
                     template = qwebcontext.get('__template__')
-                    raise QWebException("Could not render element %r" % element.nodeName, node=element, template=template, inner=e), None, sys.exc_info()[2]
+                    raise QWebException("Could not render element %r -- %s" % (element.nodeName, e.message), node=element, template=template, inner=e), None, sys.exc_info()[2]
         name = str(element.nodeName)
         inner = "".join(g_inner)
         trim = template_attributes.get("trim", 0)
@@ -307,28 +311,7 @@ class QWeb(orm.AbstractModel):
                 val = val.encode("utf8")
         else:
             att, val = self.eval_object(attribute_value, qwebcontext)
-        return val and ' %s="%s"' % (att, werkzeug.utils.escape(val)) or " "
-
-    def render_att_href(self, element, attribute_name, attribute_value, qwebcontext):
-        return self.url_for(element, attribute_name, attribute_value, qwebcontext)
-
-    def render_att_src(self, element, attribute_name, attribute_value, qwebcontext):
-        return self.url_for(element, attribute_name, attribute_value, qwebcontext)
-
-    def render_att_action(self, element, attribute_name, attribute_value, qwebcontext):
-        return self.url_for(element, attribute_name, attribute_value, qwebcontext)
-
-    def url_for(self, element, attribute_name, attribute_value, qwebcontext):
-        if 'url_for' not in qwebcontext:
-            template = qwebcontext.get('__template__')
-            raise QWebException("No 'url_for()' found in rendering context for node %r" % element.nodeName, node=element, template=template)
-        # Temporary implementation of t-keep-query until qweb py v2
-        keep_query = element.attributes.get('t-keep-query')
-        if keep_query:
-            params = self.eval_format(keep_query.value, qwebcontext)
-            keep_query = [q.strip() for q in params.split(',')]
-        path = str(qwebcontext['url_for'](self.eval_format(attribute_value, qwebcontext), keep_query=keep_query))
-        return ' %s="%s"' % (attribute_name[2:], werkzeug.utils.escape(path))
+        return att, val
 
     # Tags
     def render_tag_raw(self, element, template_attributes, generated_attributes, qwebcontext):
