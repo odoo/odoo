@@ -267,7 +267,7 @@ function declare($, _, openerp) {
                 var users = _.unique(_.map(messages, function(message){
                     return message.from_id[0];
                 }));
-                return self.ensure_users(_.without(users, self.me.get("id"))).then(function(){
+                return self.ensure_users(users, self.me.get("id")).then(function(){
                     return self.received_messages(messages, true);
                 });
             });
