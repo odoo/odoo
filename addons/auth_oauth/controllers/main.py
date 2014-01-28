@@ -1,3 +1,4 @@
+import functools
 import logging
 
 import simplejson
@@ -13,6 +14,26 @@ from openerp.modules.registry import RegistryManager
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
+
+#----------------------------------------------------------
+# helpers
+#----------------------------------------------------------
+def fragment_to_query_string(func):
+    @functools.wraps(func)
+    def wrapper(self, *a, **kw):
+        if not kw:
+            return """<html><head><script>
+                var l = window.location;
+                var q = l.hash.substring(1);
+                var r = '/' + l.search;
+                if(q.length !== 0) {
+                    var s = l.search ? (l.search === '?' ? '' : '&') : '?';
+                    r = l.pathname + l.search + s + q;
+                }
+                window.location = r;
+            </script></head><body></body></html>"""
+        return func(self, *a, **kw)
+    return wrapper
 
 #----------------------------------------------------------
 # Controller
@@ -73,6 +94,7 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
 class OAuthController(http.Controller):
 
     @http.route('/auth_oauth/signin', type='http', auth='none')
+    @fragment_to_query_string
     def signin(self, **kw):
         state = simplejson.loads(kw['state'])
         dbname = state['d']
