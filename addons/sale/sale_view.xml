@@ -28,8 +28,8 @@
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <graph string="Sales Orders" type="bar">
-                    <field name="partner_id"/>
-                    <field name="amount_total" operator="+"/>
+                    <field name="partner_id" type="row"/>
+                    <field name="amount_total" type="measure"/>
                 </graph>
             </field>
         </record>
