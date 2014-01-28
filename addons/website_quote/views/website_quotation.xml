@@ -380,7 +380,7 @@
   </template>
 
   <template id="navigation_menu">
-    <div class="hidden-print navspy" data-editable="0" role="complementary">
+    <div class="hidden-print navspy" t-ignore="true" role="complementary">
         <ul class="nav bs-sidenav" data-id="quote_sidebar">
             <li><a href="#introduction">Introduction</a></li>
         </ul>
@@ -467,7 +467,7 @@
                 <div class="row mt16">
                     <div class="col-md-3">
                         <div class="bs-sidebar">
-                            <div class="hidden-print navspy" role="complementary">
+                            <div class="hidden-print navspy" role="complementary" t-ignore="True">
                                 <ul class="nav bs-sidenav" data-id="quote_sidebar"/>
                             </div>
                         </div>
