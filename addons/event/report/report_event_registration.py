@@ -86,7 +86,6 @@ class report_event_registration(osv.osv):
                 e.seats_max,
                 e.main_speaker_id,
                 e.register_max,
->>>>>>> MERGE-SOURCE
                 name_registration
         )
         """)
