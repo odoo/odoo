@@ -534,7 +534,9 @@ def routing_map(modules, nodb_only, converters=None):
                     routing = dict(type='http', auth='user', methods=None, routes=None)
                     for claz in reversed(mv.im_class.mro()):
                         fn = getattr(claz, mv.func_name, None)
-                        if fn and hasattr(fn, 'routing'):
+                        if fn and hasattr(fn, 'routing') and '__done__' not in fn.routing:
+                            if not nodb_only:
+                                fn.routing['__done__'] = True
                             routing.update(fn.routing)
                     if not nodb_only or nodb_only == (routing['auth'] == "none"):
                         assert routing['routes'], "Method %r has not route defined" % mv
