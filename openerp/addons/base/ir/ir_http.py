@@ -70,6 +70,12 @@ class ir_http(osv.AbstractModel):
         request.disable_db = True
         request.uid = None
 
+    def _auth_method_public(self):
+        if not request.session.uid:
+            dummy, request.uid = self.pool['ir.model.data'].get_object_reference(request.cr, openerp.SUPERUSER_ID, 'base', 'public_user')
+        else:
+            request.uid = request.session.uid
+
     def _authenticate(self, auth_method='user'):
         if request.session.uid:
             try:
