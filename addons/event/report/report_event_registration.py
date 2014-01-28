@@ -31,7 +31,7 @@ class report_event_registration(osv.osv):
         'event_id': fields.many2one('event.event', 'Event', required=True),
         'draft_state': fields.integer(' # No of Draft Registrations', size=20),
         'confirm_state': fields.integer(' # No of Confirmed Registrations', size=20),
-        'seats_max': fields.integer('Max Seats', oldname='register_max'),
+        'seats_max': fields.integer('Max Seats'),
         'nbevent': fields.integer('Number Of Events'),
         'event_type': fields.many2one('event.type', 'Event Type'),
         'registration_state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Attended'), ('cancel', 'Cancelled')], 'Registration State', readonly=True, required=True),
