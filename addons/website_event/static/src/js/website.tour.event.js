@@ -70,14 +70,14 @@
                     content:   "This is your new event page. We will edit the event presentation page.",
                     template:  self.popover({ next: "OK" }),
                 },
-                {
-                    stepId:    'event-price',
-                    element:   '[data-oe-field=price]',
-                    placement: 'top',
-                    title:     "Ticket price",
-                    content:   "Edit your ticket price.",
-                    template:  self.popover({ next: "OK" }),
-                },
+                // {
+                //     stepId:    'event-price',
+                //     element:   '[data-oe-field=price]',
+                //     placement: 'top',
+                //     title:     "Ticket price",
+                //     content:   "Edit your ticket price.",
+                //     template:  self.popover({ next: "OK" }),
+                // },
                 {
                     stepId:    'add-banner',
                     element:   'button[data-action=snippet]',

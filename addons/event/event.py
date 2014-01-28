@@ -111,7 +111,7 @@ class event_event(osv.osv):
         """Get reserved, available, reserved but unconfirmed and used seats.
         @return: Dictionary of function field values.
         """
-        res = dict.fromkeys(ids, {})
+        res = dict([(id, {}) for id in ids])
         for event in self.browse(cr, uid, ids, context=context):
             res[event.id]['seats_reserved'] = sum(reg.nb_register for reg in event.registration_ids if reg.state == "open")
             res[event.id]['seats_used'] = sum(reg.nb_register for reg in event.registration_ids if reg.state == "done")

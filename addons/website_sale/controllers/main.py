@@ -355,7 +355,7 @@ class Ecommerce(http.Controller):
             context=request.context)
         return request.redirect("/shop/mycart/")
 
-    @http.route(['/shop/add_cart_json/'], type='json', auth="public", website=True)
+    @http.route(['/shop/add_cart_json/'], type='json', auth="public", website=True, multilang=True)
     def add_cart_json(self, product_id=None, order_line_id=None, remove=None):
         quantity = request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
             product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1),
@@ -366,11 +366,12 @@ class Ecommerce(http.Controller):
                 order.amount_total,
                 request.website._render("website_sale.total", {'website_sale_order': order})]
 
-    @http.route(['/shop/set_cart_json/'], type='json', auth="public", website=True)
+    @http.route(['/shop/set_cart_json/'], type='json', auth="public")
     def set_cart_json(self, path=None, product_id=None, order_line_id=None, set_number=0, json=None):
-        return request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
+        quantity = request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
             product_id=product_id, order_line_id=order_line_id, set_number=set_number,
             context=request.context)
+        return quantity
 
     @http.route(['/shop/checkout/'], type='http', auth="public", website=True, multilang=True)
     def checkout(self, **post):
@@ -724,7 +725,7 @@ class Ecommerce(http.Controller):
 
         return request.website.render("website_sale.confirmation", {'order': order})
 
-    @http.route(['/shop/change_sequence/'], type='json', auth="public", website=True)
+    @http.route(['/shop/change_sequence/'], type='json', auth="public")
     def change_sequence(self, id, sequence):
         product_obj = request.registry.get('product.template')
         if sequence == "top":
@@ -736,7 +737,7 @@ class Ecommerce(http.Controller):
         elif sequence == "down":
             product_obj.set_sequence_down(request.cr, request.uid, [id], context=request.context)
 
-    @http.route(['/shop/change_styles/'], type='json', auth="public", website=True)
+    @http.route(['/shop/change_styles/'], type='json', auth="public")
     def change_styles(self, id, style_id):
         product_obj = request.registry.get('product.template')
         product = product_obj.browse(request.cr, request.uid, id, context=request.context)
@@ -758,7 +759,7 @@ class Ecommerce(http.Controller):
 
         return not active
 
-    @http.route(['/shop/change_size/'], type='json', auth="public", website=True)
+    @http.route(['/shop/change_size/'], type='json', auth="public")
     def change_size(self, id, x, y):
         product_obj = request.registry.get('product.template')
         product = product_obj.browse(request.cr, request.uid, id, context=request.context)

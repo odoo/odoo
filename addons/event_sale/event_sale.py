@@ -133,8 +133,7 @@ class event_event(osv.osv):
             help="The maximum registration level is equal to the sum of the maximum registration of event ticket." +
             "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
             type='integer',
-            readonly=True,
-            store=True)
+            readonly=True)
     }
     _defaults = {
         'event_ticket_ids': _get_tickets
@@ -147,7 +146,7 @@ class event_ticket(osv.osv):
         """Get reserved, available, reserved but unconfirmed and used seats for each event tickets.
         @return: Dictionary of function field values.
         """
-        res = dict.fromkeys(ids, {})
+        res = dict([(id, {}) for id in ids])
         for ticket in self.browse(cr, uid, ids, context=context):
             res[ticket.id]['seats_reserved'] = sum(reg.nb_register for reg in ticket.registration_ids if reg.state == "open")
             res[ticket.id]['seats_used'] = sum(reg.nb_register for reg in ticket.registration_ids if reg.state == "done")

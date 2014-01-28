@@ -87,6 +87,7 @@ class Website(orm.Model):
         # values initialisation
         quantity = 0
         values = {}
+        order_line_ids = []
         if order_line_id:
             order_line_val = order_line_obj.read(cr, SUPERUSER_ID, [order_line_id], [], context=context)[0]
             if not product_id:
@@ -102,23 +103,22 @@ class Website(orm.Model):
             fields = [k for k, v in order_line_obj._columns.items()]
             values = order_line_obj.default_get(cr, SUPERUSER_ID, fields, context=context)
             quantity = 1
-            order_line_ids = []
 
         # change and record value
-        vals = order_line_obj._recalculate_product_values(cr, uid, order_line_ids, product_id, context=context)
-        values.update(vals)
+        if quantity:
+            vals = order_line_obj._recalculate_product_values(cr, uid, order_line_ids, product_id, context=context)
+            values.update(vals)
+            values['product_uom_qty'] = quantity
+            values['product_id'] = product_id
+            values['order_id'] = order.id
 
-        values['product_uom_qty'] = quantity
-        values['product_id'] = product_id
-        values['order_id'] = order.id
-
-        if order_line_id:
-            order_line_obj.write(cr, SUPERUSER_ID, [order_line_id], values, context=context)
-            if not quantity:
-                order_line_obj.unlink(cr, SUPERUSER_ID, [order_line_id], context=context)
-        else:
-            order_line_id = order_line_obj.create(cr, SUPERUSER_ID, values, context=context)
-            order_obj.write(cr, SUPERUSER_ID, [order.id], {'order_line': [(4, order_line_id)]}, context=context)
+            if order_line_id:
+                order_line_obj.write(cr, SUPERUSER_ID, order_line_ids, values, context=context)
+            else:
+                order_line_id = order_line_obj.create(cr, SUPERUSER_ID, values, context=context)
+                order_obj.write(cr, SUPERUSER_ID, [order.id], {'order_line': [(4, order_line_id)]}, context=context)
+        elif order_line_ids:
+            order_line_obj.unlink(cr, SUPERUSER_ID, order_line_ids, context=context)
 
         order = self.ecommerce_get_current_order(cr, uid, context=context)
         if not order or not order.order_line:
