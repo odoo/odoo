@@ -28,8 +28,10 @@ def noid(d):
     return d
 
 class TestGetFilters(common.TransactionCase):
-    USER_ID = 3
-    USER = (3, u'Demo User')
+    def setUp(self):
+        super(TestGetFilters, self).setUp()
+        self.USER = self.registery('res.users').name_search(self.cr, self.uid, 'demo')[0]
+        self.USER_ID = self.USER[0]
 
     @fixtures(
         ('ir.filters', dict(name='a', user_id=USER_ID, model_id='ir.filters')),
@@ -81,8 +83,10 @@ class TestGetFilters(common.TransactionCase):
         ])
 
 class TestOwnDefaults(common.TransactionCase):
-    USER_ID = 3
-    USER = (3, u'Demo User')
+    def setUp(self):
+        super(TestOwnDefaults, self).setUp()
+        self.USER = self.registery('res.users').name_search(self.cr, self.uid, 'demo')[0]
+        self.USER_ID = self.USER[0]                 
 
     def test_new_no_filter(self):
         """
@@ -175,7 +179,10 @@ class TestOwnDefaults(common.TransactionCase):
         ])
 
 class TestGlobalDefaults(common.TransactionCase):
-    USER_ID = 3
+    def setUp(self):
+        super(TestGlobalDefaults, self).setUp()
+        self.USER = self.registery('res.users').name_search(self.cr, self.uid, 'demo')[0]
+        self.USER_ID = self.USER[0]
 
     @fixtures(
         ('ir.filters', dict(name='a', user_id=False, model_id='ir.filters')),
