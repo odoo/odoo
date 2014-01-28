@@ -18,14 +18,18 @@ try:
 except ImportError:
     usb = None
 
-from openerp.tools.translate import _
-from .. import escpos
-from ..escpos import printer
+try:
+    from .. import escpos
+    from ..escpos import printer
+except ImportError:
+    escpos = printer = None
+
 from PIL import Image
 
 from openerp import http
 from openerp.http import request
 from openerp.addons.web.controllers.main import manifest_list, module_boot, html_template
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
