@@ -31,7 +31,6 @@ Partners geolocalization
     'author': 'OpenERP SA',
     'depends': ['crm'],
     'demo': [
-        # 'res_partner_demo.xml',
     ],
     'data': [
         'views/res_partner_view.xml',
