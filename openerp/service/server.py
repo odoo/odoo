@@ -182,7 +182,6 @@ class CommonServer(object):
         # runtime
         self.pid = os.getpid()
 
-
     def close_socket(self, sock):
         """ Closes a socket instance cleanly
         :param sock: the network socket to close
@@ -530,6 +529,8 @@ class PreforkServer(CommonServer):
                 raise
 
     def start(self):
+        # Empty the cursor pool, we dont want them to be shared among forked workers.
+        openerp.sql_db.close_all()
         # wakeup pipe, python doesnt throw EINTR when a syscall is interrupted
         # by a signal simulating a pseudo SA_RESTART. We write to a pipe in the
         # signal handler to overcome this behaviour
