@@ -9,20 +9,6 @@
     </xpath>
 </template>
 
-<!-- Task --> 
-<template id="task" name="Task">
-    <t t-call="website.layout">
-        <t t-set="additional_title">Task</t>
-        <div id="wrap">
-            <div class="oe_structure"/>
-            <div class="container">
-                <h4 t-field="task.name"/>
-            </div>
-            <div class="oe_structure"/>
-      </div>
-    </t>
-</template>
-
 <!-- Project --> 
 <template id="task_kanban_card" name="TaskKanban">
     <div class="thumbnail">
