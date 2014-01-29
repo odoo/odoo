@@ -284,7 +284,11 @@ class WebsiteSurvey(http.Controller):
 
     @http.route(['/survey/results/<model("survey.survey"):survey>'],type='http', auth='user', multilang=True, website=True)
     def survey_reporting(self, survey, token=None, **post):
-        return request.website.render('survey.result',
+        '''Display an survey Results & Statistics for given survey.'''
+        result_tamplate = 'survey.result'
+        if not survey.user_input_ids:
+            result_tamplate = 'survey.no_result'
+        return request.website.render(result_tamplate,
                                       {'survey': survey,
                                        'prepare_result':self.prepare_result,
                                        'get_input_summary':self.get_input_summary,
@@ -293,10 +297,12 @@ class WebsiteSurvey(http.Controller):
                                        })
 
     def page_range(self, total_record):
+        '''Returns number of pages required for pagination'''
         total = math.ceil( total_record/5.0 )
         return range(1, int( total+1 ))
 
     def prepare_result(self, question):
+        '''Prepare statistical data for questions by counting number of vote per choice'''
         if question.type in ['simple_choice', 'multiple_choice'] :
             result_summary = {}
             [ result_summary.update({ label.id : {'text':label.value, 'count':0} }) for label in question.labels_ids ]
@@ -329,6 +335,7 @@ class WebsiteSurvey(http.Controller):
         return result_summary
     
     def get_graph_data(self, question):
+        '''Returns appropriate formated data required by graph library'''
         result = []
         if question.type in ['simple_choice', 'multiple_choice']:
             result.append({'key':str(question.question),
@@ -344,6 +351,7 @@ class WebsiteSurvey(http.Controller):
         return json.dumps(result)
         
     def get_input_summary(self, question):
+        '''Returns overall summary of question e.g. answered, skipped, total_inputs'''
         result = {}
         if question.page_id.survey_id.user_input_ids:
             result['total_inputs'] = len(question.page_id.survey_id.user_input_ids)
