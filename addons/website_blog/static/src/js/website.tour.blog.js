@@ -47,19 +47,9 @@
                     },
                 },
                 {
-                    stepId:    'choose-blog',
-                    element:   '.modal select',
-                    placement: 'right',
-                    title:     "Which Blog?",
-                    content:   "Blog posts are organized in multiple blogs (news, job offers, events, etc). Select <em>News</em> and click <em>Continue</em>.",
-                    trigger: {
-                        id: 'change',
-                    },
-                },
-                {
                     stepId:    'continue-blog',
                     element:   '.modal button.btn-primary',
-                    placement: 'right',
+                    placement: 'bottom',
                     title:     "Create Blog Post",
                     content:   "Click <em>Continue</em> to create the blog post.",
                     trigger: {
@@ -69,16 +59,16 @@
                 {
                     stepId:    'post-page',
                     title:     "Blog Post Created",
-                    content:   "This is your new blog post. We will edit your pages inline. What You See Is What You Get. No need for a complex backend.",
+                    content:   "This is your new blog post. Let's edit it.",
                     template:  self.popover({ next: "Continue" }),
                 },
                 {
                     stepId:    'post-title',
                     element:   'h1[data-oe-expression="blog_post.name"]',
-                    placement: 'top',
-                    title:     "Create a Title",
-                    content:   "Click on this area and set a catchy title.",
-                    template:  self.popover({ next: "OK" }),
+                    placement: 'bottom',
+                    title:     "Set a Title",
+                    content:   "Click on this area and set a catchy title for your blog post.",
+                    template:  self.popover({ next: "Continue" }),
                 },
                 {
                     stepId:    'add-image-text',

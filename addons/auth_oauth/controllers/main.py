@@ -68,7 +68,7 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
 
     @http.route()
     def web_login(self, *args, **kw):
-        # TODO: ensure_db()
+        http.ensure_db(with_registry=True)
         request.disable_db = False
         providers = self.list_providers()
 
@@ -83,10 +83,10 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
                 error = _("You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email.")
             else:
                 error = None
-            response.params['values'].update(
-                providers=providers,
-                error=error,
-            )
+
+            response.params['values']['providers'] = providers
+            if error:
+                response.params['values']['error'] = error
 
         return response
 

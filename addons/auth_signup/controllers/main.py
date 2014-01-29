@@ -34,8 +34,7 @@ class Home(openerp.addons.web.controllers.main.Home):
 
     @http.route()
     def web_login(self, *args, **kw):
-        # TODO: ensure_db()
-        request.disable_db = False
+        http.ensure_db(with_registry=True)
 
         mode = request.params.get('mode')
         qcontext = request.params.copy()

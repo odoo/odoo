@@ -17,7 +17,7 @@
             <div class="row">
                 <div t-attf-class="col-md-#{(len(event.sponsor_ids) > 6) and 2 or (12/ len(event.sponsor_ids))} text-center" t-foreach="event.sponsor_ids" t-as="sponsor">
                     <t t-if="sponsor.has_access_to_partner()">
-                        <a t-href="/partners/#{ slug([sponsor.partner_id.id, sponsor.partner_id.name]) }" style="position: relative; display: inline-block;">
+                        <a t-attf-href="/partners/#{ slug([sponsor.partner_id.id, sponsor.partner_id.name]) }" style="position: relative; display: inline-block;">
                             <span t-field="sponsor.partner_id.image"
                                 t-field-options='{"widget": "image", "class": "shadow"}'/>
                             <div class="ribbon-wrapper">
@@ -143,7 +143,7 @@
                 </div>
                 <div class="col-sm-10">
                     <h3 class="mt0 mb0">
-                        <a t-href="/event/#{ slug(event) }/track/#{ slug(track) }"><span t-field="track.name"> </span></a>
+                        <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }"><span t-field="track.name"> </span></a>
                         <small t-if="not track.website_published" class="label label-danger">not published</small>
                     </h3>
                     <ul class="list-inline mb0">
@@ -159,7 +159,7 @@
                     </ul>
                     <ul class="list-inline">
                         <li t-foreach="track.tag_ids" t-as="tag_id" class="text-muted fa fa-tags">
-                            <a t-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
+                            <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
                                 <span t-field="tag_id.name"/>
                             </a>
                         </li>
@@ -174,10 +174,10 @@
 <template id="tracks_filter" inherit_id="website_event_track.tracks" inherit_option_id="website_event_track.tracks" name="Filter on Tags">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked">
-            <li t-att-class="'' if searches.get('tag') else 'active'"><a t-href="/event/#{ slug(event) }/track/">All Tags</a></li>
+            <li t-att-class="'' if searches.get('tag') else 'active'"><a t-attf-href="/event/#{ slug(event) }/track/">All Tags</a></li>
             <t t-foreach="tags" t-as="tag">
                 <li t-att-class="searches.get('tag') == tag.id and 'active' or ''">
-                    <a t-href="/event/#{ slug(event) }/track/tag/#{ slug(tag) }">
+                    <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag) }">
                         <t t-esc="tag.name"/>
                     </a>
                 </li>
@@ -198,7 +198,7 @@
             <h3 t-field="event.name" class="text-center text-muted"/>
             <ul t-if="track.tag_ids" class="text-center text-muted list-inline">
                 <li t-foreach="track.tag_ids" t-as="tag_id" class="fa fa-tags">
-                    <a t-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
+                    <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
                         <span t-field="tag_id.name"/>
                     </a>
                 </li>
