@@ -124,7 +124,7 @@ class Scanner(Thread):
             self.set_status('error',str(e))
             return None
 
-    @http.route('/hw_proxy/Vis_scanner_connected', type='json', auth='admin')
+    @http.route('/hw_proxy/Vis_scanner_connected', type='json', auth='none')
     def is_scanner_connected(self):
         return self.get_device() != None
     
@@ -207,7 +207,7 @@ s = Scanner()
 hw_proxy.drivers['scanner'] = s
 
 class ScannerDriver(hw_proxy.Proxy):
-    @http.route('/hw_proxy/scanner', type='json', auth='admin')
+    @http.route('/hw_proxy/scanner', type='json', auth='none')
     def scanner(self):
         if not s.isAlive():
             s.start()
