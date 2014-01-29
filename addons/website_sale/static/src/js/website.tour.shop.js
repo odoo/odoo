@@ -109,7 +109,7 @@
                     stepId:    'save-image',
                     element:   'button.save',
                     placement: 'bottom',
-                    title:     "Save the Image",
+                    title:     "Select this Image",
                     content:   "Click to add the image to the product decsription.",
                     template:  self.popover({ fixed: true }),
                     trigger:   'click',
