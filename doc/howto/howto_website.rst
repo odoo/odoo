@@ -157,8 +157,8 @@ your credentials (``admin``/``admin`` by default), click
 You're now in OpenERP "proper", the backend/administrative
 interface. We'll deal with it in :ref:`a latter section
 <howto-website-administration>`, for how click on the
-:guilabel:`Website` menu item, in the top-left of the browser between
-:guilabel:`Messaging` and :guilabel:`Settings`.
+:menuselection:`Website` menu item, in the top-left of the browser
+between :menuselection:`Messaging` and :menuselection:`Settings`.
 
 You're back to your website, but are now an administrator and thus
 have access to the advanced edition features of an OpenERP-build
@@ -222,9 +222,9 @@ As previously mentioned, OpenERP's website module uses bootstrap_ for
 much of its basic styles and layout. This, in turns, allows using
 existing bootstrap themes to alter the color scheme of your website.
 
-:guilabel:`Change Theme` opens a picker to a few bundled Bootstrap
-themes, and lets you change the look of your site quickly and
-on-the-fly.
+:menuselection:`Customize --> Change Theme` opens a picker to a few
+bundled Bootstrap themes, and lets you change the look of your site
+quickly and on-the-fly.
 
 .. todo:: creating or installing new boostrap themes?
 
@@ -240,10 +240,10 @@ Help
 ----
 
 Lists available tutorials, step-by-step lessons in using the website.
-``website`` only provides :guilabel:`Insert a banner` which shows some
-basic features of the website (snippets, edition, mobile preview)
-while guiding the user through. Other modules can provide additional
-tutorials for their advanced features.
+``website`` only provides :menuselection:`Help --> Insert a banner`
+which shows some basic features of the website (snippets, edition,
+mobile preview) while guiding the user through. Other modules can
+provide additional tutorials for their advanced features.
 
 Edit
 ----
@@ -265,10 +265,11 @@ Building your pages with OpenERP Website
 
 As we've seen, your index page has "disappeared" and been replaced by
 the one provided by ``website``. The page is not lost, but because
-``website`` was installed after ``academy`` module, its page takes
-over routing.
+``website`` was installed after the ``academy`` module, its index
+page takes over routing (two index pages exist, and one is picked
+over the other).
 
-To fix, that, we can simply add ``website`` as a dependency to
+To fix the issue, we can simply add ``website`` as a dependency to
 ``academy`` (that is, tell OpenERP that ``academy`` needs ``website``
 to work right):
 
@@ -283,10 +284,14 @@ to work right):
 
           also template issues (see above) (enabled website to "fix")
 
-Reload `your openerp`_. Your old index page is back, however none of
-the website edition tools are available. That is because much of these
-tools are inserted and enabled by the website layout template. Let's
-use that instead of our own page structure:
+This will cause ``academy``'s index page to overwrite ``website``'s.
+
+Reload `your openerp`_. Your old index page is back.
+
+However, none of the website edition tools are available. That is
+because much of these tools are inserted and enabled by the website
+layout template.  Let's use that layout instead of our own page
+structure:
 
 .. patch::
 
@@ -295,8 +300,8 @@ use that instead of our own page structure:
   customization tools.
 
 * there's quite a bit of complex markup, used as hooks for various
-  features (e.g. snippets). Although technically not entirely
-  necessary, some things will not work if they're not there.
+  features (e.g. snippets). Although technically not mandatory, some
+  things will not work if they're not there.
 
 * if you go in the HTML editor (:menuselection:`Customize --> HTML
   Editor`), you can see and edit your template

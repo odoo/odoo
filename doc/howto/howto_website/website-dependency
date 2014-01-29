@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 5a5145642f3604f09c5685d37beaddc497d3c850
+# Parent 77db36690ddd8ad5065cab77837deec9da3df502
 
 diff --git a/__openerp__.py b/__openerp__.py
 --- a/__openerp__.py
@@ -15,7 +15,7 @@ diff --git a/__openerp__.py b/__openerp__.py
 diff --git a/controllers.py b/controllers.py
 --- a/controllers.py
 +++ b/controllers.py
-@@ -10,18 +10,12 @@ teaching_assistants = [
+@@ -10,17 +10,12 @@ teaching_assistants = [
  ]
  
  class Home(main.Home):
@@ -30,7 +30,6 @@ diff --git a/controllers.py b/controllers.py
 +            'tas': teaching_assistants,
 +        })
  
--        # how in fuck do I get a db here?
 -        return "" % {
 -            'tas': '\n'.join(tas)
 -        }
