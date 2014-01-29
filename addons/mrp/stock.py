@@ -196,20 +196,6 @@ class StockPicking(osv.osv):
         return list(set(todo))
 
 
-class split_in_production_lot(osv.osv_memory):
-    _inherit = "stock.move.split"
-
-    def split(self, cr, uid, ids, move_ids, context=None):
-        """ Splits move lines into given quantities.
-        @param move_ids: Stock moves.
-        @return: List of new moves.
-        """
-        new_moves = super(split_in_production_lot, self).split(cr, uid, ids, move_ids, context=context)
-        production_obj = self.pool.get('mrp.production')
-        production_ids = production_obj.search(cr, uid, [('move_lines', 'in', move_ids)])
-        production_obj.write(cr, uid, production_ids, {'move_lines': [(4, m) for m in new_moves]})
-        return new_moves
-
 
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
