@@ -128,7 +128,6 @@ Dashboard for CRM will include:
     'application': True,
     'auto_install': False,
     'images': [
-        'images/crm_dashboard.png',
         'images/customers.png',
         'images/leads.png',
         'images/opportunities_kanban.png',
