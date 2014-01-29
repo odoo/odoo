@@ -3187,11 +3187,14 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         def _get_analytic_journal(journal_type):
             # Get the analytic journal
             data = False
-            if journal_type in ('sale', 'sale_refund'):
-                data = obj_data.get_object_reference(cr, uid, 'account', 'analytic_journal_sale')
-            elif journal_type in ('purchase', 'purchase_refund'):
-                pass
-            elif journal_type == 'general':
+            try:
+                if journal_type in ('sale', 'sale_refund'):
+                    data = obj_data.get_object_reference(cr, uid, 'account', 'analytic_journal_sale')
+                elif journal_type in ('purchase', 'purchase_refund'):
+                    data = obj_data.get_object_reference(cr, uid, 'account', 'exp')
+                elif journal_type == 'general':
+                    pass
+            except ValueError:
                 pass
             return data and data[1] or False
 
