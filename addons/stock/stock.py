@@ -171,12 +171,14 @@ class stock_location_route(osv.osv):
         'warehouse_selectable': fields.boolean('Applicable on Warehouse'),
         'supplied_wh_id': fields.many2one('stock.warehouse', 'Supplied Warehouse'),
         'supplier_wh_id': fields.many2one('stock.warehouse', 'Supplier Warehouse'),
+        'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this route is shared between all companies'),
     }
 
     _defaults = {
         'sequence': lambda self, cr, uid, ctx: 0,
         'active': True,
         'product_selectable': True,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.location.route', context=c),
     }
 
 
@@ -1164,6 +1166,34 @@ class stock_production_lot(osv.osv):
         ('name_ref_uniq', 'unique (name, ref)', 'The combination of Serial Number and internal reference must be unique !'),
     ]
 
+    def action_traceability(self, cr, uid, ids, context=None):
+        """ It traces the information of lots
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: List of IDs selected
+        @param context: A standard dictionary
+        @return: A dictionary of values
+        """
+        quant_obj = self.pool.get("stock.quant")
+        move_obj = self.pool.get("stock.move")
+        quants = quant_obj.search(cr, uid, [('lot_id', 'in', ids)], context=context)
+        moves = set()
+        for quant in quant_obj.browse(cr, uid, quants, context=context):
+            moves |= {move.id for move in quant.history_ids}
+        if moves:
+            return { 
+                'domain': "[('id','in',["+','.join(map(str, list(moves)))+"])]",
+                'name': _('Traceability'),
+                'view_mode': 'tree,form',
+                'view_type': 'form',
+                'context': {'tree_view_ref': 'stock.view_move_tree'},
+                'res_model': 'stock.move',
+                'type': 'ir.actions.act_window',
+                    }
+        return False
+        
+
 
 # ----------------------------------------------------
 # Move
@@ -1823,7 +1853,7 @@ class stock_move(osv.osv):
             if qty > 0:
                 self.check_tracking(cr, uid, move, move.restrict_lot_id.id, context=context)
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain, prefered_domain=prefered_domain, fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
-                quant_obj.quants_move(cr, uid, quants, move, lot_id = move.restrict_lot_id.id, owner_id = move.restrict_partner_id.id, context=context)
+                quant_obj.quants_move(cr, uid, quants, move, lot_id=move.restrict_lot_id.id, owner_id=move.restrict_partner_id.id, context=context)
             #unreserve the quants and make them available for other operations/moves
             quant_obj.quants_unreserve(cr, uid, move, context=context)
 

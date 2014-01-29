@@ -149,7 +149,8 @@ class StockMove(osv.osv):
                     production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
         return res
 
-    def action_scrap(self, cr, uid, ids, product_qty, location_id, restrict_lot_id = False, restrict_partner_id = False, context=None):
+
+    def action_scrap(self, cr, uid, ids, product_qty, location_id, restrict_lot_id=False, restrict_partner_id=False, context=None):
         """ Move the scrap/damaged product into scrap location
         @param product_qty: Scraped product quantity
         @param location_id: Scrap location
