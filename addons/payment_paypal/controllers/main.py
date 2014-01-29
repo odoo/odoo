@@ -9,8 +9,8 @@ import pprint
 import urllib2
 import werkzeug
 
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+from openerp import http, SUPERUSER_ID
+from openerp.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -45,7 +45,7 @@ class PaypalController(http.Controller):
         resp = uopen.read()
         if resp == 'VERIFIED':
             _logger.info('Paypal: validated data')
-            cr, uid, context = request.cr, request.uid, request.context
+            cr, uid, context = request.cr, SUPERUSER_ID, request.context
             res = request.registry['payment.transaction'].form_feedback(cr, uid, post, 'paypal', context=context)
         elif resp == 'INVALID':
             _logger.warning('Paypal: answered INVALID on data verification')
@@ -53,25 +53,28 @@ class PaypalController(http.Controller):
             _logger.warning('Paypal: unrecognized paypal answer, received %s instead of VERIFIED or INVALID' % resp.text)
         return res
 
-    @http.route('/payment/paypal/ipn/', type='http', auth='admin', methods=['POST'])
+    @http.route('/payment/paypal/ipn/', type='http', auth='none', methods=['POST'])
     def paypal_ipn(self, **post):
         """ Paypal IPN. """
+        request.disable_db = False
         _logger.info('Beginning Paypal IPN form_feedback with post data %s', pprint.pformat(post))  # debug
         self.paypal_validate_data(**post)
         return ''
 
-    @http.route('/payment/paypal/dpn', type='http', auth="admin", methods=['POST'])
+    @http.route('/payment/paypal/dpn', type='http', auth="none", methods=['POST'])
     def paypal_dpn(self, **post):
         """ Paypal DPN """
+        request.disable_db = False
         _logger.info('Beginning Paypal DPN form_feedback with post data %s', pprint.pformat(post))  # debug
         return_url = self._get_return_url(**post)
         self.paypal_validate_data(**post)
         return werkzeug.utils.redirect(return_url)
 
-    @http.route('/payment/paypal/cancel', type='http', auth="admin")
+    @http.route('/payment/paypal/cancel', type='http', auth="none")
     def paypal_cancel(self, **post):
         """ When the user cancels its Paypal payment: GET on this route """
-        cr, uid, context = request.cr, request.uid, request.context
+        request.disable_db = False
+        cr, uid, context = request.cr, SUPERUSER_ID, request.context
         _logger.info('Beginning Paypal cancel with post data %s', pprint.pformat(post))  # debug
         return_url = self._get_return_url(**post)
         return werkzeug.utils.redirect(return_url)

@@ -3,8 +3,8 @@ import logging
 import pprint
 import werkzeug
 
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+from openerp import http, SUPERUSER_ID
+from openerp.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -20,10 +20,11 @@ class OgoneController(http.Controller):
         '/payment/ogone/decline', '/payment/ogone/test/decline',
         '/payment/ogone/exception', '/payment/ogone/test/exception',
         '/payment/ogone/cancel', '/payment/ogone/test/cancel',
-    ], type='http', auth='admin')
+    ], type='http', auth='none')
     def ogone_form_feedback(self, **post):
         """ Ogone contacts using GET, at least for accept """
+        request.disable_db = False
         _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug
-        cr, uid, context = request.cr, request.uid, request.context
+        cr, uid, context = request.cr, SUPERUSER_ID, request.context
         request.registry['payment.transaction'].form_feedback(cr, uid, post, 'ogone', context=context)
         return werkzeug.utils.redirect(post.pop('return_url', '/'))
