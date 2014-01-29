@@ -215,8 +215,8 @@
 
 
     website.EditorShopTest = website.Test.extend({
-        id: 'shoptest',
-        name: "Try to by products",
+        id: 'shop_buy_product',
+        name: "Try to buy products",
         path: '/shop',
         init: function (editor) {
             var self = this;
