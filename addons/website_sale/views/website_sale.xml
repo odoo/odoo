@@ -487,8 +487,7 @@
                               <td t-if="line.product_id.product_tmpl_id">
                                   <div>
                                       <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }/">
-                                          <strong t-field="line.product_id.name"/>
-                                          <t t-if="line.product_id.variants">(<t t-esc="line.product_id.variants"/>)</t>
+                                          <strong t-field="line.name"/>
                                       </a>
                                   </div>
                                   <div class="text-muted" t-field="line.product_id.description_sale"/>
