@@ -26,7 +26,7 @@ from openerp.tools.translate import _
 
 class StockMove(osv.osv):
     _inherit = 'stock.move'
-    
+
     _columns = {
         'production_id': fields.many2one('mrp.production', 'Production Order for Produced Products', select=True),
         'raw_material_production_id': fields.many2one('mrp.production', 'Production Order for Raw Materials', select=True),
@@ -141,11 +141,7 @@ class StockMove(osv.osv):
                                                     'restrict_partner_id': restrict_partner_id, 
                                                     'consumed_for': consumed_for}, context=context)
             self.action_done(cr, uid, res, context=context)
-            
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
-            for prod in production_obj.browse(cr, uid, production_ids, context=context):
-                if prod.state == 'confirmed':
-                    production_obj.force_production(cr, uid, [prod.id])
             production_obj.signal_button_produce(cr, uid, production_ids)
             for new_move in res:
                 if new_move != move.id:
