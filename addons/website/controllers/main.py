@@ -55,7 +55,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
 
-    @http.route('/website/theme_change', type='http', auth="admin", website=True)
+    @http.route('/website/theme_change', type='http', auth="public", website=True)
     def theme_change(self, theme_id=False, **kwargs):
         imd = request.registry['ir.model.data']
         view = request.registry['ir.ui.view']
@@ -166,7 +166,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 })
         return result
 
-    @http.route('/website/get_view_translations', type='json', auth='admin', website=True)
+    @http.route('/website/get_view_translations', type='json', auth='public', website=True)
     def get_view_translations(self, xml_id, lang=None):
         lang = lang or request.context.get('lang')
         views = self.customize_template_get(xml_id, optional=False)
@@ -175,7 +175,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         irt = request.registry.get('ir.translation')
         return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value'], context=request.context)
 
-    @http.route('/website/set_translations', type='json', auth='admin', website=True)
+    @http.route('/website/set_translations', type='json', auth='public', website=True)
     def set_translations(self, data, lang):
         irt = request.registry.get('ir.translation')
         for view_id, trans in data.items():

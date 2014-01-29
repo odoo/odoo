@@ -7,7 +7,7 @@ from datetime import datetime
 
 class google_map(http.Controller):
 
-    @http.route(['/google_map/'], type='http', auth="admin", website=True)
+    @http.route(['/google_map/'], type='http', auth="public", website=True)
     def google_map(self, *arg, **post):
         values = {
             'partner_ids': post.get('partner_ids', ""),
@@ -17,7 +17,7 @@ class google_map(http.Controller):
         }
         return request.website.render("website_google_map.google_map", values)
 
-    @http.route(['/google_map/partners.json'], type='http', auth="admin", website=True)
+    @http.route(['/google_map/partners.json'], type='http', auth="public", website=True)
     def google_map_data(self, *arg, **post):
         partner_obj = request.registry['res.partner']
 
@@ -28,7 +28,7 @@ class google_map(http.Controller):
         return partner_obj.google_map_json(request.cr, openerp.SUPERUSER_ID,
                                            partner_ids, request.context)
 
-    @http.route(['/google_map/set_partner_position/'], type='http', auth="admin", website=True)
+    @http.route(['/google_map/set_partner_position/'], type='http', auth="public", website=True)
     def google_map_set_partner_position(self, *arg, **post):
         partner_obj = request.registry['res.partner']
 
@@ -41,7 +41,7 @@ class google_map(http.Controller):
             'partner_longitude': longitude,
             'date_localization': datetime.now().strftime('%Y-%m-%d'),
         }
-        partner_obj.write(request.cr, request.uid, [partner_id], values,
+        partner_obj.write(request.cr, openerp.SUPERUSER_ID, [partner_id], values,
                           request.context)
 
 
