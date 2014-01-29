@@ -918,16 +918,12 @@ class ir_model_data(osv.osv):
             raise ValueError('Not enough access rights on the external ID: %s.%s' % (module, xml_id))
         return model, False
 
-    def get_object(self, cr, uid, module, xml_id, context=None, raise_exception=True):
+    def get_object(self, cr, uid, module, xml_id, context=None):
         """ Returns a browsable record for the given module name and xml_id.
             If not found, raise a ValueError or return a browse_null, depending
             on the value of `raise_exception`.
-
-            :param raise_exception: when true, check whether record exists and
-                raise a ValueError if it does not; otherwise return a browse_null
-                or non-existing record.
         """
-        return self.xmlid_to_object(cr, uid, "%s.%s" % (module, xml_id), raise_if_not_found=raise_exception, context=context)
+        return self.xmlid_to_object(cr, uid, "%s.%s" % (module, xml_id), raise_if_not_found=True, context=context)
 
     def _update_dummy(self,cr, uid, model, module, xml_id=False, store=True):
         if not xml_id:
