@@ -104,17 +104,8 @@ class survey_survey(osv.Model):
         """ Computes an URL for the survey results """
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
             'web.base.url')
-        return {id: urljoin(base_url, "survey/result/%s/" % id) for id in ids}
+        return {id: urljoin(base_url, "survey/results/%s/" % id) for id in ids}
 
-    def _get_result_url(self, cr, uid, ids, name, arg, context=None):
-        """ Computes a result URL for the survey """
-        res = dict((id, 0) for id in ids)
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
-            'web.base.url')
-        for survey_browse in self.browse(cr, uid, ids, context=context):
-            res[survey_browse.id] = urljoin(base_url, "survey/results/%s/"
-                                            % survey_browse.id)
-        return res
     # Model fields #
 
     _columns = {

@@ -140,7 +140,7 @@
                 <div class="tab-pane active" t-att-id="'graph_question_'+str(question.id)">
                     <!-- Dynamic script for single bar chart -->
                     <script>
-                        var question_<t t-esc="question.id"></t> = <t t-esc="get_graph_data(question)"></t>;
+                        var question_<t t-esc="question.id"></t> = <t t-raw="get_graph_data(question)"></t>;
                         nv.addGraph(function() {
                             var chart = nv.models.discreteBarChart()
                                 .x(function(d) { return d.text })
@@ -225,7 +225,7 @@
             <div class="tab-pane active with-3d-shadow with-transitions" t-att-id="'graph_question_'+str(question.id)">
                 <!-- Dynamic script for Multi bar chart -->
                 <script>
-                    var question_<t t-esc="question.id"></t> = <t t-esc="get_graph_data(question)"></t>;
+                    var question_<t t-esc="question.id"></t> = <t t-raw="get_graph_data(question)"></t>;
                     nv.addGraph(function(){
                         var chart = nv.models.multiBarChart()
                             .x(function(d) { return d.text })
