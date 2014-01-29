@@ -55,7 +55,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
 
-    @http.route('/website/theme_change', type='http', auth="public", website=True)
+    @http.route('/website/theme_change', type='http', auth="user", website=True)
     def theme_change(self, theme_id=False, **kwargs):
         imd = request.registry['ir.model.data']
         view = request.registry['ir.ui.view']

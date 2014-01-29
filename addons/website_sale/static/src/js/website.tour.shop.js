@@ -44,27 +44,36 @@
                     trigger: {
                         modal: {
                             stopOnClose: true,
-                            afterSubmit: 'product-page',
                         },
                     },
                 },
                 {
                     stepId:    'enter-name',
                     element:   '.modal input[type=text]',
+                    sampleText: 'New Product',
                     placement: 'right',
                     title:     "Choose name",
                     content:   "Enter a name for your new product then click 'Continue'.",
+                    trigger:   'keyup',
+                },
+                {
+                    stepId:    'continue-name',
+                    element:   '.modal button.btn-primary',
+                    placement: 'right',
+                    title:     "Create Product",
+                    content:   "Click <em>Continue</em> to create the product.",
+                    trigger:   'reload',
                 },
                 {
                     stepId:    'product-page',
                     title:     "New product created",
                     content:   "This page contains all the information related to the new product.",
                     template:  self.popover({ next: "OK" }),
-                    backdrop:  true,
                 },
                 {
-                    stepId:    'edit-price',
-                    element:   '.product_price',
+                    stepId:    'edit-price-cke',
+                    element:   '.product_price .oe_currency_value',
+                    sampleText: '20.50',
                     placement: 'left',
                     title:     "Change the price",
                     content:   "Edit the price of this product by clicking on the amount.",
@@ -76,16 +85,23 @@
                     placement: 'top',
                     title:     "Update image",
                     content:   "Click here to set an image describing your product.",
-                    triggers: function () {
-                        function registerClick () {
-                            $('button.hover-edition-button').one('click', function () {
-                                $('#wrap img.img:first').off('hover', registerClick);
-                                self.moveToNextStep();
-                            });
-                        }
-                        $('#wrap img.img:first').on('hover', registerClick);
-
+                    triggers: function (callback) {
+                        var self = this;
+                        $(self.element).on('mouseenter', function () {
+                            $(this).off('mouseenter');
+                            setTimeout(function () {
+                                (callback || self.tour.moveToNextStep).apply(self.tour);
+                            },0);
+                        });
                     },
+                },
+                {
+                    stepId:    'update-image-button',
+                    element:   'button.hover-edition-button:visible',
+                    placement: 'top',
+                    title:     "Update image",
+                    content:   "Click here to set an image describing your product.",
+                    trigger:   'click',
                 },
                 {
                     stepId:    'upload-image',
@@ -94,7 +110,7 @@
                     title:     "Select an Image",
                     content:   "Let's select an existing image.",
                     template:  self.popover({ fixed: true }),
-                    trigger:   'click',
+                    trigger:   'ajax'
                 },
                 {
                     stepId:    'select-image',
@@ -103,7 +119,16 @@
                     title:     "Select an Image",
                     content:   "Let's select an imac image.",
                     template:  self.popover({ fixed: true }),
-                    trigger:   'click',
+                    triggers: function (callback) {
+                        var self = this;
+                        var click = function () {
+                            $('.modal-dialog.select-image img').off('click', click);
+                            setTimeout(function () {
+                                (callback || self.tour.moveToNextStep).apply(self.tour);
+                            },0);
+                        };
+                        $('.modal-dialog.select-image img').on('click', click);
+                    },
                 },
                 {
                     stepId:    'save-image',
@@ -139,7 +164,7 @@
                     title:     "Save your modifications",
                     content:   "Once you click on save, your product is updated.",
                     template:  self.popover({ fixed: true }),
-                    trigger:   'click',
+                    trigger:   'reload',
 
                 },
                 {
@@ -148,7 +173,7 @@
                     placement: 'top',
                     title:     "Publish your product",
                     content:   "Click to publish your product so your customers can see it.",
-                    trigger:   'click',
+                    trigger:   'ajax'
                 },
                 {
                     stepId:    'congratulations',
@@ -212,9 +237,7 @@
                 {
                     stepId:    'choose-ipod',
                     element:   'input[name="product_id"]:not([checked])',
-                    trigger: {
-                        id: 'mouseup',
-                    },
+                    trigger:   'mouseup',
                 },
                 {
                     stepId:    'add-ipod',
@@ -231,7 +254,7 @@
                 {
                     stepId:    'more-product',
                     element:   '.oe_mycart a.js_add_cart_json:eq(1)',
-                    trigger:   'click',
+                    trigger:   'ajax',
                 },
                 {
                     stepId:    'less-product',
@@ -241,17 +264,8 @@
                 {
                     stepId:    'number-product',
                     element:   '.oe_mycart input.js_quantity',
+                    sampleText: '1',
                     trigger:   'reload',
-                    beforeTrigger: function (tour) {
-                        if (parseInt($(".oe_mycart input.js_quantity").val(),10) !== 1)
-                            $(".oe_mycart input.js_quantity").val("1").change();
-                    },
-                    afterTrigger: function (tour) {
-                        if ($(".oe_mycart input.js_quantity").size() !== 1)
-                            throw "Can't remove suggested item from my cart";
-                        if (parseInt($(".oe_mycart input.js_quantity").val(),10) !== 1)
-                            throw "Can't defined number of items in my cart";
-                    },
                 },
                 {
                     stepId:    'go-checkout-product',
