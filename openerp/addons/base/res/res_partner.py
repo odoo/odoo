@@ -601,6 +601,7 @@ class res_partner(osv.osv, format_address):
             where_query = self._where_calc(cr, uid, args, context=context)
             self._apply_ir_rules(cr, uid, where_query, 'read', context=context)
             from_clause, where_clause, where_clause_params = where_query.get_sql()
+            where_str = where_clause and (" WHERE %s AND " % where_clause) or ' WHERE '
 
             # search on the name of the contacts and of its company
             search_name = name
@@ -617,9 +618,9 @@ class res_partner(osv.osv, format_address):
             #            a random selection of `limit` results.
             query = ('''SELECT res_partner.id FROM res_partner
                                           LEFT JOIN res_partner company
-                                               ON res_partner.parent_id = company.id
-                        WHERE ''' + where_clause +
-                        ''' AND res_partner.email ''' + operator + ''' %s OR
+                                               ON res_partner.parent_id = company.id'''
+                        + where_str +
+                        ''' res_partner.email ''' + operator + ''' %s OR
                               CASE
                                    WHEN company.id IS NULL OR res_partner.is_company
                                        THEN res_partner.name
@@ -638,6 +639,7 @@ class res_partner(osv.osv, format_address):
                 where_clause_params.append(limit)
             cr.execute(query, where_clause_params)
             ids = map(lambda x: x[0], cr.fetchall())
+
             if ids:
                 return self.name_get(cr, uid, ids, context)
         return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
