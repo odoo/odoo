@@ -5,39 +5,11 @@
             <field name="name">timesheet.report.graph</field>
             <field name="model">timesheet.report</field>
             <field name="arch" type="xml">
-                <graph string="Timesheet" type="bar">
-                    <field name="user_id" />
-                    <field name="quantity" operator = "+"/>
-                    <field name="state" group = "True"/>
+                <graph string="Timesheet" type="pivot" stacked="True">
+                    <field name="user_id" type="row"/>
+                    <field name="state" type="row"/>
+                    <field name="quantity" type="measure"/>
                 </graph>
-            </field>
-        </record>
-        <record id="view_timesheet_report_tree" model="ir.ui.view">
-            <field name="name">timesheet.report.tree</field>
-            <field name="model">timesheet.report</field>
-            <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';black:state in ('confirm','new');gray:state == 'cancel'" string="Timesheet" create="false">
-                    <field name="date" invisible="1"/>
-                    <field name="name" invisible="1"/>
-                    <field name="user_id" invisible="1"/>
-                    <field name="date_from" invisible="1"/>
-                    <field name="date_to" invisible="1"/>
-                    <field name="state" invisible="1"/>
-                    <field name="department_id" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
-                    <field name="to_invoice" invisible="1"/>
-                    <field name="product_id" invisible="1"/>
-                    <field name="account_id" invisible="1"/>
-                    <field name="general_account_id" invisible="1"/>
-                    <field name="year" invisible="1"/>
-                    <field name="day" invisible="1"/>
-                    <field name="month" invisible="1"/>
-                    <field name="quantity" sum="#Quantity"/>
-                    <field name="cost" sum="#Cost"/>
-                    <field name="total_diff" sum="#Total Diff"/>
-                    <field name="total_timesheet" sum="#Total Timesheet"/>
-                    <field name="total_attendance" sum="#Total Attendance"/>
-                </tree>
             </field>
         </record>
         <record id="view_timesheet_report_search" model="ir.ui.view">
@@ -80,7 +52,7 @@
             <field name="name">Timesheet Sheet Analysis</field>
             <field name="res_model">timesheet.report</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
+            <field name="view_mode">graph</field>
             <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_User_id':1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="search_view_id" ref="view_timesheet_report_search"/>
         </record>
