@@ -596,42 +596,53 @@ class res_partner(osv.osv, format_address):
         if not args:
             args = []
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
+
+            self.check_access_rights(cr, uid, 'read')
+            where_query = self._where_calc(cr, uid, args, context=context)
+            self._apply_ir_rules(cr, uid, where_query, 'read', context=context)
+            from_clause, where_clause, where_clause_params = where_query.get_sql()
+            where_str = where_clause and (" WHERE %s AND " % where_clause) or ' WHERE '
+
             # search on the name of the contacts and of its company
             search_name = name
             if operator in ('ilike', 'like'):
                 search_name = '%%%s%%' % name
             if operator in ('=ilike', '=like'):
                 operator = operator[1:]
-            query_args = {'name': search_name}
+
             # TODO: simplify this in trunk with `display_name`, once it is stored
             # Perf note: a CTE expression (WITH ...) seems to have an even higher cost
             #            than this query with duplicated CASE expressions. The bulk of
             #            the cost is the ORDER BY, and it is inevitable if we want
             #            relevant results for the next step, otherwise we'd return
             #            a random selection of `limit` results.
-            query = ('''SELECT partner.id FROM res_partner partner
+            query = ('''SELECT res_partner.id FROM res_partner
                                           LEFT JOIN res_partner company
-                                               ON partner.parent_id = company.id
-                        WHERE partner.email ''' + operator + ''' %(name)s OR
+                                               ON res_partner.parent_id = company.id'''
+                        + where_str + ''' (res_partner.email ''' + operator + ''' %s OR
                               CASE
-                                   WHEN company.id IS NULL OR partner.is_company
-                                       THEN partner.name
-                                   ELSE company.name || ', ' || partner.name
-                              END ''' + operator + ''' %(name)s
+                                   WHEN company.id IS NULL OR res_partner.is_company
+                                       THEN res_partner.name
+                                   ELSE company.name || ', ' || res_partner.name
+                              END ''' + operator + ''' %s)
                         ORDER BY
                               CASE
-                                   WHEN company.id IS NULL OR partner.is_company
-                                       THEN partner.name
-                                   ELSE company.name || ', ' || partner.name
+                                   WHEN company.id IS NULL OR res_partner.is_company
+                                       THEN res_partner.name
+                                   ELSE company.name || ', ' || res_partner.name
                               END''')
+
+            where_clause_params += [search_name, search_name]
             if limit:
-                query += ' limit %(limit)s'
-                query_args['limit'] = limit
-            cr.execute(query, query_args)
+                query += ' limit %s'
+                where_clause_params.append(limit)
+            cr.execute(query, where_clause_params)
             ids = map(lambda x: x[0], cr.fetchall())
-            ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
+
             if ids:
                 return self.name_get(cr, uid, ids, context)
+            else:
+                return []
         return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
 
     def find_or_create(self, cr, uid, email, context=None):
