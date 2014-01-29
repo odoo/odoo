@@ -69,6 +69,7 @@ class PaymentAcquirerOgone(osv.Model):
 
         items = sorted((k.upper(), v) for k, v in values.items())
         sign = ''.join('%s=%s%s' % (k, v, key) for k, v in items if v and filter_key(k))
+        sign = sign.encode("utf-8")
         shasign = sha1(sign).hexdigest()
         return shasign
 

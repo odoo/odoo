@@ -56,7 +56,7 @@
                               t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
                       </td>
                       <td>
-                          <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json pull-right hidden-print" t-if="line.option_line_id">
+                          <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json pull-right hidden-print" t-if="line.option_line_id">
                               <span class="fa fa-trash-o"></span>
                           </a>
                       </td>
@@ -96,13 +96,13 @@
       <xpath expr="//div[@id='quote_qty']" position="replace">
           <div class="input-group">
               <span class="input-group-addon hidden-print">
-                  <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;remove=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json">
+                  <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;remove=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json">
                       <span class="fa fa-minus"/>
                   </a>
               </span>
               <input type="text" class="js_quantity form-control" t-att-data-id="line.id" t-att-value="line.product_uom_qty"/>
               <span class="input-group-addon hidden-print">
-                  <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json">
+                  <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json">
                       <span class="fa fa-plus"/>
                   </a>
               </span>
@@ -380,7 +380,7 @@
   </template>
 
   <template id="navigation_menu">
-    <div class="hidden-print navspy" data-editable="0" role="complementary">
+    <div class="hidden-print navspy" t-ignore="true" role="complementary">
         <ul class="nav bs-sidenav" data-id="quote_sidebar">
             <li><a href="#introduction">Introduction</a></li>
         </ul>
@@ -443,7 +443,7 @@
                                 </strong>
                             </td>
                             <td class="pull-right">
-                                <a t-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="mb8 hidden-print">
+                                <a t-attf-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="mb8 hidden-print">
                                     <span class="fa fa-shopping-cart"/>
                                 </a>
                             </td>
@@ -467,7 +467,7 @@
                 <div class="row mt16">
                     <div class="col-md-3">
                         <div class="bs-sidebar">
-                            <div class="hidden-print navspy" role="complementary">
+                            <div class="hidden-print navspy" role="complementary" t-ignore="True">
                                 <ul class="nav bs-sidenav" data-id="quote_sidebar"/>
                             </div>
                         </div>

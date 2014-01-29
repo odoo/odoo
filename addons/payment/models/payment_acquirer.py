@@ -266,14 +266,14 @@ class PaymentAcquirer(osv.Model):
         currency = self.pool['res.currency'].browse(cr, uid, currency_id, context=context)
         currency_str = currency.symbol or currency.name
         amount = u"%s %s" % ((currency_str, amount_str) if currency.position == 'before' else (amount_str, currency_str))
-        result = """<div class="payment_acquirers">
+        result = u"""<div class="payment_acquirers">
                          <div class="payment_header">
                              <div class="payment_amount">%s</div>
                              %s
                          </div>
                          %%s
                      </div>""" % (amount, payment_header)
-        return result % html_block
+        return result % html_block.decode("utf-8")
 
     def render_payment_block(self, cr, uid, reference, amount, currency_id, tx_id=None, partner_id=False, partner_values=None, tx_values=None, context=None):
         html_forms = []

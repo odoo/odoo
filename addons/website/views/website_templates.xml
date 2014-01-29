@@ -114,7 +114,7 @@
                                         <ul class="dropdown-menu js_usermenu" role="menu">
                                             <li><a href="/web" role="menuitem">Administration</a></li>
                                             <li class="divider"/>
-                                            <li><a t-attf-href="/web/session/logout?redirect=#{ quote_plus(url_for('', keep_query='*')) }" role="menuitem">Logout</a></li>
+                                            <li><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
                                         </ul>
                                     </li>
                                 </ul>
@@ -171,13 +171,13 @@
                                 <t t-set="languages" t-value="website.get_languages()"/>
                                 <ul class="list-inline js_language_selector mt16" t-if="(len(languages) &gt; 1 or editable)">
                                     <li t-foreach="languages" t-as="lg">
-                                        <a t-att-href="url_for('', lang=lg[0], keep_query='*')"
+                                        <a t-att-href="url_for('', lang=lg[0]) + '?' + keep_query()"
                                            t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
                                             <t t-esc="lg[1].split('/').pop()"/>
                                         </a>
                                     </li>
                                     <li groups="base.group_website_publisher">
-                                        <t t-set="url_return" t-value="url_for(request.httprequest.path, '[lang]', keep_query='*')"/>
+                                        <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
                                         <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
                                             <i class="fa fa-plus-circle"/>
                                             Add a language...
@@ -715,55 +715,19 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     </t>
 </template>
 
-<template id="creation_failed">
-    <t t-call="website.layout">
-        <div id="wrap">
-            <div class="oe_structure">
-                <div class="container">
-                    <h1 class="text-center">
-                        The page "<em><t t-esc="page"/></em>"
-                        already exists
-                    </h1>
-                    <h3 class="text-center text-muted">We could not create it.</h3>
-                    <ul>
-                        <li>
-                            You can <a t-href="#{path}">visit the existing page</a>
-                        </li>
-                        <li>Or you can <a href="#" class="create-new-page">
-                            create an other page.</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <script type="application/javascript">
-            $(document.body).on('click', 'a.create-new-page', function (e) {
-                e.preventDefault();
-                openerp.website.prompt({
-                    window_title: "New Page",
-                    input: "Page Title",
-                }).then(function (val) {
-                    if (val) {
-                        document.location = '/pagenew/' + encodeURI(val);
-                    }
-                });
-            });
-        </script>
-    </t>
-</template>
-
 <template id="contact">
     <address t-ignore="true" class="mb0">
-        <div t-attf-class="'name' not in fields and 'css_non_editable_mode_hidden'"><span t-esc="name"/></div>
-        <div class='css_editable_mode_hidden'>
-            <div t-if="address and 'address' in fields">
-                <i class='fa fa-map-marker'/>
-                <span t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or '&lt;br/&gt; &amp;nbsp; &amp;nbsp; ')"/>
-            </div>
-            <div t-if="phone and 'phone' in fields"><i class='fa fa-phone'/> <span t-esc="phone"/></div>
-            <div t-if="mobile and 'mobile' in fields"><i class='fa fa-mobile-phone'/> <span t-esc="mobile"/></div>
-            <div t-if="fax and 'fax' in fields"><i class='fa fa-file-text-o'/> <span t-esc="fax"/></div>
-            <div t-if="email and 'email' in fields"><i class='fa fa-envelope'/> <span t-esc="email"/></div>
+        <div t-att-class="'name' not in fields and 'css_non_editable_mode_hidden'"><span t-esc="name"/></div>
+        <div t-if="address and 'address' in fields" class='css_editable_mode_hidden'>
+            <i class='fa fa-map-marker'/> <span t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or '&lt;br/&gt; &amp;nbsp; &amp;nbsp; ')"/>
         </div>
+        <div t-if="city and 'city' in fields" class='css_editable_mode_hidden'>
+            <i class='fa fa-map-marker'/> <span t-raw="city"/>, <span t-raw="country_id"/>
+        </div>
+        <div t-if="phone and 'phone' in fields" class='css_editable_mode_hidden'><i class='fa fa-phone'/> <span t-esc="phone"/></div>
+        <div t-if="mobile and 'mobile' in fields" class='css_editable_mode_hidden'><i class='fa fa-mobile-phone'/> <span t-esc="mobile"/></div>
+        <div t-if="fax and 'fax' in fields" class='css_editable_mode_hidden'><i class='fa fa-file-text-o'/> <span t-esc="fax"/></div>
+        <div t-if="email and 'email' in fields" class='css_editable_mode_hidden'><i class='fa fa-envelope'/> <span t-esc="email"/></div>
     </address>
 </template>
 

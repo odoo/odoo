@@ -8,7 +8,7 @@
                 <input type='hidden' name='PSPID' t-att-value='tx_values["PSPID"]'/>
                 <input type='hidden' name='ORDERID' t-att-value='tx_values["ORDERID"]'/>
                 <!-- cart -->
-                <input type='hidden' name='AMOUNT' t-att-value='tx_values["AMOUNT"]'/>
+                <input type='hidden' name='AMOUNT' t-att-value='tx_values["AMOUNT"] or "0.0"'/>
                 <input type='hidden' name='CURRENCY' t-att-value='tx_values["CURRENCY"]'/>
                 <!-- buyer -->
                 <input type='hidden' name='LANGUAGE' t-att-value='tx_values["LANGUAGE"]'/>

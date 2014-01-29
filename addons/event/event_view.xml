@@ -83,23 +83,22 @@
                                 <field name="type" on_change="onchange_event_type(type,context)" />
                                 <field name="date_begin" on_change="onchange_start_date(date_begin,date_end)"/>
                                 <field name="date_end"/>
-                                <field name="visibility"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Registrations">
                                 <group>
                                     <group>
-                                        <field name="register_min"/>
-                                        <field name="register_max"/>
-                                        <label for="register_current" string="Current Registrations" groups="base.group_user"/>
+                                        <field name="seats_min"/>
+                                        <field name="seats_max"/>
+                                        <label for="seats_reserved" string="Current Registrations" groups="base.group_user"/>
                                         <div groups="base.group_user">
-                                             <field name="register_prospect" class="oe_inline"/> (confirmed: <field name="register_current" class="oe_inline"/>)
+                                             <field name="seats_unconfirmed" class="oe_inline"/> (confirmed: <field name="seats_reserved" class="oe_inline"/>)
                                         </div>
-                                        <field name="register_attended"/>
+                                        <field name="seats_used"/>
                                     </group>
                                 </group>
-                                <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
+                                <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user" context="{'event_id': active_id}">
                                     <tree string="Registration" editable="top">
                                         <field name="name" />
                                         <field name="email" />
@@ -159,14 +158,14 @@
             <field name="name">event.event.tree</field>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <tree string="Events" fonts="bold:message_unread==True" colors="red:(register_min and register_min&gt;register_current) or (register_max and register_max&lt;register_current);grey:state=='cancel'">
+                <tree string="Events" fonts="bold:message_unread==True" colors="red:(seats_min and seats_min&gt;seats_reserved) or (seats_max and seats_max&lt;seats_reserved);grey:state=='cancel'">
                     <field name="name" string="Name"/>
                     <field name="type" string="Event Category"/>
                     <field name="date_begin"/>
                     <field name="date_end"/>
-                    <field name="register_current"/>
-                    <field name="register_min"/>
-                    <field name="register_max" invisible="1"/>
+                    <field name="seats_reserved"/>
+                    <field name="seats_min"/>
+                    <field name="seats_max" invisible="1"/>
                     <field name="user_id"/>
                     <field name="state"/>
                     <field name="message_unread" invisible="1"/>
@@ -182,15 +181,15 @@
             <field name="model">event.event</field>
             <field name="arch" type="xml">
                 <kanban>
-                    <field name="register_max"/>
                     <field name="type"/>
                     <field name="user_id"/>
-                    <field name="register_current"/>
                     <field name="is_subscribed"/>
                     <field name="country_id"/>
                     <field name="date_begin"/>
                     <field name="state"/>
-                    <field name="register_avail"/>
+                    <field name="seats_max"/>
+                    <field name="seats_reserved"/>
+                    <field name="seats_available"/>
                     <templates>
                     <t t-name="kanban-box">
                       <div class="oe_module_vignette">
@@ -207,19 +206,19 @@
                             <p>
                               <t t-if="record.country_id.raw_value">@<field name="country_id"/><br/></t>
                               <t t-if="record.user_id.raw_value">Organized by <field name="user_id"/><br/></t>
-                              <t t-if="record.register_avail.raw_value lte 10 and record.register_avail.raw_value gt 0"><i>Only</i></t>
-                              <t t-if="record.register_avail.raw_value == 9999"><i>No ticket available.</i></t>
-                              <t t-if="record.register_avail.raw_value != 9999">
-                                <i><b><t t-if="record.register_avail.raw_value != 9999"><field name="register_avail"/></t></b></i>
-                                <i>
-                                    <t t-if="record.register_avail.raw_value > 1">tickets </t>
-                                    <t t-if="record.register_avail.raw_value lte 1">ticket </t>
+                              <t t-if="record.seats_available.raw_value lte 10 and record.seats_available.raw_value gt 0"><i>Only</i></t>
+                              <t t-if="!record.seats_max.raw_value"><i>No ticket available.</i></t>
+                              <t t-if="record.seats_max.raw_value">
+                                <i t-if="record.seats_available.raw_value">
+                                    <b><field name="seats_available"/></b>
+                                    <t t-if="record.seats_available.raw_value > 1">tickets </t>
+                                    <t t-if="record.seats_available.raw_value lte 1">ticket </t>
                                     available.
                                 </i>
                               </t>
                             </p>
                             <div groups="base.group_user,base.group_portal">
-                                <t t-if="record.register_avail.raw_value gt 0 and record.register_avail.raw_value lt 9999">
+                                <t t-if="record.seats_available.raw_value gt 0 and record.seats_max.raw_value">
                                   <t t-if="!record.is_subscribed.raw_value">
                                     <input t-att-id="record.id.raw_value" type="text" name="subscribe" class="no_of_seats" value="1" onchange="document.getElementById('btn_sub' +this.id).setAttribute('data-context',JSON.stringify({'ticket':this.value}))"/>
                                     <button t-att-id="'btn_sub'+record.id.raw_value" type="object" name="subscribe_to_event" class="oe_subscribe_button">
@@ -406,9 +405,9 @@
             <field name="name">Registration Graph</field>
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
-                <graph string="Registration" type="bar" orientation="horizontal">
-                    <field name="event_id"/>
-                    <field name= "nb_register" operator="+"/>
+                <graph string="Registration" type="bar">
+                    <field name="event_id" type="row"/>
+                    <field name= "nb_register" type="measure"/>
                 </graph>
             </field>
         </record>

@@ -5,43 +5,10 @@
             <field name="name">product.month.graph</field>
             <field name="model">purchase.report</field>
             <field name="arch" type="xml">
-                <graph string="Purchase Orders Statistics" type="bar">
-                    <field name="product_id"/>
-                    <field name="price_total" operator="+"/>
+                <graph string="Purchase Orders Statistics" type="pivot">
+                    <field name="product_id" type="row"/>
+                    <field name="price_total" type="measure"/>
                 </graph>
-            </field>
-        </record>
-
-        <record id="view_purchase_order_tree" model="ir.ui.view">
-            <field name="name">purchase.order.tree</field>
-            <field name="model">purchase.report</field>
-            <field name="arch" type="xml">
-                <tree string="Purchase Orders Statistics" create="false">
-                    <field name="date" invisible="1"/>
-                    <field name="date_approve" invisible="1"/>
-                    <field name="expected_date" invisible="1"/>
-                    <field name="user_id" invisible="1"/>
-                    <field name="partner_id" invisible="1"/>
-                    <field name="product_id" invisible="1"/>
-                    <field name="category_id" invisible="1"/>
-                    <field name="product_uom" invisible="1"/>
-                    <field name="day" invisible="1"/>
-                    <field name="name" invisible="1"/>
-                    <field name="month" invisible="1"/>
-                    <field name="warehouse_id" invisible="1"/>
-                    <field name="validator" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
-                    <field name="state" invisible="1"/>
-                    <field name="location_id" invisible="1"/>
-                    <field name="nbr" sum="# of Lines"/>
-                    <field name="quantity" sum="Quantity"/>
-                    <field name="price_average" sum="Average Price"/>
-                    <field name="price_total" sum="Total Price"/>
-                    <field name="price_standard" sum="Products Value"/>
-                    <field name="negociation" widget="progressbar"/>
-                    <field name="delay" sum="Days to Validate"/>
-                    <field name="delay_pass" sum="Days to Deliver"/>
-                </tree>
             </field>
         </record>
 
@@ -113,8 +80,8 @@
         <field name="name">Purchase Analysis</field>
         <field name="res_model">purchase.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
-        <field name="view_id" ref="view_purchase_order_tree"></field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_purchase_order_graph"></field>
         <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_group_partner_id':1,'search_default_group_product_id': 1, 'search_default_orders': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="help">Purchase Analysis allows you to easily check and analyse your company purchase history and performance. From this menu you can track your negotiation performance, the delivery performance of your suppliers, etc.</field>
     </record>
@@ -123,7 +90,7 @@
         <field name="name">Total Qty and Amount by month</field>
         <field name="res_model">purchase.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">graph,tree</field>
+        <field name="view_mode">graph</field>
         <field name="view_id" ref="view_purchase_order_qty_amount_graph"></field>
     </record>
 
@@ -131,7 +98,7 @@
         <field name="name">Total Orders by User per month</field>
         <field name="res_model">purchase.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">graph,tree</field>
+        <field name="view_mode">graph</field>
         <field name="view_id" ref="view_purchase_order_by_user_graph"></field>
     </record>
 
@@ -144,7 +111,7 @@
         <field name="name">Receptions Analysis</field>
         <field name="res_model">report.stock.move</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
+        <field name="view_mode">graph</field>
         <field name="search_view_id" ref="stock.view_stock_search"/>
         <field name="context">{'full':'1','contact_display': 'partner','search_default_done':1, 'search_default_month':1, 'search_default_group_type':1, 'group_by': [], 'group_by_no_leaf':1,'search_default_year':1,}</field>
         <field name="help">Reception Analysis allows you to easily check and analyse your company order receptions and the performance of your supplier's deliveries.</field>

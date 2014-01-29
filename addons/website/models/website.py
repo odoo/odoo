@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import fnmatch
 import inspect
+import itertools
 import logging
 import math
-import itertools
+import re
 import urllib
 import urlparse
 
@@ -11,43 +12,63 @@ import simplejson
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.wrappers
+# optional python-slugify import (https://github.com/un33k/python-slugify)
+try:
+    import slugify as slugify_lib
+except ImportError:
+    slugify_lib = None
 
 import openerp
 from openerp.osv import orm, osv, fields
 from openerp.tools.safe_eval import safe_eval
-
 from openerp.addons.web.http import request, LazyResponse
-from ..utils import slugify
 
 logger = logging.getLogger(__name__)
 
-def url_for(path_or_uri, lang=None, keep_query=None):
+def keep_query(*args, **kw):
+    if not args and not kw:
+        args = ('*',)
+    params = kw.copy()
+    query_params = frozenset(werkzeug.url_decode(request.httprequest.query_string).keys())
+    for keep_param in args:
+        for param in fnmatch.filter(query_params, keep_param):
+            if param not in params and param in request.params:
+                params[param] = request.params[param]
+    return werkzeug.urls.url_encode(params)
+
+def url_for(path_or_uri, lang=None):
     location = path_or_uri.strip()
     url = urlparse.urlparse(location)
     if request and not url.netloc and not url.scheme:
         location = urlparse.urljoin(request.httprequest.path, location)
+        force_lang = lang is not None
         lang = lang or request.context.get('lang')
         langs = [lg[0] for lg in request.website.get_languages()]
-        if location[0] == '/' and len(langs) > 1 and lang != request.website.default_lang_code:
-            ps = location.split('/')
-            if ps[1] in langs:
-                ps[1] = lang
-            else:
-                ps.insert(1, lang)
-            location = '/'.join(ps)
-        if keep_query:
-            url = urlparse.urlparse(location)
-            location = url.path
-            params = werkzeug.url_decode(url.query)
-            query_params = frozenset(werkzeug.url_decode(request.httprequest.query_string).keys())
-            for kq in keep_query:
-                for param in fnmatch.filter(query_params, kq):
-                    params[param] = request.params[param]
-            params = werkzeug.urls.url_encode(params)
-            if params:
-                location += '?%s' % params
+        if lang != request.website.default_lang_code and (force_lang or (location[0] == '/' and len(langs) > 1)):
+            if is_multilang_url(location):
+                ps = location.split('/')
+                if ps[1] in langs:
+                    ps[1] = lang
+                else:
+                    ps.insert(1, lang)
+                location = '/'.join(ps)
 
     return location
+
+def is_multilang_url(path):
+    try:
+        router = request.httprequest.app.get_db_router(request.db).bind('')
+        func = router.match(path)[0]
+        return func.routing.get('multilang', False)
+    except Exception:
+        return False
+
+def slugify(s, max_length=None):
+    if slugify_lib:
+        return slugify_lib.slugify(s, max_length)
+    spaceless = re.sub(r'\s+', '-', s)
+    specialless = re.sub(r'[^-_A-Za-z0-9]', '', spaceless)
+    return specialless[:max_length]
 
 def slug(value):
     if isinstance(value, orm.browse_record):
@@ -117,37 +138,36 @@ class website(osv.osv):
         return super(website, self).write(cr, uid, ids, vals, context)
 
     def new_page(self, cr, uid, name, template='website.default_page', ispage=True, context=None):
-        context=context or {}
-        # completely arbitrary max_length
-        idname = slugify(name, max_length=50)
-
+        context = context or {}
         imd = self.pool.get('ir.model.data')
         view = self.pool.get('ir.ui.view')
+        template_module, template_name = template.split('.')
 
-        module, tmp_page = template.split('.')
-        view_model, view_id = imd.get_object_reference(cr, uid, module, tmp_page)
+        # completely arbitrary max_length
+        page_name = slugify(name, max_length=50)
+        page_xmlid = "%s.%s" % (template_module, page_name)
 
-        cr.execute('SAVEPOINT new_page')
         try:
-            newview_id = view.copy(cr, uid, view_id, context=context)
-            newview = view.browse(cr, uid, newview_id, context=context)
-            newview.write({
-                'arch': newview.arch.replace(template, "%s.%s" % (module, idname)),
-                'name': name,
+            # existing page
+            imd.get_object_reference(cr, uid, template_module, page_name)
+        except ValueError:
+            # new page
+            _, template_id = imd.get_object_reference(cr, uid, template_module, template_name)
+            page_id = view.copy(cr, uid, template_id, context=context)
+            page = view.browse(cr, uid, page_id, context=context)
+            page.write({
+                'arch': page.arch.replace(template, page_xmlid),
+                'name': page_name,
                 'page': ispage,
             })
             imd.create(cr, uid, {
-                'name': idname,
-                'module': module,
+                'name': page_name,
+                'module': template_module,
                 'model': 'ir.ui.view',
-                'res_id': newview_id,
+                'res_id': page_id,
                 'noupdate': True
             }, context=context)
-            cr.execute('RELEASE SAVEPOINT new_page')
-            return "%s.%s" % (module, idname)
-        except:
-            cr.execute("ROLLBACK TO SAVEPOINT new_page")
-            raise
+        return page_xmlid
 
     def page_for_name(self, cr, uid, ids, name, module='website', context=None):
         # whatever
@@ -163,7 +183,7 @@ class website(osv.osv):
 
     def get_public_user(self, cr, uid, context=None):
         uid = openerp.SUPERUSER_ID
-        res = self.pool['ir.model.data'].get_object_reference(cr, uid, 'website', 'public_user')
+        res = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'public_user')
         return res and res[1] or False
 
     @openerp.tools.ormcache(skiparg=3)
@@ -219,6 +239,7 @@ class website(osv.osv):
             json=simplejson,
             website=request.website,
             url_for=url_for,
+            keep_query=keep_query,
             slug=slug,
             res_company=request.website.company_id,
             user_id=user.browse(cr, uid, uid),
@@ -633,13 +654,13 @@ class base_language_install(osv.osv_memory):
             }
         return action
 
-class SeoMetadata(osv.Model):
+class website_seo_metadata(osv.Model):
     _name = 'website.seo.metadata'
     _description = 'SEO metadata'
 
     _columns = {
-        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
-        'website_meta_description': fields.text("Website meta description", size=160, translate=True),
+        'website_meta_title': fields.char("Website meta title", translate=True),
+        'website_meta_description': fields.text("Website meta description", translate=True),
         'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
 

@@ -41,7 +41,7 @@
                     <t t-foreach="countries" t-as="country_dict">
                         <t t-if="country_dict['country_id']">
                             <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
-                                <a t-href="#{ country_dict['country_id'][0] and '/partners/country/%s' % slug(country_dict['country_id']) or '/partners/' }">
+                                <a t-attf-href="#{ country_dict['country_id'][0] and '/partners/country/%s' % slug(country_dict['country_id']) or '/partners/' }">
                                     <t t-esc="country_dict['country_id'][1]"/> <small>(<t t-esc="country_dict['country_id_count']"/>)</small>
                                 </a>
                             </li>
@@ -83,11 +83,11 @@
                             <t t-set="internal_gid" t-value="partner_data['grade_id'][1]"/>
                         </t>
                         <div class="media thumbnail">
-                            <a class="pull-left" t-href="/partners/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
+                            <a class="pull-left" t-attf-href="/partners/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
                                 <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data['image_small']}"/>
                             </a>
                             <div class="media-body" style="min-height: 64px;">
-                                <a class="media-heading" t-href="/partners/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/"><t t-if="partner_data['parent_id']"><span t-esc="partner_data['parent_id'][1]"/></t> <span t-esc="partner_data['name']"/></a> - <span t-esc="partner_data['grade_id'][1]"/>
+                                <a class="media-heading" t-attf-href="/partners/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/"><t t-if="partner_data['parent_id']"><span t-esc="partner_data['parent_id'][1]"/></t> <span t-esc="partner_data['name']"/></a> - <span t-esc="partner_data['grade_id'][1]"/>
                                 <div t-esc="partner_data['website_short_description']"/>
                             </div>
                         </div>

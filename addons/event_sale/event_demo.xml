@@ -64,7 +64,7 @@
         <field name="product_id" ref="event_0_product"/>
         <field name="deadline" eval="(DateTime.today() + timedelta(90)).strftime('%Y-%m-%d')"/>
         <field name="price">1000.0</field>
-        <field name="register_max">50</field>
+        <field name="seats_max">50</field>
     </record>
 
     <record id="event_0_ticket_2" model="event.event.ticket">
@@ -73,7 +73,7 @@
         <field name="product_id" ref="event_0_product"/>
         <field name="deadline" eval="(DateTime.today() + timedelta(60)).strftime('%Y-%m-%d')"/>
         <field name="price">1500.0</field>
-        <field name="register_max">10</field>
+        <field name="seats_max">10</field>
     </record>
     
 
@@ -83,7 +83,7 @@
         <field name="product_id" ref="event_1_product"/>
         <field name="deadline" eval="(DateTime.today() + timedelta(90)).strftime('%Y-%m-%d')"/>
         <field name="price">1000.0</field>
-        <field name="register_max">60</field>
+        <field name="seats_max">60</field>
     </record>
 
 
@@ -93,7 +93,7 @@
         <field name="product_id" ref="event_2_product"/>
         <field name="deadline" eval="(DateTime.today() + timedelta(90)).strftime('%Y-%m-%d')"/>
         <field name="price">1000.0</field>
-        <field name="register_max">50</field>
+        <field name="seats_max">50</field>
     </record>
 
     <record id="event_2_ticket_2" model="event.event.ticket">
@@ -102,7 +102,7 @@
         <field name="product_id" ref="event_2_product"/>
         <field name="deadline" eval="(DateTime.today() + timedelta(60)).strftime('%Y-%m-%d')"/>
         <field name="price">1500.0</field>
-        <field name="register_max">5</field>
+        <field name="seats_max">5</field>
     </record>
 
     <record id="event_3_ticket_1" model="event.event.ticket">
@@ -111,7 +111,7 @@
         <field name="product_id" ref="event_3_product"/>
         <field name="deadline" eval="(DateTime.today() + timedelta(90)).strftime('%Y-%m-%d')"/>
         <field name="price">1000.0</field>
-        <field name="register_max">20</field>
+        <field name="seats_max">20</field>
     </record>
 
     <record id="event_3_ticket_2" model="event.event.ticket">
@@ -120,7 +120,7 @@
         <field name="product_id" ref="event_3_product"/>
         <field name="deadline" eval="(DateTime.today() + timedelta(60)).strftime('%Y-%m-%d')"/>
         <field name="price">1500.0</field>
-        <field name="register_max">5</field>
+        <field name="seats_max">5</field>
     </record>
 
     </data>

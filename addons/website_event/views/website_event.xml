@@ -46,7 +46,7 @@
                     <t t-if="not event_ids">
                         <div class="text-center text-muted">
                           <h3 class="css_editable_display">No event found</h3>
-                          <h3 class="css_editable_hidden">There isn't available events right now, <t t-if="current_date or current_country or current_type">click <a t-href="/event">here</a> to check all events or</t> click <a t-href="/page/website.contactus">here</a> to contact us</h3>
+                          <h3 class="css_editable_hidden">There isn't available events right now, <t t-if="current_date or current_country or current_type">click <a t-attf-href="/event">here</a> to check all events or</t> click <a t-attf-href="/page/website.contactus">here</a> to contact us</h3>
                           <t groups="base.group_website_publisher">
                             <t groups="event.group_event_manager">
                                 <p>Click on "Content" to define a new event or "Help" for more informations.</p>
@@ -59,14 +59,8 @@
                     <ul class="media-list">
                         <li t-foreach="event_ids" t-as="event" class="media">
                             <div class="media-body">
-                                <t t-if="event.event_ticket_ids">
-                                    <span t-if="not event.register_avail" class="label label-danger pull-right">Sold Out</span>
-                                    <span t-if="event.register_avail and event.register_avail &lt;= ((event.register_max or 0) / 4)" class="label pull-right label-info">
-                                        Only <t t-esc="event.register_avail"/> Remaining
-                                    </span>
-                                </t>
                                 <h4 class="media-heading">
-                                    <a t-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register/' or ''}"><span t-field="event.name"> </span></a>
+                                    <a t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register/' or ''}"><span t-field="event.name"> </span></a>
                                     <small t-if="not event.website_published" class="label label-danger">not published</small>
                                 </h4>
                                 <div>
@@ -77,9 +71,10 @@
                                 <div>
                                     <i class="fa fa-clock-o"></i> <span t-field="event.date_begin"> </span> <i>to</i> <span t-field="event.date_end"> </span>
                                 </div>
-                                <div t-if="event.country_id">
-                                    <i class="fa fa-map-marker"></i> <span t-field="event.city"/>, <span t-field="event.country_id"/>
-                                </div>
+                                <div t-field="event.address_id" t-field-options='{
+                                    "widget": "contact",
+                                    "fields": ["city"]
+                                    }'/>
                                 <div class="text-muted">
                                     <i class="fa fa-tag"></i> <span t-field="event.type"/>
                                 </div>
@@ -141,7 +136,7 @@
             <ul class="nav nav-pills nav-stacked">
                 <t t-foreach="dates" t-as="date">
                     <li t-att-class="searches.get('date') == date[0] and 'active' or ''" t-if="date[3] or (date[0] in ('old','all'))">
-                        <a t-href="/event/?date=#{ date[0] }" t-keep-query="country,type"><t t-esc="date[1]"/>
+                        <a t-attf-href="/event/?{{ keep_query('country', 'type', date=date[0] }}"><t t-esc="date[1]"/>
                             <span t-if="date[3]" class="badge pull-right"><t t-esc="date[3]"/></span>
                         </a>
                     </li>
@@ -156,7 +151,7 @@
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="types">
                 <li t-if="type" t-att-class="searches.get('type') == str(type and type[0]) and 'active' or ''">
-                    <a t-href="/event/?type=#{ type[0] }" t-keep-query="country,date"><t t-esc="type[1]"/>
+                    <a t-attf-href="/event/?{{ keep_query('country', 'date', type=type[0] }}"><t t-esc="type[1]"/>
                         <span class="badge pull-right"><t t-esc="type_count"/></span>
                     </a>
                 </li>
@@ -169,7 +164,7 @@
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="countries">
                 <li t-if="country_id" t-att-class="searches.get('country') == str(country_id and country_id[0]) and 'active' or ''">
-                    <a t-href="/event/?country=#{ country_id[0] }" t-keep-query="type,date"><t t-esc="country_id[1]"/>
+                    <a t-attf-href="/event/?{{ keep_query('type', 'data', country=country_id[0] }}"><t t-esc="country_id[1]"/>
                         <span class="badge pull-right"><t t-esc="country_id_count"/></span>
                     </a>
                 </li>
@@ -181,17 +176,16 @@
 <template id="layout">
     <t t-call="website.layout">
       <div id="wrap" class="js_event">
-        <div class="oe_structure"/>
         <div class="container">
             <div class="row mt8">
                 <div class="col-sm-7" id="event_menu">
                     <ol class="breadcrumb mb0" t-if="not event.menu_id">
                         <li><a href="/event">All Events</a></li>
                         <li t-if="event.type">
-                            <a t-href="/event?type=#{event.type.id}" t-esc="event.type.name"/>
+                            <a t-attf-href="/event?type=#{event.type.id}" t-esc="event.type.name"/>
                         </li>
                         <li t-if="event.country_id">
-                            <a t-href="/event?country=#{event.country_id.id}" t-esc="event.country_id.name"/>
+                            <a t-attf-href="/event?country=#{event.country_id.id}" t-esc="event.country_id.name"/>
                         </li>
                         <li class="active">
                             <span t-field="event.name"/>
@@ -244,11 +238,11 @@
                 <i class="fa fa-clock-o"></i> <span t-field="event.date_begin"/> to
                 <span t-field="event.date_end"/>
             </h4>
-            <h4 t-if="event.city and event.country_id" class="text-center text-muted">
-                <i class="fa fa-map-marker"/>
-                <span t-field="event.city"/>,
-                <span t-field="event.country_id"/>
-            </h4>
+            <h4 class="text-center text-muted"
+                t-field="event.address_id" t-field-options='{
+                "widget": "contact",
+                "fields": ["city"]
+                }'/>
             <div class="row mt32 mb32">
                 <t t-raw="0"/>
             </div>
@@ -263,7 +257,7 @@
                 <div class="container">
                     <h1 class="mt32">Event not found!</h1>
                     <p>Sorry, the requested event is not available anymore.</p>
-                    <p><a t-href="/event/">Return to the event list.</a></p>
+                    <p><a t-attf-href="/event/">Return to the event list.</a></p>
                 </div>
             </div>
         </div>
@@ -273,52 +267,6 @@
 <template id="event_description_full">
     <t t-call="website_event.event_details">
         <div class="col-md-8">
-            <form t-action="/event/add_cart?event_id=#{ event.id }" method="post" t-if="event.event_ticket_ids">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Ticket Type</th>
-                            <th style="min-width: 100px">Sales End</th>
-                            <th style="min-width: 100px">Price</th>
-                            <th></th>
-                            <th>Quantity</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr t-foreach="event.event_ticket_ids" t-as="ticket">
-                            <td>
-                                <div t-field="ticket.name"/>
-                                <div><small t-field="ticket.product_id.description_sale"/></div>
-                            </td>
-                            <td><span t-field="ticket.deadline"/></td>
-                            <td>
-                                <t t-if="ticket.price or editable"><span t-field="ticket.price" t-field-options='{
-                                       "widget": "monetary",
-                                       "display_currency": "website.pricelist_id.currency_id"
-                                  }'/>
-                                </t>
-                                <t t-if="not ticket.price and not editable">
-                                    <span>Free</span>
-                                </t>
-                            </td>
-                            <td>
-                                <span t-if="ticket.register_max and ((ticket.register_current or 0)*100 / ticket.register_max)&gt;75" class="text-muted">
-                                    <t t-esc="ticket.register_max - ticket.register_current"/> <span>left</span>
-                                </span>
-                            </td>
-                            <td>
-                                <select t-if="ticket.register_avail" t-attf-name="ticket-#{ ticket.id }" class="form-control">
-                                    <t t-foreach="range(0, ticket.register_avail > 9 and 10 or ticket.register_avail+1 )" t-as="nb"><option t-esc="nb"/></t>
-                                </select>
-                                <span t-if="not ticket.register_avail">Sold Out</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button type="submit" class="btn btn-primary btn-lg pull-right" t-if="event.register_avail">Order Now</button>
-                <div class="clearfix"/>
-                <hr/>
-            </form>
             <div t-field="event.description"></div>
             <div class="clearfix"/>
             <ul class="media-list" id="comment">

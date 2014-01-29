@@ -1,3 +1,4 @@
+import functools
 import logging
 
 import simplejson
@@ -15,6 +16,26 @@ from openerp.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 #----------------------------------------------------------
+# helpers
+#----------------------------------------------------------
+def fragment_to_query_string(func):
+    @functools.wraps(func)
+    def wrapper(self, *a, **kw):
+        if not kw:
+            return """<html><head><script>
+                var l = window.location;
+                var q = l.hash.substring(1);
+                var r = '/' + l.search;
+                if(q.length !== 0) {
+                    var s = l.search ? (l.search === '?' ? '' : '&') : '?';
+                    r = l.pathname + l.search + s + q;
+                }
+                window.location = r;
+            </script></head><body></body></html>"""
+        return func(self, *a, **kw)
+    return wrapper
+
+#----------------------------------------------------------
 # Controller
 #----------------------------------------------------------
 class OAuthLogin(openerp.addons.web.controllers.main.Home):
@@ -26,10 +47,7 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
             providers = []
         for provider in providers:
             return_url = request.httprequest.url_root + 'auth_oauth/signin'
-            state = dict(
-                d=request.session.db,
-                p=provider['id']
-            )
+            state = self.get_state(provider)
             params = dict(
                 debug=request.debug,
                 response_type='token',
@@ -42,10 +60,17 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
 
         return providers
 
+    def get_state(self, provider):
+        return dict(
+            d=request.session.db,
+            p=provider['id']
+        )
+
     @http.route()
     def web_login(self, *args, **kw):
-        # TODO: ensure_db()
+        http.ensure_db(with_registry=True)
         request.disable_db = False
+        providers = self.list_providers()
 
         response = super(OAuthLogin, self).web_login(*args, **kw)
         if isinstance(response, LazyResponse):
@@ -58,21 +83,17 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
                 error = _("You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email.")
             else:
                 error = None
-            response.params['values'].update(
-                providers=self.list_providers(),
-                error=error,
-            )
 
-            # TODO: code in old js controller that should be converted in auth_oauth_signup
-            # if (this.oauth_providers.length === 1 && params.type === 'signup') {
-            #     this.do_oauth_sign_in(this.oauth_providers[0]);
-            # }
+            response.params['values']['providers'] = providers
+            if error:
+                response.params['values']['error'] = error
 
         return response
 
 class OAuthController(http.Controller):
 
     @http.route('/auth_oauth/signin', type='http', auth='none')
+    @fragment_to_query_string
     def signin(self, **kw):
         state = simplejson.loads(kw['state'])
         dbname = state['d']

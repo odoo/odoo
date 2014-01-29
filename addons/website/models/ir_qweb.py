@@ -40,27 +40,24 @@ class QWeb(orm.AbstractModel):
     URL_ATTRS = {
         'form': 'action',
         'a': 'href',
-        'link': 'href',
-        'frame': 'src',
-        'iframe': 'src',
-        'script': 'src',
     }
 
-    def add_template(self, into, name, node, context):
+    def add_template(self, qcontext, name, node):
         # preprocessing for multilang static urls
-        if request and 'url_for' in context:
-            router = request.httprequest.app.get_db_router(request.db).bind('')
+        if request.website:
             for tag, attr in self.URL_ATTRS.items():
                 for e in node.getElementsByTagName(tag):
                     url = e.getAttribute(attr)
                     if url:
-                        try:
-                            func = router.match(url)[0]
-                            if func.multilang:
-                                e.setAttribute(attr, context['url_for'](url))
-                        except Exception, e:
-                            pass
-        super(QWeb, self).add_template(into, name, node, context)
+                        e.setAttribute(attr, qcontext.get('url_for')(url))
+        super(QWeb, self).add_template(qcontext, name, node)
+
+    def render_att_att(self, element, attribute_name, attribute_value, qwebcontext):
+        att, val = super(QWeb, self).render_att_att(element, attribute_name, attribute_value, qwebcontext)
+
+        if request.website and att == self.URL_ATTRS.get(element.nodeName) and isinstance(val, basestring):
+            val = qwebcontext.get('url_for')(val)
+        return att, val
 
     def get_converter_for(self, field_type):
         return self.pool.get(
@@ -410,6 +407,8 @@ class Contact(orm.AbstractModel):
             'phone': field_browse.phone,
             'mobile': field_browse.mobile,
             'fax': field_browse.fax,
+            'city': field_browse.city,
+            'country_id': field_browse.country_id and field_browse.country_id.name_get()[0][1],
             'email': field_browse.email,
             'fields': opf,
             'options': options

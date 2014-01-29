@@ -28,7 +28,7 @@ class stock_fill_inventory(osv.osv_memory):
     _description = "Import Inventory"
 
     def _default_location(self, cr, uid, ids, context=None):
-        location = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
+        location = self.pool.get('ir.model.data').xmlid_to_object(cr, uid, 'stock.stock_location_stock')
         if not location.exists():
             return False
         try:

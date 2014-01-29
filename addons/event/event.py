@@ -91,69 +91,34 @@ class event_event(osv.osv):
     def button_done(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
-    def check_registration_limits(self, cr, uid, ids, context=None):
-        for self.event in self.browse(cr, uid, ids, context=context):
-            total_confirmed = self.event.register_current
-            if total_confirmed < self.event.register_min or total_confirmed > self.event.register_max and self.event.register_max!=0:
-                raise osv.except_osv(_('Error!'),_("The total of confirmed registration for the event '%s' does not meet the expected minimum/maximum. Please reconsider those limits before going further.") % (self.event.name))
-
-    def check_registration_limits_before(self, cr, uid, ids, no_of_registration, context=None):
-        for event in self.browse(cr, uid, ids, context=context):
-            available_seats = event.register_avail
-            if available_seats and no_of_registration > available_seats:
-                raise osv.except_osv(_('Warning!'),_("Only %d Seats are Available!") % (available_seats))
-            elif available_seats == 0:
-                raise osv.except_osv(_('Warning!'),_("No Tickets Available!"))
-
     def confirm_event(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
-        if self.event.email_confirmation_id:
-        #send reminder that will confirm the event for all the people that were already confirmed
-            reg_ids = register_pool.search(cr, uid, [
-                               ('event_id', '=', self.event.id),
-                               ('state', 'not in', ['draft', 'cancel'])], context=context)
-            register_pool.mail_user_confirm(cr, uid, reg_ids)
+        for event in self.browse(cr, uid, ids, context=context):
+            if event.email_confirmation_id:
+            #send reminder that will confirm the event for all the people that were already confirmed
+                reg_ids = register_pool.search(cr, uid, [
+                                   ('event_id', '=', event.id),
+                                   ('state', 'not in', ['draft', 'cancel'])], context=context)
+                register_pool.mail_user_confirm(cr, uid, reg_ids)
         return self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
 
     def button_confirm(self, cr, uid, ids, context=None):
         """ Confirm Event and send confirmation email to all register peoples
         """
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        self.check_registration_limits(cr, uid, ids, context=context)
-        return self.confirm_event(cr, uid, ids, context=context)
+        return self.confirm_event(cr, uid, isinstance(ids, (int, long)) and [ids] or ids, context=context)
 
-    def _get_register(self, cr, uid, ids, fields, args, context=None):
-        """Get Confirm or uncofirm register value.
-        @param ids: List of Event registration type's id
-        @param fields: List of function fields(register_current and register_prospect).
-        @param context: A standard dictionary for contextual values
-        @return: Dictionary of function fields value.
+    def _get_seats(self, cr, uid, ids, fields, args, context=None):
+        """Get reserved, available, reserved but unconfirmed and used seats.
+        @return: Dictionary of function field values.
         """
-        res = {}
+        res = dict([(id, {}) for id in ids])
         for event in self.browse(cr, uid, ids, context=context):
-            res[event.id] = {}
-            reg_open = reg_done = reg_draft =0
-            for registration in event.registration_ids:
-                if registration.state == 'open':
-                    reg_open += registration.nb_register
-                elif registration.state == 'done':
-                    reg_done += registration.nb_register
-                elif registration.state == 'draft':
-                    reg_draft += registration.nb_register
-            for field in fields:
-                number = 0
-                if field == 'register_current':
-                    number = reg_open
-                elif field == 'register_attended':
-                    number = reg_done
-                elif field == 'register_prospect':
-                    number = reg_draft
-                elif field == 'register_avail':
-                    #the number of ticket is unlimited if the event.register_max field is not set.
-                    #In that cas we arbitrary set it to 9999, it is used in the kanban view to special case the display of the 'subscribe' button
-                    number = event.register_max - reg_open if event.register_max != 0 else 9999
-                res[event.id][field] = number
+            res[event.id]['seats_reserved'] = sum(reg.nb_register for reg in event.registration_ids if reg.state == "open")
+            res[event.id]['seats_used'] = sum(reg.nb_register for reg in event.registration_ids if reg.state == "done")
+            res[event.id]['seats_unconfirmed'] = sum(reg.nb_register for reg in event.registration_ids if reg.state == "draft")
+            res[event.id]['seats_available'] = event.seats_max - \
+                (res[event.id]['seats_reserved'] + res[event.id]['seats_used']) \
+                if event.seats_max > 0 else None
         return res
 
     def _subscribe_fnc(self, cr, uid, ids, fields, args, context=None):
@@ -171,22 +136,16 @@ class event_event(osv.osv):
                         continue
         return res
 
-    def _get_visibility_selection(self, cr, uid, context=None):
-        return [('public', 'All Users'),
-                ('employees', 'Employees Only')]
-    # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
-    _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
-
     _columns = {
         'name': fields.char('Event Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
         'user_id': fields.many2one('res.users', 'Responsible User', readonly=False, states={'done': [('readonly', True)]}),
         'type': fields.many2one('event.type', 'Type of Event', readonly=False, states={'done': [('readonly', True)]}),
-        'register_max': fields.integer('Maximum Registrations', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
-        'register_min': fields.integer('Minimum Registrations', help="You can for each event define a minimum registration level. If you do not enough registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
-        'register_current': fields.function(_get_register, string='Confirmed Registrations', multi='register_numbers'),
-        'register_avail': fields.function(_get_register, string='Available Registrations', multi='register_numbers',type='integer'),
-        'register_prospect': fields.function(_get_register, string='Unconfirmed Registrations', multi='register_numbers'),
-        'register_attended': fields.function(_get_register, string='# of Participations', multi='register_numbers'),
+        'seats_max': fields.integer('Maximum Avalaible Seats', oldname='register_max', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
+        'seats_min': fields.integer('Minimum Reserved Seats', oldname='register_min', help="You can for each event define a minimum registration level. If you do not enough registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
+        'seats_reserved': fields.function(_get_seats, oldname='register_current', string='Reserved Seats', type='integer', multi='seats_reserved'),
+        'seats_available': fields.function(_get_seats, oldname='register_avail', string='Available Seats', type='integer', multi='seats_reserved'),
+        'seats_unconfirmed': fields.function(_get_seats, oldname='register_prospect', string='Unconfirmed Seat Reservations', type='integer', multi='seats_reserved'),
+        'seats_used': fields.function(_get_seats, oldname='register_attended', string='Number of Participations', type='integer', multi='seats_reserved'),
         'registration_ids': fields.one2many('event.registration', 'event_id', 'Registrations', readonly=False, states={'done': [('readonly', True)]}),
         'date_begin': fields.datetime('Start Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_end': fields.datetime('End Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -196,45 +155,42 @@ class event_event(osv.osv):
             ('confirm', 'Confirmed'),
             ('done', 'Done')],
             'Status', readonly=True, required=True,
-            track_visibility='onchange',
             help='If event is created, the status is \'Draft\'.If event is confirmed for the particular dates the status is set to \'Confirmed\'. If the event is over, the status is set to \'Done\'.If event is cancelled the status is set to \'Cancelled\'.'),
         'email_registration_id' : fields.many2one('email.template','Registration Confirmation Email', help='This field contains the template of the mail that will be automatically sent each time a registration for this event is confirmed.'),
         'email_confirmation_id' : fields.many2one('email.template','Event Confirmation Email', help="If you set an email template, each participant will receive this email announcing the confirmation of the event."),
         'reply_to': fields.char('Reply-To Email', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one."),
         'address_id': fields.many2one('res.partner','Location', readonly=False, states={'done': [('readonly', True)]}),
-        'street': fields.related('address_id','street',type='char',string='Street'),
-        'street2': fields.related('address_id','street2',type='char',string='Street2'),
-        'state_id': fields.related('address_id','state_id',type='many2one', relation="res.country.state", string='State'),
-        'zip': fields.related('address_id','zip',type='char',string='zip'),
-        'city': fields.related('address_id','city',type='char',string='city'),
-        'country_id': fields.related('address_id', 'country_id',
-                    type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}, store=True),
         'description': fields.html(
             'Description', readonly=False,
             states={'done': [('readonly', True)]},
             oldname='note'),
         'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
         'is_subscribed' : fields.function(_subscribe_fnc, type="boolean", string='Subscribed'),
-        'visibility': fields.selection(_visibility_selection, 'Privacy / Visibility',
-            select=True, required=True),
         'organizer_id': fields.many2one('res.partner', "Organizer"),
-        'phone': fields.related('organizer_id', 'phone', type='char', string='Phone'),
-        'email': fields.related('organizer_id', 'email', type='char', string='Email'),
     }
     _defaults = {
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'event.event', context=c),
         'user_id': lambda obj, cr, uid, context: uid,
-        'visibility': 'public',
         'organizer_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, context=c).company_id.partner_id.id,
         'address_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, context=c).company_id.partner_id.id
     }
+
+    def _check_seats_limit(self, cr, uid, ids, context=None):
+        print "event _check_seats_limit"
+        for event in self.browse(cr, uid, ids, context=context):
+            if event.seats_max and event.seats_available < 0:
+                return False
+        return True
+
+    _constraints = [
+        (_check_seats_limit, 'No more available seats.', ['registration_ids','seats_max']),
+    ]
 
     def subscribe_to_event(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
         user_pool = self.pool.get('res.users')
         num_of_seats = int(context.get('ticket', 1))
-        self.check_registration_limits_before(cr, uid, ids, num_of_seats, context=context)
         user = user_pool.browse(cr, uid, uid, context=context)
         curr_reg_ids = register_pool.search(cr, uid, [('user_id', '=', user.id), ('event_id', '=' , ids[0])])
         #the subscription is done with SUPERUSER_ID because in case we share the kanban view, we want anyone to be able to subscribe
@@ -267,8 +223,8 @@ class event_event(osv.osv):
               'reply_to': type_info.default_reply_to,
               'email_registration_id': type_info.default_email_registration.id,
               'email_confirmation_id': type_info.default_email_event.id,
-              'register_min': type_info.default_registration_min,
-              'register_max': type_info.default_registration_max,
+              'seats_min': type_info.default_registration_min,
+              'seats_max': type_info.default_registration_max,
             }
             return {'value': dic}
 
@@ -307,7 +263,6 @@ class event_registration(osv.osv):
                                     ('cancel', 'Cancelled'),
                                     ('open', 'Confirmed'),
                                     ('done', 'Attended')], 'Status',
-                                    track_visibility='onchange',
                                     size=16, readonly=True),
         'email': fields.char('Email', size=64),
         'phone': fields.char('Phone', size=64),
@@ -318,6 +273,18 @@ class event_registration(osv.osv):
         'state': 'draft',
     }
     _order = 'name, create_date desc'
+
+
+    def _check_seats_limit(self, cr, uid, ids, context=None):
+        for registration in self.browse(cr, uid, ids, context=context):
+            if registration.event_id.seats_max and \
+                registration.event_id.seats_available < (registration.state == 'draft' and registration.nb_register or 0):
+                return False
+        return True
+
+    _constraints = [
+        (_check_seats_limit, 'No more available seats.', ['event_id','nb_register','state']),
+    ]
 
     def do_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
@@ -330,11 +297,6 @@ class event_registration(osv.osv):
     def registration_open(self, cr, uid, ids, context=None):
         """ Open Registration
         """
-        event_obj = self.pool.get('event.event')
-        for register in  self.browse(cr, uid, ids, context=context):
-            event_id = register.event_id.id
-            no_of_registration = register.nb_register
-            event_obj.check_registration_limits_before(cr, uid, [event_id], no_of_registration, context=context)
         res = self.confirm_registration(cr, uid, ids, context=context)
         self.mail_user(cr, uid, ids, context=context)
         return res

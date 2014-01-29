@@ -423,7 +423,6 @@
                         menu.append('<li><a data-action="ace" href="#">HTML Editor</a></li>');
                         menu.append('<li class="js_change_theme"><a href="/page/website.themes">Change Theme</a></li>');
                         menu.append('<li><a href="/web#return_label=Website&action=website.action_module_website">Install Apps</a></li>');
-                        menu.append('<li><a href="/web#return_label=Website&action=website.action_website_form">Website Settings</a></li>');
                         self.trigger('rte:customize_menu_ready');
                     }
                 );
@@ -1073,7 +1072,7 @@
                 } else {
                     // Create the page, get the URL back
                     done = $.get(_.str.sprintf(
-                            '/pagenew/%s?noredirect', encodeURI(data.id)))
+                            '/pagenew/%s?noredirect=1', encodeURI(data.id)))
                         .then(function (response) {
                             self.make_link(response, false, data.id);
                         });
