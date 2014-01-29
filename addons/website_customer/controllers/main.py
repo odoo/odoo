@@ -30,8 +30,8 @@ class WebsiteCustomer(http.Controller):
         if partner_name:
             domain += [
                 '|',
-                ('name', 'ilike', "%%%s%%" % post.get("search")),
-                ('website_description', 'ilike', "%%%s%%" % post.get("search"))
+                ('name', 'ilike', post.get("search")),
+                ('website_description', 'ilike', post.get("search"))
             ]
 
         if country_id:

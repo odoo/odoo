@@ -44,7 +44,8 @@ class WebsiteMembership(http.Controller):
         else:
             membership = None
         if post_name:
-            base_line_domain += ['|', ('partner.name', 'ilike', "%%%s%%" % post_name), ('partner.website_description', 'ilike', "%%%s%%" % post_name)]
+            base_line_domain += ['|', ('partner.name', 'ilike', post_name),
+                                      ('partner.website_description', 'ilike', post_name)]
 
         # group by country, based on all customers (base domain)
         membership_line_ids = membership_line_obj.search(cr, uid, base_line_domain, context=context)

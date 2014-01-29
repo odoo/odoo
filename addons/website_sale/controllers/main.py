@@ -205,8 +205,8 @@ class Ecommerce(http.Controller):
         domain = request.registry.get('website').ecommerce_get_product_domain()
         if search:
             domain += ['|',
-                ('name', 'ilike', "%%%s%%" % search),
-                ('description', 'ilike', "%%%s%%" % search)]
+                ('name', 'ilike', search),
+                ('description', 'ilike', search)]
         if category:
             domain.append(('product_variant_ids.public_categ_id', 'child_of', category.id))
         if filters:
