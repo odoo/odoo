@@ -17,7 +17,7 @@ testRunner.run(function eventTest (page, timeout) {
         waitFor(function testExecuted () {
             var after = page.evaluate(function () {
                 return window.$ && $('button[data-action=edit]').is(":visible") && {
-                    banner: $('#wrap [data-snippet-id=carousel]').length,
+                    banner: $('#wrap [data-snippet-id=image-text]').length,
                     text: $('#wrap [data-snippet-id=text-block]').length,
                     image: $('#wrap [data-snippet-id=three-columns]').length,
                 };
