@@ -181,6 +181,8 @@ class QWeb(orm.AbstractModel):
         val = self.eval(expr, qwebcontext)
         if isinstance(val, unicode):
             return val.encode("utf8")
+        if val is False or val is None:
+            return ''
         return str(val)
 
     def eval_format(self, expr, qwebcontext):
