@@ -328,12 +328,57 @@ class hr_employee(osv.osv):
 
 
 class hr_department(osv.osv):
-    _description = "Department"
-    _inherit = 'hr.department'
+
+    def _dept_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
+
+    _name = "hr.department"
     _columns = {
+        'name': fields.char('Department Name', size=64, required=True),
+        'complete_name': fields.function(_dept_name_get_fnc, type="char", string='Name'),
+        'company_id': fields.many2one('res.company', 'Company', select=True, required=False),
+        'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),
+        'child_ids': fields.one2many('hr.department', 'parent_id', 'Child Departments'),
         'manager_id': fields.many2one('hr.employee', 'Manager'),
         'member_ids': fields.one2many('hr.employee', 'department_id', 'Members', readonly=True),
+        'jobs_ids': fields.one2many('hr.job', 'department_id', 'Jobs'),
+        'note': fields.text('Note'),
     }
+
+    _defaults = {
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.department', context=c),
+    }
+
+    def _check_recursion(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        level = 100
+        while len(ids):
+            cr.execute('select distinct parent_id from hr_department where id IN %s',(tuple(ids),))
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+
+    _constraints = [
+        (_check_recursion, 'Error! You cannot create recursive departments.', ['parent_id'])
+    ]
+
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if not ids:
+            return []
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name = record['parent_id'][1]+' / '+name
+            res.append((record['id'], name))
+        return res
 
     def copy(self, cr, uid, ids, default=None, context=None):
         if default is None:
@@ -342,6 +387,7 @@ class hr_department(osv.osv):
         default['member_ids'] = []
         return super(hr_department, self).copy(cr, uid, ids, default, context=context)
 
+
 class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
@@ -349,7 +395,6 @@ class res_users(osv.osv):
     _columns = {
         'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
     }
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

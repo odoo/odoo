@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-12 05:17+0000\n"
-"X-Generator: Launchpad (build 16761)\n"
+"X-Launchpad-Export-Date: 2014-01-28 05:48+0000\n"
+"X-Generator: Launchpad (build 16914)\n"
 "Language: hr\n"
 
 #. module: crm
@@ -32,7 +32,7 @@ msgstr ""
 "dolaznih poruka."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:898
+#: code:addons/crm/crm_lead.py:897
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
@@ -57,6 +57,11 @@ msgid ""
 "Description: [[object.description]]\n"
 "            "
 msgstr ""
+"UPOZORENJE neobrađeni potencijal stariji je od 5 dana.\n"
+"Naziv: [[object.name ]]\n"
+"ID: [[object.id ]]\n"
+"Opis: [[object.description]]\n"
+"            "
 
 #. module: crm
 #: field:crm.opportunity2phonecall,action:0
@@ -67,7 +72,7 @@ msgstr "Akcija"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_set_team_sales_department
 msgid "Set team to Sales Department"
-msgstr ""
+msgstr "Postavi tim u prodajni odjel"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
@@ -78,7 +83,7 @@ msgstr "Odaberite prilike"
 #: model:res.groups,name:crm.group_fund_raising
 #: field:sale.config.settings,group_fund_raising:0
 msgid "Manage Fund Raising"
-msgstr ""
+msgstr "Upravljanje prikupljanjem novčanih priloga"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -151,7 +156,7 @@ msgid "Rule Name"
 msgstr "Naziv pravila"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:280
+#: code:addons/crm/crm_phonecall.py:282
 #, python-format
 msgid "It's only possible to convert one phonecall at a time."
 msgstr "Moguće je pretvoriti samo jedan po jedan poziv."
@@ -188,9 +193,10 @@ msgstr ""
 "da bi mogao biti ubačen u kanban pogled."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:640
-#: code:addons/crm/crm_lead.py:761
-#: code:addons/crm/crm_phonecall.py:280
+#: code:addons/crm/crm_lead.py:637
+#: code:addons/crm/crm_lead.py:758
+#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
 #, python-format
 msgid "Warning!"
 msgstr "Upozorenje!"
@@ -217,7 +223,7 @@ msgid "Schedule Other Call"
 msgstr "Zakaži drugi poziv"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:209
+#: code:addons/crm/crm_phonecall.py:211
 #: view:crm.phonecall:0
 #, python-format
 msgid "Phone Call"
@@ -232,7 +238,7 @@ msgstr "Isključiti iz masove e-pošte"
 #: view:crm.lead:0
 #: field:crm.lead,state_id:0
 msgid "State"
-msgstr "Stanje"
+msgstr "Država"
 
 #. module: crm
 #: field:res.partner,meeting_count:0
@@ -300,7 +306,7 @@ msgid "Prospect Partner"
 msgstr "Izgledni partner"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1002
+#: code:addons/crm/crm_lead.py:1018
 #, python-format
 msgid "No Subject"
 msgstr "Bez naslova"
@@ -332,6 +338,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje nove segmentacije kupaca.\n"
+"              </p><p>\n"
+"                Kreirajte specifične kategorije koje možete dodijeliti "
+"svojim\n"
+"                kontaktima kako bi bolje upravljali njima. Alat za "
+"segmentaciju\n"
+"                može dodijeliti kategorije kontaktima sukladno kriterijima\n"
+"                koje postavite.\n"
+"              </p>\n"
+"            "
 
 #. module: crm
 #: field:crm.opportunity2phonecall,contact_name:0
@@ -386,12 +403,25 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje prilike povezane sa ovim partnerom.\n"
+"              </p><p>\n"
+"                Koristite prilike za praćenje prodajnih aktivnosti, "
+"praćenje\n"
+"                potencijalne prodaje te boljeg prognoziranja budućih "
+"prihoda.\n"
+"              </p><p>\n"
+"                Možete planirati sastanke i telefonske pozive iz prilika,\n"
+"                pretvarati ih u ponude, pridruživati povezane dokumente, \n"
+"\t\tpratiti sve diskusije i pregovore te puno više od toga.\n"
+"              </p>\n"
+"            "
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead7
 #: view:crm.lead:0
 msgid "Dead"
-msgstr "Mrtav"
+msgstr "Izgubljen"
 
 #. module: crm
 #: field:crm.case.section,message_unread:0
@@ -402,7 +432,6 @@ msgid "Unread Messages"
 msgstr "Nepročitane poruke"
 
 #. module: crm
-#: view:crm.segmentation:0
 #: field:crm.segmentation.line,segmentation_id:0
 #: model:ir.actions.act_window,name:crm.crm_segmentation-act
 msgid "Segmentation"
@@ -450,7 +479,7 @@ msgid "#Opportunities"
 msgstr "#Prilika"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:640
+#: code:addons/crm/crm_lead.py:637
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
@@ -479,6 +508,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje novog prodajnog tima.\n"
+"              </p><p>\n"
+"                Prodajne timove koristite za organizaciju različitih "
+"referenata ili\n"
+"                odjela u zasebne timove. Svaki će tim raditi sa svojom\n"
+"                listom prilika.\n"
+"              </p>\n"
+"            "
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_opportunitymeeting0
@@ -517,7 +555,7 @@ msgstr "e-pošta"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_stage
 msgid "Stage changed"
-msgstr "Stanje izmjenjeno"
+msgstr "Promijenjen status"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -600,6 +638,8 @@ msgid ""
 "Reminder on Lead: [[object.id ]] [[object.partner_id and 'of ' "
 "+object.partner_id.name or '']]"
 msgstr ""
+"Podsjetnik na potencijalu: [[object.id ]] [[object.partner_id and 'of ' "
+"+object.partner_id.name or '']]"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -640,6 +680,14 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Pritisnite za kreiranje nove kategorije.\n"
+"          </p><p>\n"
+"            Kreirajte specifične kategorije telefonskih poziva kako biste "
+"kvalitetnije definirali vrstu\n"
+"            poziva koja se prati u sustavu.\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: help:crm.case.section,reply_to:0
@@ -716,7 +764,7 @@ msgstr "Vjerojatnost sklapanja posla bi trebala biti između 0% i 100%!"
 #. module: crm
 #: view:crm.lead:0
 msgid "Leads Generation"
-msgstr ""
+msgstr "Generiranje potencijalnih kontakata"
 
 #. module: crm
 #: view:board.board:0
@@ -724,7 +772,7 @@ msgid "Statistics Dashboard"
 msgstr "Kokpit statistike"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:878
+#: code:addons/crm/crm_lead.py:877
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -784,7 +832,7 @@ msgid "Exclusive"
 msgstr "Isključujući"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:600
+#: code:addons/crm/crm_lead.py:597
 #, python-format
 msgid "From %s : %s"
 msgstr "Od %s do %s"
@@ -807,7 +855,7 @@ msgstr "ili"
 #: field:crm.lead.report,create_date:0
 #: field:crm.phonecall.report,create_date:0
 msgid "Create Date"
-msgstr "Kreiraj datum"
+msgstr "Datum kreiranja"
 
 #. module: crm
 #: field:crm.lead,ref2:0
@@ -820,6 +868,8 @@ msgid ""
 "Link between stages and sales teams. When set, this limitate the current "
 "stage to the selected sales teams."
 msgstr ""
+"Poveznica između faza i prodajnih timova. Kada je postavljeno, ograničava "
+"trenutnu fazu odabranim timovima."
 
 #. module: crm
 #: view:crm.case.stage:0
@@ -858,7 +908,7 @@ msgstr "Kategorija partnera"
 #. module: crm
 #: field:crm.lead,probability:0
 msgid "Success Rate (%)"
-msgstr "POstotak uspjeha (%)"
+msgstr "Postotak uspjeha (%)"
 
 #. module: crm
 #: field:crm.segmentation,sales_purchase_active:0
@@ -917,7 +967,7 @@ msgstr "Dana za otvaranje"
 #: field:crm.lead,mobile:0
 #: field:crm.phonecall,partner_mobile:0
 msgid "Mobile"
-msgstr "Mobilni"
+msgstr "Mobitel"
 
 #. module: crm
 #: field:crm.lead,ref:0
@@ -952,10 +1002,10 @@ msgid "Next Action"
 msgstr "Sljedeća akcija"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:780
+#: code:addons/crm/crm_lead.py:777
 #, python-format
 msgid "<b>Partner</b> set to <em>%s</em>."
-msgstr ""
+msgstr "<b>Partner</b> postavljen na <em>%s</em>."
 
 #. module: crm
 #: selection:crm.lead.report,state:0
@@ -1042,7 +1092,7 @@ msgid "Creation Date"
 msgstr "Datum kreiranja"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:715
+#: code:addons/crm/crm_lead.py:712
 #, python-format
 msgid "Lead <b>converted into an Opportunity</b>"
 msgstr "Potencijal <b>je pretvoren u priliku</b>"
@@ -1137,6 +1187,18 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"          Pritisnite za kreiranje nove prilike.\n"
+"          </p><p>\n"
+"          OpenERP može uvelike pomoći u praćenju prodajnih aktivnosti,\n"
+"          praćenju potencijalne prodaje te boljeg prognoziranja budućih "
+"prihoda.\n"
+"          </p><p>\n"
+"          Možete planirati sastanke i telefonske pozive iz prilika,\n"
+"          pretvarati ih u ponude, pridruživati povezane dokumente, \n"
+"          pratiti sve diskusije i pregovore te puno više od toga.\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: field:crm.segmentation,partner_id:0
@@ -1187,6 +1249,8 @@ msgid ""
 "If the active field is set to true, it will allow you to hide the sales team "
 "without removing it."
 msgstr ""
+"Ako je aktivno polje uključeno, dozvoliti će sakrivanje prodajnog tima bez "
+"da ga se obriše."
 
 #. module: crm
 #: help:crm.case.stage,case_default:0
@@ -1194,6 +1258,8 @@ msgid ""
 "If you check this field, this stage will be proposed by default on each "
 "sales team. It will not assign this stage to existing teams."
 msgstr ""
+"Ako označite ovo polje, faza će biti predložena svakom prodajnom timu. Ova "
+"faza neće biti dodijeljena postojećim timovima."
 
 #. module: crm
 #: help:crm.case.stage,type:0
@@ -1235,7 +1301,7 @@ msgid "Days to Close"
 msgstr "Dana za zatvaranje"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1057
+#: code:addons/crm/crm_lead.py:1075
 #: field:crm.case.section,complete_name:0
 #, python-format
 msgid "unknown"
@@ -1324,7 +1390,7 @@ msgid "Lead Description"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:581
+#: code:addons/crm/crm_lead.py:578
 #, python-format
 msgid "Merged opportunities"
 msgstr "Spojene prilike"
@@ -1397,7 +1463,7 @@ msgstr "Za napraviti"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_lost
 msgid "Opportunity lost"
-msgstr "Izgubljena prilika"
+msgstr "Prilika je izgubljena"
 
 #. module: crm
 #: field:crm.lead2opportunity.partner,action:0
@@ -1446,7 +1512,7 @@ msgstr ""
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
 msgid "Stage Changed"
-msgstr "Stanje izmjenjeno"
+msgstr "Promijenjen status"
 
 #. module: crm
 #: field:crm.case.stage,section_ids:0
@@ -1581,7 +1647,7 @@ msgstr "Nadređeni tim"
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Do not link to a customer"
-msgstr "Ne spajaj s kupcem"
+msgstr "Bez poveznice s partnerom"
 
 #. module: crm
 #: field:crm.lead,date_action:0
@@ -1615,7 +1681,7 @@ msgid "Month of call"
 msgstr "Mjesec poziva"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:290
+#: code:addons/crm/crm_phonecall.py:292
 #, python-format
 msgid "Partner has been <b>created</b>."
 msgstr "Partner je <b>kreiran</b>."
@@ -1896,7 +1962,7 @@ msgid "Leads"
 msgstr "Potencijali"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:579
+#: code:addons/crm/crm_lead.py:576
 #, python-format
 msgid "Merged leads"
 msgstr "Spoji potencijale"
@@ -2041,7 +2107,7 @@ msgstr "Pošalji mail"
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Create a new customer"
-msgstr "Kreiraj novog klijenta"
+msgstr "Kreiraj novog partnera"
 
 #. module: crm
 #: field:crm.lead.report,deadline_day:0
@@ -2234,6 +2300,17 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Pristisnite kako biste zakazali telefonski poziv.\n"
+"          </p><p>\n"
+"            OpenERP omogućuje jednostavno definiranje poziva koje treba "
+"obaviti\n"
+"            vaš prodajni tim, kao i praćenje povezanih aktivnosti.\n"
+"          </p><p>  \n"
+"            Možete koristiti opciju uvoza podataka za uvoz lista podataka o\n"
+"            novim mogućim klijentima.\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: help:crm.case.stage,fold:0
@@ -2454,6 +2531,22 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Pritisnite za kreiranje novog potencijala.\n"
+"          </p><p>\n"
+"            Potencijale koristiti ukoliko vam je potreban korak prije "
+"kreiranja\n"
+"            prilike ili partnera. Potencijal može biti vizitka koju ste "
+"dobili,\n"
+"            kontakt obrazac popunjen na vašoj web stranici, kao i datoteka "
+"ili \n"
+"            prospekt koji možete importirati i sl.\n"
+"          </p><p>\n"
+"            Nakon obrade, potencijal može biti pretvoren u poslovnu priliku\n"
+"            i/ili u novog partnera u matičnom kartonu partnera ili "
+"adresaru.\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: field:sale.config.settings,fetchmail_lead:0
@@ -2496,6 +2589,10 @@ msgid ""
 "If checked, remove the category from partners that doesn't match "
 "segmentation criterions"
 msgstr ""
+"Provjerite da li je kategorija ograničena na partnere koji odgovaraju "
+"segmentacijskim kriterijima.\n"
+"Ako je označeno, maknite kategoriju sa partnera koji ne odgovaraju "
+"segmentacijskim kriterijima."
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_leadopportunity0
@@ -2524,6 +2621,18 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Pristisnite za kreiranje zapisa o telefonskom pozivu. \n"
+"          </p><p>\n"
+"            OpenERP omogućuje evidentiranje dolaznih poziva te praćenje\n"
+"            povijesti komunikacije sa partnerom kao i obavještavanje drugog\n"
+"            člana tima.\n"
+"          </p><p>\n"
+"            Kako bi kvalitetno pratili pozive, moguće je kreirati zahtjev za "
+"\n"
+"            drugim pozivom, sastanak ili priliku.\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: model:process.node,note:crm.process_node_leads0
@@ -2570,6 +2679,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               Pritisnite za kreiranje nove oznake prodaje.\n"
+"              </p><p>\n"
+"                Kreirajte specifičnih oznaka (tag-ova) koje odgovaraju "
+"aktivnostima vaše tvrtke\n"
+"                kako biste bolje klasificirali i analizirali svoje "
+"potencijale i prilike.\n"
+"                Takve bi se kategorije, na primjer, mogle reflektirati na "
+"strukturu vaših proizvoda\n"
+"                ili različitu strukturu vaše prodaje.\n"
+"              </p>\n"
+"            "
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -2582,7 +2703,7 @@ msgstr "Kolovoz"
 #: model:mail.message.subtype,name:crm.mt_lead_lost
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_lost
 msgid "Opportunity Lost"
-msgstr "Izgubljena prilika"
+msgstr "Prilika je izgubljena"
 
 #. module: crm
 #: field:crm.lead.report,deadline_month:0
@@ -2840,7 +2961,7 @@ msgstr "na"
 #: selection:crm.lead,state:0
 #: view:crm.lead.report:0
 msgid "New"
-msgstr "New"
+msgstr "Novi"
 
 #. module: crm
 #: field:crm.lead,function:0
@@ -2850,6 +2971,7 @@ msgstr "Funkcija"
 #. module: crm
 #: field:crm.case.section,note:0
 #: field:crm.phonecall,description:0
+#: view:crm.segmentation:0
 #: field:crm.segmentation,description:0
 msgid "Description"
 msgstr "Opis"
@@ -2896,6 +3018,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje novog kanala.\n"
+"              </p><p>\n"
+"                Koristite kanale za praćenje izvora potencijal ai prilika. "
+"Kanali\n"
+"                se najviše koriste u izvještavanju za analizu učinkovitosti "
+"prodaje\n"
+"                povezane sa određenim marketinškim akcijama.\n"
+"              </p><p>\n"
+"                Neki primjeri kanala: web stranica tvrtke, telefonska "
+"kampanja\n"
+"                preprodavači, oglas u novinama i sl.\n"
+"              </p>\n"
+"            "
 
 #. module: crm
 #: view:crm.lead:0
@@ -2933,7 +3069,7 @@ msgid "Working Hours"
 msgstr "Radno vrijeme"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:986
+#: code:addons/crm/crm_lead.py:1002
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
@@ -2961,7 +3097,7 @@ msgid "Lost"
 msgstr "Izgubljen"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
 #, python-format
 msgid "Closed/Cancelled leads cannot be converted into opportunities."
 msgstr "Zatvoreni/otkazani potencijali ne mogu se pretvoriti u prilike."
@@ -3055,7 +3191,7 @@ msgstr "Bilten"
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
 msgid "Opportunity Stage Changed"
-msgstr "Faza prilike je promijenjena"
+msgstr "Promijenjen je status prilike"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_stage_act
@@ -3069,6 +3205,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje nove faze za potencijale/prilike.\n"
+"              </p><p>\n"
+"                Faze omogućuju prodajnom osoblju lakše praćenje "
+"pozicioniranja \n"
+"                određenih potencijala ili prilika unutar prodajnog ciklusa.\n"
+"              </p>\n"
+"            "
 
 #~ msgid "All Cases"
 #~ msgstr "Svi slučajevi"
