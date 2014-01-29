@@ -39,7 +39,7 @@ def keep_query(*args, **kw):
 def url_for(path_or_uri, lang=None):
     location = path_or_uri.strip()
     url = urlparse.urlparse(location)
-    if request and not url.netloc and not url.scheme:
+    if request and url.path and not url.netloc and not url.scheme:
         location = urlparse.urljoin(request.httprequest.path, location)
         force_lang = lang is not None
         lang = lang or request.context.get('lang')
