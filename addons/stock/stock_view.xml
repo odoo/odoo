@@ -842,7 +842,7 @@
                 <search string="Picking Lists">
                     <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
                     <filter icon="terp-check" name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Moves"/>
-                    <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Moves"/>
+                    <filter icon="terp-check" name="available" string="Ready" domain="[('state','in',('assigned', 'partially_available'))]" help="Assigned Moves"/>
                     <filter icon="terp-check" name="waiting" string="Waiting Availability" domain="[('state','=', 'confirmed')]" help="Waiting Moves"/>
                     <filter icon="terp-camera_test" name="confirmed" string="Confirmed" domain="[('state','in', ('confirmed', 'waiting', 'assigned'))]" help="Confirmed Moves"/>
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
