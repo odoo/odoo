@@ -619,12 +619,12 @@ class res_partner(osv.osv, format_address):
             query = ('''SELECT res_partner.id FROM res_partner
                                           LEFT JOIN res_partner company
                                                ON res_partner.parent_id = company.id'''
-                        + where_str + ''' res_partner.email ''' + operator + ''' %s OR
+                        + where_str + ''' (res_partner.email ''' + operator + ''' %s OR
                               CASE
                                    WHEN company.id IS NULL OR res_partner.is_company
                                        THEN res_partner.name
                                    ELSE company.name || ', ' || res_partner.name
-                              END ''' + operator + ''' %s
+                              END ''' + operator + ''' %s)
                         ORDER BY
                               CASE
                                    WHEN company.id IS NULL OR res_partner.is_company
@@ -641,6 +641,8 @@ class res_partner(osv.osv, format_address):
 
             if ids:
                 return self.name_get(cr, uid, ids, context)
+            else:
+                return []
         return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
 
     def find_or_create(self, cr, uid, email, context=None):

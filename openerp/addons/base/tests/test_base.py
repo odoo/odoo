@@ -41,12 +41,18 @@ class test_base(common.TransactionCase):
 
     def test_15_res_partner_name_search(self):
         cr,uid = self.cr, self.uid
-        for text, name, mail in self.samples:
-            partner_id, dummy = self.res_partner.name_create(cr, uid, text)
+        for name, active in [
+            ('"A Raoul Grosbedon" <raoul@chirurgiens-dentistes.fr>', False),
+            ('ryu+giga-Sushi@aizubange.fukushima.jp', True),
+            ('Raoul chirurgiens-dentistes.fr', True),
+            (" Raoul O'hara  <!@historicalsociety.museum>", True)
+        ]:
+            partner_id, dummy = self.res_partner.name_create(cr, uid, name, context={'default_active': active})
         partners = self.res_partner.name_search(cr, uid, 'Raoul')
-        self.assertEqual(len(partners), 3, 'Incorrect search number result for name_search')
+        self.assertEqual(len(partners), 2, 'Incorrect search number result for name_search')
         partners = self.res_partner.name_search(cr, uid, 'Raoul', limit=1)
         self.assertEqual(len(partners), 1, 'Incorrect search number result for name_search with a limit')
+        self.assertEqual(partners[0][1], 'Raoul chirurgiens-dentistes.fr', 'Incorrect partner returned, should be the first active')
 
     def test_20_res_partner_address_sync(self):
         cr, uid = self.cr, self.uid
