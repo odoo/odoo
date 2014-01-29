@@ -107,6 +107,7 @@
         <record id="blog_post_2" model="blog.post">
             <field name="name">New Hardware Integration</field>
             <field name="blog_id" ref="blog_blog_1"/>
+            <field name="website_published" eval="True"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
             <field name="content">
 <![CDATA[<section class="mt16 mb16" data-snippet-id='big-picture'>
@@ -232,45 +233,158 @@
 ]]>
 </field>
         </record>
-
         <record id="blog_post_3" model="blog.post">
-            <field name="name">Touchscreen Point of Sale for 6.1</field>
+            <field name="name">Sorry SAP Campaign - The Making Of</field>
             <field name="blog_id" ref="blog_blog_1"/>
-            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1'), ref('blog_tag_2')])]"/>
-            <field name="website_meta_keywords">Point of Sale, Hardware, Interface, Payment Terminal, Store</field>
-            <field name="website_meta_description">Point of Sale with no installation required that runs online and offline.</field>
-            <field name="content">
-<![CDATA[<p>The brand new OpenERP touchscreen point of sale is available with 6.1 which allows you
-to manage your shop sales very easily.  It's fully web based so that you don't
-have to install or deploy any software and all the sales shops can be easily
-consolidated.  It works in connected and disconnected modes so that you can
-continue to sell even if you lose your internet connection.</p>
-<img src="http://www.openerp.com/sites/default/files/fileattach/POS(2).png" alt="">
-<h3>Here's a summary of its main features and benefits:</h3>
-<ul>
-    <li>100% WEB based</li>
-    <li>available for any touchscreen device (ipod, ipad, any tablet)mobile (with portable devices)</li>
-    <li>no installation required</li>
-    <li>no synchronization needed, completely integrated</li>
-    <li>continue working even when your connection is down or if you close your browser, data won't be lost</li>
-    <li>fully web based with a clean interface smart interface</li>
-</ul>
-<p>You have different options to select your products. You can do it through the
-barcode reader, just browse through the categories you have put in place (ie.
-drinks, snacks, meals, etc.), or text search in case neither of the other
-options work for you.  For example, if you need to use the POS for your restaurant, 
-your employees can record multiple tickets at the same time without having to wait 
-to process one transaction at a time. In addition, you can facilitate payments, 
-the application allows multiple payment methods.</p>
-<p>The POS application is so simple and accessible to use that your shop or
-restaurant will never need any other tool to manage orders. Due to its smart
-and user-friendly interface you don't need any training to learn how to use it.
-Think of it as an out-of-the-box solution to boost your business' productivity.
-</p>
-]]>
+            <field name="website_published" eval="True"/>
+            <field name="website_meta_keywords">OpenERP, News, Sorry SAP</field>
+            <field name="website_meta_description">Sorry SAP Campaign - The Making Of</field>
+            <field name="content"><![CDATA[
+        <section data-snippet-id="text" class="readable">
+            <div class="container">
+                <p>I needed to change the world. I wanted to ... You know how it
+                is when you are young; you have big dreams, a lot of energy 
+                and naïve stupidity. My dream was to lead the enterprise 
+                management market with a fully open source software. (I also 
+                wanted to get 100 employees before 30 years old with a 
+                self-financed company but I failed this one by a few months).
+                </p>
+            </div>
+        </section>
+        <section data-snippet-id="text-image" class="readable">
+            <div class="container">
+                <p>To fuel my motivation, I had to pick someone to fight 
+                against. In business, it's like a playground. When you arrive in
+                a new school, if you want to quickly become the leader, you must
+                choose the class bully, the older guy who terrorises small boys,
+                and kick his butt in front of everyone. That was my strategy 
+                with SAP, the enterprise software giant.</p>
+                <p>So, in 2005, I started to develop the TinyERP product, the 
+                software that (at least in my mind) would change the enterprise 
+                world. While preparing for the "day of the fight" in 2006, I 
+                bought the SorrySAP.com domain name. I put it on hold for 6 
+                years, waiting for the right moment to use it. I thought it 
+                would take 3 years to deprecate a 77 billion dollars company 
+                just because open source is so cool. Sometimes it's better for 
+                your self-motivation not to face reality...</p>
+                <p>To make things happen, I worked hard, very hard. I worked 13 
+                hours a day, 7 days a week, with no vacations for 7 years.I 
+                lost friendships and broke up with my girlfriend in the process 
+                (fortunately, I found a more valuable wife now. I will explain 
+                later why she is worth 1 million EUR :).</p>
+                <p>Three years later, I discovered you can't change the world 
+                if you are "tiny". Especially if the United States is part of 
+                this world, where it's better to be a BigERP, rather than a 
+                TinyERP. Can you imagine how small you feel in front of Danone's
+                directors asking; "but why should we pay millions of dollars 
+                for a tiny software?" So, we renamed TinyERP to OpenERP.</p>
+                <p>As we worked hard, things started to evolve. We were 
+                developing dozens of modules for OpenERP, the open source 
+                community was growing and I was even able to pay all employees' 
+                salaries at the end of the month without fear (which was a 
+                situation I struggled with for 4 years).</p>
+                <p>In 2010, we had a 100+ employees company selling services on 
+                OpenERP and a powerful but ugly product. This is what happens 
+                when delivering services to customers distracts you from 
+                building an exceptional product.</p>
+                <p>It was time to do a pivot in the business model.</p>
+                <h3>The Pivot</h3>
+                <p>We wanted to switch from a service company to a software 
+                publisher company. This would allow to increase our efforts in 
+                our research and development activities. As a result, we 
+                changed our business model and decided to stop our services to 
+                customers and focus on building a strong partner network and 
+                maintenance offer. This would cost money, so I had to raise a 
+                few million euros.</p>
+                <p>After a few months of pitching investors, I got roughly 10 
+                LOI from different VCs. We chosed Sofinnova Partners, the 
+                biggest European VC, and Xavier Niel the founder of Iliad, the 
+                only company in France funded in the past 10 years to have 
+                reached the 1 billion euro valuation.</p>
+                <p>I signed the LOI. I didn't realize that this contract could 
+                have turned me into a homeless person. (I already had a dog, 
+                all I needed was to lose a lot of money to become homeless). 
+                The fund raising was based on a company valuation but there 
+                was a financial mechanism to re-evaluate the company up by 
+                9.8 m€ depending on the turnover of the next 4 years. I should 
+                have received warrants convertible into shares if we achieved 
+                the turnover targeted in the business plan.</p>
+                <p>The night before receiving the warrants in front of the 
+                notary, my wife checked the contracts. She asked me what would 
+                be the taxation on these warrants. I rang the lawyer and guess 
+                what? Belgium is probably the only country in the world where 
+                you have to pay taxes on warrants when you receive them, even 
+                if you never reach the conditions to convert them into shares. 
+                If I had accepted these warrants, I would have had to pay a 
+                12.5% tax on 9.8 m€; resulting in a tax of 1.2m€ to pay in 18 
+                months! So, my wife is worth 1.2 million EUR. I would have 
+                ended up a homeless person without her, as I still did not 
+                have a salary at that time.</p> 
+                <p>We changed the deal and I got the 3 million EUR. It allowed 
+                me to recruit a rocking management team.</p>
+                <img class="img-responsive shadow" src="/website/static/src/img/OpemERP_board.jpg"/>
+                <h3 class="mt16">Being a mature company<h3>
+                <p>With this money in our bank account, we boosted two 
+                departments: R&D and Sales. We burned two million EUR in 18 months, 
+                mostly in salaries. The company started to grow even faster. 
+                We developed a partner network of 500 partners in 100 countries 
+                and we started to sign contracts with 6 zeros.</p>
+                <p>Then, things became different. You know, tedious things like 
+                handling human resources, board meetings, dealing with big 
+                customer contracts, traveling to launch international 
+                subsidiaries. We did boring stuff like budgets, career paths, 
+                management meetings, etc.</p>
+                <p>2011 was a complex year. We did not meet our expectations: 
+                we only achieved 70% of the forecasted sales budget. Our 
+                management meetings were tense. We under performed. We were not 
+                satisfied with ourselves. We had a constant feeling that we 
+                missed something. It's a strange feeling to build extraordinary 
+                things but to not be proud of ourselves.</p>
+                <p>But one day, someone (I don't remember who, I have a 
+                goldfish memory) made a graph of the monthly turnover of the 
+                past 2 years. It was like waking up from a nighmare. In fact, 
+                it was not that bad, we had multiplied by 10 the monthly turnover 
+                over the span of roughly two years! This is when we understood 
+                that OpenERP is a marathon, not a sprint. Only 100% growth a 
+                year is ok... if you can keep the rhythm for several years.</p> 
+                <img class="img-responsive shadow" src="/website/static/src/img/turnover_updated.png"/>
+                <p class="text-center" section_inner="1">
+                <strong>OpenERP Monthly Turnover</strong></p>
+                <p>As usual, I should have listened to my wife. She is way more 
+                lucid than I am. Every week I complained to her "it's not good 
+                enough, we should grow faster, what am I missing?" and she used 
+                to reply; "But you already are the fastest growing company in 
+                Belgium!". (Deloitte awarded us as the fastest growing company 
+                of Belgium with 1549% growth of the turnover between 2007 and 
+                2011)</p> 
+                <h3 class="mt16">Changing the world</h3>
+                <p>Then, the dream started to become reality. We started to get 
+                clues that what we did would change the world:</p>
+                <ul>
+                    <li>With 1.000 installations per day, we became the most 
+                    installed management software in the world,</li>
+                    <li>Analysts from Big 4 started to prefer OpenERP over SAP,</li>
+                    <li>OpenERP is now a compulsory subject for the 
+                    baccalaureate in France like Word, Excel and Powerpoint</li>
+                    <li>60 new modules are released every month (we became the 
+                    wikipedia of the management software thanks to our strong 
+                    community)</li>
+                </ul>
+                <p>Something is happening... And it's big!</p>
+                <p>OpenERP 7.0 is about to be released and I know you will be 
+                astonished by it.</p>
+                <p>The official release is planned for the 21th of December. 
+                As the Mayas predicted it, this is the end of an age, the old 
+                ERP dinosaurs.</p>
+                <p>It's time to pull out the Ace: the SorrySAP.com domain name 
+                that I bought 6 years ago.</p>
+                <p>If you want to test the v7 version online, just go the homepage.</p>
+            </div>
+        </section>
+ ]]>
 </field>
         </record>
-
+        
         <record id="blog_post_4" model="blog.post">
             <field name="name">Announcing a New Partnership</field>
             <field name="blog_id" ref="blog_blog_1"/>
