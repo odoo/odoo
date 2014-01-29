@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data noupdate="1">
-        <!-- CATEGORIES -->
-        <record id="blog_category_1" model="blog.category">
+        <record id="blog_blog_1" model="blog.blog">
             <field name="name">News</field>
             <field name="description">Presentation of new OpenERP features</field>
         </record>
 
-        <record id="menu_blog" model="website.menu">
+        <record id="menu_news" model="website.menu">
             <field name="name">News</field>
-            <field name="url" eval="'/blog/'+str(ref('website_blog.blog_category_1'))"/>
+            <field name="url" eval="'/blog/'+str(ref('website_blog.blog_blog_1'))"/>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">40</field>
         </record>
@@ -21,7 +20,7 @@
         <record id="action_open_website" model="ir.actions.act_url">
             <field name="name">Website Blogs</field>
             <field name="target">self</field>
-            <field name="url" eval="'/blog/'+str(ref('website_blog.blog_category_1'))+'/?tutorial.blog=true'"/>
+            <field name="url" eval="'/blog/'+str(ref('website_blog.blog_blog_1'))+'/?tutorial.blog=true'"/>
         </record>
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_open_website"/>
@@ -43,12 +42,12 @@
         </record>
 
         <!-- Project-related subtypes for messaging / Chatter -->
-        <record id="mt_blog_category_post_new" model="mail.message.subtype">
+        <record id="mt_blog_blog_post_new" model="mail.message.subtype">
             <field name="name">New Post</field>
-            <field name="res_model">blog.category</field>
+            <field name="res_model">blog.blog</field>
             <field name="default" eval="True"/>
             <field name="parent_id" eval="ref('mt_blog_post_new')"/>
-            <field name="relation_field">category_id</field>
+            <field name="relation_field">blog_id</field>
         </record>
 
 

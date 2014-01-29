@@ -9,7 +9,7 @@ OpenERP Website CMS
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['web', 'share', 'select2'],
+    'depends': ['web', 'share', 'mail'],
     'installable': True,
     'data': [
         'data/website_data.xml',
@@ -19,6 +19,7 @@ OpenERP Website CMS
         'views/website_views.xml',
         'views/snippets.xml',
         'views/themes.xml',
+        'views/res_config.xml',
     ],
     'demo': [
         'data/website_demo.xml',

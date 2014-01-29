@@ -4,21 +4,21 @@
         <menuitem name="Knowledge" id="knowledge.menu_document"/>
         <menuitem name="Blog Posts" id="menu_wiki" parent="knowledge.menu_document" sequence="20" />
 
-        <!-- Category views -->
-        <record model="ir.ui.view" id="view_blog_category_list">
-            <field name="name">blog.category.list</field>
-            <field name="model">blog.category</field>
+        <!-- Blog views -->
+        <record model="ir.ui.view" id="view_blog_blog_list">
+            <field name="name">blog.blog.list</field>
+            <field name="model">blog.blog</field>
             <field name="arch" type="xml">
-                <tree string="Blog Categories">
+                <tree string="Blogs">
                     <field name="name"/>
                 </tree>
             </field>
         </record>
-        <record model="ir.ui.view" id="view_blog_category_form">
-            <field name="name">blog.category.form</field>
-            <field name="model">blog.category</field>
+        <record model="ir.ui.view" id="view_blog_blog_form">
+            <field name="name">blog.blog.form</field>
+            <field name="model">blog.blog</field>
             <field name="arch" type="xml">
-                <form string="Blog Category" version="7.0">
+                <form string="Blog" version="7.0">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -40,7 +40,7 @@
             <field name="arch" type="xml">
                 <tree string="Blog Posts">
                     <field name="name"/>
-                    <field name="category_id"/>
+                    <field name="blog_id"/>
                     <field name="create_uid" invisible="1"/>
                     <field name="write_uid"/>
                     <field name="write_date"/>
@@ -57,13 +57,12 @@
                         <h1><field name="name" placeholder="Name"/></h1>
                         <field name="tag_ids" widget="many2many_tags"/>
                         <group>
-                            <field name="category_id" string="Category"/>
+                            <field name="blog_id"/>
                         </group>
                         <field name="content" placeholder="e.g. Once upon a time..." widget="html"/>
                         <group string="Technical" groups="base.group_no_one">
                             <field name="write_uid" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_document_user']}"/>
                             <field name="write_date"/>
-                            <field name="menu_id"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -81,9 +80,9 @@
                 <search string="Blog Post">
                     <field name="name" string="Content" filter_domain="['|', ('name','ilike',self), ('content','ilike',self)]"/>
                     <field name="write_uid"/>
-                    <field name="category_id"/>
+                    <field name="blog_id"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Category" domain="[]" context="{'group_by': 'category_id'}"/>
+                        <filter string="Blog" domain="[]" context="{'group_by': 'blog_id'}"/>
                         <filter string="Author" domain="[]" context="{'group_by': 'create_uid'}"/>
                         <filter string="Last Contributor" domain="[]" context="{'group_by': 'write_uid'}"/>
                     </group>
@@ -106,13 +105,13 @@
         </record>
         <menuitem id="menu_page" parent="menu_wiki" name="Blog Posts" action="action_blog_post" sequence="10"/>
 
-        <record model="ir.actions.act_window" id="action_blog_category">
-            <field name="name">Category</field>
-            <field name="res_model">blog.category</field>
+        <record model="ir.actions.act_window" id="action_blog_blog">
+            <field name="name">Blogs</field>
+            <field name="res_model">blog.blog</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem id="menu_category" parent="menu_wiki" name="Categories" action="action_blog_category" sequence="20"/>
+        <menuitem id="menu_blog" parent="menu_wiki" name="Blogs" action="action_blog_blog" sequence="20"/>
 
         <!-- History Tree view -->
         <record model="ir.ui.view" id="view_blog_history_tree">
@@ -156,14 +155,5 @@
             name="Page History"
             res_model="blog.post.history"
             src_model="blog.post"/>
-<!--         <act_window 
-            id="action_related_page_create_menu"
-            name="Create Menu"
-            res_model="blog.post.create.menu"
-            target="new"
-            view_type="form"
-            view_mode="form"
-            src_model="blog.post"/> -->
-
     </data>
 </openerp>

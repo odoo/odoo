@@ -7,7 +7,6 @@ import werkzeug
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models import website
 
 PPG = 20                        # Products Per Page
 PPR = 4                         # Products Per Row
@@ -191,10 +190,9 @@ class Ecommerce(http.Controller):
         return [r["product_tmpl_id"][0] for r in att]
 
     @http.route(['/shop/pricelist'], type='http', auth="public", website=True, multilang=True)
-    def shop_promo(self, code, **post):
-        assert code, 'No pricelist code provided'
-        request.registry['website']._ecommerce_change_pricelist(request.cr, request.uid, code=code, context=request.context)
-        return request.redirect("/shop")
+    def shop_promo(self, promo=None, **post):
+        request.registry['website']._ecommerce_change_pricelist(request.cr, request.uid, code=promo, context=request.context)
+        return request.redirect("/shop/mycart/")
 
     @http.route([
         '/shop/',
@@ -246,7 +244,7 @@ class Ecommerce(http.Controller):
             'range': range,
             'search': {
                 'search': search,
-                'category': category,
+                'category': category and category.id,
                 'filters': filters,
             },
             'pager': pager,
@@ -259,8 +257,6 @@ class Ecommerce(http.Controller):
 
     @http.route(['/shop/product/<model("product.template"):product>/'], type='http', auth="public", website=True, multilang=True)
     def product(self, product, search='', category='', filters='', **kwargs):
-        website.preload_records(product, on_error="website_sale.404")
-
         category_obj = request.registry.get('product.public.category')
 
         category_ids = category_obj.search(request.cr, request.uid, [], context=request.context)
@@ -337,6 +333,8 @@ class Ecommerce(http.Controller):
             index = random.randrange(0, len(suggested_ids))
             suggested_products.append(suggested_ids.pop(index))
 
+        context = dict(context or {}, pricelist=request.registry['website'].ecommerce_get_pricelist_id(cr, uid, None, context=context))
+
         values = {
             'int': int,
             'suggested_products': prod_obj.browse(cr, uid, suggested_products, context),
@@ -357,7 +355,7 @@ class Ecommerce(http.Controller):
             context=request.context)
         return request.redirect("/shop/mycart/")
 
-    @http.route(['/shop/add_cart_json/'], type='json', auth="public", website=True)
+    @http.route(['/shop/add_cart_json/'], type='json', auth="public", website=True, multilang=True)
     def add_cart_json(self, product_id=None, order_line_id=None, remove=None):
         quantity = request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
             product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1),
@@ -368,11 +366,12 @@ class Ecommerce(http.Controller):
                 order.amount_total,
                 request.website._render("website_sale.total", {'website_sale_order': order})]
 
-    @http.route(['/shop/set_cart_json/'], type='json', auth="public", website=True)
+    @http.route(['/shop/set_cart_json/'], type='json', auth="public")
     def set_cart_json(self, path=None, product_id=None, order_line_id=None, set_number=0, json=None):
-        return request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
+        quantity = request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
             product_id=product_id, order_line_id=order_line_id, set_number=set_number,
             context=request.context)
+        return quantity
 
     @http.route(['/shop/checkout/'], type='http', auth="public", website=True, multilang=True)
     def checkout(self, **post):
@@ -519,9 +518,8 @@ class Ecommerce(http.Controller):
             'partner_invoice_id': partner_id,
             'partner_shipping_id': shipping_id or partner_id
         }
-        print order_info
         order_info.update(registry.get('sale.order').onchange_partner_id(cr, SUPERUSER_ID, [], partner_id, context=context)['value'])
-        print order_info
+        order_info.pop('user_id')
 
         order_line_obj.write(cr, SUPERUSER_ID, [order.id], order_info, context=context)
 
@@ -567,7 +565,7 @@ class Ecommerce(http.Controller):
         if tx:
             acquirer_ids = [tx.acquirer_id.id]
         else:
-            acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('portal_published', '=', True)], context=context)
+            acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True)], context=context)
         values['acquirers'] = payment_obj.browse(cr, uid, acquirer_ids, context=context)
         render_ctx = dict(context, submit_class='btn btn-primary', submit_txt='Pay Now')
         for acquirer in values['acquirers']:
@@ -638,6 +636,7 @@ class Ecommerce(http.Controller):
         if not order:
             return {
                 'state': 'error',
+                'message': '<p>There seems to be an error with your request.</p>',
             }
 
         tx_ids = request.registry['payment.transaction'].search(
@@ -646,11 +645,25 @@ class Ecommerce(http.Controller):
             ], context=context)
         if not tx_ids:
             return {
-                'state': 'error'
+                'state': 'error',
+                'message': '<p>There seems to be an error with your request.</p>',
             }
         tx = request.registry['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
+        state = tx.state
+        if state == 'done':
+            message = '<p>Your payment has been received.</p>'
+        elif state == 'cancel':
+            message = '<p>The payment seems to have been canceled.</p>'
+        elif state == 'pending' and tx.acquirer_id.validation == 'manual':
+            message = '<p>Your transaction is waiting confirmation.</p>'
+            message += tx.acquirer_id.post_msg
+        else:
+            message = '<p>Your transaction is waiting confirmation.</p>'
+
         return {
-            'state': tx.state,
+            'state': state,
+            'message': message,
+            'validation': tx.acquirer_id.validation
         }
 
     @http.route('/shop/payment/validate/', type='http', auth="public", website=True, multilang=True)
@@ -708,9 +721,11 @@ class Ecommerce(http.Controller):
         order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
         assert order.website_session_id == request.httprequest.session['website_session_id']
 
+        request.registry['website']._ecommerce_change_pricelist(cr, uid, None, context=context or {})
+
         return request.website.render("website_sale.confirmation", {'order': order})
 
-    @http.route(['/shop/change_sequence/'], type='json', auth="public", website=True)
+    @http.route(['/shop/change_sequence/'], type='json', auth="public")
     def change_sequence(self, id, sequence):
         product_obj = request.registry.get('product.template')
         if sequence == "top":
@@ -722,7 +737,7 @@ class Ecommerce(http.Controller):
         elif sequence == "down":
             product_obj.set_sequence_down(request.cr, request.uid, [id], context=request.context)
 
-    @http.route(['/shop/change_styles/'], type='json', auth="public", website=True)
+    @http.route(['/shop/change_styles/'], type='json', auth="public")
     def change_styles(self, id, style_id):
         product_obj = request.registry.get('product.template')
         product = product_obj.browse(request.cr, request.uid, id, context=request.context)
@@ -744,7 +759,7 @@ class Ecommerce(http.Controller):
 
         return not active
 
-    @http.route(['/shop/change_size/'], type='json', auth="public", website=True)
+    @http.route(['/shop/change_size/'], type='json', auth="public")
     def change_size(self, id, x, y):
         product_obj = request.registry.get('product.template')
         product = product_obj.browse(request.cr, request.uid, id, context=request.context)

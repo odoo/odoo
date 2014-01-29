@@ -27,7 +27,6 @@ import json
 import logging
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-#from openerp.addons.website.models import website
 from openerp.addons.website.controllers.main import Website as controllers
 import itertools
 import math
@@ -78,21 +77,6 @@ class WebsiteSurvey(http.Controller):
 
     ## ROUTES HANDLERS ##
 
-    # Survey list
-    @http.route(['/survey/',
-                 '/survey/list/'],
-                type='http', auth='public', multilang=True, website=True)
-    def list_surveys(self, **post):
-        '''Lists all the public surveys'''
-        cr, uid, context = request.cr, request.uid, request.context
-        survey_obj = request.registry['survey.survey']
-        survey_ids = survey_obj.search(cr, uid, [('state', '=', 'open'),
-                                                 ('visible_to_user', '=', True),
-                                                 ('page_ids', '!=', 'None')],
-                                       context=context)
-        surveys = survey_obj.browse(cr, uid, survey_ids, context=context)
-        return request.website.render('survey.list', {'surveys': surveys})
-
     # Survey start
     @http.route(['/survey/start/<model("survey.survey"):survey>',
                  '/survey/start/<model("survey.survey"):survey>/<string:token>'],
@@ -102,6 +86,15 @@ class WebsiteSurvey(http.Controller):
         survey_obj = request.registry['survey.survey']
         user_input_obj = request.registry['survey.user_input']
 
+        # Test mode
+        if token and token == "phantom":
+            _logger.error("[survey] Phantom mode")
+            user_input_id = user_input_obj.create(cr, uid, {'survey_id': survey.id, 'test_entry': True}, context=context)
+            user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
+            data = {'survey': survey, 'page': None, 'token': user_input.token}
+            return request.website.render('survey.survey_init', data)
+        # END Test mode
+
         # Controls if the survey can be displayed
         errpage = self._check_bad_cases(cr, uid, request, survey_obj, survey, user_input_obj, context=context)
         if errpage:
@@ -110,13 +103,13 @@ class WebsiteSurvey(http.Controller):
         # Manual surveying
         if not token:
             if survey.visible_to_user:
-                user_input_id = user_input_obj.create(cr, uid, {'survey_id': survey.id})
+                user_input_id = user_input_obj.create(cr, uid, {'survey_id': survey.id}, context=context)
                 user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
             else:  # An user cannot open hidden surveys without token
                 return request.website.render("website.403")
         else:
             try:
-                user_input_id = user_input_obj.search(cr, uid, [('token', '=', token)])[0]
+                user_input_id = user_input_obj.search(cr, uid, [('token', '=', token)], context=context)[0]
             except IndexError:  # Invalid token
                 return request.website.render("website.403")
             else:

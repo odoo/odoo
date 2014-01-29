@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import fnmatch
 import inspect
+import itertools
 import logging
 import math
-import itertools
+import re
 import urllib
 import urlparse
 
@@ -11,13 +12,16 @@ import simplejson
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.wrappers
+# optional python-slugify import (https://github.com/un33k/python-slugify)
+try:
+    import slugify as slugify_lib
+except ImportError:
+    slugify_lib = None
 
 import openerp
 from openerp.osv import orm, osv, fields
 from openerp.tools.safe_eval import safe_eval
-
 from openerp.addons.web.http import request, LazyResponse
-from ..utils import slugify
 
 logger = logging.getLogger(__name__)
 
@@ -49,6 +53,13 @@ def url_for(path_or_uri, lang=None, keep_query=None):
 
     return location
 
+def slugify(s, max_length=None):
+    if slugify_lib:
+        return slugify_lib.slugify(s, max_length)
+    spaceless = re.sub(r'\s+', '-', s)
+    specialless = re.sub(r'[^-_A-Za-z0-9]', '', spaceless)
+    return specialless[:max_length]
+
 def slug(value):
     if isinstance(value, orm.browse_record):
         # [(id, name)] = value.name_get()
@@ -70,23 +81,6 @@ def urlplus(url, params):
 
 def quote_plus(value):
     return urllib.quote_plus(value.encode('utf-8') if isinstance(value, unicode) else str(value))
-
-def preload_records(*args, **kwargs):
-    """ This helper allows to check the existence and prefetch one or many browse_records at once.
-        If the browse record(s) does not exists in the db it will raise a LazyResponse
-    """
-    field = kwargs.pop('field', 'name')
-    on_error = kwargs.pop('on_error', 'website.404')
-    error_code = kwargs.pop('error_code', 404)
-    try:
-        for arg in args:
-            if isinstance(arg, orm.browse_record):
-                arg[field]
-            elif isinstance(arg, orm.browse_record_list):
-                [record[field] for record in arg]
-    except:
-        lazy_error = request.website.render(on_error, status_code=error_code)
-        raise werkzeug.exceptions.HTTPException(response=lazy_error)
 
 class website(osv.osv):
     def _get_menu_website(self, cr, uid, ids, context=None):
@@ -117,6 +111,7 @@ class website(osv.osv):
         'social_linkedin': fields.char('LinkedIn Account'),
         'social_youtube': fields.char('Youtube Account'),
         'social_googleplus': fields.char('Google+ Account'),
+        'google_analytics_key': fields.char('Google Analytics Key'),
         'public_user': fields.function(_get_public_user, relation='res.users', type='many2one', string='Public User'),
         'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu',
             store= {
@@ -124,42 +119,45 @@ class website(osv.osv):
             })
     }
 
+    # cf. Wizard hack in website_views.xml
+    def noop(self, *args, **kwargs):
+        pass
+
     def write(self, cr, uid, ids, vals, context=None):
         self._get_languages.clear_cache(self)
         return super(website, self).write(cr, uid, ids, vals, context)
 
     def new_page(self, cr, uid, name, template='website.default_page', ispage=True, context=None):
-        context=context or {}
-        # completely arbitrary max_length
-        idname = slugify(name, max_length=50)
-
+        context = context or {}
         imd = self.pool.get('ir.model.data')
         view = self.pool.get('ir.ui.view')
+        template_module, template_name = template.split('.')
 
-        module, tmp_page = template.split('.')
-        view_model, view_id = imd.get_object_reference(cr, uid, module, tmp_page)
+        # completely arbitrary max_length
+        page_name = slugify(name, max_length=50)
+        page_xmlid = "%s.%s" % (template_module, page_name)
 
-        cr.execute('SAVEPOINT new_page')
         try:
-            newview_id = view.copy(cr, uid, view_id, context=context)
-            newview = view.browse(cr, uid, newview_id, context=context)
-            newview.write({
-                'arch': newview.arch.replace(template, "%s.%s" % (module, idname)),
-                'name': name,
+            # existing page
+            imd.get_object_reference(cr, uid, template_module, page_name)
+        except ValueError:
+            # new page
+            _, template_id = imd.get_object_reference(cr, uid, template_module, template_name)
+            page_id = view.copy(cr, uid, template_id, context=context)
+            page = view.browse(cr, uid, page_id, context=context)
+            page.write({
+                'arch': page.arch.replace(template, page_xmlid),
+                'name': page_name,
                 'page': ispage,
             })
             imd.create(cr, uid, {
-                'name': idname,
-                'module': module,
+                'name': page_name,
+                'module': template_module,
                 'model': 'ir.ui.view',
-                'res_id': newview_id,
+                'res_id': page_id,
                 'noupdate': True
             }, context=context)
-            cr.execute('RELEASE SAVEPOINT new_page')
-            return "%s.%s" % (module, idname)
-        except:
-            cr.execute("ROLLBACK TO SAVEPOINT new_page")
-            raise
+        return page_xmlid
 
     def page_for_name(self, cr, uid, ids, name, module='website', context=None):
         # whatever
@@ -208,6 +206,13 @@ class website(osv.osv):
             translatable=not is_master_lang,
         )
 
+    def get_template(self, cr, uid, ids, template, context=None):
+        if '.' not in template:
+            template = 'website.%s' % template
+        module, xmlid = template.split('.', 1)
+        model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
+        return self.pool["ir.ui.view"].browse(cr, uid, view_id, context=context)
+
     def _render(self, cr, uid, ids, template, values=None, context=None):
         user = self.pool.get("res.users")
         if not context:
@@ -232,10 +237,13 @@ class website(osv.osv):
         qweb_values.setdefault('editable', False)
 
         # in edit mode ir.ui.view will tag nodes
-        context['inherit_branding']=qweb_values['editable']
+        context['inherit_branding'] = qweb_values['editable']
 
-        result = self.pool['ir.ui.view'].render(cr, uid, template, qweb_values, engine='website.qweb', context=context)
-        return result
+        view = self.get_template(cr, uid, ids, template)
+
+        if 'main_object' not in qweb_values:
+            qweb_values['main_object'] = view
+        return view.render(qweb_values, engine='website.qweb', context=context)
 
     def render(self, cr, uid, ids, template, values=None, status_code=None, context=None):
         def callback(template, values, context):
@@ -322,7 +330,7 @@ class website(osv.osv):
         :type rule: werkzeug.routing.Rule
         :rtype: bool
         """
-        spec = inspect.getargspec(rule.endpoint)
+        spec = inspect.getargspec(rule.endpoint.method)
 
         # if *args bail the fuck out, only dragons can live there
         if spec.varargs:

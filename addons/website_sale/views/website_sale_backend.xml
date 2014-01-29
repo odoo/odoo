@@ -53,11 +53,12 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <!-- add state field in header -->
+
             <xpath expr="//sheet/div" position="before">
                 <field name="website_url" invisible="1"/>
                 <field name="website_published" class="pull-right" widget="website_button"/>
             </xpath>
-            <xpath expr="//page[@string='Information']" position="inside">
+            <xpath expr="//field[@name='description']" position="before">
                 <group colspan="4" string="Website Options">
                     <field name="suggested_product_ids" widget="many2many_tags"/>
                     <field name="website_style_ids" widget="many2many_tags"/>

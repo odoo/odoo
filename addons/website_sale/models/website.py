@@ -8,16 +8,13 @@ from openerp import SUPERUSER_ID
 class Website(orm.Model):
     _inherit = 'website'
 
-    def _get_pricelist(self, cr, uid, ids, field_name, arg, context=None):
-        # FIXME: oh god kill me now
-        pricelist_id = self.ecommerce_get_pricelist_id(cr, uid, ids, context=context)
-        return dict.fromkeys(
-            ids, self.pool['product.pricelist'].browse(
-                cr, SUPERUSER_ID, pricelist_id, context=context))
+    def _get_pricelist_id(self, cr, uid, ids, field_name, arg, context=None):
+        pricelist_id = self.ecommerce_get_pricelist_id(cr, uid, None, context=context)
+        return dict.fromkeys(ids, pricelist_id)
 
     _columns = {
         'pricelist_id': fields.function(
-            _get_pricelist, type='many2one', obj='product.pricelist')
+            _get_pricelist_id, type='many2one', obj='product.pricelist')
     }
 
     # ************************************************************
@@ -51,7 +48,7 @@ class Website(orm.Model):
             values.update(order.onchange_pricelist_id(pricelist_id, None)['value'])
             order.write(values)
             for line in order.order_line:
-                self.add_product_to_cart(order_line_id=line.id, number=0)
+                self._ecommerce_add_product_to_cart(cr, uid, order_line_id=line.id, number=0)
 
     # ************************************************************
     # Ecommerce quotation management
@@ -65,7 +62,7 @@ class Website(orm.Model):
         order_line_obj = self.pool.get('sale.order.line')
         order_obj = self.pool.get('sale.order')
 
-        context = dict(context, pricelist=self.ecommerce_get_pricelist_id(cr, uid, None, context=context))
+        context = dict(context or {}, pricelist=self.ecommerce_get_pricelist_id(cr, uid, None, context=context))
 
         # set order_line_id and product_id
         if order_line_id:
@@ -90,6 +87,7 @@ class Website(orm.Model):
         # values initialisation
         quantity = 0
         values = {}
+        order_line_ids = []
         if order_line_id:
             order_line_val = order_line_obj.read(cr, SUPERUSER_ID, [order_line_id], [], context=context)[0]
             if not product_id:
@@ -105,23 +103,27 @@ class Website(orm.Model):
             fields = [k for k, v in order_line_obj._columns.items()]
             values = order_line_obj.default_get(cr, SUPERUSER_ID, fields, context=context)
             quantity = 1
-            order_line_ids = []
 
         # change and record value
-        vals = order_line_obj._recalculate_product_values(cr, uid, order_line_ids, product_id, context=context)
-        values.update(vals)
+        if quantity:
+            vals = order_line_obj._recalculate_product_values(cr, uid, order_line_ids, product_id, context=context)
+            values.update(vals)
+            values['product_uom_qty'] = quantity
+            values['product_id'] = product_id
+            values['order_id'] = order.id
 
-        values['product_uom_qty'] = quantity
-        values['product_id'] = product_id
-        values['order_id'] = order.id
+            if order_line_id:
+                order_line_obj.write(cr, SUPERUSER_ID, order_line_ids, values, context=context)
+            else:
+                order_line_id = order_line_obj.create(cr, SUPERUSER_ID, values, context=context)
+                order_obj.write(cr, SUPERUSER_ID, [order.id], {'order_line': [(4, order_line_id)]}, context=context)
+        elif order_line_ids:
+            order_line_obj.unlink(cr, SUPERUSER_ID, order_line_ids, context=context)
 
-        if order_line_id:
-            order_line_obj.write(cr, SUPERUSER_ID, [order_line_id], values, context=context)
-            if not quantity:
-                order_line_obj.unlink(cr, SUPERUSER_ID, [order_line_id], context=context)
-        else:
-            order_line_id = order_line_obj.create(cr, SUPERUSER_ID, values, context=context)
-            order_obj.write(cr, SUPERUSER_ID, [order.id], {'order_line': [(4, order_line_id)]}, context=context)
+        order = self.ecommerce_get_current_order(cr, uid, context=context)
+        if not order or not order.order_line:
+            self._ecommerce_change_pricelist(cr, uid, None, context=context)
+
         return quantity
 
     def _ecommerce_get_quotation_values(self, cr, uid, context=None):
@@ -140,6 +142,7 @@ class Website(orm.Model):
         """ Create a new quotation used in the ecommerce (event, sale) """
         SaleOrder = self.pool.get('sale.order')
         quotation_values = self._ecommerce_get_quotation_values(cr, uid, context=context)
+        quotation_values['user_id'] = False
         return SaleOrder.create(cr, SUPERUSER_ID, quotation_values, context=context)
 
     def ecommerce_get_new_order(self, cr, uid, context=None):
@@ -153,10 +156,12 @@ class Website(orm.Model):
 
         order_id = self._ecommerce_create_quotation(cr, uid, context=context)
         request.httprequest.session['ecommerce_order_id'] = order_id
+        context = dict(context or {}, pricelist=self.ecommerce_get_pricelist_id(cr, uid, None, context=context))
         return SaleOrder.browse(cr, SUPERUSER_ID, order_id, context=context)
 
     def ecommerce_get_current_order(self, cr, uid, context=None):
         SaleOrder = self.pool.get('sale.order')
+        context = dict(context or {}, pricelist=self.ecommerce_get_pricelist_id(cr, uid, None, context=context))
         order_id = request.httprequest.session.get('ecommerce_order_id')
         if not order_id:
             request.httprequest.session['ecommerce_order_id'] = False
@@ -211,4 +216,4 @@ class Website(orm.Model):
         return super(Website, self).preprocess_request(cr, uid, ids, request, context=None)
 
     def ecommerce_get_product_domain(self):
-        return [("sale_ok", "=", True)]
+        return [("sale_ok", "=", True),("product_variant_ids","!=",False)]

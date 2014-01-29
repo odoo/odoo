@@ -20,13 +20,10 @@ import openerp
 from openerp.osv import fields
 from openerp.addons.website.models import website
 from openerp.addons.web import http
-from openerp.addons.web.http import request
-
-from ..utils import slugify
+from openerp.addons.web.http import request, LazyResponse
 
 logger = logging.getLogger(__name__)
 
-NOPE = object()
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 
@@ -36,27 +33,25 @@ class Website(openerp.addons.web.controllers.main.Home):
         try:
             main_menu = request.registry['ir.model.data'].get_object(request.cr, request.uid, 'website', 'main_menu')
             first_menu = main_menu.child_id and main_menu.child_id[0]
-            if first_menu and first_menu.url != '/':
+            if first_menu and not ((first_menu.url == '/') or first_menu.url.startswith('/#') or first_menu.url.startswith('/?')):
                 return request.redirect(first_menu.url)
         except:
             pass
         return self.page("website.homepage")
 
-    @http.route('/pagenew/<path:path>', type='http', auth="user")
-    def pagenew(self, path, noredirect=NOPE):
-        web = request.registry['website']
-        try:
-            path = web.new_page(request.cr, request.uid, path, context=request.context)
-        except psycopg2.IntegrityError:
-            logger.exception('Unable to create ir_model_data for page %s', path)
-            response = request.website.render('website.creation_failed', {
-                    'page': path,
-                    'path': '/page/' + request.website.page_for_name(name=path)
-                })
-            response.status_code = 409
-            return response
-        url = "/page/" + path
-        if noredirect is not NOPE:
+    @http.route(website=True, auth="public", multilang=True)
+    def web_login(self, *args, **kw):
+        response = super(Website, self).web_login(*args, **kw)
+        if isinstance(response, LazyResponse):
+            values = dict(response.params['values'], disable_footer=True)
+            response = request.website.render(response.params['template'], values)
+        return response
+
+    @http.route('/pagenew/<path:path>', type='http', auth="user", website=True)
+    def pagenew(self, path, noredirect=False):
+        xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
+        url = "/page/" + xml_id
+        if noredirect:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
 
@@ -96,9 +91,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             page = 'website.%s' % page
 
         try:
-            module, xmlid = page.split('.', 1)
-            model, view_id = request.registry["ir.model.data"].get_object_reference(request.cr, request.uid, module, xmlid)
-            values['main_object'] = request.registry["ir.ui.view"].browse(request.cr, request.uid, view_id, context=request.context)
+            request.website.get_template(page)
         except ValueError, e:
             # page not found
             if request.context['editable']:

@@ -39,31 +39,13 @@
                     step.triggers = function (callback) {
                         var stack = JSON.parse(localStorage.getItem("website-reloads")) || [];
                         var index = stack.indexOf(step.stepId);
-                        if (index !== -1 || window.localStorage.getItem("test-wait-reload")) {
+                        if (index !== -1) {
                             stack.splice(index,1);
                             (callback || self.moveToNextStep).apply(self);
                         } else {
                             stack.push(step.stepId);
                         }
                         localStorage.setItem("website-reloads", JSON.stringify(stack));
-                    };
-                } else if (step.trigger.url) {
-                    step.triggers = function (callback) {
-                        var stack = JSON.parse(localStorage.getItem("website-geturls")) || [];
-                        var id = step.trigger.url.toString();
-                        var index = stack.indexOf(id);
-                        if (index !== -1) {
-                            var url = new website.UrlParser(window.location.href);
-                            var test = typeof step.trigger.url === "string" ?
-                                step.trigger.url == url.pathname+url.search :
-                                step.trigger.url.test(url.pathname+url.search);
-                            if (!test) return;
-                            stack.splice(index,1);
-                            (callback || self.moveToNextStep).apply(self);
-                        } else {
-                            stack.push(id);
-                        }
-                        localStorage.setItem("website-geturls", JSON.stringify(stack));
                     };
                 } else if (step.trigger === 'drag') {
                     step.triggers = function (callback) {
@@ -86,8 +68,27 @@
                             });
                         };
                     }
-                } else if (step.trigger.modal) {
+                } else if (step.trigger.url) {
                     step.triggers = function (callback) {
+                        var stack = JSON.parse(localStorage.getItem("website-geturls")) || [];
+                        var id = step.trigger.url.toString();
+                        var index = stack.indexOf(id);
+                        if (index !== -1) {
+                            var url = new website.UrlParser(window.location.href);
+                            var test = typeof step.trigger.url === "string" ?
+                                step.trigger.url == url.pathname+url.search :
+                                step.trigger.url.test(url.pathname+url.search);
+                            if (!test) return;
+                            stack.splice(index,1);
+                            (callback || self.moveToNextStep).apply(self);
+                        } else {
+                            stack.push(id);
+                        }
+                        localStorage.setItem("website-geturls", JSON.stringify(stack));
+                        return index !== -1;
+                    };
+                } else if (step.trigger.modal) {
+                    step.triggers = function (callback, auto) {
                         var $doc = $(document);
                         function onStop () {
                             if (step.trigger.modal.stopOnClose) {
@@ -98,7 +99,10 @@
                         $doc.one('shown.bs.modal', function () {
                             $('.modal button.btn-primary').one('click', function () {
                                 $doc.off('hide.bs.modal', onStop);
-                                (callback || self.moveToNextStep).apply(self, [step.trigger.modal.afterSubmit]);
+                                console.log(callback);
+                                if (!callback) {
+                                    self.moveToStep(step.trigger.modal.afterSubmit);
+                                }
                             });
                             (callback || self.moveToNextStep).apply(self);
                         });
@@ -156,8 +160,8 @@
                 this.stop();
             } else if (index >= 0) {
                 var self = this;
-                $('.popover.tour').remove();
                 setTimeout(function () {
+                    $('.popover.tour').remove();
                     setTimeout(function () {
                         self.tour.goto(index);
                     }, 0);
@@ -199,16 +203,19 @@
         },
         onSnippetDragged: function (callback) {
             var self = this;
-            function beginDrag () {
+            var selector = '#website-top-navbar [data-snippet-id].ui-draggable';
+            var beginDrag = function beginDrag () {
                 $('.popover.tour').remove();
-                function advance () {
+                var advance = function advance () {
                     if (_.isFunction(callback)) {
                         callback.apply(self);
                     }
-                }
+                    $(selector).off('mouseup', advance);
+                };
                 $(document.body).one('mouseup', advance);
-            }
-            $('#website-top-navbar [data-snippet-id].ui-draggable').one('mousedown', beginDrag);
+                $(selector).off('mousedown', beginDrag);
+            };
+            $(selector).one('mousedown', beginDrag);
         },
         onSnippetDraggedAdvance: function () {
             onSnippetDragged(self.moveToNextStep);
@@ -280,7 +287,7 @@
             function actualDragAndDrop ($thumbnail) {
                 var thumbnailPosition = $thumbnail.position();
                 $thumbnail.trigger($.Event("mousedown", { which: 1, pageX: thumbnailPosition.left, pageY: thumbnailPosition.top }));
-                $thumbnail.trigger($.Event("mousemove", { which: 1, pageX: thumbnailPosition.left, pageY: thumbnailPosition.top+500 }));
+                $thumbnail.trigger($.Event("mousemove", { which: 1, pageX: document.body.scrollWidth/2, pageY: document.body.scrollHeight/2 }));
                 var $dropZone = $(".oe_drop_zone").first();
                 var dropPosition = $dropZone.position();
                 $dropZone.trigger($.Event("mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
@@ -294,6 +301,7 @@
             }
         },
     });
+
 
     website.EditorBar.include({
         tours: [],
@@ -326,7 +334,9 @@
             var self = this;
             var testId = 'test_'+tour.id+'_tour';
             this.tours.push(tour);
-            var defaultDelay = 500; //ms
+            var defaultDelay = 250; //ms
+            var defaultDelayReload = 1500; //ms
+            var overlapsCrash;
             var test = {
                 id: tour.id,
                 run: function (force) {
@@ -337,22 +347,80 @@
                        return step.trigger || step.sampleText;
                     });
                     window.onbeforeunload = function () {
-                        window.localStorage.setItem("test-wait-reload", true);
+                        clearTimeout(overlapsCrash);
                     };
+                    function throwError (message) {
+                        console.log(window.localStorage.getItem("test-report"));
+                        test.reset();
+                        throw message;
+                    }
+                    function initReport () {
+                        // set last time for report
+                        if (!window.localStorage.getItem("test-last-time")) {
+                            window.localStorage.setItem("test-last-time", new Date().getTime());
+                        }
+                    }
+                    function setReport (step) {
+                        var report = JSON.parse(window.localStorage.getItem("test-report")) || {};
+                        report[step.stepId] = (new Date().getTime() - window.localStorage.getItem("test-last-time")) + " ms";
+                        window.localStorage.setItem("test-report", JSON.stringify(report));
+                    }
+                    function testCycling (step) {
+                        var lastStep = window.localStorage.getItem(testId);
+                        var tryStep = lastStep != step.stepId ? 0 : (+(window.localStorage.getItem("test-last-"+testId) || 0) + 1);
+                        window.localStorage.setItem("test-last-"+testId, tryStep);
+                        if (tryStep > 2) {
+                            throwError("Test: '" + testId + "' cycling step: '" + step.stepId + "'");
+                        }
+                        return tryStep;
+                    }
+                    function getDelay (step) {
+                        return step.delay ||
+                            ((step.trigger === 'reload' || (step.trigger && step.trigger.url))
+                                ? defaultDelayReload
+                                : defaultDelay);
+                    }
                     function executeStep (step) {
+                        if (testCycling(step) === 0) initReport();
+
+                        var delay = getDelay (step);
+
+                        overlapsCrash = setTimeout(function () {
+                            throwError("Test: '" + testId + "' can't resolve step: '" + step.stepId + "'");
+                        }, delay + 1000);
+
+
+                        var _next = false;
                         window.localStorage.setItem(testId, step.stepId);
                         function next () {
+                            _next = true;
+                            clearTimeout(overlapsCrash);
+
+                            setReport(step);
+
                             var nextStep = actionSteps.shift();
+
                             if (nextStep) {
-                                executeStep(nextStep);
+                                setTimeout(function () {
+                                    executeStep(nextStep);
+                                }, delay);
                             } else {
                                 window.localStorage.removeItem(testId);
                             }
                         }
+
                         setTimeout(function () {
                             var $element = $(step.element);
-                            if (step.triggers) step.triggers(next);
-                            window.localStorage.removeItem("test-wait-reload");
+                            var flag = step.triggers && (!step.trigger || !step.trigger.modal);
+                            if (flag) {
+                                try {
+                                    step.triggers(next, true);
+                                } catch (e) {
+                                    throwError(e);
+                                }
+                            }
+                            if ((step.trigger === 'reload' || (step.trigger && step.trigger.url)) && _next) return;
+                            
                             if (step.snippet && step.trigger === 'drag') {
                                 website.TestConsole.dragAndDropSnippet(step.snippet);
                             } else if (step.trigger && step.trigger.id === 'change') {
@@ -371,8 +439,8 @@
                                     $element.trigger($.Event("mouseup", { srcElement: $element }));
                                 }
                             }
-                            if (!step.triggers) next();
-                        }, step.delay || defaultDelay);
+                            if (!flag) next();
+                        },0);
                     }
                     var url = new website.UrlParser(window.location.href);
                     if (tour.path && url.pathname !== tour.path && !window.localStorage.getItem(testId)) {
@@ -397,6 +465,12 @@
                 },
                 reset: function () {
                     window.localStorage.removeItem(testId);
+                    window.localStorage.removeItem("test-report");
+                    for (var k in window.localStorage) {
+                        if (window.localStorage[k].indexOf("test-last")) {
+                            window.localStorage.removeItem(k);
+                        }
+                    }
                 },
             };
             website.TestConsole.tests.push(test);

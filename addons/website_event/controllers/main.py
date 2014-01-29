@@ -23,7 +23,6 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.translate import _
-from openerp.addons.website.models import website
 from openerp.addons.website.controllers.main import Website as controllers
 controllers = controllers()
 
@@ -163,7 +162,6 @@ class website_event(http.Controller):
 
     @http.route(['/event/<model("event.event"):event>/page/<page:page>'], type='http', auth="public", website=True, multilang=True)
     def event_page(self, event, page, **post):
-        website.preload_records(event, on_error="website_event.404")
         values = {
             'event': event,
             'main_object': event
@@ -172,7 +170,6 @@ class website_event(http.Controller):
 
     @http.route(['/event/<model("event.event"):event>'], type='http', auth="public", website=True, multilang=True)
     def event(self, event, **post):
-        website.preload_records(event, on_error="website_event.404")
         if event.menu_id and event.menu_id.child_id:
             target_url = event.menu_id.child_id[0].url
         else:
@@ -183,7 +180,6 @@ class website_event(http.Controller):
 
     @http.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", website=True, multilang=True)
     def event_register(self, event, **post):
-        website.preload_records(event, on_error="website_event.404")
         values = {
             'event': event,
             'main_object': event,
@@ -191,61 +187,6 @@ class website_event(http.Controller):
             'main_object': event,
         }
         return request.website.render("website_event.event_description_full", values)
-
-    @http.route(['/event/add_cart'], type='http', auth="public", website=True, multilang=True)
-    def add_cart(self, event_id, **post):
-        user_obj = request.registry['res.users']
-        order_line_obj = request.registry.get('sale.order.line')
-        ticket_obj = request.registry.get('event.event.ticket')
-        order_obj = request.registry.get('sale.order')
-        website = request.registry['website']
-
-        order = website.ecommerce_get_current_order(request.cr, request.uid, context=request.context)
-        if not order:
-            order = website.ecommerce_get_new_order(request.cr, request.uid, context=request.context)
-
-        partner_id = user_obj.browse(request.cr, SUPERUSER_ID, request.uid,
-                                     context=request.context).partner_id.id
-
-        fields = [k for k, v in order_line_obj._columns.items()]
-        values = order_line_obj.default_get(request.cr, SUPERUSER_ID, fields,
-                                            context=request.context)
-
-        _values = None
-        for key, value in post.items():
-            try:
-                quantity = int(value)
-            except:
-                quantity = None
-            ticket_id = key.split("-")[0] == 'ticket' and int(key.split("-")[1]) or None
-            if not ticket_id or not quantity:
-                continue
-            ticket = ticket_obj.browse(request.cr, request.uid, ticket_id,
-                                       context=request.context)
-
-            values['product_id'] = ticket.product_id.id
-            values['event_id'] = ticket.event_id.id
-            values['event_ticket_id'] = ticket.id
-            values['product_uom_qty'] = quantity
-            values['price_unit'] = ticket.price
-            values['order_id'] = order.id
-            values['name'] = "%s: %s" % (ticket.event_id.name, ticket.name)
-
-            ticket.check_registration_limits_before(quantity)
-
-            # change and record value
-            pricelist_id = order.pricelist_id and order.pricelist_id.id or False
-            _values = order_line_obj.product_id_change(
-                request.cr, SUPERUSER_ID, [], pricelist_id, ticket.product_id.id,
-                partner_id=partner_id, context=request.context)['value']
-            _values.update(values)
-
-            order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, _values, context=request.context)
-            order_obj.write(request.cr, SUPERUSER_ID, [order.id], {'order_line': [(4, order_line_id)]}, context=request.context)
-
-        if not _values:
-            return request.redirect("/event/%s/" % event_id)
-        return request.redirect("/shop/checkout")
 
     @http.route(['/event/publish'], type='json', auth="public", website=True)
     def publish(self, id, object):

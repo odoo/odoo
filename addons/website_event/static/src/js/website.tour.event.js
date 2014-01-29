@@ -43,7 +43,7 @@
                         modal: {
                             stopOnClose: true,
                             afterSubmit: 'event-page',
-                        }
+                        },
                     },
                 },
                 {
@@ -60,7 +60,9 @@
                     placement: 'right',
                     title:     "Create Event",
                     content:   "Click <em>Continue</em> to create the event.",
-                    trigger:   'click',
+                    trigger: {
+                        url:        /event\/[0-9]+\/register/
+                    },
                 },
                 {
                     stepId:    'event-page',
@@ -68,14 +70,14 @@
                     content:   "This is your new event page. We will edit the event presentation page.",
                     template:  self.popover({ next: "OK" }),
                 },
-                {
-                    stepId:    'event-price',
-                    element:   '[data-oe-field=price]',
-                    placement: 'top',
-                    title:     "Ticket price",
-                    content:   "Edit your ticket price.",
-                    template:  self.popover({ next: "OK" }),
-                },
+                // {
+                //     stepId:    'event-price',
+                //     element:   '[data-oe-field=price]',
+                //     placement: 'top',
+                //     title:     "Ticket price",
+                //     content:   "Edit your ticket price.",
+                //     template:  self.popover({ next: "OK" }),
+                // },
                 {
                     stepId:    'add-banner',
                     element:   'button[data-action=snippet]',
@@ -137,7 +139,7 @@
                     title:     "Save your modifications",
                     content:   "Once you click on save, your event is updated.",
                     template:  self.popover({ fixed: true }),
-                    trigger:   'click',
+                    trigger:   'reload',
                 },
                 {
                     stepId:    'publish-event',
@@ -146,11 +148,10 @@
                     title:     "Publish your event",
                     content:   "Click to publish your event.",
                     trigger:   'click',
-                    delay:     5000,
                 },
                 {
                     stepId:    'customize-event',
-                    element:   '.js_publish_management button#dopprod-8',
+                    element:   '.js_publish_management button[data-toggle="dropdown"]',
                     placement: 'left',
                     title:     "Customize your event",
                     content:   "Click here to customize your event further.",
@@ -158,7 +159,7 @@
                 },
                 {
                     stepId:    'edit-event-backend',
-                    element:   '.js_publish_management ul>li>a',
+                    element:   '.js_publish_management ul>li>a:last',
                     placement: 'left',
                     title:     "Customize your event",
                     content:   "Click here to edit your event in the backend.",

@@ -17,7 +17,7 @@ function waitFor (ready, callback, timeout, timeoutMessageCallback) {
             }
         }
     }, 100);
-};
+}
 
 function run (test) {
     var options = JSON.parse(phantom.args);
@@ -27,15 +27,16 @@ function run (test) {
     var scheme = options.scheme ? options.scheme+'://' : 'http://';
     var host = options.host ? options.host : 'localhost';
     var port = options.port ? ':'+options.port : '';
-    var path = options.path ? options.path : '/web';
+    var path = options.path ? options.path : '/login';
 
     var queryParams = [];
     if (options.db) queryParams.push('db='+options.db);
+    if (options.user) queryParams.push('login='+options.user);
+    if (options.password) queryParams.push('key='+options.password);
+    if (options.redirect) queryParams.push('redirect='+options.redirect);
     var query = queryParams.length > 0 ? '?'+queryParams.join('&') : '';
 
     var hashParams = [];
-    if (options.user) hashParams.push('login='+options.user);
-    if (options.password) hashParams.push('password='+options.password);
     if (options.action) hashParams.push('action='+options.action);
     var hash = hashParams.length > 0 ? '#'+hashParams.join('&') : '';
 
@@ -54,9 +55,7 @@ function run (test) {
         phantom.exit(1);
     };
     page.onConsoleMessage = function(message) {
-        /* Disabled because of the 'web_hello' addon */
-        //console.log(message);
-        //phantom.exit(1);
+        console.log(message);
     };
 
     page.onCallback = function(data) {

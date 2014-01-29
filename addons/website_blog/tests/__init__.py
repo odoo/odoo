@@ -19,12 +19,6 @@
 #
 ##############################################################################
 
-from openerp.addons.website_blog.tests import test_controllers
-
 import test_ui
-
-checks = [
-    test_controllers,
-]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

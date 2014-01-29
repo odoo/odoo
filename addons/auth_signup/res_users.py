@@ -66,19 +66,20 @@ class res_partner(osv.Model):
                 self.signup_prepare(cr, uid, [partner.id], context=context)
                 partner.refresh()
 
-            # the parameters to encode for the query and fragment part of url
-            query = {'db': cr.dbname}
+            # the parameters to encode for the query
+            query = dict(db=cr.dbname)
             signup_type = context.get('signup_force_type_in_url', partner.signup_type or '')
-            fragment = {'action': action, 'type': signup_type}
+            if signup_type:
+                query['mode'] = signup_type
 
             if partner.signup_token and signup_type:
-                fragment['token'] = partner.signup_token
+                query['token'] = partner.signup_token
             elif partner.user_ids:
-                fragment['db'] = cr.dbname
-                fragment['login'] = partner.user_ids[0].login
+                query['login'] = partner.user_ids[0].login
             else:
                 continue        # no signup token, no user, thus no signup url!
 
+            fragment = dict()
             if view_type:
                 fragment['view_type'] = view_type
             if menu_id:
@@ -88,7 +89,7 @@ class res_partner(osv.Model):
             if res_id:
                 fragment['id'] = res_id
 
-            res[partner.id] = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+            res[partner.id] = urljoin(base_url, "/web/login?%s#%s" % (urlencode(query), urlencode(fragment)))
 
         return res
 
@@ -261,9 +262,11 @@ class res_users(osv.Model):
         # send email to users with their signup url
         template = False
         if context.get('create_user'):
-            template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'set_password_email')
-            if not template.exists():
-                template = False
+            try:
+                # get_object() raises ValueError if record does not exist
+                template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'set_password_email')
+            except ValueError:
+                pass
         if not bool(template):
             template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'reset_password_email')
         assert template._name == 'email.template'
@@ -271,10 +274,7 @@ class res_users(osv.Model):
         for user in self.browse(cr, uid, ids, context):
             if not user.email:
                 raise osv.except_osv(_("Cannot send email: user has no email address."), user.name)
-            try:
-                self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, force_send=True, raise_exception=True, context=context)
-            except Exception:
-                raise
+            self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, force_send=True, raise_exception=True, context=context)
 
     def create(self, cr, uid, values, context=None):
         if context is None:

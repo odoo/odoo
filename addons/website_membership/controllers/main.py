@@ -4,7 +4,6 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models import website
 from openerp.addons.website_partner.controllers import main as website_partner
 from openerp.tools.translate import _
 
@@ -95,7 +94,6 @@ class WebsiteMembership(http.Controller):
     @http.route(['/members/<int:partner_id>/', '/members/<partner_name>-<int:partner_id>/'], type='http', auth="public", website=True, multilang=True)
     def partners_ref(self, partner_id, **post):
         partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
-        website.preload_records(partner)
         values = website_partner.get_partner_template_value(partner)
         if not values:
             return self.members(**post)

@@ -1,20 +1,25 @@
 /*
-*    OpenERP, Open Source Management Solution
-*    Copyright (C) 2004-TODAY OpenERP S.A. <http://www.openerp.com>
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ *    OpenERP, Open Source Management Solution
+ *    Copyright (C) 2004-TODAY OpenERP S.A. <http://www.openerp.com>
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * This file is intended to add interactivity to survey forms rendered by
+ * the website engine.
+ */
 
 $(document).ready(function () {
     'use strict';
@@ -25,10 +30,12 @@ $(document).ready(function () {
     var prefill_controller = the_form.attr("data-prefill");
     var validate_controller = the_form.attr("data-validate");
     var submit_controller = the_form.attr("data-submit");
+    var print_mode = false;
 
     // Printing mode: will disable all the controls in the form
     if (_.isUndefined(submit_controller)) {
         $('.js_surveyform :input').prop('disabled', true);
+        print_mode = true
     }
 
     // Custom code for right behavior of radio buttons with comments box
@@ -81,10 +88,6 @@ $(document).ready(function () {
         return prefill_def;
     };
 
-    // function validate(form){
-    //     return false;
-    // }
-
     // Parameters for form submission
     $('.js_surveyform').ajaxForm({
         url: submit_controller,
@@ -115,14 +118,19 @@ $(document).ready(function () {
         }
     });
 
-    // Handles the event when a question is focused out
-    $('.js_question-wrapper').focusout(
-        function(){
-            console.debug("[survey] Focus lost on question " + $(this).attr("id"));
+    // // Handles the event when a question is focused out
+    // $('.js_question-wrapper').focusout(
+    //     function(){
+    //         console.debug("[survey] Focus lost on question " + $(this).attr("id"));
+    // });
+
+    // Launch prefilling
+    prefill().then(function(){
+        // Activate the print dialog if needed
+        if (print_mode){
+            window.print();
+        };
     });
 
     console.debug("[survey] Custom JS for survey loaded!");
-
-    // Launch prefilling
-    prefill();
 });

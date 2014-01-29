@@ -9,10 +9,11 @@
     'author': 'OpenERP SA',
     'depends': [
         'website',
-        'payment_acquirer',
+        'payment',
     ],
     'data': [
         'views/website_payment_templates.xml',
+        'views/website_settings_payment.xml',
     ],
-    'auto_install': True,
+    'auto_install': False,
 }

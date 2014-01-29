@@ -47,7 +47,7 @@ sent mails with personal token for the invitation of the survey.
         'data/survey_cron.xml'
     ],
     'demo': ['data/survey_demo_user.xml',
-             # 'data/survey_demo_recruitment.xml',
+             'data/survey_demo_recruitment.xml',
              'data/survey_demo_feedback.xml',
              'data/survey_demo_appraisal.xml'],
     #'test': [
@@ -59,7 +59,6 @@ sent mails with personal token for the invitation of the survey.
     'sequence': 10,
     'images': [],
     'css': ['static/src/css/survey.css'],
-    'js': ['static/src/js/survey.js'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

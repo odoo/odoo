@@ -22,7 +22,7 @@ chat operators.
     'demo': [
         "im_livechat_demo.xml",
     ],
-    'depends' : ["im", "mail", "portal"],
+    'depends' : ["im", "mail"],
     'installable': True,
     'auto_install': False,
     'application': True,

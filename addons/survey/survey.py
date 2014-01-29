@@ -90,13 +90,21 @@ class survey_survey(osv.Model):
 
     def _get_public_url(self, cr, uid, ids, name, arg, context=None):
         """ Computes a public URL for the survey """
-        res = dict((id, 0) for id in ids)
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
             'web.base.url')
-        for survey_browse in self.browse(cr, uid, ids, context=context):
-            res[survey_browse.id] = urljoin(base_url, "survey/start/%s/"
-                                            % survey_browse.id)
-        return res
+        return {id: urljoin(base_url, "survey/start/%s/" % id) for id in ids}
+
+    def _get_print_url(self, cr, uid, ids, name, arg, context=None):
+        """ Computes a printing URL for the survey """
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
+            'web.base.url')
+        return {id: urljoin(base_url, "survey/print/%s/" % id) for id in ids}
+
+    def _get_result_url(self, cr, uid, ids, name, arg, context=None):
+        """ Computes an URL for the survey results """
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
+            'web.base.url')
+        return {id: urljoin(base_url, "survey/result/%s/" % id) for id in ids}
 
     def _get_result_url(self, cr, uid, ids, name, arg, context=None):
         """ Computes a result URL for the survey """
@@ -113,8 +121,8 @@ class survey_survey(osv.Model):
         'title': fields.char('Title', required=1, translate=True),
         'res_model': fields.char('Category'),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Pages'),
-        'date_open': fields.datetime('Opening date'),
-        'date_close': fields.datetime('Closing date'),
+        'date_open': fields.datetime('Opening date', readonly=True),
+        'date_close': fields.datetime('Closing date', readonly=True),
         'user_input_limit': fields.integer('Automatic closing limit',
             help="Limits the number of instances of this survey that can be completed (if set to 0, no limit is applied)",
             oldname='max_response_limit'),
@@ -141,8 +149,10 @@ class survey_survey(osv.Model):
             'User responses', readonly=1),
         'public_url': fields.function(_get_public_url,
             string="Public link", type="char"),
+        'print_url': fields.function(_get_print_url,
+            string="Print link", type="char"),
         'result_url': fields.function(_get_result_url,
-            string="Result link", type="char"),
+            string="Results link", type="char"),
         'email_template_id': fields.many2one('email.template',
             'Email Template', ondelete='set null'),
         'thank_you_message': fields.html('Thank you message', translate=True,
@@ -163,6 +173,27 @@ class survey_survey(osv.Model):
     }
 
     # Public methods #
+
+    def write(self, cr, uid, ids, vals, context=None):
+        new_state = vals.get('state')
+        if new_state == 'draft':
+            vals.update({'date_open': None})
+            vals.update({'date_close': None})
+            self.message_post(cr, uid, ids, body="""<p>Survey drafted</p>""", context=context)
+        elif new_state == 'open':
+            if self._has_questions(cr, uid, ids, context=None):
+                vals.update({'date_open': fields.datetime.now(), 'date_close': None})
+                self.message_post(cr, uid, ids, body="""<p>Survey opened</p>""", context=context)
+            else:
+                raise osv.except_osv(_('Error!'), _('You can not open a survey that has no questions.'))
+        elif new_state == 'close':
+            vals.update({'date_close': fields.datetime.now()})
+            self.message_post(cr, uid, ids, body="""<p>Survey closed</p>""", context=context)
+            # Purge the tests records
+            self.pool.get('survey.user_input').purge_tests(cr, uid, context=context)
+        elif new_state == 'cancel':
+            self.message_post(cr, uid, ids, body="""<p>Survey cancelled</p>""", context=context)
+        return super(survey_survey, self).write(cr, uid, ids, vals, context=context)
 
     def copy(self, cr, uid, ids, default=None, context=None):
         vals = {}
@@ -212,35 +243,41 @@ class survey_survey(osv.Model):
             else:
                 return (pages[current_page_index + 1][1], current_page_index + 1, False)
 
-    def action_edit_survey(self, cr, uid, ids, context=None):
-        ''' Open a survey in edition view '''
-        id = ids[0]
-        context.update({
-            'survey_id': id,
-            'edit': True,
-            'ir_actions_act_window_target': 'new',
-        })
+    # Web client actions
+
+    def action_kanban_update_state(self, cr, uid, ids, context=None):
+        ''' Change the state from the kanban ball '''
+        for survey in self.read(cr, uid, ids, ['state'], context=context):
+            if survey['state'] == 'draft':
+                self.write(cr, uid, [survey['id']], {'state': 'open'}, context=context)
+            elif survey['state'] == 'open':
+                self.write(cr, uid, [survey['id']], {'state': 'close'}, context=context)
+            elif survey['state'] == 'close':
+                self.write(cr, uid, [survey['id']], {'state': 'cancel'}, context=context)
+            elif survey['state'] == 'cancel':
+                self.write(cr, uid, [survey['id']], {'state': 'draft'}, context=context)
+        return {}
+
+    def action_start_survey(self, cr, uid, ids, context=None):
+        ''' Open the website page with the survey form '''
         return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'survey.question.wiz',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'name': self.browse(cr, uid, id, context=context).title,
-            'context': context
+            'type': 'ir.actions.act_url',
+            'name': "Start Survey",
+            'target': 'self',
+            'url': self.read(cr, uid, ids, ['public_url'], context=context)[0]['public_url']
         }
 
     def action_send_survey(self, cr, uid, ids, context=None):
         ''' Open a window to compose an email, pre-filled with the survey
         message '''
         if not self._has_questions(cr, uid, ids, context=None):
-            raise osv.except_osv(_('Error!'), _('You can not send a survey that has no questions.'))
+            raise osv.except_osv(_('Error!'), _('You cannot send an invitation for a survey that has no questions.'))
 
         survey_browse = self.pool.get('survey.survey').browse(cr, uid, ids,
             context=context)[0]
         if survey_browse.state != "open":
             raise osv.except_osv(_('Warning!'),
-                _("You cannot send invitations since the survey is not open."))
+                _("You cannot send invitations unless the survey is open."))
 
         assert len(ids) == 1, 'This option should only be used for a single \
                                 survey at a time.'
@@ -250,15 +287,14 @@ class survey_survey(osv.Model):
         template_id = templates[1] if len(templates) > 0 else False
         ctx = dict(context)
 
-        ctx.update({
-            'default_model': 'survey.survey',
-            'default_res_id': ids[0],
-            'default_survey_id': ids[0],
-            'default_use_template': bool(template_id),
-            'default_template_id': template_id,
-            'default_composition_mode': 'comment',
-            'survey_state': survey_browse.state
-            })
+        ctx.update({'default_model': 'survey.survey',
+                    'default_res_id': ids[0],
+                    'default_survey_id': ids[0],
+                    'default_use_template': bool(template_id),
+                    'default_template_id': template_id,
+                    'default_composition_mode': 'comment',
+                    'survey_state': survey_browse.state}
+                   )
         return {
             'type': 'ir.actions.act_window',
             'view_type': 'form',
@@ -268,24 +304,32 @@ class survey_survey(osv.Model):
             'context': ctx,
         }
 
-    def write(self, cr, uid, ids, vals, context=None):
-        new_state = vals.get('state')
-        if new_state == 'draft':
-            vals.update({'date_open': None})
-            vals.update({'date_close': None})
-            self.message_post(cr, uid, ids, body="""<p>Survey drafted</p>""", context=context)
-        elif new_state == 'open':
-            if self._has_questions(cr, uid, ids, context=None):
-                vals.update({'date_open': fields.datetime.now(), 'date_close': None})
-                self.message_post(cr, uid, ids, body="""<p>Survey opened</p>""", context=context)
-            else:
-                raise osv.except_osv(_('Error!'), _('You can not open a survey that has no questions.'))
-        elif new_state == 'close':
-            vals.update({'date_close': fields.datetime.now()})
-            self.message_post(cr, uid, ids, body="""<p>Survey closed</p>""", context=context)
-        elif new_state == 'cancel':
-            self.message_post(cr, uid, ids, body="""<p>Survey cancelled</p>""", context=context)
-        return super(survey_survey, self).write(cr, uid, ids, vals, context=context)
+    def action_print_survey(self, cr, uid, ids, context=None):
+        ''' Open the website page with the survey printable view '''
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Print Survey",
+            'target': 'self',
+            'url': self.read(cr, uid, ids, ['print_url'], context=context)[0]['print_url']
+        }
+
+    def action_result_survey(self, cr, uid, ids, context=None):
+        ''' Open the website page with the survey results view '''
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Results of the Survey",
+            'target': 'self',
+            'url': self.read(cr, uid, ids, ['result_url'], context=context)[0]['result_url']
+        }
+
+    def action_test_survey(self, cr, uid, ids, context=None):
+        ''' Open the website page with the survey form into test mode'''
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Results of the Survey",
+            'target': 'self',
+            'url': self.read(cr, uid, ids, ['public_url'], context=context)[0]['public_url'] + "phantom/"
+        }
 
 
 class survey_page(osv.Model):
@@ -692,6 +736,10 @@ class survey_user_input(osv.Model):
         'user_input_line_ids': fields.one2many('survey.user_input_line',
                                                'user_input_id', 'Answers'),
 
+        # URLs used to display the answers
+        'result_url': fields.related('survey_id', 'result_url', string="Public link to the survey results"),
+        'print_url': fields.related('survey_id', 'print_url', string="Public link to the empty survey"),
+
         #'quizz_score': fields.function()
     }
     _defaults = {
@@ -705,12 +753,12 @@ class survey_user_input(osv.Model):
         ('unique_token', 'UNIQUE (token)', 'A token must be unique!')
     ]
 
-    def do_clean_emptys(self, cr, uid, automatic=False, context=None):
-        ''' Remove empty user inputs that have been created manually
+    def copy(self, cr, uid, id, default=None, context=None):
+        raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
+            element!'))
 
-        .. note:
-            This function does not remove
-        '''
+    def do_clean_emptys(self, cr, uid, automatic=False, context=None):
+        ''' Remove empty user inputs that have been created manually (cronjob) '''
         empty_user_input_ids = self.search(cr, uid, [('type', '=', 'manually'),
                                                      ('state', '=', 'new'),
                                                      ('date_create', '<', (datetime.datetime.now() - datetime.timedelta(hours=1)).strftime(DF))],
@@ -718,7 +766,13 @@ class survey_user_input(osv.Model):
         if empty_user_input_ids:
             self.unlink(cr, uid, empty_user_input_ids, context=context)
 
+    def purge_tests(self, cr, uid, context=None):
+        ''' Remove the test entries '''
+        old_tests = self.search(cr, uid, [('test_entry', '=', True)], context=context)
+        return self.unlink(cr, uid, old_tests, context=context)
+
     def action_survey_resent(self, cr, uid, ids, context=None):
+        ''' Sent again the invitation '''
         record = self.browse(cr, uid, ids[0], context=context)
         context = context or {}
         context.update({
@@ -727,12 +781,27 @@ class survey_user_input(osv.Model):
             'default_multi_email': record.email or "",
             'default_public': 'email_private',
         })
-        return self.pool.get('survey.survey').action_survey_sent(cr, uid,
+        return self.pool.get('survey.survey').action_send_survey(cr, uid,
             [record.survey_id.id], context=context)
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
-            element!'))
+    def action_view_answers(self, cr, uid, ids, context=None):
+        ''' Open the website page with the survey form '''
+        user_input = self.read(cr, uid, ids, ['print_url', 'token'], context=context)[0]
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "View Answers",
+            'target': 'self',
+            'url': '%s%s/' % (user_input['print_url'], user_input['token'])
+        }
+
+    def action_survey_results(self, cr, uid, ids, context=None):
+        ''' Open the website page with the survey results '''
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Survey Results",
+            'target': 'self',
+            'url': self.read(cr, uid, ids, ['result_url'], context=context)[0]['result_url']
+        }
 
 
 class survey_user_input_line(osv.Model):
@@ -748,7 +817,7 @@ class survey_user_input_line(osv.Model):
                                   relation='survey.page', string="Page"),
         'survey_id': fields.related('user_input_id', 'survey_id',
                                     type="many2one", relation="survey.survey",
-                                    string='Survey'),
+                                    string='Survey', store=True),
         'date_create': fields.datetime('Create Date', required=1),
         'skipped': fields.boolean('Skipped'),
         'answer_type': fields.selection([('text', 'Text'),

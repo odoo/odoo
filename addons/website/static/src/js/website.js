@@ -67,6 +67,7 @@
     var dom_ready = website.dom_ready = $.Deferred();
     $(document).ready(function () {
         website.is_editable = website.is_editable || $('html').data('editable');
+        website.is_editable_button= website.is_editable_button || $('html').data('editable');
         dom_ready.resolve();
     });
 
@@ -149,8 +150,8 @@
 
     website.error = function(data, url) {
         var $error = $(openerp.qweb.render('website.error_dialog', {
-            'title': data.data ? data.data.arguments[0] : data.statusText,
-            'message': data.data ? data.data.arguments[1] : "",
+            'title': data.data ? data.data.arguments[0] : "",
+            'message': data.data ? data.data.arguments[1] : data.statusText,
             'backend_url': url
         }));
         $error.appendTo("body");
@@ -262,7 +263,7 @@
     dom_ready.then(function () {
 
         /* ----- BOOTSTRAP  STUFF ---- */
-        $('.js_tooltip').bstooltip();
+        // $('.js_tooltip').bstooltip();
 
         /* ----- PUBLISHING STUFF ---- */
         $(document).on('click', '.js_publish_management .js_publish_btn', function () {

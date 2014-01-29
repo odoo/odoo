@@ -47,7 +47,8 @@ class WebsiteUiSuite(unittest.TestSuite):
         self._ignore_filters = [
             # Ignore phantomjs warnings
             "*** WARNING:",
-
+            # Disabled because of the 'web_hello' addon
+            "hello",
             # Fixes an issue with PhantomJS 1.9.2 on OS X 10.9 (Mavericks)
             # cf. https://github.com/ariya/phantomjs/issues/11418
             "CoreText performance note",
@@ -146,6 +147,6 @@ def full_path(pyfile, filename):
 
 def load_tests(loader, base, _):
     base.addTest(WebsiteUiSuite(full_path(__file__, 'dummy_test.js'), {}, 5.0))
-    base.addTest(WebsiteUiSuite(full_path(__file__, 'simple_dom_test.js'), { 'action': 'website.action_website_homepage' }, 60.0))
-    base.addTest(WebsiteUiSuite(full_path(__file__, 'homepage_test.js'),   { 'action': 'website.action_website_homepage' }, 60.0))
+    base.addTest(WebsiteUiSuite(full_path(__file__, 'simple_dom_test.js'), {'redirect': '/page/website.homepage'}, 60.0))
+    base.addTest(WebsiteUiSuite(full_path(__file__, 'homepage_test.js'), {'redirect': '/page/website.homepage'}, 60.0))
     return base

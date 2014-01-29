@@ -12,12 +12,18 @@
 </template>
 
 <template id="website.submenu" name="Submenu">
-    <li t-if="not submenu.child_id">
+    <li t-if="not submenu.child_id" t-att-class="
+        ((submenu.url != '/' and request.httprequest.path.startswith(submenu.url)) or
+         request.httprequest.path == submenu.url) and 'active'
+        ">
         <a t-att-href="url_for(submenu.url)" t-ignore="true" t-att-target="'blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>
-    <li t-if="submenu.child_id" class="dropdown">
+    <li t-if="submenu.child_id" t-attf-class="dropdown #{
+        ((submenu.url != '/' and [1 for submenu in submenu.child_id if request.httprequest.path.startswith(submenu.url)]) or
+         request.httprequest.path == submenu.url) and 'active'
+        }">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             <span t-field="submenu.name"/> <span class="caret" t-ignore="true"></span>
         </a>
@@ -46,12 +52,13 @@
             <t t-if="not title">
                 <t t-set="title"><t t-raw="res_company.name"/><t t-if="additional_title"> - <t t-raw="additional_title"/></t></t>
             </t>
-            <title><t t-esc="title"/></title>
+            <meta name="viewport" content="initial-scale=1"/>
             <meta name="openerp.company" t-att-value="res_company.name"/>
             <meta name="description" t-att-value="main_object and 'website_meta_description' in main_object
                 and main_object.website_meta_description or website_meta_description"/>
             <meta name="keywords" t-att-value="main_object and 'website_meta_keywords' in main_object
                 and main_object.website_meta_keywords or website_meta_keywords"/>
+            <title><t t-esc="title"/></title>
 
             <!-- Load stylesheets before scripts to avoid blocking -->
             <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
@@ -97,7 +104,7 @@
                                     <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                         <t t-call="website.submenu"/>
                                     </t>
-                                    <li class="divider" groups="base.group_user,base.group_portal"/>
+                                    <li class="divider" groups="base.group_user,base.group_portal" t-ignore="true"/>
                                     <li class="dropdown" t-ignore="true" groups="base.group_user,base.group_portal">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                             <b>
@@ -192,6 +199,16 @@
                     </div>
                 </footer>
             </div>
+            <t t-if="website.google_analytics_key">
+                <script>
+                    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+                    function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+                    e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+                    e.src='//www.google-analytics.com/analytics.js';
+                    r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+                    ga('create','<t t-esc="website.google_analytics_key"/>');ga('send','pageview');
+                </script>
+            </t>
         </body>
     </html>
 </template>
@@ -211,11 +228,11 @@
         <link rel='stylesheet' href='/website/static/lib/bootstrap-tour/bootstrap-tour.css'/>
 
 
-        <link rel="stylesheet" href="/select2/static/lib/select2/select2.css"/>
+        <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
         <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
         <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
 
-        <script type="text/javascript" src="/select2/static/lib/select2/select2.js"></script>
+        <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
         <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
         <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>
         <script t-if="not translatable" type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
@@ -240,11 +257,19 @@
     </xpath>
 </template>
 
-<template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In">
+<template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout">
+    <xpath expr="t" position="replace">
+        <t t-call="website.layout">
+            <div class="oe_website_login_container" t-raw="0"/>
+        </t>
+    </xpath>
+</template>
+
+<template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
     <xpath expr="//ul[@id='top_menu']" position="inside">
-        <li class="divider" groups="base.group_public"/>
-        <li groups="base.group_public">
-            <a t-attf-href="/web#redirect=#{ quote_plus(url_for('', keep_query='*')) }">
+        <li class="divider"/>
+        <li>
+            <a t-attf-href="/web/login">
                 <b>Sign in</b>
             </a>
         </li>
@@ -431,7 +456,7 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default" t-if="qweb_template">
+        <div class="panel panel-default" t-if="qweb_exception">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_qweb">
@@ -442,11 +467,11 @@
             <div id="error_qweb" class="panel-collapse collapse">
                 <div class="panel-body">
                     <p>
-                        The error occured while rendering the template <code t-esc="qweb_template"/>
-                        <t t-if="qweb_eval">and evaluating the following expression: <code t-esc="qweb_eval"/></t>
+                        The error occured while rendering the template <code t-esc="qweb_exception.template"/>
+                        <t t-if="qweb_exception.expression">and evaluating the following expression: <code t-esc="qweb_exception.expression"/></t>
                     </p>
-                    <t t-if="qweb_node">
-                        <pre id="exception_node" t-esc="qweb_node.toxml()"/>
+                    <t t-if="qweb_exception.node">
+                        <pre id="exception_node" t-esc="qweb_exception.node.toxml()"/>
                     </t>
                 </div>
             </div>
@@ -530,7 +555,7 @@
                     <div class="navbar navbar-default navbar-static-top">
                         <div class="container">
                             <div class="collapse navbar-collapse navbar-top-collapse">
-                                <ul class="nav navbar-nav">
+                                <ul class="nav navbar-nav pull-right">
                                     <li><a href="/">Home</a></li>
                                     <li><a href="javascript: window.history.back()">Back</a></li>
                                 </ul>
@@ -543,9 +568,9 @@
                     </div>
 
                     <div class="container" t-if="views">
-                        <div class="alert alert-danger" t-if="qweb_template and editable">
+                        <div class="alert alert-danger" t-if="qweb_exception and editable">
                             <h4>Template fallback</h4>
-                            <p>An error occured while rendering the template <code t-esc="qweb_template"/>.</p>
+                            <p>An error occured while rendering the template <code t-esc="qweb_exception.template"/>.</p>
                             <p>If this error is caused by a change of yours in the templates, you have the possibility to reset one or more templates to their <strong>factory settings</strong>.</p>
                             <form action="/website/reset_templates" method="post">
                                 <ul class="oe_template_fallback">
@@ -636,6 +661,9 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     </div>
                 </div>
                 <div class="col-md-4 mb32">
+                    <div groups="base.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or ''">
+                        <a class="btn btn-primary" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s' % (res_company._name, res_company.id)" title='Edit in backend'>Edit</a>
+                    </div>
                     <t t-call="website.company_description"/>
                 </div>
             </div>
@@ -688,55 +716,19 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     </t>
 </template>
 
-<template id="creation_failed">
-    <t t-call="website.layout">
-        <div id="wrap">
-            <div class="oe_structure">
-                <div class="container">
-                    <h1 class="text-center">
-                        The page "<em><t t-esc="page"/></em>"
-                        already exists
-                    </h1>
-                    <h3 class="text-center text-muted">We could not create it.</h3>
-                    <ul>
-                        <li>
-                            You can <a t-href="#{path}">visit the existing page</a>
-                        </li>
-                        <li>Or you can <a href="#" class="create-new-page">
-                            create an other page.</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <script type="application/javascript">
-            $(document.body).on('click', 'a.create-new-page', function (e) {
-                e.preventDefault();
-                openerp.website.prompt({
-                    window_title: "New Page",
-                    input: "Page Title",
-                }).then(function (val) {
-                    if (val) {
-                        document.location = '/pagenew/' + encodeURI(val);
-                    }
-                });
-            });
-        </script>
-    </t>
-</template>
-
 <template id="contact">
-    <address t-ignore="true">
-        <div t-att-class='"" if "name" in fields else "css_non_editable_mode_hidden"'><span t-esc="name"/></div>
-        <div class='css_editable_mode_hidden'>
-            <div t-if="address and 'address' in fields">
-                <i class='fa fa-map-marker'/>
-                <span t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or '&lt;br/&gt; &amp;nbsp; &amp;nbsp; ')"/>
-            </div>
-            <div t-if="phone and 'phone' in fields"><i class='fa fa-phone'/> <span t-esc="phone"/></div>
-            <div t-if="mobile and 'mobile' in fields"><i class='fa fa-mobile-phone'/> <span t-esc="mobile"/></div>
-            <div t-if="fax and 'fax' in fields"><i class='fa fa-file-text-o'/> <span t-esc="fax"/></div>
-            <div t-if="email and 'email' in fields"><i class='fa fa-envelope'/> <span t-esc="email"/></div>
+    <address t-ignore="true" class="mb0">
+        <div t-att-class="'name' not in fields and 'css_non_editable_mode_hidden'"><span t-esc="name"/></div>
+        <div t-if="address and 'address' in fields" class='css_editable_mode_hidden'>
+            <i class='fa fa-map-marker'/> <span t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or '&lt;br/&gt; &amp;nbsp; &amp;nbsp; ')"/>
         </div>
+        <div t-if="city and 'city' in fields" class='css_editable_mode_hidden'>
+            <i class='fa fa-map-marker'/> <span t-raw="city"/>, <span t-raw="country_id"/>
+        </div>
+        <div t-if="phone and 'phone' in fields" class='css_editable_mode_hidden'><i class='fa fa-phone'/> <span t-esc="phone"/></div>
+        <div t-if="mobile and 'mobile' in fields" class='css_editable_mode_hidden'><i class='fa fa-mobile-phone'/> <span t-esc="mobile"/></div>
+        <div t-if="fax and 'fax' in fields" class='css_editable_mode_hidden'><i class='fa fa-file-text-o'/> <span t-esc="fax"/></div>
+        <div t-if="email and 'email' in fields" class='css_editable_mode_hidden'><i class='fa fa-envelope'/> <span t-esc="email"/></div>
     </address>
 </template>
 

@@ -20,7 +20,7 @@
         <!-- POSTS -->
         <record id="blog_post_1" model="blog.post">
             <field name="name">OpenERP v8 New Features</field>
-            <field name="category_id" ref="blog_category_1"/>
+            <field name="blog_id" ref="blog_blog_1"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
             <field name="website_published" eval="True"/>
             <field name="website_meta_keywords">OpenERP, Point of Sale, Hardware, Interface, Payment Terminal, Store</field>
@@ -106,7 +106,7 @@
 
         <record id="blog_post_2" model="blog.post">
             <field name="name">New Hardware Integration</field>
-            <field name="category_id" ref="blog_category_1"/>
+            <field name="blog_id" ref="blog_blog_1"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
             <field name="content">
 <![CDATA[<section class="mt16 mb16" data-snippet-id='big-picture'>
@@ -235,7 +235,7 @@
 
         <record id="blog_post_3" model="blog.post">
             <field name="name">Touchscreen Point of Sale for 6.1</field>
-            <field name="category_id" ref="blog_category_1"/>
+            <field name="blog_id" ref="blog_blog_1"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1'), ref('blog_tag_2')])]"/>
             <field name="website_meta_keywords">Point of Sale, Hardware, Interface, Payment Terminal, Store</field>
             <field name="website_meta_description">Point of Sale with no installation required that runs online and offline.</field>
@@ -273,7 +273,7 @@ Think of it as an out-of-the-box solution to boost your business' productivity.
 
         <record id="blog_post_4" model="blog.post">
             <field name="name">Announcing a New Partnership</field>
-            <field name="category_id" ref="blog_category_1"/>
+            <field name="blog_id" ref="blog_blog_1"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
             <field name="website_published" eval="True"/>
             <field name="website_meta_keywords">OpenERP, Partnership, News, Accounting</field>

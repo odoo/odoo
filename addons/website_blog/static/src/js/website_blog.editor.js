@@ -7,10 +7,8 @@
     website.is_editable = true;
     website.EditorBar.include({
         start: function() {
+            website.is_editable_button = website.is_editable_button || !!$("#wrap.js_blog").size();
             var res = this._super();
-            if ($("#wrap.js_blog").size()) {
-                this.$("button[data-action=edit]").removeClass("hidden");
-            }
             this.$(".dropdown:has(.oe_content_menu)").removeClass("hidden");
             return res;
         },
@@ -21,11 +19,11 @@
                     window_title: "New Blog Post",
                     select: "Select Blog",
                     init: function (field) {
-                        return website.session.model('blog.category')
+                        return website.session.model('blog.blog')
                                 .call('name_search', [], { context: website.get_context() });
                     },
                 }).then(function (cat_id) {
-                    document.location = '/blogpost/new?category_id=' + cat_id;
+                    document.location = '/blogpost/new?blog_id=' + cat_id;
                 });
             }
         }),

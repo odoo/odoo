@@ -127,7 +127,7 @@ class event_event(osv.osv):
         'tag_ids': fields.many2many('event.tag', string='Tags'),
         'track_ids': fields.one2many('event.track', 'event_id', 'Tracks'),
         'sponsor_ids': fields.one2many('event.sponsor', 'event_id', 'Sponsorships'),
-        'blog_id': fields.many2one('blog.category', 'Event Blog'),
+        'blog_id': fields.many2one('blog.blog', 'Event Blog'),
         'show_track_proposal': fields.boolean('Talks Proposals'),
         'show_tracks': fields.boolean('Multiple Tracks'),
         'show_blog': fields.boolean('News'),
@@ -163,7 +163,7 @@ class event_sponsors_type(osv.osv):
         "sequence": fields.integer('Sequence')
     }
 
-class event_sponsors_type(osv.osv):
+class event_sponsors(osv.osv):
     _name = "event.sponsor"
     _order = "sequence"
     _columns = {
@@ -174,9 +174,5 @@ class event_sponsors_type(osv.osv):
     }
 
     def has_access_to_partner(self, cr, uid, ids, context=None):
-        try:
-            self.browse(cr, uid, ids[0], context=context).partner_id.name
-            return True
-        except:
-            return False
+        return self.pool.get("res.partner").search(cr, uid, [("id", "in", ids)], count=True, context=context)
 

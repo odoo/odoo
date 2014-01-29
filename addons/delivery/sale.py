@@ -20,15 +20,11 @@
 ##############################################################################
 
 import time
-
-from openerp.addons import decimal_precision
-from openerp.addons.sale.sale import sale_order as OriginalSaleOrder
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp import SUPERUSER_ID
 
 
-class sale_order_line(osv.osv):
+class sale_order_line(osv.Model):
     _inherit = 'sale.order.line'
 
     _columns = {
@@ -42,39 +38,10 @@ class sale_order_line(osv.osv):
 
 class sale_order(osv.Model):
     _inherit = 'sale.order'
-
-    def _amount_all_wrapper(self, cr, uid, ids, field_name, arg, context=None):
-        """ Wrapper because of direct method passing as parameter for function fields """
-        return self._amount_all(cr, uid, ids, field_name, arg, context=context)
-
-    def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
-        res = super(sale_order, self)._amount_all(cr, uid, ids, field_name, arg, context=context)
-        Currency = self.pool.get('res.currency')
-        for order in self.browse(cr, uid, ids, context=context):
-            line_amount = sum([line.price_subtotal for line in order.order_line if line.is_delivery])
-            currency = order.pricelist_id.currency_id
-            res[order.id]['amount_delivery'] = Currency.round(cr, uid, currency, line_amount)
-        return res
-
-    def _get_order(self, cr, uid, ids, context=None):
-        result = {}
-        for line in self.pool.get('sale.order.line').browse(cr, uid, ids, context=context):
-            result[line.order_id.id] = True
-        return result.keys()
-
     _columns = {
         'carrier_id': fields.many2one(
             "delivery.carrier", string="Delivery Method",
             help="Complete this field if you plan to invoice the shipping based on picking."),
-        'amount_delivery': fields.function(
-            _amount_all_wrapper, type='float', digits_compute=decimal_precision.get_precision('Account'),
-            string='Delivery Amount',
-            store={
-                'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
-                'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
-            },
-            multi='sums', help="The amount without tax.", track_visibility='always'
-        ),
     }
 
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
@@ -92,9 +59,9 @@ class sale_order(osv.Model):
         return result
 
     def _delivery_unset(self, cr, uid, order, context=None):
-        for line in order.order_line:
-            if line.is_delivery:
-                self.pool.get('sale.order.line').unlink(cr, uid, [line.id], context=context)
+        line_ids = [line.id for line in order.order_line if line.is_delivery]
+        self.pool['sale.order.line'].unlink(cr, uid, line_ids, context=context)
+        order.refresh()
         return True
 
     def delivery_set(self, cr, uid, ids, context=None):
@@ -102,17 +69,17 @@ class sale_order(osv.Model):
         grid_obj = self.pool.get('delivery.grid')
         carrier_obj = self.pool.get('delivery.carrier')
         acc_fp_obj = self.pool.get('account.fiscal.position')
+
         for order in self.browse(cr, uid, ids, context=context):
             self._delivery_unset(cr, uid, order, context=context)
-        for order in self.browse(cr, uid, ids, context=context):
             grid_id = carrier_obj.grid_get(cr, uid, [order.carrier_id.id], order.partner_shipping_id.id)
             if not grid_id:
                 raise osv.except_osv(_('No Grid Available!'), _('No grid matching for this carrier!'))
 
-            if not order.state in ('draft'):
+            if order.state != 'draft':
                 raise osv.except_osv(_('Order not in Draft State!'), _('The order state have to be draft to add delivery lines.'))
 
-            grid = grid_obj.browse(cr, SUPERUSER_ID, grid_id, context=context)
+            grid = grid_obj.browse(cr, uid, grid_id, context=context)
 
             taxes = grid.carrier_id.product_id.taxes_id
             fpos = order.fiscal_position or False
@@ -129,6 +96,3 @@ class sale_order(osv.Model):
                 'type': 'make_to_stock',
                 'is_delivery': True
             })
-        # remove the value of the carrier_id field on the sale order
-        # TDE NOTE: why removing it ?? seems weird
-        # return self.write(cr, uid, ids, {'carrier_id': False}, context=context)

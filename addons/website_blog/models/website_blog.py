@@ -28,9 +28,9 @@ from openerp.tools.translate import _
 import difflib
 
 
-class BlogCategory(osv.Model):
-    _name = 'blog.category'
-    _description = 'Blog Category'
+class Blog(osv.Model):
+    _name = 'blog.blog'
+    _description = 'Blogs'
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = 'name'
 
@@ -38,7 +38,7 @@ class BlogCategory(osv.Model):
         'name': fields.char('Name', required=True),
         'description': fields.text('Description'),
         'blog_post_ids': fields.one2many(
-            'blog.post', 'category_id',
+            'blog.post', 'blog_id',
             'Blogs',
         ),
     }
@@ -91,15 +91,16 @@ class BlogPost(osv.Model):
         return res
 
     _columns = {
-        'name': fields.char('Title', required=True),
-        'category_id': fields.many2one(
-            'blog.category', 'Category',
+        'name': fields.char('Title', required=True, translate=True),
+        'content_image': fields.binary('Background Image'),
+        'blog_id': fields.many2one(
+            'blog.blog', 'Blog',
             required=True, ondelete='cascade',
         ),
         'tag_ids': fields.many2many(
             'blog.tag', string='Tags',
         ),
-        'content': fields.html('Content'),
+        'content': fields.html('Content', translate=True),
         'shortened_content': fields.function(
             get_shortened_content,
             type='html',
@@ -127,7 +128,6 @@ class BlogPost(osv.Model):
             'blog.post.history', 'post_id',
             'History', help='Last post modifications'
         ),
-        'menu_id': fields.many2one('ir.ui.menu', "Menu", readonly=True),
         # creation / update stuff
         'create_date': fields.datetime(
             'Created on',

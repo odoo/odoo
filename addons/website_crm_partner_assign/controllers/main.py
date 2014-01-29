@@ -7,7 +7,6 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
-from openerp.addons.website.models import website
 from openerp.addons.website_partner.controllers import main as website_partner
 
 
@@ -38,7 +37,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
             country = country_obj.browse(request.cr, request.uid, country_id, request.context)
             partner_domain += [('country_id', '=', country_id)]
         if post_name:
-            partner_domain += ['|', ('name', 'ilike', "%%%s%%" % post_name), ('website_description', 'ilike', "%%%s%%" % post_name)]
+            partner_domain += ['|', ('name', 'ilike', post_name), ('website_description', 'ilike', post_name)]
 
         # format pager
         partner_ids = partner_obj.search(
@@ -97,7 +96,6 @@ class WebsiteCrmPartnerAssign(http.Controller):
     @http.route(['/partners/<int:partner_id>/', '/partners/<partner_name>-<int:partner_id>/'], type='http', auth="public", website=True, multilang=True)
     def partners_ref(self, partner_id, **post):
         partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
-        website.preload_records(partner)
         values = website_partner.get_partner_template_value(partner)
         if not values:
             return self.partners(**post)
