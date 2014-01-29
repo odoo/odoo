@@ -3,7 +3,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
+#    Copyright (C) 2004-2014 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -971,7 +971,7 @@ class ir_model_data(osv.osv):
                 if mode == 'update' and noupdate_imd:
                     return res_id2
                 if not real_id2:
-                    self.clear_caches(self)
+                    self.clear_caches()
                     cr.execute('delete from ir_model_data where id=%s', (imd_id2,))
                     res_id = False
                 else:
