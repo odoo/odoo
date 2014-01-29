@@ -84,6 +84,7 @@ class event_track(osv.osv):
         'priority': fields.selection([('3','Low'),('2','Medium (*)'),('1','High (**)'),('0','Highest (***)')], 'Priority', required=True),
         'website_published': fields.boolean('Available in the website'),
         'website_url': fields.function(_website_url, string="Website url", type="char"),
+        'image': fields.related('speaker_ids', 'image', type='binary', readonly=True)
     }
     def set_priority(self, cr, uid, ids, priority, context={}):
         return self.write(cr, uid, ids, {'priority' : priority})
