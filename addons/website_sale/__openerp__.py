@@ -1,5 +1,5 @@
 {
-    'name': 'E-Commerce',
+    'name': 'eCommerce',
     'category': 'Website',
     'summary': 'Sell Your Products Online',
     'version': '1.0',

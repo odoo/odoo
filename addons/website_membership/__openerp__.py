@@ -1,6 +1,6 @@
 {
-    'name': 'Public Members',
-    'name': 'Website for Associations',
+    'name': 'Associations: Members',
+    'summary': 'Online Directory of Members',
     'category': 'Website',
     'summary': 'Publish Associations, Groups and Memberships',
     'version': '1.0',

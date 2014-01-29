@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Public Customer References',
+    'name': 'Customer References',
     'category': 'Website',
-    'summary': 'Publish Customer References on your Website',
+    'summary': 'Publish Your Customer References',
     'version': '1.0',
     'description': """
 OpenERP Customer References

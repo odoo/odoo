@@ -1,7 +1,7 @@
 {
-    'name': 'Website LiveChat',
+    'name': 'LiveChat',
     'category': 'Website',
-    'summary': 'Instant Messaging for your Website',
+    'summary': 'Chat With Your Website Visitors',
     'version': '1.0',
     'description': """
 OpenERP Website LiveChat
