@@ -109,8 +109,8 @@ class Scanner(Thread):
             if not evdev:
                 return None
             devices   = [ device for device in listdir(self.input_dir)]
-            keyboards = [ device for device in devices if 'kbd' in device ]
-            scanners  = [ device for device in devices if ('barcode' in device.lower()) or ('scanner' in device.lower()) ]
+            keyboards = [ device for device in devices if ('kbd' in device) and ('keyboard' not in device.lower())]
+            scanners  = [ device for device in devices if ('barcode' in device.lower()) or ('scanner' in device.lower())]
             if len(scanners) > 0:
                 self.set_status('connected','Connected to '+scanners[0])
                 return evdev.InputDevice(join(self.input_dir,scanners[0]))
@@ -144,6 +144,8 @@ class Scanner(Thread):
                 return ''
     
     def get_status(self):
+        if not s.isAlive():
+            s.start()
         return self.status
 
     def run(self):
