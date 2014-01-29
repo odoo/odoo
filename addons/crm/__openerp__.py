@@ -92,7 +92,6 @@ Dashboard for CRM will include:
         'process/crm_configuration_process.xml',
 
         'res_partner_view.xml',
-        'board_crm_view.xml',
 
         'res_config_view.xml',
         'base_partner_merge_view.xml',
