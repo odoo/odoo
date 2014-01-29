@@ -1,0 +1,68 @@
+# HG changeset patch
+# Parent 9735c655933b94f5e9017d0aac0b6e579f23adba
+
+diff --git a/__init__.py b/__init__.py
+--- a/__init__.py
++++ b/__init__.py
+@@ -1,1 +1,2 @@
+ import controllers
++import models
+diff --git a/__openerp__.py b/__openerp__.py
+--- a/__openerp__.py
++++ b/__openerp__.py
+@@ -3,6 +3,7 @@
+     'category': "Tools",
+     'depends': ['website'],
+     'data': [
++        'ir.model.access.csv',
+         'views/templates.xml',
+     ]
+ }
+diff --git a/controllers.py b/controllers.py
+--- a/controllers.py
++++ b/controllers.py
+@@ -1,19 +1,13 @@
+ from openerp import http
+ from openerp.addons.web.controllers import main
+ 
+-teaching_assistants = [
+-    {'name': "Diana Padilla"},
+-    {'name': "Jody Carroll"},
+-    {'name': "Lester Vaughn"},
+-    {'name': "Paul Jimenez"},
+-    {'name': "Tanya Harris"},
+-]
+-
+ class Home(main.Home):
+     @http.route('/', auth='public')
+     def index(self):
++        tas = http.request.registry['academy.tas'].search_read(
++            http.request.cr, http.request.uid, context=http.request.context)
+         return http.request.website.render('academy.index', {
+-            'tas': teaching_assistants,
++            'tas': tas,
+         })
+ 
+     @http.route('/tas/<int:id>/', auth='public', website=True)
+diff --git a/ir.model.access.csv b/ir.model.access.csv
+new file mode 100644
+--- /dev/null
++++ b/ir.model.access.csv
+@@ -0,0 +1,2 @@
++id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
++access_academy_tas,access_academy_tas,model_academy_tas,,1,0,0,0
+diff --git a/models.py b/models.py
+new file mode 100644
+--- /dev/null
++++ b/models.py
+@@ -0,0 +1,10 @@
++# -*- coding: utf-8 -*-
++
++from openerp.osv import orm, fields
++
++class TeachingAssistants(orm.Model):
++    _name = 'academy.tas'
++
++    _columns = {
++        'name': fields.char(),
++    }

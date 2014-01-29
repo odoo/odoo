@@ -308,8 +308,128 @@ structure:
 
 .. todo:: website template generator
 
+If you try to add content to the TA pages using snippets, for instance
+insert an :guilabel:`image-text` snippet to add a picture and a short
+biography for a TA, you'll notice things don't work right: because
+snippets are added in the template itself, they're content which is
+the same across all pages using that template.
+
+Thus snippets are mostly for generic content, when a given template is
+only used for a single page, or to add content in HTML fields.
+
+.. note::
+
+    When creating a new page (e.g. via :menuselection:`Content --> New
+    Page`), OpenERP will duplicate a "source" template, and create a
+    new template for each page. As a result, it's safe to use
+    dedicated-content snippets for "static" pages.
+
+Time, then, to create more specific content.
+
 Storing data in OpenERP
 =======================
+
+The conceptual storage model of OpenERP is simple: there are storage
+tables, represented by OpenERP models, and inside these tables are
+records. The first step, then, is to define a model.
+
+We'll start by moving our teaching assistants in the database:
+
+.. patch::
+
+We've also altered the index method slightly, to retrieve our teaching
+assistants from the database instead of storing them in a global list
+in the module\ [#taprofile]_.
+
+.. note:: :file:`ir.model.access.csv` is necessary to tell OpenERP that
+          any user can *see* the teaching assistants: by default, only
+          the administrator can see, edit, create or destroy objects.
+          Here, we only change the ``read`` permission to allow any
+          user to list and browse teaching assistants.
+
+.. todo:: command/shortcut
+
+Update the module, reload `your openerp`_… and the Teaching Assistants
+list is empty since we haven't put any TA in the database.
+
+Let's add them in data files:
+
+.. patch::
+
+Update the module again, reload `your openerp`_ and the TAs are
+back. Click on a TA name, and you'll see an error message. Let's fix
+the TA view now:
+
+.. todo:: if ta template was modified in previous section, it's marked
+          noupdate and updating the module will have no effect for no
+          known reason. That's really quite annoying.
+
+.. patch::
+
+There are a few non-obvious things here, so let's go through them for
+clarity:
+
+* OpenERP provides a has a special `converter pattern`_, which knows
+  how to retrieve OpenERP objects by identifier. Instead of an integer
+  or other similar basic value, ``ta`` thus gets a full-blown
+  ``academy.tas`` object, without having to retrieve it by hand (as is
+  done in ``index``).
+
+* However because the ``model()`` `converter pattern`_ takes an
+  identifier, we have to alter the creation of ``ta``'s URL to include
+  such an identifier, rather than an index in an array
+
+* Finally, ``website.render()`` wants a dict as its rendering context,
+  not an object, which is why we wrap our ``ta`` object into one.
+
+We're still where we started this section though: if we add snippets
+to or edit the text of a TA's page, these editions will be visible
+across all TA pages since they'll be stored in the shared
+``academy.ta`` template.
+
+Not only that, but we can not even edit the TA's name, even though
+it's not shared content.
+
+Let's fix that first, instead of using the basic "display this
+content" template tag ``t-esc``, we'll use one aware of OpenERP
+objects and their fields:
+
+.. patch::
+
+Update the module, go into a TA page and activate the edition mode. If
+you move your mouse over the TA's name, it is surrounded by a yellow
+border, and you can edit its content. If you change the name of a TA
+and save the page, the change is correctly stored in the TA's record,
+the name is fixed when you go to the index page but other TAs remain
+unaffected.
+
+For the issue of customizing our TA profiles, we can expand our model
+with a "freeform" HTML field:
+
+.. patch::
+
+Then, insert the new biographical content in the template using the
+same object-aware template tag:
+
+.. patch::
+
+.. todo:: updating the ``name`` field from the RTE altered the
+          template, which locked it...
+
+Update the module, browse to a TA's page and open the edition mode
+(using the :guilabel:`Edit` button in the window's top-right).  The
+empty HTML field now displays a big placeholder image, if you drop
+snippets in or write some content for one of the teaching assistants,
+you will see that other TA profiles are unaffected.
+
+A more complex model
+--------------------
+
+Up to now, we've been working with displaying and manipulating
+objects representing teaching assistants. It's a basic and
+simple concept, but not one which allows for much further
+diving into interesting tools of OpenERP. Thus, let's add a
+list of course lectures.
 
 .. calendar model
 .. demo data for events dates
@@ -325,9 +445,15 @@ Administration and ERP Integration
    .. improve generated views
 .. create list & form views for events
 
+.. [#taprofile] the teaching assistants profile view ends up
+                broken for now, but don't worry we'll get
+                around to it
+
 .. _bootstrap: http://getbootstrap.com
 
-.. _converter patterns: http://werkzeug.pocoo.org/docs/routing/#rule-format
+.. _converter pattern:
+.. _converter patterns:
+    http://werkzeug.pocoo.org/docs/routing/#rule-format
 
 .. _templates: http://en.wikipedia.org/wiki/Web_template
 

@@ -1,0 +1,38 @@
+# HG changeset patch
+# Parent d757ab6e2223e63f283b31815c8ff650ea42e2e7
+diff --git a/controllers.py b/controllers.py
+--- a/controllers.py
++++ b/controllers.py
+@@ -10,6 +10,8 @@ class Home(main.Home):
+             'tas': tas,
+         })
+ 
+-    @http.route('/tas/<int:id>/', auth='public', website=True)
+-    def ta(self, id):
+-        return http.request.website.render('academy.ta', teaching_assistants[id])
++    @http.route('/tas/<model("academy.tas"):ta>/', auth='public', website=True)
++    def ta(self, ta):
++        return http.request.website.render('academy.ta', {
++            'ta': ta
++        })
+diff --git a/views/templates.xml b/views/templates.xml
+--- a/views/templates.xml
++++ b/views/templates.xml
+@@ -17,7 +17,7 @@
+                     <h2>Teaching Assistants</h2>
+                     <ul>
+                         <li t-foreach="tas" t-as="ta">
+-                            <a t-att-href="url_for('/tas/%d/' % ta_index)">
++                            <a t-att-href="url_for('/tas/%s/' % ta['id'])">
+                                 <t t-esc="ta['name']"/>
+                             </a>
+                         </li>
+@@ -35,7 +35,7 @@
+             <div class="oe_structure"/>
+             <div class="oe_structure">
+                 <div class="container">
+-                    <h1><t t-esc="name"/></h1>
++                    <h1><t t-esc="ta.name"/></h1>
+                 </div>
+             </div>
+             <div class="oe_structure"/>

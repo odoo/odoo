@@ -1,0 +1,37 @@
+# HG changeset patch
+# Parent 94316d8049d7453cf70aff198b2d7ad1c04bf089
+
+diff --git a/__openerp__.py b/__openerp__.py
+--- a/__openerp__.py
++++ b/__openerp__.py
+@@ -5,5 +5,6 @@
+     'data': [
+         'ir.model.access.csv',
+         'views/templates.xml',
++        'data/teaching_assistants.xml',
+     ]
+ }
+diff --git a/data/teaching_assistants.xml b/data/teaching_assistants.xml
+new file mode 100644
+--- /dev/null
++++ b/data/teaching_assistants.xml
+@@ -0,0 +1,19 @@
++<openerp>
++    <data>
++        <record id="padilla" model="academy.tas">
++            <field name="name">Diana Padilla</field>
++        </record>
++        <record id="carroll" model="academy.tas">
++            <field name="name">Jody Carroll</field>
++        </record>
++        <record id="vaughn" model="academy.tas">
++            <field name="name">Lester Vaughn</field>
++        </record>
++        <record id="jimenez" model="academy.tas">
++            <field name="name">Paul Jimenez</field>
++        </record>
++        <record id="harris" model="academy.tas">
++            <field name="name">Tanya Harris</field>
++        </record>
++    </data>
++</openerp>
