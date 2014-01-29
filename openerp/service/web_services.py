@@ -196,7 +196,7 @@ class db(netsvc.ExportService):
                 raise Exception, e
 
     def exp_drop(self, db_name):
-        if not self.exp_db_exist(db_name):
+        if db_name not in self.exp_list(True):
             return False
         openerp.modules.registry.RegistryManager.delete(db_name)
         sql_db.close_db(db_name)
