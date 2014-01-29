@@ -37,7 +37,7 @@ class WebsiteMembership(http.Controller):
         post_name = post.get('name', '')
 
         # base domain for groupby / searches
-        base_line_domain = []
+        base_line_domain = [('state', 'in', ['free', 'paid'])]
         if membership_id:
             base_line_domain.append(('membership_id', '=', membership_id))
             membership = product_obj.browse(cr, uid, membership_id, context=context)
@@ -65,6 +65,7 @@ class WebsiteMembership(http.Controller):
 
         membership_line_ids = membership_line_obj.search(cr, uid, line_domain, context=context)
         membership_lines = membership_line_obj.browse(cr, uid, membership_line_ids, context=context)
+        membership_lines.sort(key=lambda x: x.membership_id.website_sequence)
         partner_ids = [m.partner and m.partner.id for m in membership_lines]
         google_map_partner_ids = ",".join(map(str, partner_ids))
 
@@ -73,7 +74,7 @@ class WebsiteMembership(http.Controller):
             partners_data[partner.get("id")] = partner
 
         # format domain for group_by and memberships
-        membership_ids = product_obj.search(cr, uid, [('membership', '=', True)], context=context)
+        membership_ids = product_obj.search(cr, uid, [('membership', '=', True)], order="website_sequence", context=context)
         memberships = product_obj.browse(cr, uid, membership_ids, context=context)
 
         # request pager for lines
