@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-<record id="website_mail_jobs" model="mail.group">
-    <field name="name">Jobs</field>
-    <field name="public">public</field>
-    <field name="description">Job Posts on your website</field>
-</record>
 
 <template id="editor_head" inherit_id="website.editor_head" name="Jobs Editor" groups="base.group_hr_manager">
     <xpath expr="//script[@id='website_tour_js']" position="after">
@@ -71,7 +66,7 @@
                             <li t-foreach="jobs" t-as="job" class="media">
                                 <div class="media-body" t-att-data-publish="job.website_published and 'on' or 'off'">
                                     <h3 class="media-heading">
-                                        <a t-attf-href="/job/detail/#{ slug(job) }/">
+                                        <a t-attf-href="/jobs/detail/#{ slug(job) }">
                                             <span t-field="job.name"/>
                                         </a>
                                         <small t-if="job.no_of_recruitment &gt; 1">
@@ -127,7 +122,7 @@
                 "fields": ["address"],
                 "no_tag_br": true
                 }'/>
-            <h5 class="text-center text-muted">
+           e<h5 class="text-center text-muted">
                 <i class="fa fa-clock-o"/> <span t-field="job.write_date"/>
             </h5>
         </div>
@@ -138,7 +133,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12 text-center mt16 mb16">
-                            <a t-attf-href="/job/apply/?job=#{ job.id }" class="btn btn-primary btn-lg">Apply</a>
+                            <a t-attf-href="/jobs/apply/#{ job.id }" class="btn btn-primary btn-lg">Apply</a>
                         </div>
                     </div>
                 </div>
@@ -148,7 +143,7 @@
     </t>
 </template>
 
-<template id="applyjobpost">
+<template id="apply">
     <t t-call="website.layout">
         <t t-set="additional_title">Apply Job</t>
         <div id="wrap">
@@ -163,7 +158,7 @@
                 <div class="row">
                     <section id="forms">
                         <!-- TODO Multilingual form action support ? -->
-                        <form class="form-horizontal mt32" action="/job/success" method="post" enctype="multipart/form-data">
+                        <form class="form-horizontal mt32" action="/jobs/thankyou" method="post" enctype="multipart/form-data">
                             <input type="hidden" t-att-value="job and job.department_id.id or False" name="department_id"/>
                             <input type="hidden" t-att-value="job and job.id or False" name="job_id"/>
                             <div class="form-group">
@@ -237,10 +232,10 @@
 <template id="job_departments" inherit_option_id="website_hr_recruitment.index" name="Filter by Departments">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills nav-stacked mb32">
-            <li t-att-class=" '' if active else 'active' "><a href="/jobs">All Departments</a></li>
+            <li t-att-class=" '' if department_id else 'active' "><a href="/jobs">All Departments</a></li>
             <t t-foreach="departments" t-as="department">
-                <li t-att-class="department.id == active and 'active' or ''">
-                <a t-attf-href="/jobs/department/#{ slug(department) }/" ><span t-field="department.name"/></a>
+                <li t-att-class="'active' if department_id == department.id else ''">
+                    <a t-attf-href="/jobs/department/#{ slug(department) }/" ><span t-field="department.name"/></a>
                 </li>
             </t>
         </ul>
@@ -256,9 +251,9 @@
 <template id="job_offices" inherit_option_id="website_hr_recruitment.index" name="Filter by Offices">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills nav-stacked mb32">
-            <li t-att-class=" '' if office else 'active' "><a href="/jobs">All Offices</a></li>
+            <li t-att-class=" '' if office_id else 'active' "><a href="/jobs">All Offices</a></li>
             <t t-foreach="offices" t-as="thisoffice">
-                <li t-att-class="thisoffice.id == office and 'active' or ''">
+                <li t-att-class=" 'active' if office_id == thisoffice.id else '' ">
                     <a t-attf-href="/jobs/office/#{ slug(thisoffice) }/" >
                         <span t-field="thisoffice.city"/><t t-if="thisoffice.country_id">,
                             <span t-field="thisoffice.country_id.name"/>
@@ -275,7 +270,6 @@
         <attribute name="class">col-md-9</attribute>
     </xpath>
 </template>
-
 
 </data>
 </openerp>

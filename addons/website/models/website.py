@@ -654,13 +654,13 @@ class base_language_install(osv.osv_memory):
             }
         return action
 
-class SeoMetadata(osv.Model):
+class website_seo_metadata(osv.Model):
     _name = 'website.seo.metadata'
     _description = 'SEO metadata'
 
     _columns = {
-        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
-        'website_meta_description': fields.text("Website meta description", size=160, translate=True),
+        'website_meta_title': fields.char("Website meta title", translate=True),
+        'website_meta_description': fields.text("Website meta description", translate=True),
         'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
 
