@@ -37,6 +37,7 @@ class Blog(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True),
         'description': fields.text('Description'),
+        'image': fields.binary('Image'),
         'blog_post_ids': fields.one2many(
             'blog.post', 'blog_id',
             'Blogs',

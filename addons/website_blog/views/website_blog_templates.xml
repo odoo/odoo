@@ -182,7 +182,7 @@
         </t>
     </div>
 
-    <div t-field="blog_post.content"/>
+    <div id="blog_content" t-field="blog_post.content"/>
 
     <section id="comments" class="container">
         <ul class="media-list" id="comments-list">
@@ -236,6 +236,47 @@
         <div class="text-center blog_item">
             <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 50px; margin-right: 10px;"/>
             <small class="text-muted" id="blog_author" t-field="blog_post.create_uid.name"/>
+        </div>
+        <div class="text-center mt64">
+            <a href="#blog_content"><span class="fa fa-angle-down fa-2x fa-inverse"/></a>
+        </div>
+    </xpath>
+</template>
+
+<template id="blog_footer" name="Blog Footer"
+        inherit_option_id="website_blog.blog_post_complete">
+    <xpath expr="//section[@id='comments']" position="before">
+        <div class="container mt16 mb32">
+            <div class="col-sm-12">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <hr class="mt0 mb0"/>
+                    <strong class="text-muted text-right">WRITTEN BY</strong>
+                    <div class="media">
+                        <a class="pull-left" href="#">
+                            <img class="img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 50px; margin-right: 10px;"/>
+                        </a>
+                        <div class="media-body">
+                            <h4 class="media-heading"  t-field="blog_post.create_uid.name"></h4>
+                            <p t-field="blog_post.create_uid.email"></p>
+                            <small t-if="blog_post.website_published_datetime" class="text-right text-muted">Published on <t t-esc="blog_post.website_published_datetime"/></small>
+                            <small t-if="not blog_post.website_published_datetime" class="text-right text-muted">Last Modified on <t t-esc="blog_post.write_date"/></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-sm-offset-2" t-if="blog_post.blog_id">
+                    <hr class="mt0 mb0"/>
+                    <strong class="text-muted text-right">PUBLISHED IN</strong>
+                    <div class="media">
+                        <a class="pull-left" href="#">
+                            <img class="img-rounded" t-att-src="'/website/image?model=blog.blog&amp;field=image&amp;id='+str(blog_post.blog_id.id)" style="width: 50px; margin-right: 10px;"/>
+                        </a>
+                        <div class="media-body">
+                            <h4 class="media-heading"  t-field="blog_post.blog_id.name"></h4>
+                            <span t-field="blog_post.blog_id.description"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </xpath>
 </template>
