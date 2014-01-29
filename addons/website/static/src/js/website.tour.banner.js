@@ -96,7 +96,7 @@
                     title:     "Save your modifications",
                     content:   "Publish your page by clicking on the <em>'Save'</em> button.",
                     template:   self.popover({ fixed: true }),
-                    trigger:   'click',
+                    trigger:   'reload',
                 },
                 {
                     stepId:    'part-2',
