@@ -619,8 +619,7 @@ class res_partner(osv.osv, format_address):
             query = ('''SELECT res_partner.id FROM res_partner
                                           LEFT JOIN res_partner company
                                                ON res_partner.parent_id = company.id'''
-                        + where_str +
-                        ''' res_partner.email ''' + operator + ''' %s OR
+                        + where_str + ''' res_partner.email ''' + operator + ''' %s OR
                               CASE
                                    WHEN company.id IS NULL OR res_partner.is_company
                                        THEN res_partner.name
