@@ -695,7 +695,7 @@ class purchase_order(osv.osv):
                 continue
             if order_line.product_id.type in ('product', 'consu'):
                 move = stock_move.create(cr, uid, self._prepare_order_line_move(cr, uid, order, order_line, picking_id, context=context))
-                if order_line.move_dest_id:
+                if order_line.move_dest_id and order_line.move_dest_id.state != 'done':
                     order_line.move_dest_id.write({'location_id': order.location_id.id})
                 todo_moves.append(move)
         stock_move.action_confirm(cr, uid, todo_moves)
