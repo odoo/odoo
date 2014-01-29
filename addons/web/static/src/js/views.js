@@ -1217,7 +1217,8 @@ instance.web.Sidebar = instance.web.Widget.extend({
         this.dataset = dataset;
         this.model_id = model_id;
         if (args && args[0].error) {
-            this.do_warn( instance.web.qweb.render('message_error_uploading'), args[0].error);
+            this.do_warn(_t('Upload Error'), args[0].error);
+            self.redraw();
         }
         if (!model_id) {
             this.on_attachments_loaded([]);
