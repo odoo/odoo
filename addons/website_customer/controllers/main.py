@@ -33,7 +33,7 @@ class WebsiteCustomer(http.Controller):
                 ('name', 'ilike', "%%%s%%" % post.get("search")),
                 ('website_description', 'ilike', "%%%s%%" % post.get("search"))
             ]
-        country_id = None
+
         if country_id:
             domain += [('country_id', '=', country_id)]
 
