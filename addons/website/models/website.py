@@ -279,7 +279,7 @@ class website(osv.osv):
         def get_url(page):
             _url = "%spage/%s/" % (url, page)
             if url_args:
-                _url = "%s?%s" % (_url, urllib.urlencode(url_args))
+                _url = "%s?%s" % (_url, werkzeug.url_encode(url_args))
             return _url
 
         return {
@@ -446,7 +446,7 @@ class website(osv.osv):
 
         get_args.setdefault('kanban', "")
         kanban = get_args.pop('kanban')
-        kanban_url = "?%s&kanban=" % urllib.urlencode(get_args)
+        kanban_url = "?%s&kanban=" % werkzeug.url_encode(get_args)
 
         pages = {}
         for col in kanban.split(","):

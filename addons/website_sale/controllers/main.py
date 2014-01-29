@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import random
 import simplejson
-import urllib
 import werkzeug
 
 from openerp import SUPERUSER_ID
@@ -634,7 +633,7 @@ class Ecommerce(http.Controller):
             })
 
         acquirer_form_post_url = payment_obj.get_form_action_url(cr, uid, acquirer_id, context=context)
-        acquirer_total_url = '%s?%s' % (acquirer_form_post_url, urllib.urlencode(post))
+        acquirer_total_url = '%s?%s' % (acquirer_form_post_url, werkzeug.url_encode(post))
         return request.redirect(acquirer_total_url)
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True, multilang=True)

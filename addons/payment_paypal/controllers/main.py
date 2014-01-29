@@ -6,7 +6,6 @@ except ImportError:
     import json
 import logging
 import pprint
-import urllib
 import urllib2
 import werkzeug
 
@@ -41,7 +40,7 @@ class PaypalController(http.Controller):
         Once data is validated, process it. """
         res = False
         new_post = dict(post, cmd='_notify-validate')
-        urequest = urllib2.Request("https://www.sandbox.paypal.com/cgi-bin/webscr", urllib.urlencode(new_post))
+        urequest = urllib2.Request("https://www.sandbox.paypal.com/cgi-bin/webscr", werkzeug.url_encode(new_post))
         uopen = urllib2.urlopen(urequest)
         resp = uopen.read()
         if resp == 'VERIFIED':

@@ -30,7 +30,7 @@ controllers = controllers()
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from openerp import tools
-import urllib
+import werkzeug.urls
 
 class website_event(http.Controller):
     @http.route(['/event/', '/event/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
@@ -155,7 +155,7 @@ class website_event(http.Controller):
             'countries': countries,
             'pager': pager,
             'searches': searches,
-            'search_path': "?%s" % urllib.urlencode(searches),
+            'search_path': "?%s" % werkzeug.url_encode(searches),
         }
 
         return request.website.render("website_event.index", values)
