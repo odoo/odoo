@@ -4706,15 +4706,15 @@ class BaseModel(object):
         if uid == SUPERUSER_ID:
             return
 
-        def apply_rule(added_clause, added_params, added_tables, parent_model=None, child_object=None):
-            """ :param string parent_model: string of the parent model
-                :param model child_object: model object, base of the rule application
+        def apply_rule(added_clause, added_params, added_tables, parent_model=None):
+            """ :param parent_model: name of the parent model, if the added
+                    clause comes from a parent model
             """
             if added_clause:
-                if parent_model and child_object:
+                if parent_model:
                     # as inherited rules are being applied, we need to add the missing JOIN
                     # to reach the parent table (if it was not JOINed yet in the query)
-                    parent_alias = child_object._inherits_join_add(child_object, parent_model, query)
+                    parent_alias = self._inherits_join_add(self, parent_model, query)
                     # inherited rules are applied on the external table -> need to get the alias and replace
                     parent_table = self.pool[parent_model]._table
                     added_clause = [clause.replace('"%s"' % parent_table, '"%s"' % parent_alias) for clause in added_clause]
@@ -4745,7 +4745,7 @@ class BaseModel(object):
         for inherited_model in self._inherits:
             rule_where_clause, rule_where_clause_params, rule_tables = rule_obj.domain_get(cr, uid, inherited_model, mode, context=context)
             apply_rule(rule_where_clause, rule_where_clause_params, rule_tables,
-                        parent_model=inherited_model, child_object=self)
+                        parent_model=inherited_model)
 
     def _generate_m2o_order_by(self, order_field, query):
         """
