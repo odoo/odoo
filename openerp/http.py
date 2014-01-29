@@ -352,7 +352,7 @@ class JsonRequest(WebRequest):
         # Read POST content or POST Form Data named "request"
         self.jsonrequest = simplejson.loads(request)
         self.params = dict(self.jsonrequest.get("params", {}))
-        self.context = self.params.pop('context', self.session.context)
+        self.context = self.params.pop('context', dict(self.session.context))
 
     def dispatch(self):
         """ Calls the method asked for by the JSON-RPC2 or JSONP request
