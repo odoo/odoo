@@ -80,9 +80,11 @@ class stock_return_picking(osv.osv_memory):
                         raise osv.except_osv(_('Warning!'), _('You can not reverse when the chained moves are done!'))
                 #Search quants
                 quant_search = quant_obj.search(cr, uid, ['&', '&', ('history_ids', 'in', move.id), ('qty', '>', 0.0), 
-                                                            ('location_id', '=', move.location_dest_id.id), ], context=context)
-                # ('reservation_id.origin_returned_move_id', '!=', move.id)
-                quants += [(move.id, x) for x in quant_obj.browse(cr, uid, quant_search, context=context)]
+                                                            ('location_id', 'child_of', move.location_dest_id.id), ], context=context)
+                quants += [(move.id, x) for x in quant_obj.browse(cr, uid, quant_search, context=context) if not x.reservation_id or x.reservation_id.origin_returned_move_id.id != move.id]
+            
+            # Still need to group by move/product? (move has only one product => ...)
+            
             
             for quant in quants:
                 result1.append({'product_id': quant[1].product_id.id, 'quantity': quant[1].qty, 'move_id': quant[0]})

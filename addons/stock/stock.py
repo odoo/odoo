@@ -1384,7 +1384,8 @@ class stock_move(osv.osv):
         default['reserved_quant_ids'] = []
         default['returned_move_ids'] = []
         default['linked_move_operation_ids'] = []
-        default['origin_returned_move_id'] = False
+        if not default.get('origin_returned_move_id'):
+            default['origin_returned_move_id'] = False
         default['state'] = 'draft'
         return super(stock_move, self).copy_data(cr, uid, id, default, context)
 
