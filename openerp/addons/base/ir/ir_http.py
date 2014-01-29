@@ -61,11 +61,6 @@ class ir_http(osv.AbstractModel):
         if not request.uid:
             raise http.SessionExpiredException("Session expired")
 
-    def _auth_method_admin(self):
-        if not request.db:
-            raise http.SessionExpiredException("No valid database for request %s" % request.httprequest)
-        request.uid = openerp.SUPERUSER_ID
-
     def _auth_method_none(self):
         request.disable_db = True
         request.uid = None
