@@ -228,7 +228,9 @@ class QWeb(orm.AbstractModel):
             for (attribute_name, attribute_value) in element.attributes.items():
                 attribute_name = str(attribute_name)
                 if attribute_name == "groups":
-                    can_see = self.user_has_groups(qwebcontext['request'].cr, qwebcontext['uid'], groups=attribute_value)
+                    cr = qwebcontext.get('request') and qwebcontext['request'].cr or None
+                    uid = qwebcontext.get('request') and qwebcontext['request'].uid or None
+                    can_see = self.user_has_groups(cr, uid, groups=attribute_value)
                     if not can_see:
                         return ''
                     continue
@@ -367,8 +369,10 @@ class QWeb(orm.AbstractModel):
     def render_tag_call(self, element, template_attributes, generated_attributes, qwebcontext):
         d = qwebcontext.copy()
         d[0] = self.render_element(element, template_attributes, generated_attributes, d)
+        cr = d.get('request') and d['request'].cr or None
+        uid = d.get('request') and d['request'].uid or None
 
-        return self.render(None, None, self.eval_format(template_attributes["call"], d), d)
+        return self.render(cr, uid, self.eval_format(template_attributes["call"], d), d)
 
     def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
         if "value" in template_attributes:
