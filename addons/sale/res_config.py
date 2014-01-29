@@ -138,7 +138,7 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         wizard = self.browse(cr, uid, ids)[0]
 
         if wizard.time_unit:
-            product = ir_model_data.xmlid_object(cr, uid, 'product.product_product_consultant')
+            product = ir_model_data.xmlid_to_object(cr, uid, 'product.product_product_consultant')
             if product and product.exists():
                 product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
             else:
