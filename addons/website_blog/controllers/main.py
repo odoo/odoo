@@ -196,6 +196,12 @@ class WebsiteBlog(http.Controller):
         tag_ids = tag_obj.search(cr, uid, [], context=context)
         tags = tag_obj.browse(cr, uid, tag_ids, context=context)
 
+        blog_post_obj = request.registry.get('blog.post')
+        if not request.httprequest.session.get(blog_post.id,False):
+                request.httprequest.session[blog_post.id] = True
+                counter = blog_post.counter + 1;
+                blog_post_obj.write(cr, SUPERUSER_ID, [blog_post.id], {'counter':counter},context=context)
+        
         MONTHS = [None, _('January'), _('February'), _('March'), _('April'),
             _('May'), _('June'), _('July'), _('August'), _('September'),
             _('October'), _('November'), _('December')]

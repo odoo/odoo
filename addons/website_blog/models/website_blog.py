@@ -146,9 +146,11 @@ class BlogPost(osv.Model):
             'res.users', 'Last Contributor',
             select=True, readonly=True,
         ),
+        'counter': fields.integer('No of Visitors'),
     }
     _defaults = {
-        'website_published': False
+        'website_published': False,
+        'counter': 0
     }
 
     def create_history(self, cr, uid, ids, vals, context=None):
