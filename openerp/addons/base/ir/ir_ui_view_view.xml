@@ -50,7 +50,7 @@
             <field name="model">ir.ui.view</field>
             <field name="arch" type="xml">
                 <search string="Views">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('model','ilike',self)]" string="View"/>
+                    <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('model_data_id','ilike',self)]" string="View"/>
                     <filter string="Form" domain="[('type', '=','form')]"/>
                     <filter string="Tree" domain="[('type', '=', 'tree')]"/>
                     <filter string="Kanban" domain="[('type', '=', 'kanban')]"/>
@@ -60,8 +60,9 @@
                     <field name="inherit_id"/>
                     <field name="type"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Object" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Type" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Inherit" domain="[]" context="{'group_by':'inherit_id'}"/>
                     </group>
                 </search>
             </field>
