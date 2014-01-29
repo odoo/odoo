@@ -853,24 +853,58 @@ class ir_model_data(osv.osv):
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_model_data_module_name_index ON ir_model_data (module, name)')
 
-    @tools.ormcache()
+    # NEW V8 API
+    @tools.ormcache(skiparg=3)
+    def xmlid_lookup(self, cr, uid, xmlid):
+        """Low level xmlid lookup
+        Return (id, res_model, res_id) or raise ValueError if not found
+        """
+        module, name = xmlid.split('.', 1)
+        ids = self.search(cr, uid, [('module','=',module), ('name','=', name)])
+        if not ids:
+            raise ValueError('External ID not found in the system: %s' % (xmlid))
+        # the sql constraints ensure us we have only one result
+        res = self.read(cr, uid, ids[0], ['model', 'res_id'])
+        if not res['res_id']:
+            raise ValueError('External ID not found in the system: %s' % (xmlid))
+        return ids[0], res['model'], res['res_id']
+    
+    def xmlid_to_res_model_res_id(self, cr, uid, xmlid, raise_if_not_found=False):
+        """ Return (res_model, res_id)"""
+        try:
+            return self.xmlid_lookup(cr, uid, xmlid)[1:3]
+        except ValueError:
+            if raise_if_not_found:
+                raise
+            return (False, False)
+
+    def xmlid_to_res_id(self, cr, uid, xmlid, raise_if_not_found=False):
+        """ Returns res_id """
+        return self.xmlid_to_res_model_res_id(cr, uid, xmlid, raise_if_not_found)[1]
+
+    def xmlid_to_object(self, cr, uid, xmlid, raise_if_not_found=False, context=None):
+        """ Return a browse_record
+        if not found and raise_if_not_found is True return the browse_null
+        """ 
+        t = self.xmlid_to_res_model_res_id(cr, uid, xmlid, raise_if_not_found)
+        res_model, res_id = t
+
+        if res_model and res_id:
+            record = self.pool[res_model].browse(cr, uid, res_id, context=context)
+            if record.exists():
+                return record
+            if raise_if_not_found:
+                raise ValueError('No record found for unique ID %s. It may have been deleted.' % (xml_id))
+        return browse_null()
+
+    # OLD API
     def _get_id(self, cr, uid, module, xml_id):
         """Returns the id of the ir.model.data record corresponding to a given module and xml_id (cached) or raise a ValueError if not found"""
-        ids = self.search(cr, uid, [('module','=',module), ('name','=', xml_id)])
-        if not ids:
-            raise ValueError('No such external ID currently defined in the system: %s.%s' % (module, xml_id))
-        # the sql constraints ensure us we have only one result
-        return ids[0]
+        return self.xmlid_lookup(cr, uid, "%s.%s" % (module, xml_id))[0]
 
-    @tools.ormcache()
     def get_object_reference(self, cr, uid, module, xml_id):
         """Returns (model, res_id) corresponding to a given module and xml_id (cached) or raise ValueError if not found"""
-        data_id = self._get_id(cr, uid, module, xml_id)
-        #assuming data_id is not False, as it was checked upstream
-        res = self.read(cr, uid, data_id, ['model', 'res_id'])
-        if not res['res_id']:
-            raise ValueError('No such external ID currently defined in the system: %s.%s' % (module, xml_id))
-        return res['model'], res['res_id']
+        return self.xmlid_lookup(cr, uid, "%s.%s" % (module, xml_id))[1:3]
 
     def check_object_reference(self, cr, uid, module, xml_id, raise_on_access_error=False):
         """Returns (model, res_id) corresponding to a given module and xml_id (cached), if and only if the user has the necessary access rights
@@ -893,17 +927,7 @@ class ir_model_data(osv.osv):
                 raise a ValueError if it does not; otherwise return a browse_null
                 or non-existing record.
         """
-        try:
-            res_model, res_id = self.get_object_reference(cr, uid, module, xml_id)
-            record = self.pool[res_model].browse(cr, uid, res_id, context=context)
-        except ValueError:
-            if raise_exception:
-                raise
-            return browse_null()
-
-        if raise_exception and not record.exists():
-            raise ValueError('No record found for unique ID %s.%s. It may have been deleted.' % (module, xml_id))
-        return record
+        return self.xmlid_to_object(cr, uid, "%s.%s" % (module, xml_id), raise_if_not_found=raise_exception, context=context)
 
     def _update_dummy(self,cr, uid, model, module, xml_id=False, store=True):
         if not xml_id:
@@ -920,8 +944,7 @@ class ir_model_data(osv.osv):
 
         :returns: itself
         """
-        self._get_id.clear_cache(self)
-        self.get_object_reference.clear_cache(self)
+        self.xmlid_lookup.clear_cache(self)
         return self
 
     def unlink(self, cr, uid, ids, context=None):
@@ -952,8 +975,7 @@ class ir_model_data(osv.osv):
                 if mode == 'update' and noupdate_imd:
                     return res_id2
                 if not real_id2:
-                    self._get_id.clear_cache(self)
-                    self.get_object_reference.clear_cache(self)
+                    self.clear_caches(self)
                     cr.execute('delete from ir_model_data where id=%s', (imd_id2,))
                     res_id = False
                 else:
