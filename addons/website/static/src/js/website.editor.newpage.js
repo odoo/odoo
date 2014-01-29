@@ -20,7 +20,7 @@
                     input: "Page Title",
                 }).then(function (val) {
                     if (val) {
-                        document.location = '/pagenew/' + encodeURI(val);
+                        document.location = '/website/add/' + encodeURI(val);
                     }
                 });
             }
