@@ -493,7 +493,7 @@
                                   </div>
                                   <div class="text-muted" t-field="line.product_id.description_sale"/>
                               </td>
-                              <td class="text-center">
+                              <td class="text-center" name="price">
                                 <t t-if="abs(line.product_id.lst_price - line.price_unit) &gt; 0.2">
                                   <del class="text-danger"
                                     t-field="line.product_id.lst_price" t-field-options='{
