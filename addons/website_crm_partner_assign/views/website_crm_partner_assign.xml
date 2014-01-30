@@ -42,7 +42,8 @@
                         <t t-if="country_dict['country_id']">
                             <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
                                 <a t-attf-href="#{ country_dict['country_id'][0] and '/partners/country/%s' % slug(country_dict['country_id']) or '/partners/' }#{ search_path }">
-                                    <t t-esc="country_dict['country_id'][1]"/> <small>(<t t-esc="country_dict['country_id_count']"/>)</small>
+                                    <span class="badge pull-right" t-esc="country_dict['country_id_count'] or ''"/>
+                                    <t t-esc="country_dict['country_id'][1]"/> 
                                 </a>
                             </li>
                         </t>
