@@ -130,7 +130,7 @@ instance.web.Query = instance.web.Class.extend({
             return null;
         }
         var raw_fields = _.map(grouping.concat(this._fields || []), function (field) {
-            return (_.contains(field, ':')) ? field.split(':')[0] : field;
+            return field.split(':')[0];
         });
 
         var self = this;
