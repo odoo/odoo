@@ -32,12 +32,14 @@ class WebsiteMembership(http.Controller):
     def members(self, membership_id=None, country_name=None, country_id=0, page=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
         product_obj = request.registry['product.product']
+        country_obj = request.registry['res.country']
         membership_line_obj = request.registry['membership.membership_line']
         partner_obj = request.registry['res.partner']
         post_name = post.get('name', '')
+        current_country = None
 
         # base domain for groupby / searches
-        base_line_domain = [('state', 'in', ['free', 'paid'])]
+        base_line_domain = [("partner.website_published", "=", True),('state', 'in', ['free', 'paid'])]
         if membership_id:
             base_line_domain.append(('membership_id', '=', membership_id))
             membership = product_obj.browse(cr, uid, membership_id, context=context)
@@ -53,16 +55,24 @@ class WebsiteMembership(http.Controller):
             cr, uid, [('member_lines', 'in', membership_line_ids), ("website_published", "=", True)], ["id", "country_id"],
             groupby="country_id", orderby="country_id", context=request.context)
         countries_total = sum(country_dict['country_id_count'] for country_dict in countries)
+
+        line_domain = list(base_line_domain)
+        if country_id:
+            line_domain.append(('partner.country_id', '=', country_id))
+            current_country = country_obj.read(cr, uid, country_id, ['id', 'name'], context)
+            if not any(x['country_id'][0] == country_id for x in countries):
+                countries.append({
+                    'country_id_count': 0,
+                    'country_id': (country_id, current_country["name"])
+                })
+                countries.sort(key=lambda d: d['country_id'][1])
+
         countries.insert(0, {
             'country_id_count': countries_total,
             'country_id': (0, _("All Countries"))
         })
 
         # displayed membership lines
-        line_domain = list(base_line_domain)
-        if country_id:
-            line_domain.append(('partner.country_id', '=', country_id))
-
         membership_line_ids = membership_line_obj.search(cr, uid, line_domain, context=context)
         membership_lines = membership_line_obj.browse(cr, uid, membership_line_ids, context=context)
         membership_lines.sort(key=lambda x: x.membership_id.website_sequence)
@@ -86,6 +96,8 @@ class WebsiteMembership(http.Controller):
             'memberships': memberships,
             'membership': membership,
             'countries': countries,
+            'current_country': current_country and [current_country['id'], current_country['name']] or None,
+            'current_country_id': current_country and current_country['id'] or 0,
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'post': post,

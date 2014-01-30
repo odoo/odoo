@@ -40,10 +40,6 @@ class WebsiteCustomer(http.Controller):
             groupby="country_id", orderby="country_id", context=request.context)
         country_count = partner_obj.search(
             cr, openerp.SUPERUSER_ID, domain, count=True, context=request.context)
-        countries.insert(0, {
-            'country_id_count': country_count,
-            'country_id': (0, _("All Countries"))
-        })
 
         if country_id:
             domain += [('country_id', '=', country_id)]
@@ -54,6 +50,11 @@ class WebsiteCustomer(http.Controller):
                     'country_id': (country_id, country.name)
                 })
                 countries.sort(key=lambda d: d['country_id'][1])
+
+        countries.insert(0, {
+            'country_id_count': country_count,
+            'country_id': (0, _("All Countries"))
+        })
 
         # search customers to display
         partner_ids = partner_obj.search(cr, openerp.SUPERUSER_ID, domain, context=request.context)
