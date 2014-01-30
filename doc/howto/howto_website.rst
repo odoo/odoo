@@ -341,11 +341,11 @@ We've also altered the index method slightly, to retrieve our teaching
 assistants from the database instead of storing them in a global list
 in the module\ [#taprofile]_.
 
-.. note:: :file:`ir.model.access.csv` is necessary to tell OpenERP that
-          any user can *see* the teaching assistants: by default, only
-          the administrator can see, edit, create or destroy objects.
-          Here, we only change the ``read`` permission to allow any
-          user to list and browse teaching assistants.
+.. note:: :file:`ir.model.access.csv` is necessary to tell OpenERP
+          that any user can *see* the teaching assistants: by default,
+          only the administrator can see, edit, create or destroy
+          objects.  Here, we only change the ``read`` permission to
+          allow any user to list and browse teaching assistants.
 
 .. todo:: command/shortcut
 
@@ -425,11 +425,16 @@ you will see that other TA profiles are unaffected.
 A more complex model
 --------------------
 
-Up to now, we've been working with displaying and manipulating
-objects representing teaching assistants. It's a basic and
-simple concept, but not one which allows for much further
-diving into interesting tools of OpenERP. Thus, let's add a
-list of course lectures.
+Up to now, we've been working with displaying and manipulating objects
+representing teaching assistants. It's a basic and simple concept, but not one
+which allows for much further diving into interesting tools of OpenERP.
+
+We need an object fitting the theme yet allowing for richer interactions and
+more interesting extensions. Course lectures seem to fit: they can be
+displayed in various manners (e.g. as a list of lectures or as a calendar),
+they can be moved around as necessary (cancelled/rescheduled), they can have
+numerous pieces of data attached both intrinsic (lecture transcripts) and
+extrinsic (attendance records, student discussions, etc…).
 
 .. calendar model
 .. demo data for events dates
