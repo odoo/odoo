@@ -237,7 +237,14 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.set_connection_status('connecting');
 
             if(options.force_ip){
-                urls.push(options.force_ip);
+                var url = options.force_ip;
+                if(url.indexOf('//') < 0){
+                    url = 'http://'+url;
+                }
+                if(url.indexOf(':',5) < 0){
+                    url = url+port;
+                }
+                urls.push(url);
             }else{
                 if(localStorage['hw_proxy_url']){
                     urls.push(localStorage['hw_proxy_url']);
