@@ -1437,7 +1437,11 @@ class Binary(http.Controller):
             args = {'error': "Something horrible happened"}
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
-    @http.route('/web/binary/company_logo', type='http', auth="none")
+    @http.route([
+        '/web/binary/company_logo',
+        '/logo',
+        '/logo.png',
+    ], type='http', auth="none")
     def company_logo(self, dbname=None):
         # TODO add etag, refactor to use /image code for etag
         uid = None
