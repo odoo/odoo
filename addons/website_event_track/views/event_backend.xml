@@ -159,6 +159,9 @@
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
+                    <button name="%(website_event_track.act_event_list_tracks)d" type="action" string="Tracks"/>
+                </xpath>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <label for="tag_ids" class="oe_edit_only"/>
                     <field name="tag_ids" widget="many2many_tags"/>
@@ -173,9 +176,6 @@
                 </xpath>
                 <xpath expr="//notebook" position="inside">
                     <page string="Tracks">
-                        <div class="oe_right oe_button_box">
-                            <button name="%(website_event_track.act_event_list_tracks)d" type="action" string="Tracks"/>
-                        </div>
                         <group col="2" class="oe_title">
                             <field name="allowed_track_tag_ids" widget="many2many_tags"/>
                         </group>
@@ -319,6 +319,8 @@
                                 <field name="tag_ids" widget="many2many_tags"/>
                             </group>
                         </group>
+                        <label for="description" class="oe_edit_only"/>
+                        <field name="description"/>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>

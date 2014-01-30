@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import openerp
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
@@ -106,7 +107,7 @@ class website_event(http.Controller):
 </section>''' % (e(post['track_name']), 
             e(post['description']), e(post['biography']))
 
-        track_id = tobj.create(cr, uid, {
+        track_id = tobj.create(cr, openerp.SUPERUSER_ID, {
             'name': post['track_name'],
             'event_id': event.id,
             'tag_ids': [(6, 0, tags)],
@@ -114,7 +115,7 @@ class website_event(http.Controller):
             'description': track_description
         }, context=context)
 
-        tobj.message_post(cr, uid, [track_id], body="""Proposed By: %s<br/>
+        tobj.message_post(cr, openerp.SUPERUSER_ID, [track_id], body="""Proposed By: %s<br/>
           Mail: <a href="mailto:%s">%s</a><br/>
           Phone: %s""" % (e(post['partner_name']), e(post['email_from']), 
             e(post['email_from']), e(post['phone'])), context=context)
