@@ -83,7 +83,7 @@ class res_users(osv.Model):
 
     def copy_data(self, *args, **kwargs):
         data = super(res_users, self).copy_data(*args, **kwargs)
-        if data.get('alias_name'):
+        if data and data.get('alias_name'):
             data['alias_name'] = data['login']
         return data
 
