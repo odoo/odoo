@@ -53,7 +53,6 @@ Key Features
         'security/hr_evaluation_security.xml',
         'hr_evaluation_view.xml',
         'report/hr_evaluation_report_view.xml',
-        'board_hr_evaluation_view.xml',
         'hr_evaluation_data.xml',
         'hr_evaluation_installer.xml',
     ],
