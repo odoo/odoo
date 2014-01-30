@@ -204,7 +204,7 @@ class WebRequest(object):
         kwargs.update(self.func_arguments)
 
         # Backward for 7.0
-        if getattr(self.func, '_first_arg_is_req', False):
+        if getattr(self.func.method, '_first_arg_is_req', False):
             args = (request,) + args
         # Correct exception handling and concurency retry
         @service_model.check
