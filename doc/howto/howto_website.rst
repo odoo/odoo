@@ -423,8 +423,30 @@ they can be moved around as necessary (cancelled/rescheduled), they can have
 numerous pieces of data attached both intrinsic (lecture transcripts) and
 extrinsic (attendance records, student discussions, etc…).
 
-.. calendar model
-.. demo data for events dates
+.. patch::
+
+.. TODO:: ``-u`` did not work, not even ``-uall``, new data file does not get
+          installed
+
+Note a new feature: ``t-field`` tags can take options through
+``t-field-options``. The options must be a JSON_ object. Available options
+depend on the field's type and potentially the display widget (some types
+of fields can be displayed in multiple manners). In this case, the same
+``date`` field is displayed using custom date formats, one being the generic
+``long`` (which depends on the current user's locale) and the other being
+an explicit format for `the weekday in short form
+<http://babel.pocoo.org/docs/dates/#date-fields>`_.
+
+.. note:: in edition mode, formatted date and datetime fields revert to a
+          canonical representation in order to provide all of the field's
+          information.
+
+.. warning:: if you edit the course's dates, you will notice that the two
+             displays of the ``date`` field are unlinked, if one is edited
+             the second one will not change until the edition is saved. This
+             is a limitation of the current ``website`` but may be improved in
+             future releases.
+
 .. access & formatting
 .. sending & storing comments (?)
 
@@ -449,3 +471,5 @@ Administration and ERP Integration
 .. _templates: http://en.wikipedia.org/wiki/Web_template
 
 .. _your openerp: http://localhost:8069/
+
+.. _JSON: http://www.json.org
