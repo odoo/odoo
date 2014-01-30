@@ -216,12 +216,12 @@ class res_partner(osv.osv, format_address):
     _display_name = lambda self, *args, **kwargs: self._display_name_compute(*args, **kwargs)
 
     _commercial_partner_store_triggers = {
-        'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)]),
-                        ['parent_id', 'is_company'], 10) 
+        'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)], context=dict(active_test=False)),
+                        ['parent_id', 'is_company'], 10)
     }
     _display_name_store_triggers = {
-        'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)]),
-                        ['parent_id', 'is_company', 'name'], 10) 
+        'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)], context=dict(active_test=False)),
+                        ['parent_id', 'is_company', 'name'], 10)
     }
 
     _order = "display_name"
