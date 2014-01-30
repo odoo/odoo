@@ -280,14 +280,15 @@ $sheet-padding: 16px
         .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane
             padding: 16px
         .ui-dialog-titlebar
+            border-top: none
+            border-left: none
+            border-right: none
             border-bottom: 1px solid #cacaca
             @include radius(2px 2px 0 0)
             @include vertical-gradient(#FCFCFC, #DEDEDE)
             .ui-dialog-title
                 margin: 0
                 padding: 0
-        .ui-widget-header
-            border: none
         .ui-dialog-content
             background: white
             width: auto !important
@@ -416,15 +417,6 @@ $sheet-padding: 16px
             @include box-shadow(none)
             &:hover
                 background: #ED6F6A
-    .oe_title
-        width: 50%
-        float: left
-    .oe_title:after
-        content: "."
-        display: block
-        height: 0
-        clear: both
-        visibility: hidden
     .oe_button_box
         width: 270px
         text-align: right
@@ -2522,6 +2514,7 @@ $sheet-padding: 16px
         float: left
     .oe_debug_view_log
         font-size: 95%
+        line-height: 1.2em
     .oe_debug_view_log label
         display: block
         width: 49%

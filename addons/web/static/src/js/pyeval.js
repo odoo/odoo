@@ -382,13 +382,28 @@
                 this[key] = asJS(args[key]);
             }
         },
+        replace: function () {
+            var args = py.PY_parseArgs(arguments, [
+                ['year', py.None], ['month', py.None], ['day', py.None],
+                ['hour', py.None], ['minute', py.None], ['second', py.None],
+                ['microsecond', py.None] // FIXME: tzinfo, can't use None as valid input
+            ]);
+            var params = {};
+            for(var key in args) {
+                if (!args.hasOwnProperty(key)) { continue; }
+
+                var arg = args[key];
+                params[key] = (arg === py.None ? this[key] : asJS(arg));
+            }
+            return py.PY_call(datetime.datetime, params);
+        },
         strftime: function () {
             var self = this;
             var args = py.PY_parseArgs(arguments, 'format');
             return py.str.fromJSON(args.format.toJSON()
                 .replace(/%([A-Za-z])/g, function (m, c) {
                     switch (c) {
-                    case 'Y': return self.year;
+                    case 'Y': return _.str.sprintf('%04d', self.year);
                     case 'm': return _.str.sprintf('%02d', self.month);
                     case 'd': return _.str.sprintf('%02d', self.day);
                     case 'H': return _.str.sprintf('%02d', self.hour);
@@ -399,6 +414,17 @@
                 }));
         },
         now: py.classmethod.fromJSON(function () {
+            var d = new Date;
+            return py.PY_call(datetime.datetime, [
+                d.getFullYear(), d.getMonth() + 1, d.getDate(),
+                d.getHours(), d.getMinutes(), d.getSeconds(),
+                d.getMilliseconds() * 1000]);
+        }),
+        today: py.classmethod.fromJSON(function () {
+            var dt_class = py.PY_getAttr(datetime, 'datetime');
+            return py.PY_call(py.PY_getAttr(dt_class, 'now'));
+        }),
+        utcnow: py.classmethod.fromJSON(function () {
             var d = new Date();
             return py.PY_call(datetime.datetime,
                 [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(),
@@ -415,7 +441,17 @@
                 py.PY_getAttr(args.time, 'minute'),
                 py.PY_getAttr(args.time, 'second')
             ]);
-        })
+        }),
+        toJSON: function () {
+            return new Date(
+                this.year,
+                this.month - 1,
+                this.day,
+                this.hour,
+                this.minute,
+                this.second,
+                this.microsecond / 1000);
+        },
     });
     datetime.date = py.type('date', null, {
         __init__: function () {
@@ -470,7 +506,12 @@
         },
         fromJSON: function (year, month, day) {
             return py.PY_call(datetime.date, [year, month, day]);
-        }
+        },
+        today: py.classmethod.fromJSON(function () {
+            var d = new Date;
+            return py.PY_call(datetime.date, [
+                d.getFullYear(), d.getMonth() + 1, d.getDate()]);
+        }),
     });
     /**
         Returns the current local date, which means the date on the client (which can be different
@@ -501,7 +542,7 @@
     time.strftime = py.PY_def.fromJSON(function () {
         var args  = py.PY_parseArgs(arguments, 'format');
         var dt_class = py.PY_getAttr(datetime, 'datetime');
-        var d = py.PY_call(py.PY_getAttr(dt_class, 'now'));
+        var d = py.PY_call(py.PY_getAttr(dt_class, 'utcnow'));
         return py.PY_call(py.PY_getAttr(d, 'strftime'), [args.format]);
     });
 
