@@ -20,7 +20,7 @@ $(document).ready(function () {
             .fadeIn(600);
     }
 
-    $(".oe_website_sale .oe_mycart input.js_quantity").change(function () {
+    $(".oe_website_sale .oe_cart input.js_quantity").change(function () {
         var $input = $(this);
         var value = parseInt($input.val(), 10);
         if (isNaN(value)) value = 0;
@@ -55,7 +55,7 @@ $(document).ready(function () {
                 }
                 set_my_cart_quantity(data[1]);
                 $link.parents(".input-group:first").find(".js_quantity").val(data[0]);
-                $('#mycart_total').replaceWith(data[3]);
+                $('#cart_total').replaceWith(data[3]);
             });
         return false;
     });
@@ -76,39 +76,6 @@ $(document).ready(function () {
     var js_slider_time = null;
     var $form = $("form.attributes");
     $form.on("change", "label input", function () {
-        clearTimeout(js_slider_time);
         $form.submit();
-    });
-    $(".js_slider", $form).each(function() {
-        var $slide = $(this);
-        var $slider = $('<div>'+
-                '<input type="hidden" name="att-'+$slide.data("id")+'-minmem" value="'+$slide.data("min")+'"/>'+
-                '<input type="hidden" name="att-'+$slide.data("id")+'-maxmem" value="'+$slide.data("max")+'"/>'+
-            '</div>');
-        var $min = $("<input readonly name='att-"+$slide.data("id")+"-min'/>")
-            .css("border", "0").css("width", "50%")
-            .val($slide.data("min"));
-        var $max = $("<input readonly name='att-"+$slide.data("id")+"-max'/>")
-            .css("border", "0").css("width", "50%").css("text-align", "right")
-            .val($slide.data("max"));
-        $slide.append($min);
-        $slide.append($max);
-        $slide.append($slider);
-        $slider.slider({
-            range: true,
-            min: +$slide.data("min"),
-            max: +$slide.data("max"),
-            values: [
-                $slide.data("value-min") ? +$slide.data("value-min") : +$slide.data("min"),
-                $slide.data("value-max") ? +$slide.data("value-max") : +$slide.data("max")
-            ],
-            change: function( event, ui ) {
-                $min.val( ui.values[ 0 ] );
-                $max.val( ui.values[ 1 ] );
-                $form.submit();
-            }
-        });
-        $min.val( $slider.slider( "values", 0 ) );
-        $max.val( $slider.slider( "values", 1 ) );
     });
 });

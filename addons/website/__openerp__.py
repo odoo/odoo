@@ -12,7 +12,7 @@ OpenERP Website CMS
     'depends': ['web', 'share', 'mail'],
     'installable': True,
     'data': [
-        'data/website_data.xml',
+        'data/data.xml',
         'security/ir.model.access.csv',
         'security/ir_ui_view.xml',
         'views/website_templates.xml',
@@ -22,7 +22,7 @@ OpenERP Website CMS
         'views/res_config.xml',
     ],
     'demo': [
-        'data/website_demo.xml',
+        'data/demo.xml',
     ],
     'js': ['static/src/js/website.backend.js'],
     'qweb' : ['static/src/xml/website.backend.xml'],

@@ -11,14 +11,14 @@ OpenERP E-Commerce
     'author': 'OpenERP SA',
     'depends': ['website', 'sale', 'payment'],
     'data': [
-        'data/website_sale_data.xml',
-        'views/website_sale.xml',
-        'views/website_sale_backend.xml',
+        'data/data.xml',
+        'views/views.xml',
+        'views/templates.xml',
         'security/ir.model.access.csv',
         'security/website_sale.xml',
     ],
     'demo': [
-        'data/website_sale_demo.xml',
+        'data/demo.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,

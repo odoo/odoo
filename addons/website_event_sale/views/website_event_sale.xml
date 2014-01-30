@@ -13,7 +13,7 @@
     </xpath>
 </template>
 
-<template id="mycart" inherit_id="website_sale.mycart" name="My Cart Event's Price">
+<template id="cart" inherit_id="website_sale.cart" name="My Cart Event's Price">
     <xpath expr="//td[@name='price']/t" position="attributes">
         <attribute name="t-if">abs(line.product_id.lst_price - line.price_unit) &gt; 0.2 and not line.product_id.event_ok</attribute>
     </xpath>
