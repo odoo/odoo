@@ -275,7 +275,7 @@ class procurement_order(osv.osv):
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             move_obj = self.pool.get('stock.move')
             #Minimum stock rules
-            self. _procure_orderpoint_confirm(cr, uid, automatic=False,use_new_cursor=False, context=context, user_id=False)
+            self. _procure_orderpoint_confirm(cr, uid, use_new_cursor=False, context=context, user_id=False)
 
             #Search all confirmed stock_moves and try to assign them
             confirmed_ids = move_obj.search(cr, uid, [('state', '=', 'confirmed'), ('company_id','=', company.id)], limit=None, order='picking_priority desc, date_expected asc', context=context)
@@ -295,54 +295,6 @@ class procurement_order(osv.osv):
                     pass
         return {}
 
-    def _prepare_automatic_op_procurement(self, cr, uid, product, warehouse, location_id, context=None):
-        return {'name': _('Automatic OP: %s') % (product.name,),
-                'origin': _('SCHEDULER'),
-                'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                'product_id': product.id,
-                'product_qty': -product.virtual_available,
-                'product_uom': product.uom_id.id,
-                'location_id': location_id,
-                'company_id': warehouse.company_id.id,
-                }
-
-    def create_automatic_op(self, cr, uid, context=None):
-        """
-        Create procurement of  virtual stock < 0
-
-        @param self: The object pointer
-        @param cr: The current row, from the database cursor,
-        @param uid: The current user ID for security checks
-        @param context: A standard dictionary for contextual values
-        @return:  Dictionary of values
-        """
-        if context is None:
-            context = {}
-        product_obj = self.pool.get('product.product')
-        proc_obj = self.pool.get('procurement.order')
-        warehouse_obj = self.pool.get('stock.warehouse')
-
-        warehouse_ids = warehouse_obj.search(cr, uid, [], context=context)
-        products_ids = product_obj.search(cr, uid, [], order='id', context=context)
-
-        for warehouse in warehouse_obj.browse(cr, uid, warehouse_ids, context=context):
-            context['warehouse'] = warehouse
-            # Here we check products availability.
-            # We use the method 'read' for performance reasons, because using the method 'browse' may crash the server.
-            for product_read in product_obj.read(cr, uid, products_ids, ['virtual_available'], context=context):
-                if product_read['virtual_available'] >= 0.0:
-                    continue
-
-                product = product_obj.browse(cr, uid, [product_read['id']], context=context)[0]
-
-                location_id = warehouse.lot_stock_id.id
-
-                proc_id = proc_obj.create(cr, uid,
-                            self._prepare_automatic_op_procurement(cr, uid, product, warehouse, location_id, context=context),
-                            context=context)
-                self.assign(cr, uid, [proc_id])
-                self.run(cr, uid, [proc_id])
-        return True
 
     def _get_orderpoint_date_planned(self, cr, uid, orderpoint, start_date, context=None):
         date_planned = start_date + \
@@ -365,7 +317,7 @@ class procurement_order(osv.osv):
                 [order_point.product_id.id],
                 {'location': order_point.location_id.id})[order_point.product_id.id]['virtual_available']
 
-    def _procure_orderpoint_confirm(self, cr, uid, automatic=False,\
+    def _procure_orderpoint_confirm(self, cr, uid, \
             use_new_cursor=False, context=None, user_id=False):
         '''
         Create procurement based on Orderpoint
@@ -388,8 +340,6 @@ class procurement_order(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         offset = 0
         ids = [1]
-        if automatic:
-            self.create_automatic_op(cr, uid, context=context)
         while ids:
             ids = orderpoint_obj.search(cr, uid, [], offset=offset, limit=100)
             for op in orderpoint_obj.browse(cr, uid, ids, context=context):

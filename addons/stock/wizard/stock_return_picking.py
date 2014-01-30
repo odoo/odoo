@@ -66,11 +66,11 @@ class stock_return_picking(osv.osv_memory):
             if pick.state != 'done':
                 raise osv.except_osv(_('Warning!'), _("You may only return pickings that are Done!"))
             for line in pick.move_lines:
-                qty = line.product_qty
+                qty = line.product_uom_qty
                 if line.returned_move_ids:
                     for returned_move in line.returned_move_ids:
                         if returned_move.product_id.id == line.product_id.id:
-                            qty -= returned_move.product_qty
+                            qty -= returned_move.product_uom_qty
 
                 if qty > 0:
                     result1.append({'product_id': line.product_id.id, 'quantity': qty, 'move_id': line.id})
@@ -127,7 +127,7 @@ class stock_return_picking(osv.osv_memory):
             raise osv.except_osv(_('Warning!'), _("Please specify at least one non-zero quantity."))
 
         pick_obj.action_confirm(cr, uid, [new_picking], context=context)
-        pick_obj.force_assign(cr, uid, [new_picking], context)
+        pick_obj.action_assign(cr, uid, [new_picking], context)
         return new_picking, pick_type_id
 
     def create_returns(self, cr, uid, ids, context=None):
