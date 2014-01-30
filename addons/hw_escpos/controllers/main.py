@@ -21,6 +21,7 @@ except ImportError:
 from openerp.tools.translate import _
 from .. import escpos
 from ..escpos import printer
+from ..escpos import supported_devices
 from PIL import Image
 
 from openerp import http
@@ -35,21 +36,16 @@ class EscposDriver(Thread):
         self.queue = Queue()
         self.status = {'status':'connecting', 'messages':[]}
 
-        self.supported_printers = [
-            { 'vendor' : 0x04b8, 'product' : 0x0e03, 'name' : 'Epson TM-T20' },
-            { 'vendor' : 0x04b8, 'product' : 0x0202, 'name' : 'Epson TM-T70' },
-        ]
-
-    def connected_usb_devices(self,devices):
+    def connected_usb_devices(self):
         connected = []
-        for device in devices:
+        for device in supported_devices.device_list:
             if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) != None:
                 connected.append(device)
         return connected
     
     def get_escpos_printer(self):
         try:
-            printers = self.connected_usb_devices(self.supported_printers)
+            printers = self.connected_usb_devices()
             if len(printers) > 0:
                 self.set_status('connected','Connected to '+printers[0]['name'])
                 return escpos.printer.Usb(printers[0]['vendor'], printers[0]['product'])
@@ -263,12 +259,12 @@ hw_proxy.drivers['escpos'] = driver
         
 class EscposProxy(hw_proxy.Proxy):
     
-    @http.route('/hw_proxy/open_cashbox', type='json', auth='admin')
+    @http.route('/hw_proxy/open_cashbox', type='json', auth='none')
     def open_cashbox(self):
         _logger.info('ESC/POS: OPEN CASHBOX') 
         driver.push_task('cashbox')
         
-    @http.route('/hw_proxy/print_receipt', type='json', auth='admin')
+    @http.route('/hw_proxy/print_receipt', type='json', auth='none')
     def print_receipt(self, receipt):
         _logger.info('ESC/POS: PRINT RECEIPT') 
         driver.push_task('receipt',receipt)
