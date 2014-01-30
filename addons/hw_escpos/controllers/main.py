@@ -259,12 +259,12 @@ hw_proxy.drivers['escpos'] = driver
         
 class EscposProxy(hw_proxy.Proxy):
     
-    @http.route('/hw_proxy/open_cashbox', type='json', auth='none')
+    @http.route('/hw_proxy/open_cashbox', type='json', auth='none', cors='*')
     def open_cashbox(self):
         _logger.info('ESC/POS: OPEN CASHBOX') 
         driver.push_task('cashbox')
         
-    @http.route('/hw_proxy/print_receipt', type='json', auth='none')
+    @http.route('/hw_proxy/print_receipt', type='json', auth='none', cors='*')
     def print_receipt(self, receipt):
         _logger.info('ESC/POS: PRINT RECEIPT') 
         driver.push_task('receipt',receipt)
