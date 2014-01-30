@@ -22,7 +22,7 @@
                         </div>
                         <group>
                             <group>
-                                <field name="partner_id"/>
+                                <field name="user_id"/>
                             </group>
                             <group>
                                 <label for="capacity"/>
@@ -59,7 +59,7 @@
             <field name="arch" type="xml">
                 <tree string="Stock Picking Waves" colors="black:state in ('in_progress','done');grey: state=='cancel'">
                     <field name="name"/>
-                    <field name="partner_id"/>
+                    <field name="user_id"/>
                     <field name="capacity"/>
                     <field name="capacity_uom"/>
                     <field name="time" widget="float_time"/>
@@ -75,9 +75,9 @@
                 <search string="Search Picking Waves">
                     <field name="name" string="Picking Wave"/>
                     <filter name="in_progress" string="In Progress" domain="[('state','=', 'in_progress')]" help="Picking Waves not finished"/>
-                    <field name="partner_id"/>
+                    <field name="user_id"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="User" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="State" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                </search>

@@ -7,7 +7,7 @@ class stock_picking_wave(osv.osv):
     _order = "name desc"
     _columns = {
         'name': fields.char('name', required=True, help='Name of the picking wave'),
-        'partner_id': fields.many2one('res.users', 'Responsible', help='Person responsible for this wave'),
+        'user_id': fields.many2one('res.users', 'Responsible', help='Person responsible for this wave'),
         'time': fields.float('Time', help='Time it will take to perform the wave'),
         'picking_ids': fields.one2many('stock.picking', 'wave_id', 'Pickings', help='List of picking associated to this wave'),
         'capacity': fields.float('Capacity', help='The capacity of the transport used to get the goods'),
@@ -68,12 +68,13 @@ class stock_picking_wave(osv.osv):
     def done(self, cr, uid, ids, context=None):
         #done should only be called from one wave at a time
         picking_todo = []
-        for picking in self.browse(cr, uid, ids, context=context)[0].picking_ids:
-            if picking.state not in ('cancel', 'done', 'assigned'):
-                raise osv.except_osv(_('Warning'),_('Some pickings are still waiting for goods. Please check them before setting them to done'))
-            picking_todo.append(picking.id)
+        for wave in self.browse(cr, uid, ids, context=context):
+            for picking in wave.picking_ids:
+                if picking.state not in ('cancel', 'done', 'assigned'):
+                    raise osv.except_osv(_('Warning'),_('Some pickings are still waiting for goods. Please check them before setting them to done'))
+                picking_todo.append(picking.id)
         if picking_todo:
-            self.pool.get('stock.picking').action_done(cr, uid, picking_todo, context=context)
+            self.pool.get('stock.picking').action_done(cr, uid, list(set(picking_todo)), context=context)
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
 
