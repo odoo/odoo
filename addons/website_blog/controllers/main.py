@@ -265,3 +265,17 @@ class WebsiteBlog(http.Controller):
         create_context = dict(context, mail_create_nosubscribe=True)
         new_blog_post_id = request.registry['blog.post'].copy(cr, uid, blog_post_id, {}, context=create_context)
         return werkzeug.utils.redirect("/blogpost/%s/?enable_editor=1" % new_blog_post_id)
+
+    @http.route('/blog_post/post', type='json', auth="public", website=True)
+    def getPost(self, blog=None, **post):
+        blog = request.registry.get('blog.post').browse(request.cr, SUPERUSER_ID, int(blog))
+        values = {
+              "image": "data:image/png;base64,%s" % blog.content_image,
+              "date": blog.create_date ,
+              "author": blog.create_uid.name,
+              "title": blog.name,
+              "title_secondary": "It's not too hard, really.",
+              "content": blog.content,
+        }
+        return [values]
+
