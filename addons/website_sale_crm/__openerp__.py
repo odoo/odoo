@@ -1,5 +1,5 @@
 {
-    'name': 'E-Commerce with CRM',
+    'name': 'eCommerce with CRM',
     'version': '0.1',
     'category': 'Hidden',
     'description': """

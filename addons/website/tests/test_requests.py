@@ -4,6 +4,7 @@ import urllib
 import urlparse
 import unittest2
 import urllib2
+import werkzeug.urls
 
 import lxml.html
 
@@ -70,7 +71,7 @@ class CrawlSuite(unittest2.TestSuite):
         if user is not None:
             url = 'http://localhost:{port}/login?{query}'.format(
                 port=tools.config['xmlrpc_port'],
-                query=urllib.urlencode({
+                query=werkzeug.url_encode({
                     'db': tools.config['db_name'],
                     'login': user,
                     'key': password,

@@ -92,6 +92,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         connect_to_proxy: function(){
             var self = this;
+            var  done = new $.Deferred();
             this.barcode_reader.disconnect_from_proxy();
             this.pos_widget.loading_message(_t('Connecting to the PosBox'),0);
             this.pos_widget.loading_skip(function(){
@@ -106,7 +107,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     if(self.config.iface_scan_via_proxy){
                         self.barcode_reader.connect_to_proxy();
                     }
+                }).always(function(){
+                    done.resolve();
                 });
+            return done;
         },
 
         // helper function to load data from the server

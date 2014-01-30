@@ -136,8 +136,8 @@
             </div>
             <div class="row mb32" t-foreach="tracks" t-as="track">
                 <div class="col-sm-2">
-                    <t t-if="len(track.speaker_ids)">
-                        <span t-field="track.speaker_ids[0].image"
+                    <t t-if="track.image">
+                        <span t-field="track.image"
                             t-field-options='{"widget": "image", "class": "img-circle"}'/>
                     </t>
                 </div>

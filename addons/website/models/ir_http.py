@@ -95,7 +95,7 @@ class ir_http(orm.AbstractModel):
             werkzeug.exceptions.abort(werkzeug.utils.redirect(url))
 
     def _handle_exception(self, exception=None, code=500):
-        if isinstance(exception, werkzeug.exceptions.HTTPException) and exception.response:
+        if isinstance(exception, werkzeug.exceptions.HTTPException) and hasattr(exception, 'response') and exception.response:
             return exception.response
         if getattr(request, 'website_enabled', False) and request.website:
             values = dict(

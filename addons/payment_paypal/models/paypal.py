@@ -7,7 +7,7 @@ except ImportError:
     import json
 import logging
 import urlparse
-import urllib
+import werkzeug.urls
 import urllib2
 
 from openerp.addons.payment.models.payment_acquirer import ValidationError
@@ -134,7 +134,7 @@ class AcquirerPaypal(osv.Model):
         password manager
         """
         res = dict.fromkeys(ids, False)
-        parameters = urllib.urlencode({'grant_type': 'client_credentials'})
+        parameters = werkzeug.url_encode({'grant_type': 'client_credentials'})
 
         for acquirer in self.browse(cr, uid, ids, context=context):
             tx_url = self._get_paypal_urls(cr, uid, acquirer.env)['paypal_rest_url']

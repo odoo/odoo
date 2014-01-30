@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import urllib
+import werkzeug.urls
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -89,7 +89,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'searches': post,
-            'search_path': "?%s" % urllib.urlencode(post),
+            'search_path': "?%s" % werkzeug.url_encode(post),
         }
         return request.website.render("website_crm_partner_assign.index", values)
 

@@ -109,8 +109,8 @@ class Scanner(Thread):
             if not evdev:
                 return None
             devices   = [ device for device in listdir(self.input_dir)]
-            keyboards = [ device for device in devices if 'kbd' in device ]
-            scanners  = [ device for device in devices if ('barcode' in device.lower()) or ('scanner' in device.lower()) ]
+            keyboards = [ device for device in devices if ('kbd' in device) and ('keyboard' not in device.lower())]
+            scanners  = [ device for device in devices if ('barcode' in device.lower()) or ('scanner' in device.lower())]
             if len(scanners) > 0:
                 self.set_status('connected','Connected to '+scanners[0])
                 return evdev.InputDevice(join(self.input_dir,scanners[0]))
@@ -124,7 +124,7 @@ class Scanner(Thread):
             self.set_status('error',str(e))
             return None
 
-    @http.route('/hw_proxy/Vis_scanner_connected', type='json', auth='admin')
+    @http.route('/hw_proxy/Vis_scanner_connected', type='json', auth='none')
     def is_scanner_connected(self):
         return self.get_device() != None
     
@@ -144,6 +144,8 @@ class Scanner(Thread):
                 return ''
     
     def get_status(self):
+        if not s.isAlive():
+            s.start()
         return self.status
 
     def run(self):
@@ -205,7 +207,7 @@ s = Scanner()
 hw_proxy.drivers['scanner'] = s
 
 class ScannerDriver(hw_proxy.Proxy):
-    @http.route('/hw_proxy/scanner', type='json', auth='admin')
+    @http.route('/hw_proxy/scanner', type='json', auth='none')
     def scanner(self):
         if not s.isAlive():
             s.start()

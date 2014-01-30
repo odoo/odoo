@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'Tracks and Agenda of Events',
+    'name': 'Advanced Events',
     'category': 'Website',
-    'summary': 'Organize Your Events',
+    'summary': 'Sponsors, Tracks, Agenda, Event News',
     'version': '1.0',
     'description': """
 Online Events

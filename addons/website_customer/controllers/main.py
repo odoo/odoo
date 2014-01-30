@@ -6,7 +6,7 @@ from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.addons.website_partner.controllers import main as website_partner
-import urllib
+import werkzeug.urls
 
 
 class WebsiteCustomer(http.Controller):
@@ -30,10 +30,10 @@ class WebsiteCustomer(http.Controller):
         if partner_name:
             domain += [
                 '|',
-                ('name', 'ilike', "%%%s%%" % post.get("search")),
-                ('website_description', 'ilike', "%%%s%%" % post.get("search"))
+                ('name', 'ilike', post.get("search")),
+                ('website_description', 'ilike', post.get("search"))
             ]
-        country_id = None
+
         if country_id:
             domain += [('country_id', '=', country_id)]
 
@@ -71,7 +71,7 @@ class WebsiteCustomer(http.Controller):
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'post': post,
-            'search_path': "?%s" % urllib.urlencode(post),
+            'search_path': "?%s" % werkzeug.url_encode(post),
         }
         return request.website.render("website_customer.index", values)
 

@@ -39,7 +39,7 @@ def keep_query(*args, **kw):
 def url_for(path_or_uri, lang=None):
     location = path_or_uri.strip()
     url = urlparse.urlparse(location)
-    if request and not url.netloc and not url.scheme:
+    if request and url.path and not url.netloc and not url.scheme:
         location = urlparse.urljoin(request.httprequest.path, location)
         force_lang = lang is not None
         lang = lang or request.context.get('lang')
@@ -279,7 +279,7 @@ class website(osv.osv):
         def get_url(page):
             _url = "%spage/%s/" % (url, page)
             if url_args:
-                _url = "%s?%s" % (_url, urllib.urlencode(url_args))
+                _url = "%s?%s" % (_url, werkzeug.url_encode(url_args))
             return _url
 
         return {
@@ -446,7 +446,7 @@ class website(osv.osv):
 
         get_args.setdefault('kanban', "")
         kanban = get_args.pop('kanban')
-        kanban_url = "?%s&kanban=" % urllib.urlencode(get_args)
+        kanban_url = "?%s&kanban=" % werkzeug.url_encode(get_args)
 
         pages = {}
         for col in kanban.split(","):

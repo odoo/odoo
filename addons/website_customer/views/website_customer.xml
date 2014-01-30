@@ -48,7 +48,7 @@
                                     <h4>
                                         <a t-attf-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/" t-esc="partner_data.get('name')"/>
                                     </h4>
-                                    <div t-raw="partner_data.get('website_short_description')"/>
+                                    <div t-raw="partner_data.get('website_short_description') or ''"/>
                                 </div>
                                 <div class="clearfix mb8"/>
                             </t>
@@ -115,36 +115,6 @@
         <div class="oe_structure"/>
     </div>
   </t>
-</template>
-
-<template id="customer_contact" inherit_id="website_customer.details" inherit_option_id="website_customer.details" name="Customer Contacts">
-    <xpath expr="//div[@id='left_column']" position="inside">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4>Customer Reference</h4>
-            </div>
-            <div class="panel-body">
-                <div class="text-center">
-                    <img class="img img-shadow" t-attf-src="data:image/png;base64,#{partner_data.get('image_medium')}"/>
-                </div>
-                <address class="mt16 mb8">
-                    <strong t-esc="partner_data.get('name')"/>
-                    <t t-if="partner_data.get('commercial_partner_id')">
-                        <p t-raw="'&lt;br/&gt;'.join(partner_data.get('commercial_partner_id')[1].split('\n')[1:])"/>
-                    </t>
-                    <div t-if="partner_data.get('phone')">
-                        <span class="fa fa-phone"/> <span t-esc="partner_data.get('phone')"/>
-                    </div>
-                    <div t-if="partner_data.get('email')">
-                        <span class="fa fa-envelope"/>
-                        <a t-att-href="'mailto:'+partner_data.get('email')">
-                          <span t-esc="partner_data.get('email')"/>
-                        </a>
-                    </div>
-                </address>
-            </div>
-        </div>
-    </xpath>
 </template>
 
 <template id="partner_assign" inherit_option_id="website_customer.details" inherit_id="website_customer.details" name="Implemented By">

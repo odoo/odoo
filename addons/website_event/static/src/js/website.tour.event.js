@@ -42,7 +42,6 @@
                     trigger: {
                         modal: {
                             stopOnClose: true,
-                            afterSubmit: 'event-page',
                         },
                     },
                 },
@@ -53,6 +52,7 @@
                     placement: 'right',
                     title:     "Create an Event Name",
                     content:   "Create a name for your new event and click <em>'Continue'</em>. e.g: Technical Training",
+                    trigger:   'keyup',
                 },
                 {
                     stepId:    'continue-name',
@@ -60,9 +60,7 @@
                     placement: 'right',
                     title:     "Create Event",
                     content:   "Click <em>Continue</em> to create the event.",
-                    trigger: {
-                        url:        /event\/[0-9]+\/register/
-                    },
+                    trigger:   'reload',
                 },
                 {
                     stepId:    'event-page',
@@ -139,7 +137,7 @@
                     placement: 'top',
                     title:     "Publish your event",
                     content:   "Click to publish your event.",
-                    trigger:   'click',
+                    trigger:   'ajax'
                 },
                 {
                     stepId:    'customize-event',

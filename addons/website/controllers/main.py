@@ -28,11 +28,15 @@ logger = logging.getLogger(__name__)
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 
 class Website(openerp.addons.web.controllers.main.Home):
+    #------------------------------------------------------
+    # View
+    #------------------------------------------------------
     @http.route('/', type='http', auth="public", website=True, multilang=True)
     def index(self, **kw):
         try:
             main_menu = request.registry['ir.model.data'].get_object(request.cr, request.uid, 'website', 'main_menu')
             first_menu = main_menu.child_id and main_menu.child_id[0]
+            # Dont 302 loop on /
             if first_menu and not ((first_menu.url == '/') or first_menu.url.startswith('/#') or first_menu.url.startswith('/?')):
                 return request.redirect(first_menu.url)
         except:
@@ -47,7 +51,50 @@ class Website(openerp.addons.web.controllers.main.Home):
             response = request.website.render(response.params['template'], values)
         return response
 
-    @http.route('/pagenew/<path:path>', type='http', auth="user", website=True)
+    @http.route('/page/<page:page>', type='http', auth="public", website=True, multilang=True)
+    def page(self, page, **opt):
+        values = {
+            'path': page,
+        }
+        # allow shortcut for /page/<website_xml_id>
+        if '.' not in page:
+            page = 'website.%s' % page
+
+        try:
+            request.website.get_template(page)
+        except ValueError, e:
+            # page not found
+            if request.context['editable']:
+                page = 'website.page_404'
+            else:
+                return request.registry['ir.http']._handle_exception(e, 404)
+
+        return request.website.render(page, values)
+
+    @http.route(['/robots.txt'], type='http', auth="public", website=True)
+    def robots(self):
+        response = request.website.render('website.robots', {'url_root': request.httprequest.url_root})
+        response.mimetype = 'text/plain'
+        return response
+
+    @http.route('/sitemap', type='http', auth='public', website=True, multilang=True)
+    def sitemap(self):
+        return request.website.render('website.sitemap', {
+            'pages': request.website.enumerate_pages()
+        })
+
+    @http.route('/sitemap.xml', type='http', auth="public", website=True)
+    def sitemap_xml(self):
+        response = request.website.render('website.sitemap_xml', {
+            'pages': request.website.enumerate_pages()
+        })
+        response.headers['Content-Type'] = 'application/xml;charset=utf-8'
+        return response
+
+    #------------------------------------------------------
+    # Edit
+    #------------------------------------------------------
+    @http.route('/website/add/<path:path>', type='http', auth="user", website=True)
     def pagenew(self, path, noredirect=False):
         xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
         url = "/page/" + xml_id
@@ -55,7 +102,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
 
-    @http.route('/website/theme_change', type='http', auth="admin", website=True)
+    @http.route('/website/theme_change', type='http', auth="user", website=True)
     def theme_change(self, theme_id=False, **kwargs):
         imd = request.registry['ir.model.data']
         view = request.registry['ir.ui.view']
@@ -80,26 +127,6 @@ class Website(openerp.addons.web.controllers.main.Home):
     @http.route(['/website/snippets'], type='json', auth="public", website=True)
     def snippets(self):
         return request.website._render('website.snippets')
-
-    @http.route('/page/<page:page>', type='http', auth="public", website=True, multilang=True)
-    def page(self, page, **opt):
-        values = {
-            'path': page,
-        }
-        # allow shortcut for /page/<website_xml_id>
-        if '.' not in page:
-            page = 'website.%s' % page
-
-        try:
-            request.website.get_template(page)
-        except ValueError, e:
-            # page not found
-            if request.context['editable']:
-                page = 'website.page_404'
-            else:
-                return request.registry['ir.http']._handle_exception(e, 404)
-
-        return request.website.render(page, values)
 
     @http.route('/website/reset_templates', type='http', auth='user', methods=['POST'], website=True)
     def reset_template(self, templates, redirect='/'):
@@ -166,7 +193,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 })
         return result
 
-    @http.route('/website/get_view_translations', type='json', auth='admin', website=True)
+    @http.route('/website/get_view_translations', type='json', auth='public', website=True)
     def get_view_translations(self, xml_id, lang=None):
         lang = lang or request.context.get('lang')
         views = self.customize_template_get(xml_id, optional=False)
@@ -175,7 +202,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         irt = request.registry.get('ir.translation')
         return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value'], context=request.context)
 
-    @http.route('/website/set_translations', type='json', auth='admin', website=True)
+    @http.route('/website/set_translations', type='json', auth='public', website=True)
     def set_translations(self, data, lang):
         irt = request.registry.get('ir.translation')
         for view_id, trans in data.items():
@@ -210,11 +237,9 @@ class Website(openerp.addons.web.controllers.main.Home):
                     irt.create(request.cr, request.uid, new_trans)
         return True
 
-    @http.route('/website/attach', type='http', auth='user', website=True)
+    @http.route('/website/attach', type='http', auth='user', methods=['POST'], website=True)
     def attach(self, func, upload):
         req = request.httprequest
-        if req.method != 'POST':
-            return werkzeug.exceptions.MethodNotAllowed(valid_methods=['POST'])
 
         url = message = None
         try:
@@ -257,42 +282,27 @@ class Website(openerp.addons.web.controllers.main.Home):
         obj = _object.browse(request.cr, request.uid, _id)
         return bool(obj.website_published)
 
+    #------------------------------------------------------
+    # Helpers
+    #------------------------------------------------------
     @http.route(['/website/kanban/'], type='http', auth="public", methods=['POST'], website=True)
     def kanban(self, **post):
         return request.website.kanban_col(**post)
 
-    @http.route(['/robots.txt'], type='http', auth="public", website=True)
-    def robots(self):
-        response = request.website.render('website.robots', {'url_root': request.httprequest.url_root})
-        response.mimetype = 'text/plain'
-        return response
-
-    @http.route('/sitemap', type='http', auth='public', website=True, multilang=True)
-    def sitemap(self):
-        return request.website.render('website.sitemap', {
-            'pages': request.website.enumerate_pages()
-        })
-
-    @http.route('/sitemap.xml', type='http', auth="public", website=True)
-    def sitemap_xml(self):
-        response = request.website.render('website.sitemap_xml', {
-            'pages': request.website.enumerate_pages()
-        })
-        response.headers['Content-Type'] = 'application/xml;charset=utf-8'
-        return response
-
-class Images(http.Controller):
     def placeholder(self, response):
         # file_open may return a StringIO. StringIO can be closed but are
         # not context managers in Python 2 though that is fixed in 3
         with contextlib.closing(openerp.tools.misc.file_open(
                 os.path.join('web', 'static', 'src', 'img', 'placeholder.png'),
                 mode='rb')) as f:
-            response.set_data(f.read())
+            response.data = f.read()
             return response.make_conditional(request.httprequest)
 
-    @http.route('/website/image', auth="public", website=True)
-    def image(self, model, id, field, max_width=maxint, max_height=maxint):
+    @http.route([
+        '/website/image',
+        '/website/image/<model>/<id>/<field>'
+        ], auth="public", website=True)
+    def website_image(self, model, id, field, max_width=maxint, max_height=maxint):
         Model = request.registry[model]
 
         response = werkzeug.wrappers.Response()
@@ -346,7 +356,7 @@ class Images(http.Controller):
         max_w, max_h = fit
 
         if w < max_w and h < max_h:
-            response.set_data(data)
+            response.data = data
         else:
             image.thumbnail(fit, Image.ANTIALIAS)
             image.save(response.stream, image.format)
@@ -355,5 +365,6 @@ class Images(http.Controller):
             del response.headers['Content-Length']
 
         return response
+
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

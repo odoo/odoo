@@ -7,7 +7,7 @@ from openerp.addons.web.http import request
 from openerp.addons.website_partner.controllers import main as website_partner
 from openerp.tools.translate import _
 
-import urllib
+import werkzeug.urls
 
 
 class WebsiteMembership(http.Controller):
@@ -37,14 +37,15 @@ class WebsiteMembership(http.Controller):
         post_name = post.get('name', '')
 
         # base domain for groupby / searches
-        base_line_domain = []
+        base_line_domain = [('state', 'in', ['free', 'paid'])]
         if membership_id:
             base_line_domain.append(('membership_id', '=', membership_id))
             membership = product_obj.browse(cr, uid, membership_id, context=context)
         else:
             membership = None
         if post_name:
-            base_line_domain += ['|', ('partner.name', 'ilike', "%%%s%%" % post_name), ('partner.website_description', 'ilike', "%%%s%%" % post_name)]
+            base_line_domain += ['|', ('partner.name', 'ilike', post_name),
+                                      ('partner.website_description', 'ilike', post_name)]
 
         # group by country, based on all customers (base domain)
         membership_line_ids = membership_line_obj.search(cr, uid, base_line_domain, context=context)
@@ -64,6 +65,7 @@ class WebsiteMembership(http.Controller):
 
         membership_line_ids = membership_line_obj.search(cr, uid, line_domain, context=context)
         membership_lines = membership_line_obj.browse(cr, uid, membership_line_ids, context=context)
+        membership_lines.sort(key=lambda x: x.membership_id.website_sequence)
         partner_ids = [m.partner and m.partner.id for m in membership_lines]
         google_map_partner_ids = ",".join(map(str, partner_ids))
 
@@ -72,7 +74,7 @@ class WebsiteMembership(http.Controller):
             partners_data[partner.get("id")] = partner
 
         # format domain for group_by and memberships
-        membership_ids = product_obj.search(cr, uid, [('membership', '=', True)], context=context)
+        membership_ids = product_obj.search(cr, uid, [('membership', '=', True)], order="website_sequence", context=context)
         memberships = product_obj.browse(cr, uid, membership_ids, context=context)
 
         # request pager for lines
@@ -87,7 +89,7 @@ class WebsiteMembership(http.Controller):
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'post': post,
-            'search': "?%s" % urllib.urlencode(post),
+            'search': "?%s" % werkzeug.url_encode(post),
         }
         return request.website.render("website_membership.index", values)
 

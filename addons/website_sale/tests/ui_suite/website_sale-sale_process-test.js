@@ -8,11 +8,11 @@ testRunner.run(function websiteSaleTest (page, timeout) {
         return page.evaluate(function () {
             return window.$ && window.openerp && window.openerp.website
                 && window.openerp.website.TestConsole
-                && window.openerp.website.TestConsole.test('shoptest');
+                && window.openerp.website.TestConsole.test('shop_buy_product');
         });
     }, function executeTest () {
         page.evaluate(function () {
-            window.openerp.website.TestConsole.test('shoptest').run(true);
+            window.openerp.website.TestConsole.test('shop_buy_product').run(true);
         });
     }, timeout);
 });

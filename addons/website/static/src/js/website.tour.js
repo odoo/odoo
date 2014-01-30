@@ -21,6 +21,7 @@
         },
         registerStep: function (step) {
             var self = this;
+            step.tour = self;
             step.title = openerp.qweb.render('website.tour_popover_title', { title: step.title });
             if (!step.element) {
                 step.orphan = true;
@@ -37,15 +38,21 @@
                     };
                 } else if (step.trigger === 'reload') {
                     step.triggers = function (callback) {
-                        var stack = JSON.parse(localStorage.getItem("website-reloads")) || [];
+                        var stack = JSON.parse(step.tour.tourStorage.getItem("website-reloads")) || [];
                         var index = stack.indexOf(step.stepId);
                         if (index !== -1) {
-                            stack.splice(index,1);
-                            (callback || self.moveToNextStep).apply(self);
+                            setTimeout(function () {
+                                $(step.element).popover("destroy");
+                                setTimeout(function () {
+                                    stack.splice(index,1);
+                                    (callback || self.moveToNextStep).apply(self);
+                                    step.tour.tourStorage.setItem("website-reloads", JSON.stringify(stack));
+                                },10);
+                            },0);
                         } else {
                             stack.push(step.stepId);
+                            step.tour.tourStorage.setItem("website-reloads", JSON.stringify(stack));
                         }
-                        localStorage.setItem("website-reloads", JSON.stringify(stack));
                     };
                 } else if (step.trigger === 'drag') {
                     step.triggers = function (callback) {
@@ -70,7 +77,7 @@
                     }
                 } else if (step.trigger.url) {
                     step.triggers = function (callback) {
-                        var stack = JSON.parse(localStorage.getItem("website-geturls")) || [];
+                        var stack = JSON.parse(step.tour.tourStorage.getItem("website-geturls")) || [];
                         var id = step.trigger.url.toString();
                         var index = stack.indexOf(id);
                         if (index !== -1) {
@@ -79,12 +86,18 @@
                                 step.trigger.url == url.pathname+url.search :
                                 step.trigger.url.test(url.pathname+url.search);
                             if (!test) return;
-                            stack.splice(index,1);
-                            (callback || self.moveToNextStep).apply(self);
+                            setTimeout(function () {
+                                $(step.element).popover("destroy");
+                                setTimeout(function () {
+                                    stack.splice(index,1);
+                                    (callback || self.moveToNextStep).apply(self);
+                                    step.tour.tourStorage.setItem("website-geturls", JSON.stringify(stack));
+                                },10);
+                            },0);
                         } else {
                             stack.push(id);
+                            step.tour.tourStorage.setItem("website-geturls", JSON.stringify(stack));
                         }
-                        localStorage.setItem("website-geturls", JSON.stringify(stack));
                         return index !== -1;
                     };
                 } else if (step.trigger.modal) {
@@ -99,13 +112,36 @@
                         $doc.one('shown.bs.modal', function () {
                             $('.modal button.btn-primary').one('click', function () {
                                 $doc.off('hide.bs.modal', onStop);
-                                console.log(callback);
                                 if (!callback) {
                                     self.moveToStep(step.trigger.modal.afterSubmit);
                                 }
                             });
                             (callback || self.moveToNextStep).apply(self);
                         });
+                    };
+                } else if (step.trigger === 'ajax') {
+                    step.triggers = function (callback) {
+                        $( document ).ajaxSuccess(function(event, xhr, settings) {
+                            $( document ).unbind('ajaxSuccess');
+                            xhr.then(function () {
+                                setTimeout(function () {
+                                    $(step.element).popover("destroy");
+                                    setTimeout(function () {
+                                        (callback || self.moveToNextStep).apply(self);
+                                    },10);
+                                },0);
+                            });
+                        });
+                    };
+                } else {
+                    step.triggers = function (callback) {
+                        var emitter = $(step.element);
+                        if (!emitter.size()) throw "Emitter is undefined";
+                        var trigger = function () {
+                            emitter.off(step.trigger, trigger);
+                            (callback || self.moveToNextStep).apply(self, arguments);
+                        };
+                        emitter.on(step.trigger, trigger);
                     };
                 }
             }
@@ -130,10 +166,15 @@
         reset: function () {
             this.tourStorage.removeItem(this.id+'_current_step');
             this.tourStorage.removeItem(this.id+'_end');
+            this.tourStorage.removeItem("website-reloads");
+            this.tourStorage.removeItem("website-geturls");
             this.tour._current = 0;
             $('.popover.tour').remove();
         },
         start: function () {
+            window.Tour.prototype._isOrphan = function(step) {
+                return (step.element == null) || !$(step.element).length;
+            };
             if (this.resume() || ((this.currentStepIndex() === 0) && !this.tour.ended())) {
                 this.tour.start();
             }
@@ -160,12 +201,8 @@
                 this.stop();
             } else if (index >= 0) {
                 var self = this;
-                setTimeout(function () {
-                    $('.popover.tour').remove();
-                    setTimeout(function () {
-                        self.tour.goto(index);
-                    }, 0);
-                }, 0);
+                $('.popover.tour').remove();
+                self.tour.goto(index);
             }
         },
         moveToNextStep: function () {
@@ -319,13 +356,16 @@
             _.each(this.tours, function (tour) {
                 var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
                 $menuItem.click(function () {
-                    tour.redirect(new website.UrlParser(window.location.href));
                     tour.reset();
-                    tour.start();
+                    tour.redirect(new website.UrlParser(window.location.href));
                 });
                 menu.append($menuItem);
                 if (tour.trigger()) {
-                    tour.start();
+                    setTimeout(function () {
+                        setTimeout(function () {
+                            tour.start();
+                        },100);
+                    },0);
                 }
             });
             return this._super();
@@ -335,63 +375,63 @@
             var testId = 'test_'+tour.id+'_tour';
             this.tours.push(tour);
             var defaultDelay = 250; //ms
-            var defaultDelayReload = 1500; //ms
             var overlapsCrash;
             var test = {
                 id: tour.id,
                 run: function (force) {
                     if (force === true) {
                         this.reset();
+                        tour.reset();
                     }
                     var actionSteps = _.filter(tour.steps, function (step) {
-                       return step.trigger || step.sampleText;
+                       return step.trigger || step.triggers || step.sampleText;
                     });
                     window.onbeforeunload = function () {
                         clearTimeout(overlapsCrash);
                     };
                     function throwError (message) {
-                        console.log(window.localStorage.getItem("test-report"));
+                        console.log(tour.tourStorage.getItem("test-report"));
                         test.reset();
+                        tour.reset();
                         throw message;
                     }
                     function initReport () {
                         // set last time for report
-                        if (!window.localStorage.getItem("test-last-time")) {
-                            window.localStorage.setItem("test-last-time", new Date().getTime());
+                        if (!tour.tourStorage.getItem("test-last-time")) {
+                            tour.tourStorage.setItem("test-last-time", new Date().getTime());
                         }
                     }
                     function setReport (step) {
-                        var report = JSON.parse(window.localStorage.getItem("test-report")) || {};
-                        report[step.stepId] = (new Date().getTime() - window.localStorage.getItem("test-last-time")) + " ms";
-                        window.localStorage.setItem("test-report", JSON.stringify(report));
+                        var report = JSON.parse(tour.tourStorage.getItem("test-report")) || {};
+                        report[step.stepId] = (new Date().getTime() - tour.tourStorage.getItem("test-last-time")) + " ms";
+                        tour.tourStorage.setItem("test-report", JSON.stringify(report));
                     }
                     function testCycling (step) {
-                        var lastStep = window.localStorage.getItem(testId);
-                        var tryStep = lastStep != step.stepId ? 0 : (+(window.localStorage.getItem("test-last-"+testId) || 0) + 1);
-                        window.localStorage.setItem("test-last-"+testId, tryStep);
+                        var lastStep = tour.tourStorage.getItem(testId);
+                        var tryStep = lastStep != step.stepId ? 0 : (+(tour.tourStorage.getItem("test-last-"+testId) || 0) + 1);
+                        tour.tourStorage.setItem("test-last-"+testId, tryStep);
                         if (tryStep > 2) {
                             throwError("Test: '" + testId + "' cycling step: '" + step.stepId + "'");
                         }
                         return tryStep;
                     }
                     function getDelay (step) {
-                        return step.delay ||
-                            ((step.trigger === 'reload' || (step.trigger && step.trigger.url))
-                                ? defaultDelayReload
-                                : defaultDelay);
+                        return step.delay || defaultDelay;
                     }
                     function executeStep (step) {
                         if (testCycling(step) === 0) initReport();
+
+                        tour.tourStorage.setItem(testId, step.stepId);
 
                         var delay = getDelay (step);
 
                         overlapsCrash = setTimeout(function () {
                             throwError("Test: '" + testId + "' can't resolve step: '" + step.stepId + "'");
-                        }, delay + 1000);
+                        }, delay + 3000);
 
 
                         var _next = false;
-                        window.localStorage.setItem(testId, step.stepId);
+                        tour.tourStorage.setItem(testId, step.stepId);
                         function next () {
                             _next = true;
                             clearTimeout(overlapsCrash);
@@ -401,16 +441,15 @@
                             var nextStep = actionSteps.shift();
 
                             if (nextStep) {
-                                setTimeout(function () {
-                                    executeStep(nextStep);
-                                }, delay);
+                                executeStep(nextStep);
                             } else {
-                                window.localStorage.removeItem(testId);
+                                tour.tourStorage.removeItem(testId);
                             }
                         }
 
                         setTimeout(function () {
                             var $element = $(step.element);
+
                             var flag = step.triggers && (!step.trigger || !step.trigger.modal);
                             if (flag) {
                                 try {
@@ -420,34 +459,41 @@
                                 }
                             }
                             if ((step.trigger === 'reload' || (step.trigger && step.trigger.url)) && _next) return;
-                            
+
                             if (step.snippet && step.trigger === 'drag') {
                                 website.TestConsole.dragAndDropSnippet(step.snippet);
                             } else if (step.trigger && step.trigger.id === 'change') {
                                 $element.trigger($.Event("change", { srcElement: $element }));
                             } else if (step.sampleText) {
-                                $element.val(step.sampleText);
-                                $element.trigger($.Event("change", { srcElement: $element }));
-                            } else if ($element.is(":visible")) { // Click by default
-                                if (step.trigger.id === 'mousedown') {
-                                    $element.trigger($.Event("mousedown", { srcElement: $element }));
+                                $element.trigger($.Event("keydown", { srcElement: $element }));
+                                if ($element.is("select") || $element.is("input") ) {
+                                    $element.val(step.sampleText);
+                                } else {
+                                    $element.html(step.sampleText);
                                 }
+                                $element.trigger($.Event("change", { srcElement: $element }));
+                                $element.trigger($.Event("keyup", { srcElement: $element }));
+                            } else if ($element.is(":visible")) { // Click by default
+                                $element.trigger($.Event("mouseenter", { srcElement: $element }));
+                                $element.trigger($.Event("mousedown", { srcElement: $element }));
                                 var evt = document.createEvent("MouseEvents");
                                 evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
                                 $element[0].dispatchEvent(evt);
-                                if (step.trigger.id === 'mouseup') {
-                                    $element.trigger($.Event("mouseup", { srcElement: $element }));
-                                }
+                                $element.trigger($.Event("mouseup", { srcElement: $element }));
+                                $element.trigger($.Event("mouseleave", { srcElement: $element }));
+
+                                // trigger after for step like: mouseenter, next step click on button display with mouseenter
+                                $element.trigger($.Event("mouseenter", { srcElement: $element }));
                             }
                             if (!flag) next();
-                        },0);
+                        },delay);
                     }
                     var url = new website.UrlParser(window.location.href);
-                    if (tour.path && url.pathname !== tour.path && !window.localStorage.getItem(testId)) {
-                        window.localStorage.setItem(testId, actionSteps[0].stepId);
+                    if (tour.path && url.pathname !== tour.path && !tour.tourStorage.getItem(testId)) {
+                        tour.tourStorage.setItem(testId, actionSteps[0].stepId);
                         window.location.href = tour.path;
                     } else {
-                        var lastStepId = window.localStorage.getItem(testId);
+                        var lastStepId = tour.tourStorage.getItem(testId);
                         var currentStep = actionSteps.shift();
                         if (lastStepId) {
                             while (currentStep && lastStepId !== currentStep.stepId) {
@@ -459,16 +505,18 @@
                                 executeStep(currentStep);
                             });
                         } else {
-                            executeStep(currentStep);
+                            setTimeout(function () {
+                                executeStep(currentStep);
+                            }, 500);
                         }
                     }
                 },
                 reset: function () {
-                    window.localStorage.removeItem(testId);
-                    window.localStorage.removeItem("test-report");
-                    for (var k in window.localStorage) {
-                        if (window.localStorage[k].indexOf("test-last")) {
-                            window.localStorage.removeItem(k);
+                    tour.tourStorage.removeItem(testId);
+                    tour.tourStorage.removeItem("test-report");
+                    for (var k in tour.tourStorage) {
+                        if (tour.tourStorage[k].indexOf("test-last")) {
+                            tour.tourStorage.removeItem(k);
                         }
                     }
                 },
