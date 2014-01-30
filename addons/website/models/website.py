@@ -80,17 +80,7 @@ def slug(value):
     return "%s-%d" % (slugify(name), id)
 
 def urlplus(url, params):
-    if not params:
-        return url
-
-    # can't use urlencode because it encodes to (ascii, replace) in p2
-    return "%s?%s" % (url, '&'.join(
-        k + '=' + urllib.quote_plus(v.encode('utf-8') if isinstance(v, unicode) else str(v))
-        for k, v in params.iteritems()
-    ))
-
-def quote_plus(value):
-    return urllib.quote_plus(value.encode('utf-8') if isinstance(value, unicode) else str(value))
+    return werkzeug.Href(url)(params or None)
 
 class website(osv.osv):
     def _get_menu_website(self, cr, uid, ids, context=None):
@@ -243,7 +233,7 @@ class website(osv.osv):
             slug=slug,
             res_company=request.website.company_id,
             user_id=user.browse(cr, uid, uid),
-            quote_plus=quote_plus,
+            quote_plus=werkzeug.url_quote_plus,
         )
         qweb_values.setdefault('editable', False)
 
