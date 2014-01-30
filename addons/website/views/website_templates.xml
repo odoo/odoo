@@ -633,8 +633,8 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     <address>
         <div t-field="res_company.name">Name</div>
         <br />
-        <div>&amp;#x2706; <span t-field="res_company.phone"></span></div>
-        <div class="fa fa-envelope" t-field="res_company.email"></div>
+        <div><i class="fa fa-phone"/> <span t-field="res_company.phone"/></div>
+        <div><i class="fa fa-envelope"/> <span t-field="res_company.email"/></div>
     </address>
      <a t-att-href="res_company.google_map_link()" target="_BLANK">
         <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
