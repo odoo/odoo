@@ -138,7 +138,7 @@ class mail_compose_message(osv.TransientModel):
         'partner_ids': lambda self, cr, uid, ctx={}: [],
         'post': False,
         'notify': False,
-        'same_thread': True,
+        'same_thread': False,
     }
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
@@ -268,6 +268,8 @@ class mail_compose_message(osv.TransientModel):
                         'mail.message', 0,
                         context=context)
                     mail_values['attachment_ids'] = m2m_attachment_ids
+                    if not mail_values.get('reply_to'):
+                        mail_values['reply_to'] = mail_values['email_from']
                     self.pool.get('mail.mail').create(cr, uid, mail_values, context=context)
                 else:
                     subtype = 'mail.mt_comment'
