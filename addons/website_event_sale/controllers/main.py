@@ -23,6 +23,7 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website_event.controllers.main import website_event
+from openerp.tools.translate import _
 
 
 class website_event(website_event):
@@ -82,11 +83,13 @@ class website_event(website_event):
 
     def _add_event(self, event_name="New Event", context={}, **kwargs):
         try:
+            print kwargs
             dummy, res_id = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid, 'event_sale', 'product_product_event')
             context['default_event_ticket_ids'] = [[0,0,{
                 'name': _('Subscription'),
                 'product_id': res_id,
-                'deadline' : vals.get('date_begin'),
+                'deadline' : False,
+                'seats_max': 1000,
                 'price': 0,
             }]]
         except ValueError:
