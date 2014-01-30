@@ -169,6 +169,7 @@ website.Tour = openerp.Class.extend({
         $('.popover.tour').remove();
     },
     trigger: function (automatic) {
+        this.reset();
         if (this.path) {
             this.localStorage.setItem("tour-"+this.id+"-test", 0);
             if (automatic) this.localStorage.setItem("tour-"+this.id+"-test-automatic", true);
@@ -206,7 +207,7 @@ website.Tour = openerp.Class.extend({
 
         }
 
-        if ($(this.steps[index-1].template).has("button[data-role='next']")) {
+        if ($(this.steps[index-1].template).has("button[data-role='next']").size()) {
             var step = {
                 stepId:    index,
                 waitNot:   '.popover.tour:visible'
@@ -427,6 +428,9 @@ website.Tour.waitReady = function (callback) {
             },0);
         }
     });
+};
+website.Tour.runTest = function (id) {
+    website.Tour.get(id).trigger(true);
 };
 
 

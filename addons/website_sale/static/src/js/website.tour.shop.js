@@ -141,106 +141,99 @@
         }
     });
 
-    // website.EditorShopTest = website.Tour.extend({
-    //     id: 'shop_buy_product',
-    //     name: "Try to buy products",
-    //     path: '/shop',
-    //     init: function (editor) {
-    //         var self = this;
-    //         self.steps = [
-    //             {
-    //                 title:     'begin-test',
-    //                 template:  self.popover({ next: "Start Test"}),
-    //                 backdrop:  true,
-    //             },
-    //             {
-    //                 element:   '.oe_product_cart a:contains("iPod")',
-    //                 trigger: {
-    //                     url:   /shop\/product\/.*/,
-    //                 },
-    //             },
-    //             {
-    //                 element:   'input[name="product_id"]:not([checked])',
-    //                 trigger:   'mouseup',
-    //             },
-    //             {
-    //                 element:   'form[action="/shop/add_cart/"] button',
-    //                 trigger: {
-    //                     url:   '/shop/mycart/',
-    //                 },
-    //             },
-    //             {
-    //                 element:   'form[action="/shop/add_cart/"] button:contains("Add to Cart")',
-    //                 trigger:   'reload',
-    //             },
-    //             {
-    //                 element:   '.oe_mycart a.js_add_cart_json:eq(1)',
-    //                 trigger:   'ajax',
-    //             },
-    //             {
-    //                 element:   '.oe_mycart a.js_add_cart_json:eq(2)',
-    //                 trigger:   'reload',
-    //             },
-    //             {
-    //                 element:   '.oe_mycart input.js_quantity',
-    //                 sampleText: '1',
-    //                 trigger:   'reload',
-    //             },
-    //             {
-    //                 element:   'a[href="/shop/checkout/"]',
-    //                 trigger: {
-    //                     url:   '/shop/checkout/',
-    //                 },
-    //             },
-    //             {
-    //                 element:   'form[action="/shop/confirm_order/"] button',
-    //                 trigger: {
-    //                     url:   '/shop/confirm_order/',
-    //                 },
-    //                 beforeTrigger: function (tour) {
-    //                     $("input[name='phone']").val("");
-    //                 },
-    //             },
-    //             {
-    //                 element:   'form[action="/shop/confirm_order/"] button',
-    //                 trigger: {
-    //                     url:   '/shop/payment/',
-    //                 },
-    //                 beforeTrigger: function (tour) {
-    //                     if ($("input[name='name']").val() === "")
-    //                         $("input[name='name']").val("website_sale-test-shoptest");
-    //                     if ($("input[name='email']").val() === "")
-    //                         $("input[name='email']").val("website_sale-test-shoptest@website_sale-test-shoptest.optenerp.com");
-    //                     $("input[name='phone']").val("123");
-    //                     $("input[name='street']").val("123");
-    //                     $("input[name='city']").val("123");
-    //                     $("input[name='zip']").val("123");
-    //                     $("select[name='country_id']").val("21");
-    //                 },
-    //             },
-    //             {
-    //                 element:   'input[name="acquirer"]',
-    //                 trigger:   'mouseup',
-    //             },
-    //             {
-    //                 element:   'button:contains("Pay Now")',
-    //                 trigger: {
-    //                     url:   /shop\/confirmation\//,
-    //                 },
-    //                 afterTrigger: function (tour) {
-    //                     console.log('{ "event": "success" }');
-    //                 },
-    //             }
-    //         ];
-    //         return this._super();
-    //     },
-    //     trigger: function () {
-    //         return (this.resume() && this.testUrl(/\/shop\//)) || this._super();
-    //     },
-    // });
-    // // for test without editor bar
-    // $(document).ready(function () {
-    //     website.Tour.add(website.EditorShopTest);
-    // });
+    website.EditorShopTest = website.Tour.extend({
+        id: 'shop_buy_product',
+        name: "Try to buy products",
+        path: '/shop',
+        testPath: /\/shop/,
+        init: function (editor) {
+            var self = this;
+            self.steps = [
+                {
+                    title:     'begin-test',
+                    template:  self.popover({ next: "Start Test"}),
+                    backdrop:  true,
+                },
+                {
+                    title:     "select ipod",
+                    element:   '.oe_product_cart a:contains("iPod")',
+                },
+                {
+                    title:     "select ipod 32Go",
+                    element:   'input[name="product_id"]:not([checked])',
+                },
+                {
+                    title:     "click on add to cart",
+                    waitFor:   'input[name="product_id"]:eq(1)[checked]',
+                    element:   'form[action="/shop/add_cart/"] button',
+                },
+                {
+                    title:     "add suggested",
+                    element:   'form[action="/shop/add_cart/"] button.btn-link:contains("Add to Cart")',
+                },
+                {
+                    title:     "add one more iPod",
+                    waitFor:   '.my_cart_quantity:contains(2)',
+                    element:   '#mycart_products tr:contains("iPod: 32 Gb") a.js_add_cart_json:eq(1)',
+                },
+                {
+                    title:     "remove Headphones",
+                    waitFor:   '#mycart_products tr:contains("iPod: 32 Gb") input.js_quantity[value=2]',
+                    element:   '#mycart_products tr:contains("Apple In-Ear Headphones") a.js_add_cart_json:first',
+                },
+                {
+                    title:     "set one iPod",
+                    waitNot:   '#mycart_products tr:contains("Apple In-Ear Headphones")',
+                    element:   '#mycart_products input.js_quantity',
+                    sampleText: '1',
+                },
+                {
+                    title:     "go to checkout",
+                    waitFor:   '#mycart_products input.js_quantity[value=1]',
+                    element:   'a[href="/shop/checkout/"]',
+                },
+                {
+                    title:     "test with input error",
+                    element:   'form[action="/shop/confirm_order/"] button',
+                    callback: function (tour) {
+                        $("input[name='phone']").val("");
+                    },
+                },
+                {
+                    title:     "test without input error",
+                    waitFor:   'form[action="/shop/confirm_order/"] .has-error',
+                    element:   'form[action="/shop/confirm_order/"] button',
+                    callback: function (tour) {
+                        if ($("input[name='name']").val() === "")
+                            $("input[name='name']").val("website_sale-test-shoptest");
+                        if ($("input[name='email']").val() === "")
+                            $("input[name='email']").val("website_sale-test-shoptest@website_sale-test-shoptest.optenerp.com");
+                        $("input[name='phone']").val("123");
+                        $("input[name='street']").val("123");
+                        $("input[name='city']").val("123");
+                        $("input[name='zip']").val("123");
+                        $("select[name='country_id']").val("21");
+                    },
+                },
+                {
+                    title:     "select acquirer",
+                    element:   'input[name="acquirer"]',
+                },
+                {
+                    title:     "confirm",
+                    element:   'button:contains("Pay Now")',
+                },
+                {
+                    title:     "finish",
+                    waitFor:   '.oe_website_sale:contains("Thank you for your order")',
+                }
+            ];
+            return this._super();
+        },
+    });
+    // for test without editor bar
+    $(document).ready(function () {
+        website.Tour.add(website.EditorShopTest);
+    });
 
 }());

@@ -7,12 +7,11 @@ testRunner.run(function blogTest (page, timeout) {
     waitFor(function clientReady () {
         return page.evaluate(function () {
             return window.$ && window.openerp && window.openerp.website
-                && window.openerp.website.Tour
-                && window.openerp.website.Tour.get('blog');
+                && window.openerp.website.Tour;
         });
     }, function executeTest () {
         page.evaluate(function () {
-            window.openerp.website.TestConsole.get('blog').run(true, true);
+            window.openerp.website.Tour.run_test('blog');
         });
     }, timeout/5);
 });
