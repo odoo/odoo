@@ -13,5 +13,5 @@ testRunner.run(function blogTest (page, timeout) {
         page.evaluate(function () {
             window.openerp.website.Tour.run_test('blog');
         });
-    }, timeout/5);
+    }, timeout);
 });

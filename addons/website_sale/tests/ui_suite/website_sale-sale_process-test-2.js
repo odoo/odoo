@@ -13,5 +13,5 @@ testRunner.run(function websiteSaleTest (page, timeout) {
         page.evaluate(function () {
             window.openerp.website.Tour.run_test('shop');
         });
-    }, timeout/5);
+    }, timeout);
 });

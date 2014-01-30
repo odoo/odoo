@@ -13,5 +13,5 @@ testRunner.run(function eventTest (page, timeout) {
         page.evaluate(function () {
             window.openerp.website.Tour.run_test('event');
         });
-    }, timeout/5);
+    }, timeout);
 });

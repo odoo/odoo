@@ -429,7 +429,7 @@ website.Tour.waitReady = function (callback) {
         }
     });
 };
-website.Tour.runTest = function (id) {
+website.Tour.run_test = function (id) {
     website.Tour.get(id).trigger(true);
 };
 
