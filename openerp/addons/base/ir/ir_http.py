@@ -62,7 +62,6 @@ class ir_http(osv.AbstractModel):
             raise http.SessionExpiredException("Session expired")
 
     def _auth_method_none(self):
-        request.disable_db = True
         request.uid = None
 
     def _auth_method_public(self):

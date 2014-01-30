@@ -72,29 +72,6 @@ def redirect_with_hash(url, code=303):
         return werkzeug.utils.redirect(url, code)
     return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
 
-def ensure_db(with_registry=False, redirect='/web/database/selector'):
-    db = request.params.get('db')
-    # if db not provided, use the session one
-    if not db:
-        db = request.session.db
-
-    # if no database provided and no database in session, use monodb
-    if not db:
-        db = db_monodb(request.httprequest)
-
-    # if no db can be found til here, send to the database selector
-    # the database selector will redirect to database manager if needed
-    if not db:
-        werkzeug.exceptions.abort(werkzeug.utils.redirect(redirect, 303))
-
-    # always switch the session to the computed db
-    if db != request.session.db:
-        request.session.logout()
-    request.session.db = db
-
-    if with_registry:
-        request.disable_db = False
-
 class WebRequest(object):
     """ Parent class for all OpenERP Web request types, mostly deals with
     initialization and setup of the request object (the dispatching itself has
