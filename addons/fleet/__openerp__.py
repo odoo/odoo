@@ -54,7 +54,6 @@ Main Features
         'fleet_view.xml',
         'fleet_cars.xml',
         'fleet_data.xml',
-        'fleet_board_view.xml',
     ],
     'images': ['images/costs_analysis.jpeg','images/indicative_costs_analysis.jpeg','images/vehicles.jpeg','images/vehicles_contracts.jpeg','images/vehicles_fuel.jpeg','images/vehicles_odometer.jpeg','images/vehicles_services.jpeg'],
 
