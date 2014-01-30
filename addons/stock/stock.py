@@ -1481,12 +1481,23 @@ class stock_move(osv.osv):
         moveputaway_obj = self.pool.get('stock.move.putaway')
         quant_obj = self.pool.get('stock.quant')
         if putaway.method == 'fixed' and putaway.location_spec_id:
+            qty = move.product_qty
             for row in quant_obj.read_group(cr, uid, [('reservation_id', '=', move.id)], ['qty', 'lot_id'], ['lot_id'], context=context):
                 vals = {
                     'move_id': move.id,
                     'location_id': putaway.location_spec_id.id,
                     'quantity': row['qty'],
                     'lot_id': row.get('lot_id') and row['lot_id'][0] or False,
+                }
+                moveputaway_obj.create(cr, SUPERUSER_ID, vals, context=context)
+                qty -= row['qty']
+
+            #if the quants assigned aren't fully explaining where the products have to be moved
+            if qty > 0:
+                vals = {
+                    'move_id': move.id,
+                    'location_id': putaway.location_spec_id.id,
+                    'quantity': qty,
                 }
                 moveputaway_obj.create(cr, SUPERUSER_ID, vals, context=context)
 
@@ -1723,6 +1734,8 @@ class stock_move(osv.osv):
         """ Changes the state to assigned.
         @return: True
         """
+        #check putaway method
+        self._putaway_check(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'assigned'})
 
     def cancel_assign(self, cr, uid, ids, context=None):
