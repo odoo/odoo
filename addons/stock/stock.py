@@ -1316,7 +1316,7 @@ class stock_move(osv.osv):
             if move.picking_id:
                 if move.picking_id.state in ('draft', 'confirmed', 'partially_available'):
                     info = info_available + info
-                if move.picking_id.pack_operation_exist:
+                if move.picking_id.pack_operation_exist and state != 'done':
                     info += info_remaining
             res[move.id] = info
         return res
