@@ -102,6 +102,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             };    
             this.custom_payment_status = this.default_payment_status;
 
+            this.receipt_queue = [];
+
             this.notifications = {};
             this.bypass_proxy = false;
 
@@ -112,6 +114,13 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.set('status',{});
 
             this.set_connection_status('disconnected');
+
+            this.on('change:status',this,function(eh,status){
+                status = status.newValue;
+                if(status.status === 'connected'){
+                    self.print_receipt();
+                }
+            });
 
             window.hw_proxy = this;
         },
@@ -502,7 +511,23 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
          *    }
          */
         print_receipt: function(receipt){
-            return this.message('print_receipt',{receipt: receipt});
+            var self = this;
+            if(receipt){
+                this.receipt_queue.push(receipt);
+            }
+            var aborted = false;
+            function send_printing_job(){
+                if (self.receipt_queue.length > 0){
+                    var r = self.receipt_queue.shift();
+                    self.message('print_receipt',{ receipt: r },{ timeout: 5000 })
+                        .then(function(){
+                            send_printing_job();
+                        },function(){
+                            self.receipt_queue.unshift(r)
+                        });
+                }
+            }
+            send_printing_job();
         },
 
         // asks the proxy to log some information, as with the debug.log you can provide several arguments.
