@@ -82,23 +82,16 @@ class stock_change_product_qty(osv.osv_memory):
         for data in self.browse(cr, uid, ids, context=context):
             if data.new_quantity < 0:
                 raise osv.except_osv(_('Warning!'), _('Quantity cannot be negative.'))
-            inventory_id = inventory_obj.create(cr , uid, {'name': _('INV: %s') % tools.ustr(res_original.name), 'product_id': rec_id, 'location_id': data.location_id.id}, context=context)
-            #perform an inventory for this particular product in this particular location
-            inventory_obj.prepare_inventory(cr, uid, [inventory_id], context=context)
-            #if we've got an inventory line, change it's qty, else create new line
-            line_ids = inventory_obj.browse(cr, uid, inventory_id, context=context).line_ids or False
-            if line_ids:
-                inventory_line_obj.write(cr, uid, line_ids[0].id, {'product_qty': data.new_quantity}, context=context)
-            else:
-                line_data ={
-                    'inventory_id' : inventory_id,
-                    'product_qty' : data.new_quantity,
-                    'location_id' : data.location_id.id,
-                    'product_id' : rec_id,
-                    'product_uom_id' : res_original.uom_id.id,
-                    'prod_lot_id' : data.lot_id.id
-                }
-                inventory_line_obj.create(cr , uid, line_data, context=context)
+            inventory_id = inventory_obj.create(cr , uid, {'name': _('INV: %s') % tools.ustr(res_original.name), 'product_id': rec_id, 'location_id': data.location_id.id, 'lot_id': data.lot_id.id if data.lot_id else False}, context=context)
+            line_data ={
+                'inventory_id' : inventory_id,
+                'product_qty' : data.new_quantity,
+                'location_id' : data.location_id.id,
+                'product_id' : rec_id,
+                'product_uom_id' : res_original.uom_id.id,
+                'prod_lot_id' : data.lot_id.id if data.lot_id else False
+            }
+            inventory_line_obj.create(cr , uid, line_data, context=context)
             #validate inventory
             inventory_obj.action_done(cr, uid, [inventory_id], context=context)
         return {}
