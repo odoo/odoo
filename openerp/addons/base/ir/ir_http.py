@@ -15,9 +15,7 @@ from openerp.osv import osv, orm
 
 _logger = logging.getLogger(__name__)
 
-
-# FIXME: replace by proxy on request.uid?
-_uid = object()
+UID_PLACEHOLDER = object()
 
 class ModelConverter(werkzeug.routing.BaseConverter):
 
@@ -29,7 +27,7 @@ class ModelConverter(werkzeug.routing.BaseConverter):
     def to_python(self, value):
         m = re.match(self.regex, value)
         return request.registry[self.model].browse(
-            request.cr, _uid, int(m.group(1)), context=request.context)
+            request.cr, UID_PLACEHOLDER, int(m.group(1)), context=request.context)
 
     def to_url(self, value):
         return value.id
@@ -43,10 +41,7 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
         self.regex = '([0-9,]+)'
 
     def to_python(self, value):
-        # TODO:
-        # - raise routing.ValidationError() if no browse record can be createdm
-        # - support slug
-        return request.registry[self.model].browse(request.cr, _uid, [int(i) for i in value.split(',')], context=request.context)
+        return request.registry[self.model].browse(request.cr, UID_PLACEHOLDER, [int(i) for i in value.split(',')], context=request.context)
 
     def to_url(self, value):
         return ",".join(i.id for i in value)
@@ -66,14 +61,15 @@ class ir_http(osv.AbstractModel):
         if not request.uid:
             raise http.SessionExpiredException("Session expired")
 
-    def _auth_method_admin(self):
-        if not request.db:
-            raise http.SessionExpiredException("No valid database for request %s" % request.httprequest)
-        request.uid = openerp.SUPERUSER_ID
-
     def _auth_method_none(self):
         request.disable_db = True
         request.uid = None
+
+    def _auth_method_public(self):
+        if not request.session.uid:
+            dummy, request.uid = self.pool['ir.model.data'].get_object_reference(request.cr, openerp.SUPERUSER_ID, 'base', 'public_user')
+        else:
+            request.uid = request.session.uid
 
     def _authenticate(self, auth_method='user'):
         if request.session.uid:
@@ -88,6 +84,7 @@ class ir_http(osv.AbstractModel):
         return auth_method
 
     def _handle_exception(self, exception):
+        # If handle exception return something different than None, it will be used as a response
         raise
 
     def _dispatch(self):
@@ -106,10 +103,10 @@ class ir_http(osv.AbstractModel):
                 convert_exception_to(
                     werkzeug.exceptions.Forbidden))
 
-        # post process arg to set uid on browse records
-        for arg in arguments.itervalues():
-            if isinstance(arg, orm.browse_record) and arg._uid is _uid:
-                arg._uid = request.uid
+        processing = self._postprocess_args(arguments)
+        if processing:
+            return processing
+
 
         # set and execute handler
         try:
@@ -121,6 +118,16 @@ class ir_http(osv.AbstractModel):
             return self._handle_exception(e)
 
         return result
+
+    def _postprocess_args(self, arguments):
+        """ post process arg to set uid on browse records """
+        for arg in arguments.itervalues():
+            if isinstance(arg, orm.browse_record) and arg._uid is UID_PLACEHOLDER:
+                arg._uid = request.uid
+                try:
+                    arg[arg._rec_name]
+                except KeyError:
+                    return self._handle_exception(werkzeug.exceptions.NotFound())
 
     def routing_map(self):
         if not hasattr(self, '_routing_map'):

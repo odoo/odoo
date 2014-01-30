@@ -1832,7 +1832,8 @@ class BaseModel(object):
                     _logger.warning('%r requires a fully-qualified external id (got: %r for model %s). '
                         'Please use the complete `module.view_id` form instead.', view_ref_key, view_ref,
                         self._name)
-            else:
+
+            if not view_id:
                 # otherwise try to find the lowest priority matching ir.ui.view
                 view_id = View.default_view(cr, uid, self._name, view_type, context=context)
 
@@ -2185,21 +2186,14 @@ class BaseModel(object):
         :param uid: current user id
         :param domain: list specifying search criteria [['field_name', 'operator', 'value'], ...]
         :param list fields: list of fields present in the list view specified on the object
-        :param list groupby: fields by which the records will be grouped
+        :param list groupby: list of groupby descriptions by which the records will be grouped.  
+                A groupby description is either a field (then it will be grouped by that field)
+                or a string 'field:groupby_function'.  Right now, the only functions supported
+                are 'day', 'week', 'month', 'quarter' or 'year', and they only make sense for 
+                date/datetime fields.
         :param int offset: optional number of records to skip
         :param int limit: optional max number of records to return
-        :param dict context: context arguments, like lang, time zone. A special
-                             context key exist for datetime fields : ``datetime_format``.
-                             context[``datetime_format``] = {
-                                'field_name': {
-                                    groupby_format: format for to_char (default: yyyy-mm)
-                                    display_format: format for displaying the value
-                                                    in the result (default: MMM yyyy)
-                                    interval: day, month or year; used for begin
-                                              and end date of group_by intervals
-                                              computation (default: month)
-                                }
-                             }
+        :param dict context: context arguments, like lang, time zone. 
         :param list orderby: optional ``order by`` specification, for
                              overriding the natural sort ordering of the
                              groups, see also :py:meth:`~osv.osv.osv.search`
@@ -2228,6 +2222,12 @@ class BaseModel(object):
         if groupby:
             if isinstance(groupby, list):
                 groupby = groupby[0]
+            splitted_groupby = groupby.split(':')
+            if len(splitted_groupby) == 2:
+                groupby = splitted_groupby[0]
+                groupby_function = splitted_groupby[1]
+            else:
+                groupby_function = False
             qualified_groupby_field = self._inherits_join_calc(groupby, query)
 
         if groupby:
@@ -2244,21 +2244,23 @@ class BaseModel(object):
             if fget.get(groupby):
                 groupby_type = fget[groupby]['type']
                 if groupby_type in ('date', 'datetime'):
-                    if context.get('datetime_format') and isinstance(context['datetime_format'], dict) \
-                            and context['datetime_format'].get(groupby) and isinstance(context['datetime_format'][groupby], dict):
-                        groupby_format = context['datetime_format'][groupby].get('groupby_format', 'yyyy-mm')
-                        display_format = context['datetime_format'][groupby].get('display_format', 'MMMM yyyy')
-                        interval = context['datetime_format'][groupby].get('interval', 'month')
+                    if groupby_function:
+                        interval = groupby_function
                     else:
-                        groupby_format = 'yyyy-mm'
-                        display_format = 'MMMM yyyy'
                         interval = 'month'
-                    group_by_params = {
-                        'groupby_format': groupby_format,
-                        'display_format': display_format,
-                        'interval': interval,
-                    }
-                    qualified_groupby_field = "to_char(%s,%%s)" % qualified_groupby_field
+
+                    if interval == 'day':
+                        display_format = 'dd MMMM YYYY' 
+                    elif interval == 'week':
+                        display_format = "'W'w"
+                    elif interval == 'month':
+                        display_format = 'MMMM'
+                    elif interval == 'quarter':
+                        display_format = 'QQQ'
+                    elif interval == 'year':
+                        display_format = 'YYYY'
+
+                    qualified_groupby_field = "date_trunc('%s',%s)" % (interval, qualified_groupby_field)
                     flist = "%s as %s " % (qualified_groupby_field, groupby)
                 elif groupby_type == 'boolean':
                     qualified_groupby_field = "coalesce(%s,false)" % qualified_groupby_field
@@ -2285,8 +2287,6 @@ class BaseModel(object):
         gb = groupby and (' GROUP BY ' + qualified_groupby_field) or ''
 
         from_clause, where_clause, where_clause_params = query.get_sql()
-        if group_by_params and group_by_params.get('groupby_format'):
-            where_clause_params = [group_by_params['groupby_format']] + where_clause_params + [group_by_params['groupby_format']]
         where_clause = where_clause and ' WHERE ' + where_clause
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
@@ -2323,21 +2323,24 @@ class BaseModel(object):
                         d['__context'] = {'group_by': groupby_list[1:]}
             if groupby and groupby in fget:
                 if d[groupby] and fget[groupby]['type'] in ('date', 'datetime'):
-                    _default = datetime.datetime(1970, 1, 1)    # force starts of month
-                    groupby_datetime = dateutil.parser.parse(alldata[d['id']][groupby], default=_default)
+                    groupby_datetime = alldata[d['id']][groupby]
+                    if isinstance(groupby_datetime, basestring):
+                        _default = datetime.datetime(1970, 1, 1)    # force starts of month
+                        groupby_datetime = dateutil.parser.parse(groupby_datetime, default=_default)
                     d[groupby] = babel.dates.format_date(
-                        groupby_datetime, format=group_by_params.get('display_format', 'MMMM yyyy'), locale=context.get('lang', 'en_US'))
-                    if group_by_params.get('interval') == 'month':
-                        days = calendar.monthrange(groupby_datetime.year, groupby_datetime.month)[1]
-                        domain_dt_begin = groupby_datetime.replace(day=1)
-                        domain_dt_end = groupby_datetime.replace(day=days)
-                    elif group_by_params.get('interval') == 'day':
-                        domain_dt_begin = groupby_datetime.replace(hour=0, minute=0)
-                        domain_dt_end = groupby_datetime.replace(hour=23, minute=59, second=59)
+                        groupby_datetime, format=display_format, locale=context.get('lang', 'en_US'))
+                    domain_dt_begin = groupby_datetime
+                    if interval == 'quarter':
+                        domain_dt_end = groupby_datetime + dateutil.relativedelta.relativedelta(months=3)
+                    elif interval == 'month':
+                        domain_dt_end = groupby_datetime + dateutil.relativedelta.relativedelta(months=1)
+                    elif interval == 'week':
+                        domain_dt_end = groupby_datetime + datetime.timedelta(days=7)
+                    elif interval == 'day':
+                        domain_dt_end = groupby_datetime + datetime.timedelta(days=1)
                     else:
-                        domain_dt_begin = groupby_datetime.replace(month=1, day=1)
-                        domain_dt_end = groupby_datetime.replace(month=12, day=31)
-                    d['__domain'] = [(groupby, '>=', domain_dt_begin.strftime('%Y-%m-%d')), (groupby, '<=', domain_dt_end.strftime('%Y-%m-%d'))] + domain
+                        domain_dt_end = groupby_datetime + dateutil.relativedelta.relativedelta(years=1)
+                    d['__domain'] = [(groupby, '>=', domain_dt_begin.strftime('%Y-%m-%d')), (groupby, '<', domain_dt_end.strftime('%Y-%m-%d'))] + domain
                 del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
@@ -3862,7 +3865,7 @@ class BaseModel(object):
                     for (parent_pright, parent_id) in parents:
                         if parent_id == id:
                             break
-                        position = parent_pright + 1
+                        position = parent_pright and parent_pright + 1 or 1
 
                     # It's the first node of the parent
                     if not position:
@@ -4989,6 +4992,11 @@ class BaseModel(object):
         record_ids = self.search(cr, uid, domain or [], offset=offset, limit=limit, order=order, context=context)
         if not record_ids:
             return []
+
+        if fields and fields == ['id']:
+            # shortcut read if we only want the ids
+            return [{'id': id} for id in record_ids]
+
         result = self.read(cr, uid, record_ids, fields, context=context)
         if len(result) <= 1:
             return result
@@ -5000,32 +5008,6 @@ class BaseModel(object):
     def _register_hook(self, cr):
         """ stuff to do right after the registry is built """
         pass
-
-
-    #def __getattr__(self, name):
-    #    """
-    #    Proxies attribute accesses to the `inherits` parent so we can call methods defined on the inherited parent
-    #    (though inherits doesn't use Python inheritance).
-    #    Handles translating between local ids and remote ids.
-    #    Known issue: doesn't work correctly when using python's own super(), don't involve inherit-based inheritance
-    #                 when you have inherits.
-    #    """
-    #    for model, field in self._inherits.iteritems():
-    #        proxy = self.pool.get(model)
-    #        if hasattr(proxy, name):
-    #            attribute = getattr(proxy, name)
-    #            if not hasattr(attribute, '__call__'):
-    #                return attribute
-    #            break
-    #    else:
-    #        return super(orm, self).__getattr__(name)
-
-    #    def _proxy(cr, uid, ids, *args, **kwargs):
-    #        objects = self.browse(cr, uid, ids, kwargs.get('context', None))
-    #        lst = [obj[field].id for obj in objects if obj[field]]
-    #        return getattr(proxy, name)(cr, uid, lst, *args, **kwargs)
-
-    #    return _proxy
 
     def __getattr__(self, name):
         if name.startswith('signal_'):

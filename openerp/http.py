@@ -35,6 +35,7 @@ import werkzeug.wsgi
 
 import openerp
 from openerp.service import security, model as service_model
+import openerp.tools
 
 _logger = logging.getLogger(__name__)
 
@@ -48,6 +49,51 @@ request = _request_stack()
 """
     A global proxy that always redirect to the current request object.
 """
+
+def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=303):
+    url = path
+    if not query:
+        query = {}
+    if forward_debug and request and request.debug:
+        query['debug'] = None
+    if query:
+        url += '?' + werkzeug.url_encode(query)
+    if keep_hash:
+        return redirect_with_hash(url, code)
+    else:
+        return werkzeug.utils.redirect(url, code)
+
+def redirect_with_hash(url, code=303):
+    # Most IE and Safari versions decided not to preserve location.hash upon
+    # redirect. And even if IE10 pretends to support it, it still fails
+    # inexplicably in case of multiple redirects (and we do have some).
+    # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
+    if request.httprequest.user_agent.browser in ('firefox',):
+        return werkzeug.utils.redirect(url, code)
+    return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
+
+def ensure_db(with_registry=False, redirect='/web/database/selector'):
+    db = request.params.get('db')
+    # if db not provided, use the session one
+    if not db:
+        db = request.session.db
+
+    # if no database provided and no database in session, use monodb
+    if not db:
+        db = db_monodb(request.httprequest)
+
+    # if no db can be found til here, send to the database selector
+    # the database selector will redirect to database manager if needed
+    if not db:
+        werkzeug.exceptions.abort(werkzeug.utils.redirect(redirect, 303))
+
+    # always switch the session to the computed db
+    if db != request.session.db:
+        request.session.logout()
+    request.session.db = db
+
+    if with_registry:
+        request.disable_db = False
 
 class WebRequest(object):
     """ Parent class for all OpenERP Web request types, mostly deals with
@@ -306,7 +352,7 @@ class JsonRequest(WebRequest):
         # Read POST content or POST Form Data named "request"
         self.jsonrequest = simplejson.loads(request)
         self.params = dict(self.jsonrequest.get("params", {}))
-        self.context = self.params.pop('context', self.session.context)
+        self.context = self.params.pop('context', dict(self.session.context))
 
     def dispatch(self):
         """ Calls the method asked for by the JSON-RPC2 or JSONP request
@@ -483,6 +529,13 @@ class ControllerType(type):
 class Controller(object):
     __metaclass__ = ControllerType
 
+class EndPoint(object):
+    def __init__(self, method, routing):
+        self.method = method
+        self.routing = routing
+    def __call__(self, *args, **kw):
+        return self.method(*args, **kw)
+
 def routing_map(modules, nodb_only, converters=None):
     routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)
     for module in modules:
@@ -500,21 +553,24 @@ def routing_map(modules, nodb_only, converters=None):
             members = inspect.getmembers(o)
             for mk, mv in members:
                 if inspect.ismethod(mv) and hasattr(mv, 'routing'):
-                    routing = dict(type='http', auth='user', methods=None)
+                    routing = dict(type='http', auth='user', methods=None, routes=None)
+                    methods_done = list()
                     for claz in reversed(mv.im_class.mro()):
                         fn = getattr(claz, mv.func_name, None)
-                        if fn and hasattr(fn, 'routing'):
+                        if fn and hasattr(fn, 'routing') and fn not in methods_done:
+                            methods_done.append(fn)
                             routing.update(fn.routing)
-                    mv.routing.update(routing)
-                    assert 'routes' in mv.routing
-                    if not nodb_only or nodb_only == (mv.routing['auth'] == "none"):
-                        for url in mv.routing['routes']:
-                            if mv.routing.get("combine", False):
+                    if not nodb_only or nodb_only == (routing['auth'] == "none"):
+                        assert routing['routes'], "Method %r has not route defined" % mv
+                        endpoint = EndPoint(mv, routing)
+                        for url in routing['routes']:
+                            if routing.get("combine", False):
                                 # deprecated
                                 url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
                                 if url.endswith("/") and len(url) > 1:
                                     url = url[: -1]
-                            routing_map.add(werkzeug.routing.Rule(url, endpoint=mv, methods=mv.routing['methods']))
+
+                            routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods']))
     return routing_map
 
 #----------------------------------------------------------
@@ -633,9 +689,10 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             raise SessionExpiredException("Session expired")
         security.check(self.db, self.uid, self.password)
 
-    def logout(self):
+    def logout(self, keep_db=False):
         for k in self.keys():
-            del self[k]
+            if not (keep_db and k == 'db'):
+                del self[k]
         self._default_values()
 
     def _default_values(self):
@@ -996,10 +1053,12 @@ class Root(object):
                 if db:
                     openerp.modules.registry.RegistryManager.check_registry_signaling(db)
                     try:
-                        ir_http = request.registry['ir.http']
+                        with openerp.tools.mute_logger('openerp.sql_db'):
+                            ir_http = request.registry['ir.http']
                     except psycopg2.OperationalError:
-                        # psycopg2 error. At this point, that's mean the database does not exists
-                        # anymore. We unlog the user and failback in nodb mode
+                        # psycopg2 error. At this point, that means the
+                        # database probably does not exists anymore. Log the
+                        # user out and fall back to nodb
                         request.session.logout()
                         result = _dispatch_nodb()
                     else:

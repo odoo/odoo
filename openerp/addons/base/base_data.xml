@@ -129,6 +129,20 @@ Administrator</field>
             <field name="path">/dev/null</field>
             <field name="mode">all</field>
         </record>
+        
+        <record id="public_user" model="res.users">
+            <field name="name">Public user</field>
+            <field name="login">public</field>
+            <field name="password"></field>
+            <!-- Avoid auto-including this demo user in any default group -->
+            <field name="groups_id" eval="[(5,)]"/>
+            <field name="image" type="base64" file="base/static/img/public_user-image.png"/>
+            <field name="active" eval="False"/>
+            <!-- TODO make res.partner active false too -->
+        </record>
+        <record id="base.group_public" model="res.groups">
+            <field name="users" eval="[(4, ref('base.public_user'))]"/>
+        </record>
 
     </data>
 </openerp>

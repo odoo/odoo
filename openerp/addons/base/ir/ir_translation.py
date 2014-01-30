@@ -343,6 +343,7 @@ class ir_translation(osv.osv):
         ids = super(ir_translation, self).create(cr, uid, vals, context=context)
         self._get_source.clear_cache(self)
         self._get_ids.clear_cache(self)
+        self.pool['ir.ui.view'].clear_cache()
         return ids
 
     def write(self, cursor, user, ids, vals, context=None):
@@ -357,6 +358,7 @@ class ir_translation(osv.osv):
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
         self._get_source.clear_cache(self)
         self._get_ids.clear_cache(self)
+        self.pool['ir.ui.view'].clear_cache()
         return result
 
     def unlink(self, cursor, user, ids, context=None):
