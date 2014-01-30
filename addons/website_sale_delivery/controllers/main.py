@@ -11,7 +11,6 @@ class Ecommerce(Ecommerce):
     def payment(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
         order = self.get_order()
-
         carrier_id = post.get('carrier_id')
 
         if order and carrier_id:

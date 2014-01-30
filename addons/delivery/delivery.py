@@ -204,7 +204,7 @@ class delivery_grid(osv.osv):
     def get_price_from_picking(self, cr, uid, id, total, weight, volume, context=None):
         grid = self.browse(cr, uid, id, context=context)
         price = 0.0
-        ok = False        
+        ok = False
         price_dict = {'price': total, 'volume':volume, 'weight': weight, 'wv':volume*weight}
         for line in grid.line_ids:
             test = eval(line.type+line.operator+str(line.max_value), price_dict)
@@ -215,7 +215,7 @@ class delivery_grid(osv.osv):
                     price = line.list_price
                 ok = True
                 break
-        if not ok:            
+        if not ok:
             raise osv.except_osv(_('No price available!'), _('No line matched this product or order in the chosen delivery grid.'))
 
         return price
