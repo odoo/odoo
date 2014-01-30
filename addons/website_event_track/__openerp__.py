@@ -6,9 +6,16 @@
     'summary': 'Sponsors, Tracks, Agenda, Event News',
     'version': '1.0',
     'description': """
-Online Events
-=============
+Online Advanced Events
+======================
 
+Adds support for:
+- sponsors
+- dedicated menu per event
+- news per event
+- tracks
+- agenda
+- call for proposals
         """,
     'author': 'OpenERP SA',
     'depends': ['website_event', 'website_blog'],

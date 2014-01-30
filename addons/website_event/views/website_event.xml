@@ -127,7 +127,7 @@
     </xpath>
 </template>
 
-<template id="event_left_column" inherit_option_id="website_event.index" name="Filters">
+<template id="event_left_column" inherit_option_id="website_event.index" inherit_id="website_event.index" name="Filters">
     <xpath expr="//div[@id='middle_column']" position="attributes">
         <attribute name="class">col-md-6</attribute>
     </xpath>
@@ -136,7 +136,7 @@
             <ul class="nav nav-pills nav-stacked">
                 <t t-foreach="dates" t-as="date">
                     <li t-att-class="searches.get('date') == date[0] and 'active' or ''" t-if="date[3] or (date[0] in ('old','all'))">
-                        <a t-attf-href="/event/?{{ keep_query('country', 'type', date=date[0] }}"><t t-esc="date[1]"/>
+                        <a t-attf-href="/event/?{{ keep_query('country', 'type', date=date[0]) }}"><t t-esc="date[1]"/>
                             <span t-if="date[3]" class="badge pull-right"><t t-esc="date[3]"/></span>
                         </a>
                     </li>
@@ -151,7 +151,7 @@
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="types">
                 <li t-if="type" t-att-class="searches.get('type') == str(type and type[0]) and 'active' or ''">
-                    <a t-attf-href="/event/?{{ keep_query('country', 'date', type=type[0] }}"><t t-esc="type[1]"/>
+                    <a t-attf-href="/event/?{{ keep_query('country', 'date', type=type[0]) }}"><t t-esc="type[1]"/>
                         <span class="badge pull-right"><t t-esc="type_count"/></span>
                     </a>
                 </li>
@@ -159,12 +159,13 @@
         </ul>
     </xpath>
 </template>
+
 <template id="event_location" inherit_option_id="website_event.event_left_column" name="Filter by Country">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="countries">
                 <li t-if="country_id" t-att-class="searches.get('country') == str(country_id and country_id[0]) and 'active' or ''">
-                    <a t-attf-href="/event/?{{ keep_query('type', 'data', country=country_id[0] }}"><t t-esc="country_id[1]"/>
+                    <a t-attf-href="/event/?{{ keep_query('type', 'data', country=country_id[0]) }}"><t t-esc="country_id[1]"/>
                         <span class="badge pull-right"><t t-esc="country_id_count"/></span>
                     </a>
                 </li>

@@ -31,10 +31,10 @@ controllers = controllers()
 class website_event(http.Controller):
     @http.route(['/event/<model("event.event"):event>/track/<model("event.track"):track>'], type='http', auth="public", website=True, multilang=True)
     def event_track_view(self, event, track, **post):
-        # TODO: not implemented
         values = { 'track': track, 'event': track.event_id, 'main_object': track }
         return request.website.render("website_event_track.track_view", values)
 
+    # TODO: not implemented
     @http.route(['/event/<model("event.event"):event>/agenda/'], type='http', auth="public", website=True, multilang=True)
     def event_agenda(self, event, tag=None, **post):
         values = {
@@ -49,7 +49,6 @@ class website_event(http.Controller):
         ], type='http', auth="public", website=True, multilang=True)
     def event_tracks(self, event, tag=None, **post):
         searches = {}
-
         if tag:
             searches.update(tag=tag.id)
             track_obj = request.registry.get('event.track')
@@ -71,8 +70,6 @@ class website_event(http.Controller):
             'html2text': html2text
         }
         return request.website.render("website_event_track.tracks", values)
-
-
 
     @http.route(['/event/<model("event.event"):event>/track_proposal/'], type='http', auth="public", website=True, multilang=True)
     def event_track_proposal(self, event, **post):
