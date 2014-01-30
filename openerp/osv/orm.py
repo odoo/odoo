@@ -515,7 +515,7 @@ class browse_record(object):
         return self._id
 
     def __str__(self):
-        return "browse_record(%s, %d)" % (self._table_name, self._id)
+        return "browse_record(%s, %s)" % (self._table_name, self._id)
 
     def __eq__(self, other):
         if not isinstance(other, browse_record):
