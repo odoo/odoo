@@ -190,7 +190,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             if(!this.keptalive){
                 this.keptalive = true;
                 function status(){
-                    self.connection.rpc('/hw_proxy/status_json',{},{timeout:500})       
+                    self.connection.rpc('/hw_proxy/status_json',{},{timeout:2500})       
                         .then(function(driver_status){
                             self.set_connection_status('connected',driver_status);
                         },function(){

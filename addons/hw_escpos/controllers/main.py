@@ -8,6 +8,7 @@ import openerp
 import time
 import random
 import math
+import md5
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
 import subprocess
 from threading import Thread
@@ -150,25 +151,9 @@ class EscposDriver(Thread):
             for tax in taxes:
                 eprint.text(printline(tax['tax']['name'],price(tax['amount']), width=40,ratio=0.6))
 
-        logo = None
-
-        if receipt['company']['logo']:
-            img = receipt['company']['logo']
-            img = img[img.find(',')+1:]
-            f = io.BytesIO('img')
-            f.write(base64.decodestring(img))
-            f.seek(0)
-            logo_rgba = Image.open(f)
-            logo = Image.new('RGB', logo_rgba.size, (255,255,255))
-            logo.paste(logo_rgba, mask=logo_rgba.split()[3]) 
-            width = 300
-            wfac  = width/float(logo_rgba.size[0])
-            height = int(logo_rgba.size[1]*wfac)
-            logo   = logo.resize((width,height), Image.ANTIALIAS)
-
         # Receipt Header
-        if logo:
-            eprint._convert_image(logo)
+        if receipt['company']['logo']:
+            eprint.print_base64_image(receipt['company']['logo'])
             eprint.text('\n')
         else:
             eprint.set(align='center',type='b',height=2,width=2)
