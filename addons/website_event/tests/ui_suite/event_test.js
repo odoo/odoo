@@ -12,21 +12,7 @@ testRunner.run(function eventTest (page, timeout) {
         });
     }, function executeTest () {
         page.evaluate(function () {
-            window.openerp.website.Tour.get('event').run(true, true)
+            window.openerp.website.TestConsole.get('event').run(true, true);
         });
-        waitFor(function testExecuted () {
-            var after = page.evaluate(function () {
-                return window.$ && $('button[data-action=edit]').is(":visible") && {
-                    banner: $('#wrap [data-snippet-id=image-text]').length,
-                    text: $('#wrap [data-snippet-id=text-block]').length,
-                    image: $('#wrap [data-snippet-id=three-columns]').length,
-                };
-            });
-            var result = after && (after.banner === 1) && (after.text === 1) && (after.image === 1);
-            return result;
-        }, function finish () {
-            console.log('{ "event": "success" }');
-            phantom.exit();
-        }, 4*timeout/5);
     }, timeout/5);
 });

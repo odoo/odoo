@@ -12,17 +12,7 @@ testRunner.run(function websiteSaleTest (page, timeout) {
         });
     }, function executeTest () {
         page.evaluate(function () {
-            window.openerp.website.Tour.get('shop').run(true, true);
+            window.openerp.website.TestConsole.get('shop').run(true, true);
         });
-        waitFor(function testExecuted () {
-            var after = page.evaluate(function () {
-                return window.$ && $('button[data-action=edit]').is(":visible") &&
-                    $('data-snippet-id="big-picture"').length;
-            });
-            return after;
-        }, function finish () {
-            console.log('{ "event": "success" }');
-            phantom.exit();
-        }, 4*timeout/5);
     }, timeout/5);
 });

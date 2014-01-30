@@ -12,20 +12,7 @@ testRunner.run(function blogTest (page, timeout) {
         });
     }, function executeTest () {
         page.evaluate(function () {
-            window.openerp.website.Tour.test('blog').run(true, true);
+            window.openerp.website.TestConsole.get('blog').run(true, true);
         });
-        waitFor(function testExecuted () {
-            var after = page.evaluate(function () {
-                return window.$ && $('button[data-action=edit]').is(":visible") && {
-                    image: $('#wrap [data-snippet-id=image-text]').length,
-                    text: $('#wrap [data-snippet-id=text-block]').length,
-                };
-            });
-            var result = after && (after.image === 1) && (after.text === 1);
-            return result;
-        }, function finish () {
-            console.log('{ "event": "success" }');
-            phantom.exit();
-        }, 4*timeout/5);
     }, timeout/5);
 });

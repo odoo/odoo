@@ -12,7 +12,7 @@ testRunner.run(function websiteSaleTest (page, timeout) {
         });
     }, function executeTest () {
         page.evaluate(function () {
-            window.openerp.website.TestConsole.test('shop_buy_product').run(true, true);
+            window.openerp.website.TestConsole.get('shop_buy_product').run(true, true);
         });
     }, timeout);
 });
