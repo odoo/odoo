@@ -121,7 +121,19 @@ def redirect_with_hash(*args, **kw):
     return http.redirect_with_hash(*args, **kw)
 
 def ensure_db(redirect='/web/database/selector'):
+    # This helper should be used in web client auth="none" routes
+    # if those routes needs a db to work with.
+    # If the heuristics does not find any database, then the users will be
+    # redirected to db selector or any url specified by `redirect` argument.
+    # If the db is taken out of a query parameter, it will be checked against
+    # `http.db_filter()` in order to ensure it's legit and thus avoid db
+    # forgering that could lead to xss attacks.
     db = request.params.get('db')
+
+    # Ensure db is legit
+    if db and db not in http.db_filter([db]):
+        db = None
+
     # if db not provided, use the session one
     if not db:
         db = request.session.db
@@ -138,6 +150,7 @@ def ensure_db(redirect='/web/database/selector'):
     # always switch the session to the computed db
     if db != request.session.db:
         request.session.logout()
+
     request.session.db = db
 
 def module_topological_sort(modules):
