@@ -248,6 +248,7 @@ def route(route=None, **kw):
         authentication modules. There request code will not have any facilities to access the database nor have any
         configuration indicating the current database nor the current user.
     :param methods: A sequence of http methods this route applies to. If not specified, all methods are allowed.
+    :param cors: The Access-Control-Allow-Origin cors directive value.
     """
     routing = kw.copy()
     assert not 'type' in routing or routing['type'] in ("http", "json")
@@ -908,7 +909,7 @@ class Root(object):
         self.load_addons()
 
         _logger.info("Generating nondb routing")
-        self.nodb_routing_map = routing_map(['', "web"], True)
+        self.nodb_routing_map = routing_map([''] + openerp.conf.server_wide_modules, True)
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
@@ -1008,6 +1009,16 @@ class Root(object):
         # - It could allow session fixation attacks.
         if not explicit_session and hasattr(response, 'set_cookie'):
             response.set_cookie('session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60)
+
+        # Support for Cross-Origin Resource Sharing
+        if 'cors' in request.func.routing:
+            response.headers.set('Access-Control-Allow-Origin', request.func.routing['cors'])
+            methods = 'GET, POST'
+            if request.func_request_type == 'json':
+                methods = 'POST'
+            elif request.func.routing.get('methods'):
+                methods = ', '.join(request.func.routing['methods'])
+            response.headers.set('Access-Control-Allow-Methods', methods)
 
         return response
 

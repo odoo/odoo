@@ -612,26 +612,36 @@ class res_partner(osv.osv, format_address):
         if not args:
             args = []
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
+
+            self.check_access_rights(cr, uid, 'read')
+            where_query = self._where_calc(cr, uid, args, context=context)
+            self._apply_ir_rules(cr, uid, where_query, 'read', context=context)
+            from_clause, where_clause, where_clause_params = where_query.get_sql()
+            where_str = where_clause and (" WHERE %s AND " % where_clause) or ' WHERE '
+
             # search on the name of the contacts and of its company
             search_name = name
             if operator in ('ilike', 'like'):
                 search_name = '%%%s%%' % name
             if operator in ('=ilike', '=like'):
                 operator = operator[1:]
-            query_args = {'name': search_name}
-            query = ('''SELECT id FROM res_partner
-                         WHERE email ''' + operator + ''' %(name)s
-                            OR display_name ''' + operator + ''' %(name)s
-                      ORDER BY display_name
-                     ''')
+
+            query = ('SELECT id FROM res_partner ' +
+                     where_str +  '(email ' + operator + ''' %s
+                          OR display_name ''' + operator + ''' %s)
+                    ORDER BY display_name''')
+
+            where_clause_params += [search_name, search_name]
             if limit:
-                query += ' limit %(limit)s'
-                query_args['limit'] = limit
-            cr.execute(query, query_args)
+                query += ' limit %s'
+                where_clause_params.append(limit)
+            cr.execute(query, where_clause_params)
             ids = map(lambda x: x[0], cr.fetchall())
-            ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
+
             if ids:
                 return self.name_get(cr, uid, ids, context)
+            else:
+                return []
         return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
 
     def find_or_create(self, cr, uid, email, context=None):
