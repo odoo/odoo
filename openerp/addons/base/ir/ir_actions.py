@@ -301,14 +301,14 @@ class ir_actions_act_window(osv.osv):
             }
             for res in results:
                 model = res.get('res_model')
-                if model and self.pool.get(model):
+                if model in self.pool:
                     try:
                         with tools.mute_logger("openerp.tools.safe_eval"):
                             eval_context = eval(res['context'] or "{}", eval_dict) or {}
                     except Exception:
                         continue
                     custom_context = dict(context, **eval_context)
-                    res['help'] = self.pool.get(model).get_empty_list_help(cr, uid, res.get('help', ""), context=custom_context)
+                    res['help'] = self.pool[model].get_empty_list_help(cr, uid, res.get('help', ""), context=custom_context)
         if ids_int:
             return results[0]
         return results
