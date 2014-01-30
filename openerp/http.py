@@ -1011,7 +1011,7 @@ class Root(object):
             response.set_cookie('session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60)
 
         # Support for Cross-Origin Resource Sharing
-        if 'cors' in request.func.routing:
+        if request.func and 'cors' in request.func.routing:
             response.headers.set('Access-Control-Allow-Origin', request.func.routing['cors'])
             methods = 'GET, POST'
             if request.func_request_type == 'json':
