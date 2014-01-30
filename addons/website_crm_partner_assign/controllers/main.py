@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import werkzeug.urls
-
 import openerp
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.addons.website_partner.controllers import main as website_partner
-
+import werkzeug.urls
 
 class WebsiteCrmPartnerAssign(http.Controller):
     _references_per_page = 20

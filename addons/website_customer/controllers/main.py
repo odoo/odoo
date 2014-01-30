@@ -8,7 +8,6 @@ from openerp.addons.web.http import request
 from openerp.addons.website_partner.controllers import main as website_partner
 import werkzeug.urls
 
-
 class WebsiteCustomer(http.Controller):
     _references_per_page = 20
 
@@ -22,6 +21,7 @@ class WebsiteCustomer(http.Controller):
     ], type='http', auth="public", website=True, multilang=True)
     def customers(self, country_id=0, page=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
+        country_obj = request.registry['res.country']
         partner_obj = request.registry['res.partner']
         partner_name = post.get('search', '')
 
@@ -47,6 +47,13 @@ class WebsiteCustomer(http.Controller):
 
         if country_id:
             domain += [('country_id', '=', country_id)]
+            if not any(x['country_id'][0] == country_id for x in countries):
+                country = country_obj.browse(cr, uid, country_id, context)
+                countries.append({
+                    'country_id_count': 0,
+                    'country_id': (country_id, country.name)
+                })
+                countries.sort(key=lambda d: d['country_id'][1])
 
         # search customers to display
         partner_ids = partner_obj.search(cr, openerp.SUPERUSER_ID, domain, context=request.context)
