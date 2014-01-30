@@ -37,12 +37,12 @@ class WebsiteCustomer(http.Controller):
         if country_id:
             domain += [('country_id', '=', country_id)]
 
-        # group by country, based on all customers (base domain)
+        # group by country, based on customers found with the search(domain)
         countries = partner_obj.read_group(
-            cr, openerp.SUPERUSER_ID, base_domain, ["id", "country_id"],
+            cr, openerp.SUPERUSER_ID, domain, ["id", "country_id"],
             groupby="country_id", orderby="country_id", context=request.context)
         country_count = partner_obj.search(
-            cr, openerp.SUPERUSER_ID, base_domain, count=True, context=request.context)
+            cr, openerp.SUPERUSER_ID, domain, count=True, context=request.context)
         countries.insert(0, {
             'country_id_count': country_count,
             'country_id': (0, _("All Countries"))
