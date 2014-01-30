@@ -192,7 +192,7 @@ class delivery_grid(osv.osv):
         weight = 0
         volume = 0
         for line in order.order_line:
-            if not line.product_id:
+            if not line.product_id or line.is_delivery:
                 continue
             total += line.price_subtotal or 0.0
             weight += (line.product_id.weight or 0.0) * line.product_uom_qty
