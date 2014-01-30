@@ -120,6 +120,26 @@ def redirect_with_hash(*args, **kw):
     """
     return http.redirect_with_hash(*args, **kw)
 
+def ensure_db(redirect='/web/database/selector'):
+    db = request.params.get('db')
+    # if db not provided, use the session one
+    if not db:
+        db = request.session.db
+
+    # if no database provided and no database in session, use monodb
+    if not db:
+        db = db_monodb(request.httprequest)
+
+    # if no db can be found til here, send to the database selector
+    # the database selector will redirect to database manager if needed
+    if not db:
+        werkzeug.exceptions.abort(werkzeug.utils.redirect(redirect, 303))
+
+    # always switch the session to the computed db
+    if db != request.session.db:
+        request.session.logout()
+    request.session.db = db
+
 def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the
     modules are listed before the module itself
@@ -584,7 +604,7 @@ class Home(http.Controller):
 
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, **kw):
-        http.ensure_db()
+        ensure_db()
 
         if request.session.uid:
             html = render_bootstrap_template(request.session.db, "web.webclient_bootstrap")
@@ -594,7 +614,7 @@ class Home(http.Controller):
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
-        http.ensure_db(with_registry=True)
+        ensure_db()
 
         values = request.params.copy()
         if not redirect:
