@@ -1541,9 +1541,15 @@ class BaseModel(object):
         error_msgs = []
         for constraint in self._constraints:
             fun, msg, fields = constraint
-            # We don't pass around the context here: validation code
-            # must always yield the same results.
-            if not fun(self, cr, uid, ids):
+            try:
+                # We don't pass around the context here: validation code
+                # must always yield the same results.
+                valid = fun(self, cr, uid, ids)
+                extra_error = None 
+            except Exception, e:
+                valid = False
+                extra_error = tools.ustr(e)
+            if not valid:
                 # Check presence of __call__ directly instead of using
                 # callable() because it will be deprecated as of Python 3.0
                 if hasattr(msg, '__call__'):
@@ -1555,6 +1561,8 @@ class BaseModel(object):
                         translated_msg = tmp_msg
                 else:
                     translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, msg)
+                if extra_error:
+                    translated_msg += "\n\n%s\n%s" % (_('Error details:'), extra_error)
                 error_msgs.append(
                         _("The field(s) `%s` failed against a constraint: %s") % (', '.join(fields), translated_msg)
                 )
@@ -1837,7 +1845,7 @@ class BaseModel(object):
                 # otherwise try to find the lowest priority matching ir.ui.view
                 view_id = View.default_view(cr, uid, self._name, view_type, context=context)
 
-        # context for postproscessing might be overriden
+        # context for post-processing might be overriden
         ctx = context
         if view_id:
             # read the view with inherited views applied
@@ -1862,7 +1870,7 @@ class BaseModel(object):
                 raise except_orm(_('Invalid Architecture!'), _("No default view of type '%s' could be found !") % view_type)
 
         # Apply post processing, groups and modifiers etc...
-        xarch, xfields = View.postprocess_and_fields( cr, uid, self._name, etree.fromstring(result['arch']), view_id, context=ctx)
+        xarch, xfields = View.postprocess_and_fields(cr, uid, self._name, etree.fromstring(result['arch']), view_id, context=ctx)
         result['arch'] = xarch
         result['fields'] = xfields
 
@@ -1872,8 +1880,7 @@ class BaseModel(object):
             def clean(x):
                 x = x[2]
                 for key in toclean:
-                    if key in x:
-                        del x[key]
+                    x.pop(key, None)
                 return x
             ir_values_obj = self.pool.get('ir.values')
             resprint = ir_values_obj.get(cr, uid, 'action', 'client_print_multi', [(self._name, False)], False, context)
