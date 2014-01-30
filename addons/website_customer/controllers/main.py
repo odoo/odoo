@@ -34,9 +34,6 @@ class WebsiteCustomer(http.Controller):
                 ('website_description', 'ilike', post.get("search"))
             ]
 
-        if country_id:
-            domain += [('country_id', '=', country_id)]
-
         # group by country, based on customers found with the search(domain)
         countries = partner_obj.read_group(
             cr, openerp.SUPERUSER_ID, domain, ["id", "country_id"],
@@ -47,6 +44,9 @@ class WebsiteCustomer(http.Controller):
             'country_id_count': country_count,
             'country_id': (0, _("All Countries"))
         })
+
+        if country_id:
+            domain += [('country_id', '=', country_id)]
 
         # search customers to display
         partner_ids = partner_obj.search(cr, openerp.SUPERUSER_ID, domain, context=request.context)
