@@ -120,5 +120,5 @@ class website_event(http.Controller):
             e(post['email_from']), e(post['phone'])), context=context)
 
         track = tobj.browse(cr, uid, track_id, context=context)
-        values = {'track': track}
+        values = {'track': track, 'event':event}
         return request.website.render("website_event_track.event_track_proposal_success", values)
