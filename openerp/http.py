@@ -207,7 +207,7 @@ class WebRequest(object):
         warnings.warn('please use request.registry and request.cr directly', DeprecationWarning)
         yield (self.registry, self.cr)
 
-def route(route, type="http", auth="user", methods=None):
+def route(route, type="http", auth="user", methods=None, cors=None):
     """
     Decorator marking the decorated method as being a handler for requests. The method must be part of a subclass
     of ``Controller``.
@@ -225,6 +225,7 @@ def route(route, type="http", auth="user", methods=None):
         authentication modules. There request code will not have any facilities to access the database nor have any
         configuration indicating the current database nor the current user.
     :param methods: A sequence of http methods this route applies to. If not specified, all methods are allowed.
+    :param cors: The Access-Control-Allow-Origin cors directive value.
     """
     assert type in ["http", "json"]
     def decorator(f):
@@ -234,6 +235,7 @@ def route(route, type="http", auth="user", methods=None):
             f.routes = [route]
         f.methods = methods
         f.exposed = type
+        f.cors = cors
         if getattr(f, "auth", None) is None:
             f.auth = auth
         return f
@@ -954,6 +956,12 @@ class Root(object):
         # - It could allow session fixation attacks.
         if not explicit_session and hasattr(response, 'set_cookie'):
             response.set_cookie('session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60)
+
+        # Support for Cross-Origin Resource Sharing
+        if request.func.cors:
+            response.headers.set('Access-Control-Allow-Origin', request.func.cors)
+            if request.func.methods:
+                response.headers.set('Access-Control-Allow-Methods', ','.join(request.func.methods))
 
         return response
 
