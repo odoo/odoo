@@ -15,7 +15,6 @@ import os
 import re
 import simplejson
 import time
-import urllib
 import urllib2
 import zlib
 from xml.etree import ElementTree
@@ -355,9 +354,9 @@ def manifest_list(extension, mods=None, db=None, debug=False):
     if not debug:
         path = '/web/webclient/' + extension
         if mods is not None:
-            path += '?' + urllib.urlencode({'mods': mods})
+            path += '?' + werkzeug.url_encode({'mods': mods})
         elif db:
-            path += '?' + urllib.urlencode({'db': db})
+            path += '?' + werkzeug.url_encode({'db': db})
 
         remotes = [wp for fp, wp in files if fp is None]
         return [path] + remotes
