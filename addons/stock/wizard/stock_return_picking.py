@@ -43,6 +43,8 @@ class stock_return_picking(osv.osv_memory):
     _description = 'Return Picking'
     _columns = {
         'product_return_moves': fields.one2many('stock.return.picking.line', 'wizard_id', 'Moves'),
+        'move_dest_exists': fields.boolean('Chained Move Exists', readonly = True),
+        'move_dest_cancel': fields.boolean('Cancel Chained Moves'), 
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -64,6 +66,7 @@ class stock_return_picking(osv.osv_memory):
         pick = pick_obj.browse(cr, uid, record_id, context=context)
         quant_obj = self.pool.get("stock.quant")
         move_obj = self.pool.get("stock.move")
+        move_dest = False
         if pick:
             if pick.state != 'done':
                 raise osv.except_osv(_('Warning!'), _("You may only return pickings that are Done!"))
@@ -73,6 +76,7 @@ class stock_return_picking(osv.osv_memory):
             quants = []
             for move in pick.move_lines:
                 if move.move_dest_id:
+                    move_dest = True
                     #Backorder moves
                     moves = move_obj.search(cr, uid, [('split_from', '=', move.move_dest_id.id)], context=context)
                     moves = [move.move_dest_id] + move_obj.browse(cr, uid, moves, context=context)
@@ -80,7 +84,7 @@ class stock_return_picking(osv.osv_memory):
                         raise osv.except_osv(_('Warning!'), _('You can not reverse when the chained moves are done!'))
                 #Search quants
                 quant_search = quant_obj.search(cr, uid, ['&', '&', ('history_ids', 'in', move.id), ('qty', '>', 0.0), 
-                                                            ('location_id', 'child_of', move.location_dest_id.id), ], context=context)
+                                                            ('location_id', 'child_of', move.location_dest_id.id)], context=context)
                 quants += [(move.id, x) for x in quant_obj.browse(cr, uid, quant_search, context=context) if not x.reservation_id or x.reservation_id.origin_returned_move_id.id != move.id]
             
             # Still need to group by move/product? (move has only one product => ...)
@@ -93,6 +97,8 @@ class stock_return_picking(osv.osv_memory):
                 raise osv.except_osv(_('Warning!'), _("No products to return (only lines in Done state and not fully returned yet can be returned)!"))
             if 'product_return_moves' in fields:
                 res.update({'product_return_moves': result1})
+            if 'move_dest_exists' in fields:
+                res.update({'move_dest_exists': move_dest})
         return res
 
     def _create_returns(self, cr, uid, ids, context=None):
@@ -143,6 +149,10 @@ class stock_return_picking(osv.osv_memory):
                     'reserved_quant_ids': quant_ids,
                     'origin_returned_move_id': move.id,
                 })
+                if data['move_dest_cancel']:
+                    if move.move_dest_id:
+                        res = move_obj.split(cr, uid, move.move_dest_id, new_qty, context=context)
+                        move_obj.action_cancel(cr, uid, [res], context=context)
         if not returned_lines:
             raise osv.except_osv(_('Warning!'), _("Please specify at least one non-zero quantity."))
 
