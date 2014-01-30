@@ -6,7 +6,6 @@
         <field name="model">analytic.entries.report</field>
         <field name="arch" type="xml">
             <search string="Analytic Entries Analysis">
-                <field name="day" string="Day"/>
                 <field name="date"/>
                 <filter string="My Entries" icon="terp-personal" domain="[('user_id','=',uid)]" help="My Entries"/>
                 <field name="account_id" groups="analytic.group_analytic_accounting"/>
@@ -21,9 +20,9 @@
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                     <filter string="Product Unit of Measure" icon="terp-mrp" context="{'group_by':'product_uom_id'}"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
-                    <filter string="Month" name="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
-                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
+                    <filter string="Date (day)" icon="terp-go-today" context="{'group_by':'date:day'}"/>
+                    <filter string="Date (month)" name="Month" icon="terp-go-month" context="{'group_by':'date:month'}"/>
+                    <filter string="Date (year)" icon="terp-go-year" context="{'group_by':'date:year'}"/>
                 </group>
             </search>
         </field>
@@ -34,8 +33,9 @@
          <field name="arch" type="xml">
              <graph string="Analytic Entries Analysis" type="pivot">
                 <field name="user_id" type="row"/>
-                <field name="unit_amount" operator="+"/>
-                <field name="amount" operator="+"/>
+                <field name="nbr" type="measure"/>
+                <field name="unit_amount" type="measure"/>
+                <field name="amount" type="measure"/>
              </graph>
          </field>
     </record>

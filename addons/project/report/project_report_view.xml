@@ -11,8 +11,12 @@
             <field name="model">report.project.task.user</field>
             <field name="arch" type="xml">
                 <graph string="Tasks Analysis" type="pivot">
-                     <field name="name" type="row"/>
+                     <field name="project_id" type="row"/>
+                     <field name="nbr" type="measure"/>
                      <field name="no_of_days" type="measure"/>
+                     <field name="total_hours" type="measure"/>
+                     <field name="hours_planned" type="measure"/>
+                     <field name="remaining_hours" type="measure"/>
                  </graph>
              </field>
         </record>
@@ -44,9 +48,9 @@
                         <filter string="Contact" context="{'group_by':'partner_id'}" />
                         <filter string="Assigned to" name="User" context="{'group_by':'user_id'}" />
                         <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Day" context="{'group_by':'day'}" help="Creation Date"/>
-                        <filter string="Month" context="{'group_by':'month'}" help="Creation Date"/>
-                        <filter string="Year" context="{'group_by':'year'}" help="Creation Date"/>
+                        <filter string="Assignation date (day)" context="{'group_by':'date_start:day'}" help="Creation Date"/>
+                        <filter string="Assignation date (month)" context="{'group_by':'date_start:month'}" help="Creation Date"/>
+                        <filter string="Assignation date (year)" context="{'group_by':'date_start:year'}" help="Creation Date"/>
                         <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}" help="Last Stage Update"/>
                     </group>
                 </search>
@@ -59,7 +63,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph</field>
             <field name="search_view_id" ref="view_task_project_user_search"/>
-            <field name="context">{'search_default_year':1,'search_default_project':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="help">This report allows you to analyse the performance of your projects and users. You can analyse the quantities of tasks, the hours spent compared to the planned hours, the average number of days to open or close a task, etc.</field>
         </record>
 
