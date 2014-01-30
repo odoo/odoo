@@ -1549,6 +1549,7 @@ class BaseModel(object):
                 valid = fun(self, cr, uid, ids)
                 extra_error = None 
             except Exception, e:
+                _logger.debug('Exception while validating constraint', exc_info=True)
                 valid = False
                 extra_error = tools.ustr(e)
             if not valid:
