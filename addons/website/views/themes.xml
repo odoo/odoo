@@ -18,7 +18,7 @@
                     Have a look at <a href="/">your homepage</a> or try another theme below.
                 </p>
             </div>
-            <h1 class="text-center">Try a New Theme</h1>
+            <h1 class="text-center">Try a New Bootswatch Theme</h1>
             <h3 class="text-center text-muted">You'll be able to change the theme at anytime</h3>
     
             <div class="row mt32" id="themes-list">
@@ -26,11 +26,11 @@
               <div class="col-md-4">
                 <div class="well text-center">
                   <div class="image">
-                    <img src="http://bootswatch.com/spacelab/thumbnail.png" class="img-responsive" alt="Bootstrap Theme"/>
+                    <img src="/website/static/src/img/bootswatch_default_thumbnail.png" class="img-responsive" alt="Default Theme"/>
                   </div>
                   <div class="options">
                     <h3>Default</h3>
-                    <p>Pure bootstrap</p>
+                    <p>Pure Bootstrap</p>
                     <a class="btn btn-info" href="/website/theme_change">Apply</a>
                   </div>
                 </div>
@@ -178,6 +178,20 @@
                   </div>
                 </div>
               </div>
+
+              <div class="col-md-4">
+                <div class="well text-center">
+                  <div class="image">
+                    <img class="img-responsive" src="http://bootswatch.com/yeti/thumbnail.png" alt="Yeti"/>
+                  </div>
+                  <div class="options">
+                    <h3>Yeti</h3>
+                    <p>A friendly foundation</p>
+                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_yeti">Apply</a>
+                  </div>
+                </div>
+              </div>
+
             </div>
             </div>
           </div>
@@ -252,6 +266,12 @@
     <template id="website.theme_united" name="United" inherit_option_id="website.theme">
         <xpath expr="//link[@id='bootstrap_css']" position="replace">
             <link rel='stylesheet' href='/website/static/src/css/bootswatch/united.min.css' t-ignore="true"/>
+        </xpath>
+    </template>
+
+    <template id="website.theme_yeti" name="Yeti" inherit_option_id="website.theme">
+        <xpath expr="//link[@id='bootstrap_css']" position="replace">
+            <link rel='stylesheet' href='/website/static/src/css/bootswatch/yeti.min.css' t-ignore="true"/>
         </xpath>
     </template>
 
