@@ -68,8 +68,6 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
 
     @http.route()
     def web_login(self, *args, **kw):
-        http.ensure_db(with_registry=True)
-        request.disable_db = False
         providers = self.list_providers()
 
         response = super(OAuthLogin, self).web_login(*args, **kw)

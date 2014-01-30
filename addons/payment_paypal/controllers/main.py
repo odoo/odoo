@@ -56,7 +56,6 @@ class PaypalController(http.Controller):
     @http.route('/payment/paypal/ipn/', type='http', auth='none', methods=['POST'])
     def paypal_ipn(self, **post):
         """ Paypal IPN. """
-        request.disable_db = False
         _logger.info('Beginning Paypal IPN form_feedback with post data %s', pprint.pformat(post))  # debug
         self.paypal_validate_data(**post)
         return ''
@@ -64,7 +63,6 @@ class PaypalController(http.Controller):
     @http.route('/payment/paypal/dpn', type='http', auth="none", methods=['POST'])
     def paypal_dpn(self, **post):
         """ Paypal DPN """
-        request.disable_db = False
         _logger.info('Beginning Paypal DPN form_feedback with post data %s', pprint.pformat(post))  # debug
         return_url = self._get_return_url(**post)
         self.paypal_validate_data(**post)
@@ -73,7 +71,6 @@ class PaypalController(http.Controller):
     @http.route('/payment/paypal/cancel', type='http', auth="none")
     def paypal_cancel(self, **post):
         """ When the user cancels its Paypal payment: GET on this route """
-        request.disable_db = False
         cr, uid, context = request.cr, SUPERUSER_ID, request.context
         _logger.info('Beginning Paypal cancel with post data %s', pprint.pformat(post))  # debug
         return_url = self._get_return_url(**post)

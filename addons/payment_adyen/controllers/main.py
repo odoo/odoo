@@ -22,7 +22,6 @@ class AdyenController(http.Controller):
     ], type='http', auth='none')
     def adyen_return(self, pspReference, **post):
         """ Paypal IPN."""
-        request.disable_db = False
         post["pspReference"] = pspReference
         _logger.info('Beginning Adyen form_feedback with post data %s', pprint.pformat(post))  # debug
         request.registry['payment.transaction'].form_feedback(request.cr, SUPERUSER_ID, post, 'adyen', context=request.context)
