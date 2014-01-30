@@ -130,7 +130,7 @@ class mail_compose_message(osv.TransientModel):
             'wizard_id', 'attachment_id', 'Attachments'),
         'filter_id': fields.many2one('ir.filters', 'Filters'),
     }
-
+    #TODO change same_thread to False in trunk (Require view update)
     _defaults = {
         'composition_mode': 'comment',
         'body': lambda self, cr, uid, ctx={}: '',
@@ -138,7 +138,7 @@ class mail_compose_message(osv.TransientModel):
         'partner_ids': lambda self, cr, uid, ctx={}: [],
         'post': False,
         'notify': False,
-        'same_thread': False,
+        'same_thread': True,
     }
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
