@@ -23,14 +23,12 @@ import datetime
 from lxml import etree
 import math
 import pytz
-import re
 
 import openerp
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
-from openerp.tools.yaml_import import is_comment
 
 class format_address(object):
     def fields_view_get_address(self, cr, uid, arch, context={}):
