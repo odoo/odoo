@@ -32,6 +32,8 @@ controllers = controllers()
 class website_event(http.Controller):
     @http.route(['/event/<model("event.event"):event>/track/<model("event.track"):track>'], type='http', auth="public", website=True, multilang=True)
     def event_track_view(self, event, track, **post):
+        track_obj = request.registry.get('event.track')
+        track = track_obj.browse(request.cr, openerp.SUPERUSER_ID, track.id, context=request.context)
         values = { 'track': track, 'event': track.event_id, 'main_object': track }
         return request.website.render("website_event_track.track_view", values)
 
