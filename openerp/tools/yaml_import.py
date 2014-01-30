@@ -541,7 +541,7 @@ class YamlInterpreter(object):
     def process_python(self, node):
         python, statements = node.items()[0]
         model = self.get_model(python.model)
-        statements = statements.replace("\r\n", "\n")
+        statements = "\n" * python.first_line + statements.replace("\r\n", "\n")
         code_context = {
             'model': model,
             'cr': self.cr,
