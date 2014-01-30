@@ -695,7 +695,7 @@ class view(osv.osv):
         if '.' not in xml_id:
             raise ValueError('Invalid template id: %r' % (xml_id,))
 
-        view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id)
+        view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id, raise_if_not_found=True)
         arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
         arch_tree = etree.fromstring(arch)
 
