@@ -1485,12 +1485,23 @@ class stock_move(osv.osv):
         moveputaway_obj = self.pool.get('stock.move.putaway')
         quant_obj = self.pool.get('stock.quant')
         if putaway.method == 'fixed' and putaway.location_spec_id:
+            qty = move.product_qty
             for row in quant_obj.read_group(cr, uid, [('reservation_id', '=', move.id)], ['qty', 'lot_id'], ['lot_id'], context=context):
                 vals = {
                     'move_id': move.id,
                     'location_id': putaway.location_spec_id.id,
                     'quantity': row['qty'],
                     'lot_id': row.get('lot_id') and row['lot_id'][0] or False,
+                }
+                moveputaway_obj.create(cr, SUPERUSER_ID, vals, context=context)
+                qty -= row['qty']
+
+            #if the quants assigned aren't fully explaining where the products have to be moved
+            if qty > 0:
+                vals = {
+                    'move_id': move.id,
+                    'location_id': putaway.location_spec_id.id,
+                    'quantity': qty,
                 }
                 moveputaway_obj.create(cr, SUPERUSER_ID, vals, context=context)
 
@@ -1727,6 +1738,8 @@ class stock_move(osv.osv):
         """ Changes the state to assigned.
         @return: True
         """
+        #check putaway method
+        self._putaway_check(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'assigned'})
 
     def cancel_assign(self, cr, uid, ids, context=None):
@@ -2056,7 +2069,7 @@ class stock_inventory(osv.osv):
         'date': fields.datetime('Inventory Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Create Date."),
         'date_done': fields.datetime('Date done', help="Inventory Validation Date."),
         'line_ids': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=False, states={'done': [('readonly', True)]}, help="Inventory Lines."),
-        'move_ids': fields.one2many('stock.move', 'inventory_id', 'Created Moves', help="Inventory Moves."),
+        'move_ids': fields.one2many('stock.move', 'inventory_id', 'Created Moves', help="Inventory Moves.", states={'done': [('readonly', True)]}),
         'state': fields.selection([('draft', 'Draft'), ('cancel', 'Cancelled'), ('confirm', 'In Progress'), ('done', 'Validated')], 'Status', readonly=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
         'location_id': fields.many2one('stock.location', 'Location', required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -2111,6 +2124,9 @@ class stock_inventory(osv.osv):
             context = {}
         move_obj = self.pool.get('stock.move')
         for inv in self.browse(cr, uid, ids, context=context):
+            for inventory_line in inv.line_ids:
+                if inventory_line.product_qty < 0:
+                    raise osv.except_osv(_('Warning'),_('You cannot set a negative product quantity in an inventory line'))
             if not inv.move_ids:
                 self.action_check(cr, uid, [inv.id], context=context)
             inv.refresh()
@@ -2223,6 +2239,13 @@ class stock_inventory(osv.osv):
             for key, value in product_line.items():
                 if not value:
                     product_line[key] = False
+            if product_line['product_qty'] < 0:
+                summary = _('Product: ') + product_obj.browse(cr, uid, product_line['product_id'], context=context).name + '\n'
+                summary += _('Location: ') + location_obj.browse(cr, uid, product_line['location_id'], context=context).complete_name + '\n'
+                summary += (_('Partner: ') + self.pool.get('res.partner').browse(cr, uid, product_line['partner_id'], context=context).name + '\n') if product_line['partner_id'] else ''
+                summary += (_('Lot: ') + self.pool.get('stock.production.lot').browse(cr, uid, product_line['prod_lot_id'], context=context).name + '\n') if product_line['prod_lot_id'] else ''
+                summary += (_('Package: ') + self.pool.get('stock.quant.package').browse(cr, uid, product_line['package_id'], context=context).name + '\n') if product_line['package_id'] else ''
+                raise osv.except_osv(_('Warning'),_('This inventory line has a theoretical negative quantity, please fix it before doing an inventory\n%s' % (summary)))
             product_line['inventory_id'] = inventory.id
             product_line['th_qty'] = product_line['product_qty']
             if product_line['product_id']:
@@ -2442,7 +2465,6 @@ class stock_warehouse(osv.osv):
     _sql_constraints = [
         ('warehouse_name_uniq', 'unique(name, company_id)', 'The name of the warehouse must be unique per company!'),
         ('warehouse_code_uniq', 'unique(code, company_id)', 'The code of the warehouse must be unique per company!'),
-        ('default_resupply_wh_diff', 'check (id != default_resupply_wh_id)', 'The default resupply warehouse should be different that the warehouse itself!'),
     ]
 
     def _get_partner_locations(self, cr, uid, ids, context=None):
@@ -2907,6 +2929,8 @@ class stock_warehouse(osv.osv):
                     #not implemented
                     pass
         if 'default_resupply_wh_id' in vals:
+            if vals.get('default_resupply_wh_id') == warehouse.id:
+                raise osv.except_osv(_('Warning'),_('The default resupply warehouse should be different than the warehouse itself!'))
             if warehouse.default_resupply_wh_id:
                 #remove the existing resupplying route on all products
                 to_remove_route_ids = route_obj.search(cr, uid, [('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', '=', warehouse.default_resupply_wh_id.id)], context=context)

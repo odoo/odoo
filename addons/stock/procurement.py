@@ -309,7 +309,8 @@ class procurement_order(osv.osv):
                 'company_id': orderpoint.company_id.id,
                 'product_uom': orderpoint.product_uom.id,
                 'location_id': orderpoint.location_id.id,
-                'origin': orderpoint.name}
+                'origin': orderpoint.name,
+                'warehouse_id': orderpoint.warehouse_id.id}
 
     def _product_virtual_get(self, cr, uid, order_point):
         product_obj = self.pool.get('product.product')
