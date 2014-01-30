@@ -2461,7 +2461,6 @@ class stock_warehouse(osv.osv):
     _sql_constraints = [
         ('warehouse_name_uniq', 'unique(name, company_id)', 'The name of the warehouse must be unique per company!'),
         ('warehouse_code_uniq', 'unique(code, company_id)', 'The code of the warehouse must be unique per company!'),
-        ('default_resupply_wh_diff', 'check (id != default_resupply_wh_id)', 'The default resupply warehouse should be different that the warehouse itself!'),
     ]
 
     def _get_partner_locations(self, cr, uid, ids, context=None):
@@ -2926,6 +2925,8 @@ class stock_warehouse(osv.osv):
                     #not implemented
                     pass
         if 'default_resupply_wh_id' in vals:
+            if vals.get('default_resupply_wh_id') == warehouse.id:
+                raise osv.except_osv(_('Warning'),_('The default resupply warehouse should be different than the warehouse itself!'))
             if warehouse.default_resupply_wh_id:
                 #remove the existing resupplying route on all products
                 to_remove_route_ids = route_obj.search(cr, uid, [('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', '=', warehouse.default_resupply_wh_id.id)], context=context)
