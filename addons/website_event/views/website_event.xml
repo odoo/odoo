@@ -72,7 +72,7 @@
                                     "widget": "contact",
                                     "fields": ["city"]
                                     }'/>
-                                <div class="text-muted">
+                                <div class="text-muted" t-if="event.type">
                                     <i class="fa fa-tag"></i> <span t-field="event.type"/>
                                 </div>
                             </div>
