@@ -225,7 +225,7 @@ class Ecommerce(http.Controller):
 
         styles = []
         try:
-            style_obj = request.registry.get('website.product.style')
+            style_obj = request.registry.get('product.style')
             style_ids = style_obj.search(request.cr, request.uid, [], context=request.context)
             styles = style_obj.browse(request.cr, request.uid, style_ids, context=request.context)
         except:
@@ -769,7 +769,7 @@ class Ecommerce(http.Controller):
                 active = True
                 break
 
-        style = request.registry.get('website.product.style').browse(request.cr, request.uid, style_id, context=request.context)
+        style = request.registry.get('product.style').browse(request.cr, request.uid, style_id, context=request.context)
 
         if remove:
             product.write({'website_style_ids': [(3, rid) for rid in remove]})
