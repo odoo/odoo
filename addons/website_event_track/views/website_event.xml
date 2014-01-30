@@ -16,8 +16,8 @@
             </section>
             <div class="row">
                 <div t-attf-class="col-md-#{(len(event.sponsor_ids) > 6) and 2 or (12/ len(event.sponsor_ids))} text-center" t-foreach="event.sponsor_ids" t-as="sponsor">
-                    <t t-if="sponsor.has_access_to_partner()">
-                        <a t-attf-href="/partners/#{ slug([sponsor.partner_id.id, sponsor.partner_id.name]) }" style="position: relative; display: inline-block;">
+                    <t t-if="sponsor.url">
+                        <a t-att-href="sponsor.url" style="position: relative; display: inline-block;">
                             <span t-field="sponsor.partner_id.image"
                                 t-field-options='{"widget": "image", "class": "shadow"}'/>
                             <div class="ribbon-wrapper">
@@ -25,7 +25,7 @@
                             </div>
                         </a>
                     </t>
-                    <t t-if="not sponsor.has_access_to_partner()">
+                    <t t-if="not sponsor.url">
                         <span style="position: relative; display: inline-block;">
                             <span t-field="sponsor.partner_id.image"
                                 t-field-options='{"widget": "image", "class": "shadow"}'/>

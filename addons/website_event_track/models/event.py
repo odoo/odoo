@@ -168,6 +168,7 @@ class event_sponsors(osv.osv):
         'event_id': fields.many2one('event.event', 'Event', required=True),
         'sponsor_type_id': fields.many2one('event.sponsor.type', 'Sponsoring Type', required=True),
         'partner_id': fields.many2one('res.partner', 'Sponsor/Customer', required=True),
+        'url': fields.text('Sponsor Website'),
         'sequence': fields.related('sponsor_type_id', 'sequence', string='Sequence', store=True),
     }
 
