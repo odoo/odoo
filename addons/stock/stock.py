@@ -1727,6 +1727,8 @@ class stock_move(osv.osv):
                 fallback_domain = prev_quant_ids and [('id', 'not in', prev_quant_ids)] or []
                 #we always keep the quants already assigned and try to find the remaining quantity on quants not assigned only
                 main_domain = [('reservation_id', '=', False), ('qty', '>', 0)]
+                if move.origin_returned_move_id:
+                    main_domain += [('history_ids', 'in', move.origin_returned_move_id.id)]
                 #first try to find quants based on specific domains given by linked operations
                 for record in move.linked_move_operation_ids:
                     domain = main_domain + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
@@ -1792,6 +1794,8 @@ class stock_move(osv.osv):
                 pickings.add(move.picking_id.id)
             qty = move.product_qty
             main_domain = [('qty', '>', 0)]
+            if move.origin_returned_move_id:
+                main_domain += [('history_ids', 'in', move.origin_returned_move_id.id)]
             prefered_domain = [('reservation_id', '=', move.id)]
             fallback_domain = [('reservation_id', '=', False)]
             #first, process the move per linked operation first because it may imply some specific domains to consider
