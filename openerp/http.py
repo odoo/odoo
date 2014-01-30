@@ -865,7 +865,7 @@ class Root(object):
         self.load_addons()
 
         _logger.info("Generating nondb routing")
-        self.nodb_routing_map = routing_map(['', "web"], True)
+        self.nodb_routing_map = routing_map([''] + openerp.conf.server_wide_modules, True)
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
