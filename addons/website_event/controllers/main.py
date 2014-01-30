@@ -145,8 +145,6 @@ class website_event(http.Controller):
         events_ids = event_obj.browse(request.cr, request.uid, obj_ids,
                                       context=request.context)
 
-        for d in dates:
-            print '***', d
         values = {
             'current_date': current_date,
             'current_country': current_country,
