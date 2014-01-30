@@ -29,7 +29,7 @@
 
             <group name="sale" position="inside">
                 <group name="website" string="Website">
-                    <field name="suggested_product_ids" widget="many2many_tags"/>
+                    <field name="accessory_product_ids" widget="many2many_tags"/>
                     <field name="website_style_ids" widget="many2many_tags"/>
                     <field name="website_sequence"/>
                 </group>
@@ -61,7 +61,7 @@
             </xpath>
             <xpath expr="//field[@name='description']" position="before">
                 <group colspan="4" string="Website Options">
-                    <field name="suggested_product_ids" widget="many2many_tags"/>
+                    <field name="accessory_product_ids" widget="many2many_tags"/>
                     <field name="website_style_ids" widget="many2many_tags"/>
                     <field colspan="4" name="attribute_lines" nolabel="1" groups="product.group_product_attributes">
                         <tree string="Product attributes" editable="bottom">
