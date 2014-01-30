@@ -553,7 +553,7 @@
 
 <template id="continue_shopping" inherit_id="website_sale.mycart" inherit_option_id="website_sale.mycart" name="Continue Shopping Button">
   <xpath expr="//a[@href='/shop/checkout/']" position="before">
-    <a href="/shop" class="btn btn-default mb32"><span class="fa fa-long-arrow-left"/>Continue Shopping</a>
+    <a href="/shop" class="btn btn-default mb32"><span class="fa fa-long-arrow-left"/> Continue Shopping</a>
   </xpath>
 </template>
 
@@ -720,7 +720,7 @@
           <div class="col-md-8 oe_mycart">
               <h3 class="page-header mt16">Billing Information
                   <small groups="base.group_public"> or
-                      <a t-if="not partner" t-attf-href="/web#action=redirect&amp;url=#{ request.httprequest.url }">sign in</a>
+                      <a class='btn btn-primary' t-if="not partner" t-attf-href="/web?redirect=#{ request.httprequest.url }">Sign in</a>
                   </small>
               </h3>
               <div class="row">
