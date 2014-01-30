@@ -142,7 +142,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // connects to the specified url
         connect: function(url){
             var self = this;
-            this.connection = new instance.web.Session(undefined,url);
+            this.connection = new instance.web.Session(undefined,url, { use_cors: true});
             this.host   = url;
             this.set_connection_status('connecting',{});
 
