@@ -377,13 +377,9 @@ class stock_quant(osv.osv):
             the choice on the quants that match the prefered_domain as well. But if the qty requested is not reached
             it tries to find the remaining quantity by using the fallback_domain.
         '''
-        if domain is None:
-            domain = []
-        #don't take into account location that are production, supplier or inventory
-        ignore_location_ids = self.pool.get('stock.location').search(cr, uid, [('usage', 'in', ('production', 'supplier', 'inventory'))], context=context)
-        domain.append(('location_id','not in',ignore_location_ids))
         if prefered_domain and fallback_domain:
-            
+            if domain is None:
+                domain = []
             quants = self.quants_get(cr, uid, location, product, qty, domain=domain + prefered_domain, restrict_lot_id=restrict_lot_id, restrict_partner_id=restrict_partner_id, context=context)
             res_qty = qty
             quant_ids = []
@@ -542,6 +538,9 @@ class stock_quant(osv.osv):
         '''
         domain += location and [('location_id', 'child_of', location.id)] or []
         domain += [('product_id', '=', product.id)] + domain
+        #don't take into account location that are production, supplier or inventory
+        ignore_location_ids = self.pool.get('stock.location').search(cr, uid, [('usage', 'in', ('production', 'supplier', 'inventory'))], context=context)
+        domain.append(('location_id','not in',ignore_location_ids))
         res = []
         offset = 0
         while quantity > 0:
