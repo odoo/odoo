@@ -72,8 +72,6 @@ class stock_return_picking(osv.osv_memory):
                 raise osv.except_osv(_('Warning!'), _("You may only return pickings that are Done!"))
 
             #Check if chained moves are not done already.  In the mean time, sum the quants in that location
-            all_moves = []
-            quants = []
             for move in pick.move_lines:
                 if move.move_dest_id:
                     move_dest = True
@@ -85,14 +83,12 @@ class stock_return_picking(osv.osv_memory):
                 #Search quants
                 quant_search = quant_obj.search(cr, uid, ['&', '&', ('history_ids', 'in', move.id), ('qty', '>', 0.0), 
                                                             ('location_id', 'child_of', move.location_dest_id.id)], context=context)
-                quants += [(move.id, x) for x in quant_obj.browse(cr, uid, quant_search, context=context) if not x.reservation_id or x.reservation_id.origin_returned_move_id.id != move.id]
-            
-            # Still need to group by move/product? (move has only one product => ...)
-            
-            
-            for quant in quants:
-                result1.append({'product_id': quant[1].product_id.id, 'quantity': quant[1].qty, 'move_id': quant[0]})
-                
+                qty = 0
+                for quant in quant_obj.browse(cr, uid, quant_search, context=context):
+                    if not quant.reservation_id or quant.reservation_id.origin_returned_move_id.id != move.id:
+                        qty += quant.qty
+                result1.append({'product_id': move.product_id.id, 'quantity': qty, 'move_id': move.id})
+
             if len(result1) == 0:
                 raise osv.except_osv(_('Warning!'), _("No products to return (only lines in Done state and not fully returned yet can be returned)!"))
             if 'product_return_moves' in fields:
