@@ -35,7 +35,7 @@ class Website(orm.Model):
             if order.carrier_id:
                 self.pool['sale.order']._delivery_unset(cr, SUPERUSER_ID, order, context=context)
 
-            carrier_ids = self.pool.get('delivery.carrier').search(cr, uid, [], context=context)
+            carrier_ids = self.pool.get('delivery.carrier').search(cr, uid, [('website_published','=',True)], context=context)
             carrier_id = force_carrier_id or (carrier_ids and carrier_ids[0])
             order.write({'carrier_id': carrier_id}, context=context)
             #If carrier_id have no grid, we don't have delivery !

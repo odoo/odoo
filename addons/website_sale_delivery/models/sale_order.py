@@ -56,9 +56,6 @@ class SaleOrder(orm.Model):
         ),
     }
 
-    def _add_delivery(self, cr, uid, order, context=None):
-        pass
-
     def _get_website_data(self, cr, uid, order, context=None):
         """ Override to add delivery-related website data. """
         values = super(SaleOrder, self)._get_website_data(cr, uid, order, context=context)
@@ -72,6 +69,6 @@ class SaleOrder(orm.Model):
 
         delivery_ctx = dict(context, order_id=order.id)
         DeliveryCarrier = self.pool.get('delivery.carrier')
-        delivery_ids = DeliveryCarrier.search(cr, uid, [], context=context)
+        delivery_ids = DeliveryCarrier.search(cr, uid, [('website_published','=',True)], context=context)
         values['deliveries'] = DeliveryCarrier.browse(cr, SUPERUSER_ID, delivery_ids, context=delivery_ctx)
         return values
