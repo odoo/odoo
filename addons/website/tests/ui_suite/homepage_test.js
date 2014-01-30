@@ -7,9 +7,8 @@ testRunner.run(function homepageTest (page, timeout) {
     waitFor(function clientReady () {
         return page.evaluate(function () {
             return window.$ && window.openerp && window.openerp.website
-                && window.openerp.website.TestConsole
-                && window.openerp.website.TestConsole.test
-                && window.openerp.website.TestConsole.test('banner');
+                && window.openerp.website.Tour
+                && window.openerp.website.Tour.get('banner');
         });
     }, function executeTest () {
         var before = page.evaluate(function () {
@@ -17,7 +16,7 @@ testRunner.run(function homepageTest (page, timeout) {
                 carousel: $('#wrap [data-snippet-id=carousel]').length,
                 columns: $('#wrap [data-snippet-id=three-columns]').length,
             };
-            window.openerp.website.TestConsole.test('banner').run(true);
+            window.openerp.website.Tour.get('banner').run(true, true);
             return result;
         });
         waitFor(function testExecuted () {
