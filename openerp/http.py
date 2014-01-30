@@ -979,8 +979,14 @@ class Root(object):
         return explicit_session
 
     def setup_db(self, httprequest):
-        if not httprequest.session.db:
-            # allow "admin" routes to works without being logged in when in monodb.
+        db = httprequest.session.db
+        # Check if session.db is legit
+        if db and db not in db_filter([db], httprequest=httprequest):
+            httprequest.session.logout()
+            db = None
+
+        if not db:
+            # allow auth="none" routes to works without being logged in when in monodb.
             httprequest.session.db = db_monodb(httprequest)
 
     def setup_lang(self, httprequest):
@@ -1079,8 +1085,11 @@ class Root(object):
         return request.registry['ir.http'].routing_map()
 
 def db_list(force=False, httprequest=None):
-    httprequest = httprequest or request.httprequest
     dbs = openerp.netsvc.dispatch_rpc("db", "list", [force])
+    return db_filter(dbs, httprequest=httprequest)
+
+def db_filter(dbs, httprequest=None):
+    httprequest = httprequest or request.httprequest
     h = httprequest.environ['HTTP_HOST'].split(':')[0]
     d = h.split('.')[0]
     r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
@@ -1099,8 +1108,6 @@ def db_monodb(httprequest=None):
         Returns ``None`` if the magic is not magic enough.
     """
     httprequest = httprequest or request.httprequest
-    db = None
-    redirect = None
 
     dbs = db_list(True, httprequest)
 
