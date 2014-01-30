@@ -25,9 +25,12 @@
             <div class="row mt8">
                 <div class="col-sm-5">
                     <ol class="breadcrumb mb0">
-                        <li class="active">
-                            Our Events
+                        <li>
+                            <a href="/event">Our Events</a>
                         </li>
+                        <li t-if="current_date"><t t-esc="current_date"/></li>
+                        <li t-if="current_type"><t t-esc="current_type.name"/></li>
+                        <li t-if="current_country"><t t-esc="current_country.name"/></li>
                     </ol>
                 </div><div class="col-sm-7">
                     <t t-call="website.pager" >
@@ -35,12 +38,6 @@
                     </t>
                 </div>
             </div>
-            <h3 class="text-center text-muted">
-                <t t-esc="current_date or ''"/><span t-if="current_type"><t t-if="current_date">,</t>
-                  <t t-esc="current_type.name"/></span><span t-if="current_country"><t t-if="current_type or current_date">,</t>
-                  <t t-esc="current_country.name"/>
-                </span>
-            </h3>
             <div class="row mt32 mb32">
                 <div class="col-md-9" id="middle_column">
                     <t t-if="not event_ids">
