@@ -605,9 +605,10 @@ class res_partner(osv.osv):
     def google_map_link(self, cr, uid, ids, zoom=8, context=None):
         partner = self.browse(cr, uid, ids[0], context=context)
         params = {
-            'q': '%s, %s %s, %s' % (partner.street, partner.city, partner.zip, partner.country_id and partner.country_id.name_get()[0][1] or ''),
+            'q': '%s, %s %s, %s' % (partner.street or '', partner.city  or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
+            'z': 10
         }
-        return urlplus('https://maps.google.be/maps' , params)
+        return urlplus('https://maps.google.com/maps' , params)
 
 class res_company(osv.osv):
     _inherit = "res.company"
