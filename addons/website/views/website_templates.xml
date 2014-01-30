@@ -16,7 +16,7 @@
         ((submenu.url != '/' and request.httprequest.path.startswith(submenu.url)) or
          request.httprequest.path == submenu.url) and 'active'
         ">
-        <a t-att-href="url_for(submenu.url)" t-ignore="true" t-att-target="'blank' if submenu.new_window else None">
+        <a t-att-href="submenu.url" t-ignore="true" t-att-target="'blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>

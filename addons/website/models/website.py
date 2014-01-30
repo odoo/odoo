@@ -5,7 +5,6 @@ import itertools
 import logging
 import math
 import re
-import urllib
 import urlparse
 
 import simplejson
@@ -38,24 +37,38 @@ def keep_query(*args, **kw):
 
 def url_for(path_or_uri, lang=None):
     location = path_or_uri.strip()
+    force_lang = lang is not None
     url = urlparse.urlparse(location)
-    if request and url.path and not url.netloc and not url.scheme:
+
+    if request and not url.netloc and not url.scheme and (url.path or force_lang):
         location = urlparse.urljoin(request.httprequest.path, location)
-        force_lang = lang is not None
         lang = lang or request.context.get('lang')
         langs = [lg[0] for lg in request.website.get_languages()]
-        if lang != request.website.default_lang_code and (force_lang or (location[0] == '/' and len(langs) > 1)):
-            if is_multilang_url(location):
-                ps = location.split('/')
-                if ps[1] in langs:
+
+        if (len(langs) > 1 or force_lang) and is_multilang_url(location, langs):
+            ps = location.split('/')
+            if ps[1] in langs:
+                # Replace the language only if we explicitly provide a language to url_for
+                if force_lang:
                     ps[1] = lang
-                else:
-                    ps.insert(1, lang)
-                location = '/'.join(ps)
+                # Remove the default language unless it's explicitly provided
+                elif ps[1] == request.website.default_lang_code:
+                    ps.pop(1)
+            # Insert the context language or the provided language
+            elif lang != request.website.default_lang_code or force_lang:
+                ps.insert(1, lang)
+            location = '/'.join(ps)
 
     return location
 
-def is_multilang_url(path):
+def is_multilang_url(path, langs=None):
+    if not langs:
+        langs = [lg[0] for lg in request.website.get_languages()]
+    spath = path.split('/')
+    # if a language is already in the path, remove it
+    if spath[1] in langs:
+        spath.pop(1)
+        path = '/'.join(spath)
     try:
         router = request.httprequest.app.get_db_router(request.db).bind('')
         func = router.match(path)[0]
