@@ -87,7 +87,7 @@ class view(osv.osv):
                                   help="ID of the view defined in xml file"),
         'groups_id': fields.many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
             string='Groups', help="If this field is empty, the view applies to all users. Otherwise, the view applies to the users of those groups only."),
-        'model_ids': fields.one2many('ir.model.data', 'res_id', auto_join=True),
+        'model_ids': fields.one2many('ir.model.data', 'res_id', domain=[('model','=','ir.ui.view')], auto_join=True),
     }
     _defaults = {
         'priority': 16,
