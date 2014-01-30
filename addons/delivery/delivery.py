@@ -110,11 +110,11 @@ class delivery_carrier(osv.osv):
 
             # not using advanced pricing per destination: override grid
             grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id)], context=context)
-
             if grid_id and not (record.normal_price or record.free_if_more_than):
                 grid_pool.unlink(cr, uid, grid_id, context=context)
 
-            if not (record.normal_price or record.free_if_more_than):
+            # Check that float, else 0.0 is False
+            if not (isinstance(record.normal_price,float) or record.free_if_more_than):
                 continue
 
             if not grid_id:
@@ -141,7 +141,7 @@ class delivery_carrier(osv.osv):
                     'list_price': 0.0,
                 }
                 grid_line_pool.create(cr, uid, line_data, context=context)
-            if record.normal_price:
+            if isinstance(record.normal_price,float):
                 line_data = {
                     'grid_id': grid_id and grid_id[0],
                     'name': _('Default price'),
@@ -204,10 +204,9 @@ class delivery_grid(osv.osv):
     def get_price_from_picking(self, cr, uid, id, total, weight, volume, context=None):
         grid = self.browse(cr, uid, id, context=context)
         price = 0.0
-        ok = False
-
+        ok = False        
+        price_dict = {'price': total, 'volume':volume, 'weight': weight, 'wv':volume*weight}
         for line in grid.line_ids:
-            price_dict = {'price': total, 'volume':volume, 'weight': weight, 'wv':volume*weight}
             test = eval(line.type+line.operator+str(line.max_value), price_dict)
             if test:
                 if line.price_type=='variable':
@@ -216,7 +215,7 @@ class delivery_grid(osv.osv):
                     price = line.list_price
                 ok = True
                 break
-        if not ok:
+        if not ok:            
             raise osv.except_osv(_('No price available!'), _('No line matched this product or order in the chosen delivery grid.'))
 
         return price

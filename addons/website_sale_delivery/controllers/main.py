@@ -13,11 +13,10 @@ class Ecommerce(Ecommerce):
         order = self.get_order()
 
         carrier_id = post.get('carrier_id')
+
         if order and carrier_id:
-            # recompute delivery costs
-            SaleOrder = request.registry['sale.order']
-            SaleOrder.write(cr, SUPERUSER_ID, [order.id], {'carrier_id': carrier_id}, context=context)
-            SaleOrder.delivery_set(cr, SUPERUSER_ID, [order.id], context=context)
+            # recompute delivery costs            
+            request.registry['website']._check_carrier_quotation(cr,uid,order,carrier_id,context=context)
             return request.redirect("/shop/payment/")
 
         res = super(Ecommerce, self).payment(**post)
