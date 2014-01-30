@@ -101,8 +101,6 @@ class event(osv.osv):
         'website_url': fields.function(_website_url, string="Website url", type="char"),
         'show_menu': fields.function(_get_show_menu, fnct_inv=_set_show_menu, type='boolean', string='Dedicated Menu'),
         'menu_id': fields.many2one('website.menu', 'Event Menu'),
-        'country_id': fields.related('address_id', 'country_id',
-                type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}, store=True),
     }
     _defaults = {
         'show_menu': False,
