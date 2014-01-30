@@ -44,8 +44,14 @@ class stock_return_picking(osv.osv_memory):
     _columns = {
         'product_return_moves': fields.one2many('stock.return.picking.line', 'wizard_id', 'Moves'),
         'move_dest_exists': fields.boolean('Chained Move Exists', readonly = True),
-        'move_dest_cancel': fields.boolean('Cancel Chained Moves'), 
+        'move_dest_method': fields.selection([('nothing', 'Do Nothing'), ('cancel', 'Split and Cancel Next Moves => Do not receive returned products again'), 
+                                              ('create', 'Split and Create New Original Move => Receive returned products again later')], 
+                                             string="With Chained Moves"),
     }
+    
+    _defaults = {
+        'move_dest_method': 'nothing',
+            }
 
     def default_get(self, cr, uid, fields, context=None):
         """
@@ -131,10 +137,7 @@ class stock_return_picking(osv.osv_memory):
             new_qty = data_get.quantity
             if new_qty:
                 returned_lines += 1
-                quant_ids = []
-                for quant in move.quant_ids:
-                    quant_ids.append((4, quant.id))
-                move_obj.copy(cr, uid, move.id, {
+                return_move = move_obj.copy(cr, uid, move.id, {
                     'product_id': data_get.product_id.id,
                     'product_uom_qty': new_qty,
                     'product_uos_qty': uom_obj._compute_qty(cr, uid, move.product_uom.id, new_qty, move.product_uos.id),
@@ -142,13 +145,25 @@ class stock_return_picking(osv.osv_memory):
                     'state': 'draft',
                     'location_id': move.location_dest_id.id,
                     'location_dest_id': move.location_id.id,
-                    'reserved_quant_ids': quant_ids,
                     'origin_returned_move_id': move.id,
+                    'procure_method': 'make_to_stock',
                 })
-                if data['move_dest_cancel']:
-                    if move.move_dest_id:
+                if data['move_dest_method'] == 'cancel':
+                    if move.move_dest_id and move.move_dest_id.state not in ['done', 'cancel']:
                         res = move_obj.split(cr, uid, move.move_dest_id, new_qty, context=context)
                         move_obj.action_cancel(cr, uid, [res], context=context)
+                if data['move_dest_method'] == 'create':
+                    if move.move_dest_id and move.move_dest_id.state not in ['done', 'cancel']:
+                        res = move_obj.split(cr, uid, move.move_dest_id, new_qty, context=context)
+                        new_move = move_obj.copy(cr, uid, move.id, {
+                                       'location_id': move.location_id.id,
+                                       'location_dest_id': move.location_dest_id.id,
+                                       'product_uom_qty': new_qty, 
+                                       'product_uos_qty': uom_obj._compute_qty(cr, uid, move.product_uom.id, new_qty, move.product_uos.id),
+                                       'move_dest_id': res,
+                                       'picking_id': False, 
+                                       })
+                        move_obj.action_confirm(cr, uid, [new_move], context=context)
         if not returned_lines:
             raise osv.except_osv(_('Warning!'), _("Please specify at least one non-zero quantity."))
 

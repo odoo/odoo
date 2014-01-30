@@ -42,8 +42,10 @@
             <field name="arch" type="xml">
                 <form string="Return lines" version="7.0">
                     <label string="Provide the quantities of the returned products."/>
-                    <field name="move_dest_exists" invisible="1"/>
-                    <field name="move_dest_cancel" attrs="{'invisible': [('move_dest_exists','=',False)]}"/>
+                    <group>
+                        <field name="move_dest_exists" invisible="1"/>
+                        <field name="move_dest_method" attrs="{'invisible': [('move_dest_exists','=',False)]}"/>
+                    </group>
                     <group>
                         <field name="product_return_moves"/>
                     </group>
@@ -59,3 +61,4 @@
         
     </data>
 </openerp>
+
