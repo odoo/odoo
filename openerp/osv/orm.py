@@ -2680,13 +2680,13 @@ class BaseModel(object):
                         interval = 'month'
 
                     if interval == 'day':
-                        display_format = 'dd MMMM YYYY' 
+                        display_format = 'dd MMM YYYY' 
                     elif interval == 'week':
-                        display_format = "'W'w"
+                        display_format = "'W'w YYYY"
                     elif interval == 'month':
-                        display_format = 'MMMM'
+                        display_format = 'MMMM YYYY'
                     elif interval == 'quarter':
-                        display_format = 'QQQ'
+                        display_format = 'QQQ YYYY'
                     elif interval == 'year':
                         display_format = 'YYYY'
 
