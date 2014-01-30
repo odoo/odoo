@@ -960,8 +960,12 @@ class Root(object):
         # Support for Cross-Origin Resource Sharing
         if request.func.cors:
             response.headers.set('Access-Control-Allow-Origin', request.func.cors)
-            if request.func.methods:
-                response.headers.set('Access-Control-Allow-Methods', ','.join(request.func.methods))
+            methods = 'GET, POST'
+            if request.func_request_type == 'json':
+                methods = 'POST'
+            elif request.func.methods:
+                methods = ', '.join(request.func.methods)
+            response.headers.set('Access-Control-Allow-Methods', methods)
 
         return response
 
