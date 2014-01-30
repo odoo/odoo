@@ -148,6 +148,7 @@ class stock_return_picking(osv.osv_memory):
                     'origin_returned_move_id': move.id,
                     'procure_method': 'make_to_stock',
                 })
+
                 if data['move_dest_method'] == 'cancel':
                     if move.move_dest_id and move.move_dest_id.state not in ['done', 'cancel']:
                         res = move_obj.split(cr, uid, move.move_dest_id, new_qty, context=context)
@@ -161,9 +162,10 @@ class stock_return_picking(osv.osv_memory):
                                        'product_uom_qty': new_qty, 
                                        'product_uos_qty': uom_obj._compute_qty(cr, uid, move.product_uom.id, new_qty, move.product_uos.id),
                                        'move_dest_id': res,
-                                       'picking_id': False, 
+                                       'picking_id': False,
                                        })
                         move_obj.action_confirm(cr, uid, [new_move], context=context)
+
         if not returned_lines:
             raise osv.except_osv(_('Warning!'), _("Please specify at least one non-zero quantity."))
 
