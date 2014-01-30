@@ -6,6 +6,15 @@
     border-bottom: 1px solid #ccc;
     padding: 6px 8px;
     text-align: right;
+    color: black;
+}
+
+.graph_main_content td:first-child {
+  background-color: rgb(240, 238, 238);
+}
+
+.graph_main_content table {
+  margin-top: 10px;
 }
 
 .graph_measure_selection .oe_selected {
@@ -26,30 +35,44 @@
 .graph_main_content th {
     font-size: 13px;
     font-weight: normal;
-    color: #039;
     padding: 10px 8px;
     vertical-align: top;
-}
-
-.graph_main_content thead {
-  border: 1px solid #6678b1;
-    border-bottom: 2px solid #6678b1;  
+    color: black;
 }
 
 .graph_main_content tbody td{
-  border: 1px solid #ccc;
+  border: 1px solid #b8b8b8;
+}
+
+.graph_main_content tbody {
+  border-top: 1px solid black;
+}
+
+.graph_main_content thead {
+  background-color: rgb(240, 238, 238);
+  border: 1px solid #b8b8b8;
+}
+
+.graph_main_content thead th {
+  border-left: 1px solid #b8b8b8;
+}
+
+div.graph_widget {
+  padding:10px;
+}
+
+.oe_dashboard div.graph_widget {
+  padding:0;
 }
 
 td.graph_border {
-  color: #039;
   text-align: left;
-  border-right: 1px solid #6678b1;
   white-space: nowrap;
 }
 
-.graph_main_content tbody tr:hover td
+.graph_main_content table:not(.heatmap) tr:hover td:not(:first-child)
 {
-    color: #009;
+  background-color: rgb(245, 245, 245);
 }
 
 span.field-selection {

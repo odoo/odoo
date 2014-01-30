@@ -4,6 +4,9 @@
 (function () {
 'use strict';
 var QWeb = openerp.web.qweb;
+var _lt = openerp.web._lt;
+var _t = openerp.web._t;
+
 nv.dev = false;  // sets nvd3 library in production mode
 
 openerp.web_graph.Graph = openerp.web.Widget.extend({
@@ -18,7 +21,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.domain = domain;
         this.mode = options.mode || 'pivot';  // pivot, bar, pie, line
         this.heatmap_mode = options.heatmap_mode || 'none';
-        this.title = options.title || 'Graph';
         this.visible_ui = options.visible_ui || true;
         this.bar_ui = options.bar_ui || 'group';
         this.graph_view = options.graph_view || null;
@@ -39,7 +41,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         return this.model.call('fields_get', []).then(function (f) {
             self.fields = f;
-            self.fields.__count = {field:'__count', type: 'integer', string:'Quantity'};
+            self.fields.__count = {field:'__count', type: 'integer', string:_t('Quantity')};
             self.important_fields = self.get_search_fields();
             self.measure_list = self.get_measures();
             self.add_measures_to_options();
@@ -360,6 +362,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.$('.graph_main_content svg').remove();
         this.$('.graph_main_content div').remove();
         this.table.empty();
+        this.table.toggleClass('heatmap', this.heatmap_mode !== 'none')
         this.width = this.$el.width();
         this.height = Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width()));
 
@@ -381,12 +384,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // Drawing the table
     // ----------------------------------------------------------------------
     draw_table: function () {
-        this.pivot.main_row().title = 'Total';
-        if (this.pivot.measures.length == 1) {
-            this.pivot.main_col().title = this.pivot.measures[0].string;
-        } else {
-            this.pivot.main_col().title = this.title;
-        }
         this.draw_top_headers();
         _.each(this.pivot.rows.headers, this.proxy('draw_row'));
     },
@@ -449,7 +446,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         } else {
             make_cells(pivot.main_col().children, 1);
             if (pivot.get_cols_leaves().length > 1) {
-                header_cells[0].push(self.make_border_cell(pivot.measures.length, height, true).text('Total').css('font-weight', 'bold'));
+                header_cells[0].push(self.make_border_cell(pivot.measures.length, height, true).text(_t('Total')).css('font-weight', 'bold'));
             }
         }
 
@@ -554,8 +551,8 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         // No groupby 
         if ((dim_x === 0) && (dim_y === 0)) {
-            data = [{key: 'Total', values:[{
-                x: 'Total',
+            data = [{key: _t('Total'), values:[{
+                x: _t('Total'),
                 y: this.pivot.get_total(),
             }]}];
         // Only column groupbys 
@@ -570,7 +567,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         } else if ((dim_x === 1) && (dim_y === 0))  {
             data = _.map(this.pivot.main_row().children, function (pt) {
                 var value = self.pivot.get_total(pt),
-                    title = (pt.title !== undefined) ? pt.title : 'Undefined';
+                    title = (pt.title !== undefined) ? pt.title : _t('Undefined');
                 return {x: title, y: value};
             });
             data = [{key: self.pivot.measures[0].string, values:data}];
@@ -579,24 +576,24 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             data = _.map(this.pivot.get_cols_with_depth(1), function (colhdr) {
                 var values = _.map(self.pivot.get_rows_with_depth(1), function (header) {
                     return {
-                        x: header.title || 'Undefined',
+                        x: header.title || _t('Undefined'),
                         y: self.pivot.get_values(header.id, colhdr.id)[0] || 0
                     };
                 });
-                return {key: colhdr.title || 'Undefined', values: values};
+                return {key: colhdr.title || _t('Undefined'), values: values};
             });
         // At least two row groupby
         } else {
             var keys = _.uniq(_.map(this.pivot.get_rows_with_depth(2), function (hdr) {
-                return hdr.title || 'Undefined';
+                return hdr.title || _t('Undefined');
             }));
             data = _.map(keys, function (key) {
                 var values = _.map(self.pivot.get_rows_with_depth(1), function (hdr) {
                     var subhdr = _.find(hdr.children, function (child) {
-                        return ((child.title === key) || ((child.title === undefined) && (key === 'Undefined')));
+                        return ((child.title === key) || ((child.title === undefined) && (key === _t('Undefined'))));
                     });
                     return {
-                        x: hdr.title || 'Undefined',
+                        x: hdr.title || _t('Undefined'),
                         y: (subhdr) ? self.pivot.get_total(subhdr)[0] : 0
                     };
                 });
@@ -640,7 +637,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
                 return {x: row.title, y: self.pivot.get_values(row.id,col.id)[0] || 0};
             });
             var title = _.map(col.path, function (p) {
-                return p || 'Undefined';
+                return p || _t('Undefined');
             }).join('/');
             if (dim_y === 0) {
                 title = self.pivot.measures[0].string;
@@ -670,7 +667,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             dim_x = this.pivot.rows.groupby.length;
         var data = _.map(this.pivot.get_rows_leaves(), function (row) {
             var title = _.map(row.path, function (p) {
-                return p || 'Undefined';
+                return p || _t('Undefined');
             }).join('/');
             if (dim_x === 0) {
                 title = self.measure_label;

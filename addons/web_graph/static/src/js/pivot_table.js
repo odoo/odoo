@@ -4,6 +4,9 @@
 (function () {
 'use strict';
 
+var _lt = openerp.web._lt;
+var _t = openerp.web._t;
+
 //  PivotTable requires a call to update_data after initialization
 openerp.web_graph.PivotTable = openerp.web.Class.extend({
 
@@ -13,7 +16,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		this.no_data = true;
 		this.model = model;
 		this.fields = fields;
-        this.fields.__count = {type: 'integer', string:'Quantity'};
+        this.fields.__count = {type: 'integer', string:_t('Quantity')};
         this.measures = options.measures || [];
         this.rows = { groupby: options.row_groupby, headers: null };
         this.cols = { groupby: options.col_groupby, headers: null };
@@ -235,7 +238,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	},
 
 	make_header: function (group, parent) {
-		var title = parent ? group.attributes.value : '';
+		var title = parent ? group.attributes.value : _t('Total');
         return {
 			id: _.uniqueId(),
 			path: parent ? parent.path.concat(title) : [],
@@ -397,11 +400,11 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
             grouped_on = attrs.grouped_on ? this.raw_field(attrs.grouped_on) : false;
 
         if (value === false) {
-            group.attributes.value = 'undefined';
+            group.attributes.value = _t('Undefined');
         } else if (grouped_on && this.fields[grouped_on].type === 'selection') {
             var selection = this.fields[grouped_on].selection,
                 value_lookup = _.where(selection, {0:value}); 
-            group.attributes.value = value_lookup ? value_lookup[0][1] : 'undefined';
+            group.attributes.value = value_lookup ? value_lookup[0][1] : _t('Undefined');
         } else if (value instanceof Array) {
             group.attributes.value = value[1];
         }

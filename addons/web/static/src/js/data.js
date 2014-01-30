@@ -234,9 +234,9 @@ instance.web.QueryGroup = instance.web.Class.extend({
         this.model = new instance.web.Model(
             model, fixed_group.__context, fixed_group.__domain);
 
-        var group_size = fixed_group[grouping_field + '_count'] || fixed_group.__count || 0;
+        var raw_field = grouping_field && grouping_field.split(':')[0];
+        var group_size = fixed_group[raw_field + '_count'] || fixed_group.__count || 0;
         var leaf_group = fixed_group.__context.group_by.length === 0;
-        var raw_field = (_.contains(grouping_field, ':')) ? grouping_field.split(':')[0] : grouping_field;
 
         this.attributes = {
             folded: !!(fixed_group.__fold),
