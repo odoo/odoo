@@ -39,6 +39,20 @@ class test_base(common.TransactionCase):
         new_id2 = self.res_partner.find_or_create(cr, uid, self.samples[2][0])
         self.assertTrue(new_id2 > new_id, 'find_or_create failed - should have created new one again')
 
+    def test_15_res_partner_name_search(self):
+        cr,uid = self.cr, self.uid
+        for name, active in [
+            ('"A Raoul Grosbedon" <raoul@chirurgiens-dentistes.fr>', False),
+            ('B Raoul chirurgiens-dentistes.fr', True),
+            ("C Raoul O'hara  <!@historicalsociety.museum>", True),
+            ('ryu+giga-Sushi@aizubange.fukushima.jp', True),
+        ]:
+            partner_id, dummy = self.res_partner.name_create(cr, uid, name, context={'default_active': active})
+        partners = self.res_partner.name_search(cr, uid, 'Raoul')
+        self.assertEqual(len(partners), 2, 'Incorrect search number result for name_search')
+        partners = self.res_partner.name_search(cr, uid, 'Raoul', limit=1)
+        self.assertEqual(len(partners), 1, 'Incorrect search number result for name_search with a limit')
+        self.assertEqual(partners[0][1], 'B Raoul chirurgiens-dentistes.fr', 'Incorrect partner returned, should be the first active')
 
     def test_20_res_partner_address_sync(self):
         cr, uid = self.cr, self.uid
