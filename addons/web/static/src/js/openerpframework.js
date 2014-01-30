@@ -970,6 +970,7 @@ openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
         this.session_id = options.session_id || null;
         this.override_session = options.override_session || !!options.session_id || false;
         this.avoid_recursion = false;
+        this.use_cors = options.use_cors || false;
         this.setup(origin);
     },
     setup: function(origin) {
@@ -1013,7 +1014,7 @@ openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
     },
     check_session_id: function() {
         var self = this;
-        if (this.avoid_recursion)
+        if (this.avoid_recursion || self.use_cors)
             return $.when();
         if (this.session_id)
             return $.when(); // we already have the session id
@@ -1065,6 +1066,15 @@ openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
             var fct;
             if (self.origin_server) {
                 fct = openerp.jsonRpc;
+                if (self.override_session) {
+                    options.headers = _.extend({}, options.headers, {
+                        "X-Openerp-Session-Id": self.override_session ? self.session_id || '' : ''
+                    });
+                }
+            } else if (self.use_cors) {
+                fct = openerp.jsonRpc;
+                url = self.url(url, null);
+                options.session_id = self.session_id || '';
                 if (self.override_session) {
                     options.headers = _.extend({}, options.headers, {
                         "X-Openerp-Session-Id": self.override_session ? self.session_id || '' : ''
