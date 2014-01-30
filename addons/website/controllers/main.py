@@ -168,7 +168,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         group_ids = [g.id for g in user.groups_id]
 
         view = request.registry.get("ir.ui.view")
-        views = view._views_get(request.cr, request.uid, xml_id, request.context)
+        views = view._views_get(request.cr, request.uid, xml_id, context=request.context)
         done = {}
         result = []
         for v in views:
