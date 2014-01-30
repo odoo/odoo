@@ -963,10 +963,6 @@ class Root(object):
             httprequest.session.logout()
             db = None
 
-        if not db:
-            # allow auth="none" routes to works without being logged in when in monodb.
-            httprequest.session.db = db_monodb(httprequest)
-
     def setup_lang(self, httprequest):
         if not "lang" in httprequest.session.context:
             lang = httprequest.accept_languages.best or "en_US"
