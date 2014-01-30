@@ -248,7 +248,7 @@ class view(osv.osv):
                 if not (view.groups_id and user_groups.isdisjoint(view.groups_id))]
 
     def raise_view_error(self, cr, uid, message, view_id, context=None):
-        view = self.browse(cr, uid, [view_id], context)[0]
+        view = self.browse(cr, uid, view_id, context)
         not_avail = _('n/a')
         message = ("%(msg)s\n\n" +
                    _("Error context:\nView `%(view_name)s`") + 
@@ -468,6 +468,9 @@ class view(osv.osv):
 
         modifiers = {}
         Model = self.pool.get(model)
+        if not Model:
+            self.raise_view_error(cr, user, _('Model not found: %(model)s') % dict(model=model),
+                                  view_id, context)
 
         def encode(s):
             if isinstance(s, unicode):
@@ -484,7 +487,7 @@ class view(osv.osv):
 
                :return: True if field should be included in the result of fields_view_get
             """
-            if Model and node.tag == 'field' and node.get('name') in Model._all_columns:
+            if node.tag == 'field' and node.get('name') in Model._all_columns:
                 column = Model._all_columns[node.get('name')].column
                 if column.groups and not self.user_has_groups(
                         cr, user, groups=column.groups, context=context):
@@ -646,6 +649,8 @@ class view(osv.osv):
         """
         fields = {}
         Model = self.pool.get(model)
+        if not Model:
+            self.raise_view_error(cr, user, _('Model not found: %(model)s') % dict(model=model), view_id, context)
 
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
@@ -657,7 +662,7 @@ class view(osv.osv):
             if node.getchildren()[1].tag == 'arrow':
                 arrow_fields = self.pool[node.getchildren()[1].get('object')].fields_get(cr, user, None, context)
                 fields.update(arrow_fields)
-        elif Model:
+        else:
             fields = Model.fields_get(cr, user, None, context)
 
         fields_def = self.postprocess(cr, user, model, node, view_id, False, fields, context=context)
@@ -690,9 +695,7 @@ class view(osv.osv):
         if '.' not in xml_id:
             raise ValueError('Invalid template id: %r' % (xml_id,))
 
-        m, n = xml_id.split('.', 1)
-        _, view_id = self.pool['ir.model.data'].get_object_reference(cr, uid, m, n)
-
+        view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id)
         arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
         arch_tree = etree.fromstring(arch)
 
