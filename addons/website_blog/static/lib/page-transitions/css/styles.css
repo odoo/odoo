@@ -11,7 +11,7 @@
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  background-size: cover;
+  background-size: cover !important;
 }
 
 .big-image, body article.page .big-image {
@@ -79,6 +79,10 @@ body article.page.next .big-image, body article.page.next .big-image {
 body article.page.next .big-image .inner, body article.page.next .big-image .inner {
   opacity: 1;
 }
+body article.page.current .big-image, body article.page.current .big-image {
+  background: #B2B2B2;
+}
+
 /* line 47, ../scss/styles.scss */
 body article.page.content-hidden .content {
   display: none;
