@@ -208,7 +208,7 @@ class WebRequest(object):
             args = (request,) + args
         # Correct exception handling and concurency retry
         @service_model.check
-        def checked_call(dbname, *a, **kw):
+        def checked_call(___dbname, *a, **kw):
             return self.func(*a, **kw)
 
         # FIXME: code and rollback management could be cleaned
