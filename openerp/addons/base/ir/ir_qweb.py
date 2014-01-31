@@ -24,25 +24,17 @@ _logger = logging.getLogger(__name__)
 #--------------------------------------------------------------------
 # QWeb template engine
 #--------------------------------------------------------------------
+
 class QWebException(Exception):
-    def __init__(self, message, **kw):
+    def __init__(self, message, template=None, node=None, expression=None, inner=None):
         Exception.__init__(self, message)
-        self.qweb = dict(kw)
+        self.template = template
+        self.node = node
+        self.expression = expression
+        self.inner = inner
 
 class QWebTemplateNotFound(QWebException):
     pass
-
-def convert_to_qweb_exception(etype=None, **kw):
-    if etype is None:
-        etype = QWebException
-    orig_type, original, tb = sys.exc_info()
-    try:
-        raise etype, original, tb
-    except etype, e:
-        for k, v in kw.items():
-            e.qweb[k] = v
-        e.qweb['inner'] = original
-        return e
 
 class QWebContext(dict):
     def __init__(self, cr, uid, data, loader=None, templates=None, context=None):
@@ -164,21 +156,21 @@ class QWeb(orm.AbstractModel):
         if qwebcontext.loader and name not in qwebcontext.templates:
             try:
                 xml_doc = qwebcontext.loader(name)
-            except ValueError:
-                raise convert_to_qweb_exception(QWebTemplateNotFound, message="Loader could not find template %r" % name, template=origin_template)
+            except ValueError, e:
+                raise QWebTemplateNotFound("Loader could not find template %r" % name, template=origin_template, inner=e)
             self.load_document(xml_doc, qwebcontext=qwebcontext)
 
         if name in qwebcontext.templates:
             return qwebcontext.templates[name]
 
-        raise convert_to_qweb_exception(QWebTemplateNotFound, message="Template %r not found" % name, template=origin_template)
+        raise QWebTemplateNotFound("Template %r not found" % name, template=origin_template)
 
     def eval(self, expr, qwebcontext):
         try:
             return qwebcontext.safe_eval(expr)
-        except Exception:
+        except Exception, e:
             template = qwebcontext.get('__template__')
-            raise convert_to_qweb_exception(message="Could not evaluate expression %r" % expr, expression=expr, template=template)
+            raise QWebException("Could not evaluate expression %r" % expr, expression=expr, template=template, inner=e)
 
     def eval_object(self, expr, qwebcontext):
         return self.eval(expr, qwebcontext)
@@ -204,9 +196,9 @@ class QWeb(orm.AbstractModel):
 
         try:
             return str(expr % qwebcontext)
-        except Exception:
+        except Exception, e:
             template = qwebcontext.get('__template__')
-            raise convert_to_qweb_exception(message="Format error for expression %r" % expr, expression=expr, template=template)
+            raise QWebException("Format error for expression %r" % expr, expression=expr, template=template, inner=e)
 
     def eval_bool(self, expr, qwebcontext):
         return int(bool(self.eval(expr, qwebcontext)))
@@ -289,9 +281,9 @@ class QWeb(orm.AbstractModel):
                     g_inner.append(self.render_node(current_node, qwebcontext))
                 except QWebException:
                     raise
-                except Exception:
+                except Exception, e:
                     template = qwebcontext.get('__template__')
-                    raise convert_to_qweb_exception(message="Could not render element %r" % element.nodeName, node=element, template=template)
+                    raise QWebException("Could not render element %r -- %s" % (element.nodeName, e.message), node=element, template=template, inner=e), None, sys.exc_info()[2]
         name = str(element.nodeName)
         inner = "".join(g_inner)
         trim = template_attributes.get("trim", 0)
