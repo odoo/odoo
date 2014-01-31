@@ -262,8 +262,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.company_logo.onload = function(){
                         var img = self.company_logo;
                         var ratio = 1;
-                        var targetwidth = 200;
-                        var maxheight = 100;
+                        var targetwidth = 300;
+                        var maxheight = 150;
                         if( img.width !== targetwidth ){
                             ratio = targetwidth / img.width;
                         }
