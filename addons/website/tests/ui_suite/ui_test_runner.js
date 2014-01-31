@@ -56,6 +56,16 @@ function run (test) {
     };
     page.onConsoleMessage = function(message) {
         console.log(message);
+        try {
+            var result = JSON.parse(message);
+            if (result.event === 'success') {
+                phantom.exit(0);
+            } else {
+                phantom.exit(1);
+            }
+        } catch (exception) {
+            phantom.exit(1);
+        }
     };
 
     page.onCallback = function(data) {
