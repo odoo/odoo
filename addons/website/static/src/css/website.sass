@@ -1,0 +1,412 @@
+@charset "utf-8"
+
+@import "common"
+
+/*
+ *       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY
+ *
+ * css for editor buttons, openerp widget included in the website and other
+ * stuff must go to the editor.css
+ *
+ */
+
+/* ----- GENERIC LAYOUTING HELPERS ---- */
+
+/* Vertical Spacing */
+.mt128
+    margin-top: 128px !important
+.mt92
+    margin-top: 92px !important
+.mt64
+    margin-top: 64px !important
+.mt48
+    margin-top: 48px !important
+.mt32
+    margin-top: 32px !important
+.mt16
+    margin-top: 16px !important
+.mt8
+    margin-top: 8px !important
+.mt4
+    margin-top: 4px !important
+.mt0
+    margin-top: 0px !important
+
+.mb128
+    margin-bottom: 128px !important
+.mb92
+    margin-bottom: 92px !important
+.mb64
+    margin-bottom: 64px !important
+.mb48
+    margin-bottom: 48px !important
+.mb32
+    margin-bottom: 32px !important
+.mb16
+    margin-bottom: 16px !important
+.mb8
+    margin-bottom: 8px !important
+.mb4
+    margin-bottom: 4px !important
+.mb0
+    margin-bottom: 0px !important
+
+/* Extra Styles */
+
+img.shadow
+    +border-radius(3px)
+    +box-shadow(0px 3px 8px rgba(0, 0, 0, 0.2))
+    margin: 0 auto
+
+h1.text-muted, h2.text-muted, h3.text-muted
+    margin-top: 10px
+
+header
+    a.navbar-brand.logo
+        padding: 0 15px
+    a.navbar-brand
+        img
+            max-height: 50px
+
+/* ----- Snippets Styles ----- */
+
+.readable
+    font-size: 120%
+    max-width: 700px
+    margin-left: auto
+    margin-right: auto
+
+/* ----- EDITOR ----- */
+
+
+.css_non_editable_mode_hidden
+    display: none
+
+
+/* ----- BOOTSTRAP FIX ----- */
+
+.container
+    .container
+        padding-left: 0
+        padding-right: 0
+
+/* ----- BOOTSTRAP HACK FOR HEADER NAV BAR ----- */
+
+.navbar.navbar-static-top
+    margin-bottom: 0
+    ul.nav
+        > li.divider
+            margin-top: 15px
+            padding-top: 20px
+            border-right: 1px solid grey
+
+/* ----- BOOTSTRAP HACK FOR STICKY FOOTER ----- */
+
+html,body, #wrapwrap
+    +box-sizing(border-box)
+    height: 100%
+
+#wrapwrap
+    display: table
+    width: 100%
+
+header, main, footer
+    display: table-row
+
+footer
+    height: 100%
+    background: rgb(239, 248, 248)
+    background: rgba(200, 200, 200, 0.1)
+
+#footer_container
+    padding-top: 24px
+    padding-bottom: 12px
+
+/* ----- BOOTSTRAP FIX ----- */
+
+.col-md-12
+    float: left
+    width: 100%
+
+.row
+    min-height: 32px
+    width: 100%
+
+/* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
+
+.oe_structure.oe_editable.oe_empty:empty, .oe_editable[data-oe-type=html]:empty, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
+    background-image: url('/website/static/src/img/drag_here.png') !important
+
+.oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
+    background-image: none
+    background-repeat: no-repeat
+    background-position: center
+    height: 220px !important
+
+.oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
+    position: static
+
+.oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before
+    content: ' '
+    text-align: center
+    display: block
+    padding-top: 160px
+    padding-bottom: 30px
+    color: grey
+    font-size: 24px
+
+.oe_structure.oe_editable.oe_empty:empty:before, .oe_editable[data-oe-type=html]:empty:before, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before
+    content: 'Drag Building Blocks Here' !important
+
+.css_editable_display
+    display: none
+
+/* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
+
+.navbar .nav > li > p
+    margin-bottom: 0px
+
+// .navbar .nav > li  a
+//     text-shadow: none
+
+// .nav > li  a
+//     display: block
+
+/* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
+
+.nav-hierarchy
+    padding-left: 16px
+
+#themes-list .well
+    padding: 0 0 20px 0
+
+/* -- Hack for removing double scrollbar from mobile preview -- */
+div#mobile-preview.modal
+    overflow: hidden
+    overflow-y: hidden
+
+ul.nav-stacked > li > a
+    padding: 2px 15px
+
+#customize-menu .dropdown-header
+    text-transform: uppercase
+
+/* ---- PUBLISH ---- */
+.css_published
+    .btn-danger, .css_publish
+        display: none
+.css_unpublished
+    .btn-success, .css_unpublish
+        display: none
+
+[data-publish='off']
+    +opacity(0.5)
+
+/* ---- END of PUBLISH ---- */
+
+@include selection
+    background: rgba(150, 150, 220, 0.3)
+
+.logo-img
+    width: 220px
+
+
+.oe_demo
+    position: relative
+    img
+        width: 100%
+    div
+        position: absolute
+        left: 0
+        background-color: rgba(0,0,0,0.4)
+        opacity: 0.85
+        bottom: 0px
+        width: 100%
+        padding: 7px
+        color: white
+        font-weight: bold
+        a
+            color: white
+
+/* ---- SNIPPETS --- */
+[data-snippet-id],.colmd,.hr,.blockquote
+    overflow: hidden
+
+@media (max-width: 400px)
+    [data-snippet-id]
+        height: auto !important
+
+.carousel-inner
+    height: 100%
+    .item
+        height: 100%
+        background-size: 100%
+.carousel
+    .carousel-caption
+        left: auto
+        right: auto
+        bottom: 10%
+        text-align: left
+        padding: 20px
+        background: rgba(0, 0, 0, 0.4)
+        h1, h2, h3
+            margin-top: 10px
+            margin-bottom: 10px
+    .carousel-image
+        right: 50%
+        left: 50%
+        top: 5%
+        bottom: 5%
+        position: absolute
+        max-height: 90%
+        margin: 0 auto
+    .item.text_only
+        .carousel-image
+            display: none !important
+        .carousel-caption
+            left: 10%
+            right: 10%
+            top: 10%
+            bottom: auto
+            text-align: center
+            background: transparent
+    .item.image_text
+        .carousel-caption
+            right: 10%
+        .carousel-image
+            left: 10%
+    .carousel-control
+        cursor: pointer
+        span
+            top: 50%
+            position: absolute
+            margin-top: -8px
+        &.left span
+            left: 10px
+        &.right span
+            right: 10px
+
+.quotecarousel
+    padding-bottom: 16px
+
+/* Parallax Theme */
+
+div.carousel[data-snippet-id="slider"]
+    .carousel-indicators
+        li
+            border: 1px solid grey
+        .active
+            background-color: grey
+
+.parallax
+    position: relative
+    background-size: 100%
+    display: table
+    width: 100%
+    min-height: 100px
+    &.oe_small
+        min-height: 200px
+    &.oe_medium
+        min-height: 300px
+    &.oe_big
+        min-height: 450px
+    > div
+        display: table-cell
+        vertical-align: middle
+        padding: 32px 0
+
+/* Background */
+
+.oe_dark
+    background: #eff8f8
+    background: rgba(200, 200, 200, 0.14)
+    +box-shadow(0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset)
+
+.oe_black
+    background-color: rgba(0, 0, 0, 0.9)
+    color: white
+
+.oe_green
+    background-color: #51d466
+    color: white
+    .text-muted
+        color: #ddd
+
+.oe_blue_light
+    background-color: #4791d2
+    color: white
+    .text-muted
+        color: #ddd
+
+.oe_blue
+    background-color: #34495e
+    color: white
+
+.oe_orange
+    background-color: #e67e22
+    color: white
+    .text-muted
+        color: #ddd
+
+.oe_purple
+    background-color: #b163a3
+    color: white
+    .text-muted
+        color: #ddd
+
+.oe_red
+    background-color: #f75353
+    color: white
+    .text-muted
+        color: #ddd
+
+/* Misc */
+
+.oe_img_bg
+    background-size: 100%
+
+.texttop
+    vertical-align: top
+
+table.well tr
+    th
+        text-align: right
+        padding-right: 10px
+    td
+        padding-right: 5px
+
+.logo-img
+    width: 220px
+
+.oe_demo
+    position: relative
+    img
+        width: 100%
+    div
+        position: absolute
+        left: 0
+        background-color: rgba(0,0,0,0.4)
+        opacity: 0.85
+        bottom: 0px
+        width: 100%
+        padding: 7px
+        color: white
+        font-weight: bold
+        a
+            color: white
+
+address
+    .fa.fa-mobile-phone
+        margin: 0 3px 0 2px
+    .fa.fa-file-text-o
+        margin-right: 1px
+
+span[data-oe-type="monetary"]
+    white-space: nowrap
+
+.oe_template_fallback
+    @include column-count(3)
+
+.oe_website_login_container
+    width: 400px
+    margin: 40px auto

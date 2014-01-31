@@ -24,6 +24,8 @@
          <field name="arch" type="xml">
              <graph string="Treasury Analysis" type="pivot">
                 <field name="period_id" type="row"/>
+                <field name="debit" type="measure"/>
+                <field name="credit" type="measure"/>
                 <field name="balance" type="measure"/>
              </graph>
          </field>

@@ -234,14 +234,14 @@
                     <group name="bank_cash">
                         <label for="id" string="Configuration"/>
                         <div>
-                            <div>
+                            <div name='company_footer'>
                                 <label for="company_footer"/>
                                 <button name="open_company_form" type="object"
                                     string="Configure your company bank accounts" icon="gtk-go-forward"
                                     class="oe_inline oe_link"/>
                                 <field name="company_footer"/>
                             </div>
-                            <div>
+                            <div name='payment_acquirer'>
                                 <label for="paypal_account"/>
                                 <field name="paypal_account" placeholder="e.g. sales@openerp.com" class="oe_inline"/>
                             </div>

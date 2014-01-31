@@ -8,6 +8,7 @@ import openerp
 import time
 import random
 import math
+import md5
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
 import subprocess
 from threading import Thread
@@ -18,15 +19,19 @@ try:
 except ImportError:
     usb = None
 
-from openerp.tools.translate import _
-from .. import escpos
-from ..escpos import printer
-from ..escpos import supported_devices
+try:
+    from .. import escpos
+    from ..escpos import printer
+    from ..escpos import supported_devices
+except ImportError:
+    escpos = printer = None
+
 from PIL import Image
 
 from openerp import http
 from openerp.http import request
 from openerp.addons.web.controllers.main import manifest_list, module_boot, html_template
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -150,25 +155,9 @@ class EscposDriver(Thread):
             for tax in taxes:
                 eprint.text(printline(tax['tax']['name'],price(tax['amount']), width=40,ratio=0.6))
 
-        logo = None
-
-        if receipt['company']['logo']:
-            img = receipt['company']['logo']
-            img = img[img.find(',')+1:]
-            f = io.BytesIO('img')
-            f.write(base64.decodestring(img))
-            f.seek(0)
-            logo_rgba = Image.open(f)
-            logo = Image.new('RGB', logo_rgba.size, (255,255,255))
-            logo.paste(logo_rgba, mask=logo_rgba.split()[3]) 
-            width = 300
-            wfac  = width/float(logo_rgba.size[0])
-            height = int(logo_rgba.size[1]*wfac)
-            logo   = logo.resize((width,height), Image.ANTIALIAS)
-
         # Receipt Header
-        if logo:
-            eprint._convert_image(logo)
+        if receipt['company']['logo']:
+            eprint.print_base64_image(receipt['company']['logo'])
             eprint.text('\n')
         else:
             eprint.set(align='center',type='b',height=2,width=2)
@@ -178,7 +167,7 @@ class EscposDriver(Thread):
         if check(receipt['shop']['name']):
             eprint.text(receipt['shop']['name'] + '\n')
         if check(receipt['company']['contact_address']):
-            eprint.text(receipt['company']['contact address'] + '\n')
+            eprint.text(receipt['company']['contact_address'] + '\n')
         if check(receipt['company']['phone']):
             eprint.text('Tel:' + receipt['company']['phone'] + '\n')
         if check(receipt['company']['vat']):
@@ -259,12 +248,12 @@ hw_proxy.drivers['escpos'] = driver
         
 class EscposProxy(hw_proxy.Proxy):
     
-    @http.route('/hw_proxy/open_cashbox', type='json', auth='none')
+    @http.route('/hw_proxy/open_cashbox', type='json', auth='none', cors='*')
     def open_cashbox(self):
         _logger.info('ESC/POS: OPEN CASHBOX') 
         driver.push_task('cashbox')
         
-    @http.route('/hw_proxy/print_receipt', type='json', auth='none')
+    @http.route('/hw_proxy/print_receipt', type='json', auth='none', cors='*')
     def print_receipt(self, receipt):
         _logger.info('ESC/POS: PRINT RECEIPT') 
         driver.push_task('receipt',receipt)

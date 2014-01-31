@@ -26,8 +26,36 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
-class sale_configuration(osv.osv_memory):
+
+class sale_configuration(osv.TransientModel):
     _inherit = 'sale.config.settings'
+
+    def set_group_product_variant(self, cr, uid, ids, context=None):
+        """ This method is automatically called by res_config as it begins
+            with set. It is used to implement the 'one group or another'
+            behavior. We have to perform some group manipulation by hand
+            because in res_config.execute(), set_* methods are called
+            after group_*; therefore writing on an hidden res_config file
+            could not work.
+            If group_product_variant is checked: remove group_product_mono
+            from group_user, remove the users. Otherwise, just add
+            group_product_mono in group_user.
+            The inverse logic about group_product_variant is managed by the
+            normal behavior of 'group_product_variant' field.
+        """
+        def ref(xml_id):
+            mod, xml = xml_id.split('.', 1)
+            return self.pool['ir.model.data'].get_object(cr, uid, mod, xml, context)
+
+        for obj in self.browse(cr, uid, ids, context=context):
+            config_group = ref('product.group_product_mono')
+            base_group = ref('base.group_user')
+            if obj.group_product_variant:
+                base_group.write({'implied_ids': [(3, config_group.id)]})
+                config_group.write({'users': [(3, u.id) for u in base_group.users]})
+            else:
+                base_group.write({'implied_ids': [(4, config_group.id)]})
+        return True
 
     _columns = {
         'group_invoice_so_lines': fields.boolean('Generate invoices based on the sales order lines',
@@ -65,6 +93,8 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
             help='This adds the \'Margin\' on sales order.\n'
                  'This gives the profitability by calculating the difference between the Unit Price and Cost Price.\n'
                  '-This installs the module sale_margin.'),
+        'module_website_quote': fields.boolean("Allow online quotations and templates",
+            help='This adds the online quotation'),
         'module_sale_journal': fields.boolean("Allow batch invoicing of delivery orders through journals",
             help='Allows you to categorize your sales and deliveries (picking lists) between different journals, '
                  'and perform batch operations on journals.\n'
@@ -78,6 +108,9 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         'module_sale_stock': fields.boolean("Trigger delivery orders automatically from sales orders",
             help='Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.\n'
                  '-This installs the module sale_stock.'),
+        'group_sale_delivery_address': fields.boolean("Allow a different address for delivery and invoicing ",
+            implied_group='sale.group_delivery_invoice_address',
+            help="Allows you to specify different delivery and invoice addresses on a sales order."),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -87,12 +120,9 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             res['time_unit'] = user.company_id.project_time_mode_id.id
         else:
-            try:
-                product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
+            product = ir_model_data.xmlid_to_object(cr, uid, 'product.product_product_consultant')
+            if product and product.exists():
                 res['time_unit'] = product.uom_id.id
-            except ValueError:
-                # keep default value in that case
-                _logger.warning("Product with xml_id 'product.product_product_consultant' not found")
         return res
 
     def _get_default_time_unit(self, cr, uid, context=None):
@@ -108,10 +138,10 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         wizard = self.browse(cr, uid, ids)[0]
 
         if wizard.time_unit:
-            try:
-                product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
+            product = ir_model_data.xmlid_to_object(cr, uid, 'product.product_product_consultant')
+            if product and product.exists():
                 product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
-            except ValueError:
+            else:
                 _logger.warning("Product with xml_id 'product.product_product_consultant' not found, UoMs not updated!")
 
         if wizard.module_project and wizard.time_unit:
