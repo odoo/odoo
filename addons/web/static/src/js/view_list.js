@@ -1130,11 +1130,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             if (column.invisible === '1') {
                 return;
             }
-            if (column.tag === 'button') {
-                cells.push('<td class="oe_button" title="' + column.string + '">&nbsp;</td>');
-            } else {
-                cells.push('<td title="' + column.string + '">&nbsp;</td>');
-            }
+            cells.push('<td title="' + column.string + '">&nbsp;</td>');
         });
         if (this.options.deletable) {
             cells.push('<td class="oe_list_record_delete"><button type="button" style="visibility: hidden"> </button></td>');

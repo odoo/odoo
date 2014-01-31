@@ -815,9 +815,10 @@ openerp.web_calendar = function(instance) {
                 var self = this;
 
                 var pop = new instance.web.form.FormOpenPopup(this);
+                console.log(this.open_popup_action, +this.open_popup_action);
                 pop.show_element(this.dataset.model, id, this.dataset.get_context(), {
                     title: _.str.sprintf(_t("View: %s"),title),
-                    view_id: this.open_popup_action,
+                    view_id: +this.open_popup_action,
                     res_id: id,
                     target: 'new',
                     readonly:true

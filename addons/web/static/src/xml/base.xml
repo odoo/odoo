@@ -58,46 +58,6 @@
     </div>
 </t>
 
-<t t-name="Login">
-    <div class="oe_login">
-        <div class="oe_login_bottom"> </div>
-        <div class="oe_login_error_message"/>
-        <div class="oe_login_pane">
-            <div class="oe_login_logo"><img src='/web/static/src/img/logo2.png'/></div>
-            <form action="" method="post">
-                <div class="oe_login_dbpane" >
-                    Database:
-                    <input name="db" t-att-value="widget.selected_db || ''"/>
-                </div>
-                <ul>
-                    <li>Username</li>
-                    <li><input name="login" type="text" value="" autofocus="autofocus"/></li>
-                    <li>Password</li>
-                    <li><input name="password" type="password" value=""/></li>
-                    <li><button name="submit">Log in</button></li>
-                </ul>
-            </form>
-            <div class="oe_login_footer">
-                <a href="#" class="oe_login_manage_db">Manage Databases</a> |
-                <a href="http://www.openerp.com" target="_blank">Powered by <span>OpenERP</span></a>
-            </div>
-        </div>
-    </div>
-</t>
-<t t-name="Login.dblist">
-    <select name="db">
-        <t t-foreach="db_list" t-as="db">
-            <t t-if="selected_db === db">
-                <option t-att-value="db" selected="true">
-                    <t t-esc="db"/></option>
-            </t>
-            <t t-if="selected_db !== db">
-                <option t-att-value="db"><t t-esc="db"/></option>
-            </t>
-        </t>
-    </select>
-</t>
-
 <t t-name="DatabaseManager">
     <div class="oe_view_manager_view_form">
         <div class="oe_form">
@@ -452,7 +412,7 @@
     <div class="openerp openerp_webclient_container">
     <table class="oe_webclient">
         <tr>
-            <td colspan="2" class="navbar navbar-default navbar-static-top" role="navigation">
+            <td colspan="2" class="navbar navbar-default navbar-static-top oe_navbar" role="navigation">
                 <div class="oe_menu_placeholder"/>
                 <div class="oe_user_menu_placeholder"/>
                 <div class="oe_systray"/>
@@ -1336,7 +1296,7 @@
 <t t-name="FieldBinaryFileUploader.files">
     <div class="oe_attachments">
         <t t-if="!widget.get('effective_readonly')">
-            <t t-foreach="widget.get('value')" t-as="id">
+            <t t-foreach="values" t-as="id">
                 <t t-set="file" t-value="widget.data[id]"/>
                 <div class="oe_attachment">
                     <span t-if="(file.upload or file.percent_loaded&lt;100)" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-attf-name="{file.name || file.filename}">
@@ -1450,7 +1410,7 @@
         <button type="button" class="oe_button oe_selectcreatepopup-search-select oe_highlight" disabled="disabled">Select</button>
     </t>
     <button type="button" class="oe_button oe_selectcreatepopup-search-create">Create</button>
-    or <a class="oe_button oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
+    or <a class="oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
 </t>
 <t t-name="AbstractFormPopup.buttons">
     <t t-if="! readonly">
@@ -1463,7 +1423,7 @@
         </t>
         or
     </t>
-    <a class="oe_button oe_abstractformpopup-form-close oe_bold oe_form_button_cancel" href="javascript:void(0)">
+    <a class="oe_abstractformpopup-form-close oe_bold oe_form_button_cancel" href="javascript:void(0)">
         <t t-if="! readonly">
             Discard
         </t>

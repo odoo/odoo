@@ -252,7 +252,7 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
         return !!this.uid;
     },
     /**
-     * The session is validated either by login or by restoration of a previous session
+     * The session is validated by restoration of a previous session
      */
     session_authenticate: function() {
         var self = this;
