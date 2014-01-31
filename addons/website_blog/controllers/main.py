@@ -270,7 +270,7 @@ class WebsiteBlog(http.Controller):
     def getPost(self, blog=None, **post):
         blog = request.registry.get('blog.post').browse(request.cr, SUPERUSER_ID, int(blog))
         values = {
-              "image": "data:image/png;base64,%s" % blog.content_image,
+              "image": blog.content_image,
               "date": blog.create_date ,
               "author": blog.create_uid.name,
               "author_image": "data:image/png;base64,%s" % blog.create_uid.image,

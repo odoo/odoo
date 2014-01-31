@@ -93,7 +93,7 @@ ArticleAnimator.createPost = function(opts, callback){
 }
 
 ArticleAnimator.contentizeElement = function($el, d){
-  $el.find('.big-image').css({ backgroundImage: "url(" + d.image + ")" });
+  $el.find('.big-image').css({ backgroundImage: (d.image)?"url(data:image/png;base64," + d.image + ")":""});
   $el.find('h1.title').html(d.title);
   $el.find('h2.description').html(d.title_secondary);
   $el.find('.content .text').html(d.content);
