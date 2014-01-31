@@ -207,6 +207,33 @@
         </rng:element>
     </rng:define>
 
+    <rng:define name="template">
+        <rng:element name="template">
+            <rng:optional><rng:attribute name="id"/></rng:optional>
+            <rng:optional><rng:attribute name="t-name"/></rng:optional>
+            <rng:optional><rng:attribute name="name"/></rng:optional>
+            <rng:optional><rng:attribute name="forcecreate"/></rng:optional>
+            <rng:optional><rng:attribute name="context"/></rng:optional>
+            <rng:optional><rng:attribute name="priority"/></rng:optional>
+            <rng:choice>
+                <rng:group>
+                    <rng:optional><rng:attribute name="inherit_id"/></rng:optional>
+                    <rng:optional><rng:attribute name="inherit_option_id"/></rng:optional>
+                    <rng:optional><rng:attribute name="groups"/></rng:optional>
+                </rng:group>
+                <rng:optional>
+                    <rng:attribute name="page"><rng:value>True</rng:value></rng:attribute>
+                </rng:optional>
+            </rng:choice>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:text/>
+                    <rng:ref name="any"/>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
     <rng:define name="delete">
         <rng:element name="delete">
             <rng:attribute name="model" />
@@ -285,6 +312,7 @@
                     <rng:text/>
                     <rng:ref name="menuitem" />
                     <rng:ref name="record" />
+                    <rng:ref name="template" />
                     <rng:ref name="delete" />
                     <rng:ref name="wizard" />
                     <rng:ref name="act_window" />

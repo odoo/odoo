@@ -516,7 +516,7 @@ class browse_record(object):
         return self._id
 
     def __str__(self):
-        return "browse_record(%s, %d)" % (self._table_name, self._id)
+        return "browse_record(%s, %s)" % (self._table_name, self._id)
 
     def __eq__(self, other):
         if not isinstance(other, browse_record):
@@ -1544,9 +1544,16 @@ class BaseModel(object):
         error_msgs = []
         for constraint in self._constraints:
             fun, msg, fields = constraint
-            # We don't pass around the context here: validation code
-            # must always yield the same results.
-            if not fun(self, cr, uid, ids):
+            try:
+                # We don't pass around the context here: validation code
+                # must always yield the same results.
+                valid = fun(self, cr, uid, ids)
+                extra_error = None 
+            except Exception, e:
+                _logger.debug('Exception while validating constraint', exc_info=True)
+                valid = False
+                extra_error = tools.ustr(e)
+            if not valid:
                 # Check presence of __call__ directly instead of using
                 # callable() because it will be deprecated as of Python 3.0
                 if hasattr(msg, '__call__'):
@@ -1558,6 +1565,8 @@ class BaseModel(object):
                         translated_msg = tmp_msg
                 else:
                     translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, msg)
+                if extra_error:
+                    translated_msg += "\n\n%s\n%s" % (_('Error details:'), extra_error)
                 error_msgs.append(
                         _("The field(s) `%s` failed against a constraint: %s") % (', '.join(fields), translated_msg)
                 )
@@ -1699,265 +1708,6 @@ class BaseModel(object):
         return any([self.pool.get('res.users').has_group(cr, uid, group_ext_id)
                         for group_ext_id in groups.split(',')])
 
-    def __view_look_dom(self, cr, user, node, view_id, in_tree_view, model_fields, context=None):
-        """Return the description of the fields in the node.
-
-        In a normal call to this method, node is a complete view architecture
-        but it is actually possible to give some sub-node (this is used so
-        that the method can call itself recursively).
-
-        Originally, the field descriptions are drawn from the node itself.
-        But there is now some code calling fields_get() in order to merge some
-        of those information in the architecture.
-
-        """
-        if context is None:
-            context = {}
-        result = False
-        fields = {}
-        children = True
-
-        modifiers = {}
-
-        def encode(s):
-            if isinstance(s, unicode):
-                return s.encode('utf8')
-            return s
-
-        def check_group(node):
-            """Apply group restrictions,  may be set at view level or model level::
-               * at view level this means the element should be made invisible to
-                 people who are not members
-               * at model level (exclusively for fields, obviously), this means
-                 the field should be completely removed from the view, as it is
-                 completely unavailable for non-members
-
-               :return: True if field should be included in the result of fields_view_get
-            """
-            if node.tag == 'field' and node.get('name') in self._all_columns:
-                column = self._all_columns[node.get('name')].column
-                if column.groups and not self.user_has_groups(cr, user,
-                                                              groups=column.groups,
-                                                              context=context):
-                    node.getparent().remove(node)
-                    fields.pop(node.get('name'), None)
-                    # no point processing view-level ``groups`` anymore, return
-                    return False
-            if node.get('groups'):
-                can_see = self.user_has_groups(cr, user,
-                                               groups=node.get('groups'),
-                                               context=context)
-                if not can_see:
-                    node.set('invisible', '1')
-                    modifiers['invisible'] = True
-                    if 'attrs' in node.attrib:
-                        del(node.attrib['attrs']) #avoid making field visible later
-                del(node.attrib['groups'])
-            return True
-
-        if node.tag in ('field', 'node', 'arrow'):
-            if node.get('object'):
-                attrs = {}
-                views = {}
-                xml = "<form>"
-                for f in node:
-                    if f.tag == 'field':
-                        xml += etree.tostring(f, encoding="utf-8")
-                xml += "</form>"
-                new_xml = etree.fromstring(encode(xml))
-                ctx = context.copy()
-                ctx['base_model_name'] = self._name
-                xarch, xfields = self.pool[node.get('object')].__view_look_dom_arch(cr, user, new_xml, view_id, ctx)
-                views['form'] = {
-                    'arch': xarch,
-                    'fields': xfields
-                }
-                attrs = {'views': views}
-                fields = xfields
-            if node.get('name'):
-                attrs = {}
-                try:
-                    if node.get('name') in self._columns:
-                        column = self._columns[node.get('name')]
-                    else:
-                        column = self._inherit_fields[node.get('name')][2]
-                except Exception:
-                    column = False
-
-                if column:
-                    relation = self.pool[column._obj] if column._obj else None
-
-                    children = False
-                    views = {}
-                    for f in node:
-                        if f.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
-                            node.remove(f)
-                            ctx = context.copy()
-                            ctx['base_model_name'] = self._name
-                            xarch, xfields = relation.__view_look_dom_arch(cr, user, f, view_id, ctx)
-                            views[str(f.tag)] = {
-                                'arch': xarch,
-                                'fields': xfields
-                            }
-                    attrs = {'views': views}
-                    if node.get('widget') and node.get('widget') == 'selection':
-                        # Prepare the cached selection list for the client. This needs to be
-                        # done even when the field is invisible to the current user, because
-                        # other events could need to change its value to any of the selectable ones
-                        # (such as on_change events, refreshes, etc.)
-
-                        # If domain and context are strings, we keep them for client-side, otherwise
-                        # we evaluate them server-side to consider them when generating the list of
-                        # possible values
-                        # TODO: find a way to remove this hack, by allow dynamic domains
-                        dom = []
-                        if column._domain and not isinstance(column._domain, basestring):
-                            dom = list(column._domain)
-                        dom += eval(node.get('domain', '[]'), {'uid': user, 'time': time})
-                        search_context = dict(context)
-                        if column._context and not isinstance(column._context, basestring):
-                            search_context.update(column._context)
-                        attrs['selection'] = relation._name_search(cr, user, '', dom, context=search_context, limit=None, name_get_uid=1)
-                        if (node.get('required') and not int(node.get('required'))) or not column.required:
-                            attrs['selection'].append((False, ''))
-                fields[node.get('name')] = attrs
-
-                field = model_fields.get(node.get('name'))
-                if field:
-                    transfer_field_to_modifiers(field, modifiers)
-
-
-        elif node.tag in ('form', 'tree'):
-            result = self.view_header_get(cr, user, False, node.tag, context)
-            if result:
-                node.set('string', result)
-            in_tree_view = node.tag == 'tree'
-
-        elif node.tag == 'calendar':
-            for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day','attendee'):
-                if node.get(additional_field):
-                    fields[node.get(additional_field)] = {}
-
-        if not check_group(node):
-            # node must be removed, no need to proceed further with its children
-            return fields
-
-        # The view architeture overrides the python model.
-        # Get the attrs before they are (possibly) deleted by check_group below
-        transfer_node_to_modifiers(node, modifiers, context, in_tree_view)
-
-        # TODO remove attrs couterpart in modifiers when invisible is true ?
-
-        # translate view
-        if 'lang' in context:
-            if node.text and node.text.strip():
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.text.strip())
-                if trans:
-                    node.text = node.text.replace(node.text.strip(), trans)
-            if node.tail and node.tail.strip():
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.tail.strip())
-                if trans:
-                    node.tail =  node.tail.replace(node.tail.strip(), trans)
-
-            if node.get('string') and not result:
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('string'))
-                if trans == node.get('string') and ('base_model_name' in context):
-                    # If translation is same as source, perhaps we'd have more luck with the alternative model name
-                    # (in case we are in a mixed situation, such as an inherited view where parent_view.model != model
-                    trans = self.pool.get('ir.translation')._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.get('string'))
-                if trans:
-                    node.set('string', trans)
-
-            for attr_name in ('confirm', 'sum', 'avg', 'help', 'placeholder'):
-                attr_value = node.get(attr_name)
-                if attr_value:
-                    trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], attr_value)
-                    if trans:
-                        node.set(attr_name, trans)
-
-        for f in node:
-            if children or (node.tag == 'field' and f.tag in ('filter','separator')):
-                fields.update(self.__view_look_dom(cr, user, f, view_id, in_tree_view, model_fields, context))
-
-        transfer_modifiers_to_node(modifiers, node)
-        return fields
-
-    def _disable_workflow_buttons(self, cr, user, node):
-        """ Set the buttons in node to readonly if the user can't activate them. """
-        if user == 1:
-            # admin user can always activate workflow buttons
-            return node
-
-        # TODO handle the case of more than one workflow for a model or multiple
-        # transitions with different groups and same signal
-        usersobj = self.pool.get('res.users')
-        buttons = (n for n in node.getiterator('button') if n.get('type') != 'object')
-        for button in buttons:
-            user_groups = usersobj.read(cr, user, [user], ['groups_id'])[0]['groups_id']
-            cr.execute("""SELECT DISTINCT t.group_id
-                        FROM wkf
-                  INNER JOIN wkf_activity a ON a.wkf_id = wkf.id
-                  INNER JOIN wkf_transition t ON (t.act_to = a.id)
-                       WHERE wkf.osv = %s
-                         AND t.signal = %s
-                         AND t.group_id is NOT NULL
-                   """, (self._name, button.get('name')))
-            group_ids = [x[0] for x in cr.fetchall() if x[0]]
-            can_click = not group_ids or bool(set(user_groups).intersection(group_ids))
-            button.set('readonly', str(int(not can_click)))
-        return node
-
-    def __view_look_dom_arch(self, cr, user, node, view_id, context=None):
-        """ Return an architecture and a description of all the fields.
-
-        The field description combines the result of fields_get() and
-        __view_look_dom().
-
-        :param node: the architecture as as an etree
-        :return: a tuple (arch, fields) where arch is the given node as a
-            string and fields is the description of all the fields.
-
-        """
-        fields = {}
-        if node.tag == 'diagram':
-            if node.getchildren()[0].tag == 'node':
-                node_model = self.pool[node.getchildren()[0].get('object')]
-                node_fields = node_model.fields_get(cr, user, None, context)
-                fields.update(node_fields)
-                if not node.get("create") and not node_model.check_access_rights(cr, user, 'create', raise_exception=False):
-                    node.set("create", 'false')
-            if node.getchildren()[1].tag == 'arrow':
-                arrow_fields = self.pool[node.getchildren()[1].get('object')].fields_get(cr, user, None, context)
-                fields.update(arrow_fields)
-        else:
-            fields = self.fields_get(cr, user, None, context)
-        fields_def = self.__view_look_dom(cr, user, node, view_id, False, fields, context=context)
-        node = self._disable_workflow_buttons(cr, user, node)
-        if node.tag in ('kanban', 'tree', 'form', 'gantt'):
-            for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
-                if not node.get(action) and not self.check_access_rights(cr, user, operation, raise_exception=False):
-                    node.set(action, 'false')
-        arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
-        for k in fields.keys():
-            if k not in fields_def:
-                del fields[k]
-        for field in fields_def:
-            if field == 'id':
-                # sometime, the view may contain the (invisible) field 'id' needed for a domain (when 2 objects have cross references)
-                fields['id'] = {'readonly': True, 'type': 'integer', 'string': 'ID'}
-            elif field in fields:
-                fields[field].update(fields_def[field])
-            else:
-                cr.execute('select name, model from ir_ui_view where (id=%s or inherit_id=%s) and arch like %s', (view_id, view_id, '%%%s%%' % field))
-                res = cr.fetchall()[:]
-                model = res[0][1]
-                res.insert(0, ("Can't find field '%s' in the following view parts composing the view of object model '%s':" % (field, model), None))
-                msg = "\n * ".join([r[0] for r in res])
-                msg += "\n\nEither you wrongly customized this view, or some modules bringing those views are not compatible with your current data model"
-                _logger.error(msg)
-                raise except_orm('View error', msg)
-        return arch, fields
-
     def _get_default_form_view(self, cr, user, context=None):
         """ Generates a default single-line form view using all fields
         of the current model except the m2m and o2m ones.
@@ -2055,18 +1805,12 @@ class BaseModel(object):
 
         return view
 
-    #
-    # if view_id, view_type is not required
-    #
-    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """
         Get the detailed composition of the requested view like fields, model, view architecture
 
-        :param cr: database cursor
-        :param user: current user id
         :param view_id: id of the view or None
         :param view_type: type of the view to return if view_id is None ('form', tree', ...)
-        :param context: context arguments, like lang, time zone
         :param toolbar: true to include contextual actions
         :param submenu: deprecated
         :return: dictionary describing the composition of the requested view (including inherited views and extensions)
@@ -2074,156 +1818,22 @@ class BaseModel(object):
                             * if the inherited view has unknown position to work with other than 'before', 'after', 'inside', 'replace'
                             * if some tag other than 'position' is found in parent view
         :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc defined on the structure
-
         """
         if context is None:
             context = {}
+        View = self.pool['ir.ui.view']
 
-        def encode(s):
-            if isinstance(s, unicode):
-                return s.encode('utf8')
-            return s
+        result = {
+            'model': self._name,
+            'field_parent': False,
+        }
 
-        def raise_view_error(error_msg, child_view_id):
-            view, child_view = self.pool.get('ir.ui.view').browse(cr, user, [view_id, child_view_id], context)
-            error_msg = error_msg % {'parent_xml_id': view.xml_id}
-            raise AttributeError("View definition error for inherited view '%s' on model '%s': %s"
-                                 %  (child_view.xml_id, self._name, error_msg))
-
-        def locate(source, spec):
-            """ Locate a node in a source (parent) architecture.
-
-            Given a complete source (parent) architecture (i.e. the field
-            `arch` in a view), and a 'spec' node (a node in an inheriting
-            view that specifies the location in the source view of what
-            should be changed), return (if it exists) the node in the
-            source view matching the specification.
-
-            :param source: a parent architecture to modify
-            :param spec: a modifying node in an inheriting view
-            :return: a node in the source matching the spec
-
-            """
-            if spec.tag == 'xpath':
-                nodes = source.xpath(spec.get('expr'))
-                return nodes[0] if nodes else None
-            elif spec.tag == 'field':
-                # Only compare the field name: a field can be only once in a given view
-                # at a given level (and for multilevel expressions, we should use xpath
-                # inheritance spec anyway).
-                for node in source.getiterator('field'):
-                    if node.get('name') == spec.get('name'):
-                        return node
-                return None
-
-            for node in source.getiterator(spec.tag):
-                if isinstance(node, SKIPPED_ELEMENT_TYPES):
-                    continue
-                if all(node.get(attr) == spec.get(attr) \
-                        for attr in spec.attrib
-                            if attr not in ('position','version')):
-                    # Version spec should match parent's root element's version
-                    if spec.get('version') and spec.get('version') != source.get('version'):
-                        return None
-                    return node
-            return None
-
-        def apply_inheritance_specs(source, specs_arch, inherit_id=None):
-            """ Apply an inheriting view.
-
-            Apply to a source architecture all the spec nodes (i.e. nodes
-            describing where and what changes to apply to some parent
-            architecture) given by an inheriting view.
-
-            :param source: a parent architecture to modify
-            :param specs_arch: a modifying architecture in an inheriting view
-            :param inherit_id: the database id of the inheriting view
-            :return: a modified source where the specs are applied
-
-            """
-            specs_tree = etree.fromstring(encode(specs_arch))
-            # Queue of specification nodes (i.e. nodes describing where and
-            # changes to apply to some parent architecture).
-            specs = [specs_tree]
-
-            while len(specs):
-                spec = specs.pop(0)
-                if isinstance(spec, SKIPPED_ELEMENT_TYPES):
-                    continue
-                if spec.tag == 'data':
-                    specs += [ c for c in specs_tree ]
-                    continue
-                node = locate(source, spec)
-                if node is not None:
-                    pos = spec.get('position', 'inside')
-                    if pos == 'replace':
-                        if node.getparent() is None:
-                            source = copy.deepcopy(spec[0])
-                        else:
-                            for child in spec:
-                                node.addprevious(child)
-                            node.getparent().remove(node)
-                    elif pos == 'attributes':
-                        for child in spec.getiterator('attribute'):
-                            attribute = (child.get('name'), child.text and child.text.encode('utf8') or None)
-                            if attribute[1]:
-                                node.set(attribute[0], attribute[1])
-                            elif attribute[0] in node.attrib:
-                                del node.attrib[attribute[0]]
-                    else:
-                        sib = node.getnext()
-                        for child in spec:
-                            if pos == 'inside':
-                                node.append(child)
-                            elif pos == 'after':
-                                if sib is None:
-                                    node.addnext(child)
-                                    node = child
-                                else:
-                                    sib.addprevious(child)
-                            elif pos == 'before':
-                                node.addprevious(child)
-                            else:
-                                raise_view_error("Invalid position value: '%s'" % pos, inherit_id)
-                else:
-                    attrs = ''.join([
-                        ' %s="%s"' % (attr, spec.get(attr))
-                        for attr in spec.attrib
-                        if attr != 'position'
-                    ])
-                    tag = "<%s%s>" % (spec.tag, attrs)
-                    if spec.get('version') and spec.get('version') != source.get('version'):
-                        raise_view_error("Mismatching view API version for element '%s': %r vs %r in parent view '%%(parent_xml_id)s'" % \
-                                            (tag, spec.get('version'), source.get('version')), inherit_id)
-                    raise_view_error("Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, inherit_id)
-
-            return source
-
-        def apply_view_inheritance(cr, user, source, inherit_id):
-            """ Apply all the (directly and indirectly) inheriting views.
-
-            :param source: a parent architecture to modify (with parent
-                modifications already applied)
-            :param inherit_id: the database view_id of the parent view
-            :return: a modified source where all the modifying architecture
-                are applied
-
-            """
-            sql_inherit = self.pool.get('ir.ui.view').get_inheriting_views_arch(cr, user, inherit_id, self._name, context=context)
-            for (view_arch, view_id) in sql_inherit:
-                source = apply_inheritance_specs(source, view_arch, view_id)
-                source = apply_view_inheritance(cr, user, source, view_id)
-            return source
-
-        result = {'type': view_type, 'model': self._name}
-
-        sql_res = False
-        parent_view_model = None
-        view_ref_key = view_type + '_view_ref'
-        view_ref = context.get(view_ref_key)
-        # Search for a root (i.e. without any parent) view.
-        while True:
-            if view_ref and not view_id:
+        # try to find a view_id if none provided
+        if not view_id:
+            # <view_type>_view_ref in context can be used to overrride the default view
+            view_ref_key = view_type + '_view_ref'
+            view_ref = context.get(view_ref_key)
+            if view_ref:
                 if '.' in view_ref:
                     module, view_ref = view_ref.split('.', 1)
                     cr.execute("SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s", (module, view_ref))
@@ -2235,82 +1845,53 @@ class BaseModel(object):
                         'Please use the complete `module.view_id` form instead.', view_ref_key, view_ref,
                         self._name)
 
-            if view_id:
-                cr.execute("""SELECT arch,name,field_parent,id,type,inherit_id,model
-                              FROM ir_ui_view
-                              WHERE id=%s""", (view_id,))
-            else:
-                cr.execute("""SELECT arch,name,field_parent,id,type,inherit_id,model
-                              FROM ir_ui_view
-                              WHERE model=%s AND type=%s AND inherit_id IS NULL
-                              ORDER BY priority""", (self._name, view_type))
-            sql_res = cr.dictfetchone()
+            if not view_id:
+                # otherwise try to find the lowest priority matching ir.ui.view
+                view_id = View.default_view(cr, uid, self._name, view_type, context=context)
 
-            if not sql_res:
-                break
-
-            view_id = sql_res['inherit_id'] or sql_res['id']
-            parent_view_model = sql_res['model']
-            if not sql_res['inherit_id']:
-                break
-
-        # if a view was found
-        if sql_res:
-            source = etree.fromstring(encode(sql_res['arch']))
-            result.update(
-                arch=apply_view_inheritance(cr, user, source, sql_res['id']),
-                type=sql_res['type'],
-                view_id=sql_res['id'],
-                name=sql_res['name'],
-                field_parent=sql_res['field_parent'] or False)
+        # context for post-processing might be overriden
+        ctx = context
+        if view_id:
+            # read the view with inherited views applied
+            root_view = View.read_combined(cr, uid, view_id, fields=['id', 'name', 'field_parent', 'type', 'model', 'arch'], context=context)
+            result['arch'] = root_view['arch']
+            result['name'] = root_view['name']
+            result['type'] = root_view['type']
+            result['view_id'] = root_view['id']
+            result['field_parent'] = root_view['field_parent']
+            # override context fro postprocessing
+            if root_view.get('model') != self._name:
+                ctx = dict(context, base_model_name=root_view.get('model'))
         else:
-            # otherwise, build some kind of default view
+            # fallback on default views methods if no ir.ui.view could be found
             try:
-                view = getattr(self, '_get_default_%s_view' % view_type)(
-                    cr, user, context)
+                get_func = getattr(self, '_get_default_%s_view' % view_type)
+                arch_etree = get_func(cr, uid, context)
+                result['arch'] = etree.tostring(arch_etree, encoding='utf-8')
+                result['type'] = view_type
+                result['name'] = 'default'
             except AttributeError:
-                # what happens here, graph case?
-                raise except_orm(_('Invalid Architecture!'), _("There is no view of type '%s' defined for the structure!") % view_type)
+                raise except_orm(_('Invalid Architecture!'), _("No default view of type '%s' could be found !") % view_type)
 
-            result.update(
-                arch=view,
-                name='default',
-                field_parent=False,
-                view_id=0)
-
-        if parent_view_model != self._name:
-            ctx = context.copy()
-            ctx['base_model_name'] = parent_view_model
-        else:
-            ctx = context
-        xarch, xfields = self.__view_look_dom_arch(cr, user, result['arch'], view_id, context=ctx)
+        # Apply post processing, groups and modifiers etc...
+        xarch, xfields = View.postprocess_and_fields(cr, uid, self._name, etree.fromstring(result['arch']), view_id, context=ctx)
         result['arch'] = xarch
         result['fields'] = xfields
 
+        # Add related action information if aksed
         if toolbar:
+            toclean = ('report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml', 'report_sxw_content_data', 'report_rml_content_data')
             def clean(x):
                 x = x[2]
-                for key in ('report_sxw_content', 'report_rml_content',
-                        'report_sxw', 'report_rml',
-                        'report_sxw_content_data', 'report_rml_content_data'):
-                    if key in x:
-                        del x[key]
+                for key in toclean:
+                    x.pop(key, None)
                 return x
             ir_values_obj = self.pool.get('ir.values')
-            resprint = ir_values_obj.get(cr, user, 'action',
-                    'client_print_multi', [(self._name, False)], False,
-                    context)
-            resaction = ir_values_obj.get(cr, user, 'action',
-                    'client_action_multi', [(self._name, False)], False,
-                    context)
-
-            resrelate = ir_values_obj.get(cr, user, 'action',
-                    'client_action_relate', [(self._name, False)], False,
-                    context)
-            resaction = [clean(action) for action in resaction
-                         if view_type == 'tree' or not action[2].get('multi')]
-            resprint = [clean(print_) for print_ in resprint
-                        if view_type == 'tree' or not print_[2].get('multi')]
+            resprint = ir_values_obj.get(cr, uid, 'action', 'client_print_multi', [(self._name, False)], False, context)
+            resaction = ir_values_obj.get(cr, uid, 'action', 'client_action_multi', [(self._name, False)], False, context)
+            resrelate = ir_values_obj.get(cr, uid, 'action', 'client_action_relate', [(self._name, False)], False, context)
+            resaction = [clean(action) for action in resaction if view_type == 'tree' or not action[2].get('multi')]
+            resprint = [clean(print_) for print_ in resprint if view_type == 'tree' or not print_[2].get('multi')]
             #When multi="True" set it will display only in More of the list view
             resrelate = [clean(action) for action in resrelate
                          if (action[2].get('multi') and view_type == 'tree') or (not action[2].get('multi') and view_type == 'form')]
@@ -2325,11 +1906,11 @@ class BaseModel(object):
             }
         return result
 
-    _view_look_dom_arch = __view_look_dom_arch
+    def _view_look_dom_arch(self, cr, uid, node, view_id, context=None):
+        return self['ir.ui.view'].postprocess_and_fields(
+            cr, uid, self._name, node, view_id, context=context)
 
     def search_count(self, cr, user, args, context=None):
-        if not context:
-            context = {}
         res = self.search(cr, user, args, context=context, count=True)
         if isinstance(res, list):
             return len(res)
@@ -3537,31 +3118,6 @@ class BaseModel(object):
                 self._columns[field_name].required = True
                 self._columns[field_name].ondelete = "cascade"
 
-    #def __getattr__(self, name):
-    #    """
-    #    Proxies attribute accesses to the `inherits` parent so we can call methods defined on the inherited parent
-    #    (though inherits doesn't use Python inheritance).
-    #    Handles translating between local ids and remote ids.
-    #    Known issue: doesn't work correctly when using python's own super(), don't involve inherit-based inheritance
-    #                 when you have inherits.
-    #    """
-    #    for model, field in self._inherits.iteritems():
-    #        proxy = self.pool.get(model)
-    #        if hasattr(proxy, name):
-    #            attribute = getattr(proxy, name)
-    #            if not hasattr(attribute, '__call__'):
-    #                return attribute
-    #            break
-    #    else:
-    #        return super(orm, self).__getattr__(name)
-
-    #    def _proxy(cr, uid, ids, *args, **kwargs):
-    #        objects = self.browse(cr, uid, ids, kwargs.get('context', None))
-    #        lst = [obj[field].id for obj in objects if obj[field]]
-    #        return getattr(proxy, name)(cr, uid, lst, *args, **kwargs)
-
-    #    return _proxy
-
 
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
         """ Return the definition of each field.
@@ -3610,16 +3166,6 @@ class BaseModel(object):
                     help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context['lang'])
                     if help_trans:
                         res[f]['help'] = help_trans
-                if 'selection' in res[f]:
-                    if isinstance(field.selection, (tuple, list)):
-                        sel = field.selection
-                        sel2 = []
-                        for key, val in sel:
-                            val2 = None
-                            if val:
-                                val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection',  context['lang'], val)
-                            sel2.append((key, val2 or val))
-                        res[f]['selection'] = sel2
 
         return res
 
@@ -4347,7 +3893,7 @@ class BaseModel(object):
                     for (parent_pright, parent_id) in parents:
                         if parent_id == id:
                             break
-                        position = parent_pright + 1
+                        position = parent_pright and parent_pright + 1 or 1
 
                     # It's the first node of the parent
                     if not position:
@@ -5471,7 +5017,7 @@ class BaseModel(object):
         :rtype: List of dictionaries.
 
         """
-        record_ids = self.search(cr, uid, domain or [], offset, limit or False, order or False, context or {})
+        record_ids = self.search(cr, uid, domain or [], offset=offset, limit=limit, order=order, context=context)
         if not record_ids:
             return []
 
@@ -5479,14 +5025,13 @@ class BaseModel(object):
             # shortcut read if we only want the ids
             return [{'id': id} for id in record_ids]
 
-        result = self.read(cr, uid, record_ids, fields or [], context or {})
+        result = self.read(cr, uid, record_ids, fields, context=context)
+        if len(result) <= 1:
+            return result
+
         # reorder read
-        if len(result) >= 1:
-            index = {}
-            for r in result:
-                index[r['id']] = r
-            result = [index[x] for x in record_ids if x in index]
-        return result
+        index = dict((r['id'], r) for r in result)
+        return [index[x] for x in record_ids if x in index]
 
     def _register_hook(self, cr):
         """ stuff to do right after the registry is built """
@@ -5557,11 +5102,11 @@ def itemgetter_tuple(items):
     if len(items) == 1:
         return lambda gettable: (gettable[items[0]],)
     return operator.itemgetter(*items)
+
 class ImportWarning(Warning):
     """ Used to send warnings upwards the stack during the import process
     """
     pass
-
 
 def convert_pgerror_23502(model, fields, info, e):
     m = re.match(r'^null value in column "(?P<field>\w+)" violates '
@@ -5578,6 +5123,7 @@ def convert_pgerror_23502(model, fields, info, e):
         'message': message,
         'field': field_name,
     }
+
 def convert_pgerror_23505(model, fields, info, e):
     m = re.match(r'^duplicate key (?P<field>\w+) violates unique constraint',
                  str(e))

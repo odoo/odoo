@@ -50,7 +50,7 @@ except:
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from lxml import etree
+from lxml import etree, builder
 import misc
 from config import config
 from translate import _
@@ -854,6 +854,48 @@ form: module.record_id""" % (xml_id,)
             cr.commit()
         return rec_model, id
 
+    def _tag_template(self, cr, el, data_node=None):
+        # This helper transforms a <template> element into a <record> and forwards it
+        tpl_id = el.get('id', el.get('t-name', '')).encode('ascii')
+        module = self.module
+        if '.' in tpl_id:
+            module, tpl_id = tpl_id.split('.', 1)
+        # set the full template name for qweb <module>.<id>
+        if not (el.get('inherit_id') or el.get('inherit_option_id')):
+            el.set('t-name', '%s.%s' % (module, tpl_id))
+            el.tag = 't'
+        else:
+            el.tag = 'data'
+        el.attrib.pop('id', None)
+
+        record_attrs = {
+            'id': tpl_id,
+            'model': 'ir.ui.view',
+        }
+        for att in ['forcecreate', 'context']:
+            if att in el.keys():
+                record_attrs[att] = el.attrib.pop(att)
+
+        Field = builder.E.field
+        name = el.get('name', tpl_id)
+
+        record = etree.Element('record', attrib=record_attrs)
+        record.append(Field(name, name='name'))
+        record.append(Field("qweb", name='type'))
+        record.append(Field(el.get('priority', "16"), name='priority'))
+        record.append(Field(el, name="arch", type="xml"))
+        for field_name in ('inherit_id','inherit_option_id'):
+            value = el.attrib.pop(field_name, None)
+            if value: record.append(Field(name=field_name, ref=value))
+        groups = el.attrib.pop('groups', None)
+        if groups:
+            grp_lst = map(lambda x: "ref('%s')" % x, groups.split(','))
+            record.append(Field(name="groups_id", eval="[(6, 0, ["+', '.join(grp_lst)+"])]"))
+        if el.attrib.pop('page', None) == 'True':
+            record.append(Field(name="page", eval="True"))
+
+        return self._tag_record(cr, record, data_node)
+
     def id_get(self, cr, id_str):
         if id_str in self.idref:
             return self.idref[id_str]
@@ -898,6 +940,7 @@ form: module.record_id""" % (xml_id,)
         self._tags = {
             'menuitem': self._tag_menuitem,
             'record': self._tag_record,
+            'template': self._tag_template,
             'assert': self._tag_assert,
             'report': self._tag_report,
             'wizard': self._tag_wizard,
