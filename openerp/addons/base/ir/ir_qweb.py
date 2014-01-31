@@ -41,7 +41,8 @@ def convert_to_qweb_exception(etype=None, **kw):
     except etype, e:
         for k, v in kw.items():
             e.qweb[k] = v
-        e.qweb['inner'] = original
+        # Will use `raise foo from bar` in python 3 and rename cause to __cause__
+        e.qweb['cause'] = original
         return e
 
 class QWebContext(dict):
@@ -171,7 +172,7 @@ class QWeb(orm.AbstractModel):
         if name in qwebcontext.templates:
             return qwebcontext.templates[name]
 
-        raise convert_to_qweb_exception(QWebTemplateNotFound, message="Template %r not found" % name, template=origin_template)
+        raise QWebTemplateNotFound("Template %r not found" % name, template=origin_template)
 
     def eval(self, expr, qwebcontext):
         try:
