@@ -280,3 +280,11 @@ class WebsiteBlog(http.Controller):
         }
         return [values]
 
+    @http.route('/blog_post/change_layout', type='json', auth="public", website=True)
+    def check_layout(self, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        view_obj = request.registry.get('ir.ui.view')
+        view_data = view_obj.search_read(cr, SUPERUSER_ID, [('name','=','Blog Cover')],['inherit_id', 'inherit_option_id'])[0]
+        if view_data['inherit_id']:
+            return [True]
+        return []

@@ -22,6 +22,7 @@ var ArticleAnimator = ArticleAnimator || {
 ArticleAnimator.load = function(){
   this.currentPostIndex = getURLIndex();
   this.makeSelections();
+  $body.empty();
   $body.append( this.$current )
   $body.append( this.$next )
 
@@ -209,10 +210,15 @@ function getURLIndex(){
 ************************************************************************/ 
 $(document).ready(function(){
   /* A couple of selections. */
-  $body         = $('main');
+  $body         = $('#wrap');
   $window       = $(window);
   $html         = $(document.documentElement);
 
   /* Let's get it started. */
-    ArticleAnimator.load();
+    openerp.jsonRpc("/blog_post/change_layout", 'call', {})
+    .then(function (data) {
+        if(!data[0])
+            return;
+        ArticleAnimator.load();
+    });
 })

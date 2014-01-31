@@ -1,11 +1,11 @@
 /* line 2, ../scss/_extensions.scss */
-.container, body article.page .content {
+.container, main div.page .content {
   max-width: 100%;
   margin: 0 auto;
 }
 
 /* line 7, ../scss/_extensions.scss */
-.stretchy-bg, body article.page .big-image {
+.stretchy-bg, main div.page .big-image {
   background-position: center center;
   background-repeat: none;
   -webkit-background-size: cover;
@@ -13,12 +13,15 @@
   -o-background-size: cover;
   background-size: cover !important;
 }
-
-.big-image, body article.page .big-image {
-  height: 300px;
+main div.page.next .big-image{
+  height : 50vh;
 }
-@media only screen and (min-width: 500px) {
-  .big-image, body article.page .big-image {
+
+main div.page.current .big-image {
+  height: 100vh;
+}
+@media (min-width: 500px) {
+  .big-image, main div.page .big-image {
     height: 420px;
   }
 }
@@ -40,13 +43,13 @@
 }
 
 /* line 18, ../scss/_mixins.scss */
-body {
+main {
   scrollbar-face-color: #666666;
   scrollbar-track-color: rgba(255, 255, 255, 0.1);
 }
 
 /* line 11, ../scss/styles.scss */
-body {
+main {
   color: #555;
   padding: 20px;
   padding: 0;
@@ -57,42 +60,44 @@ body {
   line-height: 1.8em;
   /* Responsive typography, yay! */
 }
-body h1, body h2, body h3, body h4, body h5, body h6 {
+main h1, main h2, main h3, main h4, main h5, main h6 {
   color: #333;
 }
 /* line 36, ../scss/styles.scss */
-body article.page {
+main div.page {
   -webkit-transform-origin: bottom center;
   /* Class applied when when page fades away. */
   /* The large image that accompanies every post. */
   /* The content. */
 }
 /* line 39, ../scss/styles.scss */
-body article.page.hidden {
+main div.page.hidden {
   display: none;
 }
 /* line 42, ../scss/styles.scss */
-body article.page.next .big-image, body article.page.next .big-image {
+main div.page.next .big-image, main div.page.next .big-image {
   cursor: pointer;
 }
 /* line 43, ../scss/styles.scss */
-body article.page.next .big-image .inner, body article.page.next .big-image .inner {
+main div.page.next .big-image .inner, main div.page.next .big-image .inner {
   opacity: 1;
 }
-body article.page.current .big-image .inner, body article.page.current .big-image .inner {
+main div.page.current .big-image .inner, main div.page.current .big-image .inner {
   opacity: 1;
 }
-body article.page.current .big-image .inner .fader .text .goto-next, body article.page.current .big-image .inner .fader .text .goto-next {
+main div.page.current .big-image .inner .fader .text .goto-next, main div.page.current .big-image .inner .fader .text .goto-next {
+  opacity: 0;
+}
+main div.page.next .post-meta {
   opacity: 0;
 }
 
-
 /* line 47, ../scss/styles.scss */
-body article.page.content-hidden .content {
+main div.page.content-hidden .content {
   display: none;
 }
 /* line 51, ../scss/styles.scss */
-body article.page.fade-up-out {
+main div.page.fade-up-out {
   opacity: 0;
   -webkit-transform: scale(0.8) translate3d(0, -10%, 0);
   -moz-transform: scale(0.8) translate3d(0, -10%, 0);
@@ -105,14 +110,14 @@ body article.page.fade-up-out {
   transition: all 450ms cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 /* line 57, ../scss/styles.scss */
-body article.page.easing-upward {
+main div.page.easing-upward {
   -webkit-transition: all 450ms cubic-bezier(0.165, 0.84, 0.44, 1);
   -moz-transition: all 450ms cubic-bezier(0.165, 0.84, 0.44, 1);
   -o-transition: all 450ms cubic-bezier(0.165, 0.84, 0.44, 1);
   transition: all 450ms cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 /* line 69, ../scss/styles.scss */
-body article.page .big-image .inner, body article.page .big-image .inner {
+main div.page .big-image .inner, main div.page .big-image .inner {
   position: relative;
   width: 100%;
   height: 100%;
@@ -125,13 +130,13 @@ body article.page .big-image .inner, body article.page .big-image .inner {
   transition: all 0.1s ease;
 }
 /* line 78, ../scss/styles.scss */
-body article.page .big-image .inner .fader, body article.page .big-image .inner .fader {
+main div.page .big-image .inner .fader, main div.page .big-image .inner .fader {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.3);
 }
 /* line 83, ../scss/styles.scss */
-body article.page .big-image .inner .fader .text {
+main div.page .big-image .inner .fader .text {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -143,21 +148,21 @@ body article.page .big-image .inner .fader .text {
   transform: translateX(-50%) translateY(-50%);
 }
 /* line 89, ../scss/styles.scss */
-body article.page .big-image .inner .fader .text a, body article.page .big-image .inner .fader .text h1, body article.page .big-image .inner .fader .text h2 {
+main div.page .big-image .inner .fader .text a, main div.page .big-image .inner .fader .text h1, main div.page .big-image .inner .fader .text h2 {
   color: white;
 }
 body article.page .big-image .inner .fader .text h4 {
   color: white;
 }
 /* line 91, ../scss/styles.scss */
-body article.page .big-image .inner .fader .text a {
+main div.page .big-image .inner .fader .text a {
   color: white;
   border-bottom: 1px solid white;
   text-decoration: none;
   line-height: 1.5em;
 }
 /* line 99, ../scss/styles.scss */
-body article.page .big-image .inner .fader .text h1 {
+main div.page .big-image .inner .fader .text h1 {
   margin: 0;
   margin-top: 0.1em;
   padding-top: 0em;
@@ -166,7 +171,7 @@ body article.page .big-image .inner .fader .text h1 {
   line-height: 1.1em;
 }
 /* line 105, ../scss/styles.scss */
-body article.page .big-image .inner .fader .text h2 {
+main div.page .big-image .inner .fader .text h2 {
   margin: 0;
   margin-top: 0.2em;
   padding-top: 0em;
@@ -175,11 +180,11 @@ body article.page .big-image .inner .fader .text h2 {
   line-height: 1.2em;
 }
 /* line 119, ../scss/styles.scss */
-body article.page .content {
+main div.page .content {
   padding: 0 3em;
 }
 /* line 123, ../scss/styles.scss */
-body article.page .content h3 {
+main div.page .content h3 {
   color: #999;
   margin-top: 3em;
   padding-top: 0em;
@@ -188,7 +193,7 @@ body article.page .content h3 {
   line-height: 1.5em;
 }
 /* line 131, ../scss/styles.scss */
-body article.page .content h1 {
+main div.page .content h1 {
   margin-top: 0em;
   padding-top: 0em;
   padding-bottom: 0em;
@@ -196,6 +201,6 @@ body article.page .content h1 {
   line-height: 1.08em;
 }
 /* line 140, ../scss/styles.scss */
-body article.page .content p:last-child {
+main div.page .content p:last-child {
   margin-bottom: 3em;
 }
