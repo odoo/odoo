@@ -16,8 +16,8 @@
             </section>
             <div class="row">
                 <div t-attf-class="col-md-#{(len(event.sponsor_ids) > 6) and 2 or (12/ len(event.sponsor_ids))} text-center" t-foreach="event.sponsor_ids" t-as="sponsor">
-                    <t t-if="sponsor.has_access_to_partner()">
-                        <a t-attf-href="/partners/#{ slug([sponsor.partner_id.id, sponsor.partner_id.name]) }" style="position: relative; display: inline-block;">
+                    <t t-if="sponsor.url">
+                        <a t-att-href="sponsor.url" style="position: relative; display: inline-block;">
                             <span t-field="sponsor.partner_id.image"
                                 t-field-options='{"widget": "image", "class": "shadow"}'/>
                             <div class="ribbon-wrapper">
@@ -25,7 +25,7 @@
                             </div>
                         </a>
                     </t>
-                    <t t-if="not sponsor.has_access_to_partner()">
+                    <t t-if="not sponsor.url">
                         <span style="position: relative; display: inline-block;">
                             <span t-field="sponsor.partner_id.image"
                                 t-field-options='{"widget": "image", "class": "shadow"}'/>
@@ -210,7 +210,7 @@
                     <div t-foreach="track.speaker_ids" t-as="speaker" class="well mt32">
                         <div class="row">
                             <div class="col-sm-2">
-                                <span t-field="speaker.image"
+                                <span t-field="track.image"
                                     t-field-options='{"widget": "image", "class": "img-circle"}'/>
                             </div><div class="col-sm-10">
                                <h4 t-field="speaker.name" class="mb4"/>
@@ -418,14 +418,15 @@
     </t>
 </template>
 
-
 <template id="event_track_proposal_success">
     <t t-call="website_event.event_details">
-        <div class="col-md-8">
-            Thanks
-        </div>
-        <div class="col-md-4"></div>
+        <p>
+            Thank you for your proposal.
+        </p><p>
+            We will evaluate your proposition and get back to you shortly.
+        </p>
     </t>
 </template>
+
 </data>
 </openerp>

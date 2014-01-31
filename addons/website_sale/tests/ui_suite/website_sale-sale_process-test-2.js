@@ -7,22 +7,11 @@ testRunner.run(function websiteSaleTest (page, timeout) {
     waitFor(function clientReady () {
         return page.evaluate(function () {
             return window.$ && window.openerp && window.openerp.website
-                && window.openerp.website.TestConsole
-                && window.openerp.website.TestConsole.test('shop');
+                && window.openerp.website.Tour;
         });
     }, function executeTest () {
         page.evaluate(function () {
-            window.openerp.website.TestConsole.test('shop').run(true);
+            window.openerp.website.Tour.run_test('shop');
         });
-        waitFor(function testExecuted () {
-            var after = page.evaluate(function () {
-                return window.$ && $('button[data-action=edit]').is(":visible") &&
-                    $('data-snippet-id="big-picture"').length;
-            });
-            return after;
-        }, function finish () {
-            console.log('{ "event": "success" }');
-            phantom.exit();
-        }, 4*timeout/5);
-    }, timeout/5);
+    }, timeout);
 });

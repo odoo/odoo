@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
             <!-- add state field in header -->
-            <xpath expr="//sheet/div" position="before">
+            <xpath expr="//div[@class='oe_right oe_button_box']" position="before">
                 <field name="website_url" invisible="1"/>
                 <field name="website_published" class="pull-right" widget="website_button"/>
             </xpath>

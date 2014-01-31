@@ -25,9 +25,12 @@
             <div class="row mt8">
                 <div class="col-sm-5">
                     <ol class="breadcrumb mb0">
-                        <li class="active">
-                            Our Events
+                        <li>
+                            <a href="/event">Our Events</a>
                         </li>
+                        <li t-if="current_date"><t t-esc="current_date"/></li>
+                        <li t-if="current_type"><t t-esc="current_type.name"/></li>
+                        <li t-if="current_country"><t t-esc="current_country.name"/></li>
                     </ol>
                 </div><div class="col-sm-7">
                     <t t-call="website.pager" >
@@ -35,12 +38,6 @@
                     </t>
                 </div>
             </div>
-            <h3 class="text-center text-muted">
-                <t t-esc="current_date or ''"/><span t-if="current_type"><t t-if="current_date">,</t>
-                  <t t-esc="current_type.name"/></span><span t-if="current_country"><t t-if="current_type or current_date">,</t>
-                  <t t-esc="current_country.name"/>
-                </span>
-            </h3>
             <div class="row mt32 mb32">
                 <div class="col-md-9" id="middle_column">
                     <t t-if="not event_ids">
@@ -75,7 +72,7 @@
                                     "widget": "contact",
                                     "fields": ["city"]
                                     }'/>
-                                <div class="text-muted">
+                                <div class="text-muted" t-if="event.type">
                                     <i class="fa fa-tag"></i> <span t-field="event.type"/>
                                 </div>
                             </div>
@@ -127,7 +124,7 @@
     </xpath>
 </template>
 
-<template id="event_left_column" inherit_option_id="website_event.index" name="Filters">
+<template id="event_left_column" inherit_option_id="website_event.index" inherit_id="website_event.index" name="Filters">
     <xpath expr="//div[@id='middle_column']" position="attributes">
         <attribute name="class">col-md-6</attribute>
     </xpath>
@@ -136,7 +133,7 @@
             <ul class="nav nav-pills nav-stacked">
                 <t t-foreach="dates" t-as="date">
                     <li t-att-class="searches.get('date') == date[0] and 'active' or ''" t-if="date[3] or (date[0] in ('old','all'))">
-                        <a t-attf-href="/event/?{{ keep_query('country', 'type', date=date[0] }}"><t t-esc="date[1]"/>
+                        <a t-attf-href="/event/?{{ keep_query('country', 'type', date=date[0]) }}"><t t-esc="date[1]"/>
                             <span t-if="date[3]" class="badge pull-right"><t t-esc="date[3]"/></span>
                         </a>
                     </li>
@@ -151,7 +148,7 @@
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="types">
                 <li t-if="type" t-att-class="searches.get('type') == str(type and type[0]) and 'active' or ''">
-                    <a t-attf-href="/event/?{{ keep_query('country', 'date', type=type[0] }}"><t t-esc="type[1]"/>
+                    <a t-attf-href="/event/?{{ keep_query('country', 'date', type=type[0]) }}"><t t-esc="type[1]"/>
                         <span class="badge pull-right"><t t-esc="type_count"/></span>
                     </a>
                 </li>
@@ -159,12 +156,13 @@
         </ul>
     </xpath>
 </template>
+
 <template id="event_location" inherit_option_id="website_event.event_left_column" name="Filter by Country">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="countries">
                 <li t-if="country_id" t-att-class="searches.get('country') == str(country_id and country_id[0]) and 'active' or ''">
-                    <a t-attf-href="/event/?{{ keep_query('type', 'data', country=country_id[0] }}"><t t-esc="country_id[1]"/>
+                    <a t-attf-href="/event/?{{ keep_query('type', 'data', country=country_id[0]) }}"><t t-esc="country_id[1]"/>
                         <span class="badge pull-right"><t t-esc="country_id_count"/></span>
                     </a>
                 </li>
@@ -309,8 +307,8 @@
                     <h4>When</h4>
                 </div>
                 <div class="panel-body">
-                    <i class="fa fa-clock-o"></i> <span t-field="event.date_begin"> </span><br/>
-                    <i class="fa fa-clock-o"></i> <span t-field="event.date_end"> </span>
+                    <i class="fa fa-clock-o"></i> from <span t-field="event.date_begin"> </span><br/>
+                    <i class="fa fa-clock-o"></i> to <span t-field="event.date_end"> </span>
                 </div>
             </div>
 
@@ -337,7 +335,7 @@
                             and join the conversation.
                         </p>
                         <p><strong>Use this tag:
-                            <a t-att-href="'http://twitter.com/search?q=#'+event.twitter_hashtag" class="label label-primary">#<span t-field="event.twitter_hashtag"/></a>
+                            <a t-att-href="'http://twitter.com/search?q=%23'+event.twitter_hashtag" target="_blank" class="label label-primary">#<span t-field="event.twitter_hashtag"/></a>
                         </strong></p>
                     </div>
                 </div>

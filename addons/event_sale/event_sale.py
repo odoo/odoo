@@ -22,7 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
-class product(osv.osv):
+class product_template(osv.osv):
     _inherit = 'product.template'
     _columns = {
         'event_ok': fields.boolean('Event Subscription', help='Determine if a product needs to create automatically an event registration at the confirmation of a sales order line.'),
@@ -30,7 +30,18 @@ class product(osv.osv):
     }
 
     def onchange_event_ok(self, cr, uid, ids, type, event_ok, context=None):
-        return {'value': {'type': event_ok and 'service' or type != 'service' and type or False}}
+        if event_ok:
+            return {'value': {'type': 'service'}}
+        return {}
+
+class product(osv.osv):
+    _inherit = 'product.product'
+
+    def onchange_event_ok(self, cr, uid, ids, type, event_ok, context=None):
+        # cannot directly forward to product.template as the ids are theoretically different
+        if event_ok:
+            return {'value': {'type': 'service'}}
+        return {}
 
 
 class sale_order_line(osv.osv):

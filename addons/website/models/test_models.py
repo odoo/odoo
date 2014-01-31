@@ -24,8 +24,8 @@ class test_converter(orm.Model):
             ('B', "Qu'il était supposé arriver à Toronto"),
             ('C', "Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?"),
             ('D', "La réponse D"),
-        ], string="Lorsqu'un pancake prend l'avion à destination de Toronto et "
-                  "qu'il fait une escale technique à St Claude, on dit:"),
+        ], string=u"Lorsqu'un pancake prend l'avion à destination de Toronto et "
+                  u"qu'il fait une escale technique à St Claude, on dit:"),
         'html': fields.html(),
         'text': fields.text(),
     }

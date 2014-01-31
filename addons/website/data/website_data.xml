@@ -6,6 +6,7 @@
             <field name="company_id" ref="base.main_company"/>
             <field name="language_ids" eval="[(6, 0, [ ref('base.lang_en')])]"/>
             <field name="default_lang_id" ref="base.lang_en"/>
+            <field name="user_id" ref="base.public_user"/>
         </record>
 
         <record id="main_menu" model="website.menu">

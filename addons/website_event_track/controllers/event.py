@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import openerp
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
@@ -31,10 +32,12 @@ controllers = controllers()
 class website_event(http.Controller):
     @http.route(['/event/<model("event.event"):event>/track/<model("event.track"):track>'], type='http', auth="public", website=True, multilang=True)
     def event_track_view(self, event, track, **post):
-        # TODO: not implemented
+        track_obj = request.registry.get('event.track')
+        track = track_obj.browse(request.cr, openerp.SUPERUSER_ID, track.id, context=request.context)
         values = { 'track': track, 'event': track.event_id, 'main_object': track }
         return request.website.render("website_event_track.track_view", values)
 
+    # TODO: not implemented
     @http.route(['/event/<model("event.event"):event>/agenda/'], type='http', auth="public", website=True, multilang=True)
     def event_agenda(self, event, tag=None, **post):
         values = {
@@ -49,7 +52,6 @@ class website_event(http.Controller):
         ], type='http', auth="public", website=True, multilang=True)
     def event_tracks(self, event, tag=None, **post):
         searches = {}
-
         if tag:
             searches.update(tag=tag.id)
             track_obj = request.registry.get('event.track')
@@ -71,8 +73,6 @@ class website_event(http.Controller):
             'html2text': html2text
         }
         return request.website.render("website_event_track.tracks", values)
-
-
 
     @http.route(['/event/<model("event.event"):event>/track_proposal/'], type='http', auth="public", website=True, multilang=True)
     def event_track_proposal(self, event, **post):
@@ -109,7 +109,7 @@ class website_event(http.Controller):
 </section>''' % (e(post['track_name']), 
             e(post['description']), e(post['biography']))
 
-        track_id = tobj.create(cr, uid, {
+        track_id = tobj.create(cr, openerp.SUPERUSER_ID, {
             'name': post['track_name'],
             'event_id': event.id,
             'tag_ids': [(6, 0, tags)],
@@ -117,11 +117,11 @@ class website_event(http.Controller):
             'description': track_description
         }, context=context)
 
-        tobj.message_post(cr, uid, [track_id], body="""Proposed By: %s<br/>
+        tobj.message_post(cr, openerp.SUPERUSER_ID, [track_id], body="""Proposed By: %s<br/>
           Mail: <a href="mailto:%s">%s</a><br/>
           Phone: %s""" % (e(post['partner_name']), e(post['email_from']), 
             e(post['email_from']), e(post['phone'])), context=context)
 
         track = tobj.browse(cr, uid, track_id, context=context)
-        values = {'track': track}
+        values = {'track': track, 'event':event}
         return request.website.render("website_event_track.event_track_proposal_success", values)

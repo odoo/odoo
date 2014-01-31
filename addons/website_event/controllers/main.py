@@ -184,7 +184,6 @@ class website_event(http.Controller):
             'event': event,
             'main_object': event,
             'range': range,
-            'main_object': event,
         }
         return request.website.render("website_event.event_description_full", values)
 
@@ -202,25 +201,15 @@ class website_event(http.Controller):
 
     @http.route('/event/add_event/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def add_event(self, event_name="New Event", **kwargs):
-        Event = request.registry.get('event.event')
-        date_begin = datetime.today() + timedelta(days=(15)) # FIXME: better defaults
+        return self._add_event(event_name, request.context, **kwargs)
 
+    def _add_event(self, event_name="New Event", context={}, **kwargs):
+        Event = request.registry.get('event.event')
+        date_begin = datetime.today() + timedelta(days=(14))
         vals = {
             'name': event_name,
             'date_begin': date_begin.strftime('%Y-%m-%d'),
             'date_end': (date_begin + timedelta(days=(1))).strftime('%Y-%m-%d'),
         }
-        try:
-            dummy, res_id = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid, 'event_sale', 'product_product_event')
-            vals['event_ticket_ids'] = [[0,0,{
-                'name': _('Subscription'),
-                'product_id': res_id,
-                'deadline' : vals.get('date_begin'),
-                'price': 0,
-            }]]
-        except ValueError:
-            pass
-
-        event_id = Event.create(request.cr, request.uid, vals, context=request.context)
-
+        event_id = Event.create(request.cr, request.uid, vals, context=context)
         return request.redirect("/event/%s/?enable_editor=1" % event_id)

@@ -23,7 +23,6 @@ class OgoneController(http.Controller):
     ], type='http', auth='none')
     def ogone_form_feedback(self, **post):
         """ Ogone contacts using GET, at least for accept """
-        request.disable_db = False
         _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug
         cr, uid, context = request.cr, SUPERUSER_ID, request.context
         request.registry['payment.transaction'].form_feedback(cr, uid, post, 'ogone', context=context)

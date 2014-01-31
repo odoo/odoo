@@ -4,13 +4,13 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp import SUPERUSER_ID
 
-from urllib import quote_plus
+import werkzeug.urls
 
 
 class contactus(http.Controller):
 
     def generate_google_map_url(self, street, city, city_zip, country_name):
-        url = "http://maps.googleapis.com/maps/api/staticmap?center=%s&sensor=false&zoom=8&size=298x298" % quote_plus(
+        url = "http://maps.googleapis.com/maps/api/staticmap?center=%s&sensor=false&zoom=8&size=298x298" % werkzeug.url_quote_plus(
             '%s, %s %s, %s' % (street, city, city_zip, country_name)
         )
         return url
