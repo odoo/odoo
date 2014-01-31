@@ -432,14 +432,14 @@ class HttpRequest(WebRequest):
 
     def dispatch(self):
         # TODO: refactor this correctly. This is a quick fix for pos demo.
-        if request.httprequest.method == 'OPTIONS' and request.func.cors:
+        if request.httprequest.method == 'OPTIONS' and request.func and request.func.routing.get('cors'):
             response = werkzeug.wrappers.Response(status=200)
-            response.headers.set('Access-Control-Allow-Origin', request.func.cors)
+            response.headers.set('Access-Control-Allow-Origin', request.func.routing['cors'])
             methods = 'GET, POST'
             if request.func_request_type == 'json':
                 methods = 'POST'
-            elif request.func.methods:
-                methods = ', '.join(request.func.methods)
+            elif request.func.routing.get('methods'):
+                methods = ', '.join(request.func.routing['methods'])
             response.headers.set('Access-Control-Allow-Methods', methods)
             response.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
             return response
