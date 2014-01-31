@@ -1,7 +1,7 @@
 {
-    'name': 'Online Quotation',
+    'name': 'Online Proposals',
     'category': 'Website',
-    'summary': 'Send Live Quotation',
+    'summary': 'Send Professional Quotations',
     'version': '1.0',
     'description': """
 OpenERP Sale Quote Roller

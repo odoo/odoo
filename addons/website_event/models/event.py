@@ -25,6 +25,8 @@ from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 import re
 
+from openerp.addons.website.models.website import slug
+
 
 class event(osv.osv):
     _name = 'event.event'
@@ -41,7 +43,7 @@ class event(osv.osv):
         for name,path in todo:
             name2 = name+' '+event.name
             newpath = web.new_page(cr, uid, name2, path, ispage=False, context=context)
-            url = "/event/"+str(event.id)+"/page/" + newpath
+            url = "/event/"+slug(event)+"/page/" + newpath
             result.append((name, url))
         return result
 
@@ -56,7 +58,7 @@ class event(osv.osv):
                     'name': event.name
                 }, context=context)
                 tocreate = self._get_new_menu_pages(cr, uid, event, context)
-                tocreate.append((_('Register'), '/event/%s/register' % str(event.id)))
+                tocreate.append((_('Register'), '/event/%s/register' % slug(event)))
                 sequence = 0
                 for name,url in tocreate:
                     menuobj.create(cr, uid, {
@@ -77,14 +79,13 @@ class event(osv.osv):
 
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, '')
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         for event in self.browse(cr, uid, ids, context=context):
-            res[event.id] = "%s/event/%s/" % (base_url, event.id)
+            res[event.id] = "/event/" + slug(event)
         return res
 
     def _default_hashtag(self, cr, uid, context={}):
         name = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
-        return re.sub("[- \\.\\(\\)]+", "", name).lower()
+        return re.sub("[- \\.\\(\\)\\@\\#\\&]+", "", name).lower()
 
     _columns = {
         'twitter_hashtag': fields.char('Twitter Hashtag'),
@@ -101,8 +102,6 @@ class event(osv.osv):
         'website_url': fields.function(_website_url, string="Website url", type="char"),
         'show_menu': fields.function(_get_show_menu, fnct_inv=_set_show_menu, type='boolean', string='Dedicated Menu'),
         'menu_id': fields.many2one('website.menu', 'Event Menu'),
-        'country_id': fields.related('address_id', 'country_id',
-                type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}, store=True),
     }
     _defaults = {
         'show_menu': False,
@@ -110,12 +109,14 @@ class event(osv.osv):
     }
 
     def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
-        partner = self.browse(cr, uid, ids[0], context=context)
-        if partner.address_id:
+        event = self.browse(cr, uid, ids[0], context=context)
+        if event.address_id:
             return self.browse(cr, SUPERUSER_ID, ids[0], context=context).address_id.google_map_img()
+        return None
 
     def google_map_link(self, cr, uid, ids, zoom=8, context=None):
-        partner = self.browse(cr, uid, ids[0], context=context)
-        if partner.address_id:
+        event = self.browse(cr, uid, ids[0], context=context)
+        if event.address_id:
             return self.browse(cr, SUPERUSER_ID, ids[0], context=context).address_id.google_map_link()
+        return None
 

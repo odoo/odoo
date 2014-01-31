@@ -1,7 +1,7 @@
 {
-    'name': 'eCommerce Delivery Methods',
+    'name': 'eCommerce Delivery',
     'category': 'Website',
-    'summary': 'Add delivery costs to sales',
+    'summary': 'Add Delivery Costs to Online Sales',
     'version': '1.0',
     'description': """
 Delivery Costs

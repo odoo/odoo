@@ -695,7 +695,7 @@ class purchase_order(osv.osv):
                 continue
             if order_line.product_id.type in ('product', 'consu'):
                 move = stock_move.create(cr, uid, self._prepare_order_line_move(cr, uid, order, order_line, picking_id, context=context))
-                if order_line.move_dest_id:
+                if order_line.move_dest_id and order_line.move_dest_id.state != 'done':
                     order_line.move_dest_id.write({'location_id': order.location_id.id})
                 todo_moves.append(move)
         stock_move.action_confirm(cr, uid, todo_moves)
@@ -908,6 +908,15 @@ class purchase_order_line(osv.osv):
             default = {}
         default.update({'state':'draft', 'move_ids':[],'invoiced':0,'invoice_lines':[]})
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        procurement_ids_to_cancel = []
+        for line in self.browse(cr, uid, ids, context=context):
+            if line.move_dest_id:
+                procurement_ids_to_cancel.extend(procurement.id for procurement in line.move_dest_id.procurements)
+        if procurement_ids_to_cancel:
+            self.pool['procurement.order'].action_cancel(cr, uid, procurement_ids_to_cancel)
+        return super(purchase_order_line, self).unlink(cr, uid, ids, context=context)
 
     def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,

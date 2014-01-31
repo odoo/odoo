@@ -7,7 +7,6 @@
         start: function () {
             this.registerTour(new website.EditorShopTour(this));
             var res = this._super();
-            this.registerTour(new website.EditorShopTest(this));
             return res;
         },
     });
@@ -15,268 +14,196 @@
     website.EditorShopTour = website.Tour.extend({
         id: 'shop',
         name: "Create a product",
+        testPath: /\/shop\/.*/,
         init: function (editor) {
             var self = this;
             self.steps = [
                 {
-                    stepId:    'welcome-shop',
                     title:     "Welcome to your shop",
                     content:   "You successfully installed the e-commerce. This guide will help you to create your product and promote your sales.",
                     template:  self.popover({ next: "Start Tutorial", end: "Skip It" }),
-                    backdrop:  true,
                 },
                 {
-                    stepId:    'content-menu',
                     element:   '#content-menu-button',
                     placement: 'left',
                     title:     "Create your first product",
                     content:   "Click here to add a new product.",
                     template:  self.popover({ fixed: true }),
-                    trigger:   'click',
                 },
                 {
-                    stepId:    'edit-entry',
-                    element:   '#create-new-product',
+                    element:   'a[data-action=new_product]',
                     placement: 'left',
                     title:     "Create a new product",
                     content:   "Select 'New Product' to create it and manage its properties to boost your sales.",
                     template:  self.popover({ fixed: true }),
-                    trigger: {
-                        modal: {
-                            stopOnClose: true,
-                            afterSubmit: 'product-page',
-                        },
-                    },
                 },
                 {
-                    stepId:    'enter-name',
-                    element:   '.modal input[type=text]',
+                    element:   '.modal:contains("New Product") input[type=text]',
+                    sampleText: 'New Product',
                     placement: 'right',
                     title:     "Choose name",
                     content:   "Enter a name for your new product then click 'Continue'.",
                 },
                 {
-                    stepId:    'product-page',
-                    title:     "New product created",
-                    content:   "This page contains all the information related to the new product.",
-                    template:  self.popover({ next: "OK" }),
-                    backdrop:  true,
+                    waitNot:   '.modal input[type=text]:not([value!=""])',
+                    element:   '.modal button.btn-primary',
+                    placement: 'right',
+                    title:     "Create Product",
+                    content:   "Click <em>Continue</em> to create the product.",
                 },
                 {
-                    stepId:    'edit-price',
-                    element:   '.product_price',
+                    waitFor:   '#website-top-navbar button[data-action="save"]:visible',
+                    title:     "New product created",
+                    content:   "This page contains all the information related to the new product.",
+                    template:  self.popover({ next: "Continue" }),
+                },
+                {
+                    element:   '.product_price .oe_currency_value',
+                    sampleText: '20.50',
                     placement: 'left',
                     title:     "Change the price",
                     content:   "Edit the price of this product by clicking on the amount.",
-                    template:  self.popover({ next: "OK" }),
                 },
                 {
-                    stepId:    'update-image',
+                    waitNot:   '.product_price .oe_currency_value:containsExact(1.00)',
                     element:   '#wrap img.img:first',
                     placement: 'top',
                     title:     "Update image",
                     content:   "Click here to set an image describing your product.",
-                    triggers: function () {
-                        function registerClick () {
-                            $('button.hover-edition-button').one('click', function () {
-                                $('#wrap img.img:first').off('hover', registerClick);
-                                self.moveToNextStep();
-                            });
-                        }
-                        $('#wrap img.img:first').on('hover', registerClick);
-
-                    },
                 },
                 {
-                    stepId:    'upload-image',
+                    element:   'button.hover-edition-button:visible',
+                    placement: 'top',
+                    title:     "Update image",
+                    content:   "Click here to set an image describing your product.",
+                },
+                {
+                    wait:      500,
                     element:   '.well a.pull-right',
                     placement: 'bottom',
                     title:     "Select an Image",
                     content:   "Let's select an existing image.",
                     template:  self.popover({ fixed: true }),
-                    trigger:   'click',
                 },
                 {
-                    stepId:    'select-image',
                     element:   'img[alt=imac]',
                     placement: 'bottom',
                     title:     "Select an Image",
                     content:   "Let's select an imac image.",
                     template:  self.popover({ fixed: true }),
-                    trigger:   'click',
                 },
                 {
-                    stepId:    'save-image',
-                    element:   'button.save',
+                    waitNot:   'img[alt=imac]',
+                    element:   '.modal-content button.save',
                     placement: 'bottom',
-                    title:     "Save the Image",
+                    title:     "Select this Image",
                     content:   "Click to add the image to the product decsription.",
                     template:  self.popover({ fixed: true }),
-                    trigger:   'click',
                 },
                 {
-                    stepId:    'add-block',
+                    waitNot:   '.modal-content:visible',
                     element:   'button[data-action=snippet]',
                     placement: 'bottom',
                     title:     "Describe the Product",
                     content:   "Insert blocks like text-image, or gallery to fully describe the product.",
                     template:  self.popover({ fixed: true }),
-                    trigger:   'click',
                 },
                 {
-                    stepId:    'drag-big-picture',
                     snippet:   'big-picture',
                     placement: 'bottom',
                     title:     "Drag & Drop a block",
                     content:   "Drag the 'Big Picture' block and drop it in your page.",
                     template:  self.popover({ fixed: true }),
-                    trigger:   'drag',
                 },
                 {
-                    stepId:    'save-changes',
                     element:   'button[data-action=save]',
                     placement: 'right',
                     title:     "Save your modifications",
                     content:   "Once you click on save, your product is updated.",
                     template:  self.popover({ fixed: true }),
-                    trigger:   'click',
 
                 },
                 {
-                    stepId:    'publish-product',
+                    waitFor:   '#website-top-navbar button[data-action="edit"]:visible',
                     element:   '.js_publish_management button.js_publish_btn.btn-danger',
                     placement: 'top',
                     title:     "Publish your product",
                     content:   "Click to publish your product so your customers can see it.",
-                    trigger:   'click',
                 },
                 {
-                    stepId:    'congratulations',
+                    waitFor:   '.js_publish_management button.js_publish_btn.btn-success:visible',
                     title:     "Congratulations",
                     content:   "Congratulations! You just created and published your first product.",
-                    template:  self.popover({ end: "Close Tutorial" }),
-                    backdrop:  true,
+                    template:  self.popover({ next: "Close Tutorial" }),
                 },
             ];
             return this._super();
-        },
-        trigger: function () {
-            return (this.resume() && this.testUrl(/^\/shop\/product\/[0-9]+\//)) || this._super();
-        },
-    });
-
-
-    website.Test = website.Tour.extend({
-        registerStep: function (step) {
-            var self = this;
-            var step = this._super(step);
-            if (step.beforeTrigger || step.afterTrigger) {
-                var fn = step.triggers;
-                step.triggers = function (callback) {
-                    if (step.beforeTrigger) step.beforeTrigger(self);
-                    if (!step.afterTrigger) {
-                        fn.call(step, callback);
-                    } else {
-                        fn.call(step, function () {
-                            (callback || self.moveToNextStep).apply(self);
-                             step.afterTrigger(self);
-                        });
-                    }
-                };
-            }
-            return step;
         }
     });
 
-
-    website.EditorShopTest = website.Test.extend({
-        id: 'shoptest',
-        name: "Try to by products",
+    website.EditorShopTest = website.Tour.extend({
+        id: 'shop_buy_product',
+        name: "Try to buy products",
         path: '/shop',
+        testPath: /\/shop/,
         init: function (editor) {
             var self = this;
             self.steps = [
                 {
-                    stepId:    'begin-test',
                     title:     'begin-test',
                     template:  self.popover({ next: "Start Test"}),
                     backdrop:  true,
                 },
                 {
-                    stepId:    'display-ipod',
+                    title:     "select ipod",
                     element:   '.oe_product_cart a:contains("iPod")',
-                    trigger: {
-                        url:   /shop\/product\/.*/,
-                    },
                 },
                 {
-                    stepId:    'choose-ipod',
+                    title:     "select ipod 32Go",
                     element:   'input[name="product_id"]:not([checked])',
-                    trigger: {
-                        id: 'mouseup',
-                    },
                 },
                 {
-                    stepId:    'add-ipod',
+                    title:     "click on add to cart",
+                    waitFor:   'input[name="product_id"]:eq(1)[checked]',
                     element:   'form[action="/shop/add_cart/"] button',
-                    trigger: {
-                        url:   '/shop/mycart/',
-                    },
                 },
                 {
-                    stepId:    'add-suggested-product',
-                    element:   'form[action="/shop/add_cart/"] button:contains("Add to Cart")',
-                    trigger:   'reload',
+                    title:     "add suggested",
+                    element:   'form[action="/shop/add_cart/"] button.btn-link:contains("Add to Cart")',
                 },
                 {
-                    stepId:    'more-product',
-                    element:   '.oe_mycart a.js_add_cart_json:eq(1)',
-                    trigger:   'click',
+                    title:     "add one more iPod",
+                    waitFor:   '.my_cart_quantity:contains(2)',
+                    element:   '#mycart_products tr:contains("iPod: 32 Gb") a.js_add_cart_json:eq(1)',
                 },
                 {
-                    stepId:    'less-product',
-                    element:   '.oe_mycart a.js_add_cart_json:eq(2)',
-                    trigger:   'reload',
+                    title:     "remove Headphones",
+                    waitFor:   '#mycart_products tr:contains("iPod: 32 Gb") input.js_quantity[value=2]',
+                    element:   '#mycart_products tr:contains("Apple In-Ear Headphones") a.js_add_cart_json:first',
                 },
                 {
-                    stepId:    'number-product',
-                    element:   '.oe_mycart input.js_quantity',
-                    trigger:   'reload',
-                    beforeTrigger: function (tour) {
-                        if (parseInt($(".oe_mycart input.js_quantity").val(),10) !== 1)
-                            $(".oe_mycart input.js_quantity").val("1").change();
-                    },
-                    afterTrigger: function (tour) {
-                        if ($(".oe_mycart input.js_quantity").size() !== 1)
-                            throw "Can't remove suggested item from my cart";
-                        if (parseInt($(".oe_mycart input.js_quantity").val(),10) !== 1)
-                            throw "Can't defined number of items in my cart";
-                    },
+                    title:     "set one iPod",
+                    waitNot:   '#mycart_products tr:contains("Apple In-Ear Headphones")',
+                    element:   '#mycart_products input.js_quantity',
+                    sampleText: '1',
                 },
                 {
-                    stepId:    'go-checkout-product',
+                    title:     "go to checkout",
+                    waitFor:   '#mycart_products input.js_quantity[value=1]',
                     element:   'a[href="/shop/checkout/"]',
-                    trigger: {
-                        url:   '/shop/checkout/',
-                    },
                 },
                 {
-                    stepId:    'confirm-false-checkout-product',
+                    title:     "test with input error",
                     element:   'form[action="/shop/confirm_order/"] button',
-                    trigger: {
-                        url:   '/shop/confirm_order/',
-                    },
-                    beforeTrigger: function (tour) {
+                    callback: function (tour) {
                         $("input[name='phone']").val("");
                     },
                 },
                 {
-                    stepId:    'confirm-checkout-product',
+                    title:     "test without input error",
+                    waitFor:   'form[action="/shop/confirm_order/"] .has-error',
                     element:   'form[action="/shop/confirm_order/"] button',
-                    trigger: {
-                        url:   '/shop/payment/',
-                    },
-                    beforeTrigger: function (tour) {
+                    callback: function (tour) {
                         if ($("input[name='name']").val() === "")
                             $("input[name='name']").val("website_sale-test-shoptest");
                         if ($("input[name='email']").val() === "")
@@ -289,26 +216,24 @@
                     },
                 },
                 {
-                    stepId:    'acquirer-checkout-product',
+                    title:     "select acquirer",
                     element:   'input[name="acquirer"]',
-                    trigger:   'mouseup',
                 },
                 {
-                    stepId:    'pay-checkout-product',
+                    title:     "confirm",
                     element:   'button:contains("Pay Now")',
-                    trigger: {
-                        url:   /shop\/confirmation\//,
-                    },
-                    afterTrigger: function (tour) {
-                        console.log('{ "event": "success" }');
-                    },
+                },
+                {
+                    title:     "finish",
+                    waitFor:   '.oe_website_sale:contains("Thank you for your order")',
                 }
             ];
             return this._super();
         },
-        trigger: function () {
-            return (this.resume() && this.testUrl(/\/shop\//)) || this._super();
-        },
+    });
+    // for test without editor bar
+    $(document).ready(function () {
+        website.Tour.add(website.EditorShopTest);
     });
 
 }());

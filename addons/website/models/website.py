@@ -5,7 +5,6 @@ import itertools
 import logging
 import math
 import re
-import urllib
 import urlparse
 
 import simplejson
@@ -38,24 +37,38 @@ def keep_query(*args, **kw):
 
 def url_for(path_or_uri, lang=None):
     location = path_or_uri.strip()
+    force_lang = lang is not None
     url = urlparse.urlparse(location)
-    if request and not url.netloc and not url.scheme:
+
+    if request and not url.netloc and not url.scheme and (url.path or force_lang):
         location = urlparse.urljoin(request.httprequest.path, location)
-        force_lang = lang is not None
         lang = lang or request.context.get('lang')
         langs = [lg[0] for lg in request.website.get_languages()]
-        if lang != request.website.default_lang_code and (force_lang or (location[0] == '/' and len(langs) > 1)):
-            if is_multilang_url(location):
-                ps = location.split('/')
-                if ps[1] in langs:
+
+        if (len(langs) > 1 or force_lang) and is_multilang_url(location, langs):
+            ps = location.split('/')
+            if ps[1] in langs:
+                # Replace the language only if we explicitly provide a language to url_for
+                if force_lang:
                     ps[1] = lang
-                else:
-                    ps.insert(1, lang)
-                location = '/'.join(ps)
+                # Remove the default language unless it's explicitly provided
+                elif ps[1] == request.website.default_lang_code:
+                    ps.pop(1)
+            # Insert the context language or the provided language
+            elif lang != request.website.default_lang_code or force_lang:
+                ps.insert(1, lang)
+            location = '/'.join(ps)
 
     return location
 
-def is_multilang_url(path):
+def is_multilang_url(path, langs=None):
+    if not langs:
+        langs = [lg[0] for lg in request.website.get_languages()]
+    spath = path.split('/')
+    # if a language is already in the path, remove it
+    if spath[1] in langs:
+        spath.pop(1)
+        path = '/'.join(spath)
     try:
         router = request.httprequest.app.get_db_router(request.db).bind('')
         func = router.match(path)[0]
@@ -80,17 +93,7 @@ def slug(value):
     return "%s-%d" % (slugify(name), id)
 
 def urlplus(url, params):
-    if not params:
-        return url
-
-    # can't use urlencode because it encodes to (ascii, replace) in p2
-    return "%s?%s" % (url, '&'.join(
-        k + '=' + urllib.quote_plus(v.encode('utf-8') if isinstance(v, unicode) else str(v))
-        for k, v in params.iteritems()
-    ))
-
-def quote_plus(value):
-    return urllib.quote_plus(value.encode('utf-8') if isinstance(value, unicode) else str(value))
+    return werkzeug.Href(url)(params or None)
 
 class website(osv.osv):
     def _get_menu_website(self, cr, uid, ids, context=None):
@@ -122,6 +125,7 @@ class website(osv.osv):
         'social_youtube': fields.char('Youtube Account'),
         'social_googleplus': fields.char('Google+ Account'),
         'google_analytics_key': fields.char('Google Analytics Key'),
+        'user_id': fields.many2one('res.users', string='Public User'),
         'public_user': fields.function(_get_public_user, relation='res.users', type='many2one', string='Public User'),
         'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu',
             store= {
@@ -243,7 +247,7 @@ class website(osv.osv):
             slug=slug,
             res_company=request.website.company_id,
             user_id=user.browse(cr, uid, uid),
-            quote_plus=quote_plus,
+            quote_plus=werkzeug.url_quote_plus,
         )
         qweb_values.setdefault('editable', False)
 
@@ -279,7 +283,7 @@ class website(osv.osv):
         def get_url(page):
             _url = "%spage/%s/" % (url, page)
             if url_args:
-                _url = "%s?%s" % (_url, urllib.urlencode(url_args))
+                _url = "%s?%s" % (_url, werkzeug.url_encode(url_args))
             return _url
 
         return {
@@ -446,7 +450,7 @@ class website(osv.osv):
 
         get_args.setdefault('kanban', "")
         kanban = get_args.pop('kanban')
-        kanban_url = "?%s&kanban=" % urllib.urlencode(get_args)
+        kanban_url = "?%s&kanban=" % werkzeug.url_encode(get_args)
 
         pages = {}
         for col in kanban.split(","):
@@ -605,9 +609,10 @@ class res_partner(osv.osv):
     def google_map_link(self, cr, uid, ids, zoom=8, context=None):
         partner = self.browse(cr, uid, ids[0], context=context)
         params = {
-            'q': '%s, %s %s, %s' % (partner.street, partner.city, partner.zip, partner.country_id and partner.country_id.name_get()[0][1] or ''),
+            'q': '%s, %s %s, %s' % (partner.street or '', partner.city  or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
+            'z': 10
         }
-        return urlplus('https://maps.google.be/maps' , params)
+        return urlplus('https://maps.google.com/maps' , params)
 
 class res_company(osv.osv):
     _inherit = "res.company"

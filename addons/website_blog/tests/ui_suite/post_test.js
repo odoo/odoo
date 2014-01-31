@@ -7,25 +7,11 @@ testRunner.run(function blogTest (page, timeout) {
     waitFor(function clientReady () {
         return page.evaluate(function () {
             return window.$ && window.openerp && window.openerp.website
-                && window.openerp.website.TestConsole
-                && window.openerp.website.TestConsole.test('blog');
+                && window.openerp.website.Tour;
         });
     }, function executeTest () {
         page.evaluate(function () {
-            window.openerp.website.TestConsole.test('blog').run(true);
+            window.openerp.website.Tour.run_test('blog');
         });
-        waitFor(function testExecuted () {
-            var after = page.evaluate(function () {
-                return window.$ && $('button[data-action=edit]').is(":visible") && {
-                    image: $('#wrap [data-snippet-id=image-text]').length,
-                    text: $('#wrap [data-snippet-id=text-block]').length,
-                };
-            });
-            var result = after && (after.image === 1) && (after.text === 1);
-            return result;
-        }, function finish () {
-            console.log('{ "event": "success" }');
-            phantom.exit();
-        }, 4*timeout/5);
-    }, timeout/5);
+    }, timeout);
 });

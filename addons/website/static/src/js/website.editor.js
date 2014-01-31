@@ -488,6 +488,7 @@
             $('.css_non_editable_mode_hidden').removeClass("css_non_editable_mode_hidden");
 
             this.rte.start_edition().then(this.check_height.bind(this));
+            this.trigger('rte:called');
         },
         rte_changed: function () {
             this.$buttons.save.prop('disabled', false);

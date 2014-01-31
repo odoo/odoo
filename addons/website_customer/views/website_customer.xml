@@ -30,7 +30,7 @@
                             <t t-call="website.pager">
                                <t t-set="classname" t-value="'pull-left'"/>
                             </t>
-                            <form action="/customers/" method="get" class="navbar-search pull-right pagination form-inline">
+                            <form action="" method="get" class="navbar-search pull-right pagination form-inline">
                                 <div class="form-group">
                                     <input type="text" name="search" class="search-query form-control"
                                         placeholder="Search" t-att-value="post.get('search', '')"/>
@@ -39,16 +39,18 @@
                         </div>
 
                         <div class="row">
+                            <t t-if="not partners_data">
+                                <p>No result found.</p>
+                            </t>
                             <t t-foreach="partners_data" t-as="partner_data" class="media">
-                                <div class="col-md-2">
-                                    <a t-attf-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
-                                        <img class="img img-thumbnail" t-attf-src="data:image/png;base64,#{partner_data.get('image')}"/>
+                                <div class="media thumbnail">
+                                    <a class="pull-left" t-attf-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
+                                        <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data.get('image_small')}"/>
                                     </a>
-                                </div><div class="col-md-10">
-                                    <h4>
+                                    <div class="media-body" style="min-height: 64px;">
                                         <a t-attf-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/" t-esc="partner_data.get('name')"/>
-                                    </h4>
-                                    <div t-raw="partner_data.get('website_short_description')"/>
+                                        <div t-raw="partner_data.get('website_short_description') or ''"/>
+                                    </div>
                                 </div>
                                 <div class="clearfix mb8"/>
                             </t>
@@ -73,13 +75,13 @@
 
 <template id="opt_country_list" inherit_id="website_customer.index" inherit_option_id="website_customer.index" name="Filter on Countries">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
-
+        <h3>References by Country</h3>
         <ul class="nav nav-pills nav-stacked mt16 mb32">
             <t t-foreach="countries" t-as="country_dict">
                 <t t-if="country_dict['country_id']">
                     <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
-                        <a t-attf-href="/customers/#{ country_dict['country_id'][0] and 'country/%s/' % slug(country_dict['country_id']) or '' }">
-                            <span class="badge pull-right" t-esc="country_dict['country_id_count']"/>
+                        <a t-attf-href="/customers/#{ country_dict['country_id'][0] and 'country/%s/' % slug(country_dict['country_id']) or '' }#{ search_path }">
+                            <span class="badge pull-right" t-esc="country_dict['country_id_count'] or '0'"/>
                             <t t-esc="country_dict['country_id'][1]"/>
                         </a>
                     </li>
@@ -115,36 +117,6 @@
         <div class="oe_structure"/>
     </div>
   </t>
-</template>
-
-<template id="customer_contact" inherit_id="website_customer.details" inherit_option_id="website_customer.details" name="Customer Contacts">
-    <xpath expr="//div[@id='left_column']" position="inside">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4>Customer Reference</h4>
-            </div>
-            <div class="panel-body">
-                <div class="text-center">
-                    <img class="img img-shadow" t-attf-src="data:image/png;base64,#{partner_data.get('image_medium')}"/>
-                </div>
-                <address class="mt16 mb8">
-                    <strong t-esc="partner_data.get('name')"/>
-                    <t t-if="partner_data.get('commercial_partner_id')">
-                        <p t-raw="'&lt;br/&gt;'.join(partner_data.get('commercial_partner_id')[1].split('\n')[1:])"/>
-                    </t>
-                    <div t-if="partner_data.get('phone')">
-                        <span class="fa fa-phone"/> <span t-esc="partner_data.get('phone')"/>
-                    </div>
-                    <div t-if="partner_data.get('email')">
-                        <span class="fa fa-envelope"/>
-                        <a t-att-href="'mailto:'+partner_data.get('email')">
-                          <span t-esc="partner_data.get('email')"/>
-                        </a>
-                    </div>
-                </address>
-            </div>
-        </div>
-    </xpath>
 </template>
 
 <template id="partner_assign" inherit_option_id="website_customer.details" inherit_id="website_customer.details" name="Implemented By">

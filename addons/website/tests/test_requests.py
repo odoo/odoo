@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import collections
-import urllib
 import urlparse
 import unittest2
 import urllib2
+import werkzeug.urls
 
 import lxml.html
 
@@ -65,12 +65,12 @@ class CrawlSuite(unittest2.TestSuite):
         # blow up in multidb situations
         self.opener.open('http://localhost:{port}/web/?db={db}'.format(
             port=tools.config['xmlrpc_port'],
-            db=urllib.quote_plus(tools.config['db_name']),
+            db=werkzeug.url_quote_plus(tools.config['db_name']),
         ))
         if user is not None:
             url = 'http://localhost:{port}/login?{query}'.format(
                 port=tools.config['xmlrpc_port'],
-                query=urllib.urlencode({
+                query=werkzeug.url_encode({
                     'db': tools.config['db_name'],
                     'login': user,
                     'key': password,

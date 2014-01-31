@@ -7,12 +7,11 @@ testRunner.run(function websiteSaleTest (page, timeout) {
     waitFor(function clientReady () {
         return page.evaluate(function () {
             return window.$ && window.openerp && window.openerp.website
-                && window.openerp.website.TestConsole
-                && window.openerp.website.TestConsole.test('shoptest');
+                && window.openerp.website.Tour;
         });
     }, function executeTest () {
         page.evaluate(function () {
-            window.openerp.website.TestConsole.test('shoptest').run(true);
+            window.openerp.website.Tour.run_test('shop_buy_product');
         });
     }, timeout);
 });

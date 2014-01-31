@@ -34,8 +34,6 @@ class Home(openerp.addons.web.controllers.main.Home):
 
     @http.route()
     def web_login(self, *args, **kw):
-        http.ensure_db(with_registry=True)
-
         mode = request.params.get('mode')
         qcontext = request.params.copy()
         response = webmain.render_bootstrap_template(request.session.db, 'auth_signup.signup', qcontext, lazy=True)

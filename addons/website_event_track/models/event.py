@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.addons.website.models.website import slug
 
 class event_track_tag(osv.osv):
     _name = "event.track.tag"
@@ -63,27 +64,26 @@ class event_track(osv.osv):
 
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, '')
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         for track in self.browse(cr, uid, ids, context=context):
-            res[track.id] = "%s/event/%d/track/%d" % (base_url, track.event_id.id, track.id)
+            res[track.id] = "/event/%s/track/%s" % (slug(track.event_id), slug(track))
         return res
 
     _columns = {
-        'name': fields.char('Track Title', required=True),
+        'name': fields.char('Track Title', required=True, translate=True),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'speaker_ids': fields.many2many('res.partner', string='Speakers'),
         'tag_ids': fields.many2many('event.track.tag', string='Tags'),
-        'stage_id': fields.many2one('event.track.stage'),
-        'description': fields.html('Track Description'),
+        'stage_id': fields.many2one('event.track.stage', 'Stage'),
+        'description': fields.html('Track Description', translate=True),
         'date': fields.datetime('Track Date'),
         'duration': fields.integer('Duration'),
         'location_id': fields.many2one('event.track.location', 'Location'),
-        'show_attachments': fields.boolean('Show Documents'),
         'event_id': fields.many2one('event.event', 'Event', required=True),
         'color': fields.integer('Color Index'),
         'priority': fields.selection([('3','Low'),('2','Medium (*)'),('1','High (**)'),('0','Highest (***)')], 'Priority', required=True),
         'website_published': fields.boolean('Available in the website'),
         'website_url': fields.function(_website_url, string="Website url", type="char"),
+        'image': fields.related('speaker_ids', 'image', type='binary', readonly=True)
     }
     def set_priority(self, cr, uid, ids, priority, context={}):
         return self.write(cr, uid, ids, {'priority' : priority})
@@ -96,7 +96,6 @@ class event_track(osv.osv):
     _defaults = {
         'user_id': lambda self, cr, uid, ctx: uid,
         'website_published': lambda self, cr, uid, ctx: False,
-        'show_attachments': lambda self, cr, uid, ctx: True,
         'duration': lambda *args: 60,
         'stage_id': _default_stage_id,
         'priority': '2'
@@ -115,7 +114,6 @@ class event_track(osv.osv):
 #
 class event_event(osv.osv):
     _inherit = "event.event"
-
     def _get_tracks_tag_ids(self, cr, uid, ids, field_names, arg=None, context=None):
         res = dict.fromkeys(ids, [])
         for event in self.browse(cr, uid, ids, context=context):
@@ -143,12 +141,12 @@ class event_event(osv.osv):
         context = context or {}
         result = super(event_event, self)._get_new_menu_pages(cr, uid, event, context=context)
         if event.show_tracks:
-            result.append( (_('Talks'), '/event/%s/track/' % event.id))
-            result.append( (_('Agenda'), '/event/%s/agenda/' % event.id))
+            result.append( (_('Talks'), '/event/%s/track/' % slug(event)))
+            result.append( (_('Agenda'), '/event/%s/agenda/' % slug(event)))
         if event.blog_id:
-            result.append( (_('News'), '/blogpost/'+str(event.blog_ig.id)))
+            result.append( (_('News'), '/blogpost/'+slug(event.blog_ig)))
         if event.show_track_proposal:
-            result.append( (_('Talk Proposals'), '/event/%s/track_proposal/' % event.id))
+            result.append( (_('Talk Proposals'), '/event/%s/track_proposal/' % slug(event)))
         return result
 
 #
@@ -170,6 +168,7 @@ class event_sponsors(osv.osv):
         'event_id': fields.many2one('event.event', 'Event', required=True),
         'sponsor_type_id': fields.many2one('event.sponsor.type', 'Sponsoring Type', required=True),
         'partner_id': fields.many2one('res.partner', 'Sponsor/Customer', required=True),
+        'url': fields.text('Sponsor Website'),
         'sequence': fields.related('sponsor_type_id', 'sequence', string='Sequence', store=True),
     }
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import base64
 
+from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
@@ -62,19 +63,19 @@ class website_hr_recruitment(http.Controller):
     def jobs_apply(self, job):
         return request.website.render("website_hr_recruitment.apply", { 'job': job })
 
-    @http.route(['/jobs/thankyou'], methods=['POST'], type='http', auth="admin", website=True, multilang=True)
+    @http.route(['/jobs/thankyou'], methods=['POST'], type='http', auth="public", website=True, multilang=True)
     def jobs_thankyou(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
         imd = request.registry['ir.model.data']
         value = {
             'name': _('Online Form'),
             'user_id': False,
-            'source_id' : imd.xmlid_to_res_id(cr, uid, 'hr_recruitment.source_website_company'),
+            'source_id' : imd.xmlid_to_res_id(cr, SUPERUSER_ID, 'hr_recruitment.source_website_company'),
         }
         for f in ['phone', 'email_from', 'partner_name', 'description', 'department_id', 'job_id']:
             value[f] = post.get(f)
 
-        job_id = request.registry['hr.applicant'].create(cr, uid, value, context=context)
+        job_id = request.registry['hr.applicant'].create(cr, SUPERUSER_ID, value, context=context)
         if post['ufile']:
             attachment_value = {
                 'name': post['ufile'].filename,
@@ -84,7 +85,7 @@ class website_hr_recruitment(http.Controller):
                 'datas': base64.encodestring(post['ufile'].read()),
                 'datas_fname': post['ufile'].filename,
             }
-            request.registry['ir.attachment'].create(cr, uid, attachment_value, context=context)
+            request.registry['ir.attachment'].create(cr, SUPERUSER_ID, attachment_value, context=context)
         return request.website.render("website_hr_recruitment.thankyou", {})
 
 # vim :et:
