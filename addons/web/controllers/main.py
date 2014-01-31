@@ -119,18 +119,14 @@ def redirect_with_hash(*args, **kw):
     """
     return http.redirect_with_hash(*args, **kw)
 
-def ensure_db():
+def ensure_db(redirect='/web/database/selector'):
     # This helper should be used in web client auth="none" routes
     # if those routes needs a db to work with.
     # If the heuristics does not find any database, then the users will be
-    # redirected to db selector.
-    #
+    # redirected to db selector or any url specified by `redirect` argument.
     # If the db is taken out of a query parameter, it will be checked against
     # `http.db_filter()` in order to ensure it's legit and thus avoid db
     # forgering that could lead to xss attacks.
-    #
-    # If the function returns True, the current routing is ok, if False, the
-    # User just switched his database and should be redirected.
     db = request.params.get('db')
 
     # Ensure db is legit
@@ -148,16 +144,13 @@ def ensure_db():
     # if no db can be found til here, send to the database selector
     # the database selector will redirect to database manager if needed
     if not db:
-        werkzeug.exceptions.abort(werkzeug.utils.redirect('/web/database/selector', 303))
+        werkzeug.exceptions.abort(werkzeug.utils.redirect(redirect, 303))
 
-    state = True
     # always switch the session to the computed db
     if db != request.session.db:
         request.session.logout()
-        state = False
 
     request.session.db = db
-    return state
 
 def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the
@@ -633,8 +626,7 @@ class Home(http.Controller):
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
-        if not ensure_db():
-            return http.local_redirect('/web/login', query=request.params, keep_hash=True)
+        ensure_db()
 
         values = request.params.copy()
         if not redirect:
@@ -1016,6 +1008,7 @@ class Session(http.Controller):
         key = saved_actions["next"]
         saved_actions["actions"][key] = the_action
         saved_actions["next"] = key + 1
+        request.httpsession['saved_actions'] = saved_actions
         return key
 
     @http.route('/web/session/get_session_action', type='json', auth="user")
@@ -1850,5 +1843,32 @@ class Reports(http.Controller):
                  ('Content-Type', report_mimetype),
                  ('Content-Length', len(report))],
              cookies={'fileToken': token})
+
+class Apps(http.Controller):
+    @http.route('/apps/<app>', auth='user')
+    def get_app_url(self, req, app):
+        act_window_obj = request.session.model('ir.actions.act_window')
+        ir_model_data = request.session.model('ir.model.data')
+        try:
+            action_id = ir_model_data.get_object_reference('base', 'open_module_tree')[1]
+            action = act_window_obj.read(action_id, ['name', 'type', 'res_model', 'view_mode', 'view_type', 'context', 'views', 'domain'])
+            action['target'] = 'current'
+        except ValueError:
+            action = False
+        try:
+            app_id = ir_model_data.get_object_reference('base', 'module_%s' % app)[1]
+        except ValueError:
+            app_id = False
+
+        if action and app_id:
+            action['res_id'] = app_id
+            action['view_mode'] = 'form'
+            action['views'] = [(False, u'form')]
+
+        sakey = Session().save_session_action(action)
+        debug = '?debug' if req.debug else ''
+        return werkzeug.utils.redirect('/web{0}#sa={1}'.format(debug, sakey))
+        
+
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
