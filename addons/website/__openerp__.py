@@ -27,4 +27,5 @@ OpenERP Website CMS
     'js': ['static/src/js/website.backend.js'],
     'qweb' : ['static/src/xml/website.backend.xml'],
     'css': ['static/src/css/website.backend.css'],
+    'application': True,
 }

@@ -49,4 +49,5 @@ OpenERP Blog
         'static/src/xml/*.xml'
     ],
     'installable': True,
+    'application': True,
 }
