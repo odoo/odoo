@@ -35,7 +35,7 @@
                     Contact a reseller
                 </h2>
             </div>
-            <div class="col-md-4" id="partner_left">
+            <div class="col-md-4 mb32" id="partner_left">
                 <h3>Resellers by Country</h3>
                 <ul class="nav nav-pills nav-stacked mt16">
                     <t t-foreach="countries" t-as="country_dict">
@@ -86,7 +86,7 @@
                             </h3>
                             <t t-set="internal_gid" t-value="partner_data['grade_id'][1]"/>
                         </t>
-                        <div class="media thumbnail">
+                        <div class="media">
                             <a class="pull-left" t-attf-href="/partners/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
                                 <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data['image_small']}"/>
                             </a>

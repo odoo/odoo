@@ -28,7 +28,7 @@
             <div class="container">
                 <div class="row">
 
-            <div class="col-md-4" id="left_column">
+            <div class="col-md-4 mb32" id="left_column">
                 <ul class="nav nav-pills nav-stacked mt16">
                     <li class="nav-header"><h3>Associations</h3></li>
                     <li t-att-class="'' if membership else 'active'"><a href="/members/">All</a></li>
@@ -60,7 +60,7 @@
                             <h3 class="text-center"><span t-field="membership_line_id.membership_id"/></h3>
                         </t>
                         <t t-set="partner_data" t-value="partners_data[membership_line_id.partner.id]"/>
-                        <div class="media thumbnail">
+                        <div class="media">
                             <a class="pull-left" t-attf-href="/members/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
                                 <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data.get('image_small')}"/>
                             </a>
