@@ -19,15 +19,19 @@ try:
 except ImportError:
     usb = None
 
-from openerp.tools.translate import _
-from .. import escpos
-from ..escpos import printer
-from ..escpos import supported_devices
+try:
+    from .. import escpos
+    from ..escpos import printer
+    from ..escpos import supported_devices
+except ImportError:
+    escpos = printer = None
+
 from PIL import Image
 
 from openerp import http
 from openerp.http import request
 from openerp.addons.web.controllers.main import manifest_list, module_boot, html_template
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -163,7 +167,7 @@ class EscposDriver(Thread):
         if check(receipt['shop']['name']):
             eprint.text(receipt['shop']['name'] + '\n')
         if check(receipt['company']['contact_address']):
-            eprint.text(receipt['company']['contact address'] + '\n')
+            eprint.text(receipt['company']['contact_address'] + '\n')
         if check(receipt['company']['phone']):
             eprint.text('Tel:' + receipt['company']['phone'] + '\n')
         if check(receipt['company']['vat']):
