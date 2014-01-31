@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import werkzeug
+
 import openerp
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.addons.website_partner.controllers import main as website_partner
-import werkzeug.urls
 
 class WebsiteCrmPartnerAssign(http.Controller):
     _references_per_page = 20
@@ -14,16 +15,25 @@ class WebsiteCrmPartnerAssign(http.Controller):
     @http.route([
         '/partners/',
         '/partners/page/<int:page>/',
+
+        '/partners/grade/<int:grade_id>',
+        '/partners/grade/<int:grade_id>/page/<int:page>/',
+
         '/partners/country/<int:country_id>',
         '/partners/country/<country_name>-<int:country_id>',
         '/partners/country/<int:country_id>/page/<int:page>/',
         '/partners/country/<country_name>-<int:country_id>/page/<int:page>/',
+        
+        '/partners/grade/<int:grade_id>/country/<int:country_id>/',
+        '/partners/grade/<int:grade_id>/country/<country_name>-<int:country_id>',
+        '/partners/grade/<int:grade_id>/country/<int:country_id>/page/<int:page>/',
+        '/partners/grade/<int:grade_id>/country/<country_name>-<int:country_id>/page/<int:page>/',
+        
     ], type='http', auth="public", website=True, multilang=True)
-    def partners(self, country_id=0, page=0, **post):
+    def partners(self, country_id=0, grade_id=0, page=0, **post):
         country_obj = request.registry['res.country']
         partner_obj = request.registry['res.partner']
         post_name = post.get('search', '')
-        grade_id = post.get('grade', '')
         country = None
 
         # format displayed membership lines domain
@@ -83,7 +93,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
             context=request.context, count=True)
         grades.insert(0, {
             'grade_id_count': grades_partners,
-            'grade_id': ("all", _("All Levels"))
+            'grade_id': (0, _("All Categories"))
         })
 
         values = {
