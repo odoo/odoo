@@ -24,7 +24,7 @@ from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 
-import urllib
+import werkzeug.urls
 import urllib2
 import simplejson
 
@@ -43,7 +43,7 @@ class google_service(osv.osv_memory):
         #Get the Refresh Token From Google And store it in ir.config_parameter
         headers = {"Content-type": "application/x-www-form-urlencoded"}
         data = dict(code=authorization_code, client_id=client_id, client_secret=client_secret, redirect_uri=redirect_uri, grant_type="authorization_code")
-        data = urllib.urlencode(data)
+        data = werkzeug.url_encode(data)
         try:
             req = urllib2.Request("https://accounts.google.com/o/oauth2/token", data, headers)
             content = urllib2.urlopen(req).read()
@@ -62,7 +62,7 @@ class google_service(osv.osv_memory):
             'response_type': 'code',
             'client_id': ir_config.get_param(cr, SUPERUSER_ID, 'google_%s_client_id' % service),
         }
-        uri = 'https://accounts.google.com/o/oauth2/auth?%s' % urllib.urlencode(params)
+        uri = 'https://accounts.google.com/o/oauth2/auth?%s' % werkzeug.url_encode(params)
         return uri
 
     #If no scope is passed, we use service by default to get a default scope
@@ -83,7 +83,7 @@ class google_service(osv.osv_memory):
             'access_type':'offline'
         }
 
-        uri = self.get_uri_oauth(a='auth') + "?%s" % urllib.urlencode(params)
+        uri = self.get_uri_oauth(a='auth') + "?%s" % werkzeug.url_encode(params)
         return uri
 
     def _get_google_token_json(self, cr, uid, authorize_code, service, context=None):
@@ -103,7 +103,7 @@ class google_service(osv.osv_memory):
         headers = {"content-type": "application/x-www-form-urlencoded"}
 
         try:
-            data = urllib.urlencode(params)
+            data = werkzeug.url_encode(params)
             req = urllib2.Request(self.get_uri_oauth(a='token'), data, headers)
 
             content = urllib2.urlopen(req).read()
@@ -128,7 +128,7 @@ class google_service(osv.osv_memory):
         headers = {"content-type": "application/x-www-form-urlencoded"}
 
         try:
-            data = urllib.urlencode(params)
+            data = werkzeug.url_encode(params)
             req = urllib2.Request(self.get_uri_oauth(a='token'), data, headers)
             content = urllib2.urlopen(req).read()
             res = simplejson.loads(content)
@@ -139,12 +139,12 @@ class google_service(osv.osv_memory):
 
 
     def _do_request(self,cr,uid,uri,params={},headers={},type='POST', context=None):
-        _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s !" % (uri,type,headers,urllib.urlencode(params) if type =='GET' else params))
+        _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s !" % (uri,type,headers,werkzeug.url_encode(params) if type =='GET' else params))
         res = False
 
         try:
             if type.upper() == 'GET' or type.upper() == 'DELETE':
-                data = urllib.urlencode(params)
+                data = werkzeug.url_encode(params)
                 req = urllib2.Request(self.get_uri_api() + uri + "?" + data)
             elif type.upper() == 'POST'  or type.upper() == 'PATCH' or type.upper() == 'PUT':
                 req = urllib2.Request(self.get_uri_api() + uri, params, headers)

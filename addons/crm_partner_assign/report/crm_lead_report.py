@@ -30,22 +30,14 @@ class crm_lead_report_assign(osv.osv):
     _auto = False
     _description = "CRM Lead Report"
     _columns = {
-        'year': fields.char('Year', size=64, required=False, readonly=True),
         'partner_assigned_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'grade_id':fields.many2one('res.partner.grade', 'Grade', readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
-        'month':fields.selection([('01', 'January'), ('02', 'February'), \
-                                  ('03', 'March'), ('04', 'April'),\
-                                  ('05', 'May'), ('06', 'June'), \
-                                  ('07', 'July'), ('08', 'August'),\
-                                  ('09', 'September'), ('10', 'October'),\
-                                  ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'date_assign': fields.date('Partner Date', readonly=True),
+        'date_assign': fields.date('Assign Date', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
         'delay_open': fields.float('Delay to Assign',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
         'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
@@ -77,9 +69,6 @@ class crm_lead_report_assign(osv.osv):
             CREATE OR REPLACE VIEW crm_lead_report_assign AS (
                 SELECT
                     c.id,
-                    to_char(c.date_assign, 'YYYY') as year,
-                    to_char(c.date_assign, 'MM') as month,
-                    to_char(c.date_assign, 'YYYY-MM-DD') as day,
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
