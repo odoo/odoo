@@ -241,7 +241,9 @@ class stock_quant(osv.osv):
 
         # Used for negative quants to reconcile after compensated by a new positive one
         'propagated_from_id': fields.many2one('stock.quant', 'Linked Quant', help='The negative quant this is coming from'),
-        'negative_dest_location_id': fields.many2one('stock.location', 'Destination Location', help='Technical field used to record the destination location of a move that created a negative quant'),
+        'negative_move_id': fields.many2one('stock.move', 'Move Negative Quant', help='If this is a negative quant, this will be the move that caused this negative quant. '),
+        'negative_dest_location_id': fields.related('negative_move_id', 'location_dest_id', type='many2one', relation='stock.location', string="Negative Destination Location", 
+                                                    help="Technical field used to record the destination location of a move that created a negative quant"), 
         'inventory_value': fields.function(_calc_inventory_value, string="Inventory Value", type='float', readonly=True),
     }
 
@@ -367,8 +369,7 @@ class stock_quant(osv.osv):
             if not quant:
                 break
             new_quant = self.move_single_quant(cr, uid, quant, location_to, qty, move, context=context)
-            if not move.move_dest_id:
-                self._quant_reconcile_negative(cr, uid, quant, context=context)
+            self._quant_reconcile_negative(cr, uid, quant, move, context=context)
             quant = new_quant
 
     def quants_get_prefered_domain(self, cr, uid, location, product, qty, domain=None, prefered_domain=False, fallback_domain=False, restrict_lot_id=False, restrict_partner_id=False, context=None):
@@ -449,7 +450,7 @@ class stock_quant(osv.osv):
             negative_vals['location_id'] = move.location_id.id
             negative_vals['qty'] = -qty
             negative_vals['cost'] = price_unit
-            negative_vals['negative_dest_location_id'] = move.location_dest_id.id
+            negative_vals['negative_move_id'] = move.id
             negative_vals['package_id'] = src_package_id
             negative_quant_id = self.create(cr, SUPERUSER_ID, negative_vals, context=context)
             vals.update({'propagated_from_id': negative_quant_id})
@@ -480,7 +481,7 @@ class stock_quant(osv.osv):
             path.append((4, move.id))
         self.write(cr, SUPERUSER_ID, solved_quant_ids, {'history_ids': path}, context=context)
 
-    def _quant_reconcile_negative(self, cr, uid, quant, context=None):
+    def _quant_reconcile_negative(self, cr, uid, quant, move, context=None):
         """
             When new quant arrive in a location, try to reconcile it with
             negative quants. If it's possible, apply the cost of the new
@@ -490,10 +491,12 @@ class stock_quant(osv.osv):
             return False
         solving_quant = quant
         dom = [('qty', '<', 0)]
-        dom += [('lot_id', '=', quant.lot_id and quant.lot_id.id or False)]
+        if quant.lot_id:
+            dom += [('lot_id', '=', quant.lot_id.id)]
         dom += [('owner_id', '=', quant.owner_id and quant.owner_id.id or False)]
-        dom += [('package_id', '=', quant.package_id and quant.package_id.id or False)]
-        quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, [('qty', '<', '0')], context=context)
+        if move.move_dest_id:
+            dom += [('negative_move_id', '=', move.move_dest_id.id)]
+        quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, dom, context=context)
         for quant_neg, qty in quants:
             if not quant_neg:
                 continue
