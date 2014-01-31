@@ -6,10 +6,11 @@
             <field name="name">project.task.history.cumulative.graph</field>
             <field name="model">project.task.history.cumulative</field>
             <field name="arch" type="xml">
-                <graph string="Project Tasks" type="pivot" stacked="True">
+                <graph string="Project Tasks" type="bar" stacked="True">
                     <field name="date" type="row"/>
                     <field name="type_id" type="row"/>
                     <field name="planned_hours" type="measure"/>
+                    <field name="remaining_hours" type="measure"/>
                 </graph>
             </field>
         </record>

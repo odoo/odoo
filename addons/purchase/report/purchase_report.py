@@ -32,8 +32,6 @@ class purchase_report(osv.osv):
     _auto = False
     _columns = {
         'date': fields.date('Order Date', readonly=True, help="Date on which this document has been created"),
-        'name': fields.char('Year',size=64,required=False, readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
         'state': fields.selection([('draft', 'Request for Quotation'),
                                      ('confirmed', 'Waiting Supplier Ack'),
                                       ('approved', 'Approved'),
@@ -60,12 +58,10 @@ class purchase_report(osv.osv):
         'negociation': fields.float('Purchase-Standard Price', readonly=True, group_operator="avg"),
         'price_standard': fields.float('Products Value', readonly=True, group_operator="sum"),
         'nbr': fields.integer('# of Lines', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'category_id': fields.many2one('product.category', 'Category', readonly=True)
 
     }
-    _order = 'name desc,price_total desc'
+    _order = 'date desc, price_total desc'
     def init(self, cr):
         tools.sql.drop_view_if_exists(cr, 'purchase_report')
         cr.execute("""
@@ -73,9 +69,6 @@ class purchase_report(osv.osv):
                 select
                     min(l.id) as id,
                     s.date_order as date,
-                    to_char(s.date_order, 'YYYY') as name,
-                    to_char(s.date_order, 'MM') as month,
-                    to_char(s.date_order, 'YYYY-MM-DD') as day,
                     s.state,
                     s.date_approve,
                     s.minimum_planned_date as expected_date,
@@ -121,9 +114,6 @@ class purchase_report(osv.osv):
                     l.product_id,
                     t.categ_id,
                     s.date_order,
-                    to_char(s.date_order, 'YYYY'),
-                    to_char(s.date_order, 'MM'),
-                    to_char(s.date_order, 'YYYY-MM-DD'),
                     s.state,
                     s.warehouse_id,
                     u.uom_type,

@@ -54,10 +54,10 @@
     <record model="ir.actions.act_window" id="action_fleet_reporting_costs">
       <field name="name">Costs Analysis</field>
       <field name="res_model">fleet.vehicle.cost</field>
-      <field name="view_id" ref="fleet_vehicle_costs_tree"></field>
+      <field name="view_id" ref="fleet_vehicle_costs_report"></field>
       <field name="view_type">form</field>
-      <field name="view_mode">tree</field>
-      <field name="context">{"search_default_parent_false" : True,"search_default_groupby_year" : True,"search_default_groupby_cost_type" : True,"search_default_groupby_cost_subtype" : True, "search_default_groupby_vehicle_id" : True,}</field>
+      <field name="view_mode">graph</field>
+      <field name="context">{"search_default_parent_false" : True,"search_default_groupby_year" : True, "search_default_groupby_cost_subtype" : True,"search_default_groupby_vehicle_id" : True}</field>
       <field name="help" type="html">
         <p>
           OpenERP helps you managing the costs for your different vehicles
@@ -73,10 +73,10 @@
     <record model="ir.actions.act_window" id="action_fleet_reporting_costs_non_effective">
       <field name="name">Indicative Costs Analysis</field>
       <field name="res_model">fleet.vehicle.cost</field>
-      <field name="view_id" ref="fleet_vehicle_costs_tree"></field>
+      <field name="view_id" ref="fleet_vehicle_costs_report"></field>
       <field name="view_type">form</field>
-      <field name="view_mode">tree</field>
-      <field name="context">{"search_default_parent_true" : True,"search_default_groupby_cost_subtype" : True,"search_default_groupby_cost_type" : True,"search_default_groupby_parent_id" : True,}</field>
+      <field name="view_mode">graph</field>
+      <field name="context">{"search_default_parent_true" : True,"search_default_groupby_cost_subtype" : True,"search_default_groupby_parent_id" : True,}</field>
       <field name="help" type="html">
         <p>
           OpenERP helps you managing the costs for your different vehicles

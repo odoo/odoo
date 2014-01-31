@@ -260,12 +260,26 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.company_logo.crossOrigin = 'anonymous';
                     var  logo_loaded = new $.Deferred();
                     self.company_logo.onload = function(){
+                        var img = self.company_logo;
+                        var ratio = 1;
+                        var targetwidth = 300;
+                        var maxheight = 150;
+                        if( img.width !== targetwidth ){
+                            ratio = targetwidth / img.width;
+                        }
+                        if( img.height * ratio > maxheight ){
+                            ratio = maxheight / img.height;
+                        }
+                        var width  = Math.floor(img.width * ratio);
+                        var height = Math.floor(img.height * ratio);
                         var c = document.createElement('canvas');
-                            c.width  = self.company_logo.width;
-                            c.height = self.company_logo.height; 
+                            c.width  = width;
+                            c.height = height
                         var ctx = c.getContext('2d');
-                            ctx.drawImage(self.company_logo,0,0);
+                            ctx.drawImage(self.company_logo,0,0, width, height);
+                        
                         self.company_logo_base64 = c.toDataURL();
+                        window.logo64 = self.company_logo_base64;
                         logo_loaded.resolve();
                     };
                     self.company_logo.onerror = function(){
