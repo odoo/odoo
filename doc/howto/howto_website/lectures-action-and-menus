@@ -1,0 +1,33 @@
+# HG changeset patch
+# Parent 419f2476f7485ffc81eced5233f323c3bea76100
+diff --git a/__openerp__.py b/__openerp__.py
+--- a/__openerp__.py
++++ b/__openerp__.py
+@@ -5,6 +5,7 @@
+     'data': [
+         'ir.model.access.csv',
+         'views/templates.xml',
++        'data/views.xml',
+     ],
+     'demo': [
+         'demo/teaching_assistants.xml',
+diff --git a/data/views.xml b/data/views.xml
+new file mode 100644
+--- /dev/null
++++ b/data/views.xml
+@@ -0,0 +1,15 @@
++<openerp>
++    <data>
++        <record id="action_academy_lecture" model="ir.actions.act_window">
++            <field name="name">Academy lectures</field>
++            <field name="res_model">academy.lectures</field>
++        </record>
++
++        <menuitem sequence="0" id="menu_academy" name="Academy"/>
++        <menuitem id="menu_academy_content" parent="menu_academy"
++                  name="Academy Content"/>
++        <menuitem id="menu_academy_content_lectures"
++                  parent="menu_academy_content"
++                  action="action_academy_lecture"/>
++    </data>
++</openerp>

@@ -137,6 +137,8 @@ generally makes it simpler for designers to edit the markup.
 .. todo:: link to section about reusing/altering existing stuff, template
           overriding
 
+.. _howto-website-support:
+
 OpenERP's Website support
 =========================
 
@@ -155,12 +157,12 @@ no content and just basic placeholders in the header and footer. Click on the
 default), click :guilabel:`Log in`.
 
 You're now in OpenERP "proper", the backend/administrative interface. We'll
-deal with it in :ref:`a latter section <howto-website-administration>`, for
-how click on the :menuselection:`Website` menu item, in the top-left of the
-browser between :menuselection:`Messaging` and :menuselection:`Settings`.
+deal with it in :ref:`a latter section <howto-website-administration>`. For
+now, click on the :menuselection:`Website` menu item in the top-left of the
+browser, between :menuselection:`Messaging` and :menuselection:`Settings`.
 
 You're back to your website, but are now an administrator and thus have access
-to the advanced edition features of an OpenERP-build website. Let's quickly
+to the advanced edition features of an OpenERP-built website. Let's quickly
 run through them.
 
 Mobile Preview
@@ -447,13 +449,70 @@ an explicit format for `the weekday in short form
              is a limitation of the current ``website`` but may be improved in
              future releases.
 
-.. access & formatting
 .. sending & storing comments (?)
 
 .. _howto-website-administration:
 
 Administration and ERP Integration
 ==================================
+
+In practice, the data we've created so far using XML data files is usually
+stored as "demo data", used for testing and demonstrations of modules, and the
+actual user data is input via the OpenERP "backend", which we're going to try
+out now. First let's move our data set to demo data:
+
+.. patch::
+
+the difference is simply that new databases can be created either in "demo"
+mode or in "no demo" mode. In the former case, the database will be preloaded
+with any demo data configured in the installed module.
+
+.. todo:: need to create a new DB again?
+
+A brief and incomplete introduction to the OpenERP administration
+-----------------------------------------------------------------
+
+You've already seen it for a very short time in :ref:`howto-website-support`,
+you can go back to it using :menuselection:`Administrator --> Administration`
+if you're already logged-in (which you should be), or go through
+:menuselection:`Sign In` again if you are not.
+
+The conceptual structure of the OpenERP backend is simple:
+
+1. first are menus, menus are a tree (they can have sub-menus). To menus
+   without children is mapped…
+
+2. an action. Actions have various types, they can be links, reports (PDF),
+   code which the server should execute or window actions. Window actions
+   tell the client to display the OpenERP object according to certain views…
+
+3. a view has a type, the broad category to which it corresponds (tree, form,
+   graph, calendar, …) and its architecture which represents the way the
+   object is laid out inside the view.
+
+By default, when an OpenERP object is *defined* it is essentially invisible in
+the interface. To make it visible, it needs to be available through an action,
+which itself needs to be reachable somehow, usually a through a menu.
+
+Let us, then, create a menu and an action for our lectures:
+
+.. patch::
+
+.. todo:: reinstall module? update?
+
+If you reload the backend, you should see a new menu :menuselection:`Academy`
+at the top-left corner, before :menuselection:`Messaging`. In it is the
+submenus we defined via ``menuitem``, and within (the first submenu is
+selected by default) opens a list view of the lectures. To the right is a
+series of 2 buttons, which lets you toggle between the "list" view (overview
+of all records in the object) and the "form" view (view an manipulation of a
+single record). The :guilabel:`Create` button above the list lets you create
+new record, you can select records to delete them.
+
+There's one big issue to fix right now, the labeling of the column in the list
+and the fields in the form view, which are all currently :guilabel:`unknown`:
+
+.. FIXME:: fix labels
 
 .. create menu, action
    .. improve generated views
