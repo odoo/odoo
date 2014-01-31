@@ -1,0 +1,190 @@
+/* line 2, ../scss/_extensions.scss */
+.container, body article.page .content {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* line 7, ../scss/_extensions.scss */
+.stretchy-bg, body article.page .big-image {
+  background-position: center center;
+  background-repeat: none;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.big-image, body article.page .big-image {
+  height: 300px;
+}
+@media only screen and (min-width: 500px) {
+  .big-image, body article.page .big-image {
+    height: 420px;
+  }
+}
+
+/* line 4, ../scss/_mixins.scss */
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+/* line 9, ../scss/_mixins.scss */
+::-webkit-scrollbar-thumb {
+  background: #666666;
+}
+
+/* line 13, ../scss/_mixins.scss */
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* line 18, ../scss/_mixins.scss */
+body {
+  scrollbar-face-color: #666666;
+  scrollbar-track-color: rgba(255, 255, 255, 0.1);
+}
+
+/* line 11, ../scss/styles.scss */
+body {
+  color: #555;
+  padding: 20px;
+  padding: 0;
+  margin: 0;
+  -webkit-backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  line-height: 1.8em;
+  /* Responsive typography, yay! */
+}
+body h1, body h2, body h3, body h4, body h5, body h6 {
+  color: #333;
+}
+/* line 36, ../scss/styles.scss */
+body article.page {
+  -webkit-transform-origin: bottom center;
+  /* Class applied when when page fades away. */
+  /* The large image that accompanies every post. */
+  /* The content. */
+}
+/* line 39, ../scss/styles.scss */
+body article.page.hidden {
+  display: none;
+}
+/* line 42, ../scss/styles.scss */
+body article.page.next .big-image, body article.page.next .big-image {
+  cursor: pointer;
+}
+/* line 43, ../scss/styles.scss */
+body article.page.next .big-image .inner, body article.page.next .big-image .inner {
+  opacity: 1;
+}
+/* line 47, ../scss/styles.scss */
+body article.page.content-hidden .content {
+  display: none;
+}
+/* line 51, ../scss/styles.scss */
+body article.page.fade-up-out {
+  opacity: 0;
+  -webkit-transform: scale(0.8) translate3d(0, -10%, 0);
+  -moz-transform: scale(0.8) translate3d(0, -10%, 0);
+  -ms-transform: scale(0.8) translate3d(0, -10%, 0);
+  -o-transform: scale(0.8) translate3d(0, -10%, 0);
+  transform: scale(0.8) translate3d(0, -10%, 0);
+  -webkit-transition: all 450ms cubic-bezier(0.165, 0.84, 0.44, 1);
+  -moz-transition: all 450ms cubic-bezier(0.165, 0.84, 0.44, 1);
+  -o-transition: all 450ms cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: all 450ms cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+/* line 57, ../scss/styles.scss */
+body article.page.easing-upward {
+  -webkit-transition: all 450ms cubic-bezier(0.165, 0.84, 0.44, 1);
+  -moz-transition: all 450ms cubic-bezier(0.165, 0.84, 0.44, 1);
+  -o-transition: all 450ms cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: all 450ms cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+/* line 69, ../scss/styles.scss */
+body article.page .big-image .inner, body article.page .big-image .inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  opacity: 0;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+  -webkit-transition: all 0.1s ease;
+  -moz-transition: all 0.1s ease;
+  -o-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+}
+/* line 78, ../scss/styles.scss */
+body article.page .big-image .inner .fader, body article.page .big-image .inner .fader {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+}
+/* line 83, ../scss/styles.scss */
+body article.page .big-image .inner .fader .text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -ms-transform: translateX(-50%) translateY(-50%);
+  -o-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
+}
+/* line 89, ../scss/styles.scss */
+body article.page .big-image .inner .fader .text a, body article.page .big-image .inner .fader .text h1, body article.page .big-image .inner .fader .text h2 {
+  color: white;
+}
+/* line 91, ../scss/styles.scss */
+body article.page .big-image .inner .fader .text a {
+  color: white;
+  border-bottom: 1px solid white;
+  text-decoration: none;
+  line-height: 1.5em;
+}
+/* line 99, ../scss/styles.scss */
+body article.page .big-image .inner .fader .text h1 {
+  margin: 0;
+  margin-top: 0.1em;
+  padding-top: 0em;
+  padding-bottom: 0em;
+  margin-bottom: 0em;
+  line-height: 1.1em;
+}
+/* line 105, ../scss/styles.scss */
+body article.page .big-image .inner .fader .text h2 {
+  margin: 0;
+  margin-top: 0.2em;
+  padding-top: 0em;
+  padding-bottom: 0em;
+  margin-bottom: 0em;
+  line-height: 1.2em;
+}
+/* line 119, ../scss/styles.scss */
+body article.page .content {
+  padding: 0 3em;
+}
+/* line 123, ../scss/styles.scss */
+body article.page .content h3 {
+  color: #999;
+  margin-top: 3em;
+  padding-top: 0em;
+  padding-bottom: 0em;
+  margin-bottom: 0.375em;
+  line-height: 1.5em;
+}
+/* line 131, ../scss/styles.scss */
+body article.page .content h1 {
+  margin-top: 0em;
+  padding-top: 0em;
+  padding-bottom: 0em;
+  margin-bottom: 0.24em;
+  line-height: 1.08em;
+}
+/* line 140, ../scss/styles.scss */
+body article.page .content p:last-child {
+  margin-bottom: 3em;
+}
