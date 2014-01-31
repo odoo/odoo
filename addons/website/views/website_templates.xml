@@ -451,10 +451,7 @@
             <div id="error_main" class="panel-collapse collapse in">
                 <div class="panel-body">
                     <p t-if="website_controller">The following error was raised in the website controller <code t-esc="website_controller"/></p>
-                    <p>
-                        <strong>Error message:</strong>
-                        <pre t-esc="exception.message"/>
-                    </p>
+                    <p><strong>Error message:</strong> <pre t-esc="exception.message"/></p>
                 </div>
             </div>
         </div>
@@ -469,15 +466,11 @@
             <div id="error_qweb" class="panel-collapse collapse">
                 <div class="panel-body">
                     <p>
-                        <strong>Error message:</strong>
-                        <pre t-esc="exception.qweb['message']"/>
+                        The error occured while rendering the template <code t-esc="qweb_exception.template"/>
+                        <t t-if="qweb_exception.expression">and evaluating the following expression: <code t-esc="qweb_exception.expression"/></t>
                     </p>
-                    <p>
-                        The error occured while rendering the template <code t-esc="qweb_exception.qweb.get('template')"/>
-                        <t t-if="'expression' in qweb_exception.qweb">and evaluating the following expression: <code t-esc="qweb_exception.qweb['expression']"/></t>
-                    </p>
-                    <t t-if="'node' in qweb_exception.qweb">
-                        <pre id="exception_node" t-esc="qweb_exception.qweb['node'].toxml()"/>
+                    <t t-if="qweb_exception.node">
+                        <pre id="exception_node" t-esc="qweb_exception.node.toxml()"/>
                     </t>
                 </div>
             </div>

@@ -103,16 +103,20 @@ class ir_http(orm.AbstractModel):
                 traceback=traceback.format_exc(exception),
             )
             if exception:
-                code = getattr(exception, 'code', code)
+                current_exception = exception
                 if isinstance(exception, ir_qweb.QWebException):
                     values.update(qweb_exception=exception)
-                    if isinstance(exception.qweb.get('inner'), openerp.exceptions.AccessError):
-                        code = 403
+                    if exception.inner:
+                        current_exception = exception.inner
+                if isinstance(current_exception, openerp.exceptions.AccessError):
+                    code = 403
+                else:
+                    code = getattr(exception, 'code', code)
             if code == 500:
                 logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
-                if 'qweb_exception' in values:
+                if values.get('qweb_exception'):
                     view = request.registry.get("ir.ui.view")
-                    views = view._views_get(request.cr, request.uid, exception.qweb['template'], request.context)
+                    views = view._views_get(request.cr, request.uid, values['qweb_exception'].template, request.context)
                     to_reset = [v for v in views if v.model_data_id.noupdate is True]
                     values['views'] = to_reset
             elif code == 403:
@@ -128,7 +132,7 @@ class ir_http(orm.AbstractModel):
 
             try:
                 html = request.website._render('website.%s' % code, values)
-            except Exception:
+            except:
                 html = request.website._render('website.http_error', values)
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
