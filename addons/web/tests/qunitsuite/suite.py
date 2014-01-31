@@ -110,6 +110,8 @@ class QUnitSuite(unittest.TestSuite):
             self._test.failed = True
             result.addFailure(
                 self._test, self.failure_to_str(*args[2:]))
+        elif event_name == 'console':
+            print args[1]
 
         return False
 
