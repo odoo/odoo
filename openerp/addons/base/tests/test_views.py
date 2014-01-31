@@ -1,15 +1,12 @@
 # -*- encoding: utf-8 -*-
 from functools import partial
-import unittest2
 
 from lxml import etree as ET
 from lxml.builder import E
 
 from openerp.tests import common
-from openerp.tools import mute_logger
 
 Field = E.field
-
 
 class TestNodeLocator(common.BaseCase):
     """
@@ -143,6 +140,7 @@ class TestViewInheritance(common.TransactionCase):
             'name': name,
             'arch': arch or self.arch_for(name, parent=parent),
             'inherit_id': parent,
+            'priority': 5, # higher than default views
         })
         self.ids[name] = view_id
         return view_id
@@ -150,7 +148,7 @@ class TestViewInheritance(common.TransactionCase):
     def setUp(self):
         super(TestViewInheritance, self).setUp()
 
-        self.model = 'dummy'
+        self.model = 'ir.ui.view.custom'
         self.View = self.registry('ir.ui.view')
         self._init = self.View.pool._init
         self.View.pool._init = False
@@ -368,21 +366,23 @@ class TestNoModel(common.TransactionCase):
         View = self.registry('ir.ui.view')
         view_id = View.create(self.cr, self.uid, {
             'name': 'dummy',
-            'arch': '<form string=""/>',
-            'inherit_id': False
+            'arch': '<template name="foo"/>',
+            'inherit_id': False,
+            'type': 'qweb',
         })
         fields = ['name', 'arch', 'type', 'priority', 'inherit_id', 'model']
         [view] = View.read(self.cr, self.uid, [view_id], fields)
         self.assertEqual(view, {
             'id': view_id,
             'name': 'dummy',
-            'arch': '<form string=""/>',
-            'type': 'form',
+            'arch': '<template name="foo"/>',
+            'type': 'qweb',
             'priority': 16,
             'inherit_id': False,
             'model': False,
         })
 
+    text_para = E.p("", {'class': 'legalese'})
     arch = E.body(
         E.div(
             E.h1("Title"),
@@ -390,43 +390,32 @@ class TestNoModel(common.TransactionCase):
         E.p("Welcome!"),
         E.div(
             E.hr(),
-            E.p("Copyright copyrighter", {'class': 'legalese'}),
+            text_para,
             id="footer"),
         {'class': "index"},)
-    def test_fields_mess(self):
-        """
-        Try to call __view_look_dom_arch without a model provided, will need
-        to be altered once it's broken up into sane components
-        """
-        View = self.registry('ir.ui.view')
 
-        sarch, fields = View.postprocess_and_fields(
-            self.cr, self.uid, None, self.arch, None)
-
-        self.assertEqual(sarch, ET.tostring(self.arch, encoding='utf-8'))
-        self.assertEqual(fields, {})
-
-    def test_mess_translation(self):
+    def test_qweb_translation(self):
         """
         Test if translations work correctly without a model
         """
         View = self.registry('ir.ui.view')
         self.registry('res.lang').load_lang(self.cr, self.uid, 'fr_FR')
+        orig_text = "Copyright copyrighter"
+        translated_text = u"Copyrighter, tous droits réservés"
+        self.text_para.text = orig_text 
         self.registry('ir.translation').create(self.cr, self.uid, {
-            'name': '',
+            'name': 'website',
             'type': 'view',
             'lang': 'fr_FR',
-            'src': 'Copyright copyrighter',
-            'value': u"Copyrighter, tous droits réservés",
+            'src': orig_text,
+            'value': translated_text,
         })
-        sarch, fields = View.postprocess_and_fields(
-            self.cr, self.uid, None, self.arch, None, {'lang': 'fr_FR'})
+        sarch = View.translate_qweb(self.cr, self.uid, None, self.arch, 'fr_FR')
+        
+        self.text_para.text = translated_text
         self.assertEqual(
-            sarch,
-            ET.tostring(self.arch, encoding='utf-8')
-                .replace('Copyright copyrighter',
-                         'Copyrighter, tous droits réservés'))
-        self.assertEqual(fields, {})
+            ET.tostring(sarch, encoding='utf-8'),
+            ET.tostring(self.arch, encoding='utf-8'))
 
 
 class test_views(common.TransactionCase):

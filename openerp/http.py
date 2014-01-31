@@ -72,29 +72,6 @@ def redirect_with_hash(url, code=303):
         return werkzeug.utils.redirect(url, code)
     return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
 
-def ensure_db(with_registry=False, redirect='/web/database/selector'):
-    db = request.params.get('db')
-    # if db not provided, use the session one
-    if not db:
-        db = request.session.db
-
-    # if no database provided and no database in session, use monodb
-    if not db:
-        db = db_monodb(request.httprequest)
-
-    # if no db can be found til here, send to the database selector
-    # the database selector will redirect to database manager if needed
-    if not db:
-        werkzeug.exceptions.abort(werkzeug.utils.redirect(redirect, 303))
-
-    # always switch the session to the computed db
-    if db != request.session.db:
-        request.session.logout()
-    request.session.db = db
-
-    if with_registry:
-        request.disable_db = False
-
 class WebRequest(object):
     """ Parent class for all OpenERP Web request types, mostly deals with
     initialization and setup of the request object (the dispatching itself has
@@ -227,7 +204,7 @@ class WebRequest(object):
         kwargs.update(self.func_arguments)
 
         # Backward for 7.0
-        if getattr(self.func, '_first_arg_is_req', False):
+        if getattr(self.func.method, '_first_arg_is_req', False):
             args = (request,) + args
         # Correct exception handling and concurency retry
         @service_model.check
@@ -271,6 +248,7 @@ def route(route=None, **kw):
         authentication modules. There request code will not have any facilities to access the database nor have any
         configuration indicating the current database nor the current user.
     :param methods: A sequence of http methods this route applies to. If not specified, all methods are allowed.
+    :param cors: The Access-Control-Allow-Origin cors directive value.
     """
     routing = kw.copy()
     assert not 'type' in routing or routing['type'] in ("http", "json")
@@ -931,7 +909,7 @@ class Root(object):
         self.load_addons()
 
         _logger.info("Generating nondb routing")
-        self.nodb_routing_map = routing_map(['', "web"], True)
+        self.nodb_routing_map = routing_map([''] + openerp.conf.server_wide_modules, True)
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
@@ -979,8 +957,13 @@ class Root(object):
         return explicit_session
 
     def setup_db(self, httprequest):
-        if not httprequest.session.db:
-            # allow "admin" routes to works without being logged in when in monodb.
+        db = httprequest.session.db
+        # Check if session.db is legit
+        if db and db not in db_filter([db], httprequest=httprequest):
+            httprequest.session.logout()
+            db = None
+
+        if not db:
             httprequest.session.db = db_monodb(httprequest)
 
     def setup_lang(self, httprequest):
@@ -1003,8 +986,6 @@ class Root(object):
             try:
                 result.process()
             except(Exception), e:
-                # In case of auth="none" we re-activate db getter for exception handling
-                request.disable_db = False
                 if request.db:
                     result = request.registry['ir.http']._handle_exception(e)
                 else:
@@ -1025,6 +1006,16 @@ class Root(object):
         # - It could allow session fixation attacks.
         if not explicit_session and hasattr(response, 'set_cookie'):
             response.set_cookie('session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60)
+
+        # Support for Cross-Origin Resource Sharing
+        if request.func and 'cors' in request.func.routing:
+            response.headers.set('Access-Control-Allow-Origin', request.func.routing['cors'])
+            methods = 'GET, POST'
+            if request.func_request_type == 'json':
+                methods = 'POST'
+            elif request.func.routing.get('methods'):
+                methods = ', '.join(request.func.routing['methods'])
+            response.headers.set('Access-Control-Allow-Methods', methods)
 
         return response
 
@@ -1079,8 +1070,11 @@ class Root(object):
         return request.registry['ir.http'].routing_map()
 
 def db_list(force=False, httprequest=None):
-    httprequest = httprequest or request.httprequest
     dbs = openerp.netsvc.dispatch_rpc("db", "list", [force])
+    return db_filter(dbs, httprequest=httprequest)
+
+def db_filter(dbs, httprequest=None):
+    httprequest = httprequest or request.httprequest
     h = httprequest.environ['HTTP_HOST'].split(':')[0]
     d = h.split('.')[0]
     r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
@@ -1099,8 +1093,6 @@ def db_monodb(httprequest=None):
         Returns ``None`` if the magic is not magic enough.
     """
     httprequest = httprequest or request.httprequest
-    db = None
-    redirect = None
 
     dbs = db_list(True, httprequest)
 

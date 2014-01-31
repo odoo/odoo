@@ -24,10 +24,8 @@ import logging
 from lxml import etree
 from operator import itemgetter
 import os
-import time
 
 import HTMLParser
-from lxml import etree
 
 import openerp
 from openerp import tools
@@ -36,7 +34,7 @@ from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.view_validation import valid_view
 from openerp.tools import misc
-from openerp.osv.orm import browse_record, browse_record_list
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -89,7 +87,7 @@ class view(osv.osv):
                                   help="ID of the view defined in xml file"),
         'groups_id': fields.many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
             string='Groups', help="If this field is empty, the view applies to all users. Otherwise, the view applies to the users of those groups only."),
-        'model_ids': fields.one2many('ir.model.data', 'res_id', auto_join=True),
+        'model_ids': fields.one2many('ir.model.data', 'res_id', domain=[('model','=','ir.ui.view')], auto_join=True),
     }
     _defaults = {
         'priority': 16,
@@ -114,20 +112,19 @@ class view(osv.osv):
     def _check_xml(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        context['check_view_ids'] = ids
+        context = dict(context, check_view_ids=ids)
 
+        # Sanity checks: the view should not break anything upon rendering!
+        # Any exception raised below will cause a transaction rollback.
         for view in self.browse(cr, uid, ids, context):
-            # Sanity check: the view should not break anything upon rendering!
-            try:
-                fvg = self.read_combined(cr, uid, view.id, None, context=context)
-                view_arch_utf8 = fvg['arch']
-            except Exception, e:
-                _logger.exception(e)
-                return False
+            view_def = self.read_combined(cr, uid, view.id, None, context=context)
+            view_arch_utf8 = view_def['arch']
             if view.type != 'qweb':
+                view_doc = etree.fromstring(view_arch_utf8)
+                # verify that all fields used are valid, etc.
+                self.postprocess_and_fields(cr, uid, view.model, view_doc, view.id, context=context)
                 # RNG-based validation is not possible anymore with 7.0 forms
-                # TODO 7.0: provide alternative assertion-based validation of view_arch_utf8
-                view_docs = [etree.fromstring(view_arch_utf8)]
+                view_docs = [view_doc]
                 if view_docs[0].tag == 'data':
                     # A <data> element is a wrapper for multiple root nodes
                     view_docs = view_docs[0]
@@ -142,7 +139,7 @@ class view(osv.osv):
         return True
 
     _constraints = [
-        (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
+        (_check_xml, 'Invalid view definition', ['arch'])
     ]
 
     def _auto_init(self, cr, context=None):
@@ -251,8 +248,21 @@ class view(osv.osv):
                 if not (view.groups_id and user_groups.isdisjoint(view.groups_id))]
 
     def raise_view_error(self, cr, uid, message, view_id, context=None):
-        view = self.browse(cr, uid, [view_id], context)[0]
-        message = "Inherit error: %s view_id: %s, xml_id: %s, model: %s, parent_view: %s" % (message, view_id, view.xml_id, view.model, view.inherit_id)
+        view = self.browse(cr, uid, view_id, context)
+        not_avail = _('n/a')
+        message = ("%(msg)s\n\n" +
+                   _("Error context:\nView `%(view_name)s`") + 
+                   "\n[view_id: %(viewid)s, xml_id: %(xmlid)s, "
+                   "model: %(model)s, parent_id: %(parent)s]") % \
+                        {
+                          'view_name': view.name or not_avail, 
+                          'viewid': view_id or not_avail,
+                          'xmlid': view.xml_id or not_avail,
+                          'model': view.model or not_avail,
+                          'parent': view.inherit_id.id or not_avail,
+                          'msg': message,
+                        }
+        _logger.error(message)
         raise AttributeError(message)
 
     def locate_node(self, arch, spec):
@@ -360,7 +370,7 @@ class view(osv.osv):
                         elif pos == 'before':
                             node.addprevious(child)
                         else:
-                            self.raise_view_error(cr, uid, "Invalid position value: '%s'" % pos, inherit_id, context=context)
+                            self.raise_view_error(cr, uid, _("Invalid position attribute: '%s'") % pos, inherit_id, context=context)
             else:
                 attrs = ''.join([
                     ' %s="%s"' % (attr, spec.get(attr))
@@ -368,7 +378,7 @@ class view(osv.osv):
                     if attr != 'position'
                 ])
                 tag = "<%s%s>" % (spec.tag, attrs)
-                self.raise_view_error(cr, uid, "Element '%s' not found in parent view " % tag, inherit_id, context=context)
+                self.raise_view_error(cr, uid, _("Element '%s' cannot be located in parent view") % tag, inherit_id, context=context)
 
         return source
 
@@ -458,6 +468,9 @@ class view(osv.osv):
 
         modifiers = {}
         Model = self.pool.get(model)
+        if not Model:
+            self.raise_view_error(cr, user, _('Model not found: %(model)s') % dict(model=model),
+                                  view_id, context)
 
         def encode(s):
             if isinstance(s, unicode):
@@ -474,7 +487,7 @@ class view(osv.osv):
 
                :return: True if field should be included in the result of fields_view_get
             """
-            if Model and node.tag == 'field' and node.get('name') in Model._all_columns:
+            if node.tag == 'field' and node.get('name') in Model._all_columns:
                 column = Model._all_columns[node.get('name')].column
                 if column.groups and not self.user_has_groups(
                         cr, user, groups=column.groups, context=context):
@@ -523,8 +536,6 @@ class view(osv.osv):
                     column = False
 
                 if column:
-                    relation = self.pool[column._obj] if column._obj else None
-
                     children = False
                     views = {}
                     for f in node:
@@ -563,7 +574,7 @@ class view(osv.osv):
         # Get the attrs before they are (possibly) deleted by check_group below
         orm.transfer_node_to_modifiers(node, modifiers, context, in_tree_view)
 
-        # TODO remove attrs couterpart in modifiers when invisible is true ?
+        # TODO remove attrs counterpart in modifiers when invisible is true ?
 
         # translate view
         if 'lang' in context:
@@ -638,6 +649,8 @@ class view(osv.osv):
         """
         fields = {}
         Model = self.pool.get(model)
+        if not Model:
+            self.raise_view_error(cr, user, _('Model not found: %(model)s') % dict(model=model), view_id, context)
 
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
@@ -649,7 +662,7 @@ class view(osv.osv):
             if node.getchildren()[1].tag == 'arrow':
                 arrow_fields = self.pool[node.getchildren()[1].get('object')].fields_get(cr, user, None, context)
                 fields.update(arrow_fields)
-        elif Model:
+        else:
             fields = Model.fields_get(cr, user, None, context)
 
         fields_def = self.postprocess(cr, user, model, node, view_id, False, fields, context=context)
@@ -669,14 +682,9 @@ class view(osv.osv):
             elif field in fields:
                 fields[field].update(fields_def[field])
             else:
-                cr.execute('select name, model from ir_ui_view where (id=%s or inherit_id=%s) and arch like %s', (view_id, view_id, '%%%s%%' % field))
-                res = cr.fetchall()[:]
-                model = res[0][1]
-                res.insert(0, ("Can't find field '%s' in the following view parts composing the view of object model '%s':" % (field, model), None))
-                msg = "\n * ".join([r[0] for r in res])
-                msg += "\n\nEither you wrongly customized this view, or some modules bringing those views are not compatible with your current data model"
-                _logger.error(msg)
-                raise orm.except_orm('View error', msg)
+                message = _("Field `%(field_name)s` does not exist") % \
+                                dict(field_name=field)
+                self.raise_view_error(cr, user, message, view_id, context)
         return arch, fields
 
     #------------------------------------------------------
@@ -687,9 +695,7 @@ class view(osv.osv):
         if '.' not in xml_id:
             raise ValueError('Invalid template id: %r' % (xml_id,))
 
-        m, n = xml_id.split('.', 1)
-        _, view_id = self.pool['ir.model.data'].get_object_reference(cr, uid, m, n)
-
+        view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id, raise_if_not_found=True)
         arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
         arch_tree = etree.fromstring(arch)
 
