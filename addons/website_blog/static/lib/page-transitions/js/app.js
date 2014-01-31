@@ -97,8 +97,9 @@ ArticleAnimator.contentizeElement = function($el, d){
   $el.find('h1.title').html(d.title);
   $el.find('h2.description').html(d.title_secondary);
   $el.find('.content .text').html(d.content);
-  $el.find('h3.byline time').html(d.date);
-  $el.find('h3.byline .author').html(d.author);
+  $el.find('h4.byline time').html(d.date);
+  $el.find('h4.byline .author').html(d.author);
+  $el.find('h4.byline .author_image').html("<img class='img-circle' style='width: 3%; margin-right:10px;' src='" + d.author_image + "'/>")
 }
 
 ArticleAnimator.animatePage = function(callback){

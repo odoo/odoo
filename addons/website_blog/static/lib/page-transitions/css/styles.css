@@ -79,6 +79,13 @@ body article.page.next .big-image, body article.page.next .big-image {
 body article.page.next .big-image .inner, body article.page.next .big-image .inner {
   opacity: 1;
 }
+body article.page.current .big-image .inner, body article.page.current .big-image .inner {
+  opacity: 1;
+}
+body article.page.current .big-image .inner .fader .text .goto-next, body article.page.current .big-image .inner .fader .text .goto-next {
+  opacity: 0;
+}
+
 body article.page.current .big-image, body article.page.current .big-image {
   background: #B2B2B2;
 }
@@ -140,6 +147,9 @@ body article.page .big-image .inner .fader .text {
 }
 /* line 89, ../scss/styles.scss */
 body article.page .big-image .inner .fader .text a, body article.page .big-image .inner .fader .text h1, body article.page .big-image .inner .fader .text h2 {
+  color: white;
+}
+body article.page .big-image .inner .fader .text h4 {
   color: white;
 }
 /* line 91, ../scss/styles.scss */

@@ -273,6 +273,7 @@ class WebsiteBlog(http.Controller):
               "image": "data:image/png;base64,%s" % blog.content_image,
               "date": blog.create_date ,
               "author": blog.create_uid.name,
+              "author_image": "data:image/png;base64,%s" % blog.create_uid.image,
               "title": blog.name,
               "title_secondary": "It's not too hard, really.",
               "content": blog.content,
