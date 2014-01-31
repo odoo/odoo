@@ -72,7 +72,7 @@ class stock_picking_wave(osv.osv):
 class stock_picking(osv.osv):
     _inherit = "stock.picking"
     _columns = {
-        'wave_id': fields.many2one('stock.picking.wave', 'Picking Wave', help='Picking wave associated to this picking'),
+        'wave_id': fields.many2one('stock.picking.wave', 'Picking Wave', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, help='Picking wave associated to this picking'),
         'wave_type_ids': fields.related('partner_id', 'wave_type_ids', type="many2many", relation='stock.picking.wave.type', string='Picking Wave Type'),
     }
 
