@@ -119,14 +119,18 @@ def redirect_with_hash(*args, **kw):
     """
     return http.redirect_with_hash(*args, **kw)
 
-def ensure_db(redirect='/web/database/selector'):
+def ensure_db():
     # This helper should be used in web client auth="none" routes
     # if those routes needs a db to work with.
     # If the heuristics does not find any database, then the users will be
-    # redirected to db selector or any url specified by `redirect` argument.
+    # redirected to db selector.
+    #
     # If the db is taken out of a query parameter, it will be checked against
     # `http.db_filter()` in order to ensure it's legit and thus avoid db
     # forgering that could lead to xss attacks.
+    #
+    # If the function returns True, the current routing is ok, if False, the
+    # User just switched his database and should be redirected.
     db = request.params.get('db')
 
     # Ensure db is legit
@@ -144,13 +148,16 @@ def ensure_db(redirect='/web/database/selector'):
     # if no db can be found til here, send to the database selector
     # the database selector will redirect to database manager if needed
     if not db:
-        werkzeug.exceptions.abort(werkzeug.utils.redirect(redirect, 303))
+        werkzeug.exceptions.abort(werkzeug.utils.redirect('/web/database/selector', 303))
 
+    state = True
     # always switch the session to the computed db
     if db != request.session.db:
         request.session.logout()
+        state = False
 
     request.session.db = db
+    return state
 
 def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the
@@ -626,7 +633,8 @@ class Home(http.Controller):
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
-        ensure_db()
+        if not ensure_db():
+            return http.local_redirect('/web/login', query=request.params, keep_hash=True)
 
         values = request.params.copy()
         if not redirect:
