@@ -749,8 +749,6 @@ class purchase_order(osv.osv):
                 for vals in self._prepare_order_line_move(cr, uid, order, order_line, picking_id, group_id, context=context):
                     move = stock_move.create(cr, uid, vals, context=context)
                     todo_moves.append(move)
-                if order_line.move_dest_id:
-                    order_line.move_dest_id.write({'location_id': order.location_id.id})
 
         stock_move.action_confirm(cr, uid, todo_moves)
         stock_move.force_assign(cr, uid, todo_moves)

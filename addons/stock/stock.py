@@ -908,6 +908,9 @@ class stock_picking(osv.osv):
             for move in picking.move_lines:
                 if move.state != 'assigned':
                     continue
+                
+                
+                
                 #Check which of the reserved quants are entirely in packages (can be in separate method)
                 packages = list(set([x.package_id for x in move.reserved_quant_ids if x.package_id]))
                 done_packages = []
@@ -929,6 +932,7 @@ class stock_picking(osv.osv):
                         done_packages.append(good_pack)
                 done_packages = list(set(done_packages))
 
+                
                 #Create package operations
                 reserved = set([x.id for x in move.reserved_quant_ids])
                 remaining_qty = move.product_qty
