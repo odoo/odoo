@@ -19,7 +19,6 @@ import test_misc
 import test_orm
 import test_osv
 import test_translate
-import test_uninstall
 import test_view_validation
 import test_qweb
 import test_func

@@ -642,8 +642,8 @@ class ManyToOneConverter(osv.AbstractModel):
 
     def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
         [read] = record.read([field_name])
+        if not read[field_name]: return ''
         _, value = read[field_name]
-
         return nl2br(value, options=options)
 
 class HTMLConverter(osv.AbstractModel):
