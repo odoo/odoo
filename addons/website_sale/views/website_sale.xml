@@ -832,7 +832,7 @@
               <h3 class="page-header mt16">Your Order <small><a href="/shop/mycart"><span class="fa fa-arrow-right"/> change</a></small></h3>
               <div class="row">
                   <div class="col-sm-6 text-right">Subtotal:</div>
-                  <div class="col-sm-6"><span t-esc="website_sale_order.amount_untaxed" t-field-options='{
+                  <div class="col-sm-6"><span t-field="website_sale_order.amount_untaxed" t-field-options='{
                       "widget": "monetary",
                       "display_currency": "website.pricelist_id.currency_id"
                   }'/></div>
