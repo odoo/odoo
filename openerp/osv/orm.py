@@ -47,6 +47,7 @@ import itertools
 import logging
 import operator
 import pickle
+import pytz
 import re
 import simplejson
 import time
@@ -62,7 +63,7 @@ import fields
 import openerp
 import openerp.tools as tools
 from openerp.tools.config import config
-from openerp.tools.misc import CountingStream
+from openerp.tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
@@ -2260,17 +2261,23 @@ class BaseModel(object):
                         interval = 'month'
 
                     if interval == 'day':
-                        display_format = 'dd MMMM YYYY' 
+                        display_format = 'dd MMM YYYY' 
                     elif interval == 'week':
-                        display_format = "'W'w"
+                        display_format = "'W'w YYYY"
                     elif interval == 'month':
-                        display_format = 'MMMM'
+                        display_format = 'MMMM YYYY'
                     elif interval == 'quarter':
-                        display_format = 'QQQ'
+                        display_format = 'QQQ YYYY'
                     elif interval == 'year':
                         display_format = 'YYYY'
 
-                    qualified_groupby_field = "date_trunc('%s',%s)" % (interval, qualified_groupby_field)
+                    if groupby_type == 'datetime' and context.get('tz') in pytz.all_timezones:
+                        # Convert groupby result to user TZ to avoid confusion!
+                        # PostgreSQL is compatible with all pytz timezone names, so we can use them
+                        # directly for conversion, starting with timestamps stored in UTC. 
+                        timezone = context.get('tz', 'UTC')
+                        qualified_groupby_field = "timezone('%s', timezone('UTC',%s))" % (timezone, qualified_groupby_field)
+                    qualified_groupby_field = "date_trunc('%s', %s)" % (interval, qualified_groupby_field)
                     flist = "%s as %s " % (qualified_groupby_field, groupby)
                 elif groupby_type == 'boolean':
                     qualified_groupby_field = "coalesce(%s,false)" % qualified_groupby_field
@@ -2332,11 +2339,15 @@ class BaseModel(object):
                     if groupby or not context.get('group_by_no_leaf', False):
                         d['__context'] = {'group_by': groupby_list[1:]}
             if groupby and groupby in fget:
-                if d[groupby] and fget[groupby]['type'] in ('date', 'datetime'):
+                groupby_type = fget[groupby]['type']
+                if d[groupby] and groupby_type in ('date', 'datetime'):
                     groupby_datetime = alldata[d['id']][groupby]
                     if isinstance(groupby_datetime, basestring):
                         _default = datetime.datetime(1970, 1, 1)    # force starts of month
                         groupby_datetime = dateutil.parser.parse(groupby_datetime, default=_default)
+                    tz_convert = groupby_type == 'datetime' and context.get('tz') in pytz.all_timezones
+                    if tz_convert:
+                        groupby_datetime =  pytz.timezone(context['tz']).localize(groupby_datetime)
                     d[groupby] = babel.dates.format_date(
                         groupby_datetime, format=display_format, locale=context.get('lang', 'en_US'))
                     domain_dt_begin = groupby_datetime
@@ -2350,7 +2361,14 @@ class BaseModel(object):
                         domain_dt_end = groupby_datetime + datetime.timedelta(days=1)
                     else:
                         domain_dt_end = groupby_datetime + dateutil.relativedelta.relativedelta(years=1)
-                    d['__domain'] = [(groupby, '>=', domain_dt_begin.strftime('%Y-%m-%d')), (groupby, '<', domain_dt_end.strftime('%Y-%m-%d'))] + domain
+                    if tz_convert:
+                        # the time boundaries were all computed in the apparent TZ of the user,
+                        # so we need to convert them to UTC to have proper server-side values.
+                        domain_dt_begin = domain_dt_begin.astimezone(pytz.utc)
+                        domain_dt_end = domain_dt_end.astimezone(pytz.utc)
+                    dt_format = DEFAULT_SERVER_DATETIME_FORMAT if groupby_type == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
+                    d['__domain'] = [(groupby, '>=', domain_dt_begin.strftime(dt_format)),
+                                     (groupby, '<', domain_dt_end.strftime(dt_format))] + domain
                 del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
