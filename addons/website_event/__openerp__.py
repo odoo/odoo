@@ -22,4 +22,5 @@ Online Events
         'data/event_demo.xml'
     ],
     'installable': True,
+    'application': True,
 }

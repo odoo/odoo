@@ -23,7 +23,7 @@
             </div>
             <div class="container">
                 <div class="row">
-                    <div class="col-md-3" id="ref_left_column">
+                    <div class="col-md-3 mb32" id="ref_left_column">
                     </div>
                     <div class="col-md-9" id="ref_content">
                         <div class='navbar mb0'>
@@ -43,7 +43,7 @@
                                 <p>No result found.</p>
                             </t>
                             <t t-foreach="partners_data" t-as="partner_data" class="media">
-                                <div class="media thumbnail">
+                                <div class="media">
                                     <a class="pull-left" t-attf-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
                                         <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data.get('image_small')}"/>
                                     </a>
@@ -157,7 +157,7 @@
     <xpath expr="//div[@id='right_column']" position="inside">
         <t t-if="implemented_partners_data">
             <h3 id="references">References</h3>
-            <div t-foreach="implemented_partners_data" t-as="partner_data" class="media thumbnail">
+            <div t-foreach="implemented_partners_data" t-as="partner_data" class="media">
                 <a class="pull-left" t-attf-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
                     <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data.get('image_small')}"/>
                 </a>

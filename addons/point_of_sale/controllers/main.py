@@ -58,13 +58,12 @@ class PosController(http.Controller):
     @http.route('/pos/web', type='http', auth='none')
     def a(self, debug=False, **k):
 
+        if not request.session.uid:
+            return http.local_redirect('/web/login?redirect=/pos/web')
 
         js_list = manifest_list('js',db=request.db, debug=debug)
         css_list =   manifest_list('css',db=request.db, debug=debug)
         
-        print css_list
-        print js_list
-
         js = "\n".join('<script type="text/javascript" src="%s"></script>' % i for i in js_list)
         #css = "\n".join('<link rel="stylesheet" href="%s">' % i for i in css_list)
         r = html_template % {
@@ -76,9 +75,6 @@ class PosController(http.Controller):
                      wc.show_application = function(){
                          wc.action_manager.do_action("pos.ui");
                      };
-                     wc.show_login = function(){
-                         window.location.href = '/';
-                     }
                      wc.appendTo($(document.body));
                      """
         }

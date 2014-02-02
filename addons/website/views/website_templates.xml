@@ -469,9 +469,9 @@
             </div>
             <div id="error_qweb" class="panel-collapse collapse">
                 <div class="panel-body">
-                    <p>
+                    <p t-if="exception.qweb.get('message')">
                         <strong>Error message:</strong>
-                        <pre t-esc="exception.qweb['message']"/>
+                        <pre t-esc="exception.qweb.get('message')"/>
                     </p>
                     <p>
                         The error occured while rendering the template <code t-esc="qweb_exception.qweb.get('template')"/>
@@ -577,7 +577,7 @@
                     <div class="container" t-if="views">
                         <div class="alert alert-danger" t-if="qweb_exception and editable">
                             <h4>Template fallback</h4>
-                            <p>An error occured while rendering the template <code t-esc="qweb_exception.template"/>.</p>
+                            <p>An error occured while rendering the template <code t-esc="qweb_exception.qweb['template']"/>.</p>
                             <p>If this error is caused by a change of yours in the templates, you have the possibility to reset one or more templates to their <strong>factory settings</strong>.</p>
                             <form action="/website/reset_templates" method="post">
                                 <ul class="oe_template_fallback">
