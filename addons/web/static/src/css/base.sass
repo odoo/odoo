@@ -190,6 +190,17 @@ $sheet-padding: 16px
         vertical-align: middle
     td
         vertical-align: top
+    .oe_title
+        width: 50%
+        float: left    
+    .oe_title:after
+        content: "."
+        display: block
+        height: 0
+        clear: both
+        visibility: hidden    
+    .oe_form_group
+        clear: both
     .zebra tbody tr:nth-child(odd) td
         background-color: #f0f0fa
         @include vertical-gradient(#f0f0fa, #eeeef6)
