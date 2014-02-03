@@ -6,6 +6,7 @@ import csv
 import functools
 import glob
 import itertools
+import jinja2
 import logging
 import operator
 import datetime
@@ -14,10 +15,7 @@ import os
 import re
 import simplejson
 import time
-import urllib
 import urllib2
-import urlparse
-import xmlrpclib
 import zlib
 from xml.etree import ElementTree
 from cStringIO import StringIO
@@ -33,12 +31,17 @@ except ImportError:
 import openerp
 import openerp.modules.registry
 from openerp.tools.translate import _
-from openerp.tools import config
 from openerp import http
 
-from openerp.http import request, serialize_exception as _serialize_exception
+from openerp.http import request, serialize_exception as _serialize_exception, LazyResponse
 
 _logger = logging.getLogger(__name__)
+
+env = jinja2.Environment(
+    loader=jinja2.PackageLoader('openerp.addons.web', "views"),
+    autoescape=True
+)
+env.filters["json"] = simplejson.dumps
 
 #----------------------------------------------------------
 # OpenERP Web helpers
@@ -108,12 +111,46 @@ def serialize_exception(f):
             return werkzeug.exceptions.InternalServerError(simplejson.dumps(error))
     return wrap
 
-def redirect_with_hash(url, code=303):
-    # Most IE and Safari versions decided not to preserve location.hash upon
-    # redirect. And even if IE10 pretends to support it, it still fails
-    # inexplicably in case of multiple redirects (and we do have some).
-    # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
-    return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
+def redirect_with_hash(*args, **kw):
+    """
+        .. deprecated:: 8.0
+
+        Use the ``http.redirect_with_hash()`` function instead.
+    """
+    return http.redirect_with_hash(*args, **kw)
+
+def ensure_db(redirect='/web/database/selector'):
+    # This helper should be used in web client auth="none" routes
+    # if those routes needs a db to work with.
+    # If the heuristics does not find any database, then the users will be
+    # redirected to db selector or any url specified by `redirect` argument.
+    # If the db is taken out of a query parameter, it will be checked against
+    # `http.db_filter()` in order to ensure it's legit and thus avoid db
+    # forgering that could lead to xss attacks.
+    db = request.params.get('db')
+
+    # Ensure db is legit
+    if db and db not in http.db_filter([db]):
+        db = None
+
+    # if db not provided, use the session one
+    if not db:
+        db = request.session.db
+
+    # if no database provided and no database in session, use monodb
+    if not db:
+        db = db_monodb(request.httprequest)
+
+    # if no db can be found til here, send to the database selector
+    # the database selector will redirect to database manager if needed
+    if not db:
+        werkzeug.exceptions.abort(werkzeug.utils.redirect(redirect, 303))
+
+    # always switch the session to the computed db
+    if db != request.session.db:
+        request.session.logout()
+
+    request.session.db = db
 
 def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the
@@ -317,9 +354,9 @@ def manifest_list(extension, mods=None, db=None, debug=False):
     if not debug:
         path = '/web/webclient/' + extension
         if mods is not None:
-            path += '?' + urllib.urlencode({'mods': mods})
+            path += '?' + werkzeug.url_encode({'mods': mods})
         elif db:
-            path += '?' + urllib.urlencode({'db': db})
+            path += '?' + werkzeug.url_encode({'db': db})
 
         remotes = [wp for fp, wp in files if fp is None]
         return [path] + remotes
@@ -512,6 +549,8 @@ def content_disposition(filename):
 # OpenERP Web web Controllers
 #----------------------------------------------------------
 
+# TODO: to remove once the database manager has been migrated server side
+#       and `edi` + `pos` addons has been adapted to use render_bootstrap_template()
 html_template = """<!DOCTYPE html>
 <html style="height: 100%%">
     <head>
@@ -538,53 +577,71 @@ html_template = """<!DOCTYPE html>
 </html>
 """
 
+def render_bootstrap_template(db, template, values=None, debug=False, lazy=False, **kw):
+    if request and request.debug:
+        debug = True
+    if values is None:
+        values = {}
+    values.update(kw)
+    values['debug'] = debug
+    values['current_db'] = db
+    try:
+        values['databases'] = http.db_list()
+    except openerp.exceptions.AccessDenied:
+        values['databases'] = None
+
+    for res in ['js', 'css']:
+        if res not in values:
+            values[res] = manifest_list(res, db=db, debug=debug)
+
+    if 'modules' not in values:
+        values['modules'] = module_boot(db=db)
+    values['modules'] = simplejson.dumps(values['modules'])
+
+    def callback(template, values):
+        registry = openerp.modules.registry.RegistryManager.get(db)
+        with registry.cursor() as cr:
+            view_obj = registry["ir.ui.view"]
+            return view_obj.render(cr, openerp.SUPERUSER_ID, template, values)
+    if lazy:
+        return LazyResponse(callback, template=template, values=values)
+    else:
+        return callback(template, values)
+
 class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
-    def index(self, s_action=None, db=None, debug=False, **kw):
-        query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
-        redirect = '/web' + '?' + urllib.urlencode(query)
-        return redirect_with_hash(redirect)
+    def index(self, s_action=None, db=None, **kw):
+        return http.local_redirect('/web', query=request.params)
 
     @http.route('/web', type='http', auth="none")
-    def web_client(self, s_action=None, db=None, debug=False, **kw):
-        debug = debug != False
+    def web_client(self, s_action=None, **kw):
+        ensure_db()
 
-        lst = http.db_list(True)
-        if db not in lst:
-            db = None
-        guessed_db = http.db_monodb(request.httprequest)
-        if guessed_db is None and len(lst) > 0:
-            guessed_db = lst[0]
+        if request.session.uid:
+            html = render_bootstrap_template(request.session.db, "web.webclient_bootstrap")
+            return request.make_response(html, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
+        else:
+            return http.local_redirect('/web/login', query=request.params)
 
-        def redirect(db):
-            query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
-            query['db'] = db
-            redirect = request.httprequest.path + '?' + urllib.urlencode(query)
-            return redirect_with_hash(redirect)
+    @http.route('/web/login', type='http', auth="none")
+    def web_login(self, redirect=None, **kw):
+        ensure_db()
 
-        if db is None and guessed_db is not None:
-            return redirect(guessed_db)
-
-        if db is not None and db != request.session.db:
-            request.session.logout()
-            request.session.db = db
-            guessed_db = db
-
-        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=guessed_db, debug=debug))
-        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=guessed_db, debug=debug))
-
-        r = html_template % {
-            'js': js,
-            'css': css,
-            'modules': simplejson.dumps(module_boot(db=guessed_db)),
-            'init': 'var wc = new s.web.WebClient();wc.appendTo($(document.body));'
-        }
-        return request.make_response(r, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
+        values = request.params.copy()
+        if not redirect:
+            redirect = '/web?' + request.httprequest.query_string
+        values['redirect'] = redirect
+        if request.httprequest.method == 'POST':
+            uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
+            if uid is not False:
+                return http.redirect_with_hash(redirect)
+            values['error'] = "Wrong login/password"
+        return render_bootstrap_template(request.session.db, 'web.login', values, lazy=True)
 
     @http.route('/login', type='http', auth="none")
-    def login(self, db, login, key):
-        return login_and_redirect(db, login, key)
+    def login(self, db, login, key, redirect="/web", **kw):
+        return login_and_redirect(db, login, key, redirect_url=redirect)
 
 class WebClient(http.Controller):
 
@@ -700,26 +757,28 @@ class WebClient(http.Controller):
         return {"modules": translations_per_module,
                 "lang_parameters": None}
 
-    @http.route('/web/webclient/translations', type='json', auth="admin")
+    @http.route('/web/webclient/translations', type='json', auth="none")
     def translations(self, mods=None, lang=None):
+        request.disable_db = False
+        uid = openerp.SUPERUSER_ID
         if mods is None:
             m = request.registry.get('ir.module.module')
-            mods = [x['name'] for x in m.search_read(request.cr, request.uid,
+            mods = [x['name'] for x in m.search_read(request.cr, uid,
                 [('state','=','installed')], ['name'])]
         if lang is None:
             lang = request.context["lang"]
         res_lang = request.registry.get('res.lang')
-        ids = res_lang.search(request.cr, request.uid, [("code", "=", lang)])
+        ids = res_lang.search(request.cr, uid, [("code", "=", lang)])
         lang_params = None
         if ids:
-            lang_params = res_lang.read(request.cr, request.uid, ids[0], ["direction", "date_format", "time_format",
+            lang_params = res_lang.read(request.cr, uid, ids[0], ["direction", "date_format", "time_format",
                                                 "grouping", "decimal_point", "thousands_sep"])
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
         # done server-side when the language is loaded, so we only need to load the user's lang.
         ir_translation = request.registry.get('ir.translation')
         translations_per_module = {}
-        messages = ir_translation.search_read(request.cr, request.uid, [('module','in',mods),('lang','=',lang),
+        messages = ir_translation.search_read(request.cr, uid, [('module','in',mods),('lang','=',lang),
                                                ('comments','like','openerp-web'),('value','!=',False),
                                                ('value','!=','')],
                                               ['module','src','value','lang'], order='module')
@@ -754,6 +813,37 @@ class Proxy(http.Controller):
 
 class Database(http.Controller):
 
+    @http.route('/web/database/selector', type='http', auth="none")
+    def selector(self, **kw):
+        try:
+            dbs = http.db_list()
+            if not dbs:
+                return http.local_redirect('/web/database/manager')
+        except openerp.exceptions.AccessDenied:
+            dbs = False
+        return env.get_template("database_selector.html").render({
+            'databases': dbs,
+            'debug': request.debug,
+        })
+
+    @http.route('/web/database/manager', type='http', auth="none")
+    def manager(self, **kw):
+        # TODO: migrate the webclient's database manager to server side views
+        request.session.logout()
+        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', debug=request.debug))
+        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', debug=request.debug))
+
+        r = html_template % {
+            'js': js,
+            'css': css,
+            'modules': simplejson.dumps(module_boot()),
+            'init': """
+                var wc = new s.web.WebClient(null, { action: 'database_manager' });
+                wc.appendTo($(document.body));
+            """
+        }
+        return r
+
     @http.route('/web/database/get_list', type='json', auth="none")
     def get_list(self):
         # TODO change js to avoid calling this method if in monodb mode
@@ -768,12 +858,15 @@ class Database(http.Controller):
     @http.route('/web/database/create', type='json', auth="none")
     def create(self, fields):
         params = dict(map(operator.itemgetter('name', 'value'), fields))
-        return request.session.proxy("db").create_database(
+        db_created = request.session.proxy("db").create_database(
             params['super_admin_pwd'],
             params['db_name'],
             bool(params.get('demo_data')),
             params['db_lang'],
             params['create_admin_pwd'])
+        if db_created:
+            request.session.authenticate(params['db_name'], 'admin', params['create_admin_pwd'])
+        return db_created
 
     @http.route('/web/database/duplicate', type='json', auth="none")
     def duplicate(self, fields):
@@ -915,6 +1008,7 @@ class Session(http.Controller):
         key = saved_actions["next"]
         saved_actions["actions"][key] = the_action
         saved_actions["next"] = key + 1
+        request.httpsession['saved_actions'] = saved_actions
         return key
 
     @http.route('/web/session/get_session_action', type='json', auth="user")
@@ -942,9 +1036,9 @@ class Session(http.Controller):
     def destroy(self):
         request.session.logout()
 
-    @http.route('/web/session/logout', type='http', auth="user")
+    @http.route('/web/session/logout', type='http', auth="none")
     def logout(self, redirect='/web'):
-        request.session.logout()
+        request.session.logout(keep_db=True)
         return werkzeug.utils.redirect(redirect, 303)
 
 class Menu(http.Controller):
@@ -1340,7 +1434,11 @@ class Binary(http.Controller):
             args = {'error': "Something horrible happened"}
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
-    @http.route('/web/binary/company_logo', type='http', auth="none")
+    @http.route([
+        '/web/binary/company_logo',
+        '/logo',
+        '/logo.png',
+    ], type='http', auth="none")
     def company_logo(self, dbname=None):
         # TODO add etag, refactor to use /image code for etag
         uid = None
@@ -1745,5 +1843,32 @@ class Reports(http.Controller):
                  ('Content-Type', report_mimetype),
                  ('Content-Length', len(report))],
              cookies={'fileToken': token})
+
+class Apps(http.Controller):
+    @http.route('/apps/<app>', auth='user')
+    def get_app_url(self, req, app):
+        act_window_obj = request.session.model('ir.actions.act_window')
+        ir_model_data = request.session.model('ir.model.data')
+        try:
+            action_id = ir_model_data.get_object_reference('base', 'open_module_tree')[1]
+            action = act_window_obj.read(action_id, ['name', 'type', 'res_model', 'view_mode', 'view_type', 'context', 'views', 'domain'])
+            action['target'] = 'current'
+        except ValueError:
+            action = False
+        try:
+            app_id = ir_model_data.get_object_reference('base', 'module_%s' % app)[1]
+        except ValueError:
+            app_id = False
+
+        if action and app_id:
+            action['res_id'] = app_id
+            action['view_mode'] = 'form'
+            action['views'] = [(False, u'form')]
+
+        sakey = Session().save_session_action(action)
+        debug = '?debug' if req.debug else ''
+        return werkzeug.utils.redirect('/web{0}#sa={1}'.format(debug, sakey))
+        
+
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

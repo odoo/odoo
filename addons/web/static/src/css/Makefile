@@ -1,3 +1,2 @@
-base.css: base.sass
-	sass --trace -t expanded base.sass base.css
-
+sass:
+	sass -t expanded --compass --unix-newlines --watch base.sass:base.css&
