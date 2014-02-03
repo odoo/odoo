@@ -8,6 +8,7 @@ class test_base(common.TransactionCase):
     def setUp(self):
         super(test_base,self).setUp()
         self.res_partner = self.registry('res.partner')
+        self.res_users = self.registry('res.users')
 
         # samples use effective TLDs from the Mozilla public suffix
         # list at http://publicsuffix.org
@@ -281,6 +282,22 @@ class test_base(common.TransactionCase):
         self.assertEquals(p1.vat, p1vat, 'Setting is_company should stop auto-sync of commercial fields')
         p0.refresh()
         self.assertEquals(p0.vat, sunhelmvat2, 'Commercial fields must be automatically synced')
+
+    def test_60_read_group(self):
+        cr, uid = self.cr, self.uid
+        company_id = self.registry("ir.model.data").get_object_reference(cr, uid, "base", "main_company")[1]
+        for user_data in [
+          {'name': 'Alice', 'login': 'alice', 'color': 1, 'function': 'Friend'},
+          {'name': 'Bob', 'login': 'bob', 'color': 2, 'function': 'Friend'},
+          {'name': 'Eve', 'login': 'eve', 'color': 3, 'function': 'Eavesdropper'},
+        ]:
+          self.res_users.create(cr, uid, user_data)
+
+        groups_data = self.res_users.read_group(cr, uid, domain=[('login', 'in', ('alice', 'bob', 'eve'))], fields=['name', 'color', 'function'], groupby='function')
+        self.assertEqual(len(groups_data), 2, "Incorrect number of results when grouping on a field")
+        for group_data in groups_data:
+          self.assertIn('color', group_data, "Aggregated data for the column 'color' is not present in read_group return values")
+          self.assertEqual(group_data['color'], 3, "Incorrect sum for aggregated data for the column 'color' not present in read_group return values")
 
 class test_partner_recursion(common.TransactionCase):
 

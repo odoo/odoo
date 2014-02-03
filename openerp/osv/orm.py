@@ -2675,7 +2675,7 @@ class BaseModel(object):
             group_operator = fget[f].get('group_operator', 'sum')
             if flist:
                 flist += ', '
-            qualified_field = self._inherits_join_calc(groupby, query)
+            qualified_field = self._inherits_join_calc(f, query)
             flist += "%s(%s) AS %s" % (group_operator, qualified_field, f)
 
         gb = groupby and (' GROUP BY ' + qualified_groupby_field) or ''
