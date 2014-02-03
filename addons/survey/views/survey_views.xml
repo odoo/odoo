@@ -49,6 +49,7 @@
                                 <field name="partner_id"/>
                                 <field name="email" widget="email"/>
                                 <field name="test_entry" groups="base.group_no_one"/>
+                                <field name="quizz_score" groups="base.group_no_one"/>
                             </group>
                         </group>
                         <field name="user_input_line_ids" mode="tree" attrs="{'readonly': False}">
@@ -77,6 +78,7 @@
                     <field name="type"/>
                     <field name="state"/>
                     <field name="test_entry" invisible="True"/>
+                    <field name="quizz_score" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
@@ -524,6 +526,7 @@
                     <field name="question_id"/>
                     <field name="question_id_2"/>
                     <field name="value"/>
+                    <field name="quizz_mark" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
@@ -560,6 +563,7 @@
                             <field name="date_create"/>
                             <field name="answer_type"/>
                             <field name="skipped" />
+                            <field name="quizz_mark" groups="base.group_no_one"/>
                         </group>
                         <group>
                             <field name="value_text" colspan='2' attrs="{'invisible': [('answer_type','!=','text')]}"/>
@@ -585,6 +589,7 @@
                     <field name="date_create"/>
                     <field name="answer_type"/>
                     <field name="skipped"/>
+                    <field name="quizz_mark" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
