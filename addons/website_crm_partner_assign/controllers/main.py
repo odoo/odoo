@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import urllib
-
 import openerp
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.addons.website_partner.controllers import main as website_partner
-
+import werkzeug.urls
 
 class WebsiteCrmPartnerAssign(http.Controller):
     _references_per_page = 20
@@ -31,13 +29,34 @@ class WebsiteCrmPartnerAssign(http.Controller):
         # format displayed membership lines domain
         base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True)]
         partner_domain = list(base_partner_domain)
+        if post_name:
+            partner_domain += ['|', ('name', 'ilike', post_name), ('website_description', 'ilike', post_name)]
         if grade_id and grade_id != "all":
             partner_domain += [('grade_id', '=', int(grade_id))]  # try/catch int
+
+        # group by country
+        countries = partner_obj.read_group(
+            request.cr, openerp.SUPERUSER_ID, partner_domain, ["id", "country_id"],
+            groupby="country_id", orderby="country_id", context=request.context)
+        countries_partners = partner_obj.search(
+            request.cr, openerp.SUPERUSER_ID, partner_domain,
+            context=request.context, count=True)
+        
         if country_id:
             country = country_obj.browse(request.cr, request.uid, country_id, request.context)
             partner_domain += [('country_id', '=', country_id)]
-        if post_name:
-            partner_domain += ['|', ('name', 'ilike', post_name), ('website_description', 'ilike', post_name)]
+            if not any(x['country_id'][0] == country_id for x in countries):
+                countries.append({
+                    'country_id_count': 0,
+                    'country_id': (country_id, country.name)
+                })
+                countries.sort(key=lambda d: d['country_id'][1])
+        
+        countries.insert(0, {
+            'country_id_count': countries_partners,
+            'country_id': (0, _("All Countries"))
+        })
+        
 
         # format pager
         partner_ids = partner_obj.search(
@@ -54,18 +73,6 @@ class WebsiteCrmPartnerAssign(http.Controller):
             order="grade_id DESC,partner_weight DESC",
             context=request.context)
         google_map_partner_ids = ",".join([str(p['id']) for p in partners_data])
-
-        # group by country
-        countries = partner_obj.read_group(
-            request.cr, openerp.SUPERUSER_ID, base_partner_domain, ["id", "country_id"],
-            groupby="country_id", orderby="country_id", context=request.context)
-        countries_partners = partner_obj.search(
-            request.cr, openerp.SUPERUSER_ID, base_partner_domain,
-            context=request.context, count=True)
-        countries.insert(0, {
-            'country_id_count': countries_partners,
-            'country_id': (0, _("All Countries"))
-        })
 
         # group by grade
         grades = partner_obj.read_group(
@@ -89,7 +96,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'searches': post,
-            'search_path': "?%s" % urllib.urlencode(post),
+            'search_path': "?%s" % werkzeug.url_encode(post),
         }
         return request.website.render("website_crm_partner_assign.index", values)
 

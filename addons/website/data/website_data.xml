@@ -6,6 +6,7 @@
             <field name="company_id" ref="base.main_company"/>
             <field name="language_ids" eval="[(6, 0, [ ref('base.lang_en')])]"/>
             <field name="default_lang_id" ref="base.lang_en"/>
+            <field name="user_id" ref="base.public_user"/>
         </record>
 
         <record id="main_menu" model="website.menu">
@@ -24,21 +25,6 @@
             <field name="url">/page/website.contactus</field>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">60</field>
-        </record>
-
-        <record id="public_user" model="res.users">
-            <field name="name">Anonymous</field>
-            <field name="login">public</field>
-            <field name="password">public</field>
-            <!-- Avoid auto-including this demo user in any default group -->
-            <field name="groups_id" eval="[(5,)]"/>
-            <field name="image" type="base64" file="website/static/img/public_user-image.png"/>
-            <field name="share" eval="True"/>
-            <field name="active" eval="False"/>
-        </record>
-
-        <record id="base.group_public" model="res.groups">
-            <field name="users" eval="[(4, ref('website.public_user'))]"/>
         </record>
 
         <record id="base.group_website_publisher" model="res.groups">

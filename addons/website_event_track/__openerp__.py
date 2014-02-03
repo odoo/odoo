@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'Tracks and Agenda of Events',
+    'name': 'Advanced Events',
     'category': 'Website',
-    'summary': 'Organize Your Events',
+    'summary': 'Sponsors, Tracks, Agenda, Event News',
     'version': '1.0',
     'description': """
-Online Events
-=============
+Online Advanced Events
+======================
 
+Adds support for:
+- sponsors
+- dedicated menu per event
+- news per event
+- tracks
+- agenda
+- call for proposals
         """,
     'author': 'OpenERP SA',
     'depends': ['website_event', 'website_blog'],

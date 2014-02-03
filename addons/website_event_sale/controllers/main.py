@@ -23,6 +23,7 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website_event.controllers.main import website_event
+from openerp.tools.translate import _
 
 
 class website_event(website_event):
@@ -49,6 +50,7 @@ class website_event(website_event):
         for key, value in post.items():
             try:
                 quantity = int(value)
+                assert quantity > 0
             except:
                 quantity = None
             ticket_id = key.split("-")[0] == 'ticket' and int(key.split("-")[1]) or None
@@ -78,3 +80,21 @@ class website_event(website_event):
         if not _values:
             return request.redirect("/event/%s/" % event_id)
         return request.redirect("/shop/checkout")
+
+    def _add_event(self, event_name="New Event", context={}, **kwargs):
+        try:
+            print kwargs
+            dummy, res_id = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid, 'event_sale', 'product_product_event')
+            context['default_event_ticket_ids'] = [[0,0,{
+                'name': _('Subscription'),
+                'product_id': res_id,
+                'deadline' : False,
+                'seats_max': 1000,
+                'price': 0,
+            }]]
+        except ValueError:
+            pass
+        return super(website_event, self)._add_event(event_name, context, **kwargs)
+
+
+

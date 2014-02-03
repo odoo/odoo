@@ -6,6 +6,11 @@ $(document).ready(function () {
         var self = this;
         var $data = $(this).parents("div.js_follow");
         var $email = $data.find(".js_follow_email");
+
+        if ($email.length && !$email.val().match(/.+@.+/)) {
+            return false;
+        }
+
         var message_is_follower = $data.attr("data-follow") || "off";
         $data.attr("data-follow", message_is_follower == 'off' ? 'on' : 'off');
 
@@ -13,7 +18,7 @@ $(document).ready(function () {
             'id': $data.data('id'),
             'object': $data.data('object'),
             'message_is_follower': message_is_follower,
-            'email': $email && $email.val() || false,
+            'email': $email.length ? $email.val() : false,
         }).then(function (result) {
             if (result) {
                 $data.find(" > *").toggleClass("hidden");

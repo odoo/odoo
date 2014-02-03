@@ -5,7 +5,6 @@ import itertools
 import logging
 import math
 import re
-import urllib
 import urlparse
 
 import simplejson
@@ -25,33 +24,57 @@ from openerp.addons.web.http import request, LazyResponse
 
 logger = logging.getLogger(__name__)
 
-def url_for(path_or_uri, lang=None, keep_query=None):
+def keep_query(*args, **kw):
+    if not args and not kw:
+        args = ('*',)
+    params = kw.copy()
+    query_params = frozenset(werkzeug.url_decode(request.httprequest.query_string).keys())
+    for keep_param in args:
+        for param in fnmatch.filter(query_params, keep_param):
+            if param not in params and param in request.params:
+                params[param] = request.params[param]
+    return werkzeug.urls.url_encode(params)
+
+def url_for(path_or_uri, lang=None):
     location = path_or_uri.strip()
+    force_lang = lang is not None
     url = urlparse.urlparse(location)
-    if request and not url.netloc and not url.scheme:
+
+    if request and not url.netloc and not url.scheme and (url.path or force_lang):
         location = urlparse.urljoin(request.httprequest.path, location)
         lang = lang or request.context.get('lang')
         langs = [lg[0] for lg in request.website.get_languages()]
-        if location[0] == '/' and len(langs) > 1 and lang != request.website.default_lang_code:
+
+        if (len(langs) > 1 or force_lang) and is_multilang_url(location, langs):
             ps = location.split('/')
             if ps[1] in langs:
-                ps[1] = lang
-            else:
+                # Replace the language only if we explicitly provide a language to url_for
+                if force_lang:
+                    ps[1] = lang
+                # Remove the default language unless it's explicitly provided
+                elif ps[1] == request.website.default_lang_code:
+                    ps.pop(1)
+            # Insert the context language or the provided language
+            elif lang != request.website.default_lang_code or force_lang:
                 ps.insert(1, lang)
             location = '/'.join(ps)
-        if keep_query:
-            url = urlparse.urlparse(location)
-            location = url.path
-            params = werkzeug.url_decode(url.query)
-            query_params = frozenset(werkzeug.url_decode(request.httprequest.query_string).keys())
-            for kq in keep_query:
-                for param in fnmatch.filter(query_params, kq):
-                    params[param] = request.params[param]
-            params = werkzeug.urls.url_encode(params)
-            if params:
-                location += '?%s' % params
 
     return location
+
+def is_multilang_url(path, langs=None):
+    if not langs:
+        langs = [lg[0] for lg in request.website.get_languages()]
+    spath = path.split('/')
+    # if a language is already in the path, remove it
+    if spath[1] in langs:
+        spath.pop(1)
+        path = '/'.join(spath)
+    try:
+        router = request.httprequest.app.get_db_router(request.db).bind('')
+        func = router.match(path)[0]
+        return func.routing.get('multilang', False)
+    except Exception:
+        return False
 
 def slugify(s, max_length=None):
     if slugify_lib:
@@ -70,17 +93,7 @@ def slug(value):
     return "%s-%d" % (slugify(name), id)
 
 def urlplus(url, params):
-    if not params:
-        return url
-
-    # can't use urlencode because it encodes to (ascii, replace) in p2
-    return "%s?%s" % (url, '&'.join(
-        k + '=' + urllib.quote_plus(v.encode('utf-8') if isinstance(v, unicode) else str(v))
-        for k, v in params.iteritems()
-    ))
-
-def quote_plus(value):
-    return urllib.quote_plus(value.encode('utf-8') if isinstance(value, unicode) else str(value))
+    return werkzeug.Href(url)(params or None)
 
 class website(osv.osv):
     def _get_menu_website(self, cr, uid, ids, context=None):
@@ -112,6 +125,7 @@ class website(osv.osv):
         'social_youtube': fields.char('Youtube Account'),
         'social_googleplus': fields.char('Google+ Account'),
         'google_analytics_key': fields.char('Google Analytics Key'),
+        'user_id': fields.many2one('res.users', string='Public User'),
         'public_user': fields.function(_get_public_user, relation='res.users', type='many2one', string='Public User'),
         'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu',
             store= {
@@ -173,7 +187,7 @@ class website(osv.osv):
 
     def get_public_user(self, cr, uid, context=None):
         uid = openerp.SUPERUSER_ID
-        res = self.pool['ir.model.data'].get_object_reference(cr, uid, 'website', 'public_user')
+        res = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'public_user')
         return res and res[1] or False
 
     @openerp.tools.ormcache(skiparg=3)
@@ -229,10 +243,11 @@ class website(osv.osv):
             json=simplejson,
             website=request.website,
             url_for=url_for,
+            keep_query=keep_query,
             slug=slug,
             res_company=request.website.company_id,
             user_id=user.browse(cr, uid, uid),
-            quote_plus=quote_plus,
+            quote_plus=werkzeug.url_quote_plus,
         )
         qweb_values.setdefault('editable', False)
 
@@ -268,7 +283,7 @@ class website(osv.osv):
         def get_url(page):
             _url = "%spage/%s/" % (url, page)
             if url_args:
-                _url = "%s?%s" % (_url, urllib.urlencode(url_args))
+                _url = "%s?%s" % (_url, werkzeug.url_encode(url_args))
             return _url
 
         return {
@@ -435,7 +450,7 @@ class website(osv.osv):
 
         get_args.setdefault('kanban', "")
         kanban = get_args.pop('kanban')
-        kanban_url = "?%s&kanban=" % urllib.urlencode(get_args)
+        kanban_url = "?%s&kanban=" % werkzeug.url_encode(get_args)
 
         pages = {}
         for col in kanban.split(","):
@@ -594,9 +609,10 @@ class res_partner(osv.osv):
     def google_map_link(self, cr, uid, ids, zoom=8, context=None):
         partner = self.browse(cr, uid, ids[0], context=context)
         params = {
-            'q': '%s, %s %s, %s' % (partner.street, partner.city, partner.zip, partner.country_id and partner.country_id.name_get()[0][1] or ''),
+            'q': '%s, %s %s, %s' % (partner.street or '', partner.city  or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
+            'z': 10
         }
-        return urlplus('https://maps.google.be/maps' , params)
+        return urlplus('https://maps.google.com/maps' , params)
 
 class res_company(osv.osv):
     _inherit = "res.company"
@@ -643,13 +659,13 @@ class base_language_install(osv.osv_memory):
             }
         return action
 
-class SeoMetadata(osv.Model):
+class website_seo_metadata(osv.Model):
     _name = 'website.seo.metadata'
     _description = 'SEO metadata'
 
     _columns = {
-        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
-        'website_meta_description': fields.text("Website meta description", size=160, translate=True),
+        'website_meta_title': fields.char("Website meta title", translate=True),
+        'website_meta_description': fields.text("Website meta description", translate=True),
         'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
 

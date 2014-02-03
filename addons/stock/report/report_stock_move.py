@@ -30,11 +30,6 @@ class report_stock_move(osv.osv):
     _auto = False
     _columns = {
         'date': fields.date('Date', readonly=True),
-        'year': fields.char('Year', size=4, readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
@@ -63,9 +58,6 @@ class report_stock_move(osv.osv):
                 SELECT
                         min(sm.id) as id, 
                         date_trunc('day', sm.date) as date,
-                        to_char(date_trunc('day',sm.date), 'YYYY') as year,
-                        to_char(date_trunc('day',sm.date), 'MM') as month,
-                        to_char(date_trunc('day',sm.date), 'YYYY-MM-DD') as day,
                         avg(date(sm.date)-date(sm.create_date)) as day_diff,
                         avg(date(sm.date_expected)-date(sm.create_date)) as day_diff1,
                         avg(date(sm.date)-date(sm.date_expected)) as day_diff2,
@@ -115,8 +107,7 @@ class report_stock_move(osv.osv):
                         coalesce(sp.type, 'other'), date_trunc('day', sm.date), sm.partner_id,
                         sm.state, sm.product_uom, sm.date_expected,
                         sm.product_id, pt.standard_price, sm.picking_id,
-                        sm.company_id, sm.location_id, sm.location_dest_id, pu.factor, pt.categ_id, sp.stock_journal_id,
-                        year, month, day
+                        sm.company_id, sm.location_id, sm.location_dest_id, pu.factor, pt.categ_id, sp.stock_journal_id
                )
         """)
 

@@ -31,35 +31,20 @@ class Website(osv.Model):
         project_obj = request.registry['project.project']
         project_ids = project_obj.search(cr, uid, [('privacy_visibility', "=", "public")], context=request.context)
 
-        request.context['website_project_ids'] = project_obj.browse(cr, uid, project_ids, request.context)
+        request.context.update({
+            'website_project_ids': project_obj.browse(cr, uid, project_ids, context=request.context)
+        })
 
-        return super(Website, self).preprocess_request(cr, uid, ids, request, context)
+        return super(Website, self).preprocess_request(cr, uid, ids, request, context=None)
 
 
 class website_project(http.Controller):
 
-    @http.route(['/project/<int:project_id>/'], type='http', auth="public", website=True, multilang=True)
-    def project(self, project_id=None, **post):
+    @http.route(['/project/<model("project.project"):project>/'], type='http', auth="public", website=True, multilang=True)
+    def project(self, project=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        project_obj = request.registry['project.project']
-
-        project = project_obj.browse(request.cr, request.uid, project_id, request.context)
-
         render_values = {
             'project': project,
             'main_object': project,
         }
         return request.website.render("website_project.index", render_values)
-
-    @http.route(['/project/task/<int:task_id>'], type='http', auth="public", website=True, multilang=True)
-    def task(self, task_id=None, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        task_obj = request.registry['project.task']
-
-        task = task_obj.browse(cr, uid, task_id, context=context)
-
-        render_values = {
-            'task': task,
-            'main_object': task,
-        }
-        return request.website.render("website_project.task", render_values)

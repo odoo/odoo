@@ -8,6 +8,7 @@ import openerp
 import time
 import random
 import math
+import md5
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
 import subprocess
 from threading import Thread
@@ -21,6 +22,7 @@ except ImportError:
 try:
     from .. import escpos
     from ..escpos import printer
+    from ..escpos import supported_devices
 except ImportError:
     escpos = printer = None
 
@@ -39,21 +41,16 @@ class EscposDriver(Thread):
         self.queue = Queue()
         self.status = {'status':'connecting', 'messages':[]}
 
-        self.supported_printers = [
-            { 'vendor' : 0x04b8, 'product' : 0x0e03, 'name' : 'Epson TM-T20' },
-            { 'vendor' : 0x04b8, 'product' : 0x0202, 'name' : 'Epson TM-T70' },
-        ]
-
-    def connected_usb_devices(self,devices):
+    def connected_usb_devices(self):
         connected = []
-        for device in devices:
+        for device in supported_devices.device_list:
             if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) != None:
                 connected.append(device)
         return connected
     
     def get_escpos_printer(self):
         try:
-            printers = self.connected_usb_devices(self.supported_printers)
+            printers = self.connected_usb_devices()
             if len(printers) > 0:
                 self.set_status('connected','Connected to '+printers[0]['name'])
                 return escpos.printer.Usb(printers[0]['vendor'], printers[0]['product'])
@@ -158,25 +155,9 @@ class EscposDriver(Thread):
             for tax in taxes:
                 eprint.text(printline(tax['tax']['name'],price(tax['amount']), width=40,ratio=0.6))
 
-        logo = None
-
-        if receipt['company']['logo']:
-            img = receipt['company']['logo']
-            img = img[img.find(',')+1:]
-            f = io.BytesIO('img')
-            f.write(base64.decodestring(img))
-            f.seek(0)
-            logo_rgba = Image.open(f)
-            logo = Image.new('RGB', logo_rgba.size, (255,255,255))
-            logo.paste(logo_rgba, mask=logo_rgba.split()[3]) 
-            width = 300
-            wfac  = width/float(logo_rgba.size[0])
-            height = int(logo_rgba.size[1]*wfac)
-            logo   = logo.resize((width,height), Image.ANTIALIAS)
-
         # Receipt Header
-        if logo:
-            eprint._convert_image(logo)
+        if receipt['company']['logo']:
+            eprint.print_base64_image(receipt['company']['logo'])
             eprint.text('\n')
         else:
             eprint.set(align='center',type='b',height=2,width=2)
@@ -267,12 +248,12 @@ hw_proxy.drivers['escpos'] = driver
         
 class EscposProxy(hw_proxy.Proxy):
     
-    @http.route('/hw_proxy/open_cashbox', type='json', auth='admin')
+    @http.route('/hw_proxy/open_cashbox', type='json', auth='none', cors='*')
     def open_cashbox(self):
         _logger.info('ESC/POS: OPEN CASHBOX') 
         driver.push_task('cashbox')
         
-    @http.route('/hw_proxy/print_receipt', type='json', auth='admin')
+    @http.route('/hw_proxy/print_receipt', type='json', auth='none', cors='*')
     def print_receipt(self, receipt):
         _logger.info('ESC/POS: PRINT RECEIPT') 
         driver.push_task('receipt',receipt)

@@ -25,7 +25,7 @@ from openerp.osv import osv, fields
 class product_pricelist(osv.Model):
     _inherit = "product.pricelist"
     _columns = {
-        'code': fields.char('Promotionnal Code', size=64, translate=True),
+        'code': fields.char('Promotional Code'),
     }
 
 
@@ -53,11 +53,11 @@ class product_template(osv.Model):
             string='Website Messages',
             help="Website communication history",
         ),
-        'suggested_product_id': fields.many2one('product.template', 'Suggested For Product'),
-        'suggested_product_ids': fields.one2many('product.template', 'suggested_product_id', 'Suggested Products'),
+        'alternative_product_ids': fields.many2many('product.template','product_alternative_rel','src_id','dest_id', string='Alternative Products', help='Appear on the product page'),
+        'accessory_product_ids': fields.many2many('product.template','product_accessory_rel','src_id','dest_id', string='Accessory Products', help='Appear on the shopping cart'),
         'website_size_x': fields.integer('Size X'),
         'website_size_y': fields.integer('Size Y'),
-        'website_style_ids': fields.many2many('website.product.style', 'product_website_style_rel', 'product_id', 'style_id', 'Styles'),
+        'website_style_ids': fields.many2many('product.style', 'product_website_style_rel', 'product_id', 'style_id', 'Styles'),
         'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
         'website_url': fields.function(_website_url, string="Website url", type="char"),
     }

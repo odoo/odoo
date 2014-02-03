@@ -6,9 +6,8 @@
             <field name="name">Opportunities By Stage - Graph</field>
             <field name="model">crm.lead.report</field>
             <field name="arch" type="xml">
-                <graph string="Opportunities By Stage" type="area">
-                    <field name="stage_id"/>
-                    <field name="nbr" operator="+"/>
+                <graph string="Opportunities By Stage" type="bar">
+                    <field name="stage_id" type="row"/>
                 </graph>
             </field>
         </record>
@@ -29,10 +28,10 @@
             <field name="name">Opportunities By Stage Per User - Graph</field>
             <field name="model">crm.lead.report</field>
             <field name="arch" type="xml">
-                <graph string="Opportunities By Stage" type="line">
-                    <field name="stage_id"/>
-                    <field name="planned_revenue" operator="+"/>
-                    <field name="user_id" group="True"/>
+                <graph string="Opportunities By Stage" stacked="True">
+                    <field name="stage_id" type="row"/>
+                    <field name="user_id" type="row"/>
+                    <field name="planned_revenue" type="measure"/>
                 </graph>
             </field>
         </record>

@@ -1,102 +1,91 @@
 # -*- coding: utf-8 -*-
+import base64
+
+from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
-from openerp.addons.website.controllers.main import Website as controllers
-controllers = controllers()
-
-import base64
-
 
 class website_hr_recruitment(http.Controller):
+
     @http.route([
         '/jobs',
-        '/jobs/department/<model("hr.department"):department>/office/<model("res.partner"):office>',
         '/jobs/department/<model("hr.department"):department>',
-        '/jobs/office/<model("res.partner"):office>'
+        '/jobs/office/<string:office>'
         ], type='http', auth="public", website=True, multilang=True)
     def jobs(self, department=None, office=None):
+        context=dict(request.context, show_address=True, no_tag_br=True)
+        cr, uid = request.cr, request.uid
+
+        # office is restriced, deslugify manually
+        office_id = 0
+        if office:
+            office_id = int(office.split('-')[-1])
+
+        # Search all available jobs as uid
         JobsObj = request.registry['hr.job']
-        jobpost_ids = JobsObj.search(request.cr, request.uid, [],
-            order="website_published desc,no_of_recruitment desc",
-            context=request.context)
-        jobs = JobsObj.browse(request.cr, request.uid, jobpost_ids, context=dict(request.context, show_address=True, no_tag_br=True))
+        job_ids = JobsObj.search(cr, uid, [], order="website_published desc,no_of_recruitment desc", context=context)
 
-        departments = set()
-        offices = set()
-        for job in jobs:
-            if job.department_id:
-                departments.add(job.department_id)
-            if job.address_id:
-                offices.add(job.address_id)
+        # Browse jobs as superuser, because address is restricted
+        jobs = JobsObj.browse(cr, 1, job_ids, context=context)
 
-        if department or office:
-            _jobs = []
-            for job in jobs:
-                if (department and job.department_id.id == department.id) or \
-                    (office and job.address_id.id == office.id):
-                    _jobs.append(job)
-            jobs = _jobs
+        # Deduce departments and offices of those jobs
+        departments = set(j.department_id for j in jobs if j.department_id)
+        offices = set(j.address_id for j in jobs if j.address_id)
 
+        # Filter the matching one
+        jobs = [j for j in jobs if department==None or j.department_id and j.department_id.id == department.id]
+        jobs = [j for j in jobs if office==None or j.address_id and j.address_id.id == office_id]
+
+        # Render page
         return request.website.render("website_hr_recruitment.index", {
             'jobs': jobs,
             'departments': departments,
             'offices': offices,
-            'active': department and department.id or None,
-            'office': office and office.id or None
+            'department_id': department and department.id,
+            'office_id': office_id,
         })
 
-    @http.route(['/job/detail/<model("hr.job"):job>'], type='http', auth="public", website=True, multilang=True)
-    def detail(self, job, **kwargs):
+    @http.route('/jobs/add', type='http', auth="user", methods=['POST'], website=True)
+    def jobs_add(self, **kwargs):
+        cr, uid, context = request.cr, request.uid, request.context
+        value = {
+            'name': _('New Job Offer'),
+        }
+        job_id = request.registry.get('hr.job').create(cr, uid, value, context=context)
+        return request.redirect("/jobs/detail/%s?enable_editor=1" % job_id)
+
+    @http.route(['/jobs/detail/<model("hr.job"):job>'], type='http', auth="public", website=True, multilang=True)
+    def jobs_detail(self, job, **kwargs):
         return request.website.render("website_hr_recruitment.detail", { 'job': job, 'main_object': job })
 
-    @http.route(['/job/success'], methods=['POST'], type='http', auth="admin", website=True, multilang=True)
-    def success(self, **post):
-        data = {
-            'name': _('Online Form'),
-            'phone': post.get('phone', False),
-            'email_from': post.get('email_from', False),
-            'partner_name': post.get('partner_name', False),
-            'description': post.get('description', False),
-            'department_id': post.get('department_id', False),
-            'job_id': post.get('job_id', False),
-            'user_id': False
-        }
+    @http.route(['/jobs/apply/<model("hr.job"):job>'], type='http', auth="public", website=True, multilang=True)
+    def jobs_apply(self, job):
+        return request.website.render("website_hr_recruitment.apply", { 'job': job })
 
+    @http.route(['/jobs/thankyou'], methods=['POST'], type='http', auth="public", website=True, multilang=True)
+    def jobs_thankyou(self, **post):
+        cr, uid, context = request.cr, request.uid, request.context
         imd = request.registry['ir.model.data']
-        try:
-            model, source_id = imd.get_object_reference(request.cr, request.uid, 'hr_recruitment', 'source_website_company')
-            data['source_id'] = source_id
-        except ValueError:
-            pass
+        value = {
+            'name': _('Online Form'),
+            'user_id': False,
+            'source_id' : imd.xmlid_to_res_id(cr, SUPERUSER_ID, 'hr_recruitment.source_website_company'),
+        }
+        for f in ['phone', 'email_from', 'partner_name', 'description', 'department_id', 'job_id']:
+            value[f] = post.get(f)
 
-        jobid = request.registry['hr.applicant'].create(request.cr, request.uid, data, context=request.context)
+        job_id = request.registry['hr.applicant'].create(cr, SUPERUSER_ID, value, context=context)
         if post['ufile']:
-            attachment_values = {
+            attachment_value = {
                 'name': post['ufile'].filename,
+                'res_name': value['partner_name'],
+                'res_model': 'hr.applicant',
+                'res_id': job_id,
                 'datas': base64.encodestring(post['ufile'].read()),
                 'datas_fname': post['ufile'].filename,
-                'res_model': 'hr.applicant',
-                'res_name': data['partner_name'],
-                'res_id': jobid
-                }
-            request.registry['ir.attachment'].create(request.cr, request.uid, attachment_values, context=request.context)
+            }
+            request.registry['ir.attachment'].create(cr, SUPERUSER_ID, attachment_value, context=context)
         return request.website.render("website_hr_recruitment.thankyou", {})
 
-    @http.route(['/job/apply'], type='http', auth="public", website=True, multilang=True)
-    def applyjobpost(self, job):
-        [job_object] = request.registry['hr.job'].browse(
-            request.cr, request.uid, [int(job)], context=request.context)
-
-        return request.website.render("website_hr_recruitment.applyjobpost", {
-            'job': job_object
-        })
-
-    @http.route('/job/add_job_offer/', type='http', auth="user", methods=['POST'], website=True, multilang=True)
-    def add_job_offer(self, **kwargs):
-        Job = request.registry.get('hr.job')
-        job_id = Job.create(request.cr, request.uid, {
-            'name': 'New Job Offer',
-        }, context=request.context)
-
-        return request.redirect("/job/detail/%s/?enable_editor=1" % job_id)
+# vim :et:

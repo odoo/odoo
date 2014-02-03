@@ -1,7 +1,7 @@
 {
     'name': 'Contact Form',
     'category': 'Website',
-    'summary': 'Generate Leads From Contact Form',
+    'summary': 'Create Leads From Contact Form',
     'version': '1.0',
     'description': """
 OpenERP Contact Form

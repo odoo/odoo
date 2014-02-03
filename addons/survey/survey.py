@@ -147,7 +147,8 @@ class survey_survey(osv.Model):
         'email_template_id': fields.many2one('email.template',
             'Email Template', ondelete='set null'),
         'thank_you_message': fields.html('Thank you message', translate=True,
-            help="This message will be displayed when survey is completed")
+            help="This message will be displayed when survey is completed"),
+        'quizz_mode': fields.boolean(string='Quizz mode')
     }
 
     _defaults = {
@@ -683,7 +684,7 @@ class survey_label(osv.Model):
         'sequence': fields.integer('Label Sequence order'),
         'value': fields.char("Suggested value", translate=True,
             required=True),
-        'quizz_marks': fields.float('Score for this answer'),
+        'quizz_mark': fields.float('Score for this answer'),
     }
     defaults = {
         'sequence': 100,
@@ -695,6 +696,12 @@ class survey_user_input(osv.Model):
     _name = "survey.user_input"
     _rec_name = 'date_create'
     _description = 'Survey User Input'
+
+    def _quizz_get_score(self, cr, uid, ids, name, args, context=None):
+        ret = dict()
+        for user_input in self.browse(cr, uid, ids, context=context):
+            ret[user_input.id] = sum([uil.quizz_mark for uil in user_input.user_input_line_ids] or 0.0)
+        return ret
 
     _columns = {
         'survey_id': fields.many2one('survey.survey', 'Survey', required=True,
@@ -731,7 +738,7 @@ class survey_user_input(osv.Model):
         'result_url': fields.related('survey_id', 'result_url', string="Public link to the survey results"),
         'print_url': fields.related('survey_id', 'print_url', string="Public link to the empty survey"),
 
-        #'quizz_score': fields.function()
+        'quizz_score': fields.function(_quizz_get_score, type="float", string="Score for the quiz")
     }
     _defaults = {
         'date_create': fields.datetime.now,
@@ -799,6 +806,7 @@ class survey_user_input_line(osv.Model):
     _name = 'survey.user_input_line'
     _description = 'Survey User Input Line'
     _rec_name = 'date_create'
+
     _columns = {
         'user_input_id': fields.many2one('survey.user_input', 'User Input',
                                          ondelete='cascade', required=1),
@@ -823,12 +831,20 @@ class survey_user_input_line(osv.Model):
         'value_free_text': fields.text("Free Text answer"),
         'value_suggested': fields.many2one('survey.label', "Suggested answer"),
         'value_suggested_row': fields.many2one('survey.label', "Row answer"),
-        'quizz_mark': fields.float("Mark given for this answer")
+        'quizz_mark': fields.float("Score given for this answer")
     }
+
     _defaults = {
         'skipped': False,
         'date_create': fields.datetime.now()
     }
+
+    def write(self, cr, uid, ids, vals, context=None):
+        value_suggested = vals.get('value_suggested')
+        if value_suggested:
+            mark = self.pool.get('survey.label').browse(cr, uid, value_suggested, context=context).quizz_mark
+            vals.update({'quizz_mark': mark})
+        return super(survey_user_input_line, self).write(cr, uid, ids, vals, context=context)
 
     def save_lines(self, cr, uid, user_input_id, question, post, answer_tag,
                    context=None):

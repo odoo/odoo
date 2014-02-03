@@ -1,8 +1,8 @@
 {
-    'name': 'Career Form',
+    'name': 'Jobs',
     'category': 'Website',
     'version': '1.0',
-    'summary': 'Job Position',
+    'summary': 'Job Descriptions And Application Forms',
     'description': """
 OpenERP Contact Form
 ====================
@@ -11,14 +11,14 @@ OpenERP Contact Form
     'author': 'OpenERP SA',
     'depends': ['website_partner', 'hr_recruitment', 'website_mail'],
     'data': [
-        'data/website_hr_recruitment_data.xml',
-        'views/website_hr_recruitment.xml',
-        'views/hr_recruitment_backend.xml',
         'security/ir.model.access.csv',
         'security/website_hr_recruitment_security.xml',
+        'data/config_data.xml',
+        'views/hr_job_views.xml',
+        'views/templates.xml',
     ],
     'demo': [
-        'data/website_hr_recruitment_demo.xml',
+        'data/hr_job_demo.xml',
     ],
     'css': [
         'static/src/css/*.css'

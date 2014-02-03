@@ -1,7 +1,7 @@
 {
-    'name': 'Publish Partner Assignment',
+    'name': 'Resellers',
     'category': 'Website',
-    'summary': 'Publish and Assign Partner',
+    'summary': 'Publish Your Channel of Resellers',
     'version': '1.0',
     'description': """
 Publish and Assign Partner

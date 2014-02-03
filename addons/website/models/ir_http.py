@@ -31,13 +31,6 @@ class ir_http(orm.AbstractModel):
             page=PageConverter,
         )
 
-    def _auth_method_public(self):
-        if not request.session.uid:
-            request.uid = request.registry['website'].get_public_user(
-                request.cr, openerp.SUPERUSER_ID, request.context)
-        else:
-            request.uid = request.session.uid
-
     def _dispatch(self):
         first_pass = not hasattr(request, 'website')
         request.website = None
@@ -102,7 +95,7 @@ class ir_http(orm.AbstractModel):
             werkzeug.exceptions.abort(werkzeug.utils.redirect(url))
 
     def _handle_exception(self, exception=None, code=500):
-        if isinstance(exception, werkzeug.exceptions.HTTPException) and exception.response:
+        if isinstance(exception, werkzeug.exceptions.HTTPException) and hasattr(exception, 'response') and exception.response:
             return exception.response
         if getattr(request, 'website_enabled', False) and request.website:
             values = dict(
@@ -110,20 +103,16 @@ class ir_http(orm.AbstractModel):
                 traceback=traceback.format_exc(exception),
             )
             if exception:
-                current_exception = exception
+                code = getattr(exception, 'code', code)
                 if isinstance(exception, ir_qweb.QWebException):
                     values.update(qweb_exception=exception)
-                    if exception.inner:
-                        current_exception = exception.inner
-                if isinstance(current_exception, openerp.exceptions.AccessError):
-                    code = 403
-                else:
-                    code = getattr(exception, 'code', code)
+                    if isinstance(exception.qweb.get('cause'), openerp.exceptions.AccessError):
+                        code = 403
             if code == 500:
                 logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
-                if values.get('qweb_exception'):
+                if 'qweb_exception' in values:
                     view = request.registry.get("ir.ui.view")
-                    views = view._views_get(request.cr, request.uid, values['qweb_exception'].template, request.context)
+                    views = view._views_get(request.cr, request.uid, exception.qweb['template'], request.context)
                     to_reset = [v for v in views if v.model_data_id.noupdate is True]
                     values['views'] = to_reset
             elif code == 403:
@@ -139,7 +128,7 @@ class ir_http(orm.AbstractModel):
 
             try:
                 html = request.website._render('website.%s' % code, values)
-            except:
+            except Exception:
                 html = request.website._render('website.http_error', values)
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 

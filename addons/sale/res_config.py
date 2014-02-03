@@ -120,7 +120,7 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             res['time_unit'] = user.company_id.project_time_mode_id.id
         else:
-            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant', raise_exception=False)
+            product = ir_model_data.xmlid_to_object(cr, uid, 'product.product_product_consultant')
             if product and product.exists():
                 res['time_unit'] = product.uom_id.id
         return res
@@ -138,7 +138,7 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         wizard = self.browse(cr, uid, ids)[0]
 
         if wizard.time_unit:
-            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant', raise_exception=False)
+            product = ir_model_data.xmlid_to_object(cr, uid, 'product.product_product_consultant')
             if product and product.exists():
                 product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
             else:

@@ -12,7 +12,7 @@
 <!-- Layout add nav and footer -->
 <template id="header_footer_custom" inherit_id="website.layout" name="Footer News Blog Link">
     <xpath expr="//footer//div[@name='info']/ul" position="inside">
-        <li><a t-href="/blog/%(website_blog.blog_blog_1)d/">News</a></li>
+        <li><a t-attf-href="/blog/%(website_blog.blog_blog_1)d/">News</a></li>
     </xpath>
 </template>
 
@@ -53,7 +53,7 @@
                     <t t-foreach="blogs" t-as="blog">
                       <div class="col-md-4">
                         <h4>
-                            <a t-href="/blogpost/#{ slug(blog) }?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}" t-field="blog.name"></a>
+                            <a t-attf-href="/blogpost/#{ slug(blog) }?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}" t-field="blog.name"></a>
                             <span t-if="not blog.website_published" class="text-warning">
                                 &amp;nbsp;
                                 <span class="fa fa-warning" title="Not published"/>
@@ -62,7 +62,7 @@
                         <div class="text-muted">
                             <span class="fa fa-calendar"> <span t-field="blog.create_date"/> &amp;nbsp;</span>
                             <span class="fa fa-folder-open"> In
-                                <a t-href="/blog/#{ slug(blog.blog_id) }">
+                                <a t-attf-href="/blog/#{ slug(blog.blog_id) }">
                                 <span t-field="blog.blog_id"/>
                                 </a> &amp;nbsp;
                             </span>
@@ -75,7 +75,7 @@
                         </div>
                         <div class="text-muted" t-if="len(blog.message_ids) &gt; 0">
                             <span class="fa fa-comment-o">
-                                <a t-href="/blogpost/#{ slug(blog) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}#comment">
+                                <a t-attf-href="/blogpost/#{ slug(blog) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}#comments">
                                     <t t-if="len(blog.message_ids) &lt;= 1" ><t t-esc="len(blog.message_ids)"/> comment</t>
                                     <t t-if="len(blog.message_ids) > 1"><t t-esc="len(blog.message_ids)"/> comments</t>
                                 </a>
@@ -100,7 +100,7 @@
     <div t-if="not blog_posts">
         <div class="text-center text-muted">
           <h3 class="css_editable_display">No blog post found</h3>
-          <h3 class="css_editable_hidden">Nothing published yet click <a t-href="/page/website.contactus">here</a> to contact us</h3>
+          <h3 class="css_editable_hidden">Nothing published yet click <a t-attf-href="/page/website.contactus">here</a> to contact us</h3>
           <t groups="base.group_website_publisher">
             <t groups="base.group_document_user">
                 <p>Click on "Content" to define a new blog post or "Help" for more informations.</p>
@@ -112,12 +112,12 @@
     <t t-foreach="blog_posts" t-as="blog_post">
       <div t-att-data-publish="blog_post.website_published and 'on' or 'off'">
         <h2 class="text-center">
-            <a t-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}" t-field="blog_post.name"></a>
+            <a t-attf-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}" t-field="blog_post.name"></a>
         </h2>
         <p class="post-meta text-muted text-center" name='blog_post_data'>
             <span class="fa fa-calendar oe_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
             <span t-if="len(blog_post.message_ids) &gt; 0" class="fa fa-comment-o">
-                <a t-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}#comment">
+                <a t-attf-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}#comments">
                     <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
                     <t t-if="len(blog_post.message_ids) > 1"><t t-esc="len(blog_post.message_ids)"/> comments</t>
                 </a>
@@ -147,7 +147,7 @@
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
             <t t-foreach="blog_post.tag_ids" t-as="tag">
-                <a t-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }" t-esc="tag.name"/> &amp;nbsp;
+                <a t-attf-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }" t-esc="tag.name"/> &amp;nbsp;
             </t>
         </p>
     </xpath>
@@ -212,10 +212,10 @@
           <div class="row">
             <div class="col-sm-9">
                 <ol class="breadcrumb">
-                    <li><a t-href="/blog/#{ slug(blog) }"><span t-field="blog.name"/></a></li>
-                    <li t-if="tag"><a t-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }"><span t-field="tag.name"/></a></li>
-                    <li t-if="tag and date"><a t-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }/date/#{ date }" t-esc="date_name"/></li>
-                    <li t-if="not tag and date"><a t-href="/blog/#{ slug(blog) }/date/#{ date }" t-esc="date_name"/></li>
+                    <li><a t-attf-href="/blog/#{ slug(blog) }"><span t-field="blog.name"/></a></li>
+                    <li t-if="tag"><a t-attf-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }"><span t-field="tag.name"/></a></li>
+                    <li t-if="tag and date"><a t-attf-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }/date/#{ date }" t-esc="date_name"/></li>
+                    <li t-if="not tag and date"><a t-attf-href="/blog/#{ slug(blog) }/date/#{ date }" t-esc="date_name"/></li>
                     <li class="active"><span t-field="blog_post.name"/></li>
                 </ol>
             </div><div class="col-sm-3">
@@ -268,7 +268,7 @@
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
             <t t-foreach="blog_post.tag_ids" t-as="tag">
-                <a t-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }" t-esc="tag.name"/> &amp;nbsp;
+                <a t-attf-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }" t-esc="tag.name"/> &amp;nbsp;
             </t>
         </p>
     </xpath>
@@ -282,7 +282,6 @@
         </t>
         <div id="wrap" class="js_blog">
             <t t-raw="0"/>
-            <div class="oe_structure"></div>
         </div>
     </t>
 </template>
@@ -300,7 +299,6 @@
                 <div class="col-lg-3 col-lg-offset-1 col-sm-4" id="blog_right_column"/>
             </div>
         </div>
-        <div class="oe_structure"></div>
     </xpath>
 </template>
 
@@ -313,7 +311,7 @@
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="tags" t-as="tag_id">
             <li t-att-class="tag and tag_id.id == tag.id and 'active' or None" style="display: inline-block;">
-                <a t-href="/blog/#{ slug(blog) }/tag/#{ slug(tag_id) }"><span t-field="tag_id.name"/></a>
+                <a t-attf-href="/blog/#{ slug(blog) }/tag/#{ slug(tag_id) }"><span t-field="tag_id.name"/></a>
             </li>
             </t>
         </ul>
@@ -330,7 +328,7 @@
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="nav_list" t-as="months">
             <li t-att-class="months['date'] == date and 'active' or None">
-                <a t-ignore="True" t-href="/blog/#{ slug(blog) }/#{ tag and 'tag/%s/' % slug(tag) or '' }date/#{ months['date'] }"><t t-esc="months['create_date']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
+                <a t-ignore="True" t-attf-href="/blog/#{ slug(blog) }/#{ tag and 'tag/%s/' % slug(tag) or '' }date/#{ months['date'] }"><t t-esc="months['create_date']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
             </li>
             </t>
         </ul>
@@ -391,7 +389,7 @@
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="blogs" t-as="nav_blog">
                 <li t-att-class="nav_blog.id == blog.id and 'active' or ''">
-                    <a t-href="/blog/#{ slug(nav_blog) }">
+                    <a t-attf-href="/blog/#{ slug(nav_blog) }">
                         <span t-field="nav_blog.name"/>
                     </a>
                 </li>

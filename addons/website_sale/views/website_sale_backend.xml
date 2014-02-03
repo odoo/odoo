@@ -9,8 +9,8 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='Product Features']/div" position="inside">
                 <div>
-                    <field name="group_product_characteristics" class="oe_inline"/>
-                    <label for="group_product_characteristics"/>
+                    <field name="group_product_attributes" class="oe_inline"/>
+                    <label for="group_product_attributes"/>
                 </div>
              </xpath>
         </field>
@@ -29,8 +29,9 @@
 
             <group name="sale" position="inside">
                 <group name="website" string="Website">
-                    <field name="suggested_product_ids" widget="many2many_tags"/>
+                    <field name="accessory_product_ids" widget="many2many_tags"/>
                     <field name="website_style_ids" widget="many2many_tags"/>
+                    <field name="website_sequence"/>
                 </group>
             </group>
         </field>
@@ -60,17 +61,17 @@
             </xpath>
             <xpath expr="//field[@name='description']" position="before">
                 <group colspan="4" string="Website Options">
-                    <field name="suggested_product_ids" widget="many2many_tags"/>
+                    <field name="accessory_product_ids" widget="many2many_tags"/>
                     <field name="website_style_ids" widget="many2many_tags"/>
-                    <field colspan="4" name="website_characteristic_ids" nolabel="1" groups="product.group_product_characteristics">
-                        <tree string="Product Characteristics" editable="bottom">
-                            <field name="characteristic_id" on_change="onchange_characteristic_id(characteristic_id)"/>
+                    <field colspan="4" name="attribute_lines" nolabel="1" groups="product.group_product_attributes">
+                        <tree string="Product attributes" editable="bottom">
+                            <field name="attribute_id" on_change="onchange_attribute_id(attribute_id)"/>
                             <field name="type" invisible="1"/>
                             <field name="value" attrs="{'required': [('type','=','float')]}"/>
                             <field name="value_id"
                                 attrs="{'required': [('type','=','distinct')]}"
-                                context="{'default_characteristic_id': characteristic_id}"
-                                domain="[('characteristic_id', '=', characteristic_id)]"/>
+                                context="{'default_attribute_id': attribute_id}"
+                                domain="[('attribute_id', '=', attribute_id)]"/>
                         </tree>
                     </field>
                 </group>
@@ -79,11 +80,11 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_product_characteristic_form">
-      <field name="name">product.characteristic.form</field>
-      <field name="model">product.characteristic</field>
+    <record model="ir.ui.view" id="view_product_attribute_form">
+      <field name="name">product.attribute.form</field>
+      <field name="model">product.attribute</field>
       <field name="arch" type="xml">
-        <form string="Product Characteristics" version="7.0">
+        <form string="Product attributes" version="7.0">
           <group>
             <field name="name"/>
             <field name="type"/>

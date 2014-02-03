@@ -1,6 +1,6 @@
 {
-    'name': 'Public Members',
-    'name': 'Website for Associations',
+    'name': 'Associations: Members',
+    'summary': 'Online Directory of Members',
     'category': 'Website',
     'summary': 'Publish Associations, Groups and Memberships',
     'version': '1.0',
@@ -9,7 +9,7 @@ Website for browsing Associations, Groups and Memberships
 =========================================================
 """,
     'author': 'OpenERP SA',
-    'depends': ['website_partner', 'website_google_map', 'association'],
+    'depends': ['website_partner', 'website_google_map', 'association', 'website_sale'],
     'data': [
         'views/website_membership.xml',
         'security/ir.model.access.csv',

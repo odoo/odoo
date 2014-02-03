@@ -71,10 +71,10 @@ $(document).ready(function () {
         $price.html($price.data("price")+parseFloat($label.find(".badge span").text() || 0));
     });
 
-    // characteristics
+    // attributes
 
     var js_slider_time = null;
-    var $form = $("form.characteristics");
+    var $form = $("form.attributes");
     $form.on("change", "label input", function () {
         clearTimeout(js_slider_time);
         $form.submit();

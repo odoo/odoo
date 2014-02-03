@@ -16,7 +16,7 @@
         ((submenu.url != '/' and request.httprequest.path.startswith(submenu.url)) or
          request.httprequest.path == submenu.url) and 'active'
         ">
-        <a t-att-href="url_for(submenu.url)" t-ignore="true" t-att-target="'blank' if submenu.new_window else None">
+        <a t-att-href="submenu.url" t-ignore="true" t-att-target="'blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>
@@ -115,7 +115,7 @@
                                         <ul class="dropdown-menu js_usermenu" role="menu">
                                             <li><a href="/web" role="menuitem">Administration</a></li>
                                             <li class="divider"/>
-                                            <li><a t-attf-href="/web/session/logout?redirect=#{ quote_plus(url_for('', keep_query='*')) }" role="menuitem">Logout</a></li>
+                                            <li><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
                                         </ul>
                                     </li>
                                 </ul>
@@ -172,13 +172,13 @@
                                 <t t-set="languages" t-value="website.get_languages()"/>
                                 <ul class="list-inline js_language_selector mt16" t-if="(len(languages) &gt; 1 or editable)">
                                     <li t-foreach="languages" t-as="lg">
-                                        <a t-att-href="url_for('', lang=lg[0], keep_query='*')"
+                                        <a t-att-href="url_for('', lang=lg[0]) + '?' + keep_query()"
                                            t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
                                             <t t-esc="lg[1].split('/').pop()"/>
                                         </a>
                                     </li>
                                     <li groups="base.group_website_publisher">
-                                        <t t-set="url_return" t-value="url_for(request.httprequest.path, '[lang]', keep_query='*')"/>
+                                        <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
                                         <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
                                             <i class="fa fa-plus-circle"/>
                                             Add a language...
@@ -216,7 +216,7 @@
 <template id="layout_logo_show" inherit_option_id="website.layout" name="Show Logo">
     <xpath expr="//header//a[@class='navbar-brand']" position="replace">
         <a href="/" class="navbar-brand logo">
-            <img src="/website/static/src/img/odoo_logo.png"/>
+            <img src="/logo.png"/>
         </a>
     </xpath>
 </template>
@@ -416,7 +416,7 @@
         <div class="container">
             <div class="well mt32">
                 <p>This page does not exists, but you can create it as you are administrator of this site.</p>
-                <a class="btn btn-primary" t-attf-href="/pagenew/#{ path }">Create Page</a>
+                <a class="btn btn-primary" t-attf-href="/website/add/#{ path }">Create Page</a>
                 <span class="text-muted">or</span> <a href="/sitemap">Search a Page</a>
             </div>
             <div class="text-center text-muted">Edit the content below this line to adapt the default "page not found" page.</div>
@@ -452,7 +452,10 @@
             <div id="error_main" class="panel-collapse collapse in">
                 <div class="panel-body">
                     <p t-if="website_controller">The following error was raised in the website controller <code t-esc="website_controller"/></p>
-                    <p><strong>Error message:</strong> <pre t-esc="exception.message"/></p>
+                    <p>
+                        <strong>Error message:</strong>
+                        <pre t-esc="exception.message"/>
+                    </p>
                 </div>
             </div>
         </div>
@@ -466,12 +469,16 @@
             </div>
             <div id="error_qweb" class="panel-collapse collapse">
                 <div class="panel-body">
-                    <p>
-                        The error occured while rendering the template <code t-esc="qweb_exception.template"/>
-                        <t t-if="qweb_exception.expression">and evaluating the following expression: <code t-esc="qweb_exception.expression"/></t>
+                    <p t-if="exception.qweb.get('message')">
+                        <strong>Error message:</strong>
+                        <pre t-esc="exception.qweb.get('message')"/>
                     </p>
-                    <t t-if="qweb_exception.node">
-                        <pre id="exception_node" t-esc="qweb_exception.node.toxml()"/>
+                    <p>
+                        The error occured while rendering the template <code t-esc="qweb_exception.qweb.get('template')"/>
+                        <t t-if="'expression' in qweb_exception.qweb">and evaluating the following expression: <code t-esc="qweb_exception.qweb['expression']"/></t>
+                    </p>
+                    <t t-if="'node' in qweb_exception.qweb">
+                        <pre id="exception_node" t-esc="qweb_exception.qweb['node'].toxml()"/>
                     </t>
                 </div>
             </div>
@@ -570,7 +577,7 @@
                     <div class="container" t-if="views">
                         <div class="alert alert-danger" t-if="qweb_exception and editable">
                             <h4>Template fallback</h4>
-                            <p>An error occured while rendering the template <code t-esc="qweb_exception.template"/>.</p>
+                            <p>An error occured while rendering the template <code t-esc="qweb_exception.qweb['template']"/>.</p>
                             <p>If this error is caused by a change of yours in the templates, you have the possibility to reset one or more templates to their <strong>factory settings</strong>.</p>
                             <form action="/website/reset_templates" method="post">
                                 <ul class="oe_template_fallback">
@@ -634,8 +641,8 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     <address>
         <div t-field="res_company.name">Name</div>
         <br />
-        <div>&amp;#x2706; <span t-field="res_company.phone"></span></div>
-        <div class="fa fa-envelope" t-field="res_company.email"></div>
+        <div><i class="fa fa-phone"/> <span t-field="res_company.phone"/></div>
+        <div><i class="fa fa-envelope"/> <span t-field="res_company.email"/></div>
     </address>
      <a t-att-href="res_company.google_map_link()" target="_BLANK">
         <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
