@@ -10,8 +10,8 @@ class WebSuite(QUnitSuite):
             '/web/tests',
             'mod=*&source={db}&supadmin={supadmin}&password={password}'.format(
                 db=tools.config['db_name'],
-                supadmin=tools.config['db_password'] or 'admin',
-                password=tools.config['admin_passwd'] or 'admin'),
+                supadmin=tools.config['admin_passwd'],
+                password='admin'),
             ''
         ])
         super(WebSuite, self).__init__(url, 50000)
