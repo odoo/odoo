@@ -96,7 +96,6 @@ class purchase_requisition(osv.osv):
     def _seller_details(self, cr, uid, requisition_line, supplier, context=None):
         product_uom = self.pool.get('product.uom')
         pricelist = self.pool.get('product.pricelist')
-        supplier_info = self.pool.get("product.supplierinfo")
         product = requisition_line.product_id
         default_uom_po_id = product.uom_po_id.id
         qty = product_uom._compute_qty(cr, uid, requisition_line.product_uom_id.id, requisition_line.product_qty, default_uom_po_id)
