@@ -6,14 +6,23 @@
 @license: GPL
 '''
 
-import copy
+try: 
+    import qrcode
+except ImportError:
+    qrcode = None
 
-import qrcode
+import time
+import copy
+import io
+import base64
+import math
+import md5
+
 from PIL import Image
 
 try:
     import jcconv
-except:
+except ImportError:
     jcconv = None
     print 'ESC/POS: please install jcconv for improved Japanese receipt printing:'
     print ' # pip install jcconv'
@@ -25,6 +34,7 @@ class Escpos:
     """ ESC/POS Printer object """
     device    = None
     encoding  = None
+    img_cache = {}
 
 
     def _check_image_size(self, size):
@@ -44,6 +54,7 @@ class Escpos:
         i = 0
         cont = 0
         buffer = ""
+
        
         self._raw(S_RASTER_N)
         buffer = "%02X%02X%02X%02X" % (((size[0]/size[1])/8), 0, size[1], 0)
@@ -59,6 +70,36 @@ class Escpos:
                 self._raw(buffer.decode("hex"))
                 buffer = ""
                 cont = 0
+
+    def _raw_print_image(self, line, size, output=None ):
+        """ Print formatted image """
+        i = 0
+        cont = 0
+        buffer = ""
+        raw = ""
+
+        def __raw(string):
+            if output:
+                output(string)
+            else:
+                self._raw(string)
+       
+        raw += S_RASTER_N
+        buffer = "%02X%02X%02X%02X" % (((size[0]/size[1])/8), 0, size[1], 0)
+        raw += buffer.decode('hex')
+        buffer = ""
+
+        while i < len(line):
+            hex_string = int(line[i:i+8],2)
+            buffer += "%02X" % hex_string
+            i += 8
+            cont += 1
+            if cont % 4 == 0:
+                raw += buffer.decode("hex")
+                buffer = ""
+                cont = 0
+
+        return raw
 
 
     def _convert_image(self, im):
@@ -106,16 +147,45 @@ class Escpos:
             pix_line += im_right
             img_size[0] += im_border[1]
 
-        self._print_image(pix_line, img_size)
-
+        return (pix_line, img_size)
 
     def image(self,path_img):
         """ Open image file """
         im_open = Image.open(path_img)
         im = im_open.convert("RGB")
         # Convert the RGB image in printable image
-        self._convert_image(im)
+        pix_line, img_size = self._convert_image(im)
+        self._print_image(pix_line, img_size)
 
+    def print_base64_image(self,img):
+
+        print 'print_b64_img'
+
+        id = md5.new(img).digest()
+
+        if id not in self.img_cache:
+            print 'not in cache'
+
+            img = img[img.find(',')+1:]
+            f = io.BytesIO('img')
+            f.write(base64.decodestring(img))
+            f.seek(0)
+            img_rgba = Image.open(f)
+            img = Image.new('RGB', img_rgba.size, (255,255,255))
+            img.paste(img_rgba, mask=img_rgba.split()[3]) 
+
+            print 'convert image'
+        
+            pix_line, img_size = self._convert_image(img)
+
+            print 'print image'
+
+            buffer = self._raw_print_image(pix_line, img_size)
+            self.img_cache[id] = buffer
+
+        print 'raw image'
+
+        self._raw(self.img_cache[id])
 
     def qr(self,text):
         """ Print QR Code for the provided string """
@@ -202,16 +272,28 @@ class Escpos:
             encoded  = ''
             encoding = self.encoding # we reuse the last encoding to prevent code page switches at every character
             encodings = {
+                    # TODO use ordering to prevent useless switches
+                    # TODO Support other encodings not natively supported by python ( Thai, Khazakh, Kanjis )
                     'cp437': TXT_ENC_PC437,
                     'cp850': TXT_ENC_PC850,
                     'cp852': TXT_ENC_PC852,
+                    'cp857': TXT_ENC_PC857,
                     'cp858': TXT_ENC_PC858,
-                    'cp865': TXT_ENC_PC860,
+                    'cp860': TXT_ENC_PC860,
                     'cp863': TXT_ENC_PC863,
                     'cp865': TXT_ENC_PC865,
                     'cp866': TXT_ENC_PC866,
+                    'cp862': TXT_ENC_PC862,
+                    'cp720': TXT_ENC_PC720,
+                    'iso8859_2': TXT_ENC_8859_2,
+                    'iso8859_7': TXT_ENC_8859_7,
+                    'iso8859_9': TXT_ENC_8859_9,
+                    'cp1254'   : TXT_ENC_WPC1254,
+                    'cp1255'   : TXT_ENC_WPC1255,
+                    'cp1256'   : TXT_ENC_WPC1256,
+                    'cp1257'   : TXT_ENC_WPC1257,
+                    'cp1258'   : TXT_ENC_WPC1258,
                     'katakana' : TXT_ENC_KATAKANA,
-                    # TODO Support other encodings not natively supported by python
             }
             remaining = copy.copy(encodings)
 

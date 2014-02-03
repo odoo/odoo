@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-12-28 05:19+0000\n"
-"X-Generator: Launchpad (build 16877)\n"
+"X-Launchpad-Export-Date: 2014-01-28 06:07+0000\n"
+"X-Generator: Launchpad (build 16914)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -281,7 +281,7 @@ msgstr "稅"
 #. module: sale
 #: field:sale.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr "未完稅金額"
+msgstr "未稅金額"
 
 #. module: sale
 #: field:sale.config.settings,module_project:0
@@ -302,7 +302,7 @@ msgstr "錯誤！"
 #. module: sale
 #: report:sale.order:0
 msgid "Net Total :"
-msgstr "淨計 :"
+msgstr "未稅合計："
 
 #. module: sale
 #: help:sale.order.line,type:0
@@ -439,6 +439,9 @@ msgid ""
 "The 'Waiting Schedule' status is set when the invoice is confirmed           "
 "    but waiting for the scheduler to run on the order date."
 msgstr ""
+"指出報價單或者銷售訂單的狀態。              \n"
+"當發票處理時(開票異常)或者提貨單處理時(運輸異常)取消了該張發票或提貨單，會自動設為異常狀態。\n"
+"當發票已確認，但在等待排程的時候，自動設為「等待排程」 狀態。"
 
 #. module: sale
 #: field:sale.report,date_confirm:0
@@ -456,12 +459,12 @@ msgstr "明細數"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "保留談話摘要(訊息數量等等)。為了放入看板檢視模式，此摘要直接存為HTML格式。"
 
 #. module: sale
 #: help:sale.order.line,sequence:0
 msgid "Gives the sequence order when displaying a list of sales order lines."
-msgstr ""
+msgstr "指出顯示銷售訂單細項的排序順序。"
 
 #. module: sale
 #: view:sale.report:0
@@ -530,7 +533,7 @@ msgstr "預付款總額"
 #. module: sale
 #: help:sale.order,invoice_exists:0
 msgid "It indicates that sales order has at least one invoice."
-msgstr ""
+msgstr "這指出銷售訂單至少有一張發票。"
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
@@ -538,6 +541,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"可依不同客戶分類而有不同規則管理產品價格。\n"
+"如，九折優惠給零售商，指定產品給予5元優惠等等。"
 
 #. module: sale
 #: field:sale.config.settings,module_analytic_user_function:0
@@ -654,6 +659,8 @@ msgid ""
 "                and perform batch operations on journals.\n"
 "                This installs the module sale_journal."
 msgstr ""
+"讓您可分類您的銷售與出貨(提貨單)在不同的日記帳中，並在日記帳中批次處理。\n"
+"                本功能將安裝 sale_journal 模組。"
 
 #. module: sale
 #: help:sale.make.invoice,grouped:0
@@ -1209,7 +1216,7 @@ msgstr "日期"
 #: view:sale.report:0
 #: field:sale.report,user_id:0
 msgid "Salesperson"
-msgstr "銷售人員"
+msgstr "業務人員"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1415,12 +1422,12 @@ msgid ""
 "This is the list of invoices that have been generated for this sales order. "
 "The same sales order may have been invoiced in several times (by line for "
 "example)."
-msgstr ""
+msgstr "這是此張銷售訂單已開立的發票清單。同一張銷售訂單可以開立多張發票（例如依銷售細項開立）。"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Your Reference"
-msgstr "您的參考"
+msgstr "參考主旨"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -1586,6 +1593,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                這裡是待開立發票的訂單細項清單。您可依細項為銷售訂單\n"
+"                部份開立發票。如果您依出貨單或依整筆訂單開立發票，就\n"
+"                不需使用此清單。\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: report:sale.order:0
@@ -1597,7 +1610,7 @@ msgstr "貨運地址 :"
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
-msgstr ""
+msgstr "您無法針對同一業務夥伴但使用不同幣別的銷售訂單進行分組"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -1610,7 +1623,7 @@ msgid ""
 "The sales order will automatically create the invoice proposition (draft "
 "invoice).                                              You have to choose  "
 "if you want your invoice based on ordered "
-msgstr ""
+msgstr "銷售訂單將會自動建立發票草稿。 您必須選擇是否要依已訂購部分開立發票。 "
 
 #. module: sale
 #: field:sale.config.settings,module_account_analytic_analysis:0
@@ -1624,6 +1637,8 @@ msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
+"無法找到適合此產品與數量的價格表細項。\n"
+"您必須更改產品、數量或價格表。"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -1648,7 +1663,7 @@ msgstr "未稅金額"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Order reference"
-msgstr ""
+msgstr "訂單參照"
 
 #. module: sale
 #: help:sale.order,invoiced:0
@@ -1669,7 +1684,7 @@ msgstr "百分比"
 #. module: sale
 #: view:sale.order:0
 msgid "Other Information"
-msgstr ""
+msgstr "其他資訊"
 
 #. module: sale
 #: model:email.template,body_html:sale.email_template_edi_sale
@@ -1759,6 +1774,90 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>${object.partner_id.name}您好，</p>\n"
+"    \n"
+"    <p>此為${object.company_id.name}給您的${object.state in ('draft', 'sent') and "
+"'quotation' or 'order confirmation'}：</p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>供您參考</strong><br />\n"
+"       &nbsp;&nbsp;訂單編號：<strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;訂單總額：<strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;訂單日期：${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;訂單參照文件：${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;參考主旨：${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;聯絡人：<a href=\"mailto:${object.user_id.email or "
+"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>可直接透過 Paypal 付款：</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>如果您有任何疑問，煩請跟我們聯絡。</p>\n"
+"    <p>感謝您選擇了${object.company_id.name or 'us'}！</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.country_id.name or ''} "
+"${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
+"or ''}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}\n"
+"        % endif\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                電話：&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                網站：&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1811,6 +1910,9 @@ msgid ""
 "Before delivery: A draft invoice is created from the sales order and must be "
 "paid before the products can be delivered."
 msgstr ""
+"應需求：當需要的時候從銷售訂單建立發票草稿。\n"
+"應出貨單：當產品已經送出時，從出貨單建立發票草稿。\n"
+"送貨前：產品出貨前必須完成付款，並由銷售訂單建立發票草稿。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -1821,6 +1923,8 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
+"此份報表將對您的報價單和銷售訂單執行分析。分析您的銷售收入並且依照不同的分組篩選條件排序（業務人員，業務夥伴，產品等）。利用報表對尚未開立發票的銷售訂單進"
+"行分析。如果您想分析您的週轉率，應使用會計模組裡的發票分析報表。"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
@@ -1856,6 +1960,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                點擊以建立報價單，新的銷售訂單的第一步。\n"
+"              </p><p>\n"
+"                OpenERP 將幫您有效處理完整的銷售流程：報價、銷\n"
+"                售訂單、出貨，開立發票及收款。\n"
+"              </p><p>\n"
+"                 社交功能將讓每張銷售訂單的討論井然有序，而且您\n"
+"                的客戶可以輕鬆的追蹤銷售訂單的進展。\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: view:res.partner:0
@@ -1868,27 +1982,27 @@ msgstr ""
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
 "default properties of Product categories."
-msgstr ""
+msgstr "產品類別的預設值中沒有定義財務結構或者收益類別會計科目。"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
-msgstr ""
+msgstr "尚待會計覆核"
 
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
 msgid "Properties on lines"
-msgstr ""
+msgstr "細項屬性"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Sale to Invoice"
-msgstr ""
+msgstr "待開立發票銷售訂單"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Order Number"
-msgstr ""
+msgstr "訂單編號"
 
 #. module: sale
 #: view:sale.order:0
@@ -1900,12 +2014,12 @@ msgstr "客戶"
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Advance"
-msgstr ""
+msgstr "預付"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "February"
-msgstr ""
+msgstr "二月"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -1921,6 +2035,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                點擊以建立可轉換為銷售訂單的報價單。\n"
+"              </p><p>\n"
+"                OpenERP 將幫您有效處理完整的銷售流程：報價、銷售訂單、出貨\n"
+"                單、開立發票及付款。\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: field:sale.order,invoice_quantity:0
@@ -1930,7 +2051,7 @@ msgstr "根據以下之發票:"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Fixed price (deposit)"
-msgstr ""
+msgstr "固定金額（押金）"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_settings
@@ -1940,7 +2061,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "September"
-msgstr ""
+msgstr "九月"
 
 #. module: sale
 #: report:sale.order:0
@@ -1950,27 +2071,27 @@ msgstr "訂單日期"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Before Delivery"
-msgstr ""
+msgstr "出貨前"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "產品銷售單位"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_quotation0
 msgid "Draft state of sales order"
-msgstr ""
+msgstr "銷售訂單草稿狀態"
 
 #. module: sale
 #: field:sale.order,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "來源文件"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "April"
-msgstr ""
+msgstr "四月"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -1983,12 +2104,12 @@ msgstr "手動進行中"
 #: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "警告！"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
 msgid "Old Quotations"
-msgstr ""
+msgstr "歷史報價單"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2010,22 +2131,32 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                點擊建立此客戶的報價單或銷售訂單。\n"
+"              </p><p>\n"
+"               OpenERP 將幫您有效處理完整的銷售流程： 報價，\n"
+"               銷售訂單，出貨單，開立發票及付款。\n"
+"              </p><p>\n"
+"                社交功能讓銷售訂單的討論井然有序，而且您的客\n"
+"                戶可以輕鬆的追蹤銷售訂單的進展。\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: field:sale.order,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "摘要"
 
 #. module: sale
 #: help:sale.order,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "訊息及聯絡紀錄"
 
 #. module: sale
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Search Sales Order"
-msgstr ""
+msgstr "搜尋銷售訂單"
 
 #. module: sale
 #: report:sale.order:0
@@ -2040,22 +2171,22 @@ msgid ""
 "                        multiple invoicing as part of the same contract "
 "with\n"
 "                        your customer."
-msgstr ""
+msgstr "用合約來管理須多次開立發票的客戶服務合約。"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Ordered month of the sales order"
-msgstr ""
+msgstr "銷售訂單下單月份"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "From a sales order"
-msgstr ""
+msgstr "由銷售訂單"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Confirmed sales order lines, not yet delivered"
-msgstr ""
+msgstr "未送貨的已確認銷售訂單細項"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -2064,23 +2195,23 @@ msgid ""
 "based on delivered or on ordered quantities. Thus, a sales order can "
 "generates an invoice or a delivery order as soon as it is confirmed by the "
 "salesman."
-msgstr ""
+msgstr "依該銷售訂單的發票控管，該發票可依送貨或訂貨數量開立。因此一經業務人員確認，即可開立發票或出貨單。"
 
 #. module: sale
 #: view:sale.order:0
 msgid "UoS"
-msgstr ""
+msgstr "銷售用單位"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Some order lines"
-msgstr ""
+msgstr "某些訂單細項"
 
 #. module: sale
 #: code:addons/sale/sale.py:983
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
-msgstr ""
+msgstr "不能刪除「%s」狀態的銷售訂單細項。"
 
 #. module: sale
 #: report:sale.order:0
@@ -2091,19 +2222,19 @@ msgstr "付款條件"
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order ready to be invoiced"
-msgstr ""
+msgstr "銷售訂單已可開立發票"
 
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
 msgid "Generate invoices based on the sales order lines"
-msgstr ""
+msgstr "依銷售訂單細項開立發票"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
 #: view:sale.make.invoice:0
 #: view:sale.order.line.make.invoice:0
 msgid "or"
-msgstr ""
+msgstr "或"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
@@ -2115,7 +2246,7 @@ msgstr "銷貨單明細"
 #. module: sale
 #: help:sale.order,pricelist_id:0
 msgid "Pricelist for current sales order."
-msgstr ""
+msgstr "目前銷售訂單使用的價格表"
 
 #. module: sale
 #: report:sale.order:0
@@ -2125,12 +2256,12 @@ msgstr "報價單編號"
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "依細項折扣"
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Customer Reference"
-msgstr ""
+msgstr "客戶參考主旨"
 
 #. module: sale
 #: view:sale.report:0
@@ -2145,6 +2276,9 @@ msgid ""
 "between the Unit Price and Cost Price.\n"
 "                This installs the module sale_margin."
 msgstr ""
+"在銷售訂單上增加「利潤」欄位。\n"
+"                可藉由單價與成本價計算盈利。\n"
+"                此功能將安裝 sale_margin 模組。"
 
 #. module: sale
 #: code:addons/sale/sale.py:865
@@ -2152,17 +2286,17 @@ msgstr ""
 msgid ""
 "Before choosing a product,\n"
 " select a customer in the sales form."
-msgstr ""
+msgstr "選擇產品前，請在銷售表單中選擇一位客戶。"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Total Tax Included"
-msgstr ""
+msgstr "含稅總額"
 
 #. module: sale
 #: view:sale.order:0
 msgid "New Copy of Quotation"
-msgstr ""
+msgstr "新增報價單複本"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -2171,11 +2305,13 @@ msgid ""
 "                        will create a draft invoice that can be modified\n"
 "                        before validation."
 msgstr ""
+"選擇如何為這個訂單開立發票。這會建立一張在核准前皆可\n"
+"                        修改的發票草稿。"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Ordered date of the sales order"
-msgstr ""
+msgstr "銷售訂單的下單日期"
 
 #~ msgid "Delivery Order"
 #~ msgstr "交貨單"

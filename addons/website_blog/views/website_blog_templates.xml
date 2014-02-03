@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="editor_head" inherit_id="website.editor_head" name="Blog Editor" groups="base.group_document_user">
+    <xpath expr="//script[@id='website_tour_js']" position="after">
+        <script type="text/javascript" src="/website_blog/static/src/js/website_blog.editor.js"></script>
+        <script type="text/javascript" src="/website_blog/static/src/js/website.tour.blog.js"></script>
+    </xpath>
+</template>
+
+<!-- Layout add nav and footer -->
+<template id="header_footer_custom" inherit_id="website.layout" name="Footer News Blog Link">
+    <xpath expr="//footer//div[@name='info']/ul" position="inside">
+        <li><a t-attf-href="/blog/%(website_blog.blog_blog_1)d/">News</a></li>
+    </xpath>
+</template>
+
+<!-- Overview of all blog posts -->
+<template id="latest_blogs" name="Latest Blogs">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure"/>
+            <section groups="base.group_website_publisher">
+                <div class="container text-center mt16">
+                    <div class="alert alert-warning alert-dismissable">
+                       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                       <p>
+                       This page is great to improve your <strong>Search Engine Optimization</strong>;
+                       You can review titles, keywords and descriptions of all blogs at once.
+                       </p><p>
+                       You should <strong>add a banner on the top</strong> as it is a frequent landing page for new visitors.
+                       <span class="text-muted">This box will not be visible to your visitors.</span>
+                       </p>
+                    </div>
+                </div>
+            </section>
+            <section class="container">
+                <t t-call="website.pager" >
+                    <t t-set="classname">pull-right</t>
+                </t>
+            </section>
+            <section data-snippet-id="title" class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h1>Latest Blogs</h1>
+                    </div>
+                </div>
+            </section>
+            <section class="container">
+                <div class="row">
+                    <t t-set="count" t-value="0"/>
+                    <t t-foreach="blogs" t-as="blog">
+                      <div class="col-md-4">
+                        <h4>
+                            <a t-attf-href="/blogpost/#{ slug(blog) }?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}" t-field="blog.name"></a>
+                            <span t-if="not blog.website_published" class="text-warning">
+                                &amp;nbsp;
+                                <span class="fa fa-warning" title="Not published"/>
+                            </span>
+                        </h4>
+                        <div class="text-muted">
+                            <span class="fa fa-calendar"> <span t-field="blog.create_date"/> &amp;nbsp;</span>
+                            <span class="fa fa-folder-open"> In
+                                <a t-attf-href="/blog/#{ slug(blog.blog_id) }">
+                                <span t-field="blog.blog_id"/>
+                                </a> &amp;nbsp;
+                            </span>
+                        </div>
+                        <div class="text-muted fa fa-tags">
+                            <span t-field="blog.website_meta_keywords"/>
+                            <span t-if="editable and not blog.website_meta_keywords" class="label label-danger">
+                                No keywords defined!
+                            </span>
+                        </div>
+                        <div class="text-muted" t-if="len(blog.message_ids) &gt; 0">
+                            <span class="fa fa-comment-o">
+                                <a t-attf-href="/blogpost/#{ slug(blog) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}#comments">
+                                    <t t-if="len(blog.message_ids) &lt;= 1" ><t t-esc="len(blog.message_ids)"/> comment</t>
+                                    <t t-if="len(blog.message_ids) > 1"><t t-esc="len(blog.message_ids)"/> comments</t>
+                                </a>
+                            </span>
+                        </div>
+                        <div class="text-muted mb16" t-field="blog.website_meta_description"/>
+                      </div>
+                      <t t-set="count" t-value="count+1"/>
+                      <div class="clearfix" t-if="(count % 3) == 0"/>
+                    </t>
+                </div>
+            </section>
+            <div class="oe_structure"/>
+        </div>
+    </t>
+</template>
+
+
+<!-- Blog Post Summary -->
+<template id="blog_post_short" name="Blog Post Summary">
+    <t t-call="website_blog.index">
+    <div t-if="not blog_posts">
+        <div class="text-center text-muted">
+          <h3 class="css_editable_display">No blog post found</h3>
+          <h3 class="css_editable_hidden">Nothing published yet click <a t-attf-href="/page/website.contactus">here</a> to contact us</h3>
+          <t groups="base.group_website_publisher">
+            <t groups="base.group_document_user">
+                <p>Click on "Content" to define a new blog post or "Help" for more informations.</p>
+                <img src="/website/static/src/img/content_here.png"/>
+              </t>
+          </t>
+        </div>
+    </div>
+    <t t-foreach="blog_posts" t-as="blog_post">
+      <div t-att-data-publish="blog_post.website_published and 'on' or 'off'">
+        <h2 class="text-center">
+            <a t-attf-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}" t-field="blog_post.name"></a>
+        </h2>
+        <p class="post-meta text-muted text-center" name='blog_post_data'>
+            <span class="fa fa-calendar oe_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
+            <span t-if="len(blog_post.message_ids) &gt; 0" class="fa fa-comment-o">
+                <a t-attf-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}#comments">
+                    <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
+                    <t t-if="len(blog_post.message_ids) > 1"><t t-esc="len(blog_post.message_ids)"/> comments</t>
+                </a>
+            </span>
+            <span t-if="not blog_post.website_published" class="label label-danger">not published</span>
+        </p>
+        <div t-raw="blog_post.shortened_content" class="blog_content"/>
+        <hr/>
+      </div>
+
+    </t>
+    </t>
+</template>
+
+<!-- Options: Blog Post Summary: hide author -->
+<template id="opt_blog_post_short_author" name="Author"
+        inherit_option_id="website_blog.blog_post_short">
+    <xpath expr="//span[@class='fa fa-calendar oe_date']" position="after">
+        <span class="fa fa-user"> By <span t-field="blog_post.create_uid"/> &amp;nbsp;</span>
+    </xpath>
+</template>
+
+<!-- Option: Blog Post Summary: show tags -->
+<template id="opt_blog_post_short_tags" name="Tags"
+        inherit_option_id="website_blog.blog_post_short" inherit_id="website_blog.blog_post_short">
+    <xpath expr="//p[@name='blog_post_data']" position="after">
+        <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
+            <span class="fa fa-tags"/>
+            <t t-foreach="blog_post.tag_ids" t-as="tag">
+                <a t-attf-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }" t-esc="tag.name"/> &amp;nbsp;
+            </t>
+        </p>
+    </xpath>
+</template>
+
+<!-- Blog Post Complete -->
+<template id="blog_post_complete" name="Blog Post">
+    <t t-call="website_blog.index">
+
+    <div class="container" id="title">
+        <h1 class="text-center" t-field="blog_post.name"/>
+        <p class="post-meta text-muted text-center" name="blog_post_data">
+            <span class="fa fa-calendar oe_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
+            <span t-if="len(blog_post.message_ids) &gt; 0" class="fa fa-comment-o"> With
+                <a t-attf-href="#comments">
+                    <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
+                    <t t-if="len(blog_post.message_ids) > 1"><t t-esc="len(blog_post.message_ids)"/> comments</t>
+                </a>
+            </span>
+        </p>
+    </div>
+    <div class="container">
+        <t t-call="website.publish_management">
+            <t t-set="object" t-value="blog_post"/>
+            <t t-set="publish_edit" t-value="True"/>
+            <li>
+                <form class="duplicate hidden" action="/blogpost/duplicate">
+                    <input name="blog_post_id" t-att-value="blog_post.id"/>
+                </form>
+                <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
+            </li>
+        </t>
+    </div>
+
+    <div t-field="blog_post.content"/>
+
+    <section id="comments" class="container">
+        <ul class="media-list" id="comments-list">
+            <li t-foreach="blog_post.website_message_ids" t-as="message" class="media">
+                <div class="media-body">
+                    <img class="media-object pull-left" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
+                    <div class="media-body">
+                        <t t-call="website.publish_short">
+                            <t t-set="object" t-value="message"/>
+                        </t>
+                        <h5 class="media-heading">
+                            <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
+                        </h5>
+                        <div t-field="message.body"/>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+    </t>
+</template>
+
+<template id="blog_breadcrumb" name="Breadcrumb"
+        inherit_option_id="website_blog.blog_post_complete">
+    <xpath expr="//div[@id='title']" position="before">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-9">
+                <ol class="breadcrumb">
+                    <li><a t-attf-href="/blog/#{ slug(blog) }"><span t-field="blog.name"/></a></li>
+                    <li t-if="tag"><a t-attf-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }"><span t-field="tag.name"/></a></li>
+                    <li t-if="tag and date"><a t-attf-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }/date/#{ date }" t-esc="date_name"/></li>
+                    <li t-if="not tag and date"><a t-attf-href="/blog/#{ slug(blog) }/date/#{ date }" t-esc="date_name"/></li>
+                    <li class="active"><span t-field="blog_post.name"/></li>
+                </ol>
+            </div><div class="col-sm-3">
+            </div>
+          </div>
+        </div>
+    </xpath>
+</template>
+
+
+<!-- Options: Blog Post: user can reply -->
+<template id="opt_blog_post_complete_comment" name="Allow Comments"
+        inherit_option_id="website_blog.blog_post_complete" inherit_id="website_blog.blog_post_complete"
+        groups="website_mail.group_comment">
+    <xpath expr="//ul[@id='comments-list']" position="before">
+        <section class="mb32 css_editable_mode_hidden">
+            <form id="comment" t-attf-action="/blogpost/comment" method="POST">
+                <input name="blog_post_id" t-att-value="blog_post.id" type="hidden"/>
+                <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
+                <div class="pull-left mb32" style="width: 75%%">
+                    <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
+                    <button type="submit" class="btn btn-primary mt8">Post</button>
+                </div>
+            </form>
+        </section>
+        <div class="clearfix"/>
+    </xpath>
+</template>
+
+<!-- Options: Blog Post: hide author -->
+<template id="opt_blog_post_complete_author" name="Authors"
+        inherit_option_id="website_blog.blog_post_complete">
+    <xpath expr="//span[@class='fa fa-calendar oe_date']" position="after">
+        <span class="fa fa-user"> By <span t-field="blog_post.create_uid"/> &amp;nbsp;</span>
+    </xpath>
+</template>
+
+<!-- Options: Blog Post: show blog -->
+<template id="opt_blog_post_complete_blog" name="Blog"
+        inherit_option_id="website_blog.blog_post_complete">
+    <xpath expr="//span[@class='fa fa-calendar oe_date']" position="after">
+        <span class="fa fa-folder-open"> In <span t-field="blog_post.blog_id"/> &amp;nbsp;</span>
+    </xpath>
+</template>
+
+<!-- Options: Blog Post: show tags -->
+<template id="opt_blog_post_complete_tags" name="Tags"
+        inherit_option_id="website_blog.blog_post_complete" inherit_id="website_blog.blog_post_complete">
+    <xpath expr="//p[@name='blog_post_data']" position="after">
+        <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
+            <span class="fa fa-tags"/>
+            <t t-foreach="blog_post.tag_ids" t-as="tag">
+                <a t-attf-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }" t-esc="tag.name"/> &amp;nbsp;
+            </t>
+        </p>
+    </xpath>
+</template>
+
+<!-- Page -->
+<template id="index" name="Blog Navigation">
+    <t t-call="website.layout">
+        <t t-set="head">
+            <link rel='stylesheet' href='/website_blog/static/src/css/website_blog.css'/>
+        </t>
+        <div id="wrap" class="js_blog">
+            <t t-raw="0"/>
+        </div>
+    </t>
+</template>
+
+<!-- Option: Right Column for extra info -->
+
+<template id="index_right" name="Right Column"
+        inherit_option_id="website_blog.index">
+    <xpath expr="//div[@id='wrap']" position="replace">
+        <div class="container mt16 js_website_blog">
+            <div class="row">
+                <div class="col-lg-8 col-sm-8" id="blog_left_column">
+                    <t t-raw="0"/>
+                </div>
+                <div class="col-lg-3 col-lg-offset-1 col-sm-4" id="blog_right_column"/>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<!-- Option: Right Column: tags -->
+<template id="opt_blog_rc_tags" name="Tags"
+        inherit_option_id="website_blog.index_right">
+    <xpath expr="//div[@id='blog_right_column']" position="inside">
+        <section class="mt32">
+        <h4>Tags</h4>
+        <ul class="nav nav-pills nav-stacked">
+            <t t-foreach="tags" t-as="tag_id">
+            <li t-att-class="tag and tag_id.id == tag.id and 'active' or None" style="display: inline-block;">
+                <a t-attf-href="/blog/#{ slug(blog) }/tag/#{ slug(tag_id) }"><span t-field="tag_id.name"/></a>
+            </li>
+            </t>
+        </ul>
+        </section>
+    </xpath>
+</template>
+
+<!-- Option: Right Column: archives -->
+<template id="opt_blog_rc_history" name="Archives"
+        inherit_option_id="website_blog.index_right">
+    <xpath expr="//div[@id='blog_right_column']" position="inside">
+        <section class="mt32">
+        <h4>Archives</h4>
+        <ul class="nav nav-pills nav-stacked">
+            <t t-foreach="nav_list" t-as="months">
+            <li t-att-class="months['date'] == date and 'active' or None">
+                <a t-ignore="True" t-attf-href="/blog/#{ slug(blog) }/#{ tag and 'tag/%s/' % slug(tag) or '' }date/#{ months['date'] }"><t t-esc="months['create_date']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
+            </li>
+            </t>
+        </ul>
+        </section>
+    </xpath>
+</template>
+
+<!-- Option: Right Column: about us -->
+<template id="opt_blog_rc_about_us" name="About Us" priority="2"
+        inherit_option_id="website_blog.index_right">
+    <xpath expr="//div[@id='blog_right_column']" position="inside">
+        <section class="mt32">
+        <h4>About us</h4>
+        <p>
+            Write a small text here for when <b>new visitors</b> find your website
+            through your <b>blog entries</b>, referenced in Google.
+        </p>
+        <div>
+            <a href="/page/website.contactus"><button class="btn btn-primary">Contact us</button></a>
+        </div>
+        </section>
+    </xpath>
+</template>
+
+<!-- Option: Right Column: follow us -->
+<template id="opt_blog_rc_follow_us" name="Follow us" priority="4"
+        inherit_option_id="website_blog.index_right">
+    <xpath expr="//div[@id='blog_right_column']" position="inside">
+        <section class="mt32">
+            <h4>Follow us<small t-if="blog">: <t t-esc="blog.name"/></small></h4>
+            <t t-if="blog">
+                <t t-call="website_mail.follow">
+                    <t t-set="email" t-value="user_id.email"/>
+                    <t t-set="object" t-value="blog"/>
+                </t>
+            </t>
+            <p class="text-muted mb0 mt16">
+                Participate on our social stream.
+            </p>
+            <h2 class="mt4">
+                <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="fa fa-facebook-square"/></a>
+                <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="fa fa-twitter"/></a>
+                <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="fa fa-linkedin"/></a>
+                <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a>
+                <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="fa fa-google-plus-square"/></a>
+                <a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a>
+            </h2>
+        </section>
+    </xpath>
+</template>
+
+<!-- Option: Right Column: blogs -->
+<template id="opt_blog_rc_blogs" name="Our Blogs" priority="6"
+        inherit_option_id="website_blog.index_right">
+    <xpath expr="//div[@id='blog_right_column']" position="inside">
+        <section class="mt32 mb32">
+        <h4>Our Blogs</h4>
+        <ul class="nav nav-pills nav-stacked">
+            <t t-foreach="blogs" t-as="nav_blog">
+                <li t-att-class="nav_blog.id == blog.id and 'active' or ''">
+                    <a t-attf-href="/blog/#{ slug(nav_blog) }">
+                        <span t-field="nav_blog.name"/>
+                    </a>
+                </li>
+            </t>
+        </ul>
+        </section>
+    </xpath>
+</template>
+
+</data>
+</openerp>

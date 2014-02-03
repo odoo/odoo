@@ -35,14 +35,12 @@
                         <field name="loc_case"/>
                     </group>
                 </group>
-                <page position="after" string="Information">
-                    <page name="properties" position="inside">
-                        <group string="Accounting Entries">
-                            <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                        </group>
-                    </page>
-                </page>
+                <xpath expr="//group[@name='weight']" position="after">
+                    <group string="Accounting Entries">
+                        <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                        <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                    </group>
+		</xpath>
 		<xpath expr="//field[@name='standard_price']" position='replace'>
                     <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                     <field name="cost_method"/>

@@ -1,0 +1,25 @@
+@import "compass/css3"
+@import "compass/css3/user-interface"
+@import "compass/css3/transition"
+
+//smartphones, iPhone, portrait 480x320 phones
+$smart_phone: 320px
+//portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide.*/
+$small-tablet: 481px
+//portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones
+$portrait-tablet: 641px
+//tablet, landscape iPad, lo-res laptops ands desktops
+$tablet: 961px
+//big landscape tablets, laptops, and desktops
+$desktop: 1025px
+
+@mixin editor-font
+    font-size: 14px
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace
+    line-height: normal
+
+@mixin selection()
+    ::-moz-selection
+        @content
+    ::selection
+        @content

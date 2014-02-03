@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.addons.portal_project.tests.test_access_rights import TestPortalProjectBase
+from openerp.exceptions import AccessError
 from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
@@ -45,7 +46,7 @@ class TestPortalProjectBase(TestPortalProjectBase):
         self.issue_5_id = self.project_issue.create(cr, uid, {
             'name': 'Test5', 'user_id': self.user_portal_id, 'project_id': self.project_pigs_id}, {'mail_create_nolog': True})
         self.issue_6_id = self.project_issue.create(cr, uid, {
-            'name': 'Test6', 'user_id': self.user_anonymous_id, 'project_id': self.project_pigs_id}, {'mail_create_nolog': True})
+            'name': 'Test6', 'user_id': self.user_public_id, 'project_id': self.project_pigs_id}, {'mail_create_nolog': True})
 
 
 class TestPortalIssue(TestPortalProjectBase):
@@ -71,11 +72,11 @@ class TestPortalIssue(TestPortalProjectBase):
 
         # Do: Bert reads project -> crash, no group
         # Test: no project issue visible
-        self.assertRaises(except_orm, self.project_issue.search, cr, self.user_none_id, [('project_id', '=', pigs_id)])
+        self.assertRaises(AccessError, self.project_issue.search, cr, self.user_none_id, [('project_id', '=', pigs_id)])
         # Test: no project issue readable
-        self.assertRaises(except_orm, self.project_issue.read, cr, self.user_none_id, issue_ids, ['name'])
+        self.assertRaises(AccessError, self.project_issue.read, cr, self.user_none_id, issue_ids, ['name'])
         # Test: no project issue writable
-        self.assertRaises(except_orm, self.project_issue.write, cr, self.user_none_id, issue_ids, {'description': 'TestDescription'})
+        self.assertRaises(AccessError, self.project_issue.write, cr, self.user_none_id, issue_ids, {'description': 'TestDescription'})
 
         # Do: Chell reads project -> ok (portal ok public)
         # Test: all project issues visible
@@ -85,11 +86,11 @@ class TestPortalIssue(TestPortalProjectBase):
         # Test: all project issues readable
         self.project_issue.read(cr, self.user_portal_id, issue_ids, ['name'])
         # Test: no project issue writable
-        self.assertRaises(except_orm, self.project_issue.write, cr, self.user_portal_id, issue_ids, {'description': 'TestDescription'})
+        self.assertRaises(AccessError, self.project_issue.write, cr, self.user_portal_id, issue_ids, {'description': 'TestDescription'})
 
-        # Do: Donovan reads project -> ok (anonymous ok public)
+        # Do: Donovan reads project -> ok (public ok public)
         # Test: all project issues visible
-        issue_ids = self.project_issue.search(cr, self.user_anonymous_id, [('project_id', '=', pigs_id)])
+        issue_ids = self.project_issue.search(cr, self.user_public_id, [('project_id', '=', pigs_id)])
         self.assertEqual(set(issue_ids), test_issue_ids,
                          'access rights: project user cannot see all issues of a public project')
 
@@ -106,7 +107,7 @@ class TestPortalIssue(TestPortalProjectBase):
 
         # Do: Bert reads project -> crash, no group
         # Test: no project issue searchable
-        self.assertRaises(except_orm, self.project_issue.search, cr, self.user_none_id, [('project_id', '=', pigs_id)])
+        self.assertRaises(AccessError, self.project_issue.search, cr, self.user_none_id, [('project_id', '=', pigs_id)])
 
         # Data: issue follower
         self.project_issue.message_subscribe_users(cr, self.user_projectuser_id, [self.issue_1_id, self.issue_3_id], [self.user_portal_id])
@@ -158,7 +159,7 @@ class TestPortalIssue(TestPortalProjectBase):
                          'access rights: portal user should not see issues of a not-followed followers project, only assigned')
 
         # Data: subscribe Alfred, Chell and Donovan as follower
-        self.project_project.message_subscribe_users(cr, uid, [pigs_id], [self.user_projectuser_id, self.user_portal_id, self.user_anonymous_id])
+        self.project_project.message_subscribe_users(cr, uid, [pigs_id], [self.user_projectuser_id, self.user_portal_id, self.user_public_id])
         self.project_issue.message_subscribe_users(cr, self.user_manager_id, [self.issue_1_id, self.issue_3_id], [self.user_portal_id, self.user_projectuser_id])
 
         # Do: Alfred reads project -> ok (follower ok followers)
