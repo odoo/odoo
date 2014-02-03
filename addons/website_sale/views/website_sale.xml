@@ -50,17 +50,18 @@
 </template>
 
 <template id="products_cart" name="Shopping cart">
+  <div itemscope="itemscope" itemtype="http://schema.org/Product">
   <div class="ribbon-wrapper">
     <div class="ribbon btn btn-danger">Sale</div>
   </div>
   <div class="oe_product_image">
-      <a t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('category', 'search', 'filters') }}">
-          <span t-field="product.image" t-field-options='{"widget": "image"}'/>
+      <a itemprop="url" t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('category', 'search', 'filters') }}">
+          <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image"}'/>
       </a>
   </div>
   <section>
-      <h5><strong><a t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('category', 'search', 'filters') }}" t-field="product.name"/></strong></h5>
-      <div class="product_price" t-if="product.product_variant_ids">
+      <h5><strong><a itemprop="name" t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('category', 'search', 'filters') }}" t-field="product.name"/></strong></h5>
+      <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
           <b>
               <t t-if="abs(product.product_variant_ids[0].lst_price - product.product_variant_ids[0].price) &gt; 0.2">
                 <del class="text-danger"
@@ -72,10 +73,14 @@
               <span t-field="product.product_variant_ids[0].price"  t-field-options='{
                    "widget": "monetary",
                    "display_currency": "website.pricelist_id.currency_id"
-               }'/>
+               }'>
+              </span>
+              <meta itemprop="price" t-att-content="product.product_variant_ids[0].price"/>
+              <meta itemprop="priceCurrency" t-att-content="website.pricelist_id.currency_id.name"/>
           </b>
       </div>
   </section>
+  </div>
 </template>
 
 <template id="products" name="Products">
