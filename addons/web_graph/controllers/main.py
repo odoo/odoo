@@ -18,7 +18,7 @@ class TableExporter(http.Controller):
     @http.route('/web_graph/export_xls', type='http', auth="user")
     def export_xls(self, data, token):
         jdata = simplejson.loads(data)
-        model = jdata['test']
+        model = jdata['headers']
         # field = jdata['field']
         # data = jdata['data']
         # id = jdata.get('id', None)

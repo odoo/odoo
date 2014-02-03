@@ -725,10 +725,9 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         _.each(pivot.cols.headers, function (col) {
             if (col.path.length === 0) { return;}
-            var cell_width = col.expanded ? pivot.get_ancestors(col).length : 1;
-            var cell_height = height - col.path.length + 1;
-            var cell = {width: cell_width, height: cell_height, title: col.title, id: col.id};
-            debugger;
+            var cell_width = col.expanded ? pivot.get_ancestor_leaves(col).length : 1,
+                cell_height = col.expanded ? 1 : height - col.path.length + 1,
+                cell = {width: cell_width, height: cell_height, title: col.title, id: col.id};
             if (rows[col.path.length - 1]) {
                 rows[col.path.length - 1].push(cell);
             } else {
@@ -736,6 +735,12 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             }
         });
 
+        if (pivot.get_cols_leaves().length > 1) {
+            rows[0].push({width:1, height:1, title: _t('Total'), id: pivot.cols.headers[0].id });
+        }
+        if (pivot.cols.headers.length === 1) {
+            rows = [{width:1, height:1, title: _t('Total'), id: pivot.cols.headers[0].id }];
+        }
         return rows;
     },
 
@@ -753,32 +758,43 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     },
 
     build_rows: function () {
-        return [];
+        var pivot = this.pivot;
+        var m;
+        var add_total = pivot.get_cols_leaves().length > 1;
+
+        return _.map(pivot.rows.headers, function (row) {
+            var cells = [];
+            _.each(pivot.get_cols_leaves(), function (col) {
+                var values = pivot.get_values(row.id, col.id);
+                for (m = 0; m < pivot.measures.length; m++) {
+                    cells.push({value:values[m], type:pivot.measures[m].type})
+                }
+            });
+            if (add_total) {
+                var totals = pivot.get_total(row);
+                for (m = 0; m < pivot.measures.length; m++) {
+                    cells.push({value:totals[m], type:pivot.measures[m].type})
+                }                
+            }
+            return {
+                id: row.id,
+                indent: row.path.length,
+                title: row.title,
+                cells: cells
+            };
+        });
     },
 
     // ----------------------------------------------------------------------
     // Controller stuff...
     // ----------------------------------------------------------------------
     export_xls: function() {
-        var c = openerp.webclient.crashmanager;
-
-        var table = this.build_table();
-        console.log(table);
-        return;
         openerp.web.blockUI();        
         this.session.get_file({
             url: '/web_graph/export_xls',
-            data: {data: JSON.stringify({
-                test: table
-                // model: this.view.dataset.model,
-                // id: (this.view.datarecord.id || ''),
-                // field: this.name,
-                // filename_field: (this.node.attrs.filename || ''),
-                // data: instance.web.form.is_bin_size(value) ? null : value,
-                // context: this.view.dataset.get_context()
-            })},
+            data: {data: JSON.stringify(this.build_table())},
             complete: openerp.web.unblockUI,
-            error: c.rpc_error.bind(c)
+            error: openerp.webclient.crashmanager.rpc_error.bind(c)
         });
     },
 
