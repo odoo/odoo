@@ -1265,7 +1265,7 @@
         }),
 
         start: function () {
-            this.$('.modal-footer [disabled]').text("Uploading…");
+            this.$('button.wait').text("Uploading…");
             var $options = this.$('.image-style').children();
             this.image_styles = $options.map(function () { return this.value; }).get();
 
@@ -1327,14 +1327,22 @@
             this.set_image(url);
         },
         preview_image: function () {
-            this.$el.removeClass('nosave');
+            var loaded = function () {
+                this.$el.removeClass('nosave');
+            }.bind(this);
             var image = this.$('input.url').val();
-            if (!image) { return; }
+            if (!image) { loaded(); return; }
 
-            this.$('img.image-preview')
+            var $img = this.$('img.image-preview')
                 .attr('src', image)
                 .removeClass(this.image_styles.join(' '))
                 .addClass(this.$('select.image-style').val());
+
+            if ($img.prop('complete')) {
+                loaded();
+            } else {
+                $img.load(loaded)
+            }
         },
         browse_existing: function (e) {
             e.preventDefault();
