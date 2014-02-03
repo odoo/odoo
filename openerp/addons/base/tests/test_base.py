@@ -285,7 +285,6 @@ class test_base(common.TransactionCase):
 
     def test_60_read_group(self):
         cr, uid = self.cr, self.uid
-        company_id = self.registry("ir.model.data").get_object_reference(cr, uid, "base", "main_company")[1]
         for user_data in [
           {'name': 'Alice', 'login': 'alice', 'color': 1, 'function': 'Friend'},
           {'name': 'Bob', 'login': 'bob', 'color': 2, 'function': 'Friend'},
@@ -297,7 +296,7 @@ class test_base(common.TransactionCase):
         self.assertEqual(len(groups_data), 2, "Incorrect number of results when grouping on a field")
         for group_data in groups_data:
           self.assertIn('color', group_data, "Aggregated data for the column 'color' is not present in read_group return values")
-          self.assertEqual(group_data['color'], 3, "Incorrect sum for aggregated data for the column 'color' not present in read_group return values")
+          self.assertEqual(group_data['color'], 3, "Incorrect sum for aggregated data for the column 'color'")
 
 class test_partner_recursion(common.TransactionCase):
 
