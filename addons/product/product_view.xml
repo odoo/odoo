@@ -868,12 +868,6 @@
                                     <group name="general">
                                         <field name="standard_price" attrs="{'readonly': [('is_only_child', '=', False)]}"/>
                                     </group>
-                                    <group name="delay" string="Delays">
-                                        <label for="produce_delay"/>
-                                        <div>
-                                            <field name="produce_delay" class="oe_inline" style="vertical-align:baseline"/> days
-                                        </div>
-                                    </group>
                                     <group name="procurement_uom" groups="product.group_uom" string="Purchase">
                                         <field name="uom_po_id"/>
                                     </group>
