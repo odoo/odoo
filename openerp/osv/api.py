@@ -721,22 +721,23 @@ def guess(method):
         is a database cursor.
     """
     # introspection on argument names to determine api style
-    names = tuple(getargspec(method).args) + (None,) * 4
+    args, vname, kwname, defaults = getargspec(method)
+    names = tuple(args) + (None,) * 4
 
     if names[0] == 'self':
         if names[1] in ('cr', 'cursor'):
             if names[2] in ('uid', 'user'):
                 if names[3] == 'ids':
-                    if 'context' in names:
+                    if 'context' in names or kwname:
                         return cr_uid_ids_context(method)
                     else:
                         return cr_uid_ids(method)
                 elif names[3] == 'id':
-                    if 'context' in names:
+                    if 'context' in names or kwname:
                         return cr_uid_id_context(method)
                     else:
                         return cr_uid_id(method)
-                elif 'context' in names:
+                elif 'context' in names or kwname:
                     return cr_uid_context(method)
                 else:
                     return cr_uid(method)
