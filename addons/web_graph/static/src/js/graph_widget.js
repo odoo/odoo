@@ -39,6 +39,10 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             this.$('.graph_heatmap label').addClass('disabled');
         }
 
+        openerp.session.rpc('/web_graph/check_xlwt').then(function (result) {
+            if (result) { self.$('.graph_options_selection label').toggle(true); }
+        });
+
         return this.model.call('fields_get', []).then(function (f) {
             self.fields = f;
             self.fields.__count = {field:'__count', type: 'integer', string:_t('Quantity')};
@@ -264,6 +268,9 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             case 'update_values':
                 this.pivot.update_data().then(this.proxy('display_data'));
                 break;
+            case 'export_data':
+                this.export_xls();
+                break;
         }
     },
 
@@ -362,7 +369,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.$('.graph_main_content svg').remove();
         this.$('.graph_main_content div').remove();
         this.table.empty();
-        this.table.toggleClass('heatmap', this.heatmap_mode !== 'none')
+        this.table.toggleClass('heatmap', this.heatmap_mode !== 'none');
         this.width = this.$el.width();
         this.height = Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width()));
 
@@ -692,6 +699,91 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             return chart;
         });
     },
+
+    // ----------------------------------------------------------------------
+    // Convert Pivot data structure into table structure
+    //    table = {headers: [header_rows], 
+    //             measure_row: [_], 
+    //             rows: [row]}
+    //    header_rows = [header_cells],
+    //    header_cells = {width:_, height:_, title:_, id:_}
+    //    rows = {id:_, indent:_, title:_, cells: [cell]}
+    //    cell = {row_id:_, col_id:_, value:_}
+    // ----------------------------------------------------------------------
+    build_table: function() {
+        return {
+            headers: this.build_headers(),
+            measure_row: this.build_measure_row(),
+            rows: this.build_rows()
+        };
+    },
+
+    build_headers: function () {
+        var pivot = this.pivot,
+            height = _.max(_.map(pivot.cols.headers, function(g) {return g.path.length;})),
+            rows = [];
+
+        _.each(pivot.cols.headers, function (col) {
+            if (col.path.length === 0) { return;}
+            var cell_width = col.expanded ? pivot.get_ancestors(col).length : 1;
+            var cell_height = height - col.path.length + 1;
+            var cell = {width: cell_width, height: cell_height, title: col.title, id: col.id};
+            debugger;
+            if (rows[col.path.length - 1]) {
+                rows[col.path.length - 1].push(cell);
+            } else {
+                rows[col.path.length - 1] = [cell];
+            }
+        });
+
+        return rows;
+    },
+
+    build_measure_row: function () {
+        var nbr_leaves = this.pivot.get_cols_leaves().length,
+            nbr_cols = nbr_leaves + ((nbr_leaves > 1) ? 1 : 0),
+            result = [],
+            i, m;
+        for (i = 0; i < nbr_cols; i++) {
+            for (m = 0; m < this.pivot.measures.length; m++) {
+                result.push(this.pivot.measures[m].string);
+            }
+        }
+        return result;
+    },
+
+    build_rows: function () {
+        return [];
+    },
+
+    // ----------------------------------------------------------------------
+    // Controller stuff...
+    // ----------------------------------------------------------------------
+    export_xls: function() {
+        var c = openerp.webclient.crashmanager;
+
+        var table = this.build_table();
+        console.log(table);
+        return;
+        openerp.web.blockUI();        
+        this.session.get_file({
+            url: '/web_graph/export_xls',
+            data: {data: JSON.stringify({
+                test: table
+                // model: this.view.dataset.model,
+                // id: (this.view.datarecord.id || ''),
+                // field: this.name,
+                // filename_field: (this.node.attrs.filename || ''),
+                // data: instance.web.form.is_bin_size(value) ? null : value,
+                // context: this.view.dataset.get_context()
+            })},
+            complete: openerp.web.unblockUI,
+            error: c.rpc_error.bind(c)
+        });
+    },
+
+
+
 
 });
 

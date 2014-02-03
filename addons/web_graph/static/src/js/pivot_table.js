@@ -127,6 +127,10 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
         return this._get_headers_with_depth(this.rows.headers, depth);
 	},
 
+    get_ancestor_leaves: function (header) {
+        return _.where(this.get_ancestors_and_self(header), {expanded:false});
+    },
+
 	// return all non expanded rows
 	get_rows_leaves: function () {
 		return _.where(this.rows.headers, {expanded:false});
