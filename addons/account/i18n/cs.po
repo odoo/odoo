@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-06-20 16:14+0000\n"
-"Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
+"PO-Revision-Date: 2014-02-02 15:35+0000\n"
+"Last-Translator: Jakub Drozd <Unknown>\n"
 "Language-Team: Czech <openerp-i18n-czech@lists.launchpad.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 05:54+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-02-03 05:18+0000\n"
+"X-Generator: Launchpad (build 16916)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: account
@@ -195,7 +195,7 @@ msgstr "Označení sloupce"
 #. module: account
 #: help:account.config.settings,code_digits:0
 msgid "No. of digits to use for account code"
-msgstr ""
+msgstr "Počet číslic použitých v čísle účtu"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -258,7 +258,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_next:0
 msgid "Next credit note number"
-msgstr ""
+msgstr "Další číslo dobropisu"
 
 #. module: account
 #: help:account.config.settings,module_account_voucher:0
@@ -444,7 +444,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_line_quickadd.xml:8
 #, python-format
 msgid "Period :"
-msgstr ""
+msgstr "Období :"
 
 #. module: account
 #: field:account.account.template,chart_template_id:0
@@ -660,12 +660,12 @@ msgstr "Hlavní číselná řada musí být odlišná od současné!"
 #: code:addons/account/wizard/account_change_currency.py:70
 #, python-format
 msgid "Current currency is not configured properly."
-msgstr ""
+msgstr "Stávající měna není správně nakonfigurována."
 
 #. module: account
 #: field:account.journal,profit_account_id:0
 msgid "Profit Account"
-msgstr ""
+msgstr "Účet zisků"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1156
@@ -761,6 +761,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"Datum vašeho záznamu deníku není v určeném období! Měli byste změnit datum "
+"nebo odstranit omezení z deníku."
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
@@ -781,7 +783,7 @@ msgstr "Opravdu chcete vytvořit záznamy?"
 #: code:addons/account/account_invoice.py:1361
 #, python-format
 msgid "Invoice partially paid: %s%s of %s%s (%s%s remaining)."
-msgstr ""
+msgstr "Faktura částečně uhrazena: %s%s z %s%s (%s%s zbývá)."
 
 #. module: account
 #: view:account.invoice:0
@@ -890,7 +892,7 @@ msgstr "Analytický účet knihy"
 #. module: account
 #: view:account.invoice:0
 msgid "Send by Email"
-msgstr ""
+msgstr "Odeslat e-mailem"
 
 #. module: account
 #: help:account.central.journal,amount_currency:0
@@ -992,7 +994,7 @@ msgstr ""
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
 msgid "Invoice paid"
-msgstr ""
+msgstr "Faktura uhrazena"
 
 #. module: account
 #: view:validate.account.move:0
@@ -1095,7 +1097,7 @@ msgstr "Kód"
 #. module: account
 #: view:account.config.settings:0
 msgid "Features"
-msgstr ""
+msgstr "Vlastnosti"
 
 #. module: account
 #: code:addons/account/account.py:2346
@@ -1162,7 +1164,7 @@ msgstr "Režim na šířku"
 #. module: account
 #: help:account.fiscalyear.close,fy_id:0
 msgid "Select a Fiscal year to close"
-msgstr "Vyberte finanční rok k uzavření"
+msgstr "Vyberte fiskální rok k uzavření"
 
 #. module: account
 #: help:account.account.template,user_type:0
@@ -1296,7 +1298,7 @@ msgstr "Kód bude zobrazen na výkazech."
 #. module: account
 #: view:account.tax.template:0
 msgid "Taxes used in Purchases"
-msgstr "Daně použité při nákuu"
+msgstr "Daně použité při nákupu"
 
 #. module: account
 #: field:account.invoice.tax,tax_code_id:0
@@ -1310,13 +1312,13 @@ msgstr "Kód daně"
 #. module: account
 #: field:account.account,currency_mode:0
 msgid "Outgoing Currencies Rate"
-msgstr "Odchozí měnový poměr"
+msgstr "Odchozí měnový kurz"
 
 #. module: account
 #: view:account.analytic.account:0
 #: field:account.config.settings,chart_template_id:0
 msgid "Template"
-msgstr ""
+msgstr "Šablona"
 
 #. module: account
 #: selection:account.analytic.journal,type:0
@@ -1389,7 +1391,7 @@ msgstr "Účet"
 #. module: account
 #: field:account.tax,include_base_amount:0
 msgid "Included in base amount"
-msgstr "Včetně základu"
+msgstr "Zahrnuto v základní částce"
 
 #. module: account
 #: view:account.entries.report:0
@@ -1457,7 +1459,7 @@ msgstr "Položky vyrovnání"
 #: model:ir.actions.report.xml,name:account.account_overdue
 #: view:res.company:0
 msgid "Overdue Payments"
-msgstr "Zpožděné platby"
+msgstr "Platby po splatnosti"
 
 #. module: account
 #: report:account.third_party_ledger:0
@@ -1529,7 +1531,7 @@ msgstr "Účet pohledávek"
 #: code:addons/account/account.py:768
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopie)"
 
 #. module: account
 #: report:account.account.balance:0
@@ -1572,7 +1574,7 @@ msgstr "# z položek"
 #. module: account
 #: field:account.automatic.reconcile,max_amount:0
 msgid "Maximum write-off amount"
-msgstr "Max.množství odpisu"
+msgstr "Maximální hodnota odpisu"
 
 #. module: account
 #. openerp-web
@@ -1605,7 +1607,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice.refund:0
 msgid "Credit Note"
-msgstr ""
+msgstr "Dobropis"
 
 #. module: account
 #: view:account.config.settings:0
@@ -1615,7 +1617,7 @@ msgstr "Elektronická fakturace a platby"
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
 msgid "Cost Ledger for Period"
-msgstr "Kniha nákladových účtu za období"
+msgstr "Kniha nákladových účtú za období"
 
 #. module: account
 #: view:account.entries.report:0
@@ -1690,7 +1692,7 @@ msgstr "Bez daně"
 #. module: account
 #: view:account.journal:0
 msgid "Advanced Settings"
-msgstr ""
+msgstr "Rozšířená nastavení"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -1796,7 +1798,7 @@ msgstr "Analytické účtenictví"
 #. module: account
 #: report:account.overdue:0
 msgid "Sub-Total :"
-msgstr "Mezisoučet"
+msgstr "Mezisoučet :"
 
 #. module: account
 #: help:res.company,tax_calculation_rounding_method:0
@@ -1826,7 +1828,7 @@ msgstr "15 dnů"
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
 msgid "Invoicing"
-msgstr "Fakturování"
+msgstr "Fakturace"
 
 #. module: account
 #: code:addons/account/report/account_partner_balance.py:115
@@ -1951,7 +1953,7 @@ msgstr ""
 #. module: account
 #: help:account.period,special:0
 msgid "These periods can overlap."
-msgstr "Tyto období se mohou překrývat."
+msgstr "Tato období se mohou překrývat."
 
 #. module: account
 #: model:process.node,name:account.process_node_draftstatement0
@@ -1977,7 +1979,7 @@ msgstr "Částka Dal"
 #: field:account.bank.statement,message_ids:0
 #: field:account.invoice,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Zprávy"
 
 #. module: account
 #: view:account.vat.declaration:0
@@ -2075,7 +2077,7 @@ msgstr "Analýza faktur"
 #. module: account
 #: model:ir.model,name:account.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Průvodce vytvořením emailu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_period_close
@@ -7494,7 +7496,7 @@ msgstr "Pro procenta zadejte násobek mezi 0-1."
 #: field:account.invoice,date_invoice:0
 #: field:report.invoice.created,date_invoice:0
 msgid "Invoice Date"
-msgstr "Datum vystavení"
+msgstr "Datum vystavení faktury"
 
 #. module: account
 #: view:account.invoice.report:0
