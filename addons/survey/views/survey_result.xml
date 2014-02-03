@@ -4,20 +4,13 @@
     <template id="result" name="Survey Result">
         <t t-call="website.layout">
             <div class="container">
-                <link href="/survey/static/src/lib/nvd3/nv.d3.css" rel="stylesheet" type="text/css"></link>
-                <script src="/survey/static/src/lib/nvd3/lib/d3.v3.js"></script>
-                <script src="/survey/static/src/lib/nvd3/nv.d3.js"></script>
-                         <style>
-                            .only_left_radius{
-                                border-top-right-radius:2em;
-                                border-bottom-right-radius:2em;
-                            }
-                            
-                            .only_right_radius{
-                                border-top-left-radius:2em;
-                                border-bottom-left-radius:2em;
-                            }
-                         </style>
+                <t t-set="head">
+                    <link href="/web_graph/static/src/css/nv.d3.css" rel="stylesheet" type="text/css"></link>
+                    <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
+                    <script src="/web_graph/static/lib/nvd3/d3.v3.js"></script>
+                    <script src="/web_graph/static/lib/nvd3/nv.d3.js"></script>
+                    <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
+                </t>
                 <h1>Survey Result</h1>
                 <h2><span t-field='survey.title'></span></h2>
                 <div t-foreach='survey.page_ids' t-as='page' class="panel panel-primary">
@@ -152,43 +145,7 @@
             </ul>
 
             <div class="tab-content">
-                <div class="tab-pane active" t-att-id="'graph_question_'+str(question.id)">
-                    <!-- Dynamic script for single bar chart -->
-                    <script>
-                        var question_<t t-esc="question.id"></t> = <t t-raw="get_graph_data(question)"></t>;
-                        nv.addGraph(function() {
-                            var chart = nv.models.discreteBarChart()
-                                .x(function(d) { return d.text })
-                                .y(function(d) { return d.count })
-                                .staggerLabels(true)
-                                .tooltips(false)
-                                .showValues(true)
-                            
-                            // Custom Tick fuction for replacing long text with '...'
-                            var customtick_function = function(d){ 
-                                if(this.hasOwnProperty('window') || d.length &lt; 35){
-                                    return d;
-                                } 
-                                else{
-                                    return d.slice(0,35)+'...';
-                                }
-                            }
-
-                            chart.xAxis
-                                .tickFormat(customtick_function);
-                            
-                            chart.yAxis
-                                .tickFormat(d3.format('d'));
-
-                            d3.select('#graph_question_<t t-esc="question.id"></t> svg')
-                                .datum(question_<t t-esc="question.id"></t>)
-                                .transition().duration(500)
-                                .call(chart);
-
-                            nv.utils.windowResize(chart.update);
-                            return chart;
-                        });
-                    </script>
+                <div class="tab-pane active survey_graph" t-att-id="'graph_question_'+str(question.id)" t-att-data-question_id= "question.id" data-graph_type= "bar">
                     <!-- svg element for drawing bar chart -->
                     <svg style="height:20em"></svg>
                 </div>
@@ -237,46 +194,7 @@
         </ul>
     
         <div class="tab-content">
-            <div class="tab-pane active with-3d-shadow with-transitions" t-att-id="'graph_question_'+str(question.id)">
-                <!-- Dynamic script for Multi bar chart -->
-                <script>
-                    var question_<t t-esc="question.id"></t> = <t t-raw="get_graph_data(question)"></t>;
-                    nv.addGraph(function(){
-                        var chart = nv.models.multiBarChart()
-                            .x(function(d) { return d.text })
-                            .y(function(d) { return d.count })
-                            .staggerLabels(true);
-
-                        // Replacing Library's Default Tooltip with our Custom One
-                        chart.tooltip(function(key, x, y, e, graph) {
-                            return '<h5 class="panel-primary"><div class="panel-heading">' + x + '</div></h5>' +
-                            '<p>'+ '<b>Responses : </b>' + key + '</p>' +
-                            '<p>' + "<b>Total Vote : </b>" + y + '</p>'  
-                        })
-
-                        // Custom Tick fuction for replacing long text with '...'
-                        var customtick_function = function(d){ 
-                            if(this.hasOwnProperty('window') || d.length &lt; 25){
-                                return d;
-                            } 
-                            else{
-                                return d.slice(0,25)+'...';
-                            }
-                        }
-
-                        chart.xAxis
-                            .tickFormat(customtick_function);
-                        chart.yAxis
-                            .tickFormat(d3.format('d'));
-
-                        d3.select('#graph_question_<t t-esc="question.id"></t> svg')
-                            .datum(question_<t t-esc="question.id"></t>)
-                            .transition().duration(500).call(chart);
-
-                        nv.utils.windowResize(chart.update);
-                        return chart;
-                    });
-                </script>
+            <div class="tab-pane active with-3d-shadow with-transitions survey_graph" t-att-id="'graph_question_'+str(question.id)" t-att-data-question_id= "question.id" data-graph_type= "multi_bar">
                 <!-- svg element for drawing Multibar chart -->
                 <svg style="height:20em"></svg>
             </div>

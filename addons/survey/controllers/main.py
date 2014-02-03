@@ -334,6 +334,7 @@ class WebsiteSurvey(http.Controller):
                                    })
         return result_summary
     
+    @http.route(['/survey/results/graph/<model("survey.question"):question>'],type='http', auth='user', multilang=True, website=True)
     def get_graph_data(self, question):
         '''Returns appropriate formated data required by graph library'''
         result = []
