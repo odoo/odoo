@@ -17,7 +17,7 @@ website.EditorBar.include({
             var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
             $menuItem.click(function () {
                 tour.reset();
-                tour.trigger();
+                tour.run();
             });
             menu.append($menuItem);
         });
@@ -100,20 +100,29 @@ website.Tour = openerp.Class.extend({
         this.registerSteps();
     },
 
-    run: function (automatic, force) {
-        if (force) this.reset();
+    run: function (automatic) {
+        this.reset();
 
         for (var k in this.localStorage) {
             if (!k.indexOf("tour-") && k.indexOf("-test") > -1) return;
         }
 
-        // only one test running
-        if (website.Tour.busy) return;
-
         website.Tour.busy = true;
-        this.localStorage.setItem("tour-"+this.id+"-test", 0);
 
-        website.Tour.waitReady.call(this, function () {this._run(automatic, force);});
+        if (automatic) {
+            this.localStorage.setItem("tour-"+this.id+"-test-automatic", true);
+        }
+
+        // redirect to begin of the tour
+        if (this.path) {
+            var path = this.path.split('?');
+            window.location.href = path[0] + "?tutorial."+this.id+"=true" + path.slice(1, path.length).join("?");
+            return;
+        }
+
+        var self = this;
+        this.localStorage.setItem("tour-"+this.id+"-test", 0);
+        website.Tour.waitReady.call(this, function () {self._running();});
     },
     running: function () {
         if (+this.localStorage.getItem("tour-"+this.id+"-test") >= this.steps.length) {
@@ -121,33 +130,29 @@ website.Tour = openerp.Class.extend({
             return;
         }
 
-        if (website.Tour.busy || !this.testUrl()) return;
+        if (website.Tour.is_busy() || !this.testUrl()) return;
+
+        // launch tour with url
+        this.checkRunningUrl();
+
+        // mark tour as busy (only one test running)
+        if (this.localStorage.getItem("tour-"+this.id+"-test") != null) {
+            website.Tour.busy = true;
+        }
 
         var self = this;
-        website.Tour.waitReady.call(this, function () {
-            self._running();
-        }, 500);
+        website.Tour.waitReady.call(this, function () {self._running();});
     },
 
-    _run: function (automatic, force) {
-        this.reset();
-        this.localStorage.setItem("tour-"+this.id+"-test", 0);
-        if (automatic) {
-            this.localStorage.setItem("tour-"+this.id+"-test-automatic", true);
-        }
-        this.nextStep(null,  automatic ? this.autoNextStep : null, automatic ? 5000 : null);
-    },
     _running: function () {
         var stepId = this.localStorage.getItem("tour-"+this.id+"-test");
         var automatic = !!this.localStorage.getItem("tour-"+this.id+"-test-automatic");
         
-        if (stepId || this.checkRuningUrl()) {
-
+        if (stepId != null) {
             if (!this.check(this.step(stepId))) {
                 var step = this.next(stepId);
                 stepId = step ? step.stepId : stepId;
             }
-            website.Tour.busy = true;
             this.nextStep(stepId,  automatic ? this.autoNextStep : null, automatic ? 5000 : null);
         }
     },
@@ -168,22 +173,15 @@ website.Tour = openerp.Class.extend({
 
         $('.popover.tour').remove();
     },
-    trigger: function (automatic) {
-        this.reset();
-        if (this.path) {
-            this.localStorage.setItem("tour-"+this.id+"-test", 0);
-            if (automatic) this.localStorage.setItem("tour-"+this.id+"-test-automatic", true);
-            var path = this.path.split('?');
-            window.location.href = path[0] + "?tutorial."+this.id+"=true" + path.slice(1, path.length).join("?");
-        } else {
-            this.run(automatic);
-        }
-    },
+
     testUrl: function () {
         return !this.testPath || this.testPath.test(window.location.href);
     },
-    checkRuningUrl: function () {
-        return window.location.search.indexOf("tutorial."+this.id+"=true") > -1;
+    checkRunningUrl: function () {
+        if (window.location.search.indexOf("tutorial."+this.id+"=true") > -1) {
+            this.localStorage.setItem("tour-"+this.id+"-test", 0);
+            window.location.href = window.location.href.replace(/tutorial.+=true&?/, '');
+        }
     },
 
     registerSteps: function () {
@@ -430,7 +428,15 @@ website.Tour.waitReady = function (callback) {
     });
 };
 website.Tour.run_test = function (id) {
-    website.Tour.get(id).trigger(true);
+    website.Tour.get(id).run(true);
+};
+website.Tour.is_busy = function () {
+    for (var k in this.localStorage) {
+        if (!k.indexOf("tour-")) {
+            return true;
+        }
+    }
+    return website.Tour.busy;
 };
 
 
