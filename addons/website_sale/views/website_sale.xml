@@ -220,7 +220,7 @@
 <template id="product_description" inherit_option_id="website_sale.products_cart" name="Product Description">
   <xpath expr="//div[@class='product_price']" position="before">
       <div class="text-info oe_subdescription oe_shadow" t-field="product.description_sale"/>
-      <div class="text-info oe_subdescription" t-field="product.description_sale"/>
+      <div itemprop="description" class="text-info oe_subdescription" t-field="product.description_sale"/>
   </xpath>
 </template>
 
