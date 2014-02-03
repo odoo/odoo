@@ -3,46 +3,47 @@
 <data>
     <template id="result" name="Survey Result">
         <t t-call="website.layout">
+            <t t-set="head">
+                <link href="/web_graph/static/src/css/nv.d3.css" rel="stylesheet" type="text/css"></link>
+                <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
+                <link href="http://getbootstrap.com/assets/css/docs.min.css" rel="stylesheet" type="text/css"></link>
+                <script src="/web_graph/static/lib/nvd3/d3.v3.js"></script>
+                <script src="/web_graph/static/lib/nvd3/nv.d3.js"></script>
+                <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
+            </t>
             <div class="container">
-                <t t-set="head">
-                    <link href="/web_graph/static/src/css/nv.d3.css" rel="stylesheet" type="text/css"></link>
-                    <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
-                    <script src="/web_graph/static/lib/nvd3/d3.v3.js"></script>
-                    <script src="/web_graph/static/lib/nvd3/nv.d3.js"></script>
-                    <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
-                </t>
-                <h1>Survey Result</h1>
-                <h2><span t-field='survey.title'></span></h2>
-                <div t-foreach='survey.page_ids' t-as='page' class="panel panel-primary">
-                    <div class="panel-heading"><h3 class="panel-title" t-field='page.title'></h3></div>
-                    <div class="row">
-                        <div class="col-md-10 col-md-offset-1">
-                            <div t-foreach='page.question_ids' t-as='question' class="panel panel-default mt16">
-                                <t t-set="input_summary" t-value="get_input_summary(question)"/>
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">
-                                        <b>Question </b>
-                                        <span t-field='question.question'></span>
-                                        <span class="pull-right">
-                                            <span class="label label-success"><span t-esc="input_summary['answered']"></span> Answered</span> 
-                                            <span class="label label-danger"><span t-esc="input_summary['skipped']"></span> Skipped</span>
-                                        </span>
-                                    </h3>
-                                </div>
-                                <t t-if="question.type in ['textbox', 'free_text', 'datetime']">
-                                    <t t-call="survey.result_text"></t>
-                                </t>
-                                <t t-if="question.type in ['simple_choice', 'multiple_choice']">
-                                    <t t-call="survey.result_choice"></t>
-                                </t>
-                                <t t-if="question.type == 'matrix'">
-                                    <t t-call="survey.result_matrix"></t>
-                                </t>
-                                <t t-if="question.type == 'numerical_box'">
-                                    <t t-call="survey.result_number"></t>
-                                </t>
-                            </div>
-                        </div>
+                <div class="jumbotron mt32">
+                    <h1><span t-field="survey.title"></span> <span style="font-size:1.5em;" class="glyphicon glyphicon-stats pull-right "/></h1>
+                    <h2><span t-field="survey.description"></span></h2>
+                </div>
+                <div t-foreach='survey.page_ids' t-as='page'>
+                    <h1 class="mt16" t-field='page.title'></h1>
+                    <hr/>
+                    <div t-foreach='page.question_ids' t-as='question' class="mt16">
+                        <t t-set="input_summary" t-value="get_input_summary(question)"/>
+                        <h4>
+                            <b>Question </b>
+                            <span t-field='question.question'></span>
+                            <span class="pull-right">
+                                <span class="label label-success"><span t-esc="input_summary['answered']"></span> Answered</span> 
+                                <span class="label label-danger"><span t-esc="input_summary['skipped']"></span> Skipped</span>
+                            </span>
+                        </h4>
+                        <t t-if="question.description">
+                            <h5><span class="text-muted" t-field="question.description"></span></h5>
+                        </t>
+                        <t t-if="question.type in ['textbox', 'free_text', 'datetime']">
+                            <t t-call="survey.result_text"></t>
+                        </t>
+                        <t t-if="question.type in ['simple_choice', 'multiple_choice']">
+                            <t t-call="survey.result_choice"></t>
+                        </t>
+                        <t t-if="question.type == 'matrix'">
+                            <t t-call="survey.result_matrix"></t>
+                        </t>
+                        <t t-if="question.type == 'numerical_box'">
+                            <t t-call="survey.result_number"></t>
+                        </t>
                     </div>
                 </div>
             </div>
