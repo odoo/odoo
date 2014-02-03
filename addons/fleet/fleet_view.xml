@@ -849,19 +849,17 @@
         <menuitem action="fleet_vehicle_service_types_act" parent="fleet_configuration" id="fleet_vehicle_service_types_menu" groups="base.group_no_one"/>
 
 
-        <record model='ir.ui.view' id='fleet_vehicle_costs_tree'>
-            <field name="name">fleet.vehicle.cost.tree</field>
+        <record model='ir.ui.view' id='fleet_vehicle_costs_report'>
+            <field name="name">fleet.vehicle.cost.graph</field>
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
-                <tree string="Vehicles costs" >
-                    <field name="date"/>
-                    <field name="vehicle_id" />
-                    <field name="cost_type"/>
-                    <field name="cost_subtype_id"/>
-                    <field name="amount" sum="Total Cost"/>
-                    <field name="parent_id" invisible="1" />
-                    <field name="year" invisible="1"/>
-                </tree>
+                <graph string="Vehicles costs" type="pivot">
+                    <field name="date" interval="year" type="row"/>
+                    <field name="vehicle_id" type="row"/>
+                    <field name="cost_type" type="col"/>
+                    <!-- <field name="cost_subtype_id"/> -->
+                    <field name="amount" type="measure"/>
+                </graph>
             </field>
         </record>
 

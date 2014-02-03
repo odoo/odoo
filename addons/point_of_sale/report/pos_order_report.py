@@ -28,11 +28,6 @@ class pos_order_report(osv.osv):
     _auto = False
     _columns = {
         'date': fields.date('Date Order', readonly=True),
-        'year': fields.char('Year', size=4, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'state': fields.selection([('draft', 'New'), ('paid', 'Closed'), ('done', 'Synchronized'), ('invoiced', 'Invoiced'), ('cancel', 'Cancelled')],
@@ -57,15 +52,12 @@ class pos_order_report(osv.osv):
                 select
                     min(l.id) as id,
                     count(*) as nbr,
-                    to_date(to_char(s.date_order, 'dd-MM-YYYY'),'dd-MM-YYYY') as date,
+                    s.date_order as date,
                     sum(l.qty * u.factor) as product_qty,
                     sum(l.qty * l.price_unit) as price_total,
                     sum((l.qty * l.price_unit) * (l.discount / 100)) as total_discount,
                     (sum(l.qty*l.price_unit)/sum(l.qty * u.factor))::decimal(16,2) as average_price,
                     sum(cast(to_char(date_trunc('day',s.date_order) - date_trunc('day',s.create_date),'DD') as int)) as delay_validation,
-                    to_char(s.date_order, 'YYYY') as year,
-                    to_char(s.date_order, 'MM') as month,
-                    to_char(s.date_order, 'YYYY-MM-DD') as day,
                     s.partner_id as partner_id,
                     s.state as state,
                     s.user_id as user_id,
@@ -78,8 +70,7 @@ class pos_order_report(osv.osv):
                     left join product_template pt on (pt.id=l.product_id)
                     left join product_uom u on (u.id=pt.uom_id)
                 group by
-                    to_char(s.date_order, 'dd-MM-YYYY'),to_char(s.date_order, 'YYYY'),to_char(s.date_order, 'MM'),
-                    to_char(s.date_order, 'YYYY-MM-DD'), s.partner_id,s.state,
+                    s.date_order, s.partner_id,s.state,
                     s.user_id,s.warehouse_id,s.company_id,s.sale_journal,l.product_id,s.create_date
                 having
                     sum(l.qty * u.factor) != 0)""")

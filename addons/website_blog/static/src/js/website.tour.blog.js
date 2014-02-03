@@ -13,7 +13,7 @@
     website.BlogTour = website.Tour.extend({
         id: 'blog',
         name: "Create a blog post",
-        testPath: /\/blogpost\/[0-9]+\//,
+        testPath: /\/(blog|blogpost)\/[0-9]+\//,
         init: function (editor) {
             var self = this;
             self.steps = [

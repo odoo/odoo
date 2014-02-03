@@ -58,7 +58,6 @@ class WebsiteUiSuite(unittest.TestSuite):
         return iter([self])
 
     def run(self, result):
-        return
         # clean slate
         if sql_db._Pool is not None:
             sql_db._Pool.close_all(sql_db.dsn(tools.config['db_name']))

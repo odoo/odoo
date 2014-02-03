@@ -142,7 +142,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // connects to the specified url
         connect: function(url){
             var self = this;
-            this.connection = new instance.web.Session(undefined,url);
+            this.connection = new instance.web.Session(undefined,url, { use_cors: true});
             this.host   = url;
             this.set_connection_status('connecting',{});
 
@@ -190,7 +190,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             if(!this.keptalive){
                 this.keptalive = true;
                 function status(){
-                    self.connection.rpc('/hw_proxy/status_json',{},{timeout:500})       
+                    self.connection.rpc('/hw_proxy/status_json',{},{timeout:2500})       
                         .then(function(driver_status){
                             self.set_connection_status('connected',driver_status);
                         },function(){
@@ -237,7 +237,14 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.set_connection_status('connecting');
 
             if(options.force_ip){
-                urls.push(options.force_ip);
+                var url = options.force_ip;
+                if(url.indexOf('//') < 0){
+                    url = 'http://'+url;
+                }
+                if(url.indexOf(':',5) < 0){
+                    url = url+port;
+                }
+                urls.push(url);
             }else{
                 if(localStorage['hw_proxy_url']){
                     urls.push(localStorage['hw_proxy_url']);
