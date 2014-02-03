@@ -2670,12 +2670,12 @@ class BaseModel(object):
             f for f in fields
             if f not in ('id', 'sequence')
             if fget[f]['type'] in ('integer', 'float')
-            if (f in self._columns and getattr(self._columns[f], '_classic_write'))]
+            if (f in self._all_columns and getattr(self._all_columns[f].column, '_classic_write'))]
         for f in aggregated_fields:
             group_operator = fget[f].get('group_operator', 'sum')
             if flist:
                 flist += ', '
-            qualified_field = '"%s"."%s"' % (self._table, f)
+            qualified_field = self._inherits_join_calc(groupby, query)
             flist += "%s(%s) AS %s" % (group_operator, qualified_field, f)
 
         gb = groupby and (' GROUP BY ' + qualified_groupby_field) or ''
