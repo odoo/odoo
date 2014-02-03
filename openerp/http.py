@@ -972,9 +972,12 @@ class Root(object):
     def setup_db(self, httprequest):
         db = httprequest.session.db
         # Check if session.db is legit
-        if db and db not in db_filter([db], httprequest=httprequest):
-            httprequest.session.logout()
-            db = None
+        if db:
+            if db not in db_filter([db], httprequest=httprequest):
+                _logger.warn("Logged into database '%s', but dbfilter "
+                             "rejects it; logging session out.", db)
+                httprequest.session.logout()
+                db = None
 
         if not db:
             httprequest.session.db = db_monodb(httprequest)
