@@ -12,6 +12,7 @@ from openerp.osv import orm
 from openerp.tools.translate import _
 from openerp.tools.misc import DEFAULT_SERVER_DATE_FORMAT,\
                                DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import html_sanitize
 
 REFERENCING_FIELDS = set([None, 'id', '.id'])
 def only_ref_fields(record):
@@ -181,6 +182,9 @@ class ir_fields_converter(orm.Model):
             raise ValueError(
                 _(u"'%s' does not seem to be a number for field '%%(field)s'")
                 % value)
+
+    def _str_to_html(self, cr, uid, model, column, value, context=None):
+        return html_sanitize(value), []
 
     def _str_id(self, cr, uid, model, column, value, context=None):
         return value, []
