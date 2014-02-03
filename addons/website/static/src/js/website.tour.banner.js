@@ -48,7 +48,6 @@
                 {
                     waitFor:   '.oe_overlay_options .oe_options:visible',
                     element:   '#wrap [data-snippet-id=carousel]:first .carousel-caption',
-                    sampleText: 'My Title',
                     placement: 'top',
                     title:     "Customize banner's text",
                     content:   "Click in the text and start editing it. Click continue once it's done.",

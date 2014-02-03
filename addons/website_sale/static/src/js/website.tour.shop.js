@@ -216,10 +216,6 @@
                     },
                 },
                 {
-                    title:     "select acquirer",
-                    element:   'input[name="acquirer"]:first',
-                },
-                {
                     title:     "Pay Now",
                     element:   'button:contains("Pay Now")',
                 },
