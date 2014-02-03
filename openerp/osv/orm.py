@@ -2678,6 +2678,16 @@ class BaseModel(object):
             qualified_field = '"%s"."%s"' % (self._table, f)
             flist += "%s(%s) AS %s" % (group_operator, qualified_field, f)
 
+        orderby_clause = ""
+        if orderby:
+            orderby_list = []
+            order_splits = [o.strip().split(' ') for o in orderby.split(',')]
+            for order_split in order_splits:
+                if order_split[0] in aggregated_fields or order_split[0] == groupby:
+                    orderby_list += [(order_split[0], (len(order_split) == 2 and order_split[1].strip() == 'DESC') and 'DESC' or 'ASC')]
+            if orderby_list:
+                orderby_clause = 'ORDER BY %s' % (','.join([ '%s %s' % (order[0], order[1]) for order in orderby_list]))
+
         gb = groupby and (' GROUP BY ' + qualified_groupby_field) or ''
 
         from_clause, where_clause, where_clause_params = query.get_sql()
@@ -2686,28 +2696,34 @@ class BaseModel(object):
         offset_str = offset and ' offset %d' % offset or ''
         if len(groupby_list) < 2 and context.get('group_by_no_leaf'):
             group_count = '_'
-        cr.execute('SELECT min(%s.id) AS id, count(%s.id) AS %s_count' % (self._table, self._table, group_count) + (flist and ',') + flist + ' FROM ' + from_clause + where_clause + gb + limit_str + offset_str, where_clause_params)
+        cr.execute('SELECT min(%s.id) AS id, count(%s.id) AS %s_count' % (self._table, self._table, group_count) + (flist and ',') + flist + ' FROM ' + from_clause + where_clause + gb + orderby_clause + limit_str + offset_str, where_clause_params)
         alldata = {}
         groupby = group_by
-        for r in cr.dictfetchall():
+
+        fetched_data = cr.dictfetchall()
+
+        # we need to keep order of previous search to properly order data on aggregated fields
+        order = orderby or groupby
+        data_ids = [data['id'] for data in fetched_data]
+
+        if order and order.split(',')[0].replace(' ASC', '').replace(' DESC', '') not in aggregated_fields:
+            data_ids = self.search(cr, uid, [('id', 'in', data_ids)], order=order, context=context)
+            # the IDs of records that have groupby field value = False or '' should be included too
+            data_ids += set(alldata.keys()).difference(data_ids)
+
+        for r in fetched_data:
             for fld, val in r.items():
                 if val is None: r[fld] = False
             alldata[r['id']] = r
             del r['id']
 
-        order = orderby or groupby
-        data_ids = self.search(cr, uid, [('id', 'in', alldata.keys())], order=order, context=context)
-        
-        # the IDs of records that have groupby field value = False or '' should be included too
-        data_ids += set(alldata.keys()).difference(data_ids)
-        
-        if groupby:   
+        if groupby:
             data = self.read(cr, uid, data_ids, [groupby], context=context)
             # restore order of the search as read() uses the default _order (this is only for groups, so the footprint of data should be small):
             data_dict = dict((d['id'], d[groupby] ) for d in data)
             result = [{'id': i, groupby: data_dict[i]} for i in data_ids]
         else:
-            result = [{'id': i} for i in data_ids] 
+            result = [{'id': i} for i in data_ids]
 
         for d in result:
             if groupby:
@@ -2717,7 +2733,7 @@ class BaseModel(object):
                         d['__context'] = {'group_by': groupby_list[1:]}
             if groupby and groupby in fget:
                 if d[groupby] and fget[groupby]['type'] in ('date', 'datetime'):
-                    dt = datetime.datetime.strptime(alldata[d['id']][groupby][:7], '%Y-%m')
+                    dt = datetime.datetime.strptime1(alldata[d['id']][groupby][:7], '%Y-%m')
                     days = calendar.monthrange(dt.year, dt.month)[1]
 
                     date_value = datetime.datetime.strptime(d[groupby][:10], '%Y-%m-%d')
