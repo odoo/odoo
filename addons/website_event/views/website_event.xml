@@ -55,9 +55,9 @@
                     </t>
                     <ul class="media-list">
                         <li t-foreach="event_ids" t-as="event" class="media">
-                            <div class="media-body">
+                            <div itemscope="itemscope" itemtype="http://schema.org/Event" class="media-body">
                                 <h4 class="media-heading">
-                                    <a t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register/' or ''}"><span t-field="event.name"> </span></a>
+                                    <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register/' or ''}"><span itemprop="name" t-field="event.name"> </span></a>
                                     <small t-if="not event.website_published" class="label label-danger">not published</small>
                                 </h4>
                                 <div>
@@ -66,9 +66,9 @@
                                     </t>
                                 </div>
                                 <div>
-                                    <i class="fa fa-clock-o"></i> <span t-field="event.date_begin"> </span> <i>to</i> <span t-field="event.date_end"> </span>
+                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin"> </span> <i>to</i> <span itemprop="endDate" t-field="event.date_end"> </span>
                                 </div>
-                                <div t-field="event.address_id" t-field-options='{
+                                <div itemprop="location" t-field="event.address_id" t-field-options='{
                                     "widget": "contact",
                                     "fields": ["city"]
                                     }'/>
