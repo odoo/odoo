@@ -30,7 +30,7 @@ from openerp.tools import exception_to_unicode
 
 _logger = logging.getLogger(__name__)
 
-class Home(openerp.addons.web.controllers.main.Home):
+class AuthSignup(openerp.addons.web.controllers.main.Home):
 
     @http.route()
     def web_login(self, *args, **kw):
