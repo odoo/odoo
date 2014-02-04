@@ -100,7 +100,10 @@ class Meta(type):
 
                 # guess calling convention if none is given
                 if not hasattr(value, '_api'):
-                    value = guess(value)
+                    try:
+                        value = guess(value)
+                    except TypeError:
+                        pass
 
                 attrs[key] = value
 
