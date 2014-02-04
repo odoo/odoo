@@ -1837,6 +1837,10 @@ class stock_move(osv.osv):
                 #Move all quants at once
                 quants = pack_obj.get_content(cr, uid, [ops.package_id.id], context=context)
                 # Write function to move package at once, adn also apply put away strategy
+                #TODO: Putaway strategy
+                location_dest_id = ops.linked_move_operation_ids[0].location_dest_id.id
+                quant_obj.write(cr, uid, quants, {'location_id': location_dest_id}, context=context)
+                pack_op_obj.process_packaging(cr, uid, ops, quants, context=context)
             else:
                 main_domain = [('qty', '>', 0)]
                 for record in ops.linked_move_operation_ids:
@@ -1847,8 +1851,45 @@ class stock_move(osv.osv):
                     dom = main_domain + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
                     quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, record.qty, domain=dom, prefered_domain=prefered_domain, 
                                                                   fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
-                    
-
+                    package_id = False
+                    if not record.operation_id.package_id:
+                        #if a package and a result_package is given, we don't enter here because it will be processed by process_packaging() later
+                        #but for operations having only result_package_id, we will create new quants in the final package directly
+                        package_id = record.operation_id.result_package_id.id or False
+                    quant_obj.quants_move(cr, uid, quants, move, lot_id=ops.lot_id.id, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id, dest_package_id=package_id, context=context)
+                    #packaging process
+                    pack_op_obj.process_packaging(cr, uid, ops, quants, context=context)
+                    move_qty[move.id] -= record.qty
+        #Check for remaining qtys
+        for move in self.browse(cr, uid, ids, context=context):
+            if move_qty[move.id] > 0:
+                self.check_tracking(cr, uid, move, move.restrict_lot_id.id, context=context)
+                qty = move_qty[move.id]
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain, prefered_domain=prefered_domain, fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
+                quant_obj.quants_move(cr, uid, quants, move, lot_id=move.restrict_lot_id.id, owner_id=move.restrict_partner_id.id, context=context)
+            quant_obj.quants_unreserve(cr, uid, move, context=context)
+            
+            #Check moves that were pushed
+            if move.move_dest_id.state in ('waiting', 'confirmed'):
+                other_upstream_move_ids = self.search(cr, uid, [('id', '!=', move.id), ('state', 'not in', ['done', 'cancel']),
+                                            ('move_dest_id', '=', move.move_dest_id.id)], context=context)
+                #If no other moves for the move that got pushed:
+                if not other_upstream_move_ids and move.move_dest_id.state in ('waiting', 'confirmed'):
+                    self.action_assign(cr, uid, [move.move_dest_id.id], context=context)
+            if move.procurement_id:
+                procurement_ids.append(move.procurement_id.id)
+        
+        # Apply on picking
+        self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+        self.pool.get('procurement.order').check(cr, uid, procurement_ids, context=context)
+        #check picking state to set the date_done is needed
+        done_picking = []
+        for picking in picking_obj.browse(cr, uid, list(pickings), context=context):
+            if picking.state == 'done' and not picking.date_done:
+                done_picking.append(picking.id)
+        if done_picking:
+            picking_obj.write(cr, uid, done_picking, {'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+        return True
 
 
 
