@@ -648,8 +648,6 @@ class Selection(Field):
     type = 'selection'
     selection = None        # [(value, string), ...], model method or method name
 
-    _description_selection = staticmethod(lambda self: self.get_selection())
-
     def __init__(self, selection, string=None, **kwargs):
         """ Selection field.
 
@@ -662,6 +660,25 @@ class Selection(Field):
             selection = api.expected(api.model, selection)
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
 
+    def get_selection(self):
+        """ return the selection list (pairs (value, label)); labels are
+            translated according to context language
+        """
+        selection = self.selection
+        if isinstance(selection, basestring):
+            return getattr(self.model, selection)()
+        if callable(selection):
+            return selection(self.model)
+
+        # translate selection labels
+        if scope.lang:
+            name = "%s,%s" % (self.model_name, self.name)
+            translate = partial(
+                scope['ir.translation']._get_source, name, 'selection', scope.lang)
+            return [(value, translate(label)) for value, label in selection]
+        else:
+            return selection
+
     @staticmethod
     def _column_selection(self):
         if isinstance(self.selection, basestring):
@@ -670,23 +687,21 @@ class Selection(Field):
         else:
             return self.selection
 
+    _description_selection = staticmethod(get_selection)
+
     def setup_related(self):
         super(Selection, self).setup_related()
         # selection must be computed on related field
         self.selection = lambda model: self.related_field.get_selection()
 
-    def get_selection(self):
-        """ return the selection list (pairs (value, string)) """
-        value = self.selection
-        if isinstance(value, basestring):
-            value = getattr(self.model, value)()
-        elif callable(value):
-            value = value(self.model)
-        return value
-
     def get_values(self):
         """ return a list of the possible values """
-        return [item[0] for item in self.get_selection()]
+        selection = self.selection
+        if isinstance(selection, basestring):
+            selection = getattr(self.model, selection)()
+        elif callable(selection):
+            selection = selection(self.model)
+        return [value for value, label in selection]
 
     def convert_to_cache(self, value):
         if value in self.get_values():

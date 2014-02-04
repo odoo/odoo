@@ -415,6 +415,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         *   For a boolean field like 'group_XXX', ``execute`` adds/removes 'implied_group'
             to/from the implied groups of 'group', depending on the field's value.
             By default 'group' is the group Employee.  Groups are given by their xml id.
+            The attribute 'group' may contain several xml ids, separated by commas.
 
         *   For a boolean field like 'module_XXX', ``execute`` triggers the immediate
             installation of the module named 'XXX' if the field has value ``True``.
@@ -437,7 +438,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         """ return a dictionary with the fields classified by category::
 
                 {   'default': [('default_foo', 'model', 'foo'), ...],
-                    'group':   [('group_bar', browse_group, browse_implied_group), ...],
+                    'group':   [('group_bar', [browse_group], browse_implied_group), ...],
                     'module':  [('module_baz', browse_module), ...],
                     'other':   ['other_field', ...],
                 }
@@ -446,15 +447,15 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         ir_module = self.pool['ir.module.module']
         def ref(xml_id):
             mod, xml = xml_id.split('.', 1)
-            return ir_model_data.get_object(cr, uid, mod, xml, context)
+            return ir_model_data.get_object(cr, uid, mod, xml, context=context)
 
         defaults, groups, modules, others = [], [], [], []
         for name, field in self._columns.items():
             if name.startswith('default_') and hasattr(field, 'default_model'):
                 defaults.append((name, field.default_model, name[8:]))
             elif name.startswith('group_') and isinstance(field, fields.boolean) and hasattr(field, 'implied_group'):
-                field_group = getattr(field, 'group', 'base.group_user')
-                groups.append((name, ref(field_group), ref(field.implied_group)))
+                field_groups = getattr(field, 'group', 'base.group_user').split(',')
+                groups.append((name, map(ref, field_groups), ref(field.implied_group)))
             elif name.startswith('module_') and isinstance(field, fields.boolean):
                 mod_ids = ir_module.search(cr, uid, [('name', '=', name[7:])])
                 record = ir_module.browse(cr, uid, mod_ids[0], context) if mod_ids else None
@@ -477,8 +478,8 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
                 res[name] = value
 
         # groups: which groups are implied by the group Employee
-        for name, group, implied_group in classified['group']:
-            res[name] = implied_group in group.implied_ids
+        for name, groups, implied_group in classified['group']:
+            res[name] = all(implied_group in group.implied_ids for group in groups)
 
         # modules: which modules are installed/to install
         for name, module in classified['module']:
@@ -497,6 +498,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
 
         ir_values = self.pool['ir.values']
         ir_module = self.pool['ir.module.module']
+        res_groups = self.pool['res.groups']
 
         classified = self._get_classified_fields(cr, uid, context)
 
@@ -507,12 +509,16 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
             ir_values.set_default(cr, SUPERUSER_ID, model, field, config[name])
 
         # group fields: modify group / implied groups
-        for name, group, implied_group in classified['group']:
+        for name, groups, implied_group in classified['group']:
+            gids = map(int, groups)
             if config[name]:
-                group.write({'implied_ids': [(4, implied_group.id)]})
+                res_groups.write(cr, uid, gids, {'implied_ids': [(4, implied_group.id)]}, context=context)
             else:
-                group.write({'implied_ids': [(3, implied_group.id)]})
-                implied_group.write({'users': [(3, u.id) for u in group.users]})
+                res_groups.write(cr, uid, gids, {'implied_ids': [(3, implied_group.id)]}, context=context)
+                uids = set()
+                for group in groups:
+                    uids.update(map(int, group.users))
+                implied_group.write({'users': [(3, u) for u in uids]})
 
         # other fields: execute all methods that start with 'set_'
         for method in dir(self):

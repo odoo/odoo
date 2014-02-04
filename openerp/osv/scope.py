@@ -231,7 +231,7 @@ class Scope(object):
     @property
     def lang(self):
         """ return the current language code """
-        return self.context.get('lang') or 'en_US'
+        return self.context.get('lang')
 
     def invalidate(self, spec):
         """ Invalidate some fields for some records in the cache of `self`.

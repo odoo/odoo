@@ -37,6 +37,7 @@
 
 import base64
 import datetime as DT
+import functools
 import logging
 import pytz
 import re

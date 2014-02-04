@@ -70,6 +70,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 cr.commit()
             else:
                 cr.rollback()
+                # avoid keeping stale xml_id, etc. in cache 
+                openerp.modules.registry.RegistryManager.clear_caches(cr.dbname)
+
 
     def _get_files_of_kind(kind):
         if kind == 'demo':

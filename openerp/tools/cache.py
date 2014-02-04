@@ -24,6 +24,9 @@
 from decorator import decorator
 
 import lru
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ormcache(object):
@@ -74,15 +77,37 @@ class ormcache(object):
         """ Remove *args entry from the cache or all keys if *args is undefined """
         d = self.lru(model)
         if args:
-            try:
-                key = args[self.skiparg-2:]
-                del d[key]
-                model.pool._any_cache_cleared = True
-            except KeyError:
-                pass
-        else:
-            d.clear()
-            model.pool._any_cache_cleared = True
+            logger.warn("ormcache.clear arguments are deprecated and ignored "
+                        "(while clearing caches on (%s).%s)",
+                        model._name, self.method.__name__)
+        d.clear()
+        model.pool._any_cache_cleared = True
+
+
+class ormcache_context(ormcache):
+    def __init__(self, skiparg=2, size=8192, accepted_keys=()):
+        super(ormcache_context,self).__init__(skiparg,size)
+        self.accepted_keys = accepted_keys
+
+    def lookup(self, method, *args, **kwargs):
+        d = self.lru(args[0])
+
+        context = kwargs.get('context') or {}
+        ckey = [(key, val) for key, val in context.iteritems() if key in self.accepted_keys]
+        ckey.sort()
+
+        key = args[self.skiparg:] + tuple(ckey)
+        try:
+            r = d[key]
+            self.stat_hit += 1
+            return r
+        except KeyError:
+            self.stat_miss += 1
+            value = d[key] = self.method(*args, **kwargs)
+            return value
+        except TypeError:
+            self.stat_err += 1
+            return self.method(*args, **kwargs)
 
 
 class ormcache_multi(ormcache):
