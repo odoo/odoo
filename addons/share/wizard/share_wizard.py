@@ -21,7 +21,6 @@
 import logging
 import random
 import time
-from urllib import quote_plus
 import uuid
 from openerp import SUPERUSER_ID
 

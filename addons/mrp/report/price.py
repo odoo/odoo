@@ -34,7 +34,6 @@ class report_custom(report_rml):
         registry = openerp.registry(cr.dbname)
         product_pool = registry.get('product.product')
         product_uom_pool = registry.get('product.uom')
-        supplier_info_pool = registry.get('product.supplierinfo')
         workcenter_pool = registry.get('mrp.workcenter')
         user_pool = registry.get('res.users')
         bom_pool = registry.get('mrp.bom')

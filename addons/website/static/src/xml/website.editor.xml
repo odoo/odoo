@@ -1,0 +1,251 @@
+<templates id="template" xml:space="preserve">
+    <t t-extend="website.editorbar">
+        <t t-jquery="#website-top-view" t-operation="after">
+            <div class="navbar-inner" id="website-top-edit">
+                <form class="navbar-form pull-left text-muted">
+                    <button type="button" data-action="save"
+                            class="btn btn-primary">Save</button>
+                    or
+                    <a href="#" data-action="cancel">Discard</a>
+                </form>
+                <ul class="nav navbar-nav pull-right">
+                </ul>
+            </div>
+        </t>
+    </t>
+    <t t-name="website.editor.dialog">
+        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="modal-title"><t t-esc="title"/></h3>
+                    </div>
+                    <div class="modal-body"><t t-raw="__content__"/></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary save">Save</button>
+                        <button type="button" class="btn hidden wait" disabled="disabled"/>
+                        or
+                        <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="website.editor.dialog.link.footer-button">
+        <button type="button" class="btn pull-left remove btn-danger">Remove Link</button>
+    </t>
+    <t t-name="website.editor.dialog.link">
+        <t t-call="website.editor.dialog">
+            <t t-set="title">Link to</t>
+            <form>
+                <ul class="list-group">
+                    <li class="list-group-item form-group active">
+                        <h4 class="list-group-item-heading">
+                            <label for="link-page" class="control-label">
+                                Page
+                            </label>
+                        </h4>
+                        <input class="page form-control url-source"
+                               id="link-page" type="hidden"/>
+                    </li>
+                    <li class="list-group-item form-group clearfix">
+                        <div class="pull-right">
+                            <label>
+                                <input type="checkbox" class="window-new"/>
+                                Open in new window
+                            </label>
+                        </div>
+                        <h4 class="list-group-item-heading">
+                            <label for="link-external" class="control-label">
+                                URL
+                            </label>
+                        </h4>
+                        <input type="text" class="form-control url url-source"
+                               id="link-external" placeholder="http://openerp.com"/>
+                    </li>
+                    <li class="list-group-item form-group">
+                        <h4 class="list-group-item-heading">
+                            <label for="link-email" class="control-label">
+                                Email Address
+                            </label>
+                        </h4>
+                        <input type="email" class="form-control email-address url-source"
+                               id="link-email" placeholder="you@yourwebsite.com"/>
+                    </li>
+                </ul>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="link-text" class="col-sm-2 control-label">
+                            Link text
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control"
+                                   id="link-text"/>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </t>
+    </t>
+    <t t-name="website.editor.dialog.image">
+        <t t-call="website.editor.dialog">
+            <t t-set="title">Image:</t>
+            <div class="row">
+                <form method="POST" action="/website/attach"
+                      enctype="multipart/form-data"
+                      target="fileframe"
+                      class="col-sm-8">
+                    <div class="text-center">
+                        <input type="file" name="upload" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
+                        <button type="button" class="btn btn-primary btn-lg filepicker">
+                            Upload an image from your computer
+                        </button>
+                        <p class="text-muted mt16">— or —</p>
+                    </div>
+                    <div class="well">
+                        <a href="#existing" class="pull-right">Browse existing images</a>
+                        <h3 class="list-group-item-heading">Image URL</h3>
+                        <input type="text" class="form-control url"
+                               placeholder="http://openerp.com"/>
+                    </div>
+                    <input type="hidden" name="func"/>
+                </form>
+                <div class="col-sm-4 image-preview-container">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAC0lEQVQIHWP4zwAAAgEBAMVfG14AAAAASUVORK5CYII%3D"
+                         class="pull-right img-rounded image-preview"
+                         width="100%"/>
+                    <select class="form-control image-style">
+                        <option value="">No styling</option>
+                        <option value="img-rounded">Rounded corners</option>
+                        <option value="img-thumbnail">Box</option>
+                        <option value="img-circle">Circle</option>
+                        <option value="shadow">Shadow</option>
+                    </select>
+                </div>
+            </div>
+            <iframe src="about:blank" name="fileframe" class="hidden"/>
+        </t>
+    </t>
+    <t t-name="website.editor.dialog.image.existing">
+        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog select-image">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="modal-title">Select a Picture</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="existing-attachments"/>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="website.editor.dialog.image.existing.content">
+        <div class="existing-attachments">
+            <ul class="pager">
+                <li class="previous disabled"><a href="#">← Previous</a></li>
+                <li class="next disabled"><a href="#">Next →</a></li>
+            </ul>
+            <div class="row mt16" t-foreach="rows" t-as="row">
+                <div class="col-sm-2" t-foreach="row" t-as="attachment">
+                    <img t-att-src="attachment.website_url" t-att-alt="attachment.name" class="img img-responsive"/>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="website.editor.table.panel">
+        <table class="editorbar-panel">
+            <tr t-foreach="rows"><td t-foreach="cols">&#8203;</td></tr>
+        </table>
+    </t>
+    <t t-name="website.editor.table">
+        <table class="table table-bordered table-responsive">
+            <tbody>
+                <tr t-foreach="rows"><td t-foreach="cols">&#8203;</td></tr>
+            </tbody>
+        </table>
+    </t>
+
+    <t t-name="website.editor.discard">
+        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="modal-title">Discard edition</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            If you discard the current edition, <em>all</em>
+                            unsaved changes will be lost.
+                        </p>
+                        <p>You can cancel to return to the edition mode.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger">Discard</button>
+                        or
+                        <a href="#" data-dismiss="modal" aria-hidden="true">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.editor.hoverbutton">
+        <button type="button" contenteditable="false"
+                t-attf-class="btn btn-primary hover-edition-button #{classes or ''}">
+            <t t-esc="label"/>
+        </button>
+    </t>
+
+    <t t-name="website.editor.dialog.font-icons">
+        <t t-call="website.editor.dialog">
+            <t t-set="title">Icon:</t>
+            <form>
+                <div class="form-group" id="fa-preview">
+
+                </div>
+                <div class="form-group font-icons fa fa-search">
+                    <input type="hidden" id="fa-icon" class="form-control"/>
+                    <input type="hidden" id="fa-size" class="form-control"/>
+                    <input type="search" class="form-control" id="icon-search"/>
+                    <div class="font-icons-icons">
+                        <t t-call="website.editor.dialog.font-icons.icons">
+                            <t t-set="icons" t-value="widget.icons"/>
+                        </t>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="fa-rotation">Rotation</label>
+                    <select id="fa-rotation" class="form-control">
+                        <option value="">None</option>
+                        <option value="fa-spin">Spin</option>
+                        <option value="fa-rotate-90">Rotate 90º</option>
+                        <option value="fa-rotate-180">Rotate 180º</option>
+                        <option value="fa-rotate-270">Rotate 270º</option>
+                        <option value="fa-flip-horizontal">Horizontal flip</option>
+                        <option value="fa-flip-vertical">Vertical flip</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="fa-border"/> border
+                    </label>
+                </div>
+            </form>
+        </t>
+    </t>
+    <t t-name="website.editor.dialog.font-icons.icons">
+        <span t-foreach="icons" t-as="icon"
+              class="fa font-icons-icon"
+              t-att-data-id="icon.id">
+            <t t-esc="icon.text"/>
+        </span>
+    </t>
+
+</templates>

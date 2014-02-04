@@ -1,0 +1,967 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="snippets">
+<div class="scroll" t-ignore="1">
+    <ul class="nav navbar-nav nav-tabs">
+      <li class="active"><a href="#snippet_structure" data-toggle="tab">Structure</a></li>
+      <li><a href="#snippet_content" data-toggle="tab">Content</a></li>
+      <li><a href="#snippet_feature" data-toggle="tab">Features</a></li>
+      <li><a href="#snippet_effect" data-toggle="tab">Effects</a></li>
+    </ul>
+    <div class="tab-content">
+
+<div id="snippet_structure" class="tab-pane fade in active">
+
+    <div data-snippet-id="carousel" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <li class="oe_snippet_options divider"></li>
+        <li class="oe_snippet_options">
+            <a href="#" class="button js_add">Add Slide</a>
+        </li>
+        <li class="oe_snippet_options">
+            <a href="#" class="button js_remove">Remove Slide</a>
+        </li>
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_banner.png"/>
+            <span class="oe_snippet_thumbnail_title">Banner</span>         
+        </div>
+        <div id="myCarousel" class="oe_snippet_body carousel slide mb32" style="height: 320px;">
+            <!-- Indicators -->
+            <ol class="carousel-indicators hidden">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="item image_text active" style="background-image: url('/website/static/src/img/banner/color_splash.jpg')">
+                    <div class="container">
+                        <div class="carousel-caption content">
+                            <h2>Your Banner Title</h2>
+                            <h3>Click to customize this text</h3>
+                            <p>
+                                <a href="/page/website.contactus" class="btn btn-success btn-large">Contact us</a>
+                            </p>
+                        </div>
+                        <img class="carousel-image hidden-xs" src="/website/static/src/img/banner/banner_picture.png" alt="Banner OpenERP Image"/>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control left hidden" href="#myCarousel" data-slide="prev" style="width: 10%"><span class="glyphicon glyphicon-chevron-left"><span class="hidden">.</span></span></a>
+            <a class="carousel-control right hidden" href="#myCarousel" data-slide="next" style="width: 10%"><span class="glyphicon glyphicon-chevron-right"><span class="hidden">.</span></span></a>
+        </div>
+    </div>
+
+    <div data-snippet-id="text-image" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_image.png"/>
+            <span class="oe_snippet_thumbnail_title">Text-Image</span>
+        </div>
+        <section class="oe_snippet_body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 mt16">
+                        <h3>A Section Subtitle</h3>
+                        <p>
+                            Write one or two paragraphs describing your product or
+                            services. To be successful your content needs to be
+                            useful to your readers.
+                        </p><p>
+                            Start with the customer – find out what they want
+                            and give it to them.
+                        </p>
+                    </div>
+                    <div class="col-md-6 mt16">
+                        <img class="img img-responsive shadow mb16" src="/website/static/src/img/text_image.png"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <div data-snippet-id="image-text" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_image_text.png"/>
+            <span class="oe_snippet_thumbnail_title">Image-Text</span>
+        </div>
+        <section class="oe_snippet_body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 mt16">
+                        <img class="img img-responsive shadow mb16" src="/website/static/src/img/image_text.jpg"/>
+                    </div>
+                    <div class="col-md-6 mt16">
+                        <h3>A Section Subtitle</h3>
+                        <p>
+                            Write one or two paragraphs describing your product,
+                            services or a specific feature. To be successful
+                            your content needs to be useful to your readers.
+                        </p><p>
+                            Start with the customer – find out what they want
+                            and give it to them.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <div data-snippet-id="jumbotron" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_jumbotron.png"/>
+            <span class="oe_snippet_thumbnail_title">Big Message</span>
+        </div>
+        <section class="oe_snippet_body jumbotron mt16 mb16">
+            <div class="container">
+                <h1>Sell Online. Easily.</h1>
+                <p>
+                    Write one sentence to convince visitor about your message.
+                </p>
+                <p>
+                    <a class="btn btn-primary btn-lg" href="/page/website.contactus">
+                        Contact us
+                    </a>
+                </p>
+            </div>
+        </section>
+    </div>
+
+
+    <div data-snippet-id="text-block" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_block.png"/>
+            <span class="oe_snippet_thumbnail_title">Text Block</span>
+        </div>
+        <section class="oe_snippet_body mt16 mb16">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center mt16 mb32">
+                        <h2>
+                            A Great Headline
+                        </h2>
+                        <h3 class="text-muted">A good subtitle</h3>
+                    </div>
+                    <div class="col-md-12 mb16 mt16">
+                        <p>
+                            A great way to catch your reader's attention is to tell a story.
+                            Everything you consider writing can be told as a story.
+                        </p><p>
+                            <b>Great stories have personality</b>. Consider telling 
+                            a great story that provides personality. Writing a story 
+                            with personality for potential clients will asist with 
+                            making a relationship connection. This shows up in small
+                            quirks like word choices or phrases. Write from your point 
+                            of view, not from someone else's experience.
+                        </p><p>
+                            <b>Great stories are for everyone even when only written for
+                            just one person</b>. If you try to write with a wide general
+                            audience in mind, your story will ring false and be bland. 
+                            No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <div data-snippet-id="title" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_title.png"/>
+            <span class="oe_snippet_thumbnail_title">Title</span>
+        </div>
+        <section class="oe_snippet_body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="text-center">Your Website Title</h1>
+                        <h3 class="text-muted text-center">And a great subtitle too</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <div data-snippet-id="hr" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_separator.png"/>
+            <span class="oe_snippet_thumbnail_title">Separator</span>        
+        </div>
+        <hr class="oe_snippet_body"/>
+    </div>
+
+
+    <div data-snippet-id="big-picture" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_big_picture.png"/>
+            <span class="oe_snippet_thumbnail_title">Big Picture</span>          
+        </div>
+        <section class="oe_snippet_body oe_dark mt16 mb16">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center mt32 mb32">
+                        <h2>A Punchy Headline</h2>
+                    </div>
+                    <div class="col-md-12">
+                        <img class="img img-responsive" src="/website/static/src/img/big_picture.png" style="margin: 0 auto;"/>
+                    </div>
+                    <div class="col-md-6 col-md-offset-3 mb16 mt16">
+                        <p class="text-center">
+                            <b>A Small Subtitle</b>
+                        </p>
+                        <p class="text-center">
+                            Choose a vibrant image and write an inspiring paragraph
+                            about it. It does not have to be long, but it should
+                            reinforce your image.
+                        </p>
+                        <p class="text-center">
+                            <a href="/page/website.contactus">Contact us »</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <div data-snippet-id="three-columns" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_three_columns.png"/>
+            <span class="oe_snippet_thumbnail_title">Three Columns</span>            
+        </div>
+        <section class="oe_snippet_body mt16 mb16">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img class="img img-rounded img-responsive" src="/website/static/src/img/desert_thumb.jpg"/>
+                        <h4 class="mt16">Feature One</h4>
+                        <p>
+                            Adapt these three columns to fit you design need.
+                            To duplicate, delete or move columns, select the
+                            column and use the top icons to perform your action.
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <img class="img img-rounded img-responsive" src="/website/static/src/img/deers_thumb.jpg"/>
+                        <h4 class="mt16">Feature Two</h4>
+                        <p>
+                            To add a fourth column, reduce the size of these
+                            three columns using the right icon of each block.
+                            Then, duplicate one of the column to create a new
+                            one as a copy.
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <img class="img img-rounded img-responsive" src="/website/static/src/img/china_thumb.jpg"/>
+                        <h4 class="mt16">Feature Three</h4>
+                        <p>
+                            Delete the above image or replace it with a picture
+                            that illustrates your message. Click on the picture to
+                            change it's <em>rounded corner</em> style.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div data-snippet-id="slider" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <li class="oe_snippet_options divider"></li>
+        <li class="oe_snippet_options">
+            <a href="#" class="button js_add">Add Slide</a>
+        </li>
+        <li class="oe_snippet_options">
+            <a href="#" class="button js_remove">Remove Slide</a>
+        </li>
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_quotes_slider.png"/>
+            <span class="oe_snippet_thumbnail_title">Quotes Slider</span>         
+        </div>
+        <div id="myQuoteCarousel" class="oe_snippet_body carousel quotecarousel slide mb0">
+            <!-- Indicators -->
+            <ol class="carousel-indicators mb0">
+                <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myQuoteCarousel" data-slide-to="1"></li>
+            </ol>
+            <div class="carousel-inner">
+
+                <div class="item text_only active">
+                    <div class="container">
+                        <div class="content">
+
+                            <div class="row">
+                                <blockquote class="mt48 mb16 col-md-4 col-md-offset-4">
+                                        <p>
+                                            Write a quote here from one of your customers. Quotes are a
+                                            great way to build confidence in your products or services.
+                                        </p>
+                                        <small>Author of this quote</small>
+                                </blockquote>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item text_only">
+                    <div class="container">
+                        <div class="content">
+
+                            <div class="row">
+                                <blockquote class="mt48 mb16 col-md-4 col-md-offset-4">
+                                        <p>
+                                            OpenERP provides essential platform for our project management.
+                                            Things are better organized and more visible with it.
+                                        </p>
+                                        <small>John Doe, CEO</small>
+                                </blockquote>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="snippet_content" class="tab-pane fade">
+
+    <div data-snippet-id="well" data-selector-siblings="p, h1, h2, h3, blockquote" data-selector-children=".content">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_well.png"/>
+            <span class="oe_snippet_thumbnail_title">Well</span>
+        </div>
+        <div class="oe_snippet_body well">
+            Explain the benefits you offer. Don't write about products or
+            services here, write about solutions.
+        </div>
+    </div>
+
+
+    <div data-snippet-id="quote" data-selector-siblings="p, h1, h2, h3, blockquote" data-selector-children=".content">
+        <div class="oe_snippet_thumbnail">            
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_quote.png"/>
+            <span class="oe_snippet_thumbnail_title">Quote</span>
+        </div>
+        <blockquote class="oe_snippet_body">
+            <p>
+                Write a quote here from one of your customers. Quotes are a
+                great way to build confidence in your products or services.
+            </p>
+            <small>Author of this quote</small>
+        </blockquote>
+    </div>
+
+
+    <div data-snippet-id="panel" data-selector-siblings="p, h1, h2, h3, blockquote" data-selector-children=".content">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_panel.png"/>
+            <span class="oe_snippet_thumbnail_title">Panel</span>
+        </div>
+        <div class="oe_snippet_body panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Feature Title</h3>
+            </div>
+            <div class="panel-body">
+                Panels are a great tool to compare offers or to emphasize on
+                key features. To compare products, use the inside columns.
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="snippet_feature" class="tab-pane fade">
+
+    <div data-snippet-id="portfolio" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_portfolio.png"/>
+            <span class="oe_snippet_thumbnail_title">Portfolio</span>
+        </div>
+        <section class="oe_snippet_body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center mt16 mb32">
+                        <h2>Our Porfolio</h2>
+                        <h4 class="text-muted">More than 500 successful projects</h4>
+                    </div>
+                    <div class="col-md-4">
+                        <img class="img img-thumbnail img-responsive" src="/website/static/src/img/deers.jpg"/>
+                        <img class="img img-thumbnail img-responsive" src="/website/static/src/img/desert.jpg"/>
+                        <img class="img img-thumbnail img-responsive" src="/website/static/src/img/china.jpg"/>
+                    </div>
+                    <div class="col-md-4">
+                        <img class="img img-thumbnail img-responsive" src="/website/static/src/img/desert.jpg"/>
+                        <img class="img img-thumbnail img-responsive" src="/website/static/src/img/china.jpg"/>
+                        <img class="img img-thumbnail img-responsive" src="/website/static/src/img/deers.jpg"/>
+                    </div>
+                    <div class="col-md-4">
+                        <img class="img img-thumbnail img-responsive" src="/website/static/src/img/landscape.jpg"/>
+                        <img class="img img-thumbnail img-responsive" src="/website/static/src/img/china.jpg"/>
+                        <img class="img img-thumbnail img-responsive" src="/website/static/src/img/desert.jpg"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <div data-snippet-id="image-gallery" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_image_gallery.png"/>
+            <span class="oe_snippet_thumbnail_title">Image Gallery</span> 
+        </div>
+        <section class="oe_snippet_body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center mt16 mb32">
+                        <h2>Our Customer References</h2>
+                        <h4 class="text-muted">More than 500 successful projects</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/desert.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/china_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/deers_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/desert_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/china_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/deers_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-6">
+                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/landscape.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/china_thumb.jpg"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <div data-snippet-id="pricing" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_comparison.png"/>
+            <span class="oe_snippet_thumbnail_title">Comparisons</span>
+        </div>
+        <section class="oe_snippet_body">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12 text-center mt16 mb32">
+                    <h2>Our Offers</h2>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="panel panel-info">
+                      
+                      <div class="panel-heading text-center">
+                          <h2 style="margin: 0">Beginner</h2>
+                          <p style="margin: 0" class="text-muted">
+                              Starter package
+                          </p>
+                      </div>
+                      <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                        <h2 style="margin: 0"><span>$</span><b style="font-size: 60px">450</b><small>.00</small></h2>
+                        <div>per month</div>
+                      </div>
+
+                      
+                      <ul class="list-group">
+                        <li class="list-group-item active">Battery: 8 hours</li>
+                        <li class="list-group-item">Screen: 2.5 inch</li>
+                        <li class="list-group-item">Weight: 1.1 ounces</li>
+                        <li class="list-group-item">No support</li>
+                      </ul>
+                      <div class="panel-footer text-center">
+                          <p class="text-muted">
+                              <i>Free shipping, satisfied or reimbursed.</i>
+                          </p>
+                          <a href="/page/website.contactus" class="btn btn-primary btn-lg">Order now</a>
+                      </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-primary">
+                      
+                      <div class="panel-heading text-center">
+                          <h2 style="margin: 0">Professional</h2>
+                          <p style="margin: 0">
+                              Enterprise package
+                          </p>
+                      </div>
+                      <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                        <h2 style="margin: 0"><span>$</span><b style="font-size: 60px">590</b><small>.00</small></h2>
+                        <div>per month</div>
+                      </div>
+
+                      
+                      <ul class="list-group">
+                        <li class="list-group-item active">Battery: 12 hours</li>
+                        <li class="list-group-item">Screen: 2.8 inch</li>
+                        <li class="list-group-item">Weight: 1.2 ounces</li>
+                        <li class="list-group-item">Limited support</li>
+                      </ul>
+                      <div class="panel-footer text-center">
+                          <p class="text-muted">
+                              <i>Free shipping, satisfied or reimbursed.</i>
+                          </p>
+                          <a href="/page/website.contactus" class="btn btn-primary btn-lg">Order now</a>
+                      </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-info">
+                      
+                      <div class="panel-heading text-center">
+                          <h2 style="margin: 0">Expert</h2>
+                          <p style="margin: 0" class="text-muted">
+                              The top of the top
+                          </p>
+                      </div>
+                      <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                        <h2 style="margin: 0"><span>$</span><b style="font-size: 60px">890</b><small>.00</small></h2>
+                        <div>per month</div>
+                      </div>
+
+                      
+                      <ul class="list-group">
+                        <li class="list-group-item active">Battery: 20 hours</li>
+                        <li class="list-group-item">Screen: 2.8 inch</li>
+                        <li class="list-group-item">Weight: 1.2 ounces</li>
+                        <li class="list-group-item">Unlimited support</li>
+                      </ul>
+                      <div class="panel-footer text-center">
+                          <p class="text-muted">
+                              <i>Free shipping, satisfied or reimbursed.</i>
+                          </p>
+                          <a href="/page/website.contactus" class="btn btn-primary btn-lg">Contact us</a>
+                      </div>
+                    </div>
+
+                </div>
+              </div>
+            </div>
+        </section>
+    </div>
+
+
+    <div data-snippet-id="cta" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_button.png"/>
+            <span class="oe_snippet_thumbnail_title">Button</span>   
+        </div>
+        <section class="oe_snippet_body oe_snippet_darken oe_dark">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12 text-center mt16 mb16">
+                    <a href="/shop" class="btn btn-info btn-lg">View Products</a>
+                    <a href="/page/website.contactus" class="btn btn-primary btn-lg">Contact us</a>
+                </div>
+              </div>
+            </div>
+        </section>
+    </div>
+
+
+    <div data-snippet-id="faq" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_faq.png"/>
+            <span class="oe_snippet_thumbnail_title">FAQ</span>  
+        </div>
+        <section class="oe_snippet_body">
+            <div class="container">
+                <h2 class="page-header">
+                    Point of Sale Questions <small>v7</small>
+                </h2>
+                <h3>
+                    Which hardware does OpenERP POS support?
+                </h3>
+                <p>
+                    OpenERP's POS is a web application that can run on any device that
+                    can display websites with little to no setup required.
+                </p><p>
+                    The Point of Sale works perfectly on any kind of touch enabled
+                    device, whether it's multi-touch tablets like an iPad or
+                    keyboardless resistive touchscreen terminals.
+                </p>
+                <h3>
+                    Does it works offline?
+                </h3>
+                <p>
+                    Deploy new stores with just an internet connection: no
+                    installation, no specific hardware required. It works with any
+                    iPad, Tablet PC, laptop or industrial POS machine.
+                </p><p>
+                    While an internet connection is required to start the Point of
+                    Sale, it will stay operational even after a complete disconnection.
+                </p>
+
+                <h2 class="page-header">
+                    Project Management Questions <small>v7</small>
+                </h2>
+                <h3>
+                    Can I use it to manage projects based on agile methodologies?
+                </h3>
+                <p>
+                    Yes.
+                </p>
+            </div>
+        </section>
+    </div>
+
+
+    <div data-snippet-id="references" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_references.png"/>
+            <span class="oe_snippet_thumbnail_title">References</span> 
+        </div>
+        <section class="oe_snippet_body mb32 mt16">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="text-center">
+                            Our References
+                        </h1>
+                        <h3 class="text-muted text-center">
+                            More than 500 happy customers.
+                        </h3>
+                    </div>
+                    <div class="col-md-4 col-md-offset-1 mt16 mb32">
+                        <blockquote data-snippet-id="quote">
+                            <p>
+                                Write a quote here from one of your customers. Quotes are a
+                                great way to build confidence in your products or services.
+                            </p>
+                            <small>Author of this quote</small>
+                        </blockquote>
+                    </div>
+                    <div class="col-md-4 col-md-offset-2 mt16 mb32">
+                        <blockquote data-snippet-id="quote">
+                            <p>
+                                OpenERP provides essential platform for our project management.
+                                Things are better organized and more visible with it.
+                            </p>
+                            <small>John Doe, CEO</small>
+                        </blockquote>
+                    </div>
+                    <div class="col-md-2 col-md-offset-1">
+                        <img src="/website/static/src/img/openerp_logo.png" class="img img-responsive img-thumbnail"/>
+                    </div>
+                    <div class="col-md-2">
+                        <img src="/website/static/src/img/openerp_logo.png" class="img img-responsive img-thumbnail"/>
+                    </div>
+                    <div class="col-md-2">
+                        <img src="/website/static/src/img/openerp_logo.png" class="img img-responsive img-thumbnail"/>
+                    </div>
+                    <div class="col-md-2">
+                        <img src="/website/static/src/img/openerp_logo.png" class="img img-responsive img-thumbnail"/>
+                    </div>
+                    <div class="col-md-2">
+                        <img src="/website/static/src/img/openerp_logo.png" class="img img-responsive img-thumbnail"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div data-snippet-id="features" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_features.png"/>
+            <span class="oe_snippet_thumbnail_title">Features</span>
+        </div>
+        <section class="oe_snippet_body mb16">
+            <div class="container">
+                <div class="row mt16 mb16">
+                    <div class="col-md-3 text-center">
+                        <span class="fa fa-suitcase fa-5x"></span>
+                        <h3 class="mt8 mb0">First Feature</h3>
+                        <p class="text-muted">Tell what's the value for the customer for this feature.</p>
+                        <p><a class="btn btn-primary">Learn More</a></p>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <span class="fa fa-lock fa-5x"></span>
+                        <h3 class="mt8 mb0">Second Feature</h3>
+                        <p class="text-muted">Write what the customer would like to know, not what you want to show.</p>
+                        <p><a class="btn btn-success">Take Tour</a></p>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <span class="fa fa-heart fa-5x"></span>
+                        <h3 class="mt8 mb0">Third Feature</h3>
+                        <p class="text-muted">A small explanation of this great feature, in clear words.</p>
+                        <p><a class="btn btn-info">Buy Now</a></p>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <span class="fa fa-credit-card fa-5x"></span>
+                        <h3 class="mt8 mb0">Fourth Feature</h3>
+                        <p class="text-muted">A small explanation of this great feature on two lines.</p>
+                        <p><a class="btn btn-danger">Buy Now</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div data-snippet-id="features-list" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_features.png"/>
+            <span class="oe_snippet_thumbnail_title">Feature Grid</span>
+        </div>
+        <section class="oe_snippet_body mb16">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-5 text-center">
+                        <h2>List of Features</h2>
+                        <h4 class="text-muted">Add a great slogan</h4>
+                    </div>
+                    <div class="col-md-5 text-center col-md-offset-2">
+                        <h2>Second List</h2>
+                        <h4 class="text-muted">Add a great slogan</h4>
+                    </div>
+                </div><div class="row">
+                    <div class="col-md-5 mt16 mb16">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <span style="min-width: 45px" class="fa fa-3x fa-comment pull-left mb16"></span>
+                            <h3 class="mt0 mb0">Change Icons</h3>
+                            <p>Click on the icon to adapt it to your feature</p>
+                          </div><div class="col-md-12">
+                            <span style="min-width: 45px" class="fa fa-3x fa-columns pull-left mb16"></span>
+                            <h3 class="mt0 mb0">Duplicate</h3>
+                            <p>Duplicate blocks to add more features.</p>
+                          </div><div class="col-md-12">
+                            <span style="min-width: 45px" class="fa fa-3x fa-user pull-left mb16"></span>
+                            <h3 class="mt0 mb0">Delete Blocks</h3>
+                            <p class="text-muted">Select and delete blocks to remove some features.</p>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-md-offset-2 mt16 mb16">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <span style="min-width: 45px" class="fa fa-3x fa-magic pull-left mb16"></span>
+                            <h3 class="mt0 mb0">Great Value</h3>
+                            <p>Tell features the visitor would like to know, not what you'd like to say.</p>
+                          </div><div class="col-md-12">
+                            <span style="min-width: 45px" class="fa fa-3x fa-bolt pull-left mb16"></span>
+                            <h3 class="mt0 mb0">Change Background</h3>
+                            <p>From the main container, you can change the background to highlight features.</p>
+                          </div><div class="col-md-12">
+                            <span style="min-width: 45px" class="fa fa-3x fa-picture-o pull-left mb16"></span>
+                            <h3 class="mt0 mb0">Sample images</h3>
+                            <p>All these icons are licensed under creative commons so that you can use them.</p>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</div>
+
+<div id="snippet_effect" class="tab-pane fade">
+
+    <div data-snippet-id="parallax" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
+            <span class="oe_snippet_thumbnail_title">Parallax</span>        
+        </div>
+        <li class="oe_snippet_options dropdown-submenu">
+            <a tabindex="-1" href="#">Scroll Speed</a>
+            <ul class="dropdown-menu" name="parallax-scroll">
+                <li data-value="0"><a>Static</a></li>
+                <li data-value="0.3"><a>Very Slow</a></li>
+                <li data-value="0.6"><a>Slow</a></li>
+                <li data-value="1"><a>Fixed</a></li>
+                <li data-value="1.4"><a>Fast</a></li>
+                <li data-value="1.7"><a>Very Fast</a></li>
+            </ul>
+        </li>
+        <section class="oe_snippet_body parallax"
+                style="height: 320px; background-image: url('/website/static/src/img/banner/mountains.jpg')"
+                data-scroll-background-ratio="0.3">
+                <div><div class="oe_structure"/></div>
+        </section>
+    </div>
+
+    <div data-snippet-id="parallax_quote" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_quotes_slider.png"/>
+            <span class="oe_snippet_thumbnail_title">Parallax Slider</span>        
+        </div>
+        <section class="oe_snippet_body parallax" data-snippet-id="parallax"
+                 style="height: 320px; background-image: url('/website/static/src/img/parallax/quote.png')"
+                data-scroll-background-ratio="0.3">
+            <div>
+                <div class="oe_structure">
+                    <div id="myQuoteCarousel" class="carousel quotecarousel slide mb0" data-snippet-id="slider">
+                        <!-- Indicators -->
+                        <ol class="carousel-indicators mb0">
+                            <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
+                            <li data-target="#myQuoteCarousel" data-slide-to="1"></li>
+                        </ol>
+                        <div class="carousel-inner">
+
+                            <div class="item text_only active">
+                                <div class="container">
+                                    <div class="content">
+
+                                        <div class="row">
+                                            <blockquote class="mt48 mb16 col-md-4 col-md-offset-4">
+                                                <p>
+                                                    Write a quote here from one of your customers. Quotes are a
+                                                    great way to build confidence in your products or services.
+                                                </p>
+                                                <small>Author of this quote</small>
+                                            </blockquote>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="item text_only">
+                                <div class="container">
+                                    <div class="content">
+
+                                        <div class="row">
+                                            <blockquote class="mt48 mb16 col-md-4 col-md-offset-4">
+                                                <p>
+                                                    OpenERP provides essential platform for our project management.
+                                                    Things are better organized and more visible with it.
+                                                </p>
+                                                <small>John Doe, CEO</small>
+                                            </blockquote>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</div>
+
+<!-- use to declare snippet for snippet editor -->
+<div id="snippet_hidden" class="hidden">
+
+    <div data-snippet-id='colmd' data-selector-vertical-children='.row'>
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_column.png"/>
+            <span class="oe_snippet_thumbnail_title">Add Column</span>            
+        </div>
+        <div class="oe_snippet_body col-md-4">
+            <img class="img img-rounded img-responsive" src="/website/static/src/img/china_thumb.jpg"/>
+            <h4 class="mt16">Feature</h4>
+            <p>
+                Delete the above image or replace it with a picture
+                that illustrates your message. Click on the picture to
+                change it's <em>rounded corner</em> style.
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<div id="snippet_styles" class="hidden">
+
+    <div data-snippet-style-id='text-style' data-selector="section">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#">Style</a>
+            <ul class="dropdown-menu">
+                <li data-class="readable"><a>Readability</a></li>
+            </ul>
+        </li>
+    </div>
+
+    <div data-snippet-style-id='carousel-style' data-selector="div[data-snippet-id='carousel']">
+        <li class="dropdown-submenu" data-required="true">
+            <a tabindex="-1" href="#">Layout</a>
+            <ul class="dropdown-menu">
+                <li data-class="text_only"><a>Text Only</a></li>
+                <li data-class="image_text"><a>Image - Text</a></li>
+                <li data-class="text_image"><a>Text - Image</a></li>
+            </ul>
+        </li>
+    </div>
+
+    <div data-snippet-style-id='background' data-selector="section, section[data-snippet-id='parallax'], div[data-snippet-id='carousel'], div[data-snippet-id='slider']">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#">Background</a>
+            <ul class="dropdown-menu">
+                <li class="dropdown-submenu">
+                    <a tabindex="-2" href="#">Uniform Color</a>
+                    <ul class="dropdown-menu">
+                        <li data-class='oe_dark'><a>Darken</a></li>
+                        <li data-class='oe_green'><a>Green</a></li>
+                        <li data-class='oe_red'><a>Red</a></li>
+                        <li data-class='oe_blue_light'><a>Light Blue</a></li>
+                        <li data-class='oe_blue'><a>Dark Blue</a></li>
+                        <li data-class='oe_orange'><a>Orange</a></li>
+                        <li data-class='oe_purple'><a>Purple</a></li>
+                        <li data-class='oe_black'><a>Black</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown-submenu">
+                    <a tabindex="-2" href="#">People</a>
+                    <ul class="dropdown-menu">
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/parallax/parallax_bg.jpg"><a>Sunflower</a></li>
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/business_guy.jpg"><a>Business Guy</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown-submenu">
+                    <a tabindex="-2" href="#">Landscape</a>
+                    <ul class="dropdown-menu">
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/flower_field.jpg"><a>Flowers Field</a></li>
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/landscape.jpg"><a>Landscape</a></li>
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/mountains.jpg"><a>Mountains</a></li>
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/greenfields.jpg"><a>Greenfields</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown-submenu">
+                    <a tabindex="-2" href="#">Various</a>
+                    <ul class="dropdown-menu">
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/aqua.jpg"><a>Aqua</a></li>
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/baby_blue.jpg"><a>Baby Blue</a></li>
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/black.jpg"><a>Black</a></li>
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/color_splash.jpg"><a>Color Splash</a></li>
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/mango.jpg"><a>Mango</a></li>
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/orange_red.jpg"><a>Orange Red</a></li>
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/flower.jpg"><a>Purple</a></li>
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/velour.jpg"><a>Velour</a></li>
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/wood.jpg"><a>Wood</a></li>
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/yellow_green.jpg"><a>Yellow Green</a></li>
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/parallax/quote.png"><a>Quote</a></li>
+                    </ul>
+                </li>
+                <li data-class=""><a>None</a></li>
+                <li><a style="background: none; padding: 5px; border-top: 1px solid #ddd;"></a></li>
+                <li class="oe_custom_bg" data-class="oe_img_bg"><a><b>Choose an image...</b></a></li>
+            </ul>
+        </li>
+    </div>
+
+</div>
+
+    </div>
+</div>
+</template>
+</data>
+</openerp>

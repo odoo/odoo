@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <!-- <data noupdate="1"> -->
+    <data>
+
+        <!-- TAGS -->
+        <record id="blog_tag_1" model="blog.tag">
+            <field name="name">functional</field>
+        </record>
+        <record id="blog_tag_2" model="blog.tag">
+            <field name="name">technical</field>
+        </record>
+        <record id="blog_tag_3" model="blog.tag">
+            <field name="name">website</field>
+        </record>
+        <record id="blog_tag_4" model="blog.tag">
+            <field name="name">pos</field>
+        </record>
+
+        <!-- POSTS -->
+        <record id="blog_post_1" model="blog.post">
+            <field name="name">OpenERP v8 New Features</field>
+            <field name="blog_id" ref="blog_blog_1"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
+            <field name="website_published" eval="True"/>
+            <field name="website_meta_keywords">OpenERP, Point of Sale, Hardware, Interface, Payment Terminal, Store</field>
+            <field name="website_meta_description">Open source Point of Sale with no installation required that runs online and offline.</field>
+            <field name="content"><![CDATA[
+        <section data-snippet-id='image-text'>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 mt16 mb16">
+                        <img class="img-responsive shadow" src="/website/static/src/img/image_text.jpg"/>
+                    </div>
+                    <div class="col-md-6 mt16">
+                        <p>
+                            OpenERP's Point of Sale introduces a super clean
+                            interface with no installation required that runs
+                            online and offline on modern hardwares.
+                        </p><p>
+                            It's full integration with the company inventory
+                            and accounting, gives you real time statistics
+                            without the hassle of integrating several applications.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="mt16 mb16" data-snippet-id='text-block'>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center mt16 mb32">
+                        <h2>
+                            Linked with Project Management
+                        </h2>
+                        <h3 class="text-muted">Infinitely flexible. Incredibly easy to use.</h3>
+                    </div>
+                    <div class="col-md-12 mb16 mt16">
+                        <p>
+                            OpenERP's <b>collaborative and realtime</b> project
+                            management helps your team get work done. Keep
+                            track of everything, from the big picture to the
+                            minute details, from the customer contract to the
+                            billing.
+                        </p><p>
+                            Organize projects around <b>your own processes</b>. Work
+                            on tasks and issues using the kanban view, schedule
+                            tasks using the gantt chart and control deadlines
+                            in the calendar view. Every project may have it's
+                            own stages allowing teams to optimize their job.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="oe_dark mt16 mb16" data-snippet-id='big-picture'>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center mt32 mb32">
+                        <h2>Work with the hardware you already have...</h2>
+                    </div>
+                    <div class="col-md-12">
+                        <img class="img-responsive" src="/website/static/src/img/big_picture.png" style="margin: 0 auto;"/>
+                    </div>
+                    <div class="col-md-6 col-md-offset-3 mb16 mt16">
+                        <p class="text-center">
+                            <b>No installation required</b>
+                        </p>
+                        <p class="text-center">
+                            OpenERP's Point of Sale introduces a super clean
+                            interface with no installation required that runs
+                            online and offline on modern hardware. Laptops,
+                            tablets, industrial POS, it runs on everything.
+                        </p>
+                        <p class="text-center">
+                            <a href="/page/website.contactus">Get more information »</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+]]>
+</field>
+        </record>
+
+        <record id="blog_post_2" model="blog.post">
+            <field name="name">New Hardware Integration</field>
+            <field name="blog_id" ref="blog_blog_1"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
+            <field name="content">
+<![CDATA[<section class="mt16 mb16" data-snippet-id='big-picture'>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <img class="img-responsive" src="/website/static/src/img/big_picture.png" style="margin: 0 auto;"/>
+                    </div>
+                    <div class="col-md-6 col-md-offset-3 mb16 mt16">
+                        <p class="text-center">
+                            <b>New Features Launched</b>
+                        </p>
+                        <p class="text-center">
+                            OpenERP's Point of Sale introduces a super clean
+                            interface with no installation required that runs
+                            online and offline on modern hardware. Laptops,
+                            tablets, industrial POS, it runs on everything.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section data-snippet-id='pricing'>
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12 text-center mt16 mb32">
+                    <h2>Our Offers</h2>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="panel panel-info">
+                      <!-- Default panel contents -->
+                      <div class="panel-heading text-center">
+                          <h2 style="margin: 0">Beginner</h2>
+                          <p style="margin: 0" class="text-muted">
+                              Starter package
+                          </p>
+                      </div>
+                      <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                        <h2 style="margin: 0"><span>$</span><b style="font-size: 60px">450</b><small>.00</small></h2>
+                        <div>per month</div>
+                      </div>
+
+                      <!-- List group -->
+                      <ul class="list-group">
+                        <li class="list-group-item">Battery: 8 hours</li>
+                        <li class="list-group-item">Screen: 2.5 inch</li>
+                        <li class="list-group-item">Weight: 1.1 ounces</li>
+                        <li class="list-group-item">No support</li>
+                      </ul>
+                      <div class="panel-footer text-center">
+                          <p class="text-muted">
+                              <i>Free shipping, satisfied or reimbursed.</i>
+                          </p>
+                          <a href="/page/website.contactus" class="btn btn-primary btn-lg">Order now</a>
+                      </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-primary">
+                      <!-- Default panel contents -->
+                      <div class="panel-heading text-center">
+                          <h2 style="margin: 0">Professional</h2>
+                          <p style="margin: 0">
+                              Enterprise package
+                          </p>
+                      </div>
+                      <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                        <h2 style="margin: 0"><span>$</span><b style="font-size: 60px">590</b><small>.00</small></h2>
+                        <div>per month</div>
+                      </div>
+
+                      <!-- List group -->
+                      <ul class="list-group">
+                        <li class="list-group-item">Battery: 12 hours</li>
+                        <li class="list-group-item">Screen: 2.8 inch</li>
+                        <li class="list-group-item">Weight: 1.2 ounces</li>
+                        <li class="list-group-item">Limited support</li>
+                      </ul>
+                      <div class="panel-footer text-center">
+                          <p class="text-muted">
+                              <i>Free shipping, satisfied or reimbursed.</i>
+                          </p>
+                          <a href="/page/website.contactus" class="btn btn-primary btn-lg">Order now</a>
+                      </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-info">
+                      <!-- Default panel contents -->
+                      <div class="panel-heading text-center">
+                          <h2 style="margin: 0">Expert</h2>
+                          <p style="margin: 0" class="text-muted">
+                              The top of the top
+                          </p>
+                      </div>
+                      <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                        <h2 style="margin: 0"><span>$</span><b style="font-size: 60px">890</b><small>.00</small></h2>
+                        <div>per month</div>
+                      </div>
+
+                      <!-- List group -->
+                      <ul class="list-group">
+                        <li class="list-group-item">Battery: 20 hours</li>
+                        <li class="list-group-item">Screen: 2.8 inch</li>
+                        <li class="list-group-item">Weight: 1.2 ounces</li>
+                        <li class="list-group-item">Unlimited support</li>
+                      </ul>
+                      <div class="panel-footer text-center">
+                          <p class="text-muted">
+                              <i>Free shipping, satisfied or reimbursed.</i>
+                          </p>
+                          <a href="/page/website.contactus" class="btn btn-primary btn-lg">Contact us</a>
+                      </div>
+                    </div>
+
+                </div>
+              </div>
+            </div>
+        </section>
+
+
+]]>
+</field>
+        </record>
+
+        <record id="blog_post_3" model="blog.post">
+            <field name="name">Touchscreen Point of Sale for 6.1</field>
+            <field name="blog_id" ref="blog_blog_1"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1'), ref('blog_tag_2')])]"/>
+            <field name="website_meta_keywords">Point of Sale, Hardware, Interface, Payment Terminal, Store</field>
+            <field name="website_meta_description">Point of Sale with no installation required that runs online and offline.</field>
+            <field name="content">
+<![CDATA[<p>The brand new OpenERP touchscreen point of sale is available with 6.1 which allows you
+to manage your shop sales very easily.  It's fully web based so that you don't
+have to install or deploy any software and all the sales shops can be easily
+consolidated.  It works in connected and disconnected modes so that you can
+continue to sell even if you lose your internet connection.</p>
+<img src="http://www.openerp.com/sites/default/files/fileattach/POS(2).png" alt="">
+<h3>Here's a summary of its main features and benefits:</h3>
+<ul>
+    <li>100% WEB based</li>
+    <li>available for any touchscreen device (ipod, ipad, any tablet)mobile (with portable devices)</li>
+    <li>no installation required</li>
+    <li>no synchronization needed, completely integrated</li>
+    <li>continue working even when your connection is down or if you close your browser, data won't be lost</li>
+    <li>fully web based with a clean interface smart interface</li>
+</ul>
+<p>You have different options to select your products. You can do it through the
+barcode reader, just browse through the categories you have put in place (ie.
+drinks, snacks, meals, etc.), or text search in case neither of the other
+options work for you.  For example, if you need to use the POS for your restaurant, 
+your employees can record multiple tickets at the same time without having to wait 
+to process one transaction at a time. In addition, you can facilitate payments, 
+the application allows multiple payment methods.</p>
+<p>The POS application is so simple and accessible to use that your shop or
+restaurant will never need any other tool to manage orders. Due to its smart
+and user-friendly interface you don't need any training to learn how to use it.
+Think of it as an out-of-the-box solution to boost your business' productivity.
+</p>
+]]>
+</field>
+        </record>
+
+        <record id="blog_post_4" model="blog.post">
+            <field name="name">Announcing a New Partnership</field>
+            <field name="blog_id" ref="blog_blog_1"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
+            <field name="website_published" eval="True"/>
+            <field name="website_meta_keywords">OpenERP, Partnership, News, Accounting</field>
+            <field name="website_meta_description">Our company partners with OpenERP to develop accounting best practices.</field>
+            <field name="content"><![CDATA[
+        <section data-snippet-id='image-text'>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 mt16 mb16">
+                        <img class="img-responsive shadow" src="/website/static/src/img/text_image.png"/>
+                    </div>
+                    <div class="col-md-6 mt16">
+                        <p>
+                            We are proud to announce a new partnership with
+                            the company OpenERP. Their open source application suite
+                            will allow us to reach new markets, specifically in
+                            the accounting area.
+                        </p><p>
+                            The full integration with the company inventory
+                            and accounting, will give our customers real time statistics
+                            without the hassle of integrating several applications.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="mt16 mb16" data-snippet-id='text-block'>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center mt16 mb32">
+                        <h2>
+                            OpenERP Project Management
+                        </h2>
+                        <h3 class="text-muted">Infinitely flexible. Incredibly easy to use.</h3>
+                    </div>
+                    <div class="col-md-12 mb16 mt16">
+                        <p>
+                            OpenERP's <b>collaborative and realtime</b> project
+                            management helps your team get work done. Keep
+                            track of everything, from the big picture to the
+                            minute details, from the customer contract to the
+                            billing.
+                        </p><p>
+                            Organize projects around <b>your own processes</b>. Work
+                            on tasks and issues using the kanban view, schedule
+                            tasks using the gantt chart and control deadlines
+                            in the calendar view. Every project may have it's
+                            own stages allowing teams to optimize their job.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+]]>
+</field>
+        </record>
+
+
+    </data>
+</openerp>

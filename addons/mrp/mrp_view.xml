@@ -547,7 +547,7 @@
                     <group name="delay" string="Delays" attrs="{'invisible':[('type','=','service')]}">
                         <label for="produce_delay" />
                         <div attrs="{'invisible':[('type','=','service')]}">
-                            <field name="produce_delay" class="oe_inline"/> days
+                            <field name="produce_delay" class="oe_inline" style="vertical-align:baseline"/> days
                         </div>                        
                     </group>                
                 </xpath>
@@ -803,7 +803,7 @@
                                         <field name="workcenter_id"/>
                                         <field name="sequence"/>
                                         <field name="cycle"/>
-                                        <field name="hour"/>
+                                        <field name="hour" widget="float_time"/>
                                     </group>
                                 </form>
                                 <tree string="Production Work Centers">
@@ -811,7 +811,7 @@
                                     <field name="name"/>
                                     <field name="workcenter_id"/>
                                     <field name="cycle"/>
-                                    <field name="hour"/>
+                                    <field name="hour" widget="float_time"/>
                                 </tree>
                             </field>
                         </page>
