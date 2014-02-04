@@ -1303,14 +1303,22 @@ class stock_move(osv.osv):
         return res
 
     def _get_string_qty_information(self, cr, uid, ids, field_name, args, context=None):
+        settings_obj = self.pool.get('stock.config.settings')
         res = dict.fromkeys(ids, '')
         for move in self.browse(cr, uid, ids, context=context):
-            if move.state in ('draft', 'done', 'cancel'):
+            if move.state in ('draft', 'done', 'cancel') or move.location_id.usage != 'internal':
                 res[move.id] = _('n/a')
                 continue
-            info = str(move.reserved_availability + move.availability) + 'uom?'
+            total_available = min(move.product_qty, move.reserved_availability + move.availability)
+            info = str(total_available)
+            #look in the settings if we need to display the UoM name or not
+            config_ids = settings_obj.search(cr, uid, [], limit=1, order='id DESC', context=context)
+            if config_ids:
+                stock_settings = settings_obj.browse(cr, uid, config_ids[0], context=context)
+                if stock_settings.group_uom:
+                    info += ' ' + move.product_id.uom_id.name
             if move.reserved_availability:
-                if move.availability:
+                if move.reserved_availability != total_available:
                     #some of the available quantity is assigned and some are available but not reserved
                     info += _(' (%s reserved)') % str(move.reserved_availability)
                 else:
