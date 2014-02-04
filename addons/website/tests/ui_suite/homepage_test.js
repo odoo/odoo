@@ -7,30 +7,11 @@ testRunner.run(function homepageTest (page, timeout) {
     waitFor(function clientReady () {
         return page.evaluate(function () {
             return window.$ && window.openerp && window.openerp.website
-                && window.openerp.website.TestConsole
-                && window.openerp.website.TestConsole.test
-                && window.openerp.website.TestConsole.test('banner');
+                && window.openerp.website.Tour;
         });
     }, function executeTest () {
-        var before = page.evaluate(function () {
-            var result = {
-                carousel: $('#wrap [data-snippet-id=carousel]').length,
-                columns: $('#wrap [data-snippet-id=three-columns]').length,
-            };
-            window.openerp.website.TestConsole.test('banner').run(true);
-            return result;
+        page.evaluate(function () {
+            window.openerp.website.Tour.run_test('banner');
         });
-        waitFor(function testExecuted () {
-            var after = page.evaluate(function () {
-                return window.$ && $('button[data-action=edit]').is(":visible") && {
-                    carousel: $('#wrap [data-snippet-id=carousel]').length,
-                    columns: $('#wrap [data-snippet-id=three-columns]').length,
-                };
-            });
-            return after && (after.carousel === before.carousel + 1) && (after.columns === before.columns + 1);
-        }, function finish () {
-            console.log('{ "event": "success" }');
-            phantom.exit();
-        }, 4*timeout/5);
-    }, timeout/5);
+    }, timeout);
 });

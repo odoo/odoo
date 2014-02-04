@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import random
 import simplejson
-import urllib
 import werkzeug
 
 from openerp import SUPERUSER_ID
@@ -113,10 +112,10 @@ class Ecommerce(http.Controller):
 
     _order = 'website_published desc, website_sequence desc'
 
-    def get_characteristic_ids(self):
-        characteristics_obj = request.registry['product.characteristic']
-        characteristics_ids = characteristics_obj.search(request.cr, request.uid, [], context=request.context)
-        return characteristics_obj.browse(request.cr, request.uid, characteristics_ids, context=request.context)
+    def get_attribute_ids(self):
+        attributes_obj = request.registry['product.attribute']
+        attributes_ids = attributes_obj.search(request.cr, request.uid, [], context=request.context)
+        return attributes_obj.browse(request.cr, request.uid, attributes_ids, context=request.context)
 
     def get_pricelist(self):
         """ Shortcut to get the pricelist from the website model """
@@ -133,13 +132,13 @@ class Ecommerce(http.Controller):
         product_ids = [id for id in product_ids if id in product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)]
         return product_obj.browse(request.cr, request.uid, product_ids, context=request.context)
 
-    def has_search_filter(self, characteristic_id, value_id=None):
+    def has_search_filter(self, attribute_id, value_id=None):
         if request.httprequest.args.get('filters'):
             filters = simplejson.loads(request.httprequest.args['filters'])
         else:
             filters = []
         for key_val in filters:
-            if key_val[0] == characteristic_id and (not value_id or value_id in key_val[1:]):
+            if key_val[0] == attribute_id and (not value_id or value_id in key_val[1:]):
                 return key_val
         return False
 
@@ -175,11 +174,11 @@ class Ecommerce(http.Controller):
                 post.get("category") and ("&category=%s" % post.get("category")) or ""
             ))
 
-    def characteristics_to_ids(self, characteristics):
-        obj = request.registry.get('product.characteristic.product')
+    def attributes_to_ids(self, attributes):
+        obj = request.registry.get('product.attribute.line')
         domain = []
-        for key_val in characteristics:
-            domain.append(("characteristic_id", "=", key_val[0]))
+        for key_val in attributes:
+            domain.append(("attribute_id", "=", key_val[0]))
             if isinstance(key_val[1], list):
                 domain.append(("value", ">=", key_val[1][0]))
                 domain.append(("value", "<=", key_val[1][1]))
@@ -206,14 +205,14 @@ class Ecommerce(http.Controller):
         domain = request.registry.get('website').ecommerce_get_product_domain()
         if search:
             domain += ['|',
-                ('name', 'ilike', "%%%s%%" % search),
-                ('description', 'ilike', "%%%s%%" % search)]
+                ('name', 'ilike', search),
+                ('description', 'ilike', search)]
         if category:
             domain.append(('product_variant_ids.public_categ_id', 'child_of', category.id))
         if filters:
             filters = simplejson.loads(filters)
             if filters:
-                ids = self.characteristics_to_ids(filters)
+                ids = self.attributes_to_ids(filters)
                 domain.append(('id', 'in', ids or [0]))
 
         product_count = product_obj.search_count(cr, uid, domain, context=context)
@@ -226,7 +225,7 @@ class Ecommerce(http.Controller):
 
         styles = []
         try:
-            style_obj = request.registry.get('website.product.style')
+            style_obj = request.registry.get('product.style')
             style_ids = style_obj.search(request.cr, request.uid, [], context=request.context)
             styles = style_obj.browse(request.cr, request.uid, style_ids, context=request.context)
         except:
@@ -321,7 +320,7 @@ class Ecommerce(http.Controller):
         product_ids = []
         if order:
             for line in order.order_line:
-                suggested_ids += [p.id for p in line.product_id and line.product_id.suggested_product_ids or []]
+                suggested_ids += [p.id for p in line.product_id and line.product_id.accessory_product_ids or []]
                 product_ids.append(line.product_id.id)
         suggested_ids = list(set(suggested_ids) - set(product_ids))
         if suggested_ids:
@@ -634,7 +633,7 @@ class Ecommerce(http.Controller):
             })
 
         acquirer_form_post_url = payment_obj.get_form_action_url(cr, uid, acquirer_id, context=context)
-        acquirer_total_url = '%s?%s' % (acquirer_form_post_url, urllib.urlencode(post))
+        acquirer_total_url = '%s?%s' % (acquirer_form_post_url, werkzeug.url_encode(post))
         return request.redirect(acquirer_total_url)
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True, multilang=True)
@@ -770,7 +769,7 @@ class Ecommerce(http.Controller):
                 active = True
                 break
 
-        style = request.registry.get('website.product.style').browse(request.cr, request.uid, style_id, context=request.context)
+        style = request.registry.get('product.style').browse(request.cr, request.uid, style_id, context=request.context)
 
         if remove:
             product.write({'website_style_ids': [(3, rid) for rid in remove]})

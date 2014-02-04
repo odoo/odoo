@@ -28,13 +28,13 @@
             <div class="container">
                 <div class="row">
 
-            <div class="col-md-4" id="left_column">
+            <div class="col-md-4 mb32" id="left_column">
                 <ul class="nav nav-pills nav-stacked mt16">
                     <li class="nav-header"><h3>Associations</h3></li>
                     <li t-att-class="'' if membership else 'active'"><a href="/members/">All</a></li>
                     <t t-foreach="memberships" t-as="membership_id">
                         <li t-att-class="membership and membership_id.id == membership.id and 'active' or ''">
-                            <a t-attf-href="/members/association/#{ membership_id.id }"><t t-esc="membership_id.name"/></a>
+                            <a t-attf-href="/members/association/#{ membership_id.id }/#{current_country and 'country/%s/' % slug(current_country) or ''}#{ search }"><t t-esc="membership_id.name"/></a>
                         </li>
                     </t>
                 </ul>
@@ -44,7 +44,7 @@
                     <t t-call="website.pager">
                        <t t-set="classname">pull-left</t>
                     </t>
-                    <form action="/members/" method="get" class="navbar-search pull-right pagination form-inline">
+                    <form action="" method="get" class="navbar-search pull-right pagination form-inline">
                         <div class="form-group">
                             <input type="text" name="name" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="post.get('name', '')"/>
                         </div>
@@ -86,9 +86,9 @@
         <ul class="nav nav-pills nav-stacked mt16">
             <li class="nav-header"><h3>Location</h3></li>
             <t t-foreach="countries">
-                <li t-if="country_id" t-att-class="post.get('country_id', '0') == str(country_id and country_id[0]) and 'active' or ''">
+                <li t-if="country_id" t-att-class="country_id[0] == current_country_id and 'active' or ''">
                     <a t-attf-href="/members/#{ membership and 'association/%s/' % membership.id or '' }#{ country_id[0] and 'country/%s/' % slug(country_id) or '' }#{ search }"><t t-esc="country_id[1]"/>
-                        <span class="badge pull-right"><t t-esc="country_id_count"/></span>
+                        <span class="badge pull-right"><t t-esc="country_id_count or '0'"/></span>
                     </a>
                 </li>
             </t>

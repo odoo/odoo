@@ -6,6 +6,7 @@
             <field name="company_id" ref="base.main_company"/>
             <field name="language_ids" eval="[(6, 0, [ ref('base.lang_en')])]"/>
             <field name="default_lang_id" ref="base.lang_en"/>
+            <field name="user_id" ref="base.public_user"/>
         </record>
 
         <record id="main_menu" model="website.menu">
@@ -58,7 +59,7 @@
         </record>
         <record id="action_website_tutorial" model="ir.actions.act_url">
             <field name="name">Website With Tutorial</field>
-            <field name="url">/?tutorial.banner=true</field>
+            <field name="url">/#tutorial.banner=true</field>
             <field name="target">self</field>
         </record>
         <record id="action_website_homepage" model="ir.actions.act_url">

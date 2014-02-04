@@ -46,6 +46,16 @@ class view(osv.osv):
             view = view.inherit_id
 
         result = [view]
+
+        node = etree.fromstring(view.arch)
+        for child in node.xpath("//t[@t-call]"):
+            try:
+                call_view = view_obj(child.get('t-call'))
+            except ValueError:
+                continue
+            if call_view not in result:
+                result += self._views_get(cr, uid, call_view, options=options, context=context, stack_result=result)
+
         todo = view.inherit_children_ids
         if options:
             todo += filter(lambda x: not x.inherit_id, view.inherited_option_ids)
@@ -55,14 +65,6 @@ class view(osv.osv):
             for r in self._views_get(cr, uid, child_view, options=bool(child_view.inherit_id), context=context, root=False, stack_result=result):
                 if r not in result:
                     result.append(r)
-        node = etree.fromstring(view.arch)
-        for child in node.xpath("//t[@t-call]"):
-            try:
-                call_view = view_obj(child.get('t-call'))
-            except ValueError:
-                continue
-            if call_view not in result:
-                result += self._views_get(cr, uid, call_view, options=options, context=context, stack_result=result)
         return result
 
     def extract_embedded_fields(self, cr, uid, arch, context=None):

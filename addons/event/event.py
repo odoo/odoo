@@ -160,6 +160,8 @@ class event_event(osv.osv):
         'email_confirmation_id' : fields.many2one('email.template','Event Confirmation Email', help="If you set an email template, each participant will receive this email announcing the confirmation of the event."),
         'reply_to': fields.char('Reply-To Email', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one."),
         'address_id': fields.many2one('res.partner','Location', readonly=False, states={'done': [('readonly', True)]}),
+        'country_id': fields.related('address_id', 'country_id',
+                    type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}, store=True),
         'description': fields.html(
             'Description', readonly=False,
             states={'done': [('readonly', True)]},

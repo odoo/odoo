@@ -7,8 +7,6 @@
     'version': '1.0',
     'description': """
 Online Events
-=============
-
         """,
     'author': 'OpenERP SA',
     'depends': ['website', 'website_partner', 'website_mail', 'event'],
@@ -24,4 +22,5 @@ Online Events
         'data/event_demo.xml'
     ],
     'installable': True,
+    'application': True,
 }

@@ -28,11 +28,6 @@ class analytic_entries_report(osv.osv):
     _auto = False
     _columns = {
         'date': fields.date('Date', readonly=True),
-        'year': fields.char('Year', size=4, readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'user_id': fields.many2one('res.users', 'User',readonly=True),
         'name': fields.char('Description', size=64, readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner'),
@@ -56,9 +51,6 @@ class analytic_entries_report(osv.osv):
                      min(a.id) as id,
                      count(distinct a.id) as nbr,
                      a.date as date,
-                     to_char(a.date, 'YYYY') as year,
-                     to_char(a.date, 'MM') as month,
-                     to_char(a.date, 'YYYY-MM-DD') as day,
                      a.user_id as user_id,
                      a.name as name,
                      analytic.partner_id as partner_id,

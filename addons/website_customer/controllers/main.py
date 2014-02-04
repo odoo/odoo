@@ -6,8 +6,7 @@ from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.addons.website_partner.controllers import main as website_partner
-import urllib
-
+import werkzeug.urls
 
 class WebsiteCustomer(http.Controller):
     _references_per_page = 20
@@ -22,6 +21,7 @@ class WebsiteCustomer(http.Controller):
     ], type='http', auth="public", website=True, multilang=True)
     def customers(self, country_id=0, page=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
+        country_obj = request.registry['res.country']
         partner_obj = request.registry['res.partner']
         partner_name = post.get('search', '')
 
@@ -30,19 +30,27 @@ class WebsiteCustomer(http.Controller):
         if partner_name:
             domain += [
                 '|',
-                ('name', 'ilike', "%%%s%%" % post.get("search")),
-                ('website_description', 'ilike', "%%%s%%" % post.get("search"))
+                ('name', 'ilike', post.get("search")),
+                ('website_description', 'ilike', post.get("search"))
             ]
-        country_id = None
-        if country_id:
-            domain += [('country_id', '=', country_id)]
 
-        # group by country, based on all customers (base domain)
+        # group by country, based on customers found with the search(domain)
         countries = partner_obj.read_group(
-            cr, openerp.SUPERUSER_ID, base_domain, ["id", "country_id"],
+            cr, openerp.SUPERUSER_ID, domain, ["id", "country_id"],
             groupby="country_id", orderby="country_id", context=request.context)
         country_count = partner_obj.search(
-            cr, openerp.SUPERUSER_ID, base_domain, count=True, context=request.context)
+            cr, openerp.SUPERUSER_ID, domain, count=True, context=request.context)
+
+        if country_id:
+            domain += [('country_id', '=', country_id)]
+            if not any(x['country_id'][0] == country_id for x in countries):
+                country = country_obj.browse(cr, uid, country_id, context)
+                countries.append({
+                    'country_id_count': 0,
+                    'country_id': (country_id, country.name)
+                })
+                countries.sort(key=lambda d: d['country_id'][1])
+
         countries.insert(0, {
             'country_id_count': country_count,
             'country_id': (0, _("All Countries"))
@@ -71,7 +79,7 @@ class WebsiteCustomer(http.Controller):
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'post': post,
-            'search_path': "?%s" % urllib.urlencode(post),
+            'search_path': "?%s" % werkzeug.url_encode(post),
         }
         return request.website.render("website_customer.index", values)
 

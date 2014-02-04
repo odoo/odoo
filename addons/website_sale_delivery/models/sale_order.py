@@ -19,17 +19,17 @@ class delivery_carrier(orm.Model):
 class SaleOrder(orm.Model):
     _inherit = 'sale.order'
 
-    def _amount_all_wrapper(self, cr, uid, ids, field_name, arg, context=None):
+    def _amount_all_wrapper(self, cr, uid, ids, field_name, arg, context=None):        
         """ Wrapper because of direct method passing as parameter for function fields """
         return self._amount_all(cr, uid, ids, field_name, arg, context=context)
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = super(SaleOrder, self)._amount_all(cr, uid, ids, field_name, arg, context=context)
-        Currency = self.pool.get('res.currency')
+        currency_pool = self.pool.get('res.currency')
         for order in self.browse(cr, uid, ids, context=context):
             line_amount = sum([line.price_subtotal for line in order.order_line if line.is_delivery])
             currency = order.pricelist_id.currency_id
-            res[order.id]['amount_delivery'] = Currency.round(cr, uid, currency, line_amount)
+            res[order.id]['amount_delivery'] = currency_pool.round(cr, uid, currency, line_amount)
         return res
 
     def _get_order(self, cr, uid, ids, context=None):
@@ -56,13 +56,9 @@ class SaleOrder(orm.Model):
         ),
     }
 
-    def _add_delivery(self, cr, uid, order, context=None):
-        pass
-
     def _get_website_data(self, cr, uid, order, context=None):
         """ Override to add delivery-related website data. """
         values = super(SaleOrder, self)._get_website_data(cr, uid, order, context=context)
-
         # We need a delivery only if we have stockable products
         has_stockable_products = False
         for line in order.order_line:
@@ -73,6 +69,6 @@ class SaleOrder(orm.Model):
 
         delivery_ctx = dict(context, order_id=order.id)
         DeliveryCarrier = self.pool.get('delivery.carrier')
-        delivery_ids = DeliveryCarrier.search(cr, uid, [], context=context)
+        delivery_ids = DeliveryCarrier.search(cr, uid, [('website_published','=',True)], context=context)
         values['deliveries'] = DeliveryCarrier.browse(cr, SUPERUSER_ID, delivery_ids, context=delivery_ctx)
         return values

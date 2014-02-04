@@ -5,8 +5,11 @@ class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
 
     _columns = {
-        'group_product_characteristics': fields.boolean("Support multiple characteristics per products  ",
+        'group_product_attributes': fields.boolean("Support custom product attributes",
             group='base.group_user,base.group_portal,base.group_public',
-            implied_group='product.group_product_characteristics',
-            help="""Allow to manage several characteristics per product. This characteristics are used for filter and compare your products. As an example, if you  sell all in one computers, you may have characteristics like RAM, Processor Speed, Manufacturing, to compare products"""),
+            implied_group='product.group_product_attributes',
+            help="Lets you add multiple custom attributes on products, "
+                 "usable to filter and compare them. "
+                 "For example if you sell computers, you could add custom attributes such as RAM size "
+                 "or CPU speed to compare your products"""),
     }

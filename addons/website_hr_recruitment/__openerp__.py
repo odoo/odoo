@@ -1,8 +1,8 @@
 {
-    'name': 'Career Form',
+    'name': 'Jobs',
     'category': 'Website',
     'version': '1.0',
-    'summary': 'Job Position',
+    'summary': 'Job Descriptions And Application Forms',
     'description': """
 OpenERP Contact Form
 ====================

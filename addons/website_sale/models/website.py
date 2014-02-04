@@ -112,6 +112,9 @@ class Website(orm.Model):
             values['product_id'] = product_id
             values['order_id'] = order.id
 
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            values['name'] = "%s: %s" % (product.name, product.variants) if product.variants else product.name
+            values['tax_id'] = [(6, 0, [tax.id for tax in product.taxes_id])]
             if order_line_id:
                 order_line_obj.write(cr, SUPERUSER_ID, order_line_ids, values, context=context)
             else:

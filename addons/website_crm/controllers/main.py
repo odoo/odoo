@@ -4,13 +4,13 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp import SUPERUSER_ID
 
-from urllib import quote_plus
+import werkzeug.urls
 
 
 class contactus(http.Controller):
 
     def generate_google_map_url(self, street, city, city_zip, country_name):
-        url = "http://maps.googleapis.com/maps/api/staticmap?center=%s&sensor=false&zoom=8&size=298x298" % quote_plus(
+        url = "http://maps.googleapis.com/maps/api/staticmap?center=%s&sensor=false&zoom=8&size=298x298" % werkzeug.url_quote_plus(
             '%s, %s %s, %s' % (street, city, city_zip, country_name)
         )
         return url
@@ -40,13 +40,13 @@ class contactus(http.Controller):
         # if not given: subject is contact name
         if not post.get('name'):
             post['name'] = post.get('contact_name')
-
-        section_ids = request.registry["crm.case.section"].search(
-            request.cr, SUPERUSER_ID, [("code", "=", "Website")], context=request.context)
-        if section_ids:
-            post['section_id'] = section_ids[0]
             
         post['user_id'] = False
+
+        try:
+            post['channel_id'] = request.registry['ir.model.data'].get_object_reference(request.cr, SUPERUSER_ID, 'crm', 'crm_case_channel_website')[1]
+        except ValueError:
+            pass
 
         request.registry['crm.lead'].create(request.cr, SUPERUSER_ID, post, request.context)
         company = request.website.company_id
