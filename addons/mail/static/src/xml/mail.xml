@@ -130,13 +130,13 @@
             <t t-set="inc" t-value="0"/>
             <t t-foreach="widget.partner_ids" t-as="partner">
                 <span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/>
-                    <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a>
-                    <t t-if="!widget.options.show_link" t-raw="partner[1]"/>
+                    <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-esc="partner[1]"/></a>
+                    <t t-if="!widget.options.show_link" t-esc="partner[1]"/>
                 </span>
                 <t t-set="inc" t-value="inc+1"/>
             </t>
             <t t-if="widget.partner_ids.length > 3">
-                <span class="oe_more">, <a><t t-raw="widget.partner_ids.length - 3"/> others...</a></span>
+                <span class="oe_more">, <a><t t-esc="widget.partner_ids.length - 3"/> others...</a></span>
                 <a class="oe_more_hidden">&lt;&lt;&lt;</a>
             </t>
         </div>
@@ -144,8 +144,8 @@
             <t t-foreach='widget.recipients' t-as='recipient'>
                 <label t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
                     <input type="checkbox" t-att-checked="recipient.checked ? 'checked' : undefined" t-att-data="recipient.full_name"/>
-                    <t t-raw="recipient.name"/> 
-                    <t t-if="recipient.email_address">(<t t-raw="recipient.email_address"/>)</t>
+                    <t t-esc="recipient.name"/> 
+                    <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
                     <t t-if="!recipient.email_address">(no email address)</t>
                 </label>
             </t>
@@ -171,7 +171,7 @@
                 <td colspan="2">
                     <h2 class="oe_view_title">
                         <span class="oe_view_title_text">
-                            <t t-raw="widget.action.name"/>
+                            <t t-esc="widget.action.name"/>
                         </span>
                     </h2>
                     <t t-if="widget.action.params.header_description">
@@ -249,11 +249,11 @@
                 <div class="oe_msg_content">
                     <h1 t-if="(widget.show_record_name or widget.subject) and !widget.thread_level" class="oe_msg_title">
                         <a t-if="widget.options.show_link and widget.show_record_name" class="oe_mail_action_model" t-attf-href="#model=#{widget.model}&amp;id=#{widget.res_id}">
-                            <t t-raw="widget.record_name"/>
+                            <t t-esc="widget.record_name"/>
                         </a>
-                        <span t-if="!widget.options.show_link and widget.show_record_name"><t t-raw="widget.record_name"/></span>
+                        <span t-if="!widget.options.show_link and widget.show_record_name"><t t-esc="widget.record_name"/></span>
                         <t t-if="widget.show_record_name and widget.subject">: </t>
-                        <t t-if="widget.subject" t-raw="widget.subject"/>
+                        <t t-if="widget.subject" t-esc="widget.subject"/>
                     </h1>
                     <div class="oe_msg_body">
                         <t t-raw="widget.body"/>
@@ -263,8 +263,8 @@
                     <t t-if="widget.attachment_ids.length > 0">
                         <div class="oe_msg_attachment_list"></div>
                     </t>
-                    <a t-if="widget.author_id and widget.options.show_link and widget.author_id[0]" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[2]"/></a>
-                    <span t-if="widget.author_id and (!widget.options.show_link or !widget.author_id[0])"><t t-raw="widget.author_id[2]"/></span>
+                    <a t-if="widget.author_id and widget.options.show_link and widget.author_id[0]" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-esc="widget.author_id[2]"/></a>
+                    <span t-if="widget.author_id and (!widget.options.show_link or !widget.author_id[0])"><t t-esc="widget.author_id[2]"/></span>
                     <t t-if="widget.type == 'notification'">
                         updated document
                         <t t-if="widget.partner_ids.length > 0">
@@ -283,19 +283,19 @@
                     <t t-if="widget.type == 'notification' or ( (widget.type == 'email' or widget.type == 'comment') and widget.subtype)"
                             t-foreach="widget.partner_ids.slice(0, 3)" t-as="partner">
                         <span t-attf-class="oe_partner_follower">
-                        <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a>
-                        <t t-if="!widget.options.show_link" t-raw="partner[1]"/>
+                        <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-esc="partner[1]"/></a>
+                        <t t-if="!widget.options.show_link" t-esc="partner[1]"/>
                         </span>
                         <t t-if="!partner_last">,</t>
                     </t>
                     <t t-if="widget.partner_ids.length > 3">
-                        <span t-att-title="widget.extra_partners_str">and <t t-raw="widget.extra_partners_nbr"/> more</span>
+                        <span t-att-title="widget.extra_partners_str">and <t t-esc="widget.extra_partners_nbr"/> more</span>
                     </t>
                     <t t-if="widget.type == 'notification' and widget.partner_ids.length > 0">
                         notified
                     </t>
                     <span class='oe_subtle'>•</span>
-                    <span t-att-title="widget.date"><t t-if="widget.timerelative" t-raw="widget.timerelative"/><t t-if="!widget.timerelative" t-raw="widget.date"/></span>
+                    <span t-att-title="widget.date"><t t-if="widget.timerelative" t-esc="widget.timerelative"/><t t-if="!widget.timerelative" t-raw="widget.date"/></span>
                     <span t-if="!widget.options.readonly" class='oe_subtle'>•</span>
                     <t t-if="!widget.options.readonly" t-call="mail.thread.message.vote"/>
                 </div>
@@ -310,7 +310,7 @@
                 <div class='oe_separator'></div>
                 <a t-if="widget.nb_messages &lt;= 0" class="oe_msg_fetch_more">show more message</a>
                 <a t-if="widget.nb_messages === 1" class="oe_msg_fetch_more">show one more message</a>
-                <a t-if="widget.nb_messages &gt; 1" class="oe_msg_fetch_more">show <t t-raw="widget.nb_messages" /> more messages</a>
+                <a t-if="widget.nb_messages &gt; 1" class="oe_msg_fetch_more">show <t t-esc="widget.nb_messages" /> more messages</a>
             </div>
         </div>
     </t>
@@ -330,7 +330,7 @@
     -->
     <span t-name="mail.thread.message.vote">
         <span class="oe_mail_vote_count" t-if='widget.vote_nb > 0'>
-            <t t-raw='widget.vote_nb' />
+            <t t-esc='widget.vote_nb' />
             <span class='oe_e'>8</span>
         </span>
         <a href='#' class="oe_msg_vote">
