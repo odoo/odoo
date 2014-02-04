@@ -33,17 +33,13 @@ Allow users to login through OAuth2 Provider.
     'website': 'http://www.openerp.com',
     'depends': ['base', 'web', 'base_setup'],
     'data': [
+        'res_users.xml',
         'auth_oauth_data.xml',
         'auth_oauth_data.yml',
         'auth_oauth_view.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'views/auth_oauth_login.xml',
     ],
-    'js': ['static/src/js/auth_oauth.js'],
-    'css': [
-        'static/lib/zocial/css/zocial.css',
-        'static/src/css/auth_oauth.css',
-    ],
-    'qweb': ['static/src/xml/auth_oauth.xml'],
     'installable': True,
     'auto_install': False,
 }

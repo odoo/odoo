@@ -7,8 +7,11 @@
         <field name="model">asset.asset.report</field>
         <field name="arch" type="xml">
             <graph string="Assets Analysis" type="pivot">
-                <field name="asset_id"/>
-                <field name="depreciation_value"/>
+                <field name="asset_id" type="row"/>
+                <field name="nbr" type="measure"/>
+                <field name="gross_value" type="measure"/>
+                <field name="depreciation_value" type="measure"/>
+                <field name="posted_value" type="measure"/>
             </graph>
         </field>
     </record>

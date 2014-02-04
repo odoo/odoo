@@ -102,6 +102,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             };    
             this.custom_payment_status = this.default_payment_status;
 
+            this.receipt_queue = [];
+
             this.notifications = {};
             this.bypass_proxy = false;
 
@@ -112,6 +114,13 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.set('status',{});
 
             this.set_connection_status('disconnected');
+
+            this.on('change:status',this,function(eh,status){
+                status = status.newValue;
+                if(status.status === 'connected'){
+                    self.print_receipt();
+                }
+            });
 
             window.hw_proxy = this;
         },
@@ -133,7 +142,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // connects to the specified url
         connect: function(url){
             var self = this;
-            this.connection = new instance.web.Session(undefined,url);
+            this.connection = new instance.web.Session(undefined,url, { use_cors: true});
             this.host   = url;
             this.set_connection_status('connecting',{});
 
@@ -181,7 +190,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             if(!this.keptalive){
                 this.keptalive = true;
                 function status(){
-                    self.connection.rpc('/hw_proxy/status_json',{},{timeout:500})       
+                    self.connection.rpc('/hw_proxy/status_json',{},{timeout:2500})       
                         .then(function(driver_status){
                             self.set_connection_status('connected',driver_status);
                         },function(){
@@ -228,7 +237,14 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.set_connection_status('connecting');
 
             if(options.force_ip){
-                urls.push(options.force_ip);
+                var url = options.force_ip;
+                if(url.indexOf('//') < 0){
+                    url = 'http://'+url;
+                }
+                if(url.indexOf(':',5) < 0){
+                    url = url+port;
+                }
+                urls.push(url);
             }else{
                 if(localStorage['hw_proxy_url']){
                     urls.push(localStorage['hw_proxy_url']);
@@ -502,7 +518,23 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
          *    }
          */
         print_receipt: function(receipt){
-            return this.message('print_receipt',{receipt: receipt});
+            var self = this;
+            if(receipt){
+                this.receipt_queue.push(receipt);
+            }
+            var aborted = false;
+            function send_printing_job(){
+                if (self.receipt_queue.length > 0){
+                    var r = self.receipt_queue.shift();
+                    self.message('print_receipt',{ receipt: r },{ timeout: 5000 })
+                        .then(function(){
+                            send_printing_job();
+                        },function(){
+                            self.receipt_queue.unshift(r)
+                        });
+                }
+            }
+            send_printing_job();
         },
 
         // asks the proxy to log some information, as with the debug.log you can provide several arguments.
