@@ -239,13 +239,20 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/website/attach', type='http', auth='user', methods=['POST'], website=True)
     def attach(self, func, upload):
-        req = request.httprequest
 
         url = message = None
         try:
+            image_data = upload.read()
+            image = Image.open(cStringIO.StringIO(image_data))
+            w, h = image.size
+            if w*h > 42e6: # Nokia Lumia 1020 photo resolution
+                raise ValueError(
+                    u"Image size excessive, uploaded images must be smaller "
+                    u"than 42 million pixel")
+
             attachment_id = request.registry['ir.attachment'].create(request.cr, request.uid, {
                 'name': upload.filename,
-                'datas': upload.read().encode('base64'),
+                'datas': image_data.encode('base64'),
                 'datas_fname': upload.filename,
                 'res_model': 'ir.ui.view',
             }, request.context)
@@ -259,7 +266,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             })
         except Exception, e:
             logger.exception("Failed to upload image to attachment")
-            message = str(e)
+            message = unicode(e)
 
         return """<script type='text/javascript'>
             window.parent['%s'](%s, %s);

@@ -1305,13 +1305,16 @@
          * Sets the provided image url as the dialog's value-to-save and
          * refreshes the preview element to use it.
          */
-        set_image: function (url) {
+        set_image: function (url, error) {
+            this.$('input.url').val(
+                error ? '' : url);
             this.$('input.url').val(url);
             this.preview_image();
         },
 
         file_selection: function () {
             this.$el.addClass('nosave');
+            this.$('form').removeClass('has-error').find('.help-block').empty();
             this.$('button.filepicker').removeClass('btn-danger btn-success');
 
             var self = this;
@@ -1326,12 +1329,15 @@
         },
         file_selected: function(url, error) {
             var $button = this.$('button.filepicker');
-            if (error) {
+            if (!error) {
+                $button.addClass('btn-success');
+            } else {
+                url = null;
+                this.$('form').addClass('has-error')
+                    .find('.help-block').text(error);
                 $button.addClass('btn-danger');
-                return;
             }
-            $button.addClass('btn-success');
-            this.set_image(url);
+            this.set_image(url, error);
         },
         preview_image: function () {
             var loaded = function () {
@@ -1353,6 +1359,8 @@
         },
         browse_existing: function (e) {
             e.preventDefault();
+            this.$('form').removeClass('has-error').find('.help-block').empty();
+            this.$('button.filepicker').removeClass('btn-danger btn-success');
             new website.editor.ExistingImageDialog(this).appendTo(document.body);
         },
     });
