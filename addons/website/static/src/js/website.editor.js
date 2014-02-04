@@ -10,6 +10,9 @@
 
         if (!is_smartphone) {
             website.ready().then(website.init_editor);
+        } else {
+            // remove padding of fake editor bar
+            document.body.style.padding = 0;
         }
 
         $(document).on('click', 'a.js_link2post', function (ev) {
@@ -437,6 +440,10 @@
             });
         },
         start: function() {
+            // remove placeholder editor bar
+            var fakebar = document.getElementById('website-top-navbar-placeholder');
+            fakebar.parentNode.removeChild(fakebar);
+
             var self = this;
             this.saving_mutex = new openerp.Mutex();
 
