@@ -175,7 +175,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             ctx['active_id'] = lead_id
             partner_id = self._find_matching_partner(cr, uid, context=ctx)
             action = 'create'
-            print partner_id
         res = lead.handle_partner_assignation(cr, uid, [lead_id], action, partner_id, context=context)
         return res.get(lead_id)
 

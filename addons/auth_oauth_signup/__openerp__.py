@@ -31,7 +31,7 @@ Allow users to sign up through OAuth2 Provider.
     'website': 'http://www.openerp.com',
     'depends': ['auth_oauth', 'auth_signup'],
     'data': [],
-    'js': ['static/src/js/auth_oauth_signup.js'],
+    'js': [],
     'css': [],
     'qweb': [],
     'installable': True,

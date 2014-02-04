@@ -290,7 +290,7 @@ class TestResource(TestResourceCommon):
         td = timedelta()
         for item in res:
             td += item[1] - item[0]
-        self.assertEqual(td.total_seconds() / 3600.0, 40.0, 'resource_calendar: wrong hours scheduling')
+        self.assertEqual(seconds(td) / 3600.0, 40.0, 'resource_calendar: wrong hours scheduling')
 
         # --------------------------------------------------
         # Test2: schedule hours forward (old interval_get)
@@ -326,7 +326,7 @@ class TestResource(TestResourceCommon):
         td = timedelta()
         for item in res:
             td += item[1] - item[0]
-        self.assertEqual(td.total_seconds() / 3600.0, 40.0, 'resource_calendar: wrong hours scheduling')
+        self.assertEqual(seconds(td) / 3600.0, 40.0, 'resource_calendar: wrong hours scheduling')
 
         # res = self.resource_calendar.interval_get(cr, uid, self.calendar_id, self.date1, 40, resource=self.resource1_id, byday=True)
         #   (datetime.datetime(2013, 2, 12, 9, 0), datetime.datetime(2013, 2, 12, 16, 0))
@@ -364,7 +364,7 @@ class TestResource(TestResourceCommon):
         td = timedelta()
         for item in res:
             td += item[1] - item[0]
-        self.assertEqual(td.total_seconds() / 3600.0, 40.0, 'resource_calendar: wrong hours scheduling')
+        self.assertEqual(seconds(td) / 3600.0, 40.0, 'resource_calendar: wrong hours scheduling')
 
         # --------------------------------------------------
         # Test3: working hours (old _interval_hours_get)
@@ -443,3 +443,8 @@ class TestResource(TestResourceCommon):
         # Without calendar, should only count days -> 12 -> 16, 5 days with default intervals
         res = self.resource_calendar.schedule_days_get_date(cr, uid, None, 5, day_date=self.date1, default_interval=(8, 16))
         self.assertEqual(res, datetime.strptime('2013-02-16 16:00:00', _format), 'resource_calendar: wrong days scheduling')
+
+def seconds(td):
+    assert isinstance(td, timedelta)
+
+    return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10.**6

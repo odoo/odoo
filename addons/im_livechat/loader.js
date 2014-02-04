@@ -35,7 +35,7 @@ require.config({
 })(["livesupport", "jquery"], function(livesupport, jQuery) {
     jQuery.noConflict();
     console.log("loaded live support");
-    livesupport.main({{url | json}}, {{db | json}}, "anonymous", "anonymous", {{channel | json}}, {
+    livesupport.main({{url | json}}, {{db | json}}, "public", "public", {{channel | json}}, {
         buttonText: {{buttonText | json}},
         inputPlaceholder: {{inputPlaceholder | json}},
         defaultMessage: {{(defaultMessage or None) | json}},
