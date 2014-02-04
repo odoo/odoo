@@ -646,12 +646,20 @@ class stock_picking(osv.osv):
                 continue
 
             order = {'confirmed': 0, 'waiting': 1, 'assigned': 2}
-            order_inv = dict(zip(order.values(), order.keys()))
+            order_inv = {0: 'confirmed', 1: 'waiting', 2: 'assigned'}
             lst = [order[x.state] for x in pick.move_lines if x.state not in ('cancel', 'done')]
-            if pick.move_lines == 'one':
+            if pick.move_type == 'one':
                 res[pick.id] = order_inv[min(lst)]
             else:
+                #we are in the case of partial delivery, so if all move are assigned, picking
+                #should be assign too, else if one of the move is assigned, or partially available, picking should be
+                #in partially available state, otherwise, picking is in waiting or confirmed state
                 res[pick.id] = order_inv[max(lst)]
+                if not all(x == 2 for x in lst):
+                    #if all moves aren't assigned, check if we have one product partially available
+                    for move in pick.move_lines:
+                        if move.reserved_quant_ids:
+                            res[pick.id] = 'partially_available'
         return res
 
     def _get_pickings(self, cr, uid, ids, context=None):
@@ -659,6 +667,13 @@ class stock_picking(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             if move.picking_id:
                 res.add(move.picking_id.id)
+        return list(res)
+
+    def _get_pickings_from_quant(self, cr, uid, ids, context=None):
+        res = set()
+        for quant in self.browse(cr, uid, ids, context=context):
+            if quant.reservation_id and quant.reservation_id.picking_id:
+                res.add(quant.reservation_id.picking_id.id)
         return list(res)
 
     def _get_pack_operation_exist(self, cr, uid, ids, field_name, arg, context=None):
@@ -692,17 +707,20 @@ class stock_picking(osv.osv):
         'move_type': fields.selection([('direct', 'Partial'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, help="It specifies goods to be deliver partially or all at once"),
         'state': fields.function(_state_get, type="selection", store={
             'stock.picking': (lambda self, cr, uid, ids, ctx: ids, ['move_type', 'move_lines'], 20),
-            'stock.move': (_get_pickings, ['state', 'picking_id'], 20)}, selection=[
+            'stock.move': (_get_pickings, ['state', 'picking_id'], 20),
+            'stock.quant': (_get_pickings_from_quant, ['reservation_id'], 20)}, selection=[
                 ('draft', 'Draft'),
                 ('cancel', 'Cancelled'),
                 ('waiting', 'Waiting Another Operation'),
                 ('confirmed', 'Waiting Availability'),
+                ('partially_available', 'Partially Available'),
                 ('assigned', 'Ready to Transfer'),
                 ('done', 'Transferred'),
                 ], string='Status', readonly=True, select=True, track_visibility='onchange', help="""
                 * Draft: not confirmed yet and will not be scheduled until confirmed\n
                 * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
                 * Waiting Availability: still waiting for the availability of products\n
+                * Partially Available: some products are available and reserved\n
                 * Ready to Transfer: products reserved, simply waiting for confirmation.\n
                 * Transferred: has been processed, can't be modified or cancelled anymore\n
                 * Cancelled: has been cancelled, can't be confirmed anymore"""
@@ -817,6 +835,8 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             move_ids = [x.id for x in pick.move_lines if x.state in ['confirmed', 'waiting']]
             self.pool.get('stock.move').force_assign(cr, uid, move_ids, context=context)
+            if pick.pack_operation_exist:
+                self.do_prepare_partial(cr, uid, [pick.id], context=None)
         return True
 
     def cancel_assign(self, cr, uid, ids, context=None):
@@ -902,9 +922,14 @@ class stock_picking(osv.osv):
         pack_operation_obj = self.pool.get('stock.pack.operation')
         pack_obj = self.pool.get("stock.quant.package")
         quant_obj = self.pool.get("stock.quant")
+        #get list of existing packages and delete them
+        existing_package_ids = pack_operation_obj.search(cr, uid, [('picking_id', 'in', picking_ids)], context=context)
+        if existing_package_ids:
+            pack_operation_obj.unlink(cr, uid, existing_package_ids, context)
+
         for picking in self.browse(cr, uid, picking_ids, context=context):
             for move in picking.move_lines:
-                if move.state != 'assigned':
+                if move.state not in ('assigned', 'confirmed'):
                     continue
                 #Check which of the reserved quants are entirely in packages (can be in separate method)
                 packages = list(set([x.package_id for x in move.reserved_quant_ids if x.package_id]))
@@ -957,7 +982,10 @@ class stock_picking(osv.osv):
                         'cost': quant.cost,
                         'package_id': quant.package_id and quant.package_id.id or False,
                     }, context=context)
-                if remaining_qty > 0:
+                if move.state == 'assigned' and remaining_qty > 0:
+                    #only add a line with remaining qty if we have all qty reserved (move is assigned)
+                    #otherwise we may be in a case where we do a partial delivery with only a few
+                    #available products and we don't want to propose to transfer everything
                     pack_operation_obj.create(cr, uid, {
                         'picking_id': picking.id,
                         'product_qty': remaining_qty,
@@ -971,8 +999,12 @@ class stock_picking(osv.osv):
           Will remove all quants for picking in picking_ids
         """
         moves_to_unreserve = []
+        pack_line_to_unreserve = []
         for picking in self.browse(cr, uid, picking_ids, context=context):
             moves_to_unreserve += [m.id for m in picking.move_lines]
+            pack_line_to_unreserve += [p.id for p in picking.pack_operation_ids]
+        if pack_line_to_unreserve:
+            self.pool.get('stock.pack.operation').unlink(cr, uid, pack_line_to_unreserve, context=context)
         if moves_to_unreserve:
             self.pool.get('stock.move').do_unreserve(cr, uid, moves_to_unreserve, context=context)
 
@@ -1270,6 +1302,37 @@ class stock_move(osv.osv):
                 res[move.id] = min(move.product_qty, availability)
         return res
 
+    def _get_string_qty_information(self, cr, uid, ids, field_name, args, context=None):
+        settings_obj = self.pool.get('stock.config.settings')
+        res = dict.fromkeys(ids, '')
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.state in ('draft', 'done', 'cancel') or move.location_id.usage != 'internal':
+                res[move.id] = _('n/a')
+                continue
+            total_available = min(move.product_qty, move.reserved_availability + move.availability)
+            info = str(total_available)
+            #look in the settings if we need to display the UoM name or not
+            config_ids = settings_obj.search(cr, uid, [], limit=1, order='id DESC', context=context)
+            if config_ids:
+                stock_settings = settings_obj.browse(cr, uid, config_ids[0], context=context)
+                if stock_settings.group_uom:
+                    info += ' ' + move.product_id.uom_id.name
+            if move.reserved_availability:
+                if move.reserved_availability != total_available:
+                    #some of the available quantity is assigned and some are available but not reserved
+                    info += _(' (%s reserved)') % str(move.reserved_availability)
+                else:
+                    #all available quantity is assigned
+                    info += _(' (reserved)')
+            res[move.id] = info
+        return res
+
+    def _get_reserved_availability(self, cr, uid, ids, field_name, args, context=None):
+        res = dict.fromkeys(ids, 0)
+        for move in self.browse(cr, uid, ids, context=context):
+            res[move.id] = sum([quant.qty for quant in move.reserved_quant_ids])
+        return res
+
     def _get_move(self, cr, uid, ids, context=None):
         res = set()
         for quant in self.browse(cr, uid, ids, context=context):
@@ -1361,7 +1424,9 @@ class stock_move(osv.osv):
         'lot_ids': fields.function(_get_lot_ids, type='many2many', relation='stock.quant', string='Lots'),
         'origin_returned_move_id': fields.many2one('stock.move', 'Origin return move', help='move that created the return move'),
         'returned_move_ids': fields.one2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move'),
-        'availability': fields.function(_get_product_availability, type='float', string='Availability'),
+        'reserved_availability': fields.function(_get_reserved_availability, type='float', string='Quantity Reserved', readonly=True, help='Quantity that has already been reserved for this move'),
+        'availability': fields.function(_get_product_availability, type='float', string='Quantity Available', readonly=True, help='Quantity in stock that can still be reserved for this move'),
+        'string_availability_info': fields.function(_get_string_qty_information, type='text', string='Availability', readonly=True, help='Show various information on stock availability for this move'),
         'restrict_lot_id': fields.many2one('stock.production.lot', 'Lot', help="Technical field used to depict a restriction on the lot of quants to consider when marking this move as 'done'"),
         'restrict_partner_id': fields.many2one('res.partner', 'Owner ', help="Technical field used to depict a restriction on the ownership of quants to consider when marking this move as 'done'"),
         'putaway_ids': fields.one2many('stock.move.putaway', 'move_id', 'Put Away Suggestions'),
@@ -3622,31 +3687,31 @@ class stock_picking_type(osv.osv):
                 ('date', '>=', groupby_begin),
                 ('date', '<', groupby_end),
             ]
-            res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['date','picking_type_id'], 'picking_type_id_count', ['date','picking_type_id'], context=context)
+            res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['date', 'picking_type_id'], 'picking_type_id_count', ['date', 'picking_type_id'], context=context)
         return res
 
     def _get_picking_count(self, cr, uid, ids, field_names, arg, context=None):
         obj = self.pool.get('stock.picking')
         domains = {
             'count_picking_draft': [('state', '=', 'draft')],
-            'count_picking_waiting': [('state','=', 'confirmed')],
-            'count_picking_ready': [('state','=','assigned')],
-            'count_picking': [('state','in',('assigned','waiting','confirmed'))],
-            'count_picking_late': [('min_date','<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state','in',('assigned','waiting','confirmed'))],
-            'count_picking_backorders': [('backorder_id','!=', False), ('state','in',('confirmed', 'assigned', 'waiting'))],
+            'count_picking_waiting': [('state', '=', 'confirmed')],
+            'count_picking_ready': [('state', 'in', ('assigned', 'partially_available'))],
+            'count_picking': [('state', 'in', ('assigned', 'waiting', 'confirmed', 'partially_available'))],
+            'count_picking_late': [('min_date', '<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state', 'in', ('assigned', 'waiting', 'confirmed', 'partially_available'))],
+            'count_picking_backorders': [('backorder_id', '!=', False), ('state', 'in', ('confirmed', 'assigned', 'waiting', 'partially_available'))],
         }
         result = {}
         for field in domains:
             data = obj.read_group(cr, uid, domains[field] +
-                [('state', 'not in',('done','cancel')), ('picking_type_id', 'in', ids)],
+                [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', ids)],
                 ['picking_type_id'], ['picking_type_id'], context=context)
             count = dict(map(lambda x: (x['picking_type_id'] and x['picking_type_id'][0], x['picking_type_id_count']), data))
             for tid in ids:
                 result.setdefault(tid, {})[field] = count.get(tid, 0)
         for tid in ids:
             if result[tid]['count_picking']:
-                result[tid]['rate_picking_late'] = result[tid]['count_picking_late'] *100 / result[tid]['count_picking']
-                result[tid]['rate_picking_backorders'] = result[tid]['count_picking_backorders'] *100 / result[tid]['count_picking']
+                result[tid]['rate_picking_late'] = result[tid]['count_picking_late'] * 100 / result[tid]['count_picking']
+                result[tid]['rate_picking_backorders'] = result[tid]['count_picking_backorders'] * 100 / result[tid]['count_picking']
             else:
                 result[tid]['rate_picking_late'] = 0
                 result[tid]['rate_picking_backorders'] = 0
