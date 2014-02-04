@@ -468,7 +468,7 @@ class view(osv.osv):
 
         modifiers = {}
         Model = self.pool.get(model)
-        if not Model:
+        if Model is None:
             self.raise_view_error(cr, user, _('Model not found: %(model)s') % dict(model=model),
                                   view_id, context)
 
@@ -649,7 +649,7 @@ class view(osv.osv):
         """
         fields = {}
         Model = self.pool.get(model)
-        if not Model:
+        if Model is None:
             self.raise_view_error(cr, user, _('Model not found: %(model)s') % dict(model=model), view_id, context)
 
         if node.tag == 'diagram':
