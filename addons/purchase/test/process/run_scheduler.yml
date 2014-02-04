@@ -37,8 +37,6 @@
 -
   !python {model: procurement.order}: |
     procurement = self.browse(cr, uid, ref('procurement_order_testcase0'))
-    move = procurement.purchase_id.order_line[0].move_dest_id
-    procurement.purchase_id.order_line[0].unlink()
-    assert move.state == 'cancel', 'Move should be cancelled'
+    procurement.purchase_line_id.unlink()
     procurement.refresh()
     assert procurement.state == 'cancel', 'Procurement should be cancelled'

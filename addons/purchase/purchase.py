@@ -974,12 +974,10 @@ class purchase_order_line(osv.osv):
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
     def unlink(self, cr, uid, ids, context=None):
-        procurement_ids_to_cancel = []
-        for line in self.browse(cr, uid, ids, context=context):
-            if line.move_dest_id:
-                procurement_ids_to_cancel.extend(procurement.id for procurement in line.move_dest_id.procurements)
+        procurement_obj = self.pool.get('procurement.order')
+        procurement_ids_to_cancel = procurement_obj.search(cr, uid, [('purchase_line_id', 'in', ids)], context=context)
         if procurement_ids_to_cancel:
-            self.pool['procurement.order'].action_cancel(cr, uid, procurement_ids_to_cancel)
+            self.pool['procurement.order'].cancel(cr, uid, procurement_ids_to_cancel)
         return super(purchase_order_line, self).unlink(cr, uid, ids, context=context)
 
     def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
