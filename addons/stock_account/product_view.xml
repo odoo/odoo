@@ -25,10 +25,10 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <group name="delay" position="inside">
+                <group name="sale_condition" position="inside">
                     <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}"/>
                 </group>
-                <group name="delay" position="after">
+                <group name="procurement_uom" position="after">
                     <group name="store" string="Storage Location">
                         <field name="loc_rack"/>
                         <field name="loc_row"/>
@@ -57,7 +57,7 @@
                     <field name="cost_method" groups="product.group_costing_method" attrs="{'readonly': [('is_only_child', '=', False)]}"/>
                     <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
                     <div groups="base.group_user">
-                        <field name="standard_price" attrs="{'readonly':['|', ('is_only_child', '=', False), '&', ('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}" nolabel="1"/>
+                        <field name="standard_price" attrs="{'readonly':['|', ('is_only_child', '=', False), '&amp;', ('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}" nolabel="1"/>
                         <button name="%(action_view_change_standard_price)d" string="- update"
                             type="action" attrs="{'invisible':['|', |', ('is_only_child', '=', False), ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"
                             class="oe_link" groups="product.group_costing_method"/>
