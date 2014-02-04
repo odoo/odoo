@@ -347,10 +347,9 @@ class mrp_bom(osv.osv):
         """
         routing_obj = self.pool.get('mrp.routing')
         factor = factor / (bom.product_efficiency or 1.0)
-        max_rounding = max(bom.product_rounding, bom.product_uom.rounding)
-        factor = rounding(factor, max_rounding)
-        if factor < max_rounding:
-            factor = max_rounding
+        factor = rounding(factor, bom.product_rounding)
+        if factor < bom.product_rounding:
+            factor = bom.product_rounding
         result = []
         result2 = []
         phantom = False
@@ -896,10 +895,10 @@ class mrp_production(osv.osv):
                 produced_qty = produced_products.get(produce_product.product_id.id, 0)
                 subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
                 rest_qty = (subproduct_factor * production.product_qty) - produced_qty
-                if rest_qty < (subproduct_factor * production_qty):
+                if float_compare(rest_qty, (subproduct_factor * production_qty) , precision_rounding=produce_product.product_id.uom_id.rounding) < 0:
                     prod_name = produce_product.product_id.name_get()[0][1]
                     raise osv.except_osv(_('Warning!'), _('You are going to produce total %s quantities of "%s".\nBut you can only produce up to total %s quantities.') % ((subproduct_factor * production_qty), prod_name, rest_qty))
-                if rest_qty > 0 :
+                if float_compare(rest_qty, 0, precision_rounding=produce_product.product_id.uom_id.rounding) > 0:
                     lot_id = False
                     if wiz:
                         lot_id = wiz.lot_id.id

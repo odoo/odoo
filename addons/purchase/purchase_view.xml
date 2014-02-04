@@ -211,7 +211,7 @@
                     <notebook>
                         <page string="Products">
                             <field name="order_line">
-                                <tree string="Purchase Order Lines" editable="bottom" colors="grey:state=='cancel'">
+                                <tree string="Purchase Order Lines" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,0,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,parent.state,context)"/>
                                     <field name="name"/>
                                     <field name="date_planned"/>
@@ -567,7 +567,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <div name="options" position="inside">
-                    <field name="purchase_ok"/>
+                    <field name="purchase_ok" attrs="{'readonly': [('is_only_child', '=', False)]}"/>
                     <label for="purchase_ok"/>
                 </div>
                 <group name="procurement" position="after">
@@ -591,14 +591,26 @@
             </field>
         </record>
 
+        <record id="product_template_search_view_purchase" model="ir.ui.view">
+            <field name="name">product.template.search.purchase</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <filter name="filter_to_sell" position="after">
+                    <filter name="filter_to_purchase" string="Can be Purchased" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
+                </filter>
+            </field>
+        </record>
+
         <record id="view_template_purchase_ok_form" model="ir.ui.view">
             <field name="name">product.template.purchase.ok.form.inherit</field>
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <field name="sale_ok" position="after">
+                <div name="options" position="inside">
                     <field name="purchase_ok"/>
-                </field>
+                    <label for="purchase_ok"/>
+                </div>
             </field>
         </record>
         <record model="ir.actions.act_window" id="action_purchase_line_product_tree">
@@ -615,12 +627,12 @@
                 <xpath expr="//div[@name='buttons']" position="inside">
                    <button string="Purchases" name="%(action_purchase_line_product_tree)d" type="action" groups="purchase.group_purchase_user"/>
                 </xpath>
-                <xpath expr="//field[@name='property_account_expense']" position="replace" >
+                <field name="property_account_expense" position="replace" >
                      <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" groups="account.group_account_user"/>
-                </xpath>
-                <xpath expr="//field[@name='supplier_taxes_id']" position="replace" >
+                </field>
+                <field name='supplier_taxes_id' position="replace" >
                      <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" attrs="{'readonly':[('purchase_ok','=',0)]}"/>
-                </xpath>
+                </field>
             </field>
         </record>
     </data>
