@@ -23,14 +23,12 @@ import datetime
 from lxml import etree
 import math
 import pytz
-import re
 
 import openerp
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
-from openerp.tools.yaml_import import is_comment
 
 class format_address(object):
     def fields_view_get_address(self, cr, uid, arch, context={}):
@@ -210,6 +208,7 @@ class res_partner(osv.osv, format_address):
     def _display_name_compute(self, cr, uid, ids, name, args, context=None):
         context = dict(context or {})
         context.pop('show_address', None)
+        context.pop('show_address_only', None)
         return dict(self.name_get(cr, uid, ids, context=context))
 
     # indirections to avoid passing a copy of the overridable method when declaring the function field
@@ -217,12 +216,12 @@ class res_partner(osv.osv, format_address):
     _display_name = lambda self, *args, **kwargs: self._display_name_compute(*args, **kwargs)
 
     _commercial_partner_store_triggers = {
-        'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)]),
-                        ['parent_id', 'is_company'], 10) 
+        'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)], context=dict(active_test=False)),
+                        ['parent_id', 'is_company'], 10)
     }
     _display_name_store_triggers = {
-        'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)]),
-                        ['parent_id', 'is_company', 'name'], 10) 
+        'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)], context=dict(active_test=False)),
+                        ['parent_id', 'is_company', 'name'], 10)
     }
 
     _order = "display_name"
@@ -232,7 +231,7 @@ class res_partner(osv.osv, format_address):
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title', 'Title'),
         'parent_id': fields.many2one('res.partner', 'Related Company'),
-        'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts', domain=[('active','=',True)]), # force "active_test" domain to bypass _search() override    
+        'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts', domain=[('active','=',True)]), # force "active_test" domain to bypass _search() override
         'ref': fields.char('Reference', size=64, select=1),
         'lang': fields.selection(_lang_get, 'Language',
             help="If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."),
@@ -560,10 +559,12 @@ class res_partner(osv.osv, format_address):
             name = record.name
             if record.parent_id and not record.is_company:
                 name =  "%s, %s" % (record.parent_id.name, name)
+            if context.get('show_address_only'):
+                name = self._display_address(cr, uid, record, without_company=True, context=context)
             if context.get('show_address'):
                 name = name + "\n" + self._display_address(cr, uid, record, without_company=True, context=context)
-                name = name.replace('\n\n','\n')
-                name = name.replace('\n\n','\n')
+            name = name.replace('\n\n','\n')
+            name = name.replace('\n\n','\n')
             if context.get('show_email') and record.email:
                 name = "%s <%s>" % (name, record.email)
             res.append((record.id, name))
@@ -602,7 +603,8 @@ class res_partner(osv.osv, format_address):
         """ Override search() to always show inactive children when searching via ``child_of`` operator. The ORM will
         always call search() with a simple domain of the form [('parent_id', 'in', [ids])]. """
         # a special ``domain`` is set on the ``child_ids`` o2m to bypass this logic, as it uses similar domain expressions
-        if len(args) == 1 and len(args[0]) == 3 and args[0][:2] == ('parent_id','in'):
+        if len(args) == 1 and len(args[0]) == 3 and args[0][:2] == ('parent_id','in') \
+                and args[0][2] != [False]:
             context = dict(context or {}, active_test=False)
         return super(res_partner, self)._search(cr, user, args, offset=offset, limit=limit, order=order, context=context,
                                                 count=count, access_rights_uid=access_rights_uid)
@@ -611,26 +613,36 @@ class res_partner(osv.osv, format_address):
         if not args:
             args = []
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
+
+            self.check_access_rights(cr, uid, 'read')
+            where_query = self._where_calc(cr, uid, args, context=context)
+            self._apply_ir_rules(cr, uid, where_query, 'read', context=context)
+            from_clause, where_clause, where_clause_params = where_query.get_sql()
+            where_str = where_clause and (" WHERE %s AND " % where_clause) or ' WHERE '
+
             # search on the name of the contacts and of its company
             search_name = name
             if operator in ('ilike', 'like'):
                 search_name = '%%%s%%' % name
             if operator in ('=ilike', '=like'):
                 operator = operator[1:]
-            query_args = {'name': search_name}
-            query = ('''SELECT id FROM res_partner
-                         WHERE email ''' + operator + ''' %(name)s
-                            OR display_name ''' + operator + ''' %(name)s
-                      ORDER BY display_name
-                     ''')
+
+            query = ('SELECT id FROM res_partner ' +
+                     where_str +  '(email ' + operator + ''' %s
+                          OR display_name ''' + operator + ''' %s)
+                    ORDER BY display_name''')
+
+            where_clause_params += [search_name, search_name]
             if limit:
-                query += ' limit %(limit)s'
-                query_args['limit'] = limit
-            cr.execute(query, query_args)
+                query += ' limit %s'
+                where_clause_params.append(limit)
+            cr.execute(query, where_clause_params)
             ids = map(lambda x: x[0], cr.fetchall())
-            ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
+
             if ids:
                 return self.name_get(cr, uid, ids, context)
+            else:
+                return []
         return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
 
     def find_or_create(self, cr, uid, email, context=None):

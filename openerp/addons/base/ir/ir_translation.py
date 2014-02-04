@@ -268,13 +268,8 @@ class ir_translation(osv.osv):
         return translations
 
     def _set_ids(self, cr, uid, name, tt, lang, ids, value, src=None):
-        # clear the caches
-        tr = self._get_ids(cr, uid, name, tt, lang, ids)
-        for res_id in tr:
-            if tr[res_id]:
-                self._get_source.clear_cache(self, uid, name, tt, lang, tr[res_id])
-            self._get_ids.clear_cache(self, uid, name, tt, lang, res_id)
-        self._get_source.clear_cache(self, uid, name, tt, lang)
+        self._get_ids.clear_cache(self)
+        self._get_source.clear_cache(self)
 
         cr.execute('delete from ir_translation '
                 'where lang=%s '
@@ -294,7 +289,7 @@ class ir_translation(osv.osv):
         return len(ids)
 
     @tools.ormcache(skiparg=3)
-    def _get_source(self, cr, uid, name, types, lang, source=None):
+    def _get_source(self, cr, uid, name, types, lang, source=None, res_id=None):
         """
         Returns the translation for the given combination of name, type, language
         and source. All values passed to this method should be unicode (not byte strings),
@@ -304,6 +299,7 @@ class ir_translation(osv.osv):
         :param types: single string defining type of term to translate (see ``type`` field on ir.translation), or sequence of allowed types (strings)
         :param lang: language code of the desired translation
         :param source: optional source term to translate (should be unicode)
+        :param res_id: optional resource id to translate (if used, ``source`` should be set)
         :rtype: unicode
         :return: the request translation, or an empty unicode string if no translation was
                  found and `source` was not passed
@@ -321,6 +317,9 @@ class ir_translation(osv.osv):
                         AND type in %s
                         AND src=%s"""
             params = (lang or '', types, tools.ustr(source))
+            if res_id:
+                query += "AND res_id=%s"
+                params += (res_id,)
             if name:
                 query += " AND name=%s"
                 params += (tools.ustr(name),)
@@ -342,8 +341,9 @@ class ir_translation(osv.osv):
         if context is None:
             context = {}
         ids = super(ir_translation, self).create(cr, uid, vals, context=context)
-        self._get_source.clear_cache(self, uid, vals.get('name',0), vals.get('type',0),  vals.get('lang',0), vals.get('src',0))
-        self._get_ids.clear_cache(self, uid, vals.get('name',0), vals.get('type',0), vals.get('lang',0), vals.get('res_id',0))
+        self._get_source.clear_cache(self)
+        self._get_ids.clear_cache(self)
+        self.pool['ir.ui.view'].clear_cache()
         return ids
 
     def write(self, cursor, user, ids, vals, context=None):
@@ -356,9 +356,9 @@ class ir_translation(osv.osv):
         if vals.get('value'):
             vals.update({'state':'translated'})
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
-        for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
-            self._get_source.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['src'])
-            self._get_ids.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['res_id'])
+        self._get_source.clear_cache(self)
+        self._get_ids.clear_cache(self)
+        self.pool['ir.ui.view'].clear_cache()
         return result
 
     def unlink(self, cursor, user, ids, context=None):
@@ -366,9 +366,9 @@ class ir_translation(osv.osv):
             context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
-            self._get_source.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['src'])
-            self._get_ids.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['res_id'])
+
+        self._get_source.clear_cache(self)
+        self._get_ids.clear_cache(self)
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
         return result
 
