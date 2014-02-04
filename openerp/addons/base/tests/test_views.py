@@ -5,6 +5,7 @@ from lxml import etree as ET
 from lxml.builder import E
 
 from openerp.tests import common
+from openerp.tools import mute_logger
 
 Field = E.field
 
@@ -320,6 +321,7 @@ class TestApplyInheritanceSpecs(common.TransactionCase):
                     name="target"),
                 string="Title")))
 
+    @mute_logger('openerp.addons.base.ir.ir_ui_view')
     def test_invalid_position(self):
         spec = Field(
                 Field(name="whoops"),
@@ -330,6 +332,7 @@ class TestApplyInheritanceSpecs(common.TransactionCase):
                                               self.base_arch,
                                               spec, None)
 
+    @mute_logger('openerp.addons.base.ir.ir_ui_view')
     def test_incorrect_version(self):
         # Version ignored on //field elements, so use something else
         arch = E.form(E.element(foo="42"))
@@ -342,6 +345,7 @@ class TestApplyInheritanceSpecs(common.TransactionCase):
                                               arch,
                                               spec, None)
 
+    @mute_logger('openerp.addons.base.ir.ir_ui_view')
     def test_target_not_found(self):
         spec = Field(name="targut")
 
