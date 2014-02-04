@@ -271,10 +271,14 @@ class audittrail_objects_proxy(object_proxy):
                 new_values = self.get_data(cr, uid_orig, pool, res_ids, model, method)
         elif method == 'read':
             res = fct_src(cr, uid_orig, model.model, method, *args, **kw)
+            if isinstance(res, dict):
+                records = [res]
+            else:
+                records = res
             # build the res_ids and the old_values dict. Here we don't use get_data() to
             # avoid performing an additional read()
             res_ids = []
-            for record in res:
+            for record in records:
                 res_ids.append(record['id'])
                 old_values[(model.id, record['id'])] = {'value': record, 'text': record}
             # log only the fields read
@@ -282,7 +286,9 @@ class audittrail_objects_proxy(object_proxy):
         elif method == 'unlink':
             res_ids = args[0]
             old_values = self.get_data(cr, uid_orig, pool, res_ids, model, method)
-            res = fct_src(cr, uid_orig, model.model, method, *args, **kw)
+            # process_data first as fct_src will unlink the record
+            self.process_data(cr, uid_orig, pool, res_ids, model, method, old_values, new_values, field_list)
+            return fct_src(cr, uid_orig, model.model, method, *args, **kw)
         else: # method is write, action or workflow action
             res_ids = []
             if args:
@@ -325,7 +331,7 @@ class audittrail_objects_proxy(object_proxy):
         data = {}
         resource_pool = pool.get(model.model)
         # read all the fields of the given resources in super admin mode
-        for resource in resource_pool.read(cr, SUPERUSER_ID, res_ids):
+        for resource in resource_pool.read(cr, SUPERUSER_ID, res_ids, resource_pool._all_columns):
             values = {}
             values_text = {}
             resource_id = resource['id']
@@ -459,7 +465,9 @@ class audittrail_objects_proxy(object_proxy):
 
             # if at least one modification has been found
             for model_id, resource_id in lines:
-                name = pool.get(model.model).name_get(cr, uid, [resource_id])[0][1]
+                line_model = pool.get('ir.model').browse(cr, SUPERUSER_ID, model_id).model
+                name = pool.get(line_model).name_get(cr, uid, [resource_id])[0][1]
+
                 vals = {
                     'method': method,
                     'object_id': model_id,
