@@ -286,7 +286,7 @@ class WebsiteSurvey(http.Controller):
     def survey_reporting(self, survey, token=None, **post):
         '''Display an survey Results & Statistics for given survey.'''
         result_tamplate = 'survey.result'
-        if not survey.user_input_ids:
+        if not survey.user_input_ids or not [input_id.id for input_id in survey.user_input_ids if input_id.state != 'new']:
             result_tamplate = 'survey.no_result'
         return request.website.render(result_tamplate,
                                       {'survey': survey,
@@ -296,9 +296,9 @@ class WebsiteSurvey(http.Controller):
                                        'page_range':self.page_range
                                        })
 
-    def page_range(self, total_record):
+    def page_range(self, total_record, limit):
         '''Returns number of pages required for pagination'''
-        total = math.ceil( total_record/5.0 )
+        total = math.ceil( total_record/float(limit) )
         return range(1, int( total+1 ))
 
     def prepare_result(self, question):
@@ -355,7 +355,7 @@ class WebsiteSurvey(http.Controller):
         '''Returns overall summary of question e.g. answered, skipped, total_inputs'''
         result = {}
         if question.page_id.survey_id.user_input_ids:
-            result['total_inputs'] = len(question.page_id.survey_id.user_input_ids)
+            result['total_inputs'] = len([input_id.id for input_id in question.page_id.survey_id.user_input_ids if input_id.state != 'new'])
             question_input_ids = []
             for user_input in question.user_input_line_ids:
                 if not user_input.skipped:

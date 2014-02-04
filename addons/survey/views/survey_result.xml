@@ -93,35 +93,7 @@
                     </tr>
                 </tbody>
             </table>
-            <!-- Pagination Element -->
-            <ul t-att-id="'pagination_'+str(question.id)" class="pagination" >
-                <t t-if="len(question.user_input_line_ids) > 5">
-                    <li t-foreach="page_range(len(question.user_input_line_ids))" t-as="num">
-                        <a href="#" t-esc="num"></a>
-                    </li>
-                </t>
-            </ul>
-            <!-- Dynamic Script for Pagination Element -->
-            <script>
-                $( document ).ready(function() {
-                    $('#table_question_<t t-esc="question.id"></t> tbody tr:lt(5)').removeClass('hidden');
-                    $('#<t t-esc="'pagination_'+str(question.id)"></t> li:first').addClass('active');
-                    $('#<t t-esc="'pagination_'+str(question.id)"></t> li a').click(function(event){
-                        event.preventDefault();
-                        $('#<t t-esc="'pagination_'+str(question.id)"></t> li').removeClass('active');
-                        $(this).parent('li').addClass('active');
-                        $('#table_question_<t t-esc="question.id"></t> tbody tr').addClass('hidden');
-                        var num = $(this).text();
-                        min = (5 * (num-1))-1;
-                        if (min == -1){
-                            $('#table_question_<t t-esc="question.id"></t> tbody tr:lt('+5 * num+')').removeClass('hidden');
-                        }
-                        else{
-                            $('#table_question_<t t-esc="question.id"></t> tbody tr:lt('+5 * num+'):gt('+min+')').removeClass('hidden');
-                        }
-                    });
-                });
-            </script>
+            <t t-call="survey.pagination"/>
         </t>
         <t t-if="input_summary['answered'] == 0">
             <h2 style="padding-top:30px;padding-bottom:30px;text-align:center;" class="text-muted">Sorry, No one answered this question.</h2>
@@ -144,9 +116,8 @@
                     </a>
                 </li>
             </ul>
-
             <div class="tab-content">
-                <div class="tab-pane active survey_graph" t-att-id="'graph_question_'+str(question.id)" t-att-data-question_id= "question.id" data-graph_type= "bar">
+                <div class="tab-pane active survey_graph" t-att-id="'graph_question_'+str(question.id)" t-att-data-question_id="question.id" data-graph_type= "bar">
                     <!-- svg element for drawing bar chart -->
                     <svg style="height:20em"></svg>
                 </div>
@@ -193,7 +164,6 @@
                 </a>
             </li>
         </ul>
-    
         <div class="tab-content">
             <div class="tab-pane active with-3d-shadow with-transitions survey_graph" t-att-id="'graph_question_'+str(question.id)" t-att-data-question_id= "question.id" data-graph_type= "multi_bar">
                 <!-- svg element for drawing Multibar chart -->
@@ -286,35 +256,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <!-- Pagination Element -->
-                <ul t-att-id="'pagination_'+str(question.id)" class="pagination" >
-                    <t t-if="len(question.user_input_line_ids) > 5">
-                        <li t-foreach="page_range(len(question.user_input_line_ids))" t-as="num">
-                            <a href="#" t-esc="num"></a>
-                        </li>
-                    </t>
-                </ul>
-                <!-- Dynamic Script for Pagination Element -->
-                <script>
-                    $( document ).ready(function() {
-                        $('#table_question_<t t-esc="question.id"></t> tbody tr:lt(5)').removeClass('hidden');
-                        $('#<t t-esc="'pagination_'+str(question.id)"></t> li:first').addClass('active');
-                        $('#<t t-esc="'pagination_'+str(question.id)"></t> li a').click(function(event){
-                            event.preventDefault();
-                            $('#<t t-esc="'pagination_'+str(question.id)"></t> li').removeClass('active');
-                            $(this).parent('li').addClass('active');
-                            $('#table_question_<t t-esc="question.id"></t> tbody tr').addClass('hidden');
-                            var num = $(this).text();
-                            min = (5 * (num-1))-1;
-                            if (min == -1){
-                                $('#table_question_<t t-esc="question.id"></t> tbody tr:lt('+5 * num+')').removeClass('hidden');
-                            }
-                            else{
-                                $('#table_question_<t t-esc="question.id"></t> tbody tr:lt('+5 * num+'):gt('+min+')').removeClass('hidden');
-                            }
-                        });
-                    });
-                </script>
+               <t t-call="survey.pagination"/>
             </div>
         </div>
     </template>
@@ -332,6 +274,16 @@
                 </div>
             </div>
         </t>
+    </template>
+    <!-- Pagination Element -->
+    <template id="pagination" name="Survey Result">
+        <ul t-att-id="'pagination_'+str(question.id)" class="pagination" t-att-data-question_id= "question.id">
+            <t t-if="len(question.user_input_line_ids) > 5">
+                <li t-foreach="page_range(len(question.user_input_line_ids), 5)" t-as="num">
+                    <a href="#" t-esc="num"></a>
+                </li>
+            </t>
+        </ul>
     </template>
 </data>
 </openerp>
