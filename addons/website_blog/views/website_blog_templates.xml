@@ -156,32 +156,6 @@
 </template>
 
 
-<template id="blog_post_cover" name="Blog Cover" inherit_option_id="website_blog.blog_post_complete">
-        <xpath expr="//div[@id='title']" position="replace">
-            <div class='page hidden' id="title">
-                <div class='big-image'>
-                    <div class='inner'>
-                        <div class='fader'>
-                            <div class='text'>
-                                <a class='goto-next'>Read Next</a>
-                                <h1 class='title'></h1>
-                                <h2 class='description'></h2>
-                                <h4 class='byline'>
-                                    <span class="author_image"/>
-                                    <span class='author'></span>
-                                </h4>
-                                <p class="post-meta text-muted text-center" name="blog_post_data"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="content">
-                    <div class='text'></div>
-                </div>
-            </div>
-      </xpath>
-</template>
-
 <!-- Blog Post Complete -->
 <template id="blog_post_complete" name="Blog Post">
     <t t-call="website_blog.index">
@@ -232,6 +206,32 @@
         </ul>
     </section>
     </t>
+</template>
+
+<template id="blog_post_cover" name="Blog Cover" inherit_option_id="website_blog.blog_post_complete">
+        <xpath expr="//div[@id='title']" position="replace">
+            <div class='page hidden' id="title">
+                <div class='big-image'>
+                    <div class='inner'>
+                        <div class='fader'>
+                            <div class='text'>
+                                <a class='goto-next'>Read Next</a>
+                                <h1 class='title'></h1>
+                                <h2 class='description'></h2>
+                                <h4 class='byline'>
+                                    <span class="author_image"/>
+                                    <span class='author'></span>
+                                </h4>
+                                <p class="post-meta text-muted text-center" name="blog_post_data"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class='text'></div>
+                </div>
+            </div>
+      </xpath>
 </template>
 
 <template id="blog_breadcrumb" name="Breadcrumb"
