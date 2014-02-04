@@ -286,7 +286,9 @@ class audittrail_objects_proxy(object_proxy):
         elif method == 'unlink':
             res_ids = args[0]
             old_values = self.get_data(cr, uid_orig, pool, res_ids, model, method)
-            res = fct_src(cr, uid_orig, model.model, method, *args, **kw)
+            # process_data first as fct_src will unlink the record
+            self.process_data(cr, uid_orig, pool, res_ids, model, method, old_values, new_values, field_list)
+            return fct_src(cr, uid_orig, model.model, method, *args, **kw)
         else: # method is write, action or workflow action
             res_ids = []
             if args:
