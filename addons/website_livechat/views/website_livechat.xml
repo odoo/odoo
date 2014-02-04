@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+<record id="website_settings_livechat" model="ir.ui.view">
+    <field name="name">website.form</field>
+    <field name="model">website</field>
+    <field name="inherit_id" ref="website.view_website_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[@name='other']" position='before'>
+            <div name="livechat">
+                <separator string="LiveChat"/>
+                <group name="livechat">
+                    <field name="channel_id" widget="many2one"/>
+                </group>
+            </div>
+        </xpath>
+    </field>
+</record>
+
+<template id="header" inherit_id="website.layout" name="LiveChat Snippet">
+    <xpath expr="//body" position="inside">
+        <t t-if="website.channel_id">
+            <t t-raw="website.channel_id.script"/>
+        </t>
+    </xpath>
+</template>
+
+    </data>
+</openerp>

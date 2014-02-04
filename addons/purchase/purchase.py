@@ -163,10 +163,10 @@ class purchase_order(osv.osv):
                 picking_ids.add(move.picking_id.id)
             res[purchase_id] = list(picking_ids)
         return res
-    
+
     STATE_SELECTION = [
         ('draft', 'Draft PO'),
-        ('sent', 'RFQ Sent'),
+        ('sent', 'RFQ'),
         ('bid', 'Bid Received'),
         ('confirmed', 'Waiting Approval'),
         ('approved', 'Purchase Confirmed'),
@@ -694,6 +694,7 @@ class purchase_order(osv.osv):
             'picking_type_id': order.picking_type_id.id,
             'group_id': group_id,
             'procurement_id': order_line.procurement_ids and order_line.procurement_ids[0].id or False,
+            'origin': order.name,
             'route_ids': order.picking_type_id.warehouse_id and [(6, 0, [x.id for x in order.picking_type_id.warehouse_id.route_ids])] or [],
         }]
         #if the order line has a bigger quantity than the procurement it was for (manually changed or minimal quantity), then
@@ -972,6 +973,13 @@ class purchase_order_line(osv.osv):
         default.update({'state':'draft', 'move_ids':[],'invoiced':0,'invoice_lines':[]})
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
+    def unlink(self, cr, uid, ids, context=None):
+        procurement_obj = self.pool.get('procurement.order')
+        procurement_ids_to_cancel = procurement_obj.search(cr, uid, [('purchase_line_id', 'in', ids)], context=context)
+        if procurement_ids_to_cancel:
+            self.pool['procurement.order'].cancel(cr, uid, procurement_ids_to_cancel)
+        return super(purchase_order_line, self).unlink(cr, uid, ids, context=context)
+
     def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
             name=False, price_unit=False, state='draft', context=None):
@@ -1030,7 +1038,6 @@ class purchase_order_line(osv.osv):
         product_product = self.pool.get('product.product')
         product_uom = self.pool.get('product.uom')
         res_partner = self.pool.get('res.partner')
-        product_supplierinfo = self.pool.get('product.supplierinfo')
         product_pricelist = self.pool.get('product.pricelist')
         account_fiscal_position = self.pool.get('account.fiscal.position')
         account_tax = self.pool.get('account.tax')

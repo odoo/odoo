@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<openerp>
+    <data>
+        <template id="auth_oauth.login" inherit_id="web.login" name="OAuth Login buttons">
+            <xpath expr="//button[@type='submit']" position="before">
+                <div class="pull-right">
+                    <div t-foreach="providers" t-as="p">
+                        <a t-att-href="p['auth_link']" class="btn btn-link">
+                            <i t-att-class="p['css_class']"/>
+                            <t t-esc="p['body']"/>
+                        </a>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</openerp>

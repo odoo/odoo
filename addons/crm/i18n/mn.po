@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-12 05:16+0000\n"
-"X-Generator: Launchpad (build 16761)\n"
+"X-Launchpad-Export-Date: 2014-01-28 05:48+0000\n"
+"X-Generator: Launchpad (build 16914)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -32,7 +32,7 @@ msgstr ""
 "олгодог."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:898
+#: code:addons/crm/crm_lead.py:897
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
@@ -156,7 +156,7 @@ msgid "Rule Name"
 msgstr "Дүрмийн нэр"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:280
+#: code:addons/crm/crm_phonecall.py:282
 #, python-format
 msgid "It's only possible to convert one phonecall at a time."
 msgstr "Энэ бол тухайн цагт нэг л утасны дуудлагыг хөрвүүлэх боломжтой"
@@ -193,9 +193,10 @@ msgstr ""
 "html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:640
-#: code:addons/crm/crm_lead.py:761
-#: code:addons/crm/crm_phonecall.py:280
+#: code:addons/crm/crm_lead.py:637
+#: code:addons/crm/crm_lead.py:758
+#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
 #, python-format
 msgid "Warning!"
 msgstr "Анхааруулга!"
@@ -222,7 +223,7 @@ msgid "Schedule Other Call"
 msgstr "Бусад дуудлагыг төлөвлөх"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:209
+#: code:addons/crm/crm_phonecall.py:211
 #: view:crm.phonecall:0
 #, python-format
 msgid "Phone Call"
@@ -305,7 +306,7 @@ msgid "Prospect Partner"
 msgstr "Хэтийн түнш"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1002
+#: code:addons/crm/crm_lead.py:1018
 #, python-format
 msgid "No Subject"
 msgstr "Гарчиг үгүй"
@@ -426,7 +427,6 @@ msgid "Unread Messages"
 msgstr "Уншаагүй зурвасууд"
 
 #. module: crm
-#: view:crm.segmentation:0
 #: field:crm.segmentation.line,segmentation_id:0
 #: model:ir.actions.act_window,name:crm.crm_segmentation-act
 msgid "Segmentation"
@@ -474,7 +474,7 @@ msgid "#Opportunities"
 msgstr "#Боломжууд"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:640
+#: code:addons/crm/crm_lead.py:637
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
@@ -539,7 +539,7 @@ msgstr "Тохируулга"
 #. module: crm
 #: view:crm.lead:0
 msgid "Escalate"
-msgstr "Шат дараалан хөгжүүлэх"
+msgstr "Дээш нь дэвшүүлэх"
 
 #. module: crm
 #: view:crm.lead:0
@@ -764,7 +764,7 @@ msgid "Statistics Dashboard"
 msgstr "Статистик хянах самбар"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:878
+#: code:addons/crm/crm_lead.py:877
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -825,7 +825,7 @@ msgid "Exclusive"
 msgstr "Дээд зиндаанд зориулсан"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:600
+#: code:addons/crm/crm_lead.py:597
 #, python-format
 msgid "From %s : %s"
 msgstr "%s -ээс: %s"
@@ -997,7 +997,7 @@ msgid "Next Action"
 msgstr "Дараагийн үйл ажиллагаа"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:780
+#: code:addons/crm/crm_lead.py:777
 #, python-format
 msgid "<b>Partner</b> set to <em>%s</em>."
 msgstr "<b>Харилцаг</b> нь <em>%s</em> гэж тохируулагдлаа."
@@ -1089,7 +1089,7 @@ msgid "Creation Date"
 msgstr "Үүсгэх огноо"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:715
+#: code:addons/crm/crm_lead.py:712
 #, python-format
 msgid "Lead <b>converted into an Opportunity</b>"
 msgstr "Сэжим нь <b>Боломж бол хөрвүүлэгдлээ</b>"
@@ -1297,7 +1297,7 @@ msgid "Days to Close"
 msgstr "Хаах өдөр"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1057
+#: code:addons/crm/crm_lead.py:1075
 #: field:crm.case.section,complete_name:0
 #, python-format
 msgid "unknown"
@@ -1388,7 +1388,7 @@ msgid "Lead Description"
 msgstr "Сэжимийн тодорхойлолт"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:581
+#: code:addons/crm/crm_lead.py:578
 #, python-format
 msgid "Merged opportunities"
 msgstr "Нийлүүлсэн боломж"
@@ -1679,7 +1679,7 @@ msgid "Month of call"
 msgstr "Дуудлагын сар"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:290
+#: code:addons/crm/crm_phonecall.py:292
 #, python-format
 msgid "Partner has been <b>created</b>."
 msgstr "Харилцагч <b>үүсгэгдлээ</b>."
@@ -1960,7 +1960,7 @@ msgid "Leads"
 msgstr "Сэжим"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:579
+#: code:addons/crm/crm_lead.py:576
 #, python-format
 msgid "Merged leads"
 msgstr "Нэгтгэгдсэн сэжимүүд"
@@ -2960,6 +2960,7 @@ msgstr "Функц"
 #. module: crm
 #: field:crm.case.section,note:0
 #: field:crm.phonecall,description:0
+#: view:crm.segmentation:0
 #: field:crm.segmentation,description:0
 msgid "Description"
 msgstr "Тайлбар"
@@ -3054,7 +3055,7 @@ msgid "Working Hours"
 msgstr "Ажлын цаг"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:986
+#: code:addons/crm/crm_lead.py:1002
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
@@ -3082,7 +3083,7 @@ msgid "Lost"
 msgstr "Ялагдсан"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
 #, python-format
 msgid "Closed/Cancelled leads cannot be converted into opportunities."
 msgstr "Хаагдсан/Цуцлагдсан сэжимүүд нь боломж руу хөрвүүлэх боломжгүй"

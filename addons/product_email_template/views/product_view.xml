@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="product_normal_form_view_template" model="ir.ui.view">
+            <field name="name">product.normal.procurement.locations.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="company_id" position="after">
+                    <field name="email_template_id"
+                        domain="[('model','=','product.template')]"
+                        context="{
+                            'form_view_ref':'product_email_template.email_template_form_simplified',
+                            'default_model': 'product.template',
+                            'default_subject': name,
+                            'default_name': name,
+                        }"
+                        attrs="{'invisible': [('is_only_child', '=', False)]}"
+                    />
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>

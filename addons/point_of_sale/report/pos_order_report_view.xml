@@ -1,29 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="view_report_pos_order_tree" model="ir.ui.view">
-            <field name="name">report.pos.order.tree</field>
+        <record id="view_report_pos_order_graph" model="ir.ui.view">
+            <field name="name">report.pos.order.graph</field>
             <field name="model">report.pos.order</field>
             <field name="arch" type="xml">
-                <tree string="Point of Sale Analysis" create="false">
-                    <field name="date" invisible="1"/>
-                    <field name="user_id" invisible="1"/>
-                    <field name="year" invisible="1"/>
-                    <field name="day" invisible="1"/>
-                    <field name="month" invisible="1"/>
-                    <field name="partner_id" invisible="1"/>
-                    <field name="product_id" invisible="1"/>
-                    <field name="warehouse_id" invisible="1"/>
-                    <!--<field name="journal_id" invisible="1"/>-->
-                    <field name="company_id" invisible="1" groups="base.group_multi_company"/>
-                    <field name="nbr" sum="# of Lines"/>
-                    <field name="product_qty" sum="# of Qty"/>
-                    <field name="average_price" sum="Average Price"/>
-                    <field name="total_discount" sum="Total Discount"/>
-                    <field name="price_total" sum="Total Price"/>
-                    <field name="delay_validation"/>
-                    <!--<field name="state" invisible="1"/>-->
-                </tree>
+                <graph string="Point of Sale Analysis" type="pivot">
+                    <field name="date" interval="day" type="row"/>
+                    <field name="nbr" type="measure"/>
+                    <field name="product_qty" type="measure"/>
+                    <field name="average_price" type="measure"/>
+                    <field name="total_discount" type="measure"/>
+                    <field name="price_total" type="measure"/>
+                </graph>
             </field>
         </record>
 
@@ -36,10 +25,7 @@
                     <filter icon="terp-dolar" string="Invoiced" domain="[('state','=',('invoiced'))]"/>
                     <filter icon="terp-dolar" string="Not Invoiced" domain="[('state','=',('paid'))]"/>
                     <separator/>
-                    <filter icon="terp-go-year" string="Year" name="year" domain="[('year','=',time.strftime('%%Y'))]" help="POS ordered created during current year"/>
-                    <separator/>
-                    <filter icon="terp-go-today" string="Today" name="today" domain="[('date','=', time.strftime('%%Y-%%m-%%d'))]"
-                         help="POS ordered created by today"/>
+                    <filter icon="terp-go-year" string="Year" name="year" domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="POS ordered created during current year"/>
                     <separator/>
                     <filter icon="terp-personal" string="My Sales" help="My Sales" domain="[('user_id','=',uid)]"/>
                     <field name="partner_id"/>
@@ -50,9 +36,9 @@
                         <filter string="Salesperson" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
                         <filter string="Customer" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                        <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Day of order date"/>
-                        <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Month of order date"/>
-                        <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Year of order date"/>
+                        <filter string="Order Date (day)" icon="terp-go-today" context="{'group_by':'date:day'}" help="Day of order date"/>
+                        <filter string="Order Date (month)" icon="terp-go-month" context="{'group_by':'date:month'}" help="Month of order date"/>
+                        <filter string="Order Date (year)" icon="terp-go-year" context="{'group_by':'date:year'}" help="Year of order date"/>
                     </group>
                 </search>
             </field>
@@ -62,9 +48,9 @@
             <field name="name">Orders Analysis</field>
             <field name="res_model">report.pos.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">graph</field>
             <field name="search_view_id" ref="view_report_pos_order_search"/>
-            <field name="context">{'search_default_year':1,'search_default_today':1,'group_by_no_leaf':1,'group_by':['product_id']}</field>
+            <field name="context">{'search_default_year':1, 'group_by_no_leaf':1,'group_by':['product_id']}</field>
         </record>
 
         <menuitem action="action_report_pos_order_all" id="menu_report_pos_order_all" parent="menu_point_rep" sequence="3"/>

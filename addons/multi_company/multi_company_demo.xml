@@ -4,18 +4,49 @@
 <!--                      Partner                        -->
         <record id="res_partner_oerp_editor" model="res.partner">
             <field name="name">OpenERP Editor</field>
+            <field name="street">Plot No 61- Sector 8</field>
+            <field name="city">Faridabad (Delhi- NCR)</field>
+            <field name="zip">121006</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="email">openerp.editor@yourcompany.example.com</field>
+            <field name="is_company" eval="1" />
         </record>
         <record id="res_partner_oerp_us" model="res.partner">
             <field name="name">OpenERP US</field>
+            <field name="street">2035 N. Evergreen Terrace</field>
+            <field name="street2">Arlington Heights</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">openerp.us@yourcompany.example.com</field>
+            <field name="is_company" eval="1" />
         </record>
         <record id="res_partner_oerp_in" model="res.partner">
             <field name="name">OpenERP IN</field>
+            <field name="street">Top Floor, Mehta Mahal,15</field>
+            <field name="street2">Matthew Road, Opera House</field>
+            <field name="city">Mumbai 27</field>
+            <field name="zip">400004</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="email">openerp.in@yourcompany.example.com</field>
+            <field name="is_company" eval="1" />
         </record>
         <record id="res_partner_oerp_be" model="res.partner">
             <field name="name">OpenERP BE</field>
+            <field name="street">Avenue de l'Artisanat 2</field>
+            <field name="city">Braine-l'Alleud</field>
+            <field name="zip">1420</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="email">openerp.be@yourcompany.example.com</field>
+            <field name="is_company" eval="1" />
         </record>
         <record id="res_partner_odoo" model="res.partner">
             <field name="name">Odoo</field>
+            <field name="street">RM#25-502, 126, Yijiang Road</field>
+            <field name="street2">Pudong</field>
+            <field name="city">Shanghai</field>
+            <field name="zip">201</field>
+            <field name="country_id" ref="base.cn"/>
+            <field name="email">odoo@yourcompany.example.com</field>
+            <field name="is_company" eval="1" />
         </record>
 
 <!--                      Company                        -->
@@ -63,87 +94,6 @@
     Resource: product.product
     -->
 
-        <record id="product.product_product_2" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_1" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_3" model="product.product">
-            <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_4" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_5" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_6" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_7" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_6" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_9" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_10" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_11" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_12" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_13" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_14" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_15" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_16" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_17" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_18" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_19" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_27" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_20" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_21" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_22" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_23" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_24" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_25" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
-        <record id="product.product_product_26" model="product.product">
-        <field name="company_id" ref="res_company_oerp_editor"/>
-        </record>
         <record id="Odoo1" model="product.category">
             <field name="parent_id" ref="product.product_category_all"/>
             <field name="name">Odoo Offers</field>

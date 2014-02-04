@@ -23,8 +23,14 @@
             action="product.product_category_action_form" id="menu_product_category_config_stock"
             parent="stock.menu_product_in_config_stock" sequence="0"/>
         <menuitem
+            action="product.product_variant_action" id="menu_product_variant_config_stock"
+            parent="stock.menu_product_in_config_stock" groups="product.group_product_variant" sequence="2"/>
+        <menuitem
+            action="product.product_template_action" id="menu_product_template_config_stock"
+            parent="stock.menu_product_in_config_stock" groups="product.group_product_variant" sequence="1"/>
+        <menuitem
             action="product.product_ul_form_action" groups="product.group_stock_packaging"
-            id="menu_product_packaging_stock_action" parent="stock.menu_product_in_config_stock" sequence="1"/>
+            id="menu_product_packaging_stock_action" parent="stock.menu_product_in_config_stock" sequence="3"/>
         <menuitem
             id="menu_stock_unit_measure_stock" name="Units of Measure"
             parent="stock.menu_product_in_config_stock"  sequence="35" groups="product.group_uom"/>
@@ -191,8 +197,7 @@
             <field name="arch" type="xml">
                 <form string="Serial Number" version="7.0">
                     <div class="oe_button_box oe_right">
-                        <button name="action_traceability" string="Upstream Traceability" type="object"/>
-                        <button name="action_traceability" string="Downstream Traceability" type="object"/>
+                        <button name="action_traceability" string="Traceability" type="object" attrs="{'invisible': [('quant_ids','=',[])]}"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -261,9 +266,9 @@
                 Click to add a serial number.
               </p><p>
                 This is the list of all the production lots you recorded. When
-                you select a lot, you can get the upstream or downstream
+                you select a lot, you can get the 
                 traceability of the products contained in lot. By default, the
-                list is filtred on the serial numbers that are available in
+                list is filtered on the serial numbers that are available in
                 your warehouse but you can uncheck the 'Available' button to
                 get all the lots you produced, received or delivered to
                 customers.
@@ -748,13 +753,14 @@
                 <header>
                     <button name="action_confirm" states="draft" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user"/>
-                    <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight" groups="base.group_user"/>
+                    <button name="force_assign" states="confirmed,partially_available" string="Force Availability" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="do_transfer" states="assigned" string="Transfer Done" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
-                    <button name="do_prepare_partial" string="Partial Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|',('pack_operation_exist', '=', True),('state','!=','assigned')]}"/>
+                    <button name="do_transfer" string="Transfer Done" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|',('pack_operation_exist', '=', False), ('state', '!=', 'partially_available')]}"/>
+                    <button name="do_prepare_partial" string="Partial Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|',('pack_operation_exist', '=', True),('state','not in',('assigned', 'partially_available'))]}"/>
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_user"/>
-                    <button name="action_cancel" states="assigned,confirmed,draft" string="Cancel Transfer" groups="base.group_user" type="object"/>
-                    <button name="do_unreserve" string="Unreserve" groups="base.group_user" type="object" attrs="{'invisible': ['|',('quant_reserved_exist', '=', False), ('state','!=','assigned')]}"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
+                    <button name="action_cancel" states="assigned,confirmed,partially_available,draft" string="Cancel Transfer" groups="base.group_user" type="object"/>
+                    <button name="do_unreserve" string="Unreserve" groups="base.group_user" type="object" attrs="{'invisible': [('quant_reserved_exist', '=', False)]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,partially_available,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box">
@@ -783,7 +789,7 @@
                     </group>
                     <notebook>
                         <page string="Products">
-                            <separator string="Expected Quantities" attrs="{'invisible': [('pack_operation_exist', '=', False)]}"/>
+                            <separator string="Stock Moves" attrs="{'invisible': [('pack_operation_exist', '=', False)]}"/>
                             <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'view_move_picking_tree', 'default_picking_type_id': picking_type_id,'default_picking_id': active_id}"/>
                             <group>
                                 <group col="3"> 
@@ -791,8 +797,9 @@
                                 </group>
                                 <group col="1">
                                     <field name="pack_operation_exist" invisible="1"/>
-                                    <button name="action_pack" string="Create Package" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}" class="oe_link oe_right oe_inline" groups="product.group_stock_packaging"/>
-                                    <button name="do_split" string="Create Draft Backorder" groups="base.group_no_one" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','!=','assigned')]}" class="oe_link oe_right oe_inline"/>
+                                    <button name="action_pack" string="Create Package" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state', 'not in', ('draft','assigned','partially_available','confirmed'))]}" class="oe_link oe_right oe_inline" groups="product.group_stock_packaging"/>
+                                    <button name="do_split" string="Create Draft Backorder" groups="base.group_no_one" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','not in',('assigned', 'partially_available'))]}" class="oe_link oe_right oe_inline"/>
+                                    <button name="do_prepare_partial" string="Recheck Availability" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','not in',('assigned', 'partially_available'))]}" groups="stock.group_stock_user" class="oe_link oe_right oe_inline"/>
                                 </group>
                             </group>
                             <field name="pack_operation_ids" attrs="{'invisible': [('pack_operation_exist', '=', False)]}" context="{'default_owner_id': owner_id}">
@@ -841,7 +848,7 @@
                 <search string="Picking Lists">
                     <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
                     <filter icon="terp-check" name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Moves"/>
-                    <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Moves"/>
+                    <filter icon="terp-check" name="available" string="Ready" domain="[('state','in',('assigned', 'partially_available'))]" help="Assigned Moves"/>
                     <filter icon="terp-check" name="waiting" string="Waiting Availability" domain="[('state','=', 'confirmed')]" help="Waiting Moves"/>
                     <filter icon="terp-camera_test" name="confirmed" string="Confirmed" domain="[('state','in', ('confirmed', 'waiting', 'assigned'))]" help="Confirmed Moves"/>
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
@@ -1057,8 +1064,11 @@
                        states="draft,waiting,confirmed,assigned"
                        groups="base.group_user"/>
                     <field name="scrapped" invisible="1"/>
+                    <field name="availability" invisible="1"/>
+                    <field name="reserved_availability" invisible="1"/>
                     <field name="location_dest_id" groups="stock.group_locations"/>
-                    <field name="remaining_qty"/>
+                    <field name="remaining_qty" invisible="1"/>
+                    <field name="string_availability_info"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -1186,7 +1196,7 @@
             <field eval="3" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Moves">
-                    <field name="origin" filter_domain="['|',('origin','ilike',self),('picking_id','ilike',self)]" string="Reference"/>
+                    <field name="origin" filter_domain="['|', '|', ('origin', 'ilike', self), ('name', 'ilike', self), ('picking_id', 'ilike', self)]" string="Reference"/>
                     <field name="date" groups="base.group_no_one"/>
 
                     <filter icon="terp-camera_test" string="Ready" name="ready" domain="[('state','=','assigned')]" help="Stock moves that are Available (Ready to process)"/>
@@ -1824,7 +1834,6 @@
                     <field name="product_id"/>
                     <field name="qty"/>
                     <field name="location_id"/>
-                    <field name="inventory_value"/>
                 </graph>
             </field>
         </record>
@@ -1848,7 +1857,7 @@
             <field name="res_model">stock.warehouse.orderpoint</field>
         </record>
         <record model="ir.actions.act_window" id="product_open_quants">
-            <field name="context">{'search_default_product_id': active_id}</field>
+            <field name="context">{'search_default_product_id': active_id, 'search_default_locationgroup':1}</field>
             <field name="name">Quants</field>
             <field name="res_model">stock.quant</field>
         </record>
@@ -1891,10 +1900,9 @@
                 </xpath>
                 
                 <xpath expr="//div[@name='buttons']" position="inside">
-                   <button string="Inventory" name="%(action_product_location_tree)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations"/>
+                   <button string="Inventory" name="%(product_open_quants)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations"/>
                    <button string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user"/>
                    <button string="Orderpoints" name="%(product_open_orderpoint)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}"/>
-                   <button string="Quants" name="%(product_open_quants)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="base.group_no_one"/>
                 </xpath>
                 
                 <xpath expr="//group[@string='Sale Conditions']" position="inside">
@@ -2082,6 +2090,7 @@
                         </div>
                     <group>
                         <group>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="sequence" string="Sequence" groups="base.group_no_one"/>
                         </group>
                         <group>
