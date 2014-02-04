@@ -406,7 +406,7 @@ class QWeb(orm.AbstractModel):
         record, field_name = template_attributes["field"].rsplit('.', 1)
         record = self.eval_object(record, qwebcontext)
 
-        column = record._model._all_columns[field_name].column
+        column = record._all_columns[field_name].column
         options = json.loads(template_attributes.get('field-options') or '{}')
         field_type = get_field_type(column, options)
 
@@ -456,10 +456,10 @@ class FieldConverter(osv.AbstractModel):
 
         :returns: iterable of (attribute name, attribute value) pairs.
         """
-        column = record._model._all_columns[field_name].column
+        column = record._all_columns[field_name].column
         field_type = get_field_type(column, options)
         return [
-            ('data-oe-model', record._model._name),
+            ('data-oe-model', record._name),
             ('data-oe-id', record.id),
             ('data-oe-field', field_name),
             ('data-oe-type', field_type),
@@ -492,7 +492,7 @@ class FieldConverter(osv.AbstractModel):
         try:
             content = self.record_to_html(
                 cr, uid, field_name, record,
-                record._model._all_columns[field_name].column,
+                record._all_columns[field_name].column,
                 options, context=context)
             if options.get('html-escape', True):
                 content = werkzeug.utils.escape(content)
@@ -500,7 +500,7 @@ class FieldConverter(osv.AbstractModel):
                 content = content.__html__()
         except Exception:
             _logger.warning("Could not get field %s for model %s",
-                            field_name, record._model._name, exc_info=True)
+                            field_name, record._name, exc_info=True)
             content = None
 
         g_att += ''.join(
@@ -632,8 +632,7 @@ class SelectionConverter(osv.AbstractModel):
     def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
         value = record[field_name]
         if not value: return ''
-        selection = dict(fields.selection.reify(
-            cr, uid, record._model, column))
+        selection = dict(record._fields[field_name].get_selection())
         return self.value_to_html(
             cr, uid, selection[value], column, options=options)
 
