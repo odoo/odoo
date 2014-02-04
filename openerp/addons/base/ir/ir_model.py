@@ -880,7 +880,7 @@ class ir_model_data(osv.osv):
 
     def xmlid_to_object(self, cr, uid, xmlid, raise_if_not_found=False, context=None):
         """ Return a browse_record
-        if not found and raise_if_not_found is True return the browse_null
+        if not found and raise_if_not_found is True return None
         """ 
         t = self.xmlid_to_res_model_res_id(cr, uid, xmlid, raise_if_not_found)
         res_model, res_id = t
@@ -891,7 +891,7 @@ class ir_model_data(osv.osv):
                 return record
             if raise_if_not_found:
                 raise ValueError('No record found for unique ID %s. It may have been deleted.' % (xml_id))
-        return browse_null()
+        return None
 
     # OLD API
     def _get_id(self, cr, uid, module, xml_id):
@@ -916,7 +916,7 @@ class ir_model_data(osv.osv):
 
     def get_object(self, cr, uid, module, xml_id, context=None):
         """ Returns a browsable record for the given module name and xml_id.
-            If not found, raise a ValueError or return a browse_null, depending
+            If not found, raise a ValueError or return None, depending
             on the value of `raise_exception`.
         """
         return self.xmlid_to_object(cr, uid, "%s.%s" % (module, xml_id), raise_if_not_found=True, context=context)
