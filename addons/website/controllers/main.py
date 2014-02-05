@@ -374,10 +374,6 @@ class Website(openerp.addons.web.controllers.main.Home):
         cr, uid, context = request.cr, request.uid, request.context
         res, action_id, action = None, None, None
         ServerActions = request.registry['ir.actions.server']
-        # add the post values in the context, to be able to handle it
-        if context is None:
-            context = {}
-        context['post'] = post or {}
 
         # find the action_id, either an int, an int into a basestring, or an xml_id
         if isinstance(id_or_xml_id, basestring) and '.' in id_or_xml_id:
