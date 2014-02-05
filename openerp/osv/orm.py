@@ -2706,16 +2706,16 @@ class BaseModel(object):
         order = orderby or groupby
         data_ids = [data['id'] for data in fetched_data]
 
-        if order and order.split(',')[0].replace(' ASC', '').replace(' DESC', '') not in aggregated_fields:
-            data_ids = self.search(cr, uid, [('id', 'in', data_ids)], order=order, context=context)
-            # the IDs of records that have groupby field value = False or '' should be included too
-            data_ids += set(alldata.keys()).difference(data_ids)
-
         for r in fetched_data:
             for fld, val in r.items():
                 if val is None: r[fld] = False
             alldata[r['id']] = r
             del r['id']
+
+        if order and order.split(',')[0].replace(' ASC', '').replace(' DESC', '') not in aggregated_fields:
+            data_ids = self.search(cr, uid, [('id', 'in', data_ids)], order=order, context=context)
+            # the IDs of records that have groupby field value = False or '' should be included too
+            data_ids += set(alldata.keys()).difference(data_ids)
 
         if groupby:
             data = self.read(cr, uid, data_ids, [groupby], context=context)
@@ -2733,7 +2733,7 @@ class BaseModel(object):
                         d['__context'] = {'group_by': groupby_list[1:]}
             if groupby and groupby in fget:
                 if d[groupby] and fget[groupby]['type'] in ('date', 'datetime'):
-                    dt = datetime.datetime.strptime1(alldata[d['id']][groupby][:7], '%Y-%m')
+                    dt = datetime.datetime.strptime(alldata[d['id']][groupby][:7], '%Y-%m')
                     days = calendar.monthrange(dt.year, dt.month)[1]
 
                     date_value = datetime.datetime.strptime(d[groupby][:10], '%Y-%m-%d')
