@@ -14,7 +14,7 @@
     website.EditorShopTour = website.Tour.extend({
         id: 'shop',
         name: "Create a product",
-        testPath: /\/shop\/.*/,
+        testPath: '/shop',
         init: function (editor) {
             var self = this;
             self.steps = [
@@ -145,7 +145,7 @@
         id: 'shop_buy_product',
         name: "Try to buy products",
         path: '/shop',
-        testPath: /\/shop/,
+        testPath: '/shop',
         init: function (editor) {
             var self = this;
             self.steps = [
@@ -216,11 +216,7 @@
                     },
                 },
                 {
-                    title:     "select acquirer",
-                    element:   'input[name="acquirer"]',
-                },
-                {
-                    title:     "confirm",
+                    title:     "Pay Now",
                     element:   'button:contains("Pay Now")',
                 },
                 {
