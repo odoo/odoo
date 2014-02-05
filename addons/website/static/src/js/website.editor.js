@@ -442,7 +442,9 @@
         start: function() {
             // remove placeholder editor bar
             var fakebar = document.getElementById('website-top-navbar-placeholder');
-            fakebar.parentNode.removeChild(fakebar);
+            if (fakebar) {
+                fakebar.parentNode.removeChild(fakebar);
+            }
 
             var self = this;
             this.saving_mutex = new openerp.Mutex();
