@@ -74,11 +74,12 @@ class pos_config(osv.osv):
         'iface_electronic_scale' : fields.boolean('Electronic Scale', help="Enables Electronic Scale integration"),
         'iface_vkeyboard' : fields.boolean('Virtual KeyBoard', help="Enables an integrated Virtual Keyboard"),
         'iface_print_via_proxy' : fields.boolean('Print via Proxy', help="Bypass browser printing and prints via the hardware proxy"),
+        'iface_scan_via_proxy' : fields.boolean('Scan via Proxy', help="Enable barcode scanning with a remotely connected barcode scanner"),
         'iface_invoicing': fields.boolean('Invoicing',help='Enables invoice generation from the Point of Sale'),
         'iface_big_scrollbars': fields.boolean('Large Scrollbars',help='For imprecise industrial touchscreens'),
         'receipt_header': fields.text('Receipt Header',help="A short text that will be inserted as a header in the printed receipt"),
         'receipt_footer': fields.text('Receipt Footer',help="A short text that will be inserted as a footer in the printed receipt"),
-        'proxy_ip':       fields.char('Hardware Proxy IP Address', size=45),
+        'proxy_ip':       fields.char('IP Address', help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty', size=45),
 
         'state' : fields.selection(POS_CONFIG_STATE, 'Status', required=True, readonly=True),
         'sequence_id' : fields.many2one('ir.sequence', 'Order IDs Sequence', readonly=True,
@@ -1276,80 +1277,6 @@ class pos_order_line(osv.osv):
         })
         return super(pos_order_line, self).copy_data(cr, uid, id, default, context=context)
 
-class pos_category(osv.osv):
-    _name = 'pos.category'
-    _description = "Point of Sale Category"
-    _order = "sequence, name"
-    def _check_recursion(self, cr, uid, ids, context=None):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from pos_category where id IN %s',(tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
-    _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
-    ]
-
-    def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
-        res = []
-        for record in reads:
-            name = record['name']
-            if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
-            res.append((record['id'], name))
-        return res
-
-    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = self.name_get(cr, uid, ids, context=context)
-        return dict(res)
-
-    def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image)
-        return result
-    
-    def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
-
-    _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
-        'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
-        'parent_id': fields.many2one('pos.category','Parent Category', select=True),
-        'child_id': fields.one2many('pos.category', 'parent_id', string='Children Categories'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
-        
-        # NOTE: there is no 'default image', because by default we don't show thumbnails for categories. However if we have a thumbnail
-        # for at least one category, then we display a default image on the other, so that the buttons have consistent styling.
-        # In this case, the default image is set by the js code.
-        # NOTE2: image: all image fields are base64 encoded and PIL-supported
-        'image': fields.binary("Image",
-            help="This field holds the image used as image for the cateogry, limited to 1024x1024px."),
-        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized image", type="binary", multi="_get_image",
-            store={
-                'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Medium-sized image of the category. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized image", type="binary", multi="_get_image",
-            store={
-                'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Small-sized image of the category. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
-                 "Use this field anywhere a small image is required."),
-    }
-
 import io, StringIO
 
 class ean_wizard(osv.osv_memory):
@@ -1388,11 +1315,8 @@ class product_product(osv.osv):
         'income_pdt': fields.boolean('Point of Sale Cash In', help="Check if, this is a product you can use to put cash into a statement for the point of sale backend."),
         'expense_pdt': fields.boolean('Point of Sale Cash Out', help="Check if, this is a product you can use to take cash from a statement for the point of sale backend, example: money lost, transfer to bank, etc."),
         'available_in_pos': fields.boolean('Available in the Point of Sale', help='Check if you want this product to appear in the Point of Sale'), 
-        'pos_categ_id': fields.many2one('pos.category','Point of Sale Category',
-            help="These products belong to those categories that are used to group similar products and are specific to the Point of Sale."),
         'to_weight' : fields.boolean('To Weight', help="Check if the product should be weighted (mainly used with self check-out interface)."),
     }
-
 
     _defaults = {
         'to_weight' : False,

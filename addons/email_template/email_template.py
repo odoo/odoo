@@ -76,6 +76,12 @@ class email_template(osv.osv):
     _description = 'Email Templates'
     _order = 'name'
 
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(email_template, self).default_get(cr, uid, fields, context)
+        if res.get('model'):
+            res['model_id'] = self.pool['ir.model'].search(cr, uid, [('model', '=', res.pop('model'))], context=context)[0]
+        return res
+
     def render_template_batch(self, cr, uid, template, model, res_ids, context=None):
         """Render the given template text, replace mako expressions ``${expr}``
            with the result of evaluating these expressions with
@@ -177,7 +183,7 @@ class email_template(osv.osv):
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
                                           help="Optional preferred server for outgoing mails. If not set, the highest "
                                                "priority one will be used."),
-        'body_html': fields.text('Body', translate=True, help="Rich-text/HTML version of the message (placeholders may be used here)"),
+        'body_html': fields.html('Body', translate=True, help="Rich-text/HTML version of the message (placeholders may be used here)"),
         'report_name': fields.char('Report Filename', translate=True,
                                    help="Name to use for the generated report file (may contain placeholders)\n"
                                         "The extension can be omitted and will then come from the report type."),
@@ -411,8 +417,8 @@ class email_template(osv.osv):
 
         # create a mail_mail based on values, without attachments
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
-        assert values.get('email_from'), 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
-
+        if not values.get('email_from'):
+            raise osv.except_osv(_('Warning!'),_("Sender email is missing or empty after template rendering. Specify one to deliver your message"))
         # process partner_to field that is a comma separated list of partner_ids -> recipient_ids
         # NOTE: only usable if force_send is True, because otherwise the value is
         # not stored on the mail_mail, and therefore lost -> fixed in v8

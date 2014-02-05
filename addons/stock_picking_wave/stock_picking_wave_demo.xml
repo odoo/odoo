@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
-	       <!--
-	            Add picking wave type  
-	        -->
-		<record id="wave_type_freeze" model="stock.picking.wave.type">
-	        <field name="name">Type Freeze</field>         
-	    </record>
-	                
-		<record id="wave_type_dry" model="stock.picking.wave.type">
-	        <field name="name">Type Dry</field>         
-	    </record>
-	    
 			<!--
 	            Add picking wave   
 	        -->
@@ -20,17 +8,14 @@
 	        <field name="name">Picking Dry for John</field>
 	        <field name="capacity">15</field>
 	        <field name="capacity_uom" ref="product.product_uom_ton" />   
-			<field name="state">in_progress</field>			
-			<field name="wave_type_id" ref="wave_type_dry" />    
-				     
+			<field name="state">in_progress</field>   
 	    </record>
 	        
 		<record id="stock_picking_wave_freeze_1" model="stock.picking.wave">
 	        <field name="name">Picking Freeze for Mickael</field>
 	        <field name="capacity">600</field>   
 			<field name="capacity_uom" ref="product.product_uom_kgm" />			
-			<field name="state">in_progress</field>		
-			<field name="wave_type_id" ref="wave_type_freeze" />
+			<field name="state">in_progress</field>
 	    </record>
 	
 			<!--

@@ -23,7 +23,7 @@ from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
-import urllib
+import werkzeug.urls
 import urllib2
 import json
 import re
@@ -70,7 +70,7 @@ class config(osv.Model):
         google_drive_client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_secret')
         #For Getting New Access Token With help of old Refresh Token
 
-        data = urllib.urlencode(dict(client_id=google_drive_client_id,
+        data = werkzeug.url_encode(dict(client_id=google_drive_client_id,
                                      refresh_token=google_drive_refresh_token,
                                      client_secret=google_drive_client_secret,
                                      grant_type="refresh_token",
