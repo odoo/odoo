@@ -513,7 +513,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         var fields = $(form).serializeArray();
         self.rpc("/web/database/create", {'fields': fields}).done(function(result) {
             if (result) {
-                instance.web.redirect('/web')
+                instance.web.redirect('/web');
             } else {
                 alert("Failed to create database");
             }
@@ -1482,24 +1482,6 @@ instance.web.embed = function (origin, dbname, login, key, action, options) {
     var client = new instance.web.EmbeddedClient(null, origin, dbname, login, key, action, options);
     client.insertAfter(currentScript);
 };
-
-openerp.web.LoginForm = openerp.web.Widget.extend({
-    init: function ($form) {
-        this._super(/* no parent */);
-        this.setElement($form);
-        this.$el.on('submit', this.on_submit);
-        this.start();
-    },
-    start: function () {
-        if (location.hash) {
-            this.$el.attr('action', this.$el.attr('action') + location.hash);
-        }
-        return this._super();
-    },
-    on_submit: function () {
-        return true;
-    },
-});
 
 })();
 

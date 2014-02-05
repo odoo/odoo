@@ -637,7 +637,10 @@ class Home(http.Controller):
             if uid is not False:
                 return http.redirect_with_hash(redirect)
             values['error'] = "Wrong login/password"
-        return render_bootstrap_template(request.session.db, 'web.login', values, lazy=True)
+
+        def callback(template, values):
+            return request.registry['ir.ui.view'].render(request.cr, openerp.SUPERUSER_ID, template, values)
+        return LazyResponse(callback, template='web.login', values=values)
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key, redirect="/web", **kw):
