@@ -41,12 +41,19 @@
             <field name="model">stock.return.picking</field>
             <field name="arch" type="xml">
                 <form string="Return lines" version="7.0">
-                    <label string="Provide the quantities of the returned products."/>
-                    <group>
+                    <group string="Provide the quantities of the returned products.">
                         <field name="move_dest_exists" invisible="1"/>
-                        <field name="move_dest_method" attrs="{'invisible': [('move_dest_exists','=',False)]}"/>
+                        <div colspan="4" class="oe_grey oe_inline" attrs="{'invisible': [('move_dest_exists','=',False)]}">
+                          <p>This picking is chained with at least another operation. Choose what you want to do with it:</p>
+                          <ul>
+                            <li>Cancel: use this option if you're not going to receive the goods you're returning. The next picking will be split and the returned part will be cancelled.</li>
+                            <li>Recreate: use this option if you plan to receive the returned goods later on. The next picking will be split and linked to another incoming picking for the same quantity</li>
+                            <li>Fix manually: use this option if none of the 2 other suits you or if you want to process the next picking in a single time.</li>
+                          </ul>
+                        </div>
                     </group>
                     <group>
+                        <field name="move_dest_method" attrs="{'invisible': [('move_dest_exists','=',False)]}"/>
                         <field name="product_return_moves"/>
                     </group>
                     <footer>
@@ -61,4 +68,3 @@
         
     </data>
 </openerp>
-
