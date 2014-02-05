@@ -755,6 +755,7 @@ class BaseModel(object):
         # can trigger some stuff on other models which expect this new instance
         # (like method _inherits_reload_src())
         instance = cls.browse()
+        cls._model = instance           # backward compatibility
         pool.add(name, instance)
 
         # determine description, table, sequence and log_access
