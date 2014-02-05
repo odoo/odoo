@@ -22,31 +22,15 @@ In OpenERP, doing things takes the form of creating modules, and these modules
 customize the behavior of the OpenERP installation. The first step is thus to
 create a module:
 
-.. todo:: code generator in oe?
+.. code:: shell-session
 
-    * Create empty module (mandatory name, category)
-    * Create controller (parent class?)
-    * Create model (concrete/abstract? Inherit?)
-    * Add field?
+    > oe scaffold Academy
 
-* Create a new folder called :file:`academy` in a module directory, inside it
-  create an empty file called :file:`__openerp__.py` with the following
-  content:
+.. patch::
+    :hidden:
 
-  .. patch::
-
-* Create a second file :file:`controllers.py`. This is where the code
-  interacting directly with your web browser will live. For starters, just
-  include the following in it:
-
-  .. patch::
-
-* Finally, create a third file :file:`__init__.py` containing just:
-
-  .. patch::
-
-  This makes :file:`controllers.py` "visible" to openerp (by running the code
-  it holds).
+This builds a basic module for you, ignore anything in the ``models`` and
+``security`` directories for now.
 
 .. todo::
 
@@ -66,8 +50,8 @@ display). Let's prettify things a bit: instead of returning just a bit of
 text, we can return a page, and use a tool/library like bootstrap_ to get a
 nicer rendering than the default.
 
-Change the string returned by the ``index`` method to get a more page-ish
-output:
+Go to :file:`academy/controllers/my_controller.py` and change the string
+returned by the ``index`` method to get a more page-ish output:
 
 .. patch::
 

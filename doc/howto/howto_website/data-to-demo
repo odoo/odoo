@@ -1,11 +1,12 @@
 # HG changeset patch
-# Parent 2af29a429acda61e5e567997dad78a673e011796
+# Parent 8799d7578ebf7aa0d81f0dbafa959f8abd106dff
+
 diff --git a/__openerp__.py b/__openerp__.py
 --- a/__openerp__.py
 +++ b/__openerp__.py
-@@ -5,7 +5,9 @@
+@@ -19,8 +19,10 @@
      'data': [
-         'ir.model.access.csv',
+         'security/ir.model.access.csv',
          'views/templates.xml',
 -        'data/teaching_assistants.xml',
 -        'data/lectures.xml',
@@ -13,8 +14,9 @@ diff --git a/__openerp__.py b/__openerp__.py
 +    'demo': [
 +        'demo/teaching_assistants.xml',
 +        'demo/lectures.xml',
-     ]
- }
+     ],
+     'tests': [
+     ],
 diff --git a/data/lectures.xml b/demo/lectures.xml
 rename from data/lectures.xml
 rename to demo/lectures.xml

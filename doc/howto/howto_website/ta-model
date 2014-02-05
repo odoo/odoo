@@ -1,27 +1,10 @@
 # HG changeset patch
-# Parent 9735c655933b94f5e9017d0aac0b6e579f23adba
+# Parent b6ba23a3c284db481f14d9ea573e0baf8d3320e8
 
-diff --git a/__init__.py b/__init__.py
---- a/__init__.py
-+++ b/__init__.py
-@@ -1,1 +1,2 @@
- import controllers
-+import models
-diff --git a/__openerp__.py b/__openerp__.py
---- a/__openerp__.py
-+++ b/__openerp__.py
-@@ -3,6 +3,7 @@
-     'category': "Tools",
-     'depends': ['website'],
-     'data': [
-+        'ir.model.access.csv',
-         'views/templates.xml',
-     ]
- }
-diff --git a/controllers.py b/controllers.py
---- a/controllers.py
-+++ b/controllers.py
-@@ -1,19 +1,13 @@
+diff --git a/controllers/my_controller.py b/controllers/my_controller.py
+--- a/controllers/my_controller.py
++++ b/controllers/my_controller.py
+@@ -3,19 +3,13 @@
  from openerp import http
  from openerp.addons.web.controllers import main
  
@@ -33,7 +16,7 @@ diff --git a/controllers.py b/controllers.py
 -    {'name': "Tanya Harris"},
 -]
 -
- class Home(main.Home):
+ class my_controller(main.Home):
      @http.route('/', auth='public')
      def index(self):
 +        tas = http.request.registry['academy.tas'].search_read(
@@ -44,25 +27,24 @@ diff --git a/controllers.py b/controllers.py
          })
  
      @http.route('/tas/<int:id>/', auth='public', website=True)
-diff --git a/ir.model.access.csv b/ir.model.access.csv
-new file mode 100644
---- /dev/null
-+++ b/ir.model.access.csv
-@@ -0,0 +1,2 @@
-+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-+access_academy_tas,access_academy_tas,model_academy_tas,,1,0,0,0
-diff --git a/models.py b/models.py
-new file mode 100644
---- /dev/null
-+++ b/models.py
-@@ -0,0 +1,10 @@
-+# -*- coding: utf-8 -*-
-+
-+from openerp.osv import orm, fields
-+
+diff --git a/models/my_model.py b/models/my_model.py
+--- a/models/my_model.py
++++ b/models/my_model.py
+@@ -1,8 +1,8 @@
+ # -*- coding: utf-8 -*-
+ from openerp.osv import orm, fields
+ 
+-class my_model(orm.Model):
+-    _name = "academy.my_model"
 +class TeachingAssistants(orm.Model):
-+    _name = 'academy.tas'
-+
-+    _columns = {
-+        'name': fields.char(),
-+    }
++    _name = "academy.tas"
+ 
+     _columns = {
+         'name': fields.char(),
+diff --git a/security/ir.model.access.csv b/security/ir.model.access.csv
+--- a/security/ir.model.access.csv
++++ b/security/ir.model.access.csv
+@@ -1,2 +1,2 @@
+ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+-access_academy_my_model,access_academy_my_model,model_academy_my_model,,1,0,0,0
++access_academy_tas,access_academy_tas,model_academy_tas,,1,0,0,0

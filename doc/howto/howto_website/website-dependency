@@ -1,24 +1,25 @@
 # HG changeset patch
-# Parent 77db36690ddd8ad5065cab77837deec9da3df502
+# Parent 5426218c6da91a13911e64eeb18a0cc2e19083c7
 
 diff --git a/__openerp__.py b/__openerp__.py
 --- a/__openerp__.py
 +++ b/__openerp__.py
-@@ -1,6 +1,7 @@
- {
-     'name': "Academy",
-     'category': "Tools",
+@@ -15,7 +15,7 @@
+     'version': '0.1',
+ 
+     # any module necessary for this one to work correctly
+-    'depends': ['web'],
 +    'depends': ['website'],
      'data': [
+         'security/ir.model.access.csv',
          'views/templates.xml',
-     ]
-diff --git a/controllers.py b/controllers.py
---- a/controllers.py
-+++ b/controllers.py
-@@ -10,17 +10,12 @@ teaching_assistants = [
+diff --git a/controllers/my_controller.py b/controllers/my_controller.py
+--- a/controllers/my_controller.py
++++ b/controllers/my_controller.py
+@@ -12,17 +12,12 @@ teaching_assistants = [
  ]
  
- class Home(main.Home):
+ class my_controller(main.Home):
 -    @http.route('/', auth='none')
 +    @http.route('/', auth='public')
      def index(self):

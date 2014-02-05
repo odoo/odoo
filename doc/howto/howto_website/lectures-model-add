@@ -1,21 +1,22 @@
 # HG changeset patch
-# Parent 65912bc56408d6bf61b2023a79a48e06a22fe9e2
+# Parent 9042ace1e3e8175155d9dbed75657222a371cdb6
 
 diff --git a/__openerp__.py b/__openerp__.py
 --- a/__openerp__.py
 +++ b/__openerp__.py
-@@ -6,5 +6,6 @@
-         'ir.model.access.csv',
+@@ -20,6 +20,7 @@
+         'security/ir.model.access.csv',
          'views/templates.xml',
          'data/teaching_assistants.xml',
 +        'data/lectures.xml',
-     ]
- }
-diff --git a/controllers.py b/controllers.py
---- a/controllers.py
-+++ b/controllers.py
-@@ -4,10 +4,15 @@ from openerp.addons.web.controllers impo
- class Home(main.Home):
+     ],
+     'tests': [
+     ],
+diff --git a/controllers/my_controller.py b/controllers/my_controller.py
+--- a/controllers/my_controller.py
++++ b/controllers/my_controller.py
+@@ -6,10 +6,15 @@ from openerp.addons.web.controllers impo
+ class my_controller(main.Home):
      @http.route('/', auth='public')
      def index(self):
 +        cr, uid, context = http.request.cr, http.request.uid, http.request.context
@@ -59,17 +60,10 @@ new file mode 100644
 +        </record>
 +    </data>
 +</openerp>
-diff --git a/ir.model.access.csv b/ir.model.access.csv
---- a/ir.model.access.csv
-+++ b/ir.model.access.csv
-@@ -1,2 +1,3 @@
- id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
- access_academy_tas,access_academy_tas,model_academy_tas,,1,0,0,0
-+access_academy_lectures,access_academy_lectures,model_academy_lectures,,1,0,0,0
-diff --git a/models.py b/models.py
---- a/models.py
-+++ b/models.py
-@@ -9,3 +9,12 @@ class TeachingAssistants(orm.Model):
+diff --git a/models/my_model.py b/models/my_model.py
+--- a/models/my_model.py
++++ b/models/my_model.py
+@@ -8,3 +8,12 @@ class TeachingAssistants(orm.Model):
          'name': fields.char(),
          'biography': fields.html(),
      }
@@ -82,6 +76,14 @@ diff --git a/models.py b/models.py
 +        'name': fields.char(required=True),
 +        'date': fields.date(required=True),
 +    }
+diff --git a/security/ir.model.access.csv b/security/ir.model.access.csv
+--- a/security/ir.model.access.csv
++++ b/security/ir.model.access.csv
+@@ -1,2 +1,3 @@
+ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+ access_academy_tas,access_academy_tas,model_academy_tas,,1,0,0,0
++access_academy_lectures,access_academy_lectures,model_academy_lectures,,1,0,0,0
+\ No newline at end of file
 diff --git a/views/templates.xml b/views/templates.xml
 --- a/views/templates.xml
 +++ b/views/templates.xml

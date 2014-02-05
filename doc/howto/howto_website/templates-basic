@@ -1,21 +1,25 @@
 # HG changeset patch
-# Parent 0e882bf90a845788e155b437baf2b42c98901216
+# Parent 170cc87a26983d34df5cd3bb27d3259722c586e5
 
 diff --git a/__openerp__.py b/__openerp__.py
 --- a/__openerp__.py
 +++ b/__openerp__.py
-@@ -1,4 +1,7 @@
- {
-     'name': "Academy",
-     'category': "Tools",
+@@ -16,7 +16,10 @@
+ 
+     # any module necessary for this one to work correctly
+     'depends': ['web'],
+-    'data': ['security/ir.model.access.csv'],
 +    'data': [
++        'security/ir.model.access.csv',
 +        'views/templates.xml',
-+    ]
++    ],
+     'tests': [
+     ],
  }
-diff --git a/controllers.py b/controllers.py
---- a/controllers.py
-+++ b/controllers.py
-@@ -17,41 +17,10 @@ class Home(main.Home):
+diff --git a/controllers/my_controller.py b/controllers/my_controller.py
+--- a/controllers/my_controller.py
++++ b/controllers/my_controller.py
+@@ -19,36 +19,10 @@ class my_controller(main.Home):
              for i, ta in enumerate(teaching_assistants)
          ]
  
@@ -28,12 +32,7 @@ diff --git a/controllers.py b/controllers.py
 -    <body class="container">
 -        <h1>Introduction to a thing</h1>
 -        <h2>Course description</h2>
--        <p>
--            This course will provide a basic introduction to a thing, for
--            motivated students with no prior experience in things. The course
--            will focus on the discovery of things and the planning and
--            organization necessary to handle things.
--        </p>
+-        <p>Course introduction</p>
 -        <h2>Teaching Assistants</h2>
 -        <ul>
 -            %(tas)s

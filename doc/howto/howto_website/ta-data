@@ -1,16 +1,17 @@
 # HG changeset patch
-# Parent 94316d8049d7453cf70aff198b2d7ad1c04bf089
+# Parent a35b5f4903087b1b31a4ecf33bfe655dc3ad5663
 
 diff --git a/__openerp__.py b/__openerp__.py
 --- a/__openerp__.py
 +++ b/__openerp__.py
-@@ -5,5 +5,6 @@
+@@ -19,6 +19,7 @@
      'data': [
-         'ir.model.access.csv',
+         'security/ir.model.access.csv',
          'views/templates.xml',
 +        'data/teaching_assistants.xml',
-     ]
- }
+     ],
+     'tests': [
+     ],
 diff --git a/data/teaching_assistants.xml b/data/teaching_assistants.xml
 new file mode 100644
 --- /dev/null

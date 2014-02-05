@@ -1,11 +1,11 @@
 # HG changeset patch
-# Parent b377930cec8f9445882bb3268f9f5fac71dd8c15
+# Parent a76a9a0e0668f4191bdc383a0d4b3173f44b39b1
 
-diff --git a/controllers.py b/controllers.py
---- a/controllers.py
-+++ b/controllers.py
-@@ -4,4 +4,21 @@ from openerp.addons.web.controllers impo
- class Home(main.Home):
+diff --git a/controllers/my_controller.py b/controllers/my_controller.py
+--- a/controllers/my_controller.py
++++ b/controllers/my_controller.py
+@@ -6,4 +6,16 @@ from openerp.addons.web.controllers impo
+ class my_controller(main.Home):
      @http.route('/', auth='none')
      def index(self):
 -        return "Hello, world!"
@@ -18,12 +18,7 @@ diff --git a/controllers.py b/controllers.py
 +    <body class="container">
 +        <h1>Introduction to a thing</h1>
 +        <h2>Course description</h2>
-+        <p>
-+            This course will provide a basic introduction to a thing, for
-+            motivated students with no prior experience in things. The course
-+            will focus on the discovery of things and the planning and
-+            organization necessary to handle things.
-+        </p>
++        <p>Course introduction</p>
 +    </body>
 +</html>
 +"""
