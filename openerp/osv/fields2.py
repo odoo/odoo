@@ -776,9 +776,6 @@ class _Relational(Field):
 
     def __init__(self, **kwargs):
         super(_Relational, self).__init__(**kwargs)
-        if callable(self.domain):
-            from openerp import api
-            self.domain = api.expected(api.model, self.domain)
 
     @lazy_property
     def comodel(self):

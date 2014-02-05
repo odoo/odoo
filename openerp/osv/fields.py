@@ -94,9 +94,6 @@ class _column(object):
         """
         if domain is None:
             domain = []
-        elif callable(domain):
-            from openerp import api
-            domain = api.expected(api.cr_uid_context, domain)
         if context is None:
             context = {}
         self.states = states or {}
