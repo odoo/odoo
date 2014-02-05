@@ -12,21 +12,6 @@
 
         <template id="auth_signup.signup" name="Sign up">
             <t t-call="web.login_layout">
-                <t t-set="head">
-                    <t t-foreach="css" t-as="css_file">
-                        <link rel="stylesheet" t-att-href="css_file"/>
-                    </t>
-                    <t t-foreach="js" t-as="js_file">
-                        <script type="text/javascript" t-att-src="js_file"></script>
-                    </t>
-                </t>
-                <script type="text/javascript">
-                    $(function() {
-                        var s = new openerp.init(<t t-raw="modules"/>);
-                        var login_form = new openerp.web.LoginForm($('.oe_signup_form'));
-                    });
-                </script>
-
                 <t t-set="reset_without_token" t-value="mode == 'reset' and not token"/>
 
                 <form class="oe_signup_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post">
