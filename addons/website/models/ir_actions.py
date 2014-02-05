@@ -9,9 +9,13 @@ class actions_server(osv.Model):
     _name = 'ir.actions.server'
     _inherit = ['ir.actions.server']
 
-    # _columns = {
-    #     'website': fields.boolean('Website Stuff'),
-    # }
+    _columns = {
+        'website_published': fields.boolean(
+            'Available on the Website',
+            help='A Code server action can be run using a dedicated controller. Set'
+                 'this field as True to allow users to run this action. If it is False'
+                 'the action cannot be run through the dedicated controller.'),
+    }
 
     def _get_eval_context(self, cr, uid, action, context=None):
         eval_context = super(actions_server, self)._get_eval_context(cr, uid, action, context=context)

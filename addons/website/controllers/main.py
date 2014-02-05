@@ -374,6 +374,10 @@ class Website(openerp.addons.web.controllers.main.Home):
         cr, uid, context = request.cr, request.uid, request.context
         res, action_id, action = None, None, None
         ServerActions = request.registry['ir.actions.server']
+        # add the post values in the context, to be able to handle it
+        if context is None:
+            context = {}
+        context.get('post', {}).update(post)
 
         # find the action_id, either an int, an int into a basestring, or an xml_id
         if isinstance(id_or_xml_id, basestring) and '.' in id_or_xml_id:
@@ -389,9 +393,11 @@ class Website(openerp.addons.web.controllers.main.Home):
             action_id = action_ids and action_ids[0] or None
         # run it, return only LazyResponse that are templates to be rendered
         if action_id:
-            action_res = ServerActions.run(cr, uid, [action_id], context=context)
-            if isinstance(action_res, LazyResponse):
-                res = action_res
+            action = ServerActions.browse(cr, uid, action_id, context=context)
+            if action.state == 'code' and action.website_published:
+                action_res = ServerActions.run(cr, uid, [action_id], context=context)
+                if isinstance(action_res, LazyResponse):
+                    res = action_res
         if res:
             return res
         return request.redirect('/')
