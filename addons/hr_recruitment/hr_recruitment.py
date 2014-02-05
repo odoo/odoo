@@ -437,7 +437,6 @@ class hr_applicant(osv.Model):
         hr_employee = self.pool.get('hr.employee')
         model_data = self.pool.get('ir.model.data')
         act_window = self.pool.get('ir.actions.act_window')
-        res_users = self.pool['res.users']
         emp_id = False
         for applicant in self.browse(cr, uid, ids, context=context):
             address_id = contact_name = False
@@ -446,7 +445,7 @@ class hr_applicant(osv.Model):
                 contact_name = self.pool.get('res.partner').name_get(cr, uid, [applicant.partner_id.id])[0][1]
             if applicant.job_id and (applicant.partner_name or contact_name):
                 applicant.job_id.write({'no_of_recruitment': applicant.job_id.no_of_recruitment - 1})
-                create_ctx = dict(context, mail_create_nolog=True)
+                create_ctx = dict(context, mail_broadcast=True)
                 emp_id = hr_employee.create(cr, uid, {'name': applicant.partner_name or contact_name,
                                                      'job_id': applicant.job_id.id,
                                                      'address_home_id': address_id,
@@ -455,18 +454,6 @@ class hr_applicant(osv.Model):
                                                      'work_email': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.email or False,
                                                      'work_phone': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.phone or False,
                                                      }, context=create_ctx)
-                employee = hr_employee.browse(cr, uid, emp_id, context=context)
-                # send a copy to every user of the company
-                # TODO: post to the `Whole Company` mail.group when we'll be able to link to the employee record  
-                _model, group_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')
-                user_ids = res_users.search(cr, uid, [('company_id', '=', employee.company_id.id),
-                                              ('groups_id', 'in', group_id)], context=context)
-                partner_ids = list(set(u.partner_id.id for u in res_users.browse(cr, uid, user_ids, context=context)))
-                hr_employee.message_post(cr, uid, [emp_id],
-                    body=_('Welcome to %s! Please help him/her take the first steps with OpenERP!') % (employee.name),
-                    partner_ids=partner_ids,
-                    subtype='mail.mt_comment', context=context
-                )
                 self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
             else:
                 raise osv.except_osv(_('Warning!'), _('You must define an Applied Job and a Contact Name for this applicant.'))
