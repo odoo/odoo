@@ -384,7 +384,7 @@ class survey_question(osv.Model):
         'page_id': fields.many2one('survey.page', 'Survey page',
             ondelete='cascade'),
         'survey_id': fields.related('page_id', 'survey_id', type='many2one',
-            relation='survey.survey', string='Survey', store=True),
+            relation='survey.survey', string='Survey'),
         'parent_id': fields.many2one('survey.question', 'Parent question',
             ondelete='cascade'),
         'sequence': fields.integer(string='Sequence'),
