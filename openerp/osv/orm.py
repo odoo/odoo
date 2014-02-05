@@ -1901,8 +1901,7 @@ class BaseModel(object):
         ``tools.ormcache`` or ``tools.ormcache_multi``.
         """
         try:
-            getattr(self, '_ormcache')
-            self._ormcache = {}
+            self._ormcache.clear()
             self.pool._any_cache_cleared = True
         except AttributeError:
             pass
