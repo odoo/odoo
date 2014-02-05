@@ -1,5 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
+    <data noupdate="1">
+
+        <template id="template_partner_demo" name="Partner Template (Server Action Demo)">
+<t t-call="website.layout">
+    <t t-set="additional_title">Members</t>
+    <div id="wrap">
+        <div class="oe_structure">
+            <section data-snippet-id="title">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="text-center">Our Members Directory</h1>
+                            <h3 class="text-muted text-center">Find a business partner</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="container">
+            <t t-foreach="partners" t-as="partner">
+                <div class="row">
+                    <span t-field="partner.name"/>
+                </div>
+            </t>
+        </div>
+    </div>
+</t>
+        </template>
+
+        <record id="action_partner_demo" model="ir.actions.server">
+            <field name="name">Website Test</field>
+            <field name="condition">True</field>
+            <field name="website_published" eval="True"/>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="code">
+partner_ids = pool['res.partner'].search(cr, uid, [('customer', '=', True)], context=context)
+partners = pool['res.partner'].browse(cr, uid, partner_ids, context=context)
+values = {
+    'partners': partners,
+}
+template = request.website.render("website.template_partner_demo", values)
+            </field>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+        </record>
+    </data>
+
     <data>
 
         <record id="default_website" model="website">
