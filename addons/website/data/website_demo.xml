@@ -76,7 +76,7 @@ post_partner_id = context.get('post', {}).get('partner_id')
 if post_partner_id:
     try:
         post_partner_id = int(post_partner_id)
-    except ValueError:
+    except:
         post_partner_id = False
 if post_partner_id:
     partner_ids = pool['res.partner'].search(cr, uid, [('id', '=', post_partner_id)], context=context)
