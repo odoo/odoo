@@ -407,7 +407,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 context: this.dataset.get_context(),
             });
 
-            $.when(load_view).then(function (r) {
+            this.alive($.when(load_view)).then(function (r) {
                 return self.search_view_loaded(r)
             }).fail(function () {
                 self.ready.reject.apply(null, arguments);
