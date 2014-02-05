@@ -377,7 +377,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         # add the post values in the context, to be able to handle it
         if context is None:
             context = {}
-        context.get('post', {}).update(post)
+        context['post'] = post or {}
 
         # find the action_id, either an int, an int into a basestring, or an xml_id
         if isinstance(id_or_xml_id, basestring) and '.' in id_or_xml_id:

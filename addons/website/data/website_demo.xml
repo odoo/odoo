@@ -1,10 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data>
+
+        <record id="default_website" model="website">
+            <field name="social_twitter">https://twitter.com/openerp</field>
+            <field name="social_facebook">https://www.facebook.com/OpenERP</field>
+            <field name="social_googleplus">https://plus.google.com/+openerp</field>
+            <field name="social_linkedin">http://www.linkedin.com/company/openerp</field>
+        </record>
+
+        <record id="base.main_company" model="res.company">
+            <field name="rml_header1">Great Product for Great People</field>
+        </record>
+    </data>
+
+    <data noupdate="0">
+
+        <!--
+            Some demo data for front-end server action generating templates
+            -->
+
+        <template id="template_partner_detail_demo" name="Partner Details Template (Server Action Demo)">
+<t t-call="website.layout">
+    <t t-set="additional_title">Partner Detail</t>
+    <div id="wrap">
+        <div class="oe_structure">
+            <section data-snippet-id="title">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="text-center">Our Members Directory</h1>
+                            <h3 class="text-muted text-center">Find a business partner</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="container">
+            <div class="row" t-if="partner">
+                <h2 t-field="partner.name"/>
+                <div class="col-md-2 mt32">
+                    <img t-att-src="'/website/image?model=res.partner&amp;field=image_medium&amp;id=%s' % partner.id"/>
+                </div>
+                <address class="col-md-6 mt32">
+                    <table style="margin: auto;" class="well">
+                        <colgroup>
+                            <col width="100"/>
+                            <col/>
+                        </colgroup>
+                        <tbody>
+                            <t t-set="address" t-value="'&lt;br/&gt;'.join(partner.name_get()[0][1].split('\n')[1:])"/>
+                            <tr><th class="texttop">Address</th><td t-raw="address"/></tr>
+                            <tr><th>Website</th><td><span t-field="partner.website"/></td></tr>
+                            <tr><th>Phone</th><td><span t-field="partner.phone"/></td></tr>
+                            <tr><th>Tel</th><td><span t-field="partner.mobile"/></td></tr>
+                            <tr><th>Fax</th><td><span t-field="partner.fax"/></td></tr>
+                            <tr><th>Email</th><td><span t-field="partner.email"/></td></tr>
+                        </tbody>
+                    </table>
+                </address>
+            </div>
+        </div>
+    </div>
+</t>
+        </template>
+
+        <record id="action_partner_detail_demo" model="ir.actions.server">
+            <field name="name">Website Partner Detail Demo</field>
+            <field name="condition">True</field>
+            <field name="website_published" eval="True"/>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="code">
+partner_id, partner = False, None
+post_partner_id = context.get('post', {}).get('partner_id')
+if post_partner_id:
+    try:
+        post_partner_id = int(post_partner_id)
+    except ValueError:
+        post_partner_id = False
+if post_partner_id:
+    partner_ids = pool['res.partner'].search(cr, uid, [('id', '=', post_partner_id)], context=context)
+    partner_id = partner_ids and partner_ids[0] or False
+if partner_id:
+    partner = pool['res.partner'].browse(cr, uid, partner_id, context=context)
+values = {
+    'partner': partner,
+}
+template = request.website.render("website.template_partner_detail_demo", values)
+            </field>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+        </record>
 
         <template id="template_partner_demo" name="Partner Template (Server Action Demo)">
 <t t-call="website.layout">
-    <t t-set="additional_title">Members</t>
+    <t t-set="additional_title">Partners</t>
     <div id="wrap">
         <div class="oe_structure">
             <section data-snippet-id="title">
@@ -21,7 +111,9 @@
         <div class="container">
             <t t-foreach="partners" t-as="partner">
                 <div class="row">
-                    <span t-field="partner.name"/>
+                    <a t-att-href="'/website/action/website.action_partner_detail_demo?partner_id=%d' % partner.id">
+                        <span t-field="partner.name"/>
+                    </a>
                 </div>
             </t>
         </div>
@@ -30,7 +122,7 @@
         </template>
 
         <record id="action_partner_demo" model="ir.actions.server">
-            <field name="name">Website Test</field>
+            <field name="name">Website Partners Demo</field>
             <field name="condition">True</field>
             <field name="website_published" eval="True"/>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -44,20 +136,6 @@ template = request.website.render("website.template_partner_demo", values)
             </field>
             <field name="state">code</field>
             <field name="type">ir.actions.server</field>
-        </record>
-    </data>
-
-    <data>
-
-        <record id="default_website" model="website">
-            <field name="social_twitter">https://twitter.com/openerp</field>
-            <field name="social_facebook">https://www.facebook.com/OpenERP</field>
-            <field name="social_googleplus">https://plus.google.com/+openerp</field>
-            <field name="social_linkedin">http://www.linkedin.com/company/openerp</field>
-        </record>
-
-        <record id="base.main_company" model="res.company">
-            <field name="rml_header1">Great Product for Great People</field>
         </record>
     </data>
 </openerp>
