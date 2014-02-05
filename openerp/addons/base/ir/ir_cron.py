@@ -229,7 +229,7 @@ class ir_cron(osv.osv):
 
                 locked_job = lock_cr.fetchone()
                 if not locked_job:
-                    _logger.debug("Job already %s executed by another process/thread. skipping it", job['name'])
+                    _logger.debug("Job `%s` already executed by another process/thread. skipping it", job['name'])
                     continue
                 # Got the lock on the job row, run its code
                 _logger.debug('Starting job `%s`.', job['name'])
