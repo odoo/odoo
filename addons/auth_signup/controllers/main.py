@@ -26,72 +26,93 @@ from openerp.addons.auth_signup.res_users import SignupError
 from openerp import http
 from openerp.http import request, LazyResponse
 from openerp.tools.translate import _
-from openerp.tools import exception_to_unicode
 
 _logger = logging.getLogger(__name__)
 
-class AuthSignup(openerp.addons.web.controllers.main.Home):
+class AuthSignupHome(openerp.addons.web.controllers.main.Home):
 
     @http.route()
     def web_login(self, *args, **kw):
-        mode = request.params.get('mode')
+        webmain.ensure_db()
+        response = super(AuthSignupHome, self).web_login(*args, **kw)
+        if isinstance(response, LazyResponse):
+            response.params['values'].update(self.get_auth_signup_config())
+        return response
+
+    @http.route('/web/signup', type='http', auth='none')
+    def web_auth_signup(self, *args, **kw):
+        webmain.ensure_db()
+        qcontext = self.get_auth_signup_qcontext()
+
+        if 'error' not in qcontext and request.httprequest.method == 'POST':
+            try:
+                self.do_signup(qcontext)
+                return super(AuthSignupHome, self).web_login(*args, **kw)
+            except (SignupError, AssertionError), e:
+                qcontext['error'] = _(e.message)
+
+        def callback(template, values):
+            return request.registry['ir.ui.view'].render(request.cr, openerp.SUPERUSER_ID, template, values)
+        return LazyResponse(callback, template='auth_signup.signup', values=qcontext)
+
+    @http.route('/web/reset_password', type='http', auth='none')
+    def web_auth_reset_password(self, *args, **kw):
+        webmain.ensure_db()
+        qcontext = self.get_auth_signup_qcontext()
+
+        if 'error' not in qcontext and request.httprequest.method == 'POST':
+            try:
+                if qcontext.get('token'):
+                    self.do_signup(qcontext)
+                    return super(AuthSignupHome, self).web_login(*args, **kw)
+                else:
+                    login = qcontext.get('login')
+                    assert login, "No login provided."
+                    res_users = request.registry.get('res.users')
+                    res_users.reset_password(request.cr, openerp.SUPERUSER_ID, login)
+                    qcontext['message'] = _("An email has been sent with credentials to reset your password")
+            except AssertionError, e:
+                qcontext['error'] = _(e.message)
+            except SignupError:
+                qcontext['error'] = _("Could not reset your password")
+                _logger.exception('error when resetting password')
+
+        def callback(template, values):
+            return request.registry['ir.ui.view'].render(request.cr, openerp.SUPERUSER_ID, template, values)
+        return LazyResponse(callback, template='auth_signup.reset_password', values=qcontext)
+
+    def get_auth_signup_config(self):
+        """retrieve the module config (which features are enabled) for the login page"""
+
+        icp = request.registry.get('ir.config_parameter')
+        return {
+            'signup_enabled': icp.get_param(request.cr, openerp.SUPERUSER_ID, 'auth_signup.allow_uninvited') == 'True',
+            'reset_password_enabled': icp.get_param(request.cr, openerp.SUPERUSER_ID, 'auth_signup.reset_password') == 'True',
+        }
+
+    def get_auth_signup_qcontext(self):
+        """ Shared helper returning the rendering context for signup and reset password """
         qcontext = request.params.copy()
-        response = webmain.render_bootstrap_template(request.session.db, 'auth_signup.signup', qcontext, lazy=True)
-        token = qcontext.get('token', None)
-        token_infos = None
-        if token:
+        if qcontext.get('token'):
             try:
                 # retrieve the user info (name, login or email) corresponding to a signup token
                 res_partner = request.registry.get('res.partner')
-                token_infos = res_partner.signup_retrieve_info(request.cr, openerp.SUPERUSER_ID, token)
+                token_infos = res_partner.signup_retrieve_info(request.cr, openerp.SUPERUSER_ID, qcontext.get('token'))
                 for k, v in token_infos.items():
                     qcontext.setdefault(k, v)
             except:
                 qcontext['error'] = _("Invalid signup token")
-                response.params['template'] = 'web.login'
-                return response
+        return qcontext
 
-        # retrieve the module config (which features are enabled) for the login page
-        icp = request.registry.get('ir.config_parameter')
-        config = {
-            'signup': icp.get_param(request.cr, openerp.SUPERUSER_ID, 'auth_signup.allow_uninvited') == 'True',
-            'reset': icp.get_param(request.cr, openerp.SUPERUSER_ID, 'auth_signup.reset_password') == 'True',
-        }
-        qcontext.update(config)
-
-        if 'error' in qcontext or mode not in ('reset', 'signup') or (not token and not config[mode]):
-            response = super(AuthSignup, self).web_login(*args, **kw)
-            if isinstance(response, LazyResponse):
-                response.params['values'].update(config)
-            return response
-
-        if request.httprequest.method == 'GET':
-            if token_infos:
-                qcontext.update(token_infos)
-        else:
-            res_users = request.registry.get('res.users')
-            login = request.params.get('login')
-            if mode == 'reset' and not token:
-                try:
-                    res_users.reset_password(request.cr, openerp.SUPERUSER_ID, login)
-                    qcontext['message'] = _("An email has been sent with credentials to reset your password")
-                    response.params['template'] = 'web.login'
-                except Exception:
-                    qcontext['error'] = _("Could not reset your password")
-                    _logger.exception('error when resetting password')
-            else:
-                values = dict((key, qcontext.get(key)) for key in ('login', 'name', 'password'))
-                try:
-                    self._signup_with_values(token, values)
-                    request.cr.commit()
-                except SignupError, e:
-                    qcontext['error'] = exception_to_unicode(e)
-                return super(AuthSignup, self).web_login(*args, **kw)
-
-        return response
+    def do_signup(self, qcontext):
+        """ Shared helper that creates a res.partner out of a token """
+        values = dict((key, qcontext.get(key)) for key in ('login', 'name', 'password'))
+        assert any([k for k in values.values()]), "The form was not properly filled in."
+        assert values.get('password') == qcontext.get('confirm_password'), "Passwords do not match; please retype them."
+        self._signup_with_values(qcontext.get('token'), values)
+        request.cr.commit()
 
     def _signup_with_values(self, token, values):
         request.registry['res.users'].signup(request.cr, openerp.SUPERUSER_ID, values, token)
-
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
