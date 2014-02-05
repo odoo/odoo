@@ -25,6 +25,6 @@ class actions_server(osv.Model):
 
     def run_action_code_multi(self, cr, uid, action, eval_context=None, context=None):
         res = super(actions_server, self).run_action_code_multi(cr, uid, action, eval_context, context)
-        if 'template' in eval_context:
-            return eval_context['template']
+        if 'response' in eval_context:
+            return eval_context['response']
         return res
