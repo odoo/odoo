@@ -512,7 +512,7 @@ new record, you can select records to delete them.
 There's one big issue to fix right now, the labeling of the column in the list
 and the fields in the form view, which are all currently :guilabel:`unknown`:
 
-.. FIXME:: fix labels
+.. FIXME fix labels
 
 .. create menu, action
    .. improve generated views
