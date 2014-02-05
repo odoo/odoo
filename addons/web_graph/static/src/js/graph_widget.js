@@ -25,6 +25,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.bar_ui = options.bar_ui || 'group';
         this.graph_view = options.graph_view || null;
         this.pivot_options = options;
+        this.title = options.title || 'Data';
     },
 
     start: function() {
@@ -38,6 +39,10 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         if (this.mode !== 'pivot') {
             this.$('.graph_heatmap label').addClass('disabled');
         }
+
+        openerp.session.rpc('/web_graph/check_xlwt').then(function (result) {
+            self.$('.graph_options_selection label').toggle(result);
+        });
 
         return this.model.call('fields_get', []).then(function (f) {
             self.fields = f;
@@ -85,8 +90,8 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             groupbys = _.flatten(_.map(filters, function (filter) {
                 var groupby = py.eval(filter.attrs.context).group_by;
                 if (!(groupby instanceof Array)) { groupby = [groupby]; }
-                return _.map(groupby, function(g) { 
-                    return {field: g, filter: filter}; 
+                return _.map(groupby, function(g) {
+                    return {field: g, filter: filter};
                 });
             }));
 
@@ -264,6 +269,9 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             case 'update_values':
                 this.pivot.update_data().then(this.proxy('display_data'));
                 break;
+            case 'export_data':
+                this.export_xls();
+                break;
         }
     },
 
@@ -356,13 +364,117 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     },
 
     // ----------------------------------------------------------------------
+    // Convert Pivot data structure into table structure :
+    //      compute rows, cols, colors, cell width, cell height, ...
+    // ----------------------------------------------------------------------
+    build_table: function() {
+        return {
+            headers: this.build_headers(),
+            measure_row: this.build_measure_row(),
+            rows: this.build_rows(),
+            nbr_measures: this.pivot.measures.length,
+            title: this.title,
+        };
+    },
+
+    build_headers: function () {
+        var pivot = this.pivot,
+            nbr_measures = pivot.measures.length,
+            height = _.max(_.map(pivot.cols.headers, function(g) {return g.path.length;})),
+            rows = [];
+
+        _.each(pivot.cols.headers, function (col) {
+            if (col.path.length === 0) { return;}
+            var cell_width = nbr_measures * (col.expanded ? pivot.get_ancestor_leaves(col).length : 1),
+                cell_height = col.expanded ? 1 : height - col.path.length + 1,
+                cell = {width: cell_width, height: cell_height, title: col.title, id: col.id, expanded: col.expanded};
+            if (rows[col.path.length - 1]) {
+                rows[col.path.length - 1].push(cell);
+            } else {
+                rows[col.path.length - 1] = [cell];
+            }
+        });
+
+        if (pivot.get_cols_leaves().length > 1) {
+            rows[0].push({width: nbr_measures, height: height, title: _t('Total'), id: pivot.main_col().id });
+        }
+        if (pivot.cols.headers.length === 1) {
+            rows = [[{width: nbr_measures, height: 1, title: _t('Total'), id: pivot.main_col().id, expanded: false}]];
+        }
+        return rows;
+    },
+
+    build_measure_row: function () {
+        var nbr_leaves = this.pivot.get_cols_leaves().length,
+            nbr_cols = nbr_leaves + ((nbr_leaves > 1) ? 1 : 0),
+            result = [],
+            add_total = this.pivot.get_cols_leaves().length > 1,
+            i, m;
+        for (i = 0; i < nbr_cols; i++) {
+            for (m = 0; m < this.pivot.measures.length; m++) {
+                result.push({
+                    text:this.pivot.measures[m].string,
+                    is_bold: add_total && (i === nbr_cols - 1)
+                });
+            }
+        }
+        return result;
+    },
+
+    make_cell: function (row, col, value, index) {
+        var formatted_value = openerp.web.format_value(value, {type:this.pivot.measures[index].type}),
+            cell = {value:formatted_value};
+
+        if (this.heatmap_mode === 'none') { return cell; }
+        var total = (this.heatmap_mode === 'both') ? this.pivot.get_total()[index]
+                  : (this.heatmap_mode === 'row')  ? this.pivot.get_total(row)[index]
+                  : this.pivot.get_total(col)[index];
+        var color = Math.floor(90 + 165*(total - Math.abs(value))/total);
+        if (color < 255) {
+            cell.color = color;
+        }
+        return cell;
+    },
+
+    build_rows: function () {
+        var self = this,
+            pivot = this.pivot,
+            m, cell;
+
+        return _.map(pivot.rows.headers, function (row) {
+            var cells = [];
+            _.each(pivot.get_cols_leaves(), function (col) {
+                var values = pivot.get_values(row.id,col.id);
+                for (m = 0; m < pivot.measures.length; m++) {
+                    cells.push(self.make_cell(row,col,values[m], m));
+                }
+            });
+            if (pivot.get_cols_leaves().length > 1) {
+                var totals = pivot.get_total(row);
+                for (m = 0; m < pivot.measures.length; m++) {
+                    cell = self.make_cell(row, pivot.main_col(), totals[m], m);
+                    cell.is_bold = 'true';
+                    cells.push(cell);
+                }
+            }
+            return {
+                id: row.id,
+                indent: row.path.length,
+                title: row.title,
+                expanded: row.expanded,
+                cells: cells,
+            };
+        });
+    },
+
+    // ----------------------------------------------------------------------
     // Main display method
     // ----------------------------------------------------------------------
     display_data: function () {
         this.$('.graph_main_content svg').remove();
         this.$('.graph_main_content div').remove();
         this.table.empty();
-        this.table.toggleClass('heatmap', this.heatmap_mode !== 'none')
+        this.table.toggleClass('heatmap', this.heatmap_mode !== 'none');
         this.width = this.$el.width();
         this.height = Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width()));
 
@@ -384,159 +496,75 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // Drawing the table
     // ----------------------------------------------------------------------
     draw_table: function () {
-        this.draw_top_headers();
-        _.each(this.pivot.rows.headers, this.proxy('draw_row'));
+        var table = this.build_table();
+        this.draw_headers(table.headers);
+        this.draw_measure_row(table.measure_row);
+        this.draw_rows(table.rows);
     },
 
-    make_border_cell: function (colspan, rowspan, headercell) {
-        var tag = (headercell) ? $('<th>') : $('<td>');
-        return tag.addClass('graph_border')
-                             .attr('colspan', colspan || 1)
-                             .attr('rowspan', rowspan || 1);
-    },
-
-    make_header_title: function (header) {
-        return $('<span> ')
-            .addClass('web_graph_click')
-            .attr('href', '#')
-            .addClass((header.expanded) ? 'fa fa-minus-square' : 'fa fa-plus-square')
-            .text(' ' + (header.title || 'Undefined'));
-    },
-
-    draw_top_headers: function () {
-        var self = this,
-            thead = $('<thead>'),
-            pivot = this.pivot,
-            height = _.max(_.map(pivot.cols.headers, function(g) {return g.path.length;})),
-            header_cells = [[this.make_border_cell(1, height, true)]];
-
-        function set_dim (cols) {
-            _.each(cols.children, set_dim);
-            if (cols.children.length === 0) {
-                cols.height = height - cols.path.length + 1;
-                cols.width = 1;
-            } else {
-                cols.height = 1;
-                cols.width = _.reduce(cols.children, function (sum,c) { return sum + c.width;}, 0);
-            }
-        }
-
-        function make_col_header (col) {
-            var cell = self.make_border_cell(col.width*pivot.measures.length, col.height, true);
-            return cell.append(self.make_header_title(col).attr('data-id', col.id));
-        }
-
-        function make_cells (queue, level) {
-            var col = queue[0];
-            queue = _.rest(queue).concat(col.children);
-            if (col.path.length == level) {
-                _.last(header_cells).push(make_col_header(col));
-            } else {
-                level +=1;
-                header_cells.push([make_col_header(col)]);
-            }
-            if (queue.length !== 0) {
-                make_cells(queue, level);
-            }
-        }
-
-        set_dim(pivot.main_col());  // add width and height info to columns headers
-        if (pivot.main_col().children.length === 0) {
-            make_cells(pivot.cols.headers, 0);
+    make_header_cell: function (header) {
+        var cell = (_.has(header, 'cells') ? $('<td>') : $('<th>'))
+                        .addClass('graph_border')
+                        .attr('rowspan', header.height)
+                        .attr('colspan', header.width);
+        var content = $('<span>').addClass('web_graph_click')
+                                 .attr('href','#')
+                                 .text(' ' + (header.title || _t('Undefined')))
+                                 .attr('data-id', header.id);
+        if (_.has(header, 'expanded')) {
+            content.addClass(header.expanded ? 'fa fa-minus-square' : 'fa fa-plus-square');
         } else {
-            make_cells(pivot.main_col().children, 1);
-            if (pivot.get_cols_leaves().length > 1) {
-                header_cells[0].push(self.make_border_cell(pivot.measures.length, height, true).text(_t('Total')).css('font-weight', 'bold'));
-            }
+            content.css('font-weight', 'bold');
         }
-
-        _.each(header_cells, function (cells) {
-            thead.append($('<tr>').append(cells));
-        });
-        
-        if (pivot.measures.length >= 2) {
-            thead.append(self.make_measure_row());
+        if (_.has(header, 'indent')) {
+            for (var i = 0; i < header.indent; i++) { cell.prepend($('<span>', {class:'web_graph_indent'})); }
         }
-
-        self.table.append(thead);
+        return cell.append(content);
     },
 
-    make_measure_cells: function () {
-        return _.map(this.pivot.measures, function (measure) {
-            return $('<th>').addClass('measure_row').text(measure.string);
+    draw_headers: function (headers) {
+        var make_cell = this.make_header_cell,
+            empty_cell = $('<th>').attr('rowspan', headers.length),
+            thead = $('<thead>');
+
+        _.each(headers, function (row) {
+            var html_row = $('<tr>');
+            _.each(row, function (header) {
+                html_row.append(make_cell(header));
+            });
+            thead.append(html_row);
         });
+        thead.children(':first').prepend(empty_cell);
+        this.table.append(thead);
     },
-
-    make_measure_row: function() {
-        var self = this,
-            cols = this.pivot.cols.headers,
-            measure_row = $('<tr>');
-
-        measure_row.append($('<th>'));
-
-        _.each(cols, function (col) {
-            if (!col.children.length) {
-                measure_row.append(self.make_measure_cells());
-            }
+    
+    draw_measure_row: function (measure_row) {
+        if (this.pivot.measures.length === 1) { return; }
+        var html_row = $('<tr>').append('<th>');
+        _.each(measure_row, function (cell) {
+            var measure_cell = $('<th>').addClass('measure_row').text(cell.text);
+            if (cell.is_bold) {measure_cell.css('font-weight', 'bold');}
+            html_row.append(measure_cell);
         });
-
-        if (this.pivot.get_cols_leaves().length > 1) {
-            measure_row.append(self.make_measure_cells());
-        }
-        return measure_row;
+        this.$('thead').append(html_row);
     },
+    
+    draw_rows: function (rows) {
+        var table = this.table,
+            make_cell = this.make_header_cell;
 
-    draw_row: function (row) {
-        var self = this,
-            pivot = this.pivot,
-            measure_types = _.pluck(this.pivot.measures, 'type'),
-            html_row = $('<tr>'),
-            row_header = this.make_border_cell(1,1)
-                .append(this.make_header_title(row).attr('data-id', row.id))
-                .addClass('graph_border');
-
-        for (var i = 0; i < row.path.length; i++) {
-            row_header.prepend($('<span>', {class:'web_graph_indent'}));
-        }
-
-        html_row.append(row_header);
-
-        _.each(pivot.cols.headers, function (col) {
-            if (!col.children.length) {
-                var values = pivot.get_values(row.id, col.id);
-                for (var i = 0; i < values.length; i++) {
-                    html_row.append(make_cell(values[i], measure_types[i], i, col));
+        _.each(rows, function (row) {
+            var html_row = $('<tr>').append(make_cell(row));
+            _.each(row.cells, function (cell) {
+                var html_cell = $('<td>').text(cell.value);
+                if (_.has(cell, 'color')) {
+                    html_cell.css('background-color', $.Color(255, cell.color, cell.color));
                 }
-            }
+                if (cell.is_bold) { html_cell.css('font-weight', 'bold'); }
+                html_row.append(html_cell);
+            });
+            table.append(html_row);
         });
-
-        if (pivot.get_cols_leaves().length > 1) {
-            var total_vals = pivot.get_total(row);
-            for (var j = 0; j < total_vals.length; j++) {
-                var cell = make_cell(total_vals[j], measure_types[j], j, pivot.cols[0]).css('font-weight', 'bold');
-                html_row.append(cell);
-            }
-        }
-
-        this.table.append(html_row);
-
-        function make_cell (value, measure_type, index, col) {
-            var cell = $('<td>');
-            if (value === undefined) {
-                return cell;
-            }
-            cell.text(openerp.web.format_value(value, {type: measure_type}));
-            var total = (self.heatmap_mode === 'both') ? pivot.get_total()[index]
-                  : (self.heatmap_mode === 'row')  ? pivot.get_total(row)[index]
-                  : (self.heatmap_mode === 'col')  ? pivot.get_total(col)[index]
-                  : undefined;
-
-            if (self.heatmap_mode !== 'none') {
-                var color = Math.floor(90 + 165*(total - Math.abs(value))/total);
-                cell.css('background-color', $.Color(255, color, color));
-            }
-            return cell;
-        }
     },
 
     // ----------------------------------------------------------------------
@@ -690,6 +718,20 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
             nv.utils.windowResize(chart.update);
             return chart;
+        });
+    },
+
+    // ----------------------------------------------------------------------
+    // Controller stuff...
+    // ----------------------------------------------------------------------
+    export_xls: function() {
+        var c = openerp.webclient.crashmanager;
+        openerp.web.blockUI();
+        this.session.get_file({
+            url: '/web_graph/export_xls',
+            data: {data: JSON.stringify(this.build_table())},
+            complete: openerp.web.unblockUI,
+            error: c.rpc_error.bind(c)
         });
     },
 
