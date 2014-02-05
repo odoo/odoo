@@ -371,6 +371,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             headers: this.build_headers(),
             measure_row: this.build_measure_row(),
             rows: this.build_rows(),
+            nbr_measures: this.pivot.measures.length
         };
     },
 
@@ -418,12 +419,15 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         return result;
     },
 
-    add_color: function (cell, row, col, index) {
+    make_cell: function (row, col, value, index) {
+        var formatted_value = openerp.web.format_value(value, {type:this.pivot.measures[index].type}),
+            cell = {value:formatted_value};
+
         if (this.heatmap_mode === 'none') { return cell; }
         var total = (this.heatmap_mode === 'both') ? this.pivot.get_total()[index]
                   : (this.heatmap_mode === 'row')  ? this.pivot.get_total(row)[index]
                   : this.pivot.get_total(col)[index];
-        var color = Math.floor(90 + 165*(total - Math.abs(cell.value))/total);
+        var color = Math.floor(90 + 165*(total - Math.abs(value))/total);
         if (color < 255) {
             cell.color = color;
         }
@@ -433,21 +437,22 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     build_rows: function () {
         var self = this,
             pivot = this.pivot,
-            m,
-            add_total = pivot.get_cols_leaves().length > 1;
+            m, cell;
 
         return _.map(pivot.rows.headers, function (row) {
             var cells = [];
             _.each(pivot.get_cols_leaves(), function (col) {
-                var values = pivot.get_values(row.id, col.id);
+                var values = pivot.get_values(row.id,col.id);
                 for (m = 0; m < pivot.measures.length; m++) {
-                    cells.push(self.add_color({value:values[m], type:pivot.measures[m].type}, row,col,m)); 
+                    cells.push(self.make_cell(row,col,values[m], m));
                 }
             });
-            if (add_total) {
+            if (pivot.get_cols_leaves().length > 1) {
                 var totals = pivot.get_total(row);
                 for (m = 0; m < pivot.measures.length; m++) {
-                    cells.push(self.add_color({value:totals[m], type:pivot.measures[m].type, is_bold:true},row,pivot.main_col(),m));
+                    cell = self.make_cell(row, pivot.main_col(), totals[m], m);
+                    cell.is_bold = 'true';
+                    cells.push(cell);
                 }
             }
             return {
@@ -549,8 +554,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         _.each(rows, function (row) {
             var html_row = $('<tr>').append(make_cell(row));
             _.each(row.cells, function (cell) {
-                var value = openerp.web.format_value(cell.value, {type: cell.type}),
-                    html_cell = $('<td>').text(value);
+                var html_cell = $('<td>').text(cell.value);
                 if (_.has(cell, 'color')) {
                     html_cell.css('background-color', $.Color(255, cell.color, cell.color));
                 }
@@ -719,12 +723,13 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // Controller stuff...
     // ----------------------------------------------------------------------
     export_xls: function() {
+        var c = openerp.webclient.crashmanager;
         openerp.web.blockUI();
         this.session.get_file({
             url: '/web_graph/export_xls',
             data: {data: JSON.stringify(this.build_table())},
             complete: openerp.web.unblockUI,
-            error: openerp.webclient.crashmanager.rpc_error.bind(c)
+            error: c.rpc_error.bind(c)
         });
     },
 
