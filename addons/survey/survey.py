@@ -391,7 +391,7 @@ class survey_question(osv.Model):
 
         # Question
         'question': fields.char('Question', required=1, translate=True),
-        'description': fields.char('Description', help="Use this field to add \
+        'description': fields.html('Description', help="Use this field to add \
             additional explanations about your question", translate=True,
             oldname='descriptive_text'),
 
@@ -837,10 +837,17 @@ class survey_user_input_line(osv.Model):
         'date_create': fields.datetime.now()
     }
 
+    def create(self, cr, uid, vals, context=None):
+        value_suggested = vals.get('value_suggested')
+        if value_suggested:
+            mark = self.pool.get('survey.label').browse(cr, uid, int(value_suggested), context=context).quizz_mark
+            vals.update({'quizz_mark': mark})
+        return super(survey_user_input_line, self).create(cr, uid, vals, context=context)
+
     def write(self, cr, uid, ids, vals, context=None):
         value_suggested = vals.get('value_suggested')
         if value_suggested:
-            mark = self.pool.get('survey.label').browse(cr, uid, value_suggested, context=context).quizz_mark
+            mark = self.pool.get('survey.label').browse(cr, uid, int(value_suggested), context=context).quizz_mark
             vals.update({'quizz_mark': mark})
         return super(survey_user_input_line, self).write(cr, uid, ids, vals, context=context)
 

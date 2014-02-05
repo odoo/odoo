@@ -162,7 +162,8 @@ class WebsiteSurvey(http.Controller):
             return request.website.render('survey.survey', data)
         elif user_input.state == 'done':  # Display success message
             return request.website.render('survey.sfinished', {'survey': survey,
-                                                               'token': token})
+                                                               'token': token,
+                                                               'user_input': user_input})
         elif user_input.state == 'skip':
             flag = (True if prev and prev == 'prev' else False)
             page, page_nr, last = survey_obj.next_page(cr, uid, user_input, user_input.last_displayed_page_id.id, go_back=flag, context=context)
