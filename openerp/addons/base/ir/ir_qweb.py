@@ -632,7 +632,8 @@ class SelectionConverter(osv.AbstractModel):
     def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
         value = record[field_name]
         if not value: return ''
-        selection = dict(record._fields[field_name].get_selection())
+        selection = dict(fields.selection.reify(
+            cr, uid, record._model, column))
         return self.value_to_html(
             cr, uid, selection[value], column, options=options)
 

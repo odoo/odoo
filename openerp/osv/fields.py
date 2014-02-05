@@ -505,6 +505,39 @@ class selection(_column):
         args['selection'] = self.selection
         return args
 
+    @classmethod
+    def reify(cls, cr, uid, model, field, context=None):
+        """ Munges the field's ``selection`` attribute as necessary to get
+        something useable out of it: calls it if it's a function, applies
+        translations to labels if it's not.
+
+        A callable ``selection`` is considered translated on its own.
+
+        :param orm.Model model:
+        :param _column field:
+        """
+        if callable(field.selection):
+            return field.selection(model, cr, uid, context)
+
+        if not (context and 'lang' in context):
+            return field.selection
+
+        # field_to_dict isn't given a field name, only a field object, we
+        # need to get the name back in order to perform the translation lookup
+        field_name = next(
+            name for name, column in model._columns.iteritems()
+            if column == field)
+
+        translation_filter = "%s,%s" % (model._name, field_name)
+        translate = functools.partial(
+            model.pool['ir.translation']._get_source,
+            cr, uid, translation_filter, 'selection', context['lang'])
+
+        return [
+            (value, translate(label))
+            for value, label in field.selection
+        ]
+
 # ---------------------------------------------------------
 # Relationals fields
 # ---------------------------------------------------------
