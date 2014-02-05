@@ -3597,13 +3597,5 @@ class account_bank_accounts_wizard(osv.osv_memory):
         'account_type': fields.selection([('cash','Cash'), ('check','Check'), ('bank','Bank')], 'Account Type', size=32),
     }
 
-class ir_ui_view(osv.Model):
-    _inherit = 'ir.ui.view'
-
-    def _valid_view_types(self, cr, uid, context=None):
-        values = super(ir_ui_view, self)._valid_view_types(cr, uid, context=context)
-        values.append(('tree_account_reconciliation', 'Tree Account Reconciliation (Custom)'))
-        return values
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
