@@ -287,13 +287,15 @@ class stock_quant(osv.osv):
         '''This function reserves quants for the given move (and optionally given link). If the total of quantity reserved is enough, the move's state
         is also set to 'assigned'
 
-        :param quants: list of tuple(quant browse record or None, qty to reserve). If None is given as first tuple element, the item will be ignored
+        :param quants: list of tuple(quant browse record or None, qty to reserve). If None is given as first tuple element, the item will be ignored. Negative quants should not be received as argument
         :param move: browse record
         :param link: browse record (stock.move.operation.link)
         '''
         toreserve = []
         #split quants if needed
         for quant, qty in quants:
+            if qty <= 0.0 or (quant and quant.qty <= 0.0):
+                raise osv.except_osv(_('Error!'), _('You can not reserve a negative quantity or a negative quant.'))
             if not quant:
                 continue
             self._quant_split(cr, uid, quant, qty, context=context)
@@ -2011,39 +2013,6 @@ class stock_move(osv.osv):
         self.action_done(cr, uid, res, context=context)
         return res
 
-    def action_consume(self, cr, uid, ids, quantity, location_id=False, restrict_lot_id=False, restrict_partner_id=False, context=None):
-        """ Consumed product with specific quantity from specific source location. This correspond to a split of the move (or write if the quantity to consume is >= than the quantity of the move) followed by an action_done
-        @param ids: ids of stock move object to be consumed
-        @param quantity : specify consume quantity (given in move UoM)
-        @param location_id : specify source location
-        @return: Consumed lines
-        """
-        uom_obj = self.pool.get('product.uom')
-        if context is None:
-            context = {}
-        if quantity <= 0:
-            raise osv.except_osv(_('Warning!'), _('Please provide proper quantity.'))
-        res = []
-        for move in self.browse(cr, uid, ids, context=context):
-            move_qty = move.product_qty
-            uom_qty = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, quantity, move.product_uom.id)
-            if move_qty <= 0:
-                raise osv.except_osv(_('Error!'), _('Cannot consume a move with negative or zero quantity.'))
-            quantity_rest = move.product_qty - uom_qty
-            if quantity_rest > 0:
-                ctx = context.copy()
-                if location_id:
-                    ctx['source_location_id'] = location_id
-                res.append(self.split(cr, uid, move, move_qty - quantity_rest, restrict_lot_id=restrict_lot_id, 
-                                      restrict_partner_id=restrict_partner_id, context=ctx))
-            else:
-                res.append(move.id)
-                if location_id:
-                    self.write(cr, uid, [move.id], {'location_id': location_id, 'restrict_lot_id': restrict_lot_id, 
-                                                    'restrict_partner_id': restrict_partner_id}, context=context)
-
-        self.action_done(cr, uid, res, context=context)
-        return res
 
     def split(self, cr, uid, move, qty, restrict_lot_id=False, restrict_partner_id=False, context=None):
         """ Splits qty from move move into a new move
@@ -2091,6 +2060,7 @@ class stock_move(osv.osv):
 
         self.action_confirm(cr, uid, [new_move], context=context)
         return new_move
+
 
 class stock_inventory(osv.osv):
     _name = "stock.inventory"
