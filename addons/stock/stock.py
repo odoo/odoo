@@ -285,17 +285,17 @@ class stock_quant(osv.osv):
 
     def quants_reserve(self, cr, uid, quants, move, link=False, context=None):
         '''This function reserves quants for the given move (and optionally given link). If the total of quantity reserved is enough, the move's state
-        is also set to 'assigned'  Please do not pass negative quants.  
+        is also set to 'assigned'
 
-        :param quants: list of tuple(quant browse record or None, qty to reserve). If None is given as first tuple element, the item will be ignored
+        :param quants: list of tuple(quant browse record or None, qty to reserve). If None is given as first tuple element, the item will be ignored. Negative quants should not be received as argument
         :param move: browse record
         :param link: browse record (stock.move.operation.link)
         '''
         toreserve = []
         #split quants if needed
         for quant, qty in quants:
-            if qty < 0.0:
-                raise osv.except_osv(_('Error!'), _('You can not reserve negative quants. '))
+            if qty <= 0.0 or quant.qty <= 0.0:
+                raise osv.except_osv(_('Error!'), _('You can not reserve a negative quantity or a negative quant.'))
             if not quant:
                 continue
             self._quant_split(cr, uid, quant, qty, context=context)
@@ -1995,7 +1995,6 @@ class stock_move(osv.osv):
 
         self.action_confirm(cr, uid, [new_move], context=context)
         return new_move
-
 
 
 class stock_inventory(osv.osv):

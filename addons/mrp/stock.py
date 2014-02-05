@@ -113,6 +113,8 @@ class StockMove(osv.osv):
         @param consumed_for: optionnal parameter given to this function to make the link between raw material consumed and produced product, for a better traceability
         @return: Consumed lines
         """
+        if context is None:
+            context = {}
         res = []
         production_obj = self.pool.get('mrp.production')
         uom_obj = self.pool.get('product.uom')
