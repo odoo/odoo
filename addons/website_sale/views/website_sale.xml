@@ -188,14 +188,9 @@
               </table>
               <t t-if="not bins">
                 <div class="text-center text-muted">
-                  <h3 class="css_editable_display">No product found</h3>
-                  <h3 class="css_non_editable_mode_hidden">There isn't available products right now, click <a t-attf-href="/page/website.contactus">here</a> to contact us</h3>
+                  <h3 class="css_editable_display">No product defined.</h3>
                   <t groups="base.group_website_publisher">
-                    <t groups="base.group_sale_manager">
-                      <p>Click on "Content" to define a new product or "Help" for more informations.</p>
-                      <img src="/website/static/src/img/content_here.png"/>
-                      <p>In the backend's product form contains information to simplify the sale process: price, notes in the quotation, accounting data, procurement methods, etc.</p>
-                    </t>
+                    <p groups="base.group_sale_manager">Use the <i>'Content'</i> top menu to create a new product.</p>
                   </t>
                 </div>
               </t>
