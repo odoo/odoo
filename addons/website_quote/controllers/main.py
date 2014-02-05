@@ -66,7 +66,7 @@ class sale_quote(http.Controller):
         if token != order.access_token:
             return request.website.render('website.404')
         attachments=sign and [('signature.png', sign)] or []
-        order_obj.signal_order_confirm(request.cr, SUPERUSER_ID, [order_id], context=request.context)
+        order_obj.signal_workflow(request.cr, SUPERUSER_ID, [order_id], 'order_confirm', context=request.context)
         message = _('Order signed by %s') % (signer,)
         self.__message_post(message, order_id, type='comment', subtype='mt_comment', attachments=attachments)
         return True
