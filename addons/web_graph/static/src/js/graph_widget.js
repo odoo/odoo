@@ -25,6 +25,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.bar_ui = options.bar_ui || 'group';
         this.graph_view = options.graph_view || null;
         this.pivot_options = options;
+        this.title = options.title || 'Data';
     },
 
     start: function() {
@@ -40,7 +41,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         }
 
         openerp.session.rpc('/web_graph/check_xlwt').then(function (result) {
-            if (result) { self.$('.graph_options_selection label').toggle(true); }
+            self.$('.graph_options_selection label').toggle(result);
         });
 
         return this.model.call('fields_get', []).then(function (f) {
@@ -371,7 +372,8 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             headers: this.build_headers(),
             measure_row: this.build_measure_row(),
             rows: this.build_rows(),
-            nbr_measures: this.pivot.measures.length
+            nbr_measures: this.pivot.measures.length,
+            title: this.title,
         };
     },
 
@@ -394,10 +396,10 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         });
 
         if (pivot.get_cols_leaves().length > 1) {
-            rows[0].push({width:nbr_measures, height:height, title: _t('Total'), id: pivot.cols.headers[0].id });
+            rows[0].push({width: nbr_measures, height: height, title: _t('Total'), id: pivot.main_col().id });
         }
         if (pivot.cols.headers.length === 1) {
-            rows = [[{width:nbr_measures, height:1, title: _t('Total'), id: pivot.cols.headers[0].id, expanded: false}]];
+            rows = [[{width: nbr_measures, height: 1, title: _t('Total'), id: pivot.main_col().id, expanded: false}]];
         }
         return rows;
     },
