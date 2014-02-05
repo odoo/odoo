@@ -911,7 +911,7 @@ class ir_actions_server(osv.osv):
             self.pool[action.model_id.model].write(cr, uid, [context.get('active_id')], {action.link_field_id.name: res_id})
 
     def _get_eval_context(self, cr, uid, action, context=None):
-        """ Prepare the contexty used when evaluation python strings, like
+        """ Prepare the context used when evaluating python code, like the
         condition or code server actions.
 
         :param action: the current server action
