@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-12 05:59+0000\n"
-"X-Generator: Launchpad (build 16761)\n"
+"X-Launchpad-Export-Date: 2014-01-28 06:18+0000\n"
+"X-Generator: Launchpad (build 16914)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -24,7 +24,7 @@ msgstr "Zatvaranje"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "account.config.settings"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:417
@@ -58,7 +58,7 @@ msgstr "Grupiraj po..."
 msgid ""
 "Computed as the difference between the amount stated in the voucher and the "
 "sum of allocation on the voucher lines."
-msgstr ""
+msgstr "Izračunato kao razlika između iznosa"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -158,6 +158,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje novog vaučera nabave. \n"
+"              </p><p>\n"
+"                Nakon potvrđivanja vaučera nabave, moguće je evidentirati\n"
+"                uplate dobavljaču povezane sa tim vaučerom nabave.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -213,7 +220,7 @@ msgstr "Poruke"
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipts"
-msgstr "Potvrde kupovine"
+msgstr "Vaučer nabave"
 
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
@@ -253,7 +260,7 @@ msgstr "Otkazani"
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
-msgstr ""
+msgstr "Morate podesiti konto  osnovice i poreza na '%s' porezu!"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -267,6 +274,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje novog vaučera prodaje.\n"
+"              </p><p>\n"
+"               Nakon kreiranje vaučera prodaje, moguće je evidentirati "
+"uplate kupaca\n"
+"               povezane sa ovim vaučerom.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
@@ -370,6 +385,8 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"Trebali bi podesiti 'Konto pozitivne tečajne razlike' u postavkama "
+"računovodstva, za automatsko knjiženje tečajnih razlika."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -444,6 +461,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje nove uplate dobavljaču.\n"
+"              </p><p>\n"
+"                OpenERP pomaže da jednostavno pratite plaćanja kao i\n"
+"                preostala salda i dugovanja prema dobavljačima.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -492,6 +516,13 @@ msgid ""
 "\n"
 "* The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
+" * 'Nacrt' je status koji se koristi kada korisnik unosi novi nepotvrđeni "
+"vaučer.                         \n"
+"* 'Pro-forma' je status koji se koristi kada je vaučer u Pro-forma "
+"statusu,dakle vaučeru nije dodijeljen broj.                         \n"
+"* 'Potvrđen' je status koji se koristi kada je vaučer kreiran, dodijeljen mu "
+"je broj te je proveden u računovodstvu                         \n"
+"* 'Otkazan' je status koji se koristi kada je vaučer otkazan."
 
 #. module: account_voucher
 #: field:account.voucher,writeoff_amount:0
@@ -541,6 +572,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za evidentiranje nove uplate. \n"
+"              </p><p>\n"
+"                Unesite kupca i način plaćanja a zatim unesite ručno ili će\n"
+"                OpenERP predložiti automatski zatvaranje stavaka sa\n"
+"                računom ili vaučerom.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: field:account.config.settings,expense_currency_exchange_account_id:0
@@ -599,6 +638,8 @@ msgid ""
 "Fields with internal purpose only that depicts if the voucher is a multi "
 "currency one or not"
 msgstr ""
+"Polja sa internom svrhom koja samo opisuje ako je vaučer u višestrukoj "
+"valuti ili ne."
 
 #. module: account_voucher
 #: view:account.invoice:0
@@ -670,7 +711,7 @@ msgstr "Vaučer je plaćen u potpunosti"
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Reconcile Payment Balance"
-msgstr ""
+msgstr "Zatvori saldo plaćanja"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1067
@@ -751,7 +792,7 @@ msgstr "Lipanj"
 #. module: account_voucher
 #: field:account.voucher,payment_rate_currency_id:0
 msgid "Payment Rate Currency"
-msgstr ""
+msgstr "Tečaj plaćanja"
 
 #. module: account_voucher
 #: field:account.voucher,paid:0
@@ -762,7 +803,7 @@ msgstr "Plaćeno"
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
-msgstr ""
+msgstr "Vaučer prodaje"
 
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
@@ -821,7 +862,7 @@ msgstr "Predhodna plaćanja ?"
 #: code:addons/account_voucher/account_voucher.py:1208
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
-msgstr ""
+msgstr "Račun koji želite platiti nije više važeći."
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -867,7 +908,7 @@ msgstr "Plaćanja kupaca"
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
 #: view:sale.receipt.report:0
 msgid "Sales Receipts Analysis"
-msgstr ""
+msgstr "Analiza potvrda"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -924,7 +965,7 @@ msgstr "Izvod banke"
 #. module: account_voucher
 #: view:account.bank.statement:0
 msgid "onchange_amount(amount)"
-msgstr ""
+msgstr "onchange_amount(amount)"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -1026,7 +1067,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Posted Vouchers"
-msgstr ""
+msgstr "Potvrđeni vaučeri"
 
 #. module: account_voucher
 #: field:account.voucher,payment_rate:0
@@ -1080,7 +1121,7 @@ msgstr "Originalni iznos"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Purchase Receipt"
-msgstr ""
+msgstr "Vaučer nabave"
 
 #. module: account_voucher
 #: help:account.voucher,payment_rate:0
@@ -1136,7 +1177,7 @@ msgstr "Godina"
 #: field:account.config.settings,income_currency_exchange_account_id:0
 #: field:res.company,income_currency_exchange_account_id:0
 msgid "Gain Exchange Rate Account"
-msgstr ""
+msgstr "Konto pozitivne tečajne razlike"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -1191,7 +1232,7 @@ msgstr ""
 #: code:addons/account_voucher/account_voucher.py:971
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
-msgstr ""
+msgstr "Otvorene ili plaćene vaučere nije moguće pobrisati."
 
 #. module: account_voucher
 #: help:account.voucher,date:0
@@ -1323,9 +1364,6 @@ msgstr ""
 #~ msgid "Unreconciliation"
 #~ msgstr "Poništavanje zatvaranja IOS-a"
 
-#~ msgid "Sales Receipt"
-#~ msgstr "Izdani vaučeri"
-
 #~ msgid ""
 #~ "The amount of the voucher must be the same amount as the one on the "
 #~ "statement line"
@@ -1402,3 +1440,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Ako želite poništiti zatvaranja transakcija, morate također provjeriti sve "
 #~ "radnje koje su povezane sa tim transakcijama jer neće biti onemogućene"
+
+#~ msgid "Sales Receipt"
+#~ msgstr "Vaučer prodaje"

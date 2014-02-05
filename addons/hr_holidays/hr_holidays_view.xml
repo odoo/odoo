@@ -40,7 +40,9 @@
             <field name="name">Leave Request</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <calendar string="Leave Request" color="employee_id" date_start="date_from" date_stop="date_to">
+                <calendar string="Leave Request" color="employee_id" 
+                          date_start="date_from" date_stop="date_to"  
+                          quick_add="False" avatar_model="hr.employee"> 
                     <field name="employee_id"/>
                     <field name="holiday_status_id"/>
                 </calendar>
@@ -511,7 +513,7 @@
             id="act_hr_leave_request_to_meeting"
             name="Leave Meetings"
             src_model="hr.holidays"
-            res_model="crm.meeting"
+            res_model="calendar.event"
             view_mode="tree,form,calendar,gantt"
             view_type="form"/>
 

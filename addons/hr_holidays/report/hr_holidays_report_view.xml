@@ -18,10 +18,10 @@
         <field name="name">hr.holidays.remaining.leaves.user.graph</field>
         <field name="model">hr.holidays.remaining.leaves.user</field>
         <field name="arch" type="xml">
-            <graph string="Leaves by Type" orientation = "horizontal" type="bar">
-                <field name="name" />
-                <field name="no_of_leaves" operator = "+"/>
-                <field name="leave_type" group = "True"/>
+            <graph string="Leaves by Type" type="bar" stacked="True">
+                <field name="name" type="row"/>
+                <field name="no_of_leaves" type="measure"/>
+                <field name="leave_type" type="col"/>
             </graph>
         </field>
     </record>
