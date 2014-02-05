@@ -35,7 +35,7 @@ class stock_move_consume(osv.osv_memory):
         'restrict_lot_id': fields.many2one('stock.production.lot', 'Lot'),
     }
 
-    #TOFIX: product_uom should not have differemt category of default UOM of product. Qty should be convert into UOM of original move line before going in consume and scrap
+    #TOFIX: product_uom should not have different category of default UOM of product. Qty should be convert into UOM of original move line before going in consume and scrap
     def default_get(self, cr, uid, fields, context=None):
         """ Get default values
         @param self: The object pointer.
@@ -76,7 +76,7 @@ class stock_move_consume(osv.osv_memory):
         move_ids = context['active_ids']
         for data in self.browse(cr, uid, ids, context=context):
             move_obj.action_consume(cr, uid, move_ids,
-                             data.product_qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id and data.restrict_lot_id.id or False,
+                             data.product_qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id.id,
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
 

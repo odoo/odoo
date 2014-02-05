@@ -51,8 +51,7 @@ class mrp_product_produce(osv.osv_memory):
         'consume_lines': fields.one2many('mrp.product.produce.line', 'produce_id', 'Products Consumed'),
         'track_production': fields.boolean('Track production'),
     }
-    
-    
+
     def on_change_qty(self, cr, uid, ids, product_qty, consume_lines, context=None):
         """ 
             When changing the quantity of products to be produced it will 
@@ -63,12 +62,11 @@ class mrp_product_produce(osv.osv_memory):
         """
         prod_obj = self.pool.get("mrp.production")
         production = prod_obj.browse(cr, uid, context['active_id'], context=context)
-        if product_qty > 0.0:
-            consume_lines = prod_obj._calculate_qty(cr, uid, production, product_qty = product_qty, context=None)
-        else:
-            consume_lines = []
-        
+        consume_lines = []
         new_consume_lines = []
+        if product_qty > 0.0:
+            consume_lines = prod_obj._calculate_qty(cr, uid, production, product_qty=product_qty, context=context)
+        
         for consume in consume_lines:
             new_consume_lines.append([0, False, consume])
         return {'value': {'consume_lines': new_consume_lines}}
@@ -114,9 +112,6 @@ class mrp_product_produce(osv.osv_memory):
          'product_id': _get_product_id,
          'track_production': _get_track, 
     }
-
-
-
 
     def do_produce(self, cr, uid, ids, context=None):
         production_id = context.get('active_id', False)
