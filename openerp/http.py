@@ -208,7 +208,7 @@ class WebRequest(object):
             args = (request,) + args
         # Correct exception handling and concurency retry
         @service_model.check
-        def checked_call(dbname, *a, **kw):
+        def checked_call(___dbname, *a, **kw):
             return self.func(*a, **kw)
 
         # FIXME: code and rollback management could be cleaned
@@ -832,6 +832,40 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
         return Model(self, model)
 
+    def save_action(self, action):
+        """
+        This method store an action object in the session and returns an integer
+        identifying that action. The method get_action() can be used to get
+        back the action.
+
+        :param the_action: The action to save in the session.
+        :type the_action: anything
+        :return: A key identifying the saved action.
+        :rtype: integer
+        """
+        saved_actions = self.setdefault('saved_actions', {"next": 1, "actions": {}})
+        # we don't allow more than 10 stored actions
+        if len(saved_actions["actions"]) >= 10:
+            del saved_actions["actions"][min(saved_actions["actions"])]
+        key = saved_actions["next"]
+        saved_actions["actions"][key] = action
+        saved_actions["next"] = key + 1
+        self.modified = True
+        return key
+
+    def get_action(self, key):
+        """
+        Gets back a previously saved action. This method can return None if the action
+        was saved since too much time (this case should be handled in a smart way).
+
+        :param key: The key given by save_action()
+        :type key: integer
+        :return: The saved action or None.
+        :rtype: anything
+        """
+        saved_actions = self.get('saved_actions', {})
+        return saved_actions.get("actions", {}).get(key)
+
 def session_gc(session_store):
     if random.random() < 0.001:
         # we keep session one week
@@ -973,9 +1007,12 @@ class Root(object):
     def setup_db(self, httprequest):
         db = httprequest.session.db
         # Check if session.db is legit
-        if db and db not in db_filter([db], httprequest=httprequest):
-            httprequest.session.logout()
-            db = None
+        if db:
+            if db not in db_filter([db], httprequest=httprequest):
+                _logger.warn("Logged into database '%s', but dbfilter "
+                             "rejects it; logging session out.", db)
+                httprequest.session.logout()
+                db = None
 
         if not db:
             httprequest.session.db = db_monodb(httprequest)
