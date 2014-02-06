@@ -355,8 +355,8 @@ class WebsiteSurvey(http.Controller):
     def get_input_summary(self, question):
         '''Returns overall summary of question e.g. answered, skipped, total_inputs'''
         result = {}
-        if question.page_id.survey_id.user_input_ids:
-            result['total_inputs'] = len([input_id.id for input_id in question.page_id.survey_id.user_input_ids if input_id.state != 'new'])
+        if question.survey_id.user_input_ids:
+            result['total_inputs'] = len([input_id.id for input_id in question.survey_id.user_input_ids if input_id.state != 'new'])
             question_input_ids = []
             for user_input in question.user_input_line_ids:
                 if not user_input.skipped:
