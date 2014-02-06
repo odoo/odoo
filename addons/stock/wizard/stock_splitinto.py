@@ -45,6 +45,7 @@ class stock_split_into(osv.osv_memory):
         quantity = self.browse(cr, uid, data[0], context=context).quantity or 0.0
         for move in move_obj.browse(cr, uid, rec_id, context=context):
             quantity_rest = move.product_qty - quantity
+            move_state = move.state
             #if move.tracking_id :
             #    raise osv.except_osv(_('Error!'),  _('The current move line is already assigned to a pack, please remove it first if you really want to change it ' \
             #                        'for this product: "%s" (id: %d)') % \
@@ -62,7 +63,6 @@ class stock_split_into(osv.osv_memory):
                 })
 
             if quantity_rest>0:
-                quantity_rest = move.product_qty - quantity
                 tracking_id = track_obj.create(cr, uid, {}, context=context)
                 if quantity == 0.0:
                     move_obj.write(cr, uid, [move.id], {'tracking_id': tracking_id}, context=context)
@@ -71,7 +71,7 @@ class stock_split_into(osv.osv_memory):
                         'product_qty': quantity_rest,
                         'product_uos_qty': quantity_rest,
                         'tracking_id': tracking_id,
-                        'state': move.state,
+                        'state': move_state,
                         'product_uos': move.product_uom.id
                     }
                     current_move = move_obj.copy(cr, uid, move.id, default_val, context=context)
