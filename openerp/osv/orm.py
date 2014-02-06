@@ -900,11 +900,6 @@ class BaseModel(object):
                         for c in new.keys():
                             if new[c].manual:
                                 del new[c]
-                        # Duplicate float fields because they have a .digits
-                        # cache (which must be per-registry, not server-wide).
-                        for c in new.keys():
-                            if new[c]._type == 'float':
-                                new[c] = copy.copy(new[c])
                     if hasattr(new, 'update'):
                         new.update(cls.__dict__.get(s, {}))
                     elif s=='_constraints':
@@ -940,6 +935,13 @@ class BaseModel(object):
         if not getattr(cls, '_original_module', None):
             cls._original_module = cls._module
         obj = object.__new__(cls)
+
+        if hasattr(obj, '_columns'):
+            # float fields are registry-dependent (digit attribute). Duplicate them to avoid issues.
+            for c, f in obj._columns.items():
+                if f._type == 'float':
+                    obj._columns[c] = copy.copy(f)
+
         obj.__init__(pool, cr)
         return obj
 
@@ -2703,12 +2705,12 @@ class BaseModel(object):
             f for f in fields
             if f not in ('id', 'sequence')
             if fget[f]['type'] in ('integer', 'float')
-            if (f in self._columns and getattr(self._columns[f], '_classic_write'))]
+            if (f in self._all_columns and getattr(self._all_columns[f].column, '_classic_write'))]
         for f in aggregated_fields:
             group_operator = fget[f].get('group_operator', 'sum')
             if flist:
                 flist += ', '
-            qualified_field = '"%s"."%s"' % (self._table, f)
+            qualified_field = self._inherits_join_calc(f, query)
             flist += "%s(%s) AS %s" % (group_operator, qualified_field, f)
 
         gb = groupby and (' GROUP BY ' + qualified_groupby_field) or ''
@@ -4253,7 +4255,8 @@ class BaseModel(object):
                         if not src_trans:
                             src_trans = vals[f]
                             # Inserting value to DB
-                            self.write(cr, user, ids, {f: vals[f]})
+                            context_wo_lang = dict(context, lang=None)
+                            self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
                         self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
 
 

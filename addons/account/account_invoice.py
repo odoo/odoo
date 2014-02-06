@@ -114,7 +114,7 @@ class account_invoice(osv.osv):
                             #we check if the invoice is partially reconciled and if there are other invoices
                             #involved in this partial reconciliation (and we sum these invoices)
                             for line in aml.reconcile_partial_id.line_partial_ids:
-                                if line.invoice:
+                                if line.invoice and invoice.type == line.invoice.type:
                                     nb_inv_in_partial_rec += 1
                                     #store the max invoice id as for this invoice we will make a balance instead of a simple division
                                     max_invoice_id = max(max_invoice_id, line.invoice.id)

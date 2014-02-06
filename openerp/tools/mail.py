@@ -29,6 +29,7 @@ import re
 import socket
 import threading
 import time
+from email.utils import getaddresses
 
 import openerp
 from openerp.loglevels import ustr
@@ -559,4 +560,9 @@ def email_split(text):
     """ Return a list of the email addresses found in ``text`` """
     if not text:
         return []
-    return re.findall(r'([^ ,<@]+@[^> ,]+)', text)
+    return [addr[1] for addr in getaddresses([text])
+                # getaddresses() returns '' when email parsing fails, and
+                # sometimes returns emails without at least '@'. The '@'
+                # is strictly required in RFC2822's `addr-spec`.
+                if addr[1]
+                if '@' in addr[1]]

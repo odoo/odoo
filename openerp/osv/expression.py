@@ -1018,7 +1018,7 @@ class expression(object):
                         right += ' 23:59:59'
                     push(create_substitution_leaf(leaf, (left, operator, right), working_model))
 
-                elif field.translate:
+                elif field.translate and right:
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
                     if need_wildcard:
