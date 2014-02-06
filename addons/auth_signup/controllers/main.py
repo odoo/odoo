@@ -19,6 +19,7 @@
 #
 ##############################################################################
 import logging
+import werkzeug
 
 import openerp
 import openerp.addons.web.controllers.main as webmain
@@ -44,6 +45,9 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
         webmain.ensure_db()
         qcontext = self.get_auth_signup_qcontext()
 
+        if not qcontext.get('token') and not qcontext.get('signup_enabled'):
+            raise werkzeug.exceptions.NotFound()
+
         if 'error' not in qcontext and request.httprequest.method == 'POST':
             try:
                 self.do_signup(qcontext)
@@ -59,6 +63,9 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
     def web_auth_reset_password(self, *args, **kw):
         webmain.ensure_db()
         qcontext = self.get_auth_signup_qcontext()
+
+        if not qcontext.get('token') and not qcontext.get('reset_password_enabled'):
+            raise werkzeug.exceptions.NotFound()
 
         if 'error' not in qcontext and request.httprequest.method == 'POST':
             try:
@@ -93,6 +100,7 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
     def get_auth_signup_qcontext(self):
         """ Shared helper returning the rendering context for signup and reset password """
         qcontext = request.params.copy()
+        qcontext.update(self.get_auth_signup_config())
         if qcontext.get('token'):
             try:
                 # retrieve the user info (name, login or email) corresponding to a signup token
