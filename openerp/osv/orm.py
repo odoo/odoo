@@ -4942,12 +4942,6 @@ class BaseModel(object):
                 else:
                     default['state'] = self._defaults['state']
 
-        data = self.read(cr, uid, [id,], context=context)
-        if data:
-            data = data[0]
-        else:
-            raise IndexError( _("Record #%d of %s not found, cannot copy!") %( id, self._name))
-
         # build a black list of fields that should not be copied
         blacklist = set(MAGIC_COLUMNS + ['parent_left', 'parent_right'])
         def blacklist_given_fields(obj):
@@ -4962,16 +4956,22 @@ class BaseModel(object):
                     blacklist_given_fields(self.pool.get(other))
         blacklist_given_fields(self)
 
+
+        fields_to_copy = dict((f,fi) for f, fi in self._all_columns.iteritems()
+                                     if f not in default
+                                     if f not in blacklist
+                                     if not isinstance(fi.column, fields.function))
+
+        data = self.read(cr, uid, [id], fields_to_copy.keys(), context=context)
+        if data:
+            data = data[0]
+        else:
+            raise IndexError( _("Record #%d of %s not found, cannot copy!") %( id, self._name))
+
         res = dict(default)
-        for f, colinfo in self._all_columns.items():
+        for f, colinfo in fields_to_copy.iteritems():
             field = colinfo.column
-            if f in default:
-                pass
-            elif f in blacklist:
-                pass
-            elif isinstance(field, fields.function):
-                pass
-            elif field._type == 'many2one':
+            if field._type == 'many2one':
                 res[f] = data[f] and data[f][0]
             elif field._type == 'one2many':
                 other = self.pool.get(field._obj)
