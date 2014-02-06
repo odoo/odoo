@@ -8,21 +8,21 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-12-29 16:50+0000\n"
+"PO-Revision-Date: 2014-02-05 09:59+0000\n"
 "Last-Translator: Andy Cheng <andy@dobtor.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-12-30 05:07+0000\n"
-"X-Generator: Launchpad (build 16877)\n"
+"X-Launchpad-Export-Date: 2014-02-06 06:24+0000\n"
+"X-Generator: Launchpad (build 16916)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
 msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
-msgstr ""
+msgstr "讓您的業務人員可用選單項目「依出貨單開立發票」來依出貨單開立發票。"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_deliveryorder0
@@ -55,11 +55,13 @@ msgid ""
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
+"您選擇了 %d 單位的數量，但它無法相容於所選擇的包裝方式。\n"
+"根據包裝方式的數量建議： EAN： %s / 數量: %s 類型的 ul: %s"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_packinglist0
 msgid "Document of the move to the output or to the customer."
-msgstr ""
+msgstr "調動至出庫倉位或至客戶的文件。"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_multiple_shops:0
@@ -81,7 +83,7 @@ msgstr "取消訂單"
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
-msgstr ""
+msgstr "您必須先取消與此銷售訂單相關的所有出貨單。"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleprocurement0
@@ -98,7 +100,7 @@ msgstr "銷貨單"
 msgid ""
 "For every sales order line, a procurement order is created to supply the "
 "sold product."
-msgstr ""
+msgstr "對每一銷售訂單細項，建立一張採購單以供應售出的產品。"
 
 #. module: sale_stock
 #: field:sale.order,picking_policy:0
@@ -113,7 +115,7 @@ msgstr "商店"
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleorderprocurement0
 msgid "Drives procurement orders for every sales order line."
-msgstr ""
+msgstr "由每一銷售訂單細項自動產生採購單。"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -212,7 +214,7 @@ msgstr "出貨準備時間"
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_deliveryorder0
 msgid "Document of the move to the customer."
-msgstr ""
+msgstr "調動至客戶的文件。"
 
 #. module: sale_stock
 #: view:sale.order:0
@@ -484,18 +486,18 @@ msgstr "開立發票"
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
 msgid "Prepare invoices based on task's activities"
-msgstr ""
+msgstr "依工時狀況開立發票"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr ""
+msgstr "訂單預付款發票"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:523
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
-msgstr ""
+msgstr "您必須先取消與此銷售訂單相關的所有庫存調動。"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:561
@@ -512,7 +514,7 @@ msgstr "國際商業用語"
 #: code:addons/sale_stock/sale_stock.py:522
 #, python-format
 msgid "Cannot cancel sales order line!"
-msgstr ""
+msgstr "無法取消銷售訂單細項！"
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancelassignation0
@@ -522,17 +524,17 @@ msgstr "取消指派"
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_invoiceafterdelivery0
 msgid "Based on the shipped or on the ordered quantities."
-msgstr ""
+msgstr "依出貨或訂貨數量。"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "一次全部交貨"
 
 #. module: sale_stock
 #: field:sale.order,picking_ids:0
 msgid "Related Picking"
-msgstr ""
+msgstr "相關提貨"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
@@ -549,12 +551,12 @@ msgstr ""
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleorderprocurement0
 msgid "Sales Order Requisition"
-msgstr ""
+msgstr "銷售訂單請求"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_deliver0
 msgid "Create Delivery Order"
-msgstr ""
+msgstr "建立出貨單"
 
 #. module: sale_stock
 #: view:sale.order:0
