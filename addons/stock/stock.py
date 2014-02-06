@@ -540,6 +540,9 @@ class stock_quant(osv.osv):
         '''
         domain += location and [('location_id', 'child_of', location.id)] or []
         domain += [('product_id', '=', product.id)] + domain
+        #don't take into account location that are production, supplier or inventory
+        ignore_location_ids = self.pool.get('stock.location').search(cr, uid, [('usage', 'in', ('production', 'supplier', 'inventory'))], context=context)
+        domain.append(('location_id','not in',ignore_location_ids))
         res = []
         offset = 0
         while quantity > 0:
