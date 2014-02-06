@@ -1509,10 +1509,10 @@ class mail_thread(osv.AbstractModel):
             if context.get('operation', '') != 'create':
                 try:
                     self.check_access_rights(cr, uid, 'read')
-                if context.get('operation', '') == 'create':
-                    self.check_access_rule(cr, uid, ids, 'create')
-                else:
-                    self.check_access_rule(cr, uid, ids, 'read')
+                    if context.get('operation', '') == 'create':
+                        self.check_access_rule(cr, uid, ids, 'create')
+                    else:
+                        self.check_access_rule(cr, uid, ids, 'read')
                 except (osv.except_osv, orm.except_orm):
                     return False
         else:
