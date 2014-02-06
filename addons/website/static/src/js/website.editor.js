@@ -414,6 +414,7 @@
                 openerp.jsonRpc('/website/customize_template_get', 'call', { 'xml_id': view_name }).then(
                     function(result) {
                         _.each(result, function (item) {
+                            if (item.xml_id === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
                             if (item.header) {
                                 menu.append('<li class="dropdown-header">' + item.name + '</li>');
                             } else {
