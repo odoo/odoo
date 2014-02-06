@@ -14,7 +14,7 @@
         </record>
     </data>
 
-    <data noupdate="0">
+    <data noupdate="1">
 
         <!--
             Some demo data for front-end server action generating templates
@@ -40,7 +40,7 @@
         </template>
 
         <record id="action_partner_post" model="ir.actions.server">
-            <field name="name">Website Partner Detail Demo</field>
+            <field name="name">Website Partner Post and Thanks Demo</field>
             <field name="condition">True</field>
             <field name="website_published" eval="True"/>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -115,7 +115,7 @@ response = request.website.render("website.template_partner_post", values)
         </template>
 
         <record id="action_partner_comment" model="ir.actions.server">
-            <field name="name">Website Partners Demo</field>
+            <field name="name">Website Partners Comment Form</field>
             <field name="condition">True</field>
             <field name="website_published" eval="True"/>
             <field name="model_id" ref="base.model_res_partner"/>
