@@ -183,12 +183,9 @@ class ir_fields_converter(orm.Model):
                 _(u"'%s' does not seem to be a number for field '%%(field)s'")
                 % value)
 
-    def _str_to_html(self, cr, uid, model, column, value, context=None):
-        return html_sanitize(value), []
-
     def _str_id(self, cr, uid, model, column, value, context=None):
         return value, []
-    _str_to_reference = _str_to_char = _str_to_text = _str_to_binary = _str_id
+    _str_to_reference = _str_to_char = _str_to_text = _str_to_binary = _str_to_html = _str_id
 
     def _str_to_date(self, cr, uid, model, column, value, context=None):
         try:
