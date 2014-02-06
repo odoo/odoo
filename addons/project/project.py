@@ -368,6 +368,11 @@ class project(osv.osv):
         default['state'] = 'open'
         default['line_ids'] = []
         default['tasks'] = []
+
+        # Don't prepare (expensive) data to copy children (analytic accounts),
+        # they are discarded in analytic.copy(), and handled in duplicate_template() 
+        default['child_ids'] = []
+
         default.pop('alias_name', None)
         default.pop('alias_id', None)
         proj = self.browse(cr, uid, id, context=context)
