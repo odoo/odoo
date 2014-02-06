@@ -1201,12 +1201,12 @@ class mail_thread(osv.AbstractModel):
 
         user_pid = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         if set(partner_ids) == set([user_pid]):
-            if context.get('operation', '') != 'create':
-                try:
-                    self.check_access_rights(cr, uid, 'read')
+            try:
+                self.check_access_rights(cr, uid, 'read')
+                if context.get('operation', '') != 'create':
                     self.check_access_rule(cr, uid, ids, 'read')
-                except (osv.except_osv, orm.except_orm):
-                    return False
+            except (osv.except_osv, orm.except_orm):
+                return False
         else:
             self.check_access_rights(cr, uid, 'write')
             self.check_access_rule(cr, uid, ids, 'write')
