@@ -7,6 +7,7 @@
         <script type="text/javascript" src="/website_blog/static/src/js/website_blog.editor.js"></script>
         <script type="text/javascript" src="/website_blog/static/src/js/website.tour.blog.js"></script>
         <script type="text/javascript" src="/website_blog/static/lib/contentshare.js"></script>
+        <script type="text/javascript" src="/website_blog/static/src/js/website_blog.js"/>
     </xpath>
 </template>
 
@@ -231,16 +232,25 @@
         inherit_option_id="website_blog.blog_post_complete">
     <xpath expr="//div[@id='title']" position="attributes">
         <attribute name="class">blog_cover</attribute>
-        <attribute t-if="blog_post.content_image" name="t-attf-style">background : url('data:image/png;base64,#{blog_post.content_image}') center center no-repeat;</attribute>
-        <attribute t-if="not blog_post.content_image" name="style">background : #34495E;</attribute>
+        <attribute name="t-attf-style">background-image : url(data:image/jpg;base64,#{blog_post.content_image})</attribute>
     </xpath>
     <xpath expr="//div[@id='title']" position="inside">
         <div class="text-center blog_item">
-            <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 50px; margin-right: 10px;"/>
+            <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.create_uid.partner_id.id)" style="width: 30px; margin-right: 10px;"/>
             <small class="text-muted" id="blog_author" t-field="blog_post.create_uid.name"/>
         </div>
         <div class="text-center mt64">
             <a href="#blog_content"><span class="fa fa-angle-down fa-2x fa-inverse"/></a>
+        </div>
+    </xpath>
+    <xpath expr="//section[@id='comments']" position="after">
+        <div class="cover_footer" t-attf-style="background-image: url(data:image/jpg;base64,#{next_post.content_image})">
+            <a class="js_next " t-attf-href="/blogpost/#{ slug(next_post) }"><p class="text-center">Read Next</p></a>
+            <h1 class="text-center" t-field="next_post.name"/>
+            <div class="text-center blog_item">
+                <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(next_post.create_uid.partner_id.id)" style="width: 30px; margin-right: 10px;"/>
+                <small class="text-muted" id="blog_author" t-field="next_post.create_uid.name"/>
+            </div>
         </div>
     </xpath>
 </template>
