@@ -264,10 +264,11 @@ class mail_thread(osv.AbstractModel):
         track_ctx = dict(context)
         if 'lang' not in track_ctx:
             track_ctx['lang'] = self.pool.get('res.users').browse(cr, uid, uid, context=context).lang
-        tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=track_ctx)
-        if tracked_fields:
-            initial_values = {thread_id: dict((item, False) for item in tracked_fields)}
-            self.message_track(cr, uid, [thread_id], tracked_fields, initial_values, context=track_ctx)
+        if not context.get('mail_notrack'):
+            tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=track_ctx)
+            if tracked_fields:
+                initial_values = {thread_id: dict((item, False) for item in tracked_fields)}
+                self.message_track(cr, uid, [thread_id], tracked_fields, initial_values, context=track_ctx)
         return thread_id
 
     def write(self, cr, uid, ids, values, context=None):
@@ -289,7 +290,11 @@ class mail_thread(osv.AbstractModel):
         result = super(mail_thread, self).write(cr, uid, ids, values, context=context)
         self.message_auto_subscribe(cr, uid, ids, values.keys(), context=context, values=values)
 
-        # Perform the tracking
+        if not context.get('mail_notrack'):
+            # Perform the tracking
+            tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
+        else:
+            tracked_fields = None
         if tracked_fields:
             self.message_track(cr, uid, ids, tracked_fields, initial_values, context=track_ctx)
         return result
@@ -310,6 +315,9 @@ class mail_thread(osv.AbstractModel):
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
+        # avoid tracking multiple temporary changes during copy
+        context = dict(context or {}, mail_notrack=True)
+
         default = default or {}
         default['message_ids'] = []
         default['message_follower_ids'] = []
