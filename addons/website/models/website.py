@@ -84,7 +84,11 @@ def is_multilang_url(path, langs=None):
 
 def slugify(s, max_length=None):
     if slugify_lib:
-        return slugify_lib.slugify(s, max_length)
+        # There are 2 different libraries only python-slugify is supported
+        try:
+            return slugify_lib.slugify(s, max_length=max_length)
+        except TypeError:
+            pass
     spaceless = re.sub(r'\s+', '-', s)
     specialless = re.sub(r'[^-_A-Za-z0-9]', '', spaceless)
     return specialless[:max_length]

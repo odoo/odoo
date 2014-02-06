@@ -37,7 +37,7 @@
                     template:  self.popover({ fixed: true }),
                 },
                 {
-                    element:   '.modal:contains("New Event") input[type=text]',
+                    element:   '.modal #editor_new_event input[type=text]',
                     sampleText: 'Advanced Technical Training',
                     placement: 'right',
                     title:     "Create an Event Name",
@@ -51,7 +51,7 @@
                     content:   "Click <em>Continue</em> to create the event.",
                 },
                 {
-                    waitFor:   '#website-top-navbar button[data-action="save"]:visible',
+                    waitFor:   'body:has(button[data-action=save]:visible):has(.js_event)',
                     title:     "New Event Created",
                     content:   "This is your new event page. We will edit the event presentation page.",
                     template:  self.popover({ next: "Continue" }),

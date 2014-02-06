@@ -2,6 +2,7 @@
     "use strict";
 
     var website = openerp.website;
+    var _t = openerp._t;
     website.add_template_file('/website_sale/static/src/xml/website_sale.xml');
 
     website.is_editable = true;
@@ -16,7 +17,8 @@
             'click a[data-action=new_product]': function (ev) {
                 ev.preventDefault();
                 website.prompt({
-                    window_title: "New Product",
+                    id: "editor_new_product",
+                    window_title: _t("New Product"),
                     input: "Product Name",
                 }).then(function (name) {
                     website.form('/shop/add_product', 'POST', {
