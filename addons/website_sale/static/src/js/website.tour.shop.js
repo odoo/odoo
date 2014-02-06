@@ -38,7 +38,7 @@
                     template:  self.popover({ fixed: true }),
                 },
                 {
-                    element:   '.modal:contains("New Product") input[type=text]',
+                    element:   '.modal #editor_new_product input[type=text]',
                     sampleText: 'New Product',
                     placement: 'right',
                     title:     _t("Choose name"),
@@ -52,7 +52,7 @@
                     content:   _t("Click <em>Continue</em> to create the product."),
                 },
                 {
-                    waitFor:   '#website-top-navbar button[data-action="save"]:visible',
+                    waitFor:   'body:has(button[data-action=save]:visible):has(.js_sale)',
                     title:     _t("New product created"),
                     content:   _t("This page contains all the information related to the new product."),
                     template:  self.popover({ next: _t("Continue") }),

@@ -38,13 +38,14 @@
                     template:  self.popover({ fixed: true }),
                 },
                 {
-                    element:   '.modal button.btn-primary',
+                    element:   '.modal:has(#editor_new_blog) button.btn-primary',
                     placement: 'bottom',
                     title:     _t("Create Blog Post"),
                     content:   _t("Click <em>Continue</em> to create the blog post."),
                 },
                 {
                     waitNot:   '.modal',
+                    waitFor:   'body:has(button[data-action=save]:visible):has(.js_blog)',
                     title:     _t("Blog Post Created"),
                     content:   _t("This is your new blog post. Let's edit it."),
                     template:  self.popover({ next: _t("Continue") }),
