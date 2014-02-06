@@ -43,18 +43,16 @@
                 <form string="Return lines" version="7.0">
                     <group string="Provide the quantities of the returned products.">
                         <field name="move_dest_exists" invisible="1"/>
-                        <div colspan="4" class="oe_grey oe_inline" attrs="{'invisible': [('move_dest_exists','=',False)]}">
-                          <p>This picking is chained with at least another operation. Choose what you want to do with it:</p>
-                          <ul>
-                            <li>Cancel: use this option if you're not going to receive the goods you're returning. The next picking will be split and the returned part will be cancelled.</li>
-                            <li>Recreate: use this option if you plan to receive the returned goods later on. The next picking will be split and linked to another incoming picking for the same quantity</li>
-                            <li>Fix manually: use this option if none of the 2 other suits you or if you want to process the next picking in a single time.</li>
-                          </ul>
+			<div attrs="{'invisible': [('move_dest_exists', '=', False)]}" class="oe_grey" colspan="4">
+                            <p>This picking appears to be chained with another operation. Later, if you receive the goods you are returning now, make sure to <b>reverse</b> the returned picking in order to avoid logistic rules to be applied again (which would create duplicated operations)</p>
                         </div>
-                    </group>
-                    <group>
-                        <field name="move_dest_method" attrs="{'invisible': [('move_dest_exists','=',False)]}"/>
-                        <field name="product_return_moves"/>
+                        <field name="product_return_moves" colspan="4">
+                            <tree editable="top">
+                                <field name="product_id"/>
+                                <field name="lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
+                                <field name="quantity"/>
+                            </tree>
+                        </field>
                     </group>
                     <footer>
                         <button name="create_returns" string="Return" type="object" class="oe_highlight"/>

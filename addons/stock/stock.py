@@ -993,11 +993,11 @@ class stock_picking(osv.osv):
         moves_to_unreserve = []
         pack_line_to_unreserve = []
         for picking in self.browse(cr, uid, picking_ids, context=context):
-            moves_to_unreserve += [m.id for m in picking.move_lines]
+            moves_to_unreserve += [m.id for m in picking.move_lines if m.state not in ('done', 'cancel')]
             pack_line_to_unreserve += [p.id for p in picking.pack_operation_ids]
-        if pack_line_to_unreserve:
-            self.pool.get('stock.pack.operation').unlink(cr, uid, pack_line_to_unreserve, context=context)
         if moves_to_unreserve:
+            if pack_line_to_unreserve:
+                self.pool.get('stock.pack.operation').unlink(cr, uid, pack_line_to_unreserve, context=context)
             self.pool.get('stock.move').do_unreserve(cr, uid, moves_to_unreserve, context=context)
 
     def do_recompute_remaining_quantities(self, cr, uid, picking_ids, context=None):
@@ -1487,6 +1487,8 @@ class stock_move(osv.osv):
     def do_unreserve(self, cr, uid, move_ids, context=None):
         quant_obj = self.pool.get("stock.quant")
         for move in self.browse(cr, uid, move_ids, context=context):
+            if move.state in ('done', 'cancel'):
+                raise osv.except_osv(_('Operation Forbidden!'), _('Cannot unreserve a done move'))
             quant_obj.quants_unreserve(cr, uid, move, context=context)
             putaway_values = []
             for putaway_rec in move.putaway_ids:
@@ -1521,7 +1523,10 @@ class stock_move(osv.osv):
     def _push_apply(self, cr, uid, moves, context=None):
         push_obj = self.pool.get("stock.location.path")
         for move in moves:
-            if not move.move_dest_id:
+            #1) if the move is already chained, there is no need to check push rules
+            #2) if the move is a returned move, we don't want to check push rules, as returning a returned move is the only decent way
+            #   to receive goods without triggering the push rules again (which would duplicate chained operations)
+            if not move.move_dest_id and not move.origin_returned_move_id:
                 domain = [('location_from_id', '=', move.location_dest_id.id)]
                 if move.warehouse_id:
                     domain += ['|', ('warehouse_id', '=', move.warehouse_id.id), ('warehouse_id', '=', False)]

@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import time
-
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
@@ -34,7 +32,7 @@ class stock_return_picking_line(osv.osv_memory):
         'quantity': fields.float("Quantity", digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'wizard_id': fields.many2one('stock.return.picking', string="Wizard"),
         'move_id': fields.many2one('stock.move', "Move"),
-        'lot_id': fields.related('move_id', 'quant_ids', 'lot_id', type="many2one", relation='stock.production.lot', string='Serial Number', readonly=True),
+        'lot_id': fields.many2one('stock.production.lot', 'Serial Number', help="Used to choose the lot/serial number of the product returned"),
     }
 
 
@@ -43,12 +41,7 @@ class stock_return_picking(osv.osv_memory):
     _description = 'Return Picking'
     _columns = {
         'product_return_moves': fields.one2many('stock.return.picking.line', 'wizard_id', 'Moves'),
-        'move_dest_exists': fields.boolean('Chained Move Exists', readonly=True, help="Technical field used to hide 'move_dest_method' and help tooltip if not needed"),
-        'move_dest_method': fields.selection([('cancel', 'Cancel'), ('create', 'Recreate'), ('nothing', 'Fix Manually')], string="Chained Picking Resolution"),
-    }
-    
-    _defaults = {
-        'move_dest_method': 'nothing',
+        'move_dest_exists': fields.boolean('Chained Move Exists', readonly=True, help="Technical field used to hide help tooltip if not needed"),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -66,10 +59,10 @@ class stock_return_picking(osv.osv_memory):
             context = {}
         res = super(stock_return_picking, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False
+        uom_obj = self.pool.get('product.uom')
         pick_obj = self.pool.get('stock.picking')
         pick = pick_obj.browse(cr, uid, record_id, context=context)
         quant_obj = self.pool.get("stock.quant")
-        move_obj = self.pool.get("stock.move")
         chained_move_exist = False
         if pick:
             if pick.state != 'done':
@@ -78,13 +71,13 @@ class stock_return_picking(osv.osv_memory):
             for move in pick.move_lines:
                 if move.move_dest_id:
                     chained_move_exist = True
-                #Sum the quants in that location that can be returned (they must belong to the moves that were included in the returned picking)
+                #Sum the quants in that location that can be returned (they should have been moved by the moves that were included in the returned picking)
                 qty = 0
-                quant_search = quant_obj.search(cr, uid, [('history_ids', 'in', move.id), ('qty', '>', 0.0), 
-                                                            ('location_id', 'child_of', move.location_dest_id.id)], context=context)
+                quant_search = quant_obj.search(cr, uid, [('history_ids', 'in', move.id), ('qty', '>', 0.0), ('location_id', 'child_of', move.location_dest_id.id)], context=context)
                 for quant in quant_obj.browse(cr, uid, quant_search, context=context):
                     if not quant.reservation_id or quant.reservation_id.origin_returned_move_id.id != move.id:
                         qty += quant.qty
+                qty = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, qty, move.product_uom.id)
                 result1.append({'product_id': move.product_id.id, 'quantity': qty, 'move_id': move.id})
 
             if len(result1) == 0:
@@ -106,11 +99,23 @@ class stock_return_picking(osv.osv_memory):
         pick = pick_obj.browse(cr, uid, record_id, context=context)
         data = self.read(cr, uid, ids[0], context=context)
         returned_lines = 0
-        
+
         # Cancel assignment of existing chained assigned moves
-        moves_to_unreserve = [x.move_dest_id.id for x in pick.move_lines if x.move_dest_id and x.move_dest_id.quant_ids]
+        moves_to_unreserve = []
+        for move in pick.move_lines:
+            to_check_moves = [move.move_dest_id]
+            while to_check_moves:
+                current_move = to_check_moves.pop()
+                if current_move.state not in ('done', 'cancel') and current_move.reserved_quant_ids:
+                    moves_to_unreserve.append(current_move.id)
+                split_move_ids = move_obj.search(cr, uid, [('split_from', '=', current_move.id)], context=context)
+                if split_move_ids:
+                    to_check_moves += move_obj.browse(cr, uid, split_move_ids, context=context)
+
         if moves_to_unreserve:
             move_obj.do_unreserve(cr, uid, moves_to_unreserve, context=context)
+            #break the link between moves in order to be able to fix them later if needed
+            move_obj.write(cr, uid, moves_to_unreserve, {'move_orig_ids': False}, context=context)
 
         #Create new picking for returned products
         pick_type_id = pick.picking_type_id.return_picking_type_id and pick.picking_type_id.return_picking_type_id.id or pick.picking_type_id.id
@@ -119,8 +124,8 @@ class stock_return_picking(osv.osv_memory):
             'picking_type_id': pick_type_id,
             'state': 'draft',
             'origin': pick.name,
-        },context=context)
-        
+        }, context=context)
+
         for data_get in data_obj.browse(cr, uid, data['product_return_moves'], context=context):
             move = data_get.move_id
             if not move:
@@ -138,24 +143,8 @@ class stock_return_picking(osv.osv_memory):
                     'location_dest_id': move.location_id.id,
                     'origin_returned_move_id': move.id,
                     'procure_method': 'make_to_stock',
+                    'restrict_lot_id': data_get.lot_id.id,
                 })
-
-                if data['move_dest_method'] == 'cancel':
-                    if move.move_dest_id and move.move_dest_id.state not in ['done', 'cancel']:
-                        res = move_obj.split(cr, uid, move.move_dest_id, new_qty, context=context)
-                        move_obj.action_cancel(cr, uid, [res], context=context)
-                if data['move_dest_method'] == 'create':
-                    if move.move_dest_id and move.move_dest_id.state not in ['done', 'cancel']:
-                        res = move_obj.split(cr, uid, move.move_dest_id, new_qty, context=context)
-                        new_move = move_obj.copy(cr, uid, move.id, {
-                                       'location_id': move.location_id.id,
-                                       'location_dest_id': move.location_dest_id.id,
-                                       'product_uom_qty': new_qty, 
-                                       'product_uos_qty': uom_obj._compute_qty(cr, uid, move.product_uom.id, new_qty, move.product_uos.id),
-                                       'move_dest_id': res,
-                                       'picking_id': False,
-                                       })
-                        move_obj.action_confirm(cr, uid, [new_move], context=context)
 
         if not returned_lines:
             raise osv.except_osv(_('Warning!'), _("Please specify at least one non-zero quantity."))
@@ -177,13 +166,13 @@ class stock_return_picking(osv.osv_memory):
         new_picking_id, pick_type_id = self._create_returns(cr, uid, ids, context=context)
         # Override the context to disable all the potential filters that could have been set previously
         ctx = {
-               'search_default_picking_type_id': pick_type_id,
-               'search_default_draft': False,
-               'search_default_assigned': False,
-               'search_default_confirmed': False,
-               'search_default_ready': False,
-               'search_default_late': False,
-               'search_default_available': False,
+            'search_default_picking_type_id': pick_type_id,
+            'search_default_draft': False,
+            'search_default_assigned': False,
+            'search_default_confirmed': False,
+            'search_default_ready': False,
+            'search_default_late': False,
+            'search_default_available': False,
         }
         return {
             'domain': "[('id', 'in', [" + str(new_picking_id) + "])]",
