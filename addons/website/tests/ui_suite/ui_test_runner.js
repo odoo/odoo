@@ -20,6 +20,8 @@ function waitFor (ready, callback, timeout, timeoutMessageCallback) {
 }
 
 function run (test, onload, inject) {
+    try {
+
     var options = JSON.parse(phantom.args);
 
     var timeout = options.timeout ? Math.round(parseFloat(options.timeout)*1000) : 60000;
@@ -113,9 +115,16 @@ function run (test, onload, inject) {
         }
 
     });
+
+    } catch (e) {
+        console.error("Error in run:", e);
+        phantom.exit(1);
+    }
 }
 
 function run_test (testname, options) {
+    try {
+
     options = options || {};
     run(
         function start (page, timeout) {
@@ -137,6 +146,11 @@ function run_test (testname, options) {
         },
         options.inject || null
     );
+
+    } catch (e) {
+        console.error("Error in run_test:", e);
+        phantom.exit(1);
+    }
 }
 
 module.exports = {
