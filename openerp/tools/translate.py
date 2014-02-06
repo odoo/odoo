@@ -172,7 +172,7 @@ class GettextAlias(object):
             cr = getattr(s, 'cr', None)
         if not cr and allow_create:
             db = self._get_db()
-            if db:
+            if db is not None:
                 cr = db.cursor()
                 is_new_cr = True
         return cr, is_new_cr
