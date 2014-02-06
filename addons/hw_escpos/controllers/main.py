@@ -163,6 +163,7 @@ class EscposDriver(Thread):
 
         # Receipt Header
         if receipt['company']['logo']:
+            eprint.set(align='center')
             eprint.print_base64_image(receipt['company']['logo'])
             eprint.text('\n')
         else:
