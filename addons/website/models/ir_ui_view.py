@@ -137,16 +137,10 @@ class view(osv.osv):
             qcontext.update(
                 website=request.website,
                 url_for=website.url_for,
-                keep_query=website.keep_query,
                 slug=website.slug,
                 res_company=request.website.company_id,
                 user_id=self.pool.get("res.users").browse(cr, uid, uid),
                 editable=False,
-
-                # TODO: move this in server's ir.ui.view
-                request=request,
-                json=simplejson,
-                quote_plus=werkzeug.url_quote_plus,
             )
 
             # add some values

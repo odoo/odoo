@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import fnmatch
 import inspect
 import itertools
 import logging
@@ -7,7 +6,6 @@ import math
 import re
 import urlparse
 
-import simplejson
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.wrappers
@@ -23,17 +21,6 @@ from openerp.tools.safe_eval import safe_eval
 from openerp.addons.web.http import request, LazyResponse
 
 logger = logging.getLogger(__name__)
-
-def keep_query(*args, **kw):
-    if not args and not kw:
-        args = ('*',)
-    params = kw.copy()
-    query_params = frozenset(werkzeug.url_decode(request.httprequest.query_string).keys())
-    for keep_param in args:
-        for param in fnmatch.filter(query_params, keep_param):
-            if param not in params and param in request.params:
-                params[param] = request.params[param]
-    return werkzeug.urls.url_encode(params)
 
 def url_for(path_or_uri, lang=None):
     if isinstance(path_or_uri, unicode):
