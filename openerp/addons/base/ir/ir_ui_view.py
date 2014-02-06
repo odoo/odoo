@@ -20,15 +20,19 @@
 ##############################################################################
 import collections
 import copy
+import fnmatch
 import logging
 from lxml import etree
 from operator import itemgetter
 import os
+import simplejson
+import werkzeug
 
 import HTMLParser
 
 import openerp
 from openerp import tools
+from openerp.http import request
 from openerp.osv import fields, osv, orm
 from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
 from openerp.tools.safe_eval import safe_eval as eval
@@ -39,6 +43,17 @@ from openerp.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath']
+
+def keep_query(*args, **kw):
+    if not args and not kw:
+        args = ('*',)
+    params = kw.copy()
+    query_params = frozenset(werkzeug.url_decode(request.httprequest.query_string).keys())
+    for keep_param in args:
+        for param in fnmatch.filter(query_params, keep_param):
+            if param not in params and param in request.params:
+                params[param] = request.params[param]
+    return werkzeug.urls.url_encode(params)
 
 class view_custom(osv.osv):
     _name = 'ir.ui.view.custom'
@@ -805,10 +820,20 @@ class view(osv.osv):
         if not context:
             context = {}
 
+        if values is None:
+            values = dict()
+        qcontext = dict(
+            keep_query=keep_query,
+            request=request,
+            json=simplejson,
+            quote_plus=werkzeug.url_quote_plus,
+        )
+        qcontext.update(values)
+
         def loader(name):
             return self.read_template(cr, uid, name, context=context)
 
-        return self.pool[engine].render(cr, uid, tname, values, loader=loader, context=context)
+        return self.pool[engine].render(cr, uid, tname, qcontext, loader=loader, context=context)
 
     #------------------------------------------------------
     # Misc
