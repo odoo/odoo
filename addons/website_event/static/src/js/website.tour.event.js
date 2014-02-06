@@ -13,7 +13,7 @@
     website.EventTour = website.Tour.extend({
         id: 'event',
         name: "Create an event",
-        testPath: /\/event\/[0-9]+\/register/,
+        testPath: '/event(/[0-9]+/register)?',
         init: function (editor) {
             var self = this;
             self.steps = [

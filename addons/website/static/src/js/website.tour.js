@@ -7,10 +7,6 @@ website.add_template_file('/website/static/src/xml/website.tour.xml');
 website.EditorBar.include({
     tours: [],
     start: function () {
-        // $('.tour-backdrop').click(function (e) {
-        //     e.stopImmediatePropagation();
-        //     e.preventDefault();
-        // });
         var self = this;
         var menu = $('#help-menu');
         _.each(this.tours, function (tour) {
@@ -113,11 +109,13 @@ website.Tour = openerp.Class.extend({
             this.localStorage.setItem("tour-"+this.id+"-test-automatic", true);
         }
 
-        // redirect to begin of the tour
         if (this.path) {
-            var path = this.path.split('?');
-            window.location.href = path[0] + "?tutorial."+this.id+"=true" + path.slice(1, path.length).join("?");
-            return;
+            // redirect to begin of the tour in function of the language
+            if (!this.testUrl(this.path+"(#.*)?$")) {
+                var path = this.path.split('#');
+                window.location.href = "/"+this.getLang()+path[0] + "#tutorial."+this.id+"=true&" + path.slice(1, path.length).join("#");
+                return;
+            }
         }
 
         var self = this;
@@ -125,12 +123,12 @@ website.Tour = openerp.Class.extend({
         website.Tour.waitReady.call(this, function () {self._running();});
     },
     running: function () {
-        if (+this.localStorage.getItem("tour-"+this.id+"-test") >= this.steps.length) {
+        if (+this.localStorage.getItem("tour-"+this.id+"-test") >= this.steps.length-1) {
             this.endTour();
             return;
         }
 
-        if (website.Tour.is_busy() || !this.testUrl()) return;
+        if (website.Tour.is_busy() || !this.testPathUrl()) return;
 
         // launch tour with url
         this.checkRunningUrl();
@@ -143,7 +141,6 @@ website.Tour = openerp.Class.extend({
         var self = this;
         website.Tour.waitReady.call(this, function () {self._running();});
     },
-
     _running: function () {
         var stepId = this.localStorage.getItem("tour-"+this.id+"-test");
         var automatic = !!this.localStorage.getItem("tour-"+this.id+"-test-automatic");
@@ -174,13 +171,19 @@ website.Tour = openerp.Class.extend({
         $('.popover.tour').remove();
     },
 
-    testUrl: function () {
-        return !this.testPath || this.testPath.test(window.location.href);
+    getLang: function () {
+        return $("html").attr("lang").replace(/-/, '_');
+    },
+    testUrl: function (url) {
+        return new RegExp("(/"+this.getLang()+")?"+url, "i").test(window.location.href);
+    },
+    testPathUrl: function () {
+        if (!this.testPath || this.testUrl(this.testPath)) return true;
     },
     checkRunningUrl: function () {
-        if (window.location.search.indexOf("tutorial."+this.id+"=true") > -1) {
+        if (window.location.hash.indexOf("tutorial."+this.id+"=true") > -1) {
             this.localStorage.setItem("tour-"+this.id+"-test", 0);
-            window.location.href = window.location.href.replace(/tutorial.+=true&?/, '');
+            window.location.hash = window.location.hash.replace(/tutorial.+=true&?/, '');
         }
     },
 
@@ -315,7 +318,11 @@ website.Tour = openerp.Class.extend({
         }
     },
     endTour: function () {
-        console.log('{ "event": "success" }');
+        if (parseInt(this.localStorage.getItem("tour-"+this.id+"-test"),10) >= this.steps.length-1) {
+            console.log('{ "event": "success" }');
+        } else {
+            console.log('{ "event": "canceled" }');
+        }
         this.reset();
     },
     autoNextStep: function () {

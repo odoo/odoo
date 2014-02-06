@@ -49,6 +49,7 @@
                                 <field name="partner_id"/>
                                 <field name="email" widget="email"/>
                                 <field name="test_entry" groups="base.group_no_one"/>
+                                <field name="quizz_score" groups="base.group_no_one"/>
                             </group>
                         </group>
                         <field name="user_input_line_ids" mode="tree" attrs="{'readonly': False}">
@@ -58,6 +59,7 @@
                                 <field name="answer_type"/>
                                 <field name="skipped"/>
                                 <field name="date_create"/>
+                                <field name="quizz_mark" groups="base.group_no_one"/>
                             </tree>
                         </field>
                     </sheet>
@@ -77,6 +79,7 @@
                     <field name="type"/>
                     <field name="state"/>
                     <field name="test_entry" invisible="True"/>
+                    <field name="quizz_score" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
@@ -497,8 +500,8 @@
                     <field name="page_id"/>
                     <field name="type"/>
                     <group expand="1" string="Group by...">
-                        <filter name="group_by_survey" string="Survey" domain="[]"  context="{'group_by':'survey_id'}"/>
-                        <filter name="group_by_page" string="Page" domain="[]"  context="{'group_by':'page_id'}"/>
+<!--                         <filter name="group_by_survey" string="Survey" domain="[]"  context="{'group_by':'survey_id'}"/>
+ -->                        <filter name="group_by_page" string="Page" domain="[]"  context="{'group_by':'page_id'}"/>
                     </group>
                 </search>
             </field>
@@ -511,7 +514,8 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="survey_question_tree"></field>
             <field name="search_view_id" ref="survey_question_search"/>
-            <field name="context">{'search_default_group_by_survey': True, 'search_default_group_by_page': True}</field>
+<!--             <field name="context">{'search_default_group_by_survey': True, 'search_default_group_by_page': True}</field>
+ -->            <field name="context">{'search_default_group_by_page': True}</field>
         </record>
 
         <!-- LABELS -->
@@ -524,6 +528,7 @@
                     <field name="question_id"/>
                     <field name="question_id_2"/>
                     <field name="value"/>
+                    <field name="quizz_mark" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
@@ -560,6 +565,7 @@
                             <field name="date_create"/>
                             <field name="answer_type"/>
                             <field name="skipped" />
+                            <field name="quizz_mark" groups="base.group_no_one"/>
                         </group>
                         <group>
                             <field name="value_text" colspan='2' attrs="{'invisible': [('answer_type','!=','text')]}"/>
@@ -585,6 +591,7 @@
                     <field name="date_create"/>
                     <field name="answer_type"/>
                     <field name="skipped"/>
+                    <field name="quizz_mark" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
