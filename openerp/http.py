@@ -441,6 +441,7 @@ class HttpRequest(WebRequest):
             elif request.func.routing.get('methods'):
                 methods = ', '.join(request.func.routing['methods'])
             response.headers.set('Access-Control-Allow-Methods', methods)
+            response.headers.set('Access-Control-Max-Age',60*60*24)
             response.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
             return response
 
