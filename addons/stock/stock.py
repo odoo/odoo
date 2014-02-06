@@ -26,7 +26,6 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp import tools
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from openerp import SUPERUSER_ID
 import openerp.addons.decimal_precision as dp
@@ -787,8 +786,8 @@ class stock_picking(osv.osv):
         '''This function prints the delivery order'''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
         datas = {
-                 'model': 'stock.picking',
-                 'ids': ids,
+            'model': 'stock.picking',
+            'ids': ids,
         }
         return {'type': 'ir.actions.report.xml', 'report_name': 'stock.picking.list', 'datas': datas, 'nodestroy': True}
 
@@ -796,8 +795,8 @@ class stock_picking(osv.osv):
         '''This function prints the picking list'''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
         datas = {
-                 'model': 'stock.picking',
-                 'ids': ids,
+            'model': 'stock.picking',
+            'ids': ids,
         }
         return {'type': 'ir.actions.report.xml', 'report_name': 'stock.picking.list.internal', 'datas': datas, 'nodestroy': True}
 
@@ -842,15 +841,6 @@ class stock_picking(osv.osv):
             self.pool.get('stock.move').force_assign(cr, uid, move_ids, context=context)
             if pick.pack_operation_exist:
                 self.do_prepare_partial(cr, uid, [pick.id], context=None)
-        return True
-
-    def cancel_assign(self, cr, uid, ids, context=None):
-        """ Cancels picking for the moves that are in the assigned state
-        @return: True
-        """
-        for pick in self.browse(cr, uid, ids, context=context):
-            move_ids = [x.id for x in pick.move_lines if x not in ['done', 'cancel']]
-            self.pool.get('stock.move').cancel_assign(cr, uid, move_ids, context=context)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -1006,11 +996,11 @@ class stock_picking(osv.osv):
         moves_to_unreserve = []
         pack_line_to_unreserve = []
         for picking in self.browse(cr, uid, picking_ids, context=context):
-            moves_to_unreserve += [m.id for m in picking.move_lines]
+            moves_to_unreserve += [m.id for m in picking.move_lines if m.state not in ('done', 'cancel')]
             pack_line_to_unreserve += [p.id for p in picking.pack_operation_ids]
-        if pack_line_to_unreserve:
-            self.pool.get('stock.pack.operation').unlink(cr, uid, pack_line_to_unreserve, context=context)
         if moves_to_unreserve:
+            if pack_line_to_unreserve:
+                self.pool.get('stock.pack.operation').unlink(cr, uid, pack_line_to_unreserve, context=context)
             self.pool.get('stock.move').do_unreserve(cr, uid, moves_to_unreserve, context=context)
 
     def do_recompute_remaining_quantities(self, cr, uid, picking_ids, context=None):
@@ -1215,14 +1205,13 @@ class stock_production_lot(osv.osv):
         @return: A dictionary of values
         """
         quant_obj = self.pool.get("stock.quant")
-        move_obj = self.pool.get("stock.move")
         quants = quant_obj.search(cr, uid, [('lot_id', 'in', ids)], context=context)
         moves = set()
         for quant in quant_obj.browse(cr, uid, quants, context=context):
             moves |= {move.id for move in quant.history_ids}
         if moves:
-            return { 
-                'domain': "[('id','in',["+','.join(map(str, list(moves)))+"])]",
+            return {
+                'domain': "[('id','in',[" + ','.join(map(str, list(moves))) + "])]",
                 'name': _('Traceability'),
                 'view_mode': 'tree,form',
                 'view_type': 'form',
@@ -1231,7 +1220,6 @@ class stock_production_lot(osv.osv):
                 'type': 'ir.actions.act_window',
                     }
         return False
-        
 
 
 # ----------------------------------------------------
@@ -1407,6 +1395,7 @@ class stock_move(osv.osv):
         'price_unit': fields.float('Unit Price', help="Technical field used to record the product cost set by the user during a picking confirmation (when costing method used is 'average price' or 'real'). Value given in company currency and in product uom."),  # as it's a technical field, we intentionally don't provide the digits attribute
 
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
+        'split_from': fields.many2one('stock.move', string="Move Split From", help="Technical field used to track the origin of a split move, which can be useful in case of debug"),
         'backorder_id': fields.related('picking_id', 'backorder_id', type='many2one', relation="stock.picking", string="Back Order of", select=True),
         'origin': fields.char("Source"),
         'procure_method': fields.selection([('make_to_stock', 'Make to Stock'), ('make_to_order', 'Make to Order')], 'Procurement Method', required=True, help="Make to Stock: When needed, the product is taken from the stock or we wait for replenishment. \nMake to Order: When needed, the product is purchased or produced."),
@@ -1493,13 +1482,16 @@ class stock_move(osv.osv):
         default['reserved_quant_ids'] = []
         default['returned_move_ids'] = []
         default['linked_move_operation_ids'] = []
-        default['origin_returned_move_id'] = False
+        if not default.get('origin_returned_move_id'):
+            default['origin_returned_move_id'] = False
         default['state'] = 'draft'
         return super(stock_move, self).copy_data(cr, uid, id, default, context)
 
     def do_unreserve(self, cr, uid, move_ids, context=None):
         quant_obj = self.pool.get("stock.quant")
         for move in self.browse(cr, uid, move_ids, context=context):
+            if move.state in ('done', 'cancel'):
+                raise osv.except_osv(_('Operation Forbidden!'), _('Cannot unreserve a done move'))
             quant_obj.quants_unreserve(cr, uid, move, context=context)
             putaway_values = []
             for putaway_rec in move.putaway_ids:
@@ -1534,7 +1526,10 @@ class stock_move(osv.osv):
     def _push_apply(self, cr, uid, moves, context=None):
         push_obj = self.pool.get("stock.location.path")
         for move in moves:
-            if not move.move_dest_id:
+            #1) if the move is already chained, there is no need to check push rules
+            #2) if the move is a returned move, we don't want to check push rules, as returning a returned move is the only decent way
+            #   to receive goods without triggering the push rules again (which would duplicate chained operations)
+            if not move.move_dest_id and not move.origin_returned_move_id:
                 domain = [('location_from_id', '=', move.location_dest_id.id)]
                 if move.warehouse_id:
                     domain += ['|', ('warehouse_id', '=', move.warehouse_id.id), ('warehouse_id', '=', False)]
@@ -1812,12 +1807,6 @@ class stock_move(osv.osv):
         self._putaway_check(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'assigned'})
 
-    def cancel_assign(self, cr, uid, ids, context=None):
-        """ Changes the state to confirmed.
-        @return: True
-        """
-        return self.write(cr, uid, ids, {'state': 'confirmed'})
-
     def check_tracking(self, cr, uid, move, lot_id, context=None):
         """ Checks if serial number is assigned to stock move or not and raise an error if it had to.
         """
@@ -1853,6 +1842,9 @@ class stock_move(osv.osv):
                 fallback_domain = prev_quant_ids and [('id', 'not in', prev_quant_ids)] or []
                 #we always keep the quants already assigned and try to find the remaining quantity on quants not assigned only
                 main_domain = [('reservation_id', '=', False), ('qty', '>', 0)]
+                #if the move is returned from another, restrict the choice of quants to the ones that follow the returned move
+                if move.origin_returned_move_id:
+                    main_domain += [('history_ids', 'in', move.origin_returned_move_id.id)]
                 #first try to find quants based on specific domains given by linked operations
                 for record in move.linked_move_operation_ids:
                     domain = main_domain + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
@@ -2043,7 +2035,8 @@ class stock_move(osv.osv):
             'move_dest_id': False,
             'reserved_quant_ids': [],
             'restrict_lot_id': restrict_lot_id,
-            'restrict_partner_id': restrict_partner_id
+            'restrict_partner_id': restrict_partner_id,
+            'split_from': move.id,
         }
         if context.get('source_location_id'):
             defaults['location_id'] = context['source_location_id']
