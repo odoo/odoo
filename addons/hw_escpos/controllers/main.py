@@ -65,7 +65,7 @@ class EscposDriver(Thread):
         self.push_task('status')
         return self.status
 
-    def open_cashbox(printer):
+    def open_cashbox(self,printer):
         printer.cashdraw(2)
         printer.cashdraw(5)
 
@@ -103,7 +103,7 @@ class EscposDriver(Thread):
                         self.print_receipt_body(printer,data)
                         printer.cut()
                 elif task == 'cashbox':
-                    if timestamp >= time.time() * 12:
+                    if timestamp >= time.time() - 12:
                         self.open_cashbox(printer)
                 elif task == 'status':
                     pass
