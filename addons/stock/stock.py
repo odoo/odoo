@@ -1895,27 +1895,12 @@ class stock_move(osv.osv):
                     self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'})
         return self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False})
 
-    def _check_packages(self, cr, uid, ids, context=None):
-        quant_obj =  self.pool.get("stock.quant")
+    def _check_package_from_moves(self, cr, uid, ids, context=None):
         pack_obj = self.pool.get("stock.quant.package")
-        # Check all quants moved are in packages and check they are moved in the good way
-        quants = quant_obj.search(cr, uid, [('history_ids', 'in', ids)], context=context)
-        # Check parent of parents for all those packages
-        top_packages = set()
-        for quant in quant_obj.browse(cr, uid, quants, context=context):
-            top_package = quant.package_id
-            while top_package.parent_id:
-                top_package = top_package.parent_id
-            if top_package:
-                top_packages.add(top_package)
-        for pack in top_packages:
-            quants = pack_obj.get_content(cr, uid, [pack.id], context=context)
-            location = False
-            for quant in quant_obj.browse(cr, uid, quants, context=context):
-                if not location:
-                    location = quant.location_id.id
-                elif location != quant.location_id.id:
-                    raise osv.except_osv(_('Error'), _('You can not put a product in a package that has products in another location. '))
+        packs = set()
+        for move in self.browse(cr, uid, ids, context=context):
+            packs |= set([q.package_id.id for q in move.quant_ids if q.package_id])
+        return pack_obj._check_location_constraint(cr, uid, list(packs), context=context)
 
     def action_done(self, cr, uid, ids, context=None):
         """ Process completly the moves given as ids and if all moves are done, it will finish the picking.
@@ -1987,7 +1972,7 @@ class stock_move(osv.osv):
                 procurement_ids.append(move.procurement_id.id)
         
         # Check the packages have been placed in the correct locations
-        self._check_packages(cr, uid, ids, context=context)
+        self._check_package_from_moves(cr, uid, ids, context=context)
         # Apply on picking
         self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         self.pool.get('procurement.order').check(cr, uid, procurement_ids, context=context)
@@ -3257,6 +3242,23 @@ class stock_package(osv.osv):
     _defaults = {
         'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').get(cr, uid, 'stock.quant.package') or _('Unknown Pack')
     }
+
+    def _check_location_constraint(self, cr, uid, ids, context=None):
+        '''checks that all quants in a package are stored in the same location. This function cannot be used
+           as a constraint because it needs to be checked on pack operations (they may not call write on the
+           package)
+        '''
+        quant_obj = self.pool.get('stock.quant')
+        for pack in self.browse(cr, uid, ids, context=context):
+            parent = pack
+            while parent.parent_id:
+                parent = parent.parent_id
+            quant_ids = self.get_content(cr, uid, [parent.id], context=context)
+            quants = quant_obj.browse(cr, uid, quant_ids, context=context)
+            location_id = quants and quants[0].location_id.id or False
+            if not all([quant.location_id.id == location_id for quant in quants]):
+                raise osv.except_osv(_('Error'), _('Everything inside a package should be in the same location'))
+        return True
 
     def action_print(self, cr, uid, ids, context=None):
         if context is None:
