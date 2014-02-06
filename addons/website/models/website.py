@@ -36,12 +36,18 @@ def keep_query(*args, **kw):
     return werkzeug.urls.url_encode(params)
 
 def url_for(path_or_uri, lang=None):
+    if isinstance(path_or_uri, unicode):
+        path_or_uri = path_or_uri.encode('utf-8')
+    current_path = request.httprequest.path
+    if isinstance(current_path, unicode):
+        current_path = current_path.encode('utf-8')
     location = path_or_uri.strip()
     force_lang = lang is not None
     url = urlparse.urlparse(location)
 
     if request and not url.netloc and not url.scheme and (url.path or force_lang):
-        location = urlparse.urljoin(request.httprequest.path, location)
+        location = urlparse.urljoin(current_path, location)
+
         lang = lang or request.context.get('lang')
         langs = [lg[0] for lg in request.website.get_languages()]
 
@@ -59,7 +65,7 @@ def url_for(path_or_uri, lang=None):
                 ps.insert(1, lang)
             location = '/'.join(ps)
 
-    return location
+    return location.decode('utf-8')
 
 def is_multilang_url(path, langs=None):
     if not langs:
