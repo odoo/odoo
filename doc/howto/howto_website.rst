@@ -22,9 +22,11 @@ In OpenERP, doing things takes the form of creating modules, and these modules
 customize the behavior of the OpenERP installation. The first step is thus to
 create a module:
 
-.. code:: shell-session
+.. todo:: output directory probably shouldn't be ``.``
 
-    > oe scaffold Academy
+.. code-block:: console
+
+    $ oe scaffold Academy .
 
 .. patch::
     :hidden:
@@ -44,10 +46,8 @@ Now start your OpenERP server and install your module in it, open a web
 browser and navigate to http://localhost:8069. A page should appear with just
 the words "Hello, world!" on it.
 
-The default response type is HTML (although we only sent some text, browsers
-are pretty good at finding ways to turn stuff into things they can
-display). Let's prettify things a bit: instead of returning just a bit of
-text, we can return a page, and use a tool/library like bootstrap_ to get a
+Let's prettify things a bit: instead of returning just a bit of text,
+we can return a page, and use a tool like bootstrap_ to get a
 nicer rendering than the default.
 
 Go to :file:`academy/controllers/my_controller.py` and change the string
@@ -66,10 +66,9 @@ Data input: URL and query
 =========================
 
 Being able to build a static page in code is nice, but makes for limited
-usefulness (you could do that with static files in the first place, after
-all).
+usefulness (you could do that with static files in the first place).
 
-But you can also create controllers which use data provided in the access URL,
+You can also create controllers which use data provided in the access URL,
 for instance so you have a single controller generating multiple pages. Any
 query parameter (``?name=value``) is passed as a parameter to the controller
 function, and is a string.

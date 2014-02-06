@@ -15,10 +15,10 @@ def run(args):
     env = jinja2.Environment(loader=jinja2.PackageLoader(
         'openerpcommand', 'templates'))
     env.filters['snake'] = snake
-    assert args.module
     args.dependency = 'web' if args.controller else 'base'
 
-    module = functools.partial(os.path.join, snake(args.module))
+    module = functools.partial(
+        os.path.join, args.modules_dir, snake(args.module))
 
     if os.path.exists(module()):
         message = "The path `%s` already exists." % module()
@@ -48,6 +48,8 @@ def add_parser(subparsers):
         description='Generate an OpenERP module skeleton.')
     parser.add_argument('module', metavar='MODULE',
         help='the name of the generated module')
+    parser.add_argument('modules_dir', metavar='DIRECTORY', type=directory,
+        help="Modules directory in which the new module should be generated")
 
     controller = parser.add_mutually_exclusive_group()
     controller.add_argument('--controller', type=identifier,
@@ -106,6 +108,14 @@ def identifier(s):
     if not re.match('[A-Za-z_][A-Za-z0-9_]*', s):
         die("%s is not a valid Python identifier" % s)
     return s
+
+def directory(p):
+    expanded = os.path.abspath(
+        os.path.expanduser(
+            os.path.expandvars(p)))
+    if not os.path.isdir(expanded):
+        die("Directory %s does not seem to exist" % p)
+    return expanded
 
 def die(message, code=1):
     print >>sys.stderr, message
