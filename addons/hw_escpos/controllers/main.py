@@ -11,7 +11,7 @@ import math
 import md5
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
 import subprocess
-from threading import Thread
+from threading import Thread, Lock
 from Queue import Queue, Empty
 
 try:
@@ -39,6 +39,7 @@ class EscposDriver(Thread):
     def __init__(self):
         Thread.__init__(self)
         self.queue = Queue()
+        self.lock  = Lock()
         self.status = {'status':'connecting', 'messages':[]}
 
     def connected_usb_devices(self):
@@ -47,6 +48,12 @@ class EscposDriver(Thread):
             if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) != None:
                 connected.append(device)
         return connected
+
+    def lockedstart(self):
+        self.lock.acquire()
+        if not self.isAlive():
+            self.start()
+        self.lock.release()
     
     def get_escpos_printer(self):
         try:
@@ -113,8 +120,7 @@ class EscposDriver(Thread):
                 _logger.error(e);
 
     def push_task(self,task, data = None):
-        if not self.isAlive():
-            self.start()
+        self.lockedstart()
         self.queue.put((time.time(),task,data))
 
     def print_receipt_body(self,eprint,receipt):
