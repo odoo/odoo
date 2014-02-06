@@ -337,7 +337,7 @@ class view(osv.osv):
             if isinstance(spec, SKIPPED_ELEMENT_TYPES):
                 continue
             if spec.tag == 'data':
-                specs += [ c for c in specs_tree ]
+                specs += [c for c in spec]
                 continue
             node = self.locate_node(source, spec)
             if node is not None:
