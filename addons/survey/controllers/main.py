@@ -294,21 +294,40 @@ class WebsiteSurvey(http.Controller):
                                        'prepare_result':self.prepare_result,
                                        'get_input_summary':self.get_input_summary,
                                        'get_graph_data':self.get_graph_data,
-                                       'page_range':self.page_range
+                                       'page_range':self.page_range,
+                                       'current_filters':post and self.filter_input_ids(post)
                                        })
+    def filter_input_ids(self,post):
+        cr, uid, context = request.cr, request.uid, request.context
+        input_line_obj = request.registry['survey.user_input_line']
+        input_obj = request.registry['survey.user_input_line']
+        domain_filter,choice = [],[]
+        for ids in post:
+            row_id,answer_id = ids.split(',')
+            if row_id == '0':
+                choice.append(int(answer_id))
+            else:
+                domain_filter.extend(['|',('value_suggested_row.id','=',int(row_id)),('value_suggested.id','=',int(answer_id))])
+        if choice:
+            domain_filter.insert(0,('value_suggested.id','in',choice))
+        else:
+            domain_filter = domain_filter[1:]
+        line_ids = input_line_obj.search(cr, uid, domain_filter, context=context)
+        filtered_input_ids = [input.user_input_id.id for input in input_obj.browse(cr, uid, line_ids, context=context)]
+        return filtered_input_ids
 
     def page_range(self, total_record, limit):
         '''Returns number of pages required for pagination'''
         total = math.ceil( total_record/float(limit) )
         return range(1, int( total+1 ))
 
-    def prepare_result(self, question):
+    def prepare_result(self, question, current_filters=[]):
         '''Prepare statistical data for questions by counting number of vote per choice'''
         if question.type in ['simple_choice', 'multiple_choice'] :
             result_summary = {}
-            [ result_summary.update({ label.id : {'text':label.value, 'count':0} }) for label in question.labels_ids ]
+            [ result_summary.update({ label.id : {'text':label.value, 'count':0, 'answer_id':label.id} }) for label in question.labels_ids ]
             for input_line in question.user_input_line_ids:
-                if result_summary.get(input_line.value_suggested.id) and not input_line.skipped:
+                if result_summary.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     result_summary[input_line.value_suggested.id]['count'] += 1
             result_summary = result_summary.values()
         if question.type == 'matrix':
@@ -318,7 +337,7 @@ class WebsiteSurvey(http.Controller):
             for cell in itertools.product(rows.keys(), answers.keys()):
                 res[cell] = 0
             for input_line in question.user_input_line_ids:
-                if not input_line.skipped:
+                if not(current_filters) or input_line.user_input_id.id in current_filters:
                     res[(input_line.value_suggested_row.id,input_line.value_suggested.id)] += 1
             result_summary= {'answers':answers,'rows':rows,'result':res}
         if question.type == 'numerical_box':
@@ -336,14 +355,15 @@ class WebsiteSurvey(http.Controller):
         return result_summary
     
     @http.route(['/survey/results/graph/<model("survey.question"):question>'],type='http', auth='user', multilang=True, website=True)
-    def get_graph_data(self, question):
+    def get_graph_data(self, question, **post):
         '''Returns appropriate formated data required by graph library'''
+        current_filters  = eval(post.get('current_filters','[]'))
         result = []
         if question.type in ['simple_choice', 'multiple_choice']:
             result.append({'key':str(question.question),
-                           'values':self.prepare_result(question)})
+                           'values':self.prepare_result(question, current_filters)})
         if question.type == 'matrix':
-            data = self.prepare_result(question)
+            data = self.prepare_result(question, current_filters)
             for answer in data['answers']:
                 values = []
                 for res in data['result']:

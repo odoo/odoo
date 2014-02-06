@@ -116,7 +116,7 @@
                 </li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane active survey_graph" t-att-id="'graph_question_'+str(question.id)" t-att-data-question_id="question.id" data-graph_type= "bar">
+                <div class="tab-pane active survey_graph" t-att-id="'graph_question_'+str(question.id)" t-att-data-question_id="question.id" data-graph_type= "bar" t-att-data-current_filters="current_filters">
                     <!-- svg element for drawing bar chart -->
                     <svg style="height:20em"></svg>
                 </div>
@@ -129,13 +129,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="prepare_result(question)" t-as="user_input">
+                            <tr t-foreach="prepare_result(question, current_filters)" t-as="user_input">
                                 <td>
                                     <p t-esc="user_input['text']"></p>
                                 </td>
-                                <td>
+                                <td class="survey_answer">
                                     <span t-esc="round(user_input['count']*100.0/(input_summary['answered'] or 1),2)"></span> %
                                     <span t-esc="user_input['count']" class="label label-primary">Vote</span>
+                                    <i class="fa fa-filter text-primary invisible survey_filter" t-att-data-question_id="question.id" t-att-data-answer_id="user_input['answer_id']"></i>
                                 </td>
                             </tr>
                         </tbody>
@@ -147,7 +148,7 @@
 
     <!-- Result for matrix -->
     <template id="result_matrix" name="Matrix Result">
-        <t t-set="matrix_result" t-value="prepare_result(question)" />
+        <t t-set="matrix_result" t-value="prepare_result(question, current_filters)" />
         <!-- Tabs -->
         <ul class="nav nav-tabs">
             <li class="active">
@@ -164,7 +165,7 @@
             </li>
         </ul>
         <div class="tab-content">
-            <div class="tab-pane active with-3d-shadow with-transitions survey_graph" t-att-id="'graph_question_'+str(question.id)" t-att-data-question_id= "question.id" data-graph_type= "multi_bar">
+            <div class="tab-pane active with-3d-shadow with-transitions survey_graph" t-att-id="'graph_question_'+str(question.id)" t-att-data-question_id= "question.id" data-graph_type= "multi_bar" t-att-data-current_filters="current_filters">
                 <!-- svg element for drawing Multibar chart -->
                 <svg style="height:20em"></svg>
             </div>
@@ -183,9 +184,9 @@
                             <td>
                                 <span t-esc="matrix_result['rows'][row_id]"></span>
                             </td>
-                            <td t-foreach="matrix_result['answers']" t-as="answer_id">
+                            <td class="survey_answer" t-foreach="matrix_result['answers']" t-as="answer_id">
                                 <span t-esc="round(matrix_result['result'][(row_id,answer_id)]*100.0/(input_summary['answered'] or 1),2)"></span> %
-                                <span class="label label-primary" t-esc="matrix_result['result'][(row_id,answer_id)]"></span>
+                                <span class="label label-primary" t-esc="matrix_result['result'][(row_id,answer_id)]"></span><i class="fa fa-filter text-primary invisible survey_filter" t-att-data-question_id="question.id" t-att-data-row_id="row_id" t-att-data-answer_id="answer_id"></i>
                             </td>
                         </tr>
                     </tbody>
@@ -196,7 +197,7 @@
 
     <!-- Result for Numeric Data -->
     <template id="result_number" name="Number Result">
-        <t t-set="number_result" t-value="prepare_result(question)" />
+        <t t-set="number_result" t-value="prepare_result(question, current_filters)" />
         <span class="pull-right mt8">
             <span class="label label-default only_right_radius">Maximum </span> <span class="label label-success only_left_radius" t-esc="number_result['max']"></span>
             <span class="label label-default only_right_radius">Minimum </span> <span class="label label-danger only_left_radius" t-esc="number_result['min']"></span>

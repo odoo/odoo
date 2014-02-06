@@ -101,10 +101,12 @@ $(document).ready(function () {
     $.each(survey_graphs, function(index, graph){
         var question_id = $(graph).attr("data-question_id");
         var graph_type = $(graph).attr("data-graph_type");
+        var current_filters = $(graph).attr("data-current_filters");
         $.ajax({
             url: '/survey/results/graph/'+question_id,
             type: 'POST',
             dataType: 'json',
+            data:{'current_filters':current_filters},
             success: function(response, status, xhr, wfe){ 
                 if(graph_type == 'multi_bar'){
                     nv.addGraph(function(){
@@ -120,6 +122,23 @@ $(document).ready(function () {
                 }
             }
         });
+    });
+    
+    // Script for filter
+    $('td.survey_answer').hover(function(){$(this).find('i.fa-filter').removeClass('invisible');},function(){$(this).find('i.fa-filter').addClass('invisible');});
+    $('td.survey_answer i.fa-filter').click(function(){
+        var cell=$(this);
+        var question_id = cell.attr('data-question_id');
+        var row_id = cell.attr('data-row_id') | 0;
+        var answer_id = cell.attr('data-answer_id');
+        if(document.URL.indexOf("?") == -1)
+            {
+                window.location.href = document.URL+'?' + encodeURI(row_id + ','+answer_id + '=' + question_id);
+            }
+        else{
+                window.location.href = document.URL+'&' + encodeURI(row_id + ','+answer_id + '=' + question_id);
+            
+        }
     });
     
     console.debug("[survey] Survey Result JS loaded!");
