@@ -998,18 +998,7 @@ class Session(http.Controller):
         :return: A key identifying the saved action.
         :rtype: integer
         """
-        saved_actions = request.httpsession.get('saved_actions')
-        if not saved_actions:
-            saved_actions = {"next":1, "actions":{}}
-            request.httpsession['saved_actions'] = saved_actions
-        # we don't allow more than 10 stored actions
-        if len(saved_actions["actions"]) >= 10:
-            del saved_actions["actions"][min(saved_actions["actions"])]
-        key = saved_actions["next"]
-        saved_actions["actions"][key] = the_action
-        saved_actions["next"] = key + 1
-        request.httpsession['saved_actions'] = saved_actions
-        return key
+        return request.httpsession.save_action(the_action)
 
     @http.route('/web/session/get_session_action', type='json', auth="user")
     def get_session_action(self, key):
@@ -1022,10 +1011,7 @@ class Session(http.Controller):
         :return: The saved action or None.
         :rtype: anything
         """
-        saved_actions = request.httpsession.get('saved_actions')
-        if not saved_actions:
-            return None
-        return saved_actions["actions"].get(key)
+        return request.httpsession.get_action(key)
 
     @http.route('/web/session/check', type='json', auth="user")
     def check(self):
