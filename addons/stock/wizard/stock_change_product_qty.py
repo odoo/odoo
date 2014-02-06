@@ -74,15 +74,15 @@ class stock_change_product_qty(osv.osv_memory):
         rec_id = context and context.get('active_id', False)
         assert rec_id, _('Active ID is not set in Context')
 
-        inventry_obj = self.pool.get('stock.inventory')
-        inventry_line_obj = self.pool.get('stock.inventory.line')
+        inventory_obj = self.pool.get('stock.inventory')
+        inventory_line_obj = self.pool.get('stock.inventory.line')
         prod_obj_pool = self.pool.get('product.product')
 
         res_original = prod_obj_pool.browse(cr, uid, rec_id, context=context)
         for data in self.browse(cr, uid, ids, context=context):
             if data.new_quantity < 0:
                 raise osv.except_osv(_('Warning!'), _('Quantity cannot be negative.'))
-            inventory_id = inventry_obj.create(cr , uid, {'name': _('INV: %s') % tools.ustr(res_original.name)}, context=context)
+            inventory_id = inventory_obj.create(cr , uid, {'name': _('INV: %s') % tools.ustr(res_original.name), 'product_id': rec_id, 'location_id': data.location_id.id, 'lot_id': data.lot_id.id}, context=context)
             line_data ={
                 'inventory_id' : inventory_id,
                 'product_qty' : data.new_quantity,
@@ -91,8 +91,8 @@ class stock_change_product_qty(osv.osv_memory):
                 'product_uom_id' : res_original.uom_id.id,
                 'prod_lot_id' : data.lot_id.id
             }
-            inventry_line_obj.create(cr , uid, line_data, context=context)
-            inventry_obj.action_done(cr, uid, [inventory_id], context=context)
+            inventory_line_obj.create(cr , uid, line_data, context=context)
+            inventory_obj.action_done(cr, uid, [inventory_id], context=context)
         return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
