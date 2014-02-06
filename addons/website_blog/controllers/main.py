@@ -237,6 +237,7 @@ class WebsiteBlog(http.Controller):
                     type='comment',
                     subtype='mt_comment',
                     author_id=user.partner_id.id,
+                    tag_id=post.get('tag_id'),
                     context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
@@ -288,3 +289,21 @@ class WebsiteBlog(http.Controller):
         if view_data['inherit_id']:
             return [True]
         return []
+    
+    @http.route('/blog_post/comments', type='json', auth="public", website=True)
+    def getcomments(self, blog=None, tag_id=None, **post):
+        blog = request.registry.get('blog.post').browse(request.cr, SUPERUSER_ID, int(blog))
+        values = []
+        mail_obj = request.registry.get('mail.message');
+        for mail in blog.website_message_ids:
+            ids = mail_obj.search(request.cr, SUPERUSER_ID, [('id', '=', mail.id), ('tag_id', '=', tag_id)])
+            if ids:
+                post = mail_obj.browse(request.cr, SUPERUSER_ID, ids[0])
+                values.append({
+                    "author_name": post.author_id.name,
+                    "date": post.date,
+                    'body': post.body,
+                    'author_image': "data:image/png;base64,%s" % post.author_id.image,
+                })
+        return values
+

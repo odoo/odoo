@@ -57,7 +57,12 @@ class BlogTag(osv.Model):
             'blog.post', string='Posts',
         ),
     }
+class MailMessage(osv.Model):
+    _inherit = 'mail.message'
 
+    _columns = {
+        'tag_id': fields.char('Tag'),
+    }
 
 class BlogPost(osv.Model):
     _name = "blog.post"
