@@ -290,6 +290,12 @@
     </xpath>
 </template>
 
+<template id="debugger" inherit_option_id="website.layout" name="Debugger &amp; Tests">
+    <xpath expr='//t[@name="layout_head"]' position="after">
+        <script type="text/javascript" src="/website/static/src/js/website.tour.test.js"></script>
+    </xpath>
+</template>
+
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout">
     <xpath expr="t" position="replace">
         <t t-call="website.layout">

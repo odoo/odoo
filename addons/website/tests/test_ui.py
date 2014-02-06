@@ -58,7 +58,6 @@ class WebsiteUiSuite(unittest.TestSuite):
         return iter([self])
 
     def run(self, result):
-        return
         # clean slate
         if sql_db._Pool is not None:
             sql_db._Pool.close_all(sql_db.dsn(tools.config['db_name']))
@@ -79,18 +78,21 @@ class WebsiteUiSuite(unittest.TestSuite):
             del result._exc_info_to_string
 
     def _run(self, result):
-        self._test = WebsiteUiTest(self._testfile)
+        self._test = WebsiteUiTest("%s (as %s)" %
+            (self._testfile, self._options.get('user') or "Anonymous" if 'user' in self._options else "admin" ))
         start_time = time.time()
         last_check_time = time.time()
 
         self._options['timeout'] = self._timeout
         self._options['port'] = tools.config.get('xmlrpc_port', 80)
         self._options['db'] = tools.config.get('db_name', '')
-        self._options['user'] = 'admin'
-        self._options['password'] = tools.config.get('admin_passwd', 'admin')
+        if 'user' not in self._options:
+            self._options['user'] = 'admin'
+            self._options['password'] = tools.config.get('admin_passwd', 'admin')
 
         phantom = subprocess.Popen([
             'phantomjs',
+            #'--debug=true',
             self._testfile,
             json.dumps(self._options)
         ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
