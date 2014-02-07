@@ -42,6 +42,7 @@ class res_users_gamification_group(osv.Model):
             challenge_ids = challenge_obj.search(cr, uid, [('autojoin_group_id', 'in', user_group_ids)], context=context)
             if challenge_ids:
                 challenge_obj.write(cr, uid, challenge_ids, {'user_ids': [(4, user_id) for user_id in ids]}, context=context)
+                challenge_obj.generate_goals_from_challenge(cr, uid, challenge_ids, context=context)
         return write_res
 
     def create(self, cr, uid, vals, context=None):
@@ -56,6 +57,7 @@ class res_users_gamification_group(osv.Model):
             challenge_ids = challenge_obj.search(cr, uid, [('autojoin_group_id', 'in', user_group_ids)], context=context)
             if challenge_ids:
                 challenge_obj.write(cr, uid, challenge_ids, {'user_ids': [(4, write_res)]}, context=context)
+                challenge_obj.generate_goals_from_challenge(cr, uid, challenge_ids, context=context)
         return write_res
 
     # def get_goals_todo_info(self, cr, uid, context=None):
@@ -129,4 +131,5 @@ class res_groups_gamification_group(osv.Model):
             challenge_ids = challenge_obj.search(cr, uid, [('autojoin_group_id', 'in', ids)], context=context)
             if challenge_ids:
                 challenge_obj.write(cr, uid, challenge_ids, {'user_ids': [(4, user_id) for user_id in user_ids]}, context=context)
+                challenge_obj.generate_goals_from_challenge(cr, uid, challenge_ids, context=context)
         return write_res
