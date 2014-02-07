@@ -111,7 +111,7 @@ class stock_location(osv.osv):
         'parent_right': fields.integer('Right Parent', select=1),
 
         'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared between all companies'),
-        'scrap_location': fields.boolean('Scrap Location', help='Check this box to allow using this location to put scrapped/damaged goods.'),
+        'scrap_location': fields.boolean('Is a Scrap Location?', help='Check this box to allow using this location to put scrapped/damaged goods.'),
         'removal_strategy_ids': fields.one2many('product.removal', 'location_id', 'Removal Strategies'),
         'putaway_strategy_ids': fields.one2many('product.putaway', 'location_id', 'Put Away Strategies'),
     }
@@ -1307,7 +1307,7 @@ class stock_move(osv.osv):
         res = dict.fromkeys(ids, '')
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ('draft', 'done', 'cancel') or move.location_id.usage != 'internal':
-                res[move.id] = _('n/a')
+                res[move.id] = ''  # 'not applicable' or 'n/a' could work too
                 continue
             total_available = min(move.product_qty, move.reserved_availability + move.availability)
             total_available = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, total_available, move.product_uom.id)
