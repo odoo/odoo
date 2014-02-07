@@ -296,13 +296,11 @@ class WebsiteBlog(http.Controller):
     
     @http.route('/blog_post/comments', type='json', auth="public", website=True)
     def getcomments(self, blog=None, tag_id=None, **post):
-        blog = request.registry.get('blog.post').browse(request.cr, SUPERUSER_ID, int(blog))
+        mail_obj = request.registry.get('mail.message')
         values = []
-        mail_obj = request.registry.get('mail.message');
-        for mail in blog.website_message_ids:
-            ids = mail_obj.search(request.cr, SUPERUSER_ID, [('id', '=', mail.id), ('tag_id', '=', tag_id)])
-            if ids:
-                post = mail_obj.browse(request.cr, SUPERUSER_ID, ids[0])
+        ids = mail_obj.search(request.cr, SUPERUSER_ID, [('res_id', '=', int(blog)) ,('model','=','blog.post'), ('tag_id', '=', tag_id)])
+        if ids:
+            for post in mail_obj.browse(request.cr, SUPERUSER_ID, ids):
                 values.append({
                     "author_name": post.author_id.name,
                     "date": post.date,

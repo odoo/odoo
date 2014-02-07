@@ -1,13 +1,9 @@
-// Disqus global vars.
+//global vars.
 var disqus_identifier;
 var disqus_url;
 
 (function($) {
-	
-    jQuery(document).ready(function() {
-        jQuery("main p").inlineDisqussions();
-    });
-     
+
     var settings = {};
 
     $.fn.extend({
@@ -16,8 +12,6 @@ var disqus_url;
       // Set up defaults
       var defaults = {
         identifier: 'name',
-        displayCount: true,
-        highlighted: false,
         position: 'right',
         background: 'white',
         maxWidth: 9999
@@ -41,11 +35,6 @@ var disqus_url;
       $(this).each(function(i) {
         disqussionNotesHandler(i, $(this));
       });
-
-      // Display comments count.
-      if (settings.displayCount) {
-       // loadDisqusCounter();
-      }
 
       // Hide the discussion.
       $('html').click(function(event) {
@@ -153,52 +142,39 @@ var disqus_url;
           if(!data)
               return;
           _.map(data, function(res){
-              p += '<div><img class="img-circle oe_inline" style="width: 25%; margin-right:10px;" src="' + res.author_image + '"/><h5 class="media-heading"><span>'+res.author_name+'</span><small> on <span>'+res.date+'</span></small></h5><span>'+res.body+'</span></div>'
+              p += '<hr/><table><tr><td rowspan="2" width="30%"><img class="img-circle oe_inline" style="width: 90%;" src="' + res.author_image + '"/></td><td>'+res.author_name+'</td></tr><tr><td><h5><small> on <span>'+res.date+'</span></small></h5></td></tr><tr><td colspan="2">'+res.body+'</td></tr></table>'
           });
           $('.content').html(p)
       });
-
-      $('#disqussions_wrapper').append('<div class="mycontent hidden"><form id="comment" action="/blogpost/comment" method="POST"><input name="tag_id" value="'+ identifier +'" type="hidden"/><input name="blog_post_id" value="'+id+'" type="hidden"/><textarea class="form-control" rows="3" id="comment" name="comment" placeholder="Write a comment..."/><br/><button id="submit" type="submit" class="btn btn-primary mt8">Post</button></form><div class="content"/></div>')
-
-      $('.disqussion-link').popover({
+      
+      $('a[data-disqus-identifier="'+identifier+'"]').append('<div class="mycontent hidden"><form id="comment" action="/blogpost/comment" method="POST"><input name="tag_id" value="'+ identifier +'" type="hidden"/><input name="blog_post_id" value="'+id+'" type="hidden"/><textarea rows="3" id="comment" name="comment" placeholder="Write a comment..."/><br/><button id="submit" type="submit" class="btn btn-primary btn-sm mt8">Post</button></form><div class="content"/></div>')
+      
+       $('#submit').click(function() {
+    	  console.log('aaaaaa',$('p[data-disqus-identifier="'+identifier+'"]'))
+    	  $('p[data-disqus-identifier="'+identifier+'"]').attr('data-count','2');
+    	  debugger;
+      });
+      $('a[data-disqus-identifier="'+identifier+'"]').popover({
           html:true,
           placement:'right',
           content:function(){
               return $($(this).data('contentwrapper')).html();
           }
       });
-//      $('#submit').click(function() {
-//    	  $('p[data-disqus-identifier="'+identifier+'"]').attr('data-count','2');
-//    	  debugger;
-//      });
-      
+     
     // Add 'active' class.
     $('a.disqussion-link, a.main-disqussion-link').removeClass('active').filter(source).addClass('active');
     callback(source);
-
   };
-
-//  var loadDisqusCounter = function() {
-//
-//    // Append the Disqus count script to <head>.
-//    var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;
-//    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-//    $('head').append(s);
-//
-//    // Add class to discussions that already have comments.
-//    window.setTimeout(function() {
-//      $('.disqussion-link').filter(function() {
-//        return $(this).text().match(/[1-9]/g);
-//      }).addClass("has-comments");
-//    }, 1000);
-//
-//  };
-
-  var hideDisqussion = function() {
-    
-    $('.disqussion-link').popover('hide')
-    $('a.disqussion-link').removeClass('active');
   
+  var hideDisqussion = function() {
+      $('a[data-disqus-identifier="'+disqus_identifier+'"]').popover('hide')
+      $('a.disqussion-link').removeClass('active');
   };
 
 })(jQuery);
+
+jQuery(document).ready(function() {
+    jQuery("main p").inlineDisqussions();
+});
+ 
