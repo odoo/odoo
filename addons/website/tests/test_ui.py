@@ -86,6 +86,10 @@ class WebsiteUiSuite(unittest.TestSuite):
         self._options['timeout'] = self._timeout
         self._options['port'] = tools.config.get('xmlrpc_port', 80)
         self._options['db'] = tools.config.get('db_name', '')
+        # FIX for runbot test
+        if hasattr(os, 'uname') and os.uname()[1].startswith('runbot.'):
+            self._options['host'] = tools.config.get('db_name', '') + ".runbot.openerp.com"
+
         if 'user' not in self._options:
             self._options['user'] = 'admin'
             self._options['password'] = 'admin'
