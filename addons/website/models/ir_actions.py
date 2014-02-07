@@ -23,7 +23,8 @@ class actions_server(osv.Model):
     def _get_website_url(self, cr, uid, ids, name, args, context=None):
         res = dict.fromkeys(ids, False)
         for action in self.browse(cr, uid, ids, context=context):
-            res[action.id] = self._compute_website_url(cr, uid, action.id, action.website_path, action.xml_id, context=context)
+            if action.state == 'code' and action.website_published:
+                res[action.id] = self._compute_website_url(cr, uid, action.id, action.website_path, action.xml_id, context=context)
         return res
 
     _columns = {
