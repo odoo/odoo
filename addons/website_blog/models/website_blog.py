@@ -98,6 +98,7 @@ class BlogPost(osv.Model):
 
     _columns = {
         'name': fields.char('Title', required=True, translate=True),
+        'sub_title' : fields.char('Sub Title', translate=True),
         'content_image': fields.binary('Background Image'),
         'blog_id': fields.many2one(
             'blog.blog', 'Blog',

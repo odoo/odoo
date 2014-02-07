@@ -56,7 +56,9 @@
                     <sheet>
                         <h1><field name="name" placeholder="Name"/></h1>
                         <field name="tag_ids" widget="many2many_tags"/>
+                        <field name="sub_title"/>
                         <group>
+                            <field name="content_image"/>
                             <field name="blog_id"/>
                         </group>
                         <field name="content" placeholder="e.g. Once upon a time..." widget="html"/>

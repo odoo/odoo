@@ -113,7 +113,7 @@
         </div>
     </div>
     <t t-foreach="blog_posts" t-as="blog_post">
-      <div t-att-data-publish="blog_post.website_published and 'on' or 'off'">
+      <div name="blog_post_summary" t-att-data-publish="blog_post.website_published and 'on' or 'off'">
         <h2 class="text-center">
             <a t-attf-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}" t-field="blog_post.name"></a>
         </h2>
@@ -133,6 +133,35 @@
 
     </t>
     </t>
+</template>
+
+<!-- Blog Post List -->
+<template id="opt_blog_post_short_list" name="Blog Post List"
+        inherit_option_id="website_blog.blog_post_short">
+    <xpath expr="//div[@name='blog_post_summary']" position="replace">
+        <div class="container">
+            <div class="row">
+                <div name="blog_post_summary" class="col-md-8 col-md-offset-2 mt32" t-att-publish-data="blog_post.website_published and 'on' or 'off'">
+                    <div class="media">
+                        <a class="pull-right" href="#">
+                            <img class="media-object" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 40px;"/>
+                        </a>
+                        <div class="media-body">
+                            <h2 class="media-heading">
+                                <a t-attf-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}" t-field="blog_post.name"></a>
+                            </h2>
+                            <h3><small class="text-left text-muted" t-field="blog_post.sub_title"/></h3>
+                            <p class="text-justify text-muted"><strong><small t-field="blog_post.create_uid.name"></small></strong></p>
+                        </div>
+                    </div>
+                    <p class="post-meta text-muted text-left hidden" name='blog_post_data'>
+                        <span class="fa fa-calendar oe_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
+                    </p>
+                <hr/>
+                </div>
+            </div>
+        </div>
+    </xpath>
 </template>
 
 <!-- Options: Blog Post Summary: hide author -->
@@ -238,8 +267,9 @@
         <attribute name="t-attf-style">background-image : url(data:image/jpg;base64,#{blog_post.content_image})</attribute>
     </xpath>
     <xpath expr="//div[@id='title']" position="inside">
+        <h2 class="text-center text-muted"><small t-field="blog_post.sub_title"></small></h2>
         <div class="text-center blog_item">
-            <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.create_uid.partner_id.id)" style="width: 30px; margin-right: 10px;"/>
+            <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 30px; margin-right: 10px;"/>
             <small class="text-muted" id="blog_author" t-field="blog_post.create_uid.name"/>
         </div>
         <div class="text-center mt64">
@@ -250,8 +280,9 @@
         <div class="cover_footer" t-attf-style="background-image: url(data:image/jpg;base64,#{next_post.content_image})">
             <a class="js_next " t-attf-href="/blogpost/#{ slug(next_post) }"><p class="text-center">Read Next</p></a>
             <h1 class="text-center" t-field="next_post.name"/>
+            <h2 class="text-center text-muted"><small t-field="blog_post.sub_title"></small></h2>
             <div class="text-center blog_item">
-                <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(next_post.create_uid.partner_id.id)" style="width: 30px; margin-right: 10px;"/>
+                <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(next_post.create_uid.id)" style="width: 30px; margin-right: 10px;"/>
                 <small class="text-muted" id="blog_author" t-field="next_post.create_uid.name"/>
             </div>
         </div>
@@ -350,7 +381,6 @@
     <t t-call="website.layout">
         <t t-set="head">
             <link rel='stylesheet' href='/website_blog/static/src/css/website_blog.css'/>
-            <link rel='stylesheet' href='/website_blog/static/lib/page-transitions/css/styles.css'/>
             <link rel='stylesheet' href='/website_blog/static/lib/inlineDisqussions/inlineDisqussions.css'/>
         </t>
         <div id="wrap" class="js_blog">
