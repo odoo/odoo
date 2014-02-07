@@ -15,8 +15,8 @@ Howto: build a website with OpenERP
    For production deployment, see the dedicated guides :ref:`using-gunicorn`
    and :ref:`using-mod-wsgi`.
 
-Hello, world!
-=============
+Creating a basic module
+=======================
 
 In OpenERP, doing things takes the form of creating modules, and these modules
 customize the behavior of the OpenERP installation. The first step is thus to
@@ -82,8 +82,8 @@ returned by the ``index`` method to get a more page-ish output:
 
 .. todo:: screenshot
 
-Data input: URL and query
-=========================
+Controller Parameters
+=====================
 
 Being able to build a static page in code is nice, but makes for limited
 usefulness (you could do that with static files).
@@ -116,8 +116,8 @@ from a string URL section to a python integer) and will perform a some
 validation (if the ``id`` is not a valid integer, the converter will return a
 ``404 Not Found`` instead of a 500 server error when the conversion fails).
 
-Templating: better experience in editing
-========================================
+Basic templates
+===============
 
 So far we've output HTML by munging strings. It works, but is not exactly fun
 to edit (and somewhat unsafe to boot) as even advanced text editors have a
@@ -273,7 +273,7 @@ installed after the ``academy`` module, its index page takes over routing (two
 index pages exist, and one is picked over the other).
 
 To fix the issue, we can simply add ``website`` as a dependency to ``academy``
-(that is, tell OpenERP that ``academy`` needs ``website`` to work right):
+(that is, tell OpenERP that ``academy`` needs ``website`` to work correctly):
 
 .. needs -u all to update metadata
 

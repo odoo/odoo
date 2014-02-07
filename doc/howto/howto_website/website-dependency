@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent b2da66732141558bdf8fcc21000b98a8b67a1340
+# Parent f84f5783ecf4eabd018fd27548423b5cefc1d2dc
 
 diff --git a/__openerp__.py b/__openerp__.py
 --- a/__openerp__.py
@@ -16,12 +16,9 @@ diff --git a/__openerp__.py b/__openerp__.py
 diff --git a/controllers/my_controller.py b/controllers/my_controller.py
 --- a/controllers/my_controller.py
 +++ b/controllers/my_controller.py
-@@ -12,20 +12,12 @@ teaching_assistants = [
- ]
- 
+@@ -14,18 +14,10 @@ teaching_assistants = [
  class my_controller(main.Home):
--    @http.route('/', auth='none')
-+    @http.route('/', auth='public')
+     @http.route('/', auth='none')
      def index(self):
 -        cr, uid, context = http.request.cr, http.request.uid, http.request.context
 -        tas = [
@@ -37,7 +34,7 @@ diff --git a/controllers/my_controller.py b/controllers/my_controller.py
 -        }, context=context)
 -
 -    @http.route('/tas/<int:id>/', auth='none')
-+    @http.route('/tas/<int:id>/', auth='public', website=True)
++    @http.route('/tas/<int:id>/', auth='none', website=True)
      def ta(self, id):
 -        cr, uid, context = http.request.cr, http.request.uid, http.request.context
 -        return http.request.registry['ir.ui.view'].render(
