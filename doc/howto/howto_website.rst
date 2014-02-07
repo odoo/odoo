@@ -133,10 +133,6 @@ Let's move our 2 pseudo-templates from inline strings to actual templates:
 
 .. patch::
 
-.. todo:: how can I access a QWeb template from a auth=none controller?
-          explicitly fetch a registry using request.session.db? That's a bit
-          horrendous now innit?
-
 This simplifies the controller code by moving data formatting out of it, and
 generally makes it simpler for designers to edit the markup.
 
@@ -278,13 +274,6 @@ To fix the issue, we can simply add ``website`` as a dependency to ``academy``
 .. needs -u all to update metadata
 
 .. patch::
-
-.. todo:: website dispatch overrides blows up on auth=none (implicitly
-          inherits website's index -> ``website_enabled`` -> tries to access
-          ``request.registry['website']`` even though ``request.registry is
-          None`` because ``auth='none'``)
-
-          also template issues (see above) (enabled website to "fix")
 
 This will cause ``academy``'s index page to overwrite ``website``'s.
 
