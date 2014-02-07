@@ -258,9 +258,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             case 'swap_axis':
                 this.swap_axis();
                 break;
-            case 'expand_all':
-                this.pivot.expand_all().then(this.proxy('display_data'));
-                break;
             case 'update_values':
                 this.pivot.update_data().then(this.proxy('display_data'));
                 break;
