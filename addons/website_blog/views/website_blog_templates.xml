@@ -7,9 +7,8 @@
         <script type="text/javascript" src="/website_blog/static/src/js/website_blog.editor.js"></script>
         <script type="text/javascript" src="/website_blog/static/src/js/website.tour.blog.js"></script>
         <script type="text/javascript" src="/website_blog/static/lib/contentshare.js"></script>
-        <script type="text/javascript" src="/website_blog/static/lib/page-transitions/js/app.js"></script>
         <script type="text/javascript" src="/website_blog/static/lib/inlineDisqussions/inlineDisqussions.js"></script>
-        
+        <script type="text/javascript" src="/website_blog/static/src/js/website_blog.js"/>
     </xpath>
 </template>
 
@@ -166,6 +165,7 @@
         <h1 class="text-center" t-field="blog_post.name"/>
         <p class="post-meta text-muted text-center" name="blog_post_data">
             <span class="fa fa-calendar oe_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
+            <span>Visit <span class="badge" t-field="blog_post.counter"></span></span>
             <span t-if="len(blog_post.message_ids) &gt; 0" class="fa fa-comment-o"> With
                 <a t-attf-href="#comments">
                     <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
@@ -187,7 +187,7 @@
         </t>
     </div>
 
-    <div t-field="blog_post.content"/>
+    <div id="blog_content" t-field="blog_post.content"/>
 
     <section id="comments" class="container">
         <ul class="media-list" id="comments-list">
@@ -210,32 +210,6 @@
     </t>
 </template>
 
-<template id="blog_post_cover" name="Blog Cover" inherit_option_id="website_blog.blog_post_complete">
-        <xpath expr="//div[@id='title']" position="replace">
-            <div class='page hidden' id="title">
-                <div class='big-image'>
-                    <div class='inner'>
-                        <div class='fader'>
-                            <div class='text'>
-                                <a class='goto-next'>Read Next</a>
-                                <h1 class='title'></h1>
-                                <h2 class='description'></h2>
-                                <h4 class='byline'>
-                                    <span class="author_image"/>
-                                    <span class='author'></span>
-                                </h4>
-                                <p class="post-meta text-muted text-center" name="blog_post_data"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="content">
-                    <div class='text'></div>
-                </div>
-            </div>
-      </xpath>
-</template>
-
 <template id="blog_breadcrumb" name="Breadcrumb"
         inherit_option_id="website_blog.blog_post_complete">
     <xpath expr="//div[@id='title']" position="before">
@@ -256,61 +230,72 @@
     </xpath>
 </template>
 
-<!--<template id="blog_background_cover" name="Blog Cover"-->
-<!--        inherit_option_id="website_blog.blog_post_complete">-->
-<!--    <xpath expr="//div[@id='title']" position="attributes">-->
-<!--        <attribute name="class">blog_cover</attribute>-->
-<!--        <attribute t-if="blog_post.content_image" name="t-attf-style">background : url('data:image/png;base64,#{blog_post.content_image}') center center no-repeat;</attribute>-->
-<!--        <attribute t-if="not blog_post.content_image" name="style">background : #34495E;</attribute>-->
-<!--    </xpath>-->
-<!--    <xpath expr="//div[@id='title']" position="inside">-->
-<!--        <div class="text-center blog_item">-->
-<!--            <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 50px; margin-right: 10px;"/>-->
-<!--            <small class="text-muted" id="blog_author" t-field="blog_post.create_uid.name"/>-->
-<!--        </div>-->
-<!--        <div class="text-center mt64">-->
-<!--            <a href="#blog_content"><span class="fa fa-angle-down fa-2x fa-inverse"/></a>-->
-<!--        </div>-->
-<!--    </xpath>-->
-<!--</template>-->
+<!-- Options: Blog Post: Full Screen Background Image -->
+<template id="blog_post_background_cover" name="Blog Cover"
+        inherit_option_id="website_blog.blog_post_complete">
+    <xpath expr="//div[@id='title']" position="attributes">
+        <attribute name="class">blog_cover</attribute>
+        <attribute name="t-attf-style">background-image : url(data:image/jpg;base64,#{blog_post.content_image})</attribute>
+    </xpath>
+    <xpath expr="//div[@id='title']" position="inside">
+        <div class="text-center blog_item">
+            <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.create_uid.partner_id.id)" style="width: 30px; margin-right: 10px;"/>
+            <small class="text-muted" id="blog_author" t-field="blog_post.create_uid.name"/>
+        </div>
+        <div class="text-center mt64">
+            <a href="#blog_content"><span class="fa fa-angle-down fa-2x fa-inverse"/></a>
+        </div>
+    </xpath>
+    <xpath expr="//section[@id='comments']" position="after">
+        <div class="cover_footer" t-attf-style="background-image: url(data:image/jpg;base64,#{next_post.content_image})">
+            <a class="js_next " t-attf-href="/blogpost/#{ slug(next_post) }"><p class="text-center">Read Next</p></a>
+            <h1 class="text-center" t-field="next_post.name"/>
+            <div class="text-center blog_item">
+                <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(next_post.create_uid.partner_id.id)" style="width: 30px; margin-right: 10px;"/>
+                <small class="text-muted" id="blog_author" t-field="next_post.create_uid.name"/>
+            </div>
+        </div>
+    </xpath>
+</template>
 
-<!--<template id="blog_footer" name="Blog Footer"-->
-<!--        inherit_option_id="website_blog.blog_post_complete">-->
-<!--    <xpath expr="//section[@id='comments']" position="before">-->
-<!--        <div class="container mt16 mb32">-->
-<!--            <div class="col-sm-12">-->
-<!--                <div class="col-sm-4 col-sm-offset-2">-->
-<!--                    <hr class="mt0 mb0"/>-->
-<!--                    <strong class="text-muted text-right">WRITTEN BY</strong>-->
-<!--                    <div class="media">-->
-<!--                        <a class="pull-left" href="#">-->
-<!--                            <img class="img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 50px; margin-right: 10px;"/>-->
-<!--                        </a>-->
-<!--                        <div class="media-body">-->
-<!--                            <h4 class="media-heading"  t-field="blog_post.create_uid.name"></h4>-->
-<!--                            <p t-field="blog_post.create_uid.email"></p>-->
-<!--                            <small t-if="blog_post.website_published_datetime" class="text-right text-muted">Published on <t t-esc="blog_post.website_published_datetime"/></small>-->
-<!--                            <small t-if="not blog_post.website_published_datetime" class="text-right text-muted">Last Modified on <t t-esc="blog_post.write_date"/></small>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="col-sm-4 col-sm-offset-2" t-if="blog_post.blog_id">-->
-<!--                    <hr class="mt0 mb0"/>-->
-<!--                    <strong class="text-muted text-right">PUBLISHED IN</strong>-->
-<!--                    <div class="media">-->
-<!--                        <a class="pull-left" href="#">-->
-<!--                            <img class="img-rounded" t-att-src="'/website/image?model=blog.blog&amp;field=image&amp;id='+str(blog_post.blog_id.id)" style="width: 50px; margin-right: 10px;"/>-->
-<!--                        </a>-->
-<!--                        <div class="media-body">-->
-<!--                            <h4 class="media-heading"  t-field="blog_post.blog_id.name"></h4>-->
-<!--                            <span t-field="blog_post.blog_id.description"/>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </xpath>-->
-<!--</template>-->
+<!-- Options: Blog Post: Footer author detail -->
+<template id="blog_post_footer" name="Blog Footer"
+        inherit_option_id="website_blog.blog_post_complete">
+    <xpath expr="//section[@id='comments']" position="before">
+        <div class="container mt16 mb32">
+            <div class="col-sm-12">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <hr class="mt0 mb0"/>
+                    <strong class="text-muted text-right">WRITTEN BY</strong>
+                    <div class="media">
+                        <a class="pull-left" href="#">
+                            <img class="img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 50px; margin-right: 10px;"/>
+                        </a>
+                        <div class="media-body">
+                            <h4 class="media-heading"  t-field="blog_post.create_uid.name"></h4>
+                            <p t-field="blog_post.create_uid.email"></p>
+                            <small t-if="blog_post.website_published_datetime" class="text-right text-muted">Published on <t t-esc="blog_post.website_published_datetime"/></small>
+                            <small t-if="not blog_post.website_published_datetime" class="text-right text-muted">Last Modified on <t t-esc="blog_post.write_date"/></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-sm-offset-2" t-if="blog_post.blog_id">
+                    <hr class="mt0 mb0"/>
+                    <strong class="text-muted text-right">PUBLISHED IN</strong>
+                    <div class="media">
+                        <a class="pull-left" href="#">
+                            <img class="img-rounded" t-att-src="'/website/image?model=blog.blog&amp;field=image&amp;id='+str(blog_post.blog_id.id)" style="width: 50px; margin-right: 10px;"/>
+                        </a>
+                        <div class="media-body">
+                            <h4 class="media-heading"  t-field="blog_post.blog_id.name"></h4>
+                            <span t-field="blog_post.blog_id.description"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </xpath>
+</template>
 
 <!-- Options: Blog Post: user can reply -->
 <template id="opt_blog_post_complete_comment" name="Allow Comments"

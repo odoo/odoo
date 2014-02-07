@@ -25,6 +25,7 @@ from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 
 import werkzeug
+import random
 
 
 
@@ -205,7 +206,9 @@ class WebsiteBlog(http.Controller):
         MONTHS = [None, _('January'), _('February'), _('March'), _('April'),
             _('May'), _('June'), _('July'), _('August'), _('September'),
             _('October'), _('November'), _('December')]
-
+        post_ids = blog_post_obj.search(cr, uid, [], context=context)
+        random_post_list = list(set(post_ids)-set([blog_post.id]))
+        next_blog_id = random_post_list[random.randint(0, len(blog_ids))]
         values = {
             'blog': blog_post.blog_id,
             'blogs': blogs,
@@ -217,7 +220,8 @@ class WebsiteBlog(http.Controller):
             'nav_list': self.nav_list(),
             'enable_editor': enable_editor,
             'date': date,
-            'date_name': date and "%s %s" % (MONTHS[int(date.split("-")[1])], date.split("-")[0]) or None
+            'date_name': date and "%s %s" % (MONTHS[int(date.split("-")[1])], date.split("-")[0]) or None,
+            'next_post' : request.registry['blog.post'].browse(cr, uid, next_blog_id, context=context)
         }
         return request.website.render("website_blog.blog_post_complete", values)
 

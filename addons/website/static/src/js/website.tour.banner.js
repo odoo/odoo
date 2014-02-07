@@ -13,7 +13,7 @@
     website.BannerTour = website.Tour.extend({
         id:   'banner',
         name: "Insert a banner",
-        path: '/page/website.homepage',
+        path: '/',
         init: function (editor) {
             var self = this;
             self.steps = [
@@ -48,13 +48,12 @@
                 {
                     waitFor:   '.oe_overlay_options .oe_options:visible',
                     element:   '#wrap [data-snippet-id=carousel]:first .carousel-caption',
-                    sampleText: 'My Title',
                     placement: 'top',
                     title:     "Customize banner's text",
                     content:   "Click in the text and start editing it. Click continue once it's done.",
+                    template:  self.popover({ next: "Continue" }),
                 },
                 {
-                    waitNot:   '#wrap [data-snippet-id=carousel]:first .carousel-caption:contains("Your Banner Title")',
                     element:   '.oe_overlay_options .oe_options',
                     placement: 'left',
                     title:     "Customize the banner",

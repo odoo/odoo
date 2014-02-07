@@ -30,7 +30,7 @@ from openerp.tools import exception_to_unicode
 
 _logger = logging.getLogger(__name__)
 
-class Home(openerp.addons.web.controllers.main.Home):
+class AuthSignup(openerp.addons.web.controllers.main.Home):
 
     @http.route()
     def web_login(self, *args, **kw):
@@ -60,7 +60,7 @@ class Home(openerp.addons.web.controllers.main.Home):
         qcontext.update(config)
 
         if 'error' in qcontext or mode not in ('reset', 'signup') or (not token and not config[mode]):
-            response = super(Home, self).web_login(*args, **kw)
+            response = super(AuthSignup, self).web_login(*args, **kw)
             if isinstance(response, LazyResponse):
                 response.params['values'].update(config)
             return response
@@ -86,7 +86,7 @@ class Home(openerp.addons.web.controllers.main.Home):
                     request.cr.commit()
                 except SignupError, e:
                     qcontext['error'] = exception_to_unicode(e)
-                return super(Home, self).web_login(*args, **kw)
+                return super(AuthSignup, self).web_login(*args, **kw)
 
         return response
 
