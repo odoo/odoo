@@ -8,6 +8,7 @@ class test_base(common.TransactionCase):
     def setUp(self):
         super(test_base,self).setUp()
         self.res_partner = self.registry('res.partner')
+        self.res_users = self.registry('res.users')
 
         # samples use effective TLDs from the Mozilla public suffix
         # list at http://publicsuffix.org
@@ -39,6 +40,20 @@ class test_base(common.TransactionCase):
         new_id2 = self.res_partner.find_or_create(cr, uid, self.samples[2][0])
         self.assertTrue(new_id2 > new_id, 'find_or_create failed - should have created new one again')
 
+    def test_15_res_partner_name_search(self):
+        cr,uid = self.cr, self.uid
+        for name, active in [
+            ('"A Raoul Grosbedon" <raoul@chirurgiens-dentistes.fr>', False),
+            ('B Raoul chirurgiens-dentistes.fr', True),
+            ("C Raoul O'hara  <!@historicalsociety.museum>", True),
+            ('ryu+giga-Sushi@aizubange.fukushima.jp', True),
+        ]:
+            partner_id, dummy = self.res_partner.name_create(cr, uid, name, context={'default_active': active})
+        partners = self.res_partner.name_search(cr, uid, 'Raoul')
+        self.assertEqual(len(partners), 2, 'Incorrect search number result for name_search')
+        partners = self.res_partner.name_search(cr, uid, 'Raoul', limit=1)
+        self.assertEqual(len(partners), 1, 'Incorrect search number result for name_search with a limit')
+        self.assertEqual(partners[0][1], 'B Raoul chirurgiens-dentistes.fr', 'Incorrect partner returned, should be the first active')
 
     def test_20_res_partner_address_sync(self):
         cr, uid = self.cr, self.uid
@@ -267,6 +282,21 @@ class test_base(common.TransactionCase):
         self.assertEquals(p1.vat, p1vat, 'Setting is_company should stop auto-sync of commercial fields')
         p0.refresh()
         self.assertEquals(p0.vat, sunhelmvat2, 'Commercial fields must be automatically synced')
+
+    def test_60_read_group(self):
+        cr, uid = self.cr, self.uid
+        for user_data in [
+          {'name': 'Alice', 'login': 'alice', 'color': 1, 'function': 'Friend'},
+          {'name': 'Bob', 'login': 'bob', 'color': 2, 'function': 'Friend'},
+          {'name': 'Eve', 'login': 'eve', 'color': 3, 'function': 'Eavesdropper'},
+        ]:
+          self.res_users.create(cr, uid, user_data)
+
+        groups_data = self.res_users.read_group(cr, uid, domain=[('login', 'in', ('alice', 'bob', 'eve'))], fields=['name', 'color', 'function'], groupby='function')
+        self.assertEqual(len(groups_data), 2, "Incorrect number of results when grouping on a field")
+        for group_data in groups_data:
+          self.assertIn('color', group_data, "Aggregated data for the column 'color' is not present in read_group return values")
+          self.assertEqual(group_data['color'], 3, "Incorrect sum for aggregated data for the column 'color'")
 
 class test_partner_recursion(common.TransactionCase):
 

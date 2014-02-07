@@ -17,7 +17,7 @@ class TestACL(common.TransactionCase):
         self.res_currency = self.registry('res.currency')
         self.res_partner = self.registry('res.partner')
         self.res_users = self.registry('res.users')
-        self.demo_uid = 3
+        _, self.demo_uid = self.registry('ir.model.data').get_object_reference(self.cr, self.uid, 'base', 'user_demo')
         self.tech_group = self.registry('ir.model.data').get_object(self.cr, self.uid,
                                                                     *(GROUP_TECHNICAL_FEATURES.split('.')))
 
@@ -103,7 +103,6 @@ class TestACL(common.TransactionCase):
             self.assertEqual(cm.exception.args[0], 'Access Denied')
         finally:
             self.res_partner._columns['email'].groups = False
-
 
 if __name__ == '__main__':
     unittest2.main()
