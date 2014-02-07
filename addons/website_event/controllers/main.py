@@ -203,7 +203,9 @@ class website_event(http.Controller):
     def add_event(self, event_name="New Event", **kwargs):
         return self._add_event(event_name, request.context, **kwargs)
 
-    def _add_event(self, event_name="New Event", context={}, **kwargs):
+    def _add_event(self, event_name=None, context={}, **kwargs):
+        if not event_name:
+            event_name = _("New Event")
         Event = request.registry.get('event.event')
         date_begin = datetime.today() + timedelta(days=(14))
         vals = {
