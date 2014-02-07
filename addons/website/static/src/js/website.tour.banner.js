@@ -12,7 +12,7 @@
 
     website.BannerTour = website.Tour.extend({
         id:   'banner',
-        name: "Insert a banner",
+        name: "Build a page",
         path: '/page/website.homepage',
         init: function (editor) {
             var self = this;
