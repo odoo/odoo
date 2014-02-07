@@ -15,11 +15,17 @@
                     <h1><span t-field="survey.title"></span> <span style="font-size:1.5em;" class="glyphicon glyphicon-stats pull-right "/></h1>
                     <h2><span t-field="survey.description"></span></h2>
                 </div>
+                <div t-if="filter_display_data" class="filteres">
+                    <span><h3><span class="glyphicon glyphicon-filter"></span> Filters <small class="pull-right clear_survey_filter"> <i class="fa fa-times"></i> Clear All Filters</small></h3></span>
+                    <span t-foreach="filter_display_data" t-as="filter_data">
+                        <span class="label label-primary only_left_radius"><i class="fa fa-filter"></i></span><span class="label label-primary no_radius" t-esc="filter_data['question_text']"></span><span class="label label-success only_right_radius" t-esc="' > '.join(filter_data['labels'])"></span>
+                    </span>
+                </div>
                 <div t-foreach='survey.page_ids' t-as='page'>
                     <h1 class="mt16" t-field='page.title'></h1>
                     <hr/>
                     <div t-foreach='page.question_ids' t-as='question' class="mt16">
-                        <t t-set="input_summary" t-value="get_input_summary(question)"/>
+                        <t t-set="input_summary" t-value="get_input_summary(question, current_filters)"/>
                         <h4>
                             <b>Question </b>
                             <span t-field='question.question'></span>
@@ -60,7 +66,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="hidden" t-foreach="question.user_input_line_ids" t-as="user_input">
+                    <t t-set="text_result" t-value="prepare_result(question, current_filters)"></t>
+                    <tr class="hidden" t-foreach="text_result" t-as="user_input">
                         <td><t t-esc="user_input_index+1"></t></td>
                         <t t-if="question.type == 'free_text'">
                             <td>
@@ -92,7 +99,7 @@
                     </tr>
                 </tbody>
             </table>
-            <t t-call="survey.pagination"/>
+            <t t-call="survey.pagination" />
         </t>
         <t t-if="input_summary['answered'] == 0">
             <h2 style="padding-top:30px;padding-bottom:30px;text-align:center;" class="text-muted">Sorry, No one answered this question.</h2>
@@ -199,9 +206,9 @@
     <template id="result_number" name="Number Result">
         <t t-set="number_result" t-value="prepare_result(question, current_filters)" />
         <span class="pull-right mt8">
-            <span class="label label-default only_right_radius">Maximum </span> <span class="label label-success only_left_radius" t-esc="number_result['max']"></span>
-            <span class="label label-default only_right_radius">Minimum </span> <span class="label label-danger only_left_radius" t-esc="number_result['min']"></span>
-            <span class="label label-default only_right_radius">Average </span> <span class="label label-warning only_left_radius" t-esc="number_result['average']"></span>
+            <span class="label label-default only_left_radius">Maximum </span> <span class="label label-success only_right_radius" t-esc="number_result['max']"></span>
+            <span class="label label-default only_left_radius">Minimum </span> <span class="label label-danger only_right_radius" t-esc="number_result['min']"></span>
+            <span class="label label-default only_left_radius">Average </span> <span class="label label-warning only_right_radius" t-esc="number_result['average']"></span>
         </span>
         <ul class="nav nav-tabs">
             <li class="active">
@@ -247,7 +254,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="hidden" t-foreach="question.user_input_line_ids" t-as="user_input">
+                        <tr class="hidden" t-foreach="number_result['input_lines']" t-as="user_input">
                             <td><t t-esc="user_input_index+1"></t></td>
                                 <td>
                                     <span t-field="user_input.value_number"></span><br/>
@@ -277,9 +284,10 @@
     </template>
     <!-- Pagination Element -->
     <template id="pagination" name="Survey Result">
-        <ul t-att-id="'pagination_'+str(question.id)" class="pagination" t-att-data-question_id= "question.id">
-            <t t-if="len(question.user_input_line_ids) > 5">
-                <li t-foreach="page_range(len(question.user_input_line_ids), 5)" t-as="num">
+        <t t-set="record_limit" t-value="5"/><!-- Change This record_limit to change number of record  per page-->
+        <ul t-att-id="'pagination_'+str(question.id)" class="pagination" t-att-data-question_id="question.id" t-att-data-record_limit= "record_limit">
+            <t t-if="len(text_result) > record_limit">
+                <li t-foreach="page_range(len(text_result), record_limit)" t-as="num">
                     <a href="#" t-esc="num"></a>
                 </li>
             </t>

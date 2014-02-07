@@ -27,9 +27,9 @@ $(document).ready(function () {
     
     //Script For Pagination 
     var survey_pagination = $('.pagination');
-    var limit = 5; //Number of Record Par Page. If you change value here, make change in pagination template also.
     $.each(survey_pagination, function(index, pagination){
         var question_id = $(pagination).attr("data-question_id");
+        var limit = $(pagination).attr("data-record_limit"); //Number of Record Par Page. If you want to change number of record per page, change record_limit in pagination template.
         $('#table_question_'+ question_id +' tbody tr:lt('+limit+')').removeClass('hidden');
         $('#pagination_'+question_id+' li:first').addClass('active');
         $('#pagination_'+question_id+' li a').click(function(event){
@@ -131,14 +131,17 @@ $(document).ready(function () {
         var question_id = cell.attr('data-question_id');
         var row_id = cell.attr('data-row_id') | 0;
         var answer_id = cell.attr('data-answer_id');
-        if(document.URL.indexOf("?") == -1)
-            {
-                window.location.href = document.URL+'?' + encodeURI(row_id + ','+answer_id + '=' + question_id);
-            }
-        else{
-                window.location.href = document.URL+'&' + encodeURI(row_id + ','+answer_id + '=' + question_id);
-            
+        if(document.URL.indexOf("?") == -1){
+            window.location.href = document.URL+'?' + encodeURI(row_id + ','+answer_id + '=' + question_id);
         }
+        else{
+            window.location.href = document.URL+'&' + encodeURI(row_id + ','+answer_id + '=' + question_id);
+        }
+    });
+    
+    // for clear all filters
+    $('.clear_survey_filter').click(function(){
+        window.location.href = document.URL.substring(0,document.URL.indexOf("?"));
     });
     
     console.debug("[survey] Survey Result JS loaded!");
