@@ -132,8 +132,7 @@ var disqus_url;
       disqus_identifier = identifier;
       disqus_url = url;
       
-      var self = this;
-      var p = '';
+      var comment = '';
       openerp.jsonRpc("/blog_post/comments/", 'call', {
           'blog': id,
           'tag_id':identifier,
@@ -142,18 +141,27 @@ var disqus_url;
           if(!data)
               return;
           _.map(data, function(res){
-              p += '<hr/><table><tr><td rowspan="2" width="30%"><img class="img-circle oe_inline" style="width: 90%;" src="' + res.author_image + '"/></td><td>'+res.author_name+'</td></tr><tr><td><h5><small> on <span>'+res.date+'</span></small></h5></td></tr><tr><td colspan="2">'+res.body+'</td></tr></table>'
+        	 comment += '<li class="media">\
+                  <div class="media-body">\
+                      <img class="media-object pull-left img-circle" src="'+ res.author_image + '" style="width: 30px; margin-right: 5px;"/>\
+                      <div class="media-body">\
+                          <h5 class="media-heading">\
+                              <span>'+res.author_name+'</span> <small>on <span>'+res.date+'</span></small>\
+                          </h5>\
+                      </div>\
+                  </div>\
+              </li><li><small class="text-muted">'+res.body+'</small></li><hr/>'
           });
-          $('.content').html(p)
+          $('.content').html('<ul class="media-list">'+comment+'</ul>')
       });
       
-      $('a[data-disqus-identifier="'+identifier+'"]').append('<div class="mycontent hidden"><form id="comment" action="/blogpost/comment" method="POST"><input name="tag_id" value="'+ identifier +'" type="hidden"/><input name="blog_post_id" value="'+id+'" type="hidden"/><textarea rows="3" id="comment" name="comment" placeholder="Write a comment..."/><br/><button id="submit" type="submit" class="btn btn-primary btn-sm mt8">Post</button></form><div class="content"/></div>')
+      $('a[data-disqus-identifier="'+identifier+'"]').append('<div class="mycontent hidden"><form id="comment" action="/blogpost/comment" method="POST"><input name="tag_id" value="'+ identifier +'" type="hidden"/><input name="blog_post_id" value="'+id+'" type="hidden"/><textarea rows="3" id="comment" name="comment" placeholder="Write a comment..."/><br/><button id="submit" type="submit" class="btn btn-primary btn-xs mb8 mt4">Post</button></form><div class="content"/></div>')
       
-       $('#submit').click(function() {
-    	  console.log('aaaaaa',$('p[data-disqus-identifier="'+identifier+'"]'))
-    	  $('p[data-disqus-identifier="'+identifier+'"]').attr('data-count','2');
-    	  debugger;
-      });
+//       $('#submit').click(function() {
+//    	  console.log('aaaaaa',$('p[data-disqus-identifier="'+identifier+'"]'))
+//    	  $('p[data-disqus-identifier="'+identifier+'"]').attr('data-count','2');
+//    	  debugger;
+//      });
       $('a[data-disqus-identifier="'+identifier+'"]').popover({
           html:true,
           placement:'right',
@@ -164,6 +172,7 @@ var disqus_url;
      
     // Add 'active' class.
     $('a.disqussion-link, a.main-disqussion-link').removeClass('active').filter(source).addClass('active');
+    $('a[data-disqus-identifier="'+identifier+'"]').popover('hide').filter(source).popover('show');
     callback(source);
   };
   
@@ -174,7 +183,7 @@ var disqus_url;
 
 })(jQuery);
 
-jQuery(document).ready(function() {
-    jQuery("main p").inlineDisqussions();
+$(document).ready(function() {
+    $("#blog_content p").inlineDisqussions();
 });
  
