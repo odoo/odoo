@@ -690,16 +690,14 @@ class sale_order(osv.osv):
                 group_id = self.pool.get("procurement.group").create(cr, uid, vals, context=context)
                 order.write({'procurement_group_id': group_id}, context=context)
 
-            fixed = True
             for line in order.order_line:
                 #Try to fix exception procurement (possible when after a shipping exception the user choose to recreate)
                 if line.procurement_ids:
-                    #first check them to see if they are in exception or not
+                    #first check them to see if they are in exception or not (one of the related moves is cancelled)
                     procurement_obj.check(cr, uid, [x.id for x in line.procurement_ids if x.state not in ['cancel', 'done']])
                     line.refresh()
-                    #run procurement that are in exception
-                    if not procurement_obj.run(cr, uid, [x.id for x in line.procurement_ids if x.state == 'exception'], context=context):
-                        fixed = False
+                    #run again procurement that are in exception in order to trigger another move
+                    proc_ids += [x.id for x in line.procurement_ids if x.state == 'exception']
                 elif sale_line_obj.need_procurement(cr, uid, [line.id], context=context):
                     if (line.state == 'done') or not line.product_id:
                         continue
@@ -707,21 +705,19 @@ class sale_order(osv.osv):
                     proc_id = procurement_obj.create(cr, uid, vals, context=context)
                     proc_ids.append(proc_id)
             #Confirm procurement order such that rules will be applied on it
-            #note that the workflow ensure proc_ids isn't an empty list
-            if proc_ids:
-                procurement_obj.run(cr, uid, proc_ids, context=context)
-            # FP NOTE: do we need this? isn't it the workflow that should set this
-            val = {}
-            if order.state == 'shipping_except' and fixed:
-                val['state'] = 'progress'
-                val['shipped'] = False
+            #note that the workflow normally ensure proc_ids isn't an empty list
+            procurement_obj.run(cr, uid, proc_ids, context=context)
+
+            #if shipping was in exception and the user choose to recreate the delivery order, write the new status of SO
+            if order.state == 'shipping_except':
+                val = {'state': 'progress', 'shipped': False}
 
                 if (order.order_policy == 'manual'):
                     for line in order.order_line:
                         if (not line.invoiced) and (line.state not in ('cancel', 'draft')):
                             val['state'] = 'manual'
                             break
-            order.write(val)
+                order.write(val)
         return True
 
     # if mode == 'finished':
