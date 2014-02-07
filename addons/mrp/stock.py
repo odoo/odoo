@@ -22,6 +22,7 @@
 from openerp.osv import fields
 from openerp.osv import osv
 from openerp.tools.translate import _
+from openerp import SUPERUSER_ID
 
 
 class StockMove(osv.osv):
@@ -32,6 +33,14 @@ class StockMove(osv.osv):
         'raw_material_production_id': fields.many2one('mrp.production', 'Production Order for Raw Materials', select=True),
         'consumed_for': fields.many2one('stock.move', 'Consumed for', help='Technical field used to make the traceability of produced products'),
     }
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        default.update({
+            'production_id': False,
+        })
+        return super(StockMove, self).copy(cr, uid, id, default, context=context)
 
     def check_tracking(self, cr, uid, move, lot_id, context=None):
         super(StockMove, self).check_tracking(cr, uid, move, lot_id, context=context)
@@ -49,8 +58,7 @@ class StockMove(osv.osv):
         move_obj = self.pool.get('stock.move')
         procurement_obj = self.pool.get('procurement.order')
         product_obj = self.pool.get('product.product')
-        processed_ids = [move.id]
-
+        processed_ids = []
         bis = bom_obj.search(cr, uid, [
             ('product_id', '=', move.product_id.id),
             ('bom_id', '=', False),
@@ -64,44 +72,38 @@ class StockMove(osv.osv):
                 state = 'assigned'
             for line in res[0]:
                 valdef = {
-                    'picking_id': move.picking_id.id,
+                    'picking_id': move.picking_id.id if move.picking_id else False,
                     'product_id': line['product_id'],
                     'product_uom': line['product_uom'],
                     'product_qty': line['product_qty'],
                     'product_uos': line['product_uos'],
                     'product_uos_qty': line['product_uos_qty'],
-                    'move_dest_id': move.id,
                     'state': state,
                     'name': line['name'],
-                    'procurements': [],
                 }
                 mid = move_obj.copy(cr, uid, move.id, default=valdef)
                 processed_ids.append(mid)
-                prodobj = product_obj.browse(cr, uid, line['product_id'], context=context)
-                proc_id = procurement_obj.create(cr, uid, {
-                    'name': (move.picking_id.origin or ''),
-                    'origin': (move.picking_id.origin or ''),
-                    'date_planned': move.date,
-                    'product_id': line['product_id'],
-                    'product_qty': line['product_qty'],
-                    'product_uom': line['product_uom'],
-                    'product_uos_qty': line['product_uos'] and line['product_uos_qty'] or False,
-                    'product_uos': line['product_uos'],
-                    'location_id': move.location_id.id,
-                    'procure_method': prodobj.procure_method,
-                    'move_id': mid,
-                })
-                procurement_obj.signal_button_confirm(cr, uid, [proc_id])
 
-            move_obj.write(cr, uid, [move.id], {
-                'location_dest_id': move.location_id.id,  # dummy move for the kit
-                'picking_id': False,
-                'state': 'confirmed'
-            })
-            procurement_ids = procurement_obj.search(cr, uid, [('move_id', '=', move.id)], context)
-            procurement_obj.signal_button_confirm(cr, uid, procurement_ids)
-            procurement_obj.signal_button_wait_done(cr, uid, procurement_ids)
+            move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)
+            #confirm all new confirm moves
+            move_obj.action_confirm(cr, uid, processed_ids, context=context)
         return processed_ids
+
+    def action_confirm(self, cr, uid, ids, context=None):
+        move_exploded = []
+        for move in self.browse(cr, uid, ids, context=context):
+            #in order to explode a move, we must have a picking_id on that move!
+            #if action_explode return a list of new move, it means it has exploded
+            #and that original move has been deleted, so we should remove that id 
+            #from super call to prevent problem
+            move_id = move.id
+            if move.picking_type_id and self._action_explode(cr, uid, move, context=context):
+                move_exploded.append(move_id)
+        #if no more id, don't call super
+        move_unexploded = list(set(ids)-set(move_exploded))
+        if not len(move_unexploded):
+            return True
+        return super(StockMove, self).action_confirm(cr, uid, move_unexploded, context=context)
 
     def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id=False, restrict_partner_id=False,
                        consumed_for=False, context=None):
@@ -181,22 +183,6 @@ class StockMove(osv.osv):
             if move.raw_material_production_id and move.raw_material_production_id.state == 'confirmed':
                 workflow.trg_trigger(uid, 'stock.move', move.id, cr)
         return res
-
-
-class StockPicking(osv.osv):
-    _inherit = 'stock.picking'
-
-    #
-    # Explode picking by replacing phantom BoMs
-    #
-    def action_explode(self, cr, uid, move_ids, *args):
-        """Explodes moves by expanding kit components"""
-        move_obj = self.pool.get('stock.move')
-        todo = move_ids[:]
-        for move in move_obj.browse(cr, uid, move_ids):
-            todo.extend(move_obj._action_explode(cr, uid, move))
-        return list(set(todo))
-
 
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
