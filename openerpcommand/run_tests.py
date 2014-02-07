@@ -101,11 +101,11 @@ def run(args):
     import openerp
 
     config = openerp.tools.config
+    config.load()
+
     config['db_name'] = args.database
     if args.port:
         config['xmlrpc_port'] = int(args.port)
-    config['admin_passwd'] = 'admin'
-    config['db_password'] = 'a2aevl8w' # TODO from .openerpserverrc
 
     if args.addons:
         args.addons = args.addons.replace(':',',').split(',')

@@ -40,9 +40,10 @@ def dispatch(method, params):
 
 def check(f):
     @wraps(f)
-    def wrapper(dbname, *args, **kwargs):
+    def wrapper(___dbname, *args, **kwargs):
         """ Wraps around OSV functions and normalises a few exceptions
         """
+        dbname = ___dbname      # NOTE: this forbid to use "___dbname" as arguments in http routes
 
         def tr(src, ttype):
             # We try to do the same as the _(), but without the frame
