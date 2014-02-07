@@ -492,11 +492,7 @@ openerp.web_calendar = function(instance) {
                 all_day = this.all_day ? evt[this.all_day] : false,
                 res_computed_text = '',
                 the_title = '',
-                attendees = [];                
-
-            if (this.date_stop && this.fields[this.date_stop].type == 'date') {
-                date_stop.addDay(1);
-            }
+                attendees = [];          
 
             if (this.info_fields) {
                 var temp_ret = {};
