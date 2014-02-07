@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent fa3e25d0315e54de4bd983ad8532044b5e2df233
+# Parent 548ab57454752e9575323e26d0471669c78172f6
 
 diff --git a/controllers/my_controller.py b/controllers/my_controller.py
 --- a/controllers/my_controller.py
@@ -9,9 +9,10 @@ diff --git a/controllers/my_controller.py b/controllers/my_controller.py
          })
  
 -    @http.route('/tas/<int:id>/', auth='public', website=True)
-+    @http.route('/tas/<model("academy.tas"):ta>/', auth='public', website=True)
-     def ta(self, id):
+-    def ta(self, id):
 -        return http.request.website.render('academy.ta', teaching_assistants[id])
++    @http.route('/tas/<model("academy.tas"):ta>/', auth='public', website=True)
++    def ta(self, ta):
 +        return http.request.website.render('academy.ta', {
 +            'ta': ta,
 +        })
