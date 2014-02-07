@@ -17,13 +17,13 @@
                 {
                     title:     "insert login",
                     element:   '.oe_login_form input[name="login"]',
-                    sampleText: typeof user !== "undefined" ? user : "admin",
+                    sampleText: "admin",
                 },
                 {
                     title:     "insert password",
                     waitFor:   '.oe_login_form input[name="login"][value!=""]',
                     element:   '.oe_login_form input[name="password"]',
-                    sampleText: typeof password !== "undefined" ? password : "admin",
+                    sampleText: "admin",
                 },
                 {
                     title:     "select 2 Standard tickets",

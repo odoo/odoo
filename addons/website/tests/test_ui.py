@@ -88,7 +88,7 @@ class WebsiteUiSuite(unittest.TestSuite):
         self._options['db'] = tools.config.get('db_name', '')
         if 'user' not in self._options:
             self._options['user'] = 'admin'
-            self._options['password'] = tools.config.get('admin_passwd', 'admin')
+            self._options['password'] = 'admin'
 
         phantom = subprocess.Popen([
             'phantomjs',
