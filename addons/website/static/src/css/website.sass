@@ -228,19 +228,24 @@ ul.nav-stacked > li > a
         a
             color: white
 
+
 /* ---- SNIPPETS --- */
+
+.oe_img_bg
+    background-size: 100%
+
 [data-snippet-id],.colmd,.hr,.blockquote
     overflow: hidden
 
 @media (max-width: 400px)
-    [data-snippet-id]
+    [data-snippet-id]:not([data-snippet-id="carousel"])
         height: auto !important
 
 .carousel-inner
     height: 100%
     .item
         height: 100%
-        background-size: 100%
+        background-size: cover
 .carousel
     .carousel-caption
         left: auto
@@ -300,7 +305,7 @@ div.carousel[data-snippet-id="slider"]
 
 .parallax
     position: relative
-    background-size: 100%
+    background-size: cover
     display: table
     width: 100%
     min-height: 100px
@@ -361,9 +366,6 @@ div.carousel[data-snippet-id="slider"]
         color: #ddd
 
 /* Misc */
-
-.oe_img_bg
-    background-size: 100%
 
 .texttop
     vertical-align: top

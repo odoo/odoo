@@ -1,3 +1,4 @@
+@charset "utf-8";
 /*       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY
  *
  * css for editor buttons, openerp widget included in the website and other
@@ -281,12 +282,16 @@ ul.nav-stacked > li > a {
 }
 
 /* ---- SNIPPETS --- */
+.oe_img_bg {
+  background-size: 100%;
+}
+
 [data-snippet-id], .colmd, .hr, .blockquote {
   overflow: hidden;
 }
 
 @media (max-width: 400px) {
-  [data-snippet-id] {
+  [data-snippet-id]:not([data-snippet-id="carousel"]) {
     height: auto !important;
   }
 }
@@ -295,7 +300,7 @@ ul.nav-stacked > li > a {
 }
 .carousel-inner .item {
   height: 100%;
-  background-size: 100%;
+  background-size: cover;
 }
 
 .carousel .carousel-caption {
@@ -365,7 +370,7 @@ div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
 
 .parallax {
   position: relative;
-  background-size: 100%;
+  background-size: cover;
   display: table;
   width: 100%;
   min-height: 100px;
@@ -445,10 +450,6 @@ div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
 }
 
 /* Misc */
-.oe_img_bg {
-  background-size: 100%;
-}
-
 .texttop {
   vertical-align: top;
 }

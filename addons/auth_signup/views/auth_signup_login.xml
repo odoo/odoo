@@ -5,8 +5,8 @@
     <data>
         <template id="auth_signup.login" inherit_id="web.login" name="Sign up - Reset Password">
             <xpath expr="//button[@type='submit']" position="before">
-                <a t-if="signup" t-attf-href="?mode=signup{{ '&amp;debug' if debug else '' }}" class="btn btn-link pull-right">Sign up</a>
-                <a t-if="reset" t-attf-href="?mode=reset{{ '&amp;debug' if debug else '' }}" class="btn btn-link pull-right">Reset Password</a>
+                <a t-if="signup" t-attf-href="?{{ keep_query('*', mode='signup') }}" class="btn btn-link pull-right">Sign up</a>
+                <a t-if="reset" t-attf-href="?{{ keep_query('*', mode='reset') }}" class="btn btn-link pull-right">Reset Password</a>
             </xpath>
         </template>
 
@@ -29,7 +29,7 @@
 
                 <t t-set="reset_without_token" t-value="mode == 'reset' and not token"/>
 
-                <form class="oe_signup_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post">
+                <form class="oe_signup_form" role="form" method="post">
                     <t t-call="web.database_select"/>
 
                     <div class="form-group field-name" t-if="not reset_without_token">
@@ -68,7 +68,7 @@
                     <input type="hidden" name="mode" t-att-value="mode"/>
                     <input type="hidden" name="token" t-att-value="token"/>
                     <div class="clearfix oe_login_buttons">
-                        <a href="/web/login" class="btn btn-link pull-right">Back to Login</a>
+                        <a t-attf-href="?{{ keep_query('*', mode='login') }}" class="btn btn-link pull-right">Back to Login</a>
                         <button type="submit" class="btn btn-primary pull-left">
                             <t t-if="mode == 'signup'">Sign up</t>
                             <t t-if="mode == 'reset'">Reset password</t>
