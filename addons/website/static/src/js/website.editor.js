@@ -1082,7 +1082,7 @@
                 } else {
                     // Create the page, get the URL back
                     done = $.get(_.str.sprintf(
-                            '/pagenew/%s?noredirect=1', encodeURI(data.id)))
+                            '/website/add/%s?noredirect=1', encodeURI(data.id)))
                         .then(function (response) {
                             self.make_link(response, false, data.id);
                         });
