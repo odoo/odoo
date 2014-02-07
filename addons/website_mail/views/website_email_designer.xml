@@ -11,6 +11,9 @@
         <div id="wrap">
             <div class="container">
                 <h1 t-field="template.name"/>
+                <a t-att-href="'/web#action=email_template.action_email_template_tree_all&amp;id=%d' % template.id">
+                    Back to back-end
+                </a>
                 <div class="row" style="width: 600px;">
                     <div class="row">
                         <div class="col-lg-3"><b>Email From</b></div>
