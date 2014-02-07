@@ -416,6 +416,19 @@
                         }
                         setTimeout(function () {
                             $("#oe_snippets").trigger('snippet-dropped', $target);
+
+                            // reset snippet for rte
+                            $target.removeData("snippet-editor");
+                            $target.removeData("overlay");
+                            self.create_overlay($target);
+                            $target.find("[data-snippet-id]").each(function () {
+                                var $snippet = $(this);
+                                $snippet.removeData("snippet-editor");
+                                $snippet.removeData("overlay");
+                                self.create_overlay($snippet);
+                            });
+                            // end
+
                             self.make_active($target);
                         },0);
                     } else {
