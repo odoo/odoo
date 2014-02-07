@@ -86,8 +86,8 @@
                 },
                 {
                     waitFor:   'button[data-action=edit]:visible',
-                    title:     "Congratulation!",
-                    content:   "Your homepage has been updated.",
+                    title:     "Good Job!",
+                    content:   "Well done, you created your homepage.",
                     template:  self.popover({ next: "Continue" }),
                 },
                 {
@@ -105,10 +105,11 @@
                     content:   "Scroll in the mobile preview to test the rendering. Once it's ok, close this dialog.",
                 },
                 {
-                    waitNot:   '.modal',
-                    title:     "Congrats",
-                    content:   "Congratulation. This tour is finished.",
-                    template:  self.popover({ fixed: true, next: "Close Tutorial" }),
+                    title:     "Congratulation",
+                    element:   'a[id=content-menu-button]',
+                    placement: 'bottom',
+                    content:   "This tour is finished. You can continue discovering features with the <em>'Content'</em> menu.",
+                    template:  self.popover({ next: "Close Tutorial" }),
                 },
             ];
             return this._super();
