@@ -133,6 +133,20 @@ def ensure_db(redirect='/web/database/selector'):
     if db and db not in http.db_filter([db]):
         db = None
 
+    if db and not request.session.db:
+        # User asked a specific database on a new session.
+        # That mean the nodb router has been used to find the route
+        # Depending on installed module in the database, the rendering of the page
+        # may depend on data injected by the database route dispatcher.
+        # Thus, we redirect the user to the same page but with the session cookie set.
+        # This will force using the database route dispatcher...
+        r = request.httprequest
+        response = werkzeug.utils.redirect(r.url, 302)
+        request.session.db = db
+        response = r.app.get_response(r, response, explicit_session=False)
+        werkzeug.exceptions.abort(response)
+        return
+
     # if db not provided, use the session one
     if not db:
         db = request.session.db
