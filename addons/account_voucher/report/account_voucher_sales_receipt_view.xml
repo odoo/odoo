@@ -2,7 +2,7 @@
 <openerp>
     <data> 
    
-   <record id="view_sale_receipt_report_tree" model="ir.ui.view">
+<!--    <record id="view_sale_receipt_report_tree" model="ir.ui.view">
         <field name="name">sale.receipt.report.tree</field>
         <field name="model">sale.receipt.report</field>
         <field name="arch" type="xml">
@@ -28,14 +28,14 @@
             </tree>
         </field>
     </record>
-
+ -->
     <record id="view_sale_receipt_report_graph" model="ir.ui.view">
          <field name="name">sale.receipt.report.graph</field>
          <field name="model">sale.receipt.report</field>
          <field name="arch" type="xml">
-             <graph string="Sales Receipts Analysis" type="bar">
+             <graph string="Sales Receipts Analysis" type="pivot">
                  <field name="account_id"/>
-                 <field name="price_total"/>
+                 <field name="price_total" type="measure"/>
              </graph>
          </field>
     </record>
@@ -77,7 +77,7 @@
         <field name="name">Sales Receipts Analysis</field>
         <field name="res_model">sale.receipt.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
+        <field name="view_mode">graph</field>
         <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_current':1, 'search_default_partner':1, 'search_default_customer':1, 'group_by':[], 'group_by_no_leaf':1,}</field>
         <field name="search_view_id" ref="view_sale_receipt_report_search"/>
         <field name="help" type="html">

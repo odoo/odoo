@@ -69,7 +69,7 @@ This installs the module product_expiry."""),
             help="""Allows you to create and manage your packaging dimensions and types you want to be maintained in your system."""),
         'group_stock_tracking_lot': fields.boolean("Track serial number on products",
             implied_group='stock.group_tracking_lot',
-            help="""This allows you to manage products by using serial numbers. When you select a serial number on product moves, you can get the upstream or downstream traceability of that product."""),
+            help="""This allows you to manage products by using serial numbers. When you select a serial number on product moves, you can get the traceability of that product."""),
         'group_stock_tracking_owner': fields.boolean("Manage owner on stock", 
             implied_group='stock.group_tracking_owner', 
             help="""This way you can receive products attributed to a certain owner. """), 
@@ -87,6 +87,7 @@ This installs the module product_expiry."""),
         'module_stock_dropshipping': fields.boolean("Manage dropshipping",
             help='\nCreates the dropship route and add more complex tests'
                  '-This installs the module stock_dropshipping.'),
+        'module_stock_picking_wave': fields.boolean('Manage picking wave', help='Install the picking wave module which will help you grouping your pickings and processing them in batch'),
     }
 
     def _default_company(self, cr, uid, context=None):

@@ -403,7 +403,7 @@ class procurement_order(osv.osv):
     def _run(self, cr, uid, procurement, context=None):
         requisition_obj = self.pool.get('purchase.requisition')
         warehouse_obj = self.pool.get('stock.warehouse')
-        if procurement.product_id.purchase_requisition:
+        if procurement.rule_id and procurement.rule_id.action == 'buy' and procurement.product_id.purchase_requisition:
             warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id)], context=context)
             requisition_id = requisition_obj.create(cr, uid, {
                 'origin': procurement.origin,

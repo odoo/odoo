@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="website_settings_payment" model="ir.ui.view">
+            <field name="name">website.form</field>
+            <field name="model">website</field>
+            <field name="inherit_id" ref="website.view_website_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='other']" position='before'>
+                    <div name="shop">
+                        <separator string="E-Commerce"/>
+                        <group name="shop">
+                            <button type="action"
+                                    name="%(payment.action_payment_acquirer)d"
+                                    string="Configure payment acquirers" class="oe_link"/>
+                        </group>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -23,6 +23,7 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.tools.float_utils import float_round
 import openerp.addons.decimal_precision as dp
 
 class account_move_line_reconcile(osv.osv_memory):
@@ -64,7 +65,11 @@ class account_move_line_reconcile(osv.osv_memory):
                 credit += line.credit
                 debit += line.debit
                 account_id = line.account_id.id
-        return {'trans_nbr': count, 'account_id': account_id, 'credit': credit, 'debit': debit, 'writeoff': debit - credit}
+        precision = self.pool['decimal.precision'].precision_get(cr, uid, 'Account')
+        writeoff = float_round(debit-credit, precision_digits=precision)
+        credit = float_round(credit, precision_digits=precision)
+        debit = float_round(debit, precision_digits=precision)
+        return {'trans_nbr': count, 'account_id': account_id, 'credit': credit, 'debit': debit, 'writeoff': writeoff}
 
     def trans_rec_addendum_writeoff(self, cr, uid, ids, context=None):
         return self.pool.get('account.move.line.reconcile.writeoff').trans_rec_addendum(cr, uid, ids, context)

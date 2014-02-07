@@ -26,17 +26,20 @@ from openerp.tools.translate import _
 
 class StockMove(osv.osv):
     _inherit = 'stock.move'
-    
+
     _columns = {
         'production_id': fields.many2one('mrp.production', 'Production Order for Produced Products', select=True),
         'raw_material_production_id': fields.many2one('mrp.production', 'Production Order for Raw Materials', select=True),
+        'consumed_for': fields.many2one('stock.move', 'Consumed for', help='Technical field used to make the traceability of produced products'),
     }
 
     def check_tracking(self, cr, uid, move, lot_id, context=None):
         super(StockMove, self).check_tracking(cr, uid, move, lot_id, context=context)
         if move.product_id.track_production and (move.location_id.usage == 'production' or move.location_dest_id.usage == 'production') and not lot_id:
             raise osv.except_osv(_('Warning!'), _('You must assign a serial number for the product %s') % (move.product_id.name))
-    
+        if move.raw_material_production_id and move.location_dest_id.usage == 'production' and move.raw_material_production_id.product_id.track_production and not move.consumed_for:
+            raise osv.except_osv(_('Warning!'), _("Because the product %s requires it, you must assign a serial number to your raw material %s to proceed further in your production. Please use the 'Produce' button to do so.") % (move.raw_material_production_id.product_id.name, move.product_id.name))
+
     def _action_explode(self, cr, uid, move, context=None):
         """ Explodes pickings.
         @param move: Stock moves
@@ -47,11 +50,11 @@ class StockMove(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         product_obj = self.pool.get('product.product')
         processed_ids = [move.id]
- 
+
         bis = bom_obj.search(cr, uid, [
-            ('product_id','=',move.product_id.id),
-            ('bom_id','=',False),
-            ('type','=','phantom')])
+            ('product_id', '=', move.product_id.id),
+            ('bom_id', '=', False),
+            ('type', '=', 'phantom')])
         if bis:
             factor = move.product_qty
             bom_point = bom_obj.browse(cr, uid, bis[0], context=context)
@@ -59,7 +62,7 @@ class StockMove(osv.osv):
             state = 'confirmed'
             if move.state == 'assigned':
                 state = 'assigned'
-            for line in res[0]: 
+            for line in res[0]:
                 valdef = {
                     'picking_id': move.picking_id.id,
                     'product_id': line['product_id'],
@@ -83,7 +86,7 @@ class StockMove(osv.osv):
                     'product_qty': line['product_qty'],
                     'product_uom': line['product_uom'],
                     'product_uos_qty': line['product_uos'] and line['product_uos_qty'] or False,
-                    'product_uos':  line['product_uos'],
+                    'product_uos': line['product_uos'],
                     'location_id': move.location_id.id,
                     'procure_method': prodobj.procure_method,
                     'move_id': mid,
@@ -100,31 +103,55 @@ class StockMove(osv.osv):
             procurement_obj.signal_button_wait_done(cr, uid, procurement_ids)
         return processed_ids
 
-    def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id = False, context=None):
-        """ Consumed product with specific quatity from specific source location.
+    def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id=False, restrict_partner_id=False,
+                       consumed_for=False, context=None):
+        """ Consumed product with specific quantity from specific source location.
         @param product_qty: Consumed product quantity
         @param location_id: Source location
+        @param restrict_lot_id: optionnal parameter that allows to restrict the choice of quants on this specific lot
+        @param restrict_partner_id: optionnal parameter that allows to restrict the choice of quants to this specific partner
+        @param consumed_for: optionnal parameter given to this function to make the link between raw material consumed and produced product, for a better traceability
         @return: Consumed lines
         """
+        if context is None:
+            context = {}
         res = []
         production_obj = self.pool.get('mrp.production')
+        uom_obj = self.pool.get('product.uom')
+
+        if product_qty <= 0:
+            raise osv.except_osv(_('Warning!'), _('Please provide proper quantity.'))
         for move in self.browse(cr, uid, ids, context=context):
-            self.action_confirm(cr, uid, [move.id], context=context)
-            new_moves = super(StockMove, self).action_consume(cr, uid, [move.id], product_qty, location_id, restrict_lot_id = restrict_lot_id, context=context)
+            if move.state == 'draft':
+                self.action_confirm(cr, uid, [move.id], context=context)
+            move_qty = move.product_qty
+            uom_qty = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, product_qty, move.product_uom.id)
+            if move_qty <= 0:
+                raise osv.except_osv(_('Error!'), _('Cannot consume a move with negative or zero quantity.'))
+            quantity_rest = move.product_qty - uom_qty
+            if quantity_rest > 0:
+                ctx = context.copy()
+                if location_id:
+                    ctx['source_location_id'] = location_id
+                new_mov = self.split(cr, uid, move, move_qty - quantity_rest, restrict_lot_id=restrict_lot_id, restrict_partner_id=restrict_partner_id, context=ctx)
+                self.write(cr, uid, new_mov, {'consumed_for': consumed_for}, context=context)
+                res.append(new_mov)
+            else:
+                res.append(move.id)
+                if location_id:
+                    self.write(cr, uid, [move.id], {'location_id': location_id, 'restrict_lot_id': restrict_lot_id,
+                                                    'restrict_partner_id': restrict_partner_id,
+                                                    'consumed_for': consumed_for}, context=context)
+            self.action_done(cr, uid, res, context=context)
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
-            for prod in production_obj.browse(cr, uid, production_ids, context=context):
-                if prod.state == 'confirmed':
-                    production_obj.force_production(cr, uid, [prod.id])
             production_obj.signal_button_produce(cr, uid, production_ids)
-            for new_move in new_moves:
-                if new_move == move.id:
-                    #This move is already there in move lines of production order
-                    continue
-                production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
-                res.append(new_move)
+            for new_move in res:
+                if new_move != move.id:
+                    #This move is not already there in move lines of production order
+                    production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
         return res
 
-    def action_scrap(self, cr, uid, ids, product_qty, location_id, context=None):
+    def action_scrap(self, cr, uid, ids, product_qty, location_id, restrict_lot_id=False, restrict_partner_id=False, context=None):
         """ Move the scrap/damaged product into scrap location
         @param product_qty: Scraped product quantity
         @param location_id: Scrap location
@@ -133,7 +160,9 @@ class StockMove(osv.osv):
         res = []
         production_obj = self.pool.get('mrp.production')
         for move in self.browse(cr, uid, ids, context=context):
-            new_moves = super(StockMove, self).action_scrap(cr, uid, [move.id], product_qty, location_id, context=context)
+            new_moves = super(StockMove, self).action_scrap(cr, uid, [move.id], product_qty, location_id,
+                                                            restrict_lot_id=restrict_lot_id,
+                                                            restrict_partner_id=restrict_partner_id, context=context)
             #If we are not scrapping our whole move, tracking and lot references must not be removed
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for prod_id in production_ids:
@@ -153,6 +182,7 @@ class StockMove(osv.osv):
                 workflow.trg_trigger(uid, 'stock.move', move.id, cr)
         return res
 
+
 class StockPicking(osv.osv):
     _inherit = 'stock.picking'
 
@@ -166,21 +196,6 @@ class StockPicking(osv.osv):
         for move in move_obj.browse(cr, uid, move_ids):
             todo.extend(move_obj._action_explode(cr, uid, move))
         return list(set(todo))
-
-
-class split_in_production_lot(osv.osv_memory):
-    _inherit = "stock.move.split"
-
-    def split(self, cr, uid, ids, move_ids, context=None):
-        """ Splits move lines into given quantities.
-        @param move_ids: Stock moves.
-        @return: List of new moves.
-        """
-        new_moves = super(split_in_production_lot, self).split(cr, uid, ids, move_ids, context=context)
-        production_obj = self.pool.get('mrp.production')
-        production_ids = production_obj.search(cr, uid, [('move_lines', 'in', move_ids)])
-        production_obj.write(cr, uid, production_ids, {'move_lines': [(4, m) for m in new_moves]})
-        return new_moves
 
 
 class stock_warehouse(osv.osv):

@@ -74,7 +74,7 @@
     return_picking_id, dummy = self._create_returns(cr, uid, [return_id], context={'active_id': pick_ids[0].id})
     self.pool.get('stock.picking').do_transfer(cr, uid, [return_picking_id])
 - 
-  Check the standard price of the product changed to 70.0 (as returns to supplier are processed as normal outgoing shipment we have sent 10kg at 50€ and 20kg at 80€, because of FIFO, so the average to store on the product is 70€)
+  Check the standard price of the product changed to 80.0 as we returned the quants of purchase order 2
 - 
   !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_fiforet_icecream")).standard_price == 70.0, 'Standard price should have changed to 70.0! %s found instead' % (self.browse(cr, uid, ref("product_fiforet_icecream")).standard_price,)
+    assert self.browse(cr, uid, ref("product_fiforet_icecream")).standard_price == 80.0, 'Standard price should have changed to 80.0! %s found instead' % (self.browse(cr, uid, ref("product_fiforet_icecream")).standard_price,)
