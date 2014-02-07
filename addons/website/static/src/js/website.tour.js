@@ -2,6 +2,8 @@
     'use strict';
 
 var website = openerp.website;
+
+if (typeof QWeb2 !== "undefined")
 website.add_template_file('/website/static/src/xml/website.tour.xml');
 
 if (website.EditorBar)
@@ -185,8 +187,9 @@ website.Tour = openerp.Class.extend({
             var step = this.steps[index];
             step.stepId = step.stepId || ""+index;
 
-            if (!step.waitNot && index > 0 && $(this.steps[index-1].template).has("button[data-role='next']").size()) {
-                step.waitNot = '.popover.tour';
+            if (!step.waitNot && index > 0 && this.steps[index-1] &&
+                this.steps[index-1].popover && this.steps[index-1].popover.next) {
+                step.waitNot = '.popover.tour:visible';
             }
             if (!step.waitFor && index > 0 && this.steps[index-1].snippet) {
                 step.waitFor = '.oe_overlay_options .oe_options:visible';
@@ -194,6 +197,8 @@ website.Tour = openerp.Class.extend({
 
             step._title = step._title || step.title;
             step.title = this.popoverTitle({ title: step._title });
+            step.template = step.template || this.popover( step.popover );
+
             if (!step.element) step.orphan = true;
             if (step.snippet) {
                 step.element = '#oe_snippets div.oe_snippet[data-snippet-id="'+step.snippet+'"] .oe_snippet_thumbnail';
@@ -201,9 +206,10 @@ website.Tour = openerp.Class.extend({
 
         }
 
-        if ($(this.steps[index-1].template).has("button[data-role='next']").size()) {
+        if (this.steps[index-1] &&
+            this.steps[index-1].popover && this.steps[index-1].popover.next) {
             var step = {
-                stepId:    index,
+                stepId:    ""+index,
                 waitNot:   '.popover.tour:visible'
             };
             this.steps.push(step);
@@ -437,7 +443,7 @@ website.Tour.each = function (callback) {
 website.Tour.waitReady = function (callback) {
     var self = this;
     $(document).ready(function () {
-        if ($.ajaxBusy == null || $.ajaxBusy) {
+        if ($.ajaxBusy) {
             $(document).ajaxStop(function() {
                 setTimeout(function () {
                     callback.call(self);

@@ -18,15 +18,17 @@ function LoadScript(src) {
 
 if (typeof jQuery === "undefined")
     LoadScript("/web/static/lib/jquery/jquery.js");
+if (typeof _ === "undefined")
+    LoadScript("/web/static/lib/underscore/underscore.js");
 if (typeof openerp === "undefined") {
     LoadScript("/web/static/lib/qweb/qweb2.js");
-    LoadScript("/web/static/lib/qweb/openerpframework.js");
+    LoadScript("/web/static/src/js/openerpframework.js");
 }
 if (typeof openerp === "undefined" || !openerp.website || !openerp.website.add_template_file)
     LoadScript("/website/static/src/js/website.js");
-if (typeof openerp === "undefined" || !openerp.website.Tour)
-    LoadScript("/website/static/src/js/website.tour.js");
 if (typeof Tour === "undefined")
     LoadScript("/website/static/lib/bootstrap-tour/bootstrap-tour.js");
+if (typeof openerp === "undefined" || !openerp.website.Tour)
+    LoadScript("/website/static/src/js/website.tour.js");
 
 })();

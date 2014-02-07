@@ -21,21 +21,21 @@
                 {
                     title:     _t("Welcome to your shop"),
                     content:   _t("You successfully installed the e-commerce. This guide will help you to create your product and promote your sales."),
-                    template:  self.popover({ next: _t("Start Tutorial"), end: _t("Skip It") }),
+                    popover:   { next: _t("Start Tutorial"), end: _t("Skip It") },
                 },
                 {
                     element:   '#content-menu-button',
                     placement: 'left',
                     title:     _t("Create your first product"),
                     content:   _t("Click here to add a new product."),
-                    template:  self.popover({ fixed: true }),
+                    popover:   { fixed: true },
                 },
                 {
                     element:   'a[data-action=new_product]',
                     placement: 'left',
                     title:     _t("Create a new product"),
                     content:   _t("Select 'New Product' to create it and manage its properties to boost your sales."),
-                    template:  self.popover({ fixed: true }),
+                    popover:   { fixed: true },
                 },
                 {
                     element:   '.modal #editor_new_product input[type=text]',
@@ -55,7 +55,7 @@
                     waitFor:   'body:has(button[data-action=save]:visible):has(.js_sale)',
                     title:     _t("New product created"),
                     content:   _t("This page contains all the information related to the new product."),
-                    template:  self.popover({ next: _t("Continue") }),
+                    popover:   { next: _t("Continue") },
                 },
                 {
                     element:   '.product_price .oe_currency_value',
@@ -83,14 +83,14 @@
                     placement: 'bottom',
                     title:     _t("Select an Image"),
                     content:   _t("Let's select an existing image."),
-                    template:  self.popover({ fixed: true }),
+                    popover:   { fixed: true },
                 },
                 {
                     element:   'img[alt=imac]',
                     placement: 'bottom',
                     title:     _t("Select an Image"),
                     content:   _t("Let's select an imac image."),
-                    template:  self.popover({ fixed: true }),
+                    popover:   { fixed: true },
                 },
                 {
                     waitNot:   'img[alt=imac]',
@@ -98,7 +98,7 @@
                     placement: 'bottom',
                     title:     _t("Select this Image"),
                     content:   _t("Click to add the image to the product decsription."),
-                    template:  self.popover({ fixed: true }),
+                    popover:   { fixed: true },
                 },
                 {
                     waitNot:   '.modal-content:visible',
@@ -106,21 +106,21 @@
                     placement: 'bottom',
                     title:     _t("Describe the Product"),
                     content:   _t("Insert blocks like text-image, or gallery to fully describe the product."),
-                    template:  self.popover({ fixed: true }),
+                    popover:   { fixed: true },
                 },
                 {
                     snippet:   'big-picture',
                     placement: 'bottom',
                     title:     _t("Drag & Drop a block"),
                     content:   _t("Drag the 'Big Picture' block and drop it in your page."),
-                    template:  self.popover({ fixed: true }),
+                    popover:   { fixed: true },
                 },
                 {
                     element:   'button[data-action=save]',
                     placement: 'right',
                     title:     _t("Save your modifications"),
                     content:   _t("Once you click on save, your product is updated."),
-                    template:  self.popover({ fixed: true }),
+                    popover:   { fixed: true },
 
                 },
                 {
@@ -134,7 +134,7 @@
                     waitFor:   '.js_publish_management button.js_publish_btn.btn-success:visible',
                     title:     _t("Congratulations"),
                     content:   _t("Congratulations! You just created and published your first product."),
-                    template:  self.popover({ next: _t("Close Tutorial") }),
+                    popover:   { next: _t("Close Tutorial") },
                 },
             ];
             return this._super();

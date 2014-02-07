@@ -419,12 +419,18 @@
 
                             // reset snippet for rte
                             $target.removeData("snippet-editor");
-                            $target.removeData("overlay");
+                            if ($target.data("overlay")) {
+                                $target.data("overlay").remove();
+                                $target.removeData("overlay");
+                            }
                             self.create_overlay($target);
                             $target.find("[data-snippet-id]").each(function () {
                                 var $snippet = $(this);
                                 $snippet.removeData("snippet-editor");
-                                $snippet.removeData("overlay");
+                                if ($snippet.data("overlay")) {
+                                    $snippet.data("overlay").remove();
+                                    $snippet.removeData("overlay");
+                                }
                                 self.create_overlay($snippet);
                             });
                             // end
