@@ -13,7 +13,7 @@ if (typeof Tour === "undefined") {
 }
 for (var i in scripts) {
     if (typeof jQuery === "undefined") {
-        throw new Error("jQuery not found.\nhref: " + window.location.href + "\n\n" + document.body.innerHTML);
+        throw new Error("jQuery not found.\nhref: " + window.location.href + (document && document.body ? "\n\n" + document.body.innerHTML : ""));
     }
     jQuery.ajax({
         async: false,
