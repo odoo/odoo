@@ -55,7 +55,7 @@
                             <group string="Reference">
                                 <field name="definition_id" on_change="on_change_definition_id(definition_id)" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="user_id" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                <field name="challenge_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="challenge_id" />
                             </group>
                             <group string="Schedule">
                                 <field name="start_date" attrs="{'readonly':[('state','!=','draft')]}"/>
