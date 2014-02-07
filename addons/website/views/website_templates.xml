@@ -637,11 +637,11 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 
 <template id="company_description" name="Company Description">
-    <address>
-        <div t-field="res_company.name">Name</div>
+    <address itemscope="itemscope" itemtype="http://schema.org/Organization">
+        <div itemprop="name" t-field="res_company.name">Name</div>
         <br />
-        <div><i class="fa fa-phone"/> <span t-field="res_company.phone"/></div>
-        <div><i class="fa fa-envelope"/> <span t-field="res_company.email"/></div>
+        <div><i class="fa fa-phone"/> <span itemprop="telephone" t-field="res_company.phone"/></div>
+        <div><i class="fa fa-envelope"/> <span itemprop="email" t-field="res_company.email"/></div>
     </address>
      <a t-att-href="res_company.google_map_link()" target="_BLANK">
         <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
@@ -723,18 +723,20 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 
 <template id="contact">
-    <address t-ignore="true" class="mb0">
-        <div t-att-class="'name' not in fields and 'css_non_editable_mode_hidden'"><span t-esc="name"/></div>
-        <div t-if="address and 'address' in fields" class='css_editable_mode_hidden'>
-            <i class='fa fa-map-marker'/> <span t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or '&lt;br/&gt; &amp;nbsp; &amp;nbsp; ')"/>
+    <address t-ignore="true" class="mb0" itemscope="itemscope" itemtype="http://schema.org/Organization">
+        <div t-att-class="'name' not in fields and 'css_non_editable_mode_hidden'"><span itemprop="name" t-esc="name"/></div>
+        <div itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
+            <div t-if="address and 'address' in fields" class='css_editable_mode_hidden'>
+                <i class='fa fa-map-marker'/> <span itemprop="streetAddress" t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or '&lt;br/&gt; &amp;nbsp; &amp;nbsp; ')"/>
+            </div>
+            <div t-if="city and 'city' in fields" class='css_editable_mode_hidden'>
+                <i class='fa fa-map-marker'/> <span itemprop="addressLocality" t-raw="city"/>, <span itemprop="addressCountry" t-raw="country_id"/>
+            </div>
+            <div t-if="phone and 'phone' in fields" class='css_editable_mode_hidden'><i class='fa fa-phone'/> <span itemprop="telephone" t-esc="phone"/></div>
+            <div t-if="mobile and 'mobile' in fields" class='css_editable_mode_hidden'><i class='fa fa-mobile-phone'/> <span itemprop="telephone" t-esc="mobile"/></div>
+            <div t-if="fax and 'fax' in fields" class='css_editable_mode_hidden'><i class='fa fa-file-text-o'/> <span itemprop="faxNumber" t-esc="fax"/></div>
+            <div t-if="email and 'email' in fields" class='css_editable_mode_hidden'><i class='fa fa-envelope'/> <span itemprop="email" t-esc="email"/></div>
         </div>
-        <div t-if="city and 'city' in fields" class='css_editable_mode_hidden'>
-            <i class='fa fa-map-marker'/> <span t-raw="city"/>, <span t-raw="country_id"/>
-        </div>
-        <div t-if="phone and 'phone' in fields" class='css_editable_mode_hidden'><i class='fa fa-phone'/> <span t-esc="phone"/></div>
-        <div t-if="mobile and 'mobile' in fields" class='css_editable_mode_hidden'><i class='fa fa-mobile-phone'/> <span t-esc="mobile"/></div>
-        <div t-if="fax and 'fax' in fields" class='css_editable_mode_hidden'><i class='fa fa-file-text-o'/> <span t-esc="fax"/></div>
-        <div t-if="email and 'email' in fields" class='css_editable_mode_hidden'><i class='fa fa-envelope'/> <span t-esc="email"/></div>
     </address>
 </template>
 
