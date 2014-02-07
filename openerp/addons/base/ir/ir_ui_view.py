@@ -265,7 +265,8 @@ class view(osv.osv):
            :return: [(view_arch,view_id), ...]
         """
 
-        user_groups = frozenset(self.pool.get('res.users').browse(cr, 1, uid, context).groups_id)
+        user = self.pool['res.users'].browse(cr, 1, uid, context=context)
+        user_groups = frozenset(user.groups_id or ())
 
         check_view_ids = context and context.get('check_view_ids') or (0,)
         conditions = [['inherit_id', '=', view_id], ['model', '=', model]]
