@@ -67,7 +67,7 @@ diff --git a/controllers/my_controller.py b/controllers/my_controller.py
 -""" % teaching_assistants[id]
 +        cr, uid, context = http.request.cr, http.request.uid, http.request.context
 +        return http.request.registry['ir.ui.view'].render(
-+            cr, uid,  "academy.tas", teaching_assistants[id], context=context)
++            cr, uid,  "academy.ta", teaching_assistants[id], context=context)
 diff --git a/views/templates.xml b/views/templates.xml
 new file mode 100644
 --- /dev/null

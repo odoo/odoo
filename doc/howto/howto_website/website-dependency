@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 1960586e8781d62d0cc8c2b7b9df7b04fb20f3ae
+# Parent b2da66732141558bdf8fcc21000b98a8b67a1340
 
 diff --git a/__openerp__.py b/__openerp__.py
 --- a/__openerp__.py
@@ -41,7 +41,7 @@ diff --git a/controllers/my_controller.py b/controllers/my_controller.py
      def ta(self, id):
 -        cr, uid, context = http.request.cr, http.request.uid, http.request.context
 -        return http.request.registry['ir.ui.view'].render(
--            cr, uid,  "academy.tas", teaching_assistants[id], context=context)
+-            cr, uid,  "academy.ta", teaching_assistants[id], context=context)
 +        return http.request.website.render('academy.ta', teaching_assistants[id])
 diff --git a/views/templates.xml b/views/templates.xml
 --- a/views/templates.xml
