@@ -150,6 +150,7 @@ def full_path(pyfile, filename):
 
 def load_tests(loader, base, _):
     base.addTest(WebsiteUiSuite(full_path(__file__, 'dummy_test.js'), {}, 5.0))
+    base.addTest(WebsiteUiSuite(full_path(__file__, 'login_test.js'), {'path': '/', 'user': None}, 60.0))
     base.addTest(WebsiteUiSuite(full_path(__file__, 'simple_dom_test.js'), {'redirect': '/page/website.homepage'}, 60.0))
     base.addTest(WebsiteUiSuite(full_path(__file__, 'homepage_test.js'), {'redirect': '/page/website.homepage'}, 60.0))
     return base

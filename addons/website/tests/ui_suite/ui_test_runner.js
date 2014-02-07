@@ -72,7 +72,7 @@ function run (test, onload, inject) {
 
     page.onCallback = function(data) {
         if (data.event && data.event === 'start') {
-            test(page, timeout);
+            if (test) test(page, timeout, options);
         }
     };
     page.onLoadFinished = function(status) {
@@ -88,7 +88,7 @@ function run (test, onload, inject) {
                     }
                 }
             }
-            if (onload) onload(page, timeout);
+            if (onload) onload(page, timeout, options);
         }
     };
     
