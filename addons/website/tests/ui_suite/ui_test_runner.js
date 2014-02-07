@@ -20,11 +20,9 @@ function waitFor (ready, callback, timeout, timeoutMessageCallback) {
 }
 
 function run (test, onload, inject) {
-    try {
-
     var options = JSON.parse(phantom.args);
 
-    var timeout = options.timeout ? Math.round(parseFloat(options.timeout)*1000) : 60000;
+    var timeout = options.timeout ? Math.round(parseFloat(options.timeout)*1000-5000) : 60000;
 
     var scheme = options.scheme ? options.scheme+'://' : 'http://';
     var host = options.host ? options.host : 'localhost';
@@ -96,14 +94,14 @@ function run (test, onload, inject) {
     
     var maxRetries = 10;
     var retryDelay = 1000; // ms
-    var tries = 0; 
+    var tries = 0;
     page.open(url, function openPage (status) {
         if (status !== 'success') {
             tries++;
             if (tries < maxRetries) {
-            	setTimeout(function () {
-            		page.open(url, openPage);
-            	}, retryDelay);
+                setTimeout(function () {
+                    page.open(url, openPage);
+                }, retryDelay);
             } else {
                 console.log('{ "event": "error", "message": "'+url+' failed to load '+tries+' times ('+status+')"}');
                 phantom.exit(1);
@@ -116,15 +114,19 @@ function run (test, onload, inject) {
 
     });
 
-    } catch (e) {
-        console.error("Error in run:", e);
-        phantom.exit(1);
-    }
+    setTimeout(function () {
+        page.evaluate(function (timeout) {
+            var message = ("Timeout after " +(timeout/1000)+ " s"
+                + "\nhref: " + window.location.href
+                + "\nreferrer: " + document.referrer
+                + "\n\n" + document.body.innerHTML).replace(/[^a-z0-9\s~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "*");
+            console.log(JSON.stringify({ "event": "error", "message": message}));
+            phantom.exit(1);
+        },timeout);
+    }, timeout);
 }
 
 function run_test (testname, options) {
-    try {
-
     options = options || {};
     run(
         function start (page, timeout) {
@@ -146,11 +148,6 @@ function run_test (testname, options) {
         },
         options.inject || null
     );
-
-    } catch (e) {
-        console.error("Error in run_test:", e);
-        phantom.exit(1);
-    }
 }
 
 module.exports = {

@@ -41,7 +41,7 @@ class WebsiteUiSuite(unittest.TestSuite):
     # timeout in seconds
     def __init__(self, testfile, options, timeout=60.0):
         self._testfile = testfile
-        self._timeout = timeout
+        self._timeout = timeout + 5.0
         self._options = options
         self._test = None
         self._ignore_filters = [

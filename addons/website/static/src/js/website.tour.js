@@ -75,9 +75,8 @@ website.Tour = openerp.Class.extend({
 
         website.Tour.busy = true;
 
-        if (automatic) {
-            this.localStorage.setItem("tour-"+this.id+"-test-automatic", true);
-        }
+        this.localStorage.setItem("tour-"+this.id+"-test-automatic", automatic);
+        this.automatic = automatic;
 
         if (this.path) {
             // redirect to begin of the tour in function of the language
@@ -93,12 +92,13 @@ website.Tour = openerp.Class.extend({
         website.Tour.waitReady.call(this, function () {self._running();});
     },
     running: function () {
+        var self = this;
         if (+this.localStorage.getItem("tour-"+this.id+"-test") >= this.steps.length-1) {
             this.endTour();
             return;
         }
 
-        if (website.Tour.is_busy() || !this.testPathUrl()) return;
+        if (website.Tour.is_busy()) return;
 
         // launch tour with url
         this.checkRunningUrl();
@@ -106,6 +106,21 @@ website.Tour = openerp.Class.extend({
         // mark tour as busy (only one test running)
         if (this.localStorage.getItem("tour-"+this.id+"-test") != null) {
             website.Tour.busy = true;
+            this.automatic = !!this.localStorage.getItem("tour-"+this.id+"-test-automatic");
+        }
+
+        if (!this.testPathUrl()) {
+            if (this.automatic) {
+                this.timer = setTimeout(function () {
+                    self.reset();
+                    throw new Error("Wrong url for running " + self.id
+                        + '\ntestPath: ' + self.testPath
+                        + '\nhref: ' + window.location.href
+                        + "\nreferrer: " + document.referrer
+                    );
+                },this.defaultOverLaps);
+            }
+            return;
         }
 
         var self = this;
@@ -115,7 +130,6 @@ website.Tour = openerp.Class.extend({
         var stepId = this.localStorage.getItem("tour-"+this.id+"-test");
 
         if (stepId != null) {
-            this.automatic = !!this.localStorage.getItem("tour-"+this.id+"-test-automatic");
             this.registerTour();
             this.nextStep(stepId,  this.automatic ? this.autoNextStep : null, this.automatic ? this.defaultOverLaps : null);
         }
