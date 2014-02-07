@@ -85,13 +85,15 @@ class res_users_gamification_group(osv.Model):
         challenge_ids = challenge_obj.search(cr, uid, [('user_ids', 'in', uid), ('state', '=', 'inprogress')], context=context)
         for challenge in challenge_obj.browse(cr, uid, challenge_ids, context=context):
             # serialize goals info to be able to use it in javascript
-            all_goals_info.append({
-                'id': challenge.id,
-                'name': challenge.name,
-                'visibility_mode': challenge.visibility_mode,
-                'currency': user.company_id.currency_id.id,
-                'lines': challenge_obj._get_serialized_challenge_lines(cr, uid, challenge, user_id, restrict_top=MAX_VISIBILITY_RANKING, context=context),
-            })
+            lines = challenge_obj._get_serialized_challenge_lines(cr, uid, challenge, user_id, restrict_top=MAX_VISIBILITY_RANKING, context=context)
+            if lines:
+                all_goals_info.append({
+                    'id': challenge.id,
+                    'name': challenge.name,
+                    'visibility_mode': challenge.visibility_mode,
+                    'currency': user.company_id.currency_id.id,
+                    'lines': lines,
+                })
 
         return all_goals_info
 
