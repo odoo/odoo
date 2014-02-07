@@ -140,7 +140,6 @@ class view(osv.osv):
                 slug=website.slug,
                 res_company=request.website.company_id,
                 user_id=self.pool.get("res.users").browse(cr, uid, uid),
-                editable=False,
             )
 
             # add some values
