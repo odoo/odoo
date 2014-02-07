@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 5426218c6da91a13911e64eeb18a0cc2e19083c7
+# Parent 1960586e8781d62d0cc8c2b7b9df7b04fb20f3ae
 
 diff --git a/__openerp__.py b/__openerp__.py
 --- a/__openerp__.py
@@ -16,13 +16,14 @@ diff --git a/__openerp__.py b/__openerp__.py
 diff --git a/controllers/my_controller.py b/controllers/my_controller.py
 --- a/controllers/my_controller.py
 +++ b/controllers/my_controller.py
-@@ -12,17 +12,12 @@ teaching_assistants = [
+@@ -12,20 +12,12 @@ teaching_assistants = [
  ]
  
  class my_controller(main.Home):
 -    @http.route('/', auth='none')
 +    @http.route('/', auth='public')
      def index(self):
+-        cr, uid, context = http.request.cr, http.request.uid, http.request.context
 -        tas = [
 -            '<li><a href="/tas/%d/">%s</a></li>' % (i, ta['name'])
 -            for i, ta in enumerate(teaching_assistants)
@@ -31,14 +32,16 @@ diff --git a/controllers/my_controller.py b/controllers/my_controller.py
 +            'tas': teaching_assistants,
 +        })
  
--        return "" % {
+-        return http.request.registry['ir.ui.view'].render(cr, uid, 'academy.index', {
 -            'tas': '\n'.join(tas)
--        }
+-        }, context=context)
 -
 -    @http.route('/tas/<int:id>/', auth='none')
 +    @http.route('/tas/<int:id>/', auth='public', website=True)
      def ta(self, id):
--        return "" % teaching_assistants[id]
+-        cr, uid, context = http.request.cr, http.request.uid, http.request.context
+-        return http.request.registry['ir.ui.view'].render(
+-            cr, uid,  "academy.tas", teaching_assistants[id], context=context)
 +        return http.request.website.render('academy.ta', teaching_assistants[id])
 diff --git a/views/templates.xml b/views/templates.xml
 --- a/views/templates.xml

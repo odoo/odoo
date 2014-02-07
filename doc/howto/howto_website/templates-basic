@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 170cc87a26983d34df5cd3bb27d3259722c586e5
+# Parent 0792d59a4a456e1ce70d8aa4cb1784632883d714
 
 diff --git a/__openerp__.py b/__openerp__.py
 --- a/__openerp__.py
@@ -19,7 +19,13 @@ diff --git a/__openerp__.py b/__openerp__.py
 diff --git a/controllers/my_controller.py b/controllers/my_controller.py
 --- a/controllers/my_controller.py
 +++ b/controllers/my_controller.py
-@@ -19,36 +19,10 @@ class my_controller(main.Home):
+@@ -14,41 +14,18 @@ teaching_assistants = [
+ class my_controller(main.Home):
+     @http.route('/', auth='none')
+     def index(self):
++        cr, uid, context = http.request.cr, http.request.uid, http.request.context
+         tas = [
+             '<li><a href="/tas/%d/">%s</a></li>' % (i, ta['name'])
              for i, ta in enumerate(teaching_assistants)
          ]
  
@@ -42,9 +48,9 @@ diff --git a/controllers/my_controller.py b/controllers/my_controller.py
 -""" % {
 -        'tas': '\n'.join(tas)
 -    }
-+        return "" % {
++        return http.request.registry['ir.ui.view'].render(cr, uid, 'academy.index', {
 +            'tas': '\n'.join(tas)
-+        }
++        }, context=context)
  
      @http.route('/tas/<int:id>/', auth='none')
      def ta(self, id):
@@ -59,7 +65,9 @@ diff --git a/controllers/my_controller.py b/controllers/my_controller.py
 -    </body>
 -</html>
 -""" % teaching_assistants[id]
-+        return "" % teaching_assistants[id]
++        cr, uid, context = http.request.cr, http.request.uid, http.request.context
++        return http.request.registry['ir.ui.view'].render(
++            cr, uid,  "academy.tas", teaching_assistants[id], context=context)
 diff --git a/views/templates.xml b/views/templates.xml
 new file mode 100644
 --- /dev/null
@@ -67,7 +75,7 @@ new file mode 100644
 @@ -0,0 +1,39 @@
 +<openerp>
 +    <data>
-+<template id="academy.index" name="Index">
++<template id="index" name="Index">
 +    <html>
 +        <head>
 +            <title>AcademyAcademy</title>
@@ -90,7 +98,7 @@ new file mode 100644
 +    </html>
 +</template>
 +
-+<template id="academy.ta" name="Teaching Assistant">
++<template id="ta" name="Teaching Assistant">
 +    <html>
 +        <head>
 +            <title>AcademyAcademy TA <t t-esc="name"/></title>

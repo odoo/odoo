@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 375b20994a7069eadfbd64c793328a07f7d9baf6
+# Parent 307d452da9602b1bc1a8ed208e6949924ba0e5cf
 
 diff --git a/views/templates.xml b/views/templates.xml
 --- a/views/templates.xml
@@ -7,7 +7,7 @@ diff --git a/views/templates.xml b/views/templates.xml
 @@ -1,42 +1,46 @@
  <openerp>
      <data>
- <template id="academy.index" name="Index">
+-<template id="index" name="Index">
 -    <html>
 -        <head>
 -            <title>AcademyAcademy</title>
@@ -32,6 +32,7 @@ diff --git a/views/templates.xml b/views/templates.xml
 -            </ul>
 -        </body>
 -    </html>
++<template id="academy.index" name="Index">
 +    <t t-call="website.layout">
 +        <div id="wrap">
 +            <div class="oe_structure"/>
@@ -60,7 +61,7 @@ diff --git a/views/templates.xml b/views/templates.xml
 +    </t>
  </template>
  
- <template id="academy.ta" name="Teaching Assistant">
+-<template id="ta" name="Teaching Assistant">
 -    <html>
 -        <head>
 -            <title>AcademyAcademy TA <t t-esc="name"/></title>
@@ -70,6 +71,7 @@ diff --git a/views/templates.xml b/views/templates.xml
 -            <h1><t t-esc="name"/></h1>
 -        </body>
 -    </html>
++<template id="academy.ta" name="Teaching Assistant">
 +    <t t-call="website.layout">
 +        <div id="wrap">
 +            <div class="oe_structure"/>

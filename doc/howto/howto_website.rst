@@ -31,13 +31,29 @@ create a module:
 .. patch::
     :hidden:
 
-This builds a basic module for you, ignore anything in the ``models`` and
-``security`` directories for now.
+This builds a basic module for you:
+
+.. code-block:: text
+
+    academy
+    ├── __init__.py
+    ├── __openerp__.py
+    ├── controllers
+    │   ├── __init__.py
+    │   └── my_controller.py
+    ├── models
+    │   ├── __init__.py
+    │   └── my_model.py
+    └── security
+        └── ir.model.access.csv
+
+Ignore anything in the ``models`` and ``security`` directories for now.
 
 .. todo::
 
    * instructions for start & install
    * db handling
+
      - if existing db, automatically selected
      - if no existing db, nodb -> login -> login of first db
      - dbfilter
@@ -45,6 +61,8 @@ This builds a basic module for you, ignore anything in the ``models`` and
 Now start your OpenERP server and install your module in it, open a web
 browser and navigate to http://localhost:8069. A page should appear with just
 the words "Hello, world!" on it.
+
+.. todo:: screenshot?
 
 Let's prettify things a bit: instead of returning just a bit of text,
 we can return a page, and use a tool like bootstrap_ to get a
@@ -57,21 +75,28 @@ returned by the ``index`` method to get a more page-ish output:
 
 .. note::
 
-   this example requires internet access at all time, as we're accessing a
-   :abbr:`CDN (Content Delivery Network, large distributed networks hosting
-   static files and trying to provide high-performance and high-availability
-   of these files)`-hosted file.
+   this example requires internet access as we're accessing a :abbr:`CDN
+   (Content Delivery Network, large distributed networks hosting static files
+   and trying to provide high-performance and high-availability of these
+   files)`-hosted file.
+
+.. todo:: screenshot
 
 Data input: URL and query
 =========================
 
 Being able to build a static page in code is nice, but makes for limited
-usefulness (you could do that with static files in the first place).
+usefulness (you could do that with static files).
 
-You can also create controllers which use data provided in the access URL,
-for instance so you have a single controller generating multiple pages. Any
-query parameter (``?name=value``) is passed as a parameter to the controller
-function, and is a string.
+You can also create dynamic pages which use data provided in the URL,
+for instance so a single controller generates multiple pages. Any
+query parameter (``?name=value``) is passed as a string parameter to the
+controller method.
+
+For instance, the index page can display a list of teaching assistants linking
+to a page for each assistant through their index in a global array. Each
+assistant's page will simply print their name by applying the index to the
+array:
 
 .. patch::
 
@@ -89,16 +114,14 @@ This can be done by adding `converter patterns`_ to the URL in
 These patterns can perform conversions directly (in this case the conversion
 from a string URL section to a python integer) and will perform a some
 validation (if the ``id`` is not a valid integer, the converter will return a
-``404 Not Found`` instead of generating a server error when the conversion
-fails).
+``404 Not Found`` instead of a 500 server error when the conversion fails).
 
 Templating: better experience in editing
 ========================================
 
-So far we've created HTML output by munging together Python strings using
-string concatenation and formatting. It works, but is not exactly fun to edit
-(and somewhat unsafe to boot) as even advanced text editors have a hard time
-understanding they're dealing with HTML embedded in Python code.
+So far we've output HTML by munging strings. It works, but is not exactly fun
+to edit (and somewhat unsafe to boot) as even advanced text editors have a
+hard time understanding they're dealing with HTML embedded in Python code.
 
 The usual solution is to use templates_, documents with placeholders which can
 be "rendered" to produce final pages (or others). OpenERP lets you use any
