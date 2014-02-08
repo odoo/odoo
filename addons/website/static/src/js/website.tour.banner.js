@@ -51,7 +51,7 @@
                     sampleText: 'My Title',
                     placement: 'top',
                     title:     "Customize banner's text",
-                    content:   "Click in the text and start editing it. Click continue once it's done.",
+                    content:   "Click in the text and start editing it.",
                 },
                 {
                     waitNot:   '#wrap [data-snippet-id=carousel]:first .carousel-caption:contains("Your Banner Title")',
