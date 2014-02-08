@@ -53,30 +53,16 @@
 }
 .disqussion:hover a, .disqussion.hovered a {
   opacity: 1;
-  background: #999999;
+  background: #57AD68;
 }
 .disqussion:hover a:after, .disqussion.hovered a:after {
-  border-top-color: #999999;
+  border-top-color: #57AD68;
 }
 
 #disqussions_wrapper {
   position: absolute;
   top: 0;
   left: 0;
-}
-
-#disqus_thread.positioned {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 5px 15px 0 15px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-.disqussion-highlight #disqus_thread.positioned {
-  background: #fff;
-  z-index: 9;
 }
 
 #disqussions_overlay {
@@ -90,8 +76,8 @@
   display: none;
 }
 
-.disqussion-highlighted {
-  position: relative;
-  background: #fff;
-  z-index: 9;
+.disqussion .popover-content {
+    max-height: 250px;
+    width: 250px;
+    overflow: auto;
 }

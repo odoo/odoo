@@ -1,4 +1,7 @@
 $(document).ready(function() {
+
+    $("#blog_content p").inlineDisqussions(); //Allow inline comments on blog post
+
     $('.js_next').click(function(event) {
         event.preventDefault();
         var translationValue  = $('.cover_footer').get(0).getBoundingClientRect().top;

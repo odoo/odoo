@@ -61,7 +61,7 @@ class MailMessage(osv.Model):
     _inherit = 'mail.message'
 
     _columns = {
-        'tag_id': fields.char('Tag'),
+        'discussion': fields.char('Discussion Unique Name'),
     }
 
 class BlogPost(osv.Model):
@@ -125,7 +125,7 @@ class BlogPost(osv.Model):
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [
-                '&', ('model', '=', self._name), ('type', '=', 'comment')
+                '&', '&', ('model', '=', self._name), ('type', '=', 'comment') , ('discussion', '=', False)
             ],
             string='Website Messages',
             help="Website communication history",

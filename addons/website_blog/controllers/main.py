@@ -241,7 +241,7 @@ class WebsiteBlog(http.Controller):
                     type='comment',
                     subtype='mt_comment',
                     author_id=user.partner_id.id,
-                    tag_id=post.get('tag_id'),
+                    discussion=post.get('discussion'),
                     context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
@@ -271,34 +271,11 @@ class WebsiteBlog(http.Controller):
         new_blog_post_id = request.registry['blog.post'].copy(cr, uid, blog_post_id, {}, context=create_context)
         return werkzeug.utils.redirect("/blogpost/%s/?enable_editor=1" % new_blog_post_id)
 
-    @http.route('/blog_post/post', type='json', auth="public", website=True)
-    def getPost(self, blog=None, **post):
-        blog = request.registry.get('blog.post').browse(request.cr, SUPERUSER_ID, int(blog))
-        values = {
-              "image": blog.content_image,
-              "date": blog.create_date ,
-              "author": blog.create_uid.name,
-              "author_image": "data:image/png;base64,%s" % blog.create_uid.image,
-              "title": blog.name,
-              "title_secondary": "It's not too hard, really.",
-              "content": blog.content,
-        }
-        return [values]
-
-    @http.route('/blog_post/change_layout', type='json', auth="public", website=True)
-    def check_layout(self, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        view_obj = request.registry.get('ir.ui.view')
-        view_data = view_obj.search_read(cr, SUPERUSER_ID, [('name','=','Blog Cover')],['inherit_id', 'inherit_option_id'])[0]
-        if view_data['inherit_id']:
-            return [True]
-        return []
-    
-    @http.route('/blog_post/comments', type='json', auth="public", website=True)
-    def getcomments(self, blog=None, tag_id=None, **post):
+    @http.route('/blogpost/discussion', type='json', auth="public", website=True)
+    def discussion(self, post_id=0, discussion=None, **post):
         mail_obj = request.registry.get('mail.message')
         values = []
-        ids = mail_obj.search(request.cr, SUPERUSER_ID, [('res_id', '=', int(blog)) ,('model','=','blog.post'), ('tag_id', '=', tag_id)])
+        ids = mail_obj.search(request.cr, SUPERUSER_ID, [('res_id', '=', int(post_id)) ,('model','=','blog.post'), ('discussion', '=', discussion)])
         if ids:
             for post in mail_obj.browse(request.cr, SUPERUSER_ID, ids):
                 values.append({
@@ -308,4 +285,3 @@ class WebsiteBlog(http.Controller):
                     'author_image': "data:image/png;base64,%s" % post.author_id.image,
                 })
         return values
-
