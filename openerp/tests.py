@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-The module :mod:`openerp.tests.common` provides a few helpers and classes to write
-tests.
+The module :mod:`openerp.tests.common` provides unittest2 test cases and a few
+helpers and classes to write tests.
+
 """
 import json
 import os
@@ -13,8 +14,11 @@ import unittest2
 import uuid
 import xmlrpclib
 import logging
+import sys
 
 import openerp
+# backward compatbility
+common = sys.modules['openerp.tests.common'] = sys.modules['openerp.tests']
 
 _logger = logging.getLogger(__name__)
 

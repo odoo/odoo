@@ -1181,6 +1181,6 @@ root = None
 def wsgi_postload():
     global root
     root = Root()
-    openerp.wsgi.register_wsgi_handler(root)
+    openerp.service.wsgi_server.register_wsgi_handler(root)
 
 # vim:et:ts=4:sw=4:
