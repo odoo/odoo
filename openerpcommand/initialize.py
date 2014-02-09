@@ -22,6 +22,8 @@ def install_openerp(database_name, create_database_flag, module_names, install_d
     # Install the import hook, to import openerp.addons.<module>.
     openerp.modules.module.initialize_sys_path()
 
+    print 
+
     registry = openerp.modules.registry.RegistryManager.get(
         database_name, update_module=True, force_demo=install_demo_data)
 
@@ -87,6 +89,8 @@ def run(args):
     else:
         args.addons = []
     config['addons_path'] = ','.join(args.addons)
+
+    print "MY addons path is", config['addons_path']
 
     if args.all_modules:
         module_names = common.get_addons_from_paths(args.addons, args.exclude)

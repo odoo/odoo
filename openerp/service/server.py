@@ -9,6 +9,7 @@ import os.path
 import platform
 import psutil
 import random
+import re
 import resource
 import select
 import signal
@@ -17,6 +18,7 @@ import subprocess
 import sys
 import threading
 import time
+import unittest2
 
 import werkzeug.serving
 
@@ -306,13 +308,20 @@ class ThreadedServer(CommonServer):
         openerp.modules.registry.RegistryManager.delete_all()
         logging.shutdown()
 
-    def run(self):
+    def run(self, preload=None, stop=False):
         """ Start the http server and the cron thread then wait for a signal.
 
         The first SIGINT or SIGTERM signal will initiate a graceful shutdown while
         a second one if any will force an immediate exit.
         """
         self.start()
+
+        preload_registries(preload)
+
+        if stop:
+            self.stop()
+            return
+
 
         # Wait for a first signal to be handled. (time.sleep will be interrupted
         # by the signal handler.) The try/except is for the win32 case.
@@ -362,7 +371,7 @@ class GeventServer(CommonServer):
         self.httpd.stop()
         gevent.shutdown()
 
-    def run(self):
+    def run(self, preload, stop):
         self.start()
         self.stop()
 
@@ -569,8 +578,15 @@ class PreforkServer(CommonServer):
             self.worker_kill(pid, signal.SIGTERM)
         self.socket.close()
 
-    def run(self):
+    def run(self, preload, stop):
         self.start()
+
+        preload_registries(preload)
+
+        if stop:
+            self.stop()
+            return
+
         _logger.debug("Multiprocess starting")
         while 1:
             try:
@@ -587,7 +603,7 @@ class PreforkServer(CommonServer):
             except Exception,e:
                 _logger.exception(e)
                 self.stop(False)
-                sys.exit(-1)
+                return -1
 
 class Worker(object):
     """ Workers """
@@ -809,7 +825,50 @@ def _reexec(updated_modules=None):
         args.insert(0, exe)
     os.execv(sys.executable, args)
 
-def start():
+def load_test_file_yml(test_file):
+    cr = registry.db.cursor()
+    openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'test', True)
+    cr.rollback()
+    cr.close()
+
+def load_test_file_py(test_file):
+    # Locate python module based on its filename and run the tests
+    test_path, _ = os.path.splitext(os.path.abspath(test_file))
+    for mod_name, mod_mod in sys.modules.items():
+        if mod_mod:
+            mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
+            if test_path == mod_path:
+                suite = unittest2.TestSuite()
+                for t in unittest2.TestLoader().loadTestsFromModule(mod_mod):
+                    suite.addTest(t)
+                _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
+                result = unittest2.TextTestRunner(verbosity=2, stream=openerp.modules.module.TestStream()).run(suite)
+                if not result.wasSuccessful():
+                    r = False
+                    _logger.error('module %s: at least one error occurred in a test', module_name)
+
+def preload_registries(dbnames):
+    """ Preload a registries, possibly run a test file."""
+    # TODO: move all config checks to args dont check tools.config here
+    config = openerp.tools.config
+    test_file = config['test_file']
+    dbnames = dbnames or []
+    for dbname in dbnames:
+        try:
+            update_module = config['init'] or config['update']
+            registry = openerp.modules.registry.RegistryManager.new(dbname, update_module=update_module)
+            # run test_file if provided
+            if test_file:
+                _logger.info('loading test file %s', test_file)
+                if test_file.endswith('yml'):
+                    load_test_file_yml(test_file)
+                elif test_file.endswith('py'):
+                    load_test_file_py(test_file)
+        except Exception:
+            _logger.exception('Failed to initialize database `%s`.', dbname)
+            return
+
+def start(preload=None, stop=False):
     """ Start the openerp http server and cron processor.
     """
     global server
@@ -825,7 +884,7 @@ def start():
         autoreload = AutoReload(server)
         autoreload.run()
 
-    server.run()
+    rc = server.run(preload, stop)
 
     # like the legend of the phoenix, all ends with beginnings
     if getattr(openerp, 'phoenix', False):
@@ -833,7 +892,8 @@ def start():
         if config['auto_reload']:
             modules = autoreload.modules.keys()
         _reexec(modules)
-    sys.exit(0)
+
+    return rc if rc else 0
 
 def restart():
     """ Restart the server

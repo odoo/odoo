@@ -193,6 +193,30 @@ class Registry(Mapping):
         finally:
             cr.close()
 
+class TestRLock(object):
+    def __init__(self):
+        self._lock = threading.RLock()
+    def acquire(self):
+        if openerp.tools.config['test_enable']:
+            return
+        return self._lock.acquire()
+    def release(self):
+        if openerp.tools.config['test_enable']:
+            return
+        return self._lock.release()
+    def __enter__(self):
+        self.acquire()
+    def __exit__(self, type, value, traceback):
+        self.release()
+
+#    def __enter__(self, *l, **kw):
+#        if openerp.tools.config['test_enable']:
+#            return
+#        return super(TestRlock, self).__enter__(*l, **kw)
+#    def __exit__(self, *l, **kw):
+#        if openerp.tools.config['test_enable']:
+#            return
+#        return super(TestRlock, self).__exit__(*l, **kw)
 
 class RegistryManager(object):
     """ Model registries manager.
@@ -204,7 +228,7 @@ class RegistryManager(object):
     # Mapping between db name and model registry.
     # Accessed through the methods below.
     registries = {}
-    registries_lock = threading.RLock()
+    registries_lock = TestRLock()
 
     @classmethod
     def get(cls, db_name, force_demo=False, status=None, update_module=False):

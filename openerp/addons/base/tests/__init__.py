@@ -1,3 +1,17 @@
+import test_acl
+import test_basecase
+import test_db_cursor
+import test_expression
+import test_fields
+import test_ir_filters
+import test_ir_sequence
+import test_mail
+import test_orm
+import test_osv
+import test_translate
+#import test_uninstall
+import test_view_validation
+import test_xmlrpc
 import test_base
 import test_expression
 import test_ir_actions
@@ -8,16 +22,4 @@ import test_res_config
 import test_res_lang
 import test_search
 import test_views
-
-checks = [
-    test_base,
-    test_expression,
-    test_ir_actions,
-    test_ir_attachment,
-    test_ir_values,
-    test_menu,
-    test_res_config,
-    test_res_lang,
-    test_search,
-    test_views,
-]
+import test_phantom
