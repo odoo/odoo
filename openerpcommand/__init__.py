@@ -14,14 +14,13 @@ from . import initialize
 from . import model
 from . import module
 from . import read
-from . import run_tests
 from . import scaffold
 from . import uninstall
 from . import update
 from . import web
 from . import grunt_tests
 
-command_list_server = (conf, cron, drop, initialize, model, module, read, run_tests,
+command_list_server = (conf, cron, drop, initialize, model, module, read,
                        scaffold, uninstall, update, web, grunt_tests, )
 
 command_list_client = (Call, Open, Show, ConsumeNothing, ConsumeMemory,
