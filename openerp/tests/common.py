@@ -5,20 +5,18 @@ helpers and classes to write tests.
 
 """
 import json
+import logging
 import os
 import select
 import subprocess
+import sys
 import threading
 import time
 import unittest2
 import uuid
 import xmlrpclib
-import logging
-import sys
 
 import openerp
-# backward compatbility
-common = sys.modules['openerp.tests.common'] = sys.modules['openerp.tests']
 
 _logger = logging.getLogger(__name__)
 
@@ -140,15 +138,12 @@ class HttpCase(SingleTransactionCase):
     def phantomjs(self, jsfile, timeout=30, options=None):
         """ Phantomjs Test protocol.
 
-        Use console.log in phantomjs to output test results evrey line must be
-        a one line JSON message using the following format:
+        Use console.log in phantomjs to output test results:
 
-        - for a success: { "event": "success", "message": "Log message" }
-        - for an error:  { "event": "error", "message": "Short error description" }
+        - for a success: console.log("ok")
+        - for an error:  console.log("error")
 
-        if a non json parsable line is received the helper will raise an
-        exception, the output buffer will be printed and phantom will be
-        killed
+        Other lines are relayed to the test log.
 
         """
         self.timeout = timeout
@@ -156,38 +151,35 @@ class HttpCase(SingleTransactionCase):
             'timeout' : timeout,
             'port': PORT,
             'db': DB,
-            'user': ADMIN_USER,
+            'login': ADMIN_USER,
             'password': ADMIN_PASSWORD,
             'session_id': self.session_id,
         }
         if options:
             self.options.update(options)
 
-        self.ignore_filters = [
-            # Ignore phantomjs warnings
-            "*** WARNING:",
-            # Fixes an issue with PhantomJS 1.9.2 on OS X 10.9 (Mavericks)
-            # cf. https://github.com/ariya/phantomjs/issues/11418
-            "CoreText performance note",
-        ]
+        phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
 
-        cmd = ['phantomjs', jsfile, json.dumps(self.options)]
+        # phantom.args[0] == phantomtest path
+        # phantom.args[1] == options
+        cmd = ['phantomjs', jsfile, phantomtest, json.dumps(self.options)]
         _logger.info('executing %s', cmd)
         try:
             phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         except OSError:
             _logger.info("phantomjs not found, test %s skipped", jsfile)
-
         try:
             t0 = time.time()
             buf = ''
             while 1:
+                # timeout
                 if time.time() > t0 + self.timeout:
-                    raise Exception("Phantom js timeout (%ss)" % self.timeout)
+                    raise Exception("phantomjs test timeout (%ss)" % self.timeout)
 
+                # read a byte
                 ready, _, _ = select.select([phantom.stdout], [], [], 0.5)
                 if ready:
-                    s = phantom.stdout.read(4096)
+                    s = phantom.stdout.read(1)
                     if s:
                         buf += s
                     else:
@@ -196,20 +188,12 @@ class HttpCase(SingleTransactionCase):
                 # process lines
                 if '\n' in buf:
                     line, buf = buf.split('\n', 1)
-                    if line not in self.ignore_filters:
-                        try:
-                            line_json = json.loads(line)
-                            if line_json.get('event') == 'success':
-                                _logger.info(line_json.get('message','ok'))
-                                continue
-                            elif line_json.get('event') == 'error':
-                                err = line_json.get('message','error')
-                                _logger.info(err)
-                            else:
-                                err = line + buf
-                        except ValueError:
-                            err = line + buf
-                        raise Exception(err)
+                    _logger.info("phantomjs: %s", line)
+                    if line == "ok":
+                        _logger.info("phantomjs test successful")
+                        return
+                    if line == "error":
+                        raise Exception("phantomjs test failed")
         finally:
             # kill phantomjs if phantom.exit() wasn't called in the test
             if phantom.poll() is None:

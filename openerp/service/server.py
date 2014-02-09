@@ -845,7 +845,7 @@ def load_test_file_py(test_file):
                 result = unittest2.TextTestRunner(verbosity=2, stream=openerp.modules.module.TestStream()).run(suite)
                 if not result.wasSuccessful():
                     r = False
-                    _logger.error('module %s: at least one error occurred in a test', module_name)
+                    _logger.error('%s: at least one error occurred in a test', test_file)
 
 def preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""
