@@ -9,6 +9,7 @@ import os.path
 import platform
 import psutil
 import random
+import re
 import resource
 import select
 import signal
@@ -17,6 +18,7 @@ import subprocess
 import sys
 import threading
 import time
+import unittest2
 
 import werkzeug.serving
 
@@ -823,16 +825,45 @@ def _reexec(updated_modules=None):
         args.insert(0, exe)
     os.execv(sys.executable, args)
 
+def load_test_file_yml(test_file):
+    cr = registry.db.cursor()
+    openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'test', True)
+    cr.rollback()
+    cr.close()
+
+def load_test_file_py(test_file):
+    # Locate python module based on its filename and run the tests
+    test_path, _ = os.path.splitext(os.path.abspath(test_file))
+    for mod_name, mod_mod in sys.modules.items():
+        if mod_mod:
+            mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
+            if test_path == mod_path:
+                suite = unittest2.TestSuite()
+                for t in unittest2.TestLoader().loadTestsFromModule(mod_mod):
+                    suite.addTest(t)
+                _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
+                result = unittest2.TextTestRunner(verbosity=2, stream=openerp.modules.module.TestStream()).run(suite)
+                if not result.wasSuccessful():
+                    r = False
+                    _logger.error('module %s: at least one error occurred in a test', module_name)
+
 def preload_registries(dbnames):
-    """ Preload a registries."""
+    """ Preload a registries, possibly run a test file."""
+    # TODO: move all config checks to args dont check tools.config here
+    config = openerp.tools.config
+    test_file = config['test_file']
     dbnames = dbnames or []
     for dbname in dbnames:
         try:
-            update_module = openerp.tools.config['init'] or openerp.tools.config['update']
+            update_module = config['init'] or config['update']
             registry = openerp.modules.registry.RegistryManager.new(dbname, update_module=update_module)
-            #if config['test_enable']:
-            #    openerp.modules.module.run_http_test(config['db_name'])
-            #if registry._assertion_report.failures != 0:
+            # run test_file if provided
+            if test_file:
+                _logger.info('loading test file %s', test_file)
+                if test_file.endswith('yml'):
+                    load_test_file_yml(test_file)
+                elif test_file.endswith('py'):
+                    load_test_file_py(test_file)
         except Exception:
             _logger.exception('Failed to initialize database `%s`.', dbname)
             return
