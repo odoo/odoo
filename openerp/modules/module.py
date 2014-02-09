@@ -323,24 +323,8 @@ def adapt_version(version):
     return version
 
 def get_test_modules(module):
-    """ Return a list of module for the addons potentialy containing tests to
-    feed unittest2.TestLoader.loadTestsFromModule() """
-    # Try to import the module
-    module = 'openerp.addons.' + module + '.tests'
-    try:
-        m = __import__(module)
-    except Exception, e:
-        # If module has no `tests` sub-module, no problem.
-        if str(e) != 'No module named tests':
-            _logger.exception('Can not `import %s`.', module)
-        return []
-
-    # include submodules too
-    result = []
-    for name in sys.modules:
-        if name.startswith(module) and sys.modules[name]:
-            result.append(sys.modules[name])
-    return result
+    # backward compatibility for oe
+    return []
 
 # Use a custom stream object to log the test executions.
 class TestStream(object):
