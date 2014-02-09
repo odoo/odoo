@@ -167,5 +167,5 @@ class PageConverter(werkzeug.routing.PathConverter):
 
         for view in views:
             xid = xids[view['id']]
-            if xid and (not query or query in xid):
+            if xid and (not query or query.lower() in xid.lower()):
                 yield xid
