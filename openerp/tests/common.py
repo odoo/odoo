@@ -110,37 +110,106 @@ class SingleTransactionCase(BaseCase):
         cls.cr.close()
 
 
-class RpcCase(unittest2.TestCase):
-    """
-    Subclass of TestCase with a few XML-RPC proxies.
+class HttpCase(SingleTransactionCase):
+    """ Transactionnal HTTP TestCase with a phantomjs helper.
     """
 
     def __init__(self, methodName='runTest'):
-        super(RpcCase, self).__init__(methodName)
-
-        class A(object):
-            pass
-        self.proxy = A()
-
-        # Use the old (pre 6.1) API.
-        self.proxy.url_60 = url_60 = 'http://%s:%d/xmlrpc/' % (HOST, PORT)
-        self.proxy.common_60 = xmlrpclib.ServerProxy(url_60 + 'common')
-        self.proxy.db_60 = xmlrpclib.ServerProxy(url_60 + 'db')
-        self.proxy.object_60 = xmlrpclib.ServerProxy(url_60 + 'object')
-        #self.proxy.edi_60 = xmlrpclib.ServerProxy(url_60 + 'edi')
-
-        # Use the new (8) API.
-        self.proxy.url_8 = url_8 = 'http://%s:%d/xmlrpc/2/' % (HOST, PORT)
-        self.proxy.common_8 = xmlrpclib.ServerProxy(url_8 + 'common')
-        self.proxy.db_8 = xmlrpclib.ServerProxy(url_8 + 'db')
-        self.proxy.object_8 = xmlrpclib.ServerProxy(url_8 + 'object')
+        super(HttpCase, self).__init__(methodName)
+        # v8 api with correct xmlrpc exception handling.
+        self.xmlrpc_url = url_8 = 'http://%s:%d/xmlrpc/2/' % (HOST, PORT)
+        self.xmlrpc_common = xmlrpclib.ServerProxy(url_8 + 'common')
+        self.xmlrpc_db = xmlrpclib.ServerProxy(url_8 + 'db')
+        self.xmlrpc_object = xmlrpclib.ServerProxy(url_8 + 'object')
 
     @classmethod
-    def generate_database_name(cls):
-        if hasattr(cls, '_database_id'):
-            cls._database_id += 1
-        else:
-            cls._database_id = 0
-        return '_fresh_name_' + str(cls._database_id) + '_'
+    def setUpClass(cls):
+        super(HttpCase, cls).setUpClass()
+        cls.session_id = uuid.uuid4().hex
+        HTTP_SESSION[cls.session_id] = cls.cr
+
+    @classmethod
+    def tearDownClass(cls):
+        del HTTP_SESSION[cls.session_id]
+        super(HttpCase, cls).tearDownClass()
+
+    def phantomjs(self, jsfile, timeout=30, options=None):
+        """ Phantomjs Test protocol.
+
+        Use console.log in phantomjs to output test results evrey line must be
+        a one line JSON message using the following format:
+
+        - for a success: { "event": "success", "message": "Log message" }
+        - for an error:  { "event": "error", "message": "Short error description" }
+
+        if a non json parsable line is received the helper will raise an
+        exception, the output buffer will be printed and phantom will be
+        killed
+
+        """
+        self.timeout = timeout
+        self.options = {
+            'timeout' : timeout,
+            'port': PORT,
+            'db': DB,
+            'user': ADMIN_USER,
+            'password': ADMIN_PASSWORD,
+            'session_id': self.session_id,
+        }
+        if options:
+            self.options.update(options)
+
+        self.ignore_filters = [
+            # Ignore phantomjs warnings
+            "*** WARNING:",
+            # Fixes an issue with PhantomJS 1.9.2 on OS X 10.9 (Mavericks)
+            # cf. https://github.com/ariya/phantomjs/issues/11418
+            "CoreText performance note",
+        ]
+
+        cmd = ['phantomjs', jsfile, json.dumps(self.options)]
+        _logger.info('executing %s', cmd)
+        try:
+            phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        except OSError:
+            _logger.info("phantomjs not found, test %s skipped", jsfile)
+
+        try:
+            t0 = time.time()
+            buf = ''
+            while 1:
+                if time.time() > t0 + self.timeout:
+                    raise Exception("Phantom js timeout (%ss)" % self.timeout)
+
+                ready, _, _ = select.select([phantom.stdout], [], [], 0.5)
+                if ready:
+                    s = phantom.stdout.read(4096)
+                    if s:
+                        buf += s
+                    else:
+                        break
+
+                # process lines
+                if '\n' in buf:
+                    line, buf = buf.split('\n', 1)
+                    if line not in self.ignore_filters:
+                        try:
+                            line_json = json.loads(line)
+                            if line_json.get('event') == 'success':
+                                _logger.info(line_json.get('message','ok'))
+                                continue
+                            elif line_json.get('event') == 'error':
+                                err = line_json.get('message','error')
+                                _logger.info(err)
+                            else:
+                                err = line + buf
+                        except ValueError:
+                            err = line + buf
+                        raise Exception(err)
+        finally:
+            # kill phantomjs if phantom.exit() wasn't called in the test
+            if phantom.poll() is None:
+                phantom.terminate()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

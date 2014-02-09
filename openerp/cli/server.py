@@ -89,16 +89,6 @@ def setup_pid_file():
             pidtext = "%d" % (os.getpid())
             fd.write(pidtext)
 
-def preload_registry(dbname):
-    """ Preload a registry, and start the cron."""
-    try:
-        update_module = True if openerp.tools.config['init'] or openerp.tools.config['update'] else False
-        registry = openerp.modules.registry.RegistryManager.new(dbname, update_module=update_module)
-    except Exception:
-        _logger.exception('Failed to initialize database `%s`.', dbname)
-        return False
-    return registry._assertion_report.failures == 0
-
 def run_test_file(dbname, test_file):
     """ Preload a registry, possibly run a test file, and start the cron."""
     try:
@@ -172,23 +162,17 @@ def main(args):
     if config['workers']:
         openerp.multi_process = True
 
-    # preload registries, needed for -u --stop_after_init
-    rc = 0
+    preload = []
     if config['db_name']:
-        for dbname in config['db_name'].split(','):
-            if not preload_registry(dbname):
-                rc += 1
+        preload = config['db_name'].split(',')
 
-    if not config["stop_after_init"]:
-        setup_pid_file()
-        openerp.service.server.start()
-        if config['pidfile']:
-            os.unlink(config['pidfile'])
-    else:
-        sys.exit(rc)
+    stop = config["stop_after_init"]
 
-    _logger.info('OpenERP server is running, waiting for connections...')
-    quit_on_signals()
+    setup_pid_file()
+    rc = openerp.service.server.start(preload=preload, stop=stop)
+    if config['pidfile']:
+        os.unlink(config['pidfile'])
+    sys.exit(rc)
 
 class Server(Command):
     def run(self, args):

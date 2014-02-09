@@ -96,6 +96,8 @@ def get_test_modules(module, submodule, explode):
     return ms
 
 def run(args):
+    print "Please use openerp-server --test-enable -d <dbname> -i modulename"
+    sys.exit(0)
     import unittest2
 
     import openerp
