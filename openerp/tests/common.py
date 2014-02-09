@@ -3,15 +3,24 @@
 The module :mod:`openerp.tests.common` provides a few helpers and classes to write
 tests.
 """
+import json
+import os
+import select
+import subprocess
 import threading
 import time
 import unittest2
+import uuid
 import xmlrpclib
+import logging
 
 import openerp
 
+_logger = logging.getLogger(__name__)
+
 # The openerp library is supposed already configured.
 ADDONS_PATH = openerp.tools.config['addons_path']
+HOST = '127.0.0.1'
 PORT = openerp.tools.config['xmlrpc_port']
 DB = openerp.tools.config['db_name']
 
@@ -22,26 +31,11 @@ DB = openerp.tools.config['db_name']
 if not DB and hasattr(threading.current_thread(), 'dbname'):
     DB = threading.current_thread().dbname
 
-HOST = '127.0.0.1'
-
 ADMIN_USER = 'admin'
 ADMIN_USER_ID = openerp.SUPERUSER_ID
 ADMIN_PASSWORD = 'admin'
 
-def start_openerp():
-    """
-    Start the OpenERP server similary to the openerp-server script.
-    """
-    openerp.service.start_services()
-
-    # Ugly way to ensure the server is listening.
-    time.sleep(2)
-
-def stop_openerp():
-    """
-    Shutdown the OpenERP server similarly to a single ctrl-c.
-    """
-    openerp.service.stop_services()
+HTTP_SESSION = {}
 
 class BaseCase(unittest2.TestCase):
     """

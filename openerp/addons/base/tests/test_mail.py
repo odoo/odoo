@@ -26,8 +26,9 @@ import unittest2
 
 from lxml import etree
 
-from openerp.tests import test_mail_examples
 from openerp.tools import html_sanitize, html_email_clean, append_content_to_html, plaintext2html, email_split
+
+import test_mail_examples
 
 
 class TestSanitizer(unittest2.TestCase):

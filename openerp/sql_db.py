@@ -282,6 +282,9 @@ class Cursor(object):
         return self._close(False)
 
     def _close(self, leak=False):
+        #import traceback
+        #traceback.print_stack()
+
         if not self._obj:
             return
 
