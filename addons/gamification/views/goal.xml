@@ -55,7 +55,7 @@
                             <group string="Reference">
                                 <field name="definition_id" on_change="on_change_definition_id(definition_id)" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="user_id" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                <field name="challenge_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="challenge_id" />
                             </group>
                             <group string="Schedule">
                                 <field name="start_date" attrs="{'readonly':[('state','!=','draft')]}"/>
@@ -280,8 +280,8 @@
 
         <!-- menus in settings - technical feature required -->
         <menuitem id="gamification_menu" name="Gamification Tools" parent="base.menu_administration" groups="base.group_no_one" />
-            <menuitem id="gamification_goal_menu" parent="gamification_menu" action="goal_list_action" sequence="0"/>
-            <menuitem id="gamification_challenge_menu" parent="gamification_menu" action="challenge_list_action" sequence="10"/>
+            <menuitem id="gamification_challenge_menu" parent="gamification_menu" action="challenge_list_action" sequence="0"/>
+            <menuitem id="gamification_goal_menu" parent="gamification_menu" action="goal_list_action" sequence="10"/>
             <menuitem id="gamification_definition_menu" parent="gamification_menu" action="goal_definition_list_action" sequence="20"/>
             <menuitem id="gamification_badge_menu" parent="gamification_menu" action="badge_list_action" sequence="30"/>
 

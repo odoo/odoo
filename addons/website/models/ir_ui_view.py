@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 import copy
+import simplejson
+import werkzeug
 
 from lxml import etree, html
 
+from openerp.addons.website.models import website
+from openerp.http import request
 from openerp.osv import osv, fields
 
 class view(osv.osv):
@@ -116,6 +120,42 @@ class view(osv.osv):
             root.append(copy.deepcopy(child))
 
         return arch
+
+    def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
+        if getattr(request, 'website_enabled', False):
+            engine='website.qweb'
+
+            if isinstance(id_or_xml_id, list):
+                id_or_xml_id = id_or_xml_id[0]
+            if isinstance(id_or_xml_id, (int, long)):
+                id_or_xml_id = self.get_view_xmlid(cr, uid, id_or_xml_id)
+
+            if not context:
+                context = {}
+
+            qcontext = context.copy()
+            qcontext.update(
+                website=request.website,
+                url_for=website.url_for,
+                slug=website.slug,
+                res_company=request.website.company_id,
+                user_id=self.pool.get("res.users").browse(cr, uid, uid),
+            )
+
+            # add some values
+            if values:
+                qcontext.update(values)
+
+            # in edit mode ir.ui.view will tag nodes
+            context['inherit_branding'] = qcontext['editable']
+
+            view_obj = request.website.get_template(id_or_xml_id)
+            if 'main_object' not in qcontext:
+                qcontext['main_object'] = view_obj
+
+            values = qcontext
+
+        return super(view, self).render(cr, uid, id_or_xml_id, values=values, engine=engine, context=context)
 
     def save(self, cr, uid, res_id, value, xpath=None, context=None):
         """ Update a view section. The view section may embed fields to write
