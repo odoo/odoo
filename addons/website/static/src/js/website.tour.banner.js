@@ -109,20 +109,6 @@
                     placement: 'bottom',
                     title:     _t("Add new pages and menus"),
                     content:   _t("The 'Content' menu allows you to add pages or add the top menu."),
-                    popover:   { next: _t("Continue") },
-                },
-                {
-                    element:   '#customize-menu-button',
-                    placement: 'bottom',
-                    title:     _t("Customize your pages"),
-                    content:   _t("The 'Customize' menu allows you to activate options and change the theme."),
-                    popover:   { next: _t("Continue") },
-                },
-                {
-                    element:   'a[data-action="promote-current-page"]',
-                    placement: 'bottom',
-                    title:     _t("Promote your website"),
-                    content:   _t("The 'Promote' menu allows you to promote each page for google and other search engines."),
                     popover:   { next: _t("Close Tutorial") },
                 },
             ];
