@@ -4,7 +4,7 @@ import unittest2
 
 import openerp
 from openerp.tools.misc import mute_logger
-import common
+from openerp.tests import common
 
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID

@@ -2,7 +2,7 @@
 import functools
 import unittest2
 
-from ..tools.func import compose
+from openerp.tools.func import compose
 
 class TestCompose(unittest2.TestCase):
     def test_basic(self):
