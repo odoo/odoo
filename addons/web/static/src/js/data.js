@@ -129,11 +129,14 @@ instance.web.Query = instance.web.Class.extend({
         if (_.isEmpty(grouping) && !ctx['group_by_no_leaf']) {
             return null;
         }
+        var raw_fields = _.map(grouping.concat(this._fields || []), function (field) {
+            return field.split(':')[0];
+        });
 
         var self = this;
         return this._model.call('read_group', {
             groupby: grouping,
-            fields: _.uniq(grouping.concat(this._fields || [])),
+            fields: _.uniq(raw_fields),
             domain: this._model.domain(this._filter),
             context: ctx,
             offset: this._offset,
@@ -231,14 +234,16 @@ instance.web.QueryGroup = instance.web.Class.extend({
         this.model = new instance.web.Model(
             model, fixed_group.__context, fixed_group.__domain);
 
-        var group_size = fixed_group[grouping_field + '_count'] || fixed_group.__count || 0;
+        var raw_field = grouping_field && grouping_field.split(':')[0];
+        var group_size = fixed_group[raw_field + '_count'] || fixed_group.__count || 0;
         var leaf_group = fixed_group.__context.group_by.length === 0;
+
         this.attributes = {
             folded: !!(fixed_group.__fold),
             grouped_on: grouping_field,
             // if terminal group (or no group) and group_by_no_leaf => use group.__count
             length: group_size,
-            value: fixed_group[grouping_field],
+            value: fixed_group[raw_field],
             // A group is open-able if it's not a leaf in group_by_no_leaf mode
             has_children: !(leaf_group && fixed_group.__context['group_by_no_leaf']),
 
@@ -939,6 +944,15 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
      * @param {Object} id record to remove from the BDS's cache
      */
     evict_record: function (id) {
+        // Don't evict records which haven't yet been saved: there is no more
+        // recent data on the server (and there potentially isn't any data),
+        // and this breaks the assumptions of other methods (that the data
+        // for new and altered records is both in the cache and in the to_write
+        // or to_create collection)
+        if (_(this.to_create.concat(this.to_write)).find(function (record) {
+                return record.id === id; })) {
+            return;
+        }
         for(var i=0, len=this.cache.length; i<len; ++i) {
             var record = this.cache[i];
             // if record we call the button upon is in the cache

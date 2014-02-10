@@ -14,5 +14,5 @@ This widget allows to display gauges using justgage library.
     ],
     'qweb': [
     ],
-    'auto_install': False,
+    'auto_install': True,
 }

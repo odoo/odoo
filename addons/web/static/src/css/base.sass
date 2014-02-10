@@ -151,7 +151,6 @@ $sheet-padding: 16px
     color: #4c4c4c
     font-size: 13px
     background: white
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5)
     &.openerp_webclient_container
         height: 100%
     // }}}
@@ -208,7 +207,7 @@ $sheet-padding: 16px
         font-size: inherit
     // }}}
     // Button style {{{
-    a.button:link, a.button:visited, button, input[type='submit'], .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
+    a.button:link, a.button:visited, button, .oe_button, input[type='submit'], .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
         display: inline-block
         border: 1px solid rgba(0,0,0,0.4)
         color: #4c4c4c
@@ -223,22 +222,22 @@ $sheet-padding: 16px
         -webkit-font-smoothing: antialiased
         outline: none
 
-    a.button:hover, button:hover, input[type='submit']:hover, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-hover
+    a.button:hover, button:hover,.oe_button:hover, input[type='submit']:hover, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-hover
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         cursor: pointer
         background-position: 0
 
-    a.button:focus, button:focus, input[type='submit']:focus, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-focus
+    a.button:focus, button:focus, .oe_button:focus, input[type='submit']:focus, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-focus
         border: 1px solid #80bfff
         background-position: 0
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
 
-    a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-active
+    a.button:active, a.button.active, button:active, .oe_button:active, .oe_button.active, input[type='submit']:active, input[type='submit'].active, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-active
         @include vertical-gradient(#e3e3e3, #f6f6f6)
         @include box-shadow(none)
 
-    a.button.disabled, button:disabled, input[type='submit']:disabled
+    a.button.disabled, button:disabled, .oe_button:disabled, input[type='submit']:disabled
         background: #efefef !important
         border: 1px solid #d1d1d1 !important
         @include box-shadow(none !important)
@@ -280,14 +279,15 @@ $sheet-padding: 16px
         .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane
             padding: 16px
         .ui-dialog-titlebar
+            border-top: none
+            border-left: none
+            border-right: none
             border-bottom: 1px solid #cacaca
             @include radius(2px 2px 0 0)
             @include vertical-gradient(#FCFCFC, #DEDEDE)
             .ui-dialog-title
                 margin: 0
                 padding: 0
-        .ui-widget-header
-            border: none
         .ui-dialog-content
             background: white
             width: auto !important
@@ -370,6 +370,7 @@ $sheet-padding: 16px
         font-family: "entypoRegular" !important
         font-size: 34px
         font-weight: 300 !important
+        line-height: 100%
     .oe_left
         float: left
         margin-right: 8px
@@ -416,15 +417,6 @@ $sheet-padding: 16px
             @include box-shadow(none)
             &:hover
                 background: #ED6F6A
-    .oe_title
-        width: 50%
-        float: left
-    .oe_title:after
-        content: "."
-        display: block
-        height: 0
-        clear: both
-        visibility: hidden
     .oe_button_box
         width: 270px
         text-align: right
@@ -595,6 +587,9 @@ $sheet-padding: 16px
         text-decoration: none
         background-color: #eee
         border-color: #eee #eee #ddd
+    .ui-tabs .oe_notebook.ui-tabs-nav li.ui-tabs-active
+        border-bottom: none
+        padding-bottom: 1px
     .oe_notebook > li.ui-state-active > a, .oe_notebook > li.ui-state-active > a:hover
         background-color: #ffffff
         border: 1px solid #ddd
@@ -744,108 +739,6 @@ $sheet-padding: 16px
     .oe_dialog_icon
         padding: 5px
         width: 32px
-    // }}}
-    // Login {{{
-    .oe_login
-        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
-        text-align: center
-        font-size: 14px
-        height: 100%
-        ul, li
-            margin: 0
-            list-style-type: none
-            padding: 0 0 4px 0
-        button
-            cursor: pointer
-            padding: 6px 16px
-            border: 1px solid #222
-            color: white
-            margin: 0
-            @include vertical-gradient(#b92020, #600606)
-            @include radius(4px)
-            @include box-shadow((0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset))
-        input, select
-            width: 252px
-            font-family: "Lucida Grande", Helvetica, Verdana, Arial
-            border: 1px solid #999999
-            background: whitesmoke
-            @include box-shadow(inset 0 1px 4px rgba(0, 0, 0, 0.4))
-            @include radius(3px)
-        input
-            margin-bottom: 9px
-            padding: 5px 6px
-        select
-            padding: 1px
-        .oe_login_dbpane
-            position: fixed
-            top: 0
-            right: 8px
-            padding: 5px 10px
-            color: #eee
-            border: solid 1px #333
-            background: #1e1e1e
-            background: rgba(30,30,30,0.94)
-            @include radius(0 0 8px 8px)
-            input
-                padding: 2px 4px
-                margin: 4px 0
-        .oe_login_bottom
-            position: absolute
-            top: 50%
-            left: 0
-            right: 0
-            bottom: 0
-            text-shadow: 0 1px 1px #999999
-            @include vertical-gradient(#b41616, #600606)
-        .oe_login_pane
-            position: absolute
-            top: 50%
-            left: 50%
-            margin: -160px -166px
-            border: solid 1px #333333
-            background: #1e1e1e
-            background: rgba(30,30,30,0.94)
-            padding: 22px 32px
-            color: #eee
-            text-align: left
-            @include radius(8px)
-            @include box-shadow(0 0 18px rgba(0, 0, 0, 0.9))
-            h2
-                margin-top: 0
-                font-size: 18px
-        .oe_login_logo
-            position: absolute
-            top: -70px
-            left: 0
-            width: 100%
-            margin: 0 auto
-            text-align: center
-        .oe_login_footer
-            position: absolute
-            bottom: -40px
-            left: 0
-            width: 100%
-            text-align: center
-            a
-                color: #eee
-                margin: 0 6px
-                &:hover
-                    text-decoration: underline
-            span
-                font-weight: bold
-                font-size: 16px
-        .oe_login_error_message
-            display: none
-            background-color: #b41616
-            color: #eee
-            padding: 14px 18px
-            margin-top: 15px
-            text-align: center
-            @include radius(4px)
-            @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.8))
-    .oe_login_invalid
-        .oe_login_error_message
-            display: inline-block
     // }}}
     // DatabaseManager {{{
     .oe_database_manager
@@ -1109,13 +1002,15 @@ $sheet-padding: 16px
                 color: #eee
     // }}}
     // ActionManager {{{
+    .oe_form_uri
+        color: $link-color
+        &:hover
+            text-decoration: underline
     .oe_application
         width: 100%
         height: 100%
         a
             color: $link-color
-            &:hover
-                text-decoration: underline
         > div
             height: 100%
         .oe_breadcrumb_item:not(:last-child)
@@ -1737,20 +1632,24 @@ $sheet-padding: 16px
                 padding: 0 16px
     // }}}
     // FormView.header {{{
-    .oe_form header
-        position: relative
-        border-bottom: 1px solid #cacaca
+    .oe_form > :not(.oe_form_nosheet) header
         padding-left: 2px
-        @include vertical-gradient(#fcfcfc, #dedede)
-        > span
-            margin-left: 4px
         ul
             display: inline-block
             float: right
         .oe_button
             margin: 3px 2px 1px
+            float: left
             &:first-child
                 margin-left: 6px
+
+    .oe_form  header
+        border-bottom: 1px solid #cacaca
+        padding-left: 2px
+        @include vertical-gradient(#fcfcfc, #dedede)
+        > span
+            margin-left: 4px        
+        
     // }}}
     // FormView.custom tags and classes {{{
     .oe_form
@@ -2078,7 +1977,7 @@ $sheet-padding: 16px
                 .oe_e
                     position: relative
                     top: -1px
-                    left: -9px
+                    left: -9px                    
             input.oe_form_binary_file
                 display: inline-block
                 margin-left: -85px
@@ -2304,6 +2203,8 @@ $sheet-padding: 16px
             &.oe_form_field_datetime,&.oe_form_field_date
                 input.oe_datepicker_master
                     width: 100% !important
+            &.oe_form_field_reference
+                display: table
     .oe_list_group_name
         white-space: nowrap
     // }}}
@@ -2517,6 +2418,7 @@ $sheet-padding: 16px
         float: left
     .oe_debug_view_log
         font-size: 95%
+        line-height: 1.2em
     .oe_debug_view_log label
         display: block
         width: 49%
@@ -2530,6 +2432,106 @@ $sheet-padding: 16px
         float: right
         color: #333
     // }}}
+    // Bootstrap HACKS {{{
+    .navbar
+        min-height: 32px
+        margin-bottom: 0px
+        border: none
+        z-index: 1
+        background-color: #414141
+        @include vertical-gradient(#646060, #262626)
+    .navbar-default
+        .navbar-nav
+            li
+                a:hover,a:focus
+                    background: rgba(0, 0, 0, 0.3)
+            .open > a,a:hover,a:focus
+                background: rgba(0, 0, 0, 0.3) !important
+            .dropdown > a .caret
+                border-top-color: #777 !important
+                border-bottom-color: #777 !important
+    .navbar-nav
+        li
+            a
+                padding: 4px 32px 4px 12px
+    .oe_navbar .dropdown-menu
+        font-size: 13px
+        padding: 4px 0
+        background: #333333 !important
+        background: rgba(37, 37, 37, 0.9) !important
+        border-color: #999999
+        border-color: rgba(0, 0, 0, 0.2)
+        background-color: #414141
+        text-shadow: none
+        @include vertical-gradient(#646060, #262626)
+        @include radius(3px)
+        li
+            a,a:hover,a:focus
+                color: #eeeeee
+
+    // Minimized unused white space and label weight for wizard popup
+    .oe_view_manager_new .oe_form_nosheet
+        margin-top: 8px
+        .oe_form_label
+            font-weight: normal
+
+    // Customize bootstrap3 for leftbar
+    .nav
+        li > a
+            padding: 3px 4px 2px 18px
+            color: #4c4c4c
+        nav-pills.nav-stacked > li > ul
+            padding-left: 16px
+    .nav-pills > li.active,a.list-group-item.active
+        > a
+            background-color: #7c7bad
+            color: white
+            border-radius: 0
+        a:hover,a:focus
+            background-color: #7c7bad
+        .badge
+            background-color: white
+            color: #7c7bad
+            text-shadow: none
+    .badge
+        font-weight: normal
+        font-size: 11px
+        background-color: #7c7bad
+
+    // Customize for global tags
+    button, body
+        line-height: normal
+    h1,h2
+        font-weight: bold
+    h3
+        font-size: 1.17em
+        font-weight: bold
+    p
+        display: block
+        -webkit-margin-before: 1em
+        -webkit-margin-after: 1em
+        -webkit-margin-start: 0px
+        -webkit-margin-end: 0px
+    pre
+        background-color: #FFFFFF
+        border: none
+        padding: 10px 0 3px 0
+
+    // Customize for kanban tooltip
+    .jqstooltip
+        height: auto !important
+        width: auto !important
+
+    // Customize for chatter
+    h5
+        font-weight: bold
+        font-size: smaller
+    .oe_form .oe_subtype label, .oe_subtype label
+        font-weight: normal
+    .oe_msg_subtype_check
+        margin: 3px 3px 0 !important
+    // }}}
+
 @-moz-document url-prefix()
     .openerp
         .oe_searchview .oe_searchview_search
@@ -2590,6 +2592,38 @@ div.ui-widget-overlay
     .db_option_table
         td
             padding-bottom: 10px !important
+
+// Server side single forms {{{
+@mixin single-form($width: 400px)
+    padding: 10px
+    position: absolute
+    left: 50%
+    top: 50%
+    width: $width
+    /* Set margins to offset 50% of the w/h */
+    margin-top: -($width / 2)
+    margin-left: -($width / 2)
+
+body.oe_single_form
+    background: #eee url(/web/static/src/img/form_sheetbg.png)
+    height: 100%
+
+    .oe_single_form_logo
+        padding: 10px
+        text-align: center
+        margin-bottom: 10px
+
+    .oe_single_form_footer
+        position: absolute
+        bottom: -30px
+        right: 0px
+        width: 100%
+        text-align: center
+
+    .oe_single_form_container
+        @include single-form(400px)
+
+// }}}
 
 // Internet Explorer 9+ specifics {{{
 .openerp_ie
@@ -2740,110 +2774,6 @@ div.ui-widget-overlay
             overflow: hidden !important
 // }}}
 
-// Customize bootstrap3 for leftbar
-.nav
-    li > a
-        padding: 3px 4px 2px 18px
-        color: #4c4c4c
-    nav-pills.nav-stacked > li > ul
-        padding-left: 16px
-.nav-pills > li.active,a.list-group-item.active
-    > a
-        background-color: #7c7bad
-        color: white
-        border-radius: 0
-    a:hover,a:focus
-        background-color: #7c7bad
-    .badge
-        background-color: white
-        color: #7c7bad
-        text-shadow: none
-.badge
-    font-weight: normal
-    font-size: 11px
-    background-color: #7c7bad
-// End of customize
-
-// Customize for global tags
-button, body
-    line-height: normal
-h1,h2
-    font-weight: bold
-h3
-    font-size: 1.17em
-    font-weight: bold
-p
-    display: block
-    -webkit-margin-before: 1em
-    -webkit-margin-after: 1em
-    -webkit-margin-start: 0px
-    -webkit-margin-end: 0px
-pre
-    background-color: #FFFFFF
-    border: none
-    padding: 10px 0 3px 0
-// End of customize
-
-// Customize for kanban tooltip
-.jqstooltip
-    height: auto !important
-    width: auto !important
-// End of kanban tooltip
-
-// Customize for chatter
-h5
-    font-weight: bold
-    font-size: smaller
-.oe_form .oe_subtype label, .oe_subtype label
-    font-weight: normal
-.oe_msg_subtype_check
-    margin: 3px 3px 0 !important
-// End of customize
-
-// Minimized unused white space and label weight for wizard popup
-.oe_view_manager_new .oe_form_nosheet
-    margin-top: 8px
-    .oe_form_label
-        font-weight: normal
-// End of customize
-
-// navbar hack {{{
-.navbar
-    min-height: 32px
-    margin-bottom: 0px
-    border: none
-    z-index: 1
-    background-color: #414141
-    @include vertical-gradient(#646060, #262626)
-.navbar-default
-    .navbar-nav
-        li
-            a:hover,a:focus
-                background: rgba(0, 0, 0, 0.3)
-        .open > a,a:hover,a:focus
-            background: rgba(0, 0, 0, 0.3) !important
-        .dropdown > a .caret
-            border-top-color: #777 !important
-            border-bottom-color: #777 !important
-.navbar-nav
-    li
-        a
-            padding: 4px 32px 4px 12px
-.dropdown-menu
-    font-size: 13px
-    padding: 4px 0
-    background: #333333 !important
-    background: rgba(37, 37, 37, 0.9) !important
-    border-color: #999999
-    border-color: rgba(0, 0, 0, 0.2)
-    background-color: #414141
-    text-shadow: none
-    @include vertical-gradient(#646060, #262626)
-    @include radius(3px)
-    li
-        a,a:hover,a:focus
-            color: #eeeeee
-// End hack }}}
 
 // Hack for ui icon {{{
 .ui-icon

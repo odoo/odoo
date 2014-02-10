@@ -85,7 +85,7 @@ my.SearchQuery = B.Collection.extend({
                     && facet.get('field') === model.get('field');
             });
             if (previous) {
-                previous.values.add(model.get('values'));
+                previous.values.add(model.get('values'), _.omit(options, 'at', 'merge'));
                 return;
             }
             B.Collection.prototype.add.call(this, model, options);
@@ -483,7 +483,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             html: true,
             autoFocus: true,
             minLength: 1,
-            delay: 0,
+            delay: 250,
         }).data('autocomplete');
 
         // MonkeyPatch autocomplete instance
@@ -535,7 +535,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 resp(_(arguments).chain()
                     .compact()
                     .map(function (completion) {
-                        console.log(completion);
                         if (completion.length && completion[0].facet !== undefined) {
                             completion[0].first = true;
                         }
@@ -1871,9 +1870,14 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
             new instance.web.Model(this.view.model).call('fields_get', {
                     context: this.view.dataset.context
                 }).done(function(data) {
-                    self.fields = _.extend({
+                    self.fields = {
                         id: { string: 'ID', type: 'id' }
-                    }, data);
+                    };
+                    _.each(data, function(field_def, field_name) {
+                        if (field_def.selectable !== false && field_name != 'id') {
+                            self.fields[field_name] = field_def;
+                        }
+                    });
         })).done(function () {
             self.append_proposition();
         });
