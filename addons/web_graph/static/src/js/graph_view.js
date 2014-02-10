@@ -77,6 +77,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     do_search: function (domain, context, group_by) {
+        if (this.ignore_do_search) {
+            this.ignore_do_search = false;
+            return;
+        }
+
         var self = this,
             col_group_by = this.extract_groupby('col_group_by', context) || [];
 
@@ -130,6 +135,14 @@ instance.web_graph.GraphView = instance.web.View.extend({
         var query = this.search_view.query;
 
         if (!_.has(this.search_view, '_s_groupby')) { return; }
+
+        if (row_groupby.length && col_groupby.length) {
+            // when two changes to the search view will be done, the method do_search
+            // will be called twice, once with the correct groupby and incorrect col_groupby,
+            // and once with correct informations. This flag is necessary to prevent the 
+            // incorrect informations to propagate and trigger useless queries
+            this.ignore_do_search = true;
+        }
 
         // add row groupbys
         var row_facet = this.make_row_groupby_facets(row_groupby),
