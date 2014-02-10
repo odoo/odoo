@@ -339,19 +339,17 @@
                     </header>
                     <sheet>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only" colspan="4"/>
-                            <h1><field name="name" class="oe_inline" nolabel="1" colspan="2"/></h1>
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" class="oe_inline"/></h1>
                         </div>
                         <div class="oe_right" name="buttons"/>
-                        <group>
-                            <group name="job_data">
-                                <field name="department_id" class="oe_inline"/>
-                                <label for="no_of_recruitment"/>
-                                <div>
-                                    <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)" class="oe_inline"/>
-                                    <p>Currently, <field name="no_of_employee" groups="base.group_user" colspan="0" class="oe_inline" style="padding-top: 1px"/> employees</p>
-                                </div>
-                            </group>
+                        <group name="employee_data">
+                            <field name="department_id" class="oe_inline"/>
+                            <label for="no_of_employee"/>no_of_recruitment
+                            <div>
+                                <field name="no_of_employee" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)" class="oe_inline"/>
+                                <p><field name="no_of_recruitment" groups="base.group_user" colspan="0" class="oe_inline" style="padding-top: 1px"/> new employee(s) expected</p>
+                            </div>
                         </group>
                         <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
                             <label for="description"/>
