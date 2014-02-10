@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import ir_actions
 import ir_ui_view
 import website
 import ir_qweb
