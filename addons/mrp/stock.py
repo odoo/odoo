@@ -67,11 +67,11 @@ class StockMove(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         product_obj = self.pool.get('product.product')
         processed_ids = []
-        bis = self._check_phantom_bom(cr, uid, move, context=context)
+        bis = self._check_phantom_bom(cr, SUPERUSER_ID, move, context=context)
         if bis:
             factor = move.product_qty
-            bom_point = bom_obj.browse(cr, uid, bis[0], context=context)
-            res = bom_obj._bom_explode(cr, uid, bom_point, factor, [])
+            bom_point = bom_obj.browse(cr, SUPERUSER_ID, bis[0], context=context)
+            res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, factor, [])
             state = 'confirmed'
             if move.state == 'assigned':
                 state = 'assigned'

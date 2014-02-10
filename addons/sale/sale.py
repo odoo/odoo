@@ -49,6 +49,7 @@ class sale_order(osv.osv):
             'date_confirm': False,
             'client_order_ref': '',
             'name': self.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
+            'procurement_group_id': False,
         })
         return super(sale_order, self).copy(cr, uid, id, default, context=context)
 
@@ -668,6 +669,11 @@ class sale_order(osv.osv):
             res.append(sale_line_obj.need_procurement(cr, uid, [line.id for line in order.order_line], context=context))
         return any(res)
 
+    def action_ignore_delivery_exception(self, cr, uid, ids, context=None):
+        for sale_order in self.browse(cr, uid, ids, context=context):
+            self.write(cr, uid, ids, {'state': 'progress' if sale_order.invoice_exists else 'manual'}, context=context)
+        return True
+
     def action_ship_create(self, cr, uid, ids, context=None):
         """Create the required procurements to supply sales order lines, also connecting
         the procurements to appropriate stock moves in order to bring the goods to the
@@ -680,34 +686,38 @@ class sale_order(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             proc_ids = []
             vals = self._prepare_procurement_group(cr, uid, order, context=context)
-            group_id = self.pool.get("procurement.group").create(cr, uid, vals, context=context)
+            if not order.procurement_group_id:
+                group_id = self.pool.get("procurement.group").create(cr, uid, vals, context=context)
+                order.write({'procurement_group_id': group_id}, context=context)
 
-            order.write({'procurement_group_id': group_id}, context=context)
             for line in order.order_line:
-                #cancel existing procurements if any (possible when after a shipping exception the user choose to recreate), to avoid duplicates
+                #Try to fix exception procurement (possible when after a shipping exception the user choose to recreate)
                 if line.procurement_ids:
-                    procurement_obj.cancel(cr, uid, [x.id for x in line.procurement_ids if x.state != 'cancel'], context=context)
-                if sale_line_obj.need_procurement(cr, uid, [line.id], context=context):
+                    #first check them to see if they are in exception or not (one of the related moves is cancelled)
+                    procurement_obj.check(cr, uid, [x.id for x in line.procurement_ids if x.state not in ['cancel', 'done']])
+                    line.refresh()
+                    #run again procurement that are in exception in order to trigger another move
+                    proc_ids += [x.id for x in line.procurement_ids if x.state == 'exception']
+                elif sale_line_obj.need_procurement(cr, uid, [line.id], context=context):
                     if (line.state == 'done') or not line.product_id:
                         continue
                     vals = self._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
                     proc_id = procurement_obj.create(cr, uid, vals, context=context)
                     proc_ids.append(proc_id)
             #Confirm procurement order such that rules will be applied on it
-            #note that the workflow ensure proc_ids isn't an empty list
+            #note that the workflow normally ensure proc_ids isn't an empty list
             procurement_obj.run(cr, uid, proc_ids, context=context)
-            # FP NOTE: do we need this? isn't it the workflow that should set this
-            val = {}
+
+            #if shipping was in exception and the user choose to recreate the delivery order, write the new status of SO
             if order.state == 'shipping_except':
-                val['state'] = 'progress'
-                val['shipped'] = False
+                val = {'state': 'progress', 'shipped': False}
 
                 if (order.order_policy == 'manual'):
                     for line in order.order_line:
                         if (not line.invoiced) and (line.state not in ('cancel', 'draft')):
                             val['state'] = 'manual'
                             break
-            order.write(val)
+                order.write(val)
         return True
 
     # if mode == 'finished':
