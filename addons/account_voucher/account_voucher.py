@@ -217,7 +217,7 @@ class account_voucher(osv.osv):
         if context.get('type', 'sale') in ('purchase', 'payment'):
             nodes = doc.xpath("//field[@name='partner_id']")
             for node in nodes:
-                node.set('context', "{'search_default_supplier': 1}")
+                node.set('context', "{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}")
                 if context.get('invoice_type','') in ('in_invoice', 'in_refund'):
                     node.set('string', _("Supplier"))
         res['arch'] = etree.tostring(doc)
@@ -746,7 +746,7 @@ class account_voucher(osv.osv):
             ids = context['move_line_ids']
         invoice_id = context.get('invoice_id', False)
         company_currency = journal.company_id.currency_id.id
-        move_line_found = False
+        move_lines_found = []
 
         #order the lines by most old first
         ids.reverse()
@@ -761,21 +761,20 @@ class account_voucher(osv.osv):
                 if line.invoice.id == invoice_id:
                     #if the invoice linked to the voucher line is equal to the invoice_id in context
                     #then we assign the amount on that line, whatever the other voucher lines
-                    move_line_found = line.id
-                    break
+                    move_lines_found.append(line.id)
             elif currency_id == company_currency:
                 #otherwise treatments is the same but with other field names
                 if line.amount_residual == price:
                     #if the amount residual is equal the amount voucher, we assign it to that voucher
                     #line, whatever the other voucher lines
-                    move_line_found = line.id
+                    move_lines_found.append(line.id)
                     break
                 #otherwise we will split the voucher amount on each line (by most old first)
                 total_credit += line.credit or 0.0
                 total_debit += line.debit or 0.0
             elif currency_id == line.currency_id.id:
                 if line.amount_residual_currency == price:
-                    move_line_found = line.id
+                    move_lines_found.append(line.id)
                     break
                 total_credit += line.credit and line.amount_currency or 0.0
                 total_debit += line.debit and line.amount_currency or 0.0
@@ -800,15 +799,16 @@ class account_voucher(osv.osv):
                 'move_line_id':line.id,
                 'account_id':line.account_id.id,
                 'amount_original': amount_original,
-                'amount': (move_line_found == line.id) and min(abs(price), amount_unreconciled) or 0.0,
+                'amount': (line.id in move_lines_found) and min(abs(price), amount_unreconciled) or 0.0,
                 'date_original':line.date,
                 'date_due':line.date_maturity,
                 'amount_unreconciled': amount_unreconciled,
                 'currency_id': line_currency_id,
             }
+            price -= rs['amount']
             #in case a corresponding move_line hasn't been found, we now try to assign the voucher amount
             #on existing invoices: we split voucher amount by most old first, but only for lines in the same currency
-            if not move_line_found:
+            if not move_lines_found:
                 if currency_id == line_currency_id:
                     if line.credit:
                         amount = min(amount_unreconciled, abs(total_debit))
@@ -1329,7 +1329,7 @@ class account_voucher(osv.osv):
                 'date': voucher.date,
                 'credit': diff > 0 and diff or 0.0,
                 'debit': diff < 0 and -diff or 0.0,
-                'amount_currency': company_currency <> current_currency and (sign * -1 * voucher.writeoff_amount) or False,
+                'amount_currency': company_currency <> current_currency and (sign * -1 * voucher.writeoff_amount) or 0.0,
                 'currency_id': company_currency <> current_currency and current_currency or False,
                 'analytic_account_id': voucher.analytic_id and voucher.analytic_id.id or False,
             }

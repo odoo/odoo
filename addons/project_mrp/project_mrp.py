@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp import netsvc
+from openerp import workflow
 
 
 class ProjectTaskStageMrp(osv.Model):
@@ -48,10 +48,9 @@ class project_task(osv.osv):
     }
 
     def _validate_subflows(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
         for task in self.browse(cr, uid, ids):
             if task.procurement_id:
-                wf_service.trg_write(uid, 'procurement.order', task.procurement_id.id, cr)
+                workflow.trg_write(uid, 'procurement.order', task.procurement_id.id, cr)
 
     def write(self, cr, uid, ids, values, context=None):
         """ When closing tasks, validate subflows. """

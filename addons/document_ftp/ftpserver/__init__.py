@@ -34,6 +34,9 @@ def start_server():
     if openerp.multi_process:
         _logger.info("FTP disabled in multiprocess mode")
         return
+    if openerp.evented:
+        _logger.info("FTP disabled in evented mode")
+        return
     HOST = config.get('ftp_server_host', '127.0.0.1')
     PORT = int(config.get('ftp_server_port', '8021'))
     PASSIVE_PORTS = None

@@ -147,13 +147,15 @@
 
         <record id="trans_confirm_mto_make_done" model="workflow.transition">
             <!-- This transition is there to unblock products that would be in MTO with a supply method that would be
-                 produce or buy without MRP or purchase module installed. These modules overwrite the check_produce()
+                 produce or buy, and without MRP or Purchase modules installed. These modules overwrite the check_produce()
                  and check_buy() methods -so that it invalidates their part of this 'bypass transition'-,  and define
                  their own workflow paths.
+                 The stock_location module also introduces a check_move() alternative, for pulled flows that are
+                 satisfied with an internal product move. This yields a threefold test for the bypass transition. 
             -->
             <field name="act_from" ref="act_confirm_mto"/>
             <field name="act_to" ref="act_make_done"/>
-            <field name="condition">not check_produce() and not check_buy()</field>
+            <field name="condition">not check_produce() and not check_buy() and not check_move()</field>
         </record>
 
         <record id="trans_make_to_stock_make_done" model="workflow.transition">
