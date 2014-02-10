@@ -638,7 +638,7 @@
                 image_dialog(editor, new CKEDITOR.dom.element(previous));
                 $image_button.hide();
                 previous = null;
-            });
+            }, 'btn-sm');
 
             // previous is the state of the button-trigger: it's the
             // currently-ish hovered element which can trigger a button showing.
