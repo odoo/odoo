@@ -1,18 +1,14 @@
-import os
-import glob
-
 import openerp
 
-fname, _ = os.path.splitext(__file__)
+class TestUi(openerp.tests.HttpCase):
+    def test_admin(self):
+        self.phantom_js("/", "console.log('ok')", "window.openerp.website")
+        self.phantom_js("/", "openerp.website.Tour.run_test('banner')", "openerp.website.Tour")
 
-class TestUiAdmin(openerp.tests.HttpCase):
-    def test(self):
-        for i in glob.glob('%s_admin_*.js' % fname):
-            self.phantomjs(i) 
-
-class TestUiPublic(openerp.tests.HttpCase):
-    def test(self):
-        for i in glob.glob('%s_public_*.js' % fname):
-            self.phantomjs(i) 
-
+    def test_public(self):
+        inject = [
+            "./../../../website/static/src/js/website.tour.test.js",
+            "./../../../website/static/src/js/website.tour.test.admin.js"i
+        ]
+        self.phantom_js("/", "openerp.website.Tour.run_test('login_edit')", "openerp.website.Tour", inject=inject);
 

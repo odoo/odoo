@@ -1,12 +1,18 @@
-import openerp.addons.website.tests.test_ui as test_ui
+import openerp
 
-def load_tests(loader, base, _):
-    base.addTest(test_ui.WebsiteUiSuite(test_ui.full_path(__file__,'website_sale-add_product-test.js'),
-        {'redirect': '/page/website.homepage'}))
-    base.addTest(test_ui.WebsiteUiSuite(test_ui.full_path(__file__,'website_sale-sale_process-test.js'),
-        {'redirect': '/page/website.homepage'}))
-    base.addTest(test_ui.WebsiteUiSuite(test_ui.full_path(__file__,'website_sale-sale_process-test.js'),
-        {'redirect': '/page/website.homepage', 'user': 'demo', 'password': 'demo'}))
-    base.addTest(test_ui.WebsiteUiSuite(test_ui.full_path(__file__,'website_sale-sale_process-test.js'),
-        {'path': '/', 'user': None}))
-    return base
+inject = [
+    "./../../../website/static/src/js/website.tour.test.js",
+    "./../../../website/static/src/js/website.tour.test.admin.js",
+]
+
+class TestUi(openerp.tests.HttpCase):
+    def test_admin(self):
+        self.phantom_js("/", "openerp.website.Tour.run_test('shop')", "openerp.website.Tour")
+        self.phantom_js("/", "openerp.website.Tour.run_test('shop_buy_product')", "openerp.website.Tour")
+
+    def test_demo(self):
+        self.phantom_js("/", "openerp.website.Tour.run_test('shop_buy_product')", "openerp.website.Tour", login="demo", password="demo", inject=inject)
+
+    def test_public(self):
+        self.phantom_js("/", "openerp.website.Tour.run_test('shop_buy_product')", "openerp.website.Tour", login=None, inject=inject)
+
