@@ -120,14 +120,14 @@ class crm_case_section(osv.osv):
         month_begin = date.today().replace(day=1)
         section_result = [{
                           'value': 0,
-                          'tooltip': (month_begin + relativedelta.relativedelta(months=-i)).strftime('%B'),
+                          'tooltip': (month_begin + relativedelta.relativedelta(months=-i)).strftime('%B %Y'),
                           } for i in range(self._period_number - 1, -1, -1)]
         group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
         pattern = tools.DEFAULT_SERVER_DATE_FORMAT if obj.fields_get(cr, uid, groupby_field)[groupby_field]['type'] == 'date' else tools.DEFAULT_SERVER_DATETIME_FORMAT
         for group in group_obj:
             group_begin_date = datetime.strptime(group['__domain'][0][2], pattern)
             month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
-            section_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group_begin_date.strftime('%B')}
+            section_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field, 0)}
         return section_result
 
     def _get_opportunities_data(self, cr, uid, ids, field_name, arg, context=None):
