@@ -113,7 +113,7 @@ class mail_thread(osv.AbstractModel):
                     object_id.alias_id.alias_model_id.model == self._name and \
                     object_id.alias_id.alias_force_thread_id == 0:
                 alias = object_id.alias_id
-        if catchall_domain and model and not alias:  #check for example alias if res_id not given or given res_id dose not contain alias-> generic help message, take an example alias (i.e. alias of some section_id)
+        if not alias and catchall_domain and model:  # no res_id or res_id not linked to an alias -> generic help message, take a generic alias of the model
             alias_obj = self.pool.get('mail.alias')
             alias_ids = alias_obj.search(cr, uid, [("alias_parent_model_id.model", "=", model), ("alias_name", "!=", False), ('alias_force_thread_id', '=', False), ('alias_parent_thread_id', '=', False)], context=context, order='id ASC')
             if alias_ids and len(alias_ids) == 1:
