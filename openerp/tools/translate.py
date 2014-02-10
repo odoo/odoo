@@ -180,7 +180,7 @@ class GettextAlias(object):
         if allow_create:
             # create a new cursor
             db = self._get_db()
-            if db:
+            if db is not None:
                 return db.cursor(), True
         return None, False
 
