@@ -24,7 +24,11 @@ function waitFor (ready, callback, timeout, timeoutMessageCallback) {
 
 function PhantomTest() {
     var self = this;
-    this.options = JSON.parse(phantom.args[1]);
+    if(phantom.args.length === 1) {
+        this.options = JSON.parse(phantom.args[0]);
+    } else {
+        this.options = JSON.parse(phantom.args[1]);
+    }
     this.inject = [];
     this.timeout = this.options.timeout ? Math.round(parseFloat(this.options.timeout)*1000 - 5000) : 10000;
     this.origin = 'http://localhost';
@@ -80,6 +84,14 @@ function PhantomTest() {
     // run test
     // ----------------------------------------------------
     this.run = function(url_path, code, ready) {
+        if(self.options.login) {
+            qp = [];
+            qp.push('db=' + self.options.db);
+            qp.push('login=' + self.options.login);
+            qp.push('key=' + self.options.password);
+            qp.push('redirect=' + encodeURIComponent(url_path));
+            var url_path = "/web/login?" + qp.join('&');
+        }
         var url = self.origin + url_path;
         self.page.open(url, function(status) {
             if (status !== 'success') {
@@ -104,15 +116,12 @@ function PhantomTest() {
             }
         });
     };
-    this.run_admin = function(url_path, code, ready) {
-        qp = [];
-        qp.push('db=' + self.options.db);
-        qp.push('login=' + self.options.login);
-        qp.push('key=' + self.options.password);
-        qp.push('redirect=' + encodeURIComponent(url_path));
-        var url_path2 = "/web/login?" + qp.join('&');
-        return self.run(url_path2, code, ready);
-    };
+}
+
+// js mode or jsfile mode
+if(phantom.args.length === 1) {
+    pt = new PhantomTest();
+    pt.run(pt.options.url_path, pt.options.code, pt.options.ready);
 }
 
 // vim:et:

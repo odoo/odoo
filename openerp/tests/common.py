@@ -112,7 +112,7 @@ class SingleTransactionCase(BaseCase):
         cls.cr.close()
 
 
-class HttpCase(SingleTransactionCase):
+class HttpCase(TransactionCase):
     """ Transactionnal HTTP TestCase with a phantomjs helper.
     """
 
@@ -124,18 +124,16 @@ class HttpCase(SingleTransactionCase):
         self.xmlrpc_db = xmlrpclib.ServerProxy(url_8 + 'db')
         self.xmlrpc_object = xmlrpclib.ServerProxy(url_8 + 'object')
 
-    @classmethod
-    def setUpClass(cls):
-        super(HttpCase, cls).setUpClass()
-        cls.session_id = uuid.uuid4().hex
-        HTTP_SESSION[cls.session_id] = cls.cr
+    def setUp(self):
+        super(HttpCase, self).setUp()
+        self.session_id = uuid.uuid4().hex
+        HTTP_SESSION[self.session_id] = self.cr
 
-    @classmethod
-    def tearDownClass(cls):
-        del HTTP_SESSION[cls.session_id]
-        super(HttpCase, cls).tearDownClass()
+    def tearDown(self):
+        del HTTP_SESSION[self.session_id]
+        super(HttpCase, self).tearDown()
 
-    def phantomjs(self, jsfile, timeout=30, options=None):
+    def phantom_poll(self, phantom, timeout):
         """ Phantomjs Test protocol.
 
         Use console.log in phantomjs to output test results:
@@ -146,8 +144,77 @@ class HttpCase(SingleTransactionCase):
         Other lines are relayed to the test log.
 
         """
-        self.timeout = timeout
-        self.options = {
+        t0 = time.time()
+        buf = ''
+        while 1:
+            # timeout
+            if time.time() > t0 + timeout:
+                raise Exception("phantomjs test timeout (%ss)" % timeout)
+
+            # read a byte
+            ready, _, _ = select.select([phantom.stdout], [], [], 0.5)
+            if ready:
+                s = phantom.stdout.read(1)
+                if s:
+                    buf += s
+                else:
+                    break
+
+            # process lines
+            if '\n' in buf:
+                line, buf = buf.split('\n', 1)
+                _logger.info("phantomjs: %s", line)
+                if line == "ok":
+                    _logger.info("phantomjs test successful")
+                    return
+                if line == "error":
+                    raise Exception("phantomjs test failed")
+
+    def phantom_run(self, cmd, timeout):
+        _logger.info('executing %s', cmd)
+        try:
+            phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        except OSError:
+            _logger.info("phantomjs not found, test %s skipped", jsfile)
+        try:
+            self.phantom_poll(phantom, timeout)
+        finally:
+            # kill phantomjs if phantom.exit() wasn't called in the test
+            if phantom.poll() is None:
+                phantom.terminate()
+
+    def phantom_jsfile(self, jsfile, timeout=30, **kw):
+        options = {
+            'timeout' : timeout,
+            'port': PORT,
+            'db': DB,
+            'session_id': self.session_id,
+        }
+        options.update(kw)
+        phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
+        # phantom.args[0] == phantomtest path
+        # phantom.args[1] == options
+        cmd = ['phantomjs', jsfile, phantomtest, json.dumps(options)]
+        self.phantom_run(cmd, timeout)
+
+    def phantom_js(self, url_path, code, ready="window", timeout=30, **kw):
+        """ Test js code running in the browser
+        - load page given by url_path
+        - wait for ready object to be available
+        - eval(code) inside the page
+
+        To signal success test do:
+        console.log('ok')
+
+        To signal failure do:
+        console.log('error')
+
+        If neither are done before timeout test fails.
+        """
+        options = {
+            'url_path': url_path,
+            'code': code,
+            'ready': ready,
             'timeout' : timeout,
             'port': PORT,
             'db': DB,
@@ -155,49 +222,10 @@ class HttpCase(SingleTransactionCase):
             'password': ADMIN_PASSWORD,
             'session_id': self.session_id,
         }
-        if options:
-            self.options.update(options)
-
+        options.update(kw)
         phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
-
-        # phantom.args[0] == phantomtest path
-        # phantom.args[1] == options
-        cmd = ['phantomjs', jsfile, phantomtest, json.dumps(self.options)]
-        _logger.info('executing %s', cmd)
-        try:
-            phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        except OSError:
-            _logger.info("phantomjs not found, test %s skipped", jsfile)
-        try:
-            t0 = time.time()
-            buf = ''
-            while 1:
-                # timeout
-                if time.time() > t0 + self.timeout:
-                    raise Exception("phantomjs test timeout (%ss)" % self.timeout)
-
-                # read a byte
-                ready, _, _ = select.select([phantom.stdout], [], [], 0.5)
-                if ready:
-                    s = phantom.stdout.read(1)
-                    if s:
-                        buf += s
-                    else:
-                        break
-
-                # process lines
-                if '\n' in buf:
-                    line, buf = buf.split('\n', 1)
-                    _logger.info("phantomjs: %s", line)
-                    if line == "ok":
-                        _logger.info("phantomjs test successful")
-                        return
-                    if line == "error":
-                        raise Exception("phantomjs test failed")
-        finally:
-            # kill phantomjs if phantom.exit() wasn't called in the test
-            if phantom.poll() is None:
-                phantom.terminate()
+        cmd = ['phantomjs', phantomtest, json.dumps(options)]
+        self.phantom_run(cmd, timeout)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

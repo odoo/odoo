@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
-import glob
 
 import openerp
 
-fname, _ = os.path.splitext(__file__)
-
 class TestUi(openerp.tests.HttpCase):
-    def test(self):
-        for i in glob.glob('%s*.js' % fname):
-            self.phantomjs(i)
+    def test_js(self):
+        self.phantom_js('/',"console.log('ok')","console", login=None)
+
+    def test_jsfile(self):
+        self.phantom_jsfile(os.path.join(os.path.dirname(__file__), 'test_ui_hello.js'))
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
