@@ -71,8 +71,8 @@
                 {
                     snippet:   'three-columns',
                     placement: 'bottom',
-                    title:     _t("Drag & Drop a Block"),
-                    content:   _t("Drag the <em>'3 Columns'</em> block and drop it below the banner."),
+                    title:     _t("Drag & Drop This Block"),
+                    content:   _t("Drag the <em>'Three Columns'</em> block and drop it below the banner."),
                     popover:   { fixed: true },
                 },
                 {
@@ -98,16 +98,32 @@
                     popover:   { fixed: true },
                 },
                 {
-                    element:   'button[data-dismiss=modal]',
+                    element:   '.modal:has(#mobile-viewport) button[data-dismiss=modal]',
                     placement: 'right',
                     title:     _t("Close Mobile Preview"),
                     content:   _t("Scroll in the mobile preview to test the rendering. Once it's ok, close this dialog."),
                 },
                 {
                     waitNot:   '.modal',
-                    title:     _t("Congrats"),
-                    content:   _t("Congratulation. This tour is finished."),
-                    popover:   { fixed: true, next: _t("Close Tutorial") },
+                    element:   '#content-menu-button',
+                    placement: 'bottom',
+                    title:     _t("Add new pages and menus"),
+                    content:   _t("The 'Content' menu allows you to add pages or add the top menu."),
+                    popover:   { next: _t("Continue") },
+                },
+                {
+                    element:   '#customize-menu-button',
+                    placement: 'bottom',
+                    title:     _t("Customize your pages"),
+                    content:   _t("The 'Customize' menu allows you to activate options and change the theme."),
+                    popover:   { next: _t("Continue") },
+                },
+                {
+                    element:   'a[data-action="promote-current-page"]',
+                    placement: 'bottom',
+                    title:     _t("Promote your website"),
+                    content:   _t("The 'Promote' menu allows you to promote each page for google and other search engines."),
+                    popover:   { next: _t("Close Tutorial") },
                 },
             ];
             return this._super();
