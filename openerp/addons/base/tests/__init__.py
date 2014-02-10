@@ -4,7 +4,6 @@ import test_base
 import test_basecase
 import test_db_cursor
 import test_expression
-import test_fields
 import test_func
 import test_ir_actions
 import test_ir_attachment
