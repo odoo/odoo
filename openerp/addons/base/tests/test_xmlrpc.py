@@ -33,8 +33,4 @@ class test_xmlrpc(common.HttpCase):
     #    with self.assertRaisesRegexp(Exception, msg_re):
     #        self.proxy.edi_60.import_edi_document(DB, ADMIN_USER_ID, ADMIN_PASSWORD, {})
 
-if __name__ == '__main__':
-    unittest2.main()
-
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

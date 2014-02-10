@@ -2,7 +2,7 @@
 import cgi
 from xml.dom import minidom as dom
 
-import common
+from openerp.tests import common
 from openerp.addons.base.ir import ir_qweb
 
 impl = dom.getDOMImplementation()
