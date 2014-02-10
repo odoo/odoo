@@ -5,7 +5,7 @@
     <template id="auth_oauth_signup.signup" inherit_id="auth_signup.signup" name="OAuth Signup buttons">
       <xpath expr="//button[@type='submit']" position="before">
         <div class="pull-right">
-          <div t-foreach="providers" t-as="p">
+          <div t-foreach="providers or []" t-as="p">
             <a t-att-href="p['auth_link']" class="btn btn-link">
               <i t-att-class="p['css_class']"/>
               <t t-esc="p['body']"/>
