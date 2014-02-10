@@ -21,16 +21,15 @@
 
 import logging
 
+from openerp import tools
 from openerp.modules.module import get_module_resource
 from openerp.osv import fields, osv
-from openerp.tools.translate import _
-from openerp import tools
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
 
-class hr_employee_category(osv.osv):
+class hr_employee_category(osv.Model):
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
@@ -73,9 +72,9 @@ class hr_employee_category(osv.osv):
     ]
 
 
-class hr_job(osv.osv):
+class hr_job(osv.Model):
 
-    def _no_of_employee(self, cr, uid, ids, name, args, context=None):
+    def _get_nbr_employees(self, cr, uid, ids, name, args, context=None):
         res = {}
         for job in self.browse(cr, uid, ids, context=context):
             nb_employees = len(job.employee_ids or [])
@@ -94,37 +93,39 @@ class hr_job(osv.osv):
 
     _name = "hr.job"
     _description = "Job Position"
-    _inherit = ['mail.thread','ir.needaction_mixin']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
-        'expected_employees': fields.function(_no_of_employee, string='Total Forecasted Employees',
+        'expected_employees': fields.function(_get_nbr_employees, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
             store = {
                 'hr.job': (lambda self,cr,uid,ids,c=None: ids, ['no_of_recruitment'], 10),
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             }, type='integer',
-            multi='no_of_employee'),
-        'no_of_employee': fields.function(_no_of_employee, string="Current Number of Employees",
+            multi='_get_nbr_employees'),
+        'no_of_employee': fields.function(_get_nbr_employees, string="Current Number of Employees",
             help='Number of employees currently occupying this job position.',
             store = {
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             }, type='integer',
-            multi='no_of_employee'),
-        'no_of_recruitment': fields.float('Expected New Employees', help='Number of new employees you expect to recruit.'),
-        'no_of_hired_employee':fields.float('Hired Employees', help='Number of hired employees for this job position during recruitment phase.'),
+            multi='_get_nbr_employees'),
+        'no_of_recruitment': fields.integer('Expected New Employees', help='Number of new employees you expect to recruit.'),
+        'no_of_hired_employee': fields.integer('Hired Employees', help='Number of hired employees for this job position during recruitment phase.'),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees', groups='base.group_user'),
         'description': fields.text('Job Description'),
         'requirements': fields.text('Requirements'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'state': fields.selection([('open', 'No Recruitment'), ('recruit', 'Recruitment in Progress')], 'Status', readonly=True, required=True,
-            help="By default 'In position', set it to 'In Recruitment' if recruitment process is going on for this job position."),
+        'state': fields.selection([('open', 'Recruitment Closed'), ('recruit', 'Recruitment in Progress')],
+                                  string='Status', readonly=True, required=True,
+                                  track_visibility='always',
+                                  help="By default 'Closed', set it to 'In Recruitment' if recruitment process is going on for this job position."),
         'color': fields.integer('Color Index'),
         'write_date': fields.datetime('Update Date', readonly=True),
     }
+
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=c),
-        'no_of_recruitment': 0,
+        'company_id': lambda self, cr, uid, ctx=None: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=ctx),
         'state': 'open',
     }
 
@@ -133,23 +134,26 @@ class hr_job(osv.osv):
         ('hired_employee_check', "CHECK ( no_of_hired_employee <= no_of_recruitment )", "Number of hired employee must be less than expected number of employee in recruitment."),
     ]
 
-
     def on_change_expected_employee(self, cr, uid, ids, no_of_recruitment, no_of_employee, context=None):
         if context is None:
             context = {}
         return {'value': {'expected_employees': no_of_recruitment + no_of_employee}}
 
-    def action_employee_to_hire(self, cr, uid, id, value, context=None):
+    def action_set_no_of_recruitment(self, cr, uid, id, value, context=None):
         return self.write(cr, uid, [id], {'no_of_recruitment': value}, context=context)
 
-    def job_recruitment(self, cr, uid, ids, context=None):
-        for job in self.browse(cr, uid, ids):
+    def set_recruit(self, cr, uid, ids, context=None):
+        for job in self.browse(cr, uid, ids, context=context):
             no_of_recruitment = job.no_of_recruitment == 0 and 1 or job.no_of_recruitment
-            self.write(cr, uid, [job.id], {'state': 'recruit', 'no_of_recruitment': no_of_recruitment})
+            self.write(cr, uid, [job.id], {'state': 'recruit', 'no_of_recruitment': no_of_recruitment}, context=context)
         return True
 
-    def job_open(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'open', 'no_of_recruitment': 0,'no_of_hired_employee': 0})
+    def set_open(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {
+            'state': 'open',
+            'no_of_recruitment': 0,
+            'no_of_hired_employee': 0
+        }, context=context)
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -160,15 +164,18 @@ class hr_job(osv.osv):
             'no_of_recruitment': 0,
             'no_of_hired_employee': 0,
         })
-        job = self.browse(cr, uid, id, context=context)
-        if not default.get('name', False):
-            default.update(name=_("%s (copy)") % (job.name))
+        if 'name' in default:
+            job = self.browse(cr, uid, id, context=context)
+            default['name'] = _("%s (copy)") % (job.name)
         return super(hr_job, self).copy(cr, uid, id, default=default, context=context)
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if vals.get('state') == 'recruit':
-            self.message_post(cr, uid, ids, body=_('Job <b>In Recruitment</b> stage'), context=context)
-        return super(hr_job, self).write(cr, uid, ids, vals, context=context)
+    # ----------------------------------------
+    # Compatibility methods
+    # ----------------------------------------
+    _no_of_employee = _get_nbr_employees  # v7 compatibility
+    job_open = set_open  # v7 compatibility
+    job_recruitment = set_recruit  # v7 compatibility
+
 
 class hr_employee(osv.osv):
     _name = "hr.employee"
