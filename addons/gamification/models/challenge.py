@@ -387,6 +387,7 @@ class gamification_challenge(osv.Model):
                 end_date = challenge.end_date
 
             for line in challenge.line_ids:
+                # FIXME: allow to restrict to a subset of users
                 for user in challenge.user_ids:
 
                     goal_obj = self.pool.get('gamification.goal')
@@ -400,8 +401,9 @@ class gamification_challenge(osv.Model):
                         # resume canceled goals
                         domain.append(('state', '=', 'canceled'))
                         canceled_goal_ids = goal_obj.search(cr, uid, domain, context=context)
-                        goal_obj.write(cr, uid, canceled_goal_ids, {'state': 'inprogress'}, context=context)
-                        goal_obj.update(cr, uid, canceled_goal_ids, context=context)
+                        if canceled_goal_ids:
+                            goal_obj.write(cr, uid, canceled_goal_ids, {'state': 'inprogress'}, context=context)
+                            goal_obj.update(cr, uid, canceled_goal_ids, context=context)
 
                         # skip to next user
                         continue
@@ -516,13 +518,6 @@ class gamification_challenge(osv.Model):
                 domain.append(('user_id', '=', user_id))
                 sorting = goal_obj._order
                 limit = 1
-                # initialise in case search returns no results
-                line_data.update({
-                    'id': 0,
-                    'current': 0,
-                    'completeness': 0,
-                    'state': 'draft',
-                })
             else:
                 line_data.update({
                     'own_goal_id': False,
@@ -559,7 +554,8 @@ class gamification_challenge(osv.Model):
                         'completeness': goal.completeness,
                         'state': goal.state,
                     })
-            res_lines.append(line_data)
+            if goal_ids:
+                res_lines.append(line_data)
         return res_lines
 
     ##### Reporting #####

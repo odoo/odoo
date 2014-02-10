@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:et:si:ts=2:sts=2:sw=2 -->
+<openerp>
+  <data>
+    <template id="auth_oauth_signup.signup" inherit_id="auth_signup.signup" name="OAuth Signup buttons">
+      <xpath expr="//button[@type='submit']" position="before">
+        <div class="pull-right">
+          <div t-foreach="providers or []" t-as="p">
+            <a t-att-href="p['auth_link']" class="btn btn-link">
+              <i t-att-class="p['css_class']"/>
+              <t t-esc="p['body']"/>
+            </a>
+          </div>
+        </div>
+      </xpath>
+    </template>
+  </data>
+</openerp>

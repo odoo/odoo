@@ -20,12 +20,13 @@ OpenERP Website CMS
         'views/snippets.xml',
         'views/themes.xml',
         'views/res_config.xml',
+        'views/ir_actions.xml',
     ],
     'demo': [
         'data/website_demo.xml',
     ],
     'js': ['static/src/js/website.backend.js'],
-    'qweb' : ['static/src/xml/website.backend.xml'],
+    'qweb': ['static/src/xml/website.backend.xml'],
     'css': ['static/src/css/website.backend.css'],
     'application': True,
 }
