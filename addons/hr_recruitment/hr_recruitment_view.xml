@@ -313,7 +313,7 @@
         <field name="name">Applications</field>
         <field name="res_model">hr.applicant</field>
         <field name="view_mode">kanban,tree,form,graph,calendar</field>
-        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
+        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id, 'empty_list_help_model': 'hr.job'}</field>
         <field name="help" type="html">
               <p>
                 OpenERP helps you track applicants in the recruitment
@@ -430,7 +430,7 @@
                                     </div>
                                     <t t-if="record.state.raw_value == 'recruit'">
                                         <div class="oe_applications">
-                                            <a name="open_applicants" type="object">
+                                            <a name="%(action_hr_job_applications)d" type="action">
                                                 <span t-if="record.application_ids.raw_value.length gt 1"><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
                                                 <span t-if="record.application_ids.raw_value.length lt 2"><t t-esc="record.application_ids.raw_value.length"/> Application</span>
                                             </a>

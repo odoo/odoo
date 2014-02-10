@@ -240,6 +240,16 @@ class hr_applicant(osv.Model):
         'stage_id': _read_group_stage_ids
     }
 
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
+        res = super(hr_applicant, self).default_get(cr, uid, fields, context=context)
+        #NOTE:to set default user_id in applicant if applicant directly created from kanban action of job because currently web is not parsing value in context on action.
+        if context.get('active_model') == "hr.job" and context.get('active_id'):
+            job = self.pool.get('hr.job').browse(cr, uid, context.get('active_id'), context=context)
+            res.update({'user_id': job.user_id.id})
+        return res
+
     def onchange_job(self, cr, uid, ids, job_id=False, context=None):
         department_id = False
         if job_id:
@@ -552,13 +562,6 @@ class hr_job(osv.osv):
             'context': context,
             'nodestroy': True,
         }
-
-    def open_applicants(self, cr, uid, ids, context=None):
-        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_recruitment','action_hr_job_applications')
-        action = self.pool.get(model).read(cr, uid, action_id, context=context)
-        job = self.browse(cr, uid, ids[0], context=context)
-        action['context'] = str({'search_default_job_id': [job.id], 'default_job_id': job.id, 'default_user_id': job.user_id.id})
-        return action
 
     def open_attachments(self, cr, uid, ids, context=None):
         #open attachments of job and related applicantions.
