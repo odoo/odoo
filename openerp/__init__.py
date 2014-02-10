@@ -67,9 +67,7 @@ def registry(database_name):
 # Imports
 #----------------------------------------------------------
 import addons
-import cli
 import conf
-import http
 import loglevels
 import modules
 import netsvc
@@ -81,6 +79,9 @@ import service
 import sql_db
 import tools
 import workflow
+
+import cli
+import http
 
 #----------------------------------------------------------
 # Model classes, fields, api decorators, and scope
