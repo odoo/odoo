@@ -68,6 +68,15 @@ def html_sanitize(src):
             return ""
         _logger.warning('html_sanitize failed to parse %s' % (src))
         cleaned = '<p>Impossible to parse</p>'
+
+    # MAKO compatibility: $, { and } inside quotes are escaped, preventing correct mako execution
+    cleaned = cleaned.replace('%24', '$')
+    cleaned = cleaned.replace('%7B', '{')
+    cleaned = cleaned.replace('%7D', '}')
+    cleaned = cleaned.replace('%20', ' ')
+    cleaned = cleaned.replace('%5B', '[')
+    cleaned = cleaned.replace('%5D', ']')
+
     return cleaned
 
 
