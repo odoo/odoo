@@ -3,8 +3,7 @@ from lxml import etree
 
 import openerp
 from openerp.tools.misc import mute_logger
-
-import common
+from openerp.tests import common
 
 # test group that demo user should not have
 GROUP_TECHNICAL_FEATURES = 'base.group_no_one'

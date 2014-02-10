@@ -168,7 +168,10 @@ class WebRequest(object):
         """
         # some magic to lazy create the cr
         if not self._cr:
-            self._cr = self.registry.db.cursor()
+            if openerp.tools.config['test_enable'] and self.session_id in openerp.tests.common.HTTP_SESSION:
+                self._cr = openerp.tests.common.HTTP_SESSION[self.session_id]
+            else:
+                self._cr = self.registry.db.cursor()
         return self._cr
 
     def __enter__(self):
@@ -177,7 +180,7 @@ class WebRequest(object):
 
     def __exit__(self, exc_type, exc_value, traceback):
         _request_stack.pop()
-        if self._cr:
+        if self._cr and not (openerp.tools.config['test_enable'] and self.session_id in openerp.tests.common.HTTP_SESSION):
             if exc_type is None:
                 self._cr.commit()
             self._cr.close()
@@ -1178,6 +1181,6 @@ root = None
 def wsgi_postload():
     global root
     root = Root()
-    openerp.wsgi.register_wsgi_handler(root)
+    openerp.service.wsgi_server.register_wsgi_handler(root)
 
 # vim:et:ts=4:sw=4:

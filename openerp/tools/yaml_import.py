@@ -321,7 +321,6 @@ class YamlInterpreter(object):
                 view_info = model.fields_view_get(self.cr, SUPERUSER_ID, varg, 'form', context)
 
             record_dict = self._create_record(model, fields, view_info, default=default)
-            _logger.debug("RECORD_DICT %s" % record_dict)
             id = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, record.model, \
                     self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
             self.id_map[record.id] = int(id)
@@ -931,7 +930,7 @@ class YamlInterpreter(object):
 def yaml_import(cr, module, yamlfile, kind, idref=None, mode='init', noupdate=False, report=None):
     if idref is None:
         idref = {}
-    loglevel = logging.INFO if kind == 'test' else logging.DEBUG
+    loglevel = logging.DEBUG
     yaml_string = yamlfile.read()
     yaml_interpreter = YamlInterpreter(cr, module, idref, mode, filename=yamlfile.name, report=report, noupdate=noupdate, loglevel=loglevel)
     yaml_interpreter.process(yaml_string)

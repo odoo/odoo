@@ -1,17 +1,28 @@
 # -*- coding: utf-8 -*-
 """
-The module :mod:`openerp.tests.common` provides a few helpers and classes to write
-tests.
+The module :mod:`openerp.tests.common` provides unittest2 test cases and a few
+helpers and classes to write tests.
+
 """
+import json
+import logging
+import os
+import select
+import subprocess
+import sys
 import threading
 import time
 import unittest2
+import uuid
 import xmlrpclib
 
 import openerp
 
+_logger = logging.getLogger(__name__)
+
 # The openerp library is supposed already configured.
 ADDONS_PATH = openerp.tools.config['addons_path']
+HOST = '127.0.0.1'
 PORT = openerp.tools.config['xmlrpc_port']
 DB = openerp.tools.config['db_name']
 
@@ -22,26 +33,11 @@ DB = openerp.tools.config['db_name']
 if not DB and hasattr(threading.current_thread(), 'dbname'):
     DB = threading.current_thread().dbname
 
-HOST = '127.0.0.1'
-
 ADMIN_USER = 'admin'
 ADMIN_USER_ID = openerp.SUPERUSER_ID
 ADMIN_PASSWORD = 'admin'
 
-def start_openerp():
-    """
-    Start the OpenERP server similary to the openerp-server script.
-    """
-    openerp.service.start_services()
-
-    # Ugly way to ensure the server is listening.
-    time.sleep(2)
-
-def stop_openerp():
-    """
-    Shutdown the OpenERP server similarly to a single ctrl-c.
-    """
-    openerp.service.stop_services()
+HTTP_SESSION = {}
 
 class BaseCase(unittest2.TestCase):
     """
@@ -116,37 +112,120 @@ class SingleTransactionCase(BaseCase):
         cls.cr.close()
 
 
-class RpcCase(unittest2.TestCase):
-    """
-    Subclass of TestCase with a few XML-RPC proxies.
+class HttpCase(TransactionCase):
+    """ Transactionnal HTTP TestCase with a phantomjs helper.
     """
 
     def __init__(self, methodName='runTest'):
-        super(RpcCase, self).__init__(methodName)
+        super(HttpCase, self).__init__(methodName)
+        # v8 api with correct xmlrpc exception handling.
+        self.xmlrpc_url = url_8 = 'http://%s:%d/xmlrpc/2/' % (HOST, PORT)
+        self.xmlrpc_common = xmlrpclib.ServerProxy(url_8 + 'common')
+        self.xmlrpc_db = xmlrpclib.ServerProxy(url_8 + 'db')
+        self.xmlrpc_object = xmlrpclib.ServerProxy(url_8 + 'object')
 
-        class A(object):
-            pass
-        self.proxy = A()
+    def setUp(self):
+        super(HttpCase, self).setUp()
+        self.session_id = uuid.uuid4().hex
+        HTTP_SESSION[self.session_id] = self.cr
 
-        # Use the old (pre 6.1) API.
-        self.proxy.url_60 = url_60 = 'http://%s:%d/xmlrpc/' % (HOST, PORT)
-        self.proxy.common_60 = xmlrpclib.ServerProxy(url_60 + 'common')
-        self.proxy.db_60 = xmlrpclib.ServerProxy(url_60 + 'db')
-        self.proxy.object_60 = xmlrpclib.ServerProxy(url_60 + 'object')
-        #self.proxy.edi_60 = xmlrpclib.ServerProxy(url_60 + 'edi')
+    def tearDown(self):
+        del HTTP_SESSION[self.session_id]
+        super(HttpCase, self).tearDown()
 
-        # Use the new (8) API.
-        self.proxy.url_8 = url_8 = 'http://%s:%d/xmlrpc/2/' % (HOST, PORT)
-        self.proxy.common_8 = xmlrpclib.ServerProxy(url_8 + 'common')
-        self.proxy.db_8 = xmlrpclib.ServerProxy(url_8 + 'db')
-        self.proxy.object_8 = xmlrpclib.ServerProxy(url_8 + 'object')
+    def phantom_poll(self, phantom, timeout):
+        """ Phantomjs Test protocol.
 
-    @classmethod
-    def generate_database_name(cls):
-        if hasattr(cls, '_database_id'):
-            cls._database_id += 1
-        else:
-            cls._database_id = 0
-        return '_fresh_name_' + str(cls._database_id) + '_'
+        Use console.log in phantomjs to output test results:
+
+        - for a success: console.log("ok")
+        - for an error:  console.log("error")
+
+        Other lines are relayed to the test log.
+
+        """
+        t0 = time.time()
+        buf = ''
+        while 1:
+            # timeout
+            if time.time() > t0 + timeout:
+                raise Exception("phantomjs test timeout (%ss)" % timeout)
+
+            # read a byte
+            ready, _, _ = select.select([phantom.stdout], [], [], 0.5)
+            if ready:
+                s = phantom.stdout.read(1)
+                if s:
+                    buf += s
+                else:
+                    break
+
+            # process lines
+            if '\n' in buf:
+                line, buf = buf.split('\n', 1)
+                _logger.info("phantomjs: %s", line)
+                if line == "ok":
+                    _logger.info("phantomjs test successful")
+                    return
+                if line == "error":
+                    raise Exception("phantomjs test failed")
+
+    def phantom_run(self, cmd, timeout):
+        _logger.info('executing %s', cmd)
+        try:
+            phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        except OSError:
+            _logger.info("phantomjs not found, test %s skipped", jsfile)
+        try:
+            self.phantom_poll(phantom, timeout)
+        finally:
+            # kill phantomjs if phantom.exit() wasn't called in the test
+            if phantom.poll() is None:
+                phantom.terminate()
+
+    def phantom_jsfile(self, jsfile, timeout=30, **kw):
+        options = {
+            'timeout' : timeout,
+            'port': PORT,
+            'db': DB,
+            'session_id': self.session_id,
+        }
+        options.update(kw)
+        phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
+        # phantom.args[0] == phantomtest path
+        # phantom.args[1] == options
+        cmd = ['phantomjs', jsfile, phantomtest, json.dumps(options)]
+        self.phantom_run(cmd, timeout)
+
+    def phantom_js(self, url_path, code, ready="window", timeout=30, **kw):
+        """ Test js code running in the browser
+        - load page given by url_path
+        - wait for ready object to be available
+        - eval(code) inside the page
+
+        To signal success test do:
+        console.log('ok')
+
+        To signal failure do:
+        console.log('error')
+
+        If neither are done before timeout test fails.
+        """
+        options = {
+            'url_path': url_path,
+            'code': code,
+            'ready': ready,
+            'timeout' : timeout,
+            'port': PORT,
+            'db': DB,
+            'login': ADMIN_USER,
+            'password': ADMIN_PASSWORD,
+            'session_id': self.session_id,
+        }
+        options.update(kw)
+        phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
+        cmd = ['phantomjs', phantomtest, json.dumps(options)]
+        self.phantom_run(cmd, timeout)
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
