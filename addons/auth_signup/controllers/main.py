@@ -36,7 +36,10 @@ class AuthSignup(openerp.addons.web.controllers.main.Home):
     def web_login(self, *args, **kw):
         mode = request.params.get('mode')
         qcontext = request.params.copy()
+        super_response = super(AuthSignup, self).web_login(*args, **kw)
         response = webmain.render_bootstrap_template(request.session.db, 'auth_signup.signup', qcontext, lazy=True)
+        if isinstance(super_response, LazyResponse):
+            response.params['values'].update(super_response.params['values'])
         token = qcontext.get('token', None)
         token_infos = None
         if token:
@@ -60,10 +63,9 @@ class AuthSignup(openerp.addons.web.controllers.main.Home):
         qcontext.update(config)
 
         if 'error' in qcontext or mode not in ('reset', 'signup') or (not token and not config[mode]):
-            response = super(AuthSignup, self).web_login(*args, **kw)
-            if isinstance(response, LazyResponse):
-                response.params['values'].update(config)
-            return response
+            if isinstance(super_response, LazyResponse):
+                super_response.params['values'].update(config)
+            return super_response
 
         if request.httprequest.method == 'GET':
             if token_infos:

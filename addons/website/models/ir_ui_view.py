@@ -122,7 +122,7 @@ class view(osv.osv):
         return arch
 
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
-        if request.website_enabled:
+        if getattr(request, 'website_enabled', False):
             engine='website.qweb'
 
             if isinstance(id_or_xml_id, list):
@@ -140,7 +140,6 @@ class view(osv.osv):
                 slug=website.slug,
                 res_company=request.website.company_id,
                 user_id=self.pool.get("res.users").browse(cr, uid, uid),
-                editable=False,
             )
 
             # add some values
