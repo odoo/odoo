@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import fnmatch
 import inspect
 import itertools
 import logging
@@ -7,7 +6,6 @@ import math
 import re
 import urlparse
 
-import simplejson
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.wrappers
@@ -24,24 +22,19 @@ from openerp.addons.web.http import request, LazyResponse
 
 logger = logging.getLogger(__name__)
 
-def keep_query(*args, **kw):
-    if not args and not kw:
-        args = ('*',)
-    params = kw.copy()
-    query_params = frozenset(werkzeug.url_decode(request.httprequest.query_string).keys())
-    for keep_param in args:
-        for param in fnmatch.filter(query_params, keep_param):
-            if param not in params and param in request.params:
-                params[param] = request.params[param]
-    return werkzeug.urls.url_encode(params)
-
 def url_for(path_or_uri, lang=None):
+    if isinstance(path_or_uri, unicode):
+        path_or_uri = path_or_uri.encode('utf-8')
+    current_path = request.httprequest.path
+    if isinstance(current_path, unicode):
+        current_path = current_path.encode('utf-8')
     location = path_or_uri.strip()
     force_lang = lang is not None
     url = urlparse.urlparse(location)
 
     if request and not url.netloc and not url.scheme and (url.path or force_lang):
-        location = urlparse.urljoin(request.httprequest.path, location)
+        location = urlparse.urljoin(current_path, location)
+
         lang = lang or request.context.get('lang')
         langs = [lg[0] for lg in request.website.get_languages()]
 
@@ -59,7 +52,7 @@ def url_for(path_or_uri, lang=None):
                 ps.insert(1, lang)
             location = '/'.join(ps)
 
-    return location
+    return location.decode('utf-8')
 
 def is_multilang_url(path, langs=None):
     if not langs:
@@ -78,7 +71,11 @@ def is_multilang_url(path, langs=None):
 
 def slugify(s, max_length=None):
     if slugify_lib:
-        return slugify_lib.slugify(s, max_length)
+        # There are 2 different libraries only python-slugify is supported
+        try:
+            return slugify_lib.slugify(s, max_length=max_length)
+        except TypeError:
+            pass
     spaceless = re.sub(r'\s+', '-', s)
     specialless = re.sub(r'[^-_A-Za-z0-9]', '', spaceless)
     return specialless[:max_length]
@@ -215,7 +212,6 @@ class website(osv.osv):
 
         request.redirect = lambda url: werkzeug.utils.redirect(url_for(url))
         request.context.update(
-            is_master_lang=is_master_lang,
             editable=is_website_publisher,
             translatable=not is_master_lang,
         )
@@ -228,37 +224,8 @@ class website(osv.osv):
         return self.pool["ir.ui.view"].browse(cr, uid, view_id, context=context)
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
-        user = self.pool.get("res.users")
-        if not context:
-            context = {}
-
-        # Take a context
-        qweb_values = context.copy()
-        # add some values
-        if values:
-            qweb_values.update(values)
-        # fill some defaults
-        qweb_values.update(
-            request=request,
-            json=simplejson,
-            website=request.website,
-            url_for=url_for,
-            keep_query=keep_query,
-            slug=slug,
-            res_company=request.website.company_id,
-            user_id=user.browse(cr, uid, uid),
-            quote_plus=werkzeug.url_quote_plus,
-        )
-        qweb_values.setdefault('editable', False)
-
-        # in edit mode ir.ui.view will tag nodes
-        context['inherit_branding'] = qweb_values['editable']
-
-        view = self.get_template(cr, uid, ids, template)
-
-        if 'main_object' not in qweb_values:
-            qweb_values['main_object'] = view
-        return view.render(qweb_values, engine='website.qweb', context=context)
+        # TODO: remove this. (just kept for backward api compatibility for saas-3)
+        return self.pool['ir.ui.view'].render(cr, uid, template, values=values, context=context)
 
     def render(self, cr, uid, ids, template, values=None, status_code=None, context=None):
         def callback(template, values, context):

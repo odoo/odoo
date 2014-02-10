@@ -163,7 +163,8 @@ class gamification_goal(osv.Model):
             string="Challenge",
             type='many2one',
             relation='gamification.challenge',
-            store=True),
+            store=True, readonly=True,
+            help="Challenge that generated the goal, assign challenge to users to generate goals with a value in this field."),
         'start_date': fields.date('Start Date'),
         'end_date': fields.date('End Date'),  # no start and end = always active
         'target_goal': fields.float('To Reach',

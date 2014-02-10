@@ -10,6 +10,9 @@
 
         if (!is_smartphone) {
             website.ready().then(website.init_editor);
+        } else {
+            // remove padding of fake editor bar
+            document.body.style.padding = 0;
         }
 
         $(document).on('click', 'a.js_link2post', function (ev) {
@@ -411,6 +414,7 @@
                 openerp.jsonRpc('/website/customize_template_get', 'call', { 'xml_id': view_name }).then(
                     function(result) {
                         _.each(result, function (item) {
+                            if (item.xml_id === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
                             if (item.header) {
                                 menu.append('<li class="dropdown-header">' + item.name + '</li>');
                             } else {
@@ -437,6 +441,12 @@
             });
         },
         start: function() {
+            // remove placeholder editor bar
+            var fakebar = document.getElementById('website-top-navbar-placeholder');
+            if (fakebar) {
+                fakebar.parentNode.removeChild(fakebar);
+            }
+
             var self = this;
             this.saving_mutex = new openerp.Mutex();
 
@@ -1073,7 +1083,7 @@
                 } else {
                     // Create the page, get the URL back
                     done = $.get(_.str.sprintf(
-                            '/pagenew/%s?noredirect=1', encodeURI(data.id)))
+                            '/website/add/%s?noredirect=1', encodeURI(data.id)))
                         .then(function (response) {
                             self.make_link(response, false, data.id);
                         });
@@ -1265,7 +1275,7 @@
         }),
 
         start: function () {
-            this.$('.modal-footer [disabled]').text("Uploading…");
+            this.$('button.wait').text("Uploading…");
             var $options = this.$('.image-style').children();
             this.image_styles = $options.map(function () { return this.value; }).get();
 
@@ -1298,13 +1308,16 @@
          * Sets the provided image url as the dialog's value-to-save and
          * refreshes the preview element to use it.
          */
-        set_image: function (url) {
+        set_image: function (url, error) {
+            this.$('input.url').val(
+                error ? '' : url);
             this.$('input.url').val(url);
             this.preview_image();
         },
 
         file_selection: function () {
             this.$el.addClass('nosave');
+            this.$('form').removeClass('has-error').find('.help-block').empty();
             this.$('button.filepicker').removeClass('btn-danger btn-success');
 
             var self = this;
@@ -1319,25 +1332,38 @@
         },
         file_selected: function(url, error) {
             var $button = this.$('button.filepicker');
-            if (error) {
+            if (!error) {
+                $button.addClass('btn-success');
+            } else {
+                url = null;
+                this.$('form').addClass('has-error')
+                    .find('.help-block').text(error);
                 $button.addClass('btn-danger');
-                return;
             }
-            $button.addClass('btn-success');
-            this.set_image(url);
+            this.set_image(url, error);
         },
         preview_image: function () {
-            this.$el.removeClass('nosave');
+            var loaded = function () {
+                this.$el.removeClass('nosave');
+            }.bind(this);
             var image = this.$('input.url').val();
-            if (!image) { return; }
+            if (!image) { loaded(); return; }
 
-            this.$('img.image-preview')
+            var $img = this.$('img.image-preview')
                 .attr('src', image)
                 .removeClass(this.image_styles.join(' '))
                 .addClass(this.$('select.image-style').val());
+
+            if ($img.prop('complete')) {
+                loaded();
+            } else {
+                $img.load(loaded)
+            }
         },
         browse_existing: function (e) {
             e.preventDefault();
+            this.$('form').removeClass('has-error').find('.help-block').empty();
+            this.$('button.filepicker').removeClass('btn-danger btn-success');
             new website.editor.ExistingImageDialog(this).appendTo(document.body);
         },
     });
