@@ -1,3 +1,6 @@
+//global vars.
+var disqus_identifier;
+
 (function($) {
     var settings = {};
     $.fn.extend({
@@ -87,6 +90,8 @@
 
     var loadDisqus = function(data, source, callback) {
         var identifier = source.attr('data-disqus-identifier');
+        $('a[data-disqus-identifier="'+disqus_identifier+'"]').popover('destroy')
+        disqus_identifier = identifier;
         var elt = $('a[data-disqus-identifier="'+identifier+'"]');
         elt.append('\
             <div class="mycontent hidden">\
@@ -131,6 +136,7 @@
     };
 
     var hideDisqussion = function() {
+        $('a[data-disqus-identifier="'+disqus_identifier+'"]').popover('destroy');
         $('a.disqussion-link').removeClass('active');
     };
   
