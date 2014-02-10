@@ -859,9 +859,8 @@ class stock_picking(osv.osv):
             todo = []
             for move in pick.move_lines:
                 if move.state == 'draft':
-                    self.pool.get('stock.move').action_confirm(cr, uid, [move.id],
-                        context=context)
-                    todo.append(move.id)
+                    todo.extend(self.pool.get('stock.move').action_confirm(cr, uid, [move.id],
+                        context=context))
                 elif move.state in ('assigned', 'confirmed'):
                     todo.append(move.id)
             if len(todo):
@@ -907,8 +906,7 @@ class stock_picking(osv.osv):
             move_obj.write(cr, uid, backorder_move_ids, {'picking_id': backorder_id}, context=context)
 
             self.write(cr, uid, [picking.id], {'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
-            self.action_confirm(cr, uid, [backorder_id], context=context)
-            return backorder_id
+            return self.action_confirm(cr, uid, [backorder_id], context=context)
         return False
 
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
@@ -1096,7 +1094,7 @@ class stock_picking(osv.osv):
                         new_move = stock_move_obj.split(cr, uid, move, move.remaining_qty, context=context)
                         todo_move_ids.append(move.id)
                         #Assign move as it was assigned before
-                        toassign_move_ids.append(new_move)
+                        toassign_move_ids.extend(new_move)
                     elif move.state:
                         #this should never happens
                         raise
@@ -1797,7 +1795,7 @@ class stock_move(osv.osv):
                             self._create_procurement(cr, uid, move, context=context)
         moves = self.browse(cr, uid, ids, context=context)
         self._push_apply(cr, uid, moves, context=context)
-        return True
+        return ids
 
     def force_assign(self, cr, uid, ids, context=None):
         """ Changes the state to assigned.
@@ -1901,7 +1899,7 @@ class stock_move(osv.osv):
         pack_op_obj = self.pool.get("stock.pack.operation")
         todo = [move.id for move in self.browse(cr, uid, ids, context=context) if move.state == "draft"]
         if todo:
-            self.action_confirm(cr, uid, todo, context=context)
+            ids = self.action_confirm(cr, uid, todo, context=context)
 
         pickings = set()
         procurement_ids = []
@@ -2054,8 +2052,7 @@ class stock_move(osv.osv):
             new_move_prop = self.split(cr, uid, move.move_dest_id, qty, context=context)
             self.write(cr, uid, [new_move], {'move_dest_id': new_move_prop}, context=context)
 
-        self.action_confirm(cr, uid, [new_move], context=context)
-        return new_move
+        return self.action_confirm(cr, uid, [new_move], context=context)
 
 
 class stock_inventory(osv.osv):
@@ -3101,8 +3098,7 @@ class stock_location_path(osv.osv):
             move_obj.write(cr, uid, [move.id], {
                 'move_dest_id': move_id,
             })
-            move_obj.action_confirm(cr, uid, [move_id], context=None)
-            return move_id
+            return move_obj.action_confirm(cr, uid, [move_id], context=None)
 
 class stock_move_putaway(osv.osv):
     _name = 'stock.move.putaway'

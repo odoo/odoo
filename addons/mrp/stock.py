@@ -49,6 +49,14 @@ class StockMove(osv.osv):
         if move.raw_material_production_id and move.location_dest_id.usage == 'production' and move.raw_material_production_id.product_id.track_production and not move.consumed_for:
             raise osv.except_osv(_('Warning!'), _("Because the product %s requires it, you must assign a serial number to your raw material %s to proceed further in your production. Please use the 'Produce' button to do so.") % (move.raw_material_production_id.product_id.name, move.product_id.name))
 
+    def _check_phantom_bom(self, cr, uid, move, context=None):
+        """check if product associated to move has a phantom bom
+            return list of ids of mrp.bom for that product """
+        return self.pool.get('mrp.bom').search(cr, uid, [
+            ('product_id', '=', move.product_id.id),
+            ('bom_id', '=', False),
+            ('type', '=', 'phantom')])
+
     def _action_explode(self, cr, uid, move, context=None):
         """ Explodes pickings.
         @param move: Stock moves
@@ -59,10 +67,7 @@ class StockMove(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         product_obj = self.pool.get('product.product')
         processed_ids = []
-        bis = bom_obj.search(cr, uid, [
-            ('product_id', '=', move.product_id.id),
-            ('bom_id', '=', False),
-            ('type', '=', 'phantom')])
+        bis = self._check_phantom_bom(cr, uid, move, context=context)
         if bis:
             factor = move.product_qty
             bom_point = bom_obj.browse(cr, uid, bis[0], context=context)
@@ -85,25 +90,31 @@ class StockMove(osv.osv):
                 processed_ids.append(mid)
 
             move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)
-            #confirm all new confirm moves
-            move_obj.action_confirm(cr, uid, processed_ids, context=context)
-        return processed_ids
+            #check if new moves needs to be exploded
+            if processed_ids:
+                for new_move in self.browse(cr, uid, processed_ids, context=context):
+                    exploded_ids = self._action_explode(cr, uid, new_move, context=context)
+                    if not (len(exploded_ids)==1 and exploded_ids[0]==new_move.id):
+                        #we have some exploded move, delete parent move and add new moves
+                        #to the list of processed ones
+                        processed_ids.remove(move.id)
+                        processed_ids.extend(exploded_ids)
+        #return list of newly created move or the move id otherwise
+        return processed_ids or [move.id]
 
     def action_confirm(self, cr, uid, ids, context=None):
-        move_exploded = []
+        move_ids = []
         for move in self.browse(cr, uid, ids, context=context):
             #in order to explode a move, we must have a picking_id on that move!
             #if action_explode return a list of new move, it means it has exploded
             #and that original move has been deleted, so we should remove that id 
             #from super call to prevent problem
-            move_id = move.id
-            if move.picking_type_id and self._action_explode(cr, uid, move, context=context):
-                move_exploded.append(move_id)
-        #if no more id, don't call super
-        move_unexploded = list(set(ids)-set(move_exploded))
-        if not len(move_unexploded):
-            return True
-        return super(StockMove, self).action_confirm(cr, uid, move_unexploded, context=context)
+            if move.picking_type_id:
+                move_ids.extend(self._action_explode(cr, uid, move, context=context))
+            else:
+                move_ids.append(move.id)
+
+        return super(StockMove, self).action_confirm(cr, uid, move_ids, context=context)
 
     def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id=False, restrict_partner_id=False,
                        consumed_for=False, context=None):
