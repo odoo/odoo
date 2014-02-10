@@ -222,6 +222,34 @@
 </template>
 
 <template id="editor_head" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher">
+    <xpath expr="//body" position="attributes">
+        <attribute name="style">padding-top: 51px;</attribute>
+    </xpath>
+    <xpath expr="//body/*[1]" position="before">
+        <div id="website-top-navbar-placeholder" class="navbar navbar-inverse navbar-fixed-top hidden-xs">
+            <div class="navbar-header">
+                <form class="navbar-form navbar-left">
+                    <button type="button" class="btn btn-primary">Edit</button>
+                </form>
+            </div>
+            <div class="collapse navbar-collapse navbar-edit-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" onclick="return false;"><i class="fa fa-mobile" title="Mobile preview"/></a></li>
+                    <li class="divider-vertical"/>
+                    <li><a href="#" onclick="return false;"><span title="Promote page on the web">Promote</span></a></li>
+                    <li class="dropdown">
+                        <a href="#" onclick="return false;">Content <span class="caret"/></a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" onclick="return false;">Customize <span class="caret"/></a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" onclick="return false;">Help <span class="caret"/></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </xpath>
     <xpath expr='//t[@name="layout_head"]' position="before">
         <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
         <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
@@ -254,6 +282,13 @@
         <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
         <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
         <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
+    </xpath>
+</template>
+
+<template id="debugger" inherit_option_id="website.layout" name="Debugger &amp; Tests">
+    <xpath expr='//t[@name="layout_head"]' position="after">
+        <script type="text/javascript" src="/website/static/src/js/website.tour.test.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.tour.test.admin.js"></script>
     </xpath>
 </template>
 
