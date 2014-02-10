@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import commands
 import logging
 import simplejson
 import os
@@ -52,6 +53,7 @@ class EscposDriver(Thread):
     def lockedstart(self):
         self.lock.acquire()
         if not self.isAlive():
+            self.daemon = True
             self.start()
         self.lock.release()
     
@@ -112,6 +114,8 @@ class EscposDriver(Thread):
                 elif task == 'cashbox':
                     if timestamp >= time.time() - 12:
                         self.open_cashbox(printer)
+                elif task == 'printstatus':
+                    self.print_status(printer)
                 elif task == 'status':
                     pass
 
@@ -122,6 +126,28 @@ class EscposDriver(Thread):
     def push_task(self,task, data = None):
         self.lockedstart()
         self.queue.put((time.time(),task,data))
+
+    def print_status(self,eprint):
+        localips = ['0.0.0.0','127.0.0.1','127.0.1.1']
+        ips =  [ c.split(':')[1].split(' ')[0] for c in commands.getoutput("/sbin/ifconfig").split('\n') if 'inet addr' in c ]
+        ips =  [ ip for ip in ips if ip not in localips ] 
+        eprint.text('\n\n')
+        eprint.set(align='center',type='b',height=2,width=2)
+        eprint.text('PosBox Status\n')
+        eprint.text('\n')
+        eprint.set(align='center')
+
+        if len(ips) == 0:
+            eprint.text('ERROR: Could not connect to LAN\n\nPlease check that the PosBox is correc-\ntly connected with a network cable,\n that the LAN is setup with DHCP, and\nthat network addresses are available')
+        elif len(ips) == 1:
+            eprint.text('IP Address\n'+ips[0]+'\n')
+        else:
+            eprint.text('IP Addresses\n')
+            for ip in ips:
+                eprint.text(ip+'\n')
+
+        eprint.text('\n\n')
+        eprint.cut()
 
     def print_receipt_body(self,eprint,receipt):
 
@@ -139,7 +165,6 @@ class EscposDriver(Thread):
                 return ("{0:."+str(receipt['precision']['quantity'])+"f}").format(amount)
             else:
                 return str(amount)
-
 
         def printline(left, right='', width=40, ratio=0.5, indent=0):
             lwidth = int(width * ratio) 
@@ -252,6 +277,8 @@ class EscposDriver(Thread):
 driver = EscposDriver()
 
 hw_proxy.drivers['escpos'] = driver
+
+driver.push_task('printstatus')
         
 class EscposProxy(hw_proxy.Proxy):
     
