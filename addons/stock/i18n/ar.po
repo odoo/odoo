@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-06 15:56+0000\n"
-"PO-Revision-Date: 2014-02-03 05:50+0000\n"
-"Last-Translator: Mohamed M. Hagag <Unknown>\n"
+"PO-Revision-Date: 2014-02-08 17:20+0000\n"
+"Last-Translator: h.hagag <h.hagag@dvit.me>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-07 07:10+0000\n"
+"X-Launchpad-Export-Date: 2014-02-09 06:52+0000\n"
 "X-Generator: Launchpad (build 16916)\n"
 
 #. module: stock
@@ -24,7 +24,7 @@ msgstr ""
 #: field:stock.move.split,line_exist_ids:0
 #: field:stock.move.split,line_ids:0
 msgid "Serial Numbers"
-msgstr "الأرقام المسلسلة"
+msgstr "الارقام التسلسلية"
 
 #. module: stock
 #: help:stock.config.settings,group_product_variant:0
@@ -33,11 +33,14 @@ msgid ""
 "Shirts, for the same \"Linux T-Shirt\", you may have variants on  sizes or "
 "colors; S, M, L, XL, XXL."
 msgstr ""
+"السماح لإدارة العديد من المتغيرات في المنتج. على سبيل المثال، إذا كنت تبيع "
+"تي شيرت، لنفس \"لينكس تي شيرت\"، قد يكون لديك متغيرات على الأحجام أو "
+"الألوان؛ S، M، L، XL، XXL"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
 msgid "Stock move Split lines"
-msgstr ""
+msgstr "خطوط تقسيم حركات المخزون"
 
 #. module: stock
 #: help:product.category,property_stock_account_input_categ:0
@@ -48,6 +51,10 @@ msgid ""
 "value for all products in this category. It can also directly be set on each "
 "product"
 msgstr ""
+"عند اتمام التقييم للجرد فى الوقت الحقيقى , فان عناصر اليومية المناظرة لجميع "
+"حركات المخزن الواردة سيتم نشرها فى هذا الحساب الا اذا كان هناك حساب تقييمى "
+"محدد تم تعيينه على مكان المصدر.هذه هى القيمه الافتراضية لجميع المنتجات فى "
+"هذه الفئة. ويمكن ايضا تعيينها مباشرة على كل منتج"
 
 #. module: stock
 #: view:stock.picking.out:0
@@ -89,13 +96,13 @@ msgstr "تاريخ التحويل"
 #. module: stock
 #: field:product.product,track_outgoing:0
 msgid "Track Outgoing Lots"
-msgstr "متابعة الحزم الخارجة"
+msgstr "تتبع الطلبيات الصادرة"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
 #: model:ir.ui.menu,name:stock.menu_report_stock_line_date
 msgid "Last Product Inventories"
-msgstr "مخزونات اخر منتج"
+msgstr "قوائم جرد المنتجات الاخيرة"
 
 #. module: stock
 #: view:stock.move:0
@@ -110,7 +117,7 @@ msgstr "عدد المراجعة"
 #. module: stock
 #: view:stock.move:0
 msgid "Orders processed Today or planned for Today"
-msgstr ""
+msgstr "الاوامر المعدة لليوم او المخططة لليوم"
 
 #. module: stock
 #: view:stock.partial.move.line:0
@@ -126,7 +133,7 @@ msgstr "حركة الصنف"
 #: code:addons/stock/stock.py:2629
 #, python-format
 msgid "Please provide proper quantity."
-msgstr ""
+msgstr "يرجى توفير الكمية المناسبة"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
@@ -138,13 +145,14 @@ msgstr "مراقبة المخزون"
 msgid ""
 "Internal reference number in case it differs from the manufacturer's serial "
 "number"
-msgstr "رقم المرجع الاولي في حالة اختلافها من رقم التسلسل للتصنيع"
+msgstr ""
+"الرقم التسلسل الداخلي \"إذا كان مختلف عن رقم التسلسل الخاص بالمُصنِع\""
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:63
 #, python-format
 msgid "You cannot perform this operation on more than one Stock Inventories."
-msgstr "لا يمكنك اداء هذه العملية على اكثر من مخزونات المخزون الواحد."
+msgstr "لا يمكن أداء العملية على أكثر من مخزن واحد."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:95
@@ -221,19 +229,19 @@ msgstr "الوارد"
 #: code:addons/stock/wizard/stock_move.py:223
 #, python-format
 msgid "Unable to assign all lots to this move!"
-msgstr ""
+msgstr "لا يمكن اضافة كل الطلبيات الى هذه الحركة"
 
 #. module: stock
 #: help:stock.move,partner_id:0
 msgid ""
 "Optional address where goods are to be delivered, specifically used for "
 "allotment"
-msgstr "عنوان اختياري اينما تُسلم السلع, بالتحديد المستخدم للتخصيص"
+msgstr "عنوان تسليم البضائع، يستخدم في حالة التوزيع (إختياري)."
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_partial_move_server
 msgid "Deliver/Receive Products"
-msgstr "تسليم/المنتجات المستلمة"
+msgstr "تسليم/استلام الاصناف"
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
@@ -245,18 +253,18 @@ msgstr "لا يمكنك حذف اي تسجيل!"
 #. module: stock
 #: view:stock.picking:0
 msgid "Delivery orders to invoice"
-msgstr ""
+msgstr "اوامر التسليم الى فاتورة"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Assigned Delivery Orders"
-msgstr ""
+msgstr "أوامر التسليم"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_standard_price.py:107
 #, python-format
 msgid "Active ID is not set in Context."
-msgstr ""
+msgstr "لم يتم تعيين رقم التعريف النشط فى السياق"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
@@ -275,7 +283,7 @@ msgstr ""
 #. module: stock
 #: help:stock.tracking,serial:0
 msgid "Other reference or serial number"
-msgstr "مرجع اخر او رقم التسلسل"
+msgstr "مرجع او رقم مسلسل آخر"
 
 #. module: stock
 #: view:stock.move:0

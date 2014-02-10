@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-06 15:56+0000\n"
-"PO-Revision-Date: 2014-02-04 09:10+0000\n"
-"Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
+"PO-Revision-Date: 2014-02-09 15:58+0000\n"
+"Last-Translator: Yoshi Tashiro <yostashiro@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-07 07:11+0000\n"
+"X-Launchpad-Export-Date: 2014-02-10 05:53+0000\n"
 "X-Generator: Launchpad (build 16916)\n"
 
 #. module: stock
@@ -503,7 +503,7 @@ msgstr "入荷待ち"
 #: view:stock.production.lot:0
 #: field:stock.production.lot,stock_available:0
 msgid "Available"
-msgstr "出荷可能"
+msgstr "処理可能"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1219,7 +1219,7 @@ msgstr ""
 #. module: stock
 #: view:stock.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "適用"
 
 #. module: stock
 #: field:product.template,loc_row:0
@@ -1406,9 +1406,9 @@ msgid ""
 msgstr ""
 "* 新規：在庫移動が作成されて、まだ確認されていない場合です。\n"
 "* 別の移動待ち：この状態は連鎖フローのような別の移動を待つ場合を表します。\n"
-"* 利用可能待ち：部品の製造やスケジューラの実行が必要で調達の解決策が単純でない場合、この状態になります。\n"
+"* 利用可能待ち：調達の解決が単純でない状態です。その場合は構成部品の製造やスケジューラの実行が必要になります。\n"
 "* 利用可能：製品が確保されると「利用可能」に設定されます。\n"
-"* 完了：出荷が処理されると状態は「完了」になります。"
+"* 完了：出荷が処理されると「完了」状態になります。"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_partner
@@ -2112,7 +2112,7 @@ msgstr "ロット番号"
 #: model:ir.actions.act_window,name:stock.action_deliver_move
 #: view:product.product:0
 msgid "Deliveries"
-msgstr ""
+msgstr "配送"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_reception_picking_move
@@ -2416,7 +2416,7 @@ msgstr "出荷タイプの定義、商品は入ってくるのか出て行くの
 #. module: stock
 #: view:stock.config.settings:0
 msgid "Accounting"
-msgstr ""
+msgstr "会計"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
@@ -4704,13 +4704,13 @@ msgstr ""
 #. module: stock
 #: view:stock.picking.out:0
 msgid "Deliver"
-msgstr ""
+msgstr "配送"
 
 #. module: stock
 #: view:product.product:0
 #: field:product.product,delivery_count:0
 msgid "Delivery"
-msgstr ""
+msgstr "配送"
 
 #. module: stock
 #: view:stock.fill.inventory:0
