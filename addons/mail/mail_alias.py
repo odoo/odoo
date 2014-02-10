@@ -205,7 +205,7 @@ class mail_alias(osv.Model):
             alias_vals['alias_parent_thread_id'] = obj_data['id']
             alias_create_ctx = dict(context, alias_model_name=alias_model_name, alias_parent_model_name=child_model_name)
             alias_id = mail_alias.create(cr, SUPERUSER_ID, alias_vals, context=alias_create_ctx)
-            child_class_model.write(cr, SUPERUSER_ID, obj_data['id'], {'alias_id': alias_id})
+            child_class_model.write(cr, SUPERUSER_ID, obj_data['id'], {'alias_id': alias_id}, context={'mail_notrack': True})
             _logger.info('Mail alias created for %s %s (id %s)', child_model_name, obj_data[alias_key], obj_data['id'])
 
         # Finally attempt to reinstate the missing constraint
