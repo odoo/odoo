@@ -111,7 +111,7 @@ class stock_location(osv.osv):
         'parent_right': fields.integer('Right Parent', select=1),
 
         'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared between all companies'),
-        'scrap_location': fields.boolean('Scrap Location', help='Check this box to allow using this location to put scrapped/damaged goods.'),
+        'scrap_location': fields.boolean('Is a Scrap Location', help='Check this box to allow using this location to put scrapped/damaged goods.'),
         'removal_strategy_ids': fields.one2many('product.removal', 'location_id', 'Removal Strategies'),
         'putaway_strategy_ids': fields.one2many('product.putaway', 'location_id', 'Put Away Strategies'),
     }
@@ -2415,7 +2415,7 @@ class stock_warehouse(osv.osv):
     _description = "Warehouse"
 
     _columns = {
-        'name': fields.char('Name', size=128, required=True, select=True),
+        'name': fields.char('Warehouse Name', size=128, required=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
         'partner_id': fields.many2one('res.partner', 'Address'),
         'view_location_id': fields.many2one('stock.location', 'View Location', required=True, domain=[('usage', '=', 'view')]),

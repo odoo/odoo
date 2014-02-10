@@ -6,12 +6,9 @@ class stock_picking_wave(osv.osv):
     _name = "stock.picking.wave"
     _order = "name desc"
     _columns = {
-        'name': fields.char('name', required=True, help='Name of the picking wave'),
+        'name': fields.char('Picking wave name', required=True, help='Name of the picking wave'),
         'user_id': fields.many2one('res.users', 'Responsible', help='Person responsible for this wave'),
-        'time': fields.float('Time', help='Time it will take to perform the wave'),
         'picking_ids': fields.one2many('stock.picking', 'wave_id', 'Pickings', help='List of picking associated to this wave'),
-        'capacity': fields.float('Capacity', help='The capacity of the transport used to get the goods'),
-        'capacity_uom': fields.many2one('product.uom', 'Unit of Measure', help='The Unity Of Measure of the transport capacity'),
         'state': fields.selection([('draft', 'Draft'), ('in_progress', 'Running'), ('done', 'Done'), ('cancel', 'Cancelled')], required=True),
     }
 

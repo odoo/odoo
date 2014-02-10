@@ -8,7 +8,6 @@
             <field name="model">stock.move.scrap</field>
             <field name="arch" type="xml">
                 <form string="Scrap Move" version="7.0">
-                    <separator string="Scrap Products"/>
                     <group>
                         <field name="product_id"  readonly="1"/>
                         <label for="product_qty"/>
@@ -22,7 +21,7 @@
                             domain="[('usage','!=','view'),('scrap_location','=',True)]" groups="stock.group_locations"/>
                     </group>
                     <footer>
-                        <button name="move_scrap" string="Ok" type="object" class="oe_highlight"  />
+                        <button name="move_scrap" string="Scrap Products" type="object" class="oe_highlight"  />
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
