@@ -11,7 +11,7 @@ import psycopg2
 import unittest2
 
 import openerp
-import common
+from openerp.tests import common
 
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID

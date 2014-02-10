@@ -1,6 +1,6 @@
 from collections import defaultdict
 from openerp.tools import mute_logger
-import common
+from openerp.tests import common
 
 UID = common.ADMIN_USER_ID
 DB = common.DB

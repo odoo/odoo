@@ -3,7 +3,7 @@ from openerp import BaseModel
 from openerp import SUPERUSER_ID, scope
 from openerp.tools import mute_logger
 from openerp.osv.orm import except_orm
-import common
+from openerp.tests import common
 
 
 class TestAPI(common.TransactionCase):

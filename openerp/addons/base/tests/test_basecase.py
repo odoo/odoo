@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest2
 
-import common
+from openerp.tests import common
 
 class test_single_transaction_case(common.SingleTransactionCase):
     """

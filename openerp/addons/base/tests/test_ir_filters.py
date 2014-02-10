@@ -2,7 +2,7 @@
 import functools
 
 from openerp import exceptions
-from . import common
+from openerp.tests import common
 
 def noid(d):
     """ Removes `id` key from a dict so we don't have to keep these things

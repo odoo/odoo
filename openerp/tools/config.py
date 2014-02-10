@@ -157,7 +157,7 @@ class configmanager(object):
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
         group.add_option("--test-file", dest="test_file", my_default=False,
-                         help="Launch a YML test file.")
+                         help="Launch a python or YML test file.")
         group.add_option("--test-report-directory", dest="test_report_directory", my_default=False,
                          help="If set, will save sample of all reports in this directory.")
         group.add_option("--test-enable", action="store_true", dest="test_enable",

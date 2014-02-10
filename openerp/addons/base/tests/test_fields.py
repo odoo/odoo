@@ -1,10 +1,8 @@
 #
 # test cases for related fields, etc.
 #
-
 from openerp.osv import fields
 from openerp.tests import common
-
 
 class TestRelatedField(common.TransactionCase):
 
