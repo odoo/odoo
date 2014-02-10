@@ -97,22 +97,18 @@ class hr_job(osv.osv):
     _inherit = ['mail.thread','ir.needaction_mixin']
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
-        # TO CLEAN: when doing a cleaning, we should change like this:
-        #   no_of_recruitment: a function field
-        #   expected_employees: float
-        # This would allow a clean update when creating new employees.
         'expected_employees': fields.function(_no_of_employee, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
             store = {
                 'hr.job': (lambda self,cr,uid,ids,c=None: ids, ['no_of_recruitment'], 10),
                 'hr.employee': (_get_job_position, ['job_id'], 10),
-            },
+            }, type='integer',
             multi='no_of_employee'),
         'no_of_employee': fields.function(_no_of_employee, string="Current Number of Employees",
             help='Number of employees currently occupying this job position.',
             store = {
                 'hr.employee': (_get_job_position, ['job_id'], 10),
-            },
+            }, type='integer',
             multi='no_of_employee'),
         'no_of_recruitment': fields.float('Expected New Employees', help='Number of new employees you expect to recruit.'),
         'no_of_hired_employee':fields.float('Hired Employees', help='Number of hired employees for this job position during recruitment phase.'),
@@ -124,9 +120,11 @@ class hr_job(osv.osv):
         'state': fields.selection([('open', 'No Recruitment'), ('recruit', 'Recruitment in Progress')], 'Status', readonly=True, required=True,
             help="By default 'In position', set it to 'In Recruitment' if recruitment process is going on for this job position."),
         'color': fields.integer('Color Index'),
+        'write_date': fields.datetime('Update Date', readonly=True),
     }
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=c),
+        'no_of_recruitment': 0,
         'state': 'open',
     }
 
@@ -353,12 +351,57 @@ class hr_employee(osv.osv):
 
 
 class hr_department(osv.osv):
-    _description = "Department"
-    _inherit = 'hr.department'
+
+    def _dept_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
+
+    _name = "hr.department"
     _columns = {
+        'name': fields.char('Department Name', size=64, required=True),
+        'complete_name': fields.function(_dept_name_get_fnc, type="char", string='Name'),
+        'company_id': fields.many2one('res.company', 'Company', select=True, required=False),
+        'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),
+        'child_ids': fields.one2many('hr.department', 'parent_id', 'Child Departments'),
         'manager_id': fields.many2one('hr.employee', 'Manager'),
         'member_ids': fields.one2many('hr.employee', 'department_id', 'Members', readonly=True),
+        'jobs_ids': fields.one2many('hr.job', 'department_id', 'Jobs'),
+        'note': fields.text('Note'),
     }
+
+    _defaults = {
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.department', context=c),
+    }
+
+    def _check_recursion(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        level = 100
+        while len(ids):
+            cr.execute('select distinct parent_id from hr_department where id IN %s',(tuple(ids),))
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+
+    _constraints = [
+        (_check_recursion, 'Error! You cannot create recursive departments.', ['parent_id'])
+    ]
+
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if not ids:
+            return []
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name = record['parent_id'][1]+' / '+name
+            res.append((record['id'], name))
+        return res
 
     def copy(self, cr, uid, ids, default=None, context=None):
         if default is None:
@@ -367,6 +410,7 @@ class hr_department(osv.osv):
         default['member_ids'] = []
         return super(hr_department, self).copy(cr, uid, ids, default, context=context)
 
+
 class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
@@ -374,7 +418,6 @@ class res_users(osv.osv):
     _columns = {
         'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
     }
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

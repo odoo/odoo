@@ -43,6 +43,8 @@
                                         <field name="trg_date_range" class="oe_inline"/>
                                         <field name="trg_date_range_type" class="oe_inline" attrs="{'required': [('trg_date_id','!=',False)]}"/>
                                     </div>
+                                    <field name="trg_date_calendar_id" class="oe_inline"
+                                        attrs="{'invisible': ['|', ('trg_date_id','=',False), ('trg_date_range_type', '!=', 'day')]}"/>
                                 </group>
                                 <p>
                                     Select when the action must be run, and add filters and/or timing conditions.

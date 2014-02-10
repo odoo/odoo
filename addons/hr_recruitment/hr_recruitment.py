@@ -302,7 +302,7 @@ class hr_applicant(osv.Model):
         if applicant.department_id and applicant.department_id.manager_id and applicant.department_id.manager_id.user_id and applicant.department_id.manager_id.user_id.partner_id:
             applicant_ids.append(applicant.department_id.manager_id.user_id.partner_id.id)
         category = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'categ_meet_interview', context)
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
         res['context'] = {
             'default_partner_ids': applicant_ids,
             'default_user_id': uid,
@@ -504,10 +504,16 @@ class hr_job(osv.osv):
         'manager_id': fields.related('department_id', 'manager_id', type='many2one', string='Department Manager', relation='hr.employee', readonly=True, store=True),
         'document_ids': fields.function(_get_attached_docs, method=True, type='one2many', relation='ir.attachment', string='Applications'),
         'user_id': fields.many2one('res.users', 'Recruitment Responsible', track_visibility='onchange'),
+        'address_id': fields.many2one('res.partner', 'Job Location', help="Address where employees are working"),
     }
 
+    def _address_get(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return user.company_id.partner_id.id
+
     _defaults = {
-        'alias_name':lambda self,cr,uid,c: self.pool.get('hr.config.settings').get_default_alias_prefix(cr,uid,uid,c)['alias_prefix']
+        'alias_name':lambda self,cr,uid,c: self.pool.get('hr.config.settings').get_default_alias_prefix(cr,uid,uid,c)['alias_prefix'],
+        'address_id': _address_get
     }
 
     def _auto_init(self, cr, context=None):

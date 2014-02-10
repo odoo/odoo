@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'CRM Geolocation',
+    'name': 'Partner Assignation & Geolocation',
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'description': """
@@ -34,8 +34,7 @@ Once the coordinates of the Lead/Opportunity is known, they can be automatically
 to an appropriate local partner, based on the distance and the weight that was assigned to the partner.
     """,
     'author': 'OpenERP SA',
-    'depends': ['crm', 'account', 'portal'],
-    'demo': ['res_partner_demo.xml', 'crm_lead_demo.xml'],
+    'depends': ['base_geolocalize', 'crm', 'account', 'portal'],
     'data': [
         'security/ir.model.access.csv',
         'res_partner_view.xml',
@@ -47,6 +46,10 @@ to an appropriate local partner, based on the distance and the weight that was a
         'portal_data.xml',
         'report/crm_lead_report_view.xml',
         'report/crm_partner_report_view.xml',
+    ],
+    'demo': [
+        'res_partner_demo.xml',
+        'crm_lead_demo.xml'
     ],
     'js': [
         'static/src/js/next.js',
