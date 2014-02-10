@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-12 06:07+0000\n"
-"X-Generator: Launchpad (build 16761)\n"
+"X-Launchpad-Export-Date: 2014-01-28 06:23+0000\n"
+"X-Generator: Launchpad (build 16914)\n"
 
 #. module: survey
 #: view:survey.response.line:0
@@ -47,7 +47,7 @@ msgstr "Karakter Kontrolü"
 #. module: survey
 #: view:survey:0
 msgid "Answers:"
-msgstr "Cevaplar:"
+msgstr "Yanıtlar:"
 
 #. module: survey
 #: view:survey:0
@@ -190,7 +190,7 @@ msgstr ""
 #. module: survey
 #: field:survey.question,tot_resp:0
 msgid "Total Answer"
-msgstr "Toplam Cevap"
+msgstr "Toplam Yanıt"
 
 #. module: survey
 #: field:survey.tbl.column.heading,name:0
@@ -216,7 +216,7 @@ msgstr ""
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Matrix of Choices (Only One Answers Per Row)"
-msgstr "Seçenekler Matrisi (Satır başına bir cevap)"
+msgstr "Seçenekler Matrisi (Satır Başına Bir Yanıt)"
 
 #. module: survey
 #: view:survey.send.invitation:0
@@ -301,7 +301,7 @@ msgstr "Aşağıdaki anketler açık durumda değildir: %s"
 #. module: survey
 #: field:survey,tot_comp_survey:0
 msgid "Total Completed Survey"
-msgstr "Toplam Cevaplanan Anket"
+msgstr "Tamamlanan Anket Toplamı"
 
 #. module: survey
 #: view:survey.response.answer:0
@@ -332,7 +332,8 @@ msgid ""
 "This survey has no question defined. Please define the questions and answers "
 "first."
 msgstr ""
-"Bu anket tanımlanmış soru vardır.Sorular ve cevaplar tanımlamak Lütfenilk."
+"Bu ankette tanımlanmış soru yok. Lütfen önce soruları ve yanıtları "
+"tanımlayın."
 
 #. module: survey
 #: field:survey.question,comment_field_type:0
@@ -388,7 +389,7 @@ msgstr "Menü Seçeneği"
 msgid ""
 "You must enter one or more menu choices                                 in "
 "column heading."
-msgstr ""
+msgstr "Sütun başlığına bir ya da daha çok menü seçeneği girmelisiniz."
 
 #. module: survey
 #: selection:survey.question,required_type:0
@@ -404,7 +405,7 @@ msgstr "Anketlerim"
 #. module: survey
 #: view:survey.response.line:0
 msgid "Survey Answer Line"
-msgstr "Anket Cevap Satırı"
+msgstr "Anket Yanıt Satırı"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_send_invitation.py:72
@@ -428,6 +429,23 @@ msgid ""
 "\n"
 "Thanks,"
 msgstr ""
+"\n"
+"Sayın %%(name)s, \n"
+"\n"
+"\n"
+"Araştırmamızı doldurmak için biraz zaman ayırmanızı rica ediyoruz: \n"
+"%s\n"
+"\n"
+"Bu araştırmaya aşağıdaki parametrelerden erişebilirsiniz:\n"
+" URL: %s\n"
+" Kullanıcı kimliğiniz: %%(login)s\n"
+"\n"
+" Parolanız: %%(passwd)s\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"Teşekkürler,"
 
 #. module: survey
 #: field:survey.response.line,single_text:0
@@ -597,7 +615,7 @@ msgstr "İş Ortak Seç"
 #: code:addons/survey/survey.py:527
 #, python-format
 msgid "Maximum Required Answer is greater than Minimum Required Answer."
-msgstr "Maksimum Gerekli Cevap Minimum Gerekli cevap daha büyüktür."
+msgstr "Ençok Gerekli Yanıt Enaz Gerekli Yanıttan daha büyüktür."
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_reporting
@@ -607,7 +625,7 @@ msgstr "Raporlama"
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_answer
 msgid "Answers"
-msgstr "Cevaplar"
+msgstr "Yanıtlar"
 
 #. module: survey
 #: selection:survey.response,response_type:0
@@ -639,7 +657,7 @@ msgstr "Menü seçeneği görünmez olacak mı?"
 #. module: survey
 #: field:survey.question,minimum_req_ans:0
 msgid "Minimum Required Answer"
-msgstr "Gerekli Minimum Cevap Sayısı"
+msgstr "Gerekli Enaz Yanıt"
 
 #. module: survey
 #: field:survey.question,req_error_msg:0
@@ -839,6 +857,7 @@ msgstr "Eğer kullanıcı başına bir cevap gerekiyorsa seçiniz"
 msgid ""
 "You must enter one or more column headings for question \"%s\" of page %s."
 msgstr ""
+"'%s' sorusu için, sayfa %s, bir ya da daha çok sütun başlığı girmelisiniz."
 
 #. module: survey
 #: model:ir.model,name:survey.model_res_users
@@ -858,6 +877,8 @@ msgid ""
 "You must enter one or more menu                                 choices in "
 "column heading (white spaces not allowed)."
 msgstr ""
+"Sütun başlığına bir ya da daha çok menü seçeneği girmelisiniz (beyaz "
+"boşluklar kabul edilmez)."
 
 #. module: survey
 #: field:survey.question,maximum_req_ans:0
@@ -915,6 +936,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir araştırma oluşturmak için tıklayın. \n"
+"              </p><p>\n"
+"                Farklı amaçlar için araştırma oluşturabilirsiniz: işe alma \n"
+"                igörüşmeleri, çalışanların periyodik değerlendirilmeleri, "
+"pazarlama\n"
+"                kampanyaları, vb.\n"
+"              </p><p>\n"
+"                Bir araştırma çeşitli türlerde sorular içeren sayfalardan\n"
+"                oluşur: metin, çoklu seçenek, vb.\n"
+"              </p>\n"
+"            "
 
 #. module: survey
 #: field:survey,date_close:0
@@ -1082,7 +1115,7 @@ msgstr "Birden fazla değişik tipte metin kutucuğu"
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "Required Answer"
-msgstr "Cevap Gerekli"
+msgstr "Yanıt Gerekli"
 
 #. module: survey
 #: model:survey.type,name:survey.survey_type2
@@ -1516,7 +1549,7 @@ msgstr "Tüm Açık Anketler"
 #: model:ir.actions.report.xml,name:survey.survey_browse_response
 #: field:survey.browse.answer,response_id:0
 msgid "Survey Answers"
-msgstr "Anket Cevapları"
+msgstr "Anket Yanıtları"
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_print_survey_answer

@@ -32,7 +32,7 @@ This is the module to manage the accounting chart, VAT structure and Registratio
 Romanian accounting chart and localization.
     """,
     "demo_xml" : [],
-    "update_xml" : ['partner_view.xml','account_tax_code_template.xml','account_chart.xml','account_tax_template.xml','l10n_chart_ro_wizard.xml'],
+    "data" : ['partner_view.xml','account_tax_code_template.xml','account_chart.xml','account_tax_template.xml','l10n_chart_ro_wizard.xml'],
     "auto_install": False,
     "installable": True,
 }

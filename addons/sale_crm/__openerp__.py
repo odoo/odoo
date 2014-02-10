@@ -45,7 +45,7 @@ modules.
         'process/sale_crm_process.xml',
         'security/sale_crm_security.xml',
         'security/ir.model.access.csv',
-        'report/sale_crm_account_invoice_report_view.xml',
+        'report/sale_report_view.xml',
     ],
     'js': [
         'static/src/js/sale_crm.js',

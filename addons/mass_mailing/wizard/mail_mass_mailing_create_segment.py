@@ -36,7 +36,7 @@ class MailMassMailingCreate(osv.TransientModel):
             required=True,
         ),
         'model_id': fields.many2one(
-            'ir.model', 'Document',
+            'ir.model', 'Document Type',
             required=True,
             help='Document on which the mass mailing will run. This must be a '
                  'valid OpenERP model.',
@@ -116,6 +116,8 @@ class MailMassMailingCreate(osv.TransientModel):
             'default_template_id': wizard.template_id.id,
             'default_use_mass_mailing_campaign': True,
             'default_use_active_domain': True,
+            'default_model': wizard.model_id.model,
+            'default_res_id': False,
             'default_active_domain': wizard.domain,
             'default_mass_mailing_campaign_id': wizard.mass_mailing_campaign_id.id,
             'default_mass_mailing_id': wizard.mass_mailing_id.id,

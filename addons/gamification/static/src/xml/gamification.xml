@@ -1,0 +1,114 @@
+<templates>
+    <t t-name="gamification.UserWallSidebar" class="oe_gamification_user_wall_sidebar">
+        <div>
+            <div class="oe_gamification_suggestion"></div>
+            <div class="oe_gamification_challenge_list"></div>
+        </div>
+    </t>
+    <t t-name="gamification.ChallengeSummary">
+        <div class="oe_goal">
+            <div>
+                <a class="oe_update_challenge oe_e" rol="button" t-attf-id="{challenge.id}">e</a>
+                <h4><t t-esc="challenge.name" /></h4>
+            </div>
+
+            <t t-if="challenge.visibility_mode == 'personal'">
+                <div class="oe_table oe_goals_list">
+                    <div t-foreach="challenge.lines" t-as="line" t-attf-class="oe_row oe_goal_outer_box #{line.state == 'reached' ? 'oe_goal_reached' : ''} #{line.display_mode != 'progress' ? 'oe_no_progress' : ''}">
+                            <t t-if="line.display_mode == 'progress'">
+                                <div class="oe_goal_progress_background"></div>
+                                <div class="oe_goal_progress" t-attf-style="#{line.display_mode == 'progress' ? 'width: '+line.completeness+'%;' : 'width:0;'}"></div>
+                                <div class="oe_cell oe_goal_current"><t t-esc="line.current" /></div>
+                            </t>
+                            <div class="oe_cell">
+                                <t t-if="line.computation_mode != 'manually' and !line.action">
+                                    <span t-att-title="line.description"><t t-esc="line.name" /></span>
+                                </t>
+                                <t t-if="line.action or line.computation_mode == 'manually'">
+                                    <span t-att-title="line.description"><a class="oe_goal_action" t-att-id="line.id"><t t-esc="line.name" /></a></span>
+                                </t>
+                                <t t-if="line.display_mode == 'progress'"><br/>
+                                    <div class="oe_grey">
+                                        <t t-if="line.definition_condition == 'higher'">
+                                            Target:
+                                        </t>
+                                        <t t-if="line.definition_condition == 'lower'">
+                                            Target: &lt;=
+                                        </t>
+                                        <span t-attf-class="#{line.monetary ? 'oe_goal_field_monetary' : ''}" t-attf-data-id="#{line.monetary ? challenge.currency : ''}"><t t-esc="line.target"/></span>
+                                        <t t-if="line.suffix"><t t-esc="line.suffix"/></t>
+                                    </div>
+                                </t>
+                            </div>
+                    </div>
+                </div>
+            </t>
+
+            <t t-if="challenge.visibility_mode == 'ranking'">
+                <div t-foreach="challenge.lines" t-as="line" class="oe_goals_list oe_table">
+                    <div class="oe_row">
+                        <div class="oe_cell oe_thead" colspan="3" t-attf-title="#{line.description ? line.description : ''}">
+                            <strong><t t-esc="line.name"/></strong>
+                            <br/>
+                            <div class="oe_grey">
+                                <t t-if="line.definition_condition == 'higher'">
+                                    Target:
+                                </t>
+                                <t t-if="line.definition_condition == 'lower'">
+                                    Target: &lt;=
+                                </t>
+                                <span t-attf-class="#{line.monetary ? 'oe_goal_field_monetary' : ''}" t-attf-data-id="#{line.monetary ? challenge.currency : ''}"><t t-esc="line.target" /></span><t t-if="line.suffix"> <t t-esc="line.suffix"/></t>
+                            </div>
+                        </div>
+                    </div>
+                    <div t-foreach="line.goals" t-as="goal" t-attf-class="#{goal.id == line.own_goal_id ? 'oe_bold' : ''}">
+                        <div t-attf-class="oe_row oe_goal_outer_box #{goal.state == 'reached' ? 'oe_goal_reached' : ''} #{line.display_mode != 'progress' ? 'oe_no_progress' : ''}">
+                            <t t-if="line.display_mode == 'progress'">
+                                <div class="oe_goal_progress_background"></div>
+                                <div class="oe_goal_progress" t-attf-style="#{line.display_mode == 'progress' ? 'width: '+goal.completeness+'%;' : 'width:0;'}"></div>
+                            </t>
+                            
+                                <div class="oe_cell col0"><t t-esc="goal.rank" /></div>
+                                <div class="oe_cell col1"><img class="oe_user_avatar" t-attf-alt="#{goal.name}" t-attf-data-id="#{goal.user_id}"/></div>
+                                <div class="oe_cell col2">
+                                    <t t-if="line.display_mode == 'progress'">
+                                        <!-- progress, action on current value -->
+                                        <t t-esc="goal.name"/><br/>
+                                        <t t-if="goal.id != line.own_goal_id or (line.computation_mode != 'manually' and !line.action)">
+                                            <span t-attf-class="#{line.monetary ? 'oe_goal_field_monetary' : ''}" t-attf-data-id="#{line.monetary ? challenge.currency : ''}"><t t-esc="goal.current" /></span><t t-if="line.suffix"> <t t-esc="line.suffix"/></t>
+                                        </t>
+                                        <t t-if="goal.id == line.own_goal_id and (line.action or line.computation_mode == 'manually')">
+                                            <a class="oe_goal_action" t-att-id="line.own_goal_id">
+                                                <span t-attf-class="#{line.monetary ? 'oe_goal_field_monetary' : ''}" t-attf-data-id="#{line.monetary ? challenge.currency : ''}"><t t-esc="goal.current" /></span><t t-if="line.suffix"> <t t-esc="line.suffix"/></t>
+                                            </a>
+                                        </t>
+                                    </t>
+                                    <t t-if="line.display_mode != 'progress'">
+                                        <!-- not progress, action on user name -->
+                                        <t t-if="goal.id != line.own_goal_id or (line.computation_mode != 'manually' and !line.action)">
+                                            <t t-esc="goal.name"/>
+                                        </t>
+                                        <t t-if="goal.id == line.own_goal_id and (line.action or line.computation_mode == 'manually')">
+                                            <a class="oe_goal_action" t-att-id="line.own_goal_id"><t t-esc="goal.name"/></a>
+                                        </t>
+                                    </t>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="gamification.ChallengeSuggestion">
+        <div class="oe_goal">
+            <h4>Invited Challenges</h4>
+            <ul t-foreach="challenges" t-as="challenge" class="oe_goals_list">
+                <li>
+                    <strong><a class="oe_challenge_reply" t-attf-title="#{challenge.description.value ? challenge.description.value : ''}" t-attf-id="{challenge.id}" title="more details..."><t t-esc="challenge.name"/></a></strong>
+                </li>
+            </ul>
+        </div>
+    </t>
+
+</templates>

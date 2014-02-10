@@ -24,8 +24,14 @@
             action="product.product_category_action_form" id="menu_product_category_config_stock"
             parent="stock.menu_product_in_config_stock" sequence="0"/>
         <menuitem
+            action="product.product_variant_action" id="menu_product_variant_config_stock"
+            parent="stock.menu_product_in_config_stock" groups="product.group_product_variant" sequence="2"/>
+        <menuitem
+            action="product.product_template_action" id="menu_product_template_config_stock"
+            parent="stock.menu_product_in_config_stock" groups="product.group_product_variant" sequence="1"/>
+        <menuitem
             action="product.product_ul_form_action" groups="product.group_stock_packaging"
-            id="menu_product_packaging_stock_action" parent="stock.menu_product_in_config_stock" sequence="1"/>
+            id="menu_product_packaging_stock_action" parent="stock.menu_product_in_config_stock" sequence="3"/>
         <menuitem
             id="menu_stock_unit_measure_stock" name="Units of Measure"
             parent="stock.menu_product_in_config_stock"  sequence="35" groups="product.group_uom"/>
@@ -1044,7 +1050,7 @@
                     <button name="action_process" states="assigned" string="Receive" type="object" class="oe_highlight"/>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="replace">
-                    <field name="partner_id" on_change="onchange_partner_in(partner_id)" string="Supplier" domain="[('supplier','=',True)]" />
+                    <field name="partner_id" on_change="onchange_partner_in(partner_id)" string="Supplier" domain="[('supplier','=',True)]" context="{'default_supplier':1,'default_customer':0}"/>
                 </xpath>
                 <xpath expr="//field[@name='move_lines']" position="replace">
                     <field name="move_lines" context="{'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}" options='{"reload_on_button": true}'/>
@@ -1251,7 +1257,7 @@
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group name="origin_grp" string="Origin">
-                            <field name="origin"/>
+                            <field name="origin" attrs="{'invisible': [('picking_id', '=', False)]}"/>
                             <field name="picking_id" domain="[('type','=',type)]"/>
                              <field name="type" on_change="onchange_move_type(type)"/>
                             <field name="location_id" groups="stock.group_locations"/>

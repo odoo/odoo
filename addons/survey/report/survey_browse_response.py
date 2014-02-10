@@ -164,18 +164,18 @@ class survey_browse_response(report_rml):
                     <initialize>
                       <paraStyle name="all" alignment="justify"/>
                     </initialize>
-                    <paraStyle name="title" fontName="helvetica-bold" fontSize="18.0" leftIndent="0.0" textColor="white"/>
-                    <paraStyle name="answer_right" alignment="RIGHT" fontName="helvetica" fontSize="09.0" leftIndent="2.0"/>
-                    <paraStyle name="Standard1" fontName="helvetica-bold" alignment="RIGHT" fontSize="09.0"/>
+                    <paraStyle name="title" fontName="Helvetica-Bold" fontSize="18.0" leftIndent="0.0" textColor="white"/>
+                    <paraStyle name="answer_right" alignment="RIGHT" fontName="Helvetica" fontSize="09.0" leftIndent="2.0"/>
+                    <paraStyle name="Standard1" fontName="Helvetica-Bold" alignment="RIGHT" fontSize="09.0"/>
                     <paraStyle name="Standard" alignment="LEFT" fontName="Helvetica-Bold" fontSize="11.0"/>
                     <paraStyle name="header1" fontName="Helvetica" fontSize="11.0"/>
-                    <paraStyle name="response" fontName="Helvetica-oblique" fontSize="9.5"/>
-                    <paraStyle name="page" fontName="helvetica" fontSize="11.0" leftIndent="0.0"/>
-                    <paraStyle name="question" fontName="helvetica-boldoblique" fontSize="10.0" leftIndent="3.0"/>
-                    <paraStyle name="answer_bold" fontName="Helvetica-Bold" fontSize="09.0" leftIndent="2.0"/>
-                    <paraStyle name="answer" fontName="helvetica" fontSize="09.0" leftIndent="2.0"/>
-                    <paraStyle name="answer1" fontName="helvetica" fontSize="09.0" leftIndent="2.0"/>
-                    <paraStyle name="Title" fontName="helvetica" fontSize="20.0" leading="15" spaceBefore="6.0" spaceAfter="6.0" alignment="CENTER"/>
+                    <paraStyle name="response" fontName="Helvetica-Oblique" fontSize="9.5"/>
+                    <paraStyle name="page" fontName="Helvetica" fontSize="11.0" leftIndent="0.0"/>
+                    <paraStyle name="question" fontName="Helvetica-BoldOblique" fontSize="10.0" leftIndent="3.0"/>
+                    <paraStyle name="answer_Bold" fontName="Helvetica-Bold" fontSize="09.0" leftIndent="2.0"/>
+                    <paraStyle name="answer" fontName="Helvetica" fontSize="09.0" leftIndent="2.0"/>
+                    <paraStyle name="answer1" fontName="Helvetica" fontSize="09.0" leftIndent="2.0"/>
+                    <paraStyle name="Title" fontName="Helvetica" fontSize="20.0" leading="15" spaceBefore="6.0" spaceAfter="6.0" alignment="CENTER"/>
                     <paraStyle name="P2" fontName="Helvetica" fontSize="14.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
                     <paraStyle name="comment" fontName="Helvetica" fontSize="14.0" leading="50" spaceBefore="0.0" spaceAfter="0.0"/>
                     <paraStyle name="P1" fontName="Helvetica" fontSize="9.0" leading="12" spaceBefore="0.0" spaceAfter="1.0"/>
@@ -186,8 +186,8 @@ class survey_browse_response(report_rml):
                     <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="10.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
                     <paraStyle name="terp_tblheader_General_right_simple" fontName="Helvetica" fontSize="10.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
                     <paraStyle name="terp_tblheader_General_right" fontName="Helvetica-Bold" fontSize="10.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
-                    <paraStyle name="descriptive_text" fontName="helvetica-bold" fontSize="18.0" leftIndent="0.0" textColor="white"/>
-                    <paraStyle name="descriptive_text_heading" fontName="helvetica-bold" fontSize="18.0" alignment="RIGHT" leftIndent="0.0" textColor="white"/>
+                    <paraStyle name="descriptive_text" fontName="Helvetica-Bold" fontSize="18.0" leftIndent="0.0" textColor="white"/>
+                    <paraStyle name="descriptive_text_heading" fontName="Helvetica-Bold" fontSize="18.0" alignment="RIGHT" leftIndent="0.0" textColor="white"/>
                   </stylesheet>
                   <images/>
                   <story>"""

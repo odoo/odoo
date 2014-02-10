@@ -40,20 +40,12 @@ class crm_phonecall_report(osv.osv):
     _auto = False
     
     _columns = {
-        'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'nbr': fields.integer('# of Cases', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
-        'month':fields.selection([('01', 'January'), ('02', 'February'), \
-                                  ('03', 'March'), ('04', 'April'),\
-                                  ('05', 'May'), ('06', 'June'), \
-                                  ('07', 'July'), ('08', 'August'),\
-                                  ('09', 'September'), ('10', 'October'),\
-                                  ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
-        'day': fields.char('Day', size=128, readonly=True), 
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'duration': fields.float('Duration', digits=(16,2),readonly=True, group_operator="avg"),
         'delay_open': fields.float('Delay to open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
@@ -77,9 +69,6 @@ class crm_phonecall_report(osv.osv):
             create or replace view crm_phonecall_report as (
                 select
                     id,
-                    to_char(c.date, 'YYYY') as name,
-                    to_char(c.date, 'MM') as month,
-                    to_char(c.date, 'YYYY-MM-DD') as day,
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
