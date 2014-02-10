@@ -34,7 +34,6 @@ class report_custom(report_rml):
         registry = openerp.registry(cr.dbname)
         product_pool = registry.get('product.product')
         product_uom_pool = registry.get('product.uom')
-        supplier_info_pool = registry.get('product.supplierinfo')
         workcenter_pool = registry.get('mrp.workcenter')
         user_pool = registry.get('res.users')
         bom_pool = registry.get('mrp.bom')
@@ -70,6 +69,8 @@ class report_custom(report_rml):
             main_strd_price = str(std_price) + '\r\n'
             sum_strd = prod_qtty*std_price
             for seller_id in prod.seller_ids:
+                if seller_id.name.id == prod.seller_id.id:
+                    continue
                 sellers +=  '- <i>'+ to_xml(seller_id.name.name) +'</i>\r\n'
                 pricelist = seller_id.name.property_product_pricelist_purchase
                 price = pricelist_pool.price_get(cr,uid,[pricelist.id],

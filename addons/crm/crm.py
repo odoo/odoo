@@ -68,8 +68,9 @@ class crm_case_stage(osv.osv):
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
         'case_default': fields.boolean('Default to New Sales Team',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
-        'fold': fields.boolean('Fold by Default',
-                        help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
+        'fold': fields.boolean('Folded in Kanban View',
+                               help='This stage is folded in the kanban view when'
+                               'there are no records in that stage to display.'),
         'type': fields.selection([('lead', 'Lead'),
                                     ('opportunity', 'Opportunity'),
                                     ('both', 'Both')],
@@ -78,8 +79,8 @@ class crm_case_stage(osv.osv):
     }
 
     _defaults = {
-        'sequence': lambda *args: 1,
-        'probability': lambda *args: 0.0,
+        'sequence': 1,
+        'probability': 0.0,
         'on_change': True,
         'fold': False,
         'type': 'both',
@@ -122,8 +123,9 @@ class crm_case_section(osv.osv):
                           'tooltip': (month_begin + relativedelta.relativedelta(months=-i)).strftime('%B'),
                           } for i in range(self._period_number - 1, -1, -1)]
         group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
+        pattern = tools.DEFAULT_SERVER_DATE_FORMAT if obj.fields_get(cr, uid, groupby_field)[groupby_field]['type'] == 'date' else tools.DEFAULT_SERVER_DATETIME_FORMAT
         for group in group_obj:
-            group_begin_date = datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATE_FORMAT)
+            group_begin_date = datetime.strptime(group['__domain'][0][2], pattern)
             month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
             section_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group_begin_date.strftime('%B')}
         return section_result

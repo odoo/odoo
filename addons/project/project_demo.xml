@@ -4,7 +4,7 @@
 
         <!-- Users -->
         <record id="base.user_demo" model="res.users">
-            <field name="groups_id" eval="[(4, ref('base.group_sale_salesman')),(4, ref('group_project_user'))]"/>
+            <field name="groups_id" eval="[(4, ref('base.group_sale_salesman')),(4, ref('group_project_manager'))]"/>
         </record>
 
         <!-- Categories -->
@@ -60,7 +60,7 @@
         </record>
 
         <record id="project_project_3" model="project.project">
-            <field name="priority">10</field>
+            <field name="sequence">10</field>
             <field name="parent_id" ref="all_projects_account"/>
             <field name="name">E-Learning Integration</field>
             <field name="user_id" ref="base.user_demo"/>
@@ -74,7 +74,7 @@
         </record>
 
         <record id="project_project_4" model="project.project">
-            <field name="priority">20</field>
+            <field name="sequence">20</field>
             <field name="parent_id" ref="all_projects_account"/>
             <field name="name">Website Design Templates</field>
             <field name="user_id" ref="base.user_root"/>
@@ -89,7 +89,7 @@
         </record>
 
         <record id="project_project_5" model="project.project">
-            <field name="priority">2</field>
+            <field name="sequence">2</field>
             <field name="parent_id" ref="all_projects_account"/>
             <field name="partner_id" ref="base.res_partner_7"/>
             <field name="name">Data Import/Export Plugin</field>

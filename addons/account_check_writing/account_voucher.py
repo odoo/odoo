@@ -49,9 +49,21 @@ class account_voucher(osv.osv):
         if 'value' in default:
             amount = 'amount' in default['value'] and default['value']['amount'] or amount
 
+            # Currency complete name is not available in res.currency model
+            # Exceptions done here (EUR, USD, BRL) cover 75% of cases
+            # For other currencies, display the currency code
+            currency = self.pool['res.currency'].browse(cr, uid, currency_id, context=context)
+            if currency.name.upper() == 'EUR':
+                currency_name = 'Euro'
+            elif currency.name.upper() == 'USD':
+                currency_name = 'Dollars'
+            elif currency.name.upper() == 'BRL':
+                currency_name = 'reais'
+            else:
+                currency_name = currency.name
             #TODO : generic amount_to_text is not ready yet, otherwise language (and country) and currency can be passed
             #amount_in_word = amount_to_text(amount, context=context)
-            amount_in_word = amount_to_text(amount)
+            amount_in_word = amount_to_text(amount, currency=currency_name)
             default['value'].update({'amount_in_word':amount_in_word})
             if journal_id:
                 allow_check_writing = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context).allow_check_writing

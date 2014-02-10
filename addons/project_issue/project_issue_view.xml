@@ -48,7 +48,8 @@
             <field name="arch" type="xml">
                 <form string="Issue" version="7.0">
                 <header>
-                    <field name="stage_id" widget="statusbar" clickable="True"/>
+                    <field name="stage_id" widget="statusbar" clickable="True"
+                        options="{'fold_field': 'fold'}"/>
                 </header>
                 <sheet string="Issue">
                     <label for="name" class="oe_edit_only"/>
@@ -312,7 +313,7 @@
                 <xpath expr='//field[@name="use_tasks"]' position="attributes">
                     <attribute name="attrs">{'on_change': 'on_change_use_tasks_or_issues(use_tasks, use_issues)'}</attribute>
                 </xpath>
-                <field name="priority" position="before">
+                <field name="sequence" position="before">
                     <field name="project_escalation_id"/>
                 </field>
             </field>
@@ -325,13 +326,14 @@
             <field name="arch" type="xml">
                 <field name="use_tasks" position="after">
                     <field name="use_issues"/>
-                    <field name="issue_count" invisible="1"/>
+                    <field name="issue_ids" invisible="1"/>
                 </field>
                 <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
                     <a t-if="record.use_issues.raw_value" style="margin-right: 10px"
                         name="%(act_project_project_2_project_issue_all)d" type="action">
-                        <span t-if="record.issue_count.raw_value gt 1"><field name="issue_count"/> Issues</span>
-                        <span t-if="record.issue_count.raw_value lt 2"><field name="issue_count"/> Issue</span>
+                        <t t-raw="record.issue_ids.raw_value.length"/>
+                        <span t-if="record.issue_ids.raw_value.length == 1">Issue</span>
+                        <span t-if="record.issue_ids.raw_value.length > 1">Issues</span>
                     </a>
                 </xpath>
             </field>
