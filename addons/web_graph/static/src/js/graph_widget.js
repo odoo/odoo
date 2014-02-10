@@ -284,25 +284,30 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         if (header.expanded) {
             this.fold(header);
-        } else {
-            if (header.path.length < header.root.groupby.length) {
-                this.expand(id);
-            } else {
-                if (!this.important_fields.length) {
-                    return;
-                }
-
-                var fields = _.map(this.important_fields, function (field) {
-                        return {id: field.field, value: field.string, type:self.fields[field.field.split(':')[0]].type};
-                });
-                this.dropdown = $(QWeb.render('field_selection', {fields:fields, header_id:id}));
-                $(event.target).after(this.dropdown);
-                this.dropdown.css({position:'absolute',
-                                   left:event.pageX,
-                                   top:event.pageY});
-                this.$('.field-selection').next('.dropdown-menu').toggle();
-            }
+            return;
+        } 
+        if (header.path.length < header.root.groupby.length) {
+            this.expand(id);
+            return;
+        } 
+        if (!this.important_fields.length) {
+            return;
         }
+
+        var fields = _.map(this.important_fields, function (field) {
+                return {id: field.field, value: field.string, type:self.fields[field.field.split(':')[0]].type};
+        });
+        if (this.dropdown) {
+            this.dropdown.remove();
+        }
+        this.dropdown = $(QWeb.render('field_selection', {fields:fields, header_id:id}));
+        $(event.target).after(this.dropdown);
+        this.dropdown.css({position:'absolute',
+                           left:event.pageX,
+                           top:event.pageY});
+        this.$('.field-selection').next('.dropdown-menu').toggle();
+        
+        
     },
 
     field_selection: function (event) {
