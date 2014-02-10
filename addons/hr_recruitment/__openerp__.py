@@ -25,7 +25,7 @@
     'version': '1.0',
     'category': 'Human Resources',
     'sequence': 25,
-    'summary': 'Jobs, Recruitment, Applications, Job Interviews',
+    'summary': 'Jobs, Recruitment, Applications, Job Interviews, Surveys',
     'description': """
 Manage job positions and the recruitment process
 ================================================
