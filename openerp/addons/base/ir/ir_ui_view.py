@@ -29,7 +29,7 @@ import HTMLParser
 
 import openerp
 from openerp import tools
-from openerp.osv import fields, osv, orm
+from openerp.osv import fields, osv, orm, api
 from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.view_validation import valid_view
@@ -795,6 +795,7 @@ class view(osv.osv):
         xmlid = imd.search_read(cr, uid, domain, ['module', 'name'])[0]
         return '%s.%s' % (xmlid['module'], xmlid['name'])
 
+    @api.cr_uid_ids_context
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
         if isinstance(id_or_xml_id, list):
             id_or_xml_id = id_or_xml_id[0]
