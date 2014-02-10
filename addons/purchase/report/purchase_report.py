@@ -32,8 +32,6 @@ class purchase_report(osv.osv):
     _auto = False
     _columns = {
         'date': fields.date('Order Date', readonly=True, help="Date on which this document has been created"),
-        'name': fields.char('Year',size=64,required=False, readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
         'state': fields.selection([('draft', 'Request for Quotation'),
                                      ('confirmed', 'Waiting Supplier Ack'),
                                       ('approved', 'Approved'),
@@ -60,12 +58,10 @@ class purchase_report(osv.osv):
         'negociation': fields.float('Purchase-Standard Price', readonly=True, group_operator="avg"),
         'price_standard': fields.float('Products Value', readonly=True, group_operator="sum"),
         'nbr': fields.integer('# of Lines', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'category_id': fields.many2one('product.category', 'Category', readonly=True)
 
     }
-    _order = 'name desc,price_total desc'
+    _order = 'date desc, price_total desc'
     def init(self, cr):
         tools.sql.drop_view_if_exists(cr, 'purchase_report')
         cr.execute("""
@@ -73,9 +69,6 @@ class purchase_report(osv.osv):
                 select
                     min(l.id) as id,
                     s.date_order as date,
-                    to_char(s.date_order, 'YYYY') as name,
-                    to_char(s.date_order, 'MM') as month,
-                    to_char(s.date_order, 'YYYY-MM-DD') as day,
                     s.state,
                     s.date_approve,
                     s.minimum_planned_date as expected_date,
@@ -94,23 +87,20 @@ class purchase_report(osv.osv):
                     extract(epoch from age(s.date_approve,s.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,s.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr,
-                    (l.price_unit*l.product_qty)::decimal(16,2) as price_total,
+                    sum(l.price_unit*l.product_qty)::decimal(16,2) as price_total,
                     avg(100.0 * (l.price_unit*l.product_qty) / NULLIF(t.standard_price*l.product_qty/u.factor*u2.factor, 0.0))::decimal(16,2) as negociation,
-
                     sum(t.standard_price*l.product_qty/u.factor*u2.factor)::decimal(16,2) as price_standard,
                     (sum(l.product_qty*l.price_unit)/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0))::decimal(16,2) as price_average
-                from purchase_order s
-                    left join purchase_order_line l on (s.id=l.order_id)
+                from purchase_order_line l
+                    join purchase_order s on (l.order_id=s.id)
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
                     left join product_uom u on (u.id=l.product_uom)
                     left join product_uom u2 on (u2.id=t.uom_id)
-                where l.product_id is not null
                 group by
                     s.company_id,
                     s.create_uid,
                     s.partner_id,
-                    l.product_qty,
                     u.factor,
                     s.location_id,
                     l.price_unit,
@@ -124,9 +114,6 @@ class purchase_report(osv.osv):
                     l.product_id,
                     t.categ_id,
                     s.date_order,
-                    to_char(s.date_order, 'YYYY'),
-                    to_char(s.date_order, 'MM'),
-                    to_char(s.date_order, 'YYYY-MM-DD'),
                     s.state,
                     s.warehouse_id,
                     u.uom_type,

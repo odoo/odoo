@@ -1,5 +1,5 @@
 import simplejson
-import urllib
+import werkzeug.urls
 
 import openerp
 import openerp.addons.web.controllers.main as webmain
@@ -17,7 +17,7 @@ class EDI(openerp.http.Controller):
         css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in webmain.manifest_list(req, modules_str, 'css'))
 
         # `url` may contain a full URL with a valid query string, we basically want to watch out for XML brackets and double-quotes 
-        safe_url = urllib.quote_plus(url,':/?&;=')
+        safe_url = werkzeug.url_quote_plus(url,':/?&;=')
 
         return webmain.html_template % {
             'js': js,
@@ -26,7 +26,7 @@ class EDI(openerp.http.Controller):
             'init': 's.edi.edi_import("%s");' % safe_url,
         }
 
-    @openerp.http.route('/edi/import_edi_url', type='http', auth='none')
+    @openerp.http.route('/edi/import_edi_url', type='json', auth='none')
     def import_edi_url(self, url):
         req = openerp.http.request
         result = req.session.proxy('edi').import_edi_url(req.session._db, req.session._uid, req.session._password, url)

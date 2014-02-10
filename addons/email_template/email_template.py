@@ -32,6 +32,7 @@ from openerp import tools
 from openerp.tools.translate import _
 from urllib import urlencode, quote as quote
 
+
 _logger = logging.getLogger(__name__)
 
 try:
@@ -74,6 +75,12 @@ class email_template(osv.osv):
     _name = "email.template"
     _description = 'Email Templates'
     _order = 'name'
+
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(email_template, self).default_get(cr, uid, fields, context)
+        if res.get('model'):
+            res['model_id'] = self.pool['ir.model'].search(cr, uid, [('model', '=', res.pop('model'))], context=context)[0]
+        return res
 
     def render_template_batch(self, cr, uid, template, model, res_ids, context=None):
         """Render the given template text, replace mako expressions ``${expr}``
@@ -176,7 +183,7 @@ class email_template(osv.osv):
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
                                           help="Optional preferred server for outgoing mails. If not set, the highest "
                                                "priority one will be used."),
-        'body_html': fields.text('Body', translate=True, help="Rich-text/HTML version of the message (placeholders may be used here)"),
+        'body_html': fields.html('Body', translate=True, help="Rich-text/HTML version of the message (placeholders may be used here)"),
         'report_name': fields.char('Report Filename', translate=True,
                                    help="Name to use for the generated report file (may contain placeholders)\n"
                                         "The extension can be omitted and will then come from the report type."),
@@ -369,7 +376,7 @@ class email_template(osv.osv):
                     attachment_ids=[attach.id for attach in template.attachment_ids],
                 )
 
-            # Add report in attachments
+            # Add report in attachments: generate once for all template_res_ids
             if template.report_template:
                 for res_id in template_res_ids:
                     attachments = []
@@ -378,7 +385,7 @@ class email_template(osv.osv):
                     # Ensure report is rendered using template's language
                     ctx = context.copy()
                     if template.lang:
-                        ctx['lang'] = self.render_template_batch(cr, uid, template.lang, template.model, res_id, context)  # take 0 ?
+                        ctx['lang'] = self.render_template_batch(cr, uid, template.lang, template.model, [res_id], context)[res_id]  # take 0 ?
                     result, format = openerp.report.render_report(cr, uid, [res_id], report_service, {'model': template.model}, ctx)
                     result = base64.b64encode(result)
                     if not report_name:
@@ -387,8 +394,7 @@ class email_template(osv.osv):
                     if not report_name.endswith(ext):
                         report_name += ext
                     attachments.append((report_name, result))
-
-                    values['attachments'] = attachments
+                    results[res_id]['attachments'] = attachments
 
         return results
 
@@ -411,8 +417,18 @@ class email_template(osv.osv):
 
         # create a mail_mail based on values, without attachments
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
-        assert values.get('email_from'), 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
-        del values['partner_to']  # TODO Properly use them.
+        if not values.get('email_from'):
+            raise osv.except_osv(_('Warning!'),_("Sender email is missing or empty after template rendering. Specify one to deliver your message"))
+        # process partner_to field that is a comma separated list of partner_ids -> recipient_ids
+        # NOTE: only usable if force_send is True, because otherwise the value is
+        # not stored on the mail_mail, and therefore lost -> fixed in v8
+        values['recipient_ids'] = []
+        partner_to = values.pop('partner_to', '')
+        if partner_to:
+            # placeholders could generate '', 3, 2 due to some empty field values
+            tpl_partner_ids = [pid for pid in partner_to.split(',') if pid]
+            values['recipient_ids'] += [(4, pid) for pid in self.pool['res.partner'].exists(cr, SUPERUSER_ID, tpl_partner_ids, context=context)]
+
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
         msg_id = mail_mail.create(cr, uid, values, context=context)
@@ -421,11 +437,11 @@ class email_template(osv.osv):
         # manage attachments
         for attachment in attachments:
             attachment_data = {
-                    'name': attachment[0],
-                    'datas_fname': attachment[0],
-                    'datas': attachment[1],
-                    'res_model': 'mail.message',
-                    'res_id': mail.mail_message_id.id,
+                'name': attachment[0],
+                'datas_fname': attachment[0],
+                'datas': attachment[1],
+                'res_model': 'mail.message',
+                'res_id': mail.mail_message_id.id,
             }
             context.pop('default_type', None)
             attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context=context))

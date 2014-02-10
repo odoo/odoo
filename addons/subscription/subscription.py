@@ -61,7 +61,7 @@ class subscription_subscription(osv.osv):
         'name': fields.char('Name', size=60, required=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the subscription without removing it."),
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'notes': fields.text('Notes'),
+        'notes': fields.text('Internal Notes'),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'interval_number': fields.integer('Interval Qty'),
         'interval_type': fields.selection([('days', 'Days'), ('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),

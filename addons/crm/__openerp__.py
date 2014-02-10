@@ -53,7 +53,7 @@ Dashboard for CRM will include:
         'base_setup',
         'mail',
         'email_template',
-        'base_calendar',
+        'calendar',
         'resource',
         'board',
         'fetchmail',
@@ -80,7 +80,7 @@ Dashboard for CRM will include:
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
 
-        'crm_meeting_menu.xml',
+        'calendar_event_menu.xml',
 
         'crm_phonecall_view.xml',
         'crm_phonecall_menu.xml',

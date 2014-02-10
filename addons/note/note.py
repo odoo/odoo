@@ -147,6 +147,7 @@ class note_note(osv.osv):
                     if result and result[0]['stage_id'][0] == current_stage_ids[0]:
                         dom_in = result[0]['__domain'].pop()
                         result[0]['__domain'] = domain + ['|', dom_in, dom_not_in]
+                        result[0]['stage_id_count'] += nb_notes_ws
                     else:
                         # add the first stage column
                         result = [{

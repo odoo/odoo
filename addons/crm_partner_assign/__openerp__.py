@@ -21,24 +21,20 @@
 
 
 {
-    'name': 'Partners Geo-Localization',
+    'name': 'Partner Assignation & Geolocation',
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'description': """
-This is the module used by OpenERP SA to redirect customers to its partners, based on geolocalization.
+This is the module used by OpenERP SA to redirect customers to its partners, based on geolocation.
 ======================================================================================================
 
-You can geolocalize your opportunities by using this module.
+This modules lets you geolocate Leads, Opportunities and Partners based on their address.
 
-Use geolocalization when assigning opportunities to partners.
-Determine the GPS coordinates according to the address of the partner.
-
-The most appropriate partner can be assigned.
-You can also use the geolocalization without using the GPS coordinates.
+Once the coordinates of the Lead/Opportunity is known, they can be automatically assigned
+to an appropriate local partner, based on the distance and the weight that was assigned to the partner.
     """,
     'author': 'OpenERP SA',
-    'depends': ['crm', 'account', 'portal'],
-    'demo': ['res_partner_demo.xml', 'crm_lead_demo.xml'],
+    'depends': ['base_geolocalize', 'crm', 'account', 'portal'],
     'data': [
         'security/ir.model.access.csv',
         'res_partner_view.xml',
@@ -50,6 +46,10 @@ You can also use the geolocalization without using the GPS coordinates.
         'portal_data.xml',
         'report/crm_lead_report_view.xml',
         'report/crm_partner_report_view.xml',
+    ],
+    'demo': [
+        'res_partner_demo.xml',
+        'crm_lead_demo.xml'
     ],
     'js': [
         'static/src/js/next.js',

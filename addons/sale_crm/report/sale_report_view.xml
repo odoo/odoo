@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+     <data>
+        <record id="view_order_product_search_sale_crm_inherit" model="ir.ui.view">
+            <field name="name">sale.report.search.sale.crm</field>
+            <field name="model">sale.report</field>
+            <field name="inherit_id" ref="sale.view_order_product_search"/>
+            <field name="arch" type="xml">
+                <filter name="User" position="after">
+                    <separator/>
+                    <filter string="Sales Team" context="{'group_by':'section_id'}"/>
+                </filter>
+            </field>
+        </record>
+     </data>
+</openerp>

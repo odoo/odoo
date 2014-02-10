@@ -29,8 +29,6 @@ class report_project_task_user(osv.osv):
     _auto = False
     _columns = {
         'name': fields.char('Task Summary', size=128, readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
-        'year': fields.char('Year', size=64, required=False, readonly=True),
         'user_id': fields.many2one('res.users', 'Assigned To', readonly=True),
         'date_start': fields.date('Assignation Date', readonly=True),
         'no_of_days': fields.integer('# of Days', size=128, readonly=True),
@@ -52,7 +50,6 @@ class report_project_task_user(osv.osv):
         'nbr': fields.integer('# of tasks', readonly=True),
         'priority': fields.selection([('4', 'Very Low'), ('3', 'Low'), ('2', 'Medium'), ('1', 'Urgent'), ('0', 'Very urgent')],
             string='Priority', readonly=True),
-        'month':fields.selection(fields.date.MONTHS, 'Month', readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')],'Status', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Contact', readonly=True),
@@ -67,15 +64,12 @@ class report_project_task_user(osv.osv):
               SELECT
                     (select 1 ) AS nbr,
                     t.id as id,
-                    to_char(date_start, 'YYYY') as year,
-                    to_char(date_start, 'MM') as month,
-                    to_char(date_start, 'YYYY-MM-DD') as day,
                     date_trunc('day',t.date_start) as date_start,
                     date_trunc('day',t.date_end) as date_end,
                     date_trunc('day',t.date_last_stage_update) as date_last_stage_update,
                     to_date(to_char(t.date_deadline, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_deadline,
 --                    sum(cast(to_char(date_trunc('day',t.date_end) - date_trunc('day',t.date_start),'DD') as int)) as no_of_days,
-                    abs((extract('epoch' from (t.date_end-t.date_start)))/(3600*24))  as no_of_days,
+                    abs((extract('epoch' from (t.write_date-t.date_start)))/(3600*24))  as no_of_days,
                     t.user_id,
                     progress as progress,
                     t.project_id,
@@ -89,9 +83,9 @@ class report_project_task_user(osv.osv):
                     total_hours as total_hours,
                     t.delay_hours as hours_delay,
                     planned_hours as hours_planned,
-                    (extract('epoch' from (t.date_end-t.create_date)))/(3600*24)  as closing_days,
+                    (extract('epoch' from (t.write_date-t.create_date)))/(3600*24)  as closing_days,
                     (extract('epoch' from (t.date_start-t.create_date)))/(3600*24)  as opening_days,
-                    abs((extract('epoch' from (t.date_deadline-t.date_end)))/(3600*24))  as delay_endings_days
+                    abs((extract('epoch' from (t.date_deadline-t.write_date)))/(3600*24))  as delay_endings_days
               FROM project_task t
                 WHERE t.active = 'true'
                 GROUP BY
@@ -102,10 +96,8 @@ class report_project_task_user(osv.osv):
                     total_hours,
                     planned_hours,
                     hours_delay,
-                    year,
-                    month,
-                    day,
                     create_date,
+                    write_date,
                     date_start,
                     date_end,
                     date_deadline,

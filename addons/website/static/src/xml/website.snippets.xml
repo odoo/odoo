@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Snippet loader -->
+    <t t-name="website.snippets_button">
+        <li class="navbar-form js_hide_on_translate"><button type="button" data-action="snippet" class="hidden btn btn-primary">Insert Blocks</button></li>
+    </t>
+    <t t-name="website.snippets_style">
+        <li class="navbar-form">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Block style <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" id="oe_snippets_style" role="menu"></ul>
+            </div>
+        </li>
+    </t>
+    <t t-name="website.snippets_modal">
+        <div class="modal" id="oe_droperror" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&amp;times;</button>
+                        <h4 class="modal-title">
+                            Building Block Not Inserted
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Please drop building blocks in a valid zone, like
+                            this one:
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-4 col-sm-offset-4 oe_drop_zone_style text-center">
+                                <span class="mt16">drop in this zone</span>
+                            </div>
+                        </div>
+                        <div class="text-muted">
+                            <b>Tip:</b> when your cursor is in a valid zone,
+                            OpenERP shows you a preview of the building block
+                            in the page.  You must release the block when the
+                            preview is visible.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <div class="pull-left">
+                            <input type="checkbox" value="1"/> Never show this tip again
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.snippets">
+        <div id='oe_snippets'></div>
+    </t>
+
+    <t t-name="website.snippet_overlay">
+        <div class="oe_overlay">
+            <div class="oe_overlay_options">
+                <div class="btn-group">
+                    <a href="#" class="btn btn-default btn-sm oe_snippet_parent" title="Select Container Block"><i class="fa fa-upload"></i></a>
+                    <div class="dropdown oe_options hidden btn-group">
+                        <a href="#" data-toggle="dropdown" class="btn btn-primary btn-sm" title="Customize">Customize <span class="caret"/></a>
+                        <ul class="dropdown-menu" role="menu"></ul>
+                    </div>
+                    <a href="#" class="btn btn-default btn-sm oe_snippet_move" title="Drag to Move">&amp;nbsp;<i class="fa fa-arrows"></i>&amp;nbsp;</a>
+                    <a href="#" class="btn btn-default btn-sm oe_snippet_clone" title="Duplicate Container">&amp;nbsp;<i class="fa fa-files-o"></i>&amp;nbsp; </a>
+                    <a href="#" class="btn btn-default btn-sm oe_snippet_remove" title="Remove Block">&amp;nbsp;<i class="fa fa-trash-o"></i>&amp;nbsp; </a>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.snippet_manipulator">
+        <div class='oe_snippet_manipulator'></div>
+    </t>
+
+    <!-- snippet objects -->
+
+    <div t-name="website.snippets.resize" data-snippet-id='resize'>
+        <!-- custom data for the widget -->
+        <div class='oe_handles'>
+            <div class='oe_handle n'></div>
+            <div class='oe_handle e'></div>
+            <div class='oe_handle w'></div>
+            <div class='oe_handle size'><div class="oe_handle_button size">Resize</div><div class="oe_border"/></div>
+            <div class='oe_handle s'></div>
+        </div>
+        <div class='oe_snippet_thumbnail'>Margin resize</div>
+    </div>
+
+    <div t-name="website.snippets.colmd" data-snippet-id='colmd' data-selector-vertical-children='.row'></div>
+
+</templates>

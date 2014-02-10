@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<!-- Email Designer main page -->
+<template id="designer_index" name="Email Designer">
+    <t t-call="website.layout">
+        <t t-set="head">
+            <script type="text/javascript" src="/website_mail/static/src/js/website_email_designer.js"></script>
+        </t>
+        <div id="wrap">
+            <div class="container">
+                <h1 t-field="template.name"/>
+                <div class="row" style="width: 600px;">
+                    <div class="row">
+                        <div class="col-lg-3"><b>Email From</b></div>
+                        <div class="col-lg-9"><span t-field="template.email_from"/></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-3"><b>To (Email)</b></div>
+                        <div class="col-lg-9"><span t-field="template.email_to"/></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-3"><b>To (Partners)</b></div>
+                        <div class="col-lg-9"><span t-field="template.partner_to"/></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-3"><b>Reply To</b></div>
+                        <div class="col-lg-9"><span t-field="template.reply_to"/></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-3"><b>Subject</b></div>
+                        <div class="col-lg-9"><span t-field="template.subject"/></div>
+                    </div>
+
+                    <div class="row well">
+                        <div t-field="template.body_html" style="position: relative;"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-set="website.footer"></t>
+</template>
+
+</data>
+</openerp>
+
+
+

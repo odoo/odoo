@@ -57,9 +57,10 @@ class res_users(osv.Model):
             various mailboxes, we do not have access to the current partner_id. """
         if kwargs.get('type') == 'email':
             return super(res_users, self).message_post(cr, uid, thread_id, context=context, **kwargs)
+        res = None
         employee_ids = self._message_post_get_eid(cr, uid, thread_id, context=context)
-        if not employee_ids:
-            pass  # dpo something
+        if not employee_ids:  # no employee: fall back on previous behavior
+            return super(res_users, self).message_post(cr, uid, thread_id, context=context, **kwargs)
         for employee_id in employee_ids:
             res = self.pool.get('hr.employee').message_post(cr, uid, employee_id, context=context, **kwargs)
         return res
