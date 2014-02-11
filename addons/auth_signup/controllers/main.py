@@ -62,7 +62,7 @@ class AuthSignup(openerp.addons.web.controllers.main.Home):
         }
         qcontext.update(config)
 
-        if 'error' in qcontext or mode not in ('reset', 'signup') or (not token and not config[mode]):
+        if 'error' in request.params or mode not in ('reset', 'signup') or (not token and not config[mode]):
             if isinstance(super_response, LazyResponse):
                 super_response.params['values'].update(config)
             return super_response
