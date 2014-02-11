@@ -34,7 +34,7 @@
     </record>
 
 
-    <!-- Jobs -->
+    <!-- Applicants -->
     <record model="ir.ui.view" id="crm_case_tree_view_job">
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
@@ -307,8 +307,6 @@
         </field>
     </record>
 
-    <!-- HR Job -->
-
     <record model="ir.actions.act_window" id="action_hr_job_applications">
         <field name="name">Applications</field>
         <field name="res_model">hr.applicant</field>
@@ -326,6 +324,7 @@
          </field>
     </record>
 
+    <!-- Jobs -->
     <record id="view_job_filter_recruitment" model="ir.ui.view">
         <field name="name">Job</field>
         <field name="model">hr.job</field>
@@ -370,7 +369,7 @@
             </xpath>
             <div name="buttons" position="inside">
                 <button string="Applications" name="%(action_hr_job_applications)d" context="{'default_user_id': user_id}" type="action"/>
-                <button name="open_attachments" string="Documents" type="object"/>
+                <button string="Documents" name="action_get_attachment_tree_view" type="object"/>
             </div>
         </field>
     </record>
@@ -435,7 +434,7 @@
                                                 <span t-if="record.application_ids.raw_value.length lt 2"><t t-esc="record.application_ids.raw_value.length"/> Application</span>
                                             </a>
                                             <br/>
-                                            <a t-if="record.document_ids.raw_value.length gt 0" name="open_attachments" type="object">
+                                            <a t-if="record.document_ids.raw_value.length gt 0" name="action_get_attachment_tree_view" type="object">
                                                 <span t-if="record.document_ids.raw_value.length gt 1"><t t-esc="record.document_ids.raw_value.length"/> Documents</span>
                                                 <span t-if="record.document_ids.raw_value.length lt 2"><t t-esc="record.document_ids.raw_value.length"/> Document</span>
                                             </a>
