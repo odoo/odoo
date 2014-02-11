@@ -85,15 +85,20 @@ class AuthSignup(openerp.addons.web.controllers.main.Home):
                 values = dict((key, qcontext.get(key)) for key in ('login', 'name', 'password'))
                 try:
                     self._signup_with_values(token, values)
-                    request.cr.commit()
+                    redirect = request.params.get('redirect')
+                    if not redirect:
+                        redirect = '/web?' + request.httprequest.query_string
+                    return http.redirect_with_hash(redirect)
                 except SignupError, e:
                     qcontext['error'] = exception_to_unicode(e)
-                return super(AuthSignup, self).web_login(*args, **kw)
 
         return response
 
     def _signup_with_values(self, token, values):
-        request.registry['res.users'].signup(request.cr, openerp.SUPERUSER_ID, values, token)
+        db, login, password = request.registry['res.users'].signup(request.cr, openerp.SUPERUSER_ID, values, token)
+        uid = request.session.authenticate(db, login, password)
+        if uid is not False:
+            raise SignupError(_('Authentification Failed.'))
 
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
