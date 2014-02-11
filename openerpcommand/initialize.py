@@ -79,6 +79,8 @@ def run(args):
         config['log_handler'] = [':INFO']
         config['test_enable'] = True
         config['without_demo'] = False
+        if args.port:
+            config['xmlrpc_port'] = int(args.port)
     else:
         config['log_handler'] = [':CRITICAL']
         config['test_enable'] = False
@@ -124,6 +126,8 @@ def add_parser(subparsers):
     parser.add_argument('-d', '--database', metavar='DATABASE',
         **common.required_or_default('DATABASE', 'the database to create'))
     common.add_addons_argument(parser)
+    parser.add_argument('-P', '--port', metavar='PORT',
+        **common.required_or_default('PORT', 'the server port'))
     parser.add_argument('--module', metavar='MODULE', action='append',
         help='specify a module to install'
         ' (this option can be repeated)')
