@@ -22,7 +22,6 @@ import logging
 import werkzeug
 
 import openerp
-import openerp.addons.web.controllers.main as webmain
 from openerp.addons.auth_signup.res_users import SignupError
 from openerp import http
 from openerp.http import request, LazyResponse
@@ -34,7 +33,6 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
 
     @http.route()
     def web_login(self, *args, **kw):
-        webmain.ensure_db()
         response = super(AuthSignupHome, self).web_login(*args, **kw)
         if isinstance(response, LazyResponse):
             response.params['values'].update(self.get_auth_signup_config())
@@ -42,7 +40,6 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
 
     @http.route('/web/signup', type='http', auth='none')
     def web_auth_signup(self, *args, **kw):
-        webmain.ensure_db()
         qcontext = self.get_auth_signup_qcontext()
 
         if not qcontext.get('token') and not qcontext.get('signup_enabled'):
@@ -61,7 +58,6 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
 
     @http.route('/web/reset_password', type='http', auth='none')
     def web_auth_reset_password(self, *args, **kw):
-        webmain.ensure_db()
         qcontext = self.get_auth_signup_qcontext()
 
         if not qcontext.get('token') and not qcontext.get('reset_password_enabled'):
