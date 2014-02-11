@@ -9,7 +9,7 @@ var disqus_identifier;
             var defaults = {
                 identifier: 'name',
                 position: 'right',
-                post_id: $('h1').attr('data-oe-id'),
+                post_id: $('#blog_post_name').attr('data-oe-id'),
             };
 
             // Overwrite default options with user provided ones.

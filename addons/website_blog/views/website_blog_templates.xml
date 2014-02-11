@@ -183,10 +183,9 @@
     <t t-call="website_blog.index">
 
     <div class="container" id="title">
-        <h1 class="text-center" t-field="blog_post.name"/>
+        <h1 class="text-center" t-field="blog_post.name" id="blog_post_name"/>
         <p class="post-meta text-muted text-center" name="blog_post_data">
-            <span class="fa fa-calendar oe_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
-            <span>Visit <span class="badge" t-field="blog_post.counter"></span></span>
+            <span class="fa fa-calendar oe_date" name="blog_post_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
             <span t-if="len(blog_post.message_ids) &gt; 0" class="fa fa-comment-o"> With
                 <a t-attf-href="#comments">
                     <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
@@ -258,8 +257,13 @@
         <attribute name="class">blog_cover</attribute>
         <attribute name="t-attf-style">background-image : url(data:image/jpg;base64,#{blog_post.content_image})</attribute>
     </xpath>
+    <xpath expr="//h1[@id='blog_post_name']" position="replace">
+        <h1 class="text-center"><strong t-field="blog_post.name" id="blog_post_name"/></h1>
+    </xpath>
+    <xpath expr="//span[@name='blog_post_date']" position="replace">
+    </xpath>
     <xpath expr="//p[@name='blog_post_data']" position="before">
-        <h5 class="text-center " t-field="blog_post.sub_title"/>
+        <h2 class="text-center " t-field="blog_post.sub_title"/>
     </xpath>
     <xpath expr="//div[@id='title']" position="inside">
         <div class="text-center blog_item">
@@ -274,7 +278,7 @@
         <div class="cover_footer mb0" t-attf-style="background-image: url(data:image/jpg;base64,#{next_post.content_image})">
             <a class="js_next " t-attf-href="/blogpost/#{ slug(next_post) }"><p class="text-center">Read Next</p></a>
             <h1 class="text-center" t-field="next_post.name"/>
-            <h5 class="text-center" t-field="blog_post.sub_title"/>
+            <h2 class="text-center" t-field="next_post.sub_title"/>
             <div class="text-center blog_item">
                 <img class="img-circle" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(next_post.create_uid.id)" style="width: 30px; margin-right: 10px;"/>
                 <small id="blog_author" t-field="next_post.create_uid.name"/>
