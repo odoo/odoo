@@ -8,14 +8,15 @@
             <field name="view_mode">kanban,tree,form,graph,calendar</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_crm_case_jobs_filter"/>
+            <field name="context">{'empty_list_help_model': 'hr.job'}</field>
             <field name="help" type="html">
               <p>
-                OpenERP helps you track applicants in the recruitment process 
-                and follow up all operations: meetings, interviews, etc. 
-                Candidates and their cv's are automatically created when they 
-                apply for a job. If you install the document management modules, 
-                all resumes are indexed automatically, so that you can easily 
-                search through their content in the recruitment menu.   
+                OpenERP helps you track applicants in the recruitment
+                process and follow up all operations: meetings, interviews, etc.
+              </p><p>
+                Applicants and their attached CV are created automatically when an email is sent.
+                If you install the document management modules, all resumes are indexed automatically, 
+                so that you can easily search through their content.
               </p>
             </field>
         </record>
