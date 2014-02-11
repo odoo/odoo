@@ -441,7 +441,18 @@
                                             </a>
                                         </div>
                                         <div class="oe_job_justgage">
-                                            <field state="recruit" name="no_of_hired_employee" widget="gauge" style="width:160px; height: 120px;" options="{'action_change': 'action_set_no_of_recruitment', 'max_field': 'no_of_recruitment', 'label': 'Hired Employees', 'input_value_field': 'no_of_recruitment'}"> </field>
+                                            <field state="recruit" name="no_of_hired_employee" widget="gauge"
+                                                style="width:160px; height: 120px;"
+                                                options="{
+                                                    'max_field': 'no_of_recruitment',
+                                                    'label': 'Hired Employees',
+                                                    'on_click_action': 'action_set_no_of_recruitment',
+                                                    'on_click_label': 'employee(s) to recruit',
+                                                    'force_set': False,
+                                                    'gauge_value_field': 'no_of_recruitment',
+                                                }">
+                                                Hired Employees
+                                            </field>
                                         </div>
                                     </t>
                                     <t t-if="record.state.raw_value == 'open'">
