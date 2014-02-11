@@ -279,7 +279,7 @@
         </div>
     </xpath>
     <xpath expr="//section[@id='comments']" position="after">
-        <div class="cover_footer" t-attf-style="background-image: url(data:image/jpg;base64,#{next_post.content_image})">
+        <div class="cover_footer mb0" t-attf-style="background-image: url(data:image/jpg;base64,#{next_post.content_image})">
             <a class="js_next " t-attf-href="/blogpost/#{ slug(next_post) }"><p class="text-center">Read Next</p></a>
             <h1 class="text-center" t-field="next_post.name"/>
             <h5 class="text-center" t-field="blog_post.sub_title"/>
