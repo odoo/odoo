@@ -628,6 +628,9 @@ class Home(http.Controller):
     def web_login(self, redirect=None, **kw):
         ensure_db()
 
+        if not request.uid:
+            request.uid = openerp.SUPERUSER_ID
+
         values = request.params.copy()
         if not redirect:
             redirect = '/web?' + request.httprequest.query_string
@@ -639,7 +642,7 @@ class Home(http.Controller):
             values['error'] = "Wrong login/password"
 
         def callback(template, values, context):
-            return request.registry['ir.ui.view'].render(request.cr, openerp.SUPERUSER_ID, template, values, context=context)
+            return request.registry['ir.ui.view'].render(request.cr, request.uid, template, values, context=context)
         return LazyResponse(callback, template='web.login', values=values, context=request.context)
 
     @http.route('/login', type='http', auth="none")
