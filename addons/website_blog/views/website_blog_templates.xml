@@ -252,7 +252,7 @@
 
 <!-- Options: Blog Post: Full Screen Background Image -->
 <template id="blog_post_background_cover" name="Blog Cover"
-        inherit_option_id="website_blog.blog_post_complete">
+        inherit_option_id="website_blog.blog_post_complete" inherit_id="website_blog.blog_post_complete">
     <xpath expr="//div[@id='title']" position="attributes">
         <attribute name="class">blog_cover</attribute>
         <attribute name="t-attf-style">background-image : url(#{blog_post.content_image})</attribute>
@@ -328,7 +328,7 @@
 
 <!-- Options: Blog Post: user can reply -->
 <template id="opt_blog_post_complete_comment" name="Allow Comments"
-        inherit_option_id="website_blog.blog_post_complete" inherit_id="website_blog.blog_post_complete"
+        inherit_option_id="website_blog.blog_post_complete"
         groups="website_mail.group_comment">
     <xpath expr="//ul[@id='comments-list']" position="before">
         <section class="mb32 css_editable_mode_hidden">
