@@ -81,8 +81,8 @@
                    "display_currency": "website.pricelist_id.currency_id"
                }'>
               </span>
-              <meta itemprop="price" t-att-content="product.product_variant_ids[0].price"/>
-              <meta itemprop="priceCurrency" t-att-content="website.pricelist_id.currency_id.name"/>
+              <span itemprop="price" style="display:none;" t-esc="product.product_variant_ids[0].price"/>
+              <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
           </b>
       </div>
   </section>
@@ -303,7 +303,7 @@
                 <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
             </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
                 <h1 itemprop="name" t-field="product.name">Product Name</h1>
-                <meta itemprop="url" t-attf-content="/shop/product/{{ slug(product) }}"/>
+                <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)"/>
                 <form action="/shop/add_cart/" class="js_add_cart_json" method="POST">
                     <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_ids[0].id"/>
                     <t t-if="len(product.product_variant_ids) &gt; 1">
@@ -335,8 +335,8 @@
                                  "widget": "monetary",
                                  "display_currency": "website.pricelist_id.currency_id"
                              }'/>
-                            <meta itemprop="price" t-att-content="product.product_variant_ids[0].price"/>
-                            <meta itemprop="priceCurrency" t-att-content="website.pricelist_id.currency_id.name"/>
+                            <span itemprop="price" style="display:none;" t-esc="product.product_variant_ids[0].price"/>
+                            <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
                         </h4>
                     </div>
                     <button class="btn btn-primary btn-lg mt8">Add to Cart</button>
