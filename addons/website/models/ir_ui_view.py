@@ -133,8 +133,9 @@ class view(osv.osv):
             if not context:
                 context = {}
 
-            qcontext = context.copy()
+            qcontext = dict(editable=False)
             qcontext.update(
+                context.copy(),
                 website=request.website,
                 url_for=website.url_for,
                 slug=website.slug,

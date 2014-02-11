@@ -77,7 +77,11 @@ website.Tour = openerp.Class.extend({
 
         website.Tour.busy = true;
 
-        this.localStorage.setItem("tour-"+this.id+"-test-automatic", automatic);
+        if (automatic) {
+            this.localStorage.setItem("tour-"+this.id+"-test-automatic", true);
+        } else {
+            this.localStorage.removeItem("tour-"+this.id+"-test-automatic");
+        }
         this.automatic = automatic;
 
         if (this.path) {
