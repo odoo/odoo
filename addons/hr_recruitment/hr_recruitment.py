@@ -239,22 +239,13 @@ class hr_applicant(osv.Model):
         'stage_id': _read_group_stage_ids
     }
 
-    def default_get(self, cr, uid, fields, context=None):
-        if context is None:
-            context = {}
-        res = super(hr_applicant, self).default_get(cr, uid, fields, context=context)
-        #NOTE:to set default user_id in applicant if applicant directly created from kanban action of job because currently web is not parsing value in context on action.
-        if context.get('active_model') == "hr.job" and context.get('active_id'):
-            job = self.pool.get('hr.job').browse(cr, uid, context.get('active_id'), context=context)
-            res.update({'user_id': job.user_id.id})
-        return res
-
     def onchange_job(self, cr, uid, ids, job_id=False, context=None):
         department_id = False
         if job_id:
             job_record = self.pool.get('hr.job').browse(cr, uid, job_id, context=context)
             department_id = job_record and job_record.department_id and job_record.department_id.id or False
-        return {'value': {'department_id': department_id}}
+            user_id = job_record and job_record.user_id and job_record.user_id.id or False
+        return {'value': {'department_id': department_id, 'user_id': user_id}}
 
     def onchange_department_id(self, cr, uid, ids, department_id=False, stage_id=False, context=None):
         if not stage_id:
@@ -382,6 +373,9 @@ class hr_applicant(osv.Model):
         context['mail_create_nolog'] = True
         if vals.get('department_id') and not context.get('default_department_id'):
             context['default_department_id'] = vals.get('department_id')
+        if vals.get('job_id') or context.get('default_job_id'):
+            job_id = vals.get('job_id') or context.get('default_job_id')
+            vals.update(self.onchange_job(cr, uid, [], job_id, context=context)['value'])
         obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
         applicant = self.browse(cr, uid, obj_id, context=context)
         if applicant.job_id:
