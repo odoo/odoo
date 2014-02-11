@@ -638,9 +638,9 @@ class Home(http.Controller):
                 return http.redirect_with_hash(redirect)
             values['error'] = "Wrong login/password"
 
-        def callback(template, values):
-            return request.registry['ir.ui.view'].render(request.cr, openerp.SUPERUSER_ID, template, values)
-        return LazyResponse(callback, template='web.login', values=values)
+        def callback(template, values, context):
+            return request.registry['ir.ui.view'].render(request.cr, openerp.SUPERUSER_ID, template, values, context=context)
+        return LazyResponse(callback, template='web.login', values=values, context=request.context)
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key, redirect="/web", **kw):
