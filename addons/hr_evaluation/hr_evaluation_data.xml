@@ -16,7 +16,7 @@
             <field name="body"><![CDATA[<p>Manage employee reviews: you can define an appraisal campaign with several steps, with specific evaluation surveys according to hierarchy levels. Evaluations filled by employees may be exported as pdf files.</p>]]></field>
         </record>
 
-        <record id="survey_2" model="survey">
+<!--         <record id="survey_2" model="survey">
             <field name="title">Self Appraisal</field>
             <field name="max_response_limit">20</field>
             <field eval="[(6,0,[])]" name="users"/>
@@ -1153,6 +1153,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_6"/>
             <field eval="5" name="sequence"/>
         </record>
+ -->
     </data>
 
     <data noupdate="1">
@@ -1175,8 +1176,8 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="action">self</field>
             <field eval="0" name="send_anonymous_employee"/>
             <field eval="0" name="send_answer_employee"/>
-            <field name="survey_id" ref="hr_evaluation.survey_2"/>
-            <field eval="0" name="send_answer_manager"/>
+<!--             <field name="survey_id" ref="hr_evaluation.survey_2"/>
+ -->            <field eval="0" name="send_answer_manager"/>
             <field eval="0" name="wait"/>
         </record>
     </data>
