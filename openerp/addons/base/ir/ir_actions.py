@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+    # -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -979,6 +979,7 @@ class actions_server(osv.osv):
         model = self.pool[action.model_id.model]
         active_id = context.get('active_id')
         active_ids = context.get('active_ids', [active_id] if active_id else [])
+        target_record = None
         if context.get('active_model') == action.model_id.model and active_id:
             context = dict(context, active_ids=active_ids, active_id=active_id)
             target_record = model.browse(cr, uid, active_id, context=context) if active_id else None
@@ -997,7 +998,7 @@ class actions_server(osv.osv):
             'context': context,
         }
         return eval_context
-        
+
 
     def run(self, cr, uid, ids, context=None):
         """ Run the server action. For each server action, the condition is
