@@ -557,7 +557,7 @@ class view(osv.osv):
                         if f.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
                             node.remove(f)
                             ctx = context.copy()
-                            ctx['base_model_name'] = Model
+                            ctx['base_model_name'] = model
                             xarch, xfields = self.postprocess_and_fields(cr, user, column._obj or None, f, view_id, ctx)
                             views[str(f.tag)] = {
                                 'arch': xarch,

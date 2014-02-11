@@ -64,9 +64,20 @@ function PhantomTest() {
     };
     this.page.onLoadFinished = function(status) {
         if (status === "success") {
+            var src, test;
             for (var k in self.inject) {
-                if(!page.injectJs(self.inject[k])) {
-                    self.error("Can't inject " + self.inject[k]);
+                if (typeof self.inject[k] !== "string") {
+                    test = self.page.evaluate(function (variable) {
+                        try { return eval("("+variable+")") != null; }
+                        catch (e) { return false; }
+                    }, self.inject[k][0]);
+                    src = self.inject[k][1];
+                } else {
+                    src = self.inject[k];
+                    test = true;
+                }
+                if(test && !page.injectJs(src)) {
+                    self.error("Can't inject " + src);
                 }
             }
         }
