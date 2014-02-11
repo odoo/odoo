@@ -100,6 +100,15 @@ def html_sanitize(src, silent=True):
             raise
         logger.warning('unknown error obtained when sanitizing %r', src, exc_info=True)
         cleaned = '<p>Unknown error when sanitizing</p>'
+
+    # MAKO compatibility: $, { and } inside quotes are escaped, preventing correct mako execution
+    cleaned = cleaned.replace('%24', '$')
+    cleaned = cleaned.replace('%7B', '{')
+    cleaned = cleaned.replace('%7D', '}')
+    cleaned = cleaned.replace('%20', ' ')
+    cleaned = cleaned.replace('%5B', '[')
+    cleaned = cleaned.replace('%5D', ']')
+
     return cleaned
 
 
