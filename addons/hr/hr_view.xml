@@ -45,7 +45,7 @@
                                     </group>
                                     <group string="Position">
                                         <field name="department_id" on_change="onchange_department_id(department_id)"/>
-                                        <field name="job_id" options='{"no_open": True}' domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
+                                        <field name="job_id"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
                                     </group>
@@ -333,8 +333,8 @@
             <field name="arch" type="xml">
                 <form string="Job" version="7.0">
                     <header>
-                        <button name="job_recruitement" string="Launch Recruitement" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
-                        <button name="job_open" string="Stop Recruitment" states="recruit" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button name="set_recruit" string="Launch Recruitment" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button name="set_open" string="Stop Recruitment" states="recruit" type="object" class="oe_highlight" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
                     <sheet>
@@ -342,20 +342,20 @@
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" class="oe_inline"/></h1>
                         </div>
-                        <group>
-                            <group name="job_data">
-                                <field name="no_of_employee" groups="base.group_user"/>
-                                <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
-                                <field name="expected_employees" groups="base.group_user"/>
-                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                                <field name="department_id"/>
-                            </group>
+                        <div class="oe_right" name="buttons"/>
+                        <group name="employee_data">
+                            <field name="department_id" class="oe_inline"/>
+                            <label for="no_of_employee"/>no_of_recruitment
+                            <div>
+                                <field name="no_of_employee" class="oe_inline"/>
+                                <p><field name="no_of_recruitment" groups="base.group_user" colspan="0" class="oe_inline" style="padding-top: 1px"/> new employee(s) expected</p>
+                            </div>
                         </group>
-                        <div>
+                        <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
                             <label for="description"/>
                             <field name="description"/>
                         </div>
-                        <div>
+                        <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
                             <label for="requirements"/>
                             <field name="requirements"/>
                         </div>
@@ -378,6 +378,7 @@
                     <field name="no_of_employee"/>
                     <field name="no_of_recruitment"/>
                     <field name="expected_employees"/>
+                    <field name="no_of_hired_employee"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -389,31 +390,15 @@
             <field name="arch" type="xml">
                 <search string="Jobs">
                     <field name="name" string="Job"/>
-                    <filter icon="terp-camera_test" domain="[('state','=','open')]" string="In Position" help="In Position"/>
-                    <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="In Recruitment" help="In Recruitment"/>
+                    <filter domain="[('state','=','open')]" string="In Position"/>
+                    <filter domain="[('state','=','recruit')]" string="In Recruitment" name="in_recruitment"/>
                     <field name="department_id"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
+                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
-            </field>
-        </record>
-
-        <record id="view_hr_job_employee_form" model="ir.ui.view">
-            <field name="name">hr.job.employee.form</field>
-            <field name="model">hr.job</field>
-            <field name="priority">20</field>
-            <field name="arch" type="xml">
-                <form string="Job" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="department_id"/>
-                    </group>
-                    <label for="description"/>
-                    <field name="description"/>
-                </form>
             </field>
         </record>
 
@@ -441,7 +426,6 @@
         </record>
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>
-        <menuitem parent="hr.menu_hr_configuration" id="menu_hr_job" action="action_hr_job" sequence="6"/>
 
         <!-- hr.department -->
         <record id="view_department_form" model="ir.ui.view">
