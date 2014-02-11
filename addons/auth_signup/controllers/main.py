@@ -38,7 +38,7 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
             response.params['values'].update(self.get_auth_signup_config())
         return response
 
-    @http.route('/web/signup', type='http', auth='public', website=True)
+    @http.route('/web/signup', type='http', auth='public', website=True, multilang=True)
     def web_auth_signup(self, *args, **kw):
         qcontext = self.get_auth_signup_qcontext()
 
@@ -56,7 +56,7 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
             return request.registry['ir.ui.view'].render(request.cr, request.uid, template, values)
         return LazyResponse(callback, template='auth_signup.signup', values=qcontext)
 
-    @http.route('/web/reset_password', type='http', auth='public', website=True)
+    @http.route('/web/reset_password', type='http', auth='public', website=True, multilang=True)
     def web_auth_reset_password(self, *args, **kw):
         qcontext = self.get_auth_signup_qcontext()
 
