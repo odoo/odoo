@@ -38,7 +38,7 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
             response.params['values'].update(self.get_auth_signup_config())
         return response
 
-    @http.route('/web/signup', type='http', auth='none')
+    @http.route('/web/signup', type='http', auth='public', website=True)
     def web_auth_signup(self, *args, **kw):
         qcontext = self.get_auth_signup_qcontext()
 
@@ -53,10 +53,10 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
                 qcontext['error'] = _(e.message)
 
         def callback(template, values):
-            return request.registry['ir.ui.view'].render(request.cr, openerp.SUPERUSER_ID, template, values)
+            return request.registry['ir.ui.view'].render(request.cr, request.uid, template, values)
         return LazyResponse(callback, template='auth_signup.signup', values=qcontext)
 
-    @http.route('/web/reset_password', type='http', auth='none')
+    @http.route('/web/reset_password', type='http', auth='public', website=True)
     def web_auth_reset_password(self, *args, **kw):
         qcontext = self.get_auth_signup_qcontext()
 
@@ -81,7 +81,7 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
                 _logger.exception('error when resetting password')
 
         def callback(template, values):
-            return request.registry['ir.ui.view'].render(request.cr, openerp.SUPERUSER_ID, template, values)
+            return request.registry['ir.ui.view'].render(request.cr, request.uid, template, values)
         return LazyResponse(callback, template='auth_signup.reset_password', values=qcontext)
 
     def get_auth_signup_config(self):
