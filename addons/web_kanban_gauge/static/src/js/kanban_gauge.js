@@ -13,7 +13,7 @@ openerp.web_kanban_gauge = function (instance) {
  * - force_set: is value is 0, display a text 'Click to set' [default: True]
  * - label: lable of the gauge, displayed below the gauge value
  * - title: title of the gauge, displayed on top of the gauge
- * - on_click_action: action to call when cliking and setting a value
+ * - on_change: action to call when cliking and setting a value
  * - on_click_label: optional label of the input displayed when clicking
  *
  */
@@ -69,7 +69,7 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
         this.gage.refresh(value, max_value);
 
         var flag_open = false;
-        if (this.options.on_click_action) {
+        if (this.options.on_change) {
             var $svg = this.$el.find('svg');
 
             this.$el.click(function (event) {
@@ -114,7 +114,7 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
                                 if (event.keyCode == 13 || event.keyCode == 9) {
                                     if ($input.val() != value) {
                                         $svg.fadeTo(0, 1);
-                                        parent.view.dataset.call(self.options.on_click_action, [parent.id, $input.val()]).then(function () {
+                                        parent.view.dataset.call(self.options.on_change, [parent.id, $input.val()]).then(function () {
                                             parent.do_reload();
                                         });
                                     } else {
