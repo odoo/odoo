@@ -57,7 +57,8 @@ var disqus_identifier;
 
     var prepareDisquseLink = function(data,identifier,node) {
 
-        var a = $('<a class="disqussion-link" />')
+        var cls = data.length > 0 ? 'disqussion-link has-comments' : 'disqussion-link';
+        var a = $('<a class="'+ cls +'" />')
             .attr('data-disqus-identifier', identifier)
             .attr('data-disqus-position', settings.position)
             .text(data.length > 0 ? data.length : '+')
@@ -66,7 +67,7 @@ var disqus_identifier;
             .parent()
             .appendTo('#disqussions_wrapper');
             a.css({
-                'top': node.offset().top,
+                'top': node.offset().top + 40,
                 'left': settings.position == 'right' ? node.offset().left + node.outerWidth() : node.offset().left - a.outerWidth()
             });
 
