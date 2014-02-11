@@ -2,6 +2,19 @@ openerp.web_kanban_gauge = function (instance) {
 
 /**
  * Kanban widgets: GaugeWidget
+ * options
+ * - max_value: maximum value of the gauge [default: 100]
+ * - max_field: get the max_value from the field that must be present in the
+ *              view; takes over max_value
+ * - gauge_value_field: if set, the value displayed below the gauge is taken
+                        from this field instead of the base field used for
+                        the gauge. This allows to display a number different
+                        from the gauge.
+ * - force_set: is value is 0, display a text 'Click to set' [default: True]
+ * - label: lable of the gauge, displayed below the gauge value
+ * - title: title of the gauge, displayed on top of the gauge
+ * - on_click_action: action to call when cliking and setting a value
+ * - on_click_label: optional label of the input displayed when clicking
  *
  */
 var _t = instance.web._t,
@@ -13,33 +26,34 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
     start: function() {
         var self = this;
         var parent = this.getParent();
-        var max = 100;
+        // parameters
+        var max_value = this.options.max_value || 100;
         if (this.options.max_field) {
-            max = this.getParent().record[this.options.max_field].raw_value;
+            max_value = this.getParent().record[this.options.max_field].raw_value;
         }
         var label = this.options.label || "";
         if (this.options.label_field) {
             label = this.getParent().record[this.options.label_field].raw_value;
         }
+        var title = this.$node.html() || this.field.string;
+        // current gauge value
         var val = this.field.value;
         var value = _.isArray(val) && val.length ? val[val.length-1]['value'] : val;
-        var input_value = value;
-        if (this.options.input_value_field) {
-            input_value = this.getParent().record[this.options.input_value_field].raw_value;
+        // displayed value under gauge
+        var gauge_value = value;
+        if (this.options.gauge_value_field) {
+            gauge_value = this.getParent().record[this.options.gauge_value_field].raw_value;
         }
-        var title = this.$node.html() || this.field.string;
         // var unique_id = _.uniqueId("JustGage");
 
-        this.$el.empty()
-            .attr('style', this.$node.attr('style') + ';position:relative; display:inline-block;');
-
+        this.$el.empty().attr('style', this.$node.attr('style') + ';position:relative; display:inline-block;');
         this.gage = new JustGage({
             parentNode: this.$el[0],
             // id: unique_id,
             value: value,
             title: title,
             min: 0,
-            max: max,
+            max: max_value,
             relativeGaugeSize: true,
             humanFriendly: true,
             titleFontColor: '#333333',
@@ -52,17 +66,11 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
                 "#a9d70b"
             ],
         });
-        this.gage.refresh(value, max);
+        this.gage.refresh(value, max_value);
 
         var flag_open = false;
-        if (this.options.action_change) {
+        if (this.options.on_click_action) {
             var $svg = this.$el.find('svg');
-            var css = {
-                'text-align': 'center',
-                'position': 'absolute',
-                'width': this.$el.outerWidth() + 'px',
-                'top': (this.$el.outerHeight()/2-5) + 'px'
-            };
 
             this.$el.click(function (event) {
                 event.stopPropagation();
@@ -70,30 +78,47 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
                 if (!parent.view.is_action_enabled('edit')) {
                     return;
                 }
+                // fade widget
+                $svg.fadeTo(0, 0.3);
+
+                // add input
                 if (!self.$el.find(".oe_justgage_edit").size()) {
                     $div = $('<div class="oe_justgage_edit" style="z-index:1"/>');
-                    $div.css(css);
-                    $input = $('<input/>').val(input_value);
+                    $div.css({
+                        'text-align': 'center',
+                        'position': 'absolute',
+                        'width': self.$el.outerWidth() + 'px',
+                        'top': (self.$el.outerHeight()/2-5) + 'px'
+                    });
+                    $input = $('<input/>').val(gauge_value);
                     $input.css({
                         'text-align': 'center',
                         'margin': 'auto',
                         'width': ($svg.outerWidth()-40) + 'px'
                     });
                     $div.append($input);
+                    if (self.options.on_click_label) {
+                        $post_input = $('<span>' + self.options.on_click_label + '</span>');
+                        $div.append($post_input);
+                    }
                     self.$el.prepend($div)
+
                     $input.focus()
                         .keydown(function (event) {
                             event.stopPropagation();
                             if(isNaN($input.val())){
                                 self.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
                                 $div.remove();
+                                $svg.fadeTo(0, 1);
                             } else {
                                 if (event.keyCode == 13 || event.keyCode == 9) {
                                     if ($input.val() != value) {
-                                        parent.view.dataset.call(self.options.action_change, [parent.id, $input.val()]).then(function () {
+                                        $svg.fadeTo(0, 1);
+                                        parent.view.dataset.call(self.options.on_click_action, [parent.id, $input.val()]).then(function () {
                                             parent.do_reload();
                                         });
                                     } else {
+                                        $svg.fadeTo(0, 1);
                                         $div.remove();
                                     }
                                 }
@@ -106,7 +131,9 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
                         .blur(function (event) {
                             if(!flag_open) {
                                 self.$el.find(".oe_justgage_edit").remove();
+                                $svg.fadeTo(0, 1);
                             } else {
+                                $svg.fadeTo(0, 1);
                                 flag_open = false;
                                 setTimeout(function () {$input.focus();}, 0);
                             }
@@ -116,7 +143,7 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
                 flag_open = true;
             });
 
-            if (!+input_value) {
+            if (this.options.force_set && !+input_value) {
                 $svg.fadeTo(0, 0.3);
                 $div = $('<div/>').text(_t("Click to change value"));
                 $div.css(css);
