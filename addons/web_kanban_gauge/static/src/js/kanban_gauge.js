@@ -79,7 +79,7 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
                     return;
                 }
                 // fade widget
-                $svg.fadeTo(0, 0.3);
+                $svg.fadeTo(0, 0.2);
 
                 // add input
                 if (!self.$el.find(".oe_justgage_edit").size()) {
@@ -98,7 +98,7 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
                     });
                     $div.append($input);
                     if (self.options.on_click_label) {
-                        $post_input = $('<span>' + self.options.on_click_label + '</span>');
+                        $post_input = $('<span style="color: #000000;">' + self.options.on_click_label + '</span>');
                         $div.append($post_input);
                     }
                     self.$el.prepend($div)
