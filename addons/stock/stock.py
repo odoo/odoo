@@ -596,7 +596,7 @@ class stock_picking(osv.osv):
     _name = "stock.picking"
     _inherit = ['mail.thread']
     _description = "Picking List"
-    _order = "priority desc, date desc, id desc"
+    _order = "priority desc, date asc, id desc"
 
     def _set_min_date(self, cr, uid, id, field, value, arg, context=None):
         move_obj = self.pool.get("stock.move")
@@ -1129,13 +1129,13 @@ class stock_picking(osv.osv):
         """ returns the next pickings to process. Used in the barcode scanner UI"""
         if context is None:
             context = {}
-        domain = [('state', 'in', ('confirmed', 'assigned'))]
+        domain = [('state', 'in', ('assigned', 'partially_available'))]
         if context.get('default_picking_type_id'):
             domain.append(('picking_type_id', '=', context['default_picking_type_id']))
         return self.search(cr, uid, domain, context=context)
 
     def action_done_from_ui(self, cr, uid, picking_id, context=None):
-        """ called when button 'done' in pused in the barcode scanner UI """
+        """ called when button 'done' is pushed in the barcode scanner UI """
         self.do_transfer(cr, uid, [picking_id], context=context)
         #return id of next picking to work on
         return self.get_next_picking_for_ui(cr, uid, context=context)
@@ -3622,39 +3622,6 @@ class stock_picking_type(osv.osv):
     _description = "The picking type determines the picking view"
     _order = 'sequence'
 
-    def __get_bar_values(self, cr, uid, obj, domain, read_fields, value_field, groupby_field, context=None):
-        """ Generic method to generate data for bar chart values using SparklineBarWidget.
-            This method performs obj.read_group(cr, uid, domain, read_fields, groupby_field).
-
-            :param obj: the target model (i.e. crm_lead)
-            :param domain: the domain applied to the read_group
-            :param list read_fields: the list of fields to read in the read_group
-            :param str value_field: the field used to compute the value of the bar slice
-            :param str groupby_field: the fields used to group
-
-            :return list section_result: a list of dicts: [
-                                                {   'value': (int) bar_column_value,
-                                                    'tootip': (str) bar_column_tooltip,
-                                                }
-                                            ]
-        """
-        month_begin = date.today().replace(day=1)
-        section_result = [{
-            'value': 0,
-            'tooltip': (month_begin + relativedelta.relativedelta(months=i)).strftime('%B'),
-        } for i in range(-2, 2, 1)]
-        group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
-        for group in group_obj:
-            group_begin_date = datetime.strptime(group['__domain'][0][2], DEFAULT_SERVER_DATE_FORMAT)
-            month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
-            section_result[-month_delta.months + 2] = {'value': group.get(value_field, 0), 'tooltip': group_begin_date.strftime('%B')}
-            inner_groupby = (group.get('__context', {})).get('group_by',[])
-            if inner_groupby:
-                groupby_picking = obj.read_group(cr, uid, group.get('__domain'), read_fields, inner_groupby, context=context)
-                for groupby in groupby_picking:
-                    section_result[-month_delta.months + 2]['value'] = groupby.get(value_field, 0)
-        return section_result
-
     def _get_tristate_values(self, cr, uid, ids, field_name, arg, context=None):
         picking_obj = self.pool.get('stock.picking')
         res = dict.fromkeys(ids, [])
@@ -3670,24 +3637,6 @@ class stock_picking_type(osv.osv):
                 else:
                     tristates.insert(0, {'tooltip': picking.name + _(': OK'), 'value': 1})
             res[picking_type_id] = tristates
-        return res
-
-
-
-    def _get_monthly_pickings(self, cr, uid, ids, field_name, arg, context=None):
-        obj = self.pool.get('stock.picking')
-        res = dict.fromkeys(ids, False)
-        month_begin = date.today().replace(day=1)
-        groupby_begin = (month_begin + relativedelta.relativedelta(months=-2)).strftime(DEFAULT_SERVER_DATE_FORMAT)
-        groupby_end = (month_begin + relativedelta.relativedelta(months=2)).strftime(DEFAULT_SERVER_DATE_FORMAT)
-        for id in ids:
-            created_domain = [
-                ('picking_type_id', '=', id),
-                ('state', '=', 'done'),
-                ('date', '>=', groupby_begin),
-                ('date', '<', groupby_end),
-            ]
-            res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['date', 'picking_type_id'], 'picking_type_id_count', ['date', 'picking_type_id'], context=context)
         return res
 
     def _get_picking_count(self, cr, uid, ids, field_names, arg, context=None):
@@ -3799,9 +3748,6 @@ class stock_picking_type(osv.osv):
         'active': fields.boolean('Active'),
 
         # Statistics for the kanban view
-        'monthly_picking': fields.function(_get_monthly_pickings,
-            type='string',
-            string='Done Pickings per Month'),
         'last_done_picking': fields.function(_get_tristate_values,
             type='string',
             string='Last 10 Done Pickings'),

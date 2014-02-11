@@ -54,6 +54,9 @@ function openerp_picking_widgets(instance){
                 console.log('Id:',id);
                 self.getParent().scan_product_id(id);
             });
+
+            //remove navigtion bar from default openerp GUI
+            $('td.navbar').html('<div></div>');
         },
     });
 
@@ -159,7 +162,7 @@ function openerp_picking_widgets(instance){
                     }
                     self.pickings_by_type[0] = [];
 
-                    return new instance.web.Model('stock.picking').call('search_read',[ [['state','in',['confirmed','assigned']]], [] ], {context: new instance.web.CompoundContext()});
+                    return new instance.web.Model('stock.picking').call('search_read',[ [['state','in', ['assigned', 'partially_available']]], [] ], {context: new instance.web.CompoundContext()});
                                                                   
                 }).then(function(pickings){
                     self.pickings = pickings;
@@ -182,6 +185,8 @@ function openerp_picking_widgets(instance){
             this.$('.oe_searchbox input').keyup(function(event){
                 self.on_searchbox($(this).val());
             });
+            //remove navigtion bar from default openerp GUI
+            $('td.navbar').html('<div></div>');
         },
         start: function(){
             this._super();
@@ -294,7 +299,6 @@ function openerp_picking_widgets(instance){
             this.packages = null;
             this.barcode_scanner = new module.BarcodeScanner();
             this.picking_type_id = params.context.active_id || 0;
-            
 
             if(params.context.picking_id){
                 this.loaded =  this.load(params.context.picking_id);
@@ -312,7 +316,6 @@ function openerp_picking_widgets(instance){
        
             function load_picking_list(type_id){
                 var pickings = new $.Deferred();
-
                 new instance.web.Model('stock.picking')
                     .call('get_next_picking_for_ui',[{'default_picking_type_id':type_id}])
                     .then(function(picking_ids){
@@ -322,7 +325,7 @@ function openerp_picking_widgets(instance){
                                 buttons: [{ 
                                     text:_t('Ok'), 
                                     click: function(){
-                                        self.quit();
+                                        self.menu();
                                     }
                                 }]
                             }, _t('<p>We could not find a picking to display.</p>'))).open();
@@ -356,6 +359,7 @@ function openerp_picking_widgets(instance){
                     })
                     .then(function(picking){
                         self.picking = picking;
+                        self.picking_type_id = picking.picking_type_id[0];
                         loaded_picking.resolve();
                     });
             }
@@ -395,10 +399,12 @@ function openerp_picking_widgets(instance){
             this.barcode_scanner.connect(function(ean){
                 self.scan(ean);
             });
+            
 
             this.$('.js_pick_quit').click(function(){ self.quit(); });
             this.$('.js_pick_pack').click(function(){ self.pack(); });
             this.$('.js_pick_done').click(function(){ self.done(); });
+            this.$('.js_pick_print').click(function(){ self.print_picking(); });
             this.$('.js_pick_prev').click(function(){ self.picking_prev(); });
             this.$('.js_pick_next').click(function(){ self.picking_next(); });
             this.$('.js_pick_menu').click(function(){ self.menu(); });
@@ -439,8 +445,6 @@ function openerp_picking_widgets(instance){
 
             });
 
-
-            return this._super();
         },
         // reloads the data from the provided picking and refresh the ui. 
         // (if no picking_id is provided, gets the first picking in the db)
@@ -463,15 +467,14 @@ function openerp_picking_widgets(instance){
                     }else{
                         self.$('.js_pick_next').removeClass('oe_disabled');
                     }
-
                     self.$('.oe_pick_app_header').text(self.get_header());
                 });
         },
         get_header: function(){
             if(this.picking){
-                return _t('Picking:') +' '+this.picking.name;
+                return this.picking.name;
             }else{
-                return _t('Picking:');
+                return '';
             }
         },
         menu: function(){
@@ -515,9 +518,14 @@ function openerp_picking_widgets(instance){
         done: function(){
             var self = this;
             new instance.web.Model('stock.picking')
-                .call('action_done_from_ui',[self.picking.id])
-                .then(function(new_picking_id){
-                    return self.refresh_ui(new_picking_id);
+                .call('action_done_from_ui',[self.picking.id, {'default_picking_type_id': self.picking_type_id}])
+                .then(function(new_picking_ids){
+                    if (new_picking_ids){
+                        return self.refresh_ui(new_picking_ids[0]);
+                    }
+                    else {
+                        return 0;
+                    }
                 });
         },
         print_package: function(package_id){
@@ -526,6 +534,26 @@ function openerp_picking_widgets(instance){
                 .call('action_print',[[package_id]])
                 .then(function(action){
                     return self.do_action(action);
+                });
+        },
+        print_picking: function(){
+            var self = this;
+            new instance.web.Model('stock.picking.type').call('read', [[self.picking_type_id], ['code'], new instance.web.CompoundContext()])
+                .then(function(pick_type){
+                    console.log('self.picking_type_id.code '+pick_type[0]['code']);
+                    if (pick_type[0]['code'] == 'outgoing'){
+                        new instance.web.Model('stock.picking').call('do_print_delivery',[[self.picking.id]])
+                           .then(function(action){
+                                return self.do_action(action);
+                           });
+                    }
+                    else {
+                        console.log('self.picking_id '+picking_id);
+                        new instance.web.Model('stock.picking').call('do_print_picking',[[self.picking.id]])
+                           .then(function(action){
+                                return self.do_action(action);
+                           });
+                    }
                 });
         },
         picking_next: function(){
@@ -734,3 +762,11 @@ function openerp_picking_widgets(instance){
     });
 
 }
+
+openerp.stock = function(openerp) {
+    openerp.stock = openerp.stock || {};
+    openerp_picking_widgets(openerp);
+
+
+}
+
