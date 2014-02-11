@@ -527,11 +527,12 @@ class hr_job(osv.osv):
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
                                     help="Email alias for this job position. New emails will automatically "
                                          "create new applicants for this job position."),
+        'address_id': fields.many2one('res.partner', 'Job Location', help="Address where employees are working"),
         'application_ids': fields.one2many('hr.applicant', 'job_id', 'Applications'),
         'manager_id': fields.related('department_id', 'manager_id', type='many2one', string='Department Manager', relation='hr.employee', readonly=True, store=True),
         'document_ids': fields.function(_get_attached_docs, type='one2many', relation='ir.attachment', string='Applications'),
         'user_id': fields.many2one('res.users', 'Recruitment Responsible', track_visibility='onchange'),
-        'address_id': fields.many2one('res.partner', 'Job Location', help="Address where employees are working"),
+        'color': fields.integer('Color Index'),
     }
 
     def _address_get(self, cr, uid, context=None):
@@ -587,6 +588,10 @@ class hr_job(osv.osv):
         action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
         action['domain'] = str(['|', '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', ids), '&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', applicant_ids)])
         return action
+
+    def action_set_no_of_recruitment(self, cr, uid, id, value, context=None):
+        return self.write(cr, uid, [id], {'no_of_recruitment': value}, context=context)
+
 
 class applicant_category(osv.osv):
     """ Category of applicant """

@@ -347,7 +347,7 @@
                             <field name="department_id" class="oe_inline"/>
                             <label for="no_of_employee"/>no_of_recruitment
                             <div>
-                                <field name="no_of_employee" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)" class="oe_inline"/>
+                                <field name="no_of_employee" class="oe_inline"/>
                                 <p><field name="no_of_recruitment" groups="base.group_user" colspan="0" class="oe_inline" style="padding-top: 1px"/> new employee(s) expected</p>
                             </div>
                         </group>
@@ -378,6 +378,7 @@
                     <field name="no_of_employee"/>
                     <field name="no_of_recruitment"/>
                     <field name="expected_employees"/>
+                    <field name="no_of_hired_employee"/>
                     <field name="state"/>
                 </tree>
             </field>

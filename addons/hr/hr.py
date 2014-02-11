@@ -120,7 +120,6 @@ class hr_job(osv.Model):
                                   string='Status', readonly=True, required=True,
                                   track_visibility='always',
                                   help="By default 'Closed', set it to 'In Recruitment' if recruitment process is going on for this job position."),
-        'color': fields.integer('Color Index'),
         'write_date': fields.datetime('Update Date', readonly=True),
     }
 
@@ -133,14 +132,6 @@ class hr_job(osv.Model):
         ('name_company_uniq', 'unique(name, company_id, department_id)', 'The name of the job position must be unique per department in company!'),
         ('hired_employee_check', "CHECK ( no_of_hired_employee <= no_of_recruitment )", "Number of hired employee must be less than expected number of employee in recruitment."),
     ]
-
-    def on_change_expected_employee(self, cr, uid, ids, no_of_recruitment, no_of_employee, context=None):
-        if context is None:
-            context = {}
-        return {'value': {'expected_employees': no_of_recruitment + no_of_employee}}
-
-    def action_set_no_of_recruitment(self, cr, uid, id, value, context=None):
-        return self.write(cr, uid, [id], {'no_of_recruitment': value}, context=context)
 
     def set_recruit(self, cr, uid, ids, context=None):
         for job in self.browse(cr, uid, ids, context=context):
