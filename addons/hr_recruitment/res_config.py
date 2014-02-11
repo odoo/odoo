@@ -47,8 +47,7 @@ class hr_applicant_settings(osv.osv_memory):
         try:
             alias_name = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'mail_alias_jobs').alias_name
         except Exception:
-            model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'hr.applicant')], context=context)
-            alias_ids = mail_alias.search(cr, uid, [('alias_model_id', '=', model_ids[0]),('alias_defaults', '=', '{}')], context=context)
+            alias_ids = mail_alias.search(cr, uid, [('alias_model_id.model', '=', 'hr.applicant'), ('alias_parent_model_id.model', '=', 'hr.job'), ('alias_defaults', '=', '{}')], context=context)
             if alias_ids:
                 alias_name = mail_alias.browse(cr, uid, alias_ids[0], context=context).alias_name
         return {'alias_prefix': alias_name}
@@ -63,10 +62,13 @@ class hr_applicant_settings(osv.osv_memory):
                 if alias:
                     alias.write({'alias_name': record.alias_prefix})
             except Exception:
-                model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'hr.applicant')], context=context)
-                alias_ids = mail_alias.search(cr, uid, [('alias_model_id', '=', model_ids[0]),('alias_defaults', '=', '{}')], context=context)
+                alias_ids = mail_alias.search(cr, uid, [('alias_model_id.model', '=', 'hr.applicant'), ('alias_parent_model_id.model', '=', 'hr.job'), ('alias_defaults', '=', '{}')], context=context)
                 if alias_ids:
                     mail_alias.write(cr, uid, alias_ids[0], {'alias_name': record.alias_prefix}, context=context)
                 else:
-                    mail_alias.create_unique_alias(cr, uid, {'alias_name': record.alias_prefix}, model_name="hr.applicant", context=context)
+                    context.update({
+                        'alias_model_name': 'hr.applicant',
+                        'alias_parent_model_name': 'hr.job'
+                    })
+                    mail_alias.create(cr, uid, {'alias_name': record.alias_prefix}, context=context)
         return True
