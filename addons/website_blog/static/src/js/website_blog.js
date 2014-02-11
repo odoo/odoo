@@ -1,18 +1,29 @@
 $(document).ready(function() {
-
+    
     $("#blog_content p").inlineDisqussions(); //Allow inline comments on blog post
+    $('.cover_footer').on('click',page_transist);
+    $('a[href^="#"]').on('click', animate);
 
-    $('.cover_footer').click(function(event) {
+    function page_transist(event) {
         event.preventDefault();
         var translationValue  = $('.cover_footer').get(0).getBoundingClientRect().top;
-        newLocation = $(this).find('.js_next')[0].href;
-        $('.blog_cover').addClass('page_fadeup_out');
-      
-      $('.cover_footer')
-        .addClass('page_upward')
-        .css({ "transform": "translate3d(0, -"+ translationValue +"px, 0)" })
-        .fadeIn(10000, newpage);
-    });
+        newLocation = $('.js_next')[0].href;
+        $('.cover_footer')
+        .fadeIn(900, newpage);
+        $("html, body").stop().animate({ scrollTop:  $("#wrap").offset().top }, 'slow', 'swing');
+    }
+
+    function animate(event) {
+       event.stopImmediatePropagation()
+        var target = this.hash,
+        $target = $(target);
+        $('html, body').stop().animate({
+            'scrollTop': $target.offset().top
+        }, 900, 'swing', function () {
+            window.location.hash = target;
+        });
+    }
+
     function newpage() {
         $.ajax({
           url: newLocation,
@@ -21,34 +32,10 @@ $(document).ready(function() {
            if (newLocation != window.location) {
                 history.pushState(null, null, newLocation);
             }
+            //bind again it takes control from now on, until page relaod.
+            $(document).find('.cover_footer').on('click',page_transist);
+            $(document).find('a[href^="#"]').on('click', animate);
+            $(document).find("#blog_content p").inlineDisqussions();
         });
     }
-
-    $(document).on('mouseover',function() {
-        $('.cover_footer').click(function(event) {
-            event.preventDefault();
-            var translationValue  = $('.cover_footer').get(0).getBoundingClientRect().top;
-            newLocation = $(this).find('.js_next')[0].href;
-            $('.blog_cover').addClass('page_fadeup_out');
-          
-          $('.cover_footer')
-            .addClass('page_upward')
-            .css({ "transform": "translate3d(0, -"+ translationValue +"px, 0)" })
-            .fadeIn(900, newpage);
-          $("html, body").stop().animate({ scrollTop:  $("#wrap").offset().top }, 'slow', 'swing');
-        });
-        
-        $('a[href^="#"]').on('click',function (e) {
-            e.preventDefault();
-        
-            var target = this.hash,
-            $target = $(target);
-        
-            $('html, body').stop().animate({
-                'scrollTop': $target.offset().top
-            }, 900, 'swing', function () {
-                window.location.hash = target;
-            });
-        });
-    });
 });
