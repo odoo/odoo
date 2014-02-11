@@ -45,11 +45,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route(website=True, auth="public", multilang=True)
     def web_login(self, *args, **kw):
-        response = super(Website, self).web_login(*args, **kw)
-        if isinstance(response, LazyResponse):
-            values = dict(response.params['values'], disable_footer=True)
-            response = request.website.render(response.params['template'], values)
-        return response
+        return super(Website, self).web_login(*args, **kw)
 
     @http.route('/page/<page:page>', type='http', auth="public", website=True, multilang=True)
     def page(self, page, **opt):
