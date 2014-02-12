@@ -139,9 +139,6 @@
 
             this.$el.addClass("hidden");
 
-            this.$modal = $(openerp.qweb.render('website.snippets_modal'));
-            this.$modal.appendTo("body");
-
             $(document).on('click', '.dropdown-submenu a[tabindex]', function (e) {
                 e.preventDefault();
             });
@@ -375,7 +372,7 @@
                     });
                 },
                 stop: function(ev, ui){
-                    if (action === 'insert' && ! dropped && $('.oe_drop_zone') && ui.position.top > 50) {
+                    if (action === 'insert' && ! dropped && $('.oe_drop_zone') && ui.position.top > 3) {
                         var el = $('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
                         if (el.length) {
                             el.after($toInsert);
@@ -439,9 +436,6 @@
                         },0);
                     } else {
                         $toInsert.remove();
-                        if (self.$modal.find('input:not(:checked)').length) {
-                            self.$modal.modal('toggle');
-                        }
                     }
                 },
             });
