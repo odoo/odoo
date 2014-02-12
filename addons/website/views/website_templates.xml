@@ -383,13 +383,13 @@
 <template id="pager" name="Pager">
     <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination" t-att-style="style or ''">
         <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else '' ">
-            <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else '' ">Prev</a>
+            <a t-att-href="'%s?%s' % (pager['page_previous']['url'],keep_query('*')) if pager['page']['num'] != 1 else ''">Prev</a>
         </li>
         <t t-foreach="pager['pages']" t-as="page">
-            <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else '' "> <a t-att-href="page['url']" t-raw="page['num']"></a></li>
+            <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else '' "> <a t-att-href="'%s?%s' % (page['url'],keep_query('*'))" t-raw="page['num']"></a></li>
         </t>
         <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else '' ">
-            <a t-att-href=" pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else '' ">Next</a>
+            <a t-att-href="'%s?%s' % (pager['page_next']['url'],keep_query('*')) if pager['page']['num'] != pager['page_count'] else ''">Next</a>
         </li>
     </ul>
 </template>
