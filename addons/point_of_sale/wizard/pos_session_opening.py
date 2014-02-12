@@ -28,10 +28,9 @@ class pos_session_opening(osv.osv_memory):
         data = self.browse(cr, uid, ids[0], context=context)
         context['active_id'] = data.pos_session_id.id
         return {
-            'type' : 'ir.actions.client',
-            'name' : _('Start Point Of Sale'),
-            'tag' : 'pos.ui',
-            'context' : context
+            'type' : 'ir.actions.act_url',
+            'url':   '/pos/web/',
+            'target': 'self',
         }
 
     def open_existing_session_cb_close(self, cr, uid, ids, context=None):

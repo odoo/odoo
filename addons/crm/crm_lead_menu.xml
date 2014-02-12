@@ -12,6 +12,7 @@
         <field name="context">{
                 'default_type':'lead',
                 'stage_type':'lead',
+                'empty_list_help_model': 'crm.case.section',
                 'needaction_menu_ref': 'crm.menu_crm_opportunities',
                 'search_default_unassigned':1,
             }
@@ -77,8 +78,7 @@
 
     <menuitem name="Sales" id="base.menu_sales" parent="base.menu_base_partner" sequence="1"/>
     <menuitem name="Leads" id="menu_crm_leads" parent="base.menu_sales" sequence="3"
-            action="crm_case_category_act_leads_all"
-            groups="base.group_mono_salesteams,base.group_sale_manager"/>
+            action="crm_case_category_act_leads_all"/>
     <menuitem name="Opportunities" id="menu_crm_opportunities" parent="base.menu_sales" sequence="4"
             action="crm_case_category_act_oppor11"
             groups="base.group_mono_salesteams,base.group_sale_manager"/>
