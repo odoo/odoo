@@ -9,26 +9,6 @@ import time
 
 import common
 
-def install_openerp(database_name, create_database_flag, module_names, install_demo_data):
-    import openerp
-    config = openerp.tools.config
-
-    if create_database_flag:
-        with lock_file('/tmp/global_openerp_create_database.lock'):
-            create_database(database_name)
-
-    config['init'] = dict.fromkeys(module_names, 1)
-
-    # Install the import hook, to import openerp.addons.<module>.
-    openerp.modules.module.initialize_sys_path()
-
-    print 
-
-    registry = openerp.modules.registry.RegistryManager.get(
-        database_name, update_module=True, force_demo=install_demo_data)
-
-    return registry
-
 # From http://code.activestate.com/recipes/576572/
 @contextlib.contextmanager
 def lock_file(path, wait_delay=.1, max_try=600):
@@ -52,21 +32,6 @@ def lock_file(path, wait_delay=.1, max_try=600):
         os.close(fd)
         os.unlink(path)
 
-# TODO turn template1 in a parameter
-# This should be exposed from openerp (currently in
-# openerp/service/web_services.py).
-def create_database(database_name):
-    import openerp
-    db = openerp.sql_db.db_connect('template1')
-    cr = db.cursor() # TODO `with db as cr:`
-    try:
-        cr.autocommit(True)
-        cr.execute("""CREATE DATABASE "%s"
-            ENCODING 'unicode' TEMPLATE "template1" """ \
-            % (database_name,))
-    finally:
-        cr.close()
-
 def run(args):
     assert args.database
     assert not (args.module and args.all_modules)
@@ -74,6 +39,7 @@ def run(args):
     import openerp
 
     config = openerp.tools.config
+    config['db_name'] = args.database
 
     if args.tests:
         config['log_handler'] = [':INFO']
@@ -92,14 +58,13 @@ def run(args):
         args.addons = []
     config['addons_path'] = ','.join(args.addons)
 
-    print "MY addons path is", config['addons_path']
-
     if args.all_modules:
         module_names = common.get_addons_from_paths(args.addons, args.exclude)
     elif args.module:
         module_names = args.module
     else:
         module_names = ['base']
+    config['init'] = dict.fromkeys(module_names, 1)
 
     if args.coverage:
         import coverage
@@ -108,17 +73,22 @@ def run(args):
         cov = coverage.coverage(branch=True, include='*.py')
         cov.start()
     openerp.netsvc.init_logger()
-    registry = install_openerp(args.database, not args.no_create, module_names, not config['without_demo'])
+
+    if not args.no_create:
+        with lock_file('/tmp/global_openerp_create_database.lock'):
+            openerp.service.db._create_empty_database(args.database)
+
+    config['workers'] = False
+
+    rc = openerp.service.server.start(preload=[args.database], stop=True)
+
     if args.coverage:
         cov.stop()
         cov.html_report(directory='coverage')
         # If we wanted the report on stdout:
         # cov.report()
 
-    # The `_assertion_report` attribute was added on the registry during the
-    # OpenERP 7.0 development.
-    if hasattr(registry, '_assertion_report'):
-        sys.exit(1 if registry._assertion_report.failures else 0)
+    sys.exit(rc)
 
 def add_parser(subparsers):
     parser = subparsers.add_parser('initialize',
