@@ -276,7 +276,8 @@
     </xpath>
     <xpath expr="//section[@id='comments']" position="after">
         <div class="cover_footer mb0" t-attf-style="background-image: url(#{next_post.content_image})">
-            <a class="js_next " t-attf-href="/blogpost/#{ slug(next_post) }"><p class="text-center">Read Next</p></a>
+            <p class="text-center">Read Next</p>
+            <a class="hidden js_next" t-attf-href="/blogpost/#{ slug(next_post) }#wrap"/>
             <h1 class="text-center" t-field="next_post.name"/>
             <h2 class="text-center" t-field="next_post.sub_title"/>
             <div class="text-center blog_item">

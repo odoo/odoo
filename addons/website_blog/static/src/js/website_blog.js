@@ -28,7 +28,7 @@ $(document).ready(function() {
         $.ajax({
           url: newLocation,
         }).done(function(data) {
-           document.getElementsByTagName('html')[0].innerHTML = data;
+           $('main').html($(data).find('main').html());
            if (newLocation != window.location) {
                 history.pushState(null, null, newLocation);
             }
