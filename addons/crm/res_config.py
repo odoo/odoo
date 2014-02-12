@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 
 
@@ -71,37 +72,37 @@ class crm_configuration(osv.TransientModel):
     }
 
     _defaults = {
-        'alias_domain': lambda self, cr, uid, context:self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context),
+        'alias_domain': lambda self, cr, uid, context: self.pool['mail.alias']._get_alias_domain(cr, SUPERUSER_ID, [1], None, None)[1],
     }
 
+    def _find_default_lead_alias_id(self, cr, uid, context=None):
+        alias_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'crm.mail_alias_lead_info')
+        if not alias_id:
+            alias_ids = self.pool['mail.alias'].search(
+                cr, uid, [
+                    ('alias_model_id.model', '=', 'crm.lead'),
+                    ('alias_force_thread_id', '=', 0),
+                    ('alias_parent_model_id.model', '=', 'crm.case.section'),
+                    ('alias_parent_thread_id', '=', 0),
+                    ('alias_defaults', '=', '{}')
+                ], context=context)
+            alias_id = alias_ids and alias_ids[0] or False
+        return alias_id
+
     def get_default_alias_prefix(self, cr, uid, ids, context=None):
-        alias_name = ''
-        mail_alias = self.pool.get('mail.alias')
-        try:
-            alias_name = self.pool.get('ir.model.data').get_object(cr, uid, 'crm', 'mail_alias_lead_info').alias_name
-        except Exception:
-            model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'crm.lead')], context=context)
-            alias_ids = mail_alias.search(cr, uid, [('alias_model_id', '=', model_ids[0]),('alias_defaults', '=', '{}')], context=context)
-            if alias_ids:
-                alias_name = mail_alias.browse(cr, uid, alias_ids[0], context=context).alias_name
+        alias_name = False
+        alias_id = self._find_default_lead_alias_id(cr, uid, context=context)
+        if alias_id:
+            alias_name = self.pool['mail.alias'].browse(cr, uid, alias_id, context=context).alias_name
         return {'alias_prefix': alias_name}
 
     def set_default_alias_prefix(self, cr, uid, ids, context=None):
-        mail_alias = self.pool.get('mail.alias')
-        record = self.browse(cr, uid, ids[0], context=context)
-        default_alias_prefix = self.get_default_alias_prefix(cr, uid, ids, context=context)['alias_prefix']
-        if record.alias_prefix != default_alias_prefix:
-            try:
-                alias = self.pool.get('ir.model.data').get_object(cr, uid, 'crm', 'mail_alias_lead_info')
-                if alias:
-                    alias.write({'alias_name': record.alias_prefix})
-            except Exception:
-                model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'crm.lead')], context=context)
-                alias_ids = mail_alias.search(cr, uid, [('alias_model_id', '=', model_ids[0]),('alias_defaults', '=', '{}')], context=context)
-                if alias_ids:
-                    mail_alias.write(cr, uid, alias_ids[0], {'alias_name': record.alias_prefix}, context=context)
-                else:
-                    mail_alias.create_unique_alias(cr, uid, {'alias_name': record.alias_prefix}, model_name="crm.lead", context=context)
+        mail_alias = self.pool['mail.alias']
+        for record in self.browse(cr, uid, ids, context=context):
+            alias_id = self._find_default_lead_alias_id(cr, uid, context=context)
+            if not alias_id:
+                create_ctx = dict(context, alias_model_name='crm.lead', alias_parent_model_name='crm.case.section')
+                alias_id = self.pool['mail.alias'].create(cr, uid, {'alias_name': record.alias_prefix}, context=create_ctx)
+            else:
+                mail_alias.write(cr, uid, alias_id, {'alias_name': record.alias_prefix}, context=context)
         return True
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
