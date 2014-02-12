@@ -1,9 +1,7 @@
 $(document).ready(function() {
-    
-    $("#blog_content p").inlineDisqussions(); //Allow inline comments on blog post
+    $("#blog_content p").inlineDisqussions({'document_user': $('#is_document_user').length}); //Allow inline comments on blog post
     $('.cover_footer').on('click',page_transist);
-    $('a[href^="#"]').on('click', animate);
-
+    $('a[href^="#blog_content"]').on('click', animate);
     function page_transist(event) {
         event.preventDefault();
         var translationValue  = $('.cover_footer').get(0).getBoundingClientRect().top;
@@ -34,7 +32,7 @@ $(document).ready(function() {
             }
             //bind again it takes control from now on, until page relaod.
             $(document).find('.cover_footer').on('click',page_transist);
-            $(document).find('a[href^="#"]').on('click', animate);
+            $(document).find('a[href^="#blog_content"]').on('click', animate);
             $(document).find("#blog_content p").inlineDisqussions();
         });
     }

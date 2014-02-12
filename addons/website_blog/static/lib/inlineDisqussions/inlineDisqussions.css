@@ -10,7 +10,7 @@
   text-align: center;
   z-index: 7;
 }
-.disqussion a {
+.disqussion>a {
   opacity: 0;
   display: block;
   overflow: hidden;
@@ -30,13 +30,13 @@
   -o-transition: all 0.5s;
   transition: all 0.5s;
 }
-.disqussion a.has-comments {
+.disqussion>a.has-comments {
   opacity: .6;
 }
-.disqussion-contain:hover .disqussion a {
+.disqussion-contain:hover .disqussion>a {
   opacity: 1;
 }
-.disqussion a:after {
+.disqussion>a:after {
   border-left: 7px solid transparent;
   border-top: 7px solid #bbbbbb;
   left: 19px;
@@ -51,11 +51,11 @@
   -o-transition: all 0.5s;
   transition: all 0.5s;
 }
-.disqussion:hover a, .disqussion.hovered a {
+.disqussion:hover>a, .disqussion.hovered>a {
   opacity: 1;
   background: #57AD68;
 }
-.disqussion:hover a:after, .disqussion.hovered a:after {
+.disqussion:hover>a:after, .disqussion.hovered>a:after {
   border-top-color: #57AD68;
 }
 

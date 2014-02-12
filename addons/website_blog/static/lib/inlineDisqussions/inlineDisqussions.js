@@ -10,6 +10,7 @@ var disqus_identifier;
                 identifier: 'name',
                 position: 'right',
                 post_id: $('#blog_post_name').attr('data-oe-id'),
+                document_user : false,
             };
 
             // Overwrite default options with user provided ones.
@@ -121,13 +122,16 @@ var disqus_identifier;
         $('a[data-disqus-identifier="'+disqus_identifier+'"]').popover('destroy')
         disqus_identifier = identifier;
         var elt = $('a[data-disqus-identifier="'+identifier+'"]');
+        var cls = settings.document_user ? '' : 'hidden';
+        var login_cls = settings.document_user ? 'hidden' : '';
         elt.append('\
             <div class="mycontent hidden">\
                     <input name="discussion" value="'+ identifier +'" type="hidden"/>\
                     <input name="blog_post_id" value="'+ settings.post_id +'" type="hidden"/>\
-                    <textarea class="mb8 form-control" rows="2" id="comment" placeholder="Write a comment..."/>\
-                    <button id="comment_post" class="btn btn-primary btn-xs mb8 mt4">Post</button>\
+                    <textarea class="mb8 form-control '+ cls +'" rows="2" id="comment" placeholder="Write a comment..."/>\
+                    <button id="comment_post" class="btn btn-primary btn-xs mb8 mt4 '+cls+'">Post</button>\
                 <div class="discussion_history"/>\
+                <a class="btn btn-block btn-success '+login_cls+'" href="/web/login">Sign In</a>\
             </div>')
         var comment = '';
         _.each(data, function(res){
@@ -149,9 +153,7 @@ var disqus_identifier;
             html:true, content:function(){
                 return $($(this).data('contentwrapper')).html();
             }
-        }).parent().delegate('button#comment_post', 'click', function() {
-            disqussionPostHandler();
-        });;
+        }).parent().delegate('button#comment_post').on('click',disqussionPostHandler);
     };
 
     var hideDisqussion = function() {
