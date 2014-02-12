@@ -585,16 +585,6 @@
         <menuitem action="action_location_form" id="menu_action_location_form" groups="stock.group_locations"
             parent="menu_stock_configuration" sequence="5"/>
 
-        <record id="view_location_tree" model="ir.ui.view">
-            <field name="name">stock.location.tree</field>
-            <field name="model">stock.location</field>
-            <field name="field_parent">child_ids</field>
-            <field name="arch" type="xml">
-                <tree toolbar="1" string="Locations" >
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
         <record model="ir.actions.act_window" id="action_product_location_tree">
             <field name="context">{'product_id': active_id}</field>
             <field name="name">Stock by Location</field>
@@ -605,29 +595,6 @@
             <field name="name">Moves</field>
             <field name="res_model">stock.move</field>
         </record>
-        <record id="action_location_tree" model="ir.actions.act_window">
-            <field name="name">Inventory by Location</field>
-            <field name="res_model">stock.location</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="domain">[('location_id','=',False)]</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="view_location_tree"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a location.
-              </p><p>
-                This is the structure of your company's warehouses and
-                locations. You can click on a location to get the list of the
-                products and their stock level in this particular location and
-                all its children.
-              </p>
-            </field>
-        </record>
-        <menuitem action="action_location_tree"
-            id="menu_action_location_tree"
-            parent="menu_stock_inventory_control"
-            groups="stock.group_locations"
-            sequence="20"/>
 
         <record id="view_warehouse" model="ir.ui.view">
             <field name="name">stock.warehouse</field>
