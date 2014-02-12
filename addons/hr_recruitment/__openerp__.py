@@ -45,6 +45,7 @@ You can define the different phases of interviews and easily rate the applicant 
         'survey',
         'calendar',
         'fetchmail',
+        'web_kanban_gauge',
     ],
     'data': [
         'wizard/hr_recruitment_create_partner_job_view.xml',
@@ -60,7 +61,11 @@ You can define the different phases of interviews and easily rate the applicant 
         'hr_recruitment_data.xml',
     ],
     'demo': ['hr_recruitment_demo.xml'],
+    'js': [
+        'static/src/js/job_position.js',
+    ],
     'test': ['test/recruitment_process.yml'],
+    'css':['static/src/css/job_position.css'],
     'installable': True,
     'auto_install': False,
     'application': True,

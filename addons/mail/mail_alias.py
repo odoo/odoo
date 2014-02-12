@@ -154,6 +154,12 @@ class mail_alias(osv.Model):
             sequence = (sequence + 1) if sequence else 2
         return new_name
 
+    def _clean_and_make_unique(self, cr, uid, name, context=None):
+        # when an alias name appears to already be an email, we keep the local part only
+        name = remove_accents(name).lower().split('@')[0]
+        name = re.sub(r'[^\w+.]+', '-', name)
+        return self._find_unique(cr, uid, name, context=context)
+
     def migrate_to_alias(self, cr, child_model_name, child_table_name, child_model_auto_init_fct,
         alias_model_name, alias_id_column, alias_key, alias_prefix='', alias_force_key='', alias_defaults={},
         alias_generate_name=False, context=None):
@@ -199,7 +205,7 @@ class mail_alias(osv.Model):
             alias_vals['alias_parent_thread_id'] = obj_data['id']
             alias_create_ctx = dict(context, alias_model_name=alias_model_name, alias_parent_model_name=child_model_name)
             alias_id = mail_alias.create(cr, SUPERUSER_ID, alias_vals, context=alias_create_ctx)
-            child_class_model.write(cr, SUPERUSER_ID, obj_data['id'], {'alias_id': alias_id})
+            child_class_model.write(cr, SUPERUSER_ID, obj_data['id'], {'alias_id': alias_id}, context={'mail_notrack': True})
             _logger.info('Mail alias created for %s %s (id %s)', child_model_name, obj_data[alias_key], obj_data['id'])
 
         # Finally attempt to reinstate the missing constraint
@@ -227,11 +233,7 @@ class mail_alias(osv.Model):
         model_name = context.get('alias_model_name')
         parent_model_name = context.get('alias_parent_model_name')
         if vals.get('alias_name'):
-            # when an alias name appears to already be an email, we keep the local part only
-            alias_name = remove_accents(vals['alias_name']).lower().split('@')[0]
-            alias_name = re.sub(r'[^\w+.]+', '-', alias_name)
-            alias_name = self._find_unique(cr, uid, alias_name, context=context)
-            vals['alias_name'] = alias_name
+            vals['alias_name'] = self._clean_and_make_unique(cr, uid, vals.get('alias_name'), context=context)
         if model_name:
             model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model_name)], context=context)[0]
             vals['alias_model_id'] = model_id
@@ -239,6 +241,12 @@ class mail_alias(osv.Model):
             model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', parent_model_name)], context=context)[0]
             vals['alias_parent_model_id'] = model_id
         return super(mail_alias, self).create(cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        """"give uniqe alias name if given alias name is allready assigned"""
+        if vals.get('alias_name'):
+            vals['alias_name'] = self._clean_and_make_unique(cr, uid, vals.get('alias_name'), context=context)
+        return super(mail_alias, self).write(cr, uid, ids, vals, context=context)
 
     def open_document(self, cr, uid, ids, context=None):
         alias = self.browse(cr, uid, ids, context=context)[0]
