@@ -7,6 +7,7 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.translate import _
+from openerp.addons.website.models.website import slug
 
 PPG = 20                        # Products Per Page
 PPR = 4                         # Products Per Row
@@ -143,8 +144,8 @@ class Ecommerce(http.Controller):
                 return key_val
         return False
 
-    @http.route(['/shop/filters/'], type='http', auth="public", website=True, multilang=True)
-    def filters(self, **post):
+    @http.route(['/shop/filters/'], type='http', auth="public", methods=['POST'], website=True, multilang=True)
+    def filters(self, category=None, **post):
         index = []
         filters = []
         for key, val in post.items():
@@ -169,11 +170,16 @@ class Ecommerce(http.Controller):
                     filters[index.index(cat_id)].append( cat[2] )
             post.pop(key)
 
-        return request.redirect("/shop/?filters=%s%s%s" % (
-                simplejson.dumps(filters),
-                post.get("search") and ("&search=%s" % post.get("search")) or "",
-                post.get("category") and ("&category=%s" % post.get("category")) or ""
-            ))
+        url = "/shop/"
+        if category:
+            category_obj = request.registry.get('product.public.category')
+            url = "%scategory/%s/" % (url, slug(category_obj.browse(request.cr, request.uid, int(category), context=request.context)))
+        if filters:
+            url = "%s?filters=%s" % (url, simplejson.dumps(filters))
+        if post.get("search"):
+            url = "%s%ssearch=%s" % (url, filters and "&" or "?", post.get("search"))
+
+        return request.redirect(url)
 
     def attributes_to_ids(self, attributes):
         obj = request.registry.get('product.attribute.line')
@@ -209,15 +215,24 @@ class Ecommerce(http.Controller):
                 ('name', 'ilike', search),
                 ('description', 'ilike', search)]
         if category:
-            domain.append(('product_variant_ids.public_categ_id', 'child_of', category.id))
+            domain.append(('product_variant_ids.public_categ_id', 'child_of', int(category)))
+            if isinstance(category, (int,str,unicode)):
+                category = request.registry.get('product.public.category').browse(cr, uid, int(category), context=context)
         if filters:
             filters = simplejson.loads(filters)
             if filters:
                 ids = self.attributes_to_ids(filters)
                 domain.append(('id', 'in', ids or [0]))
 
+        url = "/shop/"
         product_count = product_obj.search_count(cr, uid, domain, context=context)
-        pager = request.website.pager(url="/shop/", total=product_count, page=page, step=PPG, scope=7, url_args=post)
+        if search:
+            post["search"] = search
+        if filters:
+            post["filters"] = filters
+        if category:
+            url = "/shop/category/%s/" % slug(category)
+        pager = request.website.pager(url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
 
         request.context['pricelist'] = self.get_pricelist()
 
@@ -244,11 +259,12 @@ class Ecommerce(http.Controller):
             'range': range,
             'search': {
                 'search': search,
-                'category': category and category.id,
+                'category': category,
                 'filters': filters,
             },
             'pager': pager,
             'styles': styles,
+            'category': category,
             'categories': categs,
             'Ecommerce': self,   # TODO fp: Should be removed
             'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids],
@@ -257,26 +273,20 @@ class Ecommerce(http.Controller):
 
     @http.route(['/shop/product/<model("product.template"):product>/'], type='http', auth="public", website=True, multilang=True)
     def product(self, product, search='', category='', filters='', **kwargs):
-        category_obj = request.registry.get('product.public.category')
-
-        category_ids = category_obj.search(request.cr, request.uid, [], context=request.context)
-        category_list = category_obj.name_get(request.cr, request.uid, category_ids, context=request.context)
-        category_list = sorted(category_list, key=lambda category: category[1])
-
         if category:
+            category_obj = request.registry.get('product.public.category')
             category = category_obj.browse(request.cr, request.uid, int(category), context=request.context)
 
         request.context['pricelist'] = self.get_pricelist()
 
         values = {
             'Ecommerce': self,
-            'category': category,
-            'category_list': category_list,
             'main_object': product,
             'product': product,
+            'category': category,
             'search': {
                 'search': search,
-                'category': category and str(category.id),
+                'category': category,
                 'filters': filters,
             }
         }
