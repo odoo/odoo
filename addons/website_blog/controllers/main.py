@@ -224,9 +224,8 @@ class WebsiteBlog(http.Controller):
             'next_post' : request.registry['blog.post'].browse(cr, uid, next_blog_id, context=context)
         }
         return request.website.render("website_blog.blog_post_complete", values)
-
-    @http.route(['/blogpost/comment'], type='http', auth="public", methods=['POST'], website=True)
-    def blog_post_comment(self, blog_post_id=0, **post):
+    
+    def _blog_post_message(self, blog_post_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
         if post.get('comment'):
             user = request.registry['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
@@ -235,7 +234,7 @@ class WebsiteBlog(http.Controller):
             if group_id in [group.id for group in group_ids]:
                 blog_post = request.registry['blog.post']
                 blog_post.check_access_rights(cr, uid, 'read')
-                blog_post.message_post(
+                message_id = blog_post.message_post(
                     cr, SUPERUSER_ID, int(blog_post_id),
                     body=post.get('comment'),
                     type='comment',
@@ -243,8 +242,27 @@ class WebsiteBlog(http.Controller):
                     author_id=user.partner_id.id,
                     discussion=post.get('discussion'),
                     context=dict(context, mail_create_nosubcribe=True))
+                return message_id
+
+    @http.route(['/blogpost/comment'], type='http', auth="public", methods=['POST'], website=True)
+    def blog_post_comment(self, blog_post_id=0, **post):
+        self._blog_post_message(blog_post_id, **post)
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
+    @http.route(['/blogpost/post_discussion'], type='json', auth="public", website=True)
+    def post_discussion(self, blog_post_id=0, **post):
+        id = self._blog_post_message(blog_post_id, **post)
+        mail_obj = request.registry.get('mail.message')
+        values = []
+        post = mail_obj.browse(request.cr, SUPERUSER_ID, id)
+        values = {
+            "author_name": post.author_id.name,
+            "date": post.date,
+            "body": post.body,
+            "author_image": "data:image/png;base64,%s" % post.author_id.image,
+            }
+        return values
+    
     @http.route('/blogpost/new', type='http', auth="public", website=True, multilang=True)
     def blog_post_create(self, blog_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -271,7 +289,7 @@ class WebsiteBlog(http.Controller):
         new_blog_post_id = request.registry['blog.post'].copy(cr, uid, blog_post_id, {}, context=create_context)
         return werkzeug.utils.redirect("/blogpost/%s/?enable_editor=1" % new_blog_post_id)
 
-    @http.route('/blogpost/discussion', type='json', auth="public", website=True)
+    @http.route('/blogpost/get_discussion', type='json', auth="public", website=True)
     def discussion(self, post_id=0, discussion=None, **post):
         mail_obj = request.registry.get('mail.message')
         values = []

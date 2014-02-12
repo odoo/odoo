@@ -47,7 +47,7 @@ var disqus_identifier;
             }
             identifier = settings.identifier + '-' + i;
         }
-        openerp.jsonRpc("/blogpost/discussion/", 'call', {
+        openerp.jsonRpc("/blogpost/get_discussion/", 'call', {
             'post_id': settings.post_id,
             'discussion':identifier,
         }).then(function(data){
@@ -89,6 +89,33 @@ var disqus_identifier;
         });
     };
 
+    var disqussionPostHandler = function() {
+        console.log('identifier',disqus_identifier)
+        openerp.jsonRpc("/blogpost/post_discussion", 'call', {
+            'blog_post_id': settings.post_id,
+            'discussion': disqus_identifier,
+            'comment': $(".popover #comment").val(),
+        }).then(function(res){
+            $(".popover ul.media-list").prepend(comments(res))
+            $(".popover #comment").val('')
+            ele = $('a[data-disqus-identifier="'+disqus_identifier+'"]');
+            ele.text(_.isNaN(parseInt(ele.text())) ? 1 : parseInt(ele.text())+1)
+        });
+    };
+
+    var comments = function(res){
+        return '<li class="media">\
+                    <div class="media-body">\
+                        <img class="media-object pull-left img-circle" src="'+ res.author_image + '" style="width: 30px; margin-right: 5px;"/>\
+                        <div class="media-body">\
+                            <h5 class="media-heading">\
+                                <small><span>'+res.author_name+'</span> on <span>'+res.date+'</span></small>\
+                            </h5>\
+                        </div>\
+                    </div>\
+                </li><li><h6>'+res.body+'</h6></li><hr class="mb0 mt0"/>' 
+    }
+
     var loadDisqus = function(data, source, callback) {
         var identifier = source.attr('data-disqus-identifier');
         $('a[data-disqus-identifier="'+disqus_identifier+'"]').popover('destroy')
@@ -96,26 +123,15 @@ var disqus_identifier;
         var elt = $('a[data-disqus-identifier="'+identifier+'"]');
         elt.append('\
             <div class="mycontent hidden">\
-                <form id="comment" action="/blogpost/comment" method="POST">\
                     <input name="discussion" value="'+ identifier +'" type="hidden"/>\
                     <input name="blog_post_id" value="'+ settings.post_id +'" type="hidden"/>\
-                    <textarea class="mb8 form-control" rows="2" name="comment" placeholder="Write a comment..."/>\
-                    <button id="submit" type="submit" class="btn btn-primary btn-xs mb8 mt4">Post</button>\
-                </form>\
+                    <textarea class="mb8 form-control" rows="2" id="comment" placeholder="Write a comment..."/>\
+                    <button id="comment_post" class="btn btn-primary btn-xs mb8 mt4">Post</button>\
                 <div class="discussion_history"/>\
             </div>')
         var comment = '';
         _.each(data, function(res){
-            comment += '<li class="media">\
-                <div class="media-body">\
-                    <img class="media-object pull-left img-circle" src="'+ res.author_image + '" style="width: 30px; margin-right: 5px;"/>\
-                    <div class="media-body">\
-                        <h5 class="media-heading">\
-                            <small><span>'+res.author_name+'</span> on <span>'+res.date+'</span></small>\
-                        </h5>\
-                    </div>\
-                </div>\
-            </li><li><h6>'+res.body+'</h6></li><hr/>'
+            comment += comments(res)
         });
         $('.discussion_history').html('<ul class="media-list">'+comment+'</ul>');
         createPopOver(elt);
@@ -133,7 +149,9 @@ var disqus_identifier;
             html:true, content:function(){
                 return $($(this).data('contentwrapper')).html();
             }
-        });
+        }).parent().delegate('button#comment_post', 'click', function() {
+            disqussionPostHandler();
+        });;
     };
 
     var hideDisqussion = function() {
