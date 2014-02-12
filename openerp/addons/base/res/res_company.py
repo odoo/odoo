@@ -147,7 +147,7 @@ class res_company(osv.osv):
         'website': fields.related('partner_id', 'website', string="Website", type="char", size=64),
         'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32),
         'company_registry': fields.char('Company Registry', size=64),
-        'paper_format': fields.selection([('a4', 'A4'), ('us_letter', 'US Letter')], "Paper Format", required=True),
+        'rml_paper_format': fields.selection([('a4', 'A4'), ('us_letter', 'US Letter')], "Paper Format", required=True),
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
@@ -388,8 +388,8 @@ class res_company(osv.osv):
     _header_a4 = _header_main % ('21.7cm', '27.7cm', '27.7cm', '27.7cm', '27.8cm', '27.3cm', '25.3cm', '25.0cm', '25.0cm', '24.6cm', '24.6cm', '24.5cm', '24.5cm')
     _header_letter = _header_main % ('20cm', '26.0cm', '26.0cm', '26.0cm', '26.1cm', '25.6cm', '23.6cm', '23.3cm', '23.3cm', '22.9cm', '22.9cm', '22.8cm', '22.8cm')
 
-    def onchange_paper_format(self, cr, uid, ids, paper_format, context=None):
-        if paper_format == 'us_letter':
+    def onchange_rml_paper_format(self, cr, uid, ids, rml_paper_format, context=None):
+        if rml_paper_format == 'us_letter':
             return {'value': {'rml_header': self._header_letter}}
         return {'value': {'rml_header': self._header_a4}}
 
@@ -398,7 +398,7 @@ class res_company(osv.osv):
 
     _defaults = {
         'currency_id': _get_euro,
-        'paper_format': 'a4',
+        'rml_paper_format': 'a4',
         'rml_header':_get_header,
         'rml_header2': _header2,
         'rml_header3': _header3,
