@@ -673,10 +673,9 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="company_description" name="Company Description">
     <address>
-        <div t-field="res_company.name">Name</div>
-        <br />
-        <div><i class="fa fa-phone"/> <span t-field="res_company.phone"/></div>
-        <div><i class="fa fa-envelope"/> <span t-field="res_company.email"/></div>
+        <div t-field="res_company.partner_id" t-field-options='{
+                "widget": "contact",
+                "fields": ["name", "address", "phone", "mobile", "fax", "email"]}'/>
     </address>
      <a t-att-href="res_company.google_map_link()" target="_BLANK">
         <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
@@ -703,7 +702,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 </div>
                 <div class="col-md-4 mb32">
                     <div groups="base.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or ''">
-                        <a class="btn btn-primary" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s' % (res_company._name, res_company.id)" title='Edit in backend'>Edit</a>
+                        <a class="btn btm-sm btn-default" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s' % (res_company._name, res_company.id)">Change address</a>
                     </div>
                     <t t-call="website.company_description"/>
                 </div>
