@@ -279,7 +279,6 @@ class product_pricelist(osv.osv):
 
             if price:
                 if 'uom' in context and not uom_price_already_computed:
-                    product = products_dict[product.id]
                     uom = product.uos_id or product.uom_id
                     price = product_uom_obj._compute_price(cr, uid, uom.id, price, context['uom'])
 
