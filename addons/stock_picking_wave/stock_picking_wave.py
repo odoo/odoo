@@ -9,7 +9,7 @@ class stock_picking_wave(osv.osv):
         'name': fields.char('Picking wave name', required=True, help='Name of the picking wave'),
         'user_id': fields.many2one('res.users', 'Responsible', help='Person responsible for this wave'),
         'picking_ids': fields.one2many('stock.picking', 'wave_id', 'Pickings', help='List of picking associated to this wave'),
-        'state': fields.selection([('draft', 'Draft'), ('in_progress', 'Running'), ('done', 'Done'), ('cancel', 'Cancelled')], required=True),
+        'state': fields.selection([('draft', 'Draft'), ('in_progress', 'Running'), ('done', 'Done'), ('cancel', 'Cancelled')], string="State", required=True),
     }
 
     _defaults = {

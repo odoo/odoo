@@ -3805,7 +3805,7 @@ class stock_picking_type(osv.osv):
         return res and res[0] or False
 
     _columns = {
-        'name': fields.char('Name', translate=True, required=True),
+        'name': fields.char('Picking Type Name', translate=True, required=True),
         'complete_name': fields.function(_get_name, type='char', string='Name'),
         'auto_force_assign': fields.boolean('Automatic Availability', help='This picking type does\'t need to check for the availability in source location.'),
         'color': fields.integer('Color'),
