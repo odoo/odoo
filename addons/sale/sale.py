@@ -409,12 +409,7 @@ class sale_order(osv.osv):
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
         self.signal_quotation_sent(cr, uid, ids)
-        datas = {
-                 'model': 'sale.order',
-                 'ids': ids,
-                 'form': self.read(cr, uid, ids[0], context=context),
-        }
-        return {'type': 'ir.actions.report.xml', 'report_name': 'sale.order', 'datas': datas, 'nodestroy': True}
+        return self.pool['report'].get_action(cr, uid, ids, 'sale.report_saleorder', context=context)
 
     def manual_invoice(self, cr, uid, ids, context=None):
         """ create invoices for the given sales orders (ids), and open the form
