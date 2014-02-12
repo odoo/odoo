@@ -1010,31 +1010,11 @@ class stock_picking(osv.osv):
             self.pool.get('stock.move').do_unreserve(cr, uid, moves_to_unreserve, context=context)
 
     def do_recompute_remaining_quantities(self, cr, uid, picking_ids, context=None):
-        def _create_link_for_product(product_id, qty):
-            qty_to_assign = qty
-            for move in picking.move_lines:
-                if move.product_id.id == product_id and move.state not in ['done', 'cancel']:
-                    qty_on_link = min(move.remaining_qty, qty_to_assign)
-                    link_obj.create(cr, uid, {'move_id': move.id, 'operation_id': op.id, 'qty': qty_on_link}, context=context)
-                    qty_to_assign -= qty_on_link
-                    move.refresh()
-                    if qty_to_assign <= 0:
-                        break
-
-        link_obj = self.pool.get('stock.move.operation.link')
-        uom_obj = self.pool.get('product.uom')
-        package_obj = self.pool.get('stock.quant.package')
+        pack_op_obj = self.pool.get('stock.pack.operation')
         for picking in self.browse(cr, uid, picking_ids, context=context):
-            for op in picking.pack_operation_ids:
-                to_unlink_ids = [x.id for x in op.linked_move_operation_ids]
-                if to_unlink_ids:
-                    link_obj.unlink(cr, uid, to_unlink_ids, context=context)
-                if op.product_id:
-                    normalized_qty = uom_obj._compute_qty(cr, uid, op.product_uom_id.id, op.product_qty, op.product_id.uom_id.id)
-                    _create_link_for_product(op.product_id.id, normalized_qty)
-                elif op.package_id:
-                    for product_id, qty in package_obj._get_all_products_quantities(cr, uid, op.package_id.id, context=context).items():
-                        _create_link_for_product(product_id, qty)
+            op_ids = [op.id for op in picking.pack_operation_ids]
+            if op_ids:
+                pack_op_obj.recompute_rem_qty_from_operation(cr, uid, op_ids, context=context)
 
     def _create_extra_moves(self, cr, uid, picking, context=None):
         '''This function creates move lines on a picking, at the time of do_transfer, based on
@@ -3407,6 +3387,42 @@ class stock_pack_operation(osv.osv):
         'date': fields.date.context_today,
     }
 
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(stock_pack_operation, self).write(cr, uid, ids, vals, context=context)
+        self.recompute_rem_qty_from_operation(cr, uid, ids, context=context)
+        return res
+
+    def create(self, cr, uid, vals, context=None):
+        res_id = super(stock_pack_operation, self).create(cr, uid, vals, context=context)
+        self.recompute_rem_qty_from_operation(cr, uid, [res_id], context=context)
+        return res_id
+
+    def recompute_rem_qty_from_operation(self, cr, uid, op_ids, context=None):
+        def _create_link_for_product(product_id, qty):
+            qty_to_assign = qty
+            for move in op.picking_id.move_lines:
+                if move.product_id.id == product_id and move.state not in ['done', 'cancel']:
+                    qty_on_link = min(move.remaining_qty, qty_to_assign)
+                    link_obj.create(cr, uid, {'move_id': move.id, 'operation_id': op.id, 'qty': qty_on_link}, context=context)
+                    qty_to_assign -= qty_on_link
+                    move.refresh()
+                    if qty_to_assign <= 0:
+                        break
+
+        link_obj = self.pool.get('stock.move.operation.link')
+        uom_obj = self.pool.get('product.uom')
+        package_obj = self.pool.get('stock.quant.package')
+        for op in self.browse(cr, uid, op_ids, context=context):
+            to_unlink_ids = [x.id for x in op.linked_move_operation_ids]
+            if to_unlink_ids:
+                link_obj.unlink(cr, uid, to_unlink_ids, context=context)
+            if op.product_id:
+                normalized_qty = uom_obj._compute_qty(cr, uid, op.product_uom_id.id, op.product_qty, op.product_id.uom_id.id)
+                _create_link_for_product(op.product_id.id, normalized_qty)
+            elif op.package_id:
+                for product_id, qty in package_obj._get_all_products_quantities(cr, uid, op.package_id.id, context=context).items():
+                    _create_link_for_product(product_id, qty)
+
     def process_packaging(self, cr, uid, operation, quants, context=None):
         ''' Process the packaging of a given operation, after the quants have been moved. If there was not enough quants found
         a quant already has been with the good package information so we don't consider that case in this method'''
@@ -3447,7 +3463,7 @@ class stock_pack_operation(osv.osv):
             #existing operation found for the given domain and picking => increment its quantity
             operation_id = existing_operation_ids[0]
             qty = self.browse(cr, uid, operation_id, context=context).product_qty + 1
-            self.write(cr, uid, operation_id, {'product_qty': qty}, context=context)
+            self.write(cr, uid, [operation_id], {'product_qty': qty}, context=context)
         else:
             #no existing operation found for the given domain and picking => create a new one
             values = {

@@ -219,6 +219,7 @@ function openerp_picking_widgets(instance){
             });
         },
         search_picking: function(barcode){
+            //TODO don't crash if a not supported char is given
             var re = RegExp("([0-9]+):.*?"+barcode.toUpperCase(),"gi");
             var results = [];
             for(var i = 0; i < 100; i++){
@@ -239,7 +240,7 @@ function openerp_picking_widgets(instance){
 
             for(var i = 0, len = this.pickings.length; i < len; i++){
                 var picking = this.pickings[i];
-                if(picking.name.toUpperCase() === barcode.toUpperCase()){
+                if(picking.name.toUpperCase() === $.trim(barcode.toUpperCase())){
                     this.goto_picking(picking.id);
                     break;
                 }
