@@ -9,6 +9,7 @@ Report
     'author': 'OpenERP SA',
     'depends': ['base'],
     'data': [
+        'views/layouts.xml',
         'views/paperformat_view.xml',
         'views/res_company_view.xml',
         'data/paperformat_defaults.xml',
