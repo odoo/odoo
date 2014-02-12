@@ -5,7 +5,7 @@
              <field name="model">product.product</field>
              <field name="inherit_id" ref="product.product_normal_form_view" />
              <field name="arch" type="xml">
-                <div name="options" position="inside">
+                <div name="options" position="after">
                     <field name="event_ok" on_change="onchange_event_ok(type, event_ok, context)"
                            attrs="{'readonly': [('is_only_child', '=', False)]}"/>
                     <label for="event_ok"/>

@@ -2,6 +2,13 @@
 <openerp>
 <data>
 
+<template id="debugger" inherit_id="website.debugger" name="Event Debugger">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_event_sale/static/src/js/website.tour.event_sale.js"></script>
+    </xpath>
+</template>
+
+
 <template id="index" inherit_id="website_event.index" name="Event's Ticket">
     <xpath expr="//li[@t-foreach='event_ids']/div/h4" position="before">
         <t t-if="event.state in ['draft', 'confirm'] and event.event_ticket_ids">
@@ -22,7 +29,7 @@
 <template id="event_description_full" inherit_id="website_event.event_description_full" inherit_option_id="website_event.event_description_full" name="Event's Ticket form">
     <xpath expr="//div[@t-field='event.description']" position="before">
         <form t-attf-action="/event/add_cart?event_id=#{ event.id }" method="post" t-if="event.event_ticket_ids">
-            <table class="table table-striped">
+            <table itemprop="offers" class="table table-striped">
                 <thead>
                     <tr>
                         <th>Ticket Type</th>
@@ -33,17 +40,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr t-foreach="event.event_ticket_ids" t-as="ticket">
-                        <td>
-                            <div t-field="ticket.name"/>
-                            <div><small t-field="ticket.product_id.description_sale"/></div>
+                    <tr itemscope="itemscope" itemtype="http://data-vocabulary.org/Offer" t-foreach="event.event_ticket_ids" t-as="ticket">
+                        <td itemscope="itemscope" itemtype="http://data-vocabulary.org/Product">
+                            <div itemprop="name" t-field="ticket.name"/>
+                            <div><small itemprop="description" t-field="ticket.product_id.description_sale"/></div>
                         </td>
-                        <td><span t-field="ticket.deadline"/></td>
+                        <td><span itemprop="priceValidUntil" t-field="ticket.deadline"/></td>
                         <td>
                             <t t-if="ticket.price or editable"><span t-field="ticket.price" t-field-options='{
                                    "widget": "monetary",
                                    "display_currency": "website.pricelist_id.currency_id"
                               }'/>
+                              <meta itemprop="price" t-att-content="ticket.price"/>
+                              <meta itemprop="priceCurrency" t-att-content="website.pricelist_id.currency_id.name"/>
                             </t>
                             <t t-if="not ticket.price and not editable">
                                 <span>Free</span>

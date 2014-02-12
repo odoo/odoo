@@ -4,7 +4,7 @@ import os
 import time
 from os import listdir
 from os.path import join
-from threading import Thread
+from threading import Thread, Lock
 from select import select
 from Queue import Queue, Empty
 
@@ -26,6 +26,7 @@ except ImportError:
 class Scanner(Thread):
     def __init__(self):
         Thread.__init__(self)
+        self.lock = Lock()
         self.status = {'status':'connecting', 'messages':[]}
         self.input_dir = '/dev/input/by-id/'
         self.barcodes = Queue()
@@ -86,6 +87,12 @@ class Scanner(Thread):
             57:(" "," "),
         }
 
+    def lockedstart(self):
+        self.lock.acquire()
+        if not self.isAlive():
+            self.start()
+        self.lock.release()
+
     def set_status(self, status, message = None):
         if status == self.status['status']:
             if message != None and message != self.status['messages'][-1]:
@@ -101,8 +108,6 @@ class Scanner(Thread):
             _logger.error('Barcode Scanner Error: '+message)
         elif status == 'disconnected' and message:
             _logger.warning('Disconnected Barcode Scanner: '+message)
-
-            
 
     def get_device(self):
         try:
@@ -135,6 +140,8 @@ class Scanner(Thread):
             busy reading another barcode
         """
 
+        self.lockedstart()
+
         while True:
             try:
                 timestamp, barcode = self.barcodes.get(True, 5)
@@ -144,8 +151,7 @@ class Scanner(Thread):
                 return ''
     
     def get_status(self):
-        if not s.isAlive():
-            s.start()
+        self.lockedstart()
         return self.status
 
     def run(self):
@@ -209,7 +215,6 @@ hw_proxy.drivers['scanner'] = s
 class ScannerDriver(hw_proxy.Proxy):
     @http.route('/hw_proxy/scanner', type='json', auth='none', cors='*')
     def scanner(self):
-        if not s.isAlive():
-            s.start()
         return s.get_barcode()
+        
         
