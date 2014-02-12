@@ -3,7 +3,6 @@
 import urlparse
 
 from openerp.addons.web.http import request
-# from openerp.addons.website.controllers.main import Website
 from openerp.osv import fields, osv
 
 
@@ -31,14 +30,14 @@ class actions_server(osv.Model):
         'xml_id': fields.function(
             osv.osv.get_xml_id, type='char', string="External ID",
             help="ID of the action if defined in a XML file"),
+        'website_path': fields.char('Website Path'),
         'website_url': fields.function(
             _get_website_url, type='char', string='Website URL',
             help='The full URL to access the server action through the website.'),
-        'website_path': fields.char('Website Path'),
         'website_published': fields.boolean(
             'Available on the Website',
             help='A code server action can be executed from the website, using a dedicated'
-                 'controller. The address is <base>/website/action/<id_or_xml_id>.'
+                 'controller. The address is <base>/website/action/<website_path>.'
                  'Set this field as True to allow users to run this action. If it'
                  'set to is False the action cannot be run through the website.'),
     }
