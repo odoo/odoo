@@ -43,21 +43,11 @@ class crm_lead_report(osv.osv):
     _name = "crm.lead.report"
     _auto = False
     _description = "CRM Lead Analysis"
-    _rec_name = 'deadline_day'
+    _rec_name = 'date_deadline'
 
     _columns = {
-        # grouping fields based on Deadline Date
-        'deadline_year': fields.char('Ex. Closing Year', size=10, readonly=True, help="Expected closing year"),
-        'deadline_month':fields.selection(MONTHS, 'Exp. Closing Month', readonly=True, help="Expected closing month"),
-        'deadline_day': fields.char('Exp. Closing Day', size=10, readonly=True, help="Expected closing day"),
-
-        # grouping fields based on Create Date
-        'creation_year': fields.char('Creation Year', size=10, readonly=True, help="Creation year"),
-        'creation_month': fields.selection(MONTHS, 'Creation Month', readonly=True, help="Creation month"),
-        'creation_day': fields.char('Creation Day', size=10, readonly=True, help="Creation day"),
-
-        # other date fields
-        'create_date': fields.datetime('Create Date', readonly=True),
+        'date_deadline': fields.date('Exp. Closing', size=10, readonly=True, help="Expected Closing"),
+        'create_date': fields.datetime('Creation Date', readonly=True),
         'opening_date': fields.date('Assignation Date', readonly=True),
         'date_closed': fields.date('Close Date', readonly=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
@@ -78,7 +68,6 @@ class crm_lead_report(osv.osv):
         'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('section_ids', '=', section_id)]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
-        'nbr': fields.integer('# of Cases', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'type':fields.selection([
@@ -98,9 +87,7 @@ class crm_lead_report(osv.osv):
             CREATE OR REPLACE VIEW crm_lead_report AS (
                 SELECT
                     id,
-                    to_char(c.date_deadline, 'YYYY') as deadline_year,
-                    to_char(c.date_deadline, 'MM') as deadline_month,
-                    to_char(c.date_deadline, 'YYYY-MM-DD') as deadline_day,
+                    c.date_deadline,
 
                     to_char(c.create_date, 'YYYY') as creation_year,
                     to_char(c.create_date, 'MM') as creation_month,
@@ -124,7 +111,6 @@ class crm_lead_report(osv.osv):
                     c.country_id,
                     c.planned_revenue,
                     c.planned_revenue*(c.probability/100) as probable_revenue,
-                    1 as nbr,
                     date_trunc('day',c.create_date) as create_date,
                     extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
                     abs(extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24)) as  delay_expected,

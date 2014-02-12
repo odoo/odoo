@@ -306,8 +306,6 @@ class project_issue(osv.Model):
     }
 
     def set_priority(self, cr, uid, ids, priority, *args):
-        """Set lead priority
-        """
         return self.write(cr, uid, ids, {'priority' : priority})
 
     def set_high_priority(self, cr, uid, ids, *args):

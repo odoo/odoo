@@ -761,24 +761,6 @@ class crm_lead(format_address, osv.osv):
             )
         return partner_id
 
-    def _lead_set_partner(self, cr, uid, lead, partner_id, context=None):
-        """
-        Assign a partner to a lead.
-
-        :param object lead: browse record of the lead to process
-        :param int partner_id: identifier of the partner to assign
-        :return bool: True if the partner has properly been assigned
-        """
-        res = False
-        res_partner = self.pool.get('res.partner')
-        if partner_id:
-            res_partner.write(cr, uid, partner_id, {'section_id': lead.section_id and lead.section_id.id or False})
-            contact_id = res_partner.address_get(cr, uid, [partner_id])['default']
-            res = lead.write({'partner_id': partner_id}, context=context)
-            message = _("<b>Partner</b> set to <em>%s</em>." % (lead.partner_id.name))
-            self.message_post(cr, uid, [lead.id], body=message, context=context)
-        return res
-
     def handle_partner_assignation(self, cr, uid, ids, action='create', partner_id=False, context=None):
         """
         Handle partner assignation during a lead conversion.
@@ -792,13 +774,16 @@ class crm_lead(format_address, osv.osv):
         """
         #TODO this is a duplication of the handle_partner_assignation method of crm_phonecall
         partner_ids = {}
-        # If a partner_id is given, force this partner for all elements
-        force_partner_id = partner_id
         for lead in self.browse(cr, uid, ids, context=context):
             # If the action is set to 'create' and no partner_id is set, create a new one
-            if action == 'create':
-                partner_id = force_partner_id or self._create_lead_partner(cr, uid, lead, context)
-            self._lead_set_partner(cr, uid, lead, partner_id, context=context)
+            if lead.partner_id:
+                partner_ids[lead.id] = lead.partner_id.id
+                continue
+            if not partner_id and action == 'create':
+                partner_id = self._create_lead_partner(cr, uid, lead, context)
+                self.pool['res.partner'].write(cr, uid, partner_id, {'section_id': lead.section_id and lead.section_id.id or False})
+            if partner_id:
+                lead.write({'partner_id': partner_id}, context=context)
             partner_ids[lead.id] = partner_id
         return partner_ids
 
@@ -883,8 +868,8 @@ class crm_lead(format_address, osv.osv):
             'res_id': int(opportunity_id),
             'view_id': False,
             'views': [(form_view or False, 'form'),
-                    (tree_view or False, 'tree'),
-                    (False, 'calendar'), (False, 'graph')],
+                      (tree_view or False, 'tree'), (False, 'kanban'),
+                      (False, 'calendar'), (False, 'graph')],
             'type': 'ir.actions.act_window',
         }
 
