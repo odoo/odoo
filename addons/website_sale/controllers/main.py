@@ -259,7 +259,7 @@ class Ecommerce(http.Controller):
             'range': range,
             'search': {
                 'search': search,
-                'category': category,
+                'category': category and int(category),
                 'filters': filters,
             },
             'pager': pager,
@@ -286,7 +286,7 @@ class Ecommerce(http.Controller):
             'category': category,
             'search': {
                 'search': search,
-                'category': category,
+                'category': category and int(category),
                 'filters': filters,
             }
         }
