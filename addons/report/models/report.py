@@ -141,12 +141,37 @@ class report(osv.Model):
         }
         self._get_lang_dict()
 
+        def render_doc(doc_id, model, template):
+            """Helper used when a report should be translated into the associated
+            partner's lang.
+
+            <t t-foreach="doc_ids" t-as="doc_id">
+                <t t-raw="render_doc(doc_id, doc_model, 'module.templatetocall')"/>
+            </t>
+
+            :param doc_id: id of the record to translate
+            :param model: model of the record to translate
+            :param template: name of the template to translate into the partner's lang
+            """
+            ctx = context.copy()
+            doc = self.pool[model].browse(cr, uid, doc_id, context=ctx)
+            view_obj = self.pool['ir.ui.view']
+            qcontext = values.copy()
+            # Do not force-translate if we chose to display to report in a specific lang
+            if ctx.get('translatable') is True:
+                qcontext['o'] = doc
+            else:
+                ctx['lang'] = doc.partner_id.lang
+                qcontext['o'] = self.pool[model].browse(cr, uid, doc_id, context=ctx)
+            return view_obj.render(cr, uid, template, qcontext, context=ctx)
+
         current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         values.update({
             'time': time,
             'user': current_user,
             'formatLang': self.formatLang,
             'get_digits': self.get_digits,
+            'render_doc': render_doc,
         })
 
         return request.website.render(template, values)
