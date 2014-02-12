@@ -389,7 +389,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         if isinstance(path_or_xml_id_or_id, basestring) and '.' in path_or_xml_id_or_id:
             action_id = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, request.uid, path_or_xml_id_or_id, raise_if_not_found=False)
         if not action_id:
-            action_ids = ServerActions.search(cr, uid, [('website_path', '=', path_or_xml_id_or_id), ('website_publihsed', '=', True)], context=context)
+            action_ids = ServerActions.search(cr, uid, [('website_path', '=', path_or_xml_id_or_id), ('website_published', '=', True)], context=context)
             action_id = action_ids and action_ids[0] or None
         if not action_id:
             try:
