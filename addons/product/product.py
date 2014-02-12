@@ -578,7 +578,7 @@ class product_product(osv.osv):
         if context is None:
             context = {}
         product = self.browse(cr, uid, product_id, context=context)
-        date = context.get('history_date', time.strftime('%Y-%m-%d %H:%M:%s'))
+        date = context.get('history_date', time.strftime('%Y-%m-%d %H:%M:%S'))
         prices_history_obj = self.pool.get('prices.history')
         history_ids = prices_history_obj.search(cr, uid, [('company_id', '=', company_id), ('product_template_id', '=', product.product_tmpl_id.id), ('datetime', '<=', date)], limit=1)
         if history_ids:

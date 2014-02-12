@@ -82,6 +82,26 @@ class stock_location(osv.osv):
         context_with_inactive['active_test'] = False
         return self.search(cr, uid, [('id', 'child_of', ids)], context=context_with_inactive)
 
+    def _name_get(self, cr, uid, browse_location, context=None):
+        # browse_location = self.browse(cr, uid, id, context=context)
+        location_type = browse_location.usage
+        name = ''
+        while location_type != 'view':
+            name = browse_location.name + '/' + name
+            browse_location = browse_location.location_id
+            location_type = browse_location.usage
+        name = browse_location.name + '/' + name
+        return name
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        #reads = self.read(cr, uid, ids, ['name','location_id'], context=context)
+        res = []
+        for location in self.browse(cr, uid, ids, context=context):
+            res.append((location.id, self._name_get(cr, uid, location, context=context)))
+        return res
+
     _columns = {
         'name': fields.char('Location Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active', help="By unchecking the active field, you may hide a location without deleting it."),
