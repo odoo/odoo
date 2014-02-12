@@ -754,7 +754,7 @@ class BaseModel(object):
         # Note: we have to insert an instance into the registry now, because it
         # can trigger some stuff on other models which expect this new instance
         # (like method _inherits_reload_src())
-        instance = cls.browse()
+        instance = cls._browse(scope_proxy.current, ())
         cls._model = instance           # backward compatibility
         pool.add(name, instance)
 
@@ -5018,31 +5018,35 @@ class BaseModel(object):
     #
 
     @classmethod
-    def _instance(cls, scope, ids):
-        """ Create an instance attached to `scope`; `ids` is a tuple with the
-            ids of the records in the instance.
+    def _browse(cls, scope, ids):
+        """ Create an instance attached to `scope`; `ids` is a tuple of record
+            ids.
         """
         records = object.__new__(cls)
         records._scope = scope
         records._ids = ids
+        scope.cache_ids[cls._name].update(ids)
         return records
 
-    @classmethod
-    @api.model
-    def browse(cls, arg=None):
+    @api.new
+    def browse(self, arg=None):
         """ Return an instance corresponding to `arg` and attached to the
             current scope. The parameter `arg` is either a record id, or a
             collection of record ids.
         """
         if isinstance(arg, Iterable) and not isinstance(arg, basestring):
             ids = tuple(arg)
-        elif arg:
-            ids = (arg,)
         else:
-            ids = ()
-        records = cls._instance(scope_proxy.current, ids)
-        records._in_cache()
-        return records
+            ids = (arg,) if arg else ()
+        return self._browse(scope_proxy.current, ids)
+
+    @browse.old
+    def browse(self, cr, uid, arg=None, context=None):
+        if isinstance(arg, Iterable) and not isinstance(arg, basestring):
+            ids = tuple(arg)
+        else:
+            ids = (arg,) if arg else ()
+        return self._browse(scope_proxy(cr, uid, context), ids)
 
     #
     # Internal properties, for manipulating the instance's implementation
@@ -5164,7 +5168,7 @@ class BaseModel(object):
     def __iter__(self):
         """ Return an iterator over `self`. """
         for id in self._ids:
-            yield self._instance(self._scope, (id,))
+            yield self._browse(self._scope, (id,))
 
     def __contains__(self, item):
         """ Test whether `item` is a subset of `self` or a field name. """
@@ -5263,9 +5267,9 @@ class BaseModel(object):
             # important: one must call the field's getter
             return self._fields[key].__get__(self, type(self))
         elif isinstance(key, slice):
-            return self._instance(self._scope, self._ids[key])
+            return self._browse(self._scope, self._ids[key])
         else:
-            return self._instance(self._scope, (self._ids[key],))
+            return self._browse(self._scope, (self._ids[key],))
 
     def __setitem__(self, key, value):
         """ Assign the field `key` to `value` in record `self`. """
