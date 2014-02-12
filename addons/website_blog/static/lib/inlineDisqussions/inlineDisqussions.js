@@ -67,7 +67,7 @@ var disqus_identifier;
             .parent()
             .appendTo('#disqussions_wrapper');
             a.css({
-                'top': node.offset().top + 40,
+                'top': node.offset().top + 30,
                 'left': settings.position == 'right' ? node.offset().left + node.outerWidth() : node.offset().left - a.outerWidth()
             });
 

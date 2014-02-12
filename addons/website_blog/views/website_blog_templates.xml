@@ -254,7 +254,7 @@
 <template id="blog_post_background_cover" name="Blog Cover"
         inherit_option_id="website_blog.blog_post_complete" inherit_id="website_blog.blog_post_complete">
     <xpath expr="//div[@id='title']" position="attributes">
-        <attribute name="class">blog_cover</attribute>
+        <attribute name="class">blog_cover mb8</attribute>
         <attribute name="t-attf-style">background-image : url(#{blog_post.content_image})</attribute>
     </xpath>
     <xpath expr="//h1[@id='blog_post_name']" position="replace">
