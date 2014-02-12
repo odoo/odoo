@@ -783,11 +783,10 @@
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
                         </page>
                         <page string="Additional Info">
-                            <group>
+                            <group string="General Informations">
                                 <group>
                                     <field name="move_type"/>
                                     <field name="picking_type_id"/>
-                                    <field name="priority"/>
                                     <field name="picking_type_code" invisible="1"/>
                                     <field name="quant_reserved_exist" invisible="1"/>                                    
                                 </group>
@@ -795,6 +794,7 @@
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                     <field name="date_done" groups="base.group_no_one"/>
                                     <field name="group_id"/>
+                                    <field name="priority"/>
                                 </group>
                             </group>
                         </page>
