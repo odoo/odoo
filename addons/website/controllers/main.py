@@ -369,9 +369,8 @@ class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     # Server actions
     #------------------------------------------------------
-    _server_action_route = '/website/action'
 
-    @http.route('%s/<path_or_xml_id_or_id>' % _server_action_route, type='http', auth="public", website=True)
+    @http.route('/website/action/<path_or_xml_id_or_id>', type='http', auth="public", website=True)
     def actions_server(self, path_or_xml_id_or_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         res, action_id, action = None, None, None
