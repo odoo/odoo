@@ -137,21 +137,21 @@
 
 <!-- Blog Post List -->
 <template id="opt_blog_post_short_list" name="Blog Post List"
-        inherit_option_id="website_blog.blog_post_short">
+        inherit_id="website_blog.blog_post_short">
     <xpath expr="//div[@name='blog_post_summary']" position="replace">
-        <div class="container">
-            <div name="blog_post_summary" t-att-publish-data="blog_post.website_published and 'on' or 'off'">
-                <h2>
-                    <a t-attf-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}" t-field="blog_post.name"></a>
-                </h2>
-                <p class="text-muted" t-field="blog_post.sub_title"/>
-                <img class="img-circle" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 40px;"/>
+        <div class="readable" name="blog_post_summary" t-att-publish-data="blog_post.website_published and 'on' or 'off'">
+            <div class="row">
+                <a class="col-sm-11" t-attf-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}"><h2 t-field="blog_post.name"></h2></a>
+                <h2 class="col-sm-1"><img class="img-circle" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 40px;"/></h2>
+            </div>
+            <div class="row col-sm-12 text-muted">
+                <h3 t-field="blog_post.sub_title"/>
                 <span t-field="blog_post.create_uid.name"/>
                 <p class="post-meta text-muted text-left hidden" name='blog_post_data'>
                     <span class="fa fa-calendar oe_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
                 </p>
             </div>
-            <hr/>
+            <hr class="mb0 mt0"/>
         </div>
     </xpath>
 </template>
@@ -166,7 +166,7 @@
 
 <!-- Option: Blog Post Summary: show tags -->
 <template id="opt_blog_post_short_tags" name="Tags"
-        inherit_option_id="website_blog.blog_post_short" inherit_id="website_blog.blog_post_short">
+        inherit_option_id="website_blog.blog_post_short">
     <xpath expr="//p[@name='blog_post_data']" position="after">
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
