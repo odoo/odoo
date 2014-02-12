@@ -107,7 +107,7 @@ class hr_employee(osv.Model):
         'evaluation_date': fields.date('Next Appraisal Date', help="The date of the next appraisal is computed by the appraisal plan's dates (first appraisal + periodicity)."),
     }
 
-    def run_employee_evaluation(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
+    def run_employee_evaluation(self, cr, uid, automatic=False, use_new_cursor=False, context=None):  # cronjob
         now = parser.parse(datetime.now().strftime('%Y-%m-%d'))
         obj_evaluation = self.pool.get('hr_evaluation.evaluation')
         emp_ids = self.search(cr, uid, [('evaluation_plan_id', '<>', False), ('evaluation_date', '=', False)], context=context)
