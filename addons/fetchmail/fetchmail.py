@@ -198,6 +198,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                     result, data = imap_server.search(None, '(UNSEEN)')
                     for num in data[0].split():
                         result, data = imap_server.fetch(num, '(RFC822)')
+                        imap_server.store(num, '-FLAGS', '\\Seen')
                         res_id = mail_thread.message_process(cr, uid, server.object_id.model, 
                                                              data[0][1],
                                                              save_original=server.original,
@@ -205,8 +206,8 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                                                              context=context)
                         if res_id and server.action_id:
                             action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id], 'active_model': context.get("thread_model", server.object_id.model)})
-                            imap_server.store(num, '+FLAGS', '\\Seen')
-                            cr.commit()
+                        imap_server.store(num, '+FLAGS', '\\Seen')
+                        cr.commit()
                         count += 1
                     _logger.info("fetched/processed %s email(s) on %s server %s", count, server.type, server.name)
                 except Exception:
