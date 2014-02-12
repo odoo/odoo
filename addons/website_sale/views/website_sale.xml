@@ -4,6 +4,12 @@
 
 <!-- Layout add nav and footer -->
 
+<template id="debugger" inherit_id="website.debugger" name="Event Debugger">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_sale/static/src/js/website.tour.sale.js"></script>
+    </xpath>
+</template>
+
 <template id="editor_head" inherit_id="website.editor_head" name="Shop Editor" groups="base.group_sale_manager">
   <xpath expr="//script[@id='website_tour_js']" position="after">
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale.editor.js"></script>
@@ -50,17 +56,18 @@
 </template>
 
 <template id="products_cart" name="Shopping cart">
+  <div itemscope="itemscope" itemtype="http://schema.org/Product">
   <div class="ribbon-wrapper">
     <div class="ribbon btn btn-danger">Sale</div>
   </div>
   <div class="oe_product_image">
-      <a t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('category', 'search', 'filters') }}">
-          <span t-field="product.image" t-field-options='{"widget": "image"}'/>
+      <a itemprop="url" t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('category', 'search', 'filters') }}">
+          <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image"}'/>
       </a>
   </div>
   <section>
-      <h5><strong><a t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('category', 'search', 'filters') }}" t-field="product.name"/></strong></h5>
-      <div class="product_price" t-if="product.product_variant_ids">
+      <h5><strong><a itemprop="name" t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('category', 'search', 'filters') }}" t-field="product.name"/></strong></h5>
+      <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
           <b>
               <t t-if="abs(product.product_variant_ids[0].lst_price - product.product_variant_ids[0].price) &gt; 0.2">
                 <del class="text-danger"
@@ -72,10 +79,14 @@
               <span t-field="product.product_variant_ids[0].price"  t-field-options='{
                    "widget": "monetary",
                    "display_currency": "website.pricelist_id.currency_id"
-               }'/>
+               }'>
+              </span>
+              <span itemprop="price" style="display:none;" t-esc="product.product_variant_ids[0].price"/>
+              <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
           </b>
       </div>
   </section>
+  </div>
 </template>
 
 <template id="products" name="Products">
@@ -188,14 +199,9 @@
               </table>
               <t t-if="not bins">
                 <div class="text-center text-muted">
-                  <h3 class="css_editable_display">No product found</h3>
-                  <h3 class="css_non_editable_mode_hidden">There isn't available products right now, click <a t-attf-href="/page/website.contactus">here</a> to contact us</h3>
+                  <h3 class="css_editable_display">No product defined.</h3>
                   <t groups="base.group_website_publisher">
-                    <t groups="base.group_sale_manager">
-                      <p>Click on "Content" to define a new product or "Help" for more informations.</p>
-                      <img src="/website/static/src/img/content_here.png"/>
-                      <p>In the backend's product form contains information to simplify the sale process: price, notes in the quotation, accounting data, procurement methods, etc.</p>
-                    </t>
+                    <p groups="base.group_sale_manager">Use the <i>'Content'</i> top menu to create a new product.</p>
                   </t>
                 </div>
               </t>
@@ -215,7 +221,7 @@
 <template id="product_description" inherit_option_id="website_sale.products_cart" name="Product Description">
   <xpath expr="//div[@class='product_price']" position="before">
       <div class="text-info oe_subdescription oe_shadow" t-field="product.description_sale"/>
-      <div class="text-info oe_subdescription" t-field="product.description_sale"/>
+      <div itemprop="description" class="text-info oe_subdescription" t-field="product.description_sale"/>
   </xpath>
 </template>
 
@@ -266,7 +272,7 @@
           <link rel='stylesheet' href='/website_sale/static/src/css/website_mail.css'/>
       </t>
       <t t-set="additional_title" t-value="product.name"/>
-      <div id="wrap" class="js_sale">
+      <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
 
         <section class="container mt8">
           <div class="row">
@@ -294,10 +300,10 @@
         <section class="container oe_website_sale" id="product_detail">
           <div class="row">
             <div class="col-sm-7 col-md-7 col-lg-7">
-                <span t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
+                <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
             </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
-                <h1 t-field="product.name">Product Name</h1>
-
+                <h1 itemprop="name" t-field="product.name">Product Name</h1>
+                <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)"/>
                 <form action="/shop/add_cart/" class="js_add_cart_json" method="POST">
                     <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_ids[0].id"/>
                     <t t-if="len(product.product_variant_ids) &gt; 1">
@@ -313,7 +319,7 @@
                         </label>
                     </t>
 
-                    <div class="product_price mt16" t-if="product.product_variant_ids">
+                    <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt16" t-if="product.product_variant_ids">
                         <h4>
                             <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
                             <span class="text-danger" style="text-decoration: line-through;"
@@ -329,6 +335,8 @@
                                  "widget": "monetary",
                                  "display_currency": "website.pricelist_id.currency_id"
                              }'/>
+                            <span itemprop="price" style="display:none;" t-esc="product.product_variant_ids[0].price"/>
+                            <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
                         </h4>
                     </div>
                     <button class="btn btn-primary btn-lg mt8">Add to Cart</button>
@@ -344,7 +352,7 @@
             </div>
           </div>
         </section>
-        <div t-field="product.website_description" class="oe_structure mt16" id="product_full_description"/>
+        <div itemprop="description" t-field="product.website_description" class="oe_structure mt16" id="product_full_description"/>
       </div>
   </t>
 </template>
@@ -530,7 +538,7 @@
                   <a t-if="website_sale_order and website_sale_order.website_order_line" href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="fa fa-long-arrow-right"/></a>
                   <div class="oe_structure"/>
               </div>
-              <div class="col-lg-3 col-lg-offset-1 col-sm-3 text-muted" id="right_column">
+              <div class="col-lg-3 col-lg-offset-1 col-sm-3 col-md-3 text-muted" id="right_column">
                   <h4>Policies</h4>
                   <ul class="list-unstyled mb32">
                       <li>&#9745; 30-days money-back guarantee</li>
@@ -828,7 +836,7 @@
               </div>
               <button type="submit" class="btn btn-default btn-primary pull-right mb32">Confirm <span class="fa fa-long-arrow-right"/></button>
           </div>
-          <div class="col-lg-offset-1 col-lg-3 text-muted">
+          <div class="col-lg-offset-1 col-lg-3 col-md-3 text-muted">
               <h3 class="page-header mt16">Your Order <small><a href="/shop/mycart"><span class="fa fa-arrow-right"/> change</a></small></h3>
               <div class="row">
                   <div class="col-sm-6 text-right">Subtotal:</div>
