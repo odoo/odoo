@@ -1,7 +1,8 @@
 import unittest2
+
+import openerp
 from openerp.osv.orm import BaseModel
 import openerp.tests.common as common
-
 
 class test_expression(common.TransactionCase):
 
@@ -438,6 +439,14 @@ class test_expression(common.TransactionCase):
         partner_state_id_col._auto_join = False
         partner_parent_id_col._auto_join = False
         state_country_id_col._auto_join = False
+
+    def test_30_normalize_domain(self):
+        expression = openerp.osv.expression
+        norm_domain = domain = ['&', (1, '=', 1), ('a', '=', 'b')]
+        assert norm_domain == expression.normalize_domain(domain), "Normalized domains should be left untouched"
+        domain = [('x', 'in', ['y', 'z']), ('a.v', '=', 'e'), '|', '|', ('a', '=', 'b'), '!', ('c', '>', 'd'), ('e', '!=', 'f'), ('g', '=', 'h')]
+        norm_domain = ['&', '&', '&'] + domain
+        assert norm_domain == expression.normalize_domain(domain), "Non-normalized domains should be properly normalized"
 
 if __name__ == '__main__':
     unittest2.main()

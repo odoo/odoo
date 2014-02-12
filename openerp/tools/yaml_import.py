@@ -321,14 +321,13 @@ class YamlInterpreter(object):
                 view_info = model.fields_view_get(self.cr, SUPERUSER_ID, varg, 'form', context)
 
             record_dict = self._create_record(model, fields, view_info, default=default)
-            _logger.debug("RECORD_DICT %s" % record_dict)
             id = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, record.model, \
                     self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
             self.id_map[record.id] = int(id)
             if config.get('import_partial'):
                 self.cr.commit()
 
-    def _create_record(self, model, fields, view_info=False, parent={}, default=True):
+    def _create_record(self, model, fields, view_info=None, parent={}, default=True):
         """This function processes the !record tag in yalm files. It simulates the record creation through an xml
             view (either specified on the !record tag or the default one for this object), including the calls to
             on_change() functions, and sending only values for fields that aren't set as readonly.
@@ -447,7 +446,13 @@ class YamlInterpreter(object):
                     args = map(lambda x: eval(x, ctx), match.group(2).split(','))
                     result = getattr(model, match.group(1))(self.cr, SUPERUSER_ID, [], *args)
                     for key, val in (result or {}).get('value', {}).items():
-                        assert key in fg, "The returning field '%s' from your on_change call '%s' does not exist either on the object '%s', either in the view '%s' used for the creation" % (key, match.group(1), model._name, view_info['name'])
+                        assert key in fg, (
+                            "The field %r returned from the onchange call %r "
+                            "does not exist in the source view %r (of object "
+                            "%r). This field will be ignored (and thus not "
+                            "populated) when clients saves the new record" % (
+                                key, match.group(1), view_info.get('name', '?'), model._name
+                            ))
                         if key not in fields:
                             # do not shadow values explicitly set in yaml.
                             record_dict[key] = process_val(key, val)
@@ -925,7 +930,7 @@ class YamlInterpreter(object):
 def yaml_import(cr, module, yamlfile, kind, idref=None, mode='init', noupdate=False, report=None):
     if idref is None:
         idref = {}
-    loglevel = logging.INFO if kind == 'test' else logging.DEBUG
+    loglevel = logging.DEBUG
     yaml_string = yamlfile.read()
     yaml_interpreter = YamlInterpreter(cr, module, idref, mode, filename=yamlfile.name, report=report, noupdate=noupdate, loglevel=loglevel)
     yaml_interpreter.process(yaml_string)

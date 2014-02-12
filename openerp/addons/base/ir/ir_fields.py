@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import cStringIO
 import datetime
 import functools
 import operator
@@ -12,6 +13,7 @@ from openerp.osv import orm
 from openerp.tools.translate import _
 from openerp.tools.misc import DEFAULT_SERVER_DATE_FORMAT,\
                                DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import html_sanitize
 
 REFERENCING_FIELDS = set([None, 'id', '.id'])
 def only_ref_fields(record):
@@ -128,14 +130,17 @@ class ir_fields_converter(orm.Model):
 
         :param column: column object to generate a value for
         :type column: :class:`fields._column`
-        :param type fromtype: type to convert to something fitting for ``column``
+        :param fromtype: type to convert to something fitting for ``column``
+        :type fromtype: type | str
         :param context: openerp request context
         :return: a function (fromtype -> column.write_type), if a converter is found
         :rtype: Callable | None
         """
+        assert isinstance(fromtype, (type, str))
         # FIXME: return None
+        typename = fromtype.__name__ if isinstance(fromtype, type) else fromtype
         converter = getattr(
-            self, '_%s_to_%s' % (fromtype.__name__, column._type), None)
+            self, '_%s_to_%s' % (typename, column._type), None)
         if not converter: return None
 
         return functools.partial(
@@ -184,7 +189,7 @@ class ir_fields_converter(orm.Model):
 
     def _str_id(self, cr, uid, model, column, value, context=None):
         return value, []
-    _str_to_reference = _str_to_char = _str_to_text = _str_to_binary = _str_id
+    _str_to_reference = _str_to_char = _str_to_text = _str_to_binary = _str_to_html = _str_id
 
     def _str_to_date(self, cr, uid, model, column, value, context=None):
         try:

@@ -35,6 +35,7 @@ import werkzeug.wsgi
 
 import openerp
 from openerp.service import security, model as service_model
+import openerp.tools
 
 _logger = logging.getLogger(__name__)
 
@@ -48,6 +49,28 @@ request = _request_stack()
 """
     A global proxy that always redirect to the current request object.
 """
+
+def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=303):
+    url = path
+    if not query:
+        query = {}
+    if forward_debug and request and request.debug:
+        query['debug'] = None
+    if query:
+        url += '?' + werkzeug.url_encode(query)
+    if keep_hash:
+        return redirect_with_hash(url, code)
+    else:
+        return werkzeug.utils.redirect(url, code)
+
+def redirect_with_hash(url, code=303):
+    # Most IE and Safari versions decided not to preserve location.hash upon
+    # redirect. And even if IE10 pretends to support it, it still fails
+    # inexplicably in case of multiple redirects (and we do have some).
+    # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
+    if request.httprequest.user_agent.browser in ('firefox',):
+        return werkzeug.utils.redirect(url, code)
+    return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
 
 class WebRequest(object):
     """ Parent class for all OpenERP Web request types, mostly deals with
@@ -145,7 +168,10 @@ class WebRequest(object):
         """
         # some magic to lazy create the cr
         if not self._cr:
-            self._cr = self.registry.db.cursor()
+            if openerp.tools.config['test_enable'] and self.session_id in openerp.tests.common.HTTP_SESSION:
+                self._cr = openerp.tests.common.HTTP_SESSION[self.session_id]
+            else:
+                self._cr = self.registry.db.cursor()
         return self._cr
 
     def __enter__(self):
@@ -154,7 +180,7 @@ class WebRequest(object):
 
     def __exit__(self, exc_type, exc_value, traceback):
         _request_stack.pop()
-        if self._cr:
+        if self._cr and not (openerp.tools.config['test_enable'] and self.session_id in openerp.tests.common.HTTP_SESSION):
             if exc_type is None:
                 self._cr.commit()
             self._cr.close()
@@ -168,7 +194,7 @@ class WebRequest(object):
                          if not k.startswith("_ignored_"))
 
         self.func = func
-        self.func_request_type = func.exposed
+        self.func_request_type = func.routing['type']
         self.func_arguments = arguments
         self.auth_method = auth
 
@@ -181,11 +207,11 @@ class WebRequest(object):
         kwargs.update(self.func_arguments)
 
         # Backward for 7.0
-        if getattr(self.func, '_first_arg_is_req', False):
+        if getattr(self.func.method, '_first_arg_is_req', False):
             args = (request,) + args
         # Correct exception handling and concurency retry
         @service_model.check
-        def checked_call(dbname, *a, **kw):
+        def checked_call(___dbname, *a, **kw):
             return self.func(*a, **kw)
 
         # FIXME: code and rollback management could be cleaned
@@ -207,7 +233,7 @@ class WebRequest(object):
         warnings.warn('please use request.registry and request.cr directly', DeprecationWarning)
         yield (self.registry, self.cr)
 
-def route(route, type="http", auth="user", methods=None):
+def route(route=None, **kw):
     """
     Decorator marking the decorated method as being a handler for requests. The method must be part of a subclass
     of ``Controller``.
@@ -225,17 +251,18 @@ def route(route, type="http", auth="user", methods=None):
         authentication modules. There request code will not have any facilities to access the database nor have any
         configuration indicating the current database nor the current user.
     :param methods: A sequence of http methods this route applies to. If not specified, all methods are allowed.
+    :param cors: The Access-Control-Allow-Origin cors directive value.
     """
-    assert type in ["http", "json"]
+    routing = kw.copy()
+    assert not 'type' in routing or routing['type'] in ("http", "json")
     def decorator(f):
-        if isinstance(route, list):
-            f.routes = route
-        else:
-            f.routes = [route]
-        f.methods = methods
-        f.exposed = type
-        if getattr(f, "auth", None) is None:
-            f.auth = auth
+        if route:
+            if isinstance(route, list):
+                routes = route
+            else:
+                routes = [route]
+            routing['routes'] = routes
+        f.routing = routing
         return f
     return decorator
 
@@ -286,7 +313,7 @@ class JsonRequest(WebRequest):
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
             def handler():
-                self.session.jsonp_requests[request_id] = self.httprequest.form['r']
+                self.session['jsonp_request_%s' % (request_id,)] = self.httprequest.form['r']
                 self.session.modified = True
                 headers=[('Content-Type', 'text/plain; charset=utf-8')]
                 r = werkzeug.wrappers.Response(request_id, headers=headers)
@@ -298,7 +325,7 @@ class JsonRequest(WebRequest):
             request = args.get('r')
         elif jsonp and request_id:
             # jsonp 2 steps step2 GET: run and return result
-            request = self.session.jsonp_requests.pop(request_id, "")
+            request = self.session.pop('jsonp_request_%s' % (request_id,), '{}')
         else:
             # regular jsonrpc2
             request = self.httprequest.stream.read()
@@ -306,7 +333,7 @@ class JsonRequest(WebRequest):
         # Read POST content or POST Form Data named "request"
         self.jsonrequest = simplejson.loads(request)
         self.params = dict(self.jsonrequest.get("params", {}))
-        self.context = self.params.pop('context', self.session.context)
+        self.context = self.params.pop('context', dict(self.session.context))
 
     def dispatch(self):
         """ Calls the method asked for by the JSON-RPC2 or JSONP request
@@ -388,11 +415,10 @@ def jsonrequest(f):
 
         Use the ``route()`` decorator instead.
     """
-    f.combine = True
     base = f.__name__.lstrip('/')
     if f.__name__ == "index":
         base = ""
-    return route([base, base + "/<path:_ignored_path>"], type="json", auth="user")(f)
+    return route([base, base + "/<path:_ignored_path>"], type="json", auth="user", combine=True)(f)
 
 class HttpRequest(WebRequest):
     """ Regular GET/POST request
@@ -401,13 +427,27 @@ class HttpRequest(WebRequest):
 
     def __init__(self, *args):
         super(HttpRequest, self).__init__(*args)
-        params = dict(self.httprequest.args)
-        params.update(self.httprequest.form)
-        params.update(self.httprequest.files)
+        params = self.httprequest.args.to_dict()
+        params.update(self.httprequest.form.to_dict())
+        params.update(self.httprequest.files.to_dict())
         params.pop('session_id', None)
         self.params = params
 
     def dispatch(self):
+        # TODO: refactor this correctly. This is a quick fix for pos demo.
+        if request.httprequest.method == 'OPTIONS' and request.func and request.func.routing.get('cors'):
+            response = werkzeug.wrappers.Response(status=200)
+            response.headers.set('Access-Control-Allow-Origin', request.func.routing['cors'])
+            methods = 'GET, POST'
+            if request.func_request_type == 'json':
+                methods = 'POST'
+            elif request.func.routing.get('methods'):
+                methods = ', '.join(request.func.routing['methods'])
+            response.headers.set('Access-Control-Allow-Methods', methods)
+            response.headers.set('Access-Control-Max-Age',60*60*24)
+            response.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+            return response
+
         r = self._call_function(**self.params)
         if not r:
             r = werkzeug.wrappers.Response(status=204)  # no content
@@ -444,11 +484,10 @@ def httprequest(f):
 
         Use the ``route()`` decorator instead.
     """
-    f.combine = True
     base = f.__name__.lstrip('/')
     if f.__name__ == "index":
         base = ""
-    return route([base, base + "/<path:_ignored_path>"], type="http", auth="user")(f)
+    return route([base, base + "/<path:_ignored_path>"], type="http", auth="user", combine=True)(f)
 
 #----------------------------------------------------------
 # Controller and route registration
@@ -485,6 +524,13 @@ class ControllerType(type):
 class Controller(object):
     __metaclass__ = ControllerType
 
+class EndPoint(object):
+    def __init__(self, method, routing):
+        self.method = method
+        self.routing = routing
+    def __call__(self, *args, **kw):
+        return self.method(*args, **kw)
+
 def routing_map(modules, nodb_only, converters=None):
     routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)
     for module in modules:
@@ -501,13 +547,25 @@ def routing_map(modules, nodb_only, converters=None):
             o = cls()
             members = inspect.getmembers(o)
             for mk, mv in members:
-                if inspect.ismethod(mv) and getattr(mv, 'exposed', False) and (not nodb_only or nodb_only == (mv.auth == "none")):
-                    for url in mv.routes:
-                        if getattr(mv, "combine", False):
-                            url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
-                            if url.endswith("/") and len(url) > 1:
-                                url = url[: -1]
-                        routing_map.add(werkzeug.routing.Rule(url, endpoint=mv, methods=mv.methods))
+                if inspect.ismethod(mv) and hasattr(mv, 'routing'):
+                    routing = dict(type='http', auth='user', methods=None, routes=None)
+                    methods_done = list()
+                    for claz in reversed(mv.im_class.mro()):
+                        fn = getattr(claz, mv.func_name, None)
+                        if fn and hasattr(fn, 'routing') and fn not in methods_done:
+                            methods_done.append(fn)
+                            routing.update(fn.routing)
+                    if not nodb_only or nodb_only == (routing['auth'] == "none"):
+                        assert routing['routes'], "Method %r has not route defined" % mv
+                        endpoint = EndPoint(mv, routing)
+                        for url in routing['routes']:
+                            if routing.get("combine", False):
+                                # deprecated
+                                url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
+                                if url.endswith("/") and len(url) > 1:
+                                    url = url[: -1]
+
+                            routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods']))
     return routing_map
 
 #----------------------------------------------------------
@@ -626,9 +684,10 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             raise SessionExpiredException("Session expired")
         security.check(self.db, self.uid, self.password)
 
-    def logout(self):
+    def logout(self, keep_db=False):
         for k in self.keys():
-            del self[k]
+            if not (keep_db and k == 'db'):
+                del self[k]
         self._default_values()
 
     def _default_values(self):
@@ -637,7 +696,6 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.setdefault("login", None)
         self.setdefault("password", None)
         self.setdefault("context", {'tz': "UTC", "uid": None})
-        self.setdefault("jsonp_requests", {})
 
     def get_context(self):
         """
@@ -777,6 +835,40 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
         return Model(self, model)
 
+    def save_action(self, action):
+        """
+        This method store an action object in the session and returns an integer
+        identifying that action. The method get_action() can be used to get
+        back the action.
+
+        :param the_action: The action to save in the session.
+        :type the_action: anything
+        :return: A key identifying the saved action.
+        :rtype: integer
+        """
+        saved_actions = self.setdefault('saved_actions', {"next": 1, "actions": {}})
+        # we don't allow more than 10 stored actions
+        if len(saved_actions["actions"]) >= 10:
+            del saved_actions["actions"][min(saved_actions["actions"])]
+        key = saved_actions["next"]
+        saved_actions["actions"][key] = action
+        saved_actions["next"] = key + 1
+        self.modified = True
+        return key
+
+    def get_action(self, key):
+        """
+        Gets back a previously saved action. This method can return None if the action
+        was saved since too much time (this case should be handled in a smart way).
+
+        :param key: The key given by save_action()
+        :type key: integer
+        :return: The saved action or None.
+        :rtype: anything
+        """
+        saved_actions = self.get('saved_actions', {})
+        return saved_actions.get("actions", {}).get(key)
+
 def session_gc(session_store):
     if random.random() < 0.001:
         # we keep session one week
@@ -801,8 +893,10 @@ class LazyResponse(werkzeug.wrappers.Response):
     """ Lazy werkzeug response.
     API not yet frozen"""
 
-    def __init__(self, callback, **kwargs):
+    def __init__(self, callback, status_code=None, **kwargs):
         super(LazyResponse, self).__init__(mimetype='text/html')
+        if status_code:
+            self.status_code = status_code
         self.callback = callback
         self.params = kwargs
     def process(self):
@@ -866,7 +960,7 @@ class Root(object):
         self.load_addons()
 
         _logger.info("Generating nondb routing")
-        self.nodb_routing_map = routing_map(['', "web"], True)
+        self.nodb_routing_map = routing_map([''] + openerp.conf.server_wide_modules, True)
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
@@ -914,8 +1008,16 @@ class Root(object):
         return explicit_session
 
     def setup_db(self, httprequest):
-        if not httprequest.session.db:
-            # allow "admin" routes to works without being logged in when in monodb.
+        db = httprequest.session.db
+        # Check if session.db is legit
+        if db:
+            if db not in db_filter([db], httprequest=httprequest):
+                _logger.warn("Logged into database '%s', but dbfilter "
+                             "rejects it; logging session out.", db)
+                httprequest.session.logout()
+                db = None
+
+        if not db:
             httprequest.session.db = db_monodb(httprequest)
 
     def setup_lang(self, httprequest):
@@ -938,7 +1040,10 @@ class Root(object):
             try:
                 result.process()
             except(Exception), e:
-                result = request.registry['ir.http']._handle_exception(e)
+                if request.db:
+                    result = request.registry['ir.http']._handle_exception(e)
+                else:
+                    raise
 
         if isinstance(result, basestring):
             response = werkzeug.wrappers.Response(result, mimetype='text/html')
@@ -956,6 +1061,16 @@ class Root(object):
         if not explicit_session and hasattr(response, 'set_cookie'):
             response.set_cookie('session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60)
 
+        # Support for Cross-Origin Resource Sharing
+        if request.func and 'cors' in request.func.routing:
+            response.headers.set('Access-Control-Allow-Origin', request.func.routing['cors'])
+            methods = 'GET, POST'
+            if request.func_request_type == 'json':
+                methods = 'POST'
+            elif request.func.routing.get('methods'):
+                methods = ', '.join(request.func.routing['methods'])
+            response.headers.set('Access-Control-Allow-Methods', methods)
+
         return response
 
     def dispatch(self, environ, start_response):
@@ -964,7 +1079,6 @@ class Root(object):
         """
         try:
             httprequest = werkzeug.wrappers.Request(environ)
-            httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableDict
             httprequest.app = self
 
             explicit_session = self.setup_session(httprequest)
@@ -984,10 +1098,12 @@ class Root(object):
                 if db:
                     openerp.modules.registry.RegistryManager.check_registry_signaling(db)
                     try:
-                        ir_http = request.registry['ir.http']
+                        with openerp.tools.mute_logger('openerp.sql_db'):
+                            ir_http = request.registry['ir.http']
                     except psycopg2.OperationalError:
-                        # psycopg2 error. At this point, that's mean the database does not exists
-                        # anymore. We unlog the user and failback in nodb mode
+                        # psycopg2 error. At this point, that means the
+                        # database probably does not exists anymore. Log the
+                        # user out and fall back to nodb
                         request.session.logout()
                         result = _dispatch_nodb()
                     else:
@@ -1008,8 +1124,11 @@ class Root(object):
         return request.registry['ir.http'].routing_map()
 
 def db_list(force=False, httprequest=None):
-    httprequest = httprequest or request.httprequest
     dbs = openerp.netsvc.dispatch_rpc("db", "list", [force])
+    return db_filter(dbs, httprequest=httprequest)
+
+def db_filter(dbs, httprequest=None):
+    httprequest = httprequest or request.httprequest
     h = httprequest.environ['HTTP_HOST'].split(':')[0]
     d = h.split('.')[0]
     r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
@@ -1028,8 +1147,6 @@ def db_monodb(httprequest=None):
         Returns ``None`` if the magic is not magic enough.
     """
     httprequest = httprequest or request.httprequest
-    db = None
-    redirect = None
 
     dbs = db_list(True, httprequest)
 
@@ -1064,6 +1181,6 @@ root = None
 def wsgi_postload():
     global root
     root = Root()
-    openerp.wsgi.register_wsgi_handler(root)
+    openerp.service.wsgi_server.register_wsgi_handler(root)
 
 # vim:et:ts=4:sw=4:

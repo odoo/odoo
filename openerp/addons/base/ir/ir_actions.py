@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2013 OpenERP S.A. <http://www.openerp.com>
+#    Copyright (C) 2004-2014 OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -417,7 +417,7 @@ class ir_actions_server(osv.osv):
 
     def _select_objects(self, cr, uid, context=None):
         model_pool = self.pool.get('ir.model')
-        ids = model_pool.search(cr, uid, [('name', 'not ilike', '.')])
+        ids = model_pool.search(cr, uid, [], limit=None)
         res = model_pool.read(cr, uid, ids, ['model', 'name'])
         return [(r['model'], r['name']) for r in res] + [('', '')]
 
@@ -910,11 +910,34 @@ class ir_actions_server(osv.osv):
         if action.link_new_record and action.link_field_id:
             self.pool[action.model_id.model].write(cr, uid, [context.get('active_id')], {action.link_field_id.name: res_id})
 
+    def _get_eval_context(self, cr, uid, action, context=None):
+        """ Prepare the context used when evaluating python code, like the
+        condition or code server actions.
+
+        :param action: the current server action
+        :type action: browse record
+        :returns: dict -- evaluation context given to (safe_)eval """
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        obj_pool = self.pool[action.model_id.model]
+        obj = None
+        if context.get('active_model') == action.model_id.model and context.get('active_id'):
+            obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
+        return {
+            'self': obj_pool,
+            'object': obj,
+            'obj': obj,
+            'pool': self.pool,
+            'time': time,
+            'cr': cr,
+            'uid': uid,
+            'user': user,
+        }
+
     def run(self, cr, uid, ids, context=None):
-        """ Run the server action. For each server action, the condition is
-        checked. Note that A void (aka False) condition is considered as always
+        """ Runs the server action. For each server action, the condition is
+        checked. Note that a void (``False``) condition is considered as always
         valid. If it is verified, the run_action_<STATE> method is called. This
-        allows easy inheritance of the server actions.
+        allows easy overriding of the server actions.
 
         :param dict context: context should contain following keys
 
@@ -932,25 +955,9 @@ class ir_actions_server(osv.osv):
         if context is None:
             context = {}
         res = False
-        user = self.pool.get('res.users').browse(cr, uid, uid)
         active_ids = context.get('active_ids', [context.get('active_id')])
         for action in self.browse(cr, uid, ids, context):
-            obj_pool = self.pool[action.model_id.model]
-            obj = None
-            if context.get('active_model') == action.model_id.model and context.get('active_id'):
-                obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-
-            # evaluation context for python strings to evaluate
-            eval_context = {
-                'self': obj_pool,
-                'object': obj,
-                'obj': obj,
-                'pool': self.pool,
-                'time': time,
-                'cr': cr,
-                'uid': uid,
-                'user': user,
-            }
+            eval_context = self._get_eval_context(cr, uid, action, context=context)
             condition = action.condition
             if condition is False:
                 # Void (aka False) conditions are considered as True

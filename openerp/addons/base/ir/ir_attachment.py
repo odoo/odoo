@@ -45,6 +45,7 @@ class ir_attachment(osv.osv):
     The default implementation is the file:dirname location that stores files
     on the local filesystem using name based on their sha1 hash
     """
+    _order = 'id desc'
     def _name_get_resname(self, cr, uid, ids, object, method, context):
         data = {}
         for attachment in self.browse(cr, uid, ids, context=context):
@@ -242,7 +243,7 @@ class ir_attachment(osv.osv):
         # performed in batch as much as possible.
         ima = self.pool.get('ir.model.access')
         for model, targets in model_attachments.iteritems():
-            if model not in self.pool:
+            if not self.pool.get(model):
                 continue
             if not ima.check(cr, uid, model, 'read', False):
                 # remove all corresponding attachment ids

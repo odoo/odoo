@@ -35,7 +35,7 @@ import sys
 import threading
 import time
 import zipfile
-from collections import defaultdict
+from collections import defaultdict, Mapping
 from datetime import datetime
 from itertools import islice, izip, groupby
 from lxml import etree
@@ -822,6 +822,76 @@ DATETIME_FORMATS_MAP = {
         '%Z': '',
 }
 
+POSIX_TO_LDML = {
+    'a': 'E',
+    'A': 'EEEE',
+    'b': 'MMM',
+    'B': 'MMMM',
+    #'c': '',
+    'd': 'dd',
+    'H': 'HH',
+    'I': 'hh',
+    'j': 'DDD',
+    'm': 'MM',
+    'M': 'mm',
+    'p': 'a',
+    'S': 'ss',
+    'U': 'w',
+    'w': 'e',
+    'W': 'w',
+    'y': 'yy',
+    'Y': 'yyyy',
+    # see comments above, and babel's format_datetime assumes an UTC timezone
+    # for naive datetime objects
+    #'z': 'Z',
+    #'Z': 'z',
+}
+
+def posix_to_ldml(fmt, locale):
+    """ Converts a posix/strftime pattern into an LDML date format pattern.
+
+    :param fmt: non-extended C89/C90 strftime pattern
+    :param locale: babel locale used for locale-specific conversions (e.g. %x and %X)
+    :return: unicode
+    """
+    buf = []
+    pc = False
+    quoted = []
+
+    for c in fmt:
+        # LDML date format patterns uses letters, so letters must be quoted
+        if not pc and c.isalpha():
+            quoted.append(c if c != "'" else "''")
+            continue
+        if quoted:
+            buf.append("'")
+            buf.append(''.join(quoted))
+            buf.append("'")
+            quoted = []
+
+        if pc:
+            if c == '%': # escaped percent
+                buf.append('%')
+            elif c == 'x': # date format, short seems to match
+                buf.append(locale.date_formats['short'].pattern)
+            elif c == 'X': # time format, seems to include seconds. short does not
+                buf.append(locale.time_formats['medium'].pattern)
+            else: # look up format char in static mapping
+                buf.append(POSIX_TO_LDML[c])
+            pc = False
+        elif c == '%':
+            pc = True
+        else:
+            buf.append(c)
+
+    # flush anything remaining in quoted buffer
+    if quoted:
+        buf.append("'")
+        buf.append(''.join(quoted))
+        buf.append("'")
+
+    return ''.join(buf)
+
 def server_to_local_timestamp(src_tstamp_str, src_format, dst_format, dst_tz_name,
         tz_offset=True, ignore_unparsable_time=True):
     """
@@ -1005,6 +1075,8 @@ class mute_logger(object):
 
     def __enter__(self):
         for logger in self.loggers:
+            assert isinstance(logger, basestring),\
+                "A logger name must be a string, got %s" % type(logger)
             logging.getLogger(logger).addFilter(self)
 
     def __exit__(self, exc_type=None, exc_val=None, exc_tb=None):
@@ -1070,6 +1142,34 @@ def stripped_sys_argv(*strip_args):
     return [x for i, x in enumerate(args) if not strip(args, i)]
 
 
+class ConstantMapping(Mapping):
+    """
+    An immutable mapping returning the provided value for every single key.
+
+    Useful for default value to methods
+    """
+    __slots__ = ['_value']
+    def __init__(self, val):
+        self._value = val
+
+    def __len__(self):
+        """
+        defaultdict updates its length for each individually requested key, is
+        that really useful?
+        """
+        return 0
+
+    def __iter__(self):
+        """
+        same as len, defaultdict udpates its iterable keyset with each key
+        requested, is there a point for this?
+        """
+        return iter([])
+
+    def __getitem__(self, item):
+        return self._value
+
+
 def dumpstacks(sig, frame):
     """ Signal handler: dump a stack trace for each existing thread."""
     code = []
@@ -1105,6 +1205,7 @@ def dumpstacks(sig, frame):
                 code.append(line)
 
     _logger.info("\n".join(code))
+
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

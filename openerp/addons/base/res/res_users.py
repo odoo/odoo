@@ -600,6 +600,7 @@ class users_implied(osv.osv):
         if groups:
             # delegate addition of groups to add implied groups
             self.write(cr, uid, [user_id], {'groups_id': groups}, context)
+            self.pool['ir.ui.view'].clear_cache()
         return user_id
 
     def write(self, cr, uid, ids, values, context=None):
@@ -612,6 +613,7 @@ class users_implied(osv.osv):
                 gs = set(concat([g.trans_implied_ids for g in user.groups_id]))
                 vals = {'groups_id': [(4, g.id) for g in gs]}
                 super(users_implied, self).write(cr, uid, [user.id], vals, context)
+            self.pool['ir.ui.view'].clear_cache()
         return res
 
 #----------------------------------------------------------
@@ -681,8 +683,10 @@ class groups_view(osv.osv):
     def update_user_groups_view(self, cr, uid, context=None):
         # the view with id 'base.user_groups_view' inherits the user form view,
         # and introduces the reified group fields
-        view = self.get_user_groups_view(cr, uid, context)
-        if view:
+        # we have to try-catch this, because at first init the view does not exist
+        # but we are already creating some basic groups
+        view = self.pool['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'base.user_groups_view', context=context)
+        if view and view.exists() and view._table_name == 'ir.ui.view':
             xml1, xml2 = [], []
             xml1.append(E.separator(string=_('Application'), colspan="4"))
             for app, kind, gs in self.get_groups_by_application(cr, uid, context):
@@ -706,14 +710,6 @@ class groups_view(osv.osv):
             xml_content = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding="utf-8")
             view.write({'arch': xml_content})
         return True
-
-    def get_user_groups_view(self, cr, uid, context=None):
-        try:
-            view = self.pool['ir.model.data'].get_object(cr, SUPERUSER_ID, 'base', 'user_groups_view', context)
-            assert view and view._table_name == 'ir.ui.view'
-        except Exception:
-            view = False
-        return view
 
     def get_application_groups(self, cr, uid, domain=None, context=None):
         return self.search(cr, uid, domain or [])
@@ -827,7 +823,7 @@ class users_view(osv.osv):
             fields.append('groups_id')
         res = super(users_view, self).read(cr, uid, ids, fields, context=context, load=load)
 
-        if group_fields:
+        if res and group_fields:
             for values in (res if isinstance(res, list) else [res]):
                 self._get_reified_groups(group_fields, values)
                 if inject_groups_id:
@@ -859,6 +855,7 @@ class users_view(osv.osv):
                     'selection': [(False, '')] + [(g.id, g.name) for g in gs],
                     'help': '\n'.join(tips),
                     'exportable': False,
+                    'selectable': False,
                 }
             else:
                 # boolean group fields
@@ -868,6 +865,7 @@ class users_view(osv.osv):
                         'string': g.name,
                         'help': g.comment,
                         'exportable': False,
+                        'selectable': False,
                     }
         return res
 

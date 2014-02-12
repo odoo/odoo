@@ -172,7 +172,7 @@ class GettextAlias(object):
             cr = getattr(s, 'cr', None)
         if not cr and allow_create:
             db = self._get_db()
-            if db:
+            if db is not None:
                 cr = db.cursor()
                 is_new_cr = True
         return cr, is_new_cr
@@ -961,6 +961,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             irt_cursor.push(dic)
 
         irt_cursor.finish()
+        trans_obj.clear_caches()
         if verbose:
             _logger.info("translation file loaded succesfully")
     except IOError:

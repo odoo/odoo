@@ -37,6 +37,7 @@
 
 import base64
 import datetime as DT
+import functools
 import logging
 import pytz
 import re
@@ -203,7 +204,8 @@ class reference(_column):
             model_name, res_id = value.split(',')
             if model_name in obj.pool and res_id:
                 model = obj.pool[model_name]
-                return model.name_get(cr, uid, [int(res_id)], context=context)[0][1]
+                names = model.name_get(cr, uid, [int(res_id)], context=context)
+                return names[0][1] if names else False
         return tools.ustr(value)
 
 # takes a string (encoded in utf8) and returns a string (encoded in utf8)
@@ -450,6 +452,39 @@ class selection(_column):
         _column.__init__(self, string=string, **args)
         self.selection = selection
 
+    @classmethod
+    def reify(cls, cr, uid, model, field, context=None):
+        """ Munges the field's ``selection`` attribute as necessary to get
+        something useable out of it: calls it if it's a function, applies
+        translations to labels if it's not.
+
+        A callable ``selection`` is considered translated on its own.
+
+        :param orm.Model model:
+        :param _column field:
+        """
+        if callable(field.selection):
+            return field.selection(model, cr, uid, context)
+
+        if not (context and 'lang' in context):
+            return field.selection
+
+        # field_to_dict isn't given a field name, only a field object, we
+        # need to get the name back in order to perform the translation lookup
+        field_name = next(
+            name for name, column in model._columns.iteritems()
+            if column == field)
+
+        translation_filter = "%s,%s" % (model._name, field_name)
+        translate = functools.partial(
+            model.pool['ir.translation']._get_source,
+            cr, uid, translation_filter, 'selection', context['lang'])
+
+        return [
+            (value, translate(label))
+            for value, label in field.selection
+        ]
+
 # ---------------------------------------------------------
 # Relationals fields
 # ---------------------------------------------------------
@@ -566,9 +601,12 @@ class one2many(_column):
         domain = self._domain(obj) if callable(self._domain) else self._domain
         model = obj.pool[self._obj]
         ids2 = model.search(cr, user, domain + [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
-        for r in model._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
-            if r[self._fields_id] in res:
-                res[r[self._fields_id]].append(r['id'])
+        if len(ids) != 1:
+            for r in model._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
+                if r[self._fields_id] in res:
+                    res[r[self._fields_id]].append(r['id'])
+        else:
+            res[ids[0]] = ids2
         return res
 
     def set(self, cr, obj, id, field, values, user=None, context=None):
@@ -1561,11 +1599,7 @@ def field_to_dict(model, cr, user, field, context=None):
             res[arg] = getattr(field, arg)
 
     if hasattr(field, 'selection'):
-        if isinstance(field.selection, (tuple, list)):
-            res['selection'] = field.selection
-        else:
-            # call the 'dynamic selection' function
-            res['selection'] = field.selection(model, cr, user, context)
+        res['selection'] = selection.reify(cr, user, model, field, context=context)
     if res['type'] in ('one2many', 'many2many', 'many2one'):
         res['relation'] = field._obj
         res['domain'] = field._domain(model) if callable(field._domain) else field._domain

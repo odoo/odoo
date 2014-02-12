@@ -59,7 +59,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     def load_test(module_name, idref, mode):
         cr.commit()
         try:
-            threading.currentThread().testing = True
             _load_data(cr, module_name, idref, mode, 'test')
             return True
         except Exception:
@@ -67,11 +66,13 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 'module %s: an exception occurred in a test', module_name)
             return False
         finally:
-            threading.currentThread().testing = False
             if tools.config.options['test_commit']:
                 cr.commit()
             else:
                 cr.rollback()
+                # avoid keeping stale xml_id, etc. in cache 
+                openerp.modules.registry.RegistryManager.clear_caches(cr.dbname)
+
 
     def _get_files_of_kind(kind):
         if kind == 'demo':
@@ -104,12 +105,18 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         init mode.
 
         """
-        for filename in _get_files_of_kind(kind):
-            _logger.info("module %s: loading %s", module_name, filename)
-            noupdate = False
-            if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
-                noupdate = True
-            tools.convert_file(cr, module_name, filename, idref, mode, noupdate, kind, report)
+        try:
+            if kind in ('demo', 'test'):
+                threading.currentThread().testing = True
+            for filename in _get_files_of_kind(kind):
+                _logger.info("module %s: loading %s", module_name, filename)
+                noupdate = False
+                if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
+                    noupdate = True
+                tools.convert_file(cr, module_name, filename, idref, mode, noupdate, kind, report)
+        finally:
+            if kind in ('demo', 'test'):
+                threading.currentThread().testing = False
 
     if status is None:
         status = {}
@@ -175,18 +182,12 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             migrations.migrate_module(package, 'post')
 
             if has_demo:
-                # launch tests only in demo mode, as most tests will depend
-                # on demo data. Other tests can be added into the regular
-                # 'data' section, but should probably not alter the data,
-                # as there is no rollback.
+                # launch tests only in demo mode, allowing tests to use demo data.
                 if tools.config.options['test_enable']:
+                    # Yamel test
                     report.record_result(load_test(module_name, idref, mode))
-
-                    # Run the `fast_suite` and `checks` tests given by the module.
-                    if module_name == 'base':
-                        # Also run the core tests after the database is created.
-                        report.record_result(openerp.modules.module.run_unit_tests('openerp'))
-                    report.record_result(openerp.modules.module.run_unit_tests(module_name))
+                    # Python tests
+                    report.record_result(openerp.modules.module.run_unit_tests(module_name, cr.dbname))
 
             processed_modules.append(package.name)
 
@@ -239,7 +240,6 @@ def load_marked_modules(cr, graph, states, force, progressdict, report, loaded_m
         loaded_modules.extend(loaded)
         if not processed: break
     return processed_modules
-
 
 def load_modules(db, force_demo=False, status=None, update_module=False):
     # TODO status['progress'] reporting is broken: used twice (and reset each

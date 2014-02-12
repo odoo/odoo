@@ -130,11 +130,18 @@
                 <rng:group>
                     <rng:attribute name="type">
                         <rng:choice>
+                            <rng:value>base64</rng:value>
                             <rng:value>char</rng:value>
                             <rng:value>file</rng:value>
                         </rng:choice>
                     </rng:attribute>
-                    <rng:text/>
+                    <rng:choice>
+                        <rng:group>
+                            <rng:attribute name="file"/>
+                            <rng:empty/>
+                        </rng:group>
+                        <rng:text/>
+                    </rng:choice>
                 </rng:group>
                 <rng:group>
                     <rng:attribute name="type"><rng:value>int</rng:value></rng:attribute>
@@ -182,9 +189,7 @@
                     <rng:optional><rng:attribute name="use"/></rng:optional>
                     <rng:empty/>
                 </rng:group>
-                <rng:group>
-                    <rng:text/>
-                </rng:group>
+                <rng:text/>
             </rng:choice>
         </rng:element>
     </rng:define>
@@ -199,6 +204,33 @@
                 <rng:ref name="field" />
             </rng:zeroOrMore>
             <rng:optional><rng:attribute name="context"/></rng:optional>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="template">
+        <rng:element name="template">
+            <rng:optional><rng:attribute name="id"/></rng:optional>
+            <rng:optional><rng:attribute name="t-name"/></rng:optional>
+            <rng:optional><rng:attribute name="name"/></rng:optional>
+            <rng:optional><rng:attribute name="forcecreate"/></rng:optional>
+            <rng:optional><rng:attribute name="context"/></rng:optional>
+            <rng:optional><rng:attribute name="priority"/></rng:optional>
+            <rng:choice>
+                <rng:group>
+                    <rng:optional><rng:attribute name="inherit_id"/></rng:optional>
+                    <rng:optional><rng:attribute name="inherit_option_id"/></rng:optional>
+                    <rng:optional><rng:attribute name="groups"/></rng:optional>
+                </rng:group>
+                <rng:optional>
+                    <rng:attribute name="page"><rng:value>True</rng:value></rng:attribute>
+                </rng:optional>
+            </rng:choice>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:text/>
+                    <rng:ref name="any"/>
+                </rng:choice>
+            </rng:zeroOrMore>
         </rng:element>
     </rng:define>
 
@@ -280,6 +312,7 @@
                     <rng:text/>
                     <rng:ref name="menuitem" />
                     <rng:ref name="record" />
+                    <rng:ref name="template" />
                     <rng:ref name="delete" />
                     <rng:ref name="wizard" />
                     <rng:ref name="act_window" />

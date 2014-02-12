@@ -68,8 +68,8 @@ class Registry(Mapping):
         # must be reloaded.
         # The `base_cache_signaling sequence` indicates all caches must be
         # invalidated (i.e. cleared).
-        self.base_registry_signaling_sequence = 1
-        self.base_cache_signaling_sequence = 1
+        self.base_registry_signaling_sequence = None
+        self.base_cache_signaling_sequence = None
 
         # Flag indicating if at least one model cache has been cleared.
         # Useful only in a multi-process context.
@@ -159,7 +159,7 @@ class Registry(Mapping):
     @classmethod
     def setup_multi_process_signaling(cls, cr):
         if not openerp.multi_process:
-            return
+            return None, None
 
         # Inter-process signaling:
         # The `base_registry_signaling` sequence indicates the whole registry
@@ -172,6 +172,16 @@ class Registry(Mapping):
             cr.execute("""SELECT nextval('base_registry_signaling')""")
             cr.execute("""CREATE SEQUENCE base_cache_signaling INCREMENT BY 1 START WITH 1""")
             cr.execute("""SELECT nextval('base_cache_signaling')""")
+        
+        cr.execute("""
+                    SELECT base_registry_signaling.last_value,
+                           base_cache_signaling.last_value
+                    FROM base_registry_signaling, base_cache_signaling""")
+        r, c = cr.fetchone()
+        _logger.debug("Multiprocess load registry signaling: [Registry: # %s] "\
+                    "[Cache: # %s]",
+                    r, c)
+        return r, c
 
     @contextmanager
     def cursor(self, auto_commit=True):
@@ -183,6 +193,30 @@ class Registry(Mapping):
         finally:
             cr.close()
 
+class TestRLock(object):
+    def __init__(self):
+        self._lock = threading.RLock()
+    def acquire(self):
+        if openerp.tools.config['test_enable']:
+            return
+        return self._lock.acquire()
+    def release(self):
+        if openerp.tools.config['test_enable']:
+            return
+        return self._lock.release()
+    def __enter__(self):
+        self.acquire()
+    def __exit__(self, type, value, traceback):
+        self.release()
+
+#    def __enter__(self, *l, **kw):
+#        if openerp.tools.config['test_enable']:
+#            return
+#        return super(TestRlock, self).__enter__(*l, **kw)
+#    def __exit__(self, *l, **kw):
+#        if openerp.tools.config['test_enable']:
+#            return
+#        return super(TestRlock, self).__exit__(*l, **kw)
 
 class RegistryManager(object):
     """ Model registries manager.
@@ -194,7 +228,7 @@ class RegistryManager(object):
     # Mapping between db name and model registry.
     # Accessed through the methods below.
     registries = {}
-    registries_lock = threading.RLock()
+    registries_lock = TestRLock()
 
     @classmethod
     def get(cls, db_name, force_demo=False, status=None, update_module=False):
@@ -229,6 +263,10 @@ class RegistryManager(object):
             cls.delete(db_name)
             cls.registries[db_name] = registry
             try:
+                with registry.cursor() as cr:
+                    seq_registry, seq_cache = Registry.setup_multi_process_signaling(cr)
+                    registry.base_registry_signaling_sequence = seq_registry
+                    registry.base_cache_signaling_sequence = seq_cache
                 # This should be a method on Registry
                 openerp.modules.load_modules(registry.db, force_demo, status, update_module)
             except Exception:
@@ -242,7 +280,6 @@ class RegistryManager(object):
 
             cr = registry.db.cursor()
             try:
-                Registry.setup_multi_process_signaling(cr)
                 registry.do_parent_store(cr)
                 cr.commit()
             finally:
@@ -304,16 +341,20 @@ class RegistryManager(object):
                            base_cache_signaling.last_value
                     FROM base_registry_signaling, base_cache_signaling""")
                 r, c = cr.fetchone()
+                _logger.debug("Multiprocess signaling check: [Registry - old# %s new# %s] "\
+                    "[Cache - old# %s new# %s]",
+                    registry.base_registry_signaling_sequence, r,
+                    registry.base_cache_signaling_sequence, c)
                 # Check if the model registry must be reloaded (e.g. after the
                 # database has been updated by another process).
-                if registry.base_registry_signaling_sequence > 1 and registry.base_registry_signaling_sequence != r:
+                if registry.base_registry_signaling_sequence is not None and registry.base_registry_signaling_sequence != r:
                     changed = True
                     _logger.info("Reloading the model registry after database signaling.")
                     registry = cls.new(db_name)
                 # Check if the model caches must be invalidated (e.g. after a write
                 # occured on another process). Don't clear right after a registry
                 # has been reload.
-                elif registry.base_cache_signaling_sequence > 1 and registry.base_cache_signaling_sequence != c:
+                elif registry.base_cache_signaling_sequence is not None and registry.base_cache_signaling_sequence != c:
                     changed = True
                     _logger.info("Invalidating all model caches after database signaling.")
                     registry.clear_caches()
@@ -352,6 +393,7 @@ class RegistryManager(object):
     @classmethod
     def signal_registry_change(cls, db_name):
         if openerp.multi_process and db_name in cls.registries:
+            _logger.info("Registry changed, signaling through the database")
             registry = cls.get(db_name)
             cr = registry.db.cursor()
             r = 1
