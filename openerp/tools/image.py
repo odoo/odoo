@@ -23,7 +23,7 @@ import io
 import StringIO
 
 from PIL import Image
-from PIL import ImageOps
+from PIL import ImageEnhance
 from random import random
 
 # ----------------------------------------
@@ -79,8 +79,13 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
         return base64_source
 
     if image.size <> size:
-        # If you need faster thumbnails you may use use Image.NEAREST
-        image = ImageOps.fit(image, size, Image.ANTIALIAS)
+        # create a thumbnail: will resize and keep ratios, then sharpen for better looking result
+        image.thumbnail(size, Image.ANTIALIAS)
+        sharpener = ImageEnhance.Sharpness(image.convert('RGBA'))
+        resized_image = sharpener.enhance(2.0)
+        # create a transparent image for background and paste the image on it
+        image = Image.new('RGBA', size, (255, 255, 255, 0))
+        image.paste(resized_image, ((size[0] - resized_image.size[0]) / 2, (size[1] - resized_image.size[1]) / 2))
     if image.mode not in ["1", "L", "P", "RGB", "RGBA"]:
         image = image.convert("RGB")
 
