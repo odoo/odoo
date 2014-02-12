@@ -27,6 +27,10 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FO
 import time
 from datetime import datetime
 
+from werkzeug.datastructures import Headers
+from werkzeug.wrappers import BaseResponse
+from werkzeug.test import Client
+
 
 def get_date_length(date_format=DEFAULT_SERVER_DATE_FORMAT):
     return len((datetime.now()).strftime(date_format))
@@ -175,3 +179,36 @@ class report(osv.Model):
         })
 
         return request.website.render(template, values)
+
+    def get_pdf(self, report, record_id, context=None):
+        """Used to return content of a generated PDF.
+
+        :returns: pdf
+        """
+        url = '/report/pdf/report/' + report.report_file + '/' + str(record_id)
+        reqheaders = Headers(request.httprequest.headers)
+        reqheaders.pop('Accept')
+        reqheaders.add('Accept', 'application/pdf')
+        reqheaders.pop('Content-Type')
+        reqheaders.add('Content-Type', 'text/plain')
+        response = Client(request.httprequest.app, BaseResponse).get(url, headers=reqheaders,
+                                                                     follow_redirects=True)
+        return response.data
+
+    def get_action(self, cr, uid, ids, report_name, context=None):
+        """Used to return an action of type ir.actions.report.xml.
+
+        :param report_name: Name of the template to generate an action for
+        """
+        if context is None:
+            context = {}
+
+        report_obj = self.pool.get('ir.actions.report.xml')
+        idreport = report_obj.search(cr, uid, [('report_name', '=', report_name)], context=context)
+        report = report_obj.browse(cr, uid, idreport[0], context=context)
+
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': report.report_name,
+            'report_type': report.report_type,
+        }
