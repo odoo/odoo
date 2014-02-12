@@ -2,6 +2,13 @@
 <openerp>
 <data>
 
+<template id="debugger" inherit_id="website.debugger" name="Event Debugger">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_event_sale/static/src/js/website.tour.event_sale.js"></script>
+    </xpath>
+</template>
+
+
 <template id="index" inherit_id="website_event.index" name="Event's Ticket">
     <xpath expr="//li[@t-foreach='event_ids']/div/h4" position="before">
         <t t-if="event.state in ['draft', 'confirm'] and event.event_ticket_ids">
@@ -44,8 +51,8 @@
                                    "widget": "monetary",
                                    "display_currency": "website.pricelist_id.currency_id"
                               }'/>
-                              <meta itemprop="price" t-att-content="ticket.price"/>
-                              <meta itemprop="priceCurrency" t-att-content="website.pricelist_id.currency_id.name"/>
+                              <span itemprop="price" style="display:none;" t-esc="ticket.price"/>
+                              <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
                             </t>
                             <t t-if="not ticket.price and not editable">
                                 <span>Free</span>

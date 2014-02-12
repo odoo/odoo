@@ -2,6 +2,7 @@
     "use strict";
 
     var website = openerp.website;
+    var _t = openerp._t;
     website.add_template_file('/website_event/static/src/xml/website_event.xml');
 
     website.is_editable = true;
@@ -16,7 +17,8 @@
             'click a[data-action=new_event]': function (ev) {
                 ev.preventDefault();
                 website.prompt({
-                    window_title: "New Event",
+                    id: "editor_new_event",
+                    window_title: _t("New Event"),
                     input: "Event Name",
                 }).then(function (event_name) {
                     website.form('/event/add_event', 'POST', {
