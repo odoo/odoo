@@ -7,7 +7,7 @@
 Report
         """,
     'author': 'OpenERP SA',
-    'depends': ['base'],
+    'depends': ['base', 'website'],
     'data': [
         'views/layouts.xml',
         'views/paperformat_view.xml',
