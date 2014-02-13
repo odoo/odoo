@@ -521,6 +521,8 @@ class mail_thread(osv.AbstractModel):
                to which this mail should be attached. Only used if the message
                does not reply to an existing thread and does not match any mail alias.
            :return: list of [model, thread_id, custom_values, user_id]
+
+        :raises: ValueError, TypeError
         """
         if not isinstance(message, Message):
             raise TypeError('message must be an email.message.Message at this point')
@@ -641,6 +643,8 @@ class mail_thread(osv.AbstractModel):
                to which this mail should be attached. When provided, this
                overrides the automatic detection based on the message
                headers.
+
+        :raises: ValueError, TypeError
         """
         if context is None:
             context = {}
