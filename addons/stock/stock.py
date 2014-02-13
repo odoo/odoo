@@ -3410,6 +3410,8 @@ class stock_pack_operation(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(stock_pack_operation, self).write(cr, uid, ids, vals, context=context)
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         self.recompute_rem_qty_from_operation(cr, uid, ids, context=context)
         return res
 
