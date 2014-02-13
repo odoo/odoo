@@ -18,7 +18,7 @@ var disqus_identifier;
 
             // Append #disqus_thread to body if it doesn't exist yet.
             if ($('#disqussions_wrapper').length === 0) {
-                $('<div id="disqussions_wrapper"></div>').appendTo($('body'));
+                $('<div id="disqussions_wrapper"></div>').appendTo($('#blog_content'));
             }
 
             // Attach a discussion to each paragraph.
@@ -68,7 +68,7 @@ var disqus_identifier;
             .parent()
             .appendTo('#disqussions_wrapper');
             a.css({
-                'top': node.offset().top + 30,
+                'top': node.offset().top,
                 'left': settings.position == 'right' ? node.offset().left + node.outerWidth() : node.offset().left - a.outerWidth()
             });
 
@@ -91,7 +91,6 @@ var disqus_identifier;
     };
 
     var disqussionPostHandler = function() {
-        console.log('identifier',disqus_identifier)
         openerp.jsonRpc("/blogpost/post_discussion", 'call', {
             'blog_post_id': settings.post_id,
             'discussion': disqus_identifier,

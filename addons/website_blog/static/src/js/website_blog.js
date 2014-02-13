@@ -33,7 +33,7 @@ $(document).ready(function() {
             //bind again it takes control from now on, until page relaod.
             $(document).find('.cover_footer').on('click',page_transist);
             $(document).find('a[href^="#blog_content"]').on('click', animate);
-            $(document).find("#blog_content p").inlineDisqussions();
+            $(document).find("#blog_content p").inlineDisqussions({'document_user': $('#is_document_user').length});
         });
     }
 });
