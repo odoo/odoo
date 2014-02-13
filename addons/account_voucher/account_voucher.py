@@ -911,9 +911,10 @@ class account_voucher(osv.osv):
         if context.get('payment_expected_currency') and currency_id != context.get('payment_expected_currency'):
             vals['value']['amount'] = 0
             amount = 0
-        res = self.onchange_partner_id(cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context)
-        for key in res.keys():
-            vals[key].update(res[key])
+        if partner_id:
+            res = self.onchange_partner_id(cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context)
+            for key in res.keys():
+                vals[key].update(res[key])
         return vals
 
     def button_proforma_voucher(self, cr, uid, ids, context=None):
@@ -965,7 +966,7 @@ class account_voucher(osv.osv):
         res = {}
         if not partner_id:
             return res
-        res = {'account_id':False}
+        res = {}
         partner_pool = self.pool.get('res.partner')
         journal_pool = self.pool.get('account.journal')
         if pay_now == 'pay_later':
@@ -977,7 +978,8 @@ class account_voucher(osv.osv):
                 account_id = partner.property_account_payable.id
             else:
                 account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
-            res['account_id'] = account_id
+            if account_id:
+                res['account_id'] = account_id
         return {'value':res}
 
     def _sel_context(self, cr, uid, voucher_id, context=None):

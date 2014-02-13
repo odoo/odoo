@@ -14,6 +14,7 @@ openerp.pad = function(instance) {
             this.$('.oe_pad_switch').click(function() {
                 self.$el.toggleClass('oe_pad_fullscreen');
                 self.$el.find('.oe_pad_switch').toggleClass('fa-expand fa-compress');
+                self.view.$el.find('.oe_chatter').toggle();
             });
             this.render_value();
         },
