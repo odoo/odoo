@@ -9,12 +9,8 @@ class TestRelatedField(common.TransactionCase):
 
     def setUp(self):
         super(TestRelatedField, self).setUp()
-        self.user = self.registry('res.users')
         self.partner = self.registry('res.partner')
         self.company = self.registry('res.company')
-        self.country = self.registry('res.country')
-        self.property = self.registry('ir.property')
-        self.imd = self.registry('ir.model.data')
 
     def test_0_related(self):
         """ test an usual related field """
@@ -125,7 +121,19 @@ class TestRelatedField(common.TransactionCase):
         # restore res.partner fields
         self.partner._columns = old_columns
 
-    def test_4_property_multicompany(self):
+
+class TestPropertyField(common.TransactionCase):
+
+    def setUp(self):
+        super(TestPropertyField, self).setUp()
+        self.user = self.registry('res.users')
+        self.partner = self.registry('res.partner')
+        self.company = self.registry('res.company')
+        self.country = self.registry('res.country')
+        self.property = self.registry('ir.property')
+        self.imd = self.registry('ir.model.data')
+
+    def test_1_property_multicompany(self):
         cr, uid = self.cr, self.uid
 
         parent_company_id = self.imd.get_object_reference(cr, uid, 'base', 'main_company')[1]
