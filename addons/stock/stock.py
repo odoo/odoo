@@ -2190,8 +2190,8 @@ class stock_inventory(osv.osv):
         move_obj = self.pool.get('stock.move')
         for inv in self.browse(cr, uid, ids, context=context):
             for inventory_line in inv.line_ids:
-                if inventory_line.product_qty < 0:
-                    raise osv.except_osv(_('Warning'),_('You cannot set a negative product quantity in an inventory line'))
+                if inventory_line.product_qty < 0 and inventory_line.product_qty != inventory_line.th_qty:
+                    raise osv.except_osv(_('Warning'),_('You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s' % (inventory_line.product_id.name, inventory_line.product_qty)))
             if not inv.move_ids:
                 self.action_check(cr, uid, [inv.id], context=context)
             inv.refresh()
@@ -2304,13 +2304,6 @@ class stock_inventory(osv.osv):
             for key, value in product_line.items():
                 if not value:
                     product_line[key] = False
-            if product_line['product_qty'] < 0:
-                summary = _('Product: ') + product_obj.browse(cr, uid, product_line['product_id'], context=context).name + '\n'
-                summary += _('Location: ') + location_obj.browse(cr, uid, product_line['location_id'], context=context).complete_name + '\n'
-                summary += (_('Partner: ') + self.pool.get('res.partner').browse(cr, uid, product_line['partner_id'], context=context).name + '\n') if product_line['partner_id'] else ''
-                summary += (_('Lot: ') + self.pool.get('stock.production.lot').browse(cr, uid, product_line['prod_lot_id'], context=context).name + '\n') if product_line['prod_lot_id'] else ''
-                summary += (_('Package: ') + self.pool.get('stock.quant.package').browse(cr, uid, product_line['package_id'], context=context).name + '\n') if product_line['package_id'] else ''
-                raise osv.except_osv(_('Warning'),_('This inventory line has a theoretical negative quantity, please fix it before doing an inventory\n%s' % (summary)))
             product_line['inventory_id'] = inventory.id
             product_line['th_qty'] = product_line['product_qty']
             if product_line['product_id']:
