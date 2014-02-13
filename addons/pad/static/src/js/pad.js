@@ -13,6 +13,7 @@ openerp.pad = function(instance) {
             this.switch_configured();
             this.$('.oe_pad_switch').click(function() {
                 self.$el.toggleClass('oe_pad_fullscreen');
+                self.view.$el.find('.oe_chatter').toggle();
             });
             this.render_value();
         },

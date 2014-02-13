@@ -268,12 +268,13 @@ class product_pricelist(osv.osv):
                             price = 0.0
                             if sinfo:
                                 qty_in_product_uom = qty
-                                product_default_uom = product_obj.read(cr, uid, [product_id], ['uom_id'])[0]['uom_id'][0]
+                                from_uom = context.get('uom') or product_obj.read(cr, uid, [product_id], ['uom_id'])[0]['uom_id'][0]
                                 supplier = supplierinfo_obj.browse(cr, uid, sinfo, context=context)[0]
                                 seller_uom = supplier.product_uom and supplier.product_uom.id or False
-                                if seller_uom and product_default_uom and product_default_uom != seller_uom:
+                                if seller_uom and from_uom and from_uom != seller_uom:
+                                    qty_in_product_uom = product_uom_obj._compute_qty(cr, uid, from_uom, qty, to_uom_id=seller_uom)
+                                else:
                                     uom_price_already_computed = True
-                                    qty_in_product_uom = product_uom_obj._compute_qty(cr, uid, product_default_uom, qty, to_uom_id=seller_uom)
                                 cr.execute('SELECT * ' \
                                         'FROM pricelist_partnerinfo ' \
                                         'WHERE suppinfo_id IN %s' \
