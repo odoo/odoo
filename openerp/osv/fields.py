@@ -117,8 +117,7 @@ class _column(object):
         self.groups = False  # CSV list of ext IDs of groups that can access this field
         self.deprecated = False # Optional deprecation warning
         for a in args:
-            if args[a]:
-                setattr(self, a, args[a])
+            setattr(self, a, args[a])
  
     def restart(self):
         pass
@@ -205,30 +204,33 @@ class reference(_column):
             model_name, res_id = value.split(',')
             model = obj.pool.get(model_name)
             if model and res_id:
-                return model.name_get(cr, uid, [int(res_id)], context=context)[0][1]
+                names = model.name_get(cr, uid, [int(res_id)], context=context)
+                return names[0][1] if names else False
         return tools.ustr(value)
+
+# takes a string (encoded in utf8) and returns a string (encoded in utf8)
+def _symbol_set_char(self, symb):
+
+    #TODO:
+    # * we need to remove the "symb==False" from the next line BUT
+    #   for now too many things rely on this broken behavior
+    # * the symb==None test should be common to all data types
+    if symb is None or symb == False:
+        return None
+
+    # we need to convert the string to a unicode object to be able
+    # to evaluate its length (and possibly truncate it) reliably
+    u_symb = tools.ustr(symb)
+    return u_symb[:self.size].encode('utf8')
 
 class char(_column):
     _type = 'char'
 
     def __init__(self, string="unknown", size=None, **args):
         _column.__init__(self, string=string, size=size or None, **args)
-        self._symbol_set = (self._symbol_c, self._symbol_set_char)
-
-    # takes a string (encoded in utf8) and returns a string (encoded in utf8)
-    def _symbol_set_char(self, symb):
-        #TODO:
-        # * we need to remove the "symb==False" from the next line BUT
-        #   for now too many things rely on this broken behavior
-        # * the symb==None test should be common to all data types
-        if symb is None or symb == False:
-            return None
-
-        # we need to convert the string to a unicode object to be able
-        # to evaluate its length (and possibly truncate it) reliably
-        u_symb = tools.ustr(symb)
-
-        return u_symb[:self.size].encode('utf8')
+        # self._symbol_set_char defined to keep the backward compatibility
+        self._symbol_f = self._symbol_set_char = lambda x: _symbol_set_char(self, x)
+        self._symbol_set = (self._symbol_c, self._symbol_f)
 
 
 class text(_column):
@@ -569,8 +571,10 @@ class one2many(_column):
                 else:
                     cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
             elif act[0] == 4:
-                # Must use write() to recompute parent_store structure if needed
-                obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
+                cr.execute("select 1 from {0} where id=%s and {1}=%s".format(_table, self._fields_id), (act[1], id))
+                if not cr.fetchone():
+                    # Must use write() to recompute parent_store structure if needed and check access rules
+                    obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
             elif act[0] == 5:
                 reverse_rel = obj._all_columns.get(self._fields_id)
                 assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
@@ -1067,6 +1071,8 @@ class function(_column):
             self._classic_write = True
             if type=='binary':
                 self._symbol_get=lambda x:x and str(x)
+            else:
+                self._prefetch = True
 
         if type == 'float':
             self._symbol_c = float._symbol_c
@@ -1082,6 +1088,11 @@ class function(_column):
             self._symbol_c = integer._symbol_c
             self._symbol_f = integer._symbol_f
             self._symbol_set = integer._symbol_set
+
+        if type == 'char':
+            self._symbol_c = char._symbol_c
+            self._symbol_f = lambda x: _symbol_set_char(self, x)
+            self._symbol_set = (self._symbol_c, self._symbol_f)
 
     def digits_change(self, cr):
         if self._type == 'float':
@@ -1108,7 +1119,7 @@ class function(_column):
             # make the result a tuple if it is not already one
             if isinstance(value, (int,long)) and hasattr(obj._columns[field], 'relation'):
                 obj_model = obj.pool.get(obj._columns[field].relation)
-                dict_names = dict(obj_model.name_get(cr, uid, [value], context))
+                dict_names = dict(obj_model.name_get(cr, SUPERUSER_ID, [value], context))
                 result = (value, dict_names[value])
 
         if field_type == 'binary':

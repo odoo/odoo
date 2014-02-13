@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (C) 2012 OpenERP S.A. (<http://openerp.com>).
+#    Copyright (C) 2012-2013 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -30,6 +30,7 @@ import re
 import socket
 import threading
 import time
+from email.utils import getaddresses
 
 from openerp.loglevels import ustr
 
@@ -52,19 +53,30 @@ def html_sanitize(src):
     # html encode email tags
     part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
     src = part.sub(lambda m: cgi.escape(m.group(1)), src)
-    
+
     # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
     try:
         cleaner = clean.Cleaner(page_structure=True, style=False, safe_attrs_only=False, forms=False, kill_tags=tags_to_kill, remove_tags=tags_to_remove)
         cleaned = cleaner.clean_html(src)
-    except TypeError, e:
+    except TypeError:
         # lxml.clean version < 2.3.1 does not have a kill_tags attribute
         # to remove in 2014
-        cleaner = clean.Cleaner(page_structure=True, style=False, safe_attrs_only=False, forms=False, remove_tags=tags_to_kill+tags_to_remove)
+        cleaner = clean.Cleaner(page_structure=True, style=False, safe_attrs_only=False, forms=False, remove_tags=tags_to_kill + tags_to_remove)
         cleaned = cleaner.clean_html(src)
-    except:
+    except Exception, e:
+        if isinstance(e, etree.ParserError) and 'empty' in str(e):
+            return ""
         _logger.warning('html_sanitize failed to parse %s' % (src))
         cleaned = '<p>Impossible to parse</p>'
+
+    # MAKO compatibility: $, { and } inside quotes are escaped, preventing correct mako execution
+    cleaned = cleaned.replace('%24', '$')
+    cleaned = cleaned.replace('%7B', '{')
+    cleaned = cleaned.replace('%7D', '}')
+    cleaned = cleaned.replace('%20', ' ')
+    cleaned = cleaned.replace('%5B', '[')
+    cleaned = cleaned.replace('%5D', ']')
+
     return cleaned
 
 
@@ -356,4 +368,9 @@ def email_split(text):
     """ Return a list of the email addresses found in ``text`` """
     if not text:
         return []
-    return re.findall(r'([^ ,<@]+@[^> ,]+)', text)
+    return [addr[1] for addr in getaddresses([text])
+                # getaddresses() returns '' when email parsing fails, and
+                # sometimes returns emails without at least '@'. The '@'
+                # is strictly required in RFC2822's `addr-spec`.
+                if addr[1]
+                if '@' in addr[1]]

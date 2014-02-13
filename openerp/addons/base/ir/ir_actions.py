@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 OpenERP S.A. <http://www.openerp.com>
+#    Copyright (C) 2004-2014 OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -100,7 +100,7 @@ class report_xml(osv.osv):
             if r['report_rml'] or r['report_rml_content_data']:
                 report_sxw('report.'+r['report_name'], r['model'],
                         opj('addons',r['report_rml'] or '/'), header=r['header'])
-            if r['report_xsl']:
+            elif r['report_xsl'] and r['report_xml']:
                 report_rml('report.'+r['report_name'], r['model'],
                         opj('addons',r['report_xml']),
                         r['report_xsl'] and opj('addons',r['report_xsl']))
@@ -411,7 +411,7 @@ class actions_server(osv.osv):
 
     def _select_objects(self, cr, uid, context=None):
         model_pool = self.pool.get('ir.model')
-        ids = model_pool.search(cr, uid, [('name','not ilike','.')])
+        ids = model_pool.search(cr, uid, [], limit=None)
         res = model_pool.read(cr, uid, ids, ['model', 'name'])
         return [(r['model'], r['name']) for r in res] +  [('','')]
 
@@ -603,7 +603,7 @@ class actions_server(osv.osv):
 
             if action.state=='client_action':
                 if not action.action_id:
-                    raise osv.except_osv(_('Error'), _("Please specify an action to launch !"))
+                    raise osv.except_osv(_('Error'), _("Please specify an action to launch!"))
                 return self.pool.get(action.action_id.type)\
                     .read(cr, uid, action.action_id.id, context=context)
 

@@ -26,7 +26,7 @@ from openerp import report, tools
 
 _logger = logging.getLogger(__name__)
 
-def graph_get(cr, graph, wkf_ids, nested, workitem, processed_subflows):
+def graph_get(cr, graph, wkf_ids, nested, workitem, witm_trans, processed_subflows):
     import pydot
     cr.execute('select * from wkf_activity where wkf_id in ('+','.join(['%s']*len(wkf_ids))+')', wkf_ids)
     nodes = cr.dictfetchall()
@@ -40,7 +40,7 @@ def graph_get(cr, graph, wkf_ids, nested, workitem, processed_subflows):
             cr.execute('select * from wkf where id=%s', (n['subflow_id'],))
             wkfinfo = cr.dictfetchone()
             graph2 = pydot.Cluster('subflow'+str(n['subflow_id']), fontsize='12', label = "\"Subflow: %s\\nOSV: %s\"" % ( n['name'], wkfinfo['osv']) )
-            (s1,s2) = graph_get(cr, graph2, [n['subflow_id']], True, workitem, processed_subflows)
+            (s1,s2) = graph_get(cr, graph2, [n['subflow_id']], True, workitem, witm_trans, processed_subflows)
             graph.add_subgraph(graph2)
             actfrom[n['id']] = s2
             actto[n['id']] = s1
@@ -89,7 +89,9 @@ def graph_get(cr, graph, wkf_ids, nested, workitem, processed_subflows):
             args['arrowtail']='inv'
 
         if activities[t['act_to']]['join_mode']=='AND':
-            args['arrowhead']='crow'
+            args['arrowhead']='crow' 
+        if t['id'] in witm_trans:
+            args['color'] = 'red'
 
         activity_from = actfrom[t['act_from']][1].get(t['signal'], actfrom[t['act_from']][0])
         activity_to = actto[t['act_to']][1].get(t['signal'], actto[t['act_to']][0])
@@ -119,8 +121,12 @@ def graph_instance_get(cr, graph, inst_id, nested=False):
             workitems.update(workitem_get(subflow_id))
         return workitems
 
+    def witm_get(instance):
+        cr.execute("select trans_id from wkf_witm_trans where inst_id=%s", (instance,))
+        return set(t[0] for t in cr.fetchall())
+
     processed_subflows = set()
-    graph_get(cr, graph, [x[0] for x in inst], nested, workitem_get(inst_id), processed_subflows)
+    graph_get(cr, graph, [x[0] for x in inst], nested, workitem_get(inst_id), witm_get(inst_id), processed_subflows)
 
 #
 # TODO: pas clean: concurrent !!!

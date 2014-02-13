@@ -4,6 +4,7 @@ import test_ir_attachment
 import test_ir_values
 import test_menu
 import test_search
+import test_views
 
 checks = [
     test_base,
@@ -12,4 +13,5 @@ checks = [
     test_ir_values,
     test_menu,
     test_search,
+    test_views,
 ]

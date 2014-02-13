@@ -23,7 +23,7 @@
 ##############################################################################
 
 import unittest2
-from openerp.tools import html_sanitize, html_email_clean, append_content_to_html, plaintext2html
+from openerp.tools import html_sanitize, html_email_clean, append_content_to_html, plaintext2html, email_split
 
 HTML_SOURCE = """
 <font size="2" style="color: rgb(31, 31, 31); font-family: monospace; font-variant: normal; line-height: normal; ">test1</font>
@@ -311,6 +311,19 @@ class TestHtmlTools(unittest2.TestCase):
         for html, content, plaintext_flag, preserve_flag, container_tag, expected in test_samples:
             self.assertEqual(append_content_to_html(html, content, plaintext_flag, preserve_flag, container_tag), expected, 'append_content_to_html is broken')
 
+class TestEmailTools(unittest2.TestCase):
+    """ Test some of our generic utility functions for emails """
+
+    def test_email_split(self):
+        cases = [
+            ("John <12345@gmail.com>", ['12345@gmail.com']), # regular form 
+            ("d@x; 1@2", ['d@x', '1@2']), # semi-colon + extra space
+            ("'(ss)' <123@gmail.com>, 'foo' <foo@bar>", ['123@gmail.com','foo@bar']), # comma + single-quoting
+            ('"john@gmail.com"<johnny@gmail.com>', ['johnny@gmail.com']), # double-quoting
+            ('"<jg>" <johnny@gmail.com>', ['johnny@gmail.com']), # double-quoting with brackets 
+        ]
+        for text, expected in cases:
+            self.assertEqual(email_split(text), expected, 'email_split is broken')
 
 if __name__ == '__main__':
     unittest2.main()

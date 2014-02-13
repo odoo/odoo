@@ -22,6 +22,7 @@ import logging
 from operator import attrgetter
 
 import openerp
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools import ustr
 from openerp.tools.translate import _
@@ -46,10 +47,10 @@ class res_config_module_installation_mixin(object):
                 to_install_missing_names.append(name)
             elif module.state == 'uninstalled':
                 to_install_ids.append(module.id)
-
+        result = None
         if to_install_ids:
-            ir_module.button_immediate_install(cr, uid, to_install_ids, context=context)
-
+            result = ir_module.button_immediate_install(cr, uid, to_install_ids, context=context)
+        #FIXME: if result is not none, the corresponding todo will be skipped because it was just marked done
         if to_install_missing_names:
             return {
                 'type': 'ir.actions.client',
@@ -57,7 +58,7 @@ class res_config_module_installation_mixin(object):
                 'params': {'modules': to_install_missing_names},
             }
 
-        return None
+        return result
 
 class res_config_configurable(osv.osv_memory):
     ''' Base classes for new-style configuration items
@@ -99,13 +100,10 @@ class res_config_configurable(osv.osv_memory):
             res = next.action_launch(context=context)
             res['nodestroy'] = False
             return res
-        # reload the client; open the first available root menu
-        menu_obj = self.pool.get('ir.ui.menu')
-        menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
+
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',
-            'params': {'menu_id': menu_ids and menu_ids[0] or False},
         }
 
     def start(self, cr, uid, ids, context=None):
@@ -533,6 +531,9 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         return res
 
     def execute(self, cr, uid, ids, context=None):
+        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+            raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
+
         ir_values = self.pool.get('ir.values')
         ir_module = self.pool.get('ir.module.module')
         classified = self._get_classified_fields(cr, uid, context)
@@ -541,7 +542,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
 
         # default values fields
         for name, model, field in classified['default']:
-            ir_values.set_default(cr, uid, model, field, config[name])
+            ir_values.set_default(cr, SUPERUSER_ID, model, field, config[name])
 
         # group fields: modify group / implied groups
         for name, group, implied_group in classified['group']:

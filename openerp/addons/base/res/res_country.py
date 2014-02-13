@@ -77,7 +77,7 @@ addresses belonging to this country.\n\nYou can use the python-style string pate
                 context=context)
 
     def write(self, cursor, user, ids, vals, context=None):
-        if 'code' in vals:
+        if vals.get('code'):
             vals['code'] = vals['code'].upper()
         return super(Country, self).write(cursor, user, ids, vals,
                 context=context)

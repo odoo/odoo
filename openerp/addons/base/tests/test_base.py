@@ -8,6 +8,7 @@ class test_base(common.TransactionCase):
     def setUp(self):
         super(test_base,self).setUp()
         self.res_partner = self.registry('res.partner')
+        self.res_users = self.registry('res.users')
 
         # samples use effective TLDs from the Mozilla public suffix
         # list at http://publicsuffix.org
@@ -39,6 +40,20 @@ class test_base(common.TransactionCase):
         new_id2 = self.res_partner.find_or_create(cr, uid, self.samples[2][0])
         self.assertTrue(new_id2 > new_id, 'find_or_create failed - should have created new one again')
 
+    def test_15_res_partner_name_search(self):
+        cr,uid = self.cr, self.uid
+        for name, active in [
+            ('"A Raoul Grosbedon" <raoul@chirurgiens-dentistes.fr>', False),
+            ('B Raoul chirurgiens-dentistes.fr', True),
+            ("C Raoul O'hara  <!@historicalsociety.museum>", True),
+            ('ryu+giga-Sushi@aizubange.fukushima.jp', True),
+        ]:
+            partner_id, dummy = self.res_partner.name_create(cr, uid, name, context={'default_active': active})
+        partners = self.res_partner.name_search(cr, uid, 'Raoul')
+        self.assertEqual(len(partners), 2, 'Incorrect search number result for name_search')
+        partners = self.res_partner.name_search(cr, uid, 'Raoul', limit=1)
+        self.assertEqual(len(partners), 1, 'Incorrect search number result for name_search with a limit')
+        self.assertEqual(partners[0][1], 'B Raoul chirurgiens-dentistes.fr', 'Incorrect partner returned, should be the first active')
 
     def test_20_res_partner_address_sync(self):
         cr, uid = self.cr, self.uid
@@ -268,6 +283,21 @@ class test_base(common.TransactionCase):
         p0.refresh()
         self.assertEquals(p0.vat, sunhelmvat2, 'Commercial fields must be automatically synced')
 
+    def test_60_read_group(self):
+        cr, uid = self.cr, self.uid
+        for user_data in [
+          {'name': 'Alice', 'login': 'alice', 'color': 1, 'function': 'Friend'},
+          {'name': 'Bob', 'login': 'bob', 'color': 2, 'function': 'Friend'},
+          {'name': 'Eve', 'login': 'eve', 'color': 3, 'function': 'Eavesdropper'},
+        ]:
+          self.res_users.create(cr, uid, user_data)
+
+        groups_data = self.res_users.read_group(cr, uid, domain=[('login', 'in', ('alice', 'bob', 'eve'))], fields=['name', 'color', 'function'], groupby='function')
+        self.assertEqual(len(groups_data), 2, "Incorrect number of results when grouping on a field")
+        for group_data in groups_data:
+          self.assertIn('color', group_data, "Aggregated data for the column 'color' is not present in read_group return values")
+          self.assertEqual(group_data['color'], 3, "Incorrect sum for aggregated data for the column 'color'")
+
 class test_partner_recursion(common.TransactionCase):
 
     def setUp(self):
@@ -303,6 +333,48 @@ class test_partner_recursion(common.TransactionCase):
         """ multi-write on several partners in same hierarchy must not trigger a false cycle detection """
         cr, uid, p1, p2, p3 = self.cr, self.uid, self.p1, self.p2, self.p3
         self.assertTrue(self.res_partner.write(cr, uid, [p1,p2,p3], {'phone': '123456'}))
+
+class test_translation(common.TransactionCase):
+
+    def setUp(self):
+        super(test_translation, self).setUp()
+        self.res_category = self.registry('res.partner.category')
+        self.ir_translation = self.registry('ir.translation')
+        cr, uid = self.cr, self.uid
+        self.registry('ir.translation').load(cr, ['base'], ['fr_FR'])
+        self.cat_id = self.res_category.create(cr, uid, {'name': 'Customers'})
+        self.ir_translation.create(cr, uid, {'name': 'res.partner.category,name', 'module':'base', 
+            'value': 'Clients', 'res_id': self.cat_id, 'lang':'fr_FR', 'state':'translated', 'type': 'model'})
+
+    def test_101_create_translated_record(self):
+        cr, uid = self.cr, self.uid
+        
+        no_context_cat = self.res_category.browse(cr, uid, self.cat_id)
+        self.assertEqual(no_context_cat.name, 'Customers', "Error in basic name_get")
+
+        fr_context_cat = self.res_category.browse(cr, uid, self.cat_id, context={'lang':'fr_FR'})
+        self.assertEqual(fr_context_cat.name, 'Clients', "Translation not found")
+
+    def test_102_duplicate_record(self):
+        cr, uid = self.cr, self.uid
+        self.new_cat_id = self.res_category.copy(cr, uid, self.cat_id, context={'lang':'fr_FR'})
+
+        no_context_cat = self.res_category.browse(cr, uid, self.new_cat_id)
+        self.assertEqual(no_context_cat.name, 'Customers', "Duplication did not set untranslated value")
+
+        fr_context_cat = self.res_category.browse(cr, uid, self.new_cat_id, context={'lang':'fr_FR'})
+        self.assertEqual(fr_context_cat.name, 'Clients', "Did not found translation for initial value")
+
+    def test_103_duplicate_record_fr(self):
+        cr, uid = self.cr, self.uid
+        self.new_fr_cat_id = self.res_category.copy(cr, uid, self.cat_id, default={'name': 'Clients (copie)'}, context={'lang':'fr_FR'})
+
+        no_context_cat = self.res_category.browse(cr, uid, self.new_fr_cat_id)
+        self.assertEqual(no_context_cat.name, 'Customers', "Duplication erased original untranslated value")
+
+        fr_context_cat = self.res_category.browse(cr, uid, self.new_fr_cat_id, context={'lang':'fr_FR'})
+        self.assertEqual(fr_context_cat.name, 'Clients (copie)', "Did not used default value for translated value")
+
 
 if __name__ == '__main__':
     unittest2.main()

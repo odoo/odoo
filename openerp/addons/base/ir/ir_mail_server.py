@@ -212,14 +212,14 @@ class ir_mail_server(osv.osv):
                                     password=smtp_server.smtp_pass, encryption=smtp_server.smtp_encryption,
                                     smtp_debug=smtp_server.smtp_debug)
             except Exception, e:
-                raise osv.except_osv(_("Connection test failed!"), _("Here is what we got instead:\n %s") % tools.ustr(e))
+                raise osv.except_osv(_("Connection Test Failed!"), _("Here is what we got instead:\n %s") % tools.ustr(e))
             finally:
                 try:
                     if smtp: smtp.quit()
                 except Exception:
                     # ignored, just a consequence of the previous exception
                     pass
-        raise osv.except_osv(_("Connection test succeeded!"), _("Everything seems properly set up!"))
+        raise osv.except_osv(_("Connection Test Succeeded!"), _("Everything seems properly set up!"))
 
     def connect(self, host, port, user=None, password=None, encryption=False, smtp_debug=False):
         """Returns a new SMTP connection to the give SMTP server, authenticated
@@ -402,8 +402,10 @@ class ir_mail_server(osv.osv):
 
         # The email's "Envelope From" (Return-Path), and all recipient addresses must only contain ASCII characters.
         from_rfc2822 = extract_rfc2822_addresses(smtp_from)
-        assert len(from_rfc2822) == 1, "Malformed 'Return-Path' or 'From' address - it may only contain plain ASCII characters"
-        smtp_from = from_rfc2822[0]
+        assert from_rfc2822, ("Malformed 'Return-Path' or 'From' address: %r - "
+                              "It should contain one valid plain ASCII email") % smtp_from
+        # use last extracted email, to support rarities like 'Support@MyComp <support@mycompany.com>'
+        smtp_from = from_rfc2822[-1]
         email_to = message['To']
         email_cc = message['Cc']
         email_bcc = message['Bcc']
