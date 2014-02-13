@@ -303,3 +303,10 @@ class WebsiteBlog(http.Controller):
                     'author_image': "data:image/png;base64,%s" % post.author_id.image,
                 })
         return values
+        
+    @http.route('/blogpsot/change_background', type='json', auth="public", website=True)
+    def bg_change(self, post_id=0,image=None, **post):
+        post_obj = request.registry.get('blog.post')
+        values = {'content_image' : image}
+        ids = post_obj.write(request.cr, SUPERUSER_ID, [int(post_id)], values)
+        return []

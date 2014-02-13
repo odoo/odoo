@@ -25,7 +25,31 @@
                 }).then(function (cat_id) {
                     document.location = '/blogpost/new?blog_id=' + cat_id;
                 });
-            }
+            },
         }),
+        edit: function () {
+            var res = this._super();
+            $('body').on('click', '#change_cover',change_bg);
+            return res;
+        },
+        save : function() {
+            openerp.jsonRpc("/blogpsot/change_background", 'call', {
+                'post_id' : $('#blog_post_name').attr('data-oe-id'),
+                'image' : $('.blog_cover')[0].style.background.replace('url(','').replace(')',''),
+            });
+            return this._super();
+        },
     });
+
+    function change_bg(ev){
+        var self  = this;
+        var editor  = new  website.editor.ImageDialog();
+        editor.on('start', self, function (o) {
+            o.url = $(self).parent()[0].style.background.replace('url(','').replace(')','');
+        });
+        editor.on('save', self, function (o) {
+            $(self).parent().css("background-image", o.url && o.url !== "" ? 'url(' + o.url + ')' : "");
+        });
+        editor.appendTo('body');
+    }
 })();
