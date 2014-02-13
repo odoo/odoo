@@ -848,7 +848,8 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         });
         var return_records = function() {
             var records = _.map(ids, function(id) {
-                return _.extend({}, _.detect(self.cache, function(c) {return c.id === id;}).values, {"id": id});
+                var c = _.find(self.cache, function(c) {return c.id === id;});
+                return _.isUndefined(c) ? c : _.extend({}, c.values, {"id": id});
             });
             if (self.debug_mode) {
                 if (_.include(records, undefined)) {
