@@ -369,10 +369,11 @@ class mail_thread(osv.AbstractModel):
         track_ctx = dict(context)
         if 'lang' not in track_ctx:
             track_ctx['lang'] = self.pool.get('res.users').browse(cr, uid, uid, context=context).lang
-        tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=track_ctx)
-        if tracked_fields:
-            initial_values = {thread_id: dict((item, False) for item in tracked_fields)}
-            self.message_track(cr, uid, [thread_id], tracked_fields, initial_values, context=track_ctx)
+        if not context.get('mail_notrack'):
+            tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=track_ctx)
+            if tracked_fields:
+                initial_values = {thread_id: dict((item, False) for item in tracked_fields)}
+                self.message_track(cr, uid, [thread_id], tracked_fields, initial_values, context=track_ctx)
         return thread_id
 
     def write(self, cr, uid, ids, values, context=None):
@@ -393,7 +394,11 @@ class mail_thread(osv.AbstractModel):
         result = super(mail_thread, self).write(cr, uid, ids, values, context=context)
         self.message_auto_subscribe(cr, uid, ids, values.keys(), context=context, values=values)
 
-        # Perform the tracking
+        if not context.get('mail_notrack'):
+            # Perform the tracking
+            tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
+        else:
+            tracked_fields = None
         if tracked_fields:
             self.message_track(cr, uid, ids, tracked_fields, initial_values, context=track_ctx)
         return result
@@ -414,6 +419,9 @@ class mail_thread(osv.AbstractModel):
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
+        # avoid tracking multiple temporary changes during copy
+        context = dict(context or {}, mail_notrack=True)
+
         default = default or {}
         default['message_ids'] = []
         default['message_follower_ids'] = []
@@ -1549,18 +1557,23 @@ class mail_thread(osv.AbstractModel):
         """ Add partners to the records followers. """
         if context is None:
             context = {}
+        # not necessary for computation, but saves an access right check
+        if not partner_ids:
+            return True
 
         mail_followers_obj = self.pool.get('mail.followers')
         subtype_obj = self.pool.get('mail.message.subtype')
 
         user_pid = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         if set(partner_ids) == set([user_pid]):
-            if context.get('operation', '') != 'create':
-                try:
-                    self.check_access_rights(cr, uid, 'read')
+            try:
+                self.check_access_rights(cr, uid, 'read')
+                if context.get('operation', '') == 'create':
+                    self.check_access_rule(cr, uid, ids, 'create')
+                else:
                     self.check_access_rule(cr, uid, ids, 'read')
-                except (osv.except_osv, orm.except_orm):
-                    return False
+            except (osv.except_osv, orm.except_orm):
+                return False
         else:
             self.check_access_rights(cr, uid, 'write')
             self.check_access_rule(cr, uid, ids, 'write')
@@ -1605,6 +1618,9 @@ class mail_thread(osv.AbstractModel):
 
     def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
         """ Remove partners from the records followers. """
+        # not necessary for computation, but saves an access right check
+        if not partner_ids:
+            return True
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         if set(partner_ids) == set([user_pid]):
             self.check_access_rights(cr, uid, 'read')

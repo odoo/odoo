@@ -197,6 +197,7 @@ openerp_mail_followers = function(session, mail) {
             // clean and display title
             var node_user_list = this.$('.oe_follower_list').empty();
             this.$('.oe_follower_title').html(this._format_followers(this.followers.length));
+            self.message_is_follower = _.indexOf(this.followers.map(function (rec) { return rec[2]['is_uid']}), true) != -1;
             // truncate number of displayed followers
             var truncated = this.followers.slice(0, this.displayed_nb);
             _(truncated).each(function (record) {
@@ -206,9 +207,6 @@ openerp_mail_followers = function(session, mail) {
                     'is_uid': record[2]['is_uid'],
                     'is_editable': record[2]['is_editable'],
                     'avatar_url': mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record[0]),
-                }
-                if (partner.is_uid) {
-                    self.message_is_follower = partner.is_uid;
                 }
                 $(session.web.qweb.render('mail.followers.partner', {'record': partner, 'widget': self})).appendTo(node_user_list);
                 // On mouse-enter it will show the edit_subtype pencil.

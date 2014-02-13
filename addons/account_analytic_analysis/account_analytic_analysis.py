@@ -664,13 +664,20 @@ class account_analytic_account(osv.osv):
 
         partner_payment_term = contract.partner_id.property_payment_term and contract.partner_id.property_payment_term.id or False
 
+        currency_id = False
+        if contract.pricelist_id:
+            currency_id = contract.pricelist_id.currency_id.id
+        elif contract.partner_id.property_product_pricelist:
+            currency_id = contract.partner_id.property_product_pricelist.currency_id.id
+        elif contract.company_id:
+            currency_id = contract.company_id.currency_id.id
 
         inv_data = {
            'reference': contract.code or False,
            'account_id': contract.partner_id.property_account_receivable.id,
            'type': 'out_invoice',
            'partner_id': contract.partner_id.id,
-           'currency_id': contract.partner_id.property_product_pricelist.id or False,
+           'currency_id': currency_id,
            'journal_id': len(journal_ids) and journal_ids[0] or False,
            'date_invoice': contract.recurring_next_date,
            'origin': contract.name,

@@ -27,7 +27,7 @@ function run (test, onload, inject) {
     var scheme = options.scheme ? options.scheme+'://' : 'http://';
     var host = options.host ? options.host : 'localhost';
     var port = options.port ? ':'+options.port : '';
-    var path = options.path ? options.path : '/web/login';
+    var path = options.path ? options.path : '/login';
 
     var queryParams = [];
     if (options.db) queryParams.push('db='+options.db);
