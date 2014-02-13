@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-02-10 14:33+0000\n"
+"PO-Revision-Date: 2014-02-13 00:38+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-11 06:41+0000\n"
+"X-Launchpad-Export-Date: 2014-02-13 06:47+0000\n"
 "X-Generator: Launchpad (build 16916)\n"
 
 #. module: mrp
@@ -117,8 +117,8 @@ msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
 msgstr ""
-"Үйлдвэрлэлийн нэг шугамын хувьд уг дамжлага өөрийн үйлдлийг давтан гүйцэтгэх "
-"давтамжын тоо."
+"Үйлдвэрлэлийн нэг шугамын хувьд уг дамжлага өөрийн ажиллагааг давтан "
+"гүйцэтгэх давтамжын тоо."
 
 #. module: mrp
 #: view:product.product:0
@@ -488,6 +488,16 @@ msgid ""
 "'In Production'.\n"
 "                When the production is over, the status is set to 'Done'."
 msgstr ""
+"Үйлдвэрлэлийн захиалга үүсгэгдсэн дараагаараа 'Ноорог' төлөвтэй байна.\n"
+"                Үйлдвэрлэлийн захиалгыг батласан дараагаар 'Бараа хүлээж "
+"буй' төлөвтэй болдог.\n"
+"                Хэрвээ ямарваа саатал үүссэн бол 'Бэлтгэлтийн саатал' "
+"төлөвтэй болдог.\n"
+"                Хэрэв нөөц бэлэн бол төлөв нь 'Үйлдвэрлэхэд Бэлэн' төлөвтэй "
+"болдог.\n"
+"                Үйлдвэрлэл эхэлсэн бол төлөв нь 'Үйлдвэлэгдэж буй' төлөвтэй "
+"болдог.\n"
+"                Үйлдвэрлэл дууссан бол 'Хийгдсэн' төлөвтэй болдог."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
@@ -514,6 +524,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ үзүүлэлт үүсгэхдээ дарна уу.\n"
+"              </p><p>\n"
+"                OpenERP-д үзүүлэлт гэдэг нь нэг барааг үйлдвэрлэхдээ "
+"ялгаатай \n"
+"                орцуудыг сонгох тохиолдолд хэрэглэгддэг. Орц бүрт олон "
+"үзүүлэлтийг\n"
+"                оноох боломжтой. Борлуулалтын ажилтан борлуулалтын захиалга "
+"үүсгэхдээ\n"
+"                олон үзүүлэлтийг холбож өгөх боломжтой бөгөөд OpenERP нь "
+"шаардлагын дагууд\n"
+"                харгалзах орцыг автоматаар сонгодог.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: view:mrp.production:0
@@ -542,8 +566,8 @@ msgid ""
 "partner location if you subcontract the manufacturing operations."
 msgstr ""
 "Дууссан барааны байрлалд үйлдвэрлэхээр бол хоосон байлга. Тогтмол байрлалд "
-"үйлдвэрлэх бол байрлалыг тааруул. Хэрэв үйлдвэрлэлийг дэд гэрээгээр хийдэг "
-"бол харилцагчийн байрлал байж болно."
+"үйлдвэрлэх бол байрлалыг тааруул. Хэрэв үйлдвэрлэлийн ажиллагааг дэд "
+"гэрээгээр хийдэг бол харилцагчийн байрлал байж болно."
 
 #. module: mrp
 #: view:board.board:0
@@ -663,11 +687,20 @@ msgid ""
 "assembly operation.\n"
 "                This installs the module stock_no_autopicking."
 msgstr ""
+"Энэ модуль нь үйлдвэрлэлийн захиалга түүхий эдийг бэлтгэх дундын процессыг "
+"бий болгодог.\n"
+"                Тухайлбал нийлүүлэгчээр (дэд гэрээлэгчээр)  үйлдвэрлэл "
+"хийгдэх ажлын менежмент.\n"
+"                Үүнийг хийхийн тулд дэд гэрээгээр угсрагддаг барааг "
+"\"Автомат Бэлтгэнгүй\" гэж тохируулаад\n"
+"                угсрах үйл ажиллагааны шугамын байрлал дээр нийлүүлэгчийн "
+"байрлалыг сонгож өгнө.\n"
+"                Энэ нь stock_no_autopicking модулийг суулгадаг."
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Picking Exception"
-msgstr "Бэлтгэлтийн Сондгойрол"
+msgstr "Бэлтгэлтийн Саатал"
 
 #. module: mrp
 #: field:mrp.bom,bom_lines:0
@@ -743,9 +776,9 @@ msgid ""
 "operations and to plan future loads on work centers based on production "
 "plannification."
 msgstr ""
-"Эцсийн барааг үйлдвэрлэх үйлдлүүд (дамжлагууд)-н жагсаалт. Шугам гэдэг нь "
-"үндсэндээ дамжлагуудын өртөгийг тооцоолох болон ажлын ачааллыг тооцоолоход "
-"үйлдвэрлэлийн төлөвлөгөөн дээр суурилан бодоход хэрэглэгддэг."
+"Эцсийн барааг үйлдвэрлэх ажиллагаанууд (дамжлагууд)-н жагсаалт. Шугам гэдэг "
+"нь үндсэндээ дамжлагуудын өртөгийг тооцоолох болон ажлын ачааллыг "
+"тооцоолоход үйлдвэрлэлийн төлөвлөгөөн дээр суурилан бодоход хэрэглэгддэг."
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
@@ -765,6 +798,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Орцын бүрэлдхүүнийг нэмэхдээ дарна уу.\n"
+"              </p><p>\n"
+"                Орцын бүрэлдхүүн гэдэг нь орцыг бүрдүүлэхэд хэрэглэгддэг "
+"бүрэлдхүүн болон \n"
+"                дайвар бүтээгдэхүүнүүд юм. Энэ менюг ашиглан бүрэлдхүүн ямар "
+"орцод орсон \n"
+"                болохыг хайдаг.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: constraint:mrp.bom:0
@@ -791,6 +834,12 @@ msgid ""
 "                    * Product Attributes.\n"
 "                This installs the module product_manufacturer."
 msgstr ""
+"Энэ бараанд бараанд дараах талбаруудыг тодорхойлох боломжийг олгодог:\n"
+"                    * Үйлдвэрлэгч\n"
+"                    * Үйлдвэрлэгчийн барааны нэр\n"
+"                    * Үйлдвэрлэгчийн барааны  код\n"
+"                    * Барааны талбарууд.\n"
+"                Энэ нь product_manufacturer модулийг суулгадаг."
 
 #. module: mrp
 #: view:mrp.product_price:0
@@ -818,6 +867,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Дамжлага нэмэхдээ дарна уу.\n"
+"              </p><p>\n"
+"                Дамжлага нь үйлдвэрлэлийн нэгжүүдийг үүсгэх, удирдахад "
+"тусладаг. \n"
+"                Эдгээр нь хүн эсвэл машинаас бүрдэх бөгөөд даалгавар оноох "
+"нэгж\n"
+"                гэж үзэгдэхээс гадна чадал, төлөвлөлтийг хийх таамаглахад "
+"хэрэглэгддэг.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_minimumstockrule0
@@ -834,7 +894,7 @@ msgstr "Сарын хэмжээнд"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr ""
+msgstr "Хэмжих нэгж нь нөөцийн хяналтын хэмжих нэгж"
 
 #. module: mrp
 #: report:bom.structure:0
@@ -883,7 +943,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Mark as Started"
-msgstr ""
+msgstr "Эхэлснээр тэмдэглэх"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -923,6 +983,8 @@ msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
 msgstr ""
+"Таны сонгосон барааны хэмжих нэгж нь барааны маягт дээр сонгосон хэмжих "
+"нэгжээс ялгаатай ангилалтай байна."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -987,6 +1049,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ үйлдвэрлэлийн захиалга эхлэхдээ дарна уу. \n"
+"              </p><p>\n"
+"                Үйлдвэрлэлийн захиалга гэдэг нь орц дээр суурилан түүхий "
+"эдийг хангаж\n"
+"                улмаар эцсийн бэлэн бүтээгдэхүүнийг үйлдвэрлэдэг.\n"
+"              </p><p>\n"
+"                Үйлдвэрлэлийн захиалга нь захиалагчийн шаардлага эсвэл "
+"зохистой нөөцийн дүрэм \n"
+"                зэрэг автомат дүрмүүд дээр үндэслэн ихэнхдээ автоматаар "
+"санал болгогддог .\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: field:mrp.bom,type:0
@@ -998,8 +1073,7 @@ msgstr "Орцын төрөл"
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
-msgstr ""
-"'%s' татан авалтад сондгойрол байна: 'Бараанд орц тодорхойлогдоогүй !'"
+msgstr "'%s' татан авалтын саатал: 'Бараанд орц тодорхойлогдоогүй !'"
 
 #. module: mrp
 #: view:mrp.property:0
@@ -1165,7 +1239,7 @@ msgstr "Горим"
 #: help:mrp.production,message_ids:0
 #: help:mrp.production.workcenter.line,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Зурвас болон харилцсан түүх"
 
 #. module: mrp
 #: field:mrp.workcenter.load,measure_unit:0
@@ -1181,6 +1255,11 @@ msgid ""
 "                cases entail a small performance impact.\n"
 "                This installs the module mrp_jit."
 msgstr ""
+"Энэ нь татан авалтыг яг хугацаандаа тооцооллыг хийх боломжийг олгодог.\n"
+"                Бүх татан авалтын захиалга нь шууд боловсруулагддаг бөгөөд "
+"энэ нь заримдаа\n"
+"                системийн ажиллагаад ачаалал өгөх тохиолдол байдаг.\n"
+"               Энэ нь mrp_jit модулийг суулгадаг."
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
@@ -1193,8 +1272,8 @@ msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
-"Энэ дамжлагын нэгэн зэрэг хийж чадах үйлдлийн тоо. Хэрэв энэ дамжлага нь 5 "
-"ажилтантай баг бол циклийн чадавхи нь 5 байх юм."
+"Энэ дамжлагын нэгэн зэрэг хийж чадах ажиллагааны тоо. Хэрэв энэ дамжлага нь "
+"5 ажилтантай баг бол циклийн чадавхи нь 5 байх юм."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
@@ -1253,7 +1332,8 @@ msgstr "Нөөцүүд"
 msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified "
 "routing."
-msgstr "Заагдсан шугамын үйлдлийг гүйцэтгэхэд энэ дамжлагын хугацаа цагаар."
+msgstr ""
+"Заагдсан шугамын ажиллагааг гүйцэтгэхэд энэ дамжлагын хугацаа цагаар."
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
@@ -1264,7 +1344,7 @@ msgstr "Шинжилгээний журнал"
 #: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Supplier Price per Unit of Measure"
-msgstr ""
+msgstr "Хэмжих нэгжээрх нийлүүлэгчийн үнэ"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -1276,7 +1356,7 @@ msgstr "Долооногийн хэмжээнд"
 #: field:mrp.production,message_unread:0
 #: field:mrp.production.workcenter.line,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Уншаагүй Зурвасууд"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockmts0
@@ -1290,7 +1370,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.routing:0
 msgid "Work Center Operations"
-msgstr "Дамжлагын Үйлдлүүд"
+msgstr "Дамжлагын Ажиллагаанууд"
 
 #. module: mrp
 #: view:mrp.routing:0
@@ -1321,7 +1401,7 @@ msgstr "Хугацааний нэгжийг сонго"
 #: model:ir.ui.menu,name:mrp.menu_mrp_product_form
 #: view:mrp.config.settings:0
 msgid "Products"
-msgstr ""
+msgstr "Бараанууд"
 
 #. module: mrp
 #: view:report.workcenter.load:0
@@ -1348,7 +1428,7 @@ msgstr ""
 #: code:addons/mrp/mrp.py:505
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Буруу Үйлдэл!"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_producttostockrules0
@@ -1388,12 +1468,14 @@ msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
 msgstr ""
+"Орц гэдэг нь эцсийн бэлэн бүтээгдэхүүнийг үйлдвэрлэхэд шаардлагата түүхий "
+"эдийн жагсаалтыг тодорхойлдог."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:375
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (хуулбар)"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
@@ -1409,7 +1491,7 @@ msgstr "%s ажлын өртөг %s"
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
-msgstr "Үйлдвэрлэлийн үйлдэл бүрийн нууц хоногууд"
+msgstr "Үйлдвэрлэлийн ажиллагаа бүрийн нууц хоногууд"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_mts0
@@ -1484,7 +1566,7 @@ msgstr "Цагийн Данс"
 #: field:mrp.production,product_uom:0
 #: field:mrp.production.product.line,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Барааны хэмжих нэгж"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1516,6 +1598,11 @@ msgid ""
 "are attached to bills of materials\n"
 "                that will define the required raw materials."
 msgstr ""
+"Шугам гэдэг нь барааг үйлдвэрлэхэд шаардлагатай дамжлагуудийн "
+"ажиллагаануудын дарааллыг\n"
+"                тодорхойлж, менежментийг хийх боломжийг олгодог. Эдгээр нь "
+"орцод хавсрагдана. \n"
+"                Харин орц нь түүхий эдийг тодорхойлдог."
 
 #. module: mrp
 #: view:report.workcenter.load:0
@@ -1587,7 +1674,7 @@ msgstr "Хийгдсэн"
 #. module: mrp
 #: view:product.product:0
 msgid "When you sell this product, OpenERP will trigger"
-msgstr ""
+msgstr "Энэ барааг борлуулахад OpenERP нь дараах ажлыг хийнэ"
 
 #. module: mrp
 #: field:mrp.production,origin:0
@@ -1645,6 +1732,27 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Үзүүлэлтүүдийн бүлгийг тодорхойлохдоо дарна уу.\n"
+"              </p><p>\n"
+"                Орц болон борлуулалтын захиалгад оноогдож болох "
+"үзүүлэлтүүдийн\n"
+"                бүлэгийг тодорхойлно. Үзүүлэлт гэдэг нь борлуулалтын "
+"ажилтан\n"
+"                борлуулалтын захиалга дээр ямар үзүүлэлт сонгосноос "
+"хамааруулан\n"
+"                харгалзах зөв орцыг сонгох боломжийг олгодог.\n"
+"              </p><p>\n"
+"                Тухайлбал, \"Баталгаа\" гэсэн үзүүлэлтийн бүлгэд 1 жилийн "
+"баталгаа, \n"
+"                3 жилийн баталгаа гэсэн хоёр үзүүлэлттэй байлаа гэж үзье. "
+"Тэгвэл\n"
+"                Борлуулалтын захиалгад аль үзүүлэлтийг сонгосноос хамаараад "
+"\n"
+"                OpenERP нь харгалзах орц бүхий үйлдвэрлэлийн захиалгыг "
+"товлоно.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
@@ -1746,7 +1854,7 @@ msgid ""
 "operations and to plan future loads on work centers based on production "
 "planning."
 msgstr ""
-"Барааг үйлдвэрлэх үйлдлийн жагсаалт (дамжлагын жагсаалт). Шугам нь  "
+"Барааг үйлдвэрлэх ажиллагааны жагсаалт (дамжлагын жагсаалт). Шугам нь  "
 "үйлдвэрлэлийн захиалга дээр үндэслэн дамжлагуудын өртөгийг тооцох, ажлын "
 "ирээдүйн ачааллыг тооцоолох зэрэгт голчлон хэрэглэгддэг."
 
@@ -1758,7 +1866,7 @@ msgstr "Батлах"
 #. module: mrp
 #: view:mrp.config.settings:0
 msgid "Order"
-msgstr ""
+msgstr "Захиалга"
 
 #. module: mrp
 #: view:mrp.property.group:0
@@ -1825,7 +1933,7 @@ msgstr "Цуцлагдсан"
 #. module: mrp
 #: view:mrp.production:0
 msgid "(Update)"
-msgstr ""
+msgstr "(Шинэчлэх)"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_operations:0
@@ -1834,6 +1942,9 @@ msgid ""
 "lines (in the \"Work Centers\" tab).\n"
 "                This installs the module mrp_operations."
 msgstr ""
+"Энэ нь төлөв, эхлэх огноо, зогсох огноо гэсэн талбаруудыг үйлдвэрлэлийн "
+"захиалгын ажиллагааны мөрүүдэд нэмдэг (\"Дамжлага\" хавтас дээр).\n"
+"                Энэ нь mrp_operations модулийг суулгадаг."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:737
@@ -1867,7 +1978,7 @@ msgstr "Компани"
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Default Unit of Measure"
-msgstr ""
+msgstr "Үндсэн хэмжих нэгж"
 
 #. module: mrp
 #: field:mrp.workcenter,time_cycle:0
@@ -1897,7 +2008,7 @@ msgstr "Автомат татан авах дүрэм"
 #: field:mrp.production,message_ids:0
 #: field:mrp.production.workcenter.line,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Зурвас"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1910,7 +2021,7 @@ msgstr "Өгөгдлийг Тооцоолох"
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Алдаа!"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:139
@@ -1928,7 +2039,7 @@ msgstr "Орцын бүтэц"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_jit:0
 msgid "Generate procurement in real time"
-msgstr ""
+msgstr "Татан авалтыг бодит хугацаанд үүсгэнэ"
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0
@@ -1954,7 +2065,7 @@ msgstr "Үйлдвэрлэлийн урьтал хугацаа"
 #: code:addons/mrp/mrp.py:285
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Анхааруулга"
 
 #. module: mrp
 #: field:mrp.bom,product_uos_qty:0
@@ -1991,7 +2102,7 @@ msgstr "Үйлдвэрлэлийн Хэмнэлт"
 #: field:mrp.production,message_follower_ids:0
 #: field:mrp.production.workcenter.line,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Дагагчид"
 
 #. module: mrp
 #: help:mrp.bom,active:0
@@ -2096,6 +2207,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Орцыг тодорхойлохдоо дарна уу. \n"
+"              </p><p>\n"
+"                Орц нь эцсийн бэлэн бүтээгдэхүүнийг үйлдвэрлэхэд шаардагдах\n"
+"                түүхий эдийн жагсаалтыг тодорхойлдог; үүнийг үйлдвэрлэлийн "
+"захиалга эсвэл барааны\n"
+"                савлагаагаар хийдэг.\n"
+"              </p><p>\n"
+"                OpenERP нь татан авалтын хэрэгцээнд суурилан үйлдвэрлэлийн "
+"захиалгыг автоматаар\n"
+"                санал болгохдоо орцыг ашигладаг.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
@@ -2110,7 +2234,7 @@ msgstr "Суурилуулах хугацаа цагаар"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_repair:0
 msgid "Manage repairs of products "
-msgstr ""
+msgstr "Бараануудын засварын менежментийг хийх "
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_byproduct:0
@@ -2120,6 +2244,10 @@ msgid ""
 "                With this module: A + B + C -> D + E.\n"
 "                This installs the module mrp_byproduct."
 msgstr ""
+"Орцод дайвар бүтээгдэхүүнийг тохируулна.\n"
+"                Энэ модуль байхгүй бол: A + B + C -> D.\n"
+"                Энэ модуль байвал: A + B + C -> D + E.\n"
+"                Энэ нь mrp_byproduct модулийг суулгадаг."
 
 #. module: mrp
 #: field:procurement.order,bom_id:0
@@ -2142,7 +2270,7 @@ msgstr "Бараанаас хуваарилах"
 #: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Cost Price per Unit of Measure"
-msgstr ""
+msgstr "Хэмжих нэгжээрх Өртөг"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2237,7 +2365,7 @@ msgstr "Орцууд"
 #: code:addons/mrp/mrp.py:610
 #, python-format
 msgid "Cannot find a bill of material for this product."
-msgstr ""
+msgstr "Энэ бараанд орц олж чадахгүй байна."
 
 #. module: mrp
 #: view:product.product:0
@@ -2246,11 +2374,14 @@ msgid ""
 "                        The delivery order will be ready once the production "
 "is done."
 msgstr ""
+"Энэ бараанд оноогдсон орцыг ашиглаж байна.\n"
+"                        Үйлдвэрлэл хийгдмэгц хүргэлтийн захиалга бэлэн болох "
+"болно."
 
 #. module: mrp
 #: field:mrp.config.settings,module_stock_no_autopicking:0
 msgid "Manage manual picking to fulfill manufacturing orders "
-msgstr ""
+msgstr "Үйлдвэрлэлийн захиалгыг хангах гар бэлтгэнийг менежмент хийнэ "
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -2267,7 +2398,7 @@ msgstr "Үйлдвэрлэлүүд"
 #: model:ir.model,name:mrp.model_stock_move_split
 #: view:mrp.production:0
 msgid "Split in Serial Numbers"
-msgstr ""
+msgstr "Серийн дугааруудаар салгах"
 
 #. module: mrp
 #: help:mrp.bom,product_uos:0
@@ -2293,7 +2424,7 @@ msgstr "Ажлын Захиалга"
 #. module: mrp
 #: view:board.board:0
 msgid "Procurements in Exception"
-msgstr "Сондгойрсон Татан авалтууд"
+msgstr "Саатсан Татан авалтууд"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_price
@@ -2351,6 +2482,12 @@ msgid ""
 "product, it will be sold and shipped as a set of components, instead of "
 "being produced."
 msgstr ""
+"Хэрэв дайвар бүтээгдэхүүн хэд хэдэн бараанд хэрэглэгдсэн бол энэ нь өөрийн "
+"орцыг тодорхойлоход хэрэглэгдэж болно. Иймд энэ дайвар бүтээгдэхүүнд тусдаа "
+"үйлдвэрлэлийн захиалга байхыг хүсэхгүй бол орцын төрлийг Цогц/дайвар гэж "
+"сонгоно. Хэрэв язгуур бараанд дайвар гэсэн орцыг хэрэглэсэн бол энэ нь "
+"бүрэлдхүүн байдлаар борлуулагдаж хүргэгдэнэ. Өөрөөр хэлбэл бэлэн "
+"бүтээгдэхүүн гэж үзэгдэхгүй."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -2368,7 +2505,7 @@ msgstr "үйлдвэрлэл"
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_properties:0
 msgid "Allow several bill of materials per products using properties"
-msgstr ""
+msgstr "Үзүүлэлт ашиглан нэг бараанд хэд хэдэн орцтой байх боломжийг олгоно"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
@@ -2407,7 +2544,7 @@ msgstr "Цэвэрлэх хугацаа цагаар."
 #: field:mrp.production,message_summary:0
 #: field:mrp.production.workcenter.line,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Хураангуй"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_purchaseprocure0
@@ -2469,7 +2606,7 @@ msgstr "Орцын жагсаалтыг харуулах дэс дарааллы
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_config_settings
 msgid "mrp.config.settings"
-msgstr ""
+msgstr "mrp.config.settings"
 
 #. module: mrp
 #: view:mrp.production:0
