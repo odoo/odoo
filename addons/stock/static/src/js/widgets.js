@@ -71,7 +71,6 @@ function openerp_picking_widgets(instance){
             var model = this.getParent();
             var rows = [];
             var ops = model.get_current_operations();
-
             _.each( ops, function(op){
                 rows.push({
                     cols: {
@@ -121,10 +120,9 @@ function openerp_picking_widgets(instance){
             var model = this.getParent();
             this.$('.js_pack_row').each(function(){
                 var pack_id = parseInt($(this).attr('pack-id'));
-
                 $('.js_pack_print', this).click(function(){ model.print_package(pack_id); });
-                $('.js_pack_plus', this).click(function(){ model.copy_package(pack_id); });
-                $('.js_pack_minus', this).click(function(){ model.delete_package(pack_id); });
+                $('.js_pack_plus', this).click(function(){ model.copy_package_op(pack_id); });
+                $('.js_pack_minus', this).click(function(){ model.delete_package_op(pack_id); });
                 $('.js_pack_select', this).click(function(){ 
                     if(model.get_selected_package() && model.get_selected_package().id === pack_id){
                         model.deselect_package();
@@ -365,7 +363,7 @@ function openerp_picking_widgets(instance){
                     });
             }
 
-            var loaded = loaded_picking.then(function(){
+            return loaded_picking.then(function(){
 
                     return new instance.web.Model('stock.move').call('read',[self.picking.move_lines, [], new instance.web.CompoundContext()]);
                 }).then(function(movelines){
@@ -374,22 +372,19 @@ function openerp_picking_widgets(instance){
                     return new instance.web.Model('stock.pack.operation').call('read',[self.picking.pack_operation_ids, [], new instance.web.CompoundContext()]);
                 }).then(function(operations){
                     self.operations = operations;
-                    
                     var package_ids = [];
 
                     for(var i = 0; i < operations.length; i++){
                         if(!_.contains(package_ids,operations[i].result_package_id[0])){
-                            package_ids.push(operations[i].result_package_id[0]);
+                            if (operations[i].result_package_id[0]){
+                                package_ids.push(operations[i].result_package_id[0]);
+                            }
                         }
                     }
-
-
                     return new instance.web.Model('stock.quant.package').call('read',[package_ids, [], new instance.web.CompoundContext()]);
                 }).then(function(packages){
                     self.packages = packages;
                 });
-
-            return loaded;
 
         },
         start: function(){
@@ -444,7 +439,7 @@ function openerp_picking_widgets(instance){
 
                 self.$('.oe_pick_app_header').text(self.get_header());
 
-            });
+            }).fail(function(error) {console.log(error);});
 
         },
         // reloads the data from the provided picking and refresh the ui. 
@@ -541,7 +536,6 @@ function openerp_picking_widgets(instance){
             var self = this;
             new instance.web.Model('stock.picking.type').call('read', [[self.picking_type_id], ['code'], new instance.web.CompoundContext()])
                 .then(function(pick_type){
-                    console.log('self.picking_type_id.code '+pick_type[0]['code']);
                     if (pick_type[0]['code'] == 'outgoing'){
                         new instance.web.Model('stock.picking').call('do_print_delivery',[[self.picking.id]])
                            .then(function(action){
@@ -549,7 +543,6 @@ function openerp_picking_widgets(instance){
                            });
                     }
                     else {
-                        console.log('self.picking_id '+picking_id);
                         new instance.web.Model('stock.picking').call('do_print_picking',[[self.picking.id]])
                            .then(function(action){
                                 return self.do_action(action);
@@ -577,20 +570,21 @@ function openerp_picking_widgets(instance){
                 }
             }
         },
-        copy_package: function(package_id){
+        copy_package_op: function(pack_id){
             var self = this;
-            new instance.web.Model('stock.quant.package')
-                .call('copy',[[package_id]])
+            new instance.web.Model('stock.quant.package').call('copy_pack',[pack_id])
                 .then(function(){
                     return self.refresh_ui(self.picking.id);
                 });
         },
-        delete_package: function(package_id){
+        delete_package_op: function(pack_id){
             var self = this;
-            new instance.web.Model('stock.quant.package')
-                .call('unlink',[[package_id]])
-                .then(function(){
-                    return self.refresh_ui(self.picking.id);
+            new instance.web.Model('stock.pack.operation').call('search', [[['result_package_id', '=', pack_id]]])
+                .then(function(op_ids) {
+                    new instance.web.Model('stock.pack.operation').call('unlink', [op_ids])
+                        .then(function() {
+                            return self.refresh_ui(self.picking.id);
+                        });
                 });
         },
         deselect_package: function(){
@@ -660,15 +654,9 @@ function openerp_picking_widgets(instance){
                 return;
             }
 
-            if(quantity === '++'){
-                quantity = op.product_qty + 1;
-            }else if(quantity === '--'){
-                quantity = op.product_qty - 1;
-            }
-
             if(typeof quantity === 'number' && quantity >= 0){
                 new instance.web.Model('stock.pack.operation')
-                    .call('write',[[op.id],{'product_qty': quantity }])
+                    .call('write',[[op],{'product_qty': quantity }])
                     .then(function(){
                         self.refresh_ui(self.picking.id);
                     });
@@ -681,31 +669,23 @@ function openerp_picking_widgets(instance){
             var numpad_timestamp;
             
             this.numpad_handler = function(e){ 
-                // upper row numbers are reserved for the barcode scanner
-                if( e.keyCode < 48 && e.keyCode >= 58){
-                    if(numpad_timestamp + 1500 < new Date().getTime()){
-                        numpad = [];
-                    }
-                    if(e.keyCode === 27 || e.keyCode === 8){ // ESC or BACKSPACE
-                        numpad = [];
-                    }else if(e.keyCode >= 96 && e.keyCode <= 105){ // NUMPAD NUMBERS
-                        numpad.push(e.keyCode - 96);
-                    }else if(e.keyCode === 13){ // ENTER
-                        if(numpad.length > 0){
-                            self.set_operation_quantity(parseInt(numpad.join('')));
-                        }
-                        numpad = [];
-                    }else if(e.keyCode === 107){ // NUMPAD +
-                        self.set_operation_quantity('++');
-                        numpad = [];
-                    }else if(e.keyCode === 109){ // NUMPAD -
-                        self.set_operation_quantity('--');
-                        numpad = [];
-                    }else{
-                        numpad = [];
-                    }
-                    numpad_timestamp = new Date().getTime();
+                if(numpad_timestamp + 1500 < new Date().getTime()){
+                    numpad = [];
                 }
+                if(e.keyCode === 27 || e.keyCode === 8){ // ESC or BACKSPACE
+                    numpad = [];
+                }else if(e.keyCode >= 48 && e.keyCode <= 57){ // NUMPAD NUMBERS
+                    numpad.push(e.keyCode - 48);
+                }else if(e.keyCode === 13){ // ENTER
+                    console.log('enter');
+                    if(numpad.length > 0){
+                        self.set_operation_quantity(parseInt(numpad.join('')));
+                    }
+                    numpad = [];
+                }else{
+                    numpad = [];
+                }
+                numpad_timestamp = new Date().getTime();
             };
             $('body').on('keypress', this.numpad_handler);
         },

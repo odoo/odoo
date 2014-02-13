@@ -3299,6 +3299,24 @@ class stock_package(osv.osv):
             res[quant.product_id.id] += quant.qty
         return res
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if not default.get('name'):
+            default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'stock.quant.package') or _('Unknown Pack')
+        return super(stock_package, self).copy(cr, uid, id, default, context=context)
+
+    def copy_pack(self, cr, uid, id, default_pack_values=None, default=None, context=None):
+        stock_pack_operation_obj = self.pool.get('stock.pack.operation')
+        if default is None:
+            default = {}
+        new_package_id = self.copy(cr, uid, id, default_pack_values, context=context)
+        default['result_package_id'] = new_package_id
+        op_ids = stock_pack_operation_obj.search(cr, uid, [('result_package_id', '=', id)], context=context)
+        for op_id in op_ids:
+            stock_pack_operation_obj.copy(cr, uid, op_id, default, context=context)
+
+
 class stock_pack_operation(osv.osv):
     _name = "stock.pack.operation"
     _description = "Packing Operation"
