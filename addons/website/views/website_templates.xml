@@ -762,7 +762,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         <div t-att-class="'name' not in fields and 'css_non_editable_mode_hidden'"><span itemprop="name" t-esc="name"/></div>
         <div itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
             <div t-if="address and 'address' in fields" class='css_editable_mode_hidden'>
-                <i t-if="not options.get('no_marker')" class='fa fa-map-marker'/> <span itemprop="streetAddress" t-raw="address.replace('\n', (options.get('no_marker') and '&lt;br/&gt;') or (options.get('no_tag_br') and ', ') or '&lt;br/&gt; &amp;nbsp; &amp;nbsp; ')"/>
+                <i t-if="not options.get('no_marker')" class='fa fa-map-marker'/> <span itemprop="streetAddress" t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or ('&lt;br/&gt;%s' % ('' if options.get('no_marker') else '&amp;nbsp; &amp;nbsp; ')))"/>
             </div>
             <div t-if="city and 'city' in fields" class='css_editable_mode_hidden'>
                 <i t-if="not options.get('no_marker')" class='fa fa-map-marker'/> <span itemprop="addressLocality" t-raw="city"/>, <span itemprop="addressCountry" t-raw="country_id"/>
