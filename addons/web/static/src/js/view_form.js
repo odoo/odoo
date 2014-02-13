@@ -5389,9 +5389,6 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         if (this.options.clickable) {
             this.$el.on('click','li',this.on_click_stage);
         }
-        if (this.$el.parent().is('header')) {
-            this.$el.after('<div class="oe_clear"/>');
-        }
         this._super();
     },
     set_value: function(value_) {
