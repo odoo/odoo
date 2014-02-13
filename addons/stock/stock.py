@@ -596,7 +596,7 @@ class stock_picking(osv.osv):
     _name = "stock.picking"
     _inherit = ['mail.thread']
     _description = "Picking List"
-    _order = "priority desc, date desc, id desc"
+    _order = "priority desc, date asc, id desc"
 
     def _set_min_date(self, cr, uid, id, field, value, arg, context=None):
         move_obj = self.pool.get("stock.move")
@@ -914,6 +914,10 @@ class stock_picking(osv.osv):
             return self.action_confirm(cr, uid, [backorder_id], context=context)
         return False
 
+    def recheck_availability(self, cr, uid, picking_ids, context=None):
+        self.action_assign(cr, uid, picking_ids, context=context)
+        self.do_prepare_partial(cr, uid, picking_ids, context=context)
+
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
         #TODO refactore me
         context = context or {}
@@ -1008,31 +1012,11 @@ class stock_picking(osv.osv):
             self.pool.get('stock.move').do_unreserve(cr, uid, moves_to_unreserve, context=context)
 
     def do_recompute_remaining_quantities(self, cr, uid, picking_ids, context=None):
-        def _create_link_for_product(product_id, qty):
-            qty_to_assign = qty
-            for move in picking.move_lines:
-                if move.product_id.id == product_id and move.state not in ['done', 'cancel']:
-                    qty_on_link = min(move.remaining_qty, qty_to_assign)
-                    link_obj.create(cr, uid, {'move_id': move.id, 'operation_id': op.id, 'qty': qty_on_link}, context=context)
-                    qty_to_assign -= qty_on_link
-                    move.refresh()
-                    if qty_to_assign <= 0:
-                        break
-
-        link_obj = self.pool.get('stock.move.operation.link')
-        uom_obj = self.pool.get('product.uom')
-        package_obj = self.pool.get('stock.quant.package')
+        pack_op_obj = self.pool.get('stock.pack.operation')
         for picking in self.browse(cr, uid, picking_ids, context=context):
-            for op in picking.pack_operation_ids:
-                to_unlink_ids = [x.id for x in op.linked_move_operation_ids]
-                if to_unlink_ids:
-                    link_obj.unlink(cr, uid, to_unlink_ids, context=context)
-                if op.product_id:
-                    normalized_qty = uom_obj._compute_qty(cr, uid, op.product_uom_id.id, op.product_qty, op.product_id.uom_id.id)
-                    _create_link_for_product(op.product_id.id, normalized_qty)
-                elif op.package_id:
-                    for product_id, qty in package_obj._get_all_products_quantities(cr, uid, op.package_id.id, context=context).items():
-                        _create_link_for_product(product_id, qty)
+            op_ids = [op.id for op in picking.pack_operation_ids]
+            if op_ids:
+                pack_op_obj.recompute_rem_qty_from_operation(cr, uid, op_ids, context=context)
 
     def _create_extra_moves(self, cr, uid, picking, context=None):
         '''This function creates move lines on a picking, at the time of do_transfer, based on
@@ -1127,13 +1111,13 @@ class stock_picking(osv.osv):
         """ returns the next pickings to process. Used in the barcode scanner UI"""
         if context is None:
             context = {}
-        domain = [('state', 'in', ('confirmed', 'assigned'))]
+        domain = [('state', 'in', ('assigned', 'partially_available'))]
         if context.get('default_picking_type_id'):
             domain.append(('picking_type_id', '=', context['default_picking_type_id']))
         return self.search(cr, uid, domain, context=context)
 
     def action_done_from_ui(self, cr, uid, picking_id, context=None):
-        """ called when button 'done' in pused in the barcode scanner UI """
+        """ called when button 'done' is pushed in the barcode scanner UI """
         self.do_transfer(cr, uid, [picking_id], context=context)
         #return id of next picking to work on
         return self.get_next_picking_for_ui(cr, uid, context=context)
@@ -1912,7 +1896,6 @@ class stock_move(osv.osv):
         picking_obj = self.pool.get("stock.picking")
         quant_obj = self.pool.get("stock.quant")
         pack_op_obj = self.pool.get("stock.pack.operation")
-        pack_obj = self.pool.get("stock.quant.package")
         todo = [move.id for move in self.browse(cr, uid, ids, context=context) if move.state == "draft"]
         if todo:
             ids = self.action_confirm(cr, uid, todo, context=context)
@@ -3317,6 +3300,24 @@ class stock_package(osv.osv):
             res[quant.product_id.id] += quant.qty
         return res
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if not default.get('name'):
+            default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'stock.quant.package') or _('Unknown Pack')
+        return super(stock_package, self).copy(cr, uid, id, default, context=context)
+
+    def copy_pack(self, cr, uid, id, default_pack_values=None, default=None, context=None):
+        stock_pack_operation_obj = self.pool.get('stock.pack.operation')
+        if default is None:
+            default = {}
+        new_package_id = self.copy(cr, uid, id, default_pack_values, context=context)
+        default['result_package_id'] = new_package_id
+        op_ids = stock_pack_operation_obj.search(cr, uid, [('result_package_id', '=', id)], context=context)
+        for op_id in op_ids:
+            stock_pack_operation_obj.copy(cr, uid, op_id, default, context=context)
+
+
 class stock_pack_operation(osv.osv):
     _name = "stock.pack.operation"
     _description = "Packing Operation"
@@ -3405,6 +3406,44 @@ class stock_pack_operation(osv.osv):
         'date': fields.date.context_today,
     }
 
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(stock_pack_operation, self).write(cr, uid, ids, vals, context=context)
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        self.recompute_rem_qty_from_operation(cr, uid, ids, context=context)
+        return res
+
+    def create(self, cr, uid, vals, context=None):
+        res_id = super(stock_pack_operation, self).create(cr, uid, vals, context=context)
+        self.recompute_rem_qty_from_operation(cr, uid, [res_id], context=context)
+        return res_id
+
+    def recompute_rem_qty_from_operation(self, cr, uid, op_ids, context=None):
+        def _create_link_for_product(product_id, qty):
+            qty_to_assign = qty
+            for move in op.picking_id.move_lines:
+                if move.product_id.id == product_id and move.state not in ['done', 'cancel']:
+                    qty_on_link = min(move.remaining_qty, qty_to_assign)
+                    link_obj.create(cr, uid, {'move_id': move.id, 'operation_id': op.id, 'qty': qty_on_link}, context=context)
+                    qty_to_assign -= qty_on_link
+                    move.refresh()
+                    if qty_to_assign <= 0:
+                        break
+
+        link_obj = self.pool.get('stock.move.operation.link')
+        uom_obj = self.pool.get('product.uom')
+        package_obj = self.pool.get('stock.quant.package')
+        for op in self.browse(cr, uid, op_ids, context=context):
+            to_unlink_ids = [x.id for x in op.linked_move_operation_ids]
+            if to_unlink_ids:
+                link_obj.unlink(cr, uid, to_unlink_ids, context=context)
+            if op.product_id:
+                normalized_qty = uom_obj._compute_qty(cr, uid, op.product_uom_id.id, op.product_qty, op.product_id.uom_id.id)
+                _create_link_for_product(op.product_id.id, normalized_qty)
+            elif op.package_id:
+                for product_id, qty in package_obj._get_all_products_quantities(cr, uid, op.package_id.id, context=context).items():
+                    _create_link_for_product(product_id, qty)
+
     def process_packaging(self, cr, uid, operation, quants, context=None):
         ''' Process the packaging of a given operation, after the quants have been moved. If there was not enough quants found
         a quant already has been with the good package information so we don't consider that case in this method'''
@@ -3445,7 +3484,7 @@ class stock_pack_operation(osv.osv):
             #existing operation found for the given domain and picking => increment its quantity
             operation_id = existing_operation_ids[0]
             qty = self.browse(cr, uid, operation_id, context=context).product_qty + 1
-            self.write(cr, uid, operation_id, {'product_qty': qty}, context=context)
+            self.write(cr, uid, [operation_id], {'product_qty': qty}, context=context)
         else:
             #no existing operation found for the given domain and picking => create a new one
             values = {
@@ -3620,39 +3659,6 @@ class stock_picking_type(osv.osv):
     _description = "The picking type determines the picking view"
     _order = 'sequence'
 
-    def __get_bar_values(self, cr, uid, obj, domain, read_fields, value_field, groupby_field, context=None):
-        """ Generic method to generate data for bar chart values using SparklineBarWidget.
-            This method performs obj.read_group(cr, uid, domain, read_fields, groupby_field).
-
-            :param obj: the target model (i.e. crm_lead)
-            :param domain: the domain applied to the read_group
-            :param list read_fields: the list of fields to read in the read_group
-            :param str value_field: the field used to compute the value of the bar slice
-            :param str groupby_field: the fields used to group
-
-            :return list section_result: a list of dicts: [
-                                                {   'value': (int) bar_column_value,
-                                                    'tootip': (str) bar_column_tooltip,
-                                                }
-                                            ]
-        """
-        month_begin = date.today().replace(day=1)
-        section_result = [{
-            'value': 0,
-            'tooltip': (month_begin + relativedelta.relativedelta(months=i)).strftime('%B'),
-        } for i in range(-2, 2, 1)]
-        group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
-        for group in group_obj:
-            group_begin_date = datetime.strptime(group['__domain'][0][2], DEFAULT_SERVER_DATE_FORMAT)
-            month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
-            section_result[-month_delta.months + 2] = {'value': group.get(value_field, 0), 'tooltip': group_begin_date.strftime('%B')}
-            inner_groupby = (group.get('__context', {})).get('group_by',[])
-            if inner_groupby:
-                groupby_picking = obj.read_group(cr, uid, group.get('__domain'), read_fields, inner_groupby, context=context)
-                for groupby in groupby_picking:
-                    section_result[-month_delta.months + 2]['value'] = groupby.get(value_field, 0)
-        return section_result
-
     def _get_tristate_values(self, cr, uid, ids, field_name, arg, context=None):
         picking_obj = self.pool.get('stock.picking')
         res = dict.fromkeys(ids, [])
@@ -3668,24 +3674,6 @@ class stock_picking_type(osv.osv):
                 else:
                     tristates.insert(0, {'tooltip': picking.name + _(': OK'), 'value': 1})
             res[picking_type_id] = tristates
-        return res
-
-
-
-    def _get_monthly_pickings(self, cr, uid, ids, field_name, arg, context=None):
-        obj = self.pool.get('stock.picking')
-        res = dict.fromkeys(ids, False)
-        month_begin = date.today().replace(day=1)
-        groupby_begin = (month_begin + relativedelta.relativedelta(months=-2)).strftime(DEFAULT_SERVER_DATE_FORMAT)
-        groupby_end = (month_begin + relativedelta.relativedelta(months=2)).strftime(DEFAULT_SERVER_DATE_FORMAT)
-        for id in ids:
-            created_domain = [
-                ('picking_type_id', '=', id),
-                ('state', '=', 'done'),
-                ('date', '>=', groupby_begin),
-                ('date', '<', groupby_end),
-            ]
-            res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['date', 'picking_type_id'], 'picking_type_id_count', ['date', 'picking_type_id'], context=context)
         return res
 
     def _get_picking_count(self, cr, uid, ids, field_names, arg, context=None):
@@ -3797,9 +3785,6 @@ class stock_picking_type(osv.osv):
         'active': fields.boolean('Active'),
 
         # Statistics for the kanban view
-        'monthly_picking': fields.function(_get_monthly_pickings,
-            type='string',
-            string='Done Pickings per Month'),
         'last_done_picking': fields.function(_get_tristate_values,
             type='string',
             string='Last 10 Done Pickings'),

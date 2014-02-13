@@ -799,7 +799,7 @@
                                     <field name="pack_operation_exist" invisible="1"/>
                                     <button name="action_pack" string="Create Package" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state', 'not in', ('draft','assigned','partially_available','confirmed'))]}" class="oe_link oe_right oe_inline" groups="product.group_stock_packaging"/>
                                     <button name="do_split" string="Create Draft Backorder" groups="base.group_no_one" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','not in',('assigned', 'partially_available'))]}" class="oe_link oe_right oe_inline"/>
-                                    <button name="do_prepare_partial" string="Recheck Availability" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','not in',('assigned', 'partially_available'))]}" groups="stock.group_stock_user" class="oe_link oe_right oe_inline"/>
+                                    <button name="recheck_availability" string="Recheck Availability" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','not in',('assigned', 'partially_available'))]}" groups="stock.group_stock_user" class="oe_link oe_right oe_inline"/>
                                 </group>
                             </group>
                             <field name="pack_operation_ids" attrs="{'invisible': [('pack_operation_exist', '=', False)]}" context="{'default_owner_id': owner_id}">
@@ -1494,9 +1494,6 @@
                                         </div>
                                         <div>
                                             <a name="%(action_picking_tree)d" type="action">All Operations</a>
-                                            <!--<a name="%(action_picking_tree_done_grouped)d" type="action" class="oe_sparkline_bar_link">
-                                                <field name="monthly_picking" widget="sparkline_bar">Monthly Done Operations</field>
-                                            </a>-->
                                         </div>
                                     </div>
                                     <div class="oe_picking_type_gauge">
