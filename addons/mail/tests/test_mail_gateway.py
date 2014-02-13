@@ -411,14 +411,14 @@ class TestMailgateway(TestMailBase):
         # --------------------------------------------------
 
         # Do: incoming email with model that does not accepts incoming emails must raise
-        self.assertRaises(AssertionError,
+        self.assertRaises(ValueError,
                             format_and_process,
                             MAIL_TEMPLATE,
                             to='noone@example.com', subject='spam', extra='', model='res.country',
                             msg_id='<1198923581.41972151344608186760.JavaMail.new4@agrolait.com>')
 
         # Do: incoming email without model and without alias must raise
-        self.assertRaises(AssertionError,
+        self.assertRaises(ValueError,
                             format_and_process,
                             MAIL_TEMPLATE,
                             to='noone@example.com', subject='spam', extra='',
