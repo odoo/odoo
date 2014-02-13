@@ -23,6 +23,7 @@ from openerp.addons.web.http import request
 from openerp.osv import osv
 from openerp.osv.fields import float as float_field, function as function_field, datetime as datetime_field
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.translate import _
 
 import time
 from datetime import datetime
@@ -204,11 +205,16 @@ class report(osv.Model):
             context = {}
 
         if datas is None:
-            context = {}
+            datas = {}
 
         report_obj = self.pool.get('ir.actions.report.xml')
         idreport = report_obj.search(cr, uid, [('report_name', '=', report_name)], context=context)
-        report = report_obj.browse(cr, uid, idreport[0], context=context)
+
+        try:
+            report = report_obj.browse(cr, uid, idreport[0], context=context)
+        except IndexError:
+            raise osv.except_osv(_('Bad Report'),
+                                 _('This report is not loaded into the database.'))
 
         action = {
             'type': 'ir.actions.report.xml',
@@ -216,7 +222,29 @@ class report(osv.Model):
             'report_type': report.report_type,
         }
 
-        if datas.get('datas'):
+        if datas:
             action['datas'] = datas
 
         return action
+
+    def eval_params(self, dict_param):
+        """Parse a dictionary generated from the webclient into a dictionary understandable by a
+        wizard controller.
+        """
+        for key, value in dict_param.iteritems():
+            if value.lower() == 'false':
+                dict_param[key] = False
+            elif value.lower() == 'true':
+                dict_param[key] = True
+            elif ',' in value or '%2C' in value:
+                dict_param[key] = [int(i) for i in value.split(',')]
+            else:
+                try:
+                    i = int(value)
+                    dict_param[key] = i
+                except (ValueError, TypeError):
+                    pass
+
+        data = {}
+        data['form'] = dict_param
+        return data
