@@ -216,7 +216,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                         count += 1
                     _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", count, server.type, server.name, (count - failed), failed)
                 except Exception:
-                    _logger.exception("General fallure when trying to fetch mail from %s server %s.", server.type, server.name)
+                    _logger.exception("General failure when trying to fetch mail from %s server %s.", server.type, server.name)
                 finally:
                     if imap_server:
                         imap_server.close()
@@ -244,7 +244,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                         cr.commit()
                     _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", numMsgs, server.type, server.name, (numMsgs - failed), failed)
                 except Exception:
-                    _logger.exception("Failed to fetch mail from %s server %s.", server.type, server.name)
+                    _logger.exception("General failure when trying to fetch mail from %s server %s.", server.type, server.name)
                 finally:
                     if pop_server:
                         pop_server.quit()
