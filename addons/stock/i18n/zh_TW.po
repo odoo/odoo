@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-06 15:56+0000\n"
-"PO-Revision-Date: 2014-02-10 12:26+0000\n"
+"PO-Revision-Date: 2014-02-12 15:05+0000\n"
 "Last-Translator: Andy Cheng <andy@dobtor.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-11 06:41+0000\n"
+"X-Launchpad-Export-Date: 2014-02-13 06:47+0000\n"
 "X-Generator: Launchpad (build 16916)\n"
 
 #. module: stock
@@ -2620,7 +2620,7 @@ msgstr "備註"
 msgid ""
 "The unit of measure rounding does not allow you to ship \"%s %s\", only "
 "rounding of \"%s %s\" is accepted by the Unit of Measure."
-msgstr ""
+msgstr "您無法以這個度量單位運送「%s %s」，僅能接受四捨五入後的「%s %s」。"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -2760,7 +2760,7 @@ msgid ""
 "Inventory Analysis allows you to easily check and analyse your company stock "
 "levels. Sort and group by selection criteria in order to better analyse and "
 "manage your company  activities."
-msgstr ""
+msgstr "庫存分析讓您輕鬆地檢查及分析您公司的庫存水平。藉由篩選條件進行排序及分組，協助您妥善的分析與管理您公司的活動。"
 
 #. module: stock
 #: help:report.stock.move,location_id:0
@@ -2768,7 +2768,7 @@ msgstr ""
 msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
-msgstr ""
+msgstr "假如您在一個固定地點生產，則請設定倉位。假如您有外包製造，則可以設為一個夥伴倉位。"
 
 #. module: stock
 #: view:stock.invoice.onshipping:0
@@ -2778,7 +2778,7 @@ msgstr "建立"
 #. module: stock
 #: field:stock.change.product.qty,new_quantity:0
 msgid "New Quantity on Hand"
-msgstr ""
+msgstr "在庫數量調整"
 
 #. module: stock
 #: field:stock.move,priority:0
@@ -2862,12 +2862,12 @@ msgstr "報廢"
 msgid ""
 "By changing the quantity here, you accept the new quantity as complete: "
 "OpenERP will not automatically generate a Back Order."
-msgstr ""
+msgstr "修改此處的數量，則以新的數量視為完成。OpenERP 將不會自動建立一個延期交貨單。"
 
 #. module: stock
 #: report:stock.inventory.move:0
 msgid "Manual Quantity"
-msgstr ""
+msgstr "手動調整數量"
 
 #. module: stock
 #: view:product.product:0
@@ -2902,7 +2902,7 @@ msgid ""
 "specific filtering criteria. If you do frequent and partial inventories, you "
 "need this report in order to ensure that the stock of each product is "
 "controlled at least once a year."
-msgstr ""
+msgstr "顯示您最後一次盤點結果，並可輕鬆地用篩選條件排序。假如您經常進行部分盤點，建議您至少每年一次以這份報表確定控管每個產品的庫存。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:112
@@ -2921,6 +2921,13 @@ msgid ""
 "    - alert date.\n"
 "This installs the module product_expiry."
 msgstr ""
+"對產品及序號追蹤不同的日期。\n"
+"以下的日期可被追蹤：\n"
+"     - 壽命終止日期\n"
+"     - 最佳使用日期\n"
+"     - 移除日期\n"
+"     - 提醒日期\n"
+"此功能將安裝模組 product_expiry 。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:174
