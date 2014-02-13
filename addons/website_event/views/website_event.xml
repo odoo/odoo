@@ -48,9 +48,9 @@
                     </div>
                     <ul class="media-list">
                         <li t-foreach="event_ids" t-as="event" class="media">
-                            <div class="media-body">
+                            <div itemscope="itemscope" itemtype="http://schema.org/Event" class="media-body">
                                 <h4 class="media-heading">
-                                    <a t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register/' or ''}"><span t-field="event.name"> </span></a>
+                                    <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register/' or ''}"><span itemprop="name" t-field="event.name"> </span></a>
                                     <small t-if="not event.website_published" class="label label-danger">not published</small>
                                 </h4>
                                 <div>
@@ -59,9 +59,9 @@
                                     </t>
                                 </div>
                                 <div>
-                                    <i class="fa fa-clock-o"></i> <span t-field="event.date_begin"> </span> <i>to</i> <span t-field="event.date_end"> </span>
+                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin"> </span> <i>to</i> <span itemprop="endDate" t-field="event.date_end"> </span>
                                 </div>
-                                <div t-field="event.address_id" t-field-options='{
+                                <div itemprop="location" t-field="event.address_id" t-field-options='{
                                     "widget": "contact",
                                     "fields": ["city"]
                                     }'/>
@@ -223,11 +223,11 @@
 
 <template id="event_details">
     <t t-call="website_event.layout">
-        <div class="container">
-            <h1 class="text-center" t-field="event.name"></h1>
+        <div itemscope="itemscope" itemtype="http://schema.org/Event" class="container">
+            <h1 itemprop="name" class="text-center" t-field="event.name"></h1>
             <h4 class="text-center text-muted">
-                <i class="fa fa-clock-o"></i> <span t-field="event.date_begin"/> to
-                <span t-field="event.date_end"/>
+                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin"/> to
+                <span itemprop="endDate" t-field="event.date_end"/>
             </h4>
             <h4 class="text-center text-muted"
                 t-field="event.address_id" t-field-options='{
@@ -258,7 +258,7 @@
 <template id="event_description_full">
     <t t-call="website_event.event_details">
         <div class="col-md-8">
-            <div t-field="event.description"></div>
+            <div itemprop="description" t-field="event.description"></div>
             <div class="clearfix"/>
             <ul class="media-list" id="comment">
                 <li t-foreach="event.website_message_ids" t-as="comment" class="media">
@@ -288,7 +288,7 @@
                     <a t-att-href="event.google_map_link()" target="_BLANK">
                         <img t-att-src="event.google_map_img()" width="100%%"/>
                     </a>
-                    <div class="mt16 mb8" t-field="event.address_id" t-field-options='{
+                    <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-field-options='{
                         "widget": "contact",
                         "fields": ["address", "phone", "mobile", "fax", "email"]
                         }'/>

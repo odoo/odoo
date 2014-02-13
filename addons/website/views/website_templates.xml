@@ -212,7 +212,7 @@
     </html>
 </template>
 
-<template id="layout_logo_show" inherit_option_id="website.layout" name="Show Logo">
+<template id="layout_logo_show" inherit_id="website.layout" inherit_option_id="website.layout" name="Show Logo">
     <xpath expr="//header//a[@class='navbar-brand']" position="replace">
         <a href="/" class="navbar-brand logo">
             <img src="/logo.png"/>
@@ -221,6 +221,34 @@
 </template>
 
 <template id="editor_head" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher">
+    <xpath expr="//body" position="attributes">
+        <attribute name="style">padding-top: 51px;</attribute>
+    </xpath>
+    <xpath expr="//body" position="inside">
+        <div id="website-top-navbar-placeholder" class="navbar navbar-inverse navbar-fixed-top hidden-xs">
+            <div class="navbar-header">
+                <form class="navbar-form navbar-left">
+                    <button type="button" class="btn btn-primary">Edit</button>
+                </form>
+            </div>
+            <div class="collapse navbar-collapse navbar-edit-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" onclick="return false;"><i class="fa fa-mobile" title="Mobile preview"/></a></li>
+                    <li class="divider-vertical"/>
+                    <li><a href="#" onclick="return false;"><span title="Promote page on the web">Promote</span></a></li>
+                    <li class="dropdown">
+                        <a href="#" onclick="return false;">Content <span class="caret"/></a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" onclick="return false;">Customize <span class="caret"/></a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" onclick="return false;">Help <span class="caret"/></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </xpath>
     <xpath expr='//t[@name="layout_head"]' position="before">
         <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
         <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
@@ -253,6 +281,13 @@
         <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
         <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
         <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
+    </xpath>
+</template>
+
+<template id="debugger" inherit_option_id="website.layout" name="Debugger &amp; Tests">
+    <xpath expr='//t[@name="layout_head"]' position="after">
+        <script type="text/javascript" src="/website/static/src/js/website.tour.test.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.tour.test.admin.js"></script>
     </xpath>
 </template>
 
@@ -637,11 +672,11 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 
 <template id="company_description" name="Company Description">
-    <address>
-        <div t-field="res_company.name">Name</div>
+    <address itemscope="itemscope" itemtype="http://schema.org/Organization">
+        <div itemprop="name" t-field="res_company.name">Name</div>
         <br />
-        <div><i class="fa fa-phone"/> <span t-field="res_company.phone"/></div>
-        <div><i class="fa fa-envelope"/> <span t-field="res_company.email"/></div>
+        <div><i class="fa fa-phone"/> <span itemprop="telephone" t-field="res_company.phone"/></div>
+        <div><i class="fa fa-envelope"/> <span itemprop="email" t-field="res_company.email"/></div>
     </address>
      <a t-att-href="res_company.google_map_link()" target="_BLANK">
         <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
@@ -723,18 +758,20 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 
 <template id="contact">
-    <address t-ignore="true" class="mb0">
-        <div t-att-class="'name' not in fields and 'css_non_editable_mode_hidden'"><span t-esc="name"/></div>
-        <div t-if="address and 'address' in fields" class='css_editable_mode_hidden'>
-            <i class='fa fa-map-marker'/> <span t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or '&lt;br/&gt; &amp;nbsp; &amp;nbsp; ')"/>
+    <address t-ignore="true" class="mb0" itemscope="itemscope" itemtype="http://schema.org/Organization">
+        <div t-att-class="'name' not in fields and 'css_non_editable_mode_hidden'"><span itemprop="name" t-esc="name"/></div>
+        <div itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
+            <div t-if="address and 'address' in fields" class='css_editable_mode_hidden'>
+                <i class='fa fa-map-marker'/> <span itemprop="streetAddress" t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or '&lt;br/&gt; &amp;nbsp; &amp;nbsp; ')"/>
+            </div>
+            <div t-if="city and 'city' in fields" class='css_editable_mode_hidden'>
+                <i class='fa fa-map-marker'/> <span itemprop="addressLocality" t-raw="city"/>, <span itemprop="addressCountry" t-raw="country_id"/>
+            </div>
+            <div t-if="phone and 'phone' in fields" class='css_editable_mode_hidden'><i class='fa fa-phone'/> <span itemprop="telephone" t-esc="phone"/></div>
+            <div t-if="mobile and 'mobile' in fields" class='css_editable_mode_hidden'><i class='fa fa-mobile-phone'/> <span itemprop="telephone" t-esc="mobile"/></div>
+            <div t-if="fax and 'fax' in fields" class='css_editable_mode_hidden'><i class='fa fa-file-text-o'/> <span itemprop="faxNumber" t-esc="fax"/></div>
+            <div t-if="email and 'email' in fields" class='css_editable_mode_hidden'><i class='fa fa-envelope'/> <span itemprop="email" t-esc="email"/></div>
         </div>
-        <div t-if="city and 'city' in fields" class='css_editable_mode_hidden'>
-            <i class='fa fa-map-marker'/> <span t-raw="city"/>, <span t-raw="country_id"/>
-        </div>
-        <div t-if="phone and 'phone' in fields" class='css_editable_mode_hidden'><i class='fa fa-phone'/> <span t-esc="phone"/></div>
-        <div t-if="mobile and 'mobile' in fields" class='css_editable_mode_hidden'><i class='fa fa-mobile-phone'/> <span t-esc="mobile"/></div>
-        <div t-if="fax and 'fax' in fields" class='css_editable_mode_hidden'><i class='fa fa-file-text-o'/> <span t-esc="fax"/></div>
-        <div t-if="email and 'email' in fields" class='css_editable_mode_hidden'><i class='fa fa-envelope'/> <span t-esc="email"/></div>
     </address>
 </template>
 

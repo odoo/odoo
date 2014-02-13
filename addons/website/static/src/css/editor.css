@@ -195,12 +195,18 @@ ul.oe_menu_editor .disclose {
   text-align: left;
 }
 
-.modal.nosave .modal-footer button.save {
-  display: none;
-}
-.modal.nosave .modal-footer button.wait {
+.modal.nosave .wait {
   display: inline-block !important;
   visibility: visible !important;
+}
+.modal.nosave .modal-body .filepicker, .modal.nosave .modal-body .image-preview {
+  display: none;
+}
+.modal.nosave .modal-body .wait {
+  width: 100%;
+}
+.modal.nosave .modal-footer .save {
+  display: none;
 }
 
 .modal .font-icons-icons {

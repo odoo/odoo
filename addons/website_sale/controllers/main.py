@@ -6,6 +6,7 @@ import werkzeug
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
+from openerp.tools.translate import _
 
 PPG = 20                        # Products Per Page
 PPR = 4                         # Products Per Row
@@ -294,7 +295,9 @@ class Ecommerce(http.Controller):
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
     @http.route(['/shop/add_product/'], type='http', auth="user", methods=['POST'], website=True, multilang=True)
-    def add_product(self, name="New Product", category=0, **post):
+    def add_product(self, name=None, category=0, **post):
+        if not name:
+            name = _("New Product")
         Product = request.registry.get('product.product')
         product_id = Product.create(request.cr, request.uid, {
             'name': name, 'public_categ_id': category

@@ -9,9 +9,40 @@ import lxml.html
 
 from openerp import tools
 
-from . import cases
-
 __all__ = ['load_tests', 'CrawlSuite']
+
+class URLCase(unittest2.TestCase):
+    """
+    URLCase moved out of test_requests, otherwise discovery attempts to
+    instantiate and run it
+    """
+    def __init__(self, user, url, source, result):
+        super(URLCase, self).__init__()
+        self.user = user
+        self.url = url
+        self.source = source
+        self.result = result
+
+    @property
+    def username(self):
+        return self.user or "Anonymous Coward"
+
+    def __str__(self):
+        if self.source:
+            return "%s (from %s, as %s)" % (self.url, self.source, self.username)
+        return "%s (as %s)" % (self.url, self.username)
+
+    __repr__ = __str__
+
+    def shortDescription(self):
+        return ""
+
+    def runTest(self):
+        code = self.result.getcode()
+        self.assertIn(
+            code, xrange(200, 300),
+            "Fetching %s as %s returned an error response (%d)" % (
+                self.url, self.username, code))
 
 class RedirectHandler(urllib2.HTTPRedirectHandler):
     """
@@ -118,11 +149,10 @@ class URL(object):
         self.source = source
 
     def to_case(self, user, result):
-        return cases.URLCase(user, self.url, self.source, result)
+        return URLCase(user, self.url, self.source, result)
 
 def load_tests(loader, base, _):
     base.addTest(CrawlSuite())
-    # blog duplicate (&al?) are on links
     base.addTest(CrawlSuite('admin', tools.config['admin_passwd']))
     base.addTest(CrawlSuite('demo', 'demo'))
     return base
