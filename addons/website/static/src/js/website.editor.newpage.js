@@ -19,10 +19,27 @@
                 website.prompt({
                     id: "editor_new_page",
                     window_title: _t("New Page"),
-                    input: "Page Title",
-                }).then(function (val) {
+                    input: _t("Page Title"),
+                    init: function () {
+                        var $group = this.$dialog.find("div.form-group");
+                        $group.find("label").removeClass("col-sm-3").addClass("col-sm-4");
+                        $group.find("div").removeClass("col-sm-9").addClass("col-sm-8");
+                        $group.removeClass("mb0");
+
+                        var $add = $(
+                            '<div class="form-group mb0">'+
+                                '<label for="page-name" class="col-sm-4 control-label"></label>'+
+                                '<div class="col-sm-8 text-left">'+
+                                '    <input type="checkbox" class="form-control" style="width: 24px" checked="checked" required="required"/>'+
+                                '</div>'+
+                            '</div>');
+                        $add.find('label').text(_t("Add page in menu"));
+                        $group.after($add);
+                    }
+                }).then(function (val, field, $dialog) {
                     if (val) {
-                        document.location = '/website/add/' + encodeURI(val);
+                        console.log('/website/add/' + encodeURI(val) + "?add_menu=" + $dialog.find('input[type="checkbox"]').is(':checked'));
+                        document.location = '/website/add/' + encodeURI(val) + "?add_menu=" + $dialog.find('input[type="checkbox"]').is(':checked');
                     }
                 });
             }
