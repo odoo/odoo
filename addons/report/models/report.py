@@ -195,7 +195,7 @@ class report(osv.Model):
                                                                      follow_redirects=True)
         return response.data
 
-    def get_action(self, cr, uid, ids, report_name, context=None):
+    def get_action(self, cr, uid, ids, report_name, datas=None, context=None):
         """Used to return an action of type ir.actions.report.xml.
 
         :param report_name: Name of the template to generate an action for
@@ -203,12 +203,20 @@ class report(osv.Model):
         if context is None:
             context = {}
 
+        if datas is None:
+            context = {}
+
         report_obj = self.pool.get('ir.actions.report.xml')
         idreport = report_obj.search(cr, uid, [('report_name', '=', report_name)], context=context)
         report = report_obj.browse(cr, uid, idreport[0], context=context)
 
-        return {
+        action = {
             'type': 'ir.actions.report.xml',
             'report_name': report.report_name,
             'report_type': report.report_type,
         }
+
+        if datas.get('datas'):
+            action['datas'] = datas
+
+        return action
