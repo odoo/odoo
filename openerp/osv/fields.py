@@ -1390,11 +1390,12 @@ class property(function):
             res[prop_name] = prop.get(cr, uid, prop_name, obj._name, context=context)
         return res
 
-    def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None, company_id=False):
+    def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
         prop = obj.pool.get('ir.property')
         vids = [obj._name + ',' + str(oid) for oid in  ids]
-        domain = [('fields_id.model', '=', obj._name), ('fields_id.name', 'in', prop_name), ('company_id', '=', company_id)]
-        #domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
+        domain = [('fields_id.model', '=', obj._name), ('fields_id.name', 'in', prop_name)]
+        if context and context.get('company_id'):
+            domain += [('company_id', '=', context.get('company_id'))]
         if vids:
             domain = [('res_id', 'in', vids)] + domain
         return prop.search(cr, uid, domain, context=context)
@@ -1407,7 +1408,9 @@ class property(function):
         def_id = self._field_get(cr, uid, obj._name, prop_name)
         company = obj.pool.get('res.company')
         cid = company._company_default_get(cr, uid, obj._name, def_id, context=context)
-        nids = self._get_by_id(obj, cr, uid, [prop_name], [id], context, company_id=cid)
+        # TODO for trunk: add new parameter company_id to _get_by_id method
+        context_company = dict(context, company_id=cid)
+        nids = self._get_by_id(obj, cr, uid, [prop_name], [id], context_company)
         if nids:
             cr.execute('DELETE FROM ir_property WHERE id IN %s', (tuple(nids),))
 
