@@ -3420,6 +3420,7 @@ class stock_pack_operation(osv.osv):
         self.recompute_rem_qty_from_operation(cr, uid, [res_id], context=context)
         return res_id
 
+
     def recompute_rem_qty_from_operation(self, cr, uid, op_ids, context=None):
         def _create_link_for_product(product_id, qty):
             qty_to_assign = qty
@@ -3432,13 +3433,55 @@ class stock_pack_operation(osv.osv):
                     if qty_to_assign <= 0:
                         break
 
+        def _check_quants_reserve(ops):
+            if ops.package_id and not ops.product_id: 
+                for quant in quant_obj.browse(cr, uid, package_obj.get_content(cr, uid, [ops.package_id]), context=context):
+                    if quant.reservation_id and quant.reservation_id.id in [x.id for x in ops.picking.move_lines] and (not quants_done.get(quant.id)):
+                        #Entire packages means entire quants
+                        if not quants_done.get(quant.id):
+                            quants_done[quant.id] = 0
+                        link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': qty}, context=context)
+            else:
+                # CHECK: Search necessary quants -> might pass through one of the quants_get functions instead
+                zeroquants = [x for x in quants_done.keys() if x == 0]
+                domain = [('reservation_id', 'in', [x.id for x in ops.picking_id.move_lines]), ('id', 'not in', zeroquants),
+                          ('product_id', '=', ops.product_id.id)]
+                if ops.package_id:
+                    domain += [('package_id', 'child_of', ops.package_id.id)]
+                else:
+                    domain += [('package_id', '=', False)]
+                domain += [('owner_id', '=', ops.owner_id.id)]
+                quants = quant_obj.search(cr, uid, domain, context=context)
+                # Process quants until 
+                qty = uom_obj._compute_qty(cr, uid, op.product_uom_id.id, op.product_qty, op.product_id.uom_id.id)
+                for quant in quant_obj.browse(cr, uid, quants, context=context):
+                    quant_qty = quant.qty
+                    if quants_done.get(quant.id):
+                        quant_qty = quants_done[quant.id]
+                    if quant_qty > qty:
+                        qty_todo = qty
+                        quants_done[quant.id] = quant_qty - qty
+                    else:
+                        qty_todo = quant_qty
+                        quants_done[quant.id] = 0
+                    link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': qty_todo}, context=context)
+                    
+                    
+
         link_obj = self.pool.get('stock.move.operation.link')
         uom_obj = self.pool.get('product.uom')
         package_obj = self.pool.get('stock.quant.package')
-        for op in self.browse(cr, uid, op_ids, context=context):
+        quant_obj = self.pool.get('stock.quant')
+        operations = self.browse(cr, uid, op_ids, context=context)
+        operations.sort(key = lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
+        quants_done = {}
+        for op in operations:
             to_unlink_ids = [x.id for x in op.linked_move_operation_ids]
             if to_unlink_ids:
                 link_obj.unlink(cr, uid, to_unlink_ids, context=context)
+            _check_quants_reserve(op)
+        
+        for op in operations:
             if op.product_id:
                 normalized_qty = uom_obj._compute_qty(cr, uid, op.product_uom_id.id, op.product_qty, op.product_id.uom_id.id)
                 _create_link_for_product(op.product_id.id, normalized_qty)
