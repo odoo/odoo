@@ -2793,7 +2793,7 @@ class stock_warehouse(osv.osv):
 
         #create view location for warehouse
         wh_loc_id = location_obj.create(cr, uid, {
-                'name': _(vals.get('name')),
+                'name': _(vals.get('code')),
                 'usage': 'view',
                 'location_id': data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_locations')[1]
             }, context=context)
@@ -2950,14 +2950,14 @@ class stock_warehouse(osv.osv):
             'pick_pack_ship': (_('Pick + Pack + Ship'), [(warehouse.lot_stock_id, warehouse.wh_pack_stock_loc_id, warehouse.pick_type_id.id), (warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id.id), (warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id.id)]),
         }
 
-    def _handle_renaming(self, cr, uid, warehouse, name, context=None):
+    def _handle_renaming(self, cr, uid, warehouse, name, code, context=None):
         location_obj = self.pool.get('stock.location')
         route_obj = self.pool.get('stock.location.route')
         pull_obj = self.pool.get('procurement.rule')
         push_obj = self.pool.get('stock.location.path')
         #rename location
         location_id = warehouse.lot_stock_id.location_id.id
-        location_obj.write(cr, uid, location_id, {'name': name}, context=context)
+        location_obj.write(cr, uid, location_id, {'name': code}, context=context)
         #rename route and push-pull rules
         for route in warehouse.route_ids:
             route_obj.write(cr, uid, route.id, {'name': route.name.replace(warehouse.name, name, 1)}, context=context)
@@ -2985,12 +2985,13 @@ class stock_warehouse(osv.osv):
                 self.switch_location(cr, uid, warehouse.id, warehouse, vals.get('reception_steps', False), vals.get('delivery_steps', False), context=context)
                 # switch between route
                 self.change_route(cr, uid, ids, warehouse, vals.get('reception_steps', False), vals.get('delivery_steps', False), context=context_with_inactive)
+                warehouse.refresh()
             if vals.get('code') or vals.get('name'):
                 name = warehouse.name
                 #rename sequence
                 if vals.get('name'):
-                    name = vals.get('name')
-                    self._handle_renaming(cr, uid, warehouse, name, context=context_with_inactive)
+                    name = vals.get('name', warehouse.name)
+                self._handle_renaming(cr, uid, warehouse, name, vals.get('code', warehouse.code), context=context_with_inactive)
                 seq_obj.write(cr, uid, warehouse.in_type_id.sequence_id.id, {'name': name + _(' Sequence in'), 'prefix': vals.get('code', warehouse.code) + '\IN\\'}, context=context)
                 seq_obj.write(cr, uid, warehouse.out_type_id.sequence_id.id, {'name': name + _(' Sequence out'), 'prefix': vals.get('code', warehouse.code) + '\OUT\\'}, context=context)
                 seq_obj.write(cr, uid, warehouse.pack_type_id.sequence_id.id, {'name': name + _(' Sequence packing'), 'prefix': vals.get('code', warehouse.code) + '\PACK\\'}, context=context)
