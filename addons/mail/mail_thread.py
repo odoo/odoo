@@ -598,7 +598,7 @@ class mail_thread(osv.AbstractModel):
                 thread_id = False
         if not (thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new')):
             raise ValueError(
-                'No possible route found for incoming message from %s to %s (Message-Id %s:).'
+                'No possible route found for incoming message from %s to %s (Message-Id %s:). '
                 'Create an appropriate mail.alias or force the destination model.' %
                 (email_from, email_to, message_id)
             )
