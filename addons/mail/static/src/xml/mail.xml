@@ -260,7 +260,8 @@
                 <!-- message itself -->
                 <div class="oe_msg_content">
                     <h1 t-if="(widget.show_record_name or widget.subject) and !widget.thread_level" class="oe_msg_title">
-                        <a t-if="widget.options.show_link and widget.show_record_name" class="oe_mail_action_model" t-attf-href="#model=#{widget.model}&amp;id=#{widget.res_id}">
+                        <a t-if="widget.options.show_link and widget.show_record_name" class="oe_mail_action_model"
+                            t-attf-href="#action=mail.action_mail_redirect&amp;model=#{widget.model}&amp;res_id=#{widget.res_id}">
                             <t t-esc="widget.record_name"/>
                         </a>
                         <span t-if="!widget.options.show_link and widget.show_record_name"><t t-esc="widget.record_name"/></span>
