@@ -755,6 +755,10 @@ class view(osv.osv):
                 # running index by tag type, for XPath query generation
                 indexes = collections.defaultdict(lambda: 0)
                 for child in e.iterchildren(tag=etree.Element):
+                    if child.get('data-oe-xpath'):
+                        # injected by view inheritance, skip otherwise
+                        # generated xpath is incorrect
+                        continue
                     indexes[child.tag] += 1
                     self.distribute_branding(child, distributed_branding,
                                              parent_xpath=node_path,
