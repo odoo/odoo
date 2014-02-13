@@ -916,6 +916,10 @@ class stock_picking(osv.osv):
             return backorder_id
         return False
 
+    def recheck_availability(self, cr, uid, picking_ids, context=None):
+        self.action_assign(cr, uid, picking_ids, context=context)
+        self.do_prepare_partial(cr, uid, picking_ids, context=context)
+
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
         #TODO refactore me
         context = context or {}
@@ -1892,7 +1896,6 @@ class stock_move(osv.osv):
         picking_obj = self.pool.get("stock.picking")
         quant_obj = self.pool.get("stock.quant")
         pack_op_obj = self.pool.get("stock.pack.operation")
-        pack_obj = self.pool.get("stock.quant.package")
         todo = [move.id for move in self.browse(cr, uid, ids, context=context) if move.state == "draft"]
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
