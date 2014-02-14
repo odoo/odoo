@@ -156,6 +156,7 @@ ropenerp.testing.section('jsonrpc-auth', {
     rpc: "rpc",
 },
 function (test) {
+    return;
     test('basic-auth', {asserts: 3}, function () {
         var db = ropenerp.session.db;
         var session = new openerp.Session(null, null, {override_session: true});

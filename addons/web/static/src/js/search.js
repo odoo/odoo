@@ -85,7 +85,7 @@ my.SearchQuery = B.Collection.extend({
                     && facet.get('field') === model.get('field');
             });
             if (previous) {
-                previous.values.add(model.get('values'));
+                previous.values.add(model.get('values'), _.omit(options, 'at', 'merge'));
                 return;
             }
             B.Collection.prototype.add.call(this, model, options);
@@ -483,7 +483,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             html: true,
             autoFocus: true,
             minLength: 1,
-            delay: 0,
+            delay: 250,
         }).data('autocomplete');
 
         // MonkeyPatch autocomplete instance
