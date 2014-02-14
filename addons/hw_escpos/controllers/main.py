@@ -95,7 +95,6 @@ class EscposDriver(Thread):
             _logger.warning('ESC/POS Device Disconnected: '+message)
 
     def run(self):
-        self.queue = Queue()
         while True:
             try:
                 timestamp, task, data = self.queue.get(True)
