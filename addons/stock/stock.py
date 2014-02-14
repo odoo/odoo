@@ -930,74 +930,93 @@ class stock_picking(osv.osv):
         existing_package_ids = pack_operation_obj.search(cr, uid, [('picking_id', 'in', picking_ids)], context=context)
         if existing_package_ids:
             pack_operation_obj.unlink(cr, uid, existing_package_ids, context)
-
+        
         for picking in self.browse(cr, uid, picking_ids, context=context):
+            packages = []
+            reserved_move = {}
+            qtys_remaining = {}
+            
+            #Calculate packages, reserved quants, qtys of this picking's moves
             for move in picking.move_lines:
                 if move.state not in ('assigned', 'confirmed'):
                     continue
-
-                #Check which of the reserved quants are entirely in packages (can be in separate method)
-                packages = list(set([x.package_id for x in move.reserved_quant_ids if x.package_id]))
-                done_packages = []
-                for pack in packages:
-                    cont = True
-                    good_pack = False
-                    test_pack = pack
-                    while cont:
-                        quants = pack_obj.get_content(cr, uid, [test_pack.id], context=context)
-                        if all([x.reservation_id.id == move.id for x in quant_obj.browse(cr, uid, quants, context=context) if x.reservation_id]):
-                            good_pack = test_pack.id
-                            if test_pack.parent_id:
-                                test_pack = test_pack.parent_id
-                            else:
-                                cont = False
+                packages += [x.package_id for x in move.reserved_quant_ids if x.package_id]
+                reserved_move[move.id] = set([x.id for x in move.reserved_quant_ids])
+                if move.state == 'assigned':
+                    qty = move.product_qty
+                else:
+                    qty = 0
+                    for quant in move.reserved_quant_ids:
+                        qty += quant.qty
+                #Add qty to qtys remaining
+                if qtys_remaining.get(move.product_id.id):
+                    qtys_remaining[move.product_id.id] += qty
+                else:
+                    qtys_remaining[move.product_id.id] = qty
+            
+            # Try to find as much as possible top-level packages that can be moved
+            done_packages = []
+            for pack in packages:
+                cont = True
+                good_pack = False
+                test_pack = pack
+                while cont:
+                    quants = pack_obj.get_content(cr, uid, [test_pack.id], context=context)
+                    if all([x.reservation_id.id in [x.id for x in picking.move_lines] for x in quant_obj.browse(cr, uid, quants, context=context) if x.reservation_id]):
+                        good_pack = test_pack.id
+                        if test_pack.parent_id:
+                            test_pack = test_pack.parent_id
                         else:
                             cont = False
-                    if good_pack:
-                        done_packages.append(good_pack)
-                done_packages = list(set(done_packages))
+                    else:
+                        cont = False
+                if good_pack:
+                    done_packages.append(good_pack)
+            done_packages = list(set(done_packages))
 
-                #Create package operations
-                reserved = set([x.id for x in move.reserved_quant_ids])
-                remaining_qty = move.product_qty
-                for pack in pack_obj.browse(cr, uid, done_packages, context=context):
-                    quantl = pack_obj.get_content(cr, uid, [pack.id], context=context)
-                    for quant in quant_obj.browse(cr, uid, quantl, context=context):
-                        remaining_qty -= quant.qty
-                    quants = set(pack_obj.get_content(cr, uid, [pack.id], context=context))
-                    reserved -= quants
-                    pack_operation_obj.create(cr, uid, {
+            # Create pack operations for the top-level packages found
+            for pack in pack_obj.browse(cr, uid, done_packages, context=context):
+                quants = pack_obj.get_content(cr, uid, [pack.id], context=context)
+                for quant in quant_obj.browse(cr, uid, quants, context=context):
+                    reserved_move[quant.reservation_id.id] -= set([quant.id])
+                    qtys_remaining[quant.product_id.id] -= quant.qty
+                pack_operation_obj.create(cr, uid, {
                         'picking_id': picking.id,
                         'package_id': pack.id,
                         'product_qty': 1.0,
                     }, context=context)
+            
+            # Go through all remaining reserved quants and group by product, package, lot, owner
+            qtys_grouped = {}
+            for move in reserved_move.keys():
+                for quant in quant_obj.browse(cr, uid, list(reserved_move[move]), context=context):
+                    qtys_remaining[quant.product_id.id] -= quant.qty
+                    key = (quant.product_id.id, quant.package_id.id, quant.lot_id.id, quant.owner_id.id)
+                    if qtys_grouped.get(key):
+                        qtys_grouped[key] += quant.qty
+                    else:
+                        qtys_grouped[key] = quant.qty
+            
+            # Add remaining qtys (in cases of force_assign for example)
+            for product in qtys_remaining.keys():
+                if qtys_remaining[product] > 0:
+                    key = (product, False, False, False)
+                    if qtys_grouped.get(key):
+                        qtys_grouped[key] += qtys_remaining[product]
+                    else:
+                        qtys_grouped[key] = qtys_remaining[product]
 
-                yet_to_reserve = list(reserved)
-                #Create operations based on quants
-                for quant in quant_obj.browse(cr, uid, yet_to_reserve, context=context):
-                    qty = min(quant.qty, move.product_qty)
-                    remaining_qty -= qty
-                    pack_operation_obj.create(cr, uid, {
-                        'picking_id': picking.id,
-                        'product_qty': qty,
-                        'product_id': quant.product_id.id,
-                        'lot_id': quant.lot_id and quant.lot_id.id or False,
-                        'product_uom_id': quant.product_id.uom_id.id,
-                        'owner_id': quant.owner_id and quant.owner_id.id or False,
-                        'cost': quant.cost,
-                        'package_id': quant.package_id and quant.package_id.id or False,
-                    }, context=context)
-                if move.state == 'assigned' and remaining_qty > 0:
-                    #only add a line with remaining qty if we have all qty reserved (move is assigned)
-                    #otherwise we may be in a case where we do a partial delivery with only a few
-                    #available products and we don't want to propose to transfer everything
-                    pack_operation_obj.create(cr, uid, {
-                        'picking_id': picking.id,
-                        'product_qty': remaining_qty,
-                        'product_id': move.product_id.id,
-                        'product_uom_id': move.product_id.uom_id.id,
-                        'cost': move.product_id.standard_price,
-                    }, context=context)
+            # Create the necessary operations for the grouped quants and remaining qtys
+            for key in qtys_grouped.keys():
+                pack_operation_obj.create(cr, uid, {
+                                        'picking_id': picking.id, 
+                                        'product_qty': qtys_grouped[key], 
+                                        'product_id': key[0],
+                                        'package_id': key[1], 
+                                        'lot_id': key[2],
+                                        'owner_id': key[3], 
+                                        'product_uom_id': self.pool.get("product.product").browse(cr, uid, key[0], context=context).uom_id.id, 
+                                        }, context=context)
 
     def do_unreserve(self, cr, uid, picking_ids, context=None):
         """
