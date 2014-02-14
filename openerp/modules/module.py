@@ -332,6 +332,7 @@ def get_test_modules(module):
 
     # include submodules too
     result = [mod_obj for name, mod_obj in sys.modules.iteritems()
+              if mod_obj # mod_obj can be None
               if name.startswith(module)]
     return result
 
