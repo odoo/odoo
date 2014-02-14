@@ -921,7 +921,6 @@ class stock_picking(osv.osv):
         self.do_prepare_partial(cr, uid, picking_ids, context=context)
 
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
-        #TODO refactore me
         context = context or {}
         pack_operation_obj = self.pool.get('stock.pack.operation')
         pack_obj = self.pool.get("stock.quant.package")
