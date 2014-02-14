@@ -1409,10 +1409,15 @@ instance.web.WebClient = instance.web.Client.extend({
         var state = $.bbq.getState(true);
         if (_.isEmpty(state) || state.action == "login") {
             self.menu.has_been_loaded.done(function() {
-                var first_menu_id = self.menu.$el.find("a:first").data("menu");
-                if(first_menu_id) {
-                    self.menu.menu_click(first_menu_id);
-                }
+                new instance.web.Model("res.users").call("read", [self.session.uid, ["action_id"]]).done(function(data) {
+                    var first_menu_id = self.menu.$el.find("a:first").data("menu");
+                    if(first_menu_id)
+                        self.menu.menu_click(first_menu_id);
+
+                    if(data.action_id) {
+                        self.action_manager.do_action(data.action_id[0]);
+                    }
+                });
             });
         } else {
             $(window).trigger('hashchange');
