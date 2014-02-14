@@ -22,18 +22,15 @@
                     input: _t("Page Title"),
                     init: function () {
                         var $group = this.$dialog.find("div.form-group");
-                        $group.find("label").removeClass("col-sm-3").addClass("col-sm-4");
-                        $group.find("div").removeClass("col-sm-9").addClass("col-sm-8");
                         $group.removeClass("mb0");
 
                         var $add = $(
                             '<div class="form-group mb0">'+
-                                '<label for="page-name" class="col-sm-4 control-label"></label>'+
-                                '<div class="col-sm-8 text-left">'+
-                                '    <input type="checkbox" class="form-control" style="width: 24px" checked="checked" required="required"/>'+
-                                '</div>'+
+                                '<label class="col-sm-offset-3 col-sm-9 text-left">'+
+                                '    <input type="checkbox" checked="checked" required="required"/> '+
+                                '</label>'+
                             '</div>');
-                        $add.find('label').text(_t("Add page in menu"));
+                        $add.find('label').append(_t("Add page in menu"));
                         $group.after($add);
                     }
                 }).then(function (val, field, $dialog) {

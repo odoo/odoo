@@ -101,7 +101,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             model, id  = request.registry["ir.model.data"].get_object_reference(request.cr, request.uid, 'website', 'main_menu')
             request.registry['website.menu'].create(request.cr, request.uid, {
                     'name': path,
-                    'url': path,
+                    'url': "/page/" + xml_id,
                     'parent_id': id,
                 }, context=request.context)
         url = "/page/" + xml_id
