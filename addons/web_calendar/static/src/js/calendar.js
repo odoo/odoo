@@ -340,6 +340,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
                     return evt[fld][1];
                 return evt[fld];
             });
+            res_text = _.filter(res_text, function(e){return !_.isEmpty(e);});
         }
         if (!date_stop && date_delay) {
             date_stop = date_start.clone().addHours(date_delay);
