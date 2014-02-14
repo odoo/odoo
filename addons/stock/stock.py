@@ -3488,6 +3488,8 @@ class stock_pack_operation(osv.osv):
             elif op.package_id:
                 for product_id, qty in package_obj._get_all_products_quantities(cr, uid, op.package_id.id, context=context).items():
                     _create_link_for_product(product_id, qty)
+#         for op in operations:
+#             print [(y.qty, y.operation_id, y.move_id) for y in op.linked_move_operation_ids]
 
     def process_packaging(self, cr, uid, operation, quants, context=None):
         ''' Process the packaging of a given operation, after the quants have been moved. If there was not enough quants found
