@@ -50,8 +50,6 @@ ad_paths = []
 # Modules already loaded
 loaded = []
 
-_logger = logging.getLogger(__name__)
-
 class AddonsImportHook(object):
     """
     Import hook to load OpenERP addons from multiple paths.
