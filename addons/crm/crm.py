@@ -28,9 +28,11 @@ from openerp.osv import fields
 from openerp.osv import osv
 
 AVAILABLE_PRIORITIES = [
-    ('0', 'Normal'),
-    ('1', 'High'),
-    ('2', 'Highest'),
+    ('0', 'Very Low'),
+    ('1', 'Low'),
+    ('2', 'Normal'),
+    ('3', 'High'),
+    ('4', 'Very High'),
 ]
 
 class crm_case_channel(osv.osv):

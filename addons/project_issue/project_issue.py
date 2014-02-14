@@ -260,7 +260,7 @@ class project_issue(osv.Model):
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
         'categ_ids': fields.many2many('project.category', string='Tags'),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
+        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
                         track_visibility='onchange',
@@ -295,7 +295,7 @@ class project_issue(osv.Model):
         'active': 1,
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
-        'priority': crm.AVAILABLE_PRIORITIES[2][0],
+        'priority': '1',
         'kanban_state': 'normal',
         'date_last_stage_update': fields.datetime.now,
         'user_id': lambda obj, cr, uid, context: uid,
@@ -309,9 +309,6 @@ class project_issue(osv.Model):
         """Set lead priority
         """
         return self.write(cr, uid, ids, {'priority' : str(priority)})
-
-    def set_kanban_state(self, cr, uid, ids, state, context=None):
-        self.write(cr, uid, ids, {'kanban_state': state }, context=context);
 
     def copy(self, cr, uid, id, default=None, context=None):
         issue = self.read(cr, uid, id, ['name'], context=context)

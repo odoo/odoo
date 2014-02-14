@@ -23,11 +23,9 @@ from openerp.osv import fields,osv
 from openerp import tools
 
 AVAILABLE_PRIORITIES = [
-    ('5', 'Lowest'),
-    ('4', 'Low'),
-    ('3', 'Normal'),
-    ('2', 'High'),
-    ('1', 'Highest')
+   ('0', 'Low'),
+   ('1', 'Normal'),
+   ('2', 'High')
 ]
 
 

@@ -752,7 +752,7 @@ class task(osv.osv):
         'active': fields.function(_is_template, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Summary', size=128, required=True, select=True),
         'description': fields.text('Description'),
-        'priority': fields.selection([('0','Medium'), ('1','Important'), ('2','Very important')], 'Priority', select=True),
+        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'stage_id': fields.many2one('project.task.type', 'Stage', track_visibility='onchange',
                         domain="[('project_ids', '=', project_id)]"),
@@ -811,7 +811,7 @@ class task(osv.osv):
         'project_id': _get_default_project_id,
         'date_last_stage_update': fields.datetime.now,
         'kanban_state': 'normal',
-        'priority': '2',
+        'priority': '1',
         'progress': 0,
         'sequence': 10,
         'active': True,
@@ -821,12 +821,6 @@ class task(osv.osv):
     }
     _order = "priority, sequence, date_start, name, id"
     
-    def set_kanban_state(self, cr, uid, ids, state, context=None):
-        self.write(cr, uid, ids, {'kanban_state': state }, context=context);
-        
-    def set_priority(self, cr, uid, ids, priority, context=None):
-        return self.write(cr, uid, ids, {'priority' : str(priority)}, context=context)
-
     def _check_recursion(self, cr, uid, ids, context=None):
         for id in ids:
             visited_branch = set()

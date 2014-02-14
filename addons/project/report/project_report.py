@@ -48,7 +48,7 @@ class report_project_task_user(osv.osv):
                                        help="Number of Days to Open the task"),
         'delay_endings_days': fields.float('Overpassed Deadline', digits=(16,2), readonly=True),
         'nbr': fields.integer('# of tasks', readonly=True),
-        'priority': fields.selection([('4', 'Very Low'), ('3', 'Low'), ('2', 'Medium'), ('1', 'Urgent'), ('0', 'Very urgent')],
+        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')],
             string='Priority', readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')],'Status', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),

@@ -444,9 +444,6 @@ class crm_lead(format_address, osv.osv):
             self.write(cr, uid, [case.id], data, context=context)
         return True
 
-    def set_priority(self, cr, uid, ids, priority, context=None):
-        return self.write(cr, uid, ids, {'priority': str(priority)}, context=context)
-
     def _merge_get_result_type(self, cr, uid, opps, context=None):
         """
         Define the type of the result of the merge.  If at least one of the
