@@ -1265,7 +1265,7 @@ instance.web_kanban.Legend = instance.web_kanban.AbstractField.extend({
         this._super.apply(this, arguments);
         this.name = $node.attr('name')
         this.parent = parent;
-        this.legend = new instance.web.Legend(this, parent.view.dataset, this.options);
+        this.legend = new instance.web.Legend(this, parent.view.dataset);
     },
     reload_record: function(){
         this.parent.do_reload();
@@ -1280,7 +1280,8 @@ instance.web_kanban.Legend = instance.web_kanban.AbstractField.extend({
 
 
 instance.web_kanban.fields_registry = new instance.web.Registry({});
-instance.web_kanban.fields_registry.add('legend','instance.web_kanban.Legend');
+instance.web_kanban.fields_registry.add('priority','instance.web_kanban.Legend');
+instance.web_kanban.fields_registry.add('dropdown_selection','instance.web_kanban.Legend');
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

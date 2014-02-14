@@ -2332,14 +2332,13 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
 });
 
 instance.web.Legend = instance.web.Widget.extend({
-    init: function (parent, dataset, options) {
+    init: function (parent, dataset) {
         this._super(parent);
         this.parent = parent;
         this.dataset = dataset;
-        this.options = options; 
     },
     prepare_kanban_state_legend: function(){
-    	return [{ 'name': 'normal', 'legend_name': ' Normal', 'legend_class': 'btn-default' },
+        return [{ 'name': 'normal', 'legend_name': ' Normal', 'legend_class': 'btn-default' },
                 { 'name': 'blocked', 'legend_name': ' Blocked', 'legend_class': 'btn-danger' },
                 { 'name': 'done', 'legend_name': ' Done', 'legend_class': 'btn-success' }]
     },
@@ -2362,7 +2361,7 @@ instance.web.Legend = instance.web.Widget.extend({
         return data;
     },
     prepare_data: function() {
-    	var self =this;
+        var self =this;
         if (this.parent.name == 'kanban_state'){
             return self.prepare_kanban_state_legend();
         }
@@ -2388,8 +2387,9 @@ instance.web.Legend = instance.web.Widget.extend({
         var self = this;
         var li = $(e.target).closest( "li" );
         if (li.length){
-            var value = li.data('value');
-            return self.dataset.call_button(self.options.action, [self.record_id, value, self.dataset.get_context()]).done(self.parent.reload_record.bind(self.parent));
+            var value = {};
+            value[self.parent.name] = String(li.data('value'));
+            return self.dataset._model.call('write', [[self.record_id], value, self.dataset.get_context()]).done(self.parent.reload_record.bind(self.parent));
         }
     }
 });
@@ -2397,7 +2397,7 @@ instance.web.Legend = instance.web.Widget.extend({
 instance.web.form.Legend = instance.web.form.FieldChar.extend({
     init: function (field_manager, node) {
         this._super(field_manager, node);
-        this.legend = new instance.web.Legend(this, this.view.dataset, py.eval(node.attrs.options));
+        this.legend = new instance.web.Legend(this, this.view.dataset);
     },
     reload_record: function(){
         this.view.reload();
@@ -5965,7 +5965,8 @@ instance.web.form.widgets = new instance.web.Registry({
     'monetary': 'instance.web.form.FieldMonetary',
     'many2many_checkboxes': 'instance.web.form.FieldMany2ManyCheckBoxes',
     'x2many_counter': 'instance.web.form.X2ManyCounter',
-    'legend':'instance.web.form.Legend'
+    'priority':'instance.web.form.Legend',
+    'dropdown_selection':'instance.web.form.Legend'
 });
 
 /**
