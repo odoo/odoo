@@ -360,9 +360,9 @@ def run_unit_tests(module_name, dbname):
     r = True
     for m in mods:
         suite = unittest2.TestSuite()
-        for t in unittest2.TestLoader().loadTestsFromModule(m):
-            suite.addTest(t)
-        _logger.log(logging.INFO, 'module %s: running test %s.', module_name, m.__name__)
+        suite.addTests(unittest2.TestLoader().loadTestsFromModule(m))
+        _logger.info('module %s: running test %s.', module_name, m.__name__)
+
         result = unittest2.TextTestRunner(verbosity=2, stream=TestStream()).run(suite)
         if not result.wasSuccessful():
             r = False
