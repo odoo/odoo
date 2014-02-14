@@ -751,7 +751,7 @@ class purchase_order(osv.osv):
                     move = stock_move.create(cr, uid, vals, context=context)
                     todo_moves.append(move)
 
-        stock_move.action_confirm(cr, uid, todo_moves)
+        todo_moves = stock_move.action_confirm(cr, uid, todo_moves)
         stock_move.force_assign(cr, uid, todo_moves)
 
     def test_moves_done(self, cr, uid, ids, context=None):

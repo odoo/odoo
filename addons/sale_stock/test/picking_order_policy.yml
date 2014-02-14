@@ -4,6 +4,17 @@
   !context
     uid: 'res_sale_stock_salesman'
 -
+  Create a new SO to be sure we don't have one with product that can explode in mrp
+-
+  !record {model: sale.order, id: sale_order_service}:
+    partner_id: base.res_partner_18
+    partner_invoice_id: base.res_partner_18
+    partner_shipping_id: base.res_partner_18
+    user_id: base.user_root
+    pricelist_id: product.list0
+    warehouse_id: stock.warehouse0
+    order_policy: picking
+-
   Add SO line with service type product in SO to check flow which contain service type product in SO(BUG#1167330).
 -
   !record {model: sale.order.line, id: sale_order_1}:
@@ -12,27 +23,37 @@
     product_uom_qty: 1.0
     product_uom: 1
     price_unit: 150.0
-    order_id: sale.sale_order_6
+    order_id: sale_order_service
+-
+  Add a second SO line with a normal product
+-
+  !record {model: sale.order.line, id: sale_order_2}:
+    name: 'Mouse Optical'
+    product_id: product.product_product_10
+    product_uom_qty: 1.0
+    product_uom: 1
+    price_unit: 150.0
+    order_id: sale_order_service
 -
   First I check the total amount of the Quotation before Approved.
 -
-  !assert {model: sale.order, id: sale.sale_order_6, string: The amount of the Quotation is not correctly computed}:
+  !assert {model: sale.order, id: sale_order_service, string: The amount of the Quotation is not correctly computed}:
     - sum([l.price_subtotal for l in order_line]) == amount_untaxed
 - 
   I set an explicit invoicing partner that is different from the main SO Customer
 -
-  !python {model: sale.order, id: sale.sale_order_6}: |
-    order = self.browse(cr, uid, ref("sale.sale_order_6"))
+  !python {model: sale.order, id: sale_order_service}: |
+    order = self.browse(cr, uid, ref("sale_order_service"))
     order.write({'partner_invoice_id': ref('base.res_partner_address_29')})
 -
   I confirm the quotation with Invoice based on deliveries policy.
 -
-  !workflow {model: sale.order, action: order_confirm, ref: sale.sale_order_6}
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_service}
 -
   I check that invoice should not created before dispatch delivery.
 -
   !python {model: sale.order}: |
-    order = self.pool.get('sale.order').browse(cr, uid, ref("sale.sale_order_6"))
+    order = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_service"))
     assert order.state == 'progress', 'Order should be in inprogress.'
     assert len(order.invoice_ids) == False, "Invoice should not created."
 -
@@ -42,7 +63,7 @@
     from datetime import datetime, timedelta
     from dateutil.relativedelta import relativedelta
     from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-    order = self.browse(cr, uid, ref("sale.sale_order_6"))
+    order = self.browse(cr, uid, ref("sale_order_service"))
     for order_line in order.order_line:
         if order_line.product_id.type == 'product':
             procurement = order_line.procurement_ids[0]
@@ -74,7 +95,7 @@
     from datetime import datetime, timedelta
     from dateutil.relativedelta import relativedelta
     from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-    sale_order = self.browse(cr, uid, ref("sale.sale_order_6"))
+    sale_order = self.browse(cr, uid, ref("sale_order_service"))
     assert sale_order.picking_ids, "Delivery order is not created."
     for picking in sale_order.picking_ids:
       assert picking.state == "auto" or "confirmed", "Delivery order should be in 'Waitting Availability' state."
@@ -103,7 +124,7 @@
   Now, I dispatch delivery order.
 -
   !python {model: stock.picking}: |
-    order = self.pool.get('sale.order').browse(cr, uid, ref("sale.sale_order_6"))
+    order = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_service"))
     for pick in order.picking_ids:
         data = pick.force_assign()
         if data == True:
@@ -117,7 +138,7 @@
   I check sale order to verify shipment.
 -
   !python {model: sale.order}: |
-    order = self.pool.get('sale.order').browse(cr, uid, ref("sale.sale_order_6"))
+    order = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_service"))
     assert order.shipped == True, "Sale order is not Delivered."
     #assert order.state == 'progress', 'Order should be in inprogress.'
     assert len(order.invoice_ids) == False, "Invoice should not created on dispatch delivery order."
@@ -126,7 +147,7 @@
 -
   !python {model: stock.invoice.onshipping}: |
     sale = self.pool.get('sale.order')
-    sale_order = sale.browse(cr, uid, ref("sale.sale_order_6"))
+    sale_order = sale.browse(cr, uid, ref("sale_order_service"))
     ship_ids = [x.id for x in sale_order.picking_ids]
     wiz_id = self.create(cr, uid, {'journal_id': ref('account.sales_journal')},
       {'active_ids': ship_ids, 'active_model': 'stock.picking'})
@@ -135,7 +156,7 @@
   I check the invoice details after dispatched delivery.
 -
   !python {model: sale.order}: |
-    order = self.browse(cr, uid, ref("sale.sale_order_6"))
+    order = self.browse(cr, uid, ref("sale_order_service"))
     assert order.invoice_ids, "Invoice is not created."
     ac = order.partner_invoice_id.property_account_receivable.id
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)])
@@ -166,7 +187,7 @@
   I open the Invoice.
 -
   !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale.sale_order_6"))
+    so = self.browse(cr, uid, ref("sale_order_service"))
     account_invoice_obj = self.pool.get('account.invoice')
     for invoice in so.invoice_ids:
       account_invoice_obj.signal_invoice_open(cr, uid, [invoice.id])
@@ -175,7 +196,7 @@
 -
   !python {model: account.invoice}: |
     sale_order = self.pool.get('sale.order')
-    order = sale_order.browse(cr, uid, ref("sale.sale_order_6"))
+    order = sale_order.browse(cr, uid, ref("sale_order_service"))
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', order.company_id.id)], limit=1)
     for invoice in order.invoice_ids:
         invoice.pay_and_reconcile(
@@ -192,7 +213,7 @@
   I check the order after paid invoice.
 -
   !python {model: sale.order}: |
-    order = self.browse(cr, uid, ref("sale.sale_order_6"))
+    order = self.browse(cr, uid, ref("sale_order_service"))
     assert order.invoiced == True, "Sale order is not invoiced."
     assert order.invoiced_rate == 100, "Invoiced progress is not 100%."
     assert order.state == 'done', 'Order should be in closed.'
@@ -203,7 +224,7 @@
     import os
     import openerp.report
     from openerp import tools
-    data, format = openerp.report.render_report(cr, uid, [ref('sale.sale_order_6')], 'sale.order', {}, {})
+    data, format = openerp.report.render_report(cr, uid, [ref('sale_order_service')], 'sale.order', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'sale-sale_order.'+format), 'wb+').write(data)
 
