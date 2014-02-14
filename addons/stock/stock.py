@@ -1842,6 +1842,16 @@ class stock_move(osv.osv):
                 fallback_domain = prev_quant_ids and [('id', 'not in', prev_quant_ids)] or []
                 #we always keep the quants already assigned and try to find the remaining quantity on quants not assigned only
                 main_domain = [('reservation_id', '=', False), ('qty', '>', 0)]
+                #Check for original moves
+                move_orig_ids = []
+                result = False
+                move2 = move
+                while move2:
+                    move_orig_ids += [x.id for x in move2.move_orig_ids]
+                    move2 = move2.split_from
+                if move_orig_ids:
+                    main_domain += [('history_ids', 'in', move_orig_ids)]
+
                 #if the move is returned from another, restrict the choice of quants to the ones that follow the returned move
                 if move.origin_returned_move_id:
                     main_domain += [('history_ids', 'in', move.origin_returned_move_id.id)]
