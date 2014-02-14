@@ -5,9 +5,9 @@
 _.str.toBoolElse = function(str, elseValues, trueValues, falseValues) {
       var ret = _.str.toBool(str, trueValues, falseValues);
       if (_.isUndefined(ret)) {
-        return elseValues
+        return elseValues;
       }
-      return ret
+      return ret;
 };
 
 openerp.web_calendar = function(instance) {
@@ -37,7 +37,7 @@ openerp.web_calendar = function(instance) {
     }
 
     function isNullOrUndef(value) {
-        return _.isUndefined(value) || _.isNull(value)
+        return _.isUndefined(value) || _.isNull(value);
     }
     
     instance.web.views.add('calendar', 'instance.web_calendar.CalendarView');
@@ -60,7 +60,6 @@ openerp.web_calendar = function(instance) {
             this.range_start = null;
             this.range_stop = null;
             this.selected_filters = [];
-                        
         },
 
         set_default_options: function(options) {
@@ -72,7 +71,9 @@ openerp.web_calendar = function(instance) {
 
         destroy: function() {
             this.$calendar.fullCalendar('destroy');
-            this.$small_calendar.datepicker('destroy');
+            if (this.$small_calendar){
+                this.$small_calendar.datepicker('destroy');
+            }
             this._super.apply(this, arguments);
         },
 
@@ -112,21 +113,21 @@ openerp.web_calendar = function(instance) {
             this.date_start = attrs.date_start;     // Field name of starting date field
             this.date_delay = attrs.date_delay;     // duration
             this.date_stop = attrs.date_stop;
-            this.all_day = attrs.all_day; 
-            this.attendee_people = attrs.attendee;  
+            this.all_day = attrs.all_day;
+            this.attendee_people = attrs.attendee;
             this.how_display_event = '';
            
             if (!isNullOrUndef(attrs.quick_create_instance)) {
-                self.quick_create_instance = 'instance.' + attrs.quick_create_instance;                
+                self.quick_create_instance = 'instance.' + attrs.quick_create_instance;
             }
                 
             //if quick_add = False, we don't allow quick_add
             //if quick_add = not specified in view, we use the default quick_create_instance
             //if quick_add = is NOT False and IS specified in view, we this one for quick_create_instance'   
             
-            this.quick_add_pop = (isNullOrUndef(attrs.quick_add) || _.str.toBoolElse(attrs.quick_add,true) );            
+            this.quick_add_pop = (isNullOrUndef(attrs.quick_add) || _.str.toBoolElse(attrs.quick_add,true) );
             if (this.quick_add_pop && !isNullOrUndef(attrs.quick_add)) {
-                self.quick_create_instance = 'instance.' + attrs.quick_add;                
+                self.quick_create_instance = 'instance.' + attrs.quick_add;
             }
             // The display format which will be used to display the event where fields are between "[" and "]"
             if (!isNullOrUndef(attrs.display)) {
@@ -135,18 +136,18 @@ openerp.web_calendar = function(instance) {
             
             // If this field is set ot true, we don't open the event in form view, but in a popup with the view_id passed by this parameter
             if (isNullOrUndef(attrs.event_open_popup) || !_.str.toBoolElse(attrs.event_open_popup,true)) {
-                this.open_popup_action = false; 
+                this.open_popup_action = false;
             }
             else {
                 this.open_popup_action = attrs.event_open_popup;
             }
             
-            // If this field is set to true, we will use de calendar_friends model as filter and not the color field.
-            this.useContacts = (!isNullOrUndef(attrs.use_contacts) && _.str.toBool(attrs.use_contacts)); 
+            // If this field is set to true, we will use the calendar_friends model as filter and not the color field.
+            this.useContacts = (!isNullOrUndef(attrs.use_contacts) && _.str.toBool(attrs.use_contacts));
 
             // If this field is set ot true, we don't add itself as an attendee when we use attendee_people to add each attendee icon on an event
             // The color is the color of the attendee, so don't need to show again that it will be present
-            this.colorIsAttendee = (!(isNullOrUndef(attrs.color_is_attendee) || !_.str.toBoolElse(attrs.color_is_attendee,true))); 
+            this.colorIsAttendee = (!(isNullOrUndef(attrs.color_is_attendee) || !_.str.toBoolElse(attrs.color_is_attendee, true)));
                 
 /*
             Will be more logic to do it in futur, but see below to stay Retro-compatible
@@ -164,14 +165,14 @@ openerp.web_calendar = function(instance) {
             }            
 */
             if (isNullOrUndef(attrs.avatar_model)) {
-                this.avatar_model = null; 
+                this.avatar_model = null;
             }
             else {
                 this.avatar_model = attrs.avatar_model;
             }
            
             if (isNullOrUndef(attrs.avatar_title)) {
-                this.avatar_title = this.avatar_model; 
+                this.avatar_title = this.avatar_model;
             }
             else {
                 this.avatar_title = attrs.avatar_title;
@@ -195,7 +196,7 @@ openerp.web_calendar = function(instance) {
                 .call("check_access_rights", ["create", false])
                 .then(function (create_right) {
                     self.create_right = create_right;
-                    self.init_calendar().then(function() {    
+                    self.init_calendar().then(function() {
                         self.trigger('calendar_view_loaded', fv);
                         self.ready.resolve();
                     });
@@ -231,15 +232,15 @@ openerp.web_calendar = function(instance) {
                     self.proxy('update_record')(event._id, data);
                 },
                 eventRender: function (event, element, view) {
-                    element.find('.fc-event-title').html(event.title);                    
+                    element.find('.fc-event-title').html(event.title);
                 },
-                eventAfterRender: function (event, element, view) {                    
+                eventAfterRender: function (event, element, view) {
                     if ((view.name !== 'month') && (((event.end-event.start)/60000)<=30)) {
                         //if duration is too small, we see the html code of img
                         var current_title = $(element.find('.fc-event-time')).text();
-                        var new_title = current_title.substr(0,current_title.indexOf("<img")>0?current_title.indexOf("<img"):current_title.length)
+                        var new_title = current_title.substr(0,current_title.indexOf("<img")>0?current_title.indexOf("<img"):current_title.length);
                         element.find('.fc-event-time').html(new_title);
-                    }                    
+                    }
                 },
                 eventClick: function (event) { self.open_event(event._id,event.title); },
                 select: function (start_date, end_date, all_day, _js_event, _view) {
@@ -294,11 +295,11 @@ openerp.web_calendar = function(instance) {
                         context.$calendar.fullCalendar('changeView','agendaDay');
                     }
                 }
-                else if (curView.name != "agendaDay" || (curView.name == "agendaDay" && curDate.compareTo(curView.start)==0)) {
+                else if (curView.name != "agendaDay" || (curView.name == "agendaDay" && curDate.compareTo(curView.start)===0)) {
                         context.$calendar.fullCalendar('changeView','agendaWeek');
                 }
                 context.$calendar.fullCalendar('gotoDate', obj.currentYear , obj.currentMonth, obj.currentDay);
-            }
+            };
         },
 
         init_calendar: function() {
@@ -312,9 +313,10 @@ openerp.web_calendar = function(instance) {
                 this.$small_calendar.datepicker({ onSelect: self.calendarMiniChanged(self) });
             
                 if (this.useContacts) {
+                    //Get my Partner ID
                     new instance.web.Model("res.users").query(["partner_id"]).filter([["id", "=",this.dataset.context.uid]]).first()
                         .done(
-                            function(result) { 
+                            function(result) {
                                 var sidebar_items = {};
                                 var filter_value = result.partner_id[0];
                                 var filter_item = {
@@ -326,12 +328,12 @@ openerp.web_calendar = function(instance) {
                                 sidebar_items[filter_value] = filter_item ;
                                 filter_item = {
                                         value: -1,
-                                        label: _lt("All calendars"),
+                                        label: _lt("Everybody's calendars"),
                                         color: self.get_color(-1),
                                         avatar_model: self.avatar_model
                                     };
                                 sidebar_items[-1] = filter_item ;
-
+                                //Get my coworkers/contacts
                                 new instance.web.Model("calendar.contacts").query(["partner_id"]).filter([["user_id", "=",self.dataset.context.uid]]).all().then(function(result) {
                                     _.each(result, function(item) {
                                         filter_value = item.partner_id[0];
@@ -347,12 +349,12 @@ openerp.web_calendar = function(instance) {
                                     self.allFilters = sidebar_items;
                                     self.sidebar.filter.events_loaded(sidebar_items);
                                     self.sidebar.filter.addUpdateButton();
-                                }).done(function () { 
-                                    self.$calendar.fullCalendar('refetchEvents');            
+                                }).done(function () {
+                                    self.$calendar.fullCalendar('refetchEvents');
                                 });
                             }
-                         );               
-                };
+                         );
+                }
                 this.extraSideBar();
                 
             }
@@ -492,7 +494,7 @@ openerp.web_calendar = function(instance) {
                 all_day = this.all_day ? evt[this.all_day] : false,
                 res_computed_text = '',
                 the_title = '',
-                attendees = [];          
+                attendees = [];
 
             if (this.info_fields) {
                 var temp_ret = {};
@@ -526,7 +528,7 @@ openerp.web_calendar = function(instance) {
                         temp_ret[fieldname] = value;
                     }
                     res_computed_text = res_computed_text.replace("["+fieldname+"]",temp_ret[fieldname]);
-                });                
+                });
 
                 
                 if (res_computed_text.length) {
@@ -534,8 +536,8 @@ openerp.web_calendar = function(instance) {
                 }
                 else {
                     var res_text= [];
-                    _.each(temp_ret, function(val,key) { res_text.push(val)} );
-                    the_title = res_text.join(', ');                    
+                    _.each(temp_ret, function(val,key) { res_text.push(val); });
+                    the_title = res_text.join(', ');
                 }
                 the_title = _.escape(the_title);
                 
@@ -547,34 +549,33 @@ openerp.web_calendar = function(instance) {
                     var attendee_showed = 0;
                     var attendee_other = '';
 
-                    _.each(temp_ret[this.attendee_people], 
-                        function (the_attendee_people) { 
+                    _.each(temp_ret[this.attendee_people],
+                        function (the_attendee_people) {
                             attendees.push(the_attendee_people);
                             attendee_showed += 1;
-                            if (attendee_showed<= MAX_ATTENDEES) {                            
-                                if (self.avatar_model != null) {
-                                       the_title_avatar += '<img title="' + self.all_attendees[the_attendee_people] + '" class="attendee_head" src="/web/binary/image?model=' + self.avatar_model + '&field=image_small&id=' + the_attendee_people + '"></img>';                                
+                            if (attendee_showed<= MAX_ATTENDEES) {
+                                if (self.avatar_model !== null) {
+                                       the_title_avatar += '<img title="' + self.all_attendees[the_attendee_people] + '" class="attendee_head" src="/web/binary/image?model=' + self.avatar_model + '&field=image_small&id=' + the_attendee_people + '"></img>';
                                 }
                                 else {
                                     if (!self.colorIsAttendee || the_attendee_people != temp_ret[self.color_field]) {
                                             tempColor = (self.all_filters[the_attendee_people] != undefined) 
                                                                 ? self.all_filters[the_attendee_people].color
-                                                                : self.all_filters[-1].color;
-                                            
-                                        the_title_avatar += '<i class="fa fa-user attendee_head color_'+tempColor+'" title="' + self.all_attendees[the_attendee_people] + '" ></i>' 
+                                                                : self.all_filters[-1].color;                                            
+                                        the_title_avatar += '<i class="fa fa-user attendee_head color_'+tempColor+'" title="' + self.all_attendees[the_attendee_people] + '" ></i>';
                                     }//else don't add myself
                                 }
                             }
                             else {
                                 attendee_other += self.all_attendees[the_attendee_people] +", ";
-                            }                                    
+                            }
                         }
                     );
                     if (attendee_other.length>2) {
-                        the_title_avatar += '<span class="attendee_head" title="' + attendee_other.slice(0, -2) + '">+</span>';                    
+                        the_title_avatar += '<span class="attendee_head" title="' + attendee_other.slice(0, -2) + '">+</span>';
                     }
                     the_title = the_title_avatar + the_title;
-                }                
+                }
             }
             
             if (!date_stop && date_delay) {
@@ -593,20 +594,19 @@ openerp.web_calendar = function(instance) {
             };
             
 
-            if (!self.useContacts || self.all_filters[evt[this.color_field]] != undefined) {
+            if (!self.useContacts || self.all_filters[evt[this.color_field]] !== undefined) {
                 if (this.color_field && evt[this.color_field]) {
                     var color_key = evt[this.color_field];
                     if (typeof color_key === "object") {
                         color_key = color_key[0];
                     }
-                    r.className = 'cal_opacity calendar_color_'+ this.get_color(color_key);                                
+                    r.className = 'cal_opacity calendar_color_'+ this.get_color(color_key);
                 }
             }
             else  { // if form all, get color -1
 
                   r.className = 'cal_opacity calendar_color_'+ self.all_filters[-1].color;
             }
-            
             return r;
         },
         
@@ -623,7 +623,7 @@ openerp.web_calendar = function(instance) {
             
             var event_end = event.end;
             //Bug when we move an all_day event from week or day view, we don't have a dateend or duration...            
-            if (event_end == null) {
+            if (event_end === null) {
                 event_end = new Date(event.start).addHours(2);
             }
 
@@ -633,14 +633,14 @@ openerp.web_calendar = function(instance) {
                     event_end = new Date(event.start);
                 }
                 if (this.all_day) {
-                    event_end = (new Date(event_end.getTime())).addDays(1); 
-                    date_start_day = new Date(Date.UTC(event.start.getFullYear(),event.start.getMonth(),event.start.getDate()))
-                    date_stop_day = new Date(Date.UTC(event_end.getFullYear(),event_end.getMonth(),event_end.getDate()))            
+                    event_end = (new Date(event_end.getTime())).addDays(1);
+                    date_start_day = new Date(Date.UTC(event.start.getFullYear(),event.start.getMonth(),event.start.getDate()));
+                    date_stop_day = new Date(Date.UTC(event_end.getFullYear(),event_end.getMonth(),event_end.getDate()));
                 }
                 else {
-                    date_start_day = new Date(Date.UTC(event.start.getFullYear(),event.start.getMonth(),event.start.getDate(),7))
-                    date_stop_day = new Date(Date.UTC(event_end.getFullYear(),event_end.getMonth(),event_end.getDate(),19))            
-                }                                
+                    date_start_day = new Date(Date.UTC(event.start.getFullYear(),event.start.getMonth(),event.start.getDate(),7));
+                    date_stop_day = new Date(Date.UTC(event_end.getFullYear(),event_end.getMonth(),event_end.getDate(),19));
+                }
                 data[this.date_start] = instance.web.parse_value(date_start_day, this.fields[this.date_start]);
                 if (this.date_stop) {
                     data[this.date_stop] = instance.web.parse_value(date_stop_day, this.fields[this.date_stop]);
@@ -652,13 +652,12 @@ openerp.web_calendar = function(instance) {
                 data[this.date_start] = instance.web.parse_value(event.start, this.fields[this.date_start]);
                 if (this.date_stop) {
                     data[this.date_stop] = instance.web.parse_value(event_end, this.fields[this.date_stop]);
-                }            
-
+                }
             }
 
 
             if (this.all_day) {
-                data[this.all_day] = event.allDay;                
+                data[this.all_day] = event.allDay;
             }
 
             if (this.date_delay) {
@@ -667,8 +666,14 @@ openerp.web_calendar = function(instance) {
             }
             return data;
         },
+
         do_search: function(domain, context, _group_by) {
             var self = this;
+
+            if (self.sidebar) {
+                self.sidebar.filter.is_loaded = false;
+            }
+
             if (! _.isUndefined(this.event_source)) {
                 this.$calendar.fullCalendar('removeEventSource', this.event_source);
             }
@@ -680,32 +685,31 @@ openerp.web_calendar = function(instance) {
                         domain: self.get_range_domain(domain, start, end),
                         context: context,
                     }).done(function(events) {
+
                         if (self.event_source !== current_event_source) {
                             console.log("Consecutive ``do_search`` called. Cancelling.");
                             return;
                         }
-                        // We should make sure that *2many used in title of event have their extended form [ID, NAME]...
                         
-                        events = $.map(events, function (e) {
-                            
-                            if (self.attendee_people != undefined) { //If we filter on contacts...
-                                if (_.intersection(self.selected_filters,e[self.attendee_people]).length || (self.selected_filters.indexOf(-1) > -1)) {
-                                    return e;
-                                }
-                                else {
-                                    return null;
-                                }   
+                       if (self.attendee_people !== undefined) {
+                            //If we filter on 'Everybody's Calendar, we don't filter events 
+                            if (self.selected_filters.indexOf(-1) == -1) {
+
+                                //If we filter on contacts... we keep only events from coworkers                                 
+                                events = $.map(events, function (e) {
+                                        if (_.intersection(self.selected_filters,e[self.attendee_people]).length ) {
+                                            return e;
+                                        }
+                                        return null;
+                                });
                             }
-                            else { //We adds all events 
-                                return e;
-                            }                            
-                            return null;                            
-                        });
+                        }
                         
-                        if (!self.useContacts) {  // If we use all peoples as filter in sidebars
+                        if (!self.useContacts) {  // If we use all peoples displayed in the current month as filter in sidebars
                             var now_filters = {};
                             var filter_value;
                             var filter_item;
+                            
                             
                             _.each(events, function (e) {
                                 filter_value = e[self.color_field][0];
@@ -720,31 +724,44 @@ openerp.web_calendar = function(instance) {
                                 }
                             });
                             
-                            self.allFilters = now_filters;
-                            self.sidebar.filter.events_loaded(now_filters);                            
                             
+                            self.allFilters = now_filters;
+
+                            if (self.sidebar) {
+                                if (!self.sidebar.filter.is_loaded) {
+                                    self.sidebar.filter.events_loaded(now_filters);
+                                }
+                                else {
+                                    events = $.map(events, function (e) {
+                                        if (_.contains(self.selected_filters,e[self.color_field][0]) ) {
+                                            return e;
+                                        }
+                                        return null;
+                                    });
+                                }
+                            }
                             return self.perform_necessary_name_gets(events).then(callback);
                         }
                         else {
                             var all_attendees = [];
                             
                             _.each(events, function (e) {
-                                all_attendees.push(e[self.attendee_people]);                                
+                                all_attendees.push(e[self.attendee_people]);
                             });
                             
-                            self.all_attendees = {}
+                            self.all_attendees = {};
                             
                             all_attendees = _.chain(all_attendees).flatten().uniq().value();
                             
-                            if (self.avatar_title != null) {
+                            if (self.avatar_title !== null) {
                                 new instance.web.Model(self.avatar_title).query(["name"]).filter([["id", "in",all_attendees]]).all().then(function(result) {
                                     _.each(result, function(item) {
                                         self.all_attendees[item.id] = item.name;
                                     });
-                                }).done(function() { 
+                                }).done(function() {
                                     return self.perform_necessary_name_gets(events).then(callback);
                                 });
-                            }                                                        
+                            }
                             else {
                                 _.each(all_attendees,function(item){
                                         self.all_attendees[item] = '';
@@ -752,10 +769,7 @@ openerp.web_calendar = function(instance) {
                                 return self.perform_necessary_name_gets(events).then(callback);
                                 
                             }
-                            
                         }
-                        
-
                     });
                 },
                 eventDataTransform: function (event) {
@@ -775,7 +789,6 @@ openerp.web_calendar = function(instance) {
                 [[this.date_start, '>=', format(start.clone())],
                  [this.date_start, '<=', format(end.clone())]]);
         },
-
 
         /**
          * Updates record identified by ``id`` with values in object ``data``
@@ -799,26 +812,22 @@ openerp.web_calendar = function(instance) {
             }
             return false;
         },
-        open_event: function(id,title) {
+        open_event: function(id, title) {
             var self = this;
-            if (! this.open_popup_action) { 
+            if (! this.open_popup_action) {
                 var index = this.dataset.get_id_index(id);
                 this.dataset.index = index;
                 this.do_switch_view('form', null, { mode: "edit" });
-            }            
+            }
             else {
-
-                var self = this;
-
                 var pop = new instance.web.form.FormOpenPopup(this);
-                console.log(this.open_popup_action, +this.open_popup_action);
                 pop.show_element(this.dataset.model, id, this.dataset.get_context(), {
                     title: _.str.sprintf(_t("View: %s"),title),
                     view_id: +this.open_popup_action,
                     res_id: id,
                     target: 'new',
                     readonly:true
-                });              
+                });
 
                var form_controller = pop.view_form;
                form_controller.on("load_record", self, function(){
@@ -826,33 +835,25 @@ openerp.web_calendar = function(instance) {
                     button_edit = _.str.sprintf("<button class='oe_button oe_bold editme oe_highlight'><span> %s </span></button>",_t("Edit Event"));
                     
                     
-                    pop.$el.closest(".ui-dialog").find(".ui-dialog-buttonpane").prepend(button_delete)
-                    pop.$el.closest(".ui-dialog").find(".ui-dialog-buttonpane").prepend(button_edit)
+                    pop.$el.closest(".ui-dialog").find(".ui-dialog-buttonpane").prepend(button_delete);
+                    pop.$el.closest(".ui-dialog").find(".ui-dialog-buttonpane").prepend(button_edit);
                     
                     $('.delme').click(
-                        function() { 
-                            $('.oe_form_button_cancel').trigger('click'); 
-                            self.remove_event(id); 
+                        function() {
+                            $('.oe_form_button_cancel').trigger('click');
+                            self.remove_event(id);
                         }
                     );
                     $('.editme').click(
-                        function() { 
-                            $('.oe_form_button_cancel').trigger('click'); 
-
-                            var index = self.dataset.get_id_index(id);
-                            self.dataset.index = index;
+                        function() {
+                            $('.oe_form_button_cancel').trigger('click');
+                            self.dataset.index = self.dataset.get_id_index(id);
                             self.do_switch_view('form', null, { mode: "edit" });
-
                         }
                     );
-                    
-                    
                });
-                 
-            }   
-            
-            return false;         
-            
+            }
+            return false;
         },
 
         do_show: function() {
@@ -993,7 +994,6 @@ openerp.web_calendar = function(instance) {
             });
             
             self.$el.on('dialogclose', self, function() {
-                console.log("dialogclose");
                 self.trigger('close');
             });
 
@@ -1312,7 +1312,6 @@ openerp.web_calendar = function(instance) {
         },
 
         render_value: function() {
-            console.log("In render value");
             var self = this;
             this.dataset.set_ids(this.get("value"));
             this.is_loaded = this.is_loaded.then(function() {
@@ -1373,6 +1372,7 @@ openerp.web_calendar = function(instance) {
         }
     });
     instance.web_calendar.SidebarFilter = instance.web.Widget.extend({
+        is_loaded:false,
         events: {
             'change input:checkbox': 'filter_click'
         },
@@ -1380,12 +1380,18 @@ openerp.web_calendar = function(instance) {
             this._super(parent);
             this.view = view;            
         },
+
+   
+
         events_loaded: function(filters) {
             var self = this;
+            self.is_loaded=true;          
+            
             self.selected_filters = [];
             self.view.all_filters = filters;
             this.$el.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
-            this.filter_click(null);                        
+            this.filter_click(null);
+
         },
         filter_click: function(e) {
             var self = this,
@@ -1397,15 +1403,11 @@ openerp.web_calendar = function(instance) {
                 if (e==null && parseInt($(this).val())<0) {
                     $(this).prop('checked',false);
                     return;
-                }                    
+                }         
+
                 self.view.selected_filters.push(parseInt($(this).val()));
             });
-            
-            if (e !== null) { //First intialize 
-                self.view.$calendar.fullCalendar('refetchEvents');  
-            }
-
-            
+            self.view.$calendar.fullCalendar('refetchEvents');  
         },
         addUpdateButton: function() {
             var self=this;
