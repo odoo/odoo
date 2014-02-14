@@ -113,11 +113,10 @@ class mail_thread(osv.AbstractModel):
                     object_id.alias_id.alias_model_id.model == self._name and \
                     object_id.alias_id.alias_force_thread_id == 0:
                 alias = object_id.alias_id
-        elif catchall_domain and model:  # no specific res_id given -> generic help message, take an example alias (i.e. alias of some section_id)
-            model_id = self.pool.get('ir.model').search(cr, uid, [("model", "=", self._name)], context=context)[0]
+        if not alias and catchall_domain and model:  # no res_id or res_id not linked to an alias -> generic help message, take a generic alias of the model
             alias_obj = self.pool.get('mail.alias')
-            alias_ids = alias_obj.search(cr, uid, [("alias_model_id", "=", model_id), ("alias_name", "!=", False), ('alias_force_thread_id', '=', 0)], context=context, order='id ASC')
-            if alias_ids and len(alias_ids) == 1:  # if several aliases -> incoherent to propose one guessed from nowhere, therefore avoid if several aliases
+            alias_ids = alias_obj.search(cr, uid, [("alias_parent_model_id.model", "=", model), ("alias_name", "!=", False), ('alias_force_thread_id', '=', False), ('alias_parent_thread_id', '=', False)], context=context, order='id ASC')
+            if alias_ids and len(alias_ids) == 1:
                 alias = alias_obj.browse(cr, uid, alias_ids[0], context=context)
 
         if alias:
@@ -165,7 +164,7 @@ class mail_thread(osv.AbstractModel):
 
     def read_followers_data(self, cr, uid, follower_ids, context=None):
         result = []
-        technical_group = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'group_no_one')
+        technical_group = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'group_no_one', context=context)
         for follower in self.pool.get('res.partner').browse(cr, uid, follower_ids, context=context):
             is_editable = uid in map(lambda x: x.id, technical_group.users)
             is_uid = uid in map(lambda x: x.id, follower.user_ids)
@@ -385,7 +384,10 @@ class mail_thread(osv.AbstractModel):
         track_ctx = dict(context)
         if 'lang' not in track_ctx:
             track_ctx['lang'] = self.pool.get('res.users').browse(cr, uid, uid, context=context).lang
-        tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=track_ctx)
+        if not context.get('mail_notrack'):
+            tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=track_ctx)
+        else:
+            tracked_fields = []
         if tracked_fields:
             records = self.browse(cr, uid, ids, context=track_ctx)
             initial_values = dict((this.id, dict((key, getattr(this, key)) for key in tracked_fields.keys())) for this in records)
@@ -500,10 +502,9 @@ class mail_thread(osv.AbstractModel):
 
             posted = False
             for subtype in subtypes:
-                try:
-                    subtype_rec = self.pool.get('ir.model.data').get_object(cr, uid, subtype.split('.')[0], subtype.split('.')[1], context=context)
-                except ValueError, e:
-                    _logger.debug('subtype %s not found, giving error "%s"' % (subtype, e))
+                subtype_rec = self.pool.get('ir.model.data').xmlid_to_object(cr, uid, subtype, context=context)
+                if not (subtype_rec and subtype_rec.exists()):
+                    _logger.debug('subtype %s not found' % subtype)
                     continue
                 message = format_message(subtype_rec.description if subtype_rec.description else subtype_rec.name, tracked_values)
                 self.message_post(cr, uid, browse_record.id, body=message, subtype=subtype, context=context)

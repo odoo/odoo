@@ -9,7 +9,7 @@
         <field name="name">Meeting Types Tree</field>
         <field name="model">calendar.event.type</field>
         <field name="arch" type="xml">
-            <tree string="Meeting Types" editable="bottom">
+            <tree string="Meeting Types">
                 <field name="name"/>
             </tree>
         </field>
@@ -313,7 +313,7 @@
         <field name="name">Meetings</field>
         <field name="res_model">calendar.event</field>
         <field name="view_mode">form,calendar,tree,gantt</field>
-        <field name="view_id" ref="action_view_calendar_event_form"/>        
+        <field name="view_id" ref="view_calendar_event_form"/>        
     </record>
        
     
