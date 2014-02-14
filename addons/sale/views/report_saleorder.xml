@@ -2,8 +2,8 @@
 <openerp>
 <data>
 <template id="report_saleorder">
-    <t t-foreach="docs" t-as="o">
-        <t t-call="report.html_skeleton">
+    <t t-call="report.html_skeleton">
+        <t t-foreach="docs" t-as="o">
             <t t-call="report.external_layout">
                 <div class="page">
                     <div class="oe_structure"/>

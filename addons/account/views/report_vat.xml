@@ -12,7 +12,7 @@
                         <strong>Chart of Tax:</strong>
                         <p t-esc="account"/>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-3" t-if="fiscalyear">
                         <strong>Fiscal Year:</strong>
                         <p t-esc="fiscalyear"/>
                     </div>
