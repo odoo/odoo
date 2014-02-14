@@ -673,11 +673,10 @@ class purchase_order(osv.osv):
         if order.currency_id.id != order.company_id.currency_id.id:
             #we don't round the price_unit, as we may want to store the standard price with more digits than allowed by the currency
             price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, round=False, context=context)
-        res = [{
+        res = []
+        move_template = {
             'name': order_line.name or '',
             'product_id': order_line.product_id.id,
-            'product_uom_qty': order_line.product_qty,
-            'product_uos_qty': order_line.product_qty,
             'product_uom': order_line.product_uom.id,
             'product_uos': order_line.product_uom.id,
             'date': self.date_to_datetime(cr, uid, order.date_order, context),
@@ -686,34 +685,37 @@ class purchase_order(osv.osv):
             'location_dest_id': order.location_id.id,
             'picking_id': picking_id,
             'partner_id': order.dest_address_id.id or order.partner_id.id,
-            'move_dest_id': order_line.move_dest_id.id,
+            'move_dest_id': False,
             'state': 'draft',
             'purchase_line_id': order_line.id,
             'company_id': order.company_id.id,
             'price_unit': price_unit,
             'picking_type_id': order.picking_type_id.id,
             'group_id': group_id,
-            'procurement_id': order_line.procurement_ids and order_line.procurement_ids[0].id or False,
+            'procurement_id': False,
             'origin': order.name,
             'route_ids': order.picking_type_id.warehouse_id and [(6, 0, [x.id for x in order.picking_type_id.warehouse_id.route_ids])] or [],
-        }]
+        }
+
+        diff_quantity = order_line.product_qty
+        for procurement in order_line.procurement_ids:
+            procurement_qty = product_uom._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, to_uom_id=order_line.product_uom.id)
+            tmp = move_template.copy()
+            tmp.update({
+                'product_uom_qty': min(procurement_qty, diff_quantity),
+                'product_uos_qty': min(procurement_qty, diff_quantity),
+                'move_dest_id': procurement.move_dest_id.id,  # blabla
+                'group_id': procurement.group_id.id or group_id,  # blabla to check ca devrait etre bon et groupé dans le meme picking qd meme
+                'procurement_id': procurement.id,
+            })
+            diff_quantity -= min(procurement_qty, diff_quantity)
+            res.append(tmp)
         #if the order line has a bigger quantity than the procurement it was for (manually changed or minimal quantity), then
         #split the future stock move in two because the route followed may be different.
-        if order_line.procurement_ids:
-            procurement = order_line.procurement_ids[0]
-            procurement_quantity = product_uom._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, to_uom_id=order_line.product_uom.id)
-            diff_quantity = order_line.product_qty - procurement_quantity
-            if diff_quantity > 0:
-                tmp = res[0].copy()
-                res[0]['product_uom_qty'] = diff_quantity
-                res[0]['product_uos_qty'] = diff_quantity
-                res[0]['procurement_id'] = False
-                res[0]['move_dest_id'] = False
-                tmp['product_uom_qty'] = procurement.product_qty
-                tmp['product_uos_qty'] = procurement.product_qty
-                tmp['product_uom'] = procurement.product_uom.id
-                tmp['product_uos'] = procurement.product_uom.id
-                res.append(tmp)
+        if diff_quantity > 0:
+            move_template['product_uom_qty'] = diff_quantity
+            move_template['product_uos_qty'] = diff_quantity
+            res.append(move_template)
         return res
 
     def _create_stock_moves(self, cr, uid, order, order_lines, picking_id=False, context=None):
@@ -737,17 +739,14 @@ class purchase_order(osv.osv):
         """
         stock_move = self.pool.get('stock.move')
         todo_moves = []
-        new_group = False
-        if any([(not x.group_id) for x in order_lines]):
-            new_group = self.pool.get("procurement.group").create(cr, uid, {'name': order.name, 'partner_id': order.partner_id.id}, context=context)
+        new_group = self.pool.get("procurement.group").create(cr, uid, {'name': order.name, 'partner_id': order.partner_id.id}, context=context)
 
         for order_line in order_lines:
             if not order_line.product_id:
                 continue
 
             if order_line.product_id.type in ('product', 'consu'):
-                group_id = order_line.group_id and order_line.group_id.id or new_group
-                for vals in self._prepare_order_line_move(cr, uid, order, order_line, picking_id, group_id, context=context):
+                for vals in self._prepare_order_line_move(cr, uid, order, order_line, picking_id, new_group, context=context):
                     move = stock_move.create(cr, uid, vals, context=context)
                     todo_moves.append(move)
 
@@ -785,7 +784,8 @@ class purchase_order(osv.osv):
 
     def action_picking_create(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids):
-            self._create_stock_moves(cr, uid, order, order.order_line, None, context=context)
+            picking_id = self.pool.get('stock.picking').create(cr, uid, {'picking_type_id': order.picking_type_id.id}, context=context)
+            self._create_stock_moves(cr, uid, order, order.order_line, picking_id, context=context)
 
     def picking_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'shipped':1,'state':'approved'}, context=context)
@@ -832,7 +832,7 @@ class purchase_order(osv.osv):
             list_key = []
             for field in fields:
                 field_val = getattr(br, field)
-                if field in ('product_id', 'move_dest_id', 'account_analytic_id'):
+                if field in ('product_id', 'account_analytic_id'):
                     if not field_val:
                         field_val = False
                 if isinstance(field_val, browse_record):
@@ -939,7 +939,6 @@ class purchase_order_line(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
         'move_ids': fields.one2many('stock.move', 'purchase_line_id', 'Reservation', readonly=True, ondelete='set null'),
-        'move_dest_id': fields.many2one('stock.move', 'Reservation Destination', ondelete='set null'),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
         'order_id': fields.many2one('purchase.order', 'Order Reference', select=True, required=True, ondelete='cascade'),
@@ -955,7 +954,6 @@ class purchase_order_line(osv.osv):
         'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner", store=True),
         'date_order': fields.related('order_id','date_order',string='Order Date',readonly=True,type="date"),
         'procurement_ids': fields.one2many('procurement.order', 'purchase_line_id', string='Associated procurements'),
-        'group_id': fields.related('procurement_ids', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group'),
     }
     _defaults = {
         'product_uom' : _get_uom_id,
@@ -1267,7 +1265,6 @@ class procurement_order(osv.osv):
             'product_uom': uom_id,
             'price_unit': price or 0.0,
             'date_planned': schedule_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-            'move_dest_id': procurement.move_dest_id and procurement.move_dest_id.id or False,
             'taxes_id': [(6, 0, taxes)],
         }
 
@@ -1282,6 +1279,7 @@ class procurement_order(osv.osv):
         seq_obj = self.pool.get('ir.sequence')
         pass_ids = []
         linked_po_ids = []
+        sum_po_line_ids = []
         for procurement in self.browse(cr, uid, ids, context=context):
             partner = self._get_product_supplier(cr, uid, procurement, context=context)
             if not partner:
@@ -1296,9 +1294,17 @@ class procurement_order(osv.osv):
                     ('location_id', '=', procurement.location_id.id), ('company_id', '=', procurement.company_id.id)], context=context)
                 if available_draft_po_ids:
                     po_id = available_draft_po_ids[0]
-                    line_vals.update(order_id=po_id)
-                    po_line_id = po_line_obj.create(cr, uid, line_vals, context=context)
-                    linked_po_ids.append(procurement.id)
+                    #look for any other PO line in the selected PO with same product and UoM to sum quantities instead of creating a new po line
+                    available_po_line_ids = po_line_obj.search(cr, uid, [('order_id', '=', po_id), ('product_id', '=', line_vals['product_id']), ('product_uom', '=', line_vals['product_uom'])], context=context)
+                    if available_po_line_ids:
+                        po_line = po_line_obj.browse(cr, uid, available_po_line_ids[0], context=context)
+                        po_line_obj.write(cr, uid, po_line.id, {'product_qty': po_line.product_qty + line_vals['product_qty']}, context=context)
+                        po_line_id = po_line.id
+                        sum_po_line_ids.append(procurement.id)
+                    else:
+                        line_vals.update(order_id=po_id)
+                        po_line_id = po_line_obj.create(cr, uid, line_vals, context=context)
+                        linked_po_ids.append(procurement.id)
                 else:
                     purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context)
                     name = seq_obj.get(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
@@ -1323,6 +1329,8 @@ class procurement_order(osv.osv):
             self.message_post(cr, uid, pass_ids, body=_("Draft Purchase Order created"), context=context)
         if linked_po_ids:
             self.message_post(cr, uid, linked_po_ids, body=_("Purchase line created and linked to an existing Purchase Order"), context=context)
+        if sum_po_line_ids:
+            self.message_post(cr, uid, sum_po_line_ids, body=_("Quantity added in existing Purchase Order Line"), context=context)
         return res
 
     def _product_virtual_get(self, cr, uid, order_point):
