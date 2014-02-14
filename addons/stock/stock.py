@@ -3427,7 +3427,6 @@ class stock_pack_operation(osv.osv):
             for move in op.picking_id.move_lines:
                 if move.product_id.id == product_id and move.state not in ['done', 'cancel']:
                     qty_on_link = min(move.remaining_qty, qty_to_assign)
-                    print 'Create remaining link:', qty_on_link
                     link_obj.create(cr, uid, {'move_id': move.id, 'operation_id': op.id, 'qty': qty_on_link}, context=context)
                     qty_to_assign -= qty_on_link
                     move.refresh()
@@ -3457,7 +3456,6 @@ class stock_pack_operation(osv.osv):
                         link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': quant.qty}, context=context)
             else:
                 qty = uom_obj._compute_qty(cr, uid, ops.product_uom_id.id, ops.product_qty, ops.product_id.uom_id.id)
-                print qty
                 #Check moves with same product
                 for move in [x for x in ops.picking_id.move_lines if ops.product_id.id == x.product_id.id]:
                     for quant in move.reserved_quant_ids:
