@@ -1776,8 +1776,15 @@ class stock_move(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             state = 'confirmed'
             for m in move.move_orig_ids:
-                if m.state not in ('done', 'cancel'):
+                if move.move_orig_ids:
                     state = 'waiting'
+                elif move.split_from:
+                    move2 = move.split_from
+                    while move2 and state != 'waiting':
+                        if move2.move_orig_ids:
+                            state = 'waiting'
+                        move2 = move2.split_from
+
             states[state].append(move.id)
             self._picking_assign(cr, uid, move, context=context)
 
