@@ -3427,29 +3427,45 @@ class stock_pack_operation(osv.osv):
             for move in op.picking_id.move_lines:
                 if move.product_id.id == product_id and move.state not in ['done', 'cancel']:
                     qty_on_link = min(move.remaining_qty, qty_to_assign)
+                    print 'Create remaining link:', qty_on_link
                     link_obj.create(cr, uid, {'move_id': move.id, 'operation_id': op.id, 'qty': qty_on_link}, context=context)
                     qty_to_assign -= qty_on_link
                     move.refresh()
                     if qty_to_assign <= 0:
                         break
 
+        def _check_package_child_of(quant_pack, ops_pack):
+            if not quant_pack and not ops_pack:
+                return True
+            if not quant_pack or not ops_pack:
+                return False
+            check = False
+            check_pack = quant_pack
+            while not check and check_pack:
+                if check_pack.id == ops_pack.id:
+                    check = True
+                check_pack = quant_pack.parent_id
+            return check
+
         def _check_quants_reserve(ops):
             if ops.package_id and not ops.product_id: 
-                for quant in quant_obj.browse(cr, uid, package_obj.get_content(cr, uid, [ops.package_id]), context=context):
-                    if quant.reservation_id and quant.reservation_id.id in [x.id for x in ops.picking.move_lines] and (not quants_done.get(quant.id)):
-                        #Entire packages means entire quants
+                for quant in quant_obj.browse(cr, uid, package_obj.get_content(cr, uid, [ops.package_id.id]), context=context):
+                    if quant.reservation_id and quant.reservation_id.id in [x.id for x in ops.picking_id.move_lines] and (not quants_done.get(quant.id)):
+                        #Entire packages means entire quants from those packages
                         if not quants_done.get(quant.id):
                             quants_done[quant.id] = 0
-                        link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': qty}, context=context)
+                        link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': quant.qty}, context=context)
             else:
                 qty = uom_obj._compute_qty(cr, uid, ops.product_uom_id.id, ops.product_qty, ops.product_id.uom_id.id)
+                print qty
                 #Check moves with same product
-                for move in [x for x in op.picking_id.move_lines if op.product_id.id == move.product_id.id]:
+                for move in [x for x in ops.picking_id.move_lines if ops.product_id.id == x.product_id.id]:
                     for quant in move.reserved_quant_ids:
-                        #TODO: check child packages
-                        bool = (not ops.package_id and quant.package_id == False) or (ops.package_id and quant.package_id.id == ops.package_id.id)
-                        bool = bool and ((ops.lot_id and ops.lot_id.id == quant.lot_id.id) or not ops.lot_id) 
-                        bool = bool and ((ops.owner_id.id == quant.owner_id.id))
+                        if not qty  > 0:
+                            break
+                        bool = _check_package_child_of(quant.package_id, ops.package_id)
+                        bool = bool and ((ops.lot_id and ops.lot_id.id == quant.lot_id.id) or not ops.lot_id)
+                        bool = bool and (ops.owner_id.id == quant.owner_id.id)
                         if bool:
                             quant_qty = quant.qty
                             if quants_done.get(quant.id):
@@ -3465,36 +3481,6 @@ class stock_pack_operation(osv.osv):
                             qty -= qty_todo
                             link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': qty_todo}, context=context)
 
-                        
-                        
-                # CHECK: Search necessary quants -> might pass through one of the quants_get functions instead
-                domain = [('reservation_id', 'in', [x.id for x in ops.picking_id.move_lines]),
-                          ('product_id', '=', ops.product_id.id)]
-                if ops.package_id:
-                    domain += [('package_id', 'child_of', ops.package_id.id)]
-                else:
-                    domain += [('package_id', '=', False)]
-                if ops.lot_id:
-                    domain += [('lot_id', '=', ops.lot_id.id)]
-                domain += [('owner_id', '=', ops.owner_id.id)]
-                quants = quant_obj.search(cr, uid, domain, context=context)
-                # Process quants until 
-                qty = uom_obj._compute_qty(cr, uid, op.product_uom_id.id, op.product_qty, op.product_id.uom_id.id)
-                for quant in quant_obj.browse(cr, uid, quants, context=context):
-                    quant_qty = quant.qty
-                    if quants_done.get(quant.id):
-                        if quants_done[quant.id] == 0:
-                            continue
-                        quant_qty = quants_done[quant.id]
-                    if quant_qty > qty:
-                        qty_todo = qty
-                        quants_done[quant.id] = quant_qty - qty
-                    else:
-                        qty_todo = quant_qty
-                        quants_done[quant.id] = 0
-                    link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': qty_todo}, context=context)
-                    
-                    
 
         link_obj = self.pool.get('stock.move.operation.link')
         uom_obj = self.pool.get('product.uom')
@@ -3511,13 +3497,15 @@ class stock_pack_operation(osv.osv):
         
         for op in operations:
             if op.product_id:
-                normalized_qty = uom_obj._compute_qty(cr, uid, op.product_uom_id.id, op.product_qty, op.product_id.uom_id.id)
-                _create_link_for_product(op.product_id.id, normalized_qty)
+                #TODO: Remaining qty: UoM conversions are done twice
+                normalized_qty = uom_obj._compute_qty(cr, uid, op.product_uom_id.id, op.remaining_qty, op.product_id.uom_id.id)
+                if normalized_qty > 0:
+                    _create_link_for_product(op.product_id.id, normalized_qty)
             elif op.package_id:
-                for product_id, qty in package_obj._get_all_products_quantities(cr, uid, op.package_id.id, context=context).items():
-                    _create_link_for_product(product_id, qty)
-#         for op in operations:
-#             print [(y.qty, y.operation_id, y.move_id) for y in op.linked_move_operation_ids]
+                prod_quants = self._get_remaining_prod_quantities(cr, uid, op, context=context)
+                for product_id, qty in prod_quants.items():
+                    if qty > 0:
+                        _create_link_for_product(product_id, qty)
 
     def process_packaging(self, cr, uid, operation, quants, context=None):
         ''' Process the packaging of a given operation, after the quants have been moved. If there was not enough quants found
