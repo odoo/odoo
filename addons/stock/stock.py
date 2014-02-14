@@ -3442,6 +3442,31 @@ class stock_pack_operation(osv.osv):
                             quants_done[quant.id] = 0
                         link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': qty}, context=context)
             else:
+                qty = uom_obj._compute_qty(cr, uid, ops.product_uom_id.id, ops.product_qty, ops.product_id.uom_id.id)
+                #Check moves with same product
+                for move in [x for x in op.picking_id.move_lines if op.product_id.id == move.product_id.id]:
+                    for quant in move.reserved_quant_ids:
+                        #TODO: check child packages
+                        bool = (not ops.package_id and quant.package_id == False) or (ops.package_id and quant.package_id.id == ops.package_id.id)
+                        bool = bool and ((ops.lot_id and ops.lot_id.id == quant.lot_id.id) or not ops.lot_id) 
+                        bool = bool and ((ops.owner_id.id == quant.owner_id.id))
+                        if bool:
+                            quant_qty = quant.qty
+                            if quants_done.get(quant.id):
+                                if quants_done[quant.id] == 0:
+                                    continue
+                                quant_qty = quants_done[quant.id]
+                            if quant_qty > qty:
+                                qty_todo = qty
+                                quants_done[quant.id] = quant_qty - qty
+                            else:
+                                qty_todo = quant_qty
+                                quants_done[quant.id] = 0
+                            qty -= qty_todo
+                            link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': qty_todo}, context=context)
+
+                        
+                        
                 # CHECK: Search necessary quants -> might pass through one of the quants_get functions instead
                 domain = [('reservation_id', 'in', [x.id for x in ops.picking_id.move_lines]),
                           ('product_id', '=', ops.product_id.id)]
