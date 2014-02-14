@@ -11,20 +11,20 @@
                     <h2>Purchase for Requisitions <span t-field="o.name"/></h2>
 
                     <div class="row mt32 mb32">
-                        <div class="col-xs-6">
+                        <div class="col-xs-3">
                             <strong>Requisition Reference:</strong><br/>
                             <span t-field="o.name"/>
                         </div>
-                        <div class="col-xs-6">
+                        <div class="col-xs-3">
                             <strong>Requisition Date:</strong><br/>
                             <span t-field="o.date_start"/>
                         </div>
-                        <div class="col-xs-6">
+                        <div class="col-xs-3">
                             <strong>Type:</strong><br/>
                             <span t-if="o.exclusive=='exclusive'">Purchase Requisitions (exclusive)</span>
                             <span t-if="o.exclusive=='multiple'">Multiple Requisitions</span>
                         </div>
-                        <div class="col-xs-6">
+                        <div class="col-xs-3">
                             <strong>Source:</strong><br/>
                             <span t-field="o.origin"/>
                         </div>

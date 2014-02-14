@@ -239,16 +239,6 @@
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'mrp-bom_structure_report.'+format), 'wb+').write(data)
 -
-  I print "Production Order".
--
-  !python {model: mrp.production}: |
-    import os
-    import openerp.report
-    from openerp import tools
-    data, format = openerp.report.render_report(cr, uid, [ref("mrp_production_test1")], 'mrp.production.order', {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'mrp-production_order_report.'+format), 'wb+').write(data)
--
   I print "Work Center Load Report".
 -
   !python {model: mrp.workcenter}: |
