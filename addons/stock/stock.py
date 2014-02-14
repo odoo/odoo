@@ -1082,14 +1082,11 @@ class stock_picking(osv.osv):
                     if move.remaining_qty == 0:
                         if move.state in ('draft', 'assigned', 'confirmed'):
                             todo_move_ids.append(move.id)
-                    elif move.remaining_qty > 0:
+                    elif move.remaining_qty > 0 and move.remaining_qty < move.product_qty:
                         new_move = stock_move_obj.split(cr, uid, move, move.remaining_qty, context=context)
                         todo_move_ids.append(move.id)
                         #Assign move as it was assigned before
                         toassign_move_ids.append(new_move)
-                    elif move.state:
-                        #this should never happens
-                        raise
                 self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
                 if todo_move_ids and not context.get('do_only_split'):
                     self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=context)
