@@ -21,7 +21,7 @@
                 {
                     title:     _t("Create an Event"),
                     content:   _t("Let's go through the first steps to publish a new event."),
-                    popover:   { next: _("Start Tutorial"), end: _("Skip It") },
+                    popover:   { next: _t("Start Tutorial"), end: _t("Skip It") },
                 },
                 {
                     element:   '#content-menu-button',
