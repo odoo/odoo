@@ -1903,7 +1903,7 @@ class stock_move(osv.osv):
         pack_obj = self.pool.get("stock.quant.package")
         packs = set()
         for move in self.browse(cr, uid, ids, context=context):
-            packs |= set([q.package_id.id for q in move.quant_ids if q.package_id])
+            packs |= set([q.package_id.id for q in move.quant_ids if q.package_id and q.qty > 0])
         return pack_obj._check_location_constraint(cr, uid, list(packs), context=context)
 
     def action_done(self, cr, uid, ids, context=None):
@@ -2065,7 +2065,6 @@ class stock_move(osv.osv):
             'product_uom_qty': uom_qty,
             'product_uos_qty': uos_qty,
             'state': move.state,
-            'procure_method': 'make_to_stock',
             'move_dest_id': False,
             'reserved_quant_ids': [],
             'restrict_lot_id': restrict_lot_id,
@@ -3259,7 +3258,7 @@ class stock_package(osv.osv):
             quant_ids = self.get_content(cr, uid, [parent.id], context=context)
             quants = quant_obj.browse(cr, uid, quant_ids, context=context)
             location_id = quants and quants[0].location_id.id or False
-            if not all([quant.location_id.id == location_id for quant in quants]):
+            if not all([quant.location_id.id == location_id for quant in quants if quant.qty > 0]):
                 raise osv.except_osv(_('Error'), _('Everything inside a package should be in the same location'))
         return True
 
