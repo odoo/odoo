@@ -2694,7 +2694,7 @@ class BaseModel(object):
                         f_pg_notnull = res['attnotnull']
                         if isinstance(f, fields.function) and not f.store and\
                                 not getattr(f, 'nodrop', False):
-                            _logger.info('column %s (%s) in table %s removed: converted to a function !\n',
+                            _logger.info('column %s (%s) converted to a function, removed from table %s',
                                          k, f.string, self._table)
                             cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE' % (self._table, k))
                             cr.commit()
