@@ -23,7 +23,8 @@ from openerp.osv import fields
 from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
-
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+import time
 
 class StockMove(osv.osv):
     _inherit = 'stock.move'
@@ -51,10 +52,14 @@ class StockMove(osv.osv):
         """check if product associated to move has a phantom bom
             return list of ids of mrp.bom for that product """
         user_company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        #doing the search as SUPERUSER because a user with the permission to write on a stock move should be able to explode it
+        #without giving him the right to read the boms.
         return self.pool.get('mrp.bom').search(cr, SUPERUSER_ID, [
             ('product_id', '=', move.product_id.id),
             ('bom_id', '=', False),
             ('type', '=', 'phantom'),
+            '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
+            '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
             ('company_id', '=', user_company)], context=context)
 
     def _action_explode(self, cr, uid, move, context=None):
