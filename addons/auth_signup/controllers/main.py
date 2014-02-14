@@ -96,8 +96,9 @@ class AuthSignup(openerp.addons.web.controllers.main.Home):
 
     def _signup_with_values(self, token, values):
         db, login, password = request.registry['res.users'].signup(request.cr, openerp.SUPERUSER_ID, values, token)
+        request.cr.commit()     # as authenticate will use its own cursor we need to commit the current transaction
         uid = request.session.authenticate(db, login, password)
-        if uid is not False:
+        if not uid:
             raise SignupError(_('Authentification Failed.'))
 
 
