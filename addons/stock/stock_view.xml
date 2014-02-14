@@ -585,16 +585,6 @@
         <menuitem action="action_location_form" id="menu_action_location_form" groups="stock.group_locations"
             parent="menu_stock_configuration" sequence="5"/>
 
-        <record id="view_location_tree" model="ir.ui.view">
-            <field name="name">stock.location.tree</field>
-            <field name="model">stock.location</field>
-            <field name="field_parent">child_ids</field>
-            <field name="arch" type="xml">
-                <tree toolbar="1" string="Locations" >
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
         <record model="ir.actions.act_window" id="action_product_location_tree">
             <field name="context">{'product_id': active_id}</field>
             <field name="name">Stock by Location</field>
@@ -605,29 +595,6 @@
             <field name="name">Moves</field>
             <field name="res_model">stock.move</field>
         </record>
-        <record id="action_location_tree" model="ir.actions.act_window">
-            <field name="name">Inventory by Location</field>
-            <field name="res_model">stock.location</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="domain">[('location_id','=',False)]</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="view_location_tree"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a location.
-              </p><p>
-                This is the structure of your company's warehouses and
-                locations. You can click on a location to get the list of the
-                products and their stock level in this particular location and
-                all its children.
-              </p>
-            </field>
-        </record>
-        <menuitem action="action_location_tree"
-            id="menu_action_location_tree"
-            parent="menu_stock_inventory_control"
-            groups="stock.group_locations"
-            sequence="20"/>
 
         <record id="view_warehouse" model="ir.ui.view">
             <field name="name">stock.warehouse</field>
@@ -816,11 +783,10 @@
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
                         </page>
                         <page string="Additional Info">
-                            <group>
+                            <group string="General Informations">
                                 <group>
                                     <field name="move_type"/>
                                     <field name="picking_type_id"/>
-                                    <field name="priority"/>
                                     <field name="picking_type_code" invisible="1"/>
                                     <field name="quant_reserved_exist" invisible="1"/>                                    
                                 </group>
@@ -828,6 +794,7 @@
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                     <field name="date_done" groups="base.group_no_one"/>
                                     <field name="group_id"/>
+                                    <field name="priority"/>
                                 </group>
                             </group>
                         </page>
@@ -1013,6 +980,18 @@
                 to your preconfigured logistics rules, but you can also record
                 manual stock movements.
               </p>
+            </field>
+        </record>
+
+        <record id="view_move_graph" model="ir.ui.view">
+            <field name="name">stock.move.graph</field>
+            <field name="model">stock.move</field>
+            <field name="arch" type="xml">
+                <graph string="Stock Moves Analysis" type="pivot">
+                    <field name="product_id" type="row"/>
+                    <field name="location_dest_id" groups="stock.group_locations" type="row"/>
+                    <field name="product_uom_qty" type="measure"/>
+                </graph>
             </field>
         </record>
 
@@ -1251,6 +1230,13 @@
             <field name="sequence" eval="3"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_move_form"/>
+        <field name="act_window_id" ref="action_move_form2"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_stock_move_graph_all">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_move_graph"/>
         <field name="act_window_id" ref="action_move_form2"/>
         </record>
 
@@ -2069,9 +2055,6 @@
                 <tree string="Routes">
                     <field name="sequence" widget="handle" />
                     <field name="name"/>
-                    <field name="product_selectable"/>
-                    <field name="product_categ_selectable"/>
-                    <field name="warehouse_selectable"/>
                 </tree>
             </field>
         </record>
@@ -2090,10 +2073,10 @@
                     <group>
                         <group>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="sequence" string="Sequence" groups="base.group_no_one"/>
+                            <field name="active" groups="stock.group_adv_location" />
                         </group>
                         <group>
-                            <field name="active" groups="stock.group_adv_location" />
+                            <field name="sequence" string="Sequence" groups="base.group_no_one"/>
                         </group>
                     </group>
                     <separator string="Applicable On"/>

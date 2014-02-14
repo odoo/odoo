@@ -8,10 +8,12 @@ class wizard_valuation_history(osv.osv_memory):
     _name = 'wizard.valuation.history'
     _description = 'Wizard that opens the stock valuation history table'
     _columns = {
+        'choose_date': fields.boolean('Choose a Particular Date'),
         'date': fields.datetime('Date', required=True),
     }
 
     _defaults = {
+        'choose_date': False,
         'date': fields.datetime.now,
     }
 
@@ -27,7 +29,7 @@ class wizard_valuation_history(osv.osv_memory):
             'domain': "[('date', '<=', '" + data['date'] + "')]",
             'name': _('Stock Value At Date'),
             'view_type': 'form',
-            'view_mode': 'tree',
+            'view_mode': 'tree, graph',
             'res_model': 'stock.history',
             'type': 'ir.actions.act_window',
             'context': ctx,
@@ -68,7 +70,7 @@ class stock_history(osv.osv):
         'location_id': fields.many2one('stock.location', 'Location', required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_categ_id': fields.many2one('product.category', 'Product Category', required=True),
-        'quantity': fields.integer('Quantity'),
+        'quantity': fields.integer('Product Quantity'),
         'date': fields.datetime('Operation Date'),
         'price_unit_on_quant': fields.float('Value'),
         'cost_method': fields.char('Cost Method'),
