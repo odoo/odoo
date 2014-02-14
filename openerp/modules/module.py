@@ -323,7 +323,7 @@ def get_test_modules(module):
     # Try to import the module
     module = 'openerp.addons.' + module + '.tests'
     try:
-        m = __import__(module)
+        __import__(module)
     except Exception, e:
         # If module has no `tests` sub-module, no problem.
         if str(e) != 'No module named tests':
