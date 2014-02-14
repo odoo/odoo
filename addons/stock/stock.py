@@ -1094,14 +1094,11 @@ class stock_picking(osv.osv):
                     if move.remaining_qty == 0:
                         if move.state in ('draft', 'assigned', 'confirmed'):
                             todo_move_ids.append(move.id)
-                    elif move.remaining_qty > 0:
+                    elif move.remaining_qty > 0 and move.remaining_qty < move.product_qty:
                         new_move = stock_move_obj.split(cr, uid, move, move.remaining_qty, context=context)
                         todo_move_ids.append(move.id)
                         #Assign move as it was assigned before
                         toassign_move_ids.append(new_move)
-                    elif move.state:
-                        #this should never happens
-                        raise
                 self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
                 if todo_move_ids and not context.get('do_only_split'):
                     self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=context)
@@ -3436,7 +3433,7 @@ class stock_pack_operation(osv.osv):
     def recompute_rem_qty_from_operation(self, cr, uid, op_ids, context=None):
         def _create_link_for_product(product_id, qty):
             qty_to_assign = qty
-            for move in op.picking_id.move_lines:
+            for move in sorted_moves:
                 if move.product_id.id == product_id and move.state not in ['done', 'cancel']:
                     qty_on_link = min(move.remaining_qty, qty_to_assign)
                     link_obj.create(cr, uid, {'move_id': move.id, 'operation_id': op.id, 'qty': qty_on_link}, context=context)
@@ -3448,6 +3445,11 @@ class stock_pack_operation(osv.osv):
         link_obj = self.pool.get('stock.move.operation.link')
         uom_obj = self.pool.get('product.uom')
         package_obj = self.pool.get('stock.quant.package')
+        if op_ids:
+            #sort moves in order to process first the ones that have already reserved quants
+            ops = self.browse(cr, uid, op_ids[0], context=context)
+            sorted_moves = ops.picking_id.move_lines
+            sorted_moves.sort(key = lambda x: x.product_qty - x.reserved_availability)
         for op in self.browse(cr, uid, op_ids, context=context):
             to_unlink_ids = [x.id for x in op.linked_move_operation_ids]
             if to_unlink_ids:
