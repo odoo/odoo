@@ -3443,13 +3443,14 @@ class stock_pack_operation(osv.osv):
                         link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': qty}, context=context)
             else:
                 # CHECK: Search necessary quants -> might pass through one of the quants_get functions instead
-                zeroquants = [x for x in quants_done.keys() if x == 0]
-                domain = [('reservation_id', 'in', [x.id for x in ops.picking_id.move_lines]), ('id', 'not in', zeroquants),
+                domain = [('reservation_id', 'in', [x.id for x in ops.picking_id.move_lines]),
                           ('product_id', '=', ops.product_id.id)]
                 if ops.package_id:
                     domain += [('package_id', 'child_of', ops.package_id.id)]
                 else:
                     domain += [('package_id', '=', False)]
+                if ops.lot_id:
+                    domain += [('lot_id', '=', ops.lot_id.id)]
                 domain += [('owner_id', '=', ops.owner_id.id)]
                 quants = quant_obj.search(cr, uid, domain, context=context)
                 # Process quants until 
@@ -3457,6 +3458,8 @@ class stock_pack_operation(osv.osv):
                 for quant in quant_obj.browse(cr, uid, quants, context=context):
                     quant_qty = quant.qty
                     if quants_done.get(quant.id):
+                        if quants_done[quant.id] == 0:
+                            continue
                         quant_qty = quants_done[quant.id]
                     if quant_qty > qty:
                         qty_todo = qty
