@@ -260,14 +260,16 @@
         <p id="is_document_user" groups="base.group_document_user"/>
     </xpath>
     <xpath expr="//span[@name='blog_post_date']" position="replace">
+        <div class="text-center mt16">
+            <a t-ignore="true" id="change_cover" class="btn btn-primary css_non_editable_mode_hidden" style="cursor :pointer">
+                Change Cover Photo
+            </a>
+        </div>
     </xpath>
     <xpath expr="//p[@name='blog_post_data']" position="before">
-        <h2 class="text-center " t-field="blog_post.sub_title"/>
+        <h2 class="text-center" t-field="blog_post.sub_title"/>
     </xpath>
     <xpath expr="//div[@id='title']" position="inside">
-        <a t-ignore="true" id="change_cover" class="btn btn-primary hover-edition-button css_non_editable_mode_hidden" style="top: 533px; left: 648px; cursor :pointer">
-            Change Cover Photo
-        </a>
         <div class="text-center blog_item">
             <img class="img-circle" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 30px; margin-right: 10px;"/>
             <small id="blog_author" t-field="blog_post.create_uid.name"/>
@@ -278,7 +280,7 @@
     </xpath>
     <xpath expr="//section[@id='comments']" position="after">
         <div class="cover_footer mb0" t-attf-style="background-image: url(#{next_post.content_image})">
-            <p class="text-center">Read Next</p>
+            <p class="text-center" t-ignore="true">Read Next</p>
             <a class="hidden js_next" t-attf-href="/blogpost/#{ slug(next_post) }#wrap"/>
             <h1 class="text-center" t-field="next_post.name"/>
             <h2 class="text-center" t-field="next_post.sub_title"/>
