@@ -830,6 +830,7 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state == 'draft':
                 self.action_confirm(cr, uid, [pick.id], context=context)
+            pick.refresh()
             #skip the moves that don't need to be checked
             move_ids = [x.id for x in pick.move_lines if x.state not in ('draft', 'cancel', 'done')]
             if not move_ids:
@@ -864,8 +865,7 @@ class stock_picking(osv.osv):
             todo = []
             for move in pick.move_lines:
                 if move.state == 'draft':
-                    todo.extend(self.pool.get('stock.move').action_confirm(cr, uid, [move.id],
-                        context=context))
+                    todo.extend(self.pool.get('stock.move').action_confirm(cr, uid, [move.id], context=context))
                 elif move.state in ('assigned', 'confirmed'):
                     todo.append(move.id)
             if len(todo):
@@ -911,7 +911,8 @@ class stock_picking(osv.osv):
             move_obj.write(cr, uid, backorder_move_ids, {'picking_id': backorder_id}, context=context)
 
             self.write(cr, uid, [picking.id], {'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
-            return self.action_confirm(cr, uid, [backorder_id], context=context)
+            self.action_confirm(cr, uid, [backorder_id], context=context)
+            return backorder_id
         return False
 
     def recheck_availability(self, cr, uid, picking_ids, context=None):
@@ -1084,7 +1085,7 @@ class stock_picking(osv.osv):
                         new_move = stock_move_obj.split(cr, uid, move, move.remaining_qty, context=context)
                         todo_move_ids.append(move.id)
                         #Assign move as it was assigned before
-                        toassign_move_ids.extend(new_move)
+                        toassign_move_ids.append(new_move)
                     elif move.state:
                         #this should never happens
                         raise
@@ -1767,7 +1768,7 @@ class stock_move(osv.osv):
         """ Confirms stock move or put it in waiting if it's linked to another move.
         @return: List of ids.
         """
-        if type(ids) in ('int', 'float'):
+        if isinstance(ids, ('int', 'long')):
             ids = [ids]
         states = {
             'confirmed': [],
@@ -2031,18 +2032,24 @@ class stock_move(osv.osv):
         :param move: browse record
         :param qty: float. quantity to split (given in product UoM)
         :param context: dictionay. can contains the special key 'source_location_id' in order to force the source location when copying the move
+
+        returns the ID of the backorder move created
         """
+        if move.state in ('done', 'cancel'):
+            raise osv.except_osv(_('Error'), _('You cannot split a move done'))
+        if move.state == 'draft':
+            #we restrict the split of a draft move because if not confirmed yet, it may be replaced by several other moves in
+            #case of phantom bom (with mrp module). And we don't want to deal with this complexity by copying the product that will explode.
+            raise osv.except_osv(_('Error'), _('You cannot split a draft move. It needs to be confirmed first.'))
+
         if move.product_qty <= qty or qty == 0:
-            return [move.id]
+            return move.id
 
         uom_obj = self.pool.get('product.uom')
         context = context or {}
 
         uom_qty = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, qty, move.product_uom.id)
         uos_qty = uom_qty * move.product_uos_qty / move.product_uom_qty
-
-        if move.state in ('done', 'cancel'):
-            raise osv.except_osv(_('Error'), _('You cannot split a move done'))
 
         defaults = {
             'product_uom_qty': uom_qty,
@@ -2070,8 +2077,9 @@ class stock_move(osv.osv):
         if move.move_dest_id and move.propagate:
             new_move_prop = self.split(cr, uid, move.move_dest_id, qty, context=context)
             self.write(cr, uid, [new_move], {'move_dest_id': new_move_prop}, context=context)
-
-        return self.action_confirm(cr, uid, [new_move], context=context)
+        #returning the first element of list returned by action_confirm is ok because we checked it wouldn't be exploded (and
+        #thus the result of action_confirm should always be a list of 1 element length)
+        return self.action_confirm(cr, uid, [new_move], context=context)[0]
 
 
 class stock_inventory(osv.osv):
@@ -3085,6 +3093,7 @@ class stock_location_path(osv.osv):
         'propagate': True,
         'active': True,
     }
+
     def _apply(self, cr, uid, rule, move, context=None):
         move_obj = self.pool.get('stock.move')
         newdate = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=rule.delay or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -3100,7 +3109,6 @@ class stock_location_path(osv.osv):
             if rule.location_dest_id.id != old_dest_location:
                 #call again push_apply to see if a next step is defined
                 move_obj._push_apply(cr, uid, [move], context=context)
-            return move.id
         else:
             move_id = move_obj.copy(cr, uid, move.id, {
                 'location_id': move.location_dest_id.id,
@@ -3117,7 +3125,7 @@ class stock_location_path(osv.osv):
             move_obj.write(cr, uid, [move.id], {
                 'move_dest_id': move_id,
             })
-            return move_obj.action_confirm(cr, uid, [move_id], context=None)
+            move_obj.action_confirm(cr, uid, [move_id], context=None)
 
 class stock_move_putaway(osv.osv):
     _name = 'stock.move.putaway'

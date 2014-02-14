@@ -37,9 +37,7 @@ class StockMove(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
-        default.update({
-            'production_id': False,
-        })
+        default['production_id'] = False
         return super(StockMove, self).copy(cr, uid, id, default, context=context)
 
     def check_tracking(self, cr, uid, move, lot_id, context=None):
@@ -52,10 +50,12 @@ class StockMove(osv.osv):
     def _check_phantom_bom(self, cr, uid, move, context=None):
         """check if product associated to move has a phantom bom
             return list of ids of mrp.bom for that product """
-        return self.pool.get('mrp.bom').search(cr, uid, [
+        user_company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        return self.pool.get('mrp.bom').search(cr, SUPERUSER_ID, [
             ('product_id', '=', move.product_id.id),
             ('bom_id', '=', False),
-            ('type', '=', 'phantom')])
+            ('type', '=', 'phantom'),
+            ('company_id', '=', user_company)], context=context)
 
     def _action_explode(self, cr, uid, move, context=None):
         """ Explodes pickings.
@@ -66,8 +66,9 @@ class StockMove(osv.osv):
         move_obj = self.pool.get('stock.move')
         procurement_obj = self.pool.get('procurement.order')
         product_obj = self.pool.get('product.product')
+        to_explode_again_ids = []
         processed_ids = []
-        bis = self._check_phantom_bom(cr, SUPERUSER_ID, move, context=context)
+        bis = self._check_phantom_bom(cr, uid, move, context=context)
         if bis:
             factor = move.product_qty
             bom_point = bom_obj.browse(cr, SUPERUSER_ID, bis[0], context=context)
@@ -87,33 +88,29 @@ class StockMove(osv.osv):
                     'name': line['name'],
                 }
                 mid = move_obj.copy(cr, uid, move.id, default=valdef)
-                processed_ids.append(mid)
+                to_explode_again_ids.append(mid)
 
+            #delete the move with original product which is not relevant anymore
             move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)
             #check if new moves needs to be exploded
-            if processed_ids:
-                for new_move in self.browse(cr, uid, processed_ids, context=context):
-                    exploded_ids = self._action_explode(cr, uid, new_move, context=context)
-                    if not (len(exploded_ids)==1 and exploded_ids[0]==new_move.id):
-                        #we have some exploded move, delete parent move and add new moves
-                        #to the list of processed ones
-                        processed_ids.remove(move.id)
-                        processed_ids.extend(exploded_ids)
+            if to_explode_again_ids:
+                for new_move in self.browse(cr, uid, to_explode_again_ids, context=context):
+                    processed_ids.extend(self._action_explode(cr, uid, new_move, context=context))
         #return list of newly created move or the move id otherwise
         return processed_ids or [move.id]
 
     def action_confirm(self, cr, uid, ids, context=None):
         move_ids = []
         for move in self.browse(cr, uid, ids, context=context):
-            #in order to explode a move, we must have a picking_id on that move!
-            #if action_explode return a list of new move, it means it has exploded
-            #and that original move has been deleted, so we should remove that id 
-            #from super call to prevent problem
+            #in order to explode a move, we must have a picking_type_id on that move because otherwise the move
+            #won't be assigned to a picking and it would be weird to explode a move into several if they aren't
+            #all grouped in the same picking.
             if move.picking_type_id:
                 move_ids.extend(self._action_explode(cr, uid, move, context=context))
             else:
                 move_ids.append(move.id)
 
+        #we go further with the list of ids potentially changed by action_explode
         return super(StockMove, self).action_confirm(cr, uid, move_ids, context=context)
 
     def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id=False, restrict_partner_id=False,
@@ -134,9 +131,15 @@ class StockMove(osv.osv):
 
         if product_qty <= 0:
             raise osv.except_osv(_('Warning!'), _('Please provide proper quantity.'))
+        #because of the action_confirm that can create extra moves in case of phantom bom, we need to make 2 loops
+        ids2 = []
         for move in self.browse(cr, uid, ids, context=context):
             if move.state == 'draft':
-                self.action_confirm(cr, uid, [move.id], context=context)
+               ids2.extend(self.action_confirm(cr, uid, [move.id], context=context))
+            else:
+               ids2.append(move.id)
+
+        for move in self.browse(cr, uid, ids2, context=context):
             move_qty = move.product_qty
             uom_qty = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, product_qty, move.product_uom.id)
             if move_qty <= 0:
