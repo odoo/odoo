@@ -494,9 +494,14 @@ class website_menu(osv.osv):
         'parent_left': fields.integer('Parent Left', select=True),
         'parent_right': fields.integer('Parent Right', select=True),
     }
+
+    def __defaults_sequence(self, cr, uid, context):
+        menu = self.search_read(cr, uid, [(1,"=",1)], ["sequence"], limit=1, order="sequence DESC", context=context)
+        return menu and menu[0]["sequence"] or 0
+
     _defaults = {
         'url': '',
-        'sequence': 0,
+        'sequence': __defaults_sequence,
         'new_window': False,
     }
     _parent_store = True
