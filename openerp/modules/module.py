@@ -50,8 +50,6 @@ ad_paths = []
 # Modules already loaded
 loaded = []
 
-_logger = logging.getLogger(__name__)
-
 class AddonsImportHook(object):
     """
     Import hook to load OpenERP addons from multiple paths.
@@ -70,13 +68,10 @@ class AddonsImportHook(object):
             return self # We act as a loader too.
 
     def load_module(self, module_name):
+        if module_name in sys.modules:
+            return sys.modules[module_name]
 
-        module_parts = module_name.split('.')
-        if len(module_parts) == 3 and module_name.startswith('openerp.addons.'):
-            module_part = module_parts[2]
-            if module_name in sys.modules:
-                return sys.modules[module_name]
-
+        _1, _2, module_part = module_name.split('.')
         # Note: we don't support circular import.
         f, path, descr = imp.find_module(module_part, ad_paths)
         mod = imp.load_module('openerp.addons.' + module_part, f, path, descr)
@@ -328,7 +323,7 @@ def get_test_modules(module):
     # Try to import the module
     module = 'openerp.addons.' + module + '.tests'
     try:
-        m = __import__(module)
+        __import__(module)
     except Exception, e:
         # If module has no `tests` sub-module, no problem.
         if str(e) != 'No module named tests':
@@ -336,10 +331,9 @@ def get_test_modules(module):
         return []
 
     # include submodules too
-    result = []
-    for name in sys.modules:
-        if name.startswith(module) and sys.modules[name]:
-            result.append(sys.modules[name])
+    result = [mod_obj for name, mod_obj in sys.modules.iteritems()
+              if mod_obj # mod_obj can be None
+              if name.startswith(module)]
     return result
 
 # Use a custom stream object to log the test executions.
@@ -367,9 +361,9 @@ def run_unit_tests(module_name, dbname):
     r = True
     for m in mods:
         suite = unittest2.TestSuite()
-        for t in unittest2.TestLoader().loadTestsFromModule(m):
-            suite.addTest(t)
-        _logger.log(logging.INFO, 'module %s: running test %s.', module_name, m.__name__)
+        suite.addTests(unittest2.TestLoader().loadTestsFromModule(m))
+        _logger.info('module %s: running test %s.', module_name, m.__name__)
+
         result = unittest2.TextTestRunner(verbosity=2, stream=TestStream()).run(suite)
         if not result.wasSuccessful():
             r = False
