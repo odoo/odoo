@@ -134,6 +134,7 @@ class Report(http.Controller):
         # Get some css and script in order to build a minimal html page for the report.
         # This page will later be sent to wkhtmltopdf.
         css = self._get_url_content('/report/static/src/css/reset.min.css')
+        css += self._get_url_content('/web/static/lib/bootstrap/css/bootstrap.css')
         css += self._get_url_content('/website/static/src/css/website.css')
         subst = self._get_url_content('/report/static/src/js/subst.js')
 
@@ -144,7 +145,6 @@ class Report(http.Controller):
 <html style="height: 0mm;">
     <head>
         <style type='text/css'>{0}</style>
-        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
         <script type='text/javascript'>{1}</script>
     </head>
     <body class="container" onload='subst()'>
