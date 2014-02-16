@@ -168,9 +168,9 @@ class WebRequest(object):
         """
         # some magic to lazy create the cr
         if not self._cr:
-            if openerp.tools.config['test_enable'] and self.session_id in openerp.tests.common.HTTP_SESSION:
-                self._cr = openerp.tests.common.HTTP_SESSION[self.session_id]
-            else:
+            # Test cursors
+            self._cr = openerp.tests.common.acquire_test_cursor(self.session_id)
+            if not self._cr:
                 self._cr = self.registry.db.cursor()
         return self._cr
 
@@ -180,10 +180,13 @@ class WebRequest(object):
 
     def __exit__(self, exc_type, exc_value, traceback):
         _request_stack.pop()
-        if self._cr and not (openerp.tools.config['test_enable'] and self.session_id in openerp.tests.common.HTTP_SESSION):
-            if exc_type is None:
-                self._cr.commit()
-            self._cr.close()
+
+        if self._cr:
+            # Dont commit test cursors
+            if not openerp.tests.common.release_test_cursor(self.session_id):
+                if exc_type is None:
+                    self._cr.commit()
+                self._cr.close()
         # just to be sure no one tries to re-use the request
         self.disable_db = True
         self.uid = None
@@ -595,7 +598,7 @@ class Service(object):
 class Model(object):
     """
         .. deprecated:: 8.0
-        Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
+        Use the resistry and cursor in ``openerp.http.request`` instead.
     """
     def __init__(self, session, model):
         self.session = session
