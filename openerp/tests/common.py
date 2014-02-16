@@ -175,7 +175,8 @@ class HttpCase(TransactionCase):
         try:
             phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         except OSError:
-            _logger.info("phantomjs not found, test %s skipped", jsfile)
+            _logger.info("phantomjs not found, test skipped")
+            return
         try:
             self.phantom_poll(phantom, timeout)
         finally:
