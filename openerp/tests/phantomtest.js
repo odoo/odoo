@@ -24,11 +24,7 @@ function waitFor (ready, callback, timeout, timeoutMessageCallback) {
 
 function PhantomTest() {
     var self = this;
-    if(phantom.args.length === 1) {
-        this.options = JSON.parse(phantom.args[0]);
-    } else {
-        this.options = JSON.parse(phantom.args[1]);
-    }
+    this.options = JSON.parse(phantom.args[phantom.args.length-1]);
     this.inject = [];
     this.timeout = this.options.timeout ? Math.round(parseFloat(this.options.timeout)*1000 - 5000) : 10000;
     this.origin = 'http://localhost';
@@ -44,15 +40,15 @@ function PhantomTest() {
     };
 
     // ----------------------------------------------------
-    // configure page
+    // configure phantom and page
     // ----------------------------------------------------
-    this.page = require('webpage').create();
-    this.page.viewportSize = { width: 1366, height: 768 };
-    this.page.addCookie({
+    phantom.addCookie({
         'domain': 'localhost',
         'name': 'session_id',
         'value': this.options.session_id,
     });
+    this.page = require('webpage').create();
+    this.page.viewportSize = { width: 1366, height: 768 };
     this.page.onError = function(message, trace) {
         self.error(message + " " + trace);
     };
@@ -101,7 +97,7 @@ function PhantomTest() {
             qp.push('login=' + self.options.login);
             qp.push('key=' + self.options.password);
             qp.push('redirect=' + encodeURIComponent(url_path));
-            var url_path = "/web/login?" + qp.join('&');
+            var url_path = "/login?" + qp.join('&');
         }
         var url = self.origin + url_path;
         self.page.open(url, function(status) {
@@ -116,7 +112,7 @@ function PhantomTest() {
                         try {
                             r = !!eval(ready);
                         } catch(ex) {
-                            console.log("waiting for page " + ready)
+                            console.log("waiting for " + ready)
                         };
                         return r;
                     }, ready);
