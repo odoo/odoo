@@ -2718,8 +2718,7 @@ class BaseModel(object):
         offset_str = offset and ' offset %d' % offset or ''
         if len(groupby_list) < 2 and context.get('group_by_no_leaf'):
             group_count = '_'
-        query = 'SELECT min(%s.id) AS id, count(%s.id) AS %s_count' % (self._table, self._table, group_count) + (flist and ',') + flist  + ' FROM ' + from_clause + where_clause + gb + (ob and ',') + ob  + orderby_clause + limit_str + offset_str
-        cr.execute(query , where_clause_params)
+        cr.execute('SELECT min(%s.id) AS id, count(%s.id) AS %s_count' % (self._table, self._table, group_count) + (flist and ',') + flist  + ' FROM ' + from_clause + where_clause + gb + (ob and ',') + ob  + orderby_clause + limit_str + offset_str, where_clause_params)
         alldata = {}
         groupby = group_by
 
