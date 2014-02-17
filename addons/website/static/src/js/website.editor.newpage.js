@@ -2,6 +2,7 @@
     "use strict";
 
     var website = openerp.website;
+    var _t = openerp._t;
     website.is_editable = true;
     website.is_editable_button = true;
     
@@ -16,7 +17,8 @@
             'click a[data-action=new_page]': function (ev) {
                 ev.preventDefault();
                 website.prompt({
-                    window_title: "New Page",
+                    id: "editor_new_page",
+                    window_title: _t("New Page"),
                     input: "Page Title",
                 }).then(function (val) {
                     if (val) {

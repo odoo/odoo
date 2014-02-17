@@ -2,6 +2,7 @@
     "use strict";
 
     var website = openerp.website;
+    var _t = openerp._t;
     website.add_template_file('/website_blog/static/src/xml/website_blog.xml');
 
     website.is_editable = true;
@@ -16,7 +17,8 @@
             'click a[data-action=new_blog_post]': function (ev) {
                 ev.preventDefault();
                 website.prompt({
-                    window_title: "New Blog Post",
+                    id: "editor_new_blog",
+                    window_title: _t("New Blog Post"),
                     select: "Select Blog",
                     init: function (field) {
                         return website.session.model('blog.blog')

@@ -495,13 +495,9 @@
         <field name="alias_name">jobs</field>
         <field name="alias_model_id" ref="model_hr_applicant"/>
         <field name="alias_user_id" ref="base.user_root"/>
+        <field name="alias_parent_model_id" ref="model_hr_job"/>
     </record>
 
-    <!-- Job-related subtypes for messaging / Chatter -->
-    <record id="mt_job_new_applicant" model="mail.message.subtype">
-        <field name="name">New Applicant</field>
-        <field name="res_model">hr.job</field>
-    </record>
     <!-- Applicant-related subtypes for messaging / Chatter -->
     <record id="mt_applicant_new" model="mail.message.subtype">
         <field name="name">New Applicant</field>
@@ -515,12 +511,35 @@
         <field name="default" eval="False"/>
         <field name="description">Stage changed</field>
     </record>
-    <record id="mt_applicant_employee" model="mail.message.subtype">
+    <record id="mt_applicant_hired" model="mail.message.subtype">
         <field name="name">Applicant Hired</field>
         <field name="res_model">hr.applicant</field>
         <field name="default" eval="False"/>
         <field name="description">Applicant hired</field>
     </record>
+    <!-- Job-related subtypes for messaging / Chatter -->
+    <record id="mt_job_applicant_new" model="mail.message.subtype">
+        <field name="name">Applicant Created</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="False"/>
+        <field name="parent_id" eval="ref('mt_applicant_new')"/>
+        <field name="relation_field">job_id</field>
+    </record>
+    <record id="mt_job_applicant_stage_changed" model="mail.message.subtype">
+        <field name="name">Applicant Stage Changed</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="True"/>
+        <field name="parent_id" eval="ref('mt_applicant_stage_changed')"/>
+        <field name="relation_field">job_id</field>
+    </record>
+    <record id="mt_job_applicant_hired" model="mail.message.subtype">
+        <field name="name">Applicant Hired</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="True"/>
+        <field name="parent_id" eval="ref('mt_applicant_hired')"/>
+        <field name="relation_field">job_id</field>
+    </record>
+
     <!-- Applicant Categories(Tag) -->
     <record id="tag_applicant_reserve" model="hr.applicant_category">
         <field name="name">Reserve</field>
