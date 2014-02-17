@@ -147,7 +147,7 @@ class res_company(osv.osv):
         'website': fields.related('partner_id', 'website', string="Website", type="char", size=64),
         'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32),
         'company_registry': fields.char('Company Registry', size=64),
-        'rml_paper_format': fields.selection([('a4', 'A4'), ('us_letter', 'US Letter')], "Paper Format", required=True),
+        'rml_paper_format': fields.selection([('a4', 'A4'), ('us_letter', 'US Letter')], "Paper Format", required=True, oldname='paper_format'),
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
