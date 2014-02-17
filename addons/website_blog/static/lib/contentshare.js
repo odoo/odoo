@@ -3,7 +3,14 @@
         var option = $.extend($.fn.share.defaults,options);
         $.extend($.fn.share,{
             init : function(shareable) {
+                var self = this;
                 $.fn.share.defaults.shareable = shareable;
+                $.fn.share.defaults.shareable.on('mouseup',function(){
+                    self.popOver();
+                });
+                $.fn.share.defaults.shareable.on('mousedown',function(){
+                    self.destroy();
+                });
             },
             getContent : function() {
                 var current_url = window.location.href
@@ -53,13 +60,3 @@
     };
 
 }());
-
-$(document).ready(function(){
-    $("p").share();
-    $.fn.share.defaults.shareable.on('mouseup',function(){
-        $.fn.share.popOver();
-    });
-    $.fn.share.defaults.shareable.on('mousedown',function(){
-        $.fn.share.destroy();
-    });
-});

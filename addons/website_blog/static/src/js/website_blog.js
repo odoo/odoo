@@ -2,6 +2,7 @@ $(document).ready(function() {
     $("#blog_content p").inlineDisqussions({'document_user': $('#is_document_user').length}); //Allow inline comments on blog post
     $('.cover_footer').on('click',page_transist);
     $('a[href^="#blog_content"]').on('click', animate);
+    $("p").share();
     function page_transist(event) {
         event.preventDefault();
         var translationValue  = $('.cover_footer').get(0).getBoundingClientRect().top;
@@ -34,6 +35,7 @@ $(document).ready(function() {
             $(document).find('.cover_footer').on('click',page_transist);
             $(document).find('a[href^="#blog_content"]').on('click', animate);
             $(document).find("#blog_content p").inlineDisqussions({'document_user': $('#is_document_user').length});
+            $("p").share();
         });
     }
 });
