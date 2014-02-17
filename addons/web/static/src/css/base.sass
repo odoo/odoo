@@ -189,6 +189,17 @@ $sheet-padding: 16px
         vertical-align: middle
     td
         vertical-align: top
+    .oe_title
+        width: 50%
+        float: left    
+    .oe_title:after
+        content: "."
+        display: block
+        height: 0
+        clear: both
+        visibility: hidden    
+    .oe_form_group
+        clear: both
     .zebra tbody tr:nth-child(odd) td
         background-color: #f0f0fa
         @include vertical-gradient(#f0f0fa, #eeeef6)
@@ -1302,7 +1313,6 @@ $sheet-padding: 16px
                     background: $tag-bg-light
                     @include radius(0 3px 3px 0)
                 .oe_facet_category, .oe_facet_value
-                    height: 18px
                     padding: 0 4px
                 .oe_facet_category
                     color: white
@@ -2419,18 +2429,6 @@ $sheet-padding: 16px
     .oe_debug_view_log
         font-size: 95%
         line-height: 1.2em
-    .oe_debug_view_log label
-        display: block
-        width: 49%
-        text-align: right
-        float: left
-        font-weight: bold
-        color: #009
-    .oe_debug_view_log span
-        display: block
-        width: 49%
-        float: right
-        color: #333
     // }}}
     // Bootstrap HACKS {{{
     .navbar
@@ -2438,6 +2436,7 @@ $sheet-padding: 16px
         margin-bottom: 0px
         border: none
         z-index: 1
+        position: static
         background-color: #414141
         @include vertical-gradient(#646060, #262626)
     .navbar-default

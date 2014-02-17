@@ -815,6 +815,11 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             contexts: [action_context].concat(contexts || []),
             group_by_seq: groupbys || []
         }).done(function (results) {
+            if (results.error) {
+                throw new Error(
+                        _.str.sprintf(_t("Failed to evaluate search criterions")+": \n%s",
+                                      JSON.stringify(results.error)));
+            }
             self.dataset._model = new instance.web.Model(
                 self.dataset.model, results.context, results.domain);
             var groupby = results.group_by.length
@@ -1259,7 +1264,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         this.dataset = dataset;
         this.model_id = model_id;
         if (args && args[0].error) {
-            this.do_warn( instance.web.qweb.render('message_error_uploading'), args[0].error);
+            this.do_warn(_t('Uploading Error'), args[0].error);
         }
         if (!model_id) {
             this.on_attachments_loaded([]);
