@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -27,8 +27,10 @@ the database, *not* a database abstraction toolkit. Database abstraction is what
 the ORM does, in fact.
 """
 
+from contextlib import contextmanager
 from functools import wraps
 import logging
+import time
 import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
@@ -343,6 +345,19 @@ class Cursor(object):
         """ Perform an SQL `ROLLBACK`
         """
         return self._cnx.rollback()
+
+    @contextmanager
+    @check
+    def savepoint(self):
+        """context manager entering in a new savepoint"""
+        name = hex(int(time.time() * 1000))[1:]
+        self.execute("SAVEPOINT %s" % (name,))
+        try:
+            yield
+            self.execute('RELEASE SAVEPOINT %s' % (name,))
+        except Exception:
+            self.execute('ROLLBACK TO SAVEPOINT %s' % (name,))
+            raise
 
     @check
     def __getattr__(self, name):
