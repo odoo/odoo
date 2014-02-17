@@ -169,7 +169,6 @@ class purchase_requisition(osv.osv):
         vals.update({
             'order_id': purchase_id,
             'product_id': product.id,
-            'purchase_requisition_id': requisition.id,
             'account_analytic_id': requisition_line.account_analytic_id.id,
         })
         return vals
