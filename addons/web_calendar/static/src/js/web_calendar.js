@@ -114,9 +114,9 @@ openerp.web_calendar = function(instance) {
             this.date_delay = attrs.date_delay;     // duration
             this.date_stop = attrs.date_stop;
             this.all_day = attrs.all_day;
+            this.how_display_event = '';           
             this.attendee_people = attrs.attendee;
-            this.how_display_event = '';
-           
+
             if (!isNullOrUndef(attrs.quick_create_instance)) {
                 self.quick_create_instance = 'instance.' + attrs.quick_create_instance;
             }
@@ -142,12 +142,23 @@ openerp.web_calendar = function(instance) {
                 this.open_popup_action = attrs.event_open_popup;
             }
             
+
             // If this field is set to true, we will use the calendar_friends model as filter and not the color field.
-            this.useContacts = (!isNullOrUndef(attrs.use_contacts) && _.str.toBool(attrs.use_contacts));
+            this.useContacts = (!isNullOrUndef(attrs.use_contacts) && _.str.toBool(attrs.use_contacts)) && (!isNullOrUndef(self.options.$sidebar));
 
             // If this field is set ot true, we don't add itself as an attendee when we use attendee_people to add each attendee icon on an event
             // The color is the color of the attendee, so don't need to show again that it will be present
-            this.colorIsAttendee = (!(isNullOrUndef(attrs.color_is_attendee) || !_.str.toBoolElse(attrs.color_is_attendee, true)));
+            this.colorIsAttendee = (!(isNullOrUndef(attrs.color_is_attendee) || !_.str.toBoolElse(attrs.color_is_attendee, true))) && (!isNullOrUndef(self.options.$sidebar));
+
+
+
+            // if we have not sidebar, (eg: Dashboard), we don't use the filter "coworkers"
+            if (isNullOrUndef(self.options.$sidebar)) {
+                this.useContacts = false;
+                this.colorIsAttendee = false;
+                this.attendee_people = undefined;
+            }
+
                 
 /*
             Will be more logic to do it in futur, but see below to stay Retro-compatible
@@ -488,13 +499,20 @@ openerp.web_calendar = function(instance) {
         event_data_transform: function(evt) {
             var self = this;
 
-            var date_start = instance.web.auto_str_to_date(evt[this.date_start]),
-                date_stop = this.date_stop ? instance.web.auto_str_to_date(evt[this.date_stop]) : null,
-                date_delay = evt[this.date_delay] || 1.0,
+            var date_delay = evt[this.date_delay] || 1.0,
                 all_day = this.all_day ? evt[this.all_day] : false,
                 res_computed_text = '',
                 the_title = '',
                 attendees = [];
+
+            if (!all_day) {
+                date_start = instance.web.auto_str_to_date(evt[this.date_start]);
+                date_stop = this.date_stop ? instance.web.auto_str_to_date(evt[this.date_stop]) : null;
+            }
+            else {
+                date_start = instance.web.auto_str_to_date(evt[this.date_start].split(' ')[0],'date');
+                date_stop = this.date_stop  ? instance.web.auto_str_to_date(evt[this.date_stop].split(' ')[0],'date').addMinutes(-1) : null;   
+            }
 
             if (this.info_fields) {
                 var temp_ret = {};
@@ -582,7 +600,7 @@ openerp.web_calendar = function(instance) {
                 date_stop = date_start.clone().addHours(date_delay);
             }
             if (this.fields[this.date_start].type != "date" && all_day) {
-                date_stop.addDays(-1);
+                //date_stop.addDays(-1);
             }
             var r = {
                 'start': date_start.toString('yyyy-MM-dd HH:mm:ss'),
@@ -897,6 +915,10 @@ openerp.web_calendar = function(instance) {
         slow_created: function () {
             // refresh all view, because maybe some recurrents item
             var self = this;
+            if (self.sidebar) {
+                // force filter refresh
+                self.sidebar.filter.is_loaded = false;
+            }
             self.$calendar.fullCalendar('refetchEvents');
         },
 
@@ -1052,6 +1074,7 @@ openerp.web_calendar = function(instance) {
             var self = this;
             var def = $.Deferred();
             var defaults = {};
+
             _.each($.extend({}, this.data_template, data), function(val, field_name) {
                 defaults['default_' + field_name] = val;
             });
