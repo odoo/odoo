@@ -25,7 +25,7 @@ function waitFor (ready, callback, timeout, timeoutMessageCallback) {
 function PhantomTest() {
     var self = this;
     this.options = JSON.parse(phantom.args[phantom.args.length-1]);
-    this.inject = [];
+    this.inject = this.options.inject || [];
     this.timeout = this.options.timeout ? Math.round(parseFloat(this.options.timeout)*1000 - 5000) : 10000;
     this.origin = 'http://localhost';
     this.origin += this.options.port ? ':' + this.options.port : '';
@@ -60,20 +60,27 @@ function PhantomTest() {
     };
     this.page.onLoadFinished = function(status) {
         if (status === "success") {
-            var src, test;
             for (var k in self.inject) {
-                if (typeof self.inject[k] !== "string") {
-                    test = self.page.evaluate(function (variable) {
-                        try { return eval("("+variable+")") != null; }
-                        catch (e) { return false; }
-                    }, self.inject[k][0]);
-                    src = self.inject[k][1];
-                } else {
-                    src = self.inject[k];
-                    test = true;
+                var found = false;
+                var v = self.inject[k];
+                var need = v;
+                var src = v;
+                if (v[0]) {
+                    need = v[0];
+                    src = v[1];
+                    found = self.page.evaluate(function(code) {
+                        try {
+                            return !!eval(code);
+                        } catch (e) {
+                            return false;
+                        }
+                    }, need);
                 }
-                if(test && !page.injectJs(src)) {
-                    self.error("Can't inject " + src);
+                if(!found) {
+                    console.log('Injecting', src, 'needed for', need);
+                    if(!self.page.injectJs(src)) {
+                        self.error("Cannot inject " + src);
+                    }
                 }
             }
         }
@@ -112,8 +119,8 @@ function PhantomTest() {
                         try {
                             r = !!eval(ready);
                         } catch(ex) {
-                            console.log("waiting for " + ready)
-                        };
+                            console.log("waiting for " + ready);
+                        }
                         return r;
                     }, ready);
                 // run test
