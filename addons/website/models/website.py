@@ -87,7 +87,10 @@ def slug(value):
     else:
         # assume name_search result tuple
         id, name = value
-    return "%s-%d" % (slugify(name), id)
+    slugname = slugify(name)
+    if not slugname:
+        return str(id)
+    return "%s-%d" % (slugname, id)
 
 def urlplus(url, params):
     return werkzeug.Href(url)(params or None)
