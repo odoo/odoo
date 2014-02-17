@@ -395,24 +395,26 @@
     </t>
 </template>
 
-<!-- Option: Right Column for extra info -->
+<!-- Option: Left Column for extra info -->
 
-<template id="index_right" name="Right Column"
+<template id="index_left" name="Left Column"
         inherit_option_id="website_blog.index">
     <xpath expr="//div[@id='wrap']" position="replace">
         <div class="container mt16 js_website_blog">
-            <div class="col-lg-7 col-sm-7" id="blog_left_column">
-                <t t-raw="0"/>
+            <div class="row">
+                <div class="col-lg-3 col-lg-offset-1 col-sm-4" id="blog_left_column"/>
+                <div class="col-lg-8 col-sm-8" id="blog_right_column">
+                    <t t-raw="0"/>
+                </div>
             </div>
-            <div class="col-lg-3 col-sm-3 pull-right" id="blog_right_column"/>
         </div>
     </xpath>
 </template>
 
-<!-- Option: Right Column: tags -->
+<!-- Option: Left Column: tags -->
 <template id="opt_blog_rc_tags" name="Tags"
-        inherit_option_id="website_blog.index_right">
-    <xpath expr="//div[@id='blog_right_column']" position="inside">
+        inherit_option_id="website_blog.index_left">
+    <xpath expr="//div[@id='blog_left_column']" position="inside">
         <section class="mt32">
         <h4>Tags</h4>
         <ul class="nav nav-pills nav-stacked">
@@ -426,10 +428,10 @@
     </xpath>
 </template>
 
-<!-- Option: Right Column: archives -->
+<!-- Option: Left Column: archives -->
 <template id="opt_blog_rc_history" name="Archives"
-        inherit_option_id="website_blog.index_right">
-    <xpath expr="//div[@id='blog_right_column']" position="inside">
+        inherit_option_id="website_blog.index_left">
+    <xpath expr="//div[@id='blog_left_column']" position="inside">
         <section class="mt32">
         <h4>Archives</h4>
         <ul class="nav nav-pills nav-stacked">
@@ -443,10 +445,10 @@
     </xpath>
 </template>
 
-<!-- Option: Right Column: about us -->
+<!-- Option: Left Column: about us -->
 <template id="opt_blog_rc_about_us" name="About Us" priority="2"
-        inherit_option_id="website_blog.index_right">
-    <xpath expr="//div[@id='blog_right_column']" position="inside">
+        inherit_option_id="website_blog.index_left">
+    <xpath expr="//div[@id='blog_left_column']" position="inside">
         <section class="mt32">
         <h4>About us</h4>
         <p>
@@ -460,10 +462,10 @@
     </xpath>
 </template>
 
-<!-- Option: Right Column: follow us -->
+<!-- Option: Left Column: follow us -->
 <template id="opt_blog_rc_follow_us" name="Follow us" priority="4"
-        inherit_option_id="website_blog.index_right">
-    <xpath expr="//div[@id='blog_right_column']" position="inside">
+        inherit_option_id="website_blog.index_left">
+    <xpath expr="//div[@id='blog_left_column']" position="inside">
         <section class="mt32">
             <h4>Follow us<small t-if="blog">: <t t-esc="blog.name"/></small></h4>
             <t t-if="blog">
@@ -487,31 +489,22 @@
     </xpath>
 </template>
 
-<!-- Option: Right Column: blogs -->
-<template id="opt_blog_rc_blogs" name="Our Blogs"
-        inherit_option_id="website_blog.index">
-    <xpath expr="//div[@id='wrap']" position="replace">
-        <div class="mt16 js_website_blog">
-            <div class="row">
-                <div class="col-lg-2 col-sm-2" id="blog_left_column">
-                    <section class="mt32 mb32 pull-right">
-                        <h4>Our Blogs</h4>
-                        <ul class="nav nav-pills nav-stacked">
-                            <t t-foreach="blogs" t-as="nav_blog">
-                                <li t-att-class="nav_blog.id == blog.id and 'active' or ''">
-                                    <a t-attf-href="/blog/#{ slug(nav_blog) }">
-                                        <span t-field="nav_blog.name"/>
-                                    </a>
-                                </li>
-                            </t>
-                        </ul>
-                    </section>
-                </div>
-                <div class="col-lg-10 col-sm-10" id="wrap">
-                    <t t-raw="0"/>
-                </div>
-            </div>
-        </div>
+<!-- Option: Left Column: blogs -->
+<template id="opt_blog_rc_blogs" name="Our Blogs" priority="6"
+        inherit_option_id="website_blog.index_left">
+    <xpath expr="//div[@id='blog_left_column']" position="inside">
+        <section class="mt32 mb32">
+        <h4>Our Blogs</h4>
+        <ul class="nav nav-pills nav-stacked">
+            <t t-foreach="blogs" t-as="nav_blog">
+                <li t-att-class="nav_blog.id == blog.id and 'active' or ''">
+                    <a t-attf-href="/blog/#{ slug(nav_blog) }">
+                        <span t-field="nav_blog.name"/>
+                    </a>
+                </li>
+            </t>
+        </ul>
+        </section>
     </xpath>
 </template>
 
