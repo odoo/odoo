@@ -3446,7 +3446,7 @@ class stock_pack_operation(osv.osv):
                 check_pack = quant_pack.parent_id
             return check
 
-        def _check_quants_reserve(ops):
+        def _check_quants_reserved(ops):
             if ops.package_id and not ops.product_id: 
                 for quant in quant_obj.browse(cr, uid, package_obj.get_content(cr, uid, [ops.package_id.id]), context=context):
                     if quant.reservation_id and quant.reservation_id.id in [x.id for x in ops.picking_id.move_lines] and (not quants_done.get(quant.id)):
@@ -3491,9 +3491,10 @@ class stock_pack_operation(osv.osv):
             to_unlink_ids = [x.id for x in op.linked_move_operation_ids]
             if to_unlink_ids:
                 link_obj.unlink(cr, uid, to_unlink_ids, context=context)
-            _check_quants_reserve(op)
+            _check_quants_reserved(op)
         
         for op in operations:
+            op.refresh()
             if op.product_id:
                 #TODO: Remaining qty: UoM conversions are done twice
                 normalized_qty = uom_obj._compute_qty(cr, uid, op.product_uom_id.id, op.remaining_qty, op.product_id.uom_id.id)
