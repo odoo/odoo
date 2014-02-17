@@ -485,17 +485,18 @@ class account_bank_statement(osv.osv):
         return super(account_bank_statement, self).copy(cr, uid, id, default_values, context=context)
 
     def button_journal_entries(self, cr, uid, ids, context=None):
-        ctx = (context or {}).copy()
-        ctx['journal_id'] = self.browse(cr, uid, ids[0], context=context).journal_id.id
-        return {
-            'view_type':'form',
-            'view_mode':'tree',
-            'res_model':'account.move.line',
-            'view_id':False,
-            'type':'ir.actions.act_window',
-            'domain':[('statement_id','in',ids)],
-            'context':ctx,
-        }
+      ctx = (context or {}).copy()
+      ctx['journal_id'] = self.browse(cr, uid, ids[0], context=context).journal_id.id
+      return {
+        'name': _('Journal Items'),
+        'view_type':'form',
+        'view_mode':'tree',
+        'res_model':'account.move.line',
+        'view_id':False,
+        'type':'ir.actions.act_window',
+        'domain':[('statement_id','in',ids)],
+        'context':ctx,
+      }
 
 
 class account_bank_statement_line(osv.osv):
