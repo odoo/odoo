@@ -9,7 +9,6 @@ $(document).ready(function() {
         newLocation = $('.js_next')[0].href;
         $('.cover_footer')
         .fadeIn(900, newpage);
-        $("html, body").stop().animate({ scrollTop:  $("#wrap").offset().top }, 'slow', 'swing');
     }
 
     function animate(event) {
@@ -27,7 +26,11 @@ $(document).ready(function() {
         $.ajax({
           url: newLocation,
         }).done(function(data) {
-           $('main').html($(data).find('main').html());
+           $('main').append($(data).find('main').html());
+           $("html").stop().animate({ scrollTop: $("#wrap:last-child").offset().top }, 1000,function(e){
+               $("#wrap:first").remove();
+               $(document).scrollTop($("#wrap:last-child").offset().top);
+           });
            if (newLocation != window.location) {
                 history.pushState(null, null, newLocation);
             }

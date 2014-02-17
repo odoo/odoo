@@ -71,30 +71,6 @@ class BlogPost(osv.Model):
     # maximum number of characters to display in summary
     _shorten_max_char = 250
 
-    def get_shortened_content(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for page in self.browse(cr, uid, ids, context=context):
-            try:
-                body_short = tools.html_email_clean(
-                    page.content,
-                    remove=True,
-                    shorten=True,
-                    max_length=self._shorten_max_char,
-                    expand_options={
-                        'oe_expand_container_tag': 'div',
-                        'oe_expand_container_class': 'oe_mail_expand text-center',
-                        'oe_expand_container_content': '',
-                        'oe_expand_a_href': '/blogpost/%d' % page.id,
-                        'oe_expand_a_class': 'oe_mail_expand btn btn-info',
-                        'oe_expand_separator_node': 'br',
-                    },
-                    protect_sections=True,
-                )
-            except Exception:
-                body_short = False
-            res[page.id] = body_short
-        return res
-
     _columns = {
         'name': fields.char('Title', required=True, translate=True),
         'sub_title' : fields.char('Sub Title', translate=True),
@@ -107,12 +83,6 @@ class BlogPost(osv.Model):
             'blog.tag', string='Tags',
         ),
         'content': fields.html('Content', translate=True),
-        'shortened_content': fields.function(
-            get_shortened_content,
-            type='html',
-            string='Shortened Content',
-            help="Shortened content of the page that serves as a summary"
-        ),
         # website control
         'website_published': fields.boolean(
             'Publish', help="Publish on the website"
