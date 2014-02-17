@@ -20,15 +20,13 @@
 #
 ##############################################################################
 
-import base64
 import imp
 import itertools
 import logging
 import os
 import re
 import sys
-import types
-from cStringIO import StringIO
+import unittest
 from os.path import join as opj
 
 import unittest2
@@ -365,8 +363,8 @@ def run_unit_tests(module_name, dbname):
     mods = get_test_modules(module_name)
     r = True
     for m in mods:
-        suite = unittest2.TestSuite()
-        suite.addTests(unittest2.TestLoader().loadTestsFromModule(m))
+        tests = unwrap_suite(unittest2.TestLoader().loadTestsFromModule(m))
+        suite = unittest2.TestSuite(tests)
         _logger.info('module %s: running test %s.', module_name, m.__name__)
 
         result = unittest2.TextTestRunner(verbosity=2, stream=TestStream()).run(suite)
@@ -375,5 +373,20 @@ def run_unit_tests(module_name, dbname):
             _logger.error('module %s: at least one error occurred in a test', module_name)
     current_test = None
     return r
+
+def unwrap_suite(test):
+    if isinstance(test, unittest.TestCase):
+        yield test
+        return
+
+    subtests = list(test)
+    # custom test suite (no test cases)
+    if not len(subtests):
+        yield test
+        return
+
+    for item in itertools.chain.from_iterable(
+            itertools.imap(unwrap_suite, subtests)):
+        yield item
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
