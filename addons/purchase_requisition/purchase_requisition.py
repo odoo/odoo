@@ -52,7 +52,7 @@ class purchase_requisition(osv.osv):
         'purchase_ids': fields.one2many('purchase.order', 'requisition_id', 'Purchase Orders', states={'done': [('readonly', True)]}),
         'po_line_ids': fields.function(_get_po_line, method=True, type='one2many', relation='purchase.order.line', string='Products by supplier'),
         'line_ids': fields.one2many('purchase.requisition.line', 'requisition_id', 'Products to Purchase', states={'done': [('readonly', True)]}),
-        'move_dest_id': fields.many2one('stock.move', 'Reservation Destination', ondelete='set null'),
+        'procurement_id': fields.many2one('procurement.order', 'Procurement', ondelete='set null'),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'state': fields.selection([('draft', 'Draft'), ('in_progress', 'Confirmed'), ('open', 'Bid Selection'), ('done', 'PO Created'), ('cancel', 'Cancelled')],
             'Status', track_visibility='onchange', required=True),
@@ -169,7 +169,7 @@ class purchase_requisition(osv.osv):
         vals.update({
             'order_id': purchase_id,
             'product_id': product.id,
-            'move_dest_id': requisition.move_dest_id.id,
+            'purchase_requisition_id': requisition.id,
             'account_analytic_id': requisition_line.account_analytic_id.id,
         })
         return vals
@@ -363,6 +363,13 @@ class purchase_order(osv.osv):
             default.update({'requisition_id': False})
         return super(purchase_order, self).copy(cr, uid, id, default=default, context=context)
 
+    def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, group_id, context=None):
+        stock_move_lines = super(purchase_order, self)._prepare_order_line_move(cr, uid, order, order_line, picking_id, group_id, context=context)
+        if order.requisition_id and order.requisition_id.procurement_id and order.requisition_id.procurement_id.move_dest_id:
+            for i in range(0, len(stock_move_lines)):
+                stock_move_lines[i]['move_dest_id'] = order.requisition_id.procurement_id.move_dest_id.id
+        return stock_move_lines
+
 
 class purchase_order_line(osv.osv):
     _inherit = 'purchase.order.line'
@@ -410,7 +417,7 @@ class procurement_order(osv.osv):
                 'date_end': procurement.date_planned,
                 'warehouse_id': warehouse_id and warehouse_id[0] or False,
                 'company_id': procurement.company_id.id,
-                'move_dest_id': procurement.move_dest_id and procurement.move_dest_id.id or False,
+                'procurement_id': procurement.id,
                 'line_ids': [(0, 0, {
                     'product_id': procurement.product_id.id,
                     'product_uom_id': procurement.product_uom.id,
@@ -418,8 +425,17 @@ class procurement_order(osv.osv):
 
                 })],
             })
+            self.message_post(cr, uid, [procurement.id], body=_("Purchase Requisition created"), context=context)
             return self.write(cr, uid, [procurement.id], {'requisition_id': requisition_id}, context=context)
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
 
+    def _check(self, cr, uid, procurement, context=None):
+        requisition_obj = self.pool.get('purchase.requisition')
+        if procurement.rule_id and procurement.rule_id.action == 'buy' and procurement.product_id.purchase_requisition:
+            if procurement.requisition_id.state == 'done':
+                if any([purchase.shipped for purchase in procurement.requisition_id.purchase_ids]):
+                    return True
+            return False
+        return super(procurement_order, self)._check(cr, uid, procurement, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
