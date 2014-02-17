@@ -256,15 +256,14 @@
         <h1 class="text-center"><strong t-field="blog_post.name" id="blog_post_name"/></h1>
         <p id="is_document_user" groups="base.group_document_user"/>
     </xpath>
-    <xpath expr="//span[@name='blog_post_date']" position="replace">
+    <xpath expr="//p[@name='blog_post_data']" position="replace">
+         <h2 class="text-center" t-field="blog_post.sub_title"/>
         <div class="text-center mt16">
             <a t-ignore="true" id="change_cover" class="btn btn-primary css_non_editable_mode_hidden" style="cursor :pointer">
                 Change Cover Photo
             </a>
         </div>
-    </xpath>
-    <xpath expr="//p[@name='blog_post_data']" position="before">
-        <h2 class="text-center" t-field="blog_post.sub_title"/>
+        <p class="post-meta text-muted text-center" name="blog_post_data"/>
     </xpath>
     <xpath expr="//div[@id='title']" position="inside">
         <div class="text-center blog_item">
