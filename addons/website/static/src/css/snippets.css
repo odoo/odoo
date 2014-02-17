@@ -278,7 +278,8 @@
   cursor: w-resize;
 }
 .oe_overlay .oe_handle.e:before {
-  content: "\F061";
+  content: "\f0d9-\f0da";
+  line-height: 16px;
 }
 .oe_overlay .oe_handle.s {
   top: auto;
@@ -327,7 +328,8 @@
   cursor: e-resize;
 }
 .oe_overlay .oe_handle.w:before {
-  content: "\F060";
+  content: "\f0d9-\f0da";
+  line-height: 16px;
 }
 .oe_overlay .oe_handle.n {
   left: 2px;
@@ -336,7 +338,7 @@
   cursor: s-resize;
 }
 .oe_overlay .oe_handle.n:before {
-  content: "\F062";
+  content: "\f062";
 }
 .oe_overlay .icon.btn {
   display: inline-block;
@@ -361,6 +363,24 @@
 }
 .oe_overlay .oe_overlay_options .dropdown-menu select, .oe_overlay .oe_overlay_options .dropdown-menu input {
   display: block;
+}
+.oe_overlay.block-w-left .w:before {
+  content: "\F061" !important;
+}
+.oe_overlay.block-w-right .w:before {
+  content: "\F060" !important;
+}
+.oe_overlay.block-w-left.block-w-right .w {
+  display: none !important;
+}
+.oe_overlay.block-e-left .e:before {
+  content: "\F061" !important;
+}
+.oe_overlay.block-e-right .e:before {
+  content: "\F060" !important;
+}
+.oe_overlay.block-e-left.block-e-right .e {
+  display: none !important;
 }
 
 .s-resize-important, .s-resize-important * {

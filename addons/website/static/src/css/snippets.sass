@@ -147,6 +147,7 @@
 
 .resize_editor_busy
     background-color: rgba(0,0,0,0.3)
+
 .oe_overlay
     display: none
     position: absolute
@@ -201,7 +202,8 @@
             right: -6px
             cursor: w-resize
             &:before
-                content: "\F061"
+                content: "\f0d9-\f0da"
+                line-height: 16px
         &.s
             top: auto
             left: 2px
@@ -240,14 +242,15 @@
             left: -6px
             cursor: e-resize
             &:before
-                content: "\F060"
+                content: "\f0d9-\f0da"
+                line-height: 16px
         &.n
             left: 2px
             width: 100%
             top: -6px
             cursor: s-resize
             &:before
-                content: "\F062"
+                content: "\f062"
 
     .icon.btn
         display: inline-block
@@ -268,6 +271,24 @@
             min-width: 180px
         .dropdown-menu select,.dropdown-menu input
             display: block
+
+    &.block-w-left
+        .w:before
+            content: "\F061" !important
+    &.block-w-right
+        .w:before
+            content: "\F060" !important
+    &.block-w-left.block-w-right .w
+        display: none !important
+    &.block-e-left
+        .e:before
+            content: "\F061" !important
+    &.block-e-right
+        .e:before
+            content: "\F060" !important
+    &.block-e-left.block-e-right .e
+        display: none !important
+
 
 .s-resize-important, .s-resize-important *
     cursor: s-resize !important

@@ -1176,9 +1176,26 @@
             this.$overlay.find('.oe_snippet_remove').toggleClass("hidden",
                 !this.$target.siblings().length && this.$target.parents("[data-snippet-id]:first").find("[data-snippet-id='colmd']").length > 1);
         },
+        change_cursor: function () {
+            var _class = this.$target.attr("class");
+
+            var col = _class.match(/col-md-([0-9-]+)/i);
+            col = col ? +col[1] : 0;
+
+            var offset = _class.match(/col-md-offset-([0-9-]+)/i);
+            offset = offset ? +offset[1] : 0;
+
+            var overlay_class = this.$overlay.attr("class").replace(/(^|\s+)block-[^\s]*/gi, '');
+            if (col+offset >= 12) overlay_class+= " block-e-right";
+            if (col === 1) overlay_class+= " block-w-right block-e-left";
+            if (offset === 0) overlay_class+= " block-w-left";
+
+            this.$overlay.attr("class", overlay_class);
+        },
         onFocus : function () {
             this._super();
             this.hide_remove_button();
+            this.change_cursor();
         },
         on_clone: function () {
             var $clone = this.$target.clone(false);
@@ -1206,27 +1223,27 @@
             return false;
         },
         on_resize: function (compass, beginClass, current) {
-            if (compass !== 'w')
-                return;
+            if (compass === 'w') {
+                // don't change the right border position when we change the offset (replace col size)
+                var beginCol = Number(beginClass.match(/col-md-([0-9]+)|$/)[1] || 0);
+                var beginOffset = Number(beginClass.match(/col-md-offset-([0-9-]+)|$/)[1] || beginClass.match(/col-lg-offset-([0-9-]+)|$/)[1] || 0);
+                var offset = Number(this.grid.w[0][current].match(/col-md-offset-([0-9-]+)|$/)[1] || 0);
+                if (offset < 0) {
+                    offset = 0;
+                }
+                var colSize = beginCol - (offset - beginOffset);
+                if (colSize <= 0) {
+                    colSize = 1;
+                    offset = beginOffset + beginCol - 1;
+                }
+                this.$target.attr("class",this.$target.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-|col-md-)([0-9-]+)/g, ''));
 
-            // don't change the right border position when we change the offset (replace col size)
-            var beginCol = Number(beginClass.match(/col-md-([0-9]+)|$/)[1] || 0);
-            var beginOffset = Number(beginClass.match(/col-md-offset-([0-9-]+)|$/)[1] || beginClass.match(/col-lg-offset-([0-9-]+)|$/)[1] || 0);
-            var offset = Number(this.grid.w[0][current].match(/col-md-offset-([0-9-]+)|$/)[1] || 0);
-            if (offset < 0) {
-                offset = 0;
+                this.$target.addClass('col-md-' + (colSize > 12 ? 12 : colSize));
+                if (offset > 0) {
+                    this.$target.addClass('col-md-offset-' + offset);
+                }
             }
-            var colSize = beginCol - (offset - beginOffset);
-            if (colSize <= 0) {
-                colSize = 1;
-                offset = beginOffset + beginCol - 1;
-            }
-            this.$target.attr("class",this.$target.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-|col-md-)([0-9-]+)/g, ''));
-
-            this.$target.addClass('col-md-' + (colSize > 12 ? 12 : colSize));
-            if (offset > 0) {
-                this.$target.addClass('col-md-offset-' + offset);
-            }
+            this.change_cursor();
         },
     });
 
