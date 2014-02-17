@@ -1,17 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <openerp>
-    <data>
-        
-        <record model="ir.ui.view" id="crm_project_issue_form_view">
-            <field name="name">project.issue.form</field>
-            <field name="model">project.issue</field>
-            <field name="inherit_id" ref="project_issue.project_issue_form_view" />
-            <field name="arch" type="xml">
-                <field name="priority" position="after">
-                    <field name="lead_id" groups="base.group_user" context="{'default_name': name, 'default_partner_id' : partner_id, 'default_email_from' : email_from, 'default_description' : description}"/>
-                </field>
-            </field>
-        </record>
+<data>
 
-    </data>
+    <!-- inherit view of Lead Form : adding the "convert to issue" button -->
+    <record model="ir.ui.view" id="crm_case_form_view_leads_project_issue">
+        <field name="name">CRM - Leads Form</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_leads" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stage_id']" position="before">
+                    <button name="%(convert_lead2projectissue_wizard_action)d" string="Convert to Issue" type="action" help="Convert to Issue" context="{'default_lead_id' : id}" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- action of converting, via wizard -->
+    <record model="ir.actions.act_window" id="convert_lead2projectissue_wizard_action" >
+        <field name="name">Convert to Issue</field>
+        <field name="res_model">crm.lead2projectissue.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- view of the Wizard Form --> 
+    <record model="ir.ui.view" id="view_crm_lead2projectissue_wizard" >
+        <field name="name">crm.lead2projectissue.wizard.form</field>
+        <field name="model">crm.lead2projectissue.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Convert to Issue" version="7.0">
+                <field name="lead_id" invisible="True" />
+                <label for="project_id" />
+                <field name="project_id" />
+                <footer>
+                    <button type="special" special="cancel" string="Cancel" />
+                    <button type="object" name="action_lead_to_project_issue" string="Convert" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</data>
 </openerp>

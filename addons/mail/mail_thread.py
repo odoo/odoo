@@ -1796,3 +1796,34 @@ class mail_thread(osv.AbstractModel):
             }
             threads.append(data)
         return sorted(threads, key=lambda x: (x['popularity'], x['id']), reverse=True)[:3]
+
+
+    def transform_model_messages(self, cr, uid, id, new_res_id, new_model, context=None):
+        """
+        Transfert the list of the mail thread messages from an model to another
+
+        :param id : the old res_id of the mail.message
+        :param new_res_id : the new res_id of the mail.message
+        :param new_model : the name of the new model of the mail.message
+
+        Example :   self.pool.get("crm.lead").transform_model_messages(self, cr, uid, 2, 4, "project.issue", context) 
+                    will transfert thread of the lead (id=2) to the issue (id=4)
+        """
+
+        # get the message ids belonging to the thread to migrate
+        message_obj = self.pool.get('mail.message')
+        msg_ids = message_obj.search(cr, uid, [
+                    ('model', '=', self._name),
+                    ('res_id', '=', id)], context=context)
+        
+        subtype_res_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'mail.mt_comment', raise_if_not_found=True)
+        
+        # update the messages
+        for message in message_obj.browse(cr, uid, msg_ids, context=context):
+            if subtype_res_id == message.subtype_id.id:
+                # no change the subtype
+                message_obj.write(cr, uid, message.id, {"res_id" : new_res_id, "model" : new_model}, context=context)
+            else:
+                # modify the subtype
+                message_obj.write(cr, uid, message.id, {"res_id" : new_res_id, "model" : new_model, "subtype_id" : None}, context=context)
+        return True

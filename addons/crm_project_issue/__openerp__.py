@@ -13,8 +13,7 @@ CRM Project Issues
 Link module to map leads and issues
         """,
     'data': [
-        'project_issue_view.xml',
-        'crm_lead_view.xml',
+        'project_issue_view.xml'
     ],
     'depends' : ['crm', 'project_issue'],
     'installable': True,
