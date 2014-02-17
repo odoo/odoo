@@ -281,6 +281,14 @@ website.Tour = openerp.Class.extend({
                     self.nextStep(step.stepId, callback, overlaps);
                 }, self.defaultDelay);
             } else if (!overlaps || new Date().getTime() - time < overlaps) {
+                if (self.current.element) {
+                    var $popover = $(".popover.tour");
+                    if(!$(self.current.element).is(":visible")) {
+                        $popover.data("hide", true).fadeOut(300);
+                    } else if($popover.data("hide")) {
+                        $popover.data("hide", false).fadeIn(150);
+                    }
+                }
                 self.timer = setTimeout(checkNext, self.defaultDelay);
             } else {
                 self.reset();

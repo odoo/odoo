@@ -206,6 +206,7 @@
 
         var def = $.Deferred();
         var dialog = $(openerp.qweb.render('website.prompt', options)).appendTo("body");
+        options.$dialog = dialog;
         var field = dialog.find(options.field_type).first();
         field.val(options.default);
         field.fillWith = function (data) {
@@ -226,7 +227,7 @@
             dialog.modal('show');
             field.focus();
             dialog.on('click', '.btn-primary', function () {
-                def.resolve(field.val(), field);
+                def.resolve(field.val(), field, dialog);
                 dialog.remove();
             });
         });
