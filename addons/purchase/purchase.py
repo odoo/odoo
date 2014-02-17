@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import time
 import pytz
 from openerp import SUPERUSER_ID, workflow
 from datetime import datetime
@@ -154,11 +153,11 @@ class purchase_order(osv.osv):
         obj_data = self.pool.get('ir.model.data')
         return obj_data.get_object_reference(cr, uid, 'stock','picking_type_in') and obj_data.get_object_reference(cr, uid, 'stock','picking_type_in')[1] or False
 
-    def _get_picking_ids(self, cr, uid, ids, name, args, context=None):
+    def _get_picking_ids(self, cr, uid, ids, field_names, args, context=None):
         res = {}
         for purchase_id in ids:
             picking_ids = set()
-            move_ids = self.pool.get('stock.move').search(cr, uid, [('purchase_line_id.order_id','=', purchase_id)] , context=context)
+            move_ids = self.pool.get('stock.move').search(cr, uid, [('purchase_line_id.order_id', '=', purchase_id)], context=context)
             for move in self.pool.get('stock.move').browse(cr, uid, move_ids, context=context):
                 picking_ids.add(move.picking_id.id)
             res[purchase_id] = list(picking_ids)
@@ -206,7 +205,7 @@ class purchase_order(osv.osv):
         'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
         'notes': fields.text('Terms and Conditions'),
         'invoice_ids': fields.many2many('account.invoice', 'purchase_invoice_rel', 'purchase_id', 'invoice_id', 'Invoices', help="Invoices generated for a purchase order"),
-        'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking List', help="This is the list of operations that have been generated for this purchase order."),
+        'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking List', help="This is the list of reception operations that have been generated for this purchase order."),
         'shipped':fields.boolean('Received', readonly=True, select=True, help="It indicates that a picking has been done"),
         'shipped_rate': fields.function(_shipped_rate, string='Received Ratio', type='float'),
         'invoiced': fields.function(_invoiced, string='Invoice Received', type='boolean', help="It indicates that an invoice has been paid"),
@@ -408,6 +407,7 @@ class purchase_order(osv.osv):
         action = self.pool.get('ir.actions.act_window').read(cr, uid, action_id, context=context)
 
         pick_ids = []
+        #TODO: might need to change this function in order to return the whole set of operations and not only the reception(s) to input
         for po in self.browse(cr, uid, ids, context=context):
             pick_ids += [picking.id for picking in po.picking_ids]
 
@@ -800,8 +800,7 @@ class purchase_order(osv.osv):
             'shipped':False,
             'invoiced':False,
             'invoice_ids': [],
-            'picking_ids': [],
-            'origin' : '',
+            'origin': '',
             'partner_ref': '',
             'name': self.pool.get('ir.sequence').get(cr, uid, 'purchase.order'),
         })
@@ -1175,15 +1174,6 @@ class procurement_order(osv.osv):
                     raise osv.except_osv(_('Configuration Error!'), _('The product "%s" has been defined with your company as reseller which seems to be a configuration error!' % procurement.product_id.name))
 
         return True
-
-    #def action_po_assign(self, cr, uid, ids, context=None):
-    #    """ This is action which call from workflow to assign purchase order to procurements
-    #    @return: True
-    #    """
-    #    res = self.make_po(cr, uid, ids, context=context)
-    #    res = res.values()
-    #    return len(res) and res[0] or 0 #TO CHECK: why workflow is generated error if return not integer value
-
 
     def create_procurement_purchase_order(self, cr, uid, procurement, po_vals, line_vals, context=None):
         """Create the purchase order from the procurement, using

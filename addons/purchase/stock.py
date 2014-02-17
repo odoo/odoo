@@ -39,6 +39,16 @@ class stock_move(osv.osv):
             workflow.trg_trigger(uid, 'stock.move', id, cr)
         return res
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        if not default.get('split_from'):
+            #we don't want to propagate the link to the purchase order line except in case of move split
+            default.update({
+                'purchase_line_id': False,
+            })
+        return super(stock_move, self).copy(cr, uid, id, default, context)
+
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
 
