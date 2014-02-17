@@ -15,6 +15,7 @@ import time
 import unittest2
 import uuid
 import xmlrpclib
+import threading
 
 import openerp
 
@@ -25,19 +26,35 @@ ADDONS_PATH = openerp.tools.config['addons_path']
 HOST = '127.0.0.1'
 PORT = openerp.tools.config['xmlrpc_port']
 DB = openerp.tools.config['db_name']
-
 # If the database name is not provided on the command-line,
 # use the one on the thread (which means if it is provided on
 # the command-line, this will break when installing another
 # database from XML-RPC).
 if not DB and hasattr(threading.current_thread(), 'dbname'):
     DB = threading.current_thread().dbname
-
-ADMIN_USER = 'admin'
+# Useless constant, tests are aware of the content of demo data
 ADMIN_USER_ID = openerp.SUPERUSER_ID
-ADMIN_PASSWORD = 'admin'
 
+# Magic session_id, unfortunately we have to serialize access to the cursors to
+# serialize requests. We first tried to duplicate the database for each tests
+# but this proved too slow. Any idea to improve this is welcome.
 HTTP_SESSION = {}
+
+def acquire_test_cursor(session_id):
+    if openerp.tools.config['test_enable']:
+        cr = HTTP_SESSION.get(session_id)
+        if cr:
+            cr._test_lock.acquire()
+            return cr
+
+def release_test_cursor(session_id):
+    if openerp.tools.config['test_enable']:
+        cr = HTTP_SESSION.get(session_id)
+        if cr:
+            cr._test_lock.release()
+            return True
+    return False
+
 
 class BaseCase(unittest2.TestCase):
     """
@@ -126,8 +143,14 @@ class HttpCase(TransactionCase):
 
     def setUp(self):
         super(HttpCase, self).setUp()
-        self.session_id = uuid.uuid4().hex
+        # setup a magic session_id that will be rollbacked
+        self.session = openerp.http.root.session_store.new()
+        self.session_id = self.session.sid
+        self.session.db = DB
+        openerp.http.root.session_store.save(self.session)
+        self.cr._test_lock = threading.RLock()
         HTTP_SESSION[self.session_id] = self.cr
+
 
     def tearDown(self):
         del HTTP_SESSION[self.session_id]
@@ -175,7 +198,8 @@ class HttpCase(TransactionCase):
         try:
             phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         except OSError:
-            _logger.info("phantomjs not found, test %s skipped", jsfile)
+            _logger.info("phantomjs not found, test skipped")
+            return
         try:
             self.phantom_poll(phantom, timeout)
         finally:
@@ -197,8 +221,9 @@ class HttpCase(TransactionCase):
         cmd = ['phantomjs', jsfile, phantomtest, json.dumps(options)]
         self.phantom_run(cmd, timeout)
 
-    def phantom_js(self, url_path, code, ready="window", timeout=30, **kw):
+    def phantom_js(self, url_path, code, ready="window", login=None, timeout=30, **kw):
         """ Test js code running in the browser
+        - optionnally log as 'login'
         - load page given by url_path
         - wait for ready object to be available
         - eval(code) inside the page
@@ -212,17 +237,17 @@ class HttpCase(TransactionCase):
         If neither are done before timeout test fails.
         """
         options = {
+            'port': PORT,
+            'db': DB,
             'url_path': url_path,
             'code': code,
             'ready': ready,
             'timeout' : timeout,
-            'port': PORT,
-            'db': DB,
-            'login': ADMIN_USER,
-            'password': ADMIN_PASSWORD,
+            'login' : login,
             'session_id': self.session_id,
         }
         options.update(kw)
+        options.setdefault('password', options.get('login'))
         phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
         cmd = ['phantomjs', phantomtest, json.dumps(options)]
         self.phantom_run(cmd, timeout)

@@ -352,11 +352,15 @@ class TestStream(object):
             first = False
             _test_logger.info(c)
 
+current_test = None
+
 def run_unit_tests(module_name, dbname):
     """
     Return True or False if some tests were found and succeeded or failed.
     Return None if no test was found.
     """
+    global current_test
+    current_test = module_name
     mods = get_test_modules(module_name)
     r = True
     for m in mods:
@@ -368,6 +372,7 @@ def run_unit_tests(module_name, dbname):
         if not result.wasSuccessful():
             r = False
             _logger.error('module %s: at least one error occurred in a test', module_name)
+    current_test = None
     return r
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

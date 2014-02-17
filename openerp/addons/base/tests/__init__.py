@@ -20,7 +20,6 @@ import test_res_config
 import test_res_lang
 import test_search
 import test_translate
-import test_ui
 #import test_uninstall
 import test_view_validation
 import test_views
