@@ -139,7 +139,6 @@
     backorder_ids = self.search(cr, uid, [('backorder_id', '=', ref('delivery_order1'))], context=context)
     assert backorder_ids, "Backorder should have been created"
     self.do_prepare_partial(cr, uid, backorder_ids, context=context)
-    stock_pack = self.pool.get('stock.pack.operation').create(cr, uid, {'picking_id': backorder_ids[0], 'product_qty': 20})
     self.action_assign(cr, uid, backorder_ids, context=context)
     self.do_transfer(cr, uid, backorder_ids, context=context)
 - 
