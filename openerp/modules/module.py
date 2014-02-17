@@ -333,7 +333,8 @@ def get_test_modules(module):
     # include submodules too
     result = [mod_obj for name, mod_obj in sys.modules.iteritems()
               if mod_obj # mod_obj can be None
-              if name.startswith(module)]
+              if name.startswith(module)
+              if re.search(r'test_\w+$', name)]
     return result
 
 # Use a custom stream object to log the test executions.
