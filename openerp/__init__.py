@@ -80,9 +80,6 @@ import sql_db
 import tools
 import workflow
 
-import cli
-import http
-
 #----------------------------------------------------------
 # Model classes, fields, api decorators, and scope
 #----------------------------------------------------------
@@ -92,6 +89,10 @@ from openerp.osv import api
 from openerp.osv.api import model, multi, one, constrains, depends, returns
 from openerp.osv.scope import proxy as scope
 
+#----------------------------------------------------------
+# Other imports, which may require stuff from above
+#----------------------------------------------------------
+import cli
+import http
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
