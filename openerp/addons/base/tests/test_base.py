@@ -289,14 +289,24 @@ class test_base(common.TransactionCase):
           {'name': 'Alice', 'login': 'alice', 'color': 1, 'function': 'Friend'},
           {'name': 'Bob', 'login': 'bob', 'color': 2, 'function': 'Friend'},
           {'name': 'Eve', 'login': 'eve', 'color': 3, 'function': 'Eavesdropper'},
+          {'name': 'Nab', 'login': 'nab', 'color': 2, 'function': '5$ Wrench'},
         ]:
           self.res_users.create(cr, uid, user_data)
-
+        #groupby='name',order='name DESC, color ASC'
+        
         groups_data = self.res_users.read_group(cr, uid, domain=[('login', 'in', ('alice', 'bob', 'eve'))], fields=['name', 'color', 'function'], groupby='function')
         self.assertEqual(len(groups_data), 2, "Incorrect number of results when grouping on a field")
         for group_data in groups_data:
           self.assertIn('color', group_data, "Aggregated data for the column 'color' is not present in read_group return values")
           self.assertEqual(group_data['color'], 3, "Incorrect sum for aggregated data for the column 'color'")
+
+        groups_data = self.res_users.read_group(cr, uid, domain=[('login', 'in', ('alice', 'bob', 'eve'))], fields=['name', 'color'], groupby='name', orderby='name DESC, color asc')
+        self.assertEqual(len(groups_data), 3, "Incorrect number of results when grouping on a field")
+        self.assertEqual([user['name'] for user in groups_data], ['Eve', 'Bob', 'Alice'], 'Incorrect ordering of the list')
+
+        groups_data = self.res_users.read_group(cr, uid, domain=[('login', 'in', ('alice', 'bob', 'eve', 'nab'))], fields=['function', 'color'], groupby='function', orderby='color ASC')
+        self.assertEqual(len(groups_data), 3, "Incorrect number of results when grouping on a field")
+        self.assertEqual(groups_data, sorted(groups_data, key=lambda x: x['color']), 'Incorrect ordering of the list')
 
 class test_partner_recursion(common.TransactionCase):
 
