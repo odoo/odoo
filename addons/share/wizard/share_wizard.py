@@ -103,7 +103,7 @@ class share_wizard(osv.TransientModel):
         return result
 
     def _generate_embedded_code(self, wizard, options=None):
-        cr, uid, context = scope
+        cr, uid, context = scope.args
         if options is None:
             options = {}
 
