@@ -144,9 +144,8 @@
             </div>
             <div class="row col-sm-12 text-muted">
                 <h3 t-field="blog_post.sub_title"/>
-                <span t-field="blog_post.create_uid.name"/>
-                <p class="post-meta text-muted text-left hidden" name='blog_post_data'>
-                    <span class="fa fa-calendar oe_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
+                <p class="post-meta text-muted text-left " name='blog_post_data'>
+                    <span t-field="blog_post.create_uid.name"/> <span class="fa fa-calendar oe_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
                 </p>
             </div>
             <hr class="mb0 mt0"/>
@@ -205,7 +204,7 @@
         </t>
     </div>
 
-    <div id="blog_content" t-field="blog_post.content"/>
+    <div id="blog_content" t-field="blog_post.content" class="readable"/>
 
     <section id="comments" class="container">
         <ul class="media-list" id="comments-list">
