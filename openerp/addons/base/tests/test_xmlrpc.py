@@ -3,26 +3,23 @@ import time
 import unittest2
 import xmlrpclib
 
-from openerp.tests import common
+import openerp
 
-DB = common.DB
-ADMIN_USER = common.ADMIN_USER
-ADMIN_USER_ID = common.ADMIN_USER_ID
-ADMIN_PASSWORD = common.ADMIN_PASSWORD
+DB = openerp.tests.common.DB
 
-class test_xmlrpc(common.HttpCase):
+class test_xmlrpc(openerp.tests.common.HttpCase):
 
     def test_01_xmlrpc_login(self):
         """ Try to login on the common service. """
-        uid = self.xmlrpc_common.login(DB, ADMIN_USER, ADMIN_PASSWORD)
-        self.assertTrue(uid == ADMIN_USER_ID)
+        uid = self.xmlrpc_common.login(DB, 'admin', 'admin')
+        self.assertTrue(uid == 1)
 
     def test_xmlrpc_ir_model_search(self):
         """ Try a search on the object service. """
         o = self.xmlrpc_object
-        ids = o.execute(DB, ADMIN_USER_ID, ADMIN_PASSWORD, 'ir.model', 'search', [])
+        ids = o.execute(DB, 1, 'admin', 'ir.model', 'search', [])
         self.assertIsInstance(ids, list)
-        ids = o.execute(DB, ADMIN_USER_ID, ADMIN_PASSWORD, 'ir.model', 'search', [], {})
+        ids = o.execute(DB, 1, 'admin', 'ir.model', 'search', [], {})
         self.assertIsInstance(ids, list)
 
     # This test was written to test the creation of a new RPC endpoint, not
