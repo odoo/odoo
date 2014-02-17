@@ -1781,13 +1781,15 @@ class stock_move(osv.osv):
             states[state].append(move.id)
             self._picking_assign(cr, uid, move, context=context)
 
+        for move in self.browse(cr, uid, states['confirmed'], context=context):
+            if move.procure_method == 'make_to_order':
+                self._create_procurement(cr, uid, move, context=context)
+                states['waiting'].append(move.id)
+                states['confirmed'].remove(move.id)
+
         for state, write_ids in states.items():
             if len(write_ids):
                 self.write(cr, uid, write_ids, {'state': state})
-                if state == 'confirmed':
-                    for move in self.browse(cr, uid, write_ids, context=context):
-                        if move.procure_method == 'make_to_order':
-                            self._create_procurement(cr, uid, move, context=context)
         moves = self.browse(cr, uid, ids, context=context)
         self._push_apply(cr, uid, moves, context=context)
         return True
