@@ -708,13 +708,15 @@ class mail_thread(osv.AbstractModel):
         # Private message: should not contain any thread_id
         if not model and thread_id:
             if assert_model:
-                assert thread_id == 0, 'Routing: posting a message without model should be with a null res_id (private message).'
+                if thread_id: 
+                    raise ValueError('Routing: posting a message without model should be with a null res_id (private message).')
             _warn('posting a message without model should be with a null res_id (private message), resetting thread_id')
             thread_id = 0
         # Private message: should have a parent_id (only answers)
         if not model and not message_dict.get('parent_id'):
             if assert_model:
-                assert message_dict.get('parent_id'), 'Routing: posting a message without model should be with a parent_id (private mesage).'
+                if not message_dict.get('parent_id'):
+                    raise ValueError('Routing: posting a message without model should be with a parent_id (private mesage).')
             _warn('posting a message without model should be with a parent_id (private mesage), skipping')
             return ()
 
@@ -743,7 +745,10 @@ class mail_thread(osv.AbstractModel):
         # New Document: check model accepts the mailgateway
         if not thread_id and model and not hasattr(model_pool, 'message_new'):
             if assert_model:
-                assert hasattr(model_pool, 'message_new'), 'Model %s does not accept document creation, crashing' % model
+                if not hasattr(model_pool, 'message_new'):
+                    raise ValueError(
+                        'Model %s does not accept document creation, crashing' % model
+                    )
             _warn('model %s does not accept document creation, skipping' % model)
             return ()
 
@@ -804,8 +809,11 @@ class mail_thread(osv.AbstractModel):
                to which this mail should be attached. Only used if the message
                does not reply to an existing thread and does not match any mail alias.
            :return: list of [model, thread_id, custom_values, user_id, alias]
+
+        :raises: ValueError, TypeError
         """
-        assert isinstance(message, Message), 'message must be an email.message.Message at this point'
+        if not isinstance(message, Message):
+            raise TypeError('message must be an email.message.Message at this point')
         fallback_model = model
 
         # Get email.message.Message variables for future processing
@@ -899,9 +907,11 @@ class mail_thread(osv.AbstractModel):
             return [route]
 
         # AssertionError if no routes found and if no bounce occured
-        assert False, \
-            "No possible route found for incoming message from %s to %s (Message-Id %s:)." \
-            "Create an appropriate mail.alias or force the destination model." % (email_from, email_to, message_id)
+        raise ValueError(
+                'No possible route found for incoming message from %s to %s (Message-Id %s:). '
+                'Create an appropriate mail.alias or force the destination model.' %
+                (email_from, email_to, message_id)
+            )
 
     def message_route_process(self, cr, uid, message, message_dict, routes, context=None):
         # postpone setting message_dict.partner_ids after message_post, to avoid double notifications
@@ -912,9 +922,11 @@ class mail_thread(osv.AbstractModel):
                 context.update({'thread_model': model})
             if model:
                 model_pool = self.pool[model]
-                assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
-                    "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" % \
-                    (message_dict['message_id'], model)
+                if not (thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new')):
+                    raise ValueError(
+                        "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" %
+                        (message_dict['message_id'], model)
+                    )
 
                 # disabled subscriptions during message_new/update to avoid having the system user running the
                 # email gateway become a follower of all inbound messages
@@ -924,7 +936,8 @@ class mail_thread(osv.AbstractModel):
                 else:
                     thread_id = model_pool.message_new(cr, user_id, message_dict, custom_values, context=nosub_ctx)
             else:
-                assert thread_id == 0, "Posting a message without model should be with a null res_id, to create a private message."
+                if thread_id:
+                    raise ValueError("Posting a message without model should be with a null res_id, to create a private message.")
                 model_pool = self.pool.get('mail.thread')
             if not hasattr(model_pool, 'message_post'):
                 context['thread_model'] = model

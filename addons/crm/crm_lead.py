@@ -329,6 +329,7 @@ class crm_lead(format_address, osv.osv):
                 'phone': partner.phone,
                 'mobile': partner.mobile,
                 'fax': partner.fax,
+                'zip': partner.zip,
             }
         return {'value': values}
 
