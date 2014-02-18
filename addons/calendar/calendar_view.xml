@@ -57,15 +57,15 @@
                                     <label for="duration"/>
                                     <div>
                                         <field name="duration" widget="float_time"
-                                            on_change="onchange_dates(date,duration,False,allday)"
+                                            on_change="onchange_dates(date, duration, False, allday)"
                                             class="oe_inline" attrs="{'invisible': [('allday','=',True)]}"/>
                                         <label string="hours" attrs="{'invisible': [('allday','=',True)]}"/>
-                                        (<field name="allday" on_change="onchange_dates(date,False,False,allday)" class="oe_inline"/>
+                                        (<field name="allday"  class="oe_inline"/>
                                         <label for="allday" string="All Day?"/>)
                                     </div>
                                     <field name="date_deadline" groups="base.group_no_one"
                                         attrs="{'invisible': ['|', ('allday','=',True), ('duration','&lt;', 24)]}"
-                                        on_change="onchange_dates(date,False,date_deadline)"/>
+                                        />
                                 </group>
                                 <group>
                                     <field name="categ_ids" widget="many2many_tags"/>
@@ -121,7 +121,7 @@
                                         </div>
                                     </group>
                                 </group>
-                                <group>                                    
+                                <group>
                                     <field name="class"/>
                                     <field name="show_as"/>
                                     <field name="rrule" invisible="1" readonly="0" />
@@ -136,7 +136,7 @@
                                 <tree string="Invitation details" editable="top" create="false" delete="false">
                                     <field name="partner_id" />
                                     <field name="state" />
-                                    <field name="email" widget="email"/>                                   
+                                    <field name="email" widget="email"/>
                                      
                                     <button name="do_tentative" states="needsAction,declined,accepted" string="Uncertain" type="object" icon="terp-crm" />
                                     <button name="do_accept" string="Accept" states="needsAction,tentative,declined" type="object" icon="gtk-apply"/>
@@ -176,7 +176,7 @@
                         <field name="date" string="Start" />
                         <field name="duration" string="Duration" widget="float_time" attrs="{'invisible': [('allday','=',True)]}"/>
                         <field name="allday" class="oe_inline" attrs="{'invisible': [('allday','=',False)]}"/>
-                        <field name="partner_ids" widget="many2manyattendee" string="Attendees"/>                                                                        
+                        <field name="partner_ids" widget="many2manyattendee" string="Attendees"/>
                     </group>
                     <group>
                         <field name="categ_ids" widget="many2many_tags"/>
@@ -213,7 +213,7 @@
         <field name="name">Meetings Calendar</field>
         <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
-        <field name="arch" type="xml">                          
+        <field name="arch" type="xml">
             <calendar string="Meetings" date_start="date" date_stop="date_deadline" date_delay="duration" all_day="allday" 
                          display="[name]" color="color_partner_id" attendee="partner_ids" avatar_model="res.partner"
                          use_contacts="True" event_open_popup="%(calendar.view_calendar_event_form_popup)s">
@@ -248,14 +248,14 @@
                 <field name="user_id"/>
                 <field name="show_as"/>
                 <field name="class" string="Privacy"/>
-                <filter icon="terp-go-today" string="My Events" domain="[('user_id','=',uid)]" help="My Events"/>                
+                <filter icon="terp-go-today" string="My Events" domain="[('user_id','=',uid)]" help="My Events"/>
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
                 <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
-                <separator/>                
+                <separator/>
                 <group expand="0" string="Group By...">
                     <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Availability" icon="terp-camera_test" domain="[]" context="{'group_by':'show_as'}"/>
-                    <filter string="Privacy" icon="terp-locked" domain="[]" context="{'group_by':'class'}"/>                    
+                    <filter string="Privacy" icon="terp-locked" domain="[]" context="{'group_by':'class'}"/>
                     <filter string="Event Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Start Date of Event by Month"/>
                 </group>
             </search>
@@ -267,8 +267,7 @@
         <field name="res_model">calendar.event</field>
         <field name="view_mode">calendar,tree,form,gantt</field>
         <field name="view_id" ref="view_calendar_event_calendar"/>
-        <field name="search_view_id" ref="view_calendar_event_search"/>       
-        <field name="context">{"search_default_mymeetings": 1}</field>
+        <field name="search_view_id" ref="view_calendar_event_search"/>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to schedule a new meeting.
@@ -313,7 +312,7 @@
         <field name="name">Meetings</field>
         <field name="res_model">calendar.event</field>
         <field name="view_mode">form,calendar,tree,gantt</field>
-        <field name="view_id" ref="view_calendar_event_form"/>        
+        <field name="view_id" ref="view_calendar_event_form"/>
     </record>
        
     

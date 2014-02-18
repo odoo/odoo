@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-import hashlib
 import pytz
 import re
 import time
 import openerp
 import openerp.service.report
 import uuid
+from werkzeug.exceptions import BadRequest
 from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil import rrule
@@ -34,7 +34,6 @@ from openerp import tools, SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
-from openerp import http
 from openerp.http import request
 from operator import itemgetter
 
@@ -870,6 +869,7 @@ class calendar_event(osv.Model):
     ]
 
     def onchange_dates(self, cr, uid, ids, start_date, duration=False, end_date=False, allday=False, context=None):
+
         """Returns duration and/or end date based on values passed
         @param ids: List of calendar event's IDs.
         @param start_date: Starting date
@@ -888,14 +888,14 @@ class calendar_event(osv.Model):
             value['duration'] = duration
 
         if allday:  # For all day event
-            start = datetime.strptime(start_date.split(' ')[0].split('T')[0], "%Y-%m-%d")
-            duration = 24.0
-            value['duration'] = duration
+            start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
             user = self.pool['res.users'].browse(cr, uid, uid)
             tz = pytz.timezone(user.tz) if user.tz else pytz.utc
             start = pytz.utc.localize(start).astimezone(tz)     # convert start in user's timezone
             start = start.astimezone(pytz.utc)                  # convert start back to utc
-            value['date'] = start.strftime("%Y-%m-%d") + ' 00:00:00'
+
+            value['duration'] = 24.0
+            value['date'] = datetime.strftime(start, "%Y-%m-%d %H:%M:%S")
         else:
             start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
 
