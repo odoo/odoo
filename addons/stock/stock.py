@@ -1846,9 +1846,9 @@ class stock_move(osv.osv):
                     main_domain[move.id] += [('history_ids', 'in', move.origin_returned_move_id.id)]
                 for link in move.linked_move_operation_ids:
                     operations.add(link.operation_id)
-        # Check all ops and sort them
+        # Check all ops and sort them: we want to process first the packages, then operations with lot then the rest
         operations = list(operations)
-        operations.sort(key = lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
+        operations.sort(key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
         for ops in operations:
             #first try to find quants based on specific domains given by linked operations
             for record in ops.linked_move_operation_ids:
@@ -1858,7 +1858,7 @@ class stock_move(osv.osv):
                 qty = record.qty - qty_already_assigned
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_domain=prefered_domain[move.id], fallback_domain=fallback_domain[move.id], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)
-            
+
         for move in todo_moves:
             #then if the move isn't totally assigned, try to find quants without any specific domain
             if move.state != 'assigned':
