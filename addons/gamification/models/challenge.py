@@ -433,7 +433,7 @@ class gamification_challenge(osv.Model):
     ##### JS utilities #####
 
     def _get_serialized_challenge_lines(self, cr, uid, challenge, user_id=False, restrict_goal_ids=False, restrict_top=False, context=None):
-        """Return a serialised version of the goals information
+        """Return a serialised version of the goals information if the user has not completed every goal
 
         :challenge: browse record of challenge to compute
         :user_id: res.users id of the user retrieving progress (False if no distinction, only for ranking challenges)
@@ -487,6 +487,7 @@ class gamification_challenge(osv.Model):
         (start_date, end_date) = start_end_date_for_period(challenge.period)
 
         res_lines = []
+        all_reached = True
         for line in challenge.line_ids:
             line_data = {
                 'name': line.definition_id.name,
@@ -537,6 +538,8 @@ class gamification_challenge(osv.Model):
                         'completeness': goal.completeness,
                         'state': goal.state,
                     })
+                    if goal.state != 'reached':
+                        all_reached = False
                 else:
                     ranking += 1
                     if user_id and goal.user_id.id == user_id:
@@ -554,8 +557,12 @@ class gamification_challenge(osv.Model):
                         'completeness': goal.completeness,
                         'state': goal.state,
                     })
+                    if goal.state != 'reached':
+                        all_reached = False
             if goal_ids:
                 res_lines.append(line_data)
+        if all_reached:
+            return []
         return res_lines
 
     ##### Reporting #####
