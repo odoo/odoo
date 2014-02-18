@@ -260,7 +260,6 @@ openerp.web_calendar = function(instance) {
                         end: end_date,
                         allDay: all_day,
                     });
-
                     self.open_quick_create(data_template);
 
                 },
@@ -289,7 +288,7 @@ openerp.web_calendar = function(instance) {
                             agenda: 'h:mm{ - h:mm}', // 5:00 - 6:30
 
                             // for all other views
-                            '': 'h(:mm)tt'            // 7pm
+                            '': 'h(:mm)tt'  // 7pm
                         },
                 weekMode : 'liquid',
                 aspectRatio: 1.8,
@@ -580,7 +579,7 @@ openerp.web_calendar = function(instance) {
                                     if (!self.colorIsAttendee || the_attendee_people != temp_ret[self.color_field]) {
                                             tempColor = (self.all_filters[the_attendee_people] != undefined) 
                                                                 ? self.all_filters[the_attendee_people].color
-                                                                : self.all_filters[-1].color;                                            
+                                                                : self.all_filters[-1].color;
                                         the_title_avatar += '<i class="fa fa-user attendee_head color_'+tempColor+'" title="' + self.all_attendees[the_attendee_people] + '" ></i>';
                                     }//else don't add myself
                                 }
@@ -653,8 +652,8 @@ openerp.web_calendar = function(instance) {
                 }
                 if (this.all_day) {
                     event_end = (new Date(event_end.getTime())).addDays(1);
-                    date_start_day = new Date(Date.UTC(event.start.getFullYear(),event.start.getMonth(),event.start.getDate()));
-                    date_stop_day = new Date(Date.UTC(event_end.getFullYear(),event_end.getMonth(),event_end.getDate()));
+                    date_start_day = new Date(event.start.getFullYear(),event.start.getMonth(),event.start.getDate());
+                    date_stop_day = new Date(event_end.getFullYear(),event_end.getMonth(),event_end.getDate());
                 }
                 else {
                     date_start_day = new Date(Date.UTC(event.start.getFullYear(),event.start.getMonth(),event.start.getDate(),7));
@@ -711,7 +710,7 @@ openerp.web_calendar = function(instance) {
                         }
                         
                        if (self.attendee_people !== undefined) {
-                            //If we filter on 'Everybody's Calendar, we don't filter events 
+                            //Else we filter on 'Everybody's Calendar, we don't filter events 
                             if (self.selected_filters.indexOf(-1) == -1) {
 
                                 //If we filter on contacts... we keep only events from coworkers                                 
@@ -953,7 +952,7 @@ openerp.web_calendar = function(instance) {
         template: 'CalendarView.quick_create',
         
         init: function(parent, dataset, buttons, options, data_template) {
-            this._super(parent);            
+            this._super(parent);
             this.dataset = dataset;
             this._buttons = buttons || false;
             this.options = options;
@@ -964,7 +963,7 @@ openerp.web_calendar = function(instance) {
         get_title: function () {
             var parent = this.getParent();
             if (_.isUndefined(parent)) {
-                return _t("Create")
+                return _t("Create");
             }
             var title = (_.isUndefined(parent.field_widget)) ?
                     (parent.string || parent.name) :
@@ -985,7 +984,7 @@ openerp.web_calendar = function(instance) {
                 if(event.keyCode == 13){
                     self.$input.off('keyup', enterHandler);
                     if (!self.quick_add()){
-                        self.$input.on('keyup', enterHandler);                    
+                        self.$input.on('keyup', enterHandler);
                     }
                 }
             });
@@ -994,14 +993,13 @@ openerp.web_calendar = function(instance) {
             submit.click(function clickHandler() {
                 submit.off('click', clickHandler);
                 if (!self.quick_add()){
-                   submit.on('click', clickHandler);                    
-                }
+                   submit.on('click', clickHandler);                }
                 self.focus();
             });
             this.$el.find(".oe_calendar_quick_create_edit").click(function () {
                 self.slow_add();
                 self.focus();
-            });            
+            });
             this.$el.find(".oe_calendar_quick_create_close").click(function (ev) {
                 ev.preventDefault();
                 self.trigger('close');
@@ -1030,10 +1028,10 @@ openerp.web_calendar = function(instance) {
          */
         quick_add: function() {
             var val = this.$input.val();
-            if (/^\s*$/.test(val)) { 
-                return false; 
+            if (/^\s*$/.test(val)) {
+                return false;
             }
-            return this.quick_create({'name': val}).always(function() { return true });
+            return this.quick_create({'name': val}).always(function() { return true; });
         },
         
         slow_add: function() {
@@ -1079,15 +1077,10 @@ openerp.web_calendar = function(instance) {
             _.each($.extend({}, this.data_template, data), function(val, field_name) {
                 defaults['default_' + field_name] = val;
             });
-            
-            if (defaults['default_allday'] && (defaults['default_date_deadline'] || defaults['default_duration'])) {
-                delete defaults['default_date_deadline'];
-                delete defaults['default_duration'];
-            }
-
+                        
             var pop_infos = self.get_form_popup_infos();
             var pop = new instance.web.form.FormOpenPopup(this);
-            var context = new instance.web.CompoundContext(this.dataset.context, defaults)
+            var context = new instance.web.CompoundContext(this.dataset.context, defaults);
             pop.show_element(this.dataset.model, null, this.dataset.get_context(defaults), {
                 title: this.get_title(),
                 disable_multiple_selection: true,
@@ -1379,7 +1372,7 @@ openerp.web_calendar = function(instance) {
                 },
 
                 alternative_form_view: this.field.views ? this.field.views.form : undefined,
-                parent_view: this.view, 
+                parent_view: this.view,
                 child_name: this.name,
                 readonly: this.get("effective_readonly")
             });
@@ -1424,7 +1417,7 @@ openerp.web_calendar = function(instance) {
             this.$('div.oe_calendar_responsible input:checked').each(function() {
                 responsibles.push($(this).val());
                 
-                if (e==null && parseInt($(this).val())<0) {
+                if (e==null && parseInt($(this).val())<0){
                     $(this).prop('checked',false);
                     return;
                 }
