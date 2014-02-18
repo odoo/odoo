@@ -114,7 +114,7 @@ openerp.web_calendar = function(instance) {
             this.date_delay = attrs.date_delay;     // duration
             this.date_stop = attrs.date_stop;
             this.all_day = attrs.all_day;
-            this.how_display_event = '';           
+            this.how_display_event = '';
             this.attendee_people = attrs.attendee;
 
             if (!isNullOrUndef(attrs.quick_create_instance)) {
@@ -393,7 +393,7 @@ openerp.web_calendar = function(instance) {
                         delete this.quick;
                         this.$calendar.fullCalendar('unselect');
                     });
-            this.quick.replace($(".oe_calendar_qc_placeholder"));
+            this.quick.replace(this.$el.find('.oe_calendar_qc_placeholder'));
             this.quick.focus();
             
         },
@@ -511,7 +511,7 @@ openerp.web_calendar = function(instance) {
             }
             else {
                 date_start = instance.web.auto_str_to_date(evt[this.date_start].split(' ')[0],'date');
-                date_stop = this.date_stop  ? instance.web.auto_str_to_date(evt[this.date_stop].split(' ')[0],'date').addMinutes(-1) : null;   
+                date_stop = this.date_stop  ? instance.web.auto_str_to_date(evt[this.date_stop].split(' ')[0],'date').addMinutes(-1) : null;
             }
 
             if (this.info_fields) {
@@ -573,7 +573,8 @@ openerp.web_calendar = function(instance) {
                             attendee_showed += 1;
                             if (attendee_showed<= MAX_ATTENDEES) {
                                 if (self.avatar_model !== null) {
-                                       the_title_avatar += '<img title="' + self.all_attendees[the_attendee_people] + '" class="attendee_head" src="/web/binary/image?model=' + self.avatar_model + '&field=image_small&id=' + the_attendee_people + '"></img>';
+                                       the_title_avatar += '<img title="' + self.all_attendees[the_attendee_people] + '" class="attendee_head"  \
+                                                            src="/web/binary/image?model=' + self.avatar_model + '&field=image_small&id=' + the_attendee_people + '"></img>';
                                 }
                                 else {
                                     if (!self.colorIsAttendee || the_attendee_people != temp_ret[self.color_field]) {
@@ -1378,7 +1379,7 @@ openerp.web_calendar = function(instance) {
                 },
 
                 alternative_form_view: this.field.views ? this.field.views.form : undefined,
-                parent_view: this.view, //XXXvlab: to check ! this.view is likely undefined
+                parent_view: this.view, 
                 child_name: this.name,
                 readonly: this.get("effective_readonly")
             });
@@ -1401,14 +1402,14 @@ openerp.web_calendar = function(instance) {
         },
         init: function(parent, view) {
             this._super(parent);
-            this.view = view;            
+            this.view = view;
         },
 
    
 
         events_loaded: function(filters) {
             var self = this;
-            self.is_loaded=true;          
+            self.is_loaded=true;
             
             self.selected_filters = [];
             self.view.all_filters = filters;
@@ -1426,18 +1427,18 @@ openerp.web_calendar = function(instance) {
                 if (e==null && parseInt($(this).val())<0) {
                     $(this).prop('checked',false);
                     return;
-                }         
+                }
 
                 self.view.selected_filters.push(parseInt($(this).val()));
             });
-            self.view.$calendar.fullCalendar('refetchEvents');  
+            self.view.$calendar.fullCalendar('refetchEvents');
         },
         addUpdateButton: function() {
             var self=this;
             this.$('div.oe_calendar_all_responsibles').append(QWeb.render('CalendarView.sidebar.button_add_contact'));
-            this.$(".add_contacts_link_btn").on('click', function() {  
-                self.rpc("/web/action/load", { 
-                    action_id: "calendar.action_calendar_contacts" 
+            this.$(".add_contacts_link_btn").on('click', function() {
+                self.rpc("/web/action/load", {
+                    action_id: "calendar.action_calendar_contacts"
                 }).then( function(result) { return self.do_action(result); });
             });
             
