@@ -356,8 +356,9 @@ current_test = None
 
 def run_unit_tests(module_name, dbname):
     """
-    Return True or False if some tests were found and succeeded or failed.
-    Return None if no test was found.
+    :returns: ``True`` if all of ``module_name``'s tests succeeded, ``False``
+              if any of them failed.
+    :rtype: bool
     """
     global current_test
     current_test = module_name
