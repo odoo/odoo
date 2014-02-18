@@ -15,5 +15,8 @@ Report
         'data/paperformat_defaults.xml',
         'security/ir.model.access.csv',
     ],
+    'js': [
+        'static/src/js/qwebactionmanager.js',
+    ],
     'installable': True,
 }
