@@ -140,8 +140,8 @@
                                     <li><a href="/page/website.contactus">Contact us</a></li>
                                 </ul>
                                 <ul class="list-unstyled">
-                                    <li><i class="fa fa-phone"></i> <span t-field="res_company.phone"></span></li>
-                                    <li><i class="fa fa-envelope"></i>  <span t-field="res_company.email"></span></li>
+                                    <li t-ignore="true"><i class="fa fa-phone"></i> <span t-field="res_company.phone"></span></li>
+                                    <li t-ignore="true"><i class="fa fa-envelope"></i>  <span t-field="res_company.email"></span></li>
                                 </ul>
                                 <h2>
                                     <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="fa fa-facebook-square"/></a>
