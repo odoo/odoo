@@ -1,3 +1,3 @@
 import report
-import paperformat
+import report_paperformat
 

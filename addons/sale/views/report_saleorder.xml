@@ -2,7 +2,7 @@
 <openerp>
 <data>
 <template id="report_saleorder">
-    <t t-call="report.html_skeleton">
+    <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
             <t t-call="report.external_layout">
                 <div class="page">
@@ -53,46 +53,42 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <table class="table table-condensed">
-                                <thead>
-                                    <tr>
-                                        <th>Description</th>
-                                        <th>Taxes</th>
-                                        <th class="text-right">Quantity</th>
-                                        <th class="text-right">Unit Price</th>
-                                        <th groups="sale.group_discount_per_so_line">Disc.(%)</th>
-                                        <th class="text-right">Price</th>
-                                    </tr>
-                               </thead>
-                               <tbody>
-                                    <tr t-foreach="o.order_line" t-as="l">
-                                        <td>
-                                           <span  t-field="l.name"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="', '.join(map(lambda x: x.name, l.tax_id))"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-field="l.product_uom_qty"/>
-                                            <span groups="product.group_uom" t-field="l.product_uom"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-field="l.price_unit"/>
-                                        </td>
-                                        <td groups="sale.group_discount_per_so_line">
-                                            <span t-field="l.discount"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-field="l.price_subtotal"
-                                                t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Taxes</th>
+                                <th class="text-right">Quantity</th>
+                                <th class="text-right">Unit Price</th>
+                                <th groups="sale.group_discount_per_so_line">Disc.(%)</th>
+                                <th class="text-right">Price</th>
+                            </tr>
+                       </thead>
+                       <tbody>
+                            <tr t-foreach="o.order_line" t-as="l">
+                                <td>
+                                   <span  t-field="l.name"/>
+                                </td>
+                                <td>
+                                    <span t-esc="', '.join(map(lambda x: x.name, l.tax_id))"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="l.product_uom_qty"/>
+                                    <span groups="product.group_uom" t-field="l.product_uom"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="l.price_unit"/>
+                                </td>
+                                <td groups="sale.group_discount_per_so_line">
+                                    <span t-field="l.discount"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="l.price_subtotal"
+                                        t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
                     <div class="row">
                         <div class="col-xs-4 pull-right">

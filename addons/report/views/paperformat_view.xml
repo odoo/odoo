@@ -18,7 +18,7 @@
 
         <record id="paperformat_view_tree" model="ir.ui.view">
             <field name="name">paper_format_view_tree</field>
-            <field name="model">ir.actions.report.paperformat</field>
+            <field name="model">report.paperformat</field>
             <field name="arch" type="xml">
                 <tree string="Paper format configuration">
                     <field name="name" />
@@ -28,7 +28,7 @@
         
         <record id="paperformat_view_form" model="ir.ui.view">
             <field name="name">paper_format_view_form</field>
-            <field name="model">ir.actions.report.paperformat</field>
+            <field name="model">report.paperformat</field>
             <field name="arch" type="xml">
                 <form string="Paper format configuration" version="7.0">
                     <group>
@@ -53,7 +53,7 @@
 
         <record id="paper_format_action" model="ir.actions.act_window">
             <field name="name">Paper Format General Configuration</field>
-            <field name="res_model">ir.actions.report.paperformat</field>
+            <field name="res_model">report.paperformat</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>

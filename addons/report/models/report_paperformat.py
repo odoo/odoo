@@ -22,8 +22,8 @@
 from openerp.osv import osv, fields
 
 
-class actions_report_paperformat(osv.Model):
-    _name = "ir.actions.report.paperformat"
+class report_paperformat(osv.Model):
+    _name = "report.paperformat"
     _description = "Allows customization of a report."
 
     _columns = {'name': fields.char('Name', required=True),
@@ -98,10 +98,10 @@ class actions_report_paperformat(osv.Model):
 class res_company(osv.Model):
     _inherit = 'res.company'
 
-    _columns = {'paperformat_id': fields.many2one('ir.actions.report.paperformat', 'Paper format')}
+    _columns = {'paperformat_id': fields.many2one('report.paperformat', 'Paper format')}
 
 
 class ir_actions_report(osv.Model):
     _inherit = 'ir.actions.report.xml'
 
-    _columns = {'paperformat_id': fields.many2one('ir.actions.report.paperformat', 'Paper format')}
+    _columns = {'paperformat_id': fields.many2one('report.paperformat', 'Paper format')}

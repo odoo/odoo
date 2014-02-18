@@ -12,7 +12,7 @@ Report
         'views/layouts.xml',
         'views/paperformat_view.xml',
         'views/res_company_view.xml',
-        'data/paperformat_defaults.xml',
+        'data/report_paperformat.xml',
         'security/ir.model.access.csv',
     ],
     'js': [

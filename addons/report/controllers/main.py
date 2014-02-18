@@ -36,7 +36,6 @@ try:
 except ImportError:
     import StringIO
 
-
 from pyPdf import PdfFileWriter, PdfFileReader
 from werkzeug.test import Client
 from werkzeug.wrappers import BaseResponse

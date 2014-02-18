@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-<template id="html_skeleton">
+<template id="html_container">
     &lt;!DOCTYPE html&gt;
     <html t-att-lang="lang and lang.replace('_', '-')"
           t-att-data-website-id="website.id if editable else None"
@@ -170,7 +170,7 @@
     <t t-raw="0" />
 </template>
 
-<template id="editor_head" inherit_id="report.html_skeleton" name="Editor" groups="base.group_website_publisher">
+<template id="editor_head" inherit_id="report.html_container" name="Editor" groups="base.group_website_publisher">
     <xpath expr="//body" position="attributes">
         <attribute name="style">padding-top: 51px;</attribute>
     </xpath>
