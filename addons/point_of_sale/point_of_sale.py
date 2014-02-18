@@ -69,7 +69,7 @@ class pos_config(osv.osv):
         'currency_id' : fields.function(_get_currency, type="many2one", string="Currency", relation="res.currency"),
         'iface_self_checkout' : fields.boolean('Self Checkout Mode',
              help="Check this if this point of sale should open by default in a self checkout mode. If unchecked, OpenERP uses the normal cashier mode by default."),
-        'iface_cashdrawer' : fields.boolean('Cashdrawer',help="Automatically open the cashdrawer"),
+        'iface_cashdrawer' : fields.boolean('Cashdrawer', help="Automatically open the cashdrawer"),
         'iface_payment_terminal' : fields.boolean('Payment Terminal', help="Enables Payment Terminal integration"),
         'iface_electronic_scale' : fields.boolean('Electronic Scale', help="Enables Electronic Scale integration"),
         'iface_vkeyboard' : fields.boolean('Virtual KeyBoard', help="Enables an integrated Virtual Keyboard"),
@@ -1305,7 +1305,7 @@ class product_product(osv.osv):
         'income_pdt': fields.boolean('Point of Sale Cash In', help="Check if, this is a product you can use to put cash into a statement for the point of sale backend."),
         'expense_pdt': fields.boolean('Point of Sale Cash Out', help="Check if, this is a product you can use to take cash from a statement for the point of sale backend, example: money lost, transfer to bank, etc."),
         'available_in_pos': fields.boolean('Available in the Point of Sale', help='Check if you want this product to appear in the Point of Sale'), 
-        'to_weight' : fields.boolean('To Weight', help="Check if the product should be weighted (mainly used with self check-out interface)."),
+        'to_weight' : fields.boolean('To Weigh', help="Check if the product should be weighted (mainly used with self check-out interface)."),
     }
 
     _defaults = {
