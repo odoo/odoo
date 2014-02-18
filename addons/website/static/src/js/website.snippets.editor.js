@@ -1126,7 +1126,7 @@
         },
 
         change_cursor : function () {
-            var _class = this.$target.attr("class");
+            var _class = this.$target.attr("class") || "";
 
             var col = _class.match(/col-md-([0-9-]+)/i);
             col = col ? +col[1] : 0;

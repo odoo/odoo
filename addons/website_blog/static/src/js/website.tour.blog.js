@@ -88,8 +88,8 @@
                 {
                     element:   '.oe_active .oe_snippet_remove',
                     placement: 'top',
-                    title:     _t("Delete the Title"),
-                    content:   _t("From this toolbar you can move, duplicate or delete the selected zone. Click on the garbage can image to delete the title."),
+                    title:     _t("Delete the block"),
+                    content:   _t("From this toolbar you can move, duplicate or delete the selected zone. Click on the garbage can image to delete the block. Or click on the Title and delete it."),
                 },
                 {
                     waitNot:   '.oe_active .oe_snippet_remove:visible',
