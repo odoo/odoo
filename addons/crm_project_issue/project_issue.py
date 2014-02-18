@@ -9,10 +9,11 @@ class crm_lead_to_project_issue_wizard(osv.TransientModel):
         wizards = self.browse(cr, uid, ids, context=context)
         lead_model = self.pool.get("crm.lead")
         issue_model = self.pool.get("project.issue")
+        lead_id = context.get('active_id',0)
 
         for wizard in wizards:
             # get the lead to transform
-            lead = lead_model.browse(cr, uid, wizard.lead_id.id, context=context)
+            lead = lead_model.browse(cr, uid, lead_id, context=context)
             # create new project.issue
             vals = {}
             vals["name"] = lead.name
@@ -22,9 +23,9 @@ class crm_lead_to_project_issue_wizard(osv.TransientModel):
             vals["project_id"] = wizard.project_id.id
             issue_id = issue_model.create(cr, uid, vals, context=None) 
             # move the mail thread
-            lead_model.transform_model_messages(cr, uid, wizard.lead_id.id, issue_id, "project.issue", context=context)
+            lead_model.transform_model_messages(cr, uid, lead_id, issue_id, "project.issue", context=context)
             # delete the lead
-            lead_model.unlink(cr, uid, [wizard.lead_id.id], context=None)
+            lead_model.unlink(cr, uid, [lead_id], context=None)
         return False
 
 
