@@ -79,6 +79,7 @@
     // 'snippet-dropped' is triggered on '#oe_snippets' whith $target as attribute when a snippet is dropped
     // 'snippet-activated' is triggered on '#oe_snippets' (and on snippet) when a snippet is activated
 
+    if (!website.snippet) website.snippet = {};
     website.snippet.styles = {};
     website.snippet.selector = [];
     website.snippet.BuildingBlock = openerp.Widget.extend({
