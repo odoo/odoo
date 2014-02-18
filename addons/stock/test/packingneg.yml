@@ -106,7 +106,7 @@
       elif rec.lot_id.name == 'Lot neg' and rec.location_id.id == ref('stock_location_customers'):
         assert ((rec.qty == 20 or rec.qty == 120) and not rec.package_id), "Should have 140 pieces (120+20) in customer location from pallet 2 and lot A"
       elif rec.package_id.name == 'Palneg 3' and rec.location_id.id == ref('stock_location_stock'):
-        assert rec.qty == 50, "Should have 30 and 20 pieces in stock on pallet 3"
+        assert rec.qty == 50 or rec.qty == 20 or rec.qty == 30, "Should have 30 and 20 pieces in stock on pallet 3"
       elif not rec.package_id and not rec.lot_id and rec.location_id.id == ref('stock_location_customers'):
         assert rec.qty == 10, "Should have 10 pieces in customer location from pallet 3"
       else:

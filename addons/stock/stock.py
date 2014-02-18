@@ -3343,11 +3343,11 @@ class stock_pack_operation(osv.osv):
         res = {}
         for ops in self.browse(cr, uid, ids, context=context):
             res[ops.id] = 0
-            if ops.package_id:
+            if ops.package_id and not ops.product_id:
                 #dont try to compute the remaining quantity for packages because it's not relevant (a package could include different products).
                 #should use _get_remaining_prod_quantities instead
                 continue
-            elif ops.product_id:
+            else:
                 qty = ops.product_qty
                 if ops.product_uom_id:
                     qty = uom_obj._compute_qty(cr, uid, ops.product_uom_id.id, ops.product_qty, ops.product_id.uom_id.id)
