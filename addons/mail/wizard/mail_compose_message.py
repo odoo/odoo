@@ -322,9 +322,9 @@ class mail_compose_message(osv.TransientModel):
                     mail_values['email_from'] = email_dict.pop('email_from')
                 # replies redirection: mass mailing only
                 if not wizard.same_thread:
-                    mail_values['reply_to'] = email_dict.pop('reply_to')
+                    mail_values['reply_to'] = email_dict.pop('reply_to', None)
                 else:
-                    email_dict.pop('reply_to')
+                    email_dict.pop('reply_to', None)
                 mail_values.update(email_dict)
             # mass mailing without post: mail_mail values
             if mass_mail_mode and not wizard.post:

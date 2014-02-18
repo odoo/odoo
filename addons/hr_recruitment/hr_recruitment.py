@@ -19,12 +19,10 @@
 #
 ##############################################################################
 
-from openerp import tools
-
 from datetime import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.tools import html2plaintext
+
 
 AVAILABLE_PRIORITIES = [
     ('', ''),
@@ -53,6 +51,7 @@ class hr_recruitment_stage(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
         'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep this field empty."),
         'requirements': fields.text('Requirements'),
+        'template_id': fields.many2one('email.template', 'Use template', help="If set, a message is posted on the applicant using the template when the applicant is set to the stage."),
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
                                'there are no records in that stage to display.'),
@@ -172,6 +171,12 @@ class hr_applicant(osv.Model):
                     res[issue.id][field] = abs(float(duration))
         return res
 
+    def _get_attachment_number(self, cr, uid, ids, fields, args, context=None):
+        res = dict.fromkeys(ids, 0)
+        for app_id in ids:
+            res[app_id] = self.pool['ir.attachment'].search_count(cr, uid, [('res_model', '=', 'hr.applicant'), ('res_id', '=', app_id)], context=context)
+        return res
+
     _columns = {
         'name': fields.char('Subject / Application Name', size=128, required=True),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
@@ -215,9 +220,9 @@ class hr_applicant(osv.Model):
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
         'color': fields.integer('Color Index'),
-        'emp_id': fields.many2one('hr.employee', string='Employee',
-            help='Employee linked to the applicant.'),
+        'emp_id': fields.many2one('hr.employee', string='Employee', help='Employee linked to the applicant.'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
+        'attachment_number': fields.function(_get_attachment_number, string='Number of Attachments', type="integer"),
     }
 
     _defaults = {
@@ -235,11 +240,12 @@ class hr_applicant(osv.Model):
     }
 
     def onchange_job(self, cr, uid, ids, job_id=False, context=None):
+        department_id = False
         if job_id:
             job_record = self.pool.get('hr.job').browse(cr, uid, job_id, context=context)
-            if job_record and job_record.department_id:
-                return {'value': {'department_id': job_record.department_id.id}}
-        return {}
+            department_id = job_record and job_record.department_id and job_record.department_id.id or False
+            user_id = job_record and job_record.user_id and job_record.user_id.id or False
+        return {'value': {'department_id': department_id, 'user_id': user_id}}
 
     def onchange_department_id(self, cr, uid, ids, department_id=False, stage_id=False, context=None):
         if not stage_id:
@@ -290,10 +296,15 @@ class hr_applicant(osv.Model):
             @return: Dictionary value for created Meeting view
         """
         applicant = self.browse(cr, uid, ids[0], context)
+        applicant_ids = []
+        if applicant.partner_id:
+            applicant_ids.append(applicant.partner_id.id)
+        if applicant.department_id and applicant.department_id.manager_id and applicant.department_id.manager_id.user_id and applicant.department_id.manager_id.user_id.partner_id:
+            applicant_ids.append(applicant.department_id.manager_id.user_id.partner_id.id)
         category = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'categ_meet_interview', context)
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
         res['context'] = {
-            'default_partner_ids': applicant.partner_id and [applicant.partner_id.id] or False,
+            'default_partner_ids': applicant_ids,
             'default_user_id': uid,
             'default_name': applicant.name,
             'default_categ_ids': category and [category.id] or False,
@@ -319,6 +330,13 @@ class hr_applicant(osv.Model):
         value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
         return value
 
+    def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'action_attachment')
+        action = self.pool.get(model).read(cr, uid, action_id, context=context)
+        action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
+        action['domain'] = str(['&', ('res_model', '=', self._name), ('res_id', 'in', ids)])
+        return action
+
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         recipients = super(hr_applicant, self).message_get_suggested_recipients(cr, uid, ids, context=context)
         for applicant in self.browse(cr, uid, ids, context=context):
@@ -338,7 +356,7 @@ class hr_applicant(osv.Model):
         val = msg.get('from').split('<')[0]
         defaults = {
             'name':  msg.get('subject') or _("No Subject"),
-            'partner_name':val,
+            'partner_name': val,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
@@ -352,18 +370,27 @@ class hr_applicant(osv.Model):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
+        context['mail_create_nolog'] = True
         if vals.get('department_id') and not context.get('default_department_id'):
             context['default_department_id'] = vals.get('department_id')
-
+        if vals.get('job_id') or context.get('default_job_id'):
+            job_id = vals.get('job_id') or context.get('default_job_id')
+            vals.update(self.onchange_job(cr, uid, [], job_id, context=context)['value'])
         obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
         applicant = self.browse(cr, uid, obj_id, context=context)
         if applicant.job_id:
-            self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=_('Applicant <b>created</b>'), subtype="hr_recruitment.mt_job_new_applicant", context=context)
+            name = applicant.partner_name if applicant.partner_name else applicant.name
+            self.pool['hr.job'].message_post(
+                cr, uid, [applicant.job_id.id],
+                body=_('New application from %s') % name,
+                subtype="hr_recruitment.mt_job_applicant_new", context=context)
         return obj_id
 
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
+        res = True
+
         # user_id change: update date_start
         if vals.get('user_id'):
             vals['date_start'] = fields.datetime.now()
@@ -373,8 +400,43 @@ class hr_applicant(osv.Model):
             for applicant in self.browse(cr, uid, ids, context=None):
                 vals['last_stage_id'] = applicant.stage_id.id
                 res = super(hr_applicant, self).write(cr, uid, [applicant.id], vals, context=context)
-            return res
-        return super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
+        else:
+            res = super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
+
+        # post processing: if job changed, post a message on the job
+        if vals.get('job_id'):
+            for applicant in self.browse(cr, uid, ids, context=None):
+                name = applicant.partner_name if applicant.partner_name else applicant.name
+                self.pool['hr.job'].message_post(
+                    cr, uid, [vals['job_id']],
+                    body=_('New application from %s') % name,
+                    subtype="hr_recruitment.mt_job_applicant_new", context=context)
+
+        # post processing: if stage changed, post a message in the chatter
+        if vals.get('stage_id'):
+            stage = self.pool['hr.recruitment.stage'].browse(cr, uid, vals['stage_id'], context=context)
+            if stage.template_id:
+                # TDENOTE: probably factorize me in a message_post_with_template generic method FIXME
+                compose_ctx = dict(context,
+                                   active_ids=ids)
+                compose_id = self.pool['mail.compose.message'].create(
+                    cr, uid, {
+                        'model': self._name,
+                        'composition_mode': 'mass_mail',
+                        'template_id': stage.template_id.id,
+                        'same_thread': True,
+                        'post': True,
+                        'notify': True,
+                    }, context=compose_ctx)
+                self.pool['mail.compose.message'].write(
+                    cr, uid, [compose_id],
+                    self.pool['mail.compose.message'].onchange_template_id(
+                        cr, uid, [compose_id],
+                        stage.template_id.id, 'mass_mail', self._name, False,
+                        context=compose_ctx)['value'],
+                    context=compose_ctx)
+                self.pool['mail.compose.message'].send_mail(cr, uid, [compose_id], context=compose_ctx)
+        return res
 
     def create_employee_from_applicant(self, cr, uid, ids, context=None):
         """ Create an hr.employee from the hr.applicants """
@@ -390,13 +452,20 @@ class hr_applicant(osv.Model):
                 address_id = self.pool.get('res.partner').address_get(cr, uid, [applicant.partner_id.id], ['contact'])['contact']
                 contact_name = self.pool.get('res.partner').name_get(cr, uid, [applicant.partner_id.id])[0][1]
             if applicant.job_id and (applicant.partner_name or contact_name):
-                applicant.job_id.write({'no_of_recruitment': applicant.job_id.no_of_recruitment - 1})
+                applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1}, context=context)
                 emp_id = hr_employee.create(cr, uid, {'name': applicant.partner_name or contact_name,
                                                      'job_id': applicant.job_id.id,
                                                      'address_home_id': address_id,
-                                                     'department_id': applicant.department_id.id
+                                                     'department_id': applicant.department_id.id or False,
+                                                     'address_id': applicant.company_id and applicant.company_id.partner_id and applicant.company_id.partner_id.id or False,
+                                                     'work_email': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.email or False,
+                                                     'work_phone': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.phone or False,
                                                      })
                 self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
+                self.pool['hr.job'].message_post(
+                    cr, uid, [applicant.job_id.id],
+                    body=_('New Employee %s Hired') % applicant.partner_name if applicant.partner_name else applicant.name,
+                    subtype="hr_recruitment.mt_job_applicant_hired", context=context)
             else:
                 raise osv.except_osv(_('Warning!'), _('You must define an Applied Job and a Contact Name for this applicant.'))
 
@@ -433,11 +502,39 @@ class hr_job(osv.osv):
     _inherit = "hr.job"
     _name = "hr.job"
     _inherits = {'mail.alias': 'alias_id'}
+
+    def _get_attached_docs(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        attachment_obj = self.pool.get('ir.attachment')
+        for job_id in ids:
+            applicant_ids = self.pool.get('hr.applicant').search(cr, uid, [('job_id', '=', job_id)], context=context)
+            res[job_id] = attachment_obj.search(
+                cr, uid, [
+                    '|',
+                    '&', ('res_model', '=', 'hr.job'), ('res_id', '=', job_id),
+                    '&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', applicant_ids)
+                ], context=context)
+        return res
+
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
                                     help="Email alias for this job position. New emails will automatically "
                                          "create new applicants for this job position."),
+        'address_id': fields.many2one('res.partner', 'Job Location', help="Address where employees are working"),
+        'application_ids': fields.one2many('hr.applicant', 'job_id', 'Applications'),
+        'manager_id': fields.related('department_id', 'manager_id', type='many2one', string='Department Manager', relation='hr.employee', readonly=True, store=True),
+        'document_ids': fields.function(_get_attached_docs, type='one2many', relation='ir.attachment', string='Applications'),
+        'user_id': fields.many2one('res.users', 'Recruitment Responsible', track_visibility='onchange'),
+        'color': fields.integer('Color Index'),
+    }
+
+    def _address_get(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return user.company_id.partner_id.id
+
+    _defaults = {
+        'address_id': _address_get
     }
 
     def _auto_init(self, cr, context=None):
@@ -476,6 +573,18 @@ class hr_job(osv.osv):
             'context': context,
             'nodestroy': True,
         }
+
+    def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
+        #open attachments of job and related applicantions.
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'action_attachment')
+        action = self.pool.get(model).read(cr, uid, action_id, context=context)
+        applicant_ids = self.pool.get('hr.applicant').search(cr, uid, [('job_id', 'in', ids)], context=context)
+        action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
+        action['domain'] = str(['|', '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', ids), '&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', applicant_ids)])
+        return action
+
+    def action_set_no_of_recruitment(self, cr, uid, id, value, context=None):
+        return self.write(cr, uid, [id], {'no_of_recruitment': value}, context=context)
 
 
 class applicant_category(osv.osv):

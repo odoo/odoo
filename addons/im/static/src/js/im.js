@@ -92,6 +92,7 @@
         search_changed: function(e) {
             var users = new instance.web.Model("im.user");
             var self = this;
+            // TODO: Remove fields arg in trunk. Also in im.js.
             return this.user_search_dm.add(users.call("search_users", [this.get("current_search"), ["name", "user_id", "uuid", "im_status"],
                     USERS_LIMIT], {context:new instance.web.CompoundContext()})).then(function(users) {
                 var logged_users = _.filter(users, function(u) { return !!u.im_status; });

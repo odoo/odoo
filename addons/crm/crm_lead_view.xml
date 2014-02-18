@@ -79,9 +79,9 @@
                 view_type="form"/>
 
         <act_window
-                id="act_crm_opportunity_crm_meeting_new"
+                id="act_crm_opportunity_calendar_event_new"
                 name="Meetings"
-                res_model="crm.meeting"
+                res_model="calendar.event"
                 view_mode="tree,form,calendar"
                 context="{'default_duration': 4.0, 'default_opportunity_id': active_id}"
                 view_type="form"/>
@@ -207,8 +207,8 @@
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <graph string="Opportunities" type="bar">
-                    <field name="stage_id"/>
-                    <field name="planned_revenue" operator="+"/>
+                    <field name="stage_id" type="row"/>
+                    <field name="planned_revenue" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -411,7 +411,7 @@
                                     on_change="on_change_partner_id(partner_id)"
                                     string="Customer"
                                     context="{'default_name': partner_name, 'default_email': email_from, 'default_phone': phone}"/>
-                                <field name="email_from" string="Email"/>
+                                <field name="email_from" string="Email" widget="email"/>
                                 <field name="phone"/>
                             </group>
 

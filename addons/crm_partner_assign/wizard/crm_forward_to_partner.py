@@ -87,7 +87,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
             raise osv.except_osv(_('Email Template Error'),
                                  _('The Forward Email Template is not in the database'))
         try:
-            portal_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_portal')[1]
+            portal_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_portal')[1]
         except ValueError:
             raise osv.except_osv(_('Portal Group Error'),
                                  _('The Portal group cannot be found'))
@@ -139,6 +139,8 @@ class crm_lead_forward_to_partner(osv.TransientModel):
             values = {'partner_assigned_id': partner_id, 'user_id': partner_leads['partner'].user_id.id}
             if stage_id:
                 values['stage_id'] = stage_id
+            if partner_leads['partner'].user_id:
+                values['section_id'] = partner_leads['partner'].user_id.default_section_id.id
             lead_obj.write(cr, uid, lead_ids, values)
             self.pool.get('crm.lead').message_subscribe(cr, uid, lead_ids, [partner_id], context=context)
         return True

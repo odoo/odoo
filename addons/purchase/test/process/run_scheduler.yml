@@ -24,3 +24,13 @@
   !python {model: procurement.order}: |
     procurement = self.browse(cr, uid, ref('procurement_order_testcase0'))
     assert procurement.purchase_id, 'RFQ should be generated!'
+-
+  I delete the line from the purchase order and check that the move and the procurement are cancelled
+-
+  !python {model: procurement.order}: |
+    procurement = self.browse(cr, uid, ref('procurement_order_testcase0'))
+    move = procurement.purchase_id.order_line[0].move_dest_id
+    procurement.purchase_id.order_line[0].unlink()
+    assert move.state == 'cancel', 'Move should be cancelled'
+    procurement.refresh()
+    assert procurement.state == 'cancel', 'Procurement should be cancelled'

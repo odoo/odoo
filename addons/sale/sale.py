@@ -58,6 +58,10 @@ class sale_order(osv.osv):
             val += c.get('amount', 0.0)
         return val
 
+    def _amount_all_wrapper(self, cr, uid, ids, field_name, arg, context=None):
+        """ Wrapper because of direct method passing as parameter for function fields """
+        return self._amount_all(cr, uid, ids, field_name, arg, context=context)
+
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         cur_obj = self.pool.get('res.currency')
         res = {}
@@ -199,19 +203,19 @@ class sale_order(osv.osv):
             fnct_search=_invoiced_search, type='boolean', help="It indicates that sales order has at least one invoice."),
         'note': fields.text('Terms and conditions'),
 
-        'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
+        'amount_untaxed': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums', help="The amount without tax.", track_visibility='always'),
-        'amount_tax': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Taxes',
+        'amount_tax': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Taxes',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums', help="The tax amount."),
-        'amount_total': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Total',
+        'amount_total': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Total',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
@@ -238,7 +242,7 @@ class sale_order(osv.osv):
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
     ]
-    _order = 'name desc'
+    _order = 'date_order desc, id desc'
 
     # Form filling
     def unlink(self, cr, uid, ids, context=None):
@@ -997,9 +1001,9 @@ class mail_compose_message(osv.Model):
 
     def send_mail(self, cr, uid, ids, context=None):
         context = context or {}
-        if context.get('active_model') == 'sale.order' and context.get('active_ids') and context.get('mark_so_as_sent'):
+        if context.get('default_model') == 'sale.order' and context.get('default_res_id') and context.get('mark_so_as_sent'):
             context = dict(context, mail_post_autofollow=True)
-            self.pool.get('sale.order').signal_quotation_sent(cr, uid, context['active_ids'])
+            self.pool.get('sale.order').signal_quotation_sent(cr, uid, [context['default_res_id']])
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
 

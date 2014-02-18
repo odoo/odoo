@@ -71,9 +71,9 @@
         <field name="groups" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
     </record>
 
-    <record id="crm_meeting_global" model="ir.rule">
+    <record id="calendar_event_global" model="ir.rule">
         <field name="name">Hide Private Meetings</field>
-        <field ref="model_crm_meeting" name="model_id"/>
+        <field ref="model_calendar_event" name="model_id"/>
         <field eval="1" name="global"/>
         <field name="domain_force">['|',('user_id','=',user.id),('show_as','=','busy')]</field>
     </record>

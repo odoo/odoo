@@ -2106,7 +2106,7 @@ class stock_move(osv.osv):
                 })
                 new_moves.append(self.browse(cr, uid, [new_id])[0])
             if pickid:
-                self.signal_button_confirm(cr, uid, [pickid])
+                self.pool.get('stock.picking').signal_button_confirm(cr, uid, [pickid])
         if new_moves:
             new_moves += self.create_chained_picking(cr, uid, new_moves, context)
         return new_moves
@@ -2625,7 +2625,7 @@ class stock_move(osv.osv):
                 quantity = move.product_qty
 
             uos_qty = quantity / move_qty * move.product_uos_qty
-            if quantity_rest > 0:
+            if float_compare(quantity_rest, 0, precision_rounding=move.product_id.uom_id.rounding):
                 default_val = {
                     'product_qty': quantity,
                     'product_uos_qty': uos_qty,
