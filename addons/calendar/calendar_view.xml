@@ -57,15 +57,15 @@
                                     <label for="duration"/>
                                     <div>
                                         <field name="duration" widget="float_time"
-                                            on_change="onchange_dates(date,duration,False,allday)"
+                                            on_change="onchange_dates(date, duration, False, allday)"
                                             class="oe_inline" attrs="{'invisible': [('allday','=',True)]}"/>
                                         <label string="hours" attrs="{'invisible': [('allday','=',True)]}"/>
-                                        (<field name="allday" on_change="onchange_dates(date,False,False,allday)" class="oe_inline"/>
+                                        (<field name="allday"  class="oe_inline"/>
                                         <label for="allday" string="All Day?"/>)
                                     </div>
                                     <field name="date_deadline" groups="base.group_no_one"
                                         attrs="{'invisible': ['|', ('allday','=',True), ('duration','&lt;', 24)]}"
-                                        on_change="onchange_dates(date,False,date_deadline)"/>
+                                        />
                                 </group>
                                 <group>
                                     <field name="categ_ids" widget="many2many_tags"/>
