@@ -174,6 +174,9 @@ class WebRequest(object):
                 self._cr = self.registry.db.cursor()
         return self._cr
 
+    def __getattr__(self, attr):
+        return getattr(self.httprequest, attr)
+
     def __enter__(self):
         _request_stack.push(self)
         return self
@@ -265,8 +268,19 @@ def route(route=None, **kw):
             else:
                 routes = [route]
             routing['routes'] = routes
-        f.routing = routing
-        return f
+        @functools.wraps(f)
+        def response_wrap(*args, **kw):
+            response = f(*args, **kw)
+            if isinstance(response, Response) or request.func_request_type == 'json':
+                return response
+            elif isinstance(response, LazyResponse):
+                raise "TODO: remove LazyResponses ???"
+            else:
+                response = Response.force_type(response)
+                response.set_default()
+                return response
+        response_wrap.routing = routing
+        return response_wrap
     return decorator
 
 class JsonRequest(WebRequest):
@@ -379,7 +393,7 @@ class JsonRequest(WebRequest):
             mime = 'application/json'
             body = simplejson.dumps(response)
 
-        r = werkzeug.wrappers.Response(body, headers=[('Content-Type', mime), ('Content-Length', len(body))])
+        r = Response(body, headers=[('Content-Type', mime), ('Content-Length', len(body))])
         return r
 
 def serialize_exception(e):
@@ -439,7 +453,7 @@ class HttpRequest(WebRequest):
     def dispatch(self):
         # TODO: refactor this correctly. This is a quick fix for pos demo.
         if request.httprequest.method == 'OPTIONS' and request.func and request.func.routing.get('cors'):
-            response = werkzeug.wrappers.Response(status=200)
+            response = Response(status=200)
             response.headers.set('Access-Control-Allow-Origin', request.func.routing['cors'])
             methods = 'GET, POST'
             if request.func_request_type == 'json':
@@ -453,7 +467,7 @@ class HttpRequest(WebRequest):
 
         r = self._call_function(**self.params)
         if not r:
-            r = werkzeug.wrappers.Response(status=204)  # no content
+            r = Response(status=204)  # no content
         return r
 
     def make_response(self, data, headers=None, cookies=None):
@@ -470,11 +484,23 @@ class HttpRequest(WebRequest):
         :type headers: ``[(name, value)]``
         :param collections.Mapping cookies: cookies to set on the client
         """
-        response = werkzeug.wrappers.Response(data, headers=headers)
+        response = Response(data, headers=headers)
         if cookies:
             for k, v in cookies.iteritems():
                 response.set_cookie(k, v)
         return response
+
+    def render(self, template, qcontext=None, mimetype='text/html', **kw):
+        """ Lazy render of QWeb template.
+
+        The actual rendering of the given template will occur at then end of
+        the dispatching. Meanwhile, the template and/or qcontext can be
+        altered or even replaced by a static response.
+
+        :param basestring template: template to render
+        :param dict qcontext: Rendering context to use
+        """
+        return Response(template=template, qcontext=qcontext, mimetype=mimetype, **kw)
 
     def not_found(self, description=None):
         """ Helper for 404 response, return its result from the method
@@ -892,6 +918,42 @@ mimetypes.add_type('application/font-woff', '.woff')
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
 
+class Response(werkzeug.wrappers.Response):
+    """ Response object passed through controller route chain.
+
+    In addition to the werkzeug.wrappers.Response parameters, this
+    classe's constructor can take the following additional parameters
+    for QWeb Lazy Rendering.
+
+    :param basestring template: template to render
+    :param dict qcontext: Rendering context to use
+    :param int uid: User id to use for the ir.ui.view render call
+    """
+    def __init__(self, *args, **kw):
+        template = kw.pop('template', None)
+        qcontext = kw.pop('qcontext', None)
+        uid = kw.pop('uid', None)
+        self.set_default(template, qcontext, uid)
+        super(Response, self).__init__(*args, **kw)
+
+    def set_default(self, template=None, qcontext=None, uid=None):
+        self.template = template
+        self.qcontext = qcontext or dict()
+        self.uid = uid
+
+    @property
+    def is_qweb(self):
+        return self.template is not None
+
+    def render(self):
+        view_obj = request.registry["ir.ui.view"]
+        uid = self.uid or request.uid or openerp.SUPERUSER_ID
+        return view_obj.render(request.cr, uid, self.template, self.qcontext, context=request.context)
+
+    def flatten(self):
+        self.response.append(self.render())
+        self.template = None
+
 class LazyResponse(werkzeug.wrappers.Response):
     """ Lazy werkzeug response.
     API not yet frozen"""
@@ -1039,6 +1101,7 @@ class Root(object):
             return HttpRequest(httprequest)
 
     def get_response(self, httprequest, result, explicit_session):
+        # TODO: Remove LazyResponse
         if isinstance(result, LazyResponse):
             try:
                 result.process()
@@ -1048,8 +1111,17 @@ class Root(object):
                 else:
                     raise
 
+        if isinstance(result, Response) and result.is_qweb:
+            try:
+                result.flatten()
+            except(Exception), e:
+                if request.db:
+                    result = request.registry['ir.http']._handle_exception(e)
+                else:
+                    raise
+
         if isinstance(result, basestring):
-            response = werkzeug.wrappers.Response(result, mimetype='text/html')
+            response = Response(result, mimetype='text/html')
         else:
             response = result
 
