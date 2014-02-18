@@ -1281,8 +1281,6 @@
 
             this.$target.attr('contentEditable', 'false');
             this.$target.find('.oe_structure, .content>.row').attr('contentEditable', 'true');
-
-            this.$target.carousel('pause');
         },
         clean_for_save: function () {
             this._super();
@@ -1290,14 +1288,6 @@
             if(!this.$target.find(".item.active").length) {
                 this.$target.find(".item:first").addClass("active");
             }
-        },
-        onFocus: function () {
-            this._super();
-            this.$target.carousel('pause');
-        },
-        onBlur: function () {
-            this._super();
-            this.$target.carousel('cycle');
         },
         start : function () {
             var self = this;
@@ -1309,6 +1299,7 @@
             this.$editor.find(".js_add").on('click', function () {self.on_add_slide(); return false;});
             this.$editor.find(".js_remove").on('click', function () {self.on_remove_slide(); return false;});
 
+            this.$target.carousel('pause');
             this.rebind_event();
         },
         on_add_slide: function () {
