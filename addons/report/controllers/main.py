@@ -31,6 +31,11 @@ import tempfile
 import lxml.html
 import subprocess
 import simplejson
+try:
+    import cStringIO as StringIO
+except ImportError:
+    import StringIO
+
 
 from pyPdf import PdfFileWriter, PdfFileReader
 from werkzeug.test import Client
@@ -421,8 +426,7 @@ class Report(http.Controller):
             for page in range(0, reader.getNumPages()):
                 writer.addPage(reader.getPage(page))
             document.close()
-
-        merged = tempfile.NamedTemporaryFile(suffix='.pdf', prefix='report.tmp.', mode='w+b')
+        merged = StringIO.StringIO()
         writer.write(merged)
         merged.seek(0)
         content = merged.read()
