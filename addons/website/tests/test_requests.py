@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import collections
 import urlparse
 import unittest2
 import urllib2
@@ -9,40 +8,9 @@ import lxml.html
 
 from openerp import tools
 
+import cases
+
 __all__ = ['load_tests', 'CrawlSuite']
-
-class URLCase(unittest2.TestCase):
-    """
-    URLCase moved out of test_requests, otherwise discovery attempts to
-    instantiate and run it
-    """
-    def __init__(self, user, url, source, result):
-        super(URLCase, self).__init__()
-        self.user = user
-        self.url = url
-        self.source = source
-        self.result = result
-
-    @property
-    def username(self):
-        return self.user or "Anonymous Coward"
-
-    def __str__(self):
-        if self.source:
-            return "%s (from %s, as %s)" % (self.url, self.source, self.username)
-        return "%s (as %s)" % (self.url, self.username)
-
-    __repr__ = __str__
-
-    def shortDescription(self):
-        return ""
-
-    def runTest(self):
-        code = self.result.getcode()
-        self.assertIn(
-            code, xrange(200, 300),
-            "Fetching %s as %s returned an error response (%d)" % (
-                self.url, self.username, code))
 
 class RedirectHandler(urllib2.HTTPRedirectHandler):
     """
@@ -96,12 +64,12 @@ class CrawlSuite(unittest2.TestSuite):
         # blow up in multidb situations
         self.opener.open('http://localhost:{port}/web/?db={db}'.format(
             port=tools.config['xmlrpc_port'],
-            db=werkzeug.url_quote_plus(tools.config['db_name']),
+            db=werkzeug.urls.url_quote_plus(tools.config['db_name']),
         ))
         if user is not None:
             url = 'http://localhost:{port}/login?{query}'.format(
                 port=tools.config['xmlrpc_port'],
-                query=werkzeug.url_encode({
+                query=werkzeug.urls.url_encode({
                     'db': tools.config['db_name'],
                     'login': user,
                     'key': password,
@@ -149,7 +117,7 @@ class URL(object):
         self.source = source
 
     def to_case(self, user, result):
-        return URLCase(user, self.url, self.source, result)
+        return cases.URLCase(user, self.url, self.source, result)
 
 def load_tests(loader, base, _):
     base.addTest(CrawlSuite())
