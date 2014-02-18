@@ -26,6 +26,10 @@ You will need :
 Setup
 -----
 
+.. image:: _images/posbox_doc_schema.png
+    :width: 100%
+    :align: center
+
 1) Power the PosBox.
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -167,7 +171,8 @@ database settings:
 
 ::
 
-    $ ./server/openerp-server --addons-path=addons,web/addons --db-filter='^posbox$' --xmlrpc-port=8069 -d posbox
+    $ ./server/openerp-server --addons-path=addons,web/addons --db-filter='^posbox$' \
+            --xmlrpc-port=8069 -d posbox
 
 5) Check that everything works
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
