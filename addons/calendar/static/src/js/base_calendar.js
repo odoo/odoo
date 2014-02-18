@@ -77,7 +77,6 @@ openerp.calendar = function(instance) {
             if(instance.session.session_is_valid(self.db) && instance.session.username != "anonymous") {
                 self.redirect_meeting_view(self.db,self.action,self.id,self.view);
             } else {
-                alert('in anonymous or null ');
                 self.open_invitation_form(self.attendee_data);
             }
         },
@@ -94,7 +93,6 @@ openerp.calendar = function(instance) {
                 return location.replace(action_url);
             };
             reload_page();
-
         },
     });
 
