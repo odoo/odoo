@@ -586,7 +586,7 @@ class google_calendar(osv.AbstractModel):
                 if new_google_internal_event_id:
                     #TODO WARNING, NEED TO CHECK THAT EVENT and ALL instance NOT DELETE IN GMAIL BEFORE !
                     res = self.update_recurrent_event_exclu(cr,uid,new_google_internal_event_id,source_attendee_record.google_internal_event_id,att.event_id,context=context)
-                    att_obj.write(cr, uid, [att.event_id.id], {'google_internal_event_id': new_google_internal_event_id})
+                    att_obj.write(cr, uid, [att.id], {'google_internal_event_id': new_google_internal_event_id})
 
     def check_and_sync(self, cr, uid, oe_event, google_event, context):
         if datetime.strptime(oe_event.oe_update_date,"%Y-%m-%d %H:%M:%S.%f") > datetime.strptime(google_event['updated'],"%Y-%m-%dT%H:%M:%S.%fz"):
