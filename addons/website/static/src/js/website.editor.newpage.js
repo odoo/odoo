@@ -35,8 +35,9 @@
                     }
                 }).then(function (val, field, $dialog) {
                     if (val) {
-                        console.log('/website/add/' + encodeURI(val) + "?add_menu=" + $dialog.find('input[type="checkbox"]').is(':checked'));
-                        document.location = '/website/add/' + encodeURI(val) + "?add_menu=" + $dialog.find('input[type="checkbox"]').is(':checked');
+                        var url = '/website/add/' + encodeURI(val);
+                        if ($dialog.find('input[type="checkbox"]').is(':checked')) url +="?add_menu=1";
+                        document.location = url;
                     }
                 });
             }
