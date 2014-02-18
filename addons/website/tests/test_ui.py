@@ -4,9 +4,11 @@ import unittest2
 
 import openerp.tests
 
+relfile = lambda *args: os.path.join(os.path.dirname(__file__), *args)
+
 inject = [
-    ("openerp.website.Tour", os.path.join(os.path.dirname(__file__), '../static/src/js/website.tour.js')),
-    ("openerp.website.Tour.LoginEdit", os.path.join(os.path.dirname(__file__), "../static/src/js/website.tour.test.admin.js")),
+    ('openerp.website.Tour', relfile('../static/src/js/website.tour.js')),
+    ('openerp.website.Tour.LoginEdit', relfile('../static/src/js/website.tour.test.admin.js')),
 ]
 
 class TestUi(openerp.tests.HttpCase):
