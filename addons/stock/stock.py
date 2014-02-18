@@ -1775,15 +1775,16 @@ class stock_move(osv.osv):
         }
         for move in self.browse(cr, uid, ids, context=context):
             state = 'confirmed'
-            for m in move.move_orig_ids:
-                if move.move_orig_ids:
-                    state = 'waiting'
-                elif move.split_from:
-                    move2 = move.split_from
-                    while move2 and state != 'waiting':
-                        if move2.move_orig_ids:
-                            state = 'waiting'
-                        move2 = move2.split_from
+            #if the move is preceeded, then it's waiting (if preceeding move is done, then action_assign has been called already and its state is already available)
+            if move.move_orig_ids:
+                state = 'waiting'
+            #if the move is split and some of the ancestor was preceeded, then it's waiting as well
+            elif move.split_from:
+                move2 = move.split_from
+                while move2 and state != 'waiting':
+                    if move2.move_orig_ids:
+                        state = 'waiting'
+                    move2 = move2.split_from
 
             states[state].append(move.id)
             self._picking_assign(cr, uid, move, context=context)
@@ -1842,11 +1843,12 @@ class stock_move(osv.osv):
                 fallback_domain = prev_quant_ids and [('id', 'not in', prev_quant_ids)] or []
                 #we always keep the quants already assigned and try to find the remaining quantity on quants not assigned only
                 main_domain = [('reservation_id', '=', False), ('qty', '>', 0)]
-                #Check for original moves
+
+                #if the move is preceeded, restrict the choice of quants in the ones moved previously in original move
                 move_orig_ids = []
-                result = False
                 move2 = move
                 while move2:
+                    #loop on the split_from to find the ancestor of split moves
                     move_orig_ids += [x.id for x in move2.move_orig_ids]
                     move2 = move2.split_from
                 if move_orig_ids:
@@ -2042,7 +2044,6 @@ class stock_move(osv.osv):
         self.action_done(cr, uid, res, context=context)
         return res
 
-
     def split(self, cr, uid, move, qty, restrict_lot_id=False, restrict_partner_id=False, context=None):
         """ Splits qty from move move into a new move
         :param move: browse record
@@ -2065,6 +2066,7 @@ class stock_move(osv.osv):
             'product_uom_qty': uom_qty,
             'product_uos_qty': uos_qty,
             'state': move.state,
+            'procure_method': 'make_to_stock',
             'move_dest_id': False,
             'reserved_quant_ids': [],
             'restrict_lot_id': restrict_lot_id,
