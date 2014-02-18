@@ -24,7 +24,7 @@
     objects. The object :obj:`proxy` is a proxy object to the current scope.
 """
 
-from collections import defaultdict
+from collections import defaultdict, MutableMapping
 from contextlib import contextmanager
 from pprint import pformat
 from werkzeug.local import Local, release_local
@@ -325,8 +325,8 @@ class DraftSwitch(object):
 # Recomputation manager - stores the field/record to recompute
 #
 
-class Recomputation(object):
-    """ Collection of (`field`, `records`) to recompute.
+class Recomputation(MutableMapping):
+    """ Mapping `field` to `records` to recompute.
         Use it as a context manager to handle all recomputations at one level
         only, and clear the recomputation manager after an exception.
     """
@@ -335,32 +335,28 @@ class Recomputation(object):
     def __init__(self):
         self._todo = {}                 # {field: records, ...}
 
-    def clear(self):
-        """ Empty the collection. """
-        self._todo.clear()
+    def __getitem__(self, field):
+        """ Return the records to recompute for `field` (may be empty). """
+        return self._todo.get(field) or field.model.browse()
 
-    def __nonzero__(self):
-        return bool(self._todo)
-
-    def next(self):
-        """ Return the next pair `field, records` to recompute. """
-        return next(self._todo.iteritems())
-
-    def todo(self, field, records=None):
-        """ Add or return records to recompute for `field`. """
-        if records is None:
-            return self._todo.get(field) or field.model.browse()
-        elif records:
-            records0 = self._todo.get(field) or field.model.browse()
-            self._todo[field] = records0 | records
-
-    def done(self, field, records):
-        """ Remove records that have been recomputed for `field`. """
-        remain = (self._todo.get(field) or field.model.browse()) - records
-        if remain:
-            self._todo[field] = remain
+    def __setitem__(self, field, records):
+        """ Set the records to recompute for `field`. It automatically discards
+            the item if `records` is empty.
+        """
+        if records:
+            self._todo[field] = records
         else:
             self._todo.pop(field, None)
+
+    def __delitem__(self, field):
+        """ Empty the records to recompute for `field`. """
+        self._todo.pop(field, None)
+
+    def __iter__(self):
+        return iter(self._todo)
+
+    def __len__(self):
+        return len(self._todo)
 
     def __enter__(self):
         self._level += 1

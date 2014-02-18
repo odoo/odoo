@@ -2689,7 +2689,7 @@ class BaseModel(object):
                 with scope_proxy(cr, SUPERUSER_ID, {'active_test': False}):
                     recs = self.search([])
                 for f in stored_fields:
-                    scope_proxy.recomputation.todo(f, recs)
+                    scope_proxy.recomputation[f] |= recs
                 self.recompute()
 
             todo_end.append((1000, func, ()))
@@ -3129,7 +3129,7 @@ class BaseModel(object):
         # do not fetch the records/fields that have to be recomputed
         if scope_proxy.recomputation:
             for fname in list(fnames):
-                recomp = scope_proxy.recomputation.todo(self._fields[fname])
+                recomp = scope_proxy.recomputation[self._fields[fname]]
                 if self & recomp:
                     fnames.discard(fname)       # do not fetch that field
                 else:
@@ -5345,7 +5345,7 @@ class BaseModel(object):
         """
         with scope_proxy.recomputation as recomputation:
             while recomputation:
-                field, recs = recomputation.next()
+                field, recs = next(recomputation.iteritems())
                 # To recompute field, simply evaluate it on recs.
                 failed = recs.browse()
                 for rec in recs:
@@ -5355,7 +5355,7 @@ class BaseModel(object):
                         pass
                     except Exception:
                         failed += rec
-                recomputation.done(field, recs)
+                recomputation[field] -= recs
                 # check whether recomputation failed for some existing records
                 if failed:
                     raise except_orm("Error",

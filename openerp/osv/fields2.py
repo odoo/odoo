@@ -340,7 +340,7 @@ class Field(object):
         """ Determine the value of `self` for `record`. """
         if self.store:
             # recompute field on record if required
-            recs_todo = scope.recomputation.todo(self)
+            recs_todo = scope.recomputation[self]
             if record in recs_todo:
                 # execute the compute method in NON-DRAFT mode, so that assigned
                 # fields are written to the database
@@ -511,7 +511,7 @@ class Field(object):
                 with scope(user=SUPERUSER_ID, context={'active_test': False}):
                     target = field.model.search([(path, 'in', ids)])
                 spec.append((field, target.unbrowse()))
-                scope.recomputation.todo(field, target)
+                scope.recomputation[field] |= target
             else:
                 spec.append((field, None))
 
