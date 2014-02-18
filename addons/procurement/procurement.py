@@ -250,6 +250,7 @@ class procurement_order(osv.osv):
     def _run(self, cr, uid, procurement, context=None):
         '''This method implements the resolution of the given procurement
             :param procurement: browse record
+            :returns: True if the resolution of the procurement was a success, False otherwise to set it in exception
         '''
         return True
 

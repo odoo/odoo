@@ -21,17 +21,7 @@
                             </h1>
                         </div>
                         <group>
-                            <group>
-                                <field name="user_id"/>
-                            </group>
-                            <group>
-                                <label for="capacity"/>
-                                <div>
-                                    <field name="capacity" class="oe_inline"/>
-                                    <field name="capacity_uom" class="oe_inline"/>
-                                </div>
-                                <field name="time" widget="float_time"/>
-                            </group>
+                            <field name="user_id"/>
                         </group>
                         <separator string="Pickings"/>
                         <field name="picking_ids" widget="many2many" domain="[('state', 'not in', ('done', 'cancel'))]">
@@ -60,9 +50,6 @@
                 <tree string="Stock Picking Waves" colors="black:state in ('in_progress','done');grey: state=='cancel'">
                     <field name="name"/>
                     <field name="user_id"/>
-                    <field name="capacity"/>
-                    <field name="capacity_uom"/>
-                    <field name="time" widget="float_time"/>
                     <field name="state"/>
                 </tree>
             </field>

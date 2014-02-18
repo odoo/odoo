@@ -7,14 +7,18 @@
             <field name="model">wizard.valuation.history</field>
             <field name="arch" type="xml">
                 <form string="Choose your date" version="7.0">
-                    <p class="oe_gray">
+                    <p class="oe_gray" attrs="{'invisible': [('choose_date', '=', False)]}">
                         Choose the date for wich you want to get the stock valuation of your products.
 
                         This will filter the stock operation that weren't done at the selected date, to retreive the quantity
                         you had, and gives you the inventory value according to the standard price used at that time.
                     </p>
+                    <p class="oe_gray" attrs="{'invisible': [('choose_date', '=', True)]}">
+                        Retrieve the stock valuation of your products at current day
+                    </p>
                     <group>
-                        <field name="date"/>
+                        <field name="choose_date"/>
+                        <field name="date" attrs="{'invisible': [('choose_date', '=', False)]}"/>
                     </group>
                     <footer>
                         <button name="open_table" string="Retrieve the Inventory Value" type="object"  class="oe_highlight"  />
@@ -49,6 +53,18 @@
            </tree>
         </field>
     </record>
+    <record id="view_stock_history_report_graph" model="ir.ui.view">
+        <field name="name">stock.history.value.graph</field>
+        <field name="model">stock.history</field>
+        <field name="arch" type="xml">
+            <graph string="Stock Value At Date" type="pivot">
+                <field name="product_id" type="row"/>
+                <field name="inventory_value" type="measure"/>
+                <field name="quantity" type="measure"/>
+                <field name="location_id" type="row"/>
+            </graph>
+        </field>
+    </record>
     <record id="view_stock_history_report_search" model="ir.ui.view">
         <field name="name">stock.history.report.search</field>
         <field name="model">stock.history</field>
@@ -67,6 +83,21 @@
             </search>
         </field>
     </record>
+
+    <record id="action_history_tree" model="ir.actions.act_window">
+            <field name="name">Current Inventory Valuation</field>
+            <field name="res_model">stock.history</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="domain">[('date','&lt;=',time.strftime('%Y-%m-%d %H:%M:%S'))]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="view_id" ref="view_stock_history_report_tree"/>
+    </record>
+    <menuitem action="action_history_tree"
+            id="menu_action_history_tree"
+            parent="stock.menu_stock_inventory_control"
+            groups="stock.group_locations"
+            sequence="20"/>
     </data>
 </openerp>
 

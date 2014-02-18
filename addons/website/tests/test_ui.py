@@ -8,7 +8,7 @@ class TestUi(openerp.tests.HttpCase):
     def test_public(self):
         inject = [
             "./../../../website/static/src/js/website.tour.test.js",
-            "./../../../website/static/src/js/website.tour.test.admin.js"i
+            "./../../../website/static/src/js/website.tour.test.admin.js",
         ]
         self.phantom_js("/", "openerp.website.Tour.run_test('login_edit')", "openerp.website.Tour", inject=inject);
 
