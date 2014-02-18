@@ -25,13 +25,11 @@ class QUnitTest(unittest.TestCase):
 
 class QUnitSuite(unittest.TestSuite):
     def __init__(self, qunitfile, timeout=5000):
+        super(QUnitSuite, self).__init__()
         self.testfile = qunitfile
         self.timeout = timeout
         self._module = None
         self._test = None
-
-    def __iter__(self):
-        return iter([self])
 
     def run(self, result):
         try:
