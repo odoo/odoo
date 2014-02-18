@@ -1667,6 +1667,8 @@
                 }
                 switch(m.type) {
                 case 'attributes': // ignore .cke_focus being added or removed
+                    // ignore id modification
+                    if (m.attributeName === 'id') { return false; }
                     // if attribute is not a class, can't be .cke_focus change
                     if (m.attributeName !== 'class') { return true; }
 
