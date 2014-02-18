@@ -1840,6 +1840,11 @@ class stock_move(osv.osv):
         context = context or {}
         quant_obj = self.pool.get("stock.quant")
         to_assign_moves = []
+        prefered_domain = {}
+        fallback_domain = {}
+        main_domain = {}
+        todo_moves = []
+        operations = set()
         for move in self.browse(cr, uid, ids, context=context):
             if move.state not in ('confirmed', 'waiting', 'assigned'):
                 continue
@@ -1847,15 +1852,17 @@ class stock_move(osv.osv):
                 to_assign_moves.append(move.id)
                 continue
             else:
+                todo_moves.append(move)
                 #build the prefered domain based on quants that moved in previous linked done move
                 prev_quant_ids = []
                 for m2 in move.move_orig_ids:
                     for q in m2.quant_ids:
                         prev_quant_ids.append(q.id)
-                prefered_domain = prev_quant_ids and [('id', 'in', prev_quant_ids)] or []
-                fallback_domain = prev_quant_ids and [('id', 'not in', prev_quant_ids)] or []
+                prefered_domain[move.id] = prev_quant_ids and [('id', 'in', prev_quant_ids)] or []
+                fallback_domain[move.id] = prev_quant_ids and [('id', 'not in', prev_quant_ids)] or []
+
                 #we always keep the quants already assigned and try to find the remaining quantity on quants not assigned only
-                main_domain = [('reservation_id', '=', False), ('qty', '>', 0)]
+                main_domain[move.id] = [('reservation_id', '=', False), ('qty', '>', 0)]
 
                 #if the move is preceeded, restrict the choice of quants in the ones moved previously in original move
                 move_orig_ids = []
@@ -1865,24 +1872,33 @@ class stock_move(osv.osv):
                     move_orig_ids += [x.id for x in move2.move_orig_ids]
                     move2 = move2.split_from
                 if move_orig_ids:
-                    main_domain += [('history_ids', 'in', move_orig_ids)]
+                    main_domain[move.id] += [('history_ids', 'in', move_orig_ids)]
 
                 #if the move is returned from another, restrict the choice of quants to the ones that follow the returned move
                 if move.origin_returned_move_id:
-                    main_domain += [('history_ids', 'in', move.origin_returned_move_id.id)]
-                #first try to find quants based on specific domains given by linked operations
-                for record in move.linked_move_operation_ids:
-                    domain = main_domain + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
-                    qty_already_assigned = sum([q.qty for q in record.reserved_quant_ids])
-                    qty = record.qty - qty_already_assigned
-                    quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_domain=prefered_domain, fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
-                    quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)
-                #then if the move isn't totally assigned, try to find quants without any specific domain
-                if move.state != 'assigned':
-                    qty_already_assigned = sum([q.qty for q in move.reserved_quant_ids])
-                    qty = move.product_qty - qty_already_assigned
-                    quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain, prefered_domain=prefered_domain, fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
-                    quant_obj.quants_reserve(cr, uid, quants, move, context=context)
+                    main_domain[move.id] += [('history_ids', 'in', move.origin_returned_move_id.id)]
+                for link in move.linked_move_operation_ids:
+                    operations.add(link.operation_id)
+        # Check all ops and sort them: we want to process first the packages, then operations with lot then the rest
+        operations = list(operations)
+        operations.sort(key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
+        for ops in operations:
+            #first try to find quants based on specific domains given by linked operations
+            for record in ops.linked_move_operation_ids:
+                move = record.move_id
+                domain = main_domain[move.id] + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
+                qty_already_assigned = sum([q.qty for q in record.reserved_quant_ids])
+                qty = record.qty - qty_already_assigned
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_domain=prefered_domain[move.id], fallback_domain=fallback_domain[move.id], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
+                quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)
+
+        for move in todo_moves:
+            #then if the move isn't totally assigned, try to find quants without any specific domain
+            if move.state != 'assigned':
+                qty_already_assigned = sum([q.qty for q in move.reserved_quant_ids])
+                qty = move.product_qty - qty_already_assigned
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain[move.id], prefered_domain=prefered_domain[move.id], fallback_domain=fallback_domain[move.id], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
+                quant_obj.quants_reserve(cr, uid, quants, move, context=context)
 
         #force assignation of consumable products
         if to_assign_moves:
