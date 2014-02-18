@@ -1786,9 +1786,17 @@ class stock_move(osv.osv):
         }
         for move in self.browse(cr, uid, ids, context=context):
             state = 'confirmed'
-            for m in move.move_orig_ids:
-                if m.state not in ('done', 'cancel'):
-                    state = 'waiting'
+            #if the move is preceeded, then it's waiting (if preceeding move is done, then action_assign has been called already and its state is already available)
+            if move.move_orig_ids:
+                state = 'waiting'
+            #if the move is split and some of the ancestor was preceeded, then it's waiting as well
+            elif move.split_from:
+                move2 = move.split_from
+                while move2 and state != 'waiting':
+                    if move2.move_orig_ids:
+                        state = 'waiting'
+                    move2 = move2.split_from
+
             states[state].append(move.id)
             self._picking_assign(cr, uid, move, context=context)
 
@@ -1848,6 +1856,17 @@ class stock_move(osv.osv):
                 fallback_domain = prev_quant_ids and [('id', 'not in', prev_quant_ids)] or []
                 #we always keep the quants already assigned and try to find the remaining quantity on quants not assigned only
                 main_domain = [('reservation_id', '=', False), ('qty', '>', 0)]
+
+                #if the move is preceeded, restrict the choice of quants in the ones moved previously in original move
+                move_orig_ids = []
+                move2 = move
+                while move2:
+                    #loop on the split_from to find the ancestor of split moves
+                    move_orig_ids += [x.id for x in move2.move_orig_ids]
+                    move2 = move2.split_from
+                if move_orig_ids:
+                    main_domain += [('history_ids', 'in', move_orig_ids)]
+
                 #if the move is returned from another, restrict the choice of quants to the ones that follow the returned move
                 if move.origin_returned_move_id:
                     main_domain += [('history_ids', 'in', move.origin_returned_move_id.id)]
@@ -1899,7 +1918,7 @@ class stock_move(osv.osv):
         pack_obj = self.pool.get("stock.quant.package")
         packs = set()
         for move in self.browse(cr, uid, ids, context=context):
-            packs |= set([q.package_id.id for q in move.quant_ids if q.package_id])
+            packs |= set([q.package_id.id for q in move.quant_ids if q.package_id and q.qty > 0])
         return pack_obj._check_location_constraint(cr, uid, list(packs), context=context)
 
     def action_done(self, cr, uid, ids, context=None):
@@ -2037,7 +2056,6 @@ class stock_move(osv.osv):
 
         self.action_done(cr, uid, res, context=context)
         return res
-
 
     def split(self, cr, uid, move, qty, restrict_lot_id=False, restrict_partner_id=False, context=None):
         """ Splits qty from move move into a new move
@@ -3254,7 +3272,7 @@ class stock_package(osv.osv):
             quant_ids = self.get_content(cr, uid, [parent.id], context=context)
             quants = quant_obj.browse(cr, uid, quant_ids, context=context)
             location_id = quants and quants[0].location_id.id or False
-            if not all([quant.location_id.id == location_id for quant in quants]):
+            if not all([quant.location_id.id == location_id for quant in quants if quant.qty > 0]):
                 raise osv.except_osv(_('Error'), _('Everything inside a package should be in the same location'))
         return True
 
