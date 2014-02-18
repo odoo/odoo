@@ -30,6 +30,7 @@ import logging
 import tempfile
 import lxml.html
 import subprocess
+import simplejson
 
 from pyPdf import PdfFileWriter, PdfFileReader
 from werkzeug.test import Client
@@ -209,7 +210,7 @@ class Report(http.Controller):
         """Resolve an internal webpage url and return its content with the help of
         werkzeug.test.client.
 
-        :param url: string representinf the url to resolve
+        :param url: string representing the url to resolve
         :param post: a dict representing the query string
         :returns: a tuple str(html), int(statuscode)
         """
@@ -427,3 +428,18 @@ class Report(http.Controller):
         content = merged.read()
         merged.close()
         return content
+
+    @http.route('/report/downloadpdf/', type='http', auth="user")
+    def report_pdf_attachment(self, data, token):
+        """This function is only used by 'qwebactionmanager.js' in order to trigger the download of
+        a pdf report.
+
+        :param data: The JSON.stringified report internal url
+        :returns: Response with a filetoken cookie and an attachment header
+        """
+        url = simplejson.loads(data)
+        pdf = self._get_url_content(url)
+        response = self._make_pdf_response(pdf)
+        response.set_cookie('fileToken', token)
+        response.headers.add('Content-Disposition', 'attachment; filename=report.pdf;')
+        return response

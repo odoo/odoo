@@ -37,10 +37,22 @@ openerp.report = function(instance) {
                     });
                     report_url += "?" + $.param(action.datas.form);
                 }
-
-                instance.web.unblockUI();
-                window.open(report_url);
-                return;
+                if (action.report_type == 'qweb-html') {
+                    // Open the html report in a popup
+                    window.open(report_url);
+                    instance.web.unblockUI();
+                    return;
+                } else {
+                    // Trigger the download of the pdf report
+                    var c = openerp.webclient.crashmanager;
+                    this.session.get_file({
+                        url: '/report/downloadpdf',
+                        data: {data: JSON.stringify(report_url)},
+                        complete: openerp.web.unblockUI,
+                        error: c.rpc_error.bind(c)
+                    });
+                    return;
+                }
             } else {
                 return self._super(action, options);
             }
