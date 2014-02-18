@@ -2595,6 +2595,32 @@ class BaseModel(object):
                 r['__fold'] = folded.get(r[groupby] and r[groupby][0], False)
         return result
 
+    def _read_group_generate_order_by(self, orderby, aggregated_fields, groupby, query):
+        """
+        Generates the ORDER BY sql clause for the read group method. Adds the missing JOIN clause
+        to the query if order should be computed against m2o field. 
+        :param orderby: the orderby definition in the form "%(field)s %(order)s"
+        :param aggregated_fields: list of aggregated fields in the query
+        :param groupby: the current groupby field name
+        :param query: the query object used to construct the query afterwards
+        """
+        orderby_list = []
+        ob = ''
+        for order_splits in orderby.split(','):
+            order_split = order_splits.split()
+            orderby_field = order_split[0]
+            orderby_dir = len(order_split) == 2 and order_split[1].upper() == 'ASC' and 'ASC' or 'DESC'
+            if orderby_field == groupby:
+                ob = self._generate_order_by(order_splits, query).replace('ORDER BY ', '')
+                orderby_list.append(ob)
+            elif orderby_field in aggregated_fields:
+                orderby_list.append('%s %s' % (orderby_field,orderby_dir))
+
+        if orderby_list:
+            return ' ORDER BY %s' % (','.join(orderby_list)), ob and ob.split()[0] or ''
+        else:
+            return '', ''
+
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         """
         Get the list of records in list view grouped by the given ``groupby`` fields
@@ -2674,6 +2700,12 @@ class BaseModel(object):
             qualified_field = self._inherits_join_calc(f, query)
             flist += "%s(%s) AS %s" % (group_operator, qualified_field, f)
 
+        order = orderby or groupby
+        orderby_clause = ''
+        ob = ''
+        if order:
+            orderby_clause, ob = self._read_group_generate_order_by(order, aggregated_fields, groupby, query)
+
         gb = groupby and (' GROUP BY ' + qualified_groupby_field) or ''
 
         from_clause, where_clause, where_clause_params = query.get_sql()
@@ -2682,28 +2714,27 @@ class BaseModel(object):
         offset_str = offset and ' offset %d' % offset or ''
         if len(groupby_list) < 2 and context.get('group_by_no_leaf'):
             group_count = '_'
-        cr.execute('SELECT min(%s.id) AS id, count(%s.id) AS %s_count' % (self._table, self._table, group_count) + (flist and ',') + flist + ' FROM ' + from_clause + where_clause + gb + limit_str + offset_str, where_clause_params)
+        cr.execute('SELECT min(%s.id) AS id, count(%s.id) AS %s_count' % (self._table, self._table, group_count) + (flist and ',') + flist  + ' FROM ' + from_clause + where_clause + gb + (ob and ',') + ob  + orderby_clause + limit_str + offset_str, where_clause_params)
         alldata = {}
         groupby = group_by
-        for r in cr.dictfetchall():
+
+        fetched_data = cr.dictfetchall()
+
+        data_ids = []
+        for r in fetched_data:
             for fld, val in r.items():
                 if val is None: r[fld] = False
             alldata[r['id']] = r
+            data_ids.append(r['id'])
             del r['id']
 
-        order = orderby or groupby
-        data_ids = self.search(cr, uid, [('id', 'in', alldata.keys())], order=order, context=context)
-        
-        # the IDs of records that have groupby field value = False or '' should be included too
-        data_ids += set(alldata.keys()).difference(data_ids)
-        
-        if groupby:   
+        if groupby:
             data = self.read(cr, uid, data_ids, [groupby], context=context)
             # restore order of the search as read() uses the default _order (this is only for groups, so the footprint of data should be small):
             data_dict = dict((d['id'], d[groupby] ) for d in data)
             result = [{'id': i, groupby: data_dict[i]} for i in data_ids]
         else:
-            result = [{'id': i} for i in data_ids] 
+            result = [{'id': i} for i in data_ids]
 
         for d in result:
             if groupby:
