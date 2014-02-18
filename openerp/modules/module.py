@@ -20,6 +20,7 @@
 #
 ##############################################################################
 
+import functools
 import imp
 import itertools
 import logging
@@ -364,7 +365,7 @@ def run_unit_tests(module_name, dbname):
     r = True
     for m in mods:
         tests = unwrap_suite(unittest2.TestLoader().loadTestsFromModule(m))
-        suite = unittest2.TestSuite(tests)
+        suite = unittest2.TestSuite(itertools.ifilter(runs_at_install, tests))
         _logger.info('module %s: running test %s.', module_name, m.__name__)
 
         result = unittest2.TextTestRunner(verbosity=2, stream=TestStream()).run(suite)
@@ -374,7 +375,34 @@ def run_unit_tests(module_name, dbname):
     current_test = None
     return r
 
+def runs_at(test, hook, default):
+    # by default, tests do not run post install
+    test_runs = getattr(test, hook, default)
+
+    # for a test suite, we're done
+    if not isinstance(test, unittest.TestCase):
+        return test_runs
+
+    # otherwise check the current test method to see it's been set to a
+    # different state
+    method = getattr(test, test._testMethodName)
+    return getattr(method, hook, test_runs)
+
+runs_at_install = functools.partial(runs_at, hook='at_install', default=True)
+runs_post_install = functools.partial(runs_at, hook='post_install', default=False)
+
 def unwrap_suite(test):
+    """
+    Attempts to unpack testsuites (holding suites or cases) in order to
+    generate a single stream of terminals (either test cases or customized
+    test suites). These can then be checked for run/skip attributes
+    individually.
+
+    An alternative would be to use a variant of @unittest2.skipIf with a state
+    flag of some sort e.g. @unittest2.skipIf(common.runstate != 'at_install'),
+    but then things become weird with post_install as tests should *not* run
+    by default there
+    """
     if isinstance(test, unittest.TestCase):
         yield test
         return

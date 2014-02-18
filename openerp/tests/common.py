@@ -55,6 +55,28 @@ def release_test_cursor(session_id):
             return True
     return False
 
+def at_install(flag):
+    """ Sets the at-install state of a test, the flag is a boolean specifying
+    whether the test should (``True``) or should not (``False``) run during
+    module installation.
+
+    By default, tests are run at install.
+    """
+    def decorator(obj):
+        obj.at_install = flag
+        return obj
+    return decorator
+def post_install(flag):
+    """ Sets the post-install state of a test. The flag is a boolean
+    specifying whether the test should or should not run after a set of
+    module installations.
+
+    By default, tests are *not* run after installation.
+    """
+    def decorator(obj):
+        obj.post_install = flag
+        return obj
+    return decorator
 
 class BaseCase(unittest2.TestCase):
     """
