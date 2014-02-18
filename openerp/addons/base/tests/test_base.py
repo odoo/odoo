@@ -292,7 +292,6 @@ class test_base(common.TransactionCase):
           {'name': 'Nab', 'login': 'nab', 'color': 2, 'function': '5$ Wrench'},
         ]:
           self.res_users.create(cr, uid, user_data)
-        #groupby='name',order='name DESC, color ASC'
         
         groups_data = self.res_users.read_group(cr, uid, domain=[('login', 'in', ('alice', 'bob', 'eve'))], fields=['name', 'color', 'function'], groupby='function')
         self.assertEqual(len(groups_data), 2, "Incorrect number of results when grouping on a field")
