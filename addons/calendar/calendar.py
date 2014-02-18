@@ -891,7 +891,7 @@ class calendar_event(osv.Model):
             start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
             user = self.pool['res.users'].browse(cr, uid, uid)
             tz = pytz.timezone(user.tz) if user.tz else pytz.utc
-            start = pytz.utc.localize(datetime.strptime(start)).astimezone(tz)     # convert start in user's timezone
+            start = pytz.utc.localize(start).astimezone(tz)     # convert start in user's timezone
             start = start.astimezone(pytz.utc)                  # convert start back to utc
 
             value['duration'] = 24.0
