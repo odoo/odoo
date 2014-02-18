@@ -237,7 +237,8 @@ class res_users(osv.Model):
         values['active'] = True
         context = dict(context or {}, no_reset_password=True)
         try:
-            return self.copy(cr, uid, template_user_id, values, context=context)
+            with cr.savepoint():
+                return self.copy(cr, uid, template_user_id, values, context=context)
         except Exception, e:
             # copy may failed if asked login is not available.
             raise SignupError(ustr(e))
