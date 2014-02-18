@@ -370,9 +370,11 @@ def run_unit_tests(module_name, dbname):
         _logger.info('module %s: running test %s.', module_name, m.__name__)
 
         result = unittest2.TextTestRunner(verbosity=2, stream=TestStream()).run(suite)
+
         if not result.wasSuccessful():
             r = False
-            _logger.error('module %s: at least one error occurred in a test', module_name)
+            _logger.error("Module %s: %d failures, %d errors",
+                          module_name, len(result.failures), len(result.errors))
     current_test = None
     return r
 
