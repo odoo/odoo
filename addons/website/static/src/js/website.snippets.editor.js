@@ -1120,6 +1120,38 @@
             return this.grid;
         },
 
+        onFocus : function () {
+            this._super();
+            this.change_cursor();
+        },
+
+        change_cursor : function () {
+            var _class = this.$target.attr("class");
+
+            var col = _class.match(/col-md-([0-9-]+)/i);
+            col = col ? +col[1] : 0;
+
+            var offset = _class.match(/col-md-offset-([0-9-]+)/i);
+            offset = offset ? +offset[1] : 0;
+
+            var overlay_class = this.$overlay.attr("class").replace(/(^|\s+)block-[^\s]*/gi, '');
+            if (col+offset >= 12) overlay_class+= " block-e-right";
+            if (col === 1) overlay_class+= " block-w-right block-e-left";
+            if (offset === 0) overlay_class+= " block-w-left";
+
+            var mb = _class.match(/mb([0-9-]+)/i);
+            mb = mb ? +mb[1] : 0;
+            if (mb >= 128) overlay_class+= " block-s-bottom";
+            else if (!mb) overlay_class+= " block-s-top";
+
+            var mt = _class.match(/mt([0-9-]+)/i);
+            mt = mt ? +mt[1] : 0;
+            if (mt >= 128) overlay_class+= " block-n-top";
+            else if (!mt) overlay_class+= " block-n-bottom";
+
+            this.$overlay.attr("class", overlay_class);
+        },
+        
         /* on_resize
         *  called when the box is resizing and the class change, before the cover_target
         *  @compass: resize direction : 'n', 's', 'e', 'w'
@@ -1127,7 +1159,7 @@
         *  @current: curent increment in this.grid
         */
         on_resize: function (compass, beginClass, current) {
-
+            this.change_cursor();
         }
     });
 
@@ -1176,26 +1208,9 @@
             this.$overlay.find('.oe_snippet_remove').toggleClass("hidden",
                 !this.$target.siblings().length && this.$target.parents("[data-snippet-id]:first").find("[data-snippet-id='colmd']").length > 1);
         },
-        change_cursor: function () {
-            var _class = this.$target.attr("class");
-
-            var col = _class.match(/col-md-([0-9-]+)/i);
-            col = col ? +col[1] : 0;
-
-            var offset = _class.match(/col-md-offset-([0-9-]+)/i);
-            offset = offset ? +offset[1] : 0;
-
-            var overlay_class = this.$overlay.attr("class").replace(/(^|\s+)block-[^\s]*/gi, '');
-            if (col+offset >= 12) overlay_class+= " block-e-right";
-            if (col === 1) overlay_class+= " block-w-right block-e-left";
-            if (offset === 0) overlay_class+= " block-w-left";
-
-            this.$overlay.attr("class", overlay_class);
-        },
         onFocus : function () {
             this._super();
             this.hide_remove_button();
-            this.change_cursor();
         },
         on_clone: function () {
             var $clone = this.$target.clone(false);
@@ -1243,7 +1258,7 @@
                     this.$target.addClass('col-md-offset-' + offset);
                 }
             }
-            this.change_cursor();
+            this._super(compass, beginClass, current);
         },
     });
 
