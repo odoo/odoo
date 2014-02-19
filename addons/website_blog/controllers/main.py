@@ -27,6 +27,7 @@ from openerp import SUPERUSER_ID
 import werkzeug
 import random
 import json
+from openerp.tools import html2plaintext
 
 
 class WebsiteBlog(http.Controller):
@@ -279,7 +280,7 @@ class WebsiteBlog(http.Controller):
         values = {
             "author_name": post.author_id.name,
             "date": post.date,
-            "body": post.body,
+            "body": html2plaintext(post.body),
             "author_image": "data:image/png;base64,%s" % post.author_id.image,
             }
         return values
@@ -320,7 +321,7 @@ class WebsiteBlog(http.Controller):
                 values.append({
                     "author_name": post.author_id.name,
                     "date": post.date,
-                    'body': post.body,
+                    'body': html2plaintext(post.body),
                     'author_image': "data:image/png;base64,%s" % post.author_id.image,
                 })
         return values

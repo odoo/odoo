@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website.blog_discussion.comment">
+        <li class="media">
+            <div class="media-body">
+                <img class="media-object pull-left img-circle" t-att-src="res.author_image" style="width: 30px; margin-right: 5px;"/>
+                <div class="media-body">
+                    <h5 class="media-heading">
+                        <small><span t-esc='res.author_name'/> on <span t-esc='res.date'/></small>
+                    </h5>
+                </div>
+            </div>
+        </li>
+        <li>
+            <h6 t-esc='res.body'/>
+        </li>
+        <hr class="mb0 mt0"/>
+    </t>
+    <t t-name="website.blog_discussion.popover">
+        <div class="mycontent hidden">
+            <input name="discussion" t-att-value="identifier" type="hidden"/>
+            <input name="blog_post_id" t-att-value="options.post_id" type="hidden"/>
+            <textarea t-att-class="options.document_user ? 'mb8 form-control' : 'mb8 form-control hidden'" rows="2" id="comment" placeholder="Write a comment..."/>
+            <button id='comment_post' t-att-class="options.document_user ? 'btn btn-primary btn-xs mb8 mt4' : 'btn btn-primary btn-xs mb8 mt4 hidden'">Post</button>
+            <div class="discussion_history"/>
+            <a t-att-class="options.document_user ? 'btn btn-block btn-success hidden' : 'btn btn-block btn-success'" href="/web/login">Sign In</a>
+        </div>
+    </t>
+</templates>
