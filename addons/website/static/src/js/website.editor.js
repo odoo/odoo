@@ -1034,10 +1034,13 @@
         },
         start: function () {
             var self = this;
+            var last;
             this.$('#link-page').select2({
                 minimumInputLength: 1,
                 placeholder: _t("New or existing page"),
                 query: function (q) {
+                    if (q.term == last) return;
+                    last = q.term;
                     $.when(
                         self.page_exists(q.term),
                         self.fetch_pages(q.term)
