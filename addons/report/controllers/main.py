@@ -37,9 +37,11 @@ except ImportError:
     import StringIO
 
 from pyPdf import PdfFileWriter, PdfFileReader
+from werkzeug import exceptions
 from werkzeug.test import Client
 from werkzeug.wrappers import BaseResponse
 from werkzeug.datastructures import Headers
+from reportlab.graphics.barcode import createBarcodeImageInMemory
 
 
 _logger = logging.getLogger(__name__)
@@ -446,3 +448,16 @@ class Report(http.Controller):
         response.set_cookie('fileToken', token)
         response.headers.add('Content-Disposition', 'attachment; filename=report.pdf;')
         return response
+
+    @http.route('/report/getbarcode/<type>/<value>', type='http', auth="user")
+    def barcode(self, type, value):
+        """Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
+        'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'Standard39', 'Standard93',
+        'UPCA', 'USPS_4State'
+        """
+        try:
+            barcode = createBarcodeImageInMemory(type, value=value)
+        except (ValueError, AttributeError):
+            raise exceptions.HTTPException(description="Cannot convert into barcode.")
+
+        return request.make_response(barcode, headers=[('Content-Type', 'image/jpg')])
