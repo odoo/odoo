@@ -197,8 +197,12 @@ class HttpCase(TransactionCase):
             # read a byte
             try:
                 ready, _, _ = select.select([phantom.stdout], [], [], 0.5)
-            except EnvironmentError, e:
-                if e.errno == errno.EINTR: continue
+            except select.error, e:
+                # In Python 2, select.error has no relation to IOError or
+                # OSError, and no errno/strerror/filename, only a pair of
+                # unnamed arguments (matching errno and strerror)
+                err, _ = e.args
+                if err == errno.EINTR: continue
                 raise
 
             if ready:
