@@ -63,7 +63,7 @@
         prepare_discuss_link :  function(data, identifier, node) {
             var self = this;
             var cls = data.length > 0 ? 'discussion-link has-comments' : 'discussion-link';
-            var a = $('<a class="'+ cls +'" />')
+            var a = $('<a class="'+ cls +' css_editable_mode_hidden" />')
                 .attr('data-discus-identifier', identifier)
                 .attr('data-discus-position', self.settings.position)
                 .text(data.length > 0 ? data.length : '+')
