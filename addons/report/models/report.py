@@ -131,6 +131,12 @@ class report(osv.Model):
         return res
 
     def render(self, cr, uid, ids, template, values=None, context=None):
+        """Allow to render a QWeb template python-side. This function returns the 'ir.ui.view'
+        render but embellish it with some variables/methods used in reports.
+
+        :param values: additionnal methods/variables used in the rendering
+        :returns: html representation of the template
+        """
         if values is None:
             values = {}
 
@@ -146,6 +152,8 @@ class report(osv.Model):
         }
         self._get_lang_dict()
 
+        view_obj = self.pool['ir.ui.view']
+
         def render_doc(doc_id, model, template):
             """Helper used when a report should be translated into the associated
             partner's lang.
@@ -160,9 +168,8 @@ class report(osv.Model):
             """
             ctx = context.copy()
             doc = self.pool[model].browse(cr, uid, doc_id, context=ctx)
-            view_obj = self.pool['ir.ui.view']
             qcontext = values.copy()
-            # Do not force-translate if we chose to display to report in a specific lang
+            # Do not force-translate if we chose to display the report in a specific lang
             if ctx.get('translatable') is True:
                 qcontext['o'] = doc
             else:
@@ -171,18 +178,33 @@ class report(osv.Model):
             return view_obj.render(cr, uid, template, qcontext, context=ctx)
 
         current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+
+        # Website independance code
+        website = False
+        res_company = current_user.company_id
+
+        try:
+            website = request.website
+            res_company = request.website.company_id
+        except:
+            pass
+
         values.update({
             'time': time,
             'user': current_user,
+            'user_id': current_user.id,
             'formatLang': self.formatLang,
             'get_digits': self.get_digits,
             'render_doc': render_doc,
+
+            'website': website,
+            'res_company': res_company,
         })
 
-        return request.website.render(template, values)
+        return view_obj.render(cr, uid, template, values, context=context)
 
     def get_pdf(self, report, record_id, context=None):
-        """Used to return content of a generated PDF.
+        """Used to return the content of a generated PDF.
 
         :returns: pdf
         """

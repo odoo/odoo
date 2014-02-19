@@ -1,13 +1,13 @@
 {
     'name': 'Report',
-    'category': 'Website',
+    'category': 'Base',
     'summary': 'Report',
     'version': '1.0',
     'description': """
 Report
         """,
     'author': 'OpenERP SA',
-    'depends': ['base', 'website'],
+    'depends': ['base'],
     'data': [
         'views/layouts.xml',
         'views/paperformat_view.xml',
@@ -19,4 +19,5 @@ Report
         'static/src/js/qwebactionmanager.js',
     ],
     'installable': True,
+    'auto_install': True,
 }

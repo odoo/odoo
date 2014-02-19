@@ -50,15 +50,6 @@
         </head>
         <body class="container">
             <div id="wrapwrap">
-                <t t-set="languages" t-value="website.get_languages()"/>
-                <ul class="list-inline js_language_selector mt16" t-if="(len(languages) &gt; 1 or editable)">
-                    <li t-foreach="languages" t-as="lg">
-                        <a t-att-href="url_for('', lang=lg[0]) + '?' + keep_query()"
-                           t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
-                            <t t-esc="lg[1].split('/').pop()"/>
-                        </a>
-                    </li>
-                </ul>
                 <t t-raw="0"/>
             </div>
         </body>
@@ -120,14 +111,14 @@
             <ul class="list-inline">
                 <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
 
-                <li t-if="company.fax">&amp;bull;</li>
+                <li t-if="company.fax and company.phone">&amp;bull;</li>
                 <li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
 
                 <li t-if="company.email">&amp;bull;</li>
                 <li t-if="company.email">Email: <span t-field="company.email"/></li>
 
-                <li t-if="website.name">&amp;bull;</li>
-                <li t-if="website.name">Website: <span t-esc="website.name"/></li>
+                <li t-if="website">&amp;bull;</li>
+                <li t-if="website">Website: <span t-esc="website.name"/></li>
             <br/>
                 <li><span t-field="company.rml_footer"/></li>
                 <li t-if="company.rml_footer">|</li>
@@ -168,70 +159,6 @@
         </div>
     </div>
     <t t-raw="0" />
-</template>
-
-<template id="editor_head" inherit_id="report.html_container" name="Editor" groups="base.group_website_publisher">
-    <xpath expr="//body" position="attributes">
-        <attribute name="style">padding-top: 51px;</attribute>
-    </xpath>
-    <xpath expr="//body" position="inside">
-        <div id="website-top-navbar-placeholder" class="navbar navbar-inverse navbar-fixed-top hidden-xs">
-            <div class="navbar-header">
-                <form class="navbar-form navbar-left">
-                    <button type="button" class="btn btn-primary">Edit</button>
-                </form>
-            </div>
-            <div class="collapse navbar-collapse navbar-edit-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#" onclick="return false;"><i class="fa fa-mobile" title="Mobile preview"/></a></li>
-                    <li class="divider-vertical"/>
-                    <li><a href="#" onclick="return false;"><span title="Promote page on the web">Promote</span></a></li>
-                    <li class="dropdown">
-                        <a href="#" onclick="return false;">Content <span class="caret"/></a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" onclick="return false;">Customize <span class="caret"/></a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" onclick="return false;">Help <span class="caret"/></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </xpath>
-    <xpath expr='//t[@name="layout_head"]' position="before">
-        <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
-        <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
-        <link rel='stylesheet' href='/website/static/lib/bootstrap-tour/bootstrap-tour.css'/>
-
-
-        <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
-        <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
-        <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
-
-        <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
-        <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
-        <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>
-        <script t-if="not translatable" type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
-        <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
-        <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
-        <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
-        <script type="text/javascript" src="/website/static/lib//jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
-        <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
-        <script type="text/javascript" src='/website/static/lib/nearest/jquery.nearest.js'></script>
-        <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
-
-        <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.editor.newpage.js" groups="base.group_website_designer"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.menu.js" groups="base.group_website_designer"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
-        <script type="text/javascript" id="website_tour_js" src="/website/static/src/js/website.tour.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js" groups="base.group_website_designer"></script>
-        <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
-        <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
-        <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
-    </xpath>
 </template>
 </data>
 </openerp>
