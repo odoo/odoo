@@ -4,18 +4,16 @@ The module :mod:`openerp.tests.common` provides unittest2 test cases and a few
 helpers and classes to write tests.
 
 """
+import errno
 import json
 import logging
 import os
 import select
 import subprocess
-import sys
 import threading
 import time
 import unittest2
-import uuid
 import xmlrpclib
-import threading
 
 import openerp
 
@@ -197,7 +195,12 @@ class HttpCase(TransactionCase):
                 "PhantomJS tests should take less than %s seconds" % timeout)
 
             # read a byte
-            ready, _, _ = select.select([phantom.stdout], [], [], 0.5)
+            try:
+                ready, _, _ = select.select([phantom.stdout], [], [], 0.5)
+            except EnvironmentError, e:
+                if e.errno == errno.EINTR: continue
+                raise
+
             if ready:
                 s = phantom.stdout.read(1)
                 if s:
