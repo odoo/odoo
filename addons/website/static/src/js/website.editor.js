@@ -994,6 +994,7 @@
         start: function () {
             var sup = this._super();
             this.$el.modal({backdrop: 'static'});
+            this.$('input:first').focus();
             return sup;
         },
         save: function () {
