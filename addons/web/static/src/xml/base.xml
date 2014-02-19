@@ -992,26 +992,26 @@
     </span>
 </t>
 
-<t t-name="Legend.kanban_state">
+<t t-name="dropdown_selection">
     <span class="btn-group">
-        <t t-foreach="legends" t-as="rec">
-            <a t-att-class="'btn btn-xs '+ rec.legend_class" t-if="widget.get('value') === rec.name"  t-att-title="rec.legend_name" >
-                <t t-raw="rec.legend_name"/>
-                <a t-att-class="'oe_legend btn btn-xs dropdown-toggle '+rec.legend_class" data-toggle="dropdown">
+        <t t-foreach="states" t-as="rec">
+            <a t-att-class="'btn btn-xs '+ rec.state_class" t-if="widget.get('value') === rec.name"  t-att-title="rec.state_name" >
+                <t t-raw="rec.state_name"/>
+                <a t-att-class="'oe_legend btn btn-xs dropdown-toggle '+rec.state_class" data-toggle="dropdown">
                 <span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span> </a>
             </a>
         </t>
         <ul class="dropdown-menu state" role="menu">
-            <t t-foreach="legends" t-as="rec">
+            <t t-foreach="states" t-as="rec">
                 <t t-if="widget.get('value') !== rec.name">
-                    <li class="oe_legend" t-att-data-value="rec.name" ><a href="#"><t t-raw="rec.legend_name" /></a></li>
+                    <li class="oe_legend" t-att-data-value="rec.name" ><a href="#"><t t-raw="rec.state_name" /></a></li>
                 </t>
             </t>
         </ul>
     </span>
 </t>
-<t t-name="Legend.priority">
+<t t-name="priority">
     <ul style="list-style: none; padding-left: 2px;">
         <t t-foreach="legends" t-as="test" >
             <t t-if="widget.get('value') gte test.name and !test_first">

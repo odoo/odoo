@@ -2331,20 +2331,53 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
     }
 });
 
-instance.web.Legend = instance.web.Widget.extend({
-    init: function (parent, dataset) {
-        this._super(parent);
-        this.parent = parent;
-        this.dataset = dataset;
+instance.web.form.dropdown_selection = instance.web.form.FieldChar.extend({
+    init: function (field_manager, node) {
+        this._super(field_manager, node);
     },
-    prepare_kanban_state_legend: function(){
-        return [{ 'name': 'normal', 'legend_name': ' In Progress', 'legend_class': 'btn-default' },
-                { 'name': 'blocked', 'legend_name': ' Blocked', 'legend_class': 'btn-danger' },
-                { 'name': 'done', 'legend_name': ' Ready', 'legend_class': 'btn-success' }]
+    prepare_dropdown_selection: function(){
+        return [{ 'name': 'normal', 'state_name': ' In Progress', 'state_class': 'btn-default' },
+                { 'name': 'blocked', 'state_name': ' Blocked', 'state_class': 'btn-danger' },
+                { 'name': 'done', 'state_name': ' Ready', 'state_class': 'btn-success' }]
     },
-    prepare_priority_legend: function(){
+    render_value: function() {
+        var self = this;
+        var data = {'widget': self }
+        self.record_id = self.view.datarecord.id;
+        data['states'] = self.prepare_dropdown_selection();
+        var content = QWeb.render("dropdown_selection", data);
+        this.$el.html(content);
+        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+    },
+    do_action: function(e){
+        var self = this;
+        var li = $(e.target).closest( "li" );
+        if (li.length){
+            var value = {};
+            value[self.name] = String(li.data('value'));
+            if (self.record_id){
+                return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
+            } else {
+                return self.view.on_button_save().done(function(result) {
+                    if (result) {
+                        self.view.dataset._model.call('write', [[result], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
+                    }
+                });
+            }
+        }
+    },
+    reload_record: function(){
+        this.view.reload();
+    },
+});
+
+instance.web.form.priority = instance.web.form.FieldChar.extend({
+    init: function (field_manager, node) {
+        this._super(field_manager, node);
+    },
+    prepare_priority: function(){
         var data = [];
-        var selection = this.parent.field.selection || [];
+        var selection = this.field.selection || [];
         _.map(selection, function(res){  
             value = {
                 'name': res[0],
@@ -2360,62 +2393,37 @@ instance.web.Legend = instance.web.Widget.extend({
         });
         return data;
     },
-    prepare_data: function() {
-        var self =this;
-        if (this.parent.name == 'kanban_state'){
-            return self.prepare_kanban_state_legend();
-        }
-        if (this.parent.name == 'priority'){
-            return self.prepare_priority_legend();
-        }
-    },
-    render_value: function(record_id, data) {
+    render_value: function() {
         var self = this;
-        self.record_id = record_id;
-        var legend = this.prepare_data();
-        data['legends'] = legend;
-        var content = QWeb.render("Legend."+ self.parent.name, data);
-        if (data.view_mode === 'form')
-            this.parent.$el.html(content);
-        else
-            this.parent.$el = $(content);
-        this.parent.$el.find('.oe_legend').click(self.do_action.bind(self));
+        var data = {'widget': self }
+        self.record_id =  self.view.datarecord.id;
+        data['legends'] = self.prepare_priority();
+        var content = QWeb.render("priority", data);
+        this.$el.html(content);
+        this.$el.find('.oe_legend').click(self.do_action.bind(self));
     },
     do_action: function(e){
         var self = this;
         var li = $(e.target).closest( "li" );
         if (li.length){
             var value = {};
-            value[self.parent.name] = String(li.data('value'));
+            value[self.name] = String(li.data('value'));
             if (self.record_id){
-                return self.dataset._model.call('write', [[self.record_id], value, self.dataset.get_context()]).done(self.parent.reload_record.bind(self.parent));
+                return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
             } else {
-                return self.parent.view.on_button_save().done(function(result) {
-                    if (result){
-                        self.dataset._model.call('write', [[result], value, self.dataset.get_context()]).done(self.parent.reload_record.bind(self.parent));
+                return self.view.on_button_save().done(function(result) {
+                    if (result) {
+                        self.view.dataset._model.call('write', [[result], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
                     }
                 });
             }
         }
-    }
-});
-
-instance.web.form.Legend = instance.web.form.FieldChar.extend({
-    init: function (field_manager, node) {
-        this._super(field_manager, node);
-        this.legend = new instance.web.Legend(this, this.view.dataset);
     },
     reload_record: function(){
         this.view.reload();
     },
-    render_value: function() {
-        var self = this;
-        self.legend.render_value(this.view.datarecord.id, {
-            'widget': self, 
-            'view_mode':'form'
-        });
-    },
 });
+
 instance.web.form.FieldID = instance.web.form.FieldChar.extend({
     process_modifiers: function () {
         this._super();
@@ -5971,8 +5979,8 @@ instance.web.form.widgets = new instance.web.Registry({
     'monetary': 'instance.web.form.FieldMonetary',
     'many2many_checkboxes': 'instance.web.form.FieldMany2ManyCheckBoxes',
     'x2many_counter': 'instance.web.form.X2ManyCounter',
-    'priority':'instance.web.form.Legend',
-    'dropdown_selection':'instance.web.form.Legend'
+    'priority':'instance.web.form.priority',
+    'dropdown_selection':'instance.web.form.dropdown_selection'
 });
 
 /**

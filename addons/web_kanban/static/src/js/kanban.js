@@ -1260,28 +1260,90 @@ instance.web_kanban.AbstractField = instance.web.Widget.extend(instance.web_kanb
     },
 });
 
-instance.web_kanban.Legend = instance.web_kanban.AbstractField.extend({
+instance.web_kanban.priority = instance.web_kanban.AbstractField.extend({
     init: function(parent, field, $node) {
         this._super.apply(this, arguments);
         this.name = $node.attr('name')
         this.parent = parent;
-        this.legend = new instance.web.Legend(this, parent.view.dataset);
     },
-    reload_record: function(){
-        this.parent.do_reload();
+    prepare_priority: function(){
+        var data = [];
+        var selection = this.field.selection || [];
+        _.map(selection, function(res){  
+            value = {
+                'name': res[0],
+                'legend_name': res[1]
+            }
+            if (res[0] == '0') {
+                value['legend'] = '<img src="/web/static/src/img/icons/star-off.png"/>';
+                value['legend_name'] = 'Set the Priority';
+            } else {
+                value['legend'] = '<img src="/web/static/src/img/icons/star-on.png"/>';
+            }
+            data.push(value)
+        });
+        return data;
     },
     renderElement: function() {
         var self = this;
-        self.legend.render_value(self.parent.id, {
-            'widget': self, 
-        });
+        self.record_id = self.parent.id;
+        var data = {'widget': self }
+        data['legends'] = self.prepare_priority();
+        var content = QWeb.render("priority", data);
+        this.$el = $(content);
+        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+    },
+    do_action: function(e){
+        var self = this;
+        var li = $(e.target).closest( "li" );
+        if (li.length){
+            var value = {};
+            value[self.name] = String(li.data('value'));
+            return self.parent.view.dataset._model.call('write', [[self.record_id], value, self.parent.view.dataset.get_context()]).done(self.reload_record.bind(self.parent));
+        }
+    },
+    reload_record: function(){
+        this.do_reload();
     },
 });
 
+instance.web_kanban.dropdown_selection = instance.web_kanban.AbstractField.extend({
+    init: function(parent, field, $node) {
+        this._super.apply(this, arguments);
+        this.name = $node.attr('name')
+        this.parent = parent;
+    },
+    prepare_dropdown_selection: function(){
+        return [{ 'name': 'normal', 'state_name': ' In Progress', 'state_class': 'btn-default' },
+                { 'name': 'blocked', 'state_name': ' Blocked', 'state_class': 'btn-danger' },
+                { 'name': 'done', 'state_name': ' Ready', 'state_class': 'btn-success' }]
+    },
+    renderElement: function() {
+        var self = this;
+        self.record_id = self.parent.id;
+        var data = {'widget': self }
+        data['states'] = self.prepare_dropdown_selection();
+        var content = QWeb.render("dropdown_selection", data);
+        this.$el = $(content);
+        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+    },
+    do_action: function(e){
+        var self = this;
+        var li = $(e.target).closest( "li" );
+        if (li.length){
+            var value = {};
+            value[self.name] = String(li.data('value'));
+            return self.parent.view.dataset._model.call('write', [[self.record_id], value, self.parent.view.dataset.get_context()]).done(self.reload_record.bind(self.parent));
+        }
+    },
+    reload_record: function(){
+        this.do_reload();
+    },
+});
 
 instance.web_kanban.fields_registry = new instance.web.Registry({});
-instance.web_kanban.fields_registry.add('priority','instance.web_kanban.Legend');
-instance.web_kanban.fields_registry.add('dropdown_selection','instance.web_kanban.Legend');
+instance.web_kanban.fields_registry.add('priority','instance.web_kanban.priority');
+instance.web_kanban.fields_registry.add('dropdown_selection','instance.web_kanban.dropdown_selection');
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
