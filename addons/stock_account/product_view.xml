@@ -25,27 +25,25 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <group name="delay" position="inside">
+                <group name="sale_condition" position="inside">
                     <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}"/>
                 </group>
-                <group name="delay" position="after">
+                <group name="procurement_uom" position="after">
                     <group name="store" string="Storage Location">
                         <field name="loc_rack"/>
                         <field name="loc_row"/>
                         <field name="loc_case"/>
                     </group>
                 </group>
-                <page position="after" string="Information">
-                    <page name="properties" position="inside">
-                        <group string="Accounting Entries">
-                            <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                        </group>
-                    </page>
-                </page>
+                <xpath expr="//group[@name='weight']" position="after">
+                    <group string="Accounting Entries">
+                        <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                        <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                    </group>
+		</xpath>
 		<xpath expr="//field[@name='standard_price']" position='replace'>
                     <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
-                    <field name="cost_method"/>
+                    <field name="cost_method" groups="product.group_costing_method"/>
 		</xpath>
             </field>
         </record>
@@ -56,12 +54,12 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="standard_price" position="replace" version="7.0">
-                    <field name="cost_method" groups="product.group_costing_method"/>
+                    <field name="cost_method" groups="product.group_costing_method" attrs="{'readonly': [('is_only_child', '=', False)]}"/>
                     <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
                     <div groups="base.group_user">
-                        <field name="standard_price" attrs="{'readonly':[('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}" nolabel="1"/>
+                        <field name="standard_price" attrs="{'readonly':['|', ('is_only_child', '=', False), '&amp;', ('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}" nolabel="1"/>
                         <button name="%(action_view_change_standard_price)d" string="- update"
-                            type="action" attrs="{'invisible':['|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"
+                            type="action" attrs="{'invisible':['|', |', ('is_only_child', '=', False), ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"
                             class="oe_link" groups="product.group_costing_method"/>
                     </div>
                 </field>

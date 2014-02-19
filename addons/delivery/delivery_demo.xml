@@ -31,13 +31,15 @@
 
         <record id="delivery_carrier" model="delivery.carrier">
             <field name="name">The Poste</field>
+            <field name="normal_price">20</field>
             <field name="partner_id" ref="res_partner_23"/>
             <field name="product_id" ref="product_product_delivery"/>
+            <field name="use_detailed_pricelist" eval="True"/>
         </record>
 
         <record id="free_delivery_carrier" model="delivery.carrier">
             <field name="name">Free delivery charges</field>
-            <field name="normal_price">10</field>
+            <field name="normal_price">0</field>
             <field name="free_if_more_than">True</field>
             <field name="amount">1000</field>
             <field name="partner_id" ref="res_partner_23"/>

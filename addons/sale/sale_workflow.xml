@@ -187,6 +187,13 @@
             <field name="kind">function</field>
             <field name="action">action_ship_create()</field>
         </record>
+
+        <record id="act_ship_ignore" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">ship_ignore</field>
+            <field name="kind">function</field>
+            <field name="action">action_ignore_delivery_exception()</field>
+        </record>
         
         <record id="act_ship_end" model="workflow.activity">
             <field name="wkf_id" ref="sale.wkf_sale"/>
@@ -272,10 +279,15 @@
             <field name="signal">ship_recreate</field>
         </record>
         
-        <record id="trans_ship_except_ship_end" model="workflow.transition">
+        <record id="trans_ship_except_ship_ignore" model="workflow.transition">
             <field name="act_from" ref="act_ship_except"/>
-            <field name="act_to" ref="act_ship_end"/>
+            <field name="act_to" ref="act_ship_ignore"/>
             <field name="signal">ship_corrected</field>
+        </record>
+
+        <record id="trans_ship_ignore_ship_end" model="workflow.transition">
+            <field name="act_from" ref="act_ship_ignore"/>
+            <field name="act_to" ref="act_ship_end"/>
         </record>
         
         <record id="trans_ship_except_ship_cancel" model="workflow.transition">

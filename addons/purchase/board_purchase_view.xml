@@ -17,15 +17,12 @@
             <field name="model">purchase.report</field>
             <field name="arch" type="xml">
                 <tree string="Monthly Purchase by Category">
-                    <field name="month"/>
                     <field name="category_id"/>
                     <field name="price_total"/>
                     <field name="user_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="product_id" invisible="1"/>
                     <field name="product_uom" invisible="1"/>
-                    <field name="day" invisible="1"/>
-                    <field name="name" invisible="1"/>
                     <field name="validator" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="state" invisible="1"/>
@@ -38,9 +35,9 @@
             <field name="model">purchase.report</field>
             <field name="arch" type="xml">
                 <graph string="Monthly Purchase by Category" type="bar">
-                    <field name="month"/>
-                    <field name="price_total" operator="+"/>
-                    <field name="category_id" group="True"/>
+                    <field name="date" interval="month" type="row"/>
+                    <field name="category_id" type="col"/>
+                    <field name="price_total" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -49,7 +46,7 @@
             <field name="res_model">purchase.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
-            <field name="context">{'group_by':['month','category_id'],'group_by_no_leaf':1}</field>
+            <field name="context">{'group_by_no_leaf':1}</field>
             <field name="domain">[('state','in',('approved','except_picking','except_invoice','done'))]</field>
             <field name="view_id" ref="view_purchase_order_monthly_categ_graph"></field>
         </record>

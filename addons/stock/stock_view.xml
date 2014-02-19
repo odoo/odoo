@@ -23,8 +23,14 @@
             action="product.product_category_action_form" id="menu_product_category_config_stock"
             parent="stock.menu_product_in_config_stock" sequence="0"/>
         <menuitem
+            action="product.product_variant_action" id="menu_product_variant_config_stock"
+            parent="stock.menu_product_in_config_stock" groups="product.group_product_variant" sequence="2"/>
+        <menuitem
+            action="product.product_template_action" id="menu_product_template_config_stock"
+            parent="stock.menu_product_in_config_stock" groups="product.group_product_variant" sequence="1"/>
+        <menuitem
             action="product.product_ul_form_action" groups="product.group_stock_packaging"
-            id="menu_product_packaging_stock_action" parent="stock.menu_product_in_config_stock" sequence="1"/>
+            id="menu_product_packaging_stock_action" parent="stock.menu_product_in_config_stock" sequence="3"/>
         <menuitem
             id="menu_stock_unit_measure_stock" name="Units of Measure"
             parent="stock.menu_product_in_config_stock"  sequence="35" groups="product.group_uom"/>
@@ -120,7 +126,7 @@
                         <page string="Inventory Details" >
                             <button name="set_checked_qty" states="confirm" string="⇒ Set quantities to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
                             <field name="line_ids" string="Inventory Details" context="{'default_location_id': location_id,  'default_product_id': product_id, 'default_prod_lot_id': lot_id, 'default_package_id': package_id, 'default_partner_id': partner_id}">
-                                <tree string="Inventory Details" editable="bottom" colors="blue: product_qty != th_qty">
+                                <tree string="Inventory Details" editable="bottom" colors="blue: product_qty != th_qty; red: th_qty &lt; 0">
                                     <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" domain="[('type','=','product')]"/>
                                     <field name="product_uom_id" groups="product.group_uom" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
                                     <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
@@ -579,16 +585,6 @@
         <menuitem action="action_location_form" id="menu_action_location_form" groups="stock.group_locations"
             parent="menu_stock_configuration" sequence="5"/>
 
-        <record id="view_location_tree" model="ir.ui.view">
-            <field name="name">stock.location.tree</field>
-            <field name="model">stock.location</field>
-            <field name="field_parent">child_ids</field>
-            <field name="arch" type="xml">
-                <tree toolbar="1" string="Locations" >
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
         <record model="ir.actions.act_window" id="action_product_location_tree">
             <field name="context">{'product_id': active_id}</field>
             <field name="name">Stock by Location</field>
@@ -599,29 +595,6 @@
             <field name="name">Moves</field>
             <field name="res_model">stock.move</field>
         </record>
-        <record id="action_location_tree" model="ir.actions.act_window">
-            <field name="name">Inventory by Location</field>
-            <field name="res_model">stock.location</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="domain">[('location_id','=',False)]</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="view_location_tree"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a location.
-              </p><p>
-                This is the structure of your company's warehouses and
-                locations. You can click on a location to get the list of the
-                products and their stock level in this particular location and
-                all its children.
-              </p>
-            </field>
-        </record>
-        <menuitem action="action_location_tree"
-            id="menu_action_location_tree"
-            parent="menu_stock_inventory_control"
-            groups="stock.group_locations"
-            sequence="20"/>
 
         <record id="view_warehouse" model="ir.ui.view">
             <field name="name">stock.warehouse</field>
@@ -727,13 +700,13 @@
                     <field name="name"/>
                     <field name="location_dest_id"/>
                     <field name="date"/>
-                    <field name="min_date"/>
+                    <field name="min_date" invisible="1"/>
+                    <field name="origin"/>
+                    <field name="group_id" invisible="1"/>
                     <field name="backorder_id"/>
-                    <field name="group_id"/>
                     <field name="state"/>
-                    <field name="priority"/>
+                    <field name="priority" invisible="1"/>
                     <field name="picking_type_id" invisible="1"/>
-                    <field name="origin" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -747,18 +720,19 @@
                 <header>
                     <button name="action_confirm" states="draft" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user"/>
-                    <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight" groups="base.group_user"/>
-                    <button name="do_transfer" states="assigned" string="Transfer Done" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
-                    <button name="do_prepare_partial" string="Partial Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|',('pack_operation_exist', '=', True),('state','!=','assigned')]}"/>
+                    <button name="force_assign" states="confirmed,partially_available" string="Force Availability" type="object" class="oe_highlight" groups="base.group_user"/>
+                    <button name="do_transfer" states="assigned" string="Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
+                    <button name="do_transfer" string="Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|',('pack_operation_exist', '=', False), ('state', '!=', 'partially_available')]}"/>
+                    <button name="do_prepare_partial" string="Enter Transfer Details" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|',('pack_operation_exist', '=', True),('state','not in',('assigned', 'partially_available'))]}"/>
+                    <button name="do_print_delivery" string="Print Delivery Order" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|', ('picking_type_code', '!=', 'outgoing'), ('state', '!=', 'done')]}"/>
+                    <button name="do_print_picking" string="Print Picking List" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|', ('picking_type_code', '=', 'outgoing'), ('state', '!=', 'assigned')]}"/>
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_user"/>
-                    <button name="action_cancel" states="assigned,confirmed,draft" string="Cancel Transfer" groups="base.group_user" type="object"/>
-                    <button name="do_unreserve" string="Unreserve" groups="base.group_user" type="object" attrs="{'invisible': ['|',('quant_reserved_exist', '=', False), ('state','!=','assigned')]}"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
+                    <button name="action_cancel" states="assigned,confirmed,partially_available,draft" string="Cancel Transfer" groups="base.group_user" type="object"/>
+                    <button name="do_unreserve" string="Unreserve" groups="base.group_user" type="object" attrs="{'invisible': [('quant_reserved_exist', '=', False)]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,partially_available,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box">
-                <button name="do_print_delivery" string="Delivery Order" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|', ('picking_type_code', '!=', 'outgoing'), ('state', '!=', 'assigned')]}"/>
-                        <button name="do_print_picking" string="Picking List" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|', ('picking_type_code', '=', 'outgoing'), ('state', '!=', 'assigned')]}"/>
                     </div>
                     <h1>
                         <field name="name" class="oe_inline" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
@@ -782,7 +756,7 @@
                     </group>
                     <notebook>
                         <page string="Products">
-                            <separator string="Expected Quantities" attrs="{'invisible': [('pack_operation_exist', '=', False)]}"/>
+                            <separator string="Stock Moves" attrs="{'invisible': [('pack_operation_exist', '=', False)]}"/>
                             <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'view_move_picking_tree', 'default_picking_type_id': picking_type_id,'default_picking_id': active_id}"/>
                             <group>
                                 <group col="3"> 
@@ -790,8 +764,9 @@
                                 </group>
                                 <group col="1">
                                     <field name="pack_operation_exist" invisible="1"/>
-                                    <button name="action_pack" string="Create Package" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}" class="oe_link oe_right oe_inline" groups="product.group_stock_packaging"/>
-                                    <button name="do_split" string="Create Draft Backorder" groups="base.group_no_one" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','!=','assigned')]}" class="oe_link oe_right oe_inline"/>
+                                    <button name="action_pack" string="Create Package" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state', 'not in', ('draft','assigned','partially_available','confirmed'))]}" class="oe_link oe_right oe_inline" groups="product.group_stock_packaging"/>
+                                    <button name="do_split" string="Create Draft Backorder" groups="base.group_no_one" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','not in',('assigned', 'partially_available'))]}" class="oe_link oe_right oe_inline"/>
+                                    <button name="recheck_availability" string="Recheck Availability" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','not in',('assigned', 'partially_available'))]}" groups="stock.group_stock_user" class="oe_link oe_right oe_inline"/>
                                 </group>
                             </group>
                             <field name="pack_operation_ids" attrs="{'invisible': [('pack_operation_exist', '=', False)]}" context="{'default_owner_id': owner_id}">
@@ -808,11 +783,10 @@
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
                         </page>
                         <page string="Additional Info">
-                            <group>
+                            <group string="General Informations">
                                 <group>
                                     <field name="move_type"/>
                                     <field name="picking_type_id"/>
-                                    <field name="priority"/>
                                     <field name="picking_type_code" invisible="1"/>
                                     <field name="quant_reserved_exist" invisible="1"/>                                    
                                 </group>
@@ -820,6 +794,7 @@
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                     <field name="date_done" groups="base.group_no_one"/>
                                     <field name="group_id"/>
+                                    <field name="priority"/>
                                 </group>
                             </group>
                         </page>
@@ -840,7 +815,7 @@
                 <search string="Picking Lists">
                     <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
                     <filter icon="terp-check" name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Moves"/>
-                    <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Moves"/>
+                    <filter icon="terp-check" name="available" string="Ready" domain="[('state','in',('assigned', 'partially_available'))]" help="Assigned Moves"/>
                     <filter icon="terp-check" name="waiting" string="Waiting Availability" domain="[('state','=', 'confirmed')]" help="Waiting Moves"/>
                     <filter icon="terp-camera_test" name="confirmed" string="Confirmed" domain="[('state','in', ('confirmed', 'waiting', 'assigned'))]" help="Confirmed Moves"/>
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
@@ -851,6 +826,7 @@
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="product_id"/>
                     <field name="picking_type_id"/>
+                    <field name="group_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
@@ -1007,6 +983,18 @@
             </field>
         </record>
 
+        <record id="view_move_graph" model="ir.ui.view">
+            <field name="name">stock.move.graph</field>
+            <field name="model">stock.move</field>
+            <field name="arch" type="xml">
+                <graph string="Stock Moves Analysis" type="pivot">
+                    <field name="product_id" type="row"/>
+                    <field name="location_dest_id" groups="stock.group_locations" type="row"/>
+                    <field name="product_uom_qty" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">stock.move.tree</field>
             <field name="model">stock.move</field>
@@ -1056,8 +1044,11 @@
                        states="draft,waiting,confirmed,assigned"
                        groups="base.group_user"/>
                     <field name="scrapped" invisible="1"/>
+                    <field name="availability" invisible="1"/>
+                    <field name="reserved_availability" invisible="1"/>
                     <field name="location_dest_id" groups="stock.group_locations"/>
-                    <field name="remaining_qty"/>
+                    <field name="remaining_qty" invisible="1"/>
+                    <field name="string_availability_info"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -1239,6 +1230,13 @@
             <field name="sequence" eval="3"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_move_form"/>
+        <field name="act_window_id" ref="action_move_form2"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_stock_move_graph_all">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_move_graph"/>
         <field name="act_window_id" ref="action_move_form2"/>
         </record>
 
@@ -1482,9 +1480,6 @@
                                         </div>
                                         <div>
                                             <a name="%(action_picking_tree)d" type="action">All Operations</a>
-                                            <!--<a name="%(action_picking_tree_done_grouped)d" type="action" class="oe_sparkline_bar_link">
-                                                <field name="monthly_picking" widget="sparkline_bar">Monthly Done Operations</field>
-                                            </a>-->
                                         </div>
                                     </div>
                                     <div class="oe_picking_type_gauge">
@@ -1786,6 +1781,7 @@
                         <field name="reservation_id"/>
                         <field name="propagated_from_id"/>
                         <field name="owner_id" groups="stock.group_tracking_owner"/>
+                        <field name="inventory_value"/>
                     </group>
                 </form>
             </field>
@@ -2059,9 +2055,6 @@
                 <tree string="Routes">
                     <field name="sequence" widget="handle" />
                     <field name="name"/>
-                    <field name="product_selectable"/>
-                    <field name="product_categ_selectable"/>
-                    <field name="warehouse_selectable"/>
                 </tree>
             </field>
         </record>
@@ -2080,10 +2073,10 @@
                     <group>
                         <group>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="sequence" string="Sequence" groups="base.group_no_one"/>
+                            <field name="active" groups="stock.group_adv_location" />
                         </group>
                         <group>
-                            <field name="active" groups="stock.group_adv_location" />
+                            <field name="sequence" string="Sequence" groups="base.group_no_one"/>
                         </group>
                     </group>
                     <separator string="Applicable On"/>

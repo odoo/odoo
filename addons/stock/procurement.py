@@ -172,14 +172,23 @@ class procurement_order(osv.osv):
             group_id = procurement.group_id and procurement.group_id.id or False
         elif procurement.rule_id.group_propagation_option == 'fixed':
             group_id = procurement.rule_id.group_id and procurement.rule_id.group_id.id or False
+        #it is possible that we've already got some move done, so check for the done qty and create
+        #a new move with the correct qty
+        already_done_qty = 0
+        already_done_qty_uos = 0
+        for move in procurement.move_ids:
+            already_done_qty += move.product_uom_qty if move.state == 'done' else 0
+            already_done_qty_uos += move.product_uos_qty if move.state == 'done' else 0
+        qty_left = max(procurement.product_qty - already_done_qty, 0)
+        qty_uos_left = max(procurement.product_uos_qty - already_done_qty_uos, 0)
         vals = {
             'name': procurement.name,
             'company_id': procurement.company_id.id,
             'product_id': procurement.product_id.id,
-            'product_qty': procurement.product_qty,
+            'product_qty': qty_left,
             'product_uom': procurement.product_uom.id,
-            'product_uom_qty': procurement.product_qty,
-            'product_uos_qty': (procurement.product_uos and procurement.product_uos_qty) or procurement.product_qty,
+            'product_uom_qty': qty_left,
+            'product_uos_qty': (procurement.product_uos and qty_uos_left) or qty_left,
             'product_uos': (procurement.product_uos and procurement.product_uos.id) or procurement.product_uom.id,
             'partner_id': procurement.group_id and procurement.group_id.partner_id and procurement.group_id.partner_id.id or False,
             'location_id': procurement.rule_id.location_src_id.id,
@@ -207,28 +216,39 @@ class procurement_order(osv.osv):
             move_obj = self.pool.get('stock.move')
             move_dict = self._run_move_create(cr, uid, procurement, context=context)
             move_id = move_obj.create(cr, uid, move_dict, context=context)
+            self.message_post(cr, uid, [procurement.id], body=_("Supply Move created"), context=context)
             move_obj.action_confirm(cr, uid, [move_id], context=context)
-            return move_id
+            return True
         return super(procurement_order, self)._run(cr, uid, procurement, context)
 
     def _check(self, cr, uid, procurement, context=None):
+        ''' Implement the procurement checking for rules of type 'move'. The procurement will be satisfied only if all related
+            moves are done/cancel and if the requested quantity is moved.
+        '''
         if procurement.rule_id and procurement.rule_id.action == 'move':
+            uom_obj = self.pool.get('product.uom')
             done_test_list = []
             done_cancel_test_list = []
+            qty_done = 0
             for move in procurement.move_ids:
                 done_test_list.append(move.state == 'done')
                 done_cancel_test_list.append(move.state in ('done', 'cancel'))
+                qty_done += move.product_qty if move.state == 'done' else 0
+            qty_done = uom_obj._compute_qty(cr, uid, procurement.product_id.uom_id.id, qty_done, procurement.product_uom.id)
             at_least_one_done = any(done_test_list)
             all_done_or_cancel = all(done_cancel_test_list)
             if not all_done_or_cancel:
                 return False
-            elif at_least_one_done and all_done_or_cancel:
+            elif all_done_or_cancel and procurement.product_qty == qty_done:
                 return True
+            elif at_least_one_done:
+                #some move cancelled and some validated
+                self.message_post(cr, uid, [procurement.id], body=_('Some stock moves have been cancelled for this procurement. Run the procurement again to trigger a move for the remaining quantity or change the procurement quantity to finish it directly'), context=context)
             else:
                 #all move are cancelled
-                self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
                 self.message_post(cr, uid, [procurement.id], body=_('All stock moves have been cancelled for this procurement.'), context=context)
-                return False
+            self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)    
+            return False
 
         return super(procurement_order, self)._check(cr, uid, procurement, context)
 

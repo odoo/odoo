@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 
 
@@ -66,7 +67,42 @@ class crm_configuration(osv.TransientModel):
         'group_multi_salesteams': fields.boolean("Organize Sales activities into multiple Sales Teams",
             implied_group='base.group_multi_salesteams',
             help="""Allows you to use Sales Teams to manage your leads and opportunities."""),
+        'alias_prefix': fields.char('Default Alias Name for Leads'),
+        'alias_domain' : fields.char('Alias Domain'),
     }
 
+    _defaults = {
+        'alias_domain': lambda self, cr, uid, context: self.pool['mail.alias']._get_alias_domain(cr, SUPERUSER_ID, [1], None, None)[1],
+    }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    def _find_default_lead_alias_id(self, cr, uid, context=None):
+        alias_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'crm.mail_alias_lead_info')
+        if not alias_id:
+            alias_ids = self.pool['mail.alias'].search(
+                cr, uid, [
+                    ('alias_model_id.model', '=', 'crm.lead'),
+                    ('alias_force_thread_id', '=', False),
+                    ('alias_parent_model_id.model', '=', 'crm.case.section'),
+                    ('alias_parent_thread_id', '=', False),
+                    ('alias_defaults', '=', '{}')
+                ], context=context)
+            alias_id = alias_ids and alias_ids[0] or False
+        return alias_id
+
+    def get_default_alias_prefix(self, cr, uid, ids, context=None):
+        alias_name = False
+        alias_id = self._find_default_lead_alias_id(cr, uid, context=context)
+        if alias_id:
+            alias_name = self.pool['mail.alias'].browse(cr, uid, alias_id, context=context).alias_name
+        return {'alias_prefix': alias_name}
+
+    def set_default_alias_prefix(self, cr, uid, ids, context=None):
+        mail_alias = self.pool['mail.alias']
+        for record in self.browse(cr, uid, ids, context=context):
+            alias_id = self._find_default_lead_alias_id(cr, uid, context=context)
+            if not alias_id:
+                create_ctx = dict(context, alias_model_name='crm.lead', alias_parent_model_name='crm.case.section')
+                alias_id = self.pool['mail.alias'].create(cr, uid, {'alias_name': record.alias_prefix}, context=create_ctx)
+            else:
+                mail_alias.write(cr, uid, alias_id, {'alias_name': record.alias_prefix}, context=context)
+        return True

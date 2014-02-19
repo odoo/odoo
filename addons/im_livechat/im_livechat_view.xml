@@ -125,6 +125,7 @@
             <field name="res_model">im.message</field>
             <field name="view_mode">list</field>
             <field name="domain">[('session_id.channel_id', '!=', None)]</field>
+            <field name="context">{'search_default_group_by_session_id': 1, 'search_default_group_by_date': 1, 'search_default_session_id': 1}</field>
         </record>
         <menuitem name="History" parent="im_livechat" id="history" action="action_history" groups="group_im_livechat_manager"/>
 
@@ -132,12 +133,28 @@
             <field name="name">im.message.tree</field>
             <field name="model">im.message</field>
             <field name="arch" type="xml">
-                <tree string="History">
+                <tree string="History" create="false">
                     <field name="session_id"/>
                     <field name="date"/>
                     <field name="from_id"/>
                     <field name="message"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="im_message_search" model="ir.ui.view">
+            <field name="name">im.message.search</field>
+            <field name="model">im.message</field>
+            <field name="arch" type="xml">
+                <search string="Search history">
+                    <filter name="session_id" string="My Sessions" domain="[('session_id.user_ids','in', uid)]"/>
+                    <field name="from_id"/>
+                    <field name="to_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="group_by_session_id" string="Session" domain="[]" context="{'group_by':'session_id'}"/>
+                        <filter name="group_by_date" string="Date" domain="[]" context="{'group_by':'date'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 

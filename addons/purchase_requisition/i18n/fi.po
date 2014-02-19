@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-12 06:31+0000\n"
-"X-Generator: Launchpad (build 16761)\n"
+"X-Launchpad-Export-Date: 2014-01-28 06:36+0000\n"
+"X-Generator: Launchpad (build 16914)\n"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -30,7 +30,7 @@ msgstr "Useita pyyntöjä"
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_uom_id:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Tuotteen yksikkö"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -60,12 +60,12 @@ msgstr "Vastuuhenkilö"
 #: view:purchase.requisition:0
 #: field:purchase.requisition,state:0
 msgid "Status"
-msgstr ""
+msgstr "Tila"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Send to Suppliers"
-msgstr ""
+msgstr "Lähetä toimittajille"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -76,17 +76,17 @@ msgstr "Ryhmittely.."
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "Purchase Done"
-msgstr ""
+msgstr "Osto tehty"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seuraajat"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Purchase Requisition in negociation"
-msgstr "Ostotilauspyyntö neuvottelussa"
+msgstr "Ostopyyntö neuvottelussa"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -103,7 +103,7 @@ msgstr "Uusi"
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Product Detail"
-msgstr "Tuotteen yksityiskohdat"
+msgstr "Tuotetiedot"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -126,12 +126,12 @@ msgstr "Tyyppi"
 #: field:purchase.requisition.line,requisition_id:0
 #: view:purchase.requisition.partner:0
 msgid "Purchase Requisition"
-msgstr "Ostotilauspyyntö"
+msgstr "Ostopyyntö"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
 msgid "Purchase Requisition Line"
-msgstr "Ostotilauspyynnön rivi"
+msgstr "Ostopyynnön rivi"
 
 #. module: purchase_requisition
 #: view:purchase.order:0
@@ -147,12 +147,12 @@ msgstr "Tuote"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Quotations"
-msgstr "Tarjoukset"
+msgstr "Ostoehdotukset"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Toimitusehdot"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -163,7 +163,7 @@ msgstr "Kuvaus"
 #. module: purchase_requisition
 #: field:purchase.requisition,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Lukemattomat viestit"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,company_id:0
@@ -179,22 +179,22 @@ msgstr "Luo tarjous"
 #. module: purchase_requisition
 #: help:purchase.requisition,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Viesti- ja kommunikointihistoria"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Approved by Supplier"
-msgstr "Toimittajan vahvistama"
+msgstr "Toimittajan hyväksymä"
 
 #. module: purchase_requisition
 #: view:purchase.requisition.partner:0
 msgid "or"
-msgstr ""
+msgstr "tai"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Reset to Draft"
-msgstr "Palauta luonnokseksi"
+msgstr "Palauta ehdotuksesi"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -209,12 +209,12 @@ msgstr "Käyttäjä"
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Order Reference"
-msgstr "Tilauksen viite"
+msgstr "Tilausviite"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "on seuraaja"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_qty:0
@@ -230,12 +230,12 @@ msgstr "Kohdistamaton pyyntö"
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Purchase Requisitions"
-msgstr "Hankintapyynnöt"
+msgstr "Ostopyynnöt"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Quotation Detail"
-msgstr "Tarjouspyynnön yksityiskohdat"
+msgstr "Tarjouksen tiedot"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:134
@@ -244,11 +244,13 @@ msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
 msgstr ""
+"Tälle kumppanille on jo yksi ostotilaus \"%s. Peruuta ensin tämä ostotilaus "
+"ennen uuden tarjouksen luontia."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "End Date"
-msgstr "Loppupvm"
+msgstr "Loppupäivä"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -265,28 +267,28 @@ msgstr "Ostettavat tuotteet"
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "Sent to Suppliers"
-msgstr ""
+msgstr "Lähetetty toimittajille"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Search Purchase Requisition"
-msgstr "Hae ostotilausehdotusta"
+msgstr "Hae ostopyyntö"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
 #, python-format
 msgid "No Product in Tender."
-msgstr ""
+msgstr "Tarjouksessa ei ole tuotetta."
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Date Ordered"
-msgstr "Tilauspäivämäärä"
+msgstr "Tilauspäivä"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Viestit"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,exclusive:0
@@ -312,7 +314,7 @@ msgstr "Ostotilaus"
 #. module: purchase_requisition
 #: field:purchase.requisition,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Lähdedokumentti"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
@@ -328,7 +330,7 @@ msgstr "Pyynnön tyyppi"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "New Purchase Requisition"
-msgstr "Uusi ostotilauspyyntö"
+msgstr "Uusi ostopyyntö"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -338,7 +340,7 @@ msgstr "Tuotteet"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Order Date"
-msgstr "Tilauksen päivämäärä"
+msgstr "Tilauspäivä"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -348,12 +350,12 @@ msgstr "Peruttu"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_partner
 msgid "Purchase Requisition Partner"
-msgstr "Ostotilauspyynnön kumppani"
+msgstr "Ostopyynnön kumppani"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -373,7 +375,7 @@ msgstr "Pyynnön takaraja (päivä)"
 #. module: purchase_requisition
 #: field:purchase.requisition,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Yhteenveto"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -389,7 +391,7 @@ msgstr "Hankinta"
 #: report:purchase.requisition:0
 #: view:purchase.requisition:0
 msgid "Source"
-msgstr ""
+msgstr "Lähde"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,warehouse_id:0
@@ -409,7 +411,7 @@ msgstr "Päällikkö"
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Purchase Requisition (exclusive)"
-msgstr "Ostotilauspyyntö (poissulkeva)"
+msgstr "Ostopyyntö (poissulkeva)"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,message_summary:0
@@ -417,11 +419,13 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Sisältää viestien yhteenvedon (viestien määrän,...). Tämä yhteenveto on "
+"valmiiksi  html-muodossa, jotta se voidaan viedä kanban näkymään."
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Product UoM"
-msgstr "Tuotteen mittayksikkö"
+msgstr "Tuotteen yksikkö"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:134
@@ -443,7 +447,7 @@ msgstr "Peruuta"
 #: report:purchase.requisition:0
 #: field:purchase.requisition,date_start:0
 msgid "Requisition Date"
-msgstr "Pyynnön päivä"
+msgstr "Pyyntöpäivä"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -453,7 +457,7 @@ msgstr "Alkupäivä"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Unassigned"
-msgstr "Liittämätön"
+msgstr "Kohdistamaton"
 
 #. module: purchase_requisition
 #: view:purchase.order:0
@@ -466,6 +470,8 @@ msgid ""
 "Check this box to generates purchase requisition instead of generating "
 "requests for quotation from procurement."
 msgstr ""
+"Valitse tämä valintalaatikko luodaksesi ostopyynnön sen sijaan, että "
+"luotaisiin tarjouspyynnöt hankinnalle."
 
 #. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0
