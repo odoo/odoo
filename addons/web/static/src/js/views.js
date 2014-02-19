@@ -600,6 +600,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     action_views_ids : views_ids
                 }, self.flags, self.flags[view.view_type] || {}, view.options || {})
             });
+            
             views_ids[view.view_type] = view.view_id;
         });
         if (this.flags.views_switcher === false) {
@@ -607,7 +608,11 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         }
         // If no default view defined, switch to the first one in sequence
         var default_view = this.flags.default_view || this.views_src[0].view_type;
-        return this.switch_mode(default_view);
+  
+
+        return this.switch_mode(default_view, null, this.flags[default_view] && this.flags[default_view].options);
+      
+        
     },
     switch_mode: function(view_type, no_store, view_options) {
         var self = this;

@@ -652,8 +652,8 @@ openerp.web_calendar = function(instance) {
                 }
                 if (this.all_day) {
                     event_end = (new Date(event_end.getTime())).addDays(1);
-                    date_start_day = new Date(event.start.getFullYear(),event.start.getMonth(),event.start.getDate());
-                    date_stop_day = new Date(event_end.getFullYear(),event_end.getMonth(),event_end.getDate());
+                    date_start_day = new Date(event.start.getFullYear(),event.start.getMonth(),event.start.getDate(),12);
+                    date_stop_day = new Date(event_end.getFullYear(),event_end.getMonth(),event_end.getDate(),12);
                 }
                 else {
                     date_start_day = new Date(event.start.getFullYear(),event.start.getMonth(),event.start.getDate(),7);
@@ -666,7 +666,6 @@ openerp.web_calendar = function(instance) {
                                 
             }
             else {
-                
                 data[this.date_start] = instance.web.parse_value(event.start, this.fields[this.date_start]);
                 if (this.date_stop) {
                     data[this.date_stop] = instance.web.parse_value(event_end, this.fields[this.date_stop]);
@@ -1070,6 +1069,8 @@ openerp.web_calendar = function(instance) {
             return infos;
         },
         slow_create: function(data) {
+            //if all day, we could reset time to display 00:00:00
+            
             var self = this;
             var def = $.Deferred();
             var defaults = {};
