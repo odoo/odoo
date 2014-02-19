@@ -210,11 +210,18 @@ class HttpCase(TransactionCase):
             # process lines
             if '\n' in buf:
                 line, buf = buf.split('\n', 1)
+
+                line = str(line)
                 if line == "ok":
                     break
                 if line.startswith("error"):
-                    # 'error $message' or use generic message
-                    self.fail(line[6:] or "phantomjs test failed")
+                    line_ = line[6:]
+                    try: line_ = json.loads(line_)
+                    except ValueError: pass
+                    self.fail(line_ or "phantomjs test failed")
+
+                try: line = json.loads(line)
+                except ValueError: pass
                 _logger.info("phantomjs: %s", line)
 
     def phantom_run(self, cmd, timeout):
