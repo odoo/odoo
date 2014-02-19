@@ -2338,9 +2338,9 @@ instance.web.Legend = instance.web.Widget.extend({
         this.dataset = dataset;
     },
     prepare_kanban_state_legend: function(){
-        return [{ 'name': 'normal', 'legend_name': ' Normal', 'legend_class': 'btn-default' },
+        return [{ 'name': 'normal', 'legend_name': ' In Progress', 'legend_class': 'btn-default' },
                 { 'name': 'blocked', 'legend_name': ' Blocked', 'legend_class': 'btn-danger' },
-                { 'name': 'done', 'legend_name': ' Done', 'legend_class': 'btn-success' }]
+                { 'name': 'done', 'legend_name': ' Ready', 'legend_class': 'btn-success' }]
     },
     prepare_priority_legend: function(){
         var data = [];
@@ -2379,9 +2379,7 @@ instance.web.Legend = instance.web.Widget.extend({
             this.parent.$el.html(content);
         else
             this.parent.$el = $(content);
-        if (!this.parent.get("effective_readonly")){
-            this.parent.$el.find('.oe_legend').click(self.do_action.bind(self));
-        }
+        this.parent.$el.find('.oe_legend').click(self.do_action.bind(self));
     },
     do_action: function(e){
         var self = this;
@@ -2389,7 +2387,15 @@ instance.web.Legend = instance.web.Widget.extend({
         if (li.length){
             var value = {};
             value[self.parent.name] = String(li.data('value'));
-            return self.dataset._model.call('write', [[self.record_id], value, self.dataset.get_context()]).done(self.parent.reload_record.bind(self.parent));
+            if (self.record_id){
+                return self.dataset._model.call('write', [[self.record_id], value, self.dataset.get_context()]).done(self.parent.reload_record.bind(self.parent));
+            } else {
+                return self.parent.view.on_button_save().done(function(result) {
+                    if (result){
+                        self.dataset._model.call('write', [[result], value, self.dataset.get_context()]).done(self.parent.reload_record.bind(self.parent));
+                    }
+                });
+            }
         }
     }
 });
