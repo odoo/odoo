@@ -24,6 +24,8 @@ import logging
 import operator
 import os
 import time
+import datetime
+import dateutil
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -910,6 +912,33 @@ class ir_actions_server(osv.osv):
         if action.link_new_record and action.link_field_id:
             self.pool[action.model_id.model].write(cr, uid, [context.get('active_id')], {action.link_field_id.name: res_id})
 
+    def _eval_context_for_action(self, cr, uid, action, context=None):
+        if context is None:
+            context = {}
+        model = self.pool[action.model_id.model]
+        active_id = context.get('active_id')
+        active_ids = context.get('active_ids', [active_id] if active_id else [])
+        target_record = None
+        if context.get('active_model') == action.model_id.model and active_id:
+            context = dict(context, active_ids=active_ids, active_id=active_id)
+            target_record = model.browse(cr, uid, active_id, context=context) if active_id else None
+        user = self.pool['res.users'].browse(cr, uid, uid)
+        eval_context = {
+            'self': model,
+            'object': target_record,
+            'obj': target_record,
+            'pool': self.pool,
+            'time': time,
+            'datetime': datetime,
+            'dateutil': dateutil,
+            'cr': cr,
+            'uid': uid,
+            'user': user,
+            'context': context,
+        }
+        return eval_context
+
+
     def run(self, cr, uid, ids, context=None):
         """ Runs the server action. For each server action, the condition is
         checked. Note that a void (``False``) condition is considered as always
@@ -932,33 +961,14 @@ class ir_actions_server(osv.osv):
         if context is None:
             context = {}
         res = False
-        user = self.pool.get('res.users').browse(cr, uid, uid)
-        active_ids = context.get('active_ids', [context.get('active_id')])
         for action in self.browse(cr, uid, ids, context):
-            obj_pool = self.pool[action.model_id.model]
-            obj = None
-            if context.get('active_model') == action.model_id.model and context.get('active_id'):
-                obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-
-            # evaluation context for python strings to evaluate
-            eval_context = {
-                'self': obj_pool,
-                'object': obj,
-                'obj': obj,
-                'pool': self.pool,
-                'time': time,
-                'cr': cr,
-                'uid': uid,
-                'user': user,
-            }
+            eval_context = self._eval_context_for_action(cr, uid, action, context)
             condition = action.condition
             if condition is False:
                 # Void (aka False) conditions are considered as True
                 condition = True
             if hasattr(self, 'run_action_%s_multi' % action.state):
-                # set active_ids in context only needed if one active_id
-                run_context = dict(context, active_ids=active_ids)
-                eval_context["context"] = run_context
+                run_context = eval_context['context']
                 expr = eval(str(condition), eval_context)
                 if not expr:
                     continue
@@ -968,6 +978,8 @@ class ir_actions_server(osv.osv):
 
             elif hasattr(self, 'run_action_%s' % action.state):
                 func = getattr(self, 'run_action_%s' % action.state)
+                active_id = context.get('active_id')
+                active_ids = context.get('active_ids', [active_id] if active_id else [])
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id
                     run_context = dict(context, active_ids=[active_id], active_id=active_id)
