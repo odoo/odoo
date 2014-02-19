@@ -284,7 +284,7 @@ def route(route=None, **kw):
                 elif isinstance(response, basestring):
                     return Response(response)
                 else:
-                    raise "TODO: shall we autorise this ?"
+                    _logger.warn("<function %s.%s> returns an invalid response type for an http request" % (f.__module__, f.__name__))
             return response
         response_wrap.routing = routing
         response_wrap.original_func = f
