@@ -255,16 +255,14 @@ class Field(object):
         if record is None:
             return self         # the field is accessed through the owner class
 
-        cache, id = record._scope.cache, record._id
-
         try:
-            return _check_value(cache[self][id])
+            return record._cache[self]
         except KeyError:
             pass
 
         # cache miss, retrieve value
         with record._scope:
-            if id:
+            if record._id:
                 # normal record -> read or compute value for this field
                 self.determine_value(record[0])
             elif record:
@@ -275,7 +273,7 @@ class Field(object):
                 return self.null()
 
         # the result should be in cache now
-        return _check_value(cache[self][id])
+        return record._cache[self]
 
     def __set__(self, record, value):
         """ set the value of field `self` on `record` """
@@ -283,17 +281,15 @@ class Field(object):
             raise Warning("Null record %s may not be assigned" % record)
 
         with record._scope as _scope:
-            # adapt value to the cache level
-            value = self.convert_to_cache(value)
-
             # notify the change, which may cause cache invalidation
             if _scope.draft or not record._id:
                 self.modified_draft(record)
             else:
+                value = self.convert_to_cache(value)
                 record.write({self.name: self.convert_to_write(value)})
 
             # store the value in cache
-            _scope.cache[self][record._id] = value
+            record._cache[self] = value
 
     #
     # Management of the computation of field values.
@@ -327,12 +323,12 @@ class Field(object):
 
             # mark non-existing records in cache
             exc = MissingError("Computing a field on non-existing records.")
-            (all_recs - records)._update_cache(FailedValue(exc))
+            (all_recs - records)._cache.update(FailedValue(exc))
 
         # mark the field failed in cache, so that access before computation
         # raises an exception
         exc = Warning("Field %s is accessed before being computed." % self)
-        records._update_cache({self.name: FailedValue(exc)})
+        records._cache[self] = FailedValue(exc)
 
         self._compute_function(records)
 
@@ -364,7 +360,7 @@ class Field(object):
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
-        record._update_cache({self.name: SpecialValue(self.null())})
+        record._cache[self] = SpecialValue(self.null())
         if self.compute:
             self.compute_value(record)
 
@@ -918,7 +914,7 @@ class _RelationalMulti(_Relational):
         for record in value:
             # TODO: modified record (1, id, values)
             if not record.id:
-                values = record._convert_to_write(record._get_cache())
+                values = record._convert_to_write(record._cache)
                 result.append((0, 0, values))
             else:
                 result.append((4, record.id))

@@ -40,7 +40,7 @@
 """
 
 import calendar
-from collections import defaultdict, Iterable
+from collections import defaultdict, Iterable, MutableMapping
 import copy
 import datetime
 import functools
@@ -1385,7 +1385,7 @@ class BaseModel(object):
             record[name]                # force evaluation of defaults
 
         # retrieve defaults from record's cache
-        return self._convert_to_write(record._get_cache())
+        return self._convert_to_write(record._cache)
 
     def add_default_value(self, name):
         """ Set the default value of field `name` to the new record `self`.
@@ -2415,7 +2415,7 @@ class BaseModel(object):
             record = self.new()
             field = self._fields[column_name]
             field.determine_default(record)
-            defaults = record._get_cache()
+            defaults = dict(record._cache)
             if column_name in defaults:
                 default = field.convert_to_write(defaults[column_name])
 
@@ -3144,14 +3144,13 @@ class BaseModel(object):
 
         # check the cache, and update it if necessary
         field = self._fields[field_name]
-        field_cache = self._scope.cache[field]
-        if self._id not in field_cache:
+        if field not in self._cache:
             for values in result:
-                record = self.browse(values['id'])
-                record._update_cache(values)
-            if self._id not in field_cache:
-                e = AccessError("No value found for %s.%s" % (self, field))
-                self._update_cache({field_name: FailedValue(e)})
+                record = self.browse(values.pop('id'))
+                record._cache.update(values)
+            if field not in self._cache:
+                e = AccessError("No value found for %s.%s" % (self, field_name))
+                self._cache[field] = FailedValue(e)
 
     @api.multi
     def _read_from_database(self, field_names):
@@ -3216,7 +3215,7 @@ class BaseModel(object):
             # store result in cache for POST fields
             for vals in result:
                 record = self.browse(vals['id'])
-                record._update_cache(vals)
+                record._cache.update(vals)
 
             # determine the fields that must be processed now
             fields_post = [f for f in field_names if not self._columns[f]._classic_write]
@@ -3256,8 +3255,8 @@ class BaseModel(object):
 
         # store result in cache
         for vals in result:
-            record = self.browse(vals['id'])
-            record._update_cache(vals)
+            record = self.browse(vals.pop('id'))
+            record._cache.update(vals)
 
         # store failed values in cache for the records that could not be read
         missing = self - self.browse(ids)
@@ -3268,12 +3267,12 @@ class BaseModel(object):
                 (self._name, 'read')
             )
             forbidden = missing.exists()
-            forbidden._update_cache(FailedValue(exc))
+            forbidden._cache.update(FailedValue(exc))
             # store a missing error exception in non-existing records
             exc = MissingError(
                 _('One of the documents you are trying to access has been deleted, please try again after refreshing.')
             )
-            (missing - forbidden)._update_cache(FailedValue(exc))
+            (missing - forbidden)._cache.update(FailedValue(exc))
 
     # TODO check READ access
     def perm_read(self, cr, user, ids, context=None, details=True):
@@ -3622,7 +3621,7 @@ class BaseModel(object):
 
         # put the values of pure new-style fields into cache, and inverse them
         if new_vals:
-            self._update_cache(new_vals)
+            self._cache.update(new_vals)
             for key in new_vals:
                 self._fields[key].determine_inverse(self)
 
@@ -3899,7 +3898,7 @@ class BaseModel(object):
         record = self.browse(self._create(old_vals))
 
         # put the values of pure new-style fields into cache, and inverse them
-        record._update_cache(new_vals)
+        record._cache.update(new_vals)
         for key in new_vals:
             self._fields[key].determine_inverse(record)
 
@@ -5101,37 +5100,9 @@ class BaseModel(object):
     # Record cache read/update
     #
 
-    def _get_cache(self):
-        """ Return the cache of `self[0]` as a dictionary mapping field names to
-            values. Special values in the cache are not returned.
-        """
-        cache, id = self._scope.cache, self._id
-        values, dummy = {}, SpecialValue(None)
-        for name, field in self._fields.iteritems():
-            if name not in MAGIC_COLUMNS:
-                value = cache[field].get(id, dummy)
-                if not isinstance(value, SpecialValue):
-                    values[name] = value
-        return values
-
-    def _update_cache(self, values):
-        """ Update the cache of all records in `self` with `values`.
-            Only the cache is updated, no side effect happens.
-
-            :param values: either a dictionary mapping field names to values, or
-                a special value. In the latter case, all fields are updated.
-        """
-        if not self:
-            return
-        with self._scope:
-            cache = self._scope.cache
-            if isinstance(values, SpecialValue):
-                values = dict.fromkeys(set(self._fields) - set(MAGIC_COLUMNS), values)
-            for name, value in values.iteritems():
-                field = self._fields[name]
-                if not isinstance(value, SpecialValue):
-                    value = field.convert_to_cache(value)
-                cache[field].update(dict.fromkeys(self._ids, value))
+    @property
+    def _cache(self):
+        return RecordCache(self)
 
     def update(self, values):
         """ Update record `self[0]` with `values`. """
@@ -5150,7 +5121,7 @@ class BaseModel(object):
         """
         assert 'id' not in values, "New records do not have an 'id'."
         record = self.browse((NewId(),))
-        record._update_cache(values)
+        record._cache.update(values)
         return record
 
     #
@@ -5369,7 +5340,7 @@ class BaseModel(object):
     def onchange(self, field_name, values):
         # create a new record with the values, except field_name
         record = self.new(values)
-        record_values = record._get_cache()
+        record_values = dict(record._cache)
 
         field = self._fields[field_name]
         record._scope.invalidate([(field, record._ids)])
@@ -5392,6 +5363,74 @@ class BaseModel(object):
             if record[k] != v
         ))
         return {'value': changed}
+
+
+class RecordCache(MutableMapping):
+    """ Implements a proxy dictionary to read/update the cache of a record.
+        Upon iteration, it looks like a dictionary mapping field names to
+        values. However, fields may be used as keys as well.
+    """
+    def __init__(self, records):
+        self._recs = records
+
+    def __contains__(self, field):
+        """ Return whether `records[0]` has a value for `field` in cache. """
+        if isinstance(field, basestring):
+            field = self._recs._fields[field]
+        return self._recs._id in self._recs._scope.cache[field]
+
+    def __getitem__(self, field):
+        """ Return the cached value of `field` for `records[0]`. """
+        if isinstance(field, basestring):
+            field = self._recs._fields[field]
+        value = self._recs._scope.cache[field][self._recs._id]
+        return value.get() if isinstance(value, SpecialValue) else value
+
+    def __setitem__(self, field, value):
+        """ Assign the cached value of `field` for all records in `records`. """
+        if isinstance(field, basestring):
+            field = self._recs._fields[field]
+        if not isinstance(value, SpecialValue):
+            with self._recs._scope:
+                value = field.convert_to_cache(value)
+        values = dict.fromkeys(self._recs._ids, value)
+        self._recs._scope.cache[field].update(values)
+
+    def update(self, *args, **kwargs):
+        """ Update the cache of all records in `records`. If the argument is a
+            `SpecialValue`, update all fields except MAGIC_COLUMNS.
+        """
+        if args and isinstance(args[0], SpecialValue):
+            values = dict.fromkeys(self._recs._ids, args[0])
+            for name, field in self._recs._fields.iteritems():
+                if name not in MAGIC_COLUMNS:
+                    self._recs._scope.cache[field].update(values)
+        else:
+            return super(RecordCache, self).update(*args, **kwargs)
+
+    def __delitem__(self, field):
+        """ Remove the cached value of `field` for `records[0]`. """
+        if isinstance(field, basestring):
+            field = self._recs._fields[field]
+        del self._recs._scope.cache[field][self._recs._id]
+
+    def __iter__(self):
+        """ Iterate over the field names with a regular value in cache. """
+        cache, id = self._recs._scope.cache, self._recs._id
+        dummy = SpecialValue(None)
+        for name, field in self._recs._fields.iteritems():
+            value = cache[field].get(id, dummy)
+            if not isinstance(value, SpecialValue):
+                yield name
+
+    def __len__(self):
+        """ Return the number of fields with a regular value in cache. """
+        cache, id = self._recs._scope.cache, self._recs._id
+        dummy = SpecialValue(None)
+        return sum(
+            not isinstance(cache[field].get(id, dummy), SpecialValue)
+            for field in self._recs._fields.itervalues()
+        )
 
 
 # extra definitions for backward compatibility
