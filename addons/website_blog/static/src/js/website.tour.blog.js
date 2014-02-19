@@ -27,7 +27,7 @@
                     element:   '#content-menu-button',
                     placement: 'left',
                     title:     _t("Add Content"),
-                    content:   _t("Create new pages, blogs, menu items and products through the <em>'Content'</em> menu."),
+                    content:   _t("Use this <em>'Content'</em> menu to create a new blog post like any other document (page, menu, products, event, ...)."),
                     popover:   { fixed: true },
                 },
                 {
@@ -59,7 +59,7 @@
                 {
                     waitNot:   '#wrap h1[data-oe-model="blog.post"]:contains("Blog Post Title")',
                     element:   'button[data-action=snippet]',
-                    placement: 'bottom',
+                    placement: 'left',
                     title:     _t("Layout Your Blog Post"),
                     content:   _t("Use well designed building blocks to structure the content of your blog. Click 'Insert Blocks' to add new content."),
                     popover:   { fixed: true },
@@ -68,7 +68,7 @@
                     snippet:   'image-text',
                     placement: 'bottom',
                     title:     _t("Drag & Drop a Block"),
-                    content:   _t("Drag the <em>'Image-Text'</em> block and drop it in your page."),
+                    content:   _t("Drag this block and drop it in your page."),
                     popover:   { fixed: true },
                 },
                 {
@@ -82,7 +82,7 @@
                     snippet:   'text-block',
                     placement: 'bottom',
                     title:     _t("Drag & Drop a block"),
-                    content:   _t("Drag the <em>'Text Block'</em> block and drop it below the image block."),
+                    content:   _t("Drag this block and drop it below the image block."),
                     popover:   { fixed: true },
                 },
                 {
