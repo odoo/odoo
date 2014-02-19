@@ -9,16 +9,23 @@ class crm_lead_to_project_issue_wizard(osv.TransientModel):
         wizards = self.browse(cr, uid, ids, context=context)
         Lead = self.pool["crm.lead"]
         Issue = self.pool["project.issue"]
-
+        
         for wizard in wizards:
             # get the lead to transform
             lead = wizard.lead_id
+
+            partner = self._find_matching_partner(cr, uid, context=context)
+            if not partner and (lead.partner_name or lead.contact_name):
+                partner_ids = Lead.handle_partner_assignation(cr, uid, [lead.id], context=context)
+                partner = partner_ids[lead.id]
+        
             # create new project.issue
-            vals = {"name": lead.name, 
+            vals = {"name": lead.name,
                 "description": lead.description, 
                 "email_from": lead.email_from, 
-                "partner_id": lead.partner_id.id, 
-                "project_id": wizard.project_id.id
+                "project_id": wizard.project_id.id,
+                "partner_id" : partner,
+                "user_id" : None
             }
             issue_id = Issue.create(cr, uid, vals, context=None) 
             # move the mail thread
@@ -40,7 +47,7 @@ class crm_lead_to_project_issue_wizard(osv.TransientModel):
 
 
     _name = "crm.lead2projectissue.wizard"
-
+    _inherit = 'crm.partner.binding'
     _columns = {
         "lead_id" : fields.many2one("crm.lead","Lead", domain=[("type","=","lead")]),
         "project_id" : fields.many2one("project.project", "Project", domain=[("use_issues","=",True)])

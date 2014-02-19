@@ -20,8 +20,9 @@
                 <label for="project_id" />
                 <field name="project_id" />
                 <footer>
-                    <button type="special" special="cancel" string="Cancel" />
-                    <button type="object" name="action_lead_to_project_issue" string="Convert" />
+                    <button type="object" name="action_lead_to_project_issue" string="Create Issue" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
                 </footer>
             </form>
         </field>
@@ -33,7 +34,7 @@
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_case_form_view_leads" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='stage_id']" position="before">
+            <xpath expr="//div[@name='buttons']/button" position="after">
                     <button name="%(convert_lead2projectissue_wizard_action)d" string="Convert to Issue" type="action" help="Convert to Issue" />
             </xpath>
         </field>
