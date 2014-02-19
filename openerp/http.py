@@ -129,6 +129,7 @@ class WebRequest(object):
         self.session_id = httprequest.session.sid
         self.disable_db = False
         self.uid = None
+        self.endpoint = None
         self.func = None
         self.func_arguments = {}
         self.auth_method = None
@@ -199,6 +200,8 @@ class WebRequest(object):
         arguments = dict((k, v) for k, v in arguments.iteritems()
                          if not k.startswith("_ignored_"))
 
+        self.endpoint = func
+        # TODO: get rid of func_*
         self.func = func
         self.func_request_type = func.routing['type']
         self.func_arguments = arguments
@@ -271,20 +274,22 @@ def route(route=None, **kw):
         @functools.wraps(f)
         def response_wrap(*args, **kw):
             response = f(*args, **kw)
-            if isinstance(response, Response) or request.func_request_type == 'json':
-                return response
-            elif isinstance(response, LazyResponse):
-                raise "TODO: remove LazyResponses ???"
-            elif isinstance(response, werkzeug.wrappers.BaseResponse):
-                response = Response.force_type(response)
-                response.set_default()
-                return response
-            elif isinstance(response, basestring):
-                return Response(response)
-            else:
-                raise "TODO: shall we autorise this ?"
-                return response
+            if request.endpoint.original == f:
+                if isinstance(response, Response) or request.func_request_type == 'json':
+                    return response
+                elif isinstance(response, LazyResponse):
+                    raise "TODO: remove LazyResponses ???"
+                elif isinstance(response, werkzeug.wrappers.BaseResponse):
+                    response = Response.force_type(response)
+                    response.set_default()
+                    return response
+                elif isinstance(response, basestring):
+                    return Response(response)
+                else:
+                    raise "TODO: shall we autorise this ?"
+            return response
         response_wrap.routing = routing
+        response_wrap.original_func = f
         return response_wrap
     return decorator
 
@@ -561,6 +566,7 @@ class Controller(object):
 class EndPoint(object):
     def __init__(self, method, routing):
         self.method = method
+        self.original = getattr(method, 'original_func', method)
         self.routing = routing
     def __call__(self, *args, **kw):
         return self.method(*args, **kw)
