@@ -374,11 +374,11 @@
                     <sheet string="Task">
                     <h1>
                         <field name="name" placeholder="Task summary..." class="oe_inline"/>
-                        <div class="oe_right"> 
-                            <field name="kanban_state" class="oe_inline" widget="dropdown_selection"/>
-                            <field name="priority" class="oe_inline" widget="priority"/>
-                        </div>
                     </h1>
+                    <div class="oe_right"> 
+                        <field name="kanban_state" class="oe_inline" widget="dropdown_selection"/>
+                        <field name="priority" class="oe_inline" widget="priority"/>
+                    </div>
                     <group>
                         <group>
                             <field name="project_id"  on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
