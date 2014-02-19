@@ -50,7 +50,7 @@ class mail_message_subtype(osv.osv):
             help="Model the subtype applies to. If False, this subtype applies to all models."),
         'default': fields.boolean('Default',
             help="Activated by default when subscribing."),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Used to order subtypes."),
     }
     _order = 'sequence'
     _defaults = {
