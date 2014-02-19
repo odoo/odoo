@@ -390,7 +390,7 @@
                             website.snippet.start_animation();
 
                             self.create_overlay($target);
-                            if ($snippet.data("snippet-editor")) {
+                            if ($target.data("snippet-editor")) {
                                 $target.data("snippet-editor").drop_and_build_snippet($target);
                             }
 
