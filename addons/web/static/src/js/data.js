@@ -452,6 +452,9 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
      * @returns {$.Deferred}
      */
     read_ids: function (ids, fields, options) {
+        if (_.isEmpty(ids))
+            return $.Deferred().resolve([]);
+            
         options = options || {};
         // TODO: reorder results to match ids list
         return this._model.call('read',
