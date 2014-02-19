@@ -29,24 +29,21 @@ $(document).ready(function() {
         $.ajax({
           url: newLocation,
         }).done(function(data) {
-            $('main').html($(data).find('main').html());
-            var target = '#wrap';
-            $target = $(target);
-            $('html, body').stop().animate({
-                'scrollTop': $target.offset().top
-                }, 1000, 'linear', function () {
-                window.location.hash = target;
-            });
+           $('main').append($(data).find('main').html());
+           $("html").stop().animate({ scrollTop: $("#wrap:last-child").offset().top }, 1000,function(e){
+               $("#wrap:first").remove();
+               $(document).scrollTop($("#wrap:last-child").offset().top);
+               var content = $(document).find("#blog_content p");
+               if (content)
+                   new openerp.website.blog_discussion({'document_user': $('#is_document_user').length, 'content' : content});
+               $("p").share();
+           });
             if (newLocation != window.location) {
                 history.pushState(null, null, newLocation);
             }
             //bind again it takes control from now on, until page relaod.
             $(document).find('.cover_footer').on('click',page_transist);
             $(document).find('a[href^="#blog_content"]').on('click', animate);
-            var content = $(document).find("#blog_content p");
-            if (content)
-                new openerp.website.blog_discussion({'document_user': $('#is_document_user').length, 'content' : content});
-            $("p").share();
         });
     }
 });

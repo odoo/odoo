@@ -22,7 +22,6 @@
         },
         do_render: function(data) {
             var self = this;
-            console.log($('#discussions_wrapper').length)
             if ($('#discussions_wrapper').length === 0) {
                 $('<div id="discussions_wrapper"></div>').appendTo($('#blog_content'));
             }
