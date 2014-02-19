@@ -24,7 +24,7 @@ import openerp
 import openerp.addons.web.controllers.main as webmain
 from openerp.addons.auth_signup.res_users import SignupError
 from openerp import http
-from openerp.http import request, LazyResponse
+from openerp.http import request
 from openerp.tools.translate import _
 from openerp.tools import exception_to_unicode
 
@@ -37,9 +37,9 @@ class AuthSignup(openerp.addons.web.controllers.main.Home):
         mode = request.params.get('mode')
         qcontext = request.params.copy()
         super_response = super(AuthSignup, self).web_login(*args, **kw)
-        response = webmain.render_bootstrap_template(request.session.db, 'auth_signup.signup', qcontext, lazy=True)
-        if isinstance(super_response, LazyResponse):
-            response.params['values'].update(super_response.params['values'])
+        response = webmain.render_bootstrap_template('auth_signup.signup', qcontext)
+        if super_response.is_qweb:
+            response.qcontext.update(super_response.qcontext)
         token = qcontext.get('token', None)
         token_infos = None
         if token:
@@ -63,8 +63,8 @@ class AuthSignup(openerp.addons.web.controllers.main.Home):
         qcontext.update(config)
 
         if 'error' in qcontext or mode not in ('reset', 'signup') or (not token and not config[mode]):
-            if isinstance(super_response, LazyResponse):
-                super_response.params['values'].update(config)
+            if super_response.is_qweb:
+                super_response.qcontext.update(config)
             return super_response
 
         if request.httprequest.method == 'GET':

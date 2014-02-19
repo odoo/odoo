@@ -18,7 +18,7 @@ except ImportError:
 import openerp
 from openerp.osv import orm, osv, fields
 from openerp.tools.safe_eval import safe_eval
-from openerp.addons.web.http import request, LazyResponse
+from openerp.addons.web.http import request
 
 logger = logging.getLogger(__name__)
 
@@ -231,11 +231,8 @@ class website(osv.osv):
         return self.pool['ir.ui.view'].render(cr, uid, template, values=values, context=context)
 
     def render(self, cr, uid, ids, template, values=None, status_code=None, context=None):
-        def callback(template, values, context):
-            return self._render(cr, uid, ids, template, values, context)
-        if values is None:
-            values = {}
-        return LazyResponse(callback, status_code=status_code, template=template, values=values, context=context)
+        # TODO: remove this. (just kept for backward api compatibility for saas-3)
+        return request.render(template, values, uid=uid)
 
     def pager(self, cr, uid, ids, url, total, page=1, step=30, scope=5, url_args=None, context=None):
         # Compute Pager
