@@ -340,9 +340,9 @@ website.Tour = openerp.Class.extend({
     },
     endTour: function () {
         if (parseInt(this.localStorage.getItem("tour-"+this.id+"-test"),10) >= this.steps.length-1) {
-            console.log('{ "event": "success" }');
+            console.log('ok');
         } else {
-            console.log('{ "event": "canceled" }');
+            console.log('error');
         }
         this.reset();
     },

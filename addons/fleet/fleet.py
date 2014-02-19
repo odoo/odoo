@@ -62,19 +62,8 @@ class fleet_vehicle_cost(osv.Model):
                 res[record.id] = _('Unknown')
         return res
 
-    def _cost_name_get_fnc(self, cr, uid, ids, name, unknow_none, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            name = record.vehicle_id.name
-            if record.cost_subtype_id.name:
-                name += ' / '+ record.cost_subtype_id.name
-            if record.date:
-                name += ' / '+ record.date
-            res[record.id] = name
-        return res
-
     _columns = {
-        'name': fields.function(_cost_name_get_fnc, type="char", string='Name', store=True),
+        'name': fields.related('vehicle_id', 'name', type="char", string='Name', store=True),
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log'),
         'cost_subtype_id': fields.many2one('fleet.service.type', 'Type', help='Cost type purchased with this cost'),
         'amount': fields.float('Total Price'),
