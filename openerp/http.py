@@ -275,9 +275,14 @@ def route(route=None, **kw):
                 return response
             elif isinstance(response, LazyResponse):
                 raise "TODO: remove LazyResponses ???"
-            else:
+            elif isinstance(response, werkzeug.wrappers.BaseResponse):
                 response = Response.force_type(response)
                 response.set_default()
+                return response
+            elif isinstance(response, basestring):
+                return Response(response)
+            else:
+                raise "TODO: shall we autorise this ?"
                 return response
         response_wrap.routing = routing
         return response_wrap
@@ -490,7 +495,7 @@ class HttpRequest(WebRequest):
                 response.set_cookie(k, v)
         return response
 
-    def render(self, template, qcontext=None, mimetype='text/html', **kw):
+    def render(self, template, qcontext=None, **kw):
         """ Lazy render of QWeb template.
 
         The actual rendering of the given template will occur at then end of
@@ -500,7 +505,7 @@ class HttpRequest(WebRequest):
         :param basestring template: template to render
         :param dict qcontext: Rendering context to use
         """
-        return Response(template=template, qcontext=qcontext, mimetype=mimetype, **kw)
+        return Response(template=template, qcontext=qcontext, **kw)
 
     def not_found(self, description=None):
         """ Helper for 404 response, return its result from the method
@@ -929,6 +934,7 @@ class Response(werkzeug.wrappers.Response):
     :param dict qcontext: Rendering context to use
     :param int uid: User id to use for the ir.ui.view render call
     """
+    default_mimetype = 'text/html'
     def __init__(self, *args, **kw):
         template = kw.pop('template', None)
         qcontext = kw.pop('qcontext', None)
