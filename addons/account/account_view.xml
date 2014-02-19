@@ -566,6 +566,8 @@
                     <h1><field name="name"/></h1>
                     <group>
                         <group>
+                            <!-- last_closing_balance must be here because it is returned by onchange_journal_id -->
+                            <field name="last_closing_balance" invisible="1"/>
                             <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>
                             <label for="date" string="Date / Period"/>
                             <div>
