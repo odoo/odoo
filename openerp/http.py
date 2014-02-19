@@ -277,8 +277,6 @@ def route(route=None, **kw):
             if request.endpoint.original == f:
                 if isinstance(response, Response) or request.func_request_type == 'json':
                     return response
-                elif isinstance(response, LazyResponse):
-                    raise "TODO: remove LazyResponses ???"
                 elif isinstance(response, werkzeug.wrappers.BaseResponse):
                     response = Response.force_type(response)
                     response.set_default()
@@ -966,20 +964,6 @@ class Response(werkzeug.wrappers.Response):
         self.response.append(self.render())
         self.template = None
 
-class LazyResponse(werkzeug.wrappers.Response):
-    """ Lazy werkzeug response.
-    API not yet frozen"""
-
-    def __init__(self, callback, status_code=None, **kwargs):
-        super(LazyResponse, self).__init__(mimetype='text/html')
-        if status_code:
-            self.status_code = status_code
-        self.callback = callback
-        self.params = kwargs
-    def process(self):
-        response = self.callback(**self.params)
-        self.response.append(response)
-
 class DisableCacheMiddleware(object):
     def __init__(self, app):
         self.app = app
@@ -1113,16 +1097,6 @@ class Root(object):
             return HttpRequest(httprequest)
 
     def get_response(self, httprequest, result, explicit_session):
-        # TODO: Remove LazyResponse
-        if isinstance(result, LazyResponse):
-            try:
-                result.process()
-            except(Exception), e:
-                if request.db:
-                    result = request.registry['ir.http']._handle_exception(e)
-                else:
-                    raise
-
         if isinstance(result, Response) and result.is_qweb:
             try:
                 result.flatten()
