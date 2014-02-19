@@ -1,5 +1,3 @@
-import os
-
 import openerp.tests
 
 class TestUi(openerp.tests.HttpCase):

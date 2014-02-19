@@ -10,11 +10,9 @@ inject = [
 ]
 
 class TestUi(openerp.tests.HttpCase):
-    @unittest2.expectedFailure
     def test_01_admin_shop_tour(self):
         self.phantom_js("/", "openerp.website.Tour.run_test('shop')", "openerp.website.Tour.Shop", login="admin")
 
-    @unittest2.expectedFailure
     def test_02_admin_checkout(self):
         self.phantom_js("/", "openerp.website.Tour.run_test('shop_buy_product')", "openerp.website.Tour", login="admin")
 
