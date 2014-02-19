@@ -23,8 +23,7 @@ $(document).ready(function() {
             window.location.hash = target;
         });
     }
-    
-    
+
     function newpage() {
         $.ajax({
           url: newLocation,
@@ -33,6 +32,9 @@ $(document).ready(function() {
            $("html").stop().animate({ scrollTop: $("#wrap:last-child").offset().top }, 1000,function(e){
                $("#wrap:first").remove();
                $(document).scrollTop($("#wrap:last-child").offset().top);
+               //bind again it takes control from now on, until page relaod.
+               $(document).find('.cover_footer').on('click',page_transist);
+               $(document).find('a[href^="#blog_content"]').on('click', animate);
                var content = $(document).find("#blog_content p");
                if (content)
                    new openerp.website.blog_discussion({'document_user': $('#is_document_user').length, 'content' : content});
@@ -41,9 +43,6 @@ $(document).ready(function() {
             if (newLocation != window.location) {
                 history.pushState(null, null, newLocation);
             }
-            //bind again it takes control from now on, until page relaod.
-            $(document).find('.cover_footer').on('click',page_transist);
-            $(document).find('a[href^="#blog_content"]').on('click', animate);
         });
     }
 });
