@@ -972,7 +972,8 @@ class stock_picking(osv.osv):
                 test_pack = pack
                 while loop:
                     quants = pack_obj.get_content(cr, uid, [test_pack.id], context=context)
-                    if all([(x.reservation_id and x.reservation_id.id in [x.id for x in picking.move_lines] or False) for x in quant_obj.browse(cr, uid, quants, context=context)]):
+                    move_list = [m.id for m in picking.move_lines]
+                    if all([(x.reservation_id and x.reservation_id.id in move_list or False) for x in quant_obj.browse(cr, uid, quants, context=context)]):
                         good_pack = test_pack.id
                         if test_pack.parent_id:
                             test_pack = test_pack.parent_id
