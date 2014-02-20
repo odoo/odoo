@@ -363,7 +363,7 @@
 
 <!-- Options: Blog Post: show tags -->
 <template id="opt_blog_post_complete_tags" name="Tags"
-        inherit_option_id="website_blog.blog_post_complete" inherit_id="website_blog.blog_post_complete">
+        inherit_option_id="website_blog.blog_post_complete">
     <xpath expr="//p[@name='blog_post_data']" position="after">
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
