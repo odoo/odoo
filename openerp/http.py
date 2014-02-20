@@ -452,19 +452,12 @@ class HttpRequest(WebRequest):
         self.params = params
 
     def dispatch(self):
-        # TODO: refactor this correctly. This is a quick fix for pos demo.
         if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
-            response = Response(status=200)
-            response.headers.set('Access-Control-Allow-Origin', request.endpoint.routing['cors'])
-            methods = 'GET, POST'
-            if request.endpoint.routing['type'] == 'json':
-                methods = 'POST'
-            elif request.endpoint.routing.get('methods'):
-                methods = ', '.join(request.endpoint.routing['methods'])
-            response.headers.set('Access-Control-Allow-Methods', methods)
-            response.headers.set('Access-Control-Max-Age',60*60*24)
-            response.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-            return response
+            headers = {
+                'Access-Control-Max-Age': 60 * 60 * 24,
+                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+            }
+            return Response(status=200, headers=headers)
 
         r = self._call_function(**self.params)
         if not r:
@@ -953,13 +946,22 @@ class Response(werkzeug.wrappers.Response):
         template = kw.pop('template', None)
         qcontext = kw.pop('qcontext', None)
         uid = kw.pop('uid', None)
-        self.set_default(template, qcontext, uid)
         super(Response, self).__init__(*args, **kw)
+        self.set_default(template, qcontext, uid)
 
     def set_default(self, template=None, qcontext=None, uid=None):
         self.template = template
         self.qcontext = qcontext or dict()
         self.uid = uid
+        # Support for Cross-Origin Resource Sharing
+        if request.endpoint and 'cors' in request.endpoint.routing:
+            self.headers.set('Access-Control-Allow-Origin', request.endpoint.routing['cors'])
+            methods = 'GET, POST'
+            if request.endpoint.routing['type'] == 'json':
+                methods = 'POST'
+            elif request.endpoint.routing.get('methods'):
+                methods = ', '.join(request.endpoint.routing['methods'])
+            self.headers.set('Access-Control-Allow-Methods', methods)
 
     @property
     def is_qweb(self):
@@ -1131,16 +1133,6 @@ class Root(object):
         # - It could allow session fixation attacks.
         if not explicit_session and hasattr(response, 'set_cookie'):
             response.set_cookie('session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60)
-
-        # Support for Cross-Origin Resource Sharing
-        if request.endpoint and 'cors' in request.endpoint.routing:
-            response.headers.set('Access-Control-Allow-Origin', request.endpoint.routing['cors'])
-            methods = 'GET, POST'
-            if request.endpoint.routing['type'] == 'json':
-                methods = 'POST'
-            elif request.endpoint.routing['methods']:
-                methods = ', '.join(request.endpoint.routing['methods'])
-            response.headers.set('Access-Control-Allow-Methods', methods)
 
         return response
 
