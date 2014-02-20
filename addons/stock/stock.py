@@ -1848,10 +1848,13 @@ class stock_move(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             if move.state not in ('confirmed', 'waiting', 'assigned'):
                 continue
-            if move.product_id.type == 'consu' or (move.picking_type_id and move.picking_type_id.auto_force_assign):
+            if move.picking_type_id and move.picking_type_id.auto_force_assign:
                 to_assign_moves.append(move.id)
-                if move.product_id.type == 'consu' or (not move.origin_returned_move_id):
+                if not move.origin_returned_move_id:
                     continue
+            if move.product_id.type == 'consu':
+                to_assign_moves.append(move.id)
+                continue
             else:
                 todo_moves.append(move)
                 #build the prefered domain based on quants that moved in previous linked done move
