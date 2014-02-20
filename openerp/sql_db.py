@@ -31,6 +31,7 @@ from contextlib import contextmanager
 from functools import wraps
 import logging
 import time
+import uuid
 import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
@@ -350,13 +351,13 @@ class Cursor(object):
     @check
     def savepoint(self):
         """context manager entering in a new savepoint"""
-        name = hex(int(time.time() * 1000))[1:]
-        self.execute("SAVEPOINT %s" % (name,))
+        name = uuid.uuid1().hex
+        self.execute('SAVEPOINT "%s"' % name)
         try:
             yield
-            self.execute('RELEASE SAVEPOINT %s' % (name,))
-        except Exception:
-            self.execute('ROLLBACK TO SAVEPOINT %s' % (name,))
+            self.execute('RELEASE SAVEPOINT "%s"' % name)
+        except:
+            self.execute('ROLLBACK TO SAVEPOINT "%s"' % name)
             raise
 
     @check
