@@ -319,7 +319,7 @@ class stock_quant(osv.osv):
             self.write(cr, SUPERUSER_ID, toreserve, {'reservation_id': move.id, 'link_move_operation_id': link and link.id or False}, context=context)
         #check if move'state needs to be set as 'assigned'
         move.refresh()
-        if sum([q.qty for q in move.reserved_quant_ids]) == move.product_qty and move.state in ('confirmed', 'waiting'):
+        if move.reserved_availability == move.product_qty and move.state in ('confirmed', 'waiting'):
             self.pool.get('stock.move').write(cr, uid, [move.id], {'state': 'assigned'}, context=context)
 
     def quants_move(self, cr, uid, quants, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, context=None):
@@ -937,16 +937,16 @@ class stock_picking(osv.osv):
         pack_operation_obj = self.pool.get('stock.pack.operation')
         pack_obj = self.pool.get("stock.quant.package")
         quant_obj = self.pool.get("stock.quant")
-        #get list of existing packages and delete them
+        #get list of existing operations and delete them
         existing_package_ids = pack_operation_obj.search(cr, uid, [('picking_id', 'in', picking_ids)], context=context)
         if existing_package_ids:
             pack_operation_obj.unlink(cr, uid, existing_package_ids, context)
-        
+
         for picking in self.browse(cr, uid, picking_ids, context=context):
             packages = []
             reserved_move = {}
             qtys_remaining = {}
-            
+
             #Calculate packages, reserved quants, qtys of this picking's moves
             for move in picking.move_lines:
                 if move.state not in ('assigned', 'confirmed'):
@@ -956,37 +956,38 @@ class stock_picking(osv.osv):
                 if move.state == 'assigned':
                     qty = move.product_qty
                 else:
-                    qty = 0
-                    for quant in move.reserved_quant_ids:
-                        qty += quant.qty
+                    qty = move.reserved_availability
+
                 #Add qty to qtys remaining
                 if qtys_remaining.get(move.product_id.id):
                     qtys_remaining[move.product_id.id] += qty
                 else:
                     qtys_remaining[move.product_id.id] = qty
-            
+
             # Try to find as much as possible top-level packages that can be moved
-            done_packages = []
+            top_lvl_packages = set()
             for pack in packages:
-                cont = True
+                loop = True
                 good_pack = False
                 test_pack = pack
-                while cont:
+                while loop:
                     quants = pack_obj.get_content(cr, uid, [test_pack.id], context=context)
-                    if all([x.reservation_id.id in [x.id for x in picking.move_lines] for x in quant_obj.browse(cr, uid, quants, context=context) if x.reservation_id]):
+                    if all([(x.reservation_id and x.reservation_id.id in [x.id for x in picking.move_lines] or False) for x in quant_obj.browse(cr, uid, quants, context=context)]):
                         good_pack = test_pack.id
                         if test_pack.parent_id:
                             test_pack = test_pack.parent_id
                         else:
-                            cont = False
+                            #stop the loop when there's no parent package anymore
+                            loop = False
                     else:
-                        cont = False
+                        #stop the loop when the package test_pack is not totally reserved for moves of this picking
+                        #(some quants may be reserved for other picking or not reserved at all)
+                        loop = False
                 if good_pack:
-                    done_packages.append(good_pack)
-            done_packages = list(set(done_packages))
+                    top_lvl_packages.add(good_pack)
 
             # Create pack operations for the top-level packages found
-            for pack in pack_obj.browse(cr, uid, done_packages, context=context):
+            for pack in pack_obj.browse(cr, uid, list(top_lvl_packages), context=context):
                 quants = pack_obj.get_content(cr, uid, [pack.id], context=context)
                 for quant in quant_obj.browse(cr, uid, quants, context=context):
                     reserved_move[quant.reservation_id.id] -= set([quant.id])
@@ -996,18 +997,18 @@ class stock_picking(osv.osv):
                         'package_id': pack.id,
                         'product_qty': 1.0,
                     }, context=context)
-            
+
             # Go through all remaining reserved quants and group by product, package, lot, owner
             qtys_grouped = {}
-            for move in reserved_move.keys():
-                for quant in quant_obj.browse(cr, uid, list(reserved_move[move]), context=context):
+            for move, quant_set in reserved_move.items():
+                for quant in quant_obj.browse(cr, uid, list(quant_set), context=context):
                     qtys_remaining[quant.product_id.id] -= quant.qty
                     key = (quant.product_id.id, quant.package_id.id, quant.lot_id.id, quant.owner_id.id)
                     if qtys_grouped.get(key):
                         qtys_grouped[key] += quant.qty
                     else:
                         qtys_grouped[key] = quant.qty
-            
+
             # Add remaining qtys (in cases of force_assign for example)
             for product in qtys_remaining.keys():
                 if qtys_remaining[product] > 0:
@@ -1018,15 +1019,15 @@ class stock_picking(osv.osv):
                         qtys_grouped[key] = qtys_remaining[product]
 
             # Create the necessary operations for the grouped quants and remaining qtys
-            for key in qtys_grouped.keys():
+            for key, qty in qtys_grouped.items():
                 pack_operation_obj.create(cr, uid, {
-                                        'picking_id': picking.id, 
-                                        'product_qty': qtys_grouped[key], 
+                                        'picking_id': picking.id,
+                                        'product_qty': qty,
                                         'product_id': key[0],
-                                        'package_id': key[1], 
+                                        'package_id': key[1],
                                         'lot_id': key[2],
-                                        'owner_id': key[3], 
-                                        'product_uom_id': self.pool.get("product.product").browse(cr, uid, key[0], context=context).uom_id.id, 
+                                        'owner_id': key[3],
+                                        'product_uom_id': self.pool.get("product.product").browse(cr, uid, key[0], context=context).uom_id.id,
                                         }, context=context)
 
     def do_unreserve(self, cr, uid, picking_ids, context=None):
@@ -1913,7 +1914,7 @@ class stock_move(osv.osv):
         for move in todo_moves:
             #then if the move isn't totally assigned, try to find quants without any specific domain
             if move.state != 'assigned':
-                qty_already_assigned = sum([q.qty for q in move.reserved_quant_ids])
+                qty_already_assigned = move.reserved_availability
                 qty = move.product_qty - qty_already_assigned
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain[move.id], prefered_domain=prefered_domain[move.id], fallback_domain=fallback_domain[move.id], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 quant_obj.quants_reserve(cr, uid, quants, move, context=context)
