@@ -130,12 +130,9 @@ class WebRequest(object):
         self.disable_db = False
         self.uid = None
         self.endpoint = None
-        self.func = None
-        self.func_arguments = {}
         self.auth_method = None
         self._cr_cm = None
         self._cr = None
-        self.func_request_type = None
         # set db/uid trackers - they're cleaned up at the WSGI
         # dispatching phase in openerp.service.wsgi_server.application
         if self.db:
@@ -195,39 +192,36 @@ class WebRequest(object):
         self.disable_db = True
         self.uid = None
 
-    def set_handler(self, func, arguments, auth):
+    def set_handler(self, endpoint, arguments, auth):
         # is this needed ?
         arguments = dict((k, v) for k, v in arguments.iteritems()
                          if not k.startswith("_ignored_"))
 
-        self.endpoint = func
-        # TODO: get rid of func_*
-        self.func = func
-        self.func_request_type = func.routing['type']
-        self.func_arguments = arguments
+        endpoint.arguments = arguments
+        self.endpoint = endpoint
         self.auth_method = auth
 
     def _call_function(self, *args, **kwargs):
         request = self
-        if self.func_request_type != self._request_type:
+        if self.endpoint.routing['type'] != self._request_type:
             raise Exception("%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'" \
-                % (self.func, self.httprequest.path, self.func_request_type, self._request_type))
+                % (self.endpoint.original, self.httprequest.path, self.endpoint.routing['type'], self._request_type))
 
-        kwargs.update(self.func_arguments)
+        kwargs.update(self.endpoint.arguments)
 
         # Backward for 7.0
-        if getattr(self.func.method, '_first_arg_is_req', False):
+        if self.endpoint.first_arg_is_req:
             args = (request,) + args
         # Correct exception handling and concurency retry
         @service_model.check
         def checked_call(___dbname, *a, **kw):
-            return self.func(*a, **kw)
+            return self.endpoint(*a, **kw)
 
         # FIXME: code and rollback management could be cleaned
         try:
             if self.db:
                 return checked_call(self.db, *args, **kwargs)
-            return self.func(*args, **kwargs)
+            return self.endpoint(*args, **kwargs)
         except Exception:
             if self._cr:
                 self._cr.rollback()
@@ -274,17 +268,16 @@ def route(route=None, **kw):
         @functools.wraps(f)
         def response_wrap(*args, **kw):
             response = f(*args, **kw)
-            if request.endpoint.original == f:
-                if isinstance(response, Response) or request.func_request_type == 'json':
-                    return response
-                elif isinstance(response, werkzeug.wrappers.BaseResponse):
-                    response = Response.force_type(response)
-                    response.set_default()
-                    return response
-                elif isinstance(response, basestring):
-                    return Response(response)
-                else:
-                    _logger.warn("<function %s.%s> returns an invalid response type for an http request" % (f.__module__, f.__name__))
+            if isinstance(response, Response) or f.routing_type == 'json':
+                return response
+            elif isinstance(response, werkzeug.wrappers.BaseResponse):
+                response = Response.force_type(response)
+                response.set_default()
+                return response
+            elif isinstance(response, basestring):
+                return Response(response)
+            else:
+                _logger.warn("<function %s.%s> returns an invalid response type for an http request" % (f.__module__, f.__name__))
             return response
         response_wrap.routing = routing
         response_wrap.original_func = f
@@ -460,14 +453,14 @@ class HttpRequest(WebRequest):
 
     def dispatch(self):
         # TODO: refactor this correctly. This is a quick fix for pos demo.
-        if request.httprequest.method == 'OPTIONS' and request.func and request.func.routing.get('cors'):
+        if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
             response = Response(status=200)
-            response.headers.set('Access-Control-Allow-Origin', request.func.routing['cors'])
+            response.headers.set('Access-Control-Allow-Origin', request.endpoint.routing['cors'])
             methods = 'GET, POST'
-            if request.func_request_type == 'json':
+            if request.endpoint.routing['type'] == 'json':
                 methods = 'POST'
-            elif request.func.routing.get('methods'):
-                methods = ', '.join(request.func.routing['methods'])
+            elif request.endpoint.routing.get('methods'):
+                methods = ', '.join(request.endpoint.routing['methods'])
             response.headers.set('Access-Control-Allow-Methods', methods)
             response.headers.set('Access-Control-Max-Age',60*60*24)
             response.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
@@ -566,6 +559,13 @@ class EndPoint(object):
         self.method = method
         self.original = getattr(method, 'original_func', method)
         self.routing = routing
+        self.arguments = {}
+
+    @property
+    def first_arg_is_req(self):
+        # Backward for 7.0
+        return getattr(self.method, '_first_arg_is_req', False)
+
     def __call__(self, *args, **kw):
         return self.method(*args, **kw)
 
@@ -588,9 +588,19 @@ def routing_map(modules, nodb_only, converters=None):
                 if inspect.ismethod(mv) and hasattr(mv, 'routing'):
                     routing = dict(type='http', auth='user', methods=None, routes=None)
                     methods_done = list()
+                    routing_type = None
                     for claz in reversed(mv.im_class.mro()):
                         fn = getattr(claz, mv.func_name, None)
                         if fn and hasattr(fn, 'routing') and fn not in methods_done:
+                            fn_type = fn.routing.get('type')
+                            if not routing_type:
+                                routing_type = fn_type
+                            else:
+                                if fn_type and routing_type != fn_type:
+                                    _logger.warn("Subclass re-defines <function %s.%s> with different type than original."
+                                                    " Will use original type: %r", fn.__module__, fn.__name__, routing_type)
+                                fn.routing['type'] = routing_type
+                            fn.original_func.routing_type = routing_type
                             methods_done.append(fn)
                             routing.update(fn.routing)
                     if not nodb_only or nodb_only == (routing['auth'] == "none"):
@@ -1123,13 +1133,13 @@ class Root(object):
             response.set_cookie('session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60)
 
         # Support for Cross-Origin Resource Sharing
-        if request.func and 'cors' in request.func.routing:
-            response.headers.set('Access-Control-Allow-Origin', request.func.routing['cors'])
+        if request.endpoint and 'cors' in request.endpoint.routing:
+            response.headers.set('Access-Control-Allow-Origin', request.endpoint.routing['cors'])
             methods = 'GET, POST'
-            if request.func_request_type == 'json':
+            if request.endpoint.routing['type'] == 'json':
                 methods = 'POST'
-            elif request.func.routing.get('methods'):
-                methods = ', '.join(request.func.routing['methods'])
+            elif request.endpoint.routing['methods']:
+                methods = ', '.join(request.endpoint.routing['methods'])
             response.headers.set('Access-Control-Allow-Methods', methods)
 
         return response
