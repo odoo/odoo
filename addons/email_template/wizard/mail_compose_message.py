@@ -55,14 +55,23 @@ class mail_compose_message(osv.TransientModel):
             )
         return res
 
+    def get_recipients_data(self, cr, uid, values, context=None):
+        if values['composition_mode'] != 'mass_mail':
+            return super(mail_compose_message, self).get_recipients_data(cr, uid, values, context=context)
+        model, res_id, template_id = values['model'], values['res_id'], values.get('template_id')
+        active_ids = context.get('active_ids', list())
+        if not active_ids or not template_id:
+            return False
+        template = self.pool['email.template'].browse(cr, uid, template_id, context=context)
+        partner_to = self.render_template_batch(cr, uid, template.partner_to, model, active_ids[:3], context=context)
+        partner_ids = [int(data) for key, data in partner_to.iteritems() if data]
+        rec_names = [rec_name[1] for rec_name in self.pool['res.partner'].name_get(cr, SUPERUSER_ID, partner_ids, context=context)]
+        recipients = ', '.join(rec_names)
+        recipients += ' and %d more.' % (len(active_ids) - 3) if len(active_ids) > 3 else '.'
+        return recipients
+
     _columns = {
         'template_id': fields.many2one('email.template', 'Use template', select=True),
-        'partner_to': fields.char('To (Partner IDs)',
-            help="Comma-separated list of recipient partners ids (placeholders may be used here)"),
-        'email_to': fields.char('To (Emails)',
-            help="Comma-separated recipient addresses (placeholders may be used here)",),
-        'email_cc': fields.char('Cc (Emails)',
-            help="Carbon copy recipients (placeholders may be used here)"),
     }
 
     def send_mail(self, cr, uid, ids, context=None):
@@ -92,7 +101,7 @@ class mail_compose_message(osv.TransientModel):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values """
         if template_id and composition_mode == 'mass_mail':
-            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids', 'mail_server_id']
+            fields = ['subject', 'body_html', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id']
             template_values = self.pool.get('email.template').read(cr, uid, template_id, fields, context)
             values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         elif template_id:
@@ -162,16 +171,18 @@ class mail_compose_message(osv.TransientModel):
             partner_ids += self.pool['res.partner'].exists(cr, SUPERUSER_ID, tpl_partner_ids, context=context)
         return partner_ids
 
-    def generate_email_for_composer_batch(self, cr, uid, template_id, res_ids, context=None):
+    def generate_email_for_composer_batch(self, cr, uid, template_id, res_ids, fields=None, context=None):
         """ Call email_template.generate_email(), get fields relevant for
             mail.compose.message, transform email_cc and email_to into partner_ids """
         # filter template values
-        fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachment_ids', 'attachments', 'mail_server_id']
+        if fields is None:
+            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachment_ids', 'mail_server_id']
+        returned_fields = fields + ['attachments']
         values = dict.fromkeys(res_ids, False)
 
-        template_values = self.pool.get('email.template').generate_email_batch(cr, uid, template_id, res_ids, context=context)
+        template_values = self.pool.get('email.template').generate_email_batch(cr, uid, template_id, res_ids, fields=fields, context=context)
         for res_id in res_ids:
-            res_id_values = dict((field, template_values[res_id][field]) for field in fields if template_values[res_id].get(field))
+            res_id_values = dict((field, template_values[res_id][field]) for field in returned_fields if template_values[res_id].get(field))
             res_id_values['body'] = res_id_values.pop('body_html', '')
 
             # transform email_to, email_cc into partner_ids
@@ -189,7 +200,10 @@ class mail_compose_message(osv.TransientModel):
         """ Override to handle templates. """
         # generate template-based values
         if wizard.template_id:
-            template_values = self.generate_email_for_composer_batch(cr, uid, wizard.template_id.id, res_ids, context=context)
+            template_values = self.generate_email_for_composer_batch(
+                cr, uid, wizard.template_id.id, res_ids,
+                fields=['email_to', 'partner_to', 'email_cc', 'attachment_ids', 'mail_server_id'],
+                context=context)
         else:
             template_values = dict.fromkeys(res_ids, dict())
         # generate composer values

@@ -507,7 +507,7 @@ openerp.mail = function (session) {
             }
             $.when(recipient_done).done(function (partner_ids) {
                 var context = {
-                    'default_composition_mode': default_composition_mode,
+                    // 'default_composition_mode': default_composition_mode,
                     'default_parent_id': self.id,
                     'default_body': mail.ChatterUtils.get_text2html(self.$el ? (self.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
                     'default_attachment_ids': _.map(self.attachment_ids, function (file) {return file.id;}),
