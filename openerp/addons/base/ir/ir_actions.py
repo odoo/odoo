@@ -270,7 +270,7 @@ class ir_actions_act_window(osv.osv):
         'filter': fields.boolean('Filter'),
         'auto_search':fields.boolean('Auto Search'),
         'search_view' : fields.function(_search_view, type='text', string='Search View'),
-        'multi': fields.boolean('Action on Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view"),
+        'multi': fields.boolean('Restrict to lists', help="If checked and the action is bound to a model, it will only appear in the More menu on list views"),
     }
 
     _defaults = {
