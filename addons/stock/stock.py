@@ -1848,9 +1848,10 @@ class stock_move(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             if move.state not in ('confirmed', 'waiting', 'assigned'):
                 continue
-            if move.product_id.type == 'consu':
+            if move.product_id.type == 'consu' or (move.picking_type_id and move.picking_type_id.auto_force_assign):
                 to_assign_moves.append(move.id)
-                continue
+                if move.product_id.type == 'consu' or (not move.origin_returned_move_id):
+                    continue
             else:
                 todo_moves.append(move)
                 #build the prefered domain based on quants that moved in previous linked done move
@@ -1899,8 +1900,6 @@ class stock_move(osv.osv):
                 qty = move.product_qty - qty_already_assigned
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain[move.id], prefered_domain=prefered_domain[move.id], fallback_domain=fallback_domain[move.id], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 quant_obj.quants_reserve(cr, uid, quants, move, context=context)
-            if move.state != 'assigned' and move.picking_id and move.picking_type_id.auto_force_assign:
-                to_assign_moves.append(move.id)
 
         #force assignation of consumable products and picking type auto_force_assign
         if to_assign_moves:
