@@ -246,7 +246,7 @@ openerp_mail_followers = function(session, mail) {
             if (user_pid) {
                 dialog = true;
             } else {
-                var subtype_list_ul = this.$('.oe_subtype_list').empty();
+                var subtype_list_ul = this.$('.oe_subtype_list ul').empty();
                 if (! this.message_is_follower) return;
             }
             var id = this.view.datarecord.id;
@@ -261,9 +261,8 @@ openerp_mail_followers = function(session, mail) {
                 var $list = self.$dialog;
             }
             else {
-                var $list = this.$('.oe_subtype_list');
+                var $list = this.$('.oe_subtype_list ul');
             }
-            $list.empty().hide();
             var records = data[id].message_subtype_data;
             this.records_length = $.map(records, function(value, index) { return index; }).length;
             if (this.records_length > 1) { self.display_followers(); }
@@ -272,9 +271,6 @@ openerp_mail_followers = function(session, mail) {
                 record.followed = record.followed || undefined;
                 $(session.web.qweb.render('mail.followers.subtype', {'record': record})).appendTo($list);
             });
-            if (_.size(records) > 1) {
-                $list.show();
-            }
         },
 
         do_follow: function () {
