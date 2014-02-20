@@ -348,11 +348,7 @@ class mail_thread(osv.AbstractModel):
             message_follower_ids = values.get('message_follower_ids') or []  # webclient can send None or False
             message_follower_ids.append([4, pid])
             values['message_follower_ids'] = message_follower_ids
-            # add operation to ignore access rule checking for subscription
-            context_operation = dict(context, operation='create')
-        else:
-            context_operation = context
-        thread_id = super(mail_thread, self).create(cr, uid, values, context=context_operation)
+        thread_id = super(mail_thread, self).create(cr, uid, values, context=context)
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not context.get('mail_create_nolog'):
@@ -1558,12 +1554,11 @@ class mail_thread(osv.AbstractModel):
 
         user_pid = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         if set(partner_ids) == set([user_pid]):
-            if context.get('operation', '') != 'create':
-                try:
-                    self.check_access_rights(cr, uid, 'read')
-                    self.check_access_rule(cr, uid, ids, 'read')
-                except (osv.except_osv, orm.except_orm):
-                    return False
+            try:
+                self.check_access_rights(cr, uid, 'read')
+                self.check_access_rule(cr, uid, ids, 'read')
+            except (osv.except_osv, orm.except_orm):
+                return False
         else:
             self.check_access_rights(cr, uid, 'write')
             self.check_access_rule(cr, uid, ids, 'write')
