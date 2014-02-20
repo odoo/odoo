@@ -2609,6 +2609,9 @@ class BaseModel(object):
         for order_splits in orderby.split(','):
             order_split = order_splits.split()
             orderby_field = order_split[0]
+            if isinstance(self._all_columns[orderby_field].column, openerp.osv.fields.date) or \
+               isinstance(self._all_columns[orderby_field].column, openerp.osv.fields.datetime):
+                continue
             orderby_dir = len(order_split) == 2 and order_split[1].upper() == 'ASC' and 'ASC' or 'DESC'
             if orderby_field == groupby:
                 orderby_item = self._generate_order_by(order_splits, query).replace('ORDER BY ', '')
@@ -2715,7 +2718,7 @@ class BaseModel(object):
         offset_str = offset and ' offset %d' % offset or ''
         if len(groupby_list) < 2 and context.get('group_by_no_leaf'):
             group_count = '_'
-        cr.execute('SELECT min(%s.id) AS id, count(%s.id) AS %s_count' % (self._table, self._table, group_count) + (flist and ',') + flist  + ' FROM ' + from_clause + where_clause + gb + (ob and ',') + ob  + orderby_clause + limit_str + offset_str, where_clause_params)
+        cr.execute('SELECT min(%s.id) AS id, count(%s.id) AS %s_count' % (self._table, self._table, group_count) + (flist and ',') + flist + ' FROM ' + from_clause + where_clause + gb + (ob and ',') + ob + orderby_clause + limit_str + offset_str, where_clause_params)
         alldata = {}
         groupby = group_by
 
