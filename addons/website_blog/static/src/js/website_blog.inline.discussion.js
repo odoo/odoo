@@ -73,7 +73,7 @@
                 .appendTo('#discussions_wrapper');
             a.css({
                 'top': node.offset().top,
-                'left': self.settings.position == 'right' ? node.outerWidth() - 150: node.offset().left - a.outerWidth()
+                'left': self.settings.position == 'right' ? node.outerWidth() + node.offset().left: node.offset().left - a.outerWidth()
             });
             node.attr('data-discus-identifier', identifier).mouseover(function() {
                 a.addClass("hovered");
@@ -116,7 +116,7 @@
         create_popover : function(elt, identifier) {
             var self = this;
             elt.popover({
-                placement:'left',
+                placement:'right',
                 trigger:'manual',
                 html:true, content:function(){
                     return $($(this).data('contentwrapper')).html();
