@@ -148,7 +148,7 @@ class on_change_test(Model):
     name_utf8_size = fields.Integer(compute='compute_utf8_size', store=False)
     description = fields.Char(compute='compute_description')
     trick = fields.Char(compute='whatever', store=False)
-
+    lines = fields.One2many('test_new_api.on_change_line', 'parent')
 
     @one
     @depends('name')
@@ -173,6 +173,21 @@ class on_change_test(Model):
     @one
     def whatever(self):
         self.trick = "wheeeeeld.null()eld.null"
+
+
+class on_change_line(Model):
+    _name = 'test_new_api.on_change_line'
+
+    name = fields.Char(compute='compute_name', store=False)
+    parent = fields.Many2one('test_new_api.on_change')
+
+    @one
+    @depends('parent.name', 'parent.name_size')
+    def compute_name(self):
+        if self.parent.name:
+            self.name = "%s (%d)" % (self.parent.name, self.parent.name_size)
+        else:
+            self.name = None
 
 
 class defaults(Model):

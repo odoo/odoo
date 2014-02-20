@@ -24,7 +24,7 @@ class TestOnChange(common.TransactionCase):
         with self.assertRaises(AttributeError):
             self.Model.not_really_a_method()
 
-    def test_new_onchange_unsaved(self):
+    def test_new_onchange(self):
         result = self.Model.onchange('name', {
             'name': u"Bob the Builder",
             'name_size': 0,
@@ -34,13 +34,28 @@ class TestOnChange(common.TransactionCase):
         self.assertEqual(result['value'], {
             'name_size': 15,
             'name_utf8_size': 15,
-            'description': u"Bob the Builder (15:15)"
+            'description': u"Bob the Builder (15:15)",
         })
 
         result = self.Model.onchange('description', {
             'name': u"Bob the Builder",
             'name_size': 15,
             'name_utf8_size': 15,
-            'description': u"Can we fix it? Yes we can!"
+            'description': u"Can we fix it? Yes we can!",
         })
         self.assertEqual(result['value'], {})
+
+    def test_new_onchange_one2many(self):
+        result = self.Model.onchange('name', {
+            'name': u"Bob the Builder",
+            'name_size': 0,
+            'name_utf8_size': 0,
+            'description': False,
+            'lines': [(0, 0, {'name': False})]
+        })
+        self.assertEqual(result['value'], {
+            'name_size': 15,
+            'name_utf8_size': 15,
+            'description': u"Bob the Builder (15:15)",
+            'lines': [(0, 0, {'name': u"Bob the Builder (15)"})],
+        })

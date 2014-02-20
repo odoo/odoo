@@ -5104,6 +5104,19 @@ class BaseModel(object):
     def _cache(self):
         return RecordCache(self)
 
+    def map(self, field_name):
+        """ Return the union of `rec[field_name]` for all `rec` in `self`.
+
+            :param field_name: a dot-separated sequence of field names
+        """
+        recs = self
+        for name in field_name.split('.'):
+            values = recs._fields[name].null()
+            for rec in recs:
+                values |= rec[name]
+            recs = values
+        return recs
+
     def update(self, values):
         """ Update record `self[0]` with `values`. """
         for name, value in values.iteritems():
@@ -5122,6 +5135,14 @@ class BaseModel(object):
         assert 'id' not in values, "New records do not have an 'id'."
         record = self.browse((NewId(),))
         record._cache.update(values)
+
+        # HACK: the cache update does not set inverse fields, so do it manually.
+        # Note that this covers only *one* level of relational fields!
+        for name in values:
+            field = self._fields[name]
+            if field.inverse_field:
+                field.inverse_field._add(record[name], record)
+
         return record
 
     #
@@ -5357,11 +5378,37 @@ class BaseModel(object):
                 return result
 
         # determine result, and return it
-        changed = self._convert_to_write(dict(
-            (k, record[k])
-            for k, v in record_values.iteritems()
-            if record[k] != v
-        ))
+        changed = {}
+        for name, value in values.iteritems():
+            field = self._fields[name]
+
+            if field.relational and isinstance(value, list):
+                # determine fields present in the comodel, and other stuff
+                conames = set()
+                strict, deleted = False, []
+                for command in value:
+                    if isinstance(command, (list, tuple)):
+                        if command[0] in (0, 1):
+                            conames.update(command[2])
+                        elif command[0] in (2, 3):
+                            deleted.append(command)
+                        elif command[0] in (5, 6):
+                            strict = True
+
+                # force evaluation of the fields present in the comodel
+                for corecord in record[name]:
+                    for coname in conames:
+                        corecord[coname]
+
+                # serialize new value, and patch it according to old value
+                result = field.convert_to_write(record[name])
+                if not strict and result[0] == (5,):
+                    result = result[1:]
+                changed[name] = result + deleted
+
+            elif record[name] != value:
+                changed[name] = field.convert_to_write(record[name])
+
         return {'value': changed}
 
 

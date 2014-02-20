@@ -275,21 +275,28 @@ class Field(object):
         # the result should be in cache now
         return record._cache[self]
 
-    def __set__(self, record, value):
-        """ set the value of field `self` on `record` """
-        if not record:
-            raise Warning("Null record %s may not be assigned" % record)
+    def __set__(self, records, value):
+        """ set the value of field `self` on `records` """
+        if not records:
+            raise Warning("Null record %s may not be assigned" % records)
 
-        with record._scope as _scope:
-            # notify the change, which may cause cache invalidation
-            if _scope.draft or not record._id:
-                self.modified_draft(record)
+        with records._scope as _scope:
+            # adapt value to the cache level
+            value = self.convert_to_cache(value)
+
+            if _scope.draft or not all(records._ids):
+                # invalidate fields, but only in cache
+                _scope.invalidate(self.modified_draft(records))
+                # store value in cache, and update inverse field, too. This is
+                # necessary for computing a function field on value, if that
+                # field depends on records!
+                records._cache[self] = value
+                if value and self.inverse_field:
+                    self.inverse_field._add(value, records)
             else:
-                value = self.convert_to_cache(value)
-                record.write({self.name: self.convert_to_write(value)})
-
-            # store the value in cache
-            record._cache[self] = value
+                # write (and invalidate), then store value in cache
+                records.write({self.name: self.convert_to_write(value)})
+                records._cache[self] = value
 
     #
     # Management of the computation of field values.
@@ -497,17 +504,16 @@ class Field(object):
             invalidate.
         """
         # invalidate cache for self
-        ids = records.unbrowse()
-        spec = [(self, ids)]
+        spec = [(self, records._ids)]
 
-        # invalidate the fields that depend on self, and prepare their
-        # recomputation
+        # invalidate the fields that depend on self, and prepare recomputation
         for field, path in self._triggers:
             if field.store:
                 with scope(user=SUPERUSER_ID, context={'active_test': False}):
-                    target = field.model.search([(path, 'in', ids)])
-                spec.append((field, target.unbrowse()))
-                scope.recomputation[field] |= target
+                    target = field.model.search([(path, 'in', records._ids)])
+                if target:
+                    spec.append((field, target._ids))
+                    scope.recomputation[field] |= target
             else:
                 spec.append((field, None))
 
@@ -515,12 +521,21 @@ class Field(object):
 
     def modified_draft(self, records):
         """ Same as :meth:`modified`, but in draft mode. """
-        # invalidate self and dependent fields on records only
-        model_name = self.model_name
-        fields = [self] + [f for f, _ in self._triggers if f.model_name == model_name]
-        ids = records._ids
-        scope.invalidate([(f, ids) for f in fields])
+        spec = []
 
+        # invalidate the fields on the records in cache that depend on `records`
+        for field, path in self._triggers:
+            if path == 'id':
+                target = records
+            else:
+                target = field.model.browse()
+                for record in field.model.browse(scope.cache[field]):
+                    if record.map(path) & records:
+                        target += record
+            if target:
+                spec.append((field, target._ids))
+
+        return spec
 
 class Boolean(Field):
     """ Boolean field. """
@@ -828,6 +843,10 @@ class Many2one(_Relational):
         """ Whether `self` implements inheritance between model and comodel. """
         return self.name in self.model._inherits.itervalues()
 
+    def _add(self, records, value):
+        """ Add `value` to the value of `self` for `records`. """
+        records._cache[self] = value
+
     def convert_to_cache(self, value):
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name and len(value) <= 1:
@@ -872,6 +891,11 @@ class Many2one(_Relational):
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
 
+    def _add(self, records, value):
+        """ Add `value` to the value of `self` for `records`. """
+        for record in records:
+            record._cache[self] = record[self.name] | value
+
     def convert_to_cache(self, value):
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name:
@@ -914,8 +938,11 @@ class _RelationalMulti(_Relational):
         for record in value:
             # TODO: modified record (1, id, values)
             if not record.id:
-                values = record._convert_to_write(record._cache)
-                result.append((0, 0, values))
+                # take all fields in cache, except the inverse of self!
+                values = dict(record._cache)
+                if self.inverse_field:
+                    values.pop(self.inverse_field.name, None)
+                result.append((0, 0, record._convert_to_write(values)))
             else:
                 result.append((4, record.id))
         return result
