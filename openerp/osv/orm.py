@@ -2605,19 +2605,20 @@ class BaseModel(object):
         :param query: the query object used to construct the query afterwards
         """
         orderby_list = []
-        ob = ''
+        ob = []
         for order_splits in orderby.split(','):
             order_split = order_splits.split()
             orderby_field = order_split[0]
             orderby_dir = len(order_split) == 2 and order_split[1].upper() == 'ASC' and 'ASC' or 'DESC'
             if orderby_field == groupby:
-                ob = self._generate_order_by(order_splits, query).replace('ORDER BY ', '')
-                orderby_list.append(ob)
+                orderby_item = self._generate_order_by(order_splits, query).replace('ORDER BY ', '')
+                orderby_list.append(orderby_item)
+                ob += [obi.split()[0] for obi in orderby_item.split(',')]
             elif orderby_field in aggregated_fields:
                 orderby_list.append('%s %s' % (orderby_field,orderby_dir))
 
         if orderby_list:
-            return ' ORDER BY %s' % (','.join(orderby_list)), ob and ob.split()[0] or ''
+            return ' ORDER BY %s' % (','.join(orderby_list)), ob and ','.join(ob) or ''
         else:
             return '', ''
 
