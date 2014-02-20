@@ -1500,6 +1500,7 @@ class stock_move(osv.osv):
         default = default.copy()
         default['move_orig_ids'] = []
         default['quant_ids'] = []
+        default['move_dest_id'] = False
         default['reserved_quant_ids'] = []
         default['returned_move_ids'] = []
         default['linked_move_operation_ids'] = []
@@ -2121,8 +2122,6 @@ class stock_move(osv.osv):
             'product_uos_qty': uos_qty,
             'state': move.state,
             'procure_method': 'make_to_stock',
-            'move_dest_id': False,
-            'reserved_quant_ids': [],
             'restrict_lot_id': restrict_lot_id,
             'restrict_partner_id': restrict_partner_id,
             'split_from': move.id,
@@ -2136,7 +2135,6 @@ class stock_move(osv.osv):
         self.write(cr, uid, [move.id], {
             'product_uom_qty': move.product_uom_qty - uom_qty,
             'product_uos_qty': move.product_uos_qty - uos_qty,
-            #'reserved_quant_ids': [(6,0,[])]  SHOULD NOT CHANGE as it has been reserved already
         }, context=ctx)
 
         if move.move_dest_id and move.propagate:
