@@ -613,7 +613,7 @@ def render_bootstrap_template(template, values=None, debug=False, db=None, **kw)
         values['modules'] = module_boot(db=db)
     values['modules'] = simplejson.dumps(values['modules'])
 
-    return request.render(template, values, uid=openerp.SUPERUSER_ID, **kw)
+    return request.render(template, values, **kw)
 
 class Home(http.Controller):
 
