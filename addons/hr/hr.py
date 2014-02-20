@@ -21,6 +21,7 @@
 
 import logging
 
+from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.modules.module import get_module_resource
 from openerp.osv import fields, osv
@@ -248,27 +249,46 @@ class hr_employee(osv.osv):
         'color': 0,
     }
 
-    def create(self, cr, uid, data, context=None):
-        if context is None:
-            context = {}
-        create_ctx = dict(context, mail_create_nolog=True)
-        employee_id = super(hr_employee, self).create(cr, uid, data, context=create_ctx)
+    def _broadcast_welcome(self, cr, uid, employee_id, context=None):
+        """ Broadcast the welcome message to all users in the employee company. """
         employee = self.browse(cr, uid, employee_id, context=context)
+        partner_ids = []
+        _model, group_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')
         if employee.user_id:
-            res_users = self.pool['res.users']
-            # send a copy to every user of the company
-            # TODO: post to the `Whole Company` mail.group when we'll be able to link to the employee record  
-            _model, group_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')
-            user_ids = res_users.search(cr, uid, [('company_id', '=', employee.user_id.company_id.id),
-                                                  ('groups_id', 'in', group_id)])
-            partner_ids = list(set(u.partner_id.id for u in res_users.browse(cr, uid, user_ids, context=context)))
+            company_id = employee.user_id.company_id.id
+        elif employee.company_id:
+            company_id = employee.company_id.id
+        elif employee.job_id:
+            company_id = employee.job_id.company_id.id
+        elif employee.department_id:
+            company_id = employee.department_id.company_id.id
         else:
-            partner_ids = []
-        self.message_post(cr, uid, [employee_id],
+            company_id = self.pool['res.company']._company_default_get(cr, uid, 'hr.employee', context=context)
+        res_users = self.pool['res.users']
+        user_ids = res_users.search(
+            cr, SUPERUSER_ID, [
+                ('company_id', '=', company_id),
+                ('groups_id', 'in', group_id)
+            ], context=context)
+        partner_ids = list(set(u.partner_id.id for u in res_users.browse(cr, SUPERUSER_ID, user_ids, context=context)))
+        self.message_post(
+            cr, uid, [employee_id],
             body=_('Welcome to %s! Please help him/her take the first steps with OpenERP!') % (employee.name),
             partner_ids=partner_ids,
             subtype='mail.mt_comment', context=context
         )
+        return True
+
+    def create(self, cr, uid, data, context=None):
+        if context is None:
+            context = {}
+        if context.get("mail_broadcast"):
+            context['mail_create_nolog'] = True
+
+        employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
+
+        if context.get("mail_broadcast"):
+            self._broadcast_welcome(cr, uid, employee_id, context=context)
         return employee_id
 
     def unlink(self, cr, uid, ids, context=None):

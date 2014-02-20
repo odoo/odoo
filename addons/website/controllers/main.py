@@ -378,20 +378,25 @@ class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     # Server actions
     #------------------------------------------------------
-    @http.route(['/website/action/<id_or_xml_id>'], type='http', auth="public", website=True)
-    def actions_server(self, id_or_xml_id, **post):
+
+    @http.route('/website/action/<path_or_xml_id_or_id>', type='http', auth="public", website=True)
+    def actions_server(self, path_or_xml_id_or_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         res, action_id, action = None, None, None
         ServerActions = request.registry['ir.actions.server']
 
-        # find the action_id, either an int, an int into a basestring, or an xml_id
-        if isinstance(id_or_xml_id, basestring) and '.' in id_or_xml_id:
-            action_id = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, request.uid, id_or_xml_id, raise_if_not_found=False)
-        else:
+        # find the action_id: either an xml_id, the path, or an ID
+        if isinstance(path_or_xml_id_or_id, basestring) and '.' in path_or_xml_id_or_id:
+            action_id = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, request.uid, path_or_xml_id_or_id, raise_if_not_found=False)
+        if not action_id:
+            action_ids = ServerActions.search(cr, uid, [('website_path', '=', path_or_xml_id_or_id), ('website_published', '=', True)], context=context)
+            action_id = action_ids and action_ids[0] or None
+        if not action_id:
             try:
-                action_id = int(id_or_xml_id)
+                action_id = int(path_or_xml_id_or_id)
             except ValueError:
                 pass
+
         # check it effectively exists
         if action_id:
             action_ids = ServerActions.exists(cr, uid, [action_id], context=context)
@@ -406,3 +411,5 @@ class Website(openerp.addons.web.controllers.main.Home):
         if res:
             return res
         return request.redirect('/')
+
+# vim:et:

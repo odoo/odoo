@@ -50,9 +50,9 @@ class hr_applicant_settings(osv.TransientModel):
             alias_ids = self.pool['mail.alias'].search(
                 cr, uid, [
                     ('alias_model_id.model', '=', 'hr.applicant'),
-                    ('alias_force_thread_id', '=', 0),
+                    ('alias_force_thread_id', '=', False),
                     ('alias_parent_model_id.model', '=', 'hr.job'),
-                    ('alias_parent_thread_id', '=', 0),
+                    ('alias_parent_thread_id', '=', False),
                     ('alias_defaults', '=', '{}')
                 ], context=context)
             alias_id = alias_ids and alias_ids[0] or False
