@@ -2335,7 +2335,7 @@ instance.web.form.dropdown_selection = instance.web.form.FieldChar.extend({
     init: function (field_manager, node) {
         this._super(field_manager, node);
     },
-    prepare_dropdown_selection: function(){
+    prepare_dropdown_selection: function() {
         return [{ 'name': 'normal', 'state_name': ' In Progress', 'state_class': 'btn-default' },
                 { 'name': 'blocked', 'state_name': ' Blocked', 'state_class': 'btn-danger' },
                 { 'name': 'done', 'state_name': ' Ready', 'state_class': 'btn-success' }]
@@ -2345,17 +2345,16 @@ instance.web.form.dropdown_selection = instance.web.form.FieldChar.extend({
         var data = {'widget': self }
         self.record_id = self.view.datarecord.id;
         data['states'] = self.prepare_dropdown_selection();
-        var content = QWeb.render("dropdown_selection", data);
-        this.$el.html(content);
+        this.$el.html(QWeb.render("dropdown_selection", data));
         this.$el.find('.oe_legend').click(self.do_action.bind(self));
     },
-    do_action: function(e){
+    do_action: function(e) {
         var self = this;
         var li = $(e.target).closest( "li" );
-        if (li.length){
+        if (li.length) {
             var value = {};
             value[self.name] = String(li.data('value'));
-            if (self.record_id){
+            if (self.record_id) {
                 return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
             } else {
                 return self.view.on_button_save().done(function(result) {
@@ -2366,7 +2365,7 @@ instance.web.form.dropdown_selection = instance.web.form.FieldChar.extend({
             }
         }
     },
-    reload_record: function(){
+    reload_record: function() {
         this.view.reload();
     },
 });
@@ -2375,15 +2374,15 @@ instance.web.form.priority = instance.web.form.FieldChar.extend({
     init: function (field_manager, node) {
         this._super(field_manager, node);
     },
-    prepare_priority: function(){
+    prepare_priority: function() {
         var data = [];
         var selection = this.field.selection || [];
-        _.map(selection, function(res){  
+        _.map(selection, function(res) {
             value = {
                 'name': res[0],
                 'legend_name': res[1]
             }
-            if (res[0] == '0'){
+            if (res[0] == '0') {
                 value['legend']= '<img src="/web/static/src/img/icons/star-off.png"/>';
                 value['legend_name'] = 'Set the Priority';
             }else{
@@ -2398,17 +2397,16 @@ instance.web.form.priority = instance.web.form.FieldChar.extend({
         var data = {'widget': self }
         self.record_id =  self.view.datarecord.id;
         data['legends'] = self.prepare_priority();
-        var content = QWeb.render("priority", data);
-        this.$el.html(content);
+        this.$el.html(QWeb.render("priority", data));
         this.$el.find('.oe_legend').click(self.do_action.bind(self));
     },
-    do_action: function(e){
+    do_action: function(e) {
         var self = this;
         var li = $(e.target).closest( "li" );
-        if (li.length){
+        if (li.length) {
             var value = {};
             value[self.name] = String(li.data('value'));
-            if (self.record_id){
+            if (self.record_id) {
                 return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
             } else {
                 return self.view.on_button_save().done(function(result) {
@@ -2419,7 +2417,7 @@ instance.web.form.priority = instance.web.form.FieldChar.extend({
             }
         }
     },
-    reload_record: function(){
+    reload_record: function() {
         this.view.reload();
     },
 });

@@ -1266,10 +1266,10 @@ instance.web_kanban.priority = instance.web_kanban.AbstractField.extend({
         this.name = $node.attr('name')
         this.parent = parent;
     },
-    prepare_priority: function(){
+    prepare_priority: function() {
         var data = [];
         var selection = this.field.selection || [];
-        _.map(selection, function(res){  
+        _.map(selection, function(res) {  
             value = {
                 'name': res[0],
                 'legend_name': res[1]
@@ -1289,20 +1289,19 @@ instance.web_kanban.priority = instance.web_kanban.AbstractField.extend({
         self.record_id = self.parent.id;
         var data = {'widget': self }
         data['legends'] = self.prepare_priority();
-        var content = QWeb.render("priority", data);
-        this.$el = $(content);
+        this.$el = $(QWeb.render("priority", data));
         this.$el.find('.oe_legend').click(self.do_action.bind(self));
     },
-    do_action: function(e){
+    do_action: function(e) {
         var self = this;
         var li = $(e.target).closest( "li" );
-        if (li.length){
+        if (li.length) {
             var value = {};
             value[self.name] = String(li.data('value'));
             return self.parent.view.dataset._model.call('write', [[self.record_id], value, self.parent.view.dataset.get_context()]).done(self.reload_record.bind(self.parent));
         }
     },
-    reload_record: function(){
+    reload_record: function() {
         this.do_reload();
     },
 });
@@ -1313,7 +1312,7 @@ instance.web_kanban.dropdown_selection = instance.web_kanban.AbstractField.exten
         this.name = $node.attr('name')
         this.parent = parent;
     },
-    prepare_dropdown_selection: function(){
+    prepare_dropdown_selection: function() {
         return [{ 'name': 'normal', 'state_name': ' In Progress', 'state_class': 'btn-default' },
                 { 'name': 'blocked', 'state_name': ' Blocked', 'state_class': 'btn-danger' },
                 { 'name': 'done', 'state_name': ' Ready', 'state_class': 'btn-success' }]
@@ -1323,20 +1322,19 @@ instance.web_kanban.dropdown_selection = instance.web_kanban.AbstractField.exten
         self.record_id = self.parent.id;
         var data = {'widget': self }
         data['states'] = self.prepare_dropdown_selection();
-        var content = QWeb.render("dropdown_selection", data);
-        this.$el = $(content);
+        this.$el = $(QWeb.render("dropdown_selection", data));
         this.$el.find('.oe_legend').click(self.do_action.bind(self));
     },
-    do_action: function(e){
+    do_action: function(e) {
         var self = this;
         var li = $(e.target).closest( "li" );
-        if (li.length){
+        if (li.length) {
             var value = {};
             value[self.name] = String(li.data('value'));
             return self.parent.view.dataset._model.call('write', [[self.record_id], value, self.parent.view.dataset.get_context()]).done(self.reload_record.bind(self.parent));
         }
     },
-    reload_record: function(){
+    reload_record: function() {
         this.do_reload();
     },
 });
