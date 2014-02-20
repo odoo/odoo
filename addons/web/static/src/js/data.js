@@ -452,6 +452,9 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
      * @returns {$.Deferred}
      */
     read_ids: function (ids, fields, options) {
+        if (_.isEmpty(ids))
+            return $.Deferred().resolve([]);
+            
         options = options || {};
         // TODO: reorder results to match ids list
         return this._model.call('read',
@@ -872,7 +875,8 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         });
         var return_records = function() {
             var records = _.map(ids, function(id) {
-                return _.extend({}, _.detect(self.cache, function(c) {return c.id === id;}).values, {"id": id});
+                var c = _.find(self.cache, function(c) {return c.id === id;});
+                return _.isUndefined(c) ? c : _.extend({}, c.values, {"id": id});
             });
             if (self.debug_mode) {
                 if (_.include(records, undefined)) {
