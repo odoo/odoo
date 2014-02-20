@@ -938,10 +938,6 @@ class ir_actions_server(osv.osv):
             'context': context,
         }
 
-        }
-        return eval_context
-
-
     def run(self, cr, uid, ids, context=None):
         """ Runs the server action. For each server action, the condition is
         checked. Note that a void (``False``) condition is considered as always
