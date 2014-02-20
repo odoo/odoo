@@ -24,6 +24,8 @@ import logging
 import operator
 import os
 import time
+import datetime
+import dateutil
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -268,7 +270,7 @@ class ir_actions_act_window(osv.osv):
         'filter': fields.boolean('Filter'),
         'auto_search':fields.boolean('Auto Search'),
         'search_view' : fields.function(_search_view, type='text', string='Search View'),
-        'multi': fields.boolean('Action on Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view"),
+        'multi': fields.boolean('Restrict to lists', help="If checked and the action is bound to a model, it will only appear in the More menu on list views"),
     }
 
     _defaults = {
@@ -928,10 +930,17 @@ class ir_actions_server(osv.osv):
             'obj': obj,
             'pool': self.pool,
             'time': time,
+            'datetime': datetime,
+            'dateutil': dateutil,
             'cr': cr,
             'uid': uid,
             'user': user,
+            'context': context,
         }
+
+        }
+        return eval_context
+
 
     def run(self, cr, uid, ids, context=None):
         """ Runs the server action. For each server action, the condition is
@@ -955,7 +964,6 @@ class ir_actions_server(osv.osv):
         if context is None:
             context = {}
         res = False
-        active_ids = context.get('active_ids', [context.get('active_id')])
         for action in self.browse(cr, uid, ids, context):
             eval_context = self._get_eval_context(cr, uid, action, context=context)
             condition = action.condition
@@ -963,9 +971,7 @@ class ir_actions_server(osv.osv):
                 # Void (aka False) conditions are considered as True
                 condition = True
             if hasattr(self, 'run_action_%s_multi' % action.state):
-                # set active_ids in context only needed if one active_id
-                run_context = dict(context, active_ids=active_ids)
-                eval_context["context"] = run_context
+                run_context = eval_context['context']
                 expr = eval(str(condition), eval_context)
                 if not expr:
                     continue
@@ -975,6 +981,8 @@ class ir_actions_server(osv.osv):
 
             elif hasattr(self, 'run_action_%s' % action.state):
                 func = getattr(self, 'run_action_%s' % action.state)
+                active_id = context.get('active_id')
+                active_ids = context.get('active_ids', [active_id] if active_id else [])
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id
                     run_context = dict(context, active_ids=[active_id], active_id=active_id)
