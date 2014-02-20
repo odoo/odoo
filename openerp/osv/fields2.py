@@ -285,18 +285,13 @@ class Field(object):
             value = self.convert_to_cache(value)
 
             if _scope.draft or not all(records._ids):
-                # invalidate fields, but only in cache
+                # simply invalidate dependent fields
                 _scope.invalidate(self.modified_draft(records))
-                # store value in cache, and update inverse field, too. This is
-                # necessary for computing a function field on value, if that
-                # field depends on records!
-                records._cache[self] = value
-                if value and self.inverse_field:
-                    self.inverse_field._add(value, records)
             else:
-                # write (and invalidate), then store value in cache
                 records.write({self.name: self.convert_to_write(value)})
-                records._cache[self] = value
+
+            # store value in cache
+            records._cache[self] = value
 
     #
     # Management of the computation of field values.
