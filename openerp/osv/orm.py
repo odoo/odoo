@@ -5384,26 +5384,15 @@ class BaseModel(object):
             if field.relational and isinstance(value, list):
                 # determine fields present in the comodel, and other stuff
                 conames = set()
-                strict, deleted = False, []
                 for command in value:
-                    if isinstance(command, (list, tuple)):
-                        if command[0] in (0, 1):
-                            conames.update(command[2])
-                        elif command[0] in (2, 3):
-                            deleted.append(command)
-                        elif command[0] in (5, 6):
-                            strict = True
-
+                    if isinstance(command, (list, tuple)) and command[0] in (0, 1):
+                        conames.update(command[2])
                 # force evaluation of the fields present in the comodel
                 for corecord in record[name]:
                     for coname in conames:
                         corecord[coname]
-
-                # serialize new value, and patch it according to old value
-                result = field.convert_to_write(record[name])
-                if not strict and result[0] == (5,):
-                    result = result[1:]
-                changed[name] = result + deleted
+                # serialize new value
+                changed[name] = field.convert_to_write(record[name], self)
 
             elif record[name] != value:
                 changed[name] = field.convert_to_write(record[name])

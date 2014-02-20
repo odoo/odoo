@@ -232,9 +232,10 @@ class Field(object):
         """
         return value
 
-    def convert_to_write(self, value):
+    def convert_to_write(self, value, target=None):
         """ convert `value` from the cache to a valid value for method
-            :meth:`BaseModel.write`
+            :meth:`BaseModel.write`. The optional parameter `target` gives the
+            record to be modified by this value.
         """
         return self.convert_to_read(value)
 
@@ -864,7 +865,7 @@ class Many2one(_Relational):
         else:
             return value.id
 
-    def convert_to_write(self, value):
+    def convert_to_write(self, value, target=None):
         return value.id
 
     def convert_to_export(self, value):
@@ -928,8 +929,19 @@ class _RelationalMulti(_Relational):
     def convert_to_read(self, value, use_name_get=True):
         return value.unbrowse()
 
-    def convert_to_write(self, value):
-        result = [(5,)]
+    def convert_to_write(self, value, target=None):
+        result = []
+
+        # remove/delete former records
+        target = target or self.model.browse()
+        if len(target) <= 1:
+            tag = 2 if self.type == 'one2many' else 3
+            for record in target[self.name] - value:
+                result.append((tag, record._id))
+        else:
+            result.append((5,))
+
+        # add new and existing records
         for record in value:
             # TODO: modified record (1, id, values)
             if not record.id:
@@ -940,6 +952,7 @@ class _RelationalMulti(_Relational):
                 result.append((0, 0, record._convert_to_write(values)))
             else:
                 result.append((4, record.id))
+
         return result
 
     def convert_to_export(self, value):
