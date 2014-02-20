@@ -11,7 +11,7 @@ openerp.calendar = function(instance) {
         get_next_notif: function() {
             var self= this;
             this.rpc("/calendar/notify")
-            .then(
+            .done(
                 function(result) {
                     _.each(result,  function(res) {
                         setTimeout(function() {
@@ -44,6 +44,12 @@ openerp.calendar = function(instance) {
                         },res.timer * 1000);
                     });
                 }
+            )
+            .fail(
+                // To override error from framework.js in RPC function
+                function(error, event) {
+                    event.preventDefault();
+                }
             );
         },
         check_notifications: function() {
@@ -51,14 +57,14 @@ openerp.calendar = function(instance) {
             self.get_next_notif();
             setInterval(function(){
                 self.get_next_notif();
-            }, 5 * 60  * 1000 );
+            }, 5 * 60 * 1000 );
         },
         
         //Override the show_application of addons/web/static/src/js/chrome.js       
         show_application: function() {
             this._super();
             this.check_notifications();
-        },        
+        },
     });
     
 
