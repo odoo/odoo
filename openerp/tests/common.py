@@ -4,16 +4,15 @@ The module :mod:`openerp.tests.common` provides unittest2 test cases and a few
 helpers and classes to write tests.
 
 """
+import errno
 import json
 import logging
 import os
 import select
 import subprocess
-import sys
 import threading
 import time
 import unittest2
-import uuid
 import xmlrpclib
 
 import openerp
@@ -25,19 +24,57 @@ ADDONS_PATH = openerp.tools.config['addons_path']
 HOST = '127.0.0.1'
 PORT = openerp.tools.config['xmlrpc_port']
 DB = openerp.tools.config['db_name']
-
 # If the database name is not provided on the command-line,
 # use the one on the thread (which means if it is provided on
 # the command-line, this will break when installing another
 # database from XML-RPC).
 if not DB and hasattr(threading.current_thread(), 'dbname'):
     DB = threading.current_thread().dbname
-
-ADMIN_USER = 'admin'
+# Useless constant, tests are aware of the content of demo data
 ADMIN_USER_ID = openerp.SUPERUSER_ID
-ADMIN_PASSWORD = 'admin'
 
+# Magic session_id, unfortunately we have to serialize access to the cursors to
+# serialize requests. We first tried to duplicate the database for each tests
+# but this proved too slow. Any idea to improve this is welcome.
 HTTP_SESSION = {}
+
+def acquire_test_cursor(session_id):
+    if openerp.tools.config['test_enable']:
+        cr = HTTP_SESSION.get(session_id)
+        if cr:
+            cr._test_lock.acquire()
+            return cr
+
+def release_test_cursor(session_id):
+    if openerp.tools.config['test_enable']:
+        cr = HTTP_SESSION.get(session_id)
+        if cr:
+            cr._test_lock.release()
+            return True
+    return False
+
+def at_install(flag):
+    """ Sets the at-install state of a test, the flag is a boolean specifying
+    whether the test should (``True``) or should not (``False``) run during
+    module installation.
+
+    By default, tests are run at install.
+    """
+    def decorator(obj):
+        obj.at_install = flag
+        return obj
+    return decorator
+def post_install(flag):
+    """ Sets the post-install state of a test. The flag is a boolean
+    specifying whether the test should or should not run after a set of
+    module installations.
+
+    By default, tests are *not* run after installation.
+    """
+    def decorator(obj):
+        obj.post_install = flag
+        return obj
+    return decorator
 
 class BaseCase(unittest2.TestCase):
     """
@@ -126,8 +163,14 @@ class HttpCase(TransactionCase):
 
     def setUp(self):
         super(HttpCase, self).setUp()
-        self.session_id = uuid.uuid4().hex
+        # setup a magic session_id that will be rollbacked
+        self.session = openerp.http.root.session_store.new()
+        self.session_id = self.session.sid
+        self.session.db = DB
+        openerp.http.root.session_store.save(self.session)
+        self.cr._test_lock = threading.RLock()
         HTTP_SESSION[self.session_id] = self.cr
+
 
     def tearDown(self):
         del HTTP_SESSION[self.session_id]
@@ -145,37 +188,52 @@ class HttpCase(TransactionCase):
 
         """
         t0 = time.time()
-        buf = ''
-        while 1:
+        buf = bytearray()
+        while True:
             # timeout
-            if time.time() > t0 + timeout:
-                raise Exception("phantomjs test timeout (%ss)" % timeout)
+            self.assertLess(time.time(), t0 + timeout,
+                "PhantomJS tests should take less than %s seconds" % timeout)
 
             # read a byte
-            ready, _, _ = select.select([phantom.stdout], [], [], 0.5)
+            try:
+                ready, _, _ = select.select([phantom.stdout], [], [], 0.5)
+            except select.error, e:
+                # In Python 2, select.error has no relation to IOError or
+                # OSError, and no errno/strerror/filename, only a pair of
+                # unnamed arguments (matching errno and strerror)
+                err, _ = e.args
+                if err == errno.EINTR: continue
+                raise
+
             if ready:
                 s = phantom.stdout.read(1)
-                if s:
-                    buf += s
-                else:
+                if not s:
                     break
+                buf.append(s)
 
             # process lines
             if '\n' in buf:
                 line, buf = buf.split('\n', 1)
-                _logger.info("phantomjs: %s", line)
+
+                line = str(line)
                 if line == "ok":
-                    _logger.info("phantomjs test successful")
-                    return
-                if line == "error":
-                    raise Exception("phantomjs test failed")
+                    break
+                if line.startswith("error"):
+                    line_ = line[6:]
+                    try: line_ = json.loads(line_)
+                    except ValueError: pass
+                    self.fail(line_ or "phantomjs test failed")
+
+                try: line = json.loads(line)
+                except ValueError: pass
+                _logger.info("phantomjs: %s", line)
 
     def phantom_run(self, cmd, timeout):
-        _logger.info('executing %s', cmd)
+        _logger.debug('executing `%s`', ' '.join(cmd))
         try:
             phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         except OSError:
-            _logger.info("phantomjs not found, test %s skipped", jsfile)
+            raise unittest2.SkipTest("PhantomJS not found")
         try:
             self.phantom_poll(phantom, timeout)
         finally:
@@ -197,8 +255,9 @@ class HttpCase(TransactionCase):
         cmd = ['phantomjs', jsfile, phantomtest, json.dumps(options)]
         self.phantom_run(cmd, timeout)
 
-    def phantom_js(self, url_path, code, ready="window", timeout=30, **kw):
+    def phantom_js(self, url_path, code, ready="window", login=None, timeout=30, **kw):
         """ Test js code running in the browser
+        - optionnally log as 'login'
         - load page given by url_path
         - wait for ready object to be available
         - eval(code) inside the page
@@ -212,17 +271,17 @@ class HttpCase(TransactionCase):
         If neither are done before timeout test fails.
         """
         options = {
+            'port': PORT,
+            'db': DB,
             'url_path': url_path,
             'code': code,
             'ready': ready,
             'timeout' : timeout,
-            'port': PORT,
-            'db': DB,
-            'login': ADMIN_USER,
-            'password': ADMIN_PASSWORD,
+            'login' : login,
             'session_id': self.session_id,
         }
         options.update(kw)
+        options.setdefault('password', options.get('login'))
         phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
         cmd = ['phantomjs', phantomtest, json.dumps(options)]
         self.phantom_run(cmd, timeout)

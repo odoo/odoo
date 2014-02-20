@@ -10,10 +10,8 @@ function waitFor (ready, callback, timeout, timeoutMessageCallback) {
         } else {
             if(!condition) {
                 var message = timeoutMessageCallback ? timeoutMessageCallback() : "Timeout after "+timeout+" ms";
-                console.log(message);
                 console.log("Waiting for " + ready);
-                console.log("error");
-                phantom.exit(1);
+                error(message);
             } else {
                 clearInterval(interval);
                 callback();
@@ -22,62 +20,71 @@ function waitFor (ready, callback, timeout, timeoutMessageCallback) {
     }, 250);
 }
 
+function error(message) {
+    console.log('error', message);
+    phantom.exit(1);
+}
 function PhantomTest() {
     var self = this;
-    if(phantom.args.length === 1) {
-        this.options = JSON.parse(phantom.args[0]);
-    } else {
-        this.options = JSON.parse(phantom.args[1]);
-    }
-    this.inject = [];
+    this.options = JSON.parse(phantom.args[phantom.args.length-1]);
+    this.inject = this.options.inject || [];
     this.timeout = this.options.timeout ? Math.round(parseFloat(this.options.timeout)*1000 - 5000) : 10000;
     this.origin = 'http://localhost';
     this.origin += this.options.port ? ':' + this.options.port : '';
 
     // ----------------------------------------------------
-    // test reporting
+    // configure phantom and page
     // ----------------------------------------------------
-    this.error = function(message) {
-        console.log(message);
-        console.log("error");
-        phantom.exit(1);
-    };
-
-    // ----------------------------------------------------
-    // configure page
-    // ----------------------------------------------------
-    this.page = require('webpage').create();
-    this.page.viewportSize = { width: 1366, height: 768 };
-    this.page.addCookie({
+    phantom.addCookie({
         'domain': 'localhost',
         'name': 'session_id',
         'value': this.options.session_id,
     });
+    this.page = require('webpage').create();
+    this.page.viewportSize = { width: 1366, height: 768 };
     this.page.onError = function(message, trace) {
-        self.error(message + " " + trace);
+        var msg = [message];
+        if (trace && trace.length) {
+            msg.push.apply(msg, trace.map(function (frame) {
+                var result = [' at ', frame.file, ':', frame.line];
+                if (frame.function) {
+                    result.push(' (in ', frame.function, ')');
+                }
+                return result.join('');
+            }));
+            msg.push('(leaf frame on top)')
+        }
+        error(JSON.stringify(msg.join('\n')));
     };
     this.page.onAlert = function(message) {
-        self.error(message);
+        error(message);
     };
     this.page.onConsoleMessage = function(message) {
         console.log(message);
     };
     this.page.onLoadFinished = function(status) {
         if (status === "success") {
-            var src, test;
             for (var k in self.inject) {
-                if (typeof self.inject[k] !== "string") {
-                    test = self.page.evaluate(function (variable) {
-                        try { return eval("("+variable+")") != null; }
-                        catch (e) { return false; }
-                    }, self.inject[k][0]);
-                    src = self.inject[k][1];
-                } else {
-                    src = self.inject[k];
-                    test = true;
+                var found = false;
+                var v = self.inject[k];
+                var need = v;
+                var src = v;
+                if (v[0]) {
+                    need = v[0];
+                    src = v[1];
+                    found = self.page.evaluate(function(code) {
+                        try {
+                            return !!eval(code);
+                        } catch (e) {
+                            return false;
+                        }
+                    }, need);
                 }
-                if(test && !page.injectJs(src)) {
-                    self.error("Can't inject " + src);
+                if(!found) {
+                    console.log('Injecting', src, 'needed for', need);
+                    if(!self.page.injectJs(src)) {
+                        error("Cannot inject " + src);
+                    }
                 }
             }
         }
@@ -87,7 +94,7 @@ function PhantomTest() {
             var message = ("Timeout\nhref: " + window.location.href
                 + "\nreferrer: " + document.referrer
                 + "\n\n" + document.body.innerHTML).replace(/[^a-z0-9\s~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "*");
-            self.error(message);
+            error(message);
         });
     }, self.timeout);
 
@@ -101,12 +108,12 @@ function PhantomTest() {
             qp.push('login=' + self.options.login);
             qp.push('key=' + self.options.password);
             qp.push('redirect=' + encodeURIComponent(url_path));
-            var url_path = "/web/login?" + qp.join('&');
+            var url_path = "/login?" + qp.join('&');
         }
         var url = self.origin + url_path;
         self.page.open(url, function(status) {
             if (status !== 'success') {
-                self.error("failed to load " + url)
+                error("failed to load " + url)
             } else {
                 console.log('loaded', url, status);
                 // process ready
@@ -116,8 +123,8 @@ function PhantomTest() {
                         try {
                             r = !!eval(ready);
                         } catch(ex) {
-                            console.log("waiting for page " + ready)
-                        };
+                            console.log("waiting for " + ready);
+                        }
                         return r;
                     }, ready);
                 // run test

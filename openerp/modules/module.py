@@ -20,15 +20,14 @@
 #
 ##############################################################################
 
-import base64
+import functools
 import imp
 import itertools
 import logging
 import os
 import re
 import sys
-import types
-from cStringIO import StringIO
+import unittest
 from os.path import join as opj
 
 import unittest2
@@ -50,8 +49,6 @@ ad_paths = []
 # Modules already loaded
 loaded = []
 
-_logger = logging.getLogger(__name__)
-
 class AddonsImportHook(object):
     """
     Import hook to load OpenERP addons from multiple paths.
@@ -70,13 +67,10 @@ class AddonsImportHook(object):
             return self # We act as a loader too.
 
     def load_module(self, module_name):
+        if module_name in sys.modules:
+            return sys.modules[module_name]
 
-        module_parts = module_name.split('.')
-        if len(module_parts) == 3 and module_name.startswith('openerp.addons.'):
-            module_part = module_parts[2]
-            if module_name in sys.modules:
-                return sys.modules[module_name]
-
+        _1, _2, module_part = module_name.split('.')
         # Note: we don't support circular import.
         f, path, descr = imp.find_module(module_part, ad_paths)
         mod = imp.load_module('openerp.addons.' + module_part, f, path, descr)
@@ -328,7 +322,7 @@ def get_test_modules(module):
     # Try to import the module
     module = 'openerp.addons.' + module + '.tests'
     try:
-        m = __import__(module)
+        __import__(module)
     except Exception, e:
         # If module has no `tests` sub-module, no problem.
         if str(e) != 'No module named tests':
@@ -336,10 +330,10 @@ def get_test_modules(module):
         return []
 
     # include submodules too
-    result = []
-    for name in sys.modules:
-        if name.startswith(module) and sys.modules[name]:
-            result.append(sys.modules[name])
+    result = [mod_obj for name, mod_obj in sys.modules.iteritems()
+              if mod_obj # mod_obj can be None
+              if name.startswith(module)
+              if re.search(r'test_\w+$', name)]
     return result
 
 # Use a custom stream object to log the test executions.
@@ -358,22 +352,72 @@ class TestStream(object):
             first = False
             _test_logger.info(c)
 
+current_test = None
+
 def run_unit_tests(module_name, dbname):
     """
-    Return True or False if some tests were found and succeeded or failed.
-    Return None if no test was found.
+    :returns: ``True`` if all of ``module_name``'s tests succeeded, ``False``
+              if any of them failed.
+    :rtype: bool
     """
+    global current_test
+    current_test = module_name
     mods = get_test_modules(module_name)
     r = True
     for m in mods:
-        suite = unittest2.TestSuite()
-        for t in unittest2.TestLoader().loadTestsFromModule(m):
-            suite.addTest(t)
-        _logger.log(logging.INFO, 'module %s: running test %s.', module_name, m.__name__)
+        tests = unwrap_suite(unittest2.TestLoader().loadTestsFromModule(m))
+        suite = unittest2.TestSuite(itertools.ifilter(runs_at_install, tests))
+        _logger.info('module %s: running test %s.', module_name, m.__name__)
+
         result = unittest2.TextTestRunner(verbosity=2, stream=TestStream()).run(suite)
+
         if not result.wasSuccessful():
             r = False
-            _logger.error('module %s: at least one error occurred in a test', module_name)
+            _logger.error("Module %s: %d failures, %d errors",
+                          module_name, len(result.failures), len(result.errors))
+    current_test = None
     return r
+
+def runs_at(test, hook, default):
+    # by default, tests do not run post install
+    test_runs = getattr(test, hook, default)
+
+    # for a test suite, we're done
+    if not isinstance(test, unittest.TestCase):
+        return test_runs
+
+    # otherwise check the current test method to see it's been set to a
+    # different state
+    method = getattr(test, test._testMethodName)
+    return getattr(method, hook, test_runs)
+
+runs_at_install = functools.partial(runs_at, hook='at_install', default=True)
+runs_post_install = functools.partial(runs_at, hook='post_install', default=False)
+
+def unwrap_suite(test):
+    """
+    Attempts to unpack testsuites (holding suites or cases) in order to
+    generate a single stream of terminals (either test cases or customized
+    test suites). These can then be checked for run/skip attributes
+    individually.
+
+    An alternative would be to use a variant of @unittest2.skipIf with a state
+    flag of some sort e.g. @unittest2.skipIf(common.runstate != 'at_install'),
+    but then things become weird with post_install as tests should *not* run
+    by default there
+    """
+    if isinstance(test, unittest.TestCase):
+        yield test
+        return
+
+    subtests = list(test)
+    # custom test suite (no test cases)
+    if not len(subtests):
+        yield test
+        return
+
+    for item in itertools.chain.from_iterable(
+            itertools.imap(unwrap_suite, subtests)):
+        yield item
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

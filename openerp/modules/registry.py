@@ -209,15 +209,6 @@ class TestRLock(object):
     def __exit__(self, type, value, traceback):
         self.release()
 
-#    def __enter__(self, *l, **kw):
-#        if openerp.tools.config['test_enable']:
-#            return
-#        return super(TestRlock, self).__enter__(*l, **kw)
-#    def __exit__(self, *l, **kw):
-#        if openerp.tools.config['test_enable']:
-#            return
-#        return super(TestRlock, self).__exit__(*l, **kw)
-
 class RegistryManager(object):
     """ Model registries manager.
 
