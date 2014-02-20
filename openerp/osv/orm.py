@@ -2605,19 +2605,24 @@ class BaseModel(object):
         :param query: the query object used to construct the query afterwards
         """
         orderby_list = []
-        ob = ''
+        ob = []
         for order_splits in orderby.split(','):
             order_split = order_splits.split()
             orderby_field = order_split[0]
+            fields = openerp.osv.fields
+            if isinstance(self._all_columns[orderby_field].column, (fields.date, fields.datetime)):
+                continue
             orderby_dir = len(order_split) == 2 and order_split[1].upper() == 'ASC' and 'ASC' or 'DESC'
             if orderby_field == groupby:
-                ob = self._generate_order_by(order_splits, query).replace('ORDER BY ', '')
-                orderby_list.append(ob)
+                orderby_item = self._generate_order_by(order_splits, query).replace('ORDER BY ', '')
+                if orderby_item:
+                    orderby_list.append(orderby_item)
+                    ob += [obi.split()[0] for obi in orderby_item.split(',')]
             elif orderby_field in aggregated_fields:
                 orderby_list.append('%s %s' % (orderby_field,orderby_dir))
 
         if orderby_list:
-            return ' ORDER BY %s' % (','.join(orderby_list)), ob and ob.split()[0] or ''
+            return ' ORDER BY %s' % (','.join(orderby_list)), ob and ','.join(ob) or ''
         else:
             return '', ''
 
@@ -2714,7 +2719,7 @@ class BaseModel(object):
         offset_str = offset and ' offset %d' % offset or ''
         if len(groupby_list) < 2 and context.get('group_by_no_leaf'):
             group_count = '_'
-        cr.execute('SELECT min(%s.id) AS id, count(%s.id) AS %s_count' % (self._table, self._table, group_count) + (flist and ',') + flist  + ' FROM ' + from_clause + where_clause + gb + (ob and ',') + ob  + orderby_clause + limit_str + offset_str, where_clause_params)
+        cr.execute('SELECT min(%s.id) AS id, count(%s.id) AS %s_count' % (self._table, self._table, group_count) + (flist and ',') + flist + ' FROM ' + from_clause + where_clause + gb + (ob and ',') + ob + orderby_clause + limit_str + offset_str, where_clause_params)
         alldata = {}
         groupby = group_by
 
