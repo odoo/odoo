@@ -148,8 +148,12 @@ class Report(http.Controller):
         headerhtml = []
         contenthtml = []
         footerhtml = []
+        base_url = request.registry['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
+
         minimalhtml = """
-<html style="height: 0mm;">
+<base href="{3}">
+<!DOCTYPE html>
+<html style="height: 0;">
     <head>
         <style type='text/css'>{0}</style>
         <script type='text/javascript'>{1}</script>
@@ -169,12 +173,12 @@ class Report(http.Controller):
 
             for node in root.xpath("//div[@class='header']"):
                 body = lxml.html.tostring(node)
-                header = minimalhtml.format(css, subst, body)
+                header = minimalhtml.format(css, subst, body, base_url)
                 headerhtml.append(header)
 
             for node in root.xpath("//div[@class='footer']"):
                 body = lxml.html.tostring(node)
-                footer = minimalhtml.format(css, subst, body)
+                footer = minimalhtml.format(css, subst, body, base_url)
                 footerhtml.append(footer)
 
             for node in root.xpath("//div[@class='page']"):
@@ -191,7 +195,7 @@ class Report(http.Controller):
                     reportid = False
 
                 body = lxml.html.tostring(node)
-                reportcontent = minimalhtml.format(css, '', body)
+                reportcontent = minimalhtml.format(css, '', body, base_url)
                 contenthtml.append(tuple([reportid, reportcontent]))
 
         except lxml.etree.XMLSyntaxError:
@@ -255,9 +259,11 @@ class Report(http.Controller):
         command = ['wkhtmltopdf-0.12']
         tmp_dir = tempfile.gettempdir()
 
-        # Display arguments
         command_args = []
+        # Passing the cookie in order to resolve URL.
+        command_args.extend(['--cookie', 'session_id', request.httprequest.cookies['session_id']])
 
+        # Display arguments
         if paperformat:
             command_args.extend(self._build_wkhtmltopdf_args(paperformat, spec_paperformat_args))
 
@@ -316,7 +322,7 @@ class Report(http.Controller):
 
                 if process.returncode != 0:
                     raise except_osv(_('Report (PDF)'),
-                                     _('wkhtmltopdf-patched failed with error code = %s. '
+                                     _('wkhtmltopdf-0.12 failed with error code = %s. '
                                        'Message: %s') % (str(process.returncode), err))
 
                 # Save the pdf in attachment if marked
@@ -354,6 +360,7 @@ class Report(http.Controller):
     def _build_wkhtmltopdf_args(self, paperformat, specific_paperformat_args=None):
         """Build arguments understandable by wkhtmltopdf from an ir.actions.report.paperformat
         record.
+        Sample: <img t-att-src="'/report/getbarcode/QR/%s/200/200' % o.name"/>
 
         :paperformat: ir.actions.report.paperformat record associated to a document
         :specific_paperformat_args: a dict containing prioritized wkhtmltopdf arguments
@@ -370,7 +377,7 @@ class Report(http.Controller):
         if specific_paperformat_args and specific_paperformat_args['data-report-margin-top']:
             command_args.extend(['--margin-top',
                                  str(specific_paperformat_args['data-report-margin-top'])])
-        else:
+        elif paperformat.margin_top:
             command_args.extend(['--margin-top', str(paperformat.margin_top)])
 
         if paperformat.margin_left:
@@ -449,15 +456,22 @@ class Report(http.Controller):
         response.headers.add('Content-Disposition', 'attachment; filename=report.pdf;')
         return response
 
-    @http.route('/report/getbarcode/<type>/<value>', type='http', auth="user")
-    def barcode(self, type, value):
-        """Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
+    @http.route([
+        '/report/getbarcode/<type>/<value>',
+        '/report/getbarcode/<type>/<value>/<int:width>/<int:height>',
+    ], type='http', auth="user")
+    def barcode(self, type, value, width=300, height=50):
+        """Contoller able to render barcode images thanks to reportlab.
+
+        :param type: Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
         'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'Standard39', 'Standard93',
         'UPCA', 'USPS_4State'
         """
         try:
-            barcode = createBarcodeImageInMemory(type, value=value)
+            barcode = createBarcodeImageInMemory(
+                type, value=value, format='jpg', width=width, height=height
+            )
         except (ValueError, AttributeError):
-            raise exceptions.HTTPException(description="Cannot convert into barcode.")
+            raise exceptions.HTTPException(description='Cannot convert into barcode.')
 
         return request.make_response(barcode, headers=[('Content-Type', 'image/jpg')])

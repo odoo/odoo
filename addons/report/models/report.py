@@ -196,7 +196,6 @@ class report(osv.Model):
             'formatLang': self.formatLang,
             'get_digits': self.get_digits,
             'render_doc': render_doc,
-
             'website': website,
             'res_company': res_company,
         })
