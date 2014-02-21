@@ -71,7 +71,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                 lead_obj.convert_opportunity(cr, SUPERUSER_ID, [lead.id], lead.partner_id and lead.partner_id.id or None, context=None)
         return {
             'type': 'ir.actions.client',
-            'tag': 'reload',
+            'tag': 'next_or_list',
             'params': {
             },
         }
