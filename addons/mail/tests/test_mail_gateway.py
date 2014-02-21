@@ -394,7 +394,7 @@ class TestMailgateway(TestMail):
                          'message_process: after reply, group should have 2 followers')
 
         # Do: incoming email with ref holding model / res_id but that does not match any message in the thread: must raise since OpenERP saas-3
-        self.assertRaises(AssertionError,
+        self.assertRaises(ValueError,
                           format_and_process,
                           MAIL_TEMPLATE, email_from='other5@gmail.com',
                           to='noone@example.com', subject='spam',
@@ -490,14 +490,14 @@ class TestMailgateway(TestMail):
         # --------------------------------------------------
 
         # Do: incoming email with model that does not accepts incoming emails must raise
-        self.assertRaises(AssertionError,
+        self.assertRaises(ValueError,
                           format_and_process,
                           MAIL_TEMPLATE,
                           to='noone@example.com', subject='spam', extra='', model='res.country',
                           msg_id='<1198923581.41972151344608186760.JavaMail.new4@agrolait.com>')
 
         # Do: incoming email without model and without alias must raise
-        self.assertRaises(AssertionError,
+        self.assertRaises(ValueError,
                           format_and_process,
                           MAIL_TEMPLATE,
                           to='noone@example.com', subject='spam', extra='',

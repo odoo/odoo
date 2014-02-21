@@ -40,7 +40,7 @@
 
                     <div class="form-group field-login">
                         <label for="login" class="control-label">Your Email</label>
-                        <input type="text" name="login" t-att-value="login" id="login" class="form-control"
+                        <input type="email" name="login" t-att-value="login" id="login" class="form-control"
                             t-att-autofocus="'autofocus' if reset_without_token else None"
                             required="required" t-att-disabled="'disabled' if mode == 'reset' and token else None"/>
                         <input type="hidden" name="login" t-att-value="login" t-if="mode == 'reset' and token"/>

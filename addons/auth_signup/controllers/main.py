@@ -36,7 +36,10 @@ class AuthSignup(openerp.addons.web.controllers.main.Home):
     def web_login(self, *args, **kw):
         mode = request.params.get('mode')
         qcontext = request.params.copy()
-        super_response = super(AuthSignup, self).web_login(*args, **kw)
+        super_response = None
+        if request.httprequest.method != 'POST' or mode not in ('reset', 'signup'):
+            # Default behavior is to try to login,  which in reset or signup mode in a non-sense.
+            super_response = super(AuthSignup, self).web_login(*args, **kw)
         response = webmain.render_bootstrap_template(request.session.db, 'auth_signup.signup', qcontext, lazy=True)
         if isinstance(super_response, LazyResponse):
             response.params['values'].update(super_response.params['values'])
@@ -62,7 +65,7 @@ class AuthSignup(openerp.addons.web.controllers.main.Home):
         }
         qcontext.update(config)
 
-        if 'error' in qcontext or mode not in ('reset', 'signup') or (not token and not config[mode]):
+        if 'error' in request.params or mode not in ('reset', 'signup') or (not token and not config[mode]):
             if isinstance(super_response, LazyResponse):
                 super_response.params['values'].update(config)
             return super_response
@@ -78,22 +81,28 @@ class AuthSignup(openerp.addons.web.controllers.main.Home):
                     res_users.reset_password(request.cr, openerp.SUPERUSER_ID, login)
                     qcontext['message'] = _("An email has been sent with credentials to reset your password")
                     response.params['template'] = 'web.login'
-                except Exception:
-                    qcontext['error'] = _("Could not reset your password")
+                except Exception, e:
+                    qcontext['error'] = exception_to_unicode(e) or _("Could not reset your password")
                     _logger.exception('error when resetting password')
             else:
                 values = dict((key, qcontext.get(key)) for key in ('login', 'name', 'password'))
                 try:
                     self._signup_with_values(token, values)
-                    request.cr.commit()
+                    redirect = request.params.get('redirect')
+                    if not redirect:
+                        redirect = '/web?' + request.httprequest.query_string
+                    return http.redirect_with_hash(redirect)
                 except SignupError, e:
                     qcontext['error'] = exception_to_unicode(e)
-                return super(AuthSignup, self).web_login(*args, **kw)
 
         return response
 
     def _signup_with_values(self, token, values):
-        request.registry['res.users'].signup(request.cr, openerp.SUPERUSER_ID, values, token)
+        db, login, password = request.registry['res.users'].signup(request.cr, openerp.SUPERUSER_ID, values, token)
+        request.cr.commit()     # as authenticate will use its own cursor we need to commit the current transaction
+        uid = request.session.authenticate(db, login, password)
+        if not uid:
+            raise SignupError(_('Authentification Failed.'))
 
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

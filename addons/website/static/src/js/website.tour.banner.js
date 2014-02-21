@@ -100,8 +100,9 @@
                 {
                     element:   '.modal:has(#mobile-viewport) button[data-dismiss=modal]',
                     placement: 'right',
-                    title:     _t("Close Mobile Preview"),
+                    title:     _t("Check Mobile Preview"),
                     content:   _t("Scroll in the mobile preview to test the rendering. Once it's ok, close this dialog."),
+                    popover:   { next: _t("Continue") },
                 },
                 {
                     waitNot:   '.modal',

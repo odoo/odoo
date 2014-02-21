@@ -1009,8 +1009,8 @@ class account_invoice(osv.Model):
         sale_order_obj = self.pool.get('sale.order')
         res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=context)
         so_ids = sale_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
-        if so_ids:
-            sale_order_obj.message_post(cr, uid, so_ids, body=_("Invoice paid"), context=context)
+        for so_id in so_ids:
+            sale_order_obj.message_post(cr, uid, so_id, body=_("Invoice paid"), context=context)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
