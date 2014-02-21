@@ -9,7 +9,12 @@
 .openerp .oe_kanban_view .oe_view_nocontent {
   position: relative;
   max-width: none;
+  z-index: 1;
+  width: 100%;
   height: 100%;
+}
+.openerp .oe_kanban_view.oe_kanban_grouped{
+  position: relative; 
 }
 .openerp .oe_kanban_view .oe_view_nocontent .oe_view_nocontent_content {
   margin-left: 90px;
@@ -160,7 +165,7 @@
   padding: 0px;
   background: white;
 }
-.openerp .oe_kanban_view .oe_kanban_column, .openerp .oe_kanban_view .oe_kanban_column_cards {
+.openerp .oe_kanban_view .oe_kanban_column {
   height: 100%;
 }
 .openerp .oe_kanban_view .oe_kanban_aggregates {

@@ -43,7 +43,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.currently_dragging = {};
         this.limit = options.limit || 40;
         this.add_group_mutex = new $.Mutex();
-        this.last_position = 'static';
     },
     view_loading: function(r) {
         return this.load_kanban(r);
@@ -496,16 +495,13 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             || (!this.options.action.help && !this.options.action.get_empty_list_help)) {
             return;
         }
-        this.last_position = this.$el.find('table:first').css("position");
-        this.$el.find('table:first').css("position", "absolute");
-        $(QWeb.render('KanbanView.nocontent', { content : this.options.action.get_empty_list_help || this.options.action.help})).insertAfter(this.$('table:first'));
+        $(QWeb.render('KanbanView.nocontent', { content : this.options.action.get_empty_list_help || this.options.action.help})).insertBefore(this.$('table:first'));
         this.$el.find('.oe_view_nocontent').click(function() {
             self.$buttons.openerpBounce();
         });
     },
     remove_no_result: function() {
-        this.$el.find('table:first').css("position", this.last_position);
-        this.$el.find('.oe_view_nocontent').remove();        
+        this.$el.find('.oe_view_nocontent').remove();
     },
 
     /*
