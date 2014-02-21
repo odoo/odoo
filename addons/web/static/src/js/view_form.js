@@ -2331,7 +2331,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
     }
 });
 
-instance.web.form.dropdown_selection = instance.web.form.FieldChar.extend({
+instance.web.form.Dropdown_Selection = instance.web.form.FieldChar.extend({
     init: function (field_manager, node) {
         this._super(field_manager, node);
     },
@@ -2370,7 +2370,7 @@ instance.web.form.dropdown_selection = instance.web.form.FieldChar.extend({
     },
 });
 
-instance.web.form.priority = instance.web.form.FieldChar.extend({
+instance.web.form.Priority = instance.web.form.FieldChar.extend({
     init: function (field_manager, node) {
         this._super(field_manager, node);
     },
@@ -5977,8 +5977,8 @@ instance.web.form.widgets = new instance.web.Registry({
     'monetary': 'instance.web.form.FieldMonetary',
     'many2many_checkboxes': 'instance.web.form.FieldMany2ManyCheckBoxes',
     'x2many_counter': 'instance.web.form.X2ManyCounter',
-    'priority':'instance.web.form.priority',
-    'dropdown_selection':'instance.web.form.dropdown_selection'
+    'priority':'instance.web.form.Priority',
+    'dropdown_selection':'instance.web.form.Dropdown_Selection'
 });
 
 /**
