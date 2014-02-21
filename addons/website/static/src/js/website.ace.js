@@ -39,9 +39,15 @@
             this.xml = text;
         },
         isWellFormed: function () {
+            var error;
             if (document.implementation.createDocument) {
-                var dom = new DOMParser().parseFromString(this.xml, "text/xml");
-                var error = dom.getElementsByTagName("parsererror");
+                // use try catch for ie
+                try {
+                    var dom = new DOMParser().parseFromString(this.xml, "text/xml");
+                    error = dom.getElementsByTagName("parsererror");
+                } catch (e) {
+                    error = e;
+                }
                 return error.length === 0 || error;
             } else if (window.ActiveXObject) {
                 // TODO test in IE
