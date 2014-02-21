@@ -113,7 +113,7 @@ class ir_http(orm.AbstractModel):
                 code = getattr(exception, 'code', code)
                 if isinstance(exception, ir_qweb.QWebException):
                     values.update(qweb_exception=exception)
-                    if isinstance(exception.qweb.get('inner'), openerp.exceptions.AccessError):
+                    if isinstance(exception.qweb.get('cause'), openerp.exceptions.AccessError):
                         code = 403
             if code == 500:
                 logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
@@ -174,5 +174,5 @@ class PageConverter(werkzeug.routing.PathConverter):
 
         for view in views:
             xid = xids[view['id']]
-            if xid and (not query or query in xid):
+            if xid and (not query or query.lower() in xid.lower()):
                 yield xid

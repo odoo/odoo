@@ -26,7 +26,7 @@ class account_journal(osv.osv):
 
     _columns = {
         'allow_check_writing': fields.boolean('Allow Check writing', help='Check this if the journal is to be used for writing checks.'),
-        'use_preprint_check': fields.boolean('Use Preprinted Check'),
+        'use_preprint_check': fields.boolean('Use Preprinted Check', help='Check if you use a preformated sheet for check'),
         }
 
 

@@ -162,12 +162,17 @@ ul.oe_menu_editor
 .modal-footer
     text-align: left
 
-.modal.nosave .modal-footer
-    button.save
-        display: none
-    button.wait
+.modal.nosave
+    .wait
         display: inline-block !important
         visibility: visible !important
+    .modal-body
+        .filepicker, .image-preview
+            display: none
+        .wait
+            width: 100%
+    .modal-footer .save
+        display: none
 
 // fontawesome modal
 .modal

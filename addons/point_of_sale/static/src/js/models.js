@@ -260,12 +260,26 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.company_logo.crossOrigin = 'anonymous';
                     var  logo_loaded = new $.Deferred();
                     self.company_logo.onload = function(){
+                        var img = self.company_logo;
+                        var ratio = 1;
+                        var targetwidth = 300;
+                        var maxheight = 150;
+                        if( img.width !== targetwidth ){
+                            ratio = targetwidth / img.width;
+                        }
+                        if( img.height * ratio > maxheight ){
+                            ratio = maxheight / img.height;
+                        }
+                        var width  = Math.floor(img.width * ratio);
+                        var height = Math.floor(img.height * ratio);
                         var c = document.createElement('canvas');
-                            c.width  = self.company_logo.width;
-                            c.height = self.company_logo.height; 
+                            c.width  = width;
+                            c.height = height
                         var ctx = c.getContext('2d');
-                            ctx.drawImage(self.company_logo,0,0);
+                            ctx.drawImage(self.company_logo,0,0, width, height);
+                        
                         self.company_logo_base64 = c.toDataURL();
+                        window.logo64 = self.company_logo_base64;
                         logo_loaded.resolve();
                     };
                     self.company_logo.onerror = function(){
@@ -530,11 +544,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 this.order.removeOrderline(this);
                 return;
             }else{
-                var quant = Math.max(parseFloat(quantity) || 0, 0);
+                var quant = parseFloat(quantity) || 0;
                 var unit = this.get_unit();
                 if(unit){
-                    this.quantity    = Math.max(unit.rounding, round_pr(quant, unit.rounding));
-                    this.quantityStr = this.quantity.toFixed(Math.max(0,Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10))));
+                    this.quantity    = round_pr(quant, unit.rounding);
+                    this.quantityStr = this.quantity.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
                 }else{
                     this.quantity    = quant;
                     this.quantityStr = '' + this.quantity;
@@ -1090,10 +1104,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             }
         },
         switchSign: function() {
+            console.log('switchsing');
             var oldBuffer;
             oldBuffer = this.get('buffer');
             this.set({
-                buffer: oldBuffer[0] === '-' ? oldBuffer.substr(1) : "-" + oldBuffer
+                buffer: oldBuffer[0] === '-' ? oldBuffer.substr(1) : "-" + oldBuffer 
             });
             this.trigger('set_value',this.get('buffer'));
         },

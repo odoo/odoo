@@ -22,4 +22,5 @@ OpenERP E-Commerce
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
+    'application': True,
 }

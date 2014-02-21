@@ -936,12 +936,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             
             document.body.addEventListener('keyup', this.hotkey_handler);
             
-            if(    this.pos.config.iface_cashdrawer 
-                && this.pos.get('selectedOrder').get('paymentLines').find( function(pl){ 
-                           return pl.cashregister.journal.type === 'cash'; 
-                   })){
-                    this.pos.proxy.open_cashbox();
-            }
 
 
             this.add_action_button({
@@ -1131,8 +1125,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         is_paid: function(){
             var currentOrder = this.pos.get('selectedOrder');
-            return (currentOrder.getTotalTaxIncluded() >= 0.000001 
-                   && currentOrder.getPaidTotal() + 0.000001 >= currentOrder.getTotalTaxIncluded());
+            return (currentOrder.getTotalTaxIncluded() < 0.000001 
+                   || currentOrder.getPaidTotal() + 0.000001 >= currentOrder.getTotalTaxIncluded());
 
         },
         validate_order: function(options) {
@@ -1143,6 +1137,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             if(!this.is_paid()){
                 return;
+            }
+
+            if(    this.pos.config.iface_cashdrawer 
+                && this.pos.get('selectedOrder').get('paymentLines').find( function(pl){ 
+                           return pl.cashregister.journal.type === 'cash'; 
+                   })){
+                    this.pos.proxy.open_cashbox();
             }
 
             if(options.invoice){

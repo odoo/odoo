@@ -6,6 +6,7 @@ import werkzeug
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
+from openerp.tools.translate import _
 
 PPG = 20 # Products Per Page
 PPR = 4  # Products Per Row
@@ -202,6 +203,49 @@ class website_sale(http.Controller):
                 subtype='mt_comment',
                 context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
+
+    @http.route(['/shop/add_product/'], type='http', auth="user", methods=['POST'], website=True, multilang=True)
+    def add_product(self, name=None, category=0, **post):
+        if not name:
+            name = _("New Product")
+        Product = request.registry.get('product.product')
+        product_id = Product.create(request.cr, request.uid, {
+            'name': name, 'public_categ_id': category
+        }, context=request.context)
+        product = Product.browse(request.cr, request.uid, product_id, context=request.context)
+
+        return request.redirect("/shop/product/%s/?enable_editor=1" % product.product_tmpl_id.id)
+
+    @http.route(['/shop/mycart/'], type='http', auth="public", website=True, multilang=True)
+    def mycart(self, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        prod_obj = request.registry.get('product.product')
+
+        # must have a draft sale order with lines at this point, otherwise reset
+        order = self.get_order()
+        if order and order.state != 'draft':
+            request.registry['website'].sale_reset_order(cr, uid, context=context)
+            return request.redirect('/shop/')
+
+        self.get_pricelist()
+
+        suggested_ids = []
+        product_ids = []
+        if order:
+            for line in order.order_line:
+                suggested_ids += [p.id for p in line.product_id and line.product_id.accessory_product_ids or []]
+                product_ids.append(line.product_id.id)
+        suggested_ids = list(set(suggested_ids) - set(product_ids))
+        if suggested_ids:
+            suggested_ids = prod_obj.search(cr, uid, [('id', 'in', suggested_ids)], context=context)
+
+        # select 3 random products
+        suggested_products = []
+        while len(suggested_products) < 3 and suggested_ids:
+            index = random.randrange(0, len(suggested_ids))
+            suggested_products.append(suggested_ids.pop(index))
+
+        context = dict(context or {}, pricelist=request.registry['website'].ecommerce_get_pricelist_id(cr, uid, None, context=context))
 
     @http.route(['/shop/cart'], type='http', auth="public", website=True, multilang=True)
     def cart(self, **post):

@@ -6,8 +6,10 @@
             <field name="model">email.template</field>
             <field name="inherit_id" ref="email_template.email_template_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//page[@string='Mailing Template']/group" position="before">
-                    <field name="website_link" widget='html' radonly='1'/>
+                <xpath expr="//field[@name='model']" position="before">
+                    <br />
+                    <field name="website_link" widget='html' radonly='1'
+                        style='margin: 0px; padding: 0px;'/>
                 </xpath>
             </field>
         </record>

@@ -26,11 +26,12 @@ $(document).ready(function () {
         if (isNaN(value)) value = 0;
         openerp.jsonRpc("/shop/set_cart_json/", 'call', {'order_line_id': $input.data('id'), 'set_number': value})
             .then(function (data) {
+                if (!data) {
+                    location.reload();
+                    return;
+                }
                 set_my_cart_quantity(data[1]);
                 $input.val(data[0]);
-                if (!data[0]) {
-                    location.reload();
-                }
             });
     });
 

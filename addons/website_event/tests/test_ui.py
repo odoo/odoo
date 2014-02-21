@@ -1,5 +1,6 @@
-import openerp.addons.website.tests.test_ui as test_ui
+import openerp.tests
 
-def load_tests(loader, base, _):
-    base.addTest(test_ui.WebsiteUiSuite(test_ui.full_path(__file__,'event_test.js'), {'redirect': '/page/website.homepage'}, 60.0))
-    return base
+class TestUi(openerp.tests.HttpCase):
+    def test_admin(self):
+        self.phantom_js("/", "openerp.website.Tour.run_test('event')", "openerp.website.Tour")
+

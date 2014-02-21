@@ -17,7 +17,7 @@
             <field name="priority" eval="32"/>
             <field name="arch" type="xml">
                 <tree string="Monthly Turnover">
-                    <field name="month"/>
+                    <field name="date" interval="month"/>
                     <field name="price_total"/>
                 </tree>
             </field>
@@ -28,7 +28,7 @@
             <field name="priority" eval="32"/>
             <field name="arch" type="xml">
                 <graph string="Monthly Turnover" type="bar">
-                    <field name="month" type="row"/>
+                    <field name="date" interval="month" type="row"/>
                     <field name="price_total" type="measure"/>
                 </graph>
             </field>
@@ -40,8 +40,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
             <field name="view_id" ref="view_turnover_by_month_graph"/>
-            <field name="domain">[('year','ilike',time.strftime('%Y')),('user_id','=',uid)]</field>
-            <field name="context">{'group_by_no_leaf':1,'group_by':['month']}</field>
+            <field name="domain">[('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;=',time.strftime('%Y-01-01')),('user_id','=',uid)]</field>
+            <field name="context">{'group_by_no_leaf':1}</field>
         </record>
 
         <record id="board_sales_form" model="ir.ui.view">

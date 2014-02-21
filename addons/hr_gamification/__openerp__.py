@@ -37,4 +37,5 @@ Badge received are displayed on the user profile.
         'views/gamification.xml',
     ],
     'js': ['static/src/js/gamification.js'],
+    'auto_install': True,
 }
