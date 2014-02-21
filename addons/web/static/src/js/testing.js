@@ -196,7 +196,6 @@ openerp.testing = {};
         });
     };
 
-    var db = window['oe_db_info'];
     testing.section = function (name, options, body) {
         if (_.isFunction(options)) {
             body = options;
@@ -235,40 +234,6 @@ openerp.testing = {};
             .push(env._oe.setup, env._oe.teardown)
             .push(options.setup, options.teardown);
         var opts = _.defaults({}, options, env._oe);
-        // FIXME: if this test is ignored, will still query
-        if (opts.rpc === 'rpc' && !db) {
-            QUnit.config.autostart = false;
-            db = {
-                source: null,
-                supadmin: null,
-                password: null
-            };
-            var $msg = $('<form style="margin: 0 1em 1em;">')
-                .append('<h3>A test needs to clone a database</h3>')
-                .append('<h4>Please provide the source clone information</h4>')
-                .append('     Source DB: ').append('<input name="source">').append('<br>')
-                .append('   DB Password: ').append('<input name="supadmin">').append('<br>')
-                .append('Admin Password: ').append('<input name="password">').append('<br>')
-                .append('<input type="submit" value="OK"/>')
-                .submit(function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    db.source = $msg.find('input[name=source]').val();
-                    db.supadmin = $msg.find('input[name=supadmin]').val();
-                    db.password = $msg.find('input[name=password]').val();
-                    QUnit.start();
-                    $.unblockUI();
-                });
-            $.blockUI({
-                message: $msg,
-                css: {
-                    fontFamily: 'monospace',
-                    textAlign: 'left',
-                    whiteSpace: 'pre-wrap',
-                    cursor: 'default'
-                }
-            });
-        }
 
         QUnit.test(name, function () {
             var instance = openerp;
@@ -302,21 +267,6 @@ openerp.testing = {};
                     instance.session.responses[spec] = handler;
                 };
                 break;
-            case 'rpc':
-                async = true;
-                (function () {
-                // Add a session setup at the start of the stack to ensure user is logged in
-                case_stack = case_stack.unshift(function (instance) {
-                    // FIXME hack: don't want the session to go through shitty loading process of everything
-                    instance.session.session_init = testing.noop;
-                    instance.session.load_modules = testing.noop;
-                    instance.session.session_bind();
-                    if (instance.session.session_is_valid()) {
-                        return $.when();
-                    }
-                    return instance.session.session_authenticate(db.source, 'admin', db.password, true);
-                });
-                })();
             }
 
             // Always execute tests asynchronously
