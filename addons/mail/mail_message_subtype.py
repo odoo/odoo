@@ -29,6 +29,8 @@ class mail_message_subtype(osv.osv):
         on the Wall. """
     _name = 'mail.message.subtype'
     _description = 'Message subtypes'
+    _order = 'sequence, id'
+
     _columns = {
         'name': fields.char('Message Type', required=True, translate=True,
             help='Message subtype gives a more precise type on the message, '\
@@ -53,7 +55,7 @@ class mail_message_subtype(osv.osv):
         'sequence': fields.integer('Sequence', help="Used to order subtypes."),
         'hidden': fields.boolean('Hidden', help="Hide the subtype in the follower options")
     }
-    _order = 'sequence'
+
     _defaults = {
         'default': True,
         'sequence': 1,
