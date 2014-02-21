@@ -318,11 +318,11 @@ class ThreadedServer(CommonServer):
         """
         self.start()
 
-        preload_registries(preload)
+        rc = preload_registries(preload)
 
         if stop:
             self.stop()
-            return
+            return rc
 
 
         # Wait for a first signal to be handled. (time.sleep will be interrupted
@@ -583,11 +583,11 @@ class PreforkServer(CommonServer):
     def run(self, preload, stop):
         self.start()
 
-        preload_registries(preload)
+        rc = preload_registries(preload)
 
         if stop:
             self.stop()
-            return
+            return rc
 
         _logger.debug("Multiprocess starting")
         while 1:
@@ -855,6 +855,7 @@ def preload_registries(dbnames):
     config = openerp.tools.config
     test_file = config['test_file']
     dbnames = dbnames or []
+    rc = 0
     for dbname in dbnames:
         try:
             update_module = config['init'] or config['update']
@@ -866,9 +867,13 @@ def preload_registries(dbnames):
                     load_test_file_yml(test_file)
                 elif test_file.endswith('py'):
                     load_test_file_py(test_file)
+
+            if registry._assertion_report.failures:
+                rc += 1
         except Exception:
-            _logger.exception('Failed to initialize database `%s`.', dbname)
-            return
+            _logger.critical('Failed to initialize database `%s`.', dbname, exc_info=True)
+            return -1
+    return rc
 
 def start(preload=None, stop=False):
     """ Start the openerp http server and cron processor.
