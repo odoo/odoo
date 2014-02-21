@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="editor_head" inherit_id="website.editor_head" name="Event Editor" groups="event.group_event_manager">
+    <xpath expr="//script[@id='website_tour_js']" position="after">
+        <script type="text/javascript" src="/website_forum/static/src/js/website_forum.editor.js"></script>
+        <script type="text/javascript" src="/website_forum/static/src/js/website.tour.forum.js"></script>
+    </xpath>
+</template>
+
+<!-- Layout add nav and footer -->
+<template id="header_footer_custom" inherit_id="website.layout" name="Footer Questions Link">
+    <xpath expr="//footer//ul[@name='products']" position="inside">
+        <li><a href="/question">Questions</a></li>
+    </xpath>
+</template>
+
+<!-- Page -->
+
+<template id="question_list">
+    <div class="tab-pane active" id="all">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-xs-9">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h4><a t-attf-href="/question/#{ slug(question) }"><span> <t t-esc="question.name"/></span></a></h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <a href="" class="badge">6.1</a>
+                                <a href="" class="badge">7.0</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 text-right">
+                                <small>
+                                    <span><t t-esc="question.write_date"/></span>
+                                    <a href=""><span><t t-esc="question.create_uid.name"/></span></a>
+                                    <a href=""><span><t t-esc="question.create_uid.id"/></span></a>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3">
+                        <h5>
+                            <span itemprop="Votes" class="label label-success"><t t-esc="len(question.up_votes)"/> Votes</span>
+                        </h5>
+                    </div>
+                    <div class="col-xs-3">
+                        <h5>
+                            <span itemprop="Votes" class="label label-success"><t t-esc="len(question.up_votes)"/> Answers</span>
+                        </h5>
+                    </div>
+                    <div class="col-xs-3">
+                        <h5>
+                            <span itemprop="Votes" class="label label-success"><t t-esc="question.views"/> Views</span>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="question_search">
+    <form class="navbar-form " role="search">
+        <div class="form-group search-navbar">
+            <input type="text" class="form-control" placeholder="Search Or Ask your Question"/>
+        </div>
+        <button type="submit" class="btn btn-default AskButton">Ask Question</button>
+    </form>
+</template>
+
+
+<template id="index" name="Question">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <t t-call="website_forum.question_search"/>
+            <div class="row">
+                <div class="col-xs-3">
+                    <span itemprop="name" class="badge"><t t-esc="len(question_ids)"/> Question</span>
+                </div>
+                <div class="col-xs-3">
+                    <h5>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Short by <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">By Date</a></li>
+                            <li><a href="#">By Activity</a></li>
+                            <li><a href="#">By Answer</a></li>
+                            <li><a href="#">By Votes</a></li>
+                        </ul>
+                    </h5>
+                </div>
+            </div>
+            <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                <li class="active"><a href="#all" data-toggle="tab">ALL</a></li>
+                <li><a href="#unanswerd" data-toggle="tab">Unanswerd</a></li>
+            </ul>
+            
+            <ul class="media-list">
+                <li t-foreach="question_ids" t-as="question" class="media">
+                    <t t-call="website_forum.question_list"/>
+                </li>
+            </ul>
+        </div>
+    </t>
+</template>
+
+
+<template id="404">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure oe_empty">
+                <div class="container">
+                    <h1 class="mt32">Question not found!</h1>
+                    <p>Sorry, the requested question is not available anymore.</p>
+                    <p><a t-attf-href="/question/">Return to the question list.</a></p>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="user_detail">
+    <div class="col-xs-7 col-xs-offset-5 col-sm-3 col-sm-offset-9 col-md-4 col-md-offset-8 col-lg-4 col-lg-offset-8 text-right">
+        <div class="panel panel-primary ">
+            <p class="text-center -heading">
+                <small>asked Sep 12'13</small>
+            </p>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <img src="images/profile_picture/png/user_1.png" class="user-profile-image" alt="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-9">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="text-left">
+                                <a href="">Than N.</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div style="font-size:10px" class="text-left">
+                                <b style="color : green">11</b>
+                                <span class="glyphicon glyphicon-certificate badge-gold"></span>1
+                                <span class="glyphicon glyphicon-certificate badge-silver"></span>10
+                                <span class="glyphicon glyphicon-certificate badge-bronze"></span>5
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="question_vote">
+    <div class="col-md-1 col-xs-1">
+        <div class="row">
+            <div class="col-xs-12 custom-arrow-height">
+                <span class="glyphicon glyphicon-chevron-up"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 custom-vote-height">
+                <h4><span>0</span></h4>
+            </div>
+        </div>
+            <div class="row">
+                <div class="col-xs-12 custom-arrow-height">
+                <span class="glyphicon glyphicon-chevron-down"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="question_links">
+    <div class="row">
+        <div class="col-xs-12 text-right">
+            <a class="action-links" href="" ><span class="glyphicon glyphicon-pencil"></span></a>
+            <a class="action-links" href=""><span class="glyphicon glyphicon-flag"></span></a>
+            <a class="action-links" href=""><span class="glyphicon glyphicon-trash"></span></a>
+            <a class="action-links" href="" ><span class="glyphicon glyphicon-link"></span></a>
+        </div>
+    </div>
+</template>
+
+
+<template id="question_description_full">
+    <t t-call="website.layout">
+        <t t-call="website_forum.question_search"/>
+        <div class="container MainBody">
+            <div class="row">
+                <t t-call="website_forum.question_vote"/>
+
+                <div class="col-md-9 col-xs-11">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h4><div itemprop="name" t-field="question.name"></div></h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <span class="badge">openerp-7</span>
+                            <span class="badge">pos</span>
+                            <span class="badge">receipt</span>
+                            <span class="badge">cash</span>
+                        </div>
+                    </div>
+
+                    <hr/>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <span>
+                                <h6>
+                                    How to send some signal to cash drawer to open it after click print receipt or something similar? I don't know whether this depends on cash drawer's driver or not ?
+                                </h6>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <t t-call="website_forum.user_detail"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 page-header">
+                    <span class="badge">2 Answers</span>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Short by <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Oldest</a></li>
+                        <li><a href="#">Newest</a></li>
+                        <li><a href="#">Most Viewd</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="row">
+                <t t-call="website_forum.question_vote"/>
+                <div class="col-md-9 col-xs-10">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <span>
+                                <h6>
+                                    There should be a call to the cash drawers API. Read the technical manual of the hardware you are using. Thanks.
+                                </h6>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <t t-call="website_forum.user_detail"/>
+                    </div>
+                    <t t-call="website_forum.question_links"/>
+                </div>
+            </div>
+            <hr/>
+
+            <div class="row">
+                <t t-call="website_forum.question_vote"/>  
+            </div>
+
+            <div class="col-md-9 col-xs-10">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <span>
+                            <h6>
+                                Usually the cash drawer behaves like a printer in the sense that it has a RS232 or USB port. However the cash drawer is dummy and only uses the port to receive a signal (positive voltage) which causes it to open.
+                                So you only need send any signal to the RS232 or USB port (like for insance print the ascii character "a" to the rs232 port) and it will open!. I the old days you could test it from hyperterminal, I guess nowadays you will have to make a javascript app that sends a character to the rs232 port.
+                            </h6>
+                        </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <t t-call="website_forum.user_detail"/>
+                </div>
+                <t t-call="website_forum.question_links"/>
+            </div>
+        </div>
+    </t>
+</template>
+
+</data>
+</openerp>
