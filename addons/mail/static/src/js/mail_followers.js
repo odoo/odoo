@@ -265,7 +265,15 @@ openerp_mail_followers = function(session, mail) {
             var records = data[id].message_subtype_data;
             this.records_length = $.map(records, function(value, index) { return index; }).length;
             if (this.records_length > 1) { self.display_followers(); }
+            var old_model = '';
             _(records).each(function (record, record_name) {
+                if (old_model != record.parent_model){
+                    if (old_model != ''){
+                        var index = $($list).find('.oe_subtype').length;
+                        $($($list).find('.oe_subtype')[index-1]).addClass('subtype-border');
+                    }
+                    old_model = record.parent_model;
+                }
                 record.name = record_name;
                 record.followed = record.followed || undefined;
                 $(session.web.qweb.render('mail.followers.subtype', {'record': record})).appendTo($list);
