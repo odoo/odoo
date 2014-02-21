@@ -2384,8 +2384,7 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
             }
             if (res[0] == '0') {
                 value['legend']= '<img src="/web/static/src/img/icons/star-off.png"/>';
-                value['legend_name'] = 'Set the Priority';
-            }else{
+            } else {
                 value['legend']= '<img src="/web/static/src/img/icons/star-on.png"/>';
             }
             data.push(value)

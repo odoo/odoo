@@ -1276,7 +1276,6 @@ instance.web_kanban.Priority = instance.web_kanban.AbstractField.extend({
             }
             if (res[0] == '0') {
                 value['legend'] = '<img src="/web/static/src/img/icons/star-off.png"/>';
-                value['legend_name'] = 'Set the Priority';
             } else {
                 value['legend'] = '<img src="/web/static/src/img/icons/star-on.png"/>';
             }
