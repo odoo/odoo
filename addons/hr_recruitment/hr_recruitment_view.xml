@@ -85,7 +85,6 @@
                         attrs="{'invisible':[('survey','=',False)]}"/>
                     <button name="action_get_attachment_tree_view" string="Documents" type="object"/>
                 </div>
-                <field name="priority" class="oe_inline" widget="priority"/>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
@@ -114,6 +113,7 @@
                             <field name="date_action"/>
                             <field name="title_action" class="oe_inline" placeholder="e.g. Call for interview"/>
                         </div>
+                        <field name="priority" widget="priority"/>
                         <field name="source_id"/>
                         <field name="reference"/>
                     </group>

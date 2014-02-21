@@ -757,7 +757,7 @@ class task(osv.osv):
         'stage_id': fields.many2one('project.task.type', 'Stage', track_visibility='onchange',
                         domain="[('project_ids', '=', project_id)]"),
         'categ_ids': fields.many2many('project.category', string='Tags'),
-        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
+        'kanban_state': fields.selection([('normal', 'In Progress'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
                                          track_visibility='onchange',
                                          help="A task's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"

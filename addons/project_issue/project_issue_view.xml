@@ -58,7 +58,6 @@
                     </h1>
                     <div class="oe_right"> 
                         <field name="kanban_state" class="oe_inline" widget="dropdown_selection"/>
-                        <field name="priority" class="oe_inline" widget="priority"/>
                     </div>
                     <label for="categ_ids" class="oe_edit_only"/>
                     <field name="categ_ids" widget="many2many_tags"/>
@@ -78,6 +77,7 @@
                         <group>
                             <field name="id"/>
                             <field name="version_id" groups="base.group_user"/>
+                            <field name="priority" groups="base.group_user" widget="priority"/>
                             <label for="task_id" groups="base.group_user"/>
                             <div groups="base.group_user">
                                 <field name="task_id" on_change="onchange_task_id(task_id)" class="oe_inline" context="{'default_project_id':project_id}"/>
