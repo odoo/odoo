@@ -552,6 +552,7 @@ class ir_actions_server(osv.osv):
 #  - uid: current user id
 #  - context: current context
 #  - time: Python time module
+#  - workflow: Workflow engine
 # If you plan to return an action, assign: action = {...}""",
         'use_relational_model': 'base',
         'use_create': 'new',
@@ -936,6 +937,7 @@ class ir_actions_server(osv.osv):
             'uid': uid,
             'user': user,
             'context': context,
+            'workflow': workflow
         }
 
     def run(self, cr, uid, ids, context=None):
