@@ -278,7 +278,7 @@ class ThreadedServer(CommonServer):
             signal.signal(signal.SIGQUIT, dumpstacks)
         elif os.name == 'nt':
             import win32api
-            win32api.SetConsoleCtrlHandler(lambda sig: signal_handler(sig, None), 1)
+            win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
         self.cron_spawn()
         self.http_spawn()
 
