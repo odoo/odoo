@@ -1179,7 +1179,7 @@ class stock_picking(osv.osv):
         product_obj = self.pool.get('product.product')
         stock_operation_obj = self.pool.get('stock.pack.operation')
         #check if the barcode correspond to a product
-        matching_product_ids = product_obj.search(cr, uid, [('ean13', '=', barcode_str)], context=context)
+        matching_product_ids = product_obj.search(cr, uid, ['|', ('ean13', '=', barcode_str), ('default_code', '=', barcode_str)], context=context)
         if matching_product_ids:
             self.process_product_id_from_ui(cr, uid, picking_id, matching_product_ids[0], context=context)
 
@@ -1869,14 +1869,14 @@ class stock_move(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             if move.state not in ('confirmed', 'waiting', 'assigned'):
                 continue
-            if move.product_id.type == 'consu':
-                to_assign_moves.append(move.id)
-                continue
             if move.picking_type_id and move.picking_type_id.auto_force_assign:
                 to_assign_moves.append(move.id)
                 #in case the move is returned, we want to try to find quants before forcing the assignment
                 if not move.origin_returned_move_id:
                     continue
+            if move.product_id.type == 'consu':
+                to_assign_moves.append(move.id)
+                continue
             else:
                 todo_moves.append(move)
                 #build the prefered domain based on quants that moved in previous linked done move
