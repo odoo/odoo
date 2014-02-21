@@ -827,13 +827,12 @@ def _reexec(updated_modules=None):
         args.insert(0, exe)
     os.execv(sys.executable, args)
 
-def load_test_file_yml(test_file):
-    cr = registry.db.cursor()
-    openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'test', True)
-    cr.rollback()
-    cr.close()
+def load_test_file_yml(registry, test_file):
+    with registry.cursor() as cr:
+        openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'test', True)
+        cr.rollback()
 
-def load_test_file_py(test_file):
+def load_test_file_py(registry, test_file):
     # Locate python module based on its filename and run the tests
     test_path, _ = os.path.splitext(os.path.abspath(test_file))
     for mod_name, mod_mod in sys.modules.items():
@@ -845,8 +844,9 @@ def load_test_file_py(test_file):
                     suite.addTest(t)
                 _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
                 result = unittest2.TextTestRunner(verbosity=2, stream=openerp.modules.module.TestStream()).run(suite)
-                if not result.wasSuccessful():
-                    r = False
+                success = result.wasSuccessful()
+                registry._assertion_report.report_result(success)
+                if not success:
                     _logger.error('%s: at least one error occurred in a test', test_file)
 
 def preload_registries(dbnames):
@@ -864,9 +864,9 @@ def preload_registries(dbnames):
             if test_file:
                 _logger.info('loading test file %s', test_file)
                 if test_file.endswith('yml'):
-                    load_test_file_yml(test_file)
+                    load_test_file_yml(registry, test_file)
                 elif test_file.endswith('py'):
-                    load_test_file_py(test_file)
+                    load_test_file_py(registry, test_file)
 
             if registry._assertion_report.failures:
                 rc += 1
