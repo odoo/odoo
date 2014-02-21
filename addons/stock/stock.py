@@ -822,11 +822,9 @@ class stock_picking(osv.osv):
         """ Cancels picking and moves.
         @return: True
         """
-        wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
             move_ids = [x.id for x in pick.move_lines]
             self.pool.get('stock.move').cancel_assign(cr, uid, move_ids)
-            wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
         return True
 
     def action_assign_wkf(self, cr, uid, ids, context=None):
@@ -2166,10 +2164,12 @@ class stock_move(osv.osv):
         # fix for bug lp:707031
         # called write of related picking because changing move availability does
         # not trigger workflow of picking in order to change the state of picking
+        seen = set()
         wf_service = netsvc.LocalService('workflow')
         for move in self.browse(cr, uid, ids, context):
-            if move.picking_id:
+            if move.picking_id and move.picking_id.id not in seen:
                 wf_service.trg_write(uid, 'stock.picking', move.picking_id.id, cr)
+                seen.add(move.picking_id.id)
         return True
 
     #
