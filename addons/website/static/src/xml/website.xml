@@ -74,7 +74,7 @@
                     </div>
                     <div class="modal-body" t-if="message or backend_url">
                         <section>
-                            <t t-esc="message"/>
+                            <t t-raw="message"/>
                         </section>
                         <section class="mt32" t-if="backend_url">
                             <p>The web site has encountered an error.</p>

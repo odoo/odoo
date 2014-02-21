@@ -95,6 +95,9 @@ class EscposDriver(Thread):
             _logger.warning('ESC/POS Device Disconnected: '+message)
 
     def run(self):
+        if not escpos:
+            _logger.error('ESC/POS cannot initialize, please verify system dependencies.')
+            return
         while True:
             try:
                 timestamp, task, data = self.queue.get(True)
