@@ -74,7 +74,7 @@ function openerp_picking_widgets(instance){
             _.each( ops, function(op){
                 rows.push({
                     cols: {
-                        product: op.product_id[1],
+                        product: op.package_id ? op.package_id[1] : op.product_id[1],
                         uom: op.product_uom ? product_uom[1] : '',
                         qty: op.product_qty,
                     },
