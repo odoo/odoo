@@ -24,14 +24,16 @@ $(document).ready(function () {
         var $input = $(this);
         var value = parseInt($input.val(), 10);
         if (isNaN(value)) value = 0;
-        openerp.jsonRpc("/shop/set_cart_json/", 'call', {'order_line_id': $input.data('id'), 'set_number': value})
+        openerp.jsonRpc("/shop/cart/update_json", 'call', {
+            'product_id': parseInt($input.data('id'),10),
+            'set_qty': value})
             .then(function (data) {
-                if (!data) {
+                if (!data.quantity) {
                     location.reload();
                     return;
                 }
-                set_my_cart_quantity(data[1]);
-                $input.val(data[0]);
+                set_my_cart_quantity(data.cart_quantity);
+                $input.val(data.quantity);
             });
     });
 
@@ -39,25 +41,9 @@ $(document).ready(function () {
     $('.oe_website_sale a.js_add_cart_json').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        var href = $link.attr("href");
-
-        var add_cart = href.match(/add_cart\/([0-9]+)/);
-        var product_id = add_cart && +add_cart[1] || false;
-
-        var change_cart = href.match(/change_cart\/([0-9]+)/);
-        var order_line_id = change_cart && +change_cart[1] || false;
-        openerp.jsonRpc("/shop/add_cart_json/", 'call', {
-                'product_id': product_id,
-                'order_line_id': order_line_id,
-                'remove': $link.is('[href*="remove"]')})
-            .then(function (data) {
-                if (!data[0]) {
-                    location.reload();
-                }
-                set_my_cart_quantity(data[1]);
-                $link.parents(".input-group:first").find(".js_quantity").val(data[0]);
-                $('#cart_total').replaceWith(data[3]);
-            });
+        var $input = $link.parent().parent().find("input");
+        $input.val(($link.has(".fa-minus").length ? -1 : 1) + parseFloat($input.val(),10));
+        $input.change();
         return false;
     });
 

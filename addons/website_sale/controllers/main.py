@@ -104,8 +104,7 @@ class website_sale(http.Controller):
             pricelist = partner.property_product_pricelist
         return pricelist
 
-    @http.route([
-        '/shop/',
+    @http.route(['/shop/',
         '/shop/page/<int:page>/',
         '/shop/category/<model("product.public.category"):category>/',
         '/shop/category/<model("product.public.category"):category>/page/<int:page>/'
@@ -125,6 +124,8 @@ class website_sale(http.Controller):
         attrib_set = set(attrib_values) 
         keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_set)
 
+        if not context.get('pricelist'):
+            context['pricelist'] = int(self.get_pricelist())
         product_obj = pool.get('product.template')
         product_count = product_obj.search_count(cr, uid, domain, context=context)
         pager = request.website.pager(url="/shop/", total=product_count, page=page, step=PPG, scope=7, url_args=post)
@@ -166,6 +167,7 @@ class website_sale(http.Controller):
     @http.route(['/shop/product/<model("product.template"):product>/'], type='http', auth="public", website=True, multilang=True)
     def product(self, product, category='', search='', **kwargs):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        category_obj = pool['product.public.category']
 
         if category:
             category = category_obj.browse(request.cr, request.uid, int(category), context=request.context)
@@ -175,10 +177,13 @@ class website_sale(http.Controller):
 
         keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_set)
 
-        category_obj = pool['product.public.category']
         category_ids = category_obj.search(cr, uid, [], context=context)
         category_list = category_obj.name_get(cr, uid, category_ids, context=context)
         category_list = sorted(category_list, key=lambda category: category[1])
+
+        if not context.get('pricelist'):
+            context['pricelist'] = int(self.get_pricelist())
+            product = request.registry.get('product.template').browse(request.cr, request.uid, int(product), context=context)
 
         values = {
             'search': search,
@@ -216,37 +221,6 @@ class website_sale(http.Controller):
 
         return request.redirect("/shop/product/%s/?enable_editor=1" % product.product_tmpl_id.id)
 
-    @http.route(['/shop/mycart/'], type='http', auth="public", website=True, multilang=True)
-    def mycart(self, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        prod_obj = request.registry.get('product.product')
-
-        # must have a draft sale order with lines at this point, otherwise reset
-        order = self.get_order()
-        if order and order.state != 'draft':
-            request.registry['website'].sale_reset_order(cr, uid, context=context)
-            return request.redirect('/shop/')
-
-        self.get_pricelist()
-
-        suggested_ids = []
-        product_ids = []
-        if order:
-            for line in order.order_line:
-                suggested_ids += [p.id for p in line.product_id and line.product_id.accessory_product_ids or []]
-                product_ids.append(line.product_id.id)
-        suggested_ids = list(set(suggested_ids) - set(product_ids))
-        if suggested_ids:
-            suggested_ids = prod_obj.search(cr, uid, [('id', 'in', suggested_ids)], context=context)
-
-        # select 3 random products
-        suggested_products = []
-        while len(suggested_products) < 3 and suggested_ids:
-            index = random.randrange(0, len(suggested_ids))
-            suggested_products.append(suggested_ids.pop(index))
-
-        context = dict(context or {}, pricelist=request.registry['website'].ecommerce_get_pricelist_id(cr, uid, None, context=context))
-
     @http.route(['/shop/cart'], type='http', auth="public", website=True, multilang=True)
     def cart(self, **post):
         order = request.website.sale_get_order()
@@ -255,20 +229,26 @@ class website_sale(http.Controller):
             'suggested_products': [],
         }
         if order:
-            values['suggested_products'] = order._cart_accessories()
+            if not request.context.get('pricelist'):
+                request.context['pricelist'] = order.pricelist_id.id
+            values['suggested_products'] = order._cart_accessories(context=request.context)
         return request.website.render("website_sale.cart", values)
 
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True, multilang=True)
-    def cart_update(self, product_id, add_qty=None, set_qty=None, **kw):
+    def cart_update(self, product_id, add_qty=0, set_qty=0, **kw):
         cr, uid, context = request.cr, request.uid, request.context
-        request.website.sale_get_order(force_create=1)._cart_update(product_id=product_id, add_qty=add_qty, set_qty=set_qty)
+        request.website.sale_get_order(force_create=1)._cart_update(product_id=int(product_id), add_qty=add_qty, set_qty=set_qty)
         return request.redirect("/shop/cart")
 
-    @http.route(['/shop/cart/update_json'], type='json', auth="public", website=True, multilang=True)
+    @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True, multilang=True)
     def cart_update_json(self, product_id, add_qty=None, set_qty=None):
         order = request.website.sale_get_order(force_create=1)
         quantity = order._cart_update(product_id=product_id, add_qty=add_qty, set_qty=set_qty)
-        return request.website._render("website_sale.total", {'website_sale_order': order}) # FIXME good template
+        return {
+            'quantity': quantity,
+            'cart_quantity': order.cart_quantity,
+            'website_sale.total': request.website._render("website_sale.total", {'website_sale_order': order}) # FIXME good template
+        }
 
     #------------------------------------------------------
     # Checkout
@@ -384,13 +364,12 @@ class website_sale(http.Controller):
         billing_info['parent_id'] = company_id
 
         partner_id = None
-        public_id = request.registry['website'].get_public_user(cr, uid, context)
-        if request.uid != public_id:
+        if request.uid != request.website.user_id.id:
             partner_id = orm_user.browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
         elif order.partner_id:
             domain = [("active", "=", False), ("partner_id", "=", order.partner_id.id)]
             user_ids = request.registry['res.users'].search(cr, SUPERUSER_ID, domain, context=context)
-            if not user_ids or public_id not in user_ids:
+            if not user_ids or request.website.user_id.id not in user_ids:
                 partner_id = order.partner_id.id
 
         if partner_id:

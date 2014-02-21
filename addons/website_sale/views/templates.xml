@@ -19,17 +19,18 @@
 
 <template id="header" inherit_id="website.layout" name="Header Shop My Cart Link">
   <xpath expr="//header//ul[@id='top_menu']/li" position="before">
-      <li t-att-class="'' if sale_order and sale_order._cart_qty() else 'hidden'">
+      <t t-set="website_sale_order" t-value="website.sale_get_order()"/>
+      <li t-att-class="'' if website_sale_order and website_sale_order.cart_quantity else 'hidden'">
           <a href="/shop/cart/">
               <i class="fa fa-shopping-cart"></i>
-              My cart <sup t-attf-class="my_cart_quantity label label-primary" t-esc="sale_order and sale_order._cart_qty() or ''"/>
+              My cart <sup t-attf-class="my_cart_quantity label label-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''"/>
           </a>
       </li>
   </xpath>
 </template>
 
 <template id="search" name="Search hidden fields">
-  <input t-if="search.get('filters')" type="hidden" name="filters" t-att-value="search.get('filters')"/>
+  <input t-if="attrib" type="hidden" name="filters" t-att-value="attrib"/>
   <div class="input-group">
     <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search"/>
     <span class="input-group-btn">
@@ -495,6 +496,7 @@
           <h1 class="mb32">Shopping Cart</h1>
           <div class="row">
               <div class="col-md-8 col-sm-9 oe_cart">
+                  <t t-set="website_sale_order" t-value="website.sale_get_order()"/>
                   <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="well well-lg">
                       Your cart is empty!
                   </div>
@@ -537,14 +539,14 @@
                               <td>
                                   <div class="input-group">
                                       <span class="input-group-addon">
-                                          <a t-attf-href="/shop/cart/update?product_id={{ line.product_id.id }&amp;add_qty=-1" class="mb8 js_add_cart_json">
+                                          <a t-attf-href="#" class="mb8 js_add_cart_json">
                                               <i class="fa fa-minus"></i>
                                           </a>
                                       </span>
                                       <input type="text" class="js_quantity form-control"
-                                          t-att-data-id="line.id" t-att-value="int(line.product_uom_qty)"/>
+                                          t-att-data-id="line.product_id.id" t-att-value="int(line.product_uom_qty)"/>
                                       <span class="input-group-addon">
-                                          <a t-attf-href="/shop/cart/update?product_id={{ line.product_id.id }&amp;add_qty=1" class="mb8 float_left js_add_cart_json">
+                                          <a t-attf-href="#" class="mb8 float_left js_add_cart_json">
                                               <i class="fa fa-plus"></i>
                                           </a>
                                       </span>
@@ -597,28 +599,28 @@
               <tr t-foreach="suggested_products" t-as="product">
 
                   <td>
-                      <a t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }/">
+                      <a t-attf-href="/shop/product/#{ slug(product) }/">
                           <span t-field="product.image_small"
                                 t-field-options='{"widget": "image", "class": "img-rounded"}'/>
                       </a>
                   </td>
                   <td>
                       <div>
-                          <a t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }/">
+                          <a t-attf-href="/shop/product/#{ slug(product) }/">
                               <strong t-field="product.name"/>
                           </a>
                       </div>
                       <div class="text-muted" t-field="product.description_sale"/>
                   </td>
                   <td>
-                      <t t-if="abs(product.lst_price - product.price) &gt; 0.2">
+                      <t t-if="abs(product.product_variant_ids[0].lst_price - product.product_variant_ids[0].price) &gt; 0.2">
                         <del class="text-danger"
-                          t-field="product.lst_price" t-field-options='{
+                          t-field="product.product_variant_ids[0].lst_price" t-field-options='{
                                "widget": "monetary",
                                "display_currency": "website.pricelist_id.currency_id"
                           }'/>&amp;nbsp;
                       </t>
-                      <span t-field="product.price"  t-field-options='{
+                      <span t-field="product.product_variant_ids[0].price"  t-field-options='{
                            "widget": "monetary",
                            "display_currency": "website.pricelist_id.currency_id"
                        }'/>

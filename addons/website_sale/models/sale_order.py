@@ -16,12 +16,19 @@ class payment_transaction(orm.Model):
 class sale_order(osv.Model):
     _inherit = "sale.order"
 
+    def _cart_qty(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict();
+        for order in self.browse(cr, uid, ids, context=context):
+            res[order.id] = int(sum(l.product_uom_qty for l in (order.website_order_line or [])))
+        return res
+
     _columns = {
         'website_order_line': fields.one2many(
             'sale.order.line', 'order_id',
             string='Order Lines displayed on Website', readonly=True,
             help='Order Lines to be displayed on the website. They should not be used for computation purpose.',
         ),
+        'cart_quantity': fields.function(_cart_qty, type='integer', string='Main Menu'),
     }
 
     def _get_website_data(self, cr, uid, order, context):
@@ -29,11 +36,6 @@ class sale_order(osv.Model):
             'partner': order.partner_id.id,
             'order': order
         }
-
-    # TODO make a function field instead
-    def _cart_qty(self, cr, uid, ids, context=None):
-        for order in self.browse(cr, uid, ids, context=context):
-            return int(sum(l.product_uom_qty for l in (order.website_order_line or [])))
 
     def _cart_find_product_line(self, cr, uid, ids, product_id=None, context=None):
         for so in self.browse(cr, uid, ids, context=context):
@@ -43,7 +45,7 @@ class sale_order(osv.Model):
                 line_id = line_ids[0]
             return line_id
 
-    def _cart_update(self, cr, uid, ids, product_id=None, add_qty=None, set_qty=None, context=None):
+    def _cart_update(self, cr, uid, ids, product_id=None, add_qty=0, set_qty=0, context=None):
         """ Add or set product quantity, add_qty can be negative """
         for so in self.browse(cr, uid, ids, context=context):
             sol = self.pool.get('sale.order.line')
@@ -60,17 +62,15 @@ class sale_order(osv.Model):
                     context=context
                 )['value']
                 values['name'] = "%s: %s" % (product.name, product.variants) if product.variants else product.name
-                # Maybe it's better to do this ? create and then link ?
-                #order_line_id = sol.create(cr, SUPERUSER_ID, values, context=context)
-                #self.write(cr, SUPERUSER_ID, [order.id], {'order_line': [(4, order_line_id)]}, context=context)
-                so.write({'order_line': (0, 0, values)})
-                line_id = so._cart_find_product_line(product_id)
+                values['product_id'] = product_id
+                values['order_id'] = so.id
+                line_id = sol.create(cr, SUPERUSER_ID, values, context=context)
 
             # compute new quantity
             if set_qty:
                 quantity = set_qty
             else:
-                quantity = line_id.product_uom_qty + add_qty
+                quantity = sol.browse(cr, SUPERUSER_ID, line_id, context=context).product_uom_qty + add_qty
 
             # Remove zero of negative lines
             if quantity <= 0:
@@ -91,9 +91,9 @@ class sale_order(osv.Model):
 
     def _cart_accessories(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids, context=context):
-            s = set(j for l in (order.website_order_line or []) for j in (l.product_id.accessory_product_ids or []))
+            s = set(j.id for l in (order.website_order_line or []) for j in (l.product_id.accessory_product_ids or []))
             product_ids = random.sample(s, min(len(s),3))
-            return self.pool['product.product'].browse(cr, uid, product_ids, context=context)
+            return self.pool['product.template'].browse(cr, uid, product_ids, context=context)
 
 class website(orm.Model):
     _inherit = 'website'
@@ -135,10 +135,10 @@ class website(orm.Model):
                 if pricelist_ids:
                     pricelist_id = pricelist_ids[0]
                     values = {'pricelist_id': pricelist_id}
-                    values.update(order.onchange_pricelist_id(pricelist_id, None)['value'])
-                    order.write(values)
-                    for line in order.order_line:
-                        sale_order._cart_update(cr, uid, order.product_id, add_qty=0)
+                    values.update(sale_order.onchange_pricelist_id(pricelist_id, None)['value'])
+                    sale_order.write(values)
+                    for line in sale_order.order_line:
+                        sale_order._cart_update(cr, uid, sale_order.product_id, add_qty=0)
 
             # check for change of partner_id ie after signup
             if sale_order.partner_id.id !=  partner.id:
@@ -162,12 +162,5 @@ class website(orm.Model):
             'sale_order_id': False,
             'sale_transaction_id': False,
         })
-
-    def preprocess_request(self, cr, uid, ids, request, context=None):
-        request.context.update({
-            'sale_order': self.sale_get_order(cr, uid, ids, context=context),
-            #'website_sale_transaction': self.ecommerce_get_current_transaction(cr, uid, context=context)
-        })
-        return super(website, self).preprocess_request(cr, uid, ids, request, context=None)
 
 # vim:et:
