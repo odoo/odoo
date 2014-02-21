@@ -1,8 +1,8 @@
 import openerp
 
-class DiagramView(openerp.addons.web.http.Controller):
+class DiagramView(openerp.http.Controller):
 
-    @openerp.addons.web.http.route('/web_diagram/diagram/get_diagram_info', type='json', auth='user')
+    @openerp.http.route('/web_diagram/diagram/get_diagram_info', type='json', auth='user')
     def get_diagram_info(self, req, id, model, node, connector,
                          src_node, des_node, label, **kw):
 

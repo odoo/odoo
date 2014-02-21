@@ -312,15 +312,6 @@ Output
 
     Evaluates, html-escapes and outputs ``content``.
 
-.. _qweb-directive-escf:
-
-.. function:: t-escf=content
-
-    :param Format content:
-
-    Similar to :ref:`t-esc <qweb-directive-esc>` but evaluates a
-    ``Format`` instead of just an expression.
-
 .. _qweb-directive-raw:
 
 .. function:: t-raw=content
@@ -330,14 +321,6 @@ Output
     Similar to :ref:`t-esc <qweb-directive-esc>` but does *not*
     html-escape the result of evaluating ``content``. Should only ever
     be used for known-secure content, or will be an XSS attack vector.
-
-.. _qweb-directive-rawf:
-
-.. function:: t-rawf=content
-
-    :param Format content:
-
-    ``Format``-based version of :ref:`t-raw <qweb-directive-raw>`.
 
 .. _qweb-directive-att:
 

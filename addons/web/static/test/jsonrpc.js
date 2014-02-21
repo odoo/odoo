@@ -181,7 +181,6 @@ function (test) {
             session2 = new openerp.Session(null, null, {session_id: session.session_id});
             equal(session2.uid, undefined, "uid should be undefined");
             equal(session2.override_session, true, "overwrite_session should be true");
-            console.log("session_id", session.session_id);
             return session2.session_reload();
         }).then(function() {
             equal(session2.uid, session.uid);

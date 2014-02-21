@@ -15,6 +15,37 @@ openerp.testing = {};
         list_editable: ['list', 'form', 'data'],
     };
 
+    var initialized = [];
+    /**
+     * openerp.init is a broken-ass piece of shit, makes it impossible to
+     * progressively add modules, using it, retarded openerp_inited flag
+     * means the first tests being run get their dependencies loaded
+     * (basically just base and web), and for *every other module* the tests
+     * run without the dependencies being correctly loaded
+     */
+    function init(modules) {
+        if (!initialized.length) {
+            openerp.init(modules);
+            initialized = openerp._modules.slice();
+            return;
+        }
+        var to_initialize = _.difference(modules, initialized);
+        for (var i = 0; i < to_initialize.length; i++) {
+            var modname = to_initialize[i];
+            var fct = openerp[modname];
+            if (typeof fct === 'function') {
+                var module = openerp[modname] = {};
+                for(var k in fct) {
+                    if (!fct.hasOwnProperty(k)) { continue; }
+                    module[k] = fct[k];
+                }
+                fct(openerp, module)
+            }
+            initialized.push(modname);
+            openerp._modules.push(modname);
+        }
+    }
+
     testing.dependencies = window['oe_all_dependencies'] || [];
     testing.current_module = null;
     testing.templates = { };
@@ -58,8 +89,7 @@ openerp.testing = {};
             }
             var fn, params;
             var needle = rparams.model + ':' + rparams.method;
-            if (url.url === '/web/dataset/call_kw'
-                && needle in this.responses) {
+            if (url.url.substr(0, 20) === '/web/dataset/call_kw' && needle in this.responses) {
                 fn = this.responses[needle];
                 params = [
                     rparams.args || [],
@@ -166,8 +196,6 @@ openerp.testing = {};
         });
     };
 
-    var openerp_inited = false;
-
     var db = window['oe_db_info'];
     testing.section = function (name, options, body) {
         if (_.isFunction(options)) {
@@ -244,10 +272,7 @@ openerp.testing = {};
 
         QUnit.test(name, function () {
             var instance = openerp;
-            if (!openerp_inited) {
-                openerp.init(module_deps);
-                openerp_inited = true;
-            }
+            init(module_deps);
             instance.session = new instance.web.Session();
             instance.session.uid = 42;
             if (_.isNumber(opts.asserts)) {

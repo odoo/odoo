@@ -425,7 +425,7 @@ openerp.testing.section('search.completions', {
                     "should have the right facet in the query");
             });
     });
-    test('facet selection: new value existing facet', {asserts: 3}, function (instance, $s) {
+    test('facet selection: new value existing facet', {asserts: 8}, function (instance, $s) {
         var field = {
             get_domain: openerp.testing.noop,
             get_context: openerp.testing.noop,
@@ -451,8 +451,14 @@ openerp.testing.section('search.completions', {
                     {item: completion});
                 equal(view.query.length, 1, "should still have only one facet");
                 var facet = view.query.at(0);
+                var values = facet.get('values');
+                equal(values.length, 2, 'should have two values');
+                equal(values[0].label, 'previous');
+                equal(values[0].value, 41);
+                equal(values[1].label, 'dummy');
+                equal(values[1].value, 42);
                 deepEqual(
-                    facet.get('values'),
+                    values,
                     [{label: 'previous', value: 41}, {label: 'dummy', value: 42}],
                     "should have added selected value to old one");
             });
@@ -614,6 +620,29 @@ openerp.testing.section('search.completions', {
             {relation: 'dummy.model'}, view);
         return f.complete("bob");
     });
+    test("M2O custom operator", {asserts: 6}, function (instance) {
+        var view = { inputs: [], };
+        var f = new instance.web.search.ManyToOneField(
+            {attrs: {string: 'Dummy', operator:'ilike'}},
+            {relation: 'dummy.model'}, view);
+
+        return f.complete('bob')
+            .done(function (completions) {
+                equal(completions.length, 1, "should provide a single completion");
+                var c = completions[0];
+                equal(c.label, "Search <em>Dummy</em> for: <strong>bob</strong>",
+                      "should propose fuzzy searching of the value");
+                ok(c.facet, "should have a facet");
+
+                var facet = new instance.web.search.Facet(c.facet);
+                equal(facet.get('category'), f.attrs.string,
+                      "completion facet should bear the field's name");
+                strictEqual(facet.get('field'), f,
+                            "completion facet should yield the field");
+                deepEqual(facet.values.toJSON(), [{label: 'bob', value: 'bob'}],
+                          "facet should have a single value using the completion item");
+            });
+});
     test('Integer: invalid', {asserts: 1}, function (instance) {
         var view = {inputs: []};
         var f = new instance.web.search.IntegerField(
@@ -1293,7 +1322,7 @@ openerp.testing.section('search.filters.saved', {
         return view.appendTo($fix)
         .then(function () {
             $fix.find('.oe_searchview_custom input#oe_searchview_custom_input')
-                    .text("filter name")
+                    .val("filter name")
                 .end()
                 .find('.oe_searchview_custom button').click();
             return done.promise();

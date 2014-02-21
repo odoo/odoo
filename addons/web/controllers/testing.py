@@ -9,11 +9,10 @@ import os
 
 from mako.template import Template
 from openerp.modules import module
+from openerp import http
+from openerp.http import request
 
 from .main import module_topological_sort
-from .. import http
-
-from ..http import request
 
 NOMODULE_TEMPLATE = Template(u"""<!DOCTYPE html>
 <html>
@@ -90,7 +89,7 @@ TESTING = Template(u"""<!DOCTYPE html>
 class TestRunnerController(http.Controller):
 
     @http.route('/web/tests', type='http', auth="none")
-    def index(self, req, mod=None, **kwargs):
+    def index(self, mod=None, **kwargs):
         ms = module.get_modules()
         manifests = dict(
             (name, desc)
@@ -115,7 +114,7 @@ class TestRunnerController(http.Controller):
         to_test = sorted_mods
         if mod != '*':
             if mod not in manifests:
-                return req.not_found(NOTFOUND.render(module=mod))
+                return request.not_found(NOTFOUND.render(module=mod))
             idx = sorted_mods.index(mod)
             to_test = [None] * len(sorted_mods)
             to_test[idx] = mod
