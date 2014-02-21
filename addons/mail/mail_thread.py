@@ -20,6 +20,7 @@
 ##############################################################################
 
 import base64
+from collections import OrderedDict
 import datetime
 import dateutil
 import email
@@ -185,8 +186,17 @@ class mail_thread(osv.AbstractModel):
 
         # find current model subtypes, add them to a dictionary
         subtype_obj = self.pool.get('mail.message.subtype')
-        subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
-        subtype_dict = dict((subtype.name, dict(default=subtype.default, followed=False, id=subtype.id)) for subtype in subtype_obj.browse(cr, uid, subtype_ids, context=context))
+        subtype_ids = subtype_obj.search(
+            cr, uid, [
+                '&', ('hidden', '=', False), '|', ('res_model', '=', self._name), ('res_model', '=', False)
+            ], context=context)
+        subtype_dict = OrderedDict(
+            (subtype.name, {
+                'default': subtype.default,
+                'followed': False,
+                'parent_model': subtype.parent_id and subtype.parent_id.res_model or self._name,
+                'id': subtype.id}
+            ) for subtype in subtype_obj.browse(cr, uid, subtype_ids, context=context))
         for id in ids:
             res[id]['message_subtype_data'] = subtype_dict.copy()
 
