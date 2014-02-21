@@ -244,13 +244,15 @@ class product_pricelist(osv.osv):
                     for seller in product.seller_ids:
                         if (not partner) or (seller.name.id<>partner):
                             continue
-                        product_default_uom = product.uom_id.id
+                        qty_in_seller_uom = qty
+                        from_uom = context.get('uom') or product.uom_id.id
                         seller_uom = seller.product_uom and seller.product_uom.id or False
-                        if seller_uom and product_default_uom and product_default_uom != seller_uom:
+                        if seller_uom and from_uom and from_uom != seller_uom:
+                            qty_in_seller_uom = product_uom_obj._compute_qty(cr, uid, from_uom, qty, to_uom_id=seller_uom)
+                        else:
                             uom_price_already_computed = True
-                            qty = product_uom_obj._compute_qty(cr, uid, product_default_uom, qty, to_uom_id=seller_uom)
                         for line in seller.pricelist_ids:
-                            if line.min_quantity <= qty:
+                            if line.min_quantity <= qty_in_seller_uom:
                                 price = line.price
 
                 else:
@@ -277,7 +279,6 @@ class product_pricelist(osv.osv):
 
             if price:
                 if 'uom' in context and not uom_price_already_computed:
-                    product = products_dict[product.id]
                     uom = product.uos_id or product.uom_id
                     price = product_uom_obj._compute_price(cr, uid, uom.id, price, context['uom'])
 

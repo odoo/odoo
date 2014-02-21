@@ -994,6 +994,7 @@
         start: function () {
             var sup = this._super();
             this.$el.modal({backdrop: 'static'});
+            this.$('input:first').focus();
             return sup;
         },
         save: function () {
@@ -1033,10 +1034,13 @@
         },
         start: function () {
             var self = this;
+            var last;
             this.$('#link-page').select2({
                 minimumInputLength: 1,
                 placeholder: _t("New or existing page"),
                 query: function (q) {
+                    if (q.term == last) return;
+                    last = q.term;
                     $.when(
                         self.page_exists(q.term),
                         self.fetch_pages(q.term)
@@ -1667,6 +1671,8 @@
                 }
                 switch(m.type) {
                 case 'attributes': // ignore .cke_focus being added or removed
+                    // ignore id modification
+                    if (m.attributeName === 'id') { return false; }
                     // if attribute is not a class, can't be .cke_focus change
                     if (m.attributeName !== 'class') { return true; }
 

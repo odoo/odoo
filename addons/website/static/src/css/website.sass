@@ -244,18 +244,20 @@ ul.nav-stacked > li > a
         background-size: cover
 .carousel
     .carousel-caption
-        left: auto
-        right: auto
-        bottom: 10%
-        text-align: left
-        padding: 20px
-        background: rgba(0, 0, 0, 0.4)
+        position: absolute
+        right: 50%
+        left: 50%
+        bottom: 20px
+        > div
+            position: absolute
+            text-align: left
+            padding: 20px
+            background: rgba(0, 0, 0, 0.4)
+            bottom: 20px
         h1, h2, h3
             margin-top: 10px
             margin-bottom: 10px
     .carousel-image
-        right: 50%
-        left: 50%
         top: 5%
         bottom: 5%
         position: absolute
@@ -269,12 +271,30 @@ ul.nav-stacked > li > a
             right: 10%
             top: 10%
             bottom: auto
-            text-align: center
-            background: transparent
+            > div
+                text-align: center
+                background: transparent
+                bottom: auto
+                width: 100%
+    .item.text_image
+        .carousel-caption
+            left: 10%
+            > div
+                right: 50%
+                margin-right: -20%
+                max-width: 550px
+        .carousel-image
+            right: 10%
+            left: 50%
     .item.image_text
         .carousel-caption
             right: 10%
+            > div
+                left: 50%
+                margin-left: -20%
+                max-width: 550px
         .carousel-image
+            right: 50%
             left: 10%
     .carousel-control
         cursor: pointer

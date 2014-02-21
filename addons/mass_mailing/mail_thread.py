@@ -48,6 +48,7 @@ class MailThread(osv.Model):
         if bounce_alias in email_to:
             bounce_match = tools.bounce_re.search(email_to)
             if bounce_match:
+                bounced_model, bounced_thread_id = None, False
                 bounced_mail_id = bounce_match.group(1)
                 stat_ids = self.pool['mail.mail.statistics'].set_bounced(cr, uid, mail_mail_ids=[bounced_mail_id], context=context)
                 for stat in self.pool['mail.mail.statistics'].browse(cr, uid, stat_ids, context=context):
@@ -55,7 +56,7 @@ class MailThread(osv.Model):
                     bounced_thread_id = stat.res_id
                 _logger.info('Routing mail from %s to %s with Message-Id %s: bounced mail from mail %s, model: %s, thread_id: %s',
                              email_from, email_to, message_id, bounced_mail_id, bounced_model, bounced_thread_id)
-                if bounced_model and bounced_model in self.pool and hasattr(self.pool[bounced_model], 'message_receive_bounce'):
+                if bounced_model and bounced_model in self.pool and hasattr(self.pool[bounced_model], 'message_receive_bounce') and bounced_thread_id:
                     self.pool[bounced_model].message_receive_bounce(cr, uid, [bounced_thread_id], mail_id=bounced_mail_id, context=context)
                 return False
 
