@@ -1872,6 +1872,11 @@ class stock_move(osv.osv):
             if move.product_id.type == 'consu':
                 to_assign_moves.append(move.id)
                 continue
+            if move.picking_type_id and move.picking_type_id.auto_force_assign:
+                to_assign_moves.append(move.id)
+                #in case the move is returned, we want to try to find quants before forcing the assignment
+                if not move.origin_returned_move_id:
+                    continue
             else:
                 todo_moves.append(move)
                 #build the prefered domain based on quants that moved in previous linked done move
@@ -1921,7 +1926,7 @@ class stock_move(osv.osv):
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain[move.id], prefered_domain=prefered_domain[move.id], fallback_domain=fallback_domain[move.id], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 quant_obj.quants_reserve(cr, uid, quants, move, context=context)
 
-        #force assignation of consumable products
+        #force assignation of consumable products and picking type auto_force_assign
         if to_assign_moves:
             self.force_assign(cr, uid, to_assign_moves, context=context)
         #check if a putaway rule is likely to be processed and store result on the move
