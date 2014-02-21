@@ -31,7 +31,7 @@ except ImportError:
     setproctitle = lambda x: None
 
 import openerp
-from openerp.module.registry import RegistryManager
+from openerp.modules.registry import RegistryManager
 from openerp.release import nt_service_name
 import openerp.tools.config as config
 from openerp.tools.misc import stripped_sys_argv, dumpstacks
