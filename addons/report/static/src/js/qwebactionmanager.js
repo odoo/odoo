@@ -9,13 +9,22 @@ openerp.report = function(instance) {
             action.context = instance.web.pyeval.eval('contexts',eval_contexts);
 
             // QWeb reports
-            if ('report_type' in action && (action.report_type == 'qweb-html' || action.report_type == 'qweb-pdf')) {
-                var report_url = '';
-
-                if (action.report_type == 'qweb-html') {
-                    report_url = '/report/' + action.report_name;
-                } else {
-                    report_url = '/report/pdf/report/' + action.report_name;
+            if ('report_type' in action && (action.report_type == 'qweb-html' || action.report_type == 'qweb-pdf' || action.report_type == 'controller')) {
+                
+                var report_url = ''
+                switch (action.report_type) {
+                    case 'qweb-html':
+                        report_url = '/report/' + action.report_name;
+                        break;
+                    case 'qweb-pdf':
+                        report_url = '/report/pdf/report/' + action.report_name;
+                        break;
+                    case 'controller':
+                        report_url = action.report_file;
+                        break;
+                    default:
+                        report_url = '/report/' + action.report_name;
+                        break;
                 }
 
                 // single/multiple id(s): no query string
@@ -27,7 +36,7 @@ openerp.report = function(instance) {
                 } else {
                     _.each(action.datas.form, function(value, key) {
                         // will be erased when all wizards are rewritten
-                        if(key.substring(0, 12) === 'used_context') {
+                        if (key.substring(0, 12) === 'used_context') {
                             delete action.datas.form[key];                                
                         }
 
@@ -43,11 +52,15 @@ openerp.report = function(instance) {
                     instance.web.unblockUI();
                     return;
                 } else {
-                    // Trigger the download of the pdf report
+                    // Trigger the download of the pdf/custom controller report
                     var c = openerp.webclient.crashmanager;
+                    var response = new Array()
+                    response[0] = report_url
+                    response[1] = action.report_type
+
                     this.session.get_file({
-                        url: '/report/downloadpdf',
-                        data: {data: JSON.stringify(report_url)},
+                        url: '/report/download',
+                        data: {data: JSON.stringify(response)},
                         complete: openerp.web.unblockUI,
                         error: c.rpc_error.bind(c)
                     });

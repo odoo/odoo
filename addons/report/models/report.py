@@ -241,6 +241,7 @@ class report(osv.Model):
             'type': 'ir.actions.report.xml',
             'report_name': report.report_name,
             'report_type': report.report_type,
+            'report_file': report.report_file,
         }
 
         if datas:

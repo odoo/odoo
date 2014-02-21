@@ -83,11 +83,18 @@ class Report(http.Controller):
             'docs': docs,
         }
 
-        return request.registry['report'].render(request.cr, request.uid, [], report.report_file,
+        return request.registry['report'].render(request.cr, request.uid, [], report.report_name,
                                                  docargs, context=request.context)
 
     @http.route(['/report/pdf/<path:path>'], type='http', auth="user", website=True)
     def report_pdf(self, path=None, landscape=False, **post):
+        """Route converting any reports to pdf. It will get the html-rendered report, extract
+        header, page and footer in order to prepare minimal html pages that will be further passed
+        to wkhtmltopdf.
+
+        :param path: URL of the report (e.g. /report/account.report_invoice/1)
+        :returns: a response with 'application/pdf' headers and the pdf as content
+        """
         cr, uid, context = request.cr, request.uid, request.context
 
         # Get the report we are working on.
@@ -136,14 +143,14 @@ class Report(http.Controller):
             paperformat = report.paperformat_id
 
         # Get the html report.
-        html = self._get_url_content('/' + path, post)
+        html = self._get_url_content('/' + path, post)[0]
 
         # Get some css and script in order to build a minimal html page for the report.
         # This page will later be sent to wkhtmltopdf.
-        css = self._get_url_content('/report/static/src/css/reset.min.css')
-        css += self._get_url_content('/web/static/lib/bootstrap/css/bootstrap.css')
-        css += self._get_url_content('/website/static/src/css/website.css')
-        subst = self._get_url_content('/report/static/src/js/subst.js')
+        css = self._get_url_content('/report/static/src/css/reset.min.css')[0]
+        css += self._get_url_content('/web/static/lib/bootstrap/css/bootstrap.css')[0]
+        css += self._get_url_content('/website/static/src/css/website.css')[0]
+        subst = self._get_url_content('/report/static/src/js/subst.js')[0]
 
         headerhtml = []
         contenthtml = []
@@ -240,7 +247,7 @@ class Report(http.Controller):
         except UnicodeDecodeError:
             pass
 
-        return content
+        return tuple([content, response.headers])
 
     def _generate_wkhtml_pdf(self, headers, footers, bodies, landscape,
                              paperformat, spec_paperformat_args=None, save_in_attachment=None):
@@ -440,31 +447,19 @@ class Report(http.Controller):
         merged.close()
         return content
 
-    @http.route('/report/downloadpdf/', type='http', auth="user")
-    def report_pdf_attachment(self, data, token):
-        """This function is only used by 'qwebactionmanager.js' in order to trigger the download of
-        a pdf report.
-
-        :param data: The JSON.stringified report internal url
-        :returns: Response with a filetoken cookie and an attachment header
-        """
-        url = simplejson.loads(data)
-        pdf = self._get_url_content(url)
-        response = self._make_pdf_response(pdf)
-        response.set_cookie('fileToken', token)
-        response.headers.add('Content-Disposition', 'attachment; filename=report.pdf;')
-        return response
-
     @http.route(['/report/barcode', '/report/barcode/<type>/<value>'], type='http', auth="user")
     def barcode(self, type, value, width=300, height=50):
         """Contoller able to render barcode images thanks to reportlab.
-        Sample: <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
+        Samples: 
+            <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
+            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', o.name, 200, 200)"/>
 
         :param type: Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
         'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'Standard39', 'Standard93',
         'UPCA', 'USPS_4State'
         """
         try:
+            width, height = int(width), int(height)
             barcode = createBarcodeImageInMemory(
                 type, value=value, format='png', width=width, height=height
             )
@@ -474,3 +469,29 @@ class Report(http.Controller):
             raise exceptions.HTTPException(description='Please upgrade reportlab to at least 3.0.')
 
         return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
+
+    @http.route('/report/download/', type='http', auth="user")
+    def report_attachment(self, data, token):
+        """This function is only used by 'qwebactionmanager.js' in order to trigger the download of
+        a report.
+
+        :param data: The JSON.stringified report internal url
+        :returns: Response with a filetoken cookie and an attachment header
+        """
+        requestcontent = simplejson.loads(data)
+        url, type = requestcontent[0], requestcontent[1]
+        file, fileheaders = self._get_url_content(url)
+
+        if type == 'qweb-pdf':
+            response = self._make_pdf_response(file)
+            response.headers.add('Content-Disposition', 'attachment; filename=report.pdf;')
+        elif type == 'controller':
+            response = request.make_response(file)
+            response.headers.add('Content-Disposition', fileheaders['Content-Disposition'])
+            response.headers.add('Content-Type', fileheaders['Content-Type'])
+        else:
+            return
+
+        response.headers.add('Content-Length', len(file))
+        response.set_cookie('fileToken', token)
+        return response

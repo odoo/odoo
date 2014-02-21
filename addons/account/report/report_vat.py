@@ -22,6 +22,11 @@
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from common_report_header import common_report_header
+try:
+    import cStringIO as StringIO
+except ImportError:
+    import StringIO
+import xlwt
 
 
 class tax_report(http.Controller, common_report_header):
@@ -223,5 +228,44 @@ class tax_report(http.Controller, common_report_header):
             ind+=1
 
         return result_accounts
+
+    @http.route(['/report/account.report_vat_xls'], type='http', auth='user', website=True, multilang=True)
+    def report_account_tax_xls(self, **data):
+        report_obj = request.registry['report']
+        self.cr, self.uid, self.pool = request.cr, request.uid, request.registry
+
+        data = report_obj.eval_params(data)
+
+        res = {}
+        self.period_ids = []
+        period_obj = self.pool.get('account.period')
+        self.display_detail = data['form']['display_detail']
+        res['periods'] = ''
+        res['fiscalyear'] = data['form'].get('fiscalyear_id', False)
+
+        if data['form'].get('period_from', False) and data['form'].get('period_to', False):
+            self.period_ids = period_obj.build_ctx_periods(self.cr, self.uid, data['form']['period_from'], data['form']['period_to'])
+
+        content = ''
+        lines = self._get_lines(self._get_basedon(data), company_id=data['form']['company_id'])
+
+        if lines:
+            xls = StringIO.StringIO()
+            xls_workbook = xlwt.Workbook()
+            vat_sheet = xls_workbook.add_sheet('report_vat')
+
+            for x in range(0, len(lines)):
+                for y in range(0, len(lines[0])):
+                    vat_sheet.write(x, y, lines[x].values()[y])
+
+            xls_workbook.save(xls)
+            xls.seek(0)
+            content = xls.read()
+
+        response = request.make_response(content, headers=[
+            ('Content-Type', 'application/vnd.ms-excel'),
+            ('Content-Disposition', 'attachment; filename=report_vat.xls;')
+        ])
+        return response
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
