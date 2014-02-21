@@ -216,6 +216,8 @@ class HttpCase(TransactionCase):
                 line, buf = buf.split('\n', 1)
 
                 line = str(line)
+                if 'CoreText' in line:
+                    continue
                 if line == "ok":
                     break
                 if line.startswith("error"):
