@@ -360,7 +360,6 @@ class Report(http.Controller):
     def _build_wkhtmltopdf_args(self, paperformat, specific_paperformat_args=None):
         """Build arguments understandable by wkhtmltopdf from an ir.actions.report.paperformat
         record.
-        Sample: <img t-att-src="'/report/getbarcode/QR/%s/200/200' % o.name"/>
 
         :paperformat: ir.actions.report.paperformat record associated to a document
         :specific_paperformat_args: a dict containing prioritized wkhtmltopdf arguments
@@ -456,12 +455,10 @@ class Report(http.Controller):
         response.headers.add('Content-Disposition', 'attachment; filename=report.pdf;')
         return response
 
-    @http.route([
-        '/report/getbarcode/<type>/<value>',
-        '/report/getbarcode/<type>/<value>/<int:width>/<int:height>',
-    ], type='http', auth="user")
+    @http.route(['/report/barcode', '/report/barcode/<type>/<value>'], type='http', auth="user")
     def barcode(self, type, value, width=300, height=50):
         """Contoller able to render barcode images thanks to reportlab.
+        Sample: <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
 
         :param type: Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
         'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'Standard39', 'Standard93',
@@ -469,9 +466,11 @@ class Report(http.Controller):
         """
         try:
             barcode = createBarcodeImageInMemory(
-                type, value=value, format='jpg', width=width, height=height
+                type, value=value, format='png', width=width, height=height
             )
         except (ValueError, AttributeError):
             raise exceptions.HTTPException(description='Cannot convert into barcode.')
+        except AssertionError:
+            raise exceptions.HTTPException(description='Please upgrade reportlab to at least 3.0.')
 
-        return request.make_response(barcode, headers=[('Content-Type', 'image/jpg')])
+        return request.make_response(barcode, headers=[('Content-Type', 'image/png')])

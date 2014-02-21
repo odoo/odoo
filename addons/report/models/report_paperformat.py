@@ -76,7 +76,7 @@ class report_paperformat(osv.Model):
                                                 'Orientation'),
                 'header_line': fields.boolean('Display a header line'),
                 'header_spacing': fields.integer('Header spacing'),
-                'dpi': fields.integer('Output DPI'),
+                'dpi': fields.integer('Output DPI', required=True),
                 'report_ids': fields.one2many('ir.actions.report.xml',
                                               'paperformat_id',
                                               'Associated reports',
@@ -93,6 +93,20 @@ class report_paperformat(osv.Model):
         (_check_format_or_page, 'Error ! You cannot select a format AND speficic '
                                 'page width/height.', ['format']),
     ]
+
+    _defaults = {
+        'format': 'A4',
+        'margin_top': 40,
+        'margin_bottom': 20,
+        'margin_left': 7,
+        'margin_right': 7,
+        'page_height': False,
+        'page_width': False,
+        'orientation': 'Landscape',
+        'header_line': False,
+        'header_spacing': 35,
+        'dpi': 90,
+    }
 
 
 class res_company(osv.Model):

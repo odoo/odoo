@@ -53,7 +53,6 @@ class tax_report(http.Controller, common_report_header):
         }
         return request.registry['report'].render(self.cr, self.uid, [], 'account.report_vat', docargs)
 
-
     def _get_basedon(self, form):
         return form['form']['based_on']
 
