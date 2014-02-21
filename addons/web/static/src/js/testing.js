@@ -305,39 +305,16 @@ openerp.testing = {};
             case 'rpc':
                 async = true;
                 (function () {
-                // Bunch of random base36 characters
-                var dbname = 'test_' + Math.random().toString(36).slice(2);
-                // Add db setup/teardown at the start of the stack
+                // Add a session setup at the start of the stack to ensure user is logged in
                 case_stack = case_stack.unshift(function (instance) {
                     // FIXME hack: don't want the session to go through shitty loading process of everything
                     instance.session.session_init = testing.noop;
                     instance.session.load_modules = testing.noop;
                     instance.session.session_bind();
-                    return instance.session.rpc('/web/database/duplicate', {
-                        fields: [
-                            {name: 'super_admin_pwd', value: db.supadmin},
-                            {name: 'db_original_name', value: db.source},
-                            {name: 'db_name', value: dbname}
-                        ]
-                    }).then(function (result) {
-                        if (result.error) {
-                            return $.Deferred().reject(result.error).promise();
-                        }
-                        return instance.session.session_authenticate(
-                            dbname, 'admin', db.password, true);
-                    });
-                }, function (instance) {
-                    return instance.session.rpc('/web/database/drop', {
-                            fields: [
-                                {name: 'drop_pwd', value: db.supadmin},
-                                {name: 'drop_db', value: dbname}
-                            ]
-                        }).then(function (result) {
-                        if (result.error) {
-                            return $.Deferred().reject(result.error).promise();
-                        }
-                        return result;
-                    });
+                    if (instance.session.session_is_valid()) {
+                        return $.when();
+                    }
+                    return instance.session.session_authenticate(db.source, 'admin', db.password, true);
                 });
                 })();
             }
