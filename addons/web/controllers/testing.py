@@ -8,7 +8,7 @@ import operator
 import os
 
 from mako.template import Template
-from openerp.modules import module
+from openerp.modules import module, registry
 from openerp import http
 from openerp.http import request
 
@@ -90,7 +90,11 @@ class TestRunnerController(http.Controller):
 
     @http.route('/web/tests', type='http', auth="none")
     def index(self, mod=None, **kwargs):
-        ms = module.get_modules()
+        source = kwargs.get('source')
+        if source:
+            ms = list(registry.RegistryManager.get(source)._init_modules)
+        else:
+            ms = module.get_modules()
         manifests = dict(
             (name, desc)
             for name, desc in zip(ms, map(self.load_manifest, ms))
