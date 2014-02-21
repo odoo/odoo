@@ -263,7 +263,9 @@ class ThreadedServer(CommonServer):
         self.httpd.serve_forever()
 
     def http_spawn(self):
-        threading.Thread(target=self.http_thread).start()
+        t = threading.Thread(target=self.http_thread, name="openerp.service.httpd")
+        t.setDaemon(True)
+        t.start()
         _logger.info('HTTP service (werkzeug) running on %s:%s', self.interface, self.port)
 
     def start(self):
