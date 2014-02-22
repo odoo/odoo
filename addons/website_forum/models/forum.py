@@ -19,40 +19,37 @@
 #
 ##############################################################################
 
-from openerp.osv import osv, fields
-from openerp import SUPERUSER_ID
-
-from openerp.tools.translate import _
 import re
+
+from openerp import SUPERUSER_ID
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
 
 from openerp.addons.website.models.website import slug
 
 #TODO: Do we need a forum object like blog object ? Need to check with BE team 
-# class Forum(osv.Model):
-#     _name = 'blog.blog'
-#     _description = 'Blogs'
-#     _inherit = ['mail.thread', 'website.seo.metadata']
-#     _order = 'name'
-# 
-#     _columns = {
-#         'name': fields.char('Name', required=True),
-#         'description': fields.text('Description'),
-#         'forum_post_ids': fields.one2many(
-#             'website.forum.post', 'forum_id',
-#             'Posts',
-#         ),
-#     }
-
-#TODO: Need to implement badges and user profile
+class Forum(osv.Model):
+    _name = 'website.forum'
+    _description = 'Blogs'
+    _inherit = ['mail.thread', 'website.seo.metadata']
+    _order = 'name'
+ 
+    _columnss = {
+        'name': fields.char('Name', required=True),
+        'description': fields.text('Description'),
+        'forum_post_ids': fields.one2many(
+            'website.forum.post', 'forum_id',
+            'Posts',
+        ),
+    }
 
 class Post(osv.Model):
-    _name = "website.forum.post"
+    _name = 'website.forum.post'
     _description = "Question"
     _inherit = ['mail.thread', 'website.seo.metadata']
 
     _columns = {
-        #TODO: do we need a forum object like blog object Need to check with BE team?
-        #'forum_id': fields.many2one('website.forum', 'Forum'),
+        'forum_id': fields.many2one('website.forum', 'Forum'),
         
         'name': fields.char('Topic', size=64),
         'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
@@ -63,7 +60,7 @@ class Post(osv.Model):
         'write_uid': fields.many2one('res.users', 'Update by', select=True, readonly=True),
         
         'tags': fields.many2many('website.forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tag'),
-        'vote_ids':fields.one2many('website.forum.post.vote', 'Vote'),
+        'vote_ids':fields.one2many('website.forum.post.vote', 'post_id', 'Vote'),
         
         'favourite_ids': fields.many2many('res.users', 'forum_favourite_rel', 'forum_id', 'user_id', 'Favourite'),
         
@@ -91,13 +88,14 @@ class Post(osv.Model):
 
 class Users(osv.Model):
     _inherit = 'res.users'
+    
     _columns = {
         'question_ids':fields.one2many('website.forum.post', 'create_uid', 'Questions', domain=[('parent_id','=',False)]),
         'answer_ids':fields.one2many('website.forum.post', 'create_uid', 'Answers', domain=[('parent_id','=',False), ('child_ids','=',True)]),
         'vote_ids': fields.one2many('website.forum.post.vote', 'user_id', 'Votes'),
-        #TODO: 'tag_ids':fields.function()
         
-        #Badges : we will use the groups to define badges, two purpose will get solved
+        # TODO: 'tag_ids':fields.function()
+        # Badges : we will use the groups to define badges, two purpose will get solved
         # - Define Groups as Badges with Forum as an Application 
         # - Access control
     }
@@ -118,11 +116,11 @@ class PostHistory(osv.Model):
 
 class Vote(osv.Model):
     _name = 'website.forum.post.vote'
-    _description = "Vote"
-    _column = {
+    _description = 'Vote'
+    _columns = {
         'post_id': fields.many2one('website.forum.post', 'Post'),
         'user_id': fields.many2one('res.users', 'User'),
-        'vote': fields.integer('rate'), #Value in between wither +1 or -1
+        'vote': fields.integer('rate'), 
     }
 
 class Tags(osv.Model):
@@ -132,4 +130,5 @@ class Tags(osv.Model):
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True),
         'post_ids': fields.many2many('website.forum.post', 'forum_tag_que_rel', 'tag_id', 'forum_id', 'Questions', readonly=True),
-    }
+   }
+    
