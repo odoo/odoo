@@ -94,6 +94,8 @@ class Users(osv.Model):
         'answer_ids':fields.one2many('website.forum.post', 'create_uid', 'Answers', domain=[('parent_id','=',False), ('child_ids','=',True)]),
         'vote_ids': fields.one2many('website.forum.post.vote', 'user_id', 'Votes'),
         
+        'karma': fields.integer('Karma')
+        
         # TODO: 'tag_ids':fields.function()
         # Badges : we will use the groups to define badges, two purpose will get solved
         # - Define Groups as Badges with Forum as an Application 
@@ -123,12 +125,27 @@ class Vote(osv.Model):
         'vote': fields.integer('rate'), 
     }
 
+class ForumActivity(osv.Model):
+    _name = "website.forum.activity"
+    _description = "Activity"
+
+    _columns = {
+        'name': fields.char('Order Reference', size=64, required=True),
+        'post_id': fields.many2one('website.forum.post', 'Post'),
+        'user_id': fields.many2one('res.users', 'User'),
+        'create_date': fields.datetime('Created on', select=True, readonly=True),
+        'create_uid': fields.many2one('res.users', 'Created by', select=True, readonly=True),
+        'badge_id': fields.many2one('res.groups', 'Badge'),
+        'karma_add': fields.integer('Added Karma'),
+        'karma_sub': fields.integer('Karma Removed')
+   }
+
 class Tags(osv.Model):
     _name = "website.forum.tag"
     _description = "Tag"
     _inherit = ['website.seo.metadata']
     _columns = {
-        'name': fields.char('Order Reference', size=64, required=True),
+        'name': fields.char('Name', size=64, required=True),
         'post_ids': fields.many2many('website.forum.post', 'forum_tag_que_rel', 'tag_id', 'forum_id', 'Questions', readonly=True),
    }
     
