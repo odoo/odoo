@@ -27,7 +27,7 @@ import re
 
 from openerp.addons.website.models.website import slug
 
-#TODO: do we need a forum object like blog object Need to check with BE team?
+#TODO: Do we need a forum object like blog object ? Need to check with BE team 
 # class Forum(osv.Model):
 #     _name = 'blog.blog'
 #     _description = 'Blogs'
@@ -42,6 +42,8 @@ from openerp.addons.website.models.website import slug
 #             'Posts',
 #         ),
 #     }
+
+#TODO: Need to implement badges and user profile
 
 class Post(osv.Model):
     _name = "website.forum.post"
@@ -87,19 +89,35 @@ class Post(osv.Model):
         'active': True
     }
 
+class Users(osv.Model):
+    _inherit = 'res.users'
+    _columns = {
+        'question_ids':fields.one2many('website.forum.post', 'create_uid', 'Questions', domain=[('parent_id','=',False)]),
+        'answer_ids':fields.one2many('website.forum.post', 'create_uid', 'Answers', domain=[('parent_id','=',False), ('child_ids','=',True)]),
+        'vote_ids': fields.one2many('website.forum.post.vote', 'user_id', 'Votes'),
+        #TODO: 'tag_ids':fields.function()
+        
+        #Badges : we will use the groups to define badges, two purpose will get solved
+        # - Define Groups as Badges with Forum as an Application 
+        # - Access control
+    }
+
 class PostHistory(osv.Model):
     _name = 'website.forum.post.history'
-    _description = "Post History"
+    _description = 'Post History'
     _inherit = ['website.seo.metadata']
     _columns = {
         'post_id': fields.many2one('website.forum.post', 'Post'),
+        'create_date': fields.datetime('Created on', select=True, readonly=True),
+        'create_uid': fields.many2one('res.users', 'Created by', select=True, readonly=True),
+        'version': fields.integer('Version'),
         'name': fields.char('Update Notes', size=64, required=True),
         'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
         'tags': fields.many2many('website.forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tag'),
     }
 
 class Vote(osv.Model):
-    _name = "website.forum.post.vote"
+    _name = 'website.forum.post.vote'
     _description = "Vote"
     _column = {
         'post_id': fields.many2one('website.forum.post', 'Post'),
@@ -109,9 +127,9 @@ class Vote(osv.Model):
 
 class Tags(osv.Model):
     _name = "website.forum.tag"
-    _description = "Tags"
+    _description = "Tag"
     _inherit = ['website.seo.metadata']
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True),
-        'post_ids': fields.many2many('website.forum.post', 'forum_tag_que_rel', 'tag_id', 'forum_id', 'Question', readonly=True),
+        'post_ids': fields.many2many('website.forum.post', 'forum_tag_que_rel', 'tag_id', 'forum_id', 'Questions', readonly=True),
     }
