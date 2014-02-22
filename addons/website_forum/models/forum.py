@@ -27,59 +27,91 @@ import re
 
 from openerp.addons.website.models.website import slug
 
-#class WebsiteForum(osv.Model):
-#    _inhrit = "website"
+#TODO: do we need a forum object like blog object Need to check with BE team?
+# class Forum(osv.Model):
+#     _name = 'blog.blog'
+#     _description = 'Blogs'
+#     _inherit = ['mail.thread', 'website.seo.metadata']
+#     _order = 'name'
+# 
+#     _columns = {
+#         'name': fields.char('Name', required=True),
+#         'description': fields.text('Description'),
+#         'forum_post_ids': fields.one2many(
+#             'website.forum.post', 'forum_id',
+#             'Posts',
+#         ),
+#     }
 
-class website_form_post_rate(osv.Model):
-    _name = "website.forum.post.rate"
-    _column = {
-        'post_id': fields.many2one('website.forum.post', 'Forum Post'),
-        'user_id': fields.many2one('res.users', 'User'),
-        'rate': fields.integer('rate'),
-    }
-
-class website_forum_post(osv.Model):
+class Post(osv.Model):
     _name = "website.forum.post"
-    _description = "Website forum post"
+    _description = "Question"
     _inherit = ['mail.thread', 'website.seo.metadata']
 
     _columns = {
-        #add version and category , instead of page use category in website,
+        #TODO: do we need a forum object like blog object Need to check with BE team?
+        #'forum_id': fields.many2one('website.forum', 'Forum'),
+        
         'name': fields.char('Topic', size=64),
         'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
-        #'forum_id': fields.many2one('website.forum', 'Forum'),
-        'create_date': fields.datetime('Created on', select=True, readonly=True),
-        'create_uid': fields.many2one('res.users', 'Author', select=True, readonly=True ),
-        'write_date': fields.datetime('Last Modified on', select=True, readonly=True ),
-        'write_uid': fields.many2one('res.users', 'Last Contributor', select=True, readonly=True),
+        
+        'create_date': fields.datetime('Asked on', select=True, readonly=True),
+        'create_uid': fields.many2one('res.users', 'Asked by', select=True, readonly=True ),
+        'write_date': fields.datetime('Update on', select=True, readonly=True ),
+        'write_uid': fields.many2one('res.users', 'Update by', select=True, readonly=True),
+        
         'tags': fields.many2many('website.forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tag'),
-        'up_votes': fields.many2many('res.users', 'forum_user_upvotes_rel', 'forum_id', 'user_id', 'Up votes'),
-        'favourite_que_ids': fields.many2many('res.users', 'forum_user_fav_rel', 'forum_id', 'user_id', 'Down votes'),
-        'views': fields.integer('Views'),
+        'vote_ids':fields.one2many('website.forum.post.vote', 'Vote'),
+        
+        'favourite_ids': fields.many2many('res.users', 'forum_favourite_rel', 'forum_id', 'user_id', 'Favourite'),
+        
         'state': fields.selection([('active', 'Active'),('close', 'Close'),('offensive', 'Offensive')], 'Status'),
+        'active': fields.boolean('Active'),
+        'views': fields.integer('Views'),
+        
         'parent_id': fields.many2one('website.forum.post', 'Parent'),
         'child_ids': fields.one2many('website.forum.post', 'parent_id', 'Child'),
+        
         # TODO FIXME: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [
                 '&', ('model', '=', self._name), ('type', '=', 'comment')
             ],
-            string='Website Messages',
-            help="Website communication history",
+            string='Post Messages',
+            help="Comments on forum post",
         ),
     }
     _defaults = {
         'state': 'active',
+        'active': True
     }
 
-class website_forum_tag(osv.Model):
+class PostHistory(osv.Model):
+    _name = 'website.forum.post.history'
+    _description = "Post History"
+    _inherit = ['website.seo.metadata']
+    _columns = {
+        'post_id': fields.many2one('website.forum.post', 'Post'),
+        'name': fields.char('Update Notes', size=64, required=True),
+        'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
+        'tags': fields.many2many('website.forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tag'),
+    }
+
+class Vote(osv.Model):
+    _name = "website.forum.post.vote"
+    _description = "Vote"
+    _column = {
+        'post_id': fields.many2one('website.forum.post', 'Post'),
+        'user_id': fields.many2one('res.users', 'User'),
+        'vote': fields.integer('rate'), #Value in between wither +1 or -1
+    }
+
+class Tags(osv.Model):
     _name = "website.forum.tag"
-    _description = "Website forum tag"
+    _description = "Tags"
     _inherit = ['website.seo.metadata']
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True),
-        #'forum_id': fields.many2one('website.forum', 'Forum'),
         'post_ids': fields.many2many('website.forum.post', 'forum_tag_que_rel', 'tag_id', 'forum_id', 'Question', readonly=True),
     }
-
