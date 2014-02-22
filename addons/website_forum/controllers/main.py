@@ -19,23 +19,24 @@
 #
 ##############################################################################
 
+import werkzeug.urls
+
+from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
-from openerp.addons.web.http import request
+
 from openerp.tools.translate import _
-from openerp.addons.website.controllers.main import Website as controllers
-controllers = controllers()
-
-
 from datetime import datetime, timedelta
+from openerp.addons.web.http import request
+
 from dateutil.relativedelta import relativedelta
-from openerp import tools
-import werkzeug.urls
+from openerp.addons.website.controllers.main import Website as controllers
+
+controllers = controllers()
 
 class website_forum(http.Controller):
     @http.route(['/question/', '/question/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
     def questions(self, page=1, **searches):
-        print "questions----------------",self,page,searches
         cr, uid, context = request.cr, request.uid, request.context
         forum_obj = request.registry['website.forum.post']
         tag_obj = request.registry['website.forum.tag']
@@ -51,8 +52,6 @@ class website_forum(http.Controller):
             offset=pager['offset'], context=request.context)
         question_ids = forum_obj.browse(request.cr, request.uid, obj_ids,
                                       context=request.context)
-
-        print "question_ids----",question_ids
         values = {
             'question_ids': question_ids,
             'pager': pager,
