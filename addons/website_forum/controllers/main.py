@@ -77,7 +77,7 @@ class website_forum(http.Controller):
         }
         return request.website.render("website_forum.question_description_full", values)
 
-    @http.route('/question/add_question/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    @http.route('/question/askquestion/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def add_question(self, question_name="New question", **kwargs):
         return self._add_question(question_name, request.context, **kwargs)
 

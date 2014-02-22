@@ -17,7 +17,7 @@
 			name="Footer Questions Link">
 			<xpath expr="//footer//ul[@name='products']" position="inside">
 				<li>
-					<a href="/question">Support</a>
+					<a href="/questions">Support</a>
 				</li>
 			</xpath>
 		</template>
@@ -25,7 +25,6 @@
 		<!-- Page -->
 
 		<template id="question_list">
-			<div id="wrap">
 			<div class="tab-pane active" id="all">
 				<div class="row">
 					<div class="col-xs-12">
@@ -96,22 +95,24 @@
 					</div>
 				</div>
 			</div>
-			</div>
 		</template>
 
 		<template id="question_search">
 			<form class="navbar-form " role="search">
 				<div class="form-group search-navbar">
-					<input type="text" class="form-control" placeholder="Search Or Ask your Question" />
+					<input type="text" class="form-control" placeholder="Search Or Ask  your Question" />
 				</div>
 				<button type="submit" class="btn btn-default AskButton">Ask Question</button>
 			</form>
 		</template>
 
-
-		<template id="index" name="Question">
+		<!-- index page of forum -->
+		<template id="index" name="Questions">
 			<t t-call="website.layout">
-				<div id="wrap">
+				<t t-set="head">
+					<link rel='stylesheet' href='/website_blog/static/src/css/website_forum.css' />
+				</t>
+				<div id="wrap" class="js_blog">
 					<t t-call="website_forum.question_search" />
 					<div class="row">
 						<div class="col-xs-3">
@@ -151,7 +152,6 @@
 							<a href="#unanswerd" data-toggle="tab">Unanswerd</a>
 						</li>
 					</ul>
-
 					<ul class="media-list">
 						<li t-foreach="question_ids" t-as="question" class="media">
 							<t t-call="website_forum.question_list" />
@@ -292,8 +292,10 @@
 								<div class="col-xs-12">
 									<span>
 										<h6>
-											How to send some signal to cash drawer to open it after click
-											print receipt or something similar? I don't know whether this
+											How to send some signal to cash drawer to open it after
+											click
+											print receipt or something similar? I don't know whether
+											this
 											depends on cash drawer's driver or not ?
 										</h6>
 									</span>
@@ -332,7 +334,8 @@
 								<div class="col-xs-12">
 									<span>
 										<h6>
-											There should be a call to the cash drawers API. Read the technical
+											There should be a call to the cash drawers API. Read the
+											technical
 											manual of the hardware you are using. Thanks.
 										</h6>
 									</span>
@@ -355,15 +358,23 @@
 							<div class="col-xs-12">
 								<span>
 									<h6>
-										Usually the cash drawer behaves like a printer in the sense that it
-										has a RS232 or USB port. However the cash drawer is dummy and
-										only uses the port to receive a signal (positive voltage)
+										Usually the cash drawer behaves like a printer in the sense
+										that it
+										has a RS232 or USB port. However the cash drawer is
+										dummy and
+										only uses the port to receive a signal (positive
+										voltage)
 										which causes it to open.
-										So you only need send any signal to the RS232 or USB port (like
-										for insance print the ascii character "a" to the rs232 port)
-										and it will open!. I the old days you could test it from
-										hyperterminal, I guess nowadays you will have to make a
-										javascript app that sends a character to the rs232 port.
+										So you only need send any
+										signal to the RS232 or USB port (like
+										for insance print the
+										ascii character "a" to the rs232 port)
+										and it will open!. I the
+										old days you could test it from
+										hyperterminal, I guess nowadays
+										you will have to make a
+										javascript app that sends a character
+										to the rs232 port.
 									</h6>
 								</span>
 							</div>
