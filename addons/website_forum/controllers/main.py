@@ -35,7 +35,7 @@ from openerp.addons.website.controllers.main import Website as controllers
 controllers = controllers()
 
 class website_forum(http.Controller):
-    @http.route(['/question/', '/question/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/questions/', '/question/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
     def questions(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         forum_obj = request.registry['website.forum.post']
@@ -45,7 +45,7 @@ class website_forum(http.Controller):
         question_count = forum_obj.search(
             request.cr, request.uid, [], count=True,
             context=request.context)
-        pager = request.website.pager(url="/question/", total=question_count, page=page, step=step, scope=5)
+        pager = request.website.pager(url="/questions/", total=question_count, page=page, step=step, scope=5)
         
         obj_ids = forum_obj.search(
             request.cr, request.uid, [], limit=step,
