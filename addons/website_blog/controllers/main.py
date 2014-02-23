@@ -25,7 +25,9 @@ from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 
 import werkzeug
-
+import random
+import json
+from openerp.tools import html2plaintext
 
 
 class WebsiteBlog(http.Controller):
@@ -144,8 +146,26 @@ class WebsiteBlog(http.Controller):
             'path_filter': path_filter,
             'date': date,
         }
-        return request.website.render("website_blog.blog_post_short", values)
+        response = request.website.render("website_blog.blog_post_short", values)
+        response.set_cookie('unvisited', json.dumps(blog_post_ids))
+        return response
 
+    def get_next_post(self, cr, uid, blog_post, context):
+        """ Get next blog post display in footer of current post """
+        blog_post_obj = request.registry.get('blog.post')
+        unvisited = eval(request.httprequest.cookies.get('unvisited'))
+        if blog_post.id in unvisited:
+            # if post is not visited yet return a random post
+            unvisited.remove(blog_post.id)
+            post_list = blog_post_obj.search(cr, uid, [('id', '!=', blog_post.id)],context=context)
+            next_post_id = post_list[random.randint(0, (len(post_list)-1))]
+        else:
+            # if post is visited return a most visited(count) and post share same keywords
+            post_list = blog_post_obj.search(cr, uid, [('id', '!=', blog_post.id),('website_meta_keywords', 'ilike', blog_post.website_meta_keywords)], order='visits',context=context)
+            next_post_id = post_list and post_list[0] or (unvisited and unvisited[0] or False)
+        next_post = next_post_id and blog_post_obj.browse(cr, uid, next_post_id, context=context) or False
+        return (next_post,unvisited)
+    
     @http.route([
         '/blogpost/<model("blog.post"):blog_post>/',
     ], type='http', auth="public", website=True, multilang=True)
@@ -172,6 +192,7 @@ class WebsiteBlog(http.Controller):
          - 'pager': the pager to display comments pager in a blog post
          - 'tag': current tag, if tag_id
          - 'nav_list': a dict [year][month] for archives navigation
+         - 'next_blog': next blog post , display in footer
         """
 
         pager_url = "/blogpost/%s" % blog_post.id
@@ -196,9 +217,17 @@ class WebsiteBlog(http.Controller):
         tag_ids = tag_obj.search(cr, uid, [], context=context)
         tags = tag_obj.browse(cr, uid, tag_ids, context=context)
 
+        blog_post_obj = request.registry.get('blog.post')
+        if not request.httprequest.session.get(blog_post.id,False):
+                request.httprequest.session[blog_post.id] = True
+                counter = blog_post.visits + 1;
+                blog_post_obj.write(cr, SUPERUSER_ID, [blog_post.id], {'visits':counter},context=context)
+        
         MONTHS = [None, _('January'), _('February'), _('March'), _('April'),
             _('May'), _('June'), _('July'), _('August'), _('September'),
             _('October'), _('November'), _('December')]
+        
+        next_post, unvisited = self.get_next_post(cr, uid, blog_post, context)
 
         values = {
             'blog': blog_post.blog_id,
@@ -211,12 +240,14 @@ class WebsiteBlog(http.Controller):
             'nav_list': self.nav_list(),
             'enable_editor': enable_editor,
             'date': date,
-            'date_name': date and "%s %s" % (MONTHS[int(date.split("-")[1])], date.split("-")[0]) or None
+            'date_name': date and "%s %s" % (MONTHS[int(date.split("-")[1])], date.split("-")[0]) or None,
+            'next_post' : next_post,
         }
-        return request.website.render("website_blog.blog_post_complete", values)
-
-    @http.route(['/blogpost/comment'], type='http', auth="public", methods=['POST'], website=True)
-    def blog_post_comment(self, blog_post_id=0, **post):
+        response = request.website.render("website_blog.blog_post_complete", values)
+        response.set_cookie('unvisited', json.dumps(unvisited))
+        return response
+    
+    def _blog_post_message(self, blog_post_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
         if post.get('comment'):
             user = request.registry['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
@@ -225,15 +256,35 @@ class WebsiteBlog(http.Controller):
             if group_id in [group.id for group in group_ids]:
                 blog_post = request.registry['blog.post']
                 blog_post.check_access_rights(cr, uid, 'read')
-                blog_post.message_post(
+                message_id = blog_post.message_post(
                     cr, SUPERUSER_ID, int(blog_post_id),
                     body=post.get('comment'),
                     type='comment',
                     subtype='mt_comment',
                     author_id=user.partner_id.id,
+                    discussion=post.get('discussion'),
                     context=dict(context, mail_create_nosubcribe=True))
+                return message_id
+
+    @http.route(['/blogpost/comment'], type='http', auth="public", methods=['POST'], website=True)
+    def blog_post_comment(self, blog_post_id=0, **post):
+        self._blog_post_message(blog_post_id, **post)
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
+    @http.route(['/blogpost/post_discussion'], type='json', auth="public", website=True)
+    def post_discussion(self, blog_post_id=0, **post):
+        id = self._blog_post_message(blog_post_id, **post)
+        mail_obj = request.registry.get('mail.message')
+        values = []
+        post = mail_obj.browse(request.cr, SUPERUSER_ID, id)
+        values = {
+            "author_name": post.author_id.name,
+            "date": post.date,
+            "body": html2plaintext(post.body),
+            "author_image": "data:image/png;base64,%s" % post.author_id.image,
+            }
+        return values
+    
     @http.route('/blogpost/new', type='http', auth="public", website=True, multilang=True)
     def blog_post_create(self, blog_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -259,3 +310,25 @@ class WebsiteBlog(http.Controller):
         create_context = dict(context, mail_create_nosubscribe=True)
         new_blog_post_id = request.registry['blog.post'].copy(cr, uid, blog_post_id, {}, context=create_context)
         return werkzeug.utils.redirect("/blogpost/%s/?enable_editor=1" % new_blog_post_id)
+
+    @http.route('/blogpost/get_discussion', type='json', auth="public", website=True)
+    def discussion(self, post_id=0, discussion=None, **post):
+        mail_obj = request.registry.get('mail.message')
+        values = []
+        ids = mail_obj.search(request.cr, SUPERUSER_ID, [('res_id', '=', int(post_id)) ,('model','=','blog.post'), ('discussion', '=', discussion)])
+        if ids:
+            for post in mail_obj.browse(request.cr, SUPERUSER_ID, ids):
+                values.append({
+                    "author_name": post.author_id.name,
+                    "date": post.date,
+                    'body': html2plaintext(post.body),
+                    'author_image': "data:image/png;base64,%s" % post.author_id.image,
+                })
+        return values
+
+    @http.route('/blogpsot/change_background', type='json', auth="public", website=True)
+    def change_bg(self, post_id=0,image=None, **post):
+        post_obj = request.registry.get('blog.post')
+        values = {'content_image' : image}
+        ids = post_obj.write(request.cr, SUPERUSER_ID, [int(post_id)], values)
+        return []

@@ -35,16 +35,13 @@ OpenERP Blog
         'data/website_blog_data.xml',
         'views/website_blog_views.xml',
         'views/website_blog_templates.xml',
-        'wizard/document_page_show_diff_view.xml',
         'security/ir.model.access.csv',
         'security/website_blog.xml',
     ],
     'demo': [
         'data/website_blog_demo.xml'
     ],
-    'test': [
-        'tests/test_website_blog.yml'
-    ],
+    'test': [],
     'qweb': [
         'static/src/xml/*.xml'
     ],

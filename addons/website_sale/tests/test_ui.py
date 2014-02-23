@@ -23,4 +23,3 @@ class TestUi(openerp.tests.HttpCase):
     @unittest2.expectedFailure
     def test_04_public_checkout(self):
         self.phantom_js("/", "openerp.website.Tour.run_test('shop_buy_product')", "openerp.website.Tour.ShopTest", inject=inject)
-
