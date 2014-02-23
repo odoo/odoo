@@ -161,20 +161,23 @@
 
 <!-- Blog Post Complete -->
 <template id="blog_post_complete" name="Blog Post">
-    <t t-call="website_blog.index">
+  <t t-call="website_blog.index">
 
-    <div class="container" id="title">
-        <h1 class="text-center" t-field="blog_post.name" id="blog_post_name"/>
-        <p class="post-meta text-muted text-center" name="blog_post_data">
-            <span class="fa fa-calendar oe_date" name="blog_post_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
-            <span t-if="len(blog_post.message_ids) &gt; 0" class="fa fa-comment-o"> With
-                <a t-attf-href="#comments">
-                    <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
-                    <t t-if="len(blog_post.message_ids) > 1"><t t-esc="len(blog_post.message_ids)"/> comments</t>
-                </a>
-            </span>
-        </p>
+    <div class="cover cover_header text-center" id="title" t-attf-style="background-image : url(#{blog_post.content_image})">
+        <div class="text-right">
+            <a id="change_cover" t-ignore="true" class="btn btn-primary css_non_editable_mode_hidden">
+                Change Cover Photo
+            </a>
+        </div>
+        <h1 t-field="blog_post.name" id="blog_post_name"/>
+        <h2 t-field="blog_post.sub_title"/>
+        <div>
+            <img class="img-circle" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 30px; margin-right: 10px;"/>
+            <small id="blog_author" t-field="blog_post.create_uid.name"/>
+        </div>
+        <a href="#blog_content" class="fa fa-angle-down fa-2x fa-inverse mt32"/>
     </div>
+
     <div class="container">
         <t t-call="website.publish_management">
             <t t-set="object" t-value="blog_post"/>
@@ -189,6 +192,7 @@
     </div>
     <div id="blog_content" t-field="blog_post.content"/>
 
+    <!-- FP Note: should we remove this or put it in options? -->
     <section id="comments" class="container">
         <ul class="media-list" id="comments-list">
             <li t-foreach="blog_post.website_message_ids" t-as="message" class="media">
@@ -207,7 +211,19 @@
             </li>
         </ul>
     </section>
-    </t>
+
+    <div class="cover cover_footer mb0 text-center" t-attf-style="background-image: url(#{next_post.content_image})" t-if="next_post" t-ignore="True">
+        <p>Read Next</p>
+        <a class="hidden js_next" t-attf-href="/blogpost/#{ slug(next_post) }#wrap"/>
+        <h1 t-field="next_post.name"/>
+        <h2 t-field="next_post.sub_title"/>
+        <div>
+            <img class="img-circle" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(next_post.create_uid.id)" style="width: 30px; margin-right: 10px;"/>
+            <small id="blog_author" t-field="next_post.create_uid.name"/>
+        </div>
+    </div>
+
+  </t>
 </template>
 
 <template id="blog_breadcrumb" name="Breadcrumb"
@@ -227,51 +243,6 @@
             </div>
           </div>
         </div>
-    </xpath>
-</template>
-
-<!-- Options: Blog Post: Full Screen Background Image -->
-<template id="blog_post_background_cover" name="Blog Cover"
-        inherit_option_id="website_blog.blog_post_complete" inherit_id="website_blog.blog_post_complete">
-    <xpath expr="//div[@id='title']" position="attributes">
-        <attribute name="class">blog_cover</attribute>
-        <attribute name="t-attf-style">background-image : url(#{blog_post.content_image})</attribute>
-    </xpath>
-    <xpath expr="//h1[@id='blog_post_name']" position="replace">
-        <div class="text-right">
-            <a id="change_cover" t-ignore="true" class="btn btn-primary css_non_editable_mode_hidden" style="cursor :pointer">
-                Change Cover Photo
-            </a>
-        </div>
-        <h1 class="text-center cover_title" t-ignore="true"><strong t-field="blog_post.name" id="blog_post_name"/></h1>
-        <p t-ignore="true" id="is_document_user" groups="base.group_document_user"/>
-    </xpath>
-    <xpath expr="//p[@name='blog_post_data']" position="replace">
-        <h2 class="text-center" t-field="blog_post.sub_title"/>
-        <p class="post-meta text-muted text-center" name="blog_post_data"/>
-    </xpath>
-    <xpath expr="//div[@id='title']" position="inside">
-        <div class="text-center blog_item" t-ignore="true">
-            <img class="img-circle" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 30px; margin-right: 10px;"/>
-            <small id="blog_author" t-field="blog_post.create_uid.name"/>
-        </div>
-        <div class="text-center mt32">
-            <a href="#blog_content" t-ignore="true"><span class="fa fa-angle-down fa-2x fa-inverse"/></a>
-        </div>
-    </xpath>
-    <xpath expr="//section[@id='comments']" position="after">
-        <t t-if="next_post">
-            <div class="cover_footer mb0" t-attf-style="background-image: url(#{next_post.content_image})">
-                <p class="text-center" t-ignore="true">Read Next</p>
-                <a class="hidden js_next" t-attf-href="/blogpost/#{ slug(next_post) }#wrap"/>
-                <h1 class="text-center" t-field="next_post.name"/>
-                <h2 class="text-center" t-field="next_post.sub_title"/>
-                <div class="text-center blog_item" t-ignore="true">
-                    <img class="img-circle" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(next_post.create_uid.id)" style="width: 30px; margin-right: 10px;"/>
-                    <small id="blog_author" t-field="next_post.create_uid.name"/>
-                </div>
-            </div>
-        </t>
     </xpath>
 </template>
 
