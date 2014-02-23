@@ -95,78 +95,68 @@
 
 
 <!-- Blog Post Summary -->
-<template id="blog_post_short" name="Blog Post Summary">
+<template id="blog_post_short" name="Blog Posts">
     <t t-call="website_blog.index">
-    <div t-if="not blog_posts" class="container mb64">
-      <p class="css_editable_hidden">
-        <h1>No blog post yet.</h1>
-      </p>
-      <t groups="base.group_website_publisher">
-        <t groups="base.group_document_user">
-          <p>Click on "Content" on the top menu to write your first blog post.</p>
-        </t>
-      </t>
-    </div>
-    <t t-foreach="blog_posts" t-as="blog_post">
-      <div name="blog_post_summary" t-att-data-publish="blog_post.website_published and 'on' or 'off'">
-        <h2 class="text-center">
-            <a t-attf-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}" t-field="blog_post.name"></a>
-        </h2>
-        <p class="post-meta text-muted text-center" name='blog_post_data'>
-            <span class="fa fa-calendar oe_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
-            <span t-if="len(blog_post.message_ids) &gt; 0" class="fa fa-comment-o">
-                <a t-attf-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}#comments">
-                    <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
-                    <t t-if="len(blog_post.message_ids) > 1"><t t-esc="len(blog_post.message_ids)"/> comments</t>
-                </a>
-            </span>
-            <span t-if="not blog_post.website_published" class="label label-danger">not published</span>
-        </p>
-        <hr/>
-      </div>
 
-    </t>
-    </t>
-</template>
-
-<!-- Blog Post List -->
-<template id="opt_blog_post_short_list" name="Blog Post List"
-        inherit_id="website_blog.blog_post_short">
-    <xpath expr="//div[@name='blog_post_summary']" position="replace">
-        <div class="readable" name="blog_post_summary" t-att-publish-data="blog_post.website_published and 'on' or 'off'">
-            <div class="row">
-                <a class="col-sm-11" t-attf-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}"><h2 t-field="blog_post.name"></h2></a>
-                <h2 class="col-sm-1"><img class="img-circle" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 40px;"/></h2>
-            </div>
-            <div class="row col-sm-12 text-muted">
-                <h3 t-field="blog_post.sub_title"/>
-                <p class="post-meta text-muted text-left " name='blog_post_data'>
-                    <span t-field="blog_post.create_uid.name"/> <span class="fa fa-calendar oe_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
-                </p>
-            </div>
-            <hr class="mb0 mt0"/>
+        <div t-if="not blog_posts" class="container mb64">
+          <p class="css_editable_hidden">
+            <h1>No blog post yet.</h1>
+          </p>
+          <p groups="base.group_document_user">
+            Click on "Content" on the top menu to write your first blog post.
+          </p>
         </div>
-    </xpath>
-</template>
+        <div class="oe_structure"/>
 
-<!-- Options: Blog Post Summary: hide author -->
-<template id="opt_blog_post_short_author" name="Author"
-        inherit_option_id="website_blog.blog_post_short">
-    <xpath expr="//span[@class='fa fa-calendar oe_date']" position="after">
-        <span class="fa fa-user"> By <span t-field="blog_post.create_uid"/> &amp;nbsp;</span>
-    </xpath>
+        <div class="row">
+          <div class="col-md-8 col-md-offset-2" t-ignore="True">
+
+            <div t-foreach="blog_posts" t-as="blog_post" class="mb32">
+
+              <img class="img-circle pull-right mt16"
+                t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)"
+                style="width: 50px;"/>
+
+              <a t-attf-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}">
+                  <h2 t-field="blog_post.name" class="mb4"/>
+              </a>
+
+              <div class="text-muted">
+                  <h4
+                    t-field="blog_post.sub_title"
+                    class="mb4 mt4"/>
+                  <p name='blog_post_data'>
+
+                    <span t-field="blog_post.create_uid.name"/>
+                    &#5760; <span t-field="blog_post.create_date" t-field-options='{"format": "MMMM yyyy"}'/>
+                    <span t-if="len(blog_post.message_ids) &gt; 0">
+                        &#5760; <t t-esc="len(blog_post.message_ids)"/>
+                        <t t-if="len(blog_post.message_ids) &lt;= 1" >comment</t>
+                        <t t-if="len(blog_post.message_ids) > 1">comments</t>
+                    </span>
+
+                    <span t-if="not blog_post.website_published" class="label label-danger">not published</span>
+                  </p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="oe_structure"/>
+    </t>
 </template>
 
 <!-- Option: Blog Post Summary: show tags -->
 <template id="opt_blog_post_short_tags" name="Tags"
         inherit_option_id="website_blog.blog_post_short">
     <xpath expr="//p[@name='blog_post_data']" position="after">
-        <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
+        <div class="text-muted" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
             <t t-foreach="blog_post.tag_ids" t-as="tag">
                 <a t-attf-href="/blog/#{ slug(blog) }/tag/#{ slug(tag) }" t-esc="tag.name"/> &amp;nbsp;
             </t>
-        </p>
+        </div>
     </xpath>
 </template>
 
@@ -389,26 +379,26 @@
     </t>
 </template>
 
-<!-- Option: Left Column for extra info -->
+<!-- Option:Right Column for extra info -->
 
-<template id="index_left" name="Left Column"
+<template id="index_right" name="Right Column"
         inherit_option_id="website_blog.index">
     <xpath expr="//div[@id='wrap']" position="replace">
         <div class="container mt16 js_website_blog">
             <div class="row">
-                <div class="col-lg-3 col-lg-offset-1 col-sm-4" id="blog_left_column"/>
                 <div class="col-lg-8 col-sm-8" id="blog_right_column">
                     <t t-raw="0"/>
                 </div>
+                <div class="col-lg-3 col-lg-offset-1 col-sm-4" id="blog_right_column"/>
             </div>
         </div>
     </xpath>
 </template>
 
-<!-- Option: Left Column: tags -->
+<!-- Option:Right Column: tags -->
 <template id="opt_blog_rc_tags" name="Tags"
-        inherit_option_id="website_blog.index_left">
-    <xpath expr="//div[@id='blog_left_column']" position="inside">
+        inherit_option_id="website_blog.index_right">
+    <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
         <h4>Tags</h4>
         <ul class="nav nav-pills nav-stacked">
@@ -422,10 +412,10 @@
     </xpath>
 </template>
 
-<!-- Option: Left Column: archives -->
+<!-- Option:Right Column: archives -->
 <template id="opt_blog_rc_history" name="Archives"
-        inherit_option_id="website_blog.index_left">
-    <xpath expr="//div[@id='blog_left_column']" position="inside">
+        inherit_option_id="website_blog.index_right">
+    <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
         <h4>Archives</h4>
         <ul class="nav nav-pills nav-stacked">
@@ -439,10 +429,10 @@
     </xpath>
 </template>
 
-<!-- Option: Left Column: about us -->
+<!-- Option:Right Column: about us -->
 <template id="opt_blog_rc_about_us" name="About Us" priority="2"
-        inherit_option_id="website_blog.index_left">
-    <xpath expr="//div[@id='blog_left_column']" position="inside">
+        inherit_option_id="website_blog.index_right">
+    <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
         <h4>About us</h4>
         <p>
@@ -456,10 +446,10 @@
     </xpath>
 </template>
 
-<!-- Option: Left Column: follow us -->
+<!-- Option:Right Column: follow us -->
 <template id="opt_blog_rc_follow_us" name="Follow us" priority="4"
-        inherit_option_id="website_blog.index_left">
-    <xpath expr="//div[@id='blog_left_column']" position="inside">
+        inherit_option_id="website_blog.index_right">
+    <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
             <h4>Follow us<small t-if="blog">: <t t-esc="blog.name"/></small></h4>
             <t t-if="blog">
@@ -483,10 +473,10 @@
     </xpath>
 </template>
 
-<!-- Option: Left Column: blogs -->
+<!-- Option:Right Column: blogs -->
 <template id="opt_blog_rc_blogs" name="Our Blogs" priority="6"
-        inherit_option_id="website_blog.index_left">
-    <xpath expr="//div[@id='blog_left_column']" position="inside">
+        inherit_option_id="website_blog.index_right">
+    <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32 mb32">
         <h4>Our Blogs</h4>
         <ul class="nav nav-pills nav-stacked">
