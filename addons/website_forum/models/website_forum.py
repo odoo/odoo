@@ -52,7 +52,7 @@ class Post(osv.Model):
         'forum_id': fields.many2one('website.forum', 'Forum'),
         
         'name': fields.char('Topic', size=64),
-        'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
+        'content': fields.html('Contents', help='Automatically sanitized HTML contents'),
         
         'create_date': fields.datetime('Asked on', select=True, readonly=True),
         'create_uid': fields.many2one('res.users', 'Asked by', select=True, readonly=True ),
@@ -85,6 +85,37 @@ class Post(osv.Model):
         'state': 'active',
         'active': True
     }
+    
+    def create_history(self, cr, uid, ids, vals, context=None):
+        for forum in ids:
+            history = self.pool.get('website.forum.post.history')
+            if vals.get('content'):
+                create_date = vals.get('create_date')
+                res = {
+                    'name': 'Update %s - %s' % (create_date, vals.get('name')),
+                    'content': vals.get('content', ''),
+                    'forum_id': forum
+                }
+                if vals.get('version'):
+                    res.update({'version':vals.get('version')})
+                    
+                if vals.get('tags'):
+                    res.update({'tags':vals.get('tags')})
+                    
+                history.create(cr, uid, res)
+
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        create_context = dict(context, mail_create_nolog=True)
+        post_id = super(Post, self).create(cr, uid, vals, context=create_context)
+        self.create_history(cr, uid, [post_id], vals, context)
+        return post_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        result = super(Post, self).write(cr, uid, ids, vals, context)
+        self.create_history(cr, uid, ids, vals, context)
+        return result
 
 class Users(osv.Model):
     _inherit = 'res.users'
@@ -112,7 +143,7 @@ class PostHistory(osv.Model):
         'create_uid': fields.many2one('res.users', 'Created by', select=True, readonly=True),
         'version': fields.integer('Version'),
         'name': fields.char('Update Notes', size=64, required=True),
-        'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
+        'content': fields.html('Contents', help='Automatically sanitized HTML contents'),
         'tags': fields.many2many('website.forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tag'),
     }
 
