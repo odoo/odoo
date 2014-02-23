@@ -150,22 +150,6 @@ class WebsiteBlog(http.Controller):
         response.set_cookie('unvisited', json.dumps(blog_post_ids))
         return response
 
-    def get_next_post(self, cr, uid, blog_post, context):
-        """ Get next blog post display in footer of current post """
-        blog_post_obj = request.registry.get('blog.post')
-        unvisited = eval(request.httprequest.cookies.get('unvisited'))
-        if blog_post.id in unvisited:
-            # if post is not visited yet return a random post
-            unvisited.remove(blog_post.id)
-            post_list = blog_post_obj.search(cr, uid, [('id', '!=', blog_post.id)],context=context)
-            next_post_id = post_list[random.randint(0, (len(post_list)-1))]
-        else:
-            # if post is visited return a most visited(count) and post share same keywords
-            post_list = blog_post_obj.search(cr, uid, [('id', '!=', blog_post.id),('website_meta_keywords', 'ilike', blog_post.website_meta_keywords)], order='visits',context=context)
-            next_post_id = post_list and post_list[0] or (unvisited and unvisited[0] or False)
-        next_post = next_post_id and blog_post_obj.browse(cr, uid, next_post_id, context=context) or False
-        return (next_post,unvisited)
-    
     @http.route([
         '/blogpost/<model("blog.post"):blog_post>/',
     ], type='http', auth="public", website=True, multilang=True)
@@ -222,12 +206,20 @@ class WebsiteBlog(http.Controller):
                 request.httprequest.session[blog_post.id] = True
                 counter = blog_post.visits + 1;
                 blog_post_obj.write(cr, SUPERUSER_ID, [blog_post.id], {'visits':counter},context=context)
-        
+
         MONTHS = [None, _('January'), _('February'), _('March'), _('April'),
             _('May'), _('June'), _('July'), _('August'), _('September'),
             _('October'), _('November'), _('December')]
-        
-        next_post, unvisited = self.get_next_post(cr, uid, blog_post, context)
+
+        # Find next Post
+        visited_blogs = request.httprequest.cookies.get('visited_blogs') or ''
+        visited_ids = map(lambda x: int(x or blog_post.id), visited_blogs.split(',')) + [blog_post.id]
+        if blog_post.id not in visited_ids:
+            visited_ids.append(blog_post.id)
+        next_post_id = blog_post_obj.search(cr, uid, [
+            ('id', 'not in', visited_ids),
+            ], order='visits desc', limit=1, context=context)
+        next_post = next_post_id and blog_post_obj.browse(cr, uid, next_post_id[0], context=context) or False
 
         values = {
             'blog': blog_post.blog_id,
@@ -244,9 +236,9 @@ class WebsiteBlog(http.Controller):
             'next_post' : next_post,
         }
         response = request.website.render("website_blog.blog_post_complete", values)
-        response.set_cookie('unvisited', json.dumps(unvisited))
+        response.set_cookie('visited_blogs', ','.join(map(str, visited_ids)))
         return response
-    
+
     def _blog_post_message(self, blog_post_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
         if post.get('comment'):

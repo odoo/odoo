@@ -221,16 +221,18 @@
         </ul>
     </section>
 
-    <div class="cover cover_footer mb0 text-center" t-attf-style="background-image: url(#{next_post.content_image})" t-if="next_post" t-ignore="True">
-        <p>Read Next</p>
-        <a class="hidden js_next" t-attf-href="/blogpost/#{ slug(next_post) }#wrap"/>
-        <h1 t-field="next_post.name"/>
-        <h2 t-field="next_post.sub_title"/>
-        <div>
-            <img class="img-circle" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(next_post.create_uid.id)" style="width: 30px; margin-right: 10px;"/>
-            <small id="blog_author" t-field="next_post.create_uid.name"/>
+    <t t-if="next_post">
+        <div class="cover cover_footer mb0 text-center" t-attf-style="background-image: url(#{next_post.content_image})" t-ignore="True">
+            <p>Read Next</p>
+            <a class="hidden js_next" t-attf-href="/blogpost/#{ slug(next_post) }#wrap"/>
+            <h1 t-field="next_post.name"/>
+            <h2 t-field="next_post.sub_title"/>
+            <div>
+                <img class="img-circle" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(next_post.create_uid.id)" style="width: 30px; margin-right: 10px;"/>
+                <small id="blog_author" t-field="next_post.create_uid.name"/>
+            </div>
         </div>
-    </div>
+    </t>
 
   </t>
 </template>
