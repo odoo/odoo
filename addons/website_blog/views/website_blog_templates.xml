@@ -257,45 +257,6 @@
     </xpath>
 </template>
 
-<!-- Options: Blog Post: Footer author detail -->
-<template id="blog_post_footer" name="Blog Footer"
-        inherit_option_id="website_blog.blog_post_complete">
-    <xpath expr="//section[@id='comments']" position="before">
-        <div class="container mt16 mb32">
-            <div class="col-sm-12">
-                <div class="col-sm-4 col-sm-push-2">
-                    <hr class="mt0 mb0"/>
-                    <strong class="text-muted text-right">WRITTEN BY</strong>
-                    <div class="media">
-                        <a class="pull-left" href="#">
-                            <img class="img-rounded" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 50px; margin-right: 10px;"/>
-                        </a>
-                        <div class="media-body">
-                            <h4 class="media-heading"  t-field="blog_post.create_uid.name"></h4>
-                            <p t-field="blog_post.create_uid.email"></p>
-                            <small t-if="blog_post.website_published_datetime" class="text-right text-muted">Published on <t t-esc="blog_post.website_published_datetime"/></small>
-                            <small t-if="not blog_post.website_published_datetime" class="text-right text-muted">Last Modified on <t t-esc="blog_post.write_date"/></small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-sm-push-2" t-if="blog_post.blog_id">
-                    <hr class="mt0 mb0"/>
-                    <strong class="text-muted text-right">PUBLISHED IN</strong>
-                    <div class="media">
-                        <a class="pull-left" href="#">
-                            <img class="img-rounded" t-att-src="'/website/image?model=blog.blog&amp;field=image&amp;id='+str(blog_post.blog_id.id)" style="width: 50px; margin-right: 10px;"/>
-                        </a>
-                        <div class="media-body">
-                            <h4 class="media-heading"  t-field="blog_post.blog_id.name"></h4>
-                            <span t-field="blog_post.blog_id.description"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </xpath>
-</template>
-
 <!-- Options: Blog Post: user can reply -->
 <template id="opt_blog_post_complete_comment" name="Allow Comments"
         inherit_option_id="website_blog.blog_post_complete"
@@ -312,22 +273,6 @@
             </form>
         </section>
         <div class="clearfix"/>
-    </xpath>
-</template>
-
-<!-- Options: Blog Post: hide author -->
-<template id="opt_blog_post_complete_author" name="Authors"
-        inherit_option_id="website_blog.blog_post_complete">
-    <xpath expr="//span[@class='fa fa-calendar oe_date']" position="after">
-        <span class="fa fa-user"> By <span t-field="blog_post.create_uid"/> &amp;nbsp;</span>
-    </xpath>
-</template>
-
-<!-- Options: Blog Post: show blog -->
-<template id="opt_blog_post_complete_blog" name="Blog"
-        inherit_option_id="website_blog.blog_post_complete">
-    <xpath expr="//span[@class='fa fa-calendar oe_date']" position="after">
-        <span class="fa fa-folder-open"> In <span t-field="blog_post.blog_id"/> &amp;nbsp;</span>
     </xpath>
 </template>
 
