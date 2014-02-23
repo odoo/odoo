@@ -33,9 +33,9 @@ class Blog(osv.Model):
     _description = 'Blogs'
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = 'name'
-
     _columns = {
-        'name': fields.char('Name', required=True),
+        'name': fields.char('Blog Name', required=True),
+        'subtitle': fields.char('Blog Subtitle', required=True),
         'description': fields.text('Description'),
         'image': fields.binary('Image'),
         'blog_post_ids': fields.one2many(
