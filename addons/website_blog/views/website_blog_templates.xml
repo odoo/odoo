@@ -163,34 +163,43 @@
 <template id="blog_post_complete" name="Blog Post">
   <t t-call="website_blog.index">
 
-    <div class="cover cover_header text-center" id="title" t-attf-style="background-image : url(#{blog_post.content_image})">
-        <div class="text-right">
-            <a id="change_cover" t-ignore="true" class="btn btn-primary css_non_editable_mode_hidden">
-                Change Cover Photo
-            </a>
+    <div t-attf-class="cover #{blog_post.content_image and 'cover_header' or ''} text-center" id="title" t-attf-style="background-image : url(#{blog_post.content_image})" t-ignore="True">
+        <div class="container">
+          <div style="position: absolute" class="container text-right mt16">
+            <div class="btn-group css_non_editable_mode_hidden">
+                <a id="change_cover" class="btn btn-primary">
+                    Change Cover
+                </a>
+                <a id="clear_cover" class="btn btn-danger">
+                    <span class="fa fa-times"/>
+                </a>
+            </div>
+            <t t-call="website.publish_management">
+                <t t-set="object" t-value="blog_post"/>
+                <t t-set="publish_edit" t-value="True"/>
+                <li>
+                    <form class="duplicate hidden" action="/blogpost/duplicate">
+                        <input name="blog_post_id" t-att-value="blog_post.id"/>
+                    </form>
+                    <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
+                </li>
+            </t>
+          </div>
         </div>
-        <h1 t-field="blog_post.name" id="blog_post_name"/>
-        <h2 t-field="blog_post.sub_title"/>
-        <div>
-            <img class="img-circle" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 30px; margin-right: 10px;"/>
-            <small id="blog_author" t-field="blog_post.create_uid.name"/>
+        <div class="blog_title">
+            <h1 t-field="blog_post.name" id="blog_post_name" class="mt32"/>
+            <h2 t-field="blog_post.sub_title" class="text-muted"/>
+            <div>
+                <img class="img-circle" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 30px; margin-right: 10px;"/>
+                <small id="blog_author" t-field="blog_post.create_uid.name"/><br/>
+            </div>
+            <div t-if="blog_post.content_image">
+                <a href="#blog_content" class="fa fa-angle-down fa-2x fa-inverse mt32"/>
+            </div>
         </div>
-        <a href="#blog_content" class="fa fa-angle-down fa-2x fa-inverse mt32"/>
     </div>
 
-    <div class="container">
-        <t t-call="website.publish_management">
-            <t t-set="object" t-value="blog_post"/>
-            <t t-set="publish_edit" t-value="True"/>
-            <li>
-                <form class="duplicate hidden" action="/blogpost/duplicate">
-                    <input name="blog_post_id" t-att-value="blog_post.id"/>
-                </form>
-                <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
-            </li>
-        </t>
-    </div>
-    <div id="blog_content" t-field="blog_post.content"/>
+    <div id="blog_content" t-field="blog_post.content" class="mt32"/>
 
     <!-- FP Note: should we remove this or put it in options? -->
     <section id="comments" class="container">
