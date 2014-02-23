@@ -1,4 +1,4 @@
-// Inspired from https://github.com/tsi/inlinediscussions
+// Inspired from https://github.com/tsi/inlineDisqussions
 (function () {
     
     'use strict';
