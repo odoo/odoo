@@ -238,6 +238,8 @@ class mail_compose_message(osv.TransientModel):
             email(s), rendering any template patterns on the fly if needed. """
         if context is None:
             context = {}
+        import datetime
+        print '--> beginning sending email', datetime.datetime.now()
         # clean the context (hint: mass mailing sets some default values that
         # could be wrongly interpreted by mail_mail)
         context.pop('default_email_to', None)
@@ -261,20 +263,12 @@ class mail_compose_message(osv.TransientModel):
             else:
                 res_ids = [wizard.res_id]
 
+            print '----> before computing values', datetime.datetime.now()
             all_mail_values = self.get_mail_values(cr, uid, wizard, res_ids, context=context)
+            print '----> after computing values', datetime.datetime.now()
 
             for res_id, mail_values in all_mail_values.iteritems():
                 if wizard.composition_mode == 'mass_mail':
-                    if wizard.same_thread:  # same thread: keep a copy of the message in the chatter to enable the reply redirection
-                        mail_values.update(notification=True, model=wizard.model, res_id=res_id)
-                    m2m_attachment_ids = self.pool['mail.thread']._message_preprocess_attachments(
-                        cr, uid, mail_values.pop('attachments', []),
-                        mail_values.pop('attachment_ids', []),
-                        'mail.message', 0,
-                        context=context)
-                    mail_values['attachment_ids'] = m2m_attachment_ids
-                    if not mail_values.get('reply_to'):
-                        mail_values['reply_to'] = mail_values['email_from']
                     self.pool.get('mail.mail').create(cr, uid, mail_values, context=context)
                 else:
                     subtype = 'mail.mt_comment'
@@ -286,6 +280,7 @@ class mail_compose_message(osv.TransientModel):
                                        mail_create_nosubscribe=True)  # add context key to avoid subscribing the author
                     active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **mail_values)
 
+        print '--> finished sending email', datetime.datetime.now()
         return {'type': 'ir.actions.act_window_close'}
 
     def get_mail_values(self, cr, uid, wizard, res_ids, context=None):
@@ -306,9 +301,12 @@ class mail_compose_message(osv.TransientModel):
                 'parent_id': wizard.parent_id and wizard.parent_id.id,
                 'partner_ids': [partner.id for partner in wizard.partner_ids],
                 'attachment_ids': [attach.id for attach in wizard.attachment_ids],
+                'author_id': wizard.author_id.id,
+                'email_from': wizard.email_from,
             }
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and wizard.model:
+                # rendered values using template
                 email_dict = rendered_values[res_id]
                 mail_values['partner_ids'] += email_dict.pop('partner_ids', [])
                 # process attachments: should not be encoded before being processed by message_post / mail_mail create
@@ -326,16 +324,31 @@ class mail_compose_message(osv.TransientModel):
                 if email_dict.get('email_from'):
                     mail_values['email_from'] = email_dict.pop('email_from')
                 # replies redirection: mass mailing only
-                if wizard.same_thread and wizard.post:
+                if wizard.same_thread:
                     email_dict.pop('reply_to', None)
                 else:
                     mail_values['reply_to'] = email_dict.pop('reply_to', None)
                 mail_values.update(email_dict)
+
+                # value tweaking in mass mailing
+                mail_values['record_name'] = False  # avoid browsing the record for an email
+                if wizard.same_thread:  # same thread: keep a copy of the message in the chatter to enable the reply redirection
+                    mail_values.update(notification=True, model=wizard.model, res_id=res_id)
+                m2m_attachment_ids = self.pool['mail.thread']._message_preprocess_attachments(
+                    cr, uid, mail_values.pop('attachments', []),
+                    mail_values.pop('attachment_ids', []),
+                    'mail.message', 0,
+                    context=context)
+                mail_values['attachment_ids'] = m2m_attachment_ids
+                if not mail_values.get('reply_to'):
+                    mail_values['reply_to'] = mail_values['email_from']
+
                 # mail_mail values
                 if 'mail_auto_delete' in context:
                     mail_values['auto_delete'] = context.get('mail_auto_delete')
                 mail_values['body_html'] = mail_values.get('body', '')
                 mail_values['recipient_ids'] = [(4, id) for id in mail_values.pop('partner_ids', [])]
+
             results[res_id] = mail_values
         return results
 

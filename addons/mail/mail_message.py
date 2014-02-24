@@ -76,6 +76,7 @@ class mail_message(osv.Model):
     _message_read_more_limit = 1024
 
     def default_get(self, cr, uid, fields, context=None):
+        # print '\tmail_message: default_get on', fields
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
         if context and context.get('default_type') and context.get('default_type') not in self._columns['type'].selection:
             context = dict(context, default_type=None)
@@ -85,17 +86,6 @@ class mail_message(osv.Model):
         if len(name) <= (self._message_record_name_length + 3):
             return name
         return name[:self._message_record_name_length] + '...'
-
-    def _get_record_name(self, cr, uid, ids, name, arg, context=None):
-        """ Return the related document name, using name_get. It is done using
-            SUPERUSER_ID, to be sure to have the record name correctly stored. """
-        # TDE note: regroup by model/ids, to have less queries to perform
-        result = dict.fromkeys(ids, False)
-        for message in self.read(cr, uid, ids, ['model', 'res_id'], context=context):
-            if not message.get('model') or not message.get('res_id') or message['model'] not in self.pool:
-                continue
-            result[message['id']] = self.pool[message['model']].name_get(cr, SUPERUSER_ID, [message['res_id']], context=context)[0][1]
-        return result
 
     def _get_to_read(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
@@ -172,9 +162,7 @@ class mail_message(osv.Model):
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
         'model': fields.char('Related Document Model', size=128, select=1),
         'res_id': fields.integer('Related Document ID', select=1),
-        'record_name': fields.function(_get_record_name, type='char',
-            store=True, string='Message Record Name',
-            help="Name get of the related document."),
+        'record_name': fields.char('Message Record Name', help="Name get of the related document."),
         'notification_ids': fields.one2many('mail.notification', 'message_id',
             string='Notifications', auto_join=True,
             help='Technical field holding the message notifications. Use notified_partner_ids to access notified partners.'),
@@ -783,6 +771,13 @@ class mail_message(osv.Model):
                             _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                             (self._description, operation))
 
+    def _get_record_name(self, cr, uid, values, context=None):
+        """ Return the related document name, using name_get. It is done using
+            SUPERUSER_ID, to be sure to have the record name correctly stored. """
+        if not values.get('model') or not values.get('res_id') or values['model'] not in self.pool:
+            return False
+        return self.pool[values['model']].name_get(cr, SUPERUSER_ID, [values['res_id']], context=context)[0][1]
+
     def _get_reply_to(self, cr, uid, values, context=None):
         """ Return a specific reply_to: alias of the document through message_get_reply_to
             or take the email_from
@@ -841,8 +836,13 @@ class mail_message(osv.Model):
             values['message_id'] = self._get_message_id(cr, uid, values, context=context)
         if 'reply_to' not in values:
             values['reply_to'] = self._get_reply_to(cr, uid, values, context=context)
+        if 'record_name' not in values and 'default_record_name' not in context:
+            values['record_name'] = self._get_record_name(cr, uid, values, context=context)
 
         newid = super(mail_message, self).create(cr, uid, values, context)
+        if not values.get('subtype_id'):
+            return newid
+
         self._notify(cr, uid, newid, context=context,
                      force_send=context.get('mail_notify_force_send', True),
                      user_signature=context.get('mail_notify_user_signature', True))
@@ -985,7 +985,7 @@ class mail_message(osv.Model):
             partners_to_notify -= set([message.author_id.id])
 
         # all partner_ids of the mail.message have to be notified regardless of the above (even the author if explicitly added!)
-        if message.partner_ids:
+        if message.subtype_id and message.partner_ids:
             partners_to_notify |= set([p.id for p in message.partner_ids])
 
         # notify
