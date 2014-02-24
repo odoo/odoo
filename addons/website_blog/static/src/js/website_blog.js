@@ -2,6 +2,14 @@ $(document).ready(function() {
     var discussion = false;
     var share = false;
 
+    var node = $('#fa-angle-down')
+    var stickyTop = node.offset().top - 50;
+    $(window).scroll(function(event){
+        var scrolltop = $(window).scrollTop()
+        if (stickyTop > scrolltop)
+            node.stop().animate({"marginTop": ($(window).scrollTop() - 50) + "px"}, "slow" );
+    });
+
     var def = $.Deferred();
     openerp.jsonRpc("/blogpsot/get_custom_options", 'call', {
     }).then(function(res){
