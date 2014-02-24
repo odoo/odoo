@@ -23,7 +23,7 @@
 
         <!-- Page -->
 
-        <template id="question_list">
+        <template id="post_list">
             <div class="tab-pane active" id="all">
                 <div class="row">
                     <div class="col-xs-12">
@@ -129,7 +129,7 @@
             <ul class="media-list">
                 <li t-foreach="question.child_ids" t-as="answer" class="media">
                     <div class="row">
-                        <t t-call="website_forum.question_vote" />
+                        <t t-call="website_forum.post_vote" />
                         <div class="col-md-9 col-xs-10">
                             <div class="row">
                                 <div class="col-xs-12">
@@ -143,14 +143,14 @@
                             <div class="row">
                                 <t t-call="website_forum.user_detail" />
                             </div>
-                            <t t-call="website_forum.question_links" />
+                            <t t-call="website_forum.post_links" />
                         </div>
                     </div>
                 </li>
             </ul>
         </template>
 
-        <template id="question_search">
+        <template id="post_search">
             <form class="navbar-form " role="search">
                 <div class="form-group search-navbar">
                     <input type="text" class="form-control" placeholder="Search Or Ask  your Question" />
@@ -160,13 +160,13 @@
         </template>
 
         <!-- index page of forum -->
-        <template id="index" name="Questions">
+        <template id="index" name="Posts">
             <t t-call="website.layout">
                 <t t-set="head">
                     <link rel='stylesheet' href='/website_blog/static/src/css/website_forum.css' />
                 </t>
                 <div id="wrap" class="js_blog">
-                    <t t-call="website_forum.question_search" />
+                    <t t-call="website_forum.post_search" />
                     <div class="row">
                         <div class="col-xs-3">
                             <span itemprop="name" class="badge">
@@ -176,7 +176,7 @@
                         </div>
                         <t t-call="website_forum.shorting" />
                     </div>
-                    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                    <ul id="tabs" class="nav nav-pills">
                         <li class="active">
                             <a href="#all" data-toggle="tab">ALL</a>
                         </li>
@@ -186,7 +186,7 @@
                     </ul>
                     <ul class="media-list">
                         <li t-foreach="question_ids" t-as="question" class="media">
-                            <t t-call="website_forum.question_list" />
+                            <t t-call="website_forum.post_list" />
                         </li>
                     </ul>
                 </div>
@@ -252,7 +252,7 @@
             </div>
         </template>
 
-        <template id="question_vote">
+        <template id="post_vote">
             <div class="col-md-1 col-xs-1">
                 <div class="row">
                     <div class="col-xs-12 custom-arrow-height">
@@ -274,7 +274,7 @@
             </div>
         </template>
 
-        <template id="question_links">
+        <template id="post_links">
             <div class="row">
                 <div class="col-xs-12 text-right">
                     <a class="action-links" href="">
@@ -294,11 +294,11 @@
         </template>
 
 
-        <template id="question_description_full">
+        <template id="post_description_full">
             <t t-call="website.layout">
-                <t t-call="website_forum.question_search" />
+                <t t-call="website_forum.post_search" />
                 <div class="container MainBody">
-                    <t t-call="website_forum.question_vote" />
+                    <t t-call="website_forum.post_vote" />
                     <div class="row">
                         <div class="col-md-9 col-xs-11">
                             <div class="row">

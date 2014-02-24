@@ -76,7 +76,7 @@ class website_forum(http.Controller):
             'main_object': question,
             'range': range,
         }
-        return request.website.render("website_forum.question_description_full", values)
+        return request.website.render("website_forum.post_description_full", values)
 
     @http.route('/question/postquestion/', type='http', auth="user", multilang=True, website=True)
     def post_question(self, question_name="New question", **kwargs):
