@@ -31,6 +31,7 @@ import openerp.addons.decimal_precision as dp
 from openerp.osv.orm import browse_record, browse_null
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 
+
 class purchase_order(osv.osv):
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
@@ -155,12 +156,19 @@ class purchase_order(osv.osv):
 
     def _get_picking_ids(self, cr, uid, ids, field_names, args, context=None):
         res = {}
-        for purchase_id in ids:
-            picking_ids = set()
-            move_ids = self.pool.get('stock.move').search(cr, uid, [('purchase_line_id.order_id', '=', purchase_id)], context=context)
-            for move in self.pool.get('stock.move').browse(cr, uid, move_ids, context=context):
-                picking_ids.add(move.picking_id.id)
-            res[purchase_id] = list(picking_ids)
+        query = """
+        SELECT picking_id, po.id FROM stock_picking p, stock_move m, purchase_order_line pol, purchase_order po
+            WHERE po.id in %s and po.id = pol.order_id and pol.id = m.purchase_line_id and m.picking_id = p.id
+            GROUP BY picking_id, po.id
+             
+        """
+        cr.execute(query, (tuple(ids), ))
+        picks = cr.fetchall()
+        for pick in picks:
+            if not res.get(pick[1]):
+                res[pick[1]] = [pick[0]]
+            else:
+                res[pick[1]].append(pick[0])
         return res
 
     STATE_SELECTION = [

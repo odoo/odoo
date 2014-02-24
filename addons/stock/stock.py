@@ -1488,11 +1488,12 @@ class stock_move(osv.osv):
             if move.product_id.uom_id.category_id.id != move.product_uom.category_id.id:
                 return False
         return True
-
+ 
     _constraints = [
         (_check_uom,
             'You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.',
             ['product_uom'])]
+     
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
