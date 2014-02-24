@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
-        <report auto="True" header="False" id="report_bom_structure" model="mrp.bom" name="bom.structure" rml="mrp/report/bom_structure.rml" string="BOM Structure"/>
+        <report 
+            string="BOM Structure" 
+            id="action_report_bom_structure" 
+            model="mrp.bom" 
+            name="mrp.report_mrpbomstructure" 
+            file="mrp.report_mrpbomstructure" 
+            report_type="qweb-pdf"
+        />
 
         <report 
             string="Production Order" 
@@ -18,6 +24,7 @@
             menu="False"
             name="product.price"
             string="Cost Structure"
-            xsl="mrp/report/price.xsl"/>
+            xsl="mrp/report/price.xsl"
+        />
     </data>
 </openerp>
