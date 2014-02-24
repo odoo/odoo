@@ -41,7 +41,7 @@ from werkzeug import exceptions
 from werkzeug.test import Client
 from werkzeug.wrappers import BaseResponse
 from werkzeug.datastructures import Headers
-from reportlab.graphics.barcode import createBarcodeImageInMemory
+from reportlab.graphics.barcode import createBarcodeDrawing
 
 
 _logger = logging.getLogger(__name__)
@@ -462,13 +462,12 @@ class Report(http.Controller):
         """
         try:
             width, height = int(width), int(height)
-            barcode = createBarcodeImageInMemory(
+            barcode = createBarcodeDrawing(
                 type, value=value, format='png', width=width, height=height
             )
+            barcode = barcode.asString('png')
         except (ValueError, AttributeError):
             raise exceptions.HTTPException(description='Cannot convert into barcode.')
-        except AssertionError:
-            raise exceptions.HTTPException(description='Please upgrade reportlab to at least 3.0.')
 
         return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
 
