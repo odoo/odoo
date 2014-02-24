@@ -36,7 +36,7 @@ controllers = controllers()
 
 class website_forum(http.Controller):
 
-    @http.route(['/questions/', '/question/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/questions/', '/questions/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
     def questions(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         forum_obj = request.registry['website.forum.post']
@@ -46,7 +46,7 @@ class website_forum(http.Controller):
         question_count = forum_obj.search(
             request.cr, request.uid, [], count=True,
             context=request.context)
-        pager = request.website.pager(url="/questions/", total=question_count, page=page, step=step, scope=5)
+        pager = request.website.pager(url="/questions/", total=question_count, page=page, step=step, scope=10)
 
         obj_ids = forum_obj.search(
             request.cr, request.uid, [], limit=step,
@@ -118,7 +118,7 @@ class website_forum(http.Controller):
     def tag_questions(self, tag, page=1, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         step = 10
-        pager = request.website.pager(url="/questions/", total=len(tag.post_ids), page=page, step=step, scope=5)
+        pager = request.website.pager(url="/questions/", total=len(tag.post_ids), page=page, step=step, scope=10)
 
         values = {
             'question_ids': tag.post_ids,

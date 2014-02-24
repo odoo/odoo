@@ -189,6 +189,11 @@
                             <t t-call="website_forum.post_list" />
                         </li>
                     </ul>
+                    <div class="col-sm-7">
+                        <t t-call="website.pager" >
+                            <t t-set="classname">pull-right</t>
+                        </t>
+                    </div>
                 </div>
             </t>
         </template>
