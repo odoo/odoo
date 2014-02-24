@@ -221,11 +221,12 @@ instance.web.QueryGroup = instance.web.Class.extend({
             {__context: {group_by: []}, __domain: []},
             read_group_group);
 
+        var raw_field = grouping_field && grouping_field.split(':')[0];
         var aggregates = {};
         _(fixed_group).each(function (value, key) {
             if (key.indexOf('__') === 0
-                    || key === grouping_field
-                    || key === grouping_field + '_count') {
+                    || key === raw_field
+                    || key === raw_field + '_count') {
                 return;
             }
             aggregates[key] = value || 0;
@@ -234,7 +235,6 @@ instance.web.QueryGroup = instance.web.Class.extend({
         this.model = new instance.web.Model(
             model, fixed_group.__context, fixed_group.__domain);
 
-        var raw_field = grouping_field && grouping_field.split(':')[0];
         var group_size = fixed_group[raw_field + '_count'] || fixed_group.__count || 0;
         var leaf_group = fixed_group.__context.group_by.length === 0;
 
