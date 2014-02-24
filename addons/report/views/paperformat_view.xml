@@ -10,11 +10,18 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='report_file']" position="after">
-                        <field name="paperformat_id" />    
+                        <field name="paperformat_id"/>
+                        <button
+                            type="object"
+                            class="oe_link"
+                            string="Search associated QWeb views"
+                            name="associated_view"
+                        />
                     </xpath>    
                 </data>
             </field>
         </record>
+
 
         <record id="paperformat_view_tree" model="ir.ui.view">
             <field name="name">paper_format_view_tree</field>
