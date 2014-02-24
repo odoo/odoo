@@ -23,6 +23,7 @@ from openerp.osv.osv import except_osv
 from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
+import openerp.tools.config as config
 
 import time
 import base64
@@ -35,6 +36,10 @@ try:
     import cStringIO as StringIO
 except ImportError:
     import StringIO
+import psutil
+import signal
+import os
+
 
 from pyPdf import PdfFileWriter, PdfFileReader
 from werkzeug import exceptions
@@ -322,12 +327,21 @@ class Report(http.Controller):
             content_file.seek(0)
 
             try:
+                # If the server is running with only one worker, increase it to two to be able
+                # to serve the http request from wkhtmltopdf.
+                if config['workers'] == 1:
+                    ppid = psutil.Process(os.getpid()).ppid
+                    os.kill(ppid, signal.SIGTTIN)
+
                 wkhtmltopdf = command + command_args + command_arg_local
                 wkhtmltopdf += [content_file.name] + [pdfreport.name]
 
                 process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE,
                                            stderr=subprocess.PIPE)
                 out, err = process.communicate()
+
+                if config['workers'] == 1:
+                    os.kill(ppid, signal.SIGTTOU)
 
                 if process.returncode != 0:
                     raise except_osv(_('Report (PDF)'),
