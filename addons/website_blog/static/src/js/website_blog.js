@@ -48,12 +48,10 @@ $(document).ready(function() {
                //bind again it takes control from now on, until page relaod.
                $(document).find('.cover_footer').on('click',page_transist);
                $(document).find('a[href^="#blog_content"]').on('click', animate);
-               def.done( function(){
-                   var content = $(document).find("#blog_content p");
-                   if (content && discussion)
-                       new openerp.website.blog_discussion({'content' : content});
-                   if (share) $("p").share();
-               });
+               var content = $(document).find("#blog_content p");
+               if (content && discussion)
+                   new openerp.website.blog_discussion({'content' : content});
+               if (share) $("p").share();
            });
             if (newLocation != window.location) {
                 history.pushState(null, null, newLocation);

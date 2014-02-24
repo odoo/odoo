@@ -139,6 +139,7 @@
                     $(".popover #comment").val('')
                     var ele = $('a[data-discus-identifier="'+ self.discus_identifier +'"]');
                     ele.text(_.isNaN(parseInt(ele.text())) ? 1 : parseInt(ele.text())+1)
+                    ele.addClass('has-comments');
                 });
             }
         },
