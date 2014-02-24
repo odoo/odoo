@@ -3502,7 +3502,7 @@ class stock_pack_operation(osv.osv):
                         break
 
         def _check_quants_reserved(ops):
-            if ops.package_id and not ops.product_id: 
+            if ops.package_id and not ops.product_id:
                 for quant in quant_obj.browse(cr, uid, package_obj.get_content(cr, uid, [ops.package_id.id]), context=context):
                     if quant.reservation_id and quant.reservation_id.id in [x.id for x in ops.picking_id.move_lines] and (not quants_done.get(quant.id)):
                         #Entire packages means entire quants from those packages
@@ -3514,9 +3514,12 @@ class stock_pack_operation(osv.osv):
                 #Check moves with same product
                 for move in [x for x in ops.picking_id.move_lines if ops.product_id.id == x.product_id.id]:
                     for quant in move.reserved_quant_ids:
-                        if not qty  > 0:
+                        if not qty > 0:
                             break
-                        bool = bool(pack_obj.search(cr, uid, [('id', 'child_of', [ops.package_id.id]), ('id', '=', quants.package_id.id)], context=context)
+                        if ops.package_id:
+                            bool = quant.package_id and bool(package_obj.search(cr, uid, [('id', 'child_of', [ops.package_id.id]), ('id', '=', quant.package_id.id)], context=context)) or False
+                        else:
+                            bool = not quant.package_id.id
                         bool = bool and ((ops.lot_id and ops.lot_id.id == quant.lot_id.id) or not ops.lot_id)
                         bool = bool and (ops.owner_id.id == quant.owner_id.id)
                         if bool:
@@ -3534,20 +3537,26 @@ class stock_pack_operation(osv.osv):
                             qty -= qty_todo
                             link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': qty_todo}, context=context)
 
-
         link_obj = self.pool.get('stock.move.operation.link')
         uom_obj = self.pool.get('product.uom')
         package_obj = self.pool.get('stock.quant.package')
         quant_obj = self.pool.get('stock.quant')
-        operations = self.browse(cr, uid, op_ids, context=context)
-        operations.sort(key = lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
         quants_done = {}
+
+        operations = self.browse(cr, uid, op_ids, context=context)
+        operations.sort(key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
+        sorted_moves = []
         for op in operations:
+            if not sorted_moves:
+                #sort moves in order to process first the ones that have already reserved quants
+                sorted_moves = op.picking_id.move_lines
+                sorted_moves.sort(key=lambda x: x.product_qty - x.reserved_availability)
+
             to_unlink_ids = [x.id for x in op.linked_move_operation_ids]
             if to_unlink_ids:
                 link_obj.unlink(cr, uid, to_unlink_ids, context=context)
             _check_quants_reserved(op)
-        
+
         for op in operations:
             op.refresh()
             if op.product_id:
