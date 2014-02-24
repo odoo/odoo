@@ -35,19 +35,19 @@ from openerp.addons.website.controllers.main import Website as controllers
 controllers = controllers()
 
 class website_forum(http.Controller):
-    
+
     @http.route(['/questions/', '/question/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
     def questions(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         forum_obj = request.registry['website.forum.post']
         tag_obj = request.registry['website.forum.tag']
-        
+
         step = 5
         question_count = forum_obj.search(
             request.cr, request.uid, [], count=True,
             context=request.context)
         pager = request.website.pager(url="/questions/", total=question_count, page=page, step=step, scope=5)
-        
+
         obj_ids = forum_obj.search(
             request.cr, request.uid, [], limit=step,
             offset=pager['offset'], context=request.context)
@@ -69,20 +69,20 @@ class website_forum(http.Controller):
         }
         return request.website.render(page, values)
 
-#     @http.route(['/question/<model("website.forum.post"):question>'], type='http', auth="public", website=True, multilang=True)
-#     def question_register(self, question, **post):
-#         values = {
-#             'question': question,
-#             'main_object': question,
-#             'range': range,
-#         }
-#         return request.website.render("website_forum.question_description_full", values)
+    @http.route(['/question/<model("website.forum.post"):question>'], type='http', auth="public", website=True, multilang=True)
+    def question_register(self, question, **post):
+        values = {
+            'question': question,
+            'main_object': question,
+            'range': range,
+        }
+        return request.website.render("website_forum.question_description_full", values)
 
     @http.route('/question/postquestion/', type='http', auth="user", multilang=True, website=True)
     def post_question(self, question_name="New question", **kwargs):
         #TODO : reply a page that allows user to post a question
         return self._add_question(question_name, request.context, **kwargs)
-    
+
     @http.route('/question/new/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def register_question(self, forum_id=1, **question):
         cr, uid, context = request.cr, request.uid, request.context
@@ -97,7 +97,7 @@ class website_forum(http.Controller):
                 'active': True,
             }, context=create_context)
         return werkzeug.utils.redirect("/question/%s" % new_question_id)
-    
+
     @http.route('/question/new/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def post_answer(self, post_id, forum_id=1, **question):
         cr, uid, context = request.cr, request.uid, request.context

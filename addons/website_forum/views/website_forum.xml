@@ -67,35 +67,59 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-xs-3">
-								<h5>
-									<span itemprop="Votes" class="label label-success">
-										<t t-esc="len(question.vote_ids)" />
-										Votes
-									</span>
-								</h5>
-							</div>
-							<div class="col-xs-3">
-								<h5>
-									<span itemprop="Votes" class="label label-success">
-										<t t-esc="len(question.vote_ids)" />
-										Answers
-									</span>
-								</h5>
-							</div>
-							<div class="col-xs-3">
-								<h5>
-									<span itemprop="Votes" class="label label-success">
-										<t t-esc="question.views" />
-										Views
-									</span>
-								</h5>
-							</div>
-						</div>
+                            <div class="col-xs-3">
+                                <h5>
+                                    <span itemprop="Votes" class="label label-success">
+                                        <t t-esc="len(question.vote_ids)" />
+                                        Votes
+                                    </span>
+                                </h5>
+                            </div>
+                            <div class="col-xs-3">
+                                <h5>
+                                    <span itemprop="Votes" class="label label-success">
+                                        <t t-esc="len(question.vote_ids)" />
+                                        Answers
+                                    </span>
+                                </h5>
+                            </div>
+                            <div class="col-xs-3">
+                                <h5>
+                                    <span itemprop="Votes" class="label label-success">
+                                        <t t-esc="question.views" />
+                                        Views
+                                    </span>
+                                </h5>
+                            </div>
+                    	</div>
 					</div>
 				</div>
 			</div>
 		</template>
+        
+        <template id="answer">
+            <div class="row">
+                <t t-call="website_forum.question_vote" />
+                <div class="col-md-9 col-xs-10">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <span>
+                                <h6>
+                                    There should be a call to the cash drawers API. Read the
+                                    technical
+                                    manual of the hardware you are using. Thanks.
+                                </h6>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <t t-call="website_forum.user_detail" />
+                    </div>
+                    <t t-call="website_forum.question_links" />
+                    <t t-call="website_forum.question_vote" />
+                </div>
+            </div>
+        </template>
 
 		<template id="question_search">
 			<form class="navbar-form " role="search">
@@ -222,25 +246,27 @@
 		</template>
 
 		<template id="question_vote">
-			<div class="col-md-1 col-xs-1">
-				<div class="row">
-					<div class="col-xs-12 custom-arrow-height">
-						<span class="glyphicon glyphicon-chevron-up" />
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12 custom-vote-height">
-						<h4>
-							<span>0</span>
-						</h4>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12 custom-arrow-height">
-						<span class="glyphicon glyphicon-chevron-down" />
-					</div>
-				</div>
-			</div>
+            <div class="row">
+                <div class="col-md-1 col-xs-1">
+                    <div class="row">
+                        <div class="col-xs-12 custom-arrow-height">
+                            <span class="glyphicon glyphicon-chevron-up" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 custom-vote-height">
+                            <h4>
+                                <span>0</span>
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 custom-arrow-height">
+                            <span class="glyphicon glyphicon-chevron-down" />
+                        </div>
+                    </div>
+                </div>
+            </div>
 		</template>
 
 		<template id="question_links">
@@ -267,8 +293,9 @@
 			<t t-call="website.layout">
 				<t t-call="website_forum.question_search" />
 				<div class="container MainBody">
+                    <t t-call="website_forum.question_vote" />
 					<div class="row">
-						<t t-call="website_forum.question_vote" />
+						
 
 						<div class="col-md-9 col-xs-11">
 							<div class="row">
@@ -286,26 +313,9 @@
 									<span class="badge">cash</span>
 								</div>
 							</div>
-
-							<hr />
-							<div class="row">
-								<div class="col-xs-12">
-									<span>
-										<h6>
-											How to send some signal to cash drawer to open it after
-											click
-											print receipt or something similar? I don't know whether
-											this
-											depends on cash drawer's driver or not ?
-										</h6>
-									</span>
-								</div>
-							</div>
-							<div class="row">
-								<t t-call="website_forum.user_detail" />
-							</div>
 						</div>
 					</div>
+
 					<div class="row">
 						<div class="col-xs-12 page-header">
 							<span class="badge">2 Answers</span>
@@ -326,64 +336,14 @@
 							</ul>
 						</div>
 					</div>
-
-					<div class="row">
-						<t t-call="website_forum.question_vote" />
-						<div class="col-md-9 col-xs-10">
-							<div class="row">
-								<div class="col-xs-12">
-									<span>
-										<h6>
-											There should be a call to the cash drawers API. Read the
-											technical
-											manual of the hardware you are using. Thanks.
-										</h6>
-									</span>
-								</div>
-							</div>
-							<div class="row">
-								<t t-call="website_forum.user_detail" />
-							</div>
-							<t t-call="website_forum.question_links" />
-						</div>
-					</div>
-					<hr />
-
-					<div class="row">
-						<t t-call="website_forum.question_vote" />
-					</div>
-
-					<div class="col-md-9 col-xs-10">
-						<div class="row">
-							<div class="col-xs-12">
-								<span>
-									<h6>
-										Usually the cash drawer behaves like a printer in the sense
-										that it
-										has a RS232 or USB port. However the cash drawer is
-										dummy and
-										only uses the port to receive a signal (positive
-										voltage)
-										which causes it to open.
-										So you only need send any
-										signal to the RS232 or USB port (like
-										for insance print the
-										ascii character "a" to the rs232 port)
-										and it will open!. I the
-										old days you could test it from
-										hyperterminal, I guess nowadays
-										you will have to make a
-										javascript app that sends a character
-										to the rs232 port.
-									</h6>
-								</span>
-							</div>
-						</div>
-						<div class="row">
-							<t t-call="website_forum.user_detail" />
-						</div>
-						<t t-call="website_forum.question_links" />
-					</div>
+                    
+                    <ul class="media-list">
+                        <li t-foreach="question.child_ids" t-as="answer" class="media">
+                            <t t-call="website_forum.answer" />
+                        </li>
+                        <t t-call="website_forum.answer" />
+                    </ul>
+                    
 				</div>
 			</t>
 		</template>
