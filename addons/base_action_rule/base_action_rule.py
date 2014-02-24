@@ -275,6 +275,13 @@ class base_action_rule(osv.osv):
             if action.filter_id:
                 domain = eval(action.filter_id.domain)
                 ctx.update(eval(action.filter_id.context))
+                if 'lang' not in ctx:
+                    # Filters might be language-sensitive, attempt to reuse creator lang
+                    # as we are usually running this as super-user in background
+                    [filter_meta] = action.filter_id.perm_read()
+                    user_id = filter_meta['write_uid'] and filter_meta['write_uid'][0] or \
+                                    filter_meta['create_uid'][0]
+                    ctx['lang'] = self.pool['res.users'].browse(cr, uid, user_id).lang
             record_ids = model.search(cr, uid, domain, context=ctx)
 
             # determine when action should occur for the records
