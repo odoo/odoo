@@ -276,78 +276,73 @@ class website_sale(http.Controller):
         states_ids = state_orm.search(cr, SUPERUSER_ID, [], context=context)
         states = state_orm.browse(cr, SUPERUSER_ID, states_ids, context)
 
-        info = CheckoutInfo()
+        checkout = {}
+        shipping = False
+        if request.uid != request.website.user_id.id:
+            partner = orm_user.browse(cr, SUPERUSER_ID, request.uid, context).partner_id
+            checkout.update( self.checkout_parse("billing", partner) )
+
+            shipping_ids = orm_partner.search(cr, SUPERUSER_ID, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], limit=1, context=context)
+            if shipping_ids:
+                shipping = orm_user.browse(cr, SUPERUSER_ID, request.uid, context)
+                checkout.update( self.checkout_parse("shipping", shipping) )
 
         values = {
             'countries': countries,
             'states': states,
-            'checkout': info.empty(),
-            'shipping': post.get("shipping_different"),
+            'checkout': checkout.empty(),
+            'shipping': bool(shipping),
             'error': {},
         }
         return values
 
-    def checkout_form_parse(self):
-        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+    mandatory_billing_fields = ["name", "phone", "email", "street", "city", "country_id", "zip"]
+    optional_billing_fields = ["company", "state_id"]
+    mandatory_shipping_fields = ["name", "phone", "street", "city", "country_id", "zip"]
+    optional_shipping_fields = ["state_id"]
 
-        #public_id = request.registry['website'].get_public_user(cr, uid, context)
-        #if not request.uid == public_id:
-        #    partner = orm_user.browse(cr, uid, uid, context).partner_id
-
-        #elif order.partner_id:
-        #    domain = [("active", "=", False), ("partner_id", "=", order.partner_id.id)]
-
-        #    user_ids = request.registry['res.users'].search(cr, SUPERUSER_ID, domain, context=context)
-        #    if not user_ids or public_id not in user_ids:
-        #        partner = orm_partner.browse(cr, SUPERUSER_ID, order.partner_id.id, context)
-
-        #if partner:
-        #    partner_info = info.from_partner(partner)
-        #    checkout.update(partner_info)
-        #    shipping_ids = orm_partner.search(cr, SUPERUSER_ID, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], limit=1, context=context)
-        #    if shipping_ids:
-        #        values['shipping'] = "true"
-        #        shipping_partner = orm_partner.browse(cr, SUPERUSER_ID, shipping_ids[0], context)
-        #        checkout.update(info.from_partner(shipping_partner, address_type='shipping'))
-
-        # from query
-        query = dict((field_name, post[field_name]) for field_name in self.all_fields() if post[field_name])
-
-        # fill with partner
+    def checkout_parse(self, address_type, data):
+        """ data is a dict OR a partner browse record
+        """
+        # set mandatory and optional fields
         assert address_type in ('billing', 'shipping')
         if address_type == 'billing':
+            all_fields = self.mandatory_billing_fields + self.optional_billing_fields
             prefix = ''
         else:
+            all_fields = self.mandatory_shipping_fields + self.optional_shipping_fields
             prefix = 'shipping_'
-        result = dict((prefix + field_name, getattr(partner, field_name)) for field_name in self.string_billing_fields if getattr(partner, field_name))
-        result[prefix + 'state_id'] = partner.state_id and partner.state_id.id or ''
-        result[prefix + 'country_id'] = partner.country_id and partner.country_id.id or ''
-        result[prefix + 'company'] = partner.parent_id and partner.parent_id.name or ''
-        return result
 
-        mandatory_billing_fields = ["name", "phone", "email", "street", "city", "country_id", "zip"]
-        optional_billing_fields = ["company", "state_id"]
-        #string_billing_fields = ["name", "phone", "email", "street", "city", "zip"]
+        # set data
+        if isinstance(data, dict):
+            query = dict((field_name, data[field_name]) for field_name in all_fields if data[field_name])
+        else:
+            query = dict((prefix + field_name, getattr(data, field_name)) for field_name in all_fields if getattr(data, field_name))
+            if data.parent_id:
+                query[prefix + 'company'] = data.parent_id.name
 
-        mandatory_shipping_fields = ["name", "phone", "street", "city", "country_id", "zip"]
-        optional_shipping_field = ["state_id"]
-        #string_shipping_fields = ["name", "phone", "street", "city", "zip"]
+        if query.get(prefix + 'state_id'):
+            query[prefix + 'state_id'] = int(query[prefix + 'state_id'])
+        if query.get(prefix + 'country_id'):
+            query[prefix + 'country_id'] = int(query[prefix + 'country_id'])
 
-        return values
+        return query
 
-    def checkout_form_validate(self):
+    def checkout_form_validate(self, data):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
         # Validation
-        for field_name in info.mandatory_billing_fields:
-            if not checkout[field_name]:
+        error = dict()
+        for field_name in self.mandatory_billing_fields:
+            if not data.get(field_name):
                 error[field_name] = 'missing'
-        if post.get("shipping_different"):
-            for field_name in info.mandatory_shipping_fields:
-                if not checkout[field_name]:
+
+        if data.get("shipping_different"):
+            for field_name in self.mandatory_shipping_fields:
+                if not data.get(field_name):
                     error[field_name] = 'missing'
 
-        return values
+        return error
 
     def checkout_form_save(self):
 
