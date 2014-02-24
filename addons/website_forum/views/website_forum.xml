@@ -99,26 +99,55 @@
             </div>
         </template>
 
+        <template id="shorting">
+            <div class="col-xs-3">
+                <h5>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Short by
+                        <b class="caret"></b>
+                    </a>
+                    
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#">By Date</a>
+                        </li>
+                        <li>
+                            <a href="#">By Activity</a>
+                        </li>
+                        <li>
+                            <a href="#">By Answer</a>
+                        </li>
+                        <li>
+                            <a href="#">By Votes</a>
+                        </li>
+                    </ul>
+                </h5>
+            </div>
+        </template>
+
         <template id="answer">
-            <div class="row">
-                <t t-call="website_forum.question_vote" />
-                <div class="col-md-9 col-xs-10">
+            <ul class="media-list">
+                <li t-foreach="question.child_ids" t-as="answer" class="media">
                     <div class="row">
-                        <div class="col-xs-12">
-                            <span>
-                                <h6>
-                                    <t t-esc="question.name" />
-                                </h6>
-                            </span>
+                        <t t-call="website_forum.question_vote" />
+                        <div class="col-md-9 col-xs-10">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <span>
+                                        <h4>
+                                            <t t-esc="answer.name" />
+                                        </h4>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <t t-call="website_forum.user_detail" />
+                            </div>
+                            <t t-call="website_forum.question_links" />
                         </div>
                     </div>
-                    <div class="row">
-                        <t t-call="website_forum.user_detail" />
-                    </div>
-                    <t t-call="website_forum.question_links" />
-                    <t t-call="website_forum.question_vote" />
-                </div>
-            </div>
+                </li>
+            </ul>
         </template>
 
         <template id="question_search">
@@ -145,28 +174,7 @@
                                 Question
                             </span>
                         </div>
-                        <div class="col-xs-3">
-                            <h5>
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    Short by
-                                    <b class="caret"></b>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="#">By Date</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">By Activity</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">By Answer</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">By Votes</a>
-                                    </li>
-                                </ul>
-                            </h5>
-                        </div>
+                        <t t-call="website_forum.shorting" />
                     </div>
                     <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
                         <li class="active">
@@ -245,24 +253,22 @@
         </template>
 
         <template id="question_vote">
-            <div class="row">
-                <div class="col-md-1 col-xs-1">
-                    <div class="row">
-                        <div class="col-xs-12 custom-arrow-height">
-                            <span class="glyphicon glyphicon-chevron-up" />
-                        </div>
+            <div class="col-md-1 col-xs-1">
+                <div class="row">
+                    <div class="col-xs-12 custom-arrow-height">
+                        <span class="glyphicon glyphicon-chevron-up" />
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12 custom-vote-height">
-                            <h4>
-                                <span>0</span>
-                            </h4>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 custom-vote-height">
+                        <h4>
+                            <span>0</span>
+                        </h4>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12 custom-arrow-height">
-                            <span class="glyphicon glyphicon-chevron-down" />
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 custom-arrow-height">
+                        <span class="glyphicon glyphicon-chevron-down" />
                     </div>
                 </div>
             </div>
@@ -309,32 +315,12 @@
                     <div class="row">
                         <div class="col-xs-12 page-header">
                             <span class="badge">
-                                <t t-esc="len(question.child_ids)"/> Answers
+                                <t t-esc="len(question.child_ids)"/> Answer
                             </span>
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                Short by
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#">Oldest</a>
-                                </li>
-                                <li>
-                                    <a href="#">Newest</a>
-                                </li>
-                                <li>
-                                    <a href="#">Most Viewd</a>
-                                </li>
-                            </ul>
                         </div>
+                        <t t-call="website_forum.shorting" />
                     </div>
-                    
-                    <ul class="media-list">
-                        <li t-foreach="question.child_ids" t-as="answer" class="media">
-                            <t t-call="website_forum.answer" />
-                        </li>
-                    </ul>
-                    
+                    <t t-call="website_forum.answer"/>
                 </div>
             </t>
         </template>
