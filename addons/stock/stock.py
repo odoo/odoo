@@ -3489,7 +3489,6 @@ class stock_pack_operation(osv.osv):
         self.recompute_rem_qty_from_operation(cr, uid, [res_id], context=context)
         return res_id
 
-
     def recompute_rem_qty_from_operation(self, cr, uid, op_ids, context=None):
         def _create_link_for_product(product_id, qty):
             qty_to_assign = qty
@@ -3501,19 +3500,6 @@ class stock_pack_operation(osv.osv):
                     move.refresh()
                     if qty_to_assign <= 0:
                         break
-
-        def _check_package_child_of(quant_pack, ops_pack):
-            if not quant_pack and not ops_pack:
-                return True
-            if not quant_pack or not ops_pack:
-                return False
-            check = False
-            check_pack = quant_pack
-            while not check and check_pack:
-                if check_pack.id == ops_pack.id:
-                    check = True
-                check_pack = quant_pack.parent_id
-            return check
 
         def _check_quants_reserved(ops):
             if ops.package_id and not ops.product_id: 
@@ -3530,7 +3516,7 @@ class stock_pack_operation(osv.osv):
                     for quant in move.reserved_quant_ids:
                         if not qty  > 0:
                             break
-                        bool = _check_package_child_of(quant.package_id, ops.package_id)
+                        bool = bool(pack_obj.search(cr, uid, [('id', 'child_of', [ops.package_id.id]), ('id', '=', quants.package_id.id)], context=context)
                         bool = bool and ((ops.lot_id and ops.lot_id.id == quant.lot_id.id) or not ops.lot_id)
                         bool = bool and (ops.owner_id.id == quant.owner_id.id)
                         if bool:
