@@ -3412,11 +3412,11 @@ class stock_pack_operation(osv.osv):
         res = {}
         for ops in self.browse(cr, uid, ids, context=context):
             res[ops.id] = 0
-            if ops.package_id:
+            if ops.package_id and not ops.product_id:
                 #dont try to compute the remaining quantity for packages because it's not relevant (a package could include different products).
                 #should use _get_remaining_prod_quantities instead
                 continue
-            elif ops.product_id:
+            else:
                 qty = ops.product_qty
                 if ops.product_uom_id:
                     qty = uom_obj._compute_qty(cr, uid, ops.product_uom_id.id, ops.product_qty, ops.product_id.uom_id.id)
@@ -3501,24 +3501,74 @@ class stock_pack_operation(osv.osv):
                     if qty_to_assign <= 0:
                         break
 
+        def _check_quants_reserved(ops):
+            if ops.package_id and not ops.product_id:
+                for quant in quant_obj.browse(cr, uid, package_obj.get_content(cr, uid, [ops.package_id.id]), context=context):
+                    if quant.reservation_id and quant.reservation_id.id in [x.id for x in ops.picking_id.move_lines] and (not quants_done.get(quant.id)):
+                        #Entire packages means entire quants from those packages
+                        if not quants_done.get(quant.id):
+                            quants_done[quant.id] = 0
+                        link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': quant.qty}, context=context)
+            else:
+                qty = uom_obj._compute_qty(cr, uid, ops.product_uom_id.id, ops.product_qty, ops.product_id.uom_id.id)
+                #Check moves with same product
+                for move in [x for x in ops.picking_id.move_lines if ops.product_id.id == x.product_id.id]:
+                    for quant in move.reserved_quant_ids:
+                        if not qty > 0:
+                            break
+                        if ops.package_id:
+                            flag = quant.package_id and bool(package_obj.search(cr, uid, [('id', 'child_of', [ops.package_id.id]), ('id', '=', quant.package_id.id)], context=context)) or False
+                        else:
+                            flag = not quant.package_id.id
+                        flag = flag and ((ops.lot_id and ops.lot_id.id == quant.lot_id.id) or not ops.lot_id)
+                        flag = flag and (ops.owner_id.id == quant.owner_id.id)
+                        if flag:
+                            quant_qty = quant.qty
+                            if quants_done.get(quant.id):
+                                if quants_done[quant.id] == 0:
+                                    continue
+                                quant_qty = quants_done[quant.id]
+                            if quant_qty > qty:
+                                qty_todo = qty
+                                quants_done[quant.id] = quant_qty - qty
+                            else:
+                                qty_todo = quant_qty
+                                quants_done[quant.id] = 0
+                            qty -= qty_todo
+                            link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': qty_todo}, context=context)
+
         link_obj = self.pool.get('stock.move.operation.link')
         uom_obj = self.pool.get('product.uom')
         package_obj = self.pool.get('stock.quant.package')
-        if op_ids:
-            #sort moves in order to process first the ones that have already reserved quants
-            ops = self.browse(cr, uid, op_ids[0], context=context)
-            sorted_moves = ops.picking_id.move_lines
-            sorted_moves.sort(key = lambda x: x.product_qty - x.reserved_availability)
-        for op in self.browse(cr, uid, op_ids, context=context):
+        quant_obj = self.pool.get('stock.quant')
+        quants_done = {}
+
+        operations = self.browse(cr, uid, op_ids, context=context)
+        operations.sort(key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
+        sorted_moves = []
+        for op in operations:
+            if not sorted_moves:
+                #sort moves in order to process first the ones that have already reserved quants
+                sorted_moves = op.picking_id.move_lines
+                sorted_moves.sort(key=lambda x: x.product_qty - x.reserved_availability)
+
             to_unlink_ids = [x.id for x in op.linked_move_operation_ids]
             if to_unlink_ids:
                 link_obj.unlink(cr, uid, to_unlink_ids, context=context)
+            _check_quants_reserved(op)
+
+        for op in operations:
+            op.refresh()
             if op.product_id:
-                normalized_qty = uom_obj._compute_qty(cr, uid, op.product_uom_id.id, op.product_qty, op.product_id.uom_id.id)
-                _create_link_for_product(op.product_id.id, normalized_qty)
+                #TODO: Remaining qty: UoM conversions are done twice
+                normalized_qty = uom_obj._compute_qty(cr, uid, op.product_uom_id.id, op.remaining_qty, op.product_id.uom_id.id)
+                if normalized_qty > 0:
+                    _create_link_for_product(op.product_id.id, normalized_qty)
             elif op.package_id:
-                for product_id, qty in package_obj._get_all_products_quantities(cr, uid, op.package_id.id, context=context).items():
-                    _create_link_for_product(product_id, qty)
+                prod_quants = self._get_remaining_prod_quantities(cr, uid, op, context=context)
+                for product_id, qty in prod_quants.items():
+                    if qty > 0:
+                        _create_link_for_product(product_id, qty)
 
     def process_packaging(self, cr, uid, operation, quants, context=None):
         ''' Process the packaging of a given operation, after the quants have been moved. If there was not enough quants found
