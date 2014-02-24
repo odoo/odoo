@@ -44,16 +44,17 @@ class website_forum(http.Controller):
 
         step = 10
         question_count = forum_obj.search(
-            request.cr, request.uid, [], count=True,
+            request.cr, request.uid, [('parent_id', '=', False)], count=True,
             context=request.context)
         pager = request.website.pager(url="/questions/", total=question_count, page=page, step=step, scope=10)
 
         obj_ids = forum_obj.search(
-            request.cr, request.uid, [], limit=step,
+            request.cr, request.uid, [('parent_id', '=', False)], limit=step,
             offset=pager['offset'], context=request.context)
         question_ids = forum_obj.browse(request.cr, request.uid, obj_ids,
                                       context=request.context)
         values = {
+            'total_questions': question_count,
             'question_ids': question_ids,
             'pager': pager,
             'searches': searches,
