@@ -5,6 +5,7 @@
         <record id="question_0" model="website.forum.post">
             <field name="name">How to configure alerts for employee contract expiration.</field>
             <field name="views">45</field>
+            <field name="tags" eval="[(4,ref('tags_0')),(4,ref('tags_3')),(4,ref('tags_4'))]"/>
         </record>
         
         <record id="question_1" model="website.forum.post">
@@ -19,6 +20,7 @@ I use a XML-RPC to access to invoices, I want to get the states of invoices, but
             <field name="name">Restrain the user from confirming the Purchase requisition</field>
             <field name="views">45</field>
             <field name="body">Can anybody tell me how to restrict the user from confirming the purchase requisition? In my case when a user is creating a purchase requisition than the user after saving it is able to send it to the supplier rather I want the user to just generate the purchase requisition and let the manager do the remaining works like sending the purchase requisition to the supplier and than receiving the goods. Please help me out. Thanks in advance.</field>
+            <field name="tags" eval="[(4,ref('tags_5'))]"/>
         </record>
         
         <record id="question_4" model="website.forum.post">
@@ -67,5 +69,193 @@ Thank you in advance</field>
             <field name="views">45</field>
             <field name="body">Now i create new group , assign user and access right as READ &amp; CREATE to object stock.picking.ads but nothing is reflected , iam able to delete and write which should not happen. Very Strange!!!</field>
         </record>
+        
+        <record id="question_9" model="website.forum.post">
+            <field name="name">how to import csv into customer database</field>
+            <field name="views">45</field>
+            <field name="body">hi, how to import csv into customer database? Thanks</field>
+            <field name="tags" eval="[(4,ref('tags_2'))]"/>
+        </record>
+                
+        <record id="question_10" model="website.forum.post">
+            <field name="name">send mails not receiving properly</field>
+            <field name="views">45</field>
+            <field name="body">Hi, The options for sending mails have been enabled in openerp.
+                               There are options to send the invoice,sales order,
+                               quotations etc by the email.But the issue is even after the button 'Send By Email' is clicked,
+                               the email is not received to the recipients .Those emails are stored in the Archives under the Messaging window.How to configure incoming and outgoing mails in openerp</field>
+           <field name="tags" eval="[(4,ref('tags_1'))]"/>
+        </record>
+        
+        <record id="question_11" model="website.forum.post">
+            <field name="name">How to refresh weight of stock move lines after product weight update?</field>
+            <field name="views">45</field>
+        </record>
+
+        <record id="question_12" model="website.forum.post">
+            <field name="name">Update new module v7.0 Ubuntu 12.04</field>
+            <field name="views">45</field>
+        </record>
+        
+        <record id="question_13" model="website.forum.post">
+            <field name="name">Can view top menu In openerp 7.0. (black taskbar at top of window???)</field>
+            <field name="views">45</field>
+            <field name="tags" eval="[(4,ref('tags_6'))]"/>
+        </record>
+        
+<!-- Answer -->
+
+        <record id="answer_0" model="website.forum.post">
+            <field name="name">Just for posterity so other can see. Here are the steps to set automatic alerts on any contract.. i.e. HR Employee, or Fleet for example. I will use fleet as an example.
+                Step 1. As a user who has access rights to Technical Features, go to Settings --> Automated Actions. Create A new Automated Action. For the Related Document Model choose.. Contract information on a vehicle (you can also type in the actual model name.. fleet.vehicle.log.contract ) . Set the trigger date to ... Contract Expiration Date.
+                The Next Field (Delay After Trigger Date) is a bit ridiculous. Who wants to be reminded of a contract expiration AFTER the fact? The field should say Days Before Date to Fire Action and the number should be converted to a negative. IMHO. Any way... to get a workable solution you must enter in the number in the negative. So for instance like me if you want to be warned 35 days BEFORE the expiration... put in Delay After Trigger Date.. the number -35 But the sake of testing, right now just put in -1 for 1 day before. Save the Action.
+                Step 2. Go to Server Actions and create new Action. Call it Fleet Contract Expiration Warning. The Object will be the same as above .. Contract information on a vehicle. The Action Type is Email. For email address I just put my email. Under subject put in... [[object.name]]. This will tell you the name of the car. Message you can put any text message you like. Now save the Server Action.
+                Step 3. Now go back to the Automated Action you created and go to the Action tab next to the conditions tab. Click Add and add the server action you created . In this case Fleet Contract Expiration Warning. Then Save.
+                Step 4. To test, set a contract to expire tomorrow under one of your fleets vehicles. Then Save it.
+                Step 5. Go to Scheduled Actions.. Set interval number to 1. Interval Unit to Minutes. Then Set the Next Execution date to 2 minutes from now. If your SMTP is configured correctly you will start to get a mail every minute with the reminder.
+            </field>
+            <field name="parent_id" ref="question_0" />
+        </record>
+        
+        <record id="answer_1" model="website.forum.post">
+            <field name="name"> Hello everybody,
+                I use a XML-RPC to access to invoices, I want to get the states of invoices, but always I get paid instead of Payé (French)
+                I use administrator to connect to the databse, he has as lang = 'fr_FR'
+                def _get_invoice_states(self, cr, uid, ids, field_name, args, context=None):
+                    if not context : 
+                        context = {}
+                        user = self.pool.get('res.users').read(cr, uid, uid, ['lang','tz'])
+                        context.update({'lang' : str(user.get('lang',u'fr_FR'))})
+                        context.update({'tz' : str(user.get('tz',u'GMT'))})
+                        context.update({'uid' : uid})
+                    result = {}
+                    for invoice in self.browse(cr, uid, ids, context=context):
+                        res = _('Name : ') + (invoice.number or '') 
+                        res += _('Etat : ') + (invoice.state or '')
+                 
+            </field>
+            <field name="parent_id" ref="question_1" />
+        </record>
+        
+        <record id="answer_4" model="website.forum.post">
+            <field name="name">Yes you could download the module from internet on another 
+                    computer and unzip the file on the ERP server. 
+                    Then you have to activate the module, see the tutorial on acespritechblog.wordpress.com (sorry I cannot post the full link)
+            </field>
+            <field name="parent_id" ref="question_4" />
+        </record>
+
+        <record id="answer_5" model="website.forum.post">
+            <field name="name">OpenERP v8 (next release) provides a web module and an e-commerce module: www.openerp.com/website_cms
+                            The CMS editor in OpernERP web is nice but I prefer drupal for customization and there is a drupal module for OpenERP. I think WP is better than OpenERP web too.
+            </field>
+            <field name="parent_id" ref="question_5" />
+        </record>
+        
+        <record id="answer_6_0" model="website.forum.post">
+            <field name="name"> 
+                no need to inherit account.voucher. after creating the account.voucher record, you just add this in your XMLRPC script.
+
+                self.sock.execute(self.dbname, self.uid, self.pwd, 'account.voucher', 
+                                             'button_proforma_voucher', voucher_id, {})
+                 
+                voucher_id should be the ID of the created voucher.
+            </field>
+            <field name="parent_id" ref="question_6" />
+        </record>
+        
+        <record id="answer_6_1" model="website.forum.post">
+            <field name="name"> 
+               I had the same issue and in my case I needed to remove the field "move_id" from account.voucher and adding the field "move_line_id" to account.voucher.line, have you tried that?
+
+               move_line_id should match the ID of the account.move.line whose "move_id" field matches the "move_id" field of the invoice you created
+
+               I also set 'type'='cr' for account.voucher.line
+
+               After that, executing workflow('account.voucher', 'proforma_voucher', voucher_id) worked ok,
+
+               Hope this helps!
+            </field>
+            <field name="parent_id" ref="question_6" />
+        </record>
+        
+        <record id="answer_9" model="website.forum.post">
+            <field name="name">
+                    Step 1: First make sure the CRM module is installed. If it isnt then you can click on the CRM module in the applications view.
+                    
+                    Step 2: Go to Settings -> Configuration -> General Settings and check the "Allow users to import data from CSV files" checkbox
+                    
+                    Step 3: Go to Sales -> Customers then switch to the List view by clicking the List view button in the upper right corner
+                    
+                    Step 4: Click on the "Import" link next to the red Create button
+                    
+                    Step 5: Click the "Choose File" button and find your csv file to import
+                    
+                    Step 6: Match the fields from the csv file to the fields in the drop down menus.
+                    
+                    Step 7: Click the "Validate" button to see if any errors occurred. Correct any errors on the csv file, save it, then refresh the file by clicking the refresh button next to the "Choose File" button
+                    
+                    Step 8: Click "Validate" again. If there are still errors, then repeat step 7, otherwise click the "Import" button. Then youre done
+                     
+            </field>
+            <field name="parent_id" ref="question_9" />
+        </record>
+        
+        <record id="answer_10" model="website.forum.post">
+            <field name="name">
+                    Hello,
+                    Email outgoing server can be configured in: Settings >> General Settings >> Email >> Outgoing mail server.
+                    SMTP Server: Your SMTP server address
+                    Connection Security: SSL or none
+                    Username: Your E-Mail user name
+                    Password: Your E-Mail password
+            </field>
+            <field name="parent_id" ref="question_10" />
+        </record>
+        
+        <record id="answer_13_0" model="website.forum.post">
+            <field name="name">
+                also settings-> update moduel list? can find this anywhere??
+            </field>
+            <field name="parent_id" ref="question_13" />
+        </record>
+
+        <record id="answer_13_1" model="website.forum.post">
+            <field name="name">
+                Give your admin user the technical features right and you will be able to see more options in the settings menu. (use a refresh)
+            </field>
+            <field name="parent_id" ref="question_13" />
+        </record>
+
+<!-- Tag  -->        
+
+        <record id="tags_0" model="website.forum.tag">
+            <field name="name">Contract</field>
+        </record>
+        
+        <record id="tags_1" model="website.forum.tag">
+            <field name="name">e-mail</field>
+        </record>
+        
+        <record id="tags_2" model="website.forum.tag">
+            <field name="name">Csv</field>
+        </record>
+
+        <record id="tags_3" model="website.forum.tag">
+            <field name="name">Action</field>
+        </record>
+                
+        <record id="tags_4" model="website.forum.tag">
+            <field name="name">Alert</field>
+        </record>
+                        
+        <record id="tags_5" model="website.forum.tag">
+            <field name="name">POS</field>
+        </record>
+        
+        <record id="tags_6" model="website.forum.tag">
+            <field name="name">Menu</field>
+        </record>
+        
     </data>
 </openerp>
