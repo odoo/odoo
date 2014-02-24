@@ -20,10 +20,9 @@
         <div class="mycontent hidden">
             <input name="discussion" t-att-value="identifier" type="hidden"/>
             <input name="blog_post_id" t-att-value="options.post_id" type="hidden"/>
-            <textarea t-att-class="options.document_user ? 'mb8 form-control' : 'mb8 form-control hidden'" rows="2" id="comment" placeholder="Write a comment..."/>
-            <button id='comment_post' t-att-class="options.document_user ? 'btn btn-primary btn-xs mb8 mt4' : 'btn btn-primary btn-xs mb8 mt4 hidden'">Post</button>
+            <textarea class="mb8 form-control" rows="2" id="comment" placeholder="Write a comment..."/>
+            <button id='comment_post' class="btn btn-primary btn-xs mb8 mt4">Post</button>
             <div class="discussion_history"/>
-            <a t-att-class="options.document_user ? 'btn btn-block btn-success hidden' : 'btn btn-block btn-success'" href="/web/login">Sign In</a>
         </div>
     </t>
 </templates>

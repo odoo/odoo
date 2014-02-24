@@ -14,7 +14,6 @@
                 identifier: 'name',
                 position: 'right',
                 post_id: $('#blog_post_name').attr('data-oe-id'),
-                document_user : false,
                 content : false,
             };
             self.settings = $.extend({}, defaults, options);

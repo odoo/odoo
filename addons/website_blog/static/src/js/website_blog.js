@@ -1,7 +1,7 @@
 $(document).ready(function() {
     var content = $("#blog_content p");
     if(content.length)
-        new openerp.website.blog_discussion({'document_user': $('#is_document_user').length, 'content' : content});
+        new openerp.website.blog_discussion({'content' : content});
     $('.cover_footer').on('click',page_transist);
     $('a[href^="#blog_content"]').on('click', animate);
     $("p").share();
@@ -37,7 +37,7 @@ $(document).ready(function() {
                $(document).find('a[href^="#blog_content"]').on('click', animate);
                var content = $(document).find("#blog_content p");
                if (content)
-                   new openerp.website.blog_discussion({'document_user': $('#is_document_user').length, 'content' : content});
+                   new openerp.website.blog_discussion({'content' : content});
                $("p").share();
            });
             if (newLocation != window.location) {
