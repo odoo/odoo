@@ -56,6 +56,7 @@ class project_issue(osv.Model):
         },
         'kanban_state': {
             'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
+            'project_issue.mt_issue_done': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'done',
         },
     }
 
