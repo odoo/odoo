@@ -369,7 +369,8 @@ class stock_quant(osv.osv):
         #if the quant we are moving had been split and was inside a package, it means we unpacked it
         if new_quant and new_quant.package_id:
             vals['package_id'] = False
-        self.write(cr, SUPERUSER_ID, [quant.id], vals, context=context)
+        if self._check_location(cr, uid, location_to, context):
+            self.write(cr, SUPERUSER_ID, [quant.id], vals, context=context)
         quant.refresh()
         return new_quant
 
@@ -589,15 +590,10 @@ class stock_quant(osv.osv):
         ''' Return the company owning the location if any '''
         return location and (location.usage == 'internal') and location.company_id or False
 
-    def _check_location(self, cr, uid, ids, context=None):
-        for record in self.browse(cr, uid, ids, context=context):
-            if record.location_id.usage == 'view':
-                raise osv.except_osv(_('Error'), _('You cannot move product %s to a location of type view %s.') % (record.product_id.name, record.location_id.name))
+    def _check_location(self, cr, uid, location, context=None):
+        if location.usage == 'view':
+            raise osv.except_osv(_('Error'), _('You cannot move to a location of type view %s.') % (location.name))
         return True
-
-    _constraints = [
-        (_check_location, 'You cannot move products to a location of the type view.', ['location_id'])
-    ]
 
 
 #----------------------------------------------------------
