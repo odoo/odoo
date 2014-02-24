@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import random
-import simplejson
 import werkzeug
 
 from openerp import SUPERUSER_ID
@@ -116,13 +114,13 @@ class website_sale(http.Controller):
         if search:
             domain += ['|', ('name', 'ilike', search), ('description', 'ilike', search)]
         if category:
-            domain += [('product_variant_ids.public_categ_id', 'child_of', category.id)]
+            domain += [('product_variant_ids.public_categ_id', 'child_of', int(category))]
 
         attrib_values = map(int,request.httprequest.args.getlist('attrib'))
         if attrib_values:
             domain += [('attribute_lines.value_id', 'in', attrib_values)]
         attrib_set = set(attrib_values) 
-        keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_set)
+        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_set)
 
         if not context.get('pricelist'):
             context['pricelist'] = int(self.get_pricelist())
@@ -147,7 +145,7 @@ class website_sale(http.Controller):
 
         values = {
             'search': search,
-            'category': category and category.id,
+            'category': category and int(category),
             'attrib_set': attrib_set,
             'pager': pager,
             'pricelist': self.get_pricelist(),

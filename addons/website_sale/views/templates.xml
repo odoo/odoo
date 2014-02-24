@@ -28,9 +28,9 @@
       </li>
   </xpath>
 </template>
-
 <template id="search" name="Search hidden fields">
   <input t-if="attrib" type="hidden" name="filters" t-att-value="attrib"/>
+  <input t-if="category" type="hidden" name="category" t-att-value="int(category or 0)"/>
   <div class="input-group">
     <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search"/>
     <span class="input-group-btn">
