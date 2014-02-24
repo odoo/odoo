@@ -457,7 +457,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             options = options || {};
 
             var self = this;
-            var timeout = typeof options.timeout === 'number' ? options.timeout : 7500;
+            var timeout = typeof options.timeout === 'number' ? options.timeout : 7500 * orders.length;
 
             // we try to send the order. shadow prevents a spinner if it takes too long. (unless we are sending an invoice,
             // then we want to notify the user that we are waiting on something )
