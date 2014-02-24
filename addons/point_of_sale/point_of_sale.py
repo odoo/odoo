@@ -561,7 +561,11 @@ class pos_order(osv.osv):
                     'journal': cash_journal.id,
                 }, context=context)
             order_ids.append(order_id)
-            self.signal_paid(cr, uid, [order_id])
+
+            try:
+                self.signal_paid(cr, uid, [order_id])
+            except Exception as e:
+                _logger.error('ERROR: Could not mark POS Order as Paid.\n'+str(e))
 
             if to_invoice:
                 self.action_invoice(cr, uid, [order_id], context)
