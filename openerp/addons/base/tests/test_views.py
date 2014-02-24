@@ -473,6 +473,72 @@ class TestTemplating(common.TransactionCase):
             second.get('data-oe-id'),
             "second should come from the extension view")
 
+    def test_branding_distribute_inner(self):
+        """ Checks that the branding is correctly distributed within a view
+        extension
+        """
+        Views = self.registry('ir.ui.view')
+        id = Views.create(self.cr, self.uid, {
+            'name': "Base view",
+            'type': 'qweb',
+            'arch': """<root>
+                <item order="1"/>
+            </root>"""
+        })
+        id2 = Views.create(self.cr, self.uid, {
+            'name': "Extension",
+            'type': 'qweb',
+            'inherit_id': id,
+            'arch': """<xpath expr="//item" position="before">
+                <item order="2">
+                    <content t-att-href="foo">bar</content>
+                </item>
+            </xpath>"""
+        })
+
+        arch_string = Views.read_combined(
+            self.cr, self.uid, id, fields=['arch'],
+            context={'inherit_branding': True})['arch']
+
+        arch = ET.fromstring(arch_string)
+        Views.distribute_branding(arch)
+
+        self.assertTreesEqual(
+            arch,
+            E.root(
+                E.item(
+                    E.content("bar", {
+                        't-att-href': "foo",
+                        'data-oe-model': 'ir.ui.view',
+                        'data-oe-id': str(id2),
+                        'data-oe-field': 'arch',
+                        'data-oe-xpath': '/xpath/item/content[1]',
+                    }), {
+                        'order': '2',
+                        'data-oe-source-id': "159"
+                    }),
+                E.item({
+                    'order': '1',
+                    'data-oe-model': 'ir.ui.view',
+                    'data-oe-id': str(id),
+                    'data-oe-field': 'arch',
+                    'data-oe-xpath': '/root[1]/item[1]'
+                })
+            )
+        )
+
+    def assertTreesEqual(self, n1, n2):
+        self.assertEqual(n1.tag, n2.tag)
+        self.assertEqual((n1.text or '').strip(), (n2.text or '').strip())
+        self.assertEqual((n1.tail or '').strip(), (n2.tail or '').strip())
+
+        # Because lxml uses ordereddicts in which order is important to
+        # equality (!?!?!?!)
+        self.assertEqual(dict(n1.attrib), dict(n2.attrib))
+
+        for c1, c2 in zip(n1, n2):
+            self.assertTreesEqual(c1, c2)
+
 class test_views(common.TransactionCase):
 
     def test_nonexistent_attribute_removal(self):
@@ -666,4 +732,3 @@ class test_views(common.TransactionCase):
                     '<button name="action_next" type="object" string="New button"/>'
                 '</footer>'
             '</form>')
-

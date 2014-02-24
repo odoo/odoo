@@ -760,11 +760,12 @@ class view(osv.osv):
                     if child.get('data-oe-xpath'):
                         # injected by view inheritance, skip otherwise
                         # generated xpath is incorrect
-                        continue
-                    indexes[child.tag] += 1
-                    self.distribute_branding(child, distributed_branding,
-                                             parent_xpath=node_path,
-                                             index_map=indexes)
+                        self.distribute_branding(child)
+                    else:
+                        indexes[child.tag] += 1
+                        self.distribute_branding(
+                            child, distributed_branding,
+                            parent_xpath=node_path, index_map=indexes)
 
     def is_node_branded(self, node):
         """ Finds out whether a node is branded or qweb-active (bears a
