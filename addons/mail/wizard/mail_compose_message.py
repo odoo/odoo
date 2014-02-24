@@ -121,9 +121,9 @@ class mail_compose_message(osv.TransientModel):
         'use_active_domain': fields.boolean('Use active domain'),
         'active_domain': fields.char('Active domain', readonly=True),
         'notify': fields.boolean('Notify followers',
-            help='Notify followers of the document'),
+            help='Notify followers of the document (mass post only)'),
         'same_thread': fields.boolean('Replies in the document',
-            help='Replies to the messages will go into the selected document.'),
+            help='Replies to the messages will go into the selected document (mass mail only)'),
         'attachment_ids': fields.many2many('ir.attachment',
             'mail_compose_message_ir_attachments_rel',
             'wizard_id', 'attachment_id', 'Attachments'),
@@ -245,9 +245,6 @@ class mail_compose_message(osv.TransientModel):
         context.pop('default_email_to', None)
         context.pop('default_partner_ids', None)
 
-        active_ids = context.get('active_ids')
-        is_log = context.get('mail_compose_log', False)
-
         for wizard in self.browse(cr, uid, ids, context=context):
             mass_mode = wizard.composition_mode in ('mass_mail', 'mass_post')
             active_model_pool = self.pool[wizard.model if wizard.model else 'mail.thread']
@@ -258,8 +255,8 @@ class mail_compose_message(osv.TransientModel):
             # wizard works in batch mode: [res_id] or active_ids or active_domain
             if mass_mode and wizard.use_active_domain and wizard.model:
                 res_ids = self.pool[wizard.model].search(cr, uid, eval(wizard.active_domain), context=context)
-            elif mass_mode and wizard.model and active_ids:
-                res_ids = active_ids
+            elif mass_mode and wizard.model and context.get('active_ids'):
+                res_ids = context['active_ids']
             else:
                 res_ids = [wizard.res_id]
 
@@ -269,10 +266,10 @@ class mail_compose_message(osv.TransientModel):
 
             for res_id, mail_values in all_mail_values.iteritems():
                 if wizard.composition_mode == 'mass_mail':
-                    self.pool.get('mail.mail').create(cr, uid, mail_values, context=context)
+                    self.pool['mail.mail'].create(cr, uid, mail_values, context=context)
                 else:
                     subtype = 'mail.mt_comment'
-                    if is_log or (wizard.composition_mode == 'mass_post' and not wizard.notify):  # log a note: subtype is False
+                    if context.get('mail_compose_log') or (wizard.composition_mode == 'mass_post' and not wizard.notify):  # log a note: subtype is False
                         subtype = False
                     if wizard.composition_mode == 'mass_post':
                         context = dict(context,

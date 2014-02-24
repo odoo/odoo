@@ -842,7 +842,6 @@ class mail_message(osv.Model):
         newid = super(mail_message, self).create(cr, uid, values, context)
         if not values.get('subtype_id'):
             return newid
-
         self._notify(cr, uid, newid, context=context,
                      force_send=context.get('mail_notify_force_send', True),
                      user_signature=context.get('mail_notify_user_signature', True))
@@ -985,7 +984,7 @@ class mail_message(osv.Model):
             partners_to_notify -= set([message.author_id.id])
 
         # all partner_ids of the mail.message have to be notified regardless of the above (even the author if explicitly added!)
-        if message.subtype_id and message.partner_ids:
+        if message.partner_ids:
             partners_to_notify |= set([p.id for p in message.partner_ids])
 
         # notify
