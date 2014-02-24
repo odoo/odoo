@@ -1,0 +1,203 @@
+-
+  I first create a warehouse with pick-pack-ship and reception in 2 steps
+-
+  !record {model: stock.warehouse, id: mwh_pps}:
+    name: Mega WareHouse Simple 
+    code: mwhpps
+-
+  Next I create a new product in this warehouse
+-
+  !record {model: product.product, id: mprod_mto}:
+    name: "My Product"
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+    seller_ids:
+      - delay: 1
+        name: base.res_partner_2
+        min_qty: 2.0
+        qty: 10.0
+- 
+  I will create another product in this warehouse
+- 
+  !record {model: product.product, id: mprod_mto2}:
+    name: "My Product 2"
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+    seller_ids:
+      - delay: 2
+        name: base.res_partner_2
+        min_qty: 2.0
+        qty: 10.0
+- 
+  I will create another product in this warehouse
+- 
+  !record {model: product.product, id: mprod_mto3}:
+    name: "My Product 3"
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+    seller_ids:
+      - delay: 4
+        name: base.res_partner_2
+        min_qty: 2.0
+        qty: 10.0
+- 
+  I will create another product in this warehouse
+- 
+  !record {model: product.product, id: mprod_mts}:
+    name: "My Product MTS"
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+    seller_ids:
+      - delay: 2
+        name: base.res_partner_2
+        min_qty: 2.0
+        qty: 10.0
+-
+  Set routes on product to be MTO and Buy
+-
+ !python {model: product.product}: |
+    route_warehouse0_buy = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock.warehouse0')).buy_pull_id.route_id.id 
+    route_warehouse0_mto = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock.warehouse0')).mto_pull_id.route_id.id 
+    self.write(cr, uid, [ref('mprod_mto'), ref('mprod_mto2'), ref('mprod_mto3')], { 'route_ids': [(6, 0, [route_warehouse0_mto,route_warehouse0_buy])]}, context=context)
+-
+  Create a sales order with 36 lines.
+- 
+  !record {model: sale.order, id: sale_order_product_mto2}:
+    partner_id: base.res_partner_3
+    note: Create Sales order
+    warehouse_id: mwh_pps
+    order_line:
+      - product_id: mprod_mto
+        product_uom_qty: 500.00
+      - product_id: mprod_mto
+        product_uom_qty: 100.00
+      - product_id: mprod_mto
+        product_uom_qty: 67.00
+      - product_id: mprod_mto
+        product_uom_qty: 500.00
+      - product_id: mprod_mto2
+        product_uom_qty: 100.00
+      - product_id: mprod_mto2
+        product_uom_qty: 99.00
+      - product_id: mprod_mto3
+        product_uom_qty: 500.00
+      - product_id: mprod_mto2
+        product_uom_qty: 100.00
+      - product_id: mprod_mto2
+        product_uom_qty: 67.00
+      - product_id: mprod_mto3
+        product_uom_qty: 500.00
+      - product_id: mprod_mts
+        product_uom_qty: 100.00
+      - product_id: mprod_mts
+        product_uom_qty: 67.00
+      - product_id: mprod_mts
+        product_uom_qty: 500.00
+      - product_id: mprod_mto
+        product_uom_qty: 100.00
+      - product_id: mprod_mto
+        product_uom_qty: 67.00
+      - product_id: mprod_mto2
+        product_uom_qty: 500.00
+      - product_id: mprod_mto3
+        product_uom_qty: 100.00
+      - product_id: mprod_mto
+        product_uom_qty: 67.00
+      - product_id: mprod_mts
+        product_uom_qty: 500.00
+      - product_id: mprod_mto2
+        product_uom_qty: 100.00
+      - product_id: mprod_mto
+        product_uom_qty: 67.00
+      - product_id: mprod_mts
+        product_uom_qty: 500.00
+      - product_id: mprod_mto2
+        product_uom_qty: 100.00
+      - product_id: mprod_mto
+        product_uom_qty: 67.00
+      - product_id: mprod_mto
+        product_uom_qty: 500.00
+      - product_id: mprod_mto3
+        product_uom_qty: 100.00
+      - product_id: mprod_mto2
+        product_uom_qty: 67.00
+      - product_id: mprod_mto
+        product_uom_qty: 500.00
+      - product_id: mprod_mto3
+        product_uom_qty: 100.00
+      - product_id: mprod_mto2
+        product_uom_qty: 67.00
+      - product_id: mprod_mto2
+        product_uom_qty: 500.00
+      - product_id: mprod_mto2
+        product_uom_qty: 100.00
+      - product_id: mprod_mto3
+        product_uom_qty: 67.00
+      - product_id: mprod_mto2
+        product_uom_qty: 500.00
+      - product_id: mprod_mto
+        product_uom_qty: 100.00
+      - product_id: mprod_mto2
+        product_uom_qty: 67.00
+- 
+  Confirm the sale order
+- 
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_product_mto2}
+- 
+  Check sales order is confirmed
+- 
+  !python {model: sale.order}:
+    print self.browse(cr, uid, ref('sale_order_product_mto2')).state
+- 
+  Confirm all purchase orders that are in draft related
+- 
+  !python {model: purchase.order}: |
+    po_ids = self.search(cr, uid, [('partner_id', '=', ref('base.res_partner_2')), ('state', '=', 'draft')])
+    self.signal_purchase_confirm(cr, uid, po_ids)
+- 
+  Doing all incoming shipments
+- 
+  !python {model: purchase.order.line}: |
+    import time
+    beforebefore = time.time()
+    print time.time()
+    prod_list = [ref('mprod_mto'), ref('mprod_mto2'), ref('mprod_mto3'), ref('mprod_mts')]
+    po_line_ids = self.search(cr, uid, [('product_id', 'in', prod_list)])
+    # Search all related moves
+    move_obj = self.pool.get("stock.move")
+    related_moves = move_obj.search(cr, uid, [('purchase_line_id', 'in', po_line_ids)])
+    moves = move_obj.browse(cr, uid, related_moves)
+    related_pickings = [x.picking_id for x in moves]
+    pickings = list(set(related_pickings))
+    op_obj = self.pool.get('stock.pack.operation')
+    pack_obj = self.pool.get('stock.quant.package')
+    pick_obj = self.pool.get('stock.picking')
+    # Process those pickings and put in boxes of 20 pieces
+    for pick in pickings:
+      #pick_obj.do_prepare_partial(cr, uid, [pick.id])
+      #for ops in pick.pack_operation_ids:
+      #  pick
+      #  while ops.product_qty > 100:
+      #    op_obj.write(cr, uid, [ops.id], {'product_qty': ops.product_qty - 100})
+      #    pack_id =  pack_obj.create(cr, uid, {}, context=context)
+      #    op_obj.copy(cr, uid, ops.id, {'product_qty': 100, 'result_package_id': pack_id})
+      #    print "copy"
+      #    ops.refresh()
+      print "moves", len(pick.move_lines), "pack_ops", len(pick.pack_operation_ids), time.time()
+      pick.refresh()
+      pick_obj.do_transfer(cr, uid, [pick.id])
+      print "Done transfer", time.time()
+    print "totaltime", time.time() - beforebefore
+    #Search all dests of moves
+    move_dest_ids = [x.move_dest_id for x in moves]
+    move_dest_ids = list(set(move_dest_ids))
+    related_dest_pickings = [x.picking_id for x in move_dest_ids if x.picking_id]
+    picks = list(set(related_dest_pickings))
+    for pick in picks:
+      #pick_obj.do_prepare_partial(cr, uid, [pick.id])
+      pick_obj.do_transfer(cr, uid, [pick.id])
+    print "after second transfer", time.time()
