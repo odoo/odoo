@@ -71,7 +71,7 @@ openerp_mail_followers = function(session, mail) {
             });
             // event: click on a subtype, that (un)subscribe for this subtype
             this.$el.on('click', '.oe_subtype_list input', function(event) {
-                self.do_update_subscription();
+                self.do_update_subscription(event);
                 $list = self.$('.oe_subtype_list');
                 if(!$list.hasClass('open'))
                     $list.addClass('open')
