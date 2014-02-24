@@ -276,6 +276,17 @@
     </xpath>
 </template>
 
+<!-- Options: Blog Post: user can select text for tweet -->
+<template id="opt_blog_post_select_to_tweet" name="Select to Tweet"
+        inherit_option_id="website_blog.blog_post_complete">
+</template>
+
+<!-- Options: Blog Post: user can add Inline Discussion -->
+<template id="opt_blog_post_inline_discussion" name="Inline Discussion"
+        inherit_option_id="website_blog.blog_post_complete"
+        groups="website_mail.group_comment">
+</template>
+
 <!-- Page -->
 <template id="index" name="Blog Navigation">
     <t t-call="website.layout">

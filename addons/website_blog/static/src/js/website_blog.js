@@ -1,10 +1,29 @@
 $(document).ready(function() {
+<<<<<<< TREE
+    var discussion = false;
+    var share = false;
+
+    var def = $.Deferred();
+    openerp.jsonRpc("/blogpsot/get_custom_options", 'call', {
+    }).then(function(res){
+        discussion = res['Inline Discussion']
+        share = res['Select to Tweet']
+        return def.resolve()
+    })
+    def.done( function(){
+        var content = $("#blog_content p");
+        if(content.length && discussion)
+            new openerp.website.blog_discussion({'document_user': $('#is_document_user').length, 'content' : content});
+        if (share) $("p").share();
+    })
+=======
     var content = $("#blog_content p");
     if(content.length)
         new openerp.website.blog_discussion({'content' : content});
+>>>>>>> MERGE-SOURCE
     $('.cover_footer').on('click',page_transist);
     $('a[href^="#blog_content"]').on('click', animate);
-    $("p").share();
+
     function page_transist(event) {
         event.preventDefault();
         var translationValue  = $('.cover_footer').get(0).getBoundingClientRect().top;
@@ -35,10 +54,12 @@ $(document).ready(function() {
                //bind again it takes control from now on, until page relaod.
                $(document).find('.cover_footer').on('click',page_transist);
                $(document).find('a[href^="#blog_content"]').on('click', animate);
-               var content = $(document).find("#blog_content p");
-               if (content)
-                   new openerp.website.blog_discussion({'content' : content});
-               $("p").share();
+               def.done( function(){
+                   var content = $(document).find("#blog_content p");
+                   if (content && discussion)
+                       new openerp.website.blog_discussion({'content' : content});
+                   if (share) $("p").share();
+               });
            });
             if (newLocation != window.location) {
                 history.pushState(null, null, newLocation);
