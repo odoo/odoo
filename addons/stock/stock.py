@@ -1806,12 +1806,10 @@ class stock_move(osv.osv):
         if default is None:
             default = {}
         default = default.copy()
-        default.update({
-            'tracking_id': False,
-            'prodlot_id': False,
-            'move_history_ids2': [],
-            'move_history_ids': []
-        })
+        default.setdefault('tracking_id', False)
+        default.setdefault('prodlot_id', False)
+        default.setdefault('move_history_ids', [])
+        default.setdefault('move_history_ids2', [])
         return super(stock_move, self).copy_data(cr, uid, id, default, context=context)
 
     def _auto_init(self, cursor, context=None):
