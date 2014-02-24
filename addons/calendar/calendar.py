@@ -483,8 +483,12 @@ class calendar_alarm_manager(osv.AbstractModel):
 
     def get_next_notif(self,cr,uid,context=None):
         ajax_check_every_seconds = 300
-        partner = self.pool.get('res.users').browse(cr,uid,uid,context=context).partner_id;
+        partner = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id
         all_notif = []
+
+        if not partner or not partner.id:  # If user is disconnected 
+            return []
+
         all_events = self.get_next_potential_limit_alarm(cr,uid,ajax_check_every_seconds,partner_id=partner.id,mail=False,context=context)
 
         for event in all_events:  # .values()
