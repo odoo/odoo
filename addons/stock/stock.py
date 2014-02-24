@@ -1368,7 +1368,7 @@ class stock_move(osv.osv):
         'date_expected': fields.datetime('Expected Date', states={'done': [('readonly', True)]}, required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type', '<>', 'service')], states={'done': [('readonly', True)]}),
         # TODO: improve store to add dependency on product UoM
-        'product_qty': fields.function(_quantity_normalize, type='float', store=True, string='Quantity',
+        'product_qty': fields.function(_quantity_normalize, type='float', store={'stock.move': (lambda self, cr, uid, ids, ctx: ids, ['product_uom_qty', 'product_uom'], 20)}, string='Quantity',
             digits_compute=dp.get_precision('Product Unit of Measure'),
             help='Quantity in the default UoM of the product'),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
