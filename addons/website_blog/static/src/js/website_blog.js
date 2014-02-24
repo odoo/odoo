@@ -1,5 +1,4 @@
 $(document).ready(function() {
-<<<<<<< TREE
     var discussion = false;
     var share = false;
 
@@ -13,14 +12,9 @@ $(document).ready(function() {
     def.done( function(){
         var content = $("#blog_content p");
         if(content.length && discussion)
-            new openerp.website.blog_discussion({'document_user': $('#is_document_user').length, 'content' : content});
+            new openerp.website.blog_discussion({'content' : content});
         if (share) $("p").share();
     })
-=======
-    var content = $("#blog_content p");
-    if(content.length)
-        new openerp.website.blog_discussion({'content' : content});
->>>>>>> MERGE-SOURCE
     $('.cover_footer').on('click',page_transist);
     $('a[href^="#blog_content"]').on('click', animate);
 
