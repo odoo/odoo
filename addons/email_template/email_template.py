@@ -363,12 +363,11 @@ class email_template(osv.osv):
             # update values for all res_ids
             for res_id in template_res_ids:
                 values = results[res_id]
-                if 'body_html' in fields:
-                    if template.user_signature:
-                        signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
-                        values['body_html'] = tools.append_content_to_html(values['body_html'], signature)
-                    if values['body_html']:
-                        values['body'] = tools.html_sanitize(values['body_html'])
+                if 'body_html' in fields and template.user_signature:
+                    signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
+                    values['body_html'] = tools.append_content_to_html(values['body_html'], signature)
+                if values.get('body_html'):
+                    values['body'] = tools.html_sanitize(values['body_html'])
                 values.update(
                     mail_server_id=template.mail_server_id.id or False,
                     auto_delete=template.auto_delete,
