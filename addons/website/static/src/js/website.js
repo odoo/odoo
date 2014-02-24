@@ -69,6 +69,7 @@
         website.is_editable = website.is_editable || $('html').data('editable');
         website.is_editable_button= website.is_editable_button || $('html').data('editable');
         dom_ready.resolve();
+        $('input, textarea').placeholder();
     });
 
     website.init_kanban = function ($kanban) {
@@ -248,13 +249,13 @@
 
     website.form = function (url, method, params) {
         var form = document.createElement('form');
-        form.action = url;
-        form.method = method;
+        form.setAttribute('action', url);
+        form.setAttribute('method', method);
         _.each(params, function (v, k) {
             var param = document.createElement('input');
-            param.type = 'hidden';
-            param.name = k;
-            param.value = v;
+            param.setAttribute('type', 'hidden');
+            param.setAttribute('name', k);
+            param.setAttribute('value', v);
             form.appendChild(param);
         });
         document.body.appendChild(form);

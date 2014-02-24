@@ -2,7 +2,7 @@
     'use strict';
 
     var website = openerp.website;
-    website.snippet = {};
+    if (!website.snippet) website.snippet = {};
     website.snippet.readyAnimation = [];
 
     website.snippet.start_animation = function () {

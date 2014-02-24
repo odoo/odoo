@@ -79,6 +79,7 @@
     // 'snippet-dropped' is triggered on '#oe_snippets' whith $target as attribute when a snippet is dropped
     // 'snippet-activated' is triggered on '#oe_snippets' (and on snippet) when a snippet is activated
 
+    if (!website.snippet) website.snippet = {};
     website.snippet.styles = {};
     website.snippet.selector = [];
     website.snippet.BuildingBlock = openerp.Widget.extend({
@@ -389,7 +390,7 @@
                             website.snippet.start_animation();
 
                             self.create_overlay($target);
-                            if ($snippet.data("snippet-editor")) {
+                            if ($target.data("snippet-editor")) {
                                 $target.data("snippet-editor").drop_and_build_snippet($target);
                             }
 
@@ -1120,6 +1121,38 @@
             return this.grid;
         },
 
+        onFocus : function () {
+            this._super();
+            this.change_cursor();
+        },
+
+        change_cursor : function () {
+            var _class = this.$target.attr("class") || "";
+
+            var col = _class.match(/col-md-([0-9-]+)/i);
+            col = col ? +col[1] : 0;
+
+            var offset = _class.match(/col-md-offset-([0-9-]+)/i);
+            offset = offset ? +offset[1] : 0;
+
+            var overlay_class = this.$overlay.attr("class").replace(/(^|\s+)block-[^\s]*/gi, '');
+            if (col+offset >= 12) overlay_class+= " block-e-right";
+            if (col === 1) overlay_class+= " block-w-right block-e-left";
+            if (offset === 0) overlay_class+= " block-w-left";
+
+            var mb = _class.match(/mb([0-9-]+)/i);
+            mb = mb ? +mb[1] : 0;
+            if (mb >= 128) overlay_class+= " block-s-bottom";
+            else if (!mb) overlay_class+= " block-s-top";
+
+            var mt = _class.match(/mt([0-9-]+)/i);
+            mt = mt ? +mt[1] : 0;
+            if (mt >= 128) overlay_class+= " block-n-top";
+            else if (!mt) overlay_class+= " block-n-bottom";
+
+            this.$overlay.attr("class", overlay_class);
+        },
+        
         /* on_resize
         *  called when the box is resizing and the class change, before the cover_target
         *  @compass: resize direction : 'n', 's', 'e', 'w'
@@ -1127,7 +1160,7 @@
         *  @current: curent increment in this.grid
         */
         on_resize: function (compass, beginClass, current) {
-
+            this.change_cursor();
         }
     });
 
@@ -1206,27 +1239,27 @@
             return false;
         },
         on_resize: function (compass, beginClass, current) {
-            if (compass !== 'w')
-                return;
+            if (compass === 'w') {
+                // don't change the right border position when we change the offset (replace col size)
+                var beginCol = Number(beginClass.match(/col-md-([0-9]+)|$/)[1] || 0);
+                var beginOffset = Number(beginClass.match(/col-md-offset-([0-9-]+)|$/)[1] || beginClass.match(/col-lg-offset-([0-9-]+)|$/)[1] || 0);
+                var offset = Number(this.grid.w[0][current].match(/col-md-offset-([0-9-]+)|$/)[1] || 0);
+                if (offset < 0) {
+                    offset = 0;
+                }
+                var colSize = beginCol - (offset - beginOffset);
+                if (colSize <= 0) {
+                    colSize = 1;
+                    offset = beginOffset + beginCol - 1;
+                }
+                this.$target.attr("class",this.$target.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-|col-md-)([0-9-]+)/g, ''));
 
-            // don't change the right border position when we change the offset (replace col size)
-            var beginCol = Number(beginClass.match(/col-md-([0-9]+)|$/)[1] || 0);
-            var beginOffset = Number(beginClass.match(/col-md-offset-([0-9-]+)|$/)[1] || beginClass.match(/col-lg-offset-([0-9-]+)|$/)[1] || 0);
-            var offset = Number(this.grid.w[0][current].match(/col-md-offset-([0-9-]+)|$/)[1] || 0);
-            if (offset < 0) {
-                offset = 0;
+                this.$target.addClass('col-md-' + (colSize > 12 ? 12 : colSize));
+                if (offset > 0) {
+                    this.$target.addClass('col-md-offset-' + offset);
+                }
             }
-            var colSize = beginCol - (offset - beginOffset);
-            if (colSize <= 0) {
-                colSize = 1;
-                offset = beginOffset + beginCol - 1;
-            }
-            this.$target.attr("class",this.$target.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-|col-md-)([0-9-]+)/g, ''));
-
-            this.$target.addClass('col-md-' + (colSize > 12 ? 12 : colSize));
-            if (offset > 0) {
-                this.$target.addClass('col-md-offset-' + offset);
-            }
+            this._super(compass, beginClass, current);
         },
     });
 
@@ -1248,8 +1281,6 @@
 
             this.$target.attr('contentEditable', 'false');
             this.$target.find('.oe_structure, .content>.row').attr('contentEditable', 'true');
-
-            this.$target.carousel('pause');
         },
         clean_for_save: function () {
             this._super();
@@ -1257,14 +1288,6 @@
             if(!this.$target.find(".item.active").length) {
                 this.$target.find(".item:first").addClass("active");
             }
-        },
-        onFocus: function () {
-            this._super();
-            this.$target.carousel('pause');
-        },
-        onBlur: function () {
-            this._super();
-            this.$target.carousel('cycle');
         },
         start : function () {
             var self = this;
@@ -1276,6 +1299,7 @@
             this.$editor.find(".js_add").on('click', function () {self.on_add_slide(); return false;});
             this.$editor.find(".js_remove").on('click', function () {self.on_remove_slide(); return false;});
 
+            this.$target.carousel('pause');
             this.rebind_event();
         },
         on_add_slide: function () {
@@ -1395,7 +1419,7 @@
             this.$target.find('.carousel-control').off('click').on('click', function () {
                 self.$target.carousel( $(this).data('slide')); });
 
-            this.$target.find('.carousel-image, .content').attr('contentEditable', 'true');
+            this.$target.find('.carousel-inner .content > div').attr('contentEditable', 'true');
             this.$target.find('.carousel-image').attr('attributeEditable', 'true');
             this._super();
         },
