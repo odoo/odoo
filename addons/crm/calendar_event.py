@@ -23,15 +23,13 @@ from openerp.osv import fields, osv
 import logging
 _logger = logging.getLogger(__name__)
 
-#
-# calendar.event is defined in module calendar
-#
+
 class calendar_event(osv.Model):
     """ Model for Calendar Event """
     _inherit = 'calendar.event'
     _columns = {
-        'phonecall_id': fields.many2one ('crm.phonecall', 'Phonecall'),
-        'opportunity_id': fields.many2one ('crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]"),
+        'phonecall_id': fields.many2one('crm.phonecall', 'Phonecall'),
+        'opportunity_id': fields.many2one('crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]"),
     }
 
     def create(self, cr, uid, vals, context=None):
@@ -49,7 +47,7 @@ class calendar_attendee(osv.osv):
     _description = 'Calendar Attendee'
 
     def _noop(self, cr, uid, ids, name, arg, context=None):
-       return dict.fromkeys(ids,False)
+        return dict.fromkeys(ids, False)
 
     _columns = {
         'categ_id': fields.function(_noop, string='Event Type', deprecated="Unused Field - TODO : Remove it in trunk", type="many2one", relation="crm.case.categ"),
