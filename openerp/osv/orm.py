@@ -5461,7 +5461,7 @@ class RecordCache(MutableMapping):
 
     def update(self, *args, **kwargs):
         """ Update the cache of all records in `records`. If the argument is a
-            `SpecialValue`, update all fields except MAGIC_COLUMNS.
+            `SpecialValue`, update all fields (except "magic" columns).
         """
         if args and isinstance(args[0], SpecialValue):
             values = dict.fromkeys(self._recs._ids, args[0])
@@ -5472,30 +5472,25 @@ class RecordCache(MutableMapping):
             return super(RecordCache, self).update(*args, **kwargs)
 
     def __delitem__(self, field):
-        """ Remove the cached value of `field` for `records[0]`. """
+        """ Remove the cached value of `field` for all `records`. """
         if isinstance(field, basestring):
             field = self._recs._fields[field]
-        del self._recs._scope.cache[field][self._recs._id]
+        field_cache = self._recs._scope.cache[field]
+        for id in self._recs._ids:
+            field_cache.pop(id, None)
 
     def __iter__(self):
         """ Iterate over the field names with a regular value in cache. """
         cache, id = self._recs._scope.cache, self._recs._id
         dummy = SpecialValue(None)
         for name, field in self._recs._fields.iteritems():
-            if name in MAGIC_COLUMNS:
-                continue
-            value = cache[field].get(id, dummy)
-            if not isinstance(value, SpecialValue):
+            if name not in MAGIC_COLUMNS and \
+                    not isinstance(cache[field].get(id, dummy), SpecialValue):
                 yield name
 
     def __len__(self):
         """ Return the number of fields with a regular value in cache. """
-        cache, id = self._recs._scope.cache, self._recs._id
-        dummy = SpecialValue(None)
-        return sum(
-            not isinstance(cache[field].get(id, dummy), SpecialValue)
-            for field in self._recs._fields.itervalues()
-        )
+        return sum(1 for name in self)
 
 
 # extra definitions for backward compatibility
