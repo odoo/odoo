@@ -316,14 +316,14 @@ class view(osv.osv):
                 return node
         return None
 
-    def inherit_branding(self, specs_tree, view_id, source_id):
+    def inherit_branding(self, specs_tree, view_id, root_id):
         for node in specs_tree.iterchildren(tag=etree.Element):
             xpath = node.getroottree().getpath(node)
             if node.tag == 'data' or node.tag == 'xpath':
-                self.inherit_branding(node, view_id, source_id)
+                self.inherit_branding(node, view_id, root_id)
             else:
                 node.set('data-oe-id', str(view_id))
-                node.set('data-oe-source-id', str(source_id))
+                node.set('data-oe-source-id', str(root_id))
                 node.set('data-oe-xpath', xpath)
                 node.set('data-oe-model', 'ir.ui.view')
                 node.set('data-oe-field', 'arch')
@@ -397,7 +397,7 @@ class view(osv.osv):
 
         return source
 
-    def apply_view_inheritance(self, cr, uid, source, source_id, model, context=None):
+    def apply_view_inheritance(self, cr, uid, source, source_id, model, root_id=None, context=None):
         """ Apply all the (directly and indirectly) inheriting views.
 
         :param source: a parent architecture to modify (with parent modifications already applied)
@@ -408,13 +408,15 @@ class view(osv.osv):
         :return: a modified source where all the modifying architecture are applied
         """
         if context is None: context = {}
+        if root_id is None:
+            root_id = source_id
         sql_inherit = self.pool.get('ir.ui.view').get_inheriting_views_arch(cr, uid, source_id, model, context=context)
         for (specs, view_id) in sql_inherit:
             specs_tree = etree.fromstring(specs.encode('utf-8'))
             if context.get('inherit_branding'):
-                self.inherit_branding(specs_tree, view_id, source_id)
+                self.inherit_branding(specs_tree, view_id, root_id)
             source = self.apply_inheritance_specs(cr, uid, source, specs_tree, view_id, context=context)
-            source = self.apply_view_inheritance(cr, uid, source, view_id, model, context=context)
+            source = self.apply_view_inheritance(cr, uid, source, view_id, model, root_id=root_id, context=context)
         return source
 
     def read_combined(self, cr, uid, view_id, fields=None, context=None):
