@@ -139,11 +139,11 @@
     backorder_ids = self.search(cr, uid, [('backorder_id', '=', ref('delivery_order1'))], context=context)
     assert backorder_ids, "Backorder should have been created"
     self.do_prepare_partial(cr, uid, backorder_ids, context=context)
-    picking = self.browse(cr, uid backorder_ids[0])
+    picking = self.browse(cr, uid, backorder_ids[0])
     assert len(picking.pack_operation_ids) == 2, "Wrong number of pack operation"
-    assert picking.pack_operation_ids[0].produc_qty == 100, "Wrong quantity in pack operation"
+    assert picking.pack_operation_ids[0].product_qty == 100, "Wrong quantity in pack operation"
     assert picking.pack_operation_ids[0].package_id.name == 'Pallet 2', "Wrong pallet in pack operation"
-    assert picking.pack_operation_ids[1].produc_qty == 50, "Wrong quantity in pack operation"
+    assert picking.pack_operation_ids[1].product_qty == 50, "Wrong quantity in pack operation"
     assert picking.pack_operation_ids[1].package_id.name == 'Pallet 3', "Wrong pallet in pack operation"
     self.action_assign(cr, uid, backorder_ids, context=context)
     self.do_transfer(cr, uid, backorder_ids, context=context)

@@ -3517,12 +3517,12 @@ class stock_pack_operation(osv.osv):
                         if not qty > 0:
                             break
                         if ops.package_id:
-                            bool = quant.package_id and bool(package_obj.search(cr, uid, [('id', 'child_of', [ops.package_id.id]), ('id', '=', quant.package_id.id)], context=context)) or False
+                            flag = quant.package_id and bool(package_obj.search(cr, uid, [('id', 'child_of', [ops.package_id.id]), ('id', '=', quant.package_id.id)], context=context)) or False
                         else:
-                            bool = not quant.package_id.id
-                        bool = bool and ((ops.lot_id and ops.lot_id.id == quant.lot_id.id) or not ops.lot_id)
-                        bool = bool and (ops.owner_id.id == quant.owner_id.id)
-                        if bool:
+                            flag = not quant.package_id.id
+                        flag = flag and ((ops.lot_id and ops.lot_id.id == quant.lot_id.id) or not ops.lot_id)
+                        flag = flag and (ops.owner_id.id == quant.owner_id.id)
+                        if flag:
                             quant_qty = quant.qty
                             if quants_done.get(quant.id):
                                 if quants_done[quant.id] == 0:
