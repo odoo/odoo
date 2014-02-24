@@ -70,7 +70,13 @@ openerp_mail_followers = function(session, mail) {
                     self.do_unfollow();
             });
             // event: click on a subtype, that (un)subscribe for this subtype
-            this.$el.on('click', '.oe_subtype_list input', self.do_update_subscription);
+            this.$el.on('click', '.oe_subtype_list input', function(event) {
+                self.do_update_subscription();
+                $list = self.$('.oe_subtype_list');
+                if(!$list.hasClass('open'))
+                    $list.addClass('open')
+                event.stopPropagation();
+            });
             // event: click on 'invite' button, that opens the invite wizard
             this.$('.oe_invite').on('click', self.on_invite_follower);
             // event: click on 'edit_subtype(pencil)' button to edit subscription
@@ -267,7 +273,7 @@ openerp_mail_followers = function(session, mail) {
             _(records).each(function (record, record_name) {
                 record.name = record_name;
                 record.followed = record.followed || undefined;
-                $(session.web.qweb.render('mail.followers.subtype', {'record': record})).appendTo($list);
+                $(session.web.qweb.render('mail.followers.subtype', {'record': record,'dialog': dialog})).appendTo($list);
             });
         },
 
@@ -323,8 +329,7 @@ openerp_mail_followers = function(session, mail) {
                 }
             } else {
                 var context = new session.web.CompoundContext(this.build_context(), {});
-                return this.ds_model.call(action_subscribe, [[this.view.datarecord.id], follower_ids, checklist, context])
-                    .then(this.proxy('read_value'));
+                return this.ds_model.call(action_subscribe, [[this.view.datarecord.id], follower_ids, checklist, context]).then(this.proxy('read_value'));
             }
         },
     });
