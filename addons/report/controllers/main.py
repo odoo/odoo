@@ -68,7 +68,7 @@ class Report(http.Controller):
             name="module.template_name"
             file="module.template_name"
 
-        If you don't want your report to be listed under the print button, just add
+        If you don't want your report listed under the print button, just add
         'menu=False'.
         """
         ids = [int(i) for i in docids.split(',')]
@@ -102,7 +102,7 @@ class Report(http.Controller):
         reportname_in_path = path.split('/')[1].split('?')[0]
         report = self._get_report_from_name(reportname_in_path)
 
-        # Check attachment_use field. If set to true and an existing pdf is already saved, return
+        # Check attachment_use field. If set to true and an existing pdf is already saved, load
         # this one now. If not, mark save it.
         save_in_attachment = {}
 
@@ -135,7 +135,8 @@ class Report(http.Controller):
                         # Mark current document to be saved
                         save_in_attachment[path_id] = filename
 
-        # Get the paperformat associated to the report, if there is.
+        # Get the paperformat associated to the report. If there is not, get the one associated to
+        # the company.
         if not report.paperformat_id:
             user = request.registry['res.users'].browse(cr, uid, uid, context=context)
             paperformat = user.company_id.paperformat_id
@@ -144,13 +145,8 @@ class Report(http.Controller):
 
         # Get the html report.
         html = self._get_url_content('/' + path, post)[0]
-
-        # Get some css and script in order to build a minimal html page for the report.
-        # This page will later be sent to wkhtmltopdf.
-        css = self._get_url_content('/report/static/src/css/reset.min.css')[0]
-        css += self._get_url_content('/web/static/lib/bootstrap/css/bootstrap.css')[0]
-        css += self._get_url_content('/website/static/src/css/website.css')[0]
-        subst = self._get_url_content('/report/static/src/js/subst.js')[0]
+        subst = self._get_url_content('/report/static/src/js/subst.js')[0]  # Used in age numbering
+        css = ''  # Local css
 
         headerhtml = []
         contenthtml = []
@@ -162,7 +158,13 @@ class Report(http.Controller):
 <!DOCTYPE html>
 <html style="height: 0;">
     <head>
+        <link href="/report/static/src/css/reset.min.css"/>
+        <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+        <link href="/website/static/src/css/website.css" rel="stylesheet"/>
+        <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
+
         <style type='text/css'>{0}</style>
+
         <script type='text/javascript'>{1}</script>
     </head>
     <body class="container" onload='subst()'>
@@ -171,7 +173,7 @@ class Report(http.Controller):
 </html>"""
 
         # The retrieved html report must be simplified. We convert it into a xml tree
-        # via lxml in order to extract header, footer and all reportcontent.
+        # via lxml in order to extract headers, footers and content.
         try:
             root = lxml.html.fromstring(html)
 
@@ -190,7 +192,7 @@ class Report(http.Controller):
 
             for node in root.xpath("//div[@class='page']"):
                 # Previously, we marked some reports to be saved in attachment via their ids, so we
-                # must set a relation between report ids and reportcontent. We use the QWeb
+                # must set a relation between report ids and report's content. We use the QWeb
                 # branding in order to do so: searching after a node having a data-oe-model
                 # attribute with the value of the current report model and read its oe-id attribute
                 oemodelnode = node.find(".//*[@data-oe-model='" + report.model + "']")
@@ -472,10 +474,11 @@ class Report(http.Controller):
 
     @http.route('/report/download/', type='http', auth="user")
     def report_attachment(self, data, token):
-        """This function is only used by 'qwebactionmanager.js' in order to trigger the download of
-        a report.
+        """This function is used by 'qwebactionmanager.js' in order to trigger the download of
+        a report of any type.
 
-        :param data: The JSON.stringified report internal url
+        :param data: a javasscript array JSON.stringified containg report internal url ([0]) and
+        type [1]
         :returns: Response with a filetoken cookie and an attachment header
         """
         requestcontent = simplejson.loads(data)
