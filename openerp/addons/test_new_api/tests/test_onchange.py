@@ -46,16 +46,37 @@ class TestOnChange(common.TransactionCase):
         self.assertEqual(result['value'], {})
 
     def test_new_onchange_one2many(self):
+        tocheck = ['lines.name']
+
         result = self.Model.onchange('name', {
             'name': u"Bob the Builder",
             'name_size': 0,
             'name_utf8_size': 0,
             'description': False,
             'lines': [(0, 0, {'name': False})]
-        })
+        }, tocheck)
         self.assertEqual(result['value'], {
             'name_size': 15,
             'name_utf8_size': 15,
             'description': u"Bob the Builder (15:15)",
             'lines': [(0, 0, {'name': u"Bob the Builder (15)"})],
+        })
+
+        # create a new line
+        line = self.registry('test_new_api.on_change_line').create({})
+        self.assertFalse(line.name)
+
+        # include the line in a new record
+        result = self.Model.onchange('name', {
+            'name': u"Bob the Builder",
+            'name_size': 0,
+            'name_utf8_size': 0,
+            'description': False,
+            'lines': [(4, line.id)]
+        }, tocheck)
+        self.assertEqual(result['value'], {
+            'name_size': 15,
+            'name_utf8_size': 15,
+            'description': u"Bob the Builder (15:15)",
+            'lines': [(1, line.id, {'name': u"Bob the Builder (15)"})],
         })

@@ -161,6 +161,7 @@ class Scope(object):
         scope.registry = RegistryManager.get(cr.dbname)
         scope.cache = defaultdict(dict)     # cache[field] = {id: value}
         scope.cache_ids = defaultdict(set)  # cache_ids[model_name] = set(ids)
+        scope.dirty = set()                 # set of dirty records
         scope.draft = proxy.draft
         scope_list.append(scope)
         return scope
@@ -252,6 +253,7 @@ class Scope(object):
         """ Invalidate the cache. """
         self.cache.clear()
         self.cache_ids.clear()
+        self.dirty.clear()
 
     def check_cache(self):
         """ Check the cache consistency. """
@@ -313,12 +315,15 @@ class DraftSwitch(object):
 
     @contextmanager
     def __call__(self):
-        old = self._state
+        old_state = self._state
         self._state = True
         try:
             yield
         finally:
-            self._state = old
+            self._state = old_state
+            # if going back to clean state, clear the dirty set
+            if not old_state:
+                proxy.dirty.clear()
 
 
 #

@@ -293,6 +293,8 @@ class Field(object):
 
             # store value in cache
             records._cache[self] = value
+            if _scope.draft:
+                records._dirty = True           # mark records as dirty
 
     #
     # Management of the computation of field values.
@@ -943,15 +945,18 @@ class _RelationalMulti(_Relational):
 
         # add new and existing records
         for record in value:
-            # TODO: modified record (1, id, values)
-            if not record.id:
+            if not record._id or record._dirty:
                 # take all fields in cache, except the inverse of self!
                 values = dict(record._cache)
                 if self.inverse_field:
                     values.pop(self.inverse_field.name, None)
-                result.append((0, 0, record._convert_to_write(values)))
+                values = record._convert_to_write(values)
+                if not record._id:
+                    result.append((0, 0, values))
+                else:
+                    result.append((1, record._id, values))
             else:
-                result.append((4, record.id))
+                result.append((4, record._id))
 
         return result
 

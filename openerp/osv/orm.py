@@ -5142,6 +5142,19 @@ class BaseModel(object):
         record._cache.update(values)
         return record
 
+    @property
+    def _dirty(self):
+        """ Return whether any record in `self` is dirty. """
+        dirty = self._scope.dirty
+        return any(record in dirty for record in self)
+
+    @_dirty.setter
+    def _dirty(self, value):
+        if value:
+            map(self._scope.dirty.add, self)
+        else:
+            map(self._scope.dirty.discard, self)
+
     #
     # "Dunder" methods
     #
@@ -5236,9 +5249,7 @@ class BaseModel(object):
     __repr__ = __str__
 
     def __hash__(self):
-        if all(self._ids):
-            return hash((self._name, frozenset(self._ids)))
-        raise except_orm("ValueError", "Cannot hash %s" % self)
+        return hash((self._name, frozenset(self._ids)))
 
     def __getitem__(self, key):
         """ If `key` is an integer or a slice, return the corresponding record
@@ -5355,11 +5366,21 @@ class BaseModel(object):
     #
 
     @api.multi
-    def onchange(self, field_name, values):
-        # create a new record with the values, except field_name
-        record = self.new(values)
-        record_values = dict(record._cache)
-        record._cache.pop(field_name, None)
+    def onchange(self, field_name, values, tocheck=None):
+        """ Perform an onchange on the given field.
+
+            :param field_name: name of the modified field_name
+            :param values: dictionary of values giving the current state of modification
+            :param tocheck: list of (dot-separated) field names to check; use
+                this for secondary fields that are not keys of `values`
+        """
+        scope = scope_proxy.current
+
+        with scope.draft():
+            # create a new record with the values, except field_name
+            record = self.new(values)
+            record_values = dict(record._cache)
+            record._cache.pop(field_name, None)
 
         # HACK: the cache update does not set inverse fields, so do it manually.
         # This is necessary for computing a function field on a secondary
@@ -5370,39 +5391,35 @@ class BaseModel(object):
             if field.inverse_field and not field.related:
                 field.inverse_field._add(record[name], record)
 
-        # check for a field-specific onchange method
-        method = getattr(record, 'onchange_' + field_name, None)
-        if method is None:
-            # apply the change on the record
-            record[field_name] = values[field_name]
-        else:
-            # invoke specific onchange method, which may return a result
-            result = method(values[field_name])
-            if result is not None:
-                return result
+        # at this point, the cache should be clean
+        assert not scope.dirty
 
-        # determine result, and return it
-        changed = {}
-        for name, value in values.iteritems():
-            field = self._fields[name]
+        with scope.draft():
+            # check for a field-specific onchange method
+            method = getattr(record, 'onchange_' + field_name, None)
+            if method is None:
+                # apply the change on the record
+                record[field_name] = values[field_name]
+            else:
+                # invoke specific onchange method, which may return a result
+                result = method(values[field_name])
+                if result is not None:
+                    return result
 
-            if field.relational and isinstance(value, list):
-                # determine fields present in the comodel, and other stuff
-                conames = set()
-                for command in value:
-                    if isinstance(command, (list, tuple)) and command[0] in (0, 1):
-                        conames.update(command[2])
-                # force evaluation of the fields present in the comodel
-                for corecord in record[name]:
-                    for coname in conames:
-                        corecord[coname]
-                # serialize new value
-                changed[name] = field.convert_to_write(record[name], self)
+            # compute function fields on secondary records (one2many, many2many)
+            for field_seq in (tocheck or ()):
+                record.map(field_seq)
 
-            elif record[name] != value:
-                changed[name] = field.convert_to_write(record[name])
+            # determine result, and return it
+            changed = {}
+            for name, oldval in record_values.iteritems():
+                newval = record[name]
+                if newval != oldval or \
+                        isinstance(newval, BaseModel) and newval._dirty:
+                    field = self._fields[name]
+                    changed[name] = field.convert_to_write(newval, self)
 
-        return {'value': changed}
+            return {'value': changed}
 
 
 class RecordCache(MutableMapping):
@@ -5459,6 +5476,8 @@ class RecordCache(MutableMapping):
         cache, id = self._recs._scope.cache, self._recs._id
         dummy = SpecialValue(None)
         for name, field in self._recs._fields.iteritems():
+            if name in MAGIC_COLUMNS:
+                continue
             value = cache[field].get(id, dummy)
             if not isinstance(value, SpecialValue):
                 yield name
