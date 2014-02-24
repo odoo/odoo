@@ -99,8 +99,6 @@ class mrp_workcenter(osv.osv):
             value = {'costs_hour': cost.standard_price}
         return {'value': value}
 
-
-
 class mrp_routing(osv.osv):
     """
     For specifying the routings of Work Centers.
@@ -288,16 +286,20 @@ class mrp_bom(osv.osv):
         (_check_product, 'BoM line product should not be same as BoM product.', ['product_id']),
     ]
 
-    def onchange_product_id(self, cr, uid, ids, product_id, name, context=None):
+    def onchange_product_id(self, cr, uid, ids, product_id, name, product_qty=0, context=None):
         """ Changes UoM and name if product_id changes.
         @param name: Name of the field
         @param product_id: Changed product_id
         @return:  Dictionary of changed values
         """
+        res = {}
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            return {'value': {'name': prod.name, 'product_uom': prod.uom_id.id}}
-        return {}
+            res['value'] = {'name': prod.name, 'product_uom': prod.uom_id.id, 'product_uos_qty': 0, 'product_uos': False}
+            if prod.uos_id.id:
+                res['value']['product_uos_qty'] = product_qty * prod.uos_coeff
+                res['value']['product_uos'] = prod.uos_id.id
+        return res
 
     def onchange_uom(self, cr, uid, ids, product_id, product_uom, context=None):
         res = {'value': {}}
@@ -597,16 +599,19 @@ class mrp_production(osv.osv):
             return {'value': {'location_dest_id': src}}
         return {}
 
-    def product_id_change(self, cr, uid, ids, product_id, context=None):
+    def product_id_change(self, cr, uid, ids, product_id, product_qty=0, context=None):
         """ Finds UoM of changed product.
         @param product_id: Id of changed product.
         @return: Dictionary of values.
         """
+        result = {}
         if not product_id:
             return {'value': {
                 'product_uom': False,
                 'bom_id': False,
-                'routing_id': False
+                'routing_id': False,
+                'product_uos_qty': 0, 
+                'product_uos': False
             }}
         bom_obj = self.pool.get('mrp.bom')
         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
@@ -615,14 +620,13 @@ class mrp_production(osv.osv):
         if bom_id:
             bom_point = bom_obj.browse(cr, uid, bom_id, context=context)
             routing_id = bom_point.routing_id.id or False
-
         product_uom_id = product.uom_id and product.uom_id.id or False
-        result = {
-            'product_uom': product_uom_id,
-            'bom_id': bom_id,
-            'routing_id': routing_id,
-        }
-        return {'value': result}
+        product_uos_id = product.uos_id and product.uos_id.id or False
+        result['value'] = {'product_uos_qty': 0, 'product_uos': False, 'product_uom': product_uom_id, 'bom_id': bom_id, 'routing_id': routing_id}
+        if product.uos_id.id:
+            result['value']['product_uos_qty'] = product_qty * product.uos_coeff
+            result['value']['product_uos'] = product.uos_id.id
+        return result
 
     def bom_id_change(self, cr, uid, ids, bom_id, context=None):
         """ Finds routing for changed BoM.
@@ -1031,11 +1035,12 @@ class mrp_production(osv.osv):
             'location_dest_id': destination_location_id,
             'move_dest_id': production.move_prod_id.id,
             'company_id': production.company_id.id,
+            'production_id': production.id,
         }
         move_id = stock_move.create(cr, uid, data, context=context)
-        stock_move.action_confirm(cr, uid, [move_id], context=context)
-        production.write({'move_created_ids': [(6, 0, [move_id])]}, context=context)
-        return move_id
+        #a phantom bom cannot be used in mrp order so it's ok to assume the list returned by action_confirm
+        #is 1 element long, so we can take the first.
+        return stock_move.action_confirm(cr, uid, [move_id], context=context)[0]
 
     def _make_production_consume_line(self, cr, uid, production_line, parent_move_id, source_location_id=False, context=None):
         stock_move = self.pool.get('stock.move')
@@ -1058,10 +1063,10 @@ class mrp_production(osv.osv):
             'location_dest_id': destination_location_id,
             'company_id': production.company_id.id,
             'procure_method': 'make_to_order',
+            'raw_material_production_id': production.id,
         })
         stock_move.action_confirm(cr, uid, [move_id], context=context)
-        production.write({'move_lines': [(4, move_id)]}, context=context)
-        return move_id
+        return True
 
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms production order.

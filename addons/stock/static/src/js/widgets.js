@@ -74,7 +74,7 @@ function openerp_picking_widgets(instance){
             _.each( ops, function(op){
                 rows.push({
                     cols: {
-                        product: op.product_id[1],
+                        product: (op.package_id ? op.package_id[1] : op.product_id[1]) + (op.lot_id ? ' Lot: ' + op.lot_id[1] : ''),
                         uom: op.product_uom ? product_uom[1] : '',
                         qty: op.product_qty,
                     },
@@ -90,9 +90,14 @@ function openerp_picking_widgets(instance){
             this._super();
             var model = this.getParent();
             this.$('.js_pack_op').click(function(){
-                self.$('.js_pack_op').removeClass('oe_selected');
-                $(this).addClass('oe_selected');
-                model.set_selected_operation(parseInt($(this).attr('op-id')));
+                if (!this.classList.contains('oe_selected')){
+                    self.$('.js_pack_op').removeClass('oe_selected');
+                    $(this).addClass('oe_selected');
+                    model.set_selected_operation(parseInt($(this).attr('op-id')));
+                } else {
+                    $(this).removeClass('oe_selected');
+                    model.set_selected_operation(null);
+                };
             });
         },
     });
@@ -628,14 +633,7 @@ function openerp_picking_widgets(instance){
             if(   this.selected_operation.picking_id === this.picking.id && this.selected_operation.id ){
                 return this.selected_operation.id;
             }else{
-                this.selected_operation.picking_id = this.picking.id;
-                var ops = this.get_current_operations();
-                if(ops.length === 0){
-                    this.selected_operation.id = null;
-                }else{
-                    this.selected_operation.id = ops[ops.length - 1].id;
-                }
-                return this.selected_operation.id;
+                return null;
             }
         },
         reset_selected_operation: function(){
@@ -651,16 +649,19 @@ function openerp_picking_widgets(instance){
             var self = this;
             var op = this.get_selected_operation();
             if( !op ){
-                return;
+                //TODO typing the ean of a product manually ?
+                //(scanning the barcode is already handled somewhere else, and i don't know how to differenciate the 2 operations)
+                // and the result is that if i uncomment the next line, scanning a product counts it twice
+                //self.scan(quantity);
             }
 
-            if(typeof quantity === 'number' && quantity >= 0){
+            else {if(typeof quantity === 'number' && quantity >= 0){
                 new instance.web.Model('stock.pack.operation')
                     .call('write',[[op],{'product_qty': quantity }])
                     .then(function(){
                         self.refresh_ui(self.picking.id);
                     });
-            }
+            }}
 
         },
         connect_numpad: function(){

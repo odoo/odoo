@@ -130,7 +130,7 @@ class product_uom(osv.osv):
     _order = "name"
     _columns = {
         'name': fields.char('Unit of Measure', required=True, translate=True),
-        'category_id': fields.many2one('product.uom.categ', 'Category', required=True, ondelete='cascade',
+        'category_id': fields.many2one('product.uom.categ', 'Product Category', required=True, ondelete='cascade',
             help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."),
         'factor': fields.float('Ratio', required=True,digits=(12, 12),
             help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'\
@@ -578,7 +578,7 @@ class product_product(osv.osv):
         if context is None:
             context = {}
         product = self.browse(cr, uid, product_id, context=context)
-        date = context.get('history_date', time.strftime('%Y-%m-%d %H:%M:%s'))
+        date = context.get('history_date', time.strftime('%Y-%m-%d %H:%M:%S'))
         prices_history_obj = self.pool.get('prices.history')
         history_ids = prices_history_obj.search(cr, uid, [('company_id', '=', company_id), ('product_template_id', '=', product.product_tmpl_id.id), ('datetime', '<=', date)], limit=1)
         if history_ids:

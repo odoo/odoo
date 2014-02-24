@@ -27,15 +27,13 @@
                         </h1>
                     </div>
                     <group>
-                        <group name="general">
+                        <field name="active"/>
+                    </group>
+                    <group name="general">
+                        <group string="General Information">
                             <field name="partner_id"/>
                             <field name="product_id"/>
                         </group>
-                        <group>
-                        <field name="active"/>
-                        </group>
-                    </group>
-                    <group col="4">
                         <group string="Pricing Information">
                             <field name="normal_price" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
                             <label for="free_if_more_than"/>
@@ -43,10 +41,12 @@
                                 <field name="free_if_more_than" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
                                 <field name="amount" attrs="{'required':[('free_if_more_than','&lt;&gt;',False)], 'invisible':[('free_if_more_than','=',False)]}"/>
                             </div>
-                        </group>
+                        
                         <newline/>
                         <field name="use_detailed_pricelist"/>
+                        </group>
                     </group>
+
                     <field name="pricelist_ids" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree">
                         <tree string="Delivery grids">
                               <field name="sequence"/>
@@ -235,13 +235,13 @@
                     <group>
                         <field name="carrier_id"/>
                         <field name="carrier_tracking_ref"/>
-                        <field name="number_of_packages"/>
                     </group>
                     <group>
                         <label for="weight" string="Weight"/>
                         <div>
                             <field name="weight" class="oe_inline"/>
                             <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
+                            <field name="number_of_packages"/>
                         </div>
                         <field name="weight_net" groups="base.group_no_one"/>
                     </group>

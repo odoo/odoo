@@ -22,7 +22,9 @@
 from openerp.osv import fields
 from openerp.osv import osv
 from openerp.tools.translate import _
-
+from openerp import SUPERUSER_ID
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+import time
 
 class StockMove(osv.osv):
     _inherit = 'stock.move'
@@ -33,12 +35,32 @@ class StockMove(osv.osv):
         'consumed_for': fields.many2one('stock.move', 'Consumed for', help='Technical field used to make the traceability of produced products'),
     }
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        default['production_id'] = False
+        return super(StockMove, self).copy(cr, uid, id, default, context=context)
+
     def check_tracking(self, cr, uid, move, lot_id, context=None):
         super(StockMove, self).check_tracking(cr, uid, move, lot_id, context=context)
         if move.product_id.track_production and (move.location_id.usage == 'production' or move.location_dest_id.usage == 'production') and not lot_id:
             raise osv.except_osv(_('Warning!'), _('You must assign a serial number for the product %s') % (move.product_id.name))
         if move.raw_material_production_id and move.location_dest_id.usage == 'production' and move.raw_material_production_id.product_id.track_production and not move.consumed_for:
             raise osv.except_osv(_('Warning!'), _("Because the product %s requires it, you must assign a serial number to your raw material %s to proceed further in your production. Please use the 'Produce' button to do so.") % (move.raw_material_production_id.product_id.name, move.product_id.name))
+
+    def _check_phantom_bom(self, cr, uid, move, context=None):
+        """check if product associated to move has a phantom bom
+            return list of ids of mrp.bom for that product """
+        user_company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        #doing the search as SUPERUSER because a user with the permission to write on a stock move should be able to explode it
+        #without giving him the right to read the boms.
+        return self.pool.get('mrp.bom').search(cr, SUPERUSER_ID, [
+            ('product_id', '=', move.product_id.id),
+            ('bom_id', '=', False),
+            ('type', '=', 'phantom'),
+            '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
+            '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
+            ('company_id', '=', user_company)], context=context)
 
     def _action_explode(self, cr, uid, move, context=None):
         """ Explodes pickings.
@@ -49,59 +71,52 @@ class StockMove(osv.osv):
         move_obj = self.pool.get('stock.move')
         procurement_obj = self.pool.get('procurement.order')
         product_obj = self.pool.get('product.product')
-        processed_ids = [move.id]
-
-        bis = bom_obj.search(cr, uid, [
-            ('product_id', '=', move.product_id.id),
-            ('bom_id', '=', False),
-            ('type', '=', 'phantom')])
+        to_explode_again_ids = []
+        processed_ids = []
+        bis = self._check_phantom_bom(cr, uid, move, context=context)
         if bis:
             factor = move.product_qty
-            bom_point = bom_obj.browse(cr, uid, bis[0], context=context)
-            res = bom_obj._bom_explode(cr, uid, bom_point, factor, [])
+            bom_point = bom_obj.browse(cr, SUPERUSER_ID, bis[0], context=context)
+            res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, factor, [])
             state = 'confirmed'
             if move.state == 'assigned':
                 state = 'assigned'
             for line in res[0]:
                 valdef = {
-                    'picking_id': move.picking_id.id,
+                    'picking_id': move.picking_id.id if move.picking_id else False,
                     'product_id': line['product_id'],
                     'product_uom': line['product_uom'],
                     'product_qty': line['product_qty'],
                     'product_uos': line['product_uos'],
                     'product_uos_qty': line['product_uos_qty'],
-                    'move_dest_id': move.id,
                     'state': state,
                     'name': line['name'],
-                    'procurements': [],
                 }
                 mid = move_obj.copy(cr, uid, move.id, default=valdef)
-                processed_ids.append(mid)
-                prodobj = product_obj.browse(cr, uid, line['product_id'], context=context)
-                proc_id = procurement_obj.create(cr, uid, {
-                    'name': (move.picking_id.origin or ''),
-                    'origin': (move.picking_id.origin or ''),
-                    'date_planned': move.date,
-                    'product_id': line['product_id'],
-                    'product_qty': line['product_qty'],
-                    'product_uom': line['product_uom'],
-                    'product_uos_qty': line['product_uos'] and line['product_uos_qty'] or False,
-                    'product_uos': line['product_uos'],
-                    'location_id': move.location_id.id,
-                    'procure_method': prodobj.procure_method,
-                    'move_id': mid,
-                })
-                procurement_obj.signal_button_confirm(cr, uid, [proc_id])
+                to_explode_again_ids.append(mid)
 
-            move_obj.write(cr, uid, [move.id], {
-                'location_dest_id': move.location_id.id,  # dummy move for the kit
-                'picking_id': False,
-                'state': 'confirmed'
-            })
-            procurement_ids = procurement_obj.search(cr, uid, [('move_id', '=', move.id)], context)
-            procurement_obj.signal_button_confirm(cr, uid, procurement_ids)
-            procurement_obj.signal_button_wait_done(cr, uid, procurement_ids)
-        return processed_ids
+            #delete the move with original product which is not relevant anymore
+            move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)
+            #check if new moves needs to be exploded
+            if to_explode_again_ids:
+                for new_move in self.browse(cr, uid, to_explode_again_ids, context=context):
+                    processed_ids.extend(self._action_explode(cr, uid, new_move, context=context))
+        #return list of newly created move or the move id otherwise
+        return processed_ids or [move.id]
+
+    def action_confirm(self, cr, uid, ids, context=None):
+        move_ids = []
+        for move in self.browse(cr, uid, ids, context=context):
+            #in order to explode a move, we must have a picking_type_id on that move because otherwise the move
+            #won't be assigned to a picking and it would be weird to explode a move into several if they aren't
+            #all grouped in the same picking.
+            if move.picking_type_id:
+                move_ids.extend(self._action_explode(cr, uid, move, context=context))
+            else:
+                move_ids.append(move.id)
+
+        #we go further with the list of ids potentially changed by action_explode
+        return super(StockMove, self).action_confirm(cr, uid, move_ids, context=context)
 
     def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id=False, restrict_partner_id=False,
                        consumed_for=False, context=None):
@@ -121,9 +136,15 @@ class StockMove(osv.osv):
 
         if product_qty <= 0:
             raise osv.except_osv(_('Warning!'), _('Please provide proper quantity.'))
+        #because of the action_confirm that can create extra moves in case of phantom bom, we need to make 2 loops
+        ids2 = []
         for move in self.browse(cr, uid, ids, context=context):
             if move.state == 'draft':
-                self.action_confirm(cr, uid, [move.id], context=context)
+               ids2.extend(self.action_confirm(cr, uid, [move.id], context=context))
+            else:
+               ids2.append(move.id)
+
+        for move in self.browse(cr, uid, ids2, context=context):
             move_qty = move.product_qty
             uom_qty = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, product_qty, move.product_uom.id)
             if move_qty <= 0:
@@ -181,22 +202,6 @@ class StockMove(osv.osv):
             if move.raw_material_production_id and move.raw_material_production_id.state == 'confirmed':
                 workflow.trg_trigger(uid, 'stock.move', move.id, cr)
         return res
-
-
-class StockPicking(osv.osv):
-    _inherit = 'stock.picking'
-
-    #
-    # Explode picking by replacing phantom BoMs
-    #
-    def action_explode(self, cr, uid, move_ids, *args):
-        """Explodes moves by expanding kit components"""
-        move_obj = self.pool.get('stock.move')
-        todo = move_ids[:]
-        for move in move_obj.browse(cr, uid, move_ids):
-            todo.extend(move_obj._action_explode(cr, uid, move))
-        return list(set(todo))
-
 
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
@@ -259,11 +264,12 @@ class stock_warehouse(osv.osv):
             all_routes += [warehouse.manufacture_pull_id.route_id.id]
         return all_routes
 
-    def _handle_renaming(self, cr, uid, warehouse, name, context=None):
-        res = super(stock_warehouse, self)._handle_renaming(cr, uid, warehouse, name, context=context)
+    def _handle_renaming(self, cr, uid, warehouse, name, code, context=None):
+        res = super(stock_warehouse, self)._handle_renaming(cr, uid, warehouse, name, code, context=context)
         pull_obj = self.pool.get('procurement.rule')
         #change the manufacture pull rule name
-        pull_obj.write(cr, uid, warehouse.manufacture_pull_id.id, {'name': warehouse.manufacture_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
+        if warehouse.manufacture_pull_id:
+            pull_obj.write(cr, uid, warehouse.manufacture_pull_id.id, {'name': warehouse.manufacture_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
         return res
 
     def _get_all_products_to_resupply(self, cr, uid, warehouse, context=None):
