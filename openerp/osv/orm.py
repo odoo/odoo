@@ -5111,10 +5111,15 @@ class BaseModel(object):
         """
         recs = self
         for name in field_name.split('.'):
-            values = recs._fields[name].null()
-            for rec in recs:
-                values |= rec[name]
-            recs = values
+            field = recs._fields[name]
+            if field.relational:
+                values = field.null()
+                for rec in recs:
+                    values |= rec[name]
+                recs = values
+            else:
+                # this will raise an excdeption if more fields are read!
+                recs = set(filter(None, (rec[name] for rec in recs)))
         return recs
 
     def update(self, values):
