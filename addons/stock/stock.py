@@ -1479,17 +1479,6 @@ class stock_move(osv.osv):
         'propagate': True,
     }
 
-    def _check_uom(self, cr, uid, ids, context=None):
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.product_id.uom_id.category_id.id != move.product_uom.category_id.id:
-                return False
-        return True
- 
-    _constraints = [
-        (_check_uom,
-            'You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.',
-            ['product_uom'])]
-     
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -1607,6 +1596,17 @@ class stock_move(osv.osv):
         # Check that we do not modify a stock.move which is done
         frozen_fields = set(['product_qty', 'product_uom', 'product_uos_qty', 'product_uos', 'location_id', 'location_dest_id', 'product_id'])
         for move in self.browse(cr, uid, ids, context=context):
+            #Check UoM in meantime
+            if vals.get('product_uom') or vals.get('product_id'):
+                product_uom = move.product_uom
+                move_uom = move.product_uom
+                if vals.get('product_uom'):
+                    move_uom = self.pool.get('product.uom').browse(cr, uid, vals['product_uom'], context=context)
+                if vals.get('product_id'):
+                    product_uom = self.pool.get('product.product').browse(cr, uid, vals['product_id'], context=context)
+                if move_uom.category_id.id != product_uom.category_id.id:
+                    raise osv.except_osv(_('Operation Forbidden'), 
+                                         _('Category of Product UoM must be the same as the category of the UoM of the move'))
             if move.state == 'done':
                 if frozen_fields.intersection(vals):
                     raise osv.except_osv(_('Operation Forbidden!'),
