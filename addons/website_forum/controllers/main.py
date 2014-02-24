@@ -42,7 +42,7 @@ class website_forum(http.Controller):
         forum_obj = request.registry['website.forum.post']
         tag_obj = request.registry['website.forum.tag']
 
-        step = 5
+        step = 10
         question_count = forum_obj.search(
             request.cr, request.uid, [], count=True,
             context=request.context)
@@ -70,7 +70,7 @@ class website_forum(http.Controller):
         return request.website.render(page, values)
 
     @http.route(['/question/<model("website.forum.post"):question>'], type='http', auth="public", website=True, multilang=True)
-    def question_register(self, question, **post):
+    def open_question(self, question, **post):
         values = {
             'question': question,
             'main_object': question,
@@ -113,3 +113,16 @@ class website_forum(http.Controller):
                 'active': True,
             }, context=create_context)
         return werkzeug.utils.redirect("/question/%s" % post_id)
+
+    @http.route(['/questions/tag/<model("website.forum.tag"):tag>'], type='http', auth="public", website=True, multilang=True)
+    def tag_questions(self, tag, page=1, **kwargs):
+        cr, uid, context = request.cr, request.uid, request.context
+        step = 10
+        pager = request.website.pager(url="/questions/", total=len(tag.post_ids), page=page, step=step, scope=5)
+
+        values = {
+            'question_ids': tag.post_ids,
+            'pager': pager,
+        }
+
+        return request.website.render("website_forum.index", values)

@@ -34,18 +34,13 @@
                                         <h4>
                                             <a t-attf-href="/question/#{ slug(question) }">
                                                 <span>
-                                                    <t t-esc="question.name" />
+                                                    <t t-esc="question.name"/>
                                                 </span>
                                             </a>
                                         </h4>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <a href="" class="badge">6.1</a>
-                                        <a href="" class="badge">7.0</a>
-                                    </div>
-                                </div>
+                                <t t-call="website_forum.tags" />
                                 <div class="row">
                                     <div class="col-xs-12 text-right">
                                         <small>
@@ -96,6 +91,14 @@
             </div>
         </template>
 
+        <template id="tags">
+            <div class="col-xs-12">
+                <t  t-foreach="question.tags" t-as="tag">
+                    <a t-attf-href="/questions/tag/#{ tag.id }" class="badge"><t t-esc="tag.name"/></a>
+                </t>
+            </div>
+        </template>
+
         <template id="answer">
             <div class="row">
                 <t t-call="website_forum.question_vote" />
@@ -104,9 +107,7 @@
                         <div class="col-xs-12">
                             <span>
                                 <h6>
-                                    There should be a call to the cash drawers API. Read the
-                                    technical
-                                    manual of the hardware you are using. Thanks.
+                                    <t t-esc="question.name" />
                                 </h6>
                             </span>
                         </div>
@@ -301,20 +302,15 @@
                                     </h4>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <span class="badge">openerp-7</span>
-                                    <span class="badge">pos</span>
-                                    <span class="badge">receipt</span>
-                                    <span class="badge">cash</span>
-                                </div>
-                            </div>
+                            <t t-call="website_forum.tags" />
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-xs-12 page-header">
-                            <span class="badge">2 Answers</span>
+                            <span class="badge">
+                                <t t-esc="len(question.child_ids)"/> Answers
+                            </span>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 Short by
                                 <b class="caret"></b>
@@ -337,7 +333,6 @@
                         <li t-foreach="question.child_ids" t-as="answer" class="media">
                             <t t-call="website_forum.answer" />
                         </li>
-                        <t t-call="website_forum.answer" />
                     </ul>
                     
                 </div>

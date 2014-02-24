@@ -35,7 +35,6 @@ import werkzeug.urls
 class website_event(http.Controller):
     @http.route(['/event/', '/event/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
     def events(self, page=1, **searches):
-        print "events----------------",self,page,searches
         cr, uid, context = request.cr, request.uid, request.context
         event_obj = request.registry['event.event']
         type_obj = request.registry['event.type']
@@ -163,7 +162,6 @@ class website_event(http.Controller):
 
     @http.route(['/event/<model("event.event"):event>/page/<page:page>'], type='http', auth="public", website=True, multilang=True)
     def event_page(self, event, page, **post):
-        print "event_page-------------------"
         values = {
             'event': event,
             'main_object': event
@@ -172,7 +170,6 @@ class website_event(http.Controller):
 
     @http.route(['/event/<model("event.event"):event>'], type='http', auth="public", website=True, multilang=True)
     def event(self, event, **post):
-        print "in event---------------"
         if event.menu_id and event.menu_id.child_id:
             target_url = event.menu_id.child_id[0].url
         else:
@@ -183,7 +180,6 @@ class website_event(http.Controller):
 
     @http.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", website=True, multilang=True)
     def event_register(self, event, **post):
-        print "event_register-------------------"
         values = {
             'event': event,
             'main_object': event,
