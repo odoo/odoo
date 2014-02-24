@@ -273,7 +273,7 @@ openerp_mail_followers = function(session, mail) {
             _(records).each(function (record, record_name) {
                 record.name = record_name;
                 record.followed = record.followed || undefined;
-                $(session.web.qweb.render('mail.followers.subtype', {'record': record,'dialog': dialog})).appendTo($list);
+                $(session.web.qweb.render('mail.followers.subtype', {'record': record, 'dialog': dialog})).appendTo($list);
             });
         },
 
@@ -329,7 +329,8 @@ openerp_mail_followers = function(session, mail) {
                 }
             } else {
                 var context = new session.web.CompoundContext(this.build_context(), {});
-                return this.ds_model.call(action_subscribe, [[this.view.datarecord.id], follower_ids, checklist, context]).then(this.proxy('read_value'));
+                return this.ds_model.call(action_subscribe, [[this.view.datarecord.id], follower_ids, checklist, context])
+                    .then(this.proxy('read_value'));
             }
         },
     });
