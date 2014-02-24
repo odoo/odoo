@@ -5097,12 +5097,8 @@ class BaseModel(object):
         )
 
     #
-    # Record cache read/update
+    # Record traversal and update
     #
-
-    @property
-    def _cache(self):
-        return RecordCache(self)
 
     def map(self, field_name):
         """ Return the union of `rec[field_name]` for all `rec` in `self`.
@@ -5118,7 +5114,7 @@ class BaseModel(object):
                     values |= rec[name]
                 recs = values
             else:
-                # this will raise an excdeption if more fields are read!
+                # this will raise an exception if more fields are read!
                 recs = set(filter(None, (rec[name] for rec in recs)))
         return recs
 
@@ -5129,7 +5125,7 @@ class BaseModel(object):
 
     #
     # New records - represent records that do not exist in the database yet;
-    # they are used to compute default values.
+    # they are used to compute default values and perform onchanges.
     #
 
     def new(self, values={}):
@@ -5142,6 +5138,10 @@ class BaseModel(object):
         record._cache.update(values)
         return record
 
+    #
+    # Dirty flag, to mark records modified (in draft mode)
+    #
+
     @property
     def _dirty(self):
         """ Return whether any record in `self` is dirty. """
@@ -5150,6 +5150,7 @@ class BaseModel(object):
 
     @_dirty.setter
     def _dirty(self, value):
+        """ Mark the records in `self` as dirty. """
         if value:
             map(self._scope.dirty.add, self)
         else:
@@ -5280,13 +5281,10 @@ class BaseModel(object):
     # Cache and recomputation management
     #
 
-    def refresh(self):
-        """ Clear the records cache.
-
-            .. deprecated:: 8.0
-                The record cache is automatically invalidated.
-        """
-        scope_proxy.invalidate_all()
+    @property
+    def _cache(self):
+        """ Return the cache of `self`, mapping field names to values. """
+        return RecordCache(self)
 
     def _in_cache(self):
         """ Make sure `self` is introduced in the cache for prefetching. """
@@ -5301,6 +5299,14 @@ class BaseModel(object):
         field = self._fields[fname]
         ids = filter(None, scope.cache_ids[self._name] - set(scope.cache[field]))
         return self.browse(ids)
+
+    def refresh(self):
+        """ Clear the records cache.
+
+            .. deprecated:: 8.0
+                The record cache is automatically invalidated.
+        """
+        scope_proxy.invalidate_all()
 
     def invalidate_cache(self, fnames=None, ids=None):
         """ Invalidate the record caches after some records have been modified.
