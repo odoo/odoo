@@ -32,7 +32,6 @@ import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
 
-
 #----------------------------------------------------------
 # Incoterms
 #----------------------------------------------------------
@@ -728,7 +727,7 @@ class stock_picking(osv.osv):
         'note': fields.text('Notes', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'move_type': fields.selection([('direct', 'Partial'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, help="It specifies goods to be deliver partially or all at once"),
         'state': fields.function(_state_get, type="selection", store={
-            'stock.picking': (lambda self, cr, uid, ids, ctx: ids, ['move_type', 'move_lines'], 20),
+            'stock.picking': (lambda self, cr, uid, ids, ctx: ids, ['move_type'], 20),
             'stock.move': (_get_pickings, ['state', 'picking_id'], 20),
             'stock.quant': (_get_pickings_from_quant, ['reservation_id'], 20)}, selection=[
                 ('draft', 'Draft'),
