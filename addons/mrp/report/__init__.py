@@ -23,7 +23,6 @@ import price
 import workcenter_load
 import bom_structure
 import mrp_report
-import mrp_production_order
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

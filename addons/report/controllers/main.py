@@ -463,7 +463,7 @@ class Report(http.Controller):
         merged.close()
         return content
 
-    @http.route(['/report/barcode', '/report/barcode/<type>/<value>'], type='http', auth="user")
+    @http.route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="user")
     def barcode(self, type, value, width=300, height=50):
         """Contoller able to render barcode images thanks to reportlab.
         Samples: 
