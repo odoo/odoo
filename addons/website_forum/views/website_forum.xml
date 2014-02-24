@@ -2,71 +2,70 @@
 <openerp>
 	<data>
 
-		<template id="editor_head" inherit_id="website.editor_head"
-			name="Event Editor">
-			<xpath expr="//script[@id='website_tour_js']" position="after">
-				<script type="text/javascript"
-					src="/website_forum/static/src/js/website_forum.editor.js"></script>
-				<script type="text/javascript"
-					src="/website_forum/static/src/js/website.tour.forum.js"></script>
-			</xpath>
-		</template>
+        <template id="editor_head" inherit_id="website.editor_head" name="Fvent Editor">
+            <xpath expr="//script[@id='website_tour_js']" position="after">
+                <script type="text/javascript"
+                    src="/website_forum/static/src/js/website_forum.editor.js"></script>
+                <script type="text/javascript"
+                    src="/website_forum/static/src/js/website.tour.forum.js"></script>
+            </xpath>
+        </template>
 
-		<!-- Layout add nav and footer -->
-		<template id="header_footer_custom" inherit_id="website.layout"
-			name="Footer Questions Link">
-			<xpath expr="//footer//ul[@name='products']" position="inside">
-				<li>
-					<a href="/questions">Support</a>
-				</li>
-			</xpath>
-		</template>
+        <!-- Layout add nav and footer -->
+        <template id="header_footer_custom" inherit_id="website.layout"
+            name="Footer Questions Link">
+            <xpath expr="//footer//ul[@name='products']" position="inside">
+                <li>
+                    <a href="/questions">Support</a>
+                </li>
+            </xpath>
+        </template>
 
-		<!-- Page -->
+        <!-- Page -->
 
-		<template id="question_list">
-			<div class="tab-pane active" id="all">
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="row">
-							<div class="col-xs-9">
-								<div class="row">
-									<div class="col-xs-12">
-										<h4>
-											<a t-attf-href="/question/#{ slug(question) }">
-												<span>
-													<t t-esc="question.name" />
-												</span>
-											</a>
-										</h4>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-xs-12">
-										<a href="" class="badge">6.1</a>
-										<a href="" class="badge">7.0</a>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-xs-12 text-right">
-										<small>
-											<span>
-												<t t-esc="question.write_date" />
-											</span>
-											<a href="">
-												<span>
-													<t t-esc="question.create_uid.name" />
-												</span>
-											</a>
-											<a href="">
-												<span>
-													<t t-esc="question.create_uid.id" />
-												</span>
-											</a>
-										</small>
-									</div>
-								</div>
-							</div>
+        <template id="question_list">
+            <div class="tab-pane active" id="all">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="row">
+                            <div class="col-xs-9">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h4>
+                                            <a t-attf-href="/question/#{ slug(question) }">
+                                                <span>
+                                                    <t t-esc="question.name" />
+                                                </span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <a href="" class="badge">6.1</a>
+                                        <a href="" class="badge">7.0</a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 text-right">
+                                        <small>
+                                            <span>
+                                                <t t-esc="question.write_date" />
+                                            </span>
+                                            <a href="">
+                                                <span>
+                                                    <t t-esc="question.create_uid.name" />
+                                                </span>
+                                            </a>
+                                            <a href="">
+                                                <span>
+                                                    <t t-esc="question.create_uid.id" />
+                                                </span>
+                                            </a>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-xs-3">
                                 <h5>
                                     <span itemprop="Votes" class="label label-success">
@@ -91,12 +90,12 @@
                                     </span>
                                 </h5>
                             </div>
-                    	</div>
-					</div>
-				</div>
-			</div>
-		</template>
-        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
         <template id="answer">
             <div class="row">
                 <t t-call="website_forum.question_vote" />
@@ -121,131 +120,130 @@
             </div>
         </template>
 
-		<template id="question_search">
-			<form class="navbar-form " role="search">
-				<div class="form-group search-navbar">
-					<input type="text" class="form-control" placeholder="Search Or Ask  your Question" />
-				</div>
-				<button type="submit" class="btn btn-default AskButton">Ask Question</button>
-			</form>
-		</template>
+        <template id="question_search">
+            <form class="navbar-form " role="search">
+                <div class="form-group search-navbar">
+                    <input type="text" class="form-control" placeholder="Search Or Ask  your Question" />
+                </div>
+                <button type="submit" class="btn btn-default AskButton">Ask Question</button>
+            </form>
+        </template>
 
-		<!-- index page of forum -->
-		<template id="index" name="Questions">
-			<t t-call="website.layout">
-				<t t-set="head">
-					<link rel='stylesheet' href='/website_blog/static/src/css/website_forum.css' />
-				</t>
-				<div id="wrap" class="js_blog">
-					<t t-call="website_forum.question_search" />
-					<div class="row">
-						<div class="col-xs-3">
-							<span itemprop="name" class="badge">
-								<t t-esc="len(question_ids)" />
-								Question
-							</span>
-						</div>
-						<div class="col-xs-3">
-							<h5>
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-									Short by
-									<b class="caret"></b>
-								</a>
-								<ul class="dropdown-menu">
-									<li>
-										<a href="#">By Date</a>
-									</li>
-									<li>
-										<a href="#">By Activity</a>
-									</li>
-									<li>
-										<a href="#">By Answer</a>
-									</li>
-									<li>
-										<a href="#">By Votes</a>
-									</li>
-								</ul>
-							</h5>
-						</div>
-					</div>
-					<ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-						<li class="active">
-							<a href="#all" data-toggle="tab">ALL</a>
-						</li>
-						<li>
-							<a href="#unanswerd" data-toggle="tab">Unanswerd</a>
-						</li>
-					</ul>
-					<ul class="media-list">
-						<li t-foreach="question_ids" t-as="question" class="media">
-							<t t-call="website_forum.question_list" />
-						</li>
-					</ul>
-				</div>
-			</t>
-		</template>
+        <!-- index page of forum -->
+        <template id="index" name="Questions">
+            <t t-call="website.layout">
+                <t t-set="head">
+                    <link rel='stylesheet' href='/website_blog/static/src/css/website_forum.css' />
+                </t>
+                <div id="wrap" class="js_blog">
+                    <t t-call="website_forum.question_search" />
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <span itemprop="name" class="badge">
+                                <t t-esc="len(question_ids)" />
+                                Question
+                            </span>
+                        </div>
+                        <div class="col-xs-3">
+                            <h5>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    Short by
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="#">By Date</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">By Activity</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">By Answer</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">By Votes</a>
+                                    </li>
+                                </ul>
+                            </h5>
+                        </div>
+                    </div>
+                    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                        <li class="active">
+                            <a href="#all" data-toggle="tab">ALL</a>
+                        </li>
+                        <li>
+                            <a href="#unanswerd" data-toggle="tab">Unanswerd</a>
+                        </li>
+                    </ul>
+                    <ul class="media-list">
+                        <li t-foreach="question_ids" t-as="question" class="media">
+                            <t t-call="website_forum.question_list" />
+                        </li>
+                    </ul>
+                </div>
+            </t>
+        </template>
 
 
-		<template id="404">
-			<t t-call="website.layout">
-				<div id="wrap">
-					<div class="oe_structure oe_empty">
-						<div class="container">
-							<h1 class="mt32">Question not found!</h1>
-							<p>Sorry, the requested question is not available anymore.</p>
-							<p>
-								<a t-attf-href="/question/">Return to the question list.</a>
-							</p>
-						</div>
-					</div>
-				</div>
-			</t>
-		</template>
+        <template id="404">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <div class="oe_structure oe_empty">
+                        <div class="container">
+                            <h1 class="mt32">Question not found!</h1>
+                            <p>Sorry, the requested question is not available anymore.</p>
+                            <p>
+                                <a t-attf-href="/question/">Return to the question list.</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
 
-		<template id="user_detail">
-			<div
-				class="col-xs-7 col-xs-offset-5 col-sm-3 col-sm-offset-9 col-md-4 col-md-offset-8 col-lg-4 col-lg-offset-8 text-right">
-				<div class="panel panel-primary ">
-					<p class="text-center -heading">
-						<small>asked Sep 12'13</small>
-					</p>
-					<div class="row">
-						<div class="col-xs-3">
-							<div class="row">
-								<div class="col-xs-12">
-									<img src="images/profile_picture/png/user_1.png" class="user-profile-image"
-										alt="" />
-								</div>
-							</div>
-						</div>
-						<div class="col-xs-9">
-							<div class="row">
-								<div class="col-xs-12">
-									<div class="text-left">
-										<a href="">Than N.</a>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-xs-12">
-									<div style="font-size:10px" class="text-left">
-										<b style="color : green">11</b>
-										<span class="glyphicon glyphicon-certificate badge-gold"></span>
-										1
-										<span class="glyphicon glyphicon-certificate badge-silver"></span>
-										10
-										<span class="glyphicon glyphicon-certificate badge-bronze"></span>
-										5
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</template>
+        <template id="user_detail">
+            <div
+                class="col-xs-7 col-xs-offset-5 col-sm-3 col-sm-offset-9 col-md-4 col-md-offset-8 col-lg-4 col-lg-offset-8 text-right">
+                <div class="panel panel-primary ">
+                    <p class="text-center -heading">
+                        <small>asked Sep 12'13</small>
+                    </p>
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <img src="images/profile_picture/png/user_1.png" class="user-profile-image" alt="" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-9">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="text-left">
+                                        <a href="">Than N.</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div style="font-size:10px" class="text-left">
+                                        <b style="color : green">11</b>
+                                        <span class="glyphicon glyphicon-certificate badge-gold"></span>
+                                        1
+                                        <span class="glyphicon glyphicon-certificate badge-silver"></span>
+                                        10
+                                        <span class="glyphicon glyphicon-certificate badge-bronze"></span>
+                                        5
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
 
-		<template id="question_vote">
+        <template id="question_vote">
             <div class="row">
                 <div class="col-md-1 col-xs-1">
                     <div class="row">
@@ -267,75 +265,73 @@
                     </div>
                 </div>
             </div>
-		</template>
+        </template>
 
-		<template id="question_links">
-			<div class="row">
-				<div class="col-xs-12 text-right">
-					<a class="action-links" href="">
-						<span class="glyphicon glyphicon-pencil"></span>
-					</a>
-					<a class="action-links" href="">
-						<span class="glyphicon glyphicon-flag"></span>
-					</a>
-					<a class="action-links" href="">
-						<span class="glyphicon glyphicon-trash"></span>
-					</a>
-					<a class="action-links" href="">
-						<span class="glyphicon glyphicon-link"></span>
-					</a>
-				</div>
-			</div>
-		</template>
+        <template id="question_links">
+            <div class="row">
+                <div class="col-xs-12 text-right">
+                    <a class="action-links" href="">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    <a class="action-links" href="">
+                        <span class="glyphicon glyphicon-flag"></span>
+                    </a>
+                    <a class="action-links" href="">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                    <a class="action-links" href="">
+                        <span class="glyphicon glyphicon-link"></span>
+                    </a>
+                </div>
+            </div>
+        </template>
 
 
-		<template id="question_description_full">
-			<t t-call="website.layout">
-				<t t-call="website_forum.question_search" />
-				<div class="container MainBody">
+        <template id="question_description_full">
+            <t t-call="website.layout">
+                <t t-call="website_forum.question_search" />
+                <div class="container MainBody">
                     <t t-call="website_forum.question_vote" />
-					<div class="row">
-						
+                    <div class="row">
+                        <div class="col-md-9 col-xs-11">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <h4>
+                                        <div itemprop="name" t-field="question.name"></div>
+                                    </h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <span class="badge">openerp-7</span>
+                                    <span class="badge">pos</span>
+                                    <span class="badge">receipt</span>
+                                    <span class="badge">cash</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-						<div class="col-md-9 col-xs-11">
-							<div class="row">
-								<div class="col-xs-12">
-									<h4>
-										<div itemprop="name" t-field="question.name"></div>
-									</h4>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-xs-12">
-									<span class="badge">openerp-7</span>
-									<span class="badge">pos</span>
-									<span class="badge">receipt</span>
-									<span class="badge">cash</span>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-xs-12 page-header">
-							<span class="badge">2 Answers</span>
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								Short by
-								<b class="caret"></b>
-							</a>
-							<ul class="dropdown-menu">
-								<li>
-									<a href="#">Oldest</a>
-								</li>
-								<li>
-									<a href="#">Newest</a>
-								</li>
-								<li>
-									<a href="#">Most Viewd</a>
-								</li>
-							</ul>
-						</div>
-					</div>
+                    <div class="row">
+                        <div class="col-xs-12 page-header">
+                            <span class="badge">2 Answers</span>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                Short by
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#">Oldest</a>
+                                </li>
+                                <li>
+                                    <a href="#">Newest</a>
+                                </li>
+                                <li>
+                                    <a href="#">Most Viewd</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                     
                     <ul class="media-list">
                         <li t-foreach="question.child_ids" t-as="answer" class="media">
@@ -344,9 +340,9 @@
                         <t t-call="website_forum.answer" />
                     </ul>
                     
-				</div>
-			</t>
-		</template>
+                </div>
+            </t>
+        </template>
 
 	</data>
 </openerp>
