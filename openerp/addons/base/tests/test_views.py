@@ -1,12 +1,32 @@
 # -*- encoding: utf-8 -*-
 from functools import partial
 
+import unittest2
+
 from lxml import etree as ET
 from lxml.builder import E
 
 from openerp.tests import common
 
 Field = E.field
+
+class ViewCase(common.TransactionCase):
+    def setUp(self):
+        super(ViewCase, self).setUp()
+        self.addTypeEqualityFunc(ET._Element, self.assertTreesEqual)
+
+    def assertTreesEqual(self, n1, n2, msg=None):
+        self.assertEqual(n1.tag, n2.tag)
+        self.assertEqual((n1.text or '').strip(), (n2.text or '').strip(), msg)
+        self.assertEqual((n1.tail or '').strip(), (n2.tail or '').strip(), msg)
+
+        # Because lxml uses ordereddicts in which order is important to
+        # equality (!?!?!?!)
+        self.assertEqual(dict(n1.attrib), dict(n2.attrib), msg)
+
+        for c1, c2 in zip(n1, n2):
+            self.assertTreesEqual(c1, c2, msg)
+
 
 class TestNodeLocator(common.BaseCase):
     """
@@ -98,7 +118,7 @@ class TestNodeLocator(common.BaseCase):
             E.foo(attr='1', version='3'))
         self.assertIsNone(node)
 
-class TestViewInheritance(common.TransactionCase):
+class TestViewInheritance(ViewCase):
     def arch_for(self, name, view_type='form', parent=None):
         """ Generates a trivial view of the specified ``view_type``.
 
@@ -206,7 +226,7 @@ class TestViewInheritance(common.TransactionCase):
             self.View.default_view(
                 self.cr, self.uid, model=self.model, view_type='graph'))
 
-class TestApplyInheritanceSpecs(common.TransactionCase):
+class TestApplyInheritanceSpecs(ViewCase):
     """ Applies a sequence of inheritance specification nodes to a base
     architecture. IO state parameters (cr, uid, model, context) are used for
     error reporting
@@ -230,8 +250,8 @@ class TestApplyInheritanceSpecs(common.TransactionCase):
                                           spec, None)
 
         self.assertEqual(
-            ET.tostring(self.base_arch),
-            ET.tostring(E.form(Field(name="replacement"), string="Title")))
+            self.base_arch,
+            E.form(Field(name="replacement"), string="Title"))
 
     def test_delete(self):
         spec = Field(name="target", position="replace")
@@ -241,8 +261,8 @@ class TestApplyInheritanceSpecs(common.TransactionCase):
                                           spec, None)
 
         self.assertEqual(
-            ET.tostring(self.base_arch),
-            ET.tostring(E.form(string="Title")))
+            self.base_arch,
+            E.form(string="Title"))
 
     def test_insert_after(self):
         spec = Field(
@@ -254,12 +274,12 @@ class TestApplyInheritanceSpecs(common.TransactionCase):
                                           spec, None)
 
         self.assertEqual(
-            ET.tostring(self.base_arch),
-            ET.tostring(E.form(
+            self.base_arch,
+            E.form(
                 Field(name="target"),
                 Field(name="inserted"),
                 string="Title"
-            )))
+            ))
 
     def test_insert_before(self):
         spec = Field(
@@ -271,11 +291,11 @@ class TestApplyInheritanceSpecs(common.TransactionCase):
                                           spec, None)
 
         self.assertEqual(
-            ET.tostring(self.base_arch),
-            ET.tostring(E.form(
+            self.base_arch,
+            E.form(
                 Field(name="inserted"),
                 Field(name="target"),
-                string="Title")))
+                string="Title"))
 
     def test_insert_inside(self):
         default = Field(Field(name="inserted"), name="target")
@@ -289,13 +309,13 @@ class TestApplyInheritanceSpecs(common.TransactionCase):
                                           spec, None)
 
         self.assertEqual(
-            ET.tostring(self.base_arch),
-            ET.tostring(E.form(
+            self.base_arch,
+            E.form(
                 Field(
                     Field(name="inserted"),
                     Field(name="inserted 2"),
                     name="target"),
-                string="Title")))
+                string="Title"))
 
     def test_unpack_data(self):
         spec = E.data(
@@ -310,15 +330,15 @@ class TestApplyInheritanceSpecs(common.TransactionCase):
                                           spec, None)
 
         self.assertEqual(
-            ET.tostring(self.base_arch),
-            ET.tostring(E.form(
+            self.base_arch,
+            E.form(
                 Field(
                     Field(name="inserted 0"),
                     Field(name="inserted 1"),
                     Field(name="inserted 2"),
                     Field(name="inserted 3"),
                     name="target"),
-                string="Title")))
+                string="Title"))
 
     def test_invalid_position(self):
         spec = Field(
@@ -350,18 +370,18 @@ class TestApplyInheritanceSpecs(common.TransactionCase):
                                               self.base_arch,
                                               spec, None)
 
-class TestApplyInheritedArchs(common.TransactionCase):
+class TestApplyInheritedArchs(ViewCase):
     """ Applies a sequence of modificator archs to a base view
     """
 
-class TestViewCombined(common.TransactionCase):
+class TestViewCombined(ViewCase):
     """
     Test fallback operations of View.read_combined:
     * defaults mapping
     * ?
     """
 
-class TestNoModel(common.TransactionCase):
+class TestNoModel(ViewCase):
     def test_create_view_nomodel(self):
         View = self.registry('ir.ui.view')
         view_id = View.create(self.cr, self.uid, {
@@ -411,13 +431,11 @@ class TestNoModel(common.TransactionCase):
             'value': translated_text,
         })
         sarch = View.translate_qweb(self.cr, self.uid, None, self.arch, 'fr_FR')
-        
-        self.text_para.text = translated_text
-        self.assertEqual(
-            ET.tostring(sarch, encoding='utf-8'),
-            ET.tostring(self.arch, encoding='utf-8'))
 
-class TestTemplating(common.TransactionCase):
+        self.text_para.text = translated_text
+        self.assertEqual(sarch, self.arch)
+
+class TestTemplating(ViewCase):
     def setUp(self):
         import openerp.modules
         super(TestTemplating, self).setUp()
@@ -503,7 +521,7 @@ class TestTemplating(common.TransactionCase):
         arch = ET.fromstring(arch_string)
         Views.distribute_branding(arch)
 
-        self.assertTreesEqual(
+        self.assertEqual(
             arch,
             E.root(
                 E.item(
@@ -527,19 +545,16 @@ class TestTemplating(common.TransactionCase):
             )
         )
 
-    def assertTreesEqual(self, n1, n2):
-        self.assertEqual(n1.tag, n2.tag)
-        self.assertEqual((n1.text or '').strip(), (n2.text or '').strip())
-        self.assertEqual((n1.tail or '').strip(), (n2.tail or '').strip())
+    @unittest2.expectedFailure
+    def test_esc_no_branding(self):
+        self.fail("View branding should be removed on t-esc or other terminal "
+                  "branded node with no content (r-raw, *f)")
 
-        # Because lxml uses ordereddicts in which order is important to
-        # equality (!?!?!?!)
-        self.assertEqual(dict(n1.attrib), dict(n2.attrib))
+    @unittest2.expectedFailure
+    def test_ignore_unbrand(self):
+        self.fail("Branding should be removed from subviews of a t-ignore (?)")
 
-        for c1, c2 in zip(n1, n2):
-            self.assertTreesEqual(c1, c2)
-
-class test_views(common.TransactionCase):
+class test_views(ViewCase):
 
     def test_nonexistent_attribute_removal(self):
         Views = self.registry('ir.ui.view')
@@ -655,16 +670,17 @@ class test_views(common.TransactionCase):
             })
         self.assertEqual(view['type'], 'form')
         self.assertEqual(
-            ET.tostring(ET.fromstring(
+            ET.fromstring(
                 view['arch'],
                 parser=ET.XMLParser(remove_blank_text=True)
-            )),
-            '<form string="Replacement title" version="7.0">'
-                '<p>Replacement data</p>'
-                '<footer thing="bob">'
-                    '<button name="action_next" type="object" string="New button"/>'
-                '</footer>'
-            '</form>')
+            ),
+            E.form(
+                E.p("Replacement data"),
+                E.footer(
+                    E.button(name="action_next", type="object", string="New button"),
+                    thing="bob"
+                ),
+                string="Replacement title", version="7.0"))
 
     def test_view_inheritance_divergent_models(self):
         Views = self.registry('ir.ui.view')
@@ -722,13 +738,13 @@ class test_views(common.TransactionCase):
             })
         self.assertEqual(view['type'], 'form')
         self.assertEqual(
-            ET.tostring(ET.fromstring(
+            ET.fromstring(
                 view['arch'],
                 parser=ET.XMLParser(remove_blank_text=True)
-            )),
-            '<form string="Replacement title" version="7.0">'
-                '<p>Replacement data</p>'
-                '<footer>'
-                    '<button name="action_next" type="object" string="New button"/>'
-                '</footer>'
-            '</form>')
+            ),
+            E.form(
+                E.p("Replacement data"),
+                E.footer(
+                    E.button(name="action_next", type="object", string="New button")),
+                string="Replacement title", version="7.0"
+            ))
