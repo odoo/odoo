@@ -28,13 +28,21 @@ class MailMessage(osv.Model):
 
     _columns = {
         'website_published': fields.boolean(
-            'Publish', help="Publish on the website as a blog"
+            'Published', help="Visible on the website as a comment"
         ),
     }
 
-    _defaults = {
-        'website_published': True,
-    }
+    def default_get(self, cr, uid, fields_list, context=None):
+        defaults = super(MailMessage, self).default_get(cr, uid, fields_list, context=context)
+
+        # Note: explicitly implemented in default_get() instead of _defaults,
+        # to avoid setting to True for all existing messages during upgrades.
+        # TODO: this default should probably be dynamic according to the model
+        # on which the messages are attached, thus moved to create().
+        if 'website_published' in fields_list:
+            defaults.setdefault('website_published', True)
+
+        return defaults
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
                 context=None, count=False, access_rights_uid=None):

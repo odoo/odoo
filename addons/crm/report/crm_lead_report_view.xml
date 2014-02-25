@@ -15,6 +15,17 @@
             </field>
         </record>
 
+        <record id="view_report_crm_lead_graph_two" model="ir.ui.view">
+            <field name="name">crm.lead.report.graph.two</field>
+            <field name="model">crm.lead.report</field>
+            <field name="arch" type="xml">
+                <graph string="Leads Analysis" type="pivot" stacked="True">
+                    <field name="create_date" type="row"/>
+                    <field name="user_id" type="col"/>
+                </graph>
+            </field>
+        </record>
+
         <record id="view_report_crm_opportunity_graph" model="ir.ui.view">
             <field name="name">crm.opportunity.report.graph</field>
             <field name="model">crm.lead.report</field>
@@ -23,7 +34,7 @@
                     <field name="date_deadline" type="row"/>
                     <field name="user_id" type="col"/>
                     <field name="stage_id" type="col"/>
-                    <field name="probable_revenue" type="measure"/>
+                    <field name="planned_revenue" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -84,7 +95,7 @@
                         <filter string="Creation date (week)" icon="terp-go-year"
                             domain="[]" context="{'group_by':'create_date:week'}"/>
                         <filter string="Creation date (month)" icon="terp-go-year"
-                            domain="[]" context="{'group_by':'create_date:month'}"/>
+                            domain="[]" context="{'group_by':'create_date:month'}" name="month"/>
                         <filter string="Creation date (year)" icon="terp-go-year"
                             domain="[]" context="{'group_by':'create_date:year'}"/>
                         <separator orientation="vertical" />

@@ -69,7 +69,6 @@
             <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
             <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
-            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
             <script type="text/javascript">
                 // Bootstrap and jQuery UI conflicts
                 $.fn.bstooltip = $.fn.tooltip;
@@ -80,6 +79,8 @@
             <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
 
             <script type="text/javascript" src="/website/static/src/js/website.js"></script>
+            
+            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
             <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
 
             <t t-raw="head or ''" name='layout_head'/>
@@ -140,8 +141,8 @@
                                     <li><a href="/page/website.contactus">Contact us</a></li>
                                 </ul>
                                 <ul class="list-unstyled">
-                                    <li><i class="fa fa-phone"></i> <span t-field="res_company.phone"></span></li>
-                                    <li><i class="fa fa-envelope"></i>  <span t-field="res_company.email"></span></li>
+                                    <li t-ignore="true"><i class="fa fa-phone"></i> <span t-field="res_company.phone"></span></li>
+                                    <li t-ignore="true"><i class="fa fa-envelope"></i>  <span t-field="res_company.email"></span></li>
                                 </ul>
                                 <h2>
                                     <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="fa fa-facebook-square"/></a>
@@ -249,7 +250,7 @@
             </div>
         </div>
     </xpath>
-    <xpath expr='//t[@name="layout_head"]' position="before">
+    <xpath expr='//script[@src="/web/static/lib/bootstrap/js/bootstrap.js"]' position="before">
         <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
         <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
         <link rel='stylesheet' href='/website/static/lib/bootstrap-tour/bootstrap-tour.css'/>
@@ -261,10 +262,10 @@
 
         <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
         <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
-        <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>
         <script t-if="not translatable" type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
         <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
         <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
+        <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>
         <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
         <script type="text/javascript" src="/website/static/lib//jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
         <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
@@ -383,13 +384,13 @@
 <template id="pager" name="Pager">
     <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination" t-att-style="style or ''">
         <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else '' ">
-            <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else '' ">Prev</a>
+            <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else ''">Prev</a>
         </li>
         <t t-foreach="pager['pages']" t-as="page">
             <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else '' "> <a t-att-href="page['url']" t-raw="page['num']"></a></li>
         </t>
         <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else '' ">
-            <a t-att-href=" pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else '' ">Next</a>
+            <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else ''">Next</a>
         </li>
     </ul>
 </template>
@@ -673,10 +674,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="company_description" name="Company Description">
     <address itemscope="itemscope" itemtype="http://schema.org/Organization">
-        <div itemprop="name" t-field="res_company.name">Name</div>
-        <br />
-        <div><i class="fa fa-phone"/> <span itemprop="telephone" t-field="res_company.phone"/></div>
-        <div><i class="fa fa-envelope"/> <span itemprop="email" t-field="res_company.email"/></div>
+    	<!-- TODO widget contact must add itemprop attributes -->
+        <div t-field="res_company.partner_id" t-field-options='{
+                "widget": "contact",
+                "fields": ["name", "address", "phone", "mobile", "fax", "email"]}'/>
     </address>
      <a t-att-href="res_company.google_map_link()" target="_BLANK">
         <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
@@ -703,7 +704,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 </div>
                 <div class="col-md-4 mb32">
                     <div groups="base.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or ''">
-                        <a class="btn btn-primary" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s' % (res_company._name, res_company.id)" title='Edit in backend'>Edit</a>
+                        <a class="btn btm-sm btn-default" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s' % (res_company._name, res_company.id)">Change address</a>
                     </div>
                     <t t-call="website.company_description"/>
                 </div>

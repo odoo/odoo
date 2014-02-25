@@ -298,20 +298,23 @@ ul.nav-stacked > li > a {
 }
 
 .carousel .carousel-caption {
-  left: auto;
-  right: auto;
-  bottom: 10%;
+  position: absolute;
+  right: 50%;
+  left: 50%;
+  bottom: 20px;
+}
+.carousel .carousel-caption > div {
+  position: absolute;
   text-align: left;
   padding: 20px;
   background: rgba(0, 0, 0, 0.4);
+  bottom: 20px;
 }
 .carousel .carousel-caption h1, .carousel .carousel-caption h2, .carousel .carousel-caption h3 {
   margin-top: 10px;
   margin-bottom: 10px;
 }
 .carousel .carousel-image {
-  right: 50%;
-  left: 50%;
   top: 5%;
   bottom: 5%;
   position: absolute;
@@ -326,13 +329,35 @@ ul.nav-stacked > li > a {
   right: 10%;
   top: 10%;
   bottom: auto;
+}
+.carousel .item.text_only .carousel-caption > div {
   text-align: center;
   background: transparent;
+  bottom: auto;
+  width: 100%;
+}
+.carousel .item.text_image .carousel-caption {
+  left: 10%;
+}
+.carousel .item.text_image .carousel-caption > div {
+  right: 50%;
+  margin-right: -20%;
+  max-width: 550px;
+}
+.carousel .item.text_image .carousel-image {
+  right: 10%;
+  left: 50%;
 }
 .carousel .item.image_text .carousel-caption {
   right: 10%;
 }
+.carousel .item.image_text .carousel-caption > div {
+  left: 50%;
+  margin-left: -20%;
+  max-width: 550px;
+}
 .carousel .item.image_text .carousel-image {
+  right: 50%;
   left: 10%;
 }
 .carousel .carousel-control {
