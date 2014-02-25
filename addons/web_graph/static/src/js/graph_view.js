@@ -50,7 +50,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             var field_name = field.attrs.name;
             if (_.has(field.attrs, 'interval')) {
                 field_name = field.attrs.name + ':' + field.attrs.interval;
-            } 
+            }
             if (_.has(field.attrs, 'type')) {
                 switch (field.attrs.type) {
                     case 'row':
@@ -78,7 +78,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     do_search: function (domain, context, group_by) {
         var self = this,
-            col_group_by = context.col_group_by || this.get_groupbys_from_searchview('ColGroupBy', 'col_group_by');
+            groupbys = this.get_groupbys_dos(),
+            col_group_by = groupbys.col_group_by;
 
         if (!this.graph_widget) {
             if (group_by.length) {
@@ -90,10 +91,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.graph_widget = new openerp.web_graph.Graph(this, this.model, domain, this.widget_config);
             this.graph_widget.appendTo(this.$el);
             this.ViewManager.on('switch_mode', this, function (e) {
-                var col_gb = self.get_groupbys_from_searchview('ColGroupBy', 'col_group_by'),
-                    row_gb = self.get_groupbys_from_searchview('GroupBy', 'group_by');
-
-                if (e === 'graph') this.graph_widget.set(domain, row_gb, col_gb);
+                if (e === 'graph') {
+                    var group_bys = self.get_groupbys_from_searchview();
+                    this.graph_widget.set(domain, group_bys.group_by, group_bys.col_group_by);
+                }
             });
             return;
         }
@@ -101,17 +102,27 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.graph_widget.set(domain, group_by, col_group_by);
     },
 
-    get_groupbys_from_searchview: function (cat_name, cat_field) {
-        var facet = this.search_view.query.findWhere({category:cat_name}),
-            groupby_list = facet ? facet.values.models : [];
-        return _.map(groupby_list, function (g) { 
-            var context = g.attributes.value.attrs.context;
-            if (_.isString(context)) {
-                return py.eval(context).group_by;
-            } else {
-                return context[cat_field]; 
+    get_groupbys_from_searchview: function () {
+        var result = { group_by: [], col_group_by: []},
+            searchdata = this.search_view.build_search_data();
+
+        _.each(searchdata.groupbys, function (data) {
+            data = (_isString(data)) ? py.eval(data) : data;
+            result.group_by = result.group_by.concat(data.group_by);
+            if (data.col_group_by) {
+                result.col_group_by = result.col_group_by.concat(data.col_group_by);
             }
         });
+
+        if (result.col_group_by.length) {
+            return result;
+        }
+        _.each(searchdata.contexts, function (context) {
+            if (context.col_group_by) {
+                result.col_group_by = result.col_group_by.concat(context.col_group_by);
+            }
+        });
+        return result;
     },
 
     do_show: function () {
