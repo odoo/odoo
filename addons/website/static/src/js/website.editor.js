@@ -66,8 +66,10 @@
     // only enable editors manually
     CKEDITOR.disableAutoInline = true;
     // EDIT ALL THE THINGS
-    CKEDITOR.dtd.$editable = $.extend(
-        {}, CKEDITOR.dtd.$block, CKEDITOR.dtd.$inline);
+    CKEDITOR.dtd.$editable = _.omit(
+        $.extend({}, CKEDITOR.dtd.$block, CKEDITOR.dtd.$inline),
+        // well maybe not *all* the things
+        'ul', 'ol', 'li', 'table', 'tr', 'th', 'td');
     // Disable removal of empty elements on CKEDITOR activation. Empty
     // elements are used for e.g. support of FontAwesome icons
     CKEDITOR.dtd.$removeEmpty = {};
@@ -377,8 +379,7 @@
                         });
                     },
                     upcast: function (el) {
-                        return el.attributes['class']
-                            && (/\bfa\b/.test(el.attributes['class']));
+                        return el.hasClass('fa');
                     }
                 });
             }
@@ -650,6 +651,7 @@
                 if (previous && previous === this) { return; }
 
                 var selected = new CKEDITOR.dom.element(this);
+                // FIXME: fa nodes may not be editable widgets (?)
                 if (!is_editable_node(selected) && !selected.hasClass('fa')) {
                     return;
                 }

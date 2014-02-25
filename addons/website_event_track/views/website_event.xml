@@ -197,7 +197,8 @@
             <h2 t-field="track.name" class="text-center"/>
             <h3 t-field="event.name" class="text-center text-muted"/>
             <ul t-if="track.tag_ids" class="text-center text-muted list-inline">
-                <li t-foreach="track.tag_ids" t-as="tag_id" class="fa fa-tags">
+                <li t-foreach="track.tag_ids" t-as="tag_id">
+                    <span class="fa fa-tags"></span>
                     <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
                         <span t-field="tag_id.name"/>
                     </a>
