@@ -20,17 +20,17 @@ openerp.web_calendar = function(instance) {
         return new instance.web.Registry({'tmp' : name}).get_object("tmp");
     }
 
-    var fc_defaultOptions = {
-        monthNames: Date.CultureInfo.monthNames,
-        monthNamesShort: Date.CultureInfo.abbreviatedMonthNames,
-        dayNames: Date.CultureInfo.dayNames,
-        dayNamesShort: Date.CultureInfo.abbreviatedDayNames,
-
-        weekNumberTitle: _t("W"),
-        allDayText: _t("all-day"),
-
-        firstDay: Date.CultureInfo.firstDayOfWeek,
-    };
+    function get_fc_defaultOptions() {
+        return {
+            weekNumberTitle: _t("W"),
+            allDayText: _t("all-day"),
+            monthNames: Date.CultureInfo.monthNames,
+            monthNamesShort: Date.CultureInfo.abbreviatedMonthNames,
+            dayNames: Date.CultureInfo.dayNames,
+            dayNamesShort: Date.CultureInfo.abbreviatedDayNames,
+            firstDay: Date.CultureInfo.firstDayOfWeek,
+        };
+    }
 
     function is_virtual_id(id) {
         return typeof id == "string" && id.indexOf('-') >= 0;
@@ -217,7 +217,7 @@ openerp.web_calendar = function(instance) {
         get_fc_init_options: function () {
             //Documentation here : http://arshaw.com/fullcalendar/docs/
             var self = this;
-            return $.extend({}, fc_defaultOptions, {
+            return  $.extend({}, get_fc_defaultOptions(), {
                 
                 defaultView: (this.mode == "month")?"month":
                     (this.mode == "week"?"agendaWeek":
@@ -263,19 +263,7 @@ openerp.web_calendar = function(instance) {
                     self.open_quick_create(data_template);
 
                 },
-                drop: function(start_date, all_day) {
-                    if (this.classList.contains("ui-dialog")) {
-                        return; //don't look click event on calendar if popup hover !
-                    }
-                    var data_template = self.get_event_data({
-                        start: start_date,
-                        allDay: all_day,
-                    });
-                    var stored_data = $(this).data('eventDefaults');
 
-                    data_template = $.extend({}, stored_data, data_template);
-                    self.open_quick_create(data_template);
-                },
                 unselectAuto: false,
 
                 // Options
@@ -369,7 +357,6 @@ openerp.web_calendar = function(instance) {
                 
             }
             self.$calendar.fullCalendar(self.get_fc_init_options());
-
             
             return $.when();
         },
