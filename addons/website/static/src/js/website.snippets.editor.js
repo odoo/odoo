@@ -213,13 +213,7 @@
 
         bind_snippet_click_editor: function () {
             var self = this;
-            var snipped_event_flag = false;
-            $("#wrapwrap").on('click', function (event) {
-                if (snipped_event_flag) {
-                    return;
-                }
-                snipped_event_flag = true;
-                setTimeout(function () {snipped_event_flag = false;}, 0);
+            $(document).on('click', "#wrapwrap", function (event) {
                 var $target = $(event.srcElement);
                 if (!$target.attr("data-snippet-id")) {
                     $target = $target.parents("[data-snippet-id]:first");
