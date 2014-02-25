@@ -743,6 +743,11 @@ class view(osv.osv):
     def distribute_branding(self, e, branding=None, parent_xpath='',
                             index_map=misc.ConstantMapping(1)):
         if e.get('t-ignore') or e.tag == 'head':
+            # remove any view branding possibly injected by inheritance
+            attrs = set(MOVABLE_BRANDING)
+            for descendant in e.iterdescendants(tag=etree.Element):
+                if not attrs.intersection(descendant.attrib): continue
+                self._pop_view_branding(descendant)
             # TODO: find a better name and check if we have a string to boolean helper
             return
 

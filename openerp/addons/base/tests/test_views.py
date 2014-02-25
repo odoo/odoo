@@ -533,7 +533,7 @@ class TestTemplating(ViewCase):
                         'data-oe-xpath': '/xpath/item/content[1]',
                     }), {
                         'order': '2',
-                        'data-oe-source-id': "159"
+                        'data-oe-source-id': str(id)
                     }),
                 E.item({
                     'order': '1',
@@ -563,9 +563,52 @@ class TestTemplating(ViewCase):
 
         self.assertEqual(arch, E.root(E.item(E.span({'t-esc': "foo"}))))
 
-    @unittest2.expectedFailure
     def test_ignore_unbrand(self):
-        self.fail("Branding should be removed from subviews of a t-ignore (?)")
+        Views = self.registry('ir.ui.view')
+        id = Views.create(self.cr, self.uid, {
+            'name': "Base view",
+            'type': 'qweb',
+            'arch': """<root>
+                <item order="1" t-ignore="true">
+                    <t t-esc="foo"/>
+                </item>
+            </root>"""
+        })
+        id2 = Views.create(self.cr, self.uid, {
+            'name': "Extension",
+            'type': 'qweb',
+            'inherit_id': id,
+            'arch': """<xpath expr="//item[@order='1']" position="inside">
+                <item order="2">
+                    <content t-att-href="foo">bar</content>
+                </item>
+            </xpath>"""
+        })
+
+        arch_string = Views.read_combined(
+            self.cr, self.uid, id, fields=['arch'],
+            context={'inherit_branding': True})['arch']
+
+        arch = ET.fromstring(arch_string)
+        Views.distribute_branding(arch)
+
+        self.assertEqual(
+            arch,
+            E.root(
+                E.item(
+                    {'t-ignore': 'true', 'order': '1'},
+                    E.t({'t-esc': 'foo'}),
+                    E.item(
+                        {'order': '2', 'data-oe-source-id': str(id)},
+                        E.content(
+                            {'t-att-href': 'foo'},
+                            "bar")
+                    )
+                )
+            ),
+            "t-ignore should apply to injected sub-view branding, not just to"
+            " the main view's"
+        )
 
 class test_views(ViewCase):
 
