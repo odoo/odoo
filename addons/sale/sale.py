@@ -681,6 +681,8 @@ class sale_order(osv.osv):
 
         :return: True
         """
+        if not context:
+            context = {}
         procurement_obj = self.pool.get('procurement.order')
         sale_line_obj = self.pool.get('sale.order.line')
         for order in self.browse(cr, uid, ids, context=context):
@@ -706,7 +708,11 @@ class sale_order(osv.osv):
                     proc_ids.append(proc_id)
             #Confirm procurement order such that rules will be applied on it
             #note that the workflow normally ensure proc_ids isn't an empty list
-            procurement_obj.run(cr, uid, proc_ids, context=context)
+            ctx = context.copy()
+            ctx["no_picking_assign"] = True
+            procurement_obj.run(cr, uid, proc_ids, context=ctx)
+            #Check all moves associated and do the picking_assign
+            procurement_obj.group_picking_assign(cr, uid, proc_ids, context=context)
 
             #if shipping was in exception and the user choose to recreate the delivery order, write the new status of SO
             if order.state == 'shipping_except':
@@ -1175,3 +1181,5 @@ class procurement_order(osv.osv):
         'sale_line_id': fields.many2one('sale.order.line', string='Sale Order Line'),
     }
     
+    def group_picking_assign(self, cr, uid, proc_ids, context=None):
+        return True

@@ -344,8 +344,8 @@ class stock_quant(osv.osv):
                     'location_id': loc.id,
                     'history_ids': [(4, move.id)],
 #                     'package_id': False
-                }
-            self.write(cr, uid, to_move[loc], vals, context=context)
+                    }
+            self.write(cr, SUPERUSER_ID, to_move[loc], vals, context=context)
 
     def check_preferred_location(self, cr, uid, move, qty, context=None):
         '''Checks the preferred location on the move, if any returned by a putaway strategy, and returns a list of
@@ -1766,6 +1766,10 @@ class stock_move(osv.osv):
         return {'value': result}
 
     def _picking_assign(self, cr, uid, move, context=None):
+        if not context:
+            context = {}
+        if context.get("no_picking_assign") and context['no_picking_assign']:
+            return False
         if move.picking_id or not move.picking_type_id:
             return False
         context = context or {}
@@ -1790,6 +1794,40 @@ class stock_move(osv.osv):
             pick = pick_obj.create(cr, uid, values, context=context)
         move.write({'picking_id': pick})
         return True
+
+    def _group_picking_assign(self, cr, uid, moves, context=None):
+        if not context:
+            context = {}
+        if context.get("no_picking_assign") and context['no_picking_assign']:
+            return False
+        move_dict = {}
+        for move in moves:
+            group_by = (move.location_id, move.location_dest_id, move.group_id)
+            if not move_dict.get(group_by, False):
+                move_dict[group_by] = [move]
+            else:
+                move_dict[group_by].append(move)
+        pick_obj = self.pool.get("stock.picking")
+        for to_compare in move_dict.keys():
+            picks = pick_obj.search(cr, uid, [
+                ('group_id', '=', to_compare[2].id),
+                ('location_id', '=', to_compare[0].id),
+                ('location_dest_id', '=', to_compare[1].id),
+                ('state', 'in', ['draft', 'confirmed', 'waiting']),
+                ], context=context)
+            if picks:
+                pick = picks[0]
+            else:
+                move = move_dict[to_compare][0]
+                values = {
+                          'origin': move.origin,
+                          'company_id': move.company_id and move.company_id.id or False,
+                          'move_type': move.group_id and move.group_id.move_type or 'one',
+                          'partner_id': move.group_id and move.group_id.partner_id and move.group_id.partner_id.id or False,
+                          'picking_type_id': move.picking_type_id and move.picking_type_id.id or False,
+                }
+                pick = pick_obj.create(cr, uid, values, context=context)
+            self.write(cr, uid, [x.id for x in move_dict[to_compare]], {'picking_id': pick}, context=context)
 
     def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
         """ On change of Scheduled Date gives a Move date.
