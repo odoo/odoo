@@ -163,7 +163,7 @@ class Report(http.Controller):
 <!DOCTYPE html>
 <html style="height: 0;">
     <head>
-        <link href="/report/static/src/css/reset.min.css"/>
+        <link href="/report/static/src/css/reset.min.css" rel="stylesheet"/>
         <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
         <link href="/website/static/src/css/website.css" rel="stylesheet"/>
         <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
