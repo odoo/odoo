@@ -545,10 +545,23 @@ class TestTemplating(ViewCase):
             )
         )
 
-    @unittest2.expectedFailure
     def test_esc_no_branding(self):
-        self.fail("View branding should be removed on t-esc or other terminal "
-                  "branded node with no content (r-raw, *f)")
+        Views = self.registry('ir.ui.view')
+        id = Views.create(self.cr, self.uid, {
+            'name': "Base View",
+            'type': 'qweb',
+            'arch': """<root>
+                <item><span t-esc="foo"/></item>
+            </root>""",
+        })
+
+        arch_string = Views.read_combined(
+            self.cr, self.uid, id, fields=['arch'],
+            context={'inherit_branding': True})['arch']
+        arch = ET.fromstring(arch_string)
+        Views.distribute_branding(arch)
+
+        self.assertEqual(arch, E.root(E.item(E.span({'t-esc': "foo"}))))
 
     @unittest2.expectedFailure
     def test_ignore_unbrand(self):
