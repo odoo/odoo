@@ -1,10 +1,13 @@
 openerp.calendar = function(instance) {
     var _t = instance.web._t;
     var QWeb = instance.web.qweb;
+
     instance.calendar = {};
     
 
     instance.web.WebClient = instance.web.WebClient.extend({
+        
+
         get_notif_box: function(me) {
             return $(me).closest(".ui-notify-message-style");
         },
@@ -55,7 +58,7 @@ openerp.calendar = function(instance) {
         check_notifications: function() {
             var self= this;
             self.get_next_notif();
-            setInterval(function(){
+            self.intervalNotif = setInterval(function(){
                 self.get_next_notif();
             }, 5 * 60 * 1000 );
         },
@@ -64,6 +67,11 @@ openerp.calendar = function(instance) {
         show_application: function() {
             this._super();
             this.check_notifications();
+        },
+        //Override addons/web/static/src/js/chrome.js       
+        on_logout: function() {
+            this._super();
+            clearInterval(self.intervalNotif);
         },
     });
     
