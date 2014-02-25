@@ -48,7 +48,6 @@ class TestMrpMulticompany(common.TransactionCase):
         fields = ['location_src_id', 'location_dest_id']
         defaults = self.stock_location.default_get(cr, uid, ['location_id', 'location_dest_id', 'type'], context)
         for field in fields:
-            print field, uid, defaults
             if defaults.get(field):
                 try:
                     self.stock_location.check_access_rule(cr, uid, [defaults[field]], 'read', context)

@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.addons.mail.tests.common import TestMail
+from openerp.exceptions import AccessError
 from openerp.osv.orm import except_orm
 from openerp.tools.misc import mute_logger
 
@@ -31,7 +32,7 @@ class test_portal(TestMail):
         cr, uid = self.cr, self.uid
 
         # Find Portal group
-        group_portal = self.registry('ir.model.data').get_object(cr, uid, 'portal', 'group_portal')
+        group_portal = self.registry('ir.model.data').get_object(cr, uid, 'base', 'group_portal')
         self.group_portal_id = group_portal.id
 
         # Create Chell (portal user)
@@ -63,7 +64,7 @@ class test_portal(TestMail):
             trigger_read = chell_pigs.name
 
         # Do: Chell posts a message on Pigs, crash because can not write on group or is not in the followers
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.mail_group.message_post(cr, self.user_chell_id, self.group_pigs_id, body='Message')
 
         # Do: Chell is added into Pigs followers and browse it -> ok for messages, ko for partners (no read permission)

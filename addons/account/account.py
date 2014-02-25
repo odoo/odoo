@@ -729,8 +729,7 @@ class account_journal(osv.osv):
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Autopost Created Moves', help='Check this box to automatically post entries of this journal. Note that legally, some entries may be automatically posted when the source document is validated (Invoices), whatever the status of this field.'),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
-        'allow_date':fields.boolean('Check Date in Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
-
+        'allow_date':fields.boolean('Check Date in Period', help= 'If checked, the entry won\'t be created if the entry date is not included into the selected period'),
         'profit_account_id' : fields.many2one('account.account', 'Profit Account'),
         'loss_account_id' : fields.many2one('account.account', 'Loss Account'),
         'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1),
@@ -1023,7 +1022,10 @@ class account_period(osv.osv):
         if not result:
             result = self.search(cr, uid, args, context=context)
         if not result:
-            raise osv.except_osv(_('Error!'), _('There is no period defined for this date: %s.\nPlease create one.')%dt)
+            model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_fiscalyear')
+            msg = _('There is no period defined for this date: %s.\nPlease, go to Configuration/Periods and configure a fiscal year.') % dt
+            raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
+
         return result
 
     def action_draft(self, cr, uid, ids, *args):
@@ -3184,11 +3186,14 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         def _get_analytic_journal(journal_type):
             # Get the analytic journal
             data = False
-            if journal_type in ('sale', 'sale_refund'):
-                data = obj_data.get_object_reference(cr, uid, 'account', 'analytic_journal_sale')
-            elif journal_type in ('purchase', 'purchase_refund'):
-                pass
-            elif journal_type == 'general':
+            try:
+                if journal_type in ('sale', 'sale_refund'):
+                    data = obj_data.get_object_reference(cr, uid, 'account', 'analytic_journal_sale')
+                elif journal_type in ('purchase', 'purchase_refund'):
+                    data = obj_data.get_object_reference(cr, uid, 'account', 'exp')
+                elif journal_type == 'general':
+                    pass
+            except ValueError:
                 pass
             return data and data[1] or False
 

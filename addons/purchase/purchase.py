@@ -21,7 +21,7 @@
 
 import time
 import pytz
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, workflow
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import attrgetter
@@ -245,7 +245,7 @@ class purchase_order(osv.osv):
     _name = "purchase.order"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Purchase Order"
-    _order = "name desc"
+    _order = 'date_order desc, id desc'
 
     def create(self, cr, uid, vals, context=None):
         if vals.get('name','/')=='/':
@@ -695,7 +695,7 @@ class purchase_order(osv.osv):
                 continue
             if order_line.product_id.type in ('product', 'consu'):
                 move = stock_move.create(cr, uid, self._prepare_order_line_move(cr, uid, order, order_line, picking_id, context=context))
-                if order_line.move_dest_id:
+                if order_line.move_dest_id and order_line.move_dest_id.state != 'done':
                     order_line.move_dest_id.write({'location_id': order.location_id.id})
                 todo_moves.append(move)
         stock_move.action_confirm(cr, uid, todo_moves)
@@ -909,6 +909,15 @@ class purchase_order_line(osv.osv):
         default.update({'state':'draft', 'move_ids':[],'invoiced':0,'invoice_lines':[]})
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
+    def unlink(self, cr, uid, ids, context=None):
+        procurement_ids_to_cancel = []
+        for line in self.browse(cr, uid, ids, context=context):
+            if line.move_dest_id:
+                procurement_ids_to_cancel.extend(procurement.id for procurement in line.move_dest_id.procurements)
+        if procurement_ids_to_cancel:
+            self.pool['procurement.order'].action_cancel(cr, uid, procurement_ids_to_cancel)
+        return super(purchase_order_line, self).unlink(cr, uid, ids, context=context)
+
     def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
             name=False, price_unit=False, context=None):
@@ -961,7 +970,6 @@ class purchase_order_line(osv.osv):
         product_product = self.pool.get('product.product')
         product_uom = self.pool.get('product.uom')
         res_partner = self.pool.get('res.partner')
-        product_supplierinfo = self.pool.get('product.supplierinfo')
         product_pricelist = self.pool.get('product.pricelist')
         account_fiscal_position = self.pool.get('account.fiscal.position')
         account_tax = self.pool.get('account.tax')
@@ -1290,6 +1298,7 @@ class account_invoice(osv.Model):
         po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
         for po_id in po_ids:
             purchase_order_obj.message_post(cr, user_id, po_id, body=_("Invoice received"), context=context)
+            workflow.trg_write(uid, 'purchase.order', po_id, cr)
         return res
 
     def confirm_paid(self, cr, uid, ids, context=None):

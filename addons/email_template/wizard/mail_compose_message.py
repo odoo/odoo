@@ -41,6 +41,20 @@ def _reopen(self, res_id, model):
 class mail_compose_message(osv.TransientModel):
     _inherit = 'mail.compose.message'
 
+    def default_get(self, cr, uid, fields, context=None):
+        """ Override to pre-fill the data when having a template in single-email mode """
+        if context is None:
+            context = {}
+        res = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
+        if res.get('composition_mode') != 'mass_mail' and context.get('default_template_id') and res.get('model') and res.get('res_id'):
+            res.update(
+                self.onchange_template_id(
+                    cr, uid, [], context['default_template_id'], res.get('composition_mode'),
+                    res.get('model'), res.get('res_id', context.get('active_id')), context=context
+                )['value']
+            )
+        return res
+
     _columns = {
         'template_id': fields.many2one('email.template', 'Use template', select=True),
         'partner_to': fields.char('To (Partner IDs)',
@@ -137,7 +151,7 @@ class mail_compose_message(osv.TransientModel):
     def _get_or_create_partners_from_values(self, cr, uid, rendered_values, context=None):
         """ Check for email_to, email_cc, partner_to """
         partner_ids = []
-        mails = tools.email_split(rendered_values.pop('email_to', '') + ' ' + rendered_values.pop('email_cc', ''))
+        mails = tools.email_split(rendered_values.pop('email_to', '')) + tools.email_split(rendered_values.pop('email_cc', ''))
         for mail in mails:
             partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
             partner_ids.append(partner_id)

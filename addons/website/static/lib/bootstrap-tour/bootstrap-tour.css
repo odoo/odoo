@@ -1,0 +1,43 @@
+.tour-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1009;
+  background-color: #000;
+  opacity: 0.8;
+}
+.tour-step-backdrop {
+  position: relative;
+  z-index: 1011;
+}
+.tour-step-background {
+  position: absolute;
+  z-index: 1010;
+  background: #fff;
+  border-radius: 6px;
+}
+.popover[class*="tour-"] .popover-navigation {
+  padding: 9px 14px;
+}
+.popover[class*="tour-"] .popover-navigation *[data-role=end] {
+  float: right;
+}
+.popover[class*="tour-"] .popover-navigation *[data-role=prev],
+.popover[class*="tour-"] .popover-navigation *[data-role=next],
+.popover[class*="tour-"] .popover-navigation *[data-role=end] {
+  cursor: pointer;
+}
+.popover[class*="tour-"] .popover-navigation *[data-role=prev].disabled,
+.popover[class*="tour-"] .popover-navigation *[data-role=next].disabled,
+.popover[class*="tour-"] .popover-navigation *[data-role=end].disabled {
+  cursor: default;
+}
+.popover[class*="tour-"].orphan {
+  position: fixed;
+  margin-top: 0;
+}
+.popover[class*="tour-"].orphan .arrow {
+  display: none;
+}

@@ -20,7 +20,7 @@
         <!-- Resource: project.project -->
         <record id="all_projects_account" model="account.analytic.account">
             <field name="name">Projects</field>
-            <field name="code">3</field>
+            <field name="code">PP001</field>
             <field name="type">view</field>
         </record>
         <function id="parent_project_default_set" model="ir.values" name="set" eval="('default',False,'parent_id', [('project.project', False)], all_projects_account, True, False, False, False, True)"/>
@@ -78,6 +78,7 @@
             <field name="name">Task Created</field>
             <field name="res_model">project.task</field>
             <field name="default" eval="False"/>
+            <field name="hidden" eval="True"/>
             <field name="description">Task created</field>
         </record>
         <record id="mt_task_assigned" model="mail.message.subtype">
@@ -101,6 +102,7 @@
         <!-- Project-related subtypes for messaging / Chatter -->
         <record id="mt_project_task_new" model="mail.message.subtype">
             <field name="name">Task Created</field>
+            <field name="sequence">10</field>
             <field name="res_model">project.project</field>
             <field name="default" eval="False"/>
             <field name="parent_id" eval="ref('mt_task_new')"/>
@@ -108,6 +110,7 @@
         </record>
         <record id="mt_project_task_assigned" model="mail.message.subtype">
             <field name="name">Task Assigned</field>
+            <field name="sequence">11</field>
             <field name="res_model">project.project</field>
             <field name="default" eval="False"/>
             <field name="parent_id" eval="ref('mt_task_assigned')"/>
@@ -115,12 +118,14 @@
         </record>
         <record id="mt_project_task_blocked" model="mail.message.subtype">
             <field name="name">Task Blocked</field>
+            <field name="sequence">12</field>
             <field name="res_model">project.project</field>
             <field name="parent_id" eval="ref('mt_task_blocked')"/>
             <field name="relation_field">project_id</field>
         </record>
         <record id="mt_project_task_stage" model="mail.message.subtype">
             <field name="name">Task Stage Changed</field>
+            <field name="sequence">13</field>
             <field name="res_model">project.project</field>
             <field name="parent_id" eval="ref('mt_task_stage')"/>
             <field name="relation_field">project_id</field>

@@ -46,9 +46,15 @@ class project_task_type(osv.osv):
                                'there are no records in that stage to display.'),
     }
 
+    def _get_default_project_ids(self, cr, uid, ctx={}):
+        project_id = self.pool['project.task']._get_default_project_id(cr, uid, context=ctx)
+        if project_id:
+            return [project_id]
+        return None
+
     _defaults = {
         'sequence': 1,
-        'project_ids': lambda self, cr, uid, ctx=None: self.pool['project.task']._get_default_project_id(cr, uid, context=ctx),
+        'project_ids': _get_default_project_ids,
     }
     _order = 'sequence'
 
@@ -64,7 +70,7 @@ class project(osv.osv):
         """ Installation hook: aliases, project.project """
         # create aliases for all projects and avoid constraint errors
         alias_context = dict(context, alias_model_name='project.task')
-        self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(project, self)._auto_init,
+        return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(project, self)._auto_init,
             'project.task', self._columns['alias_id'], 'id', alias_prefix='project+', alias_defaults={'project_id':'id'}, context=alias_context)
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
@@ -78,12 +84,6 @@ class project(osv.osv):
                 return [(r[0]) for r in cr.fetchall()]
         return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
             context=context, count=count)
-
-    def _complete_name(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = (m.parent_id and (m.parent_id.name + '/') or '') + m.name
-        return res
 
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         partner_obj = self.pool.get('res.partner')
@@ -234,7 +234,6 @@ class project(osv.osv):
     _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
 
     _columns = {
-        'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Contract/Analytic', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
@@ -359,6 +358,11 @@ class project(osv.osv):
         default['state'] = 'open'
         default['line_ids'] = []
         default['tasks'] = []
+
+        # Don't prepare (expensive) data to copy children (analytic accounts),
+        # they are discarded in analytic.copy(), and handled in duplicate_template() 
+        default['child_ids'] = []
+
         proj = self.browse(cr, uid, id, context=context)
         if not default.get('name', False):
             default.update(name=_("%s (copy)") % (proj.name))
@@ -691,23 +695,13 @@ class task(osv.osv):
         return {'value': vals}
 
     def duplicate_task(self, cr, uid, map_ids, context=None):
-        for new in map_ids.values():
-            task = self.browse(cr, uid, new, context)
-            child_ids = [ ch.id for ch in task.child_ids]
-            if task.child_ids:
-                for child in task.child_ids:
-                    if child.id in map_ids.keys():
-                        child_ids.remove(child.id)
-                        child_ids.append(map_ids[child.id])
-
-            parent_ids = [ ch.id for ch in task.parent_ids]
-            if task.parent_ids:
-                for parent in task.parent_ids:
-                    if parent.id in map_ids.keys():
-                        parent_ids.remove(parent.id)
-                        parent_ids.append(map_ids[parent.id])
-            #FIXME why there is already the copy and the old one
-            self.write(cr, uid, new, {'parent_ids':[(6,0,set(parent_ids))], 'child_ids':[(6,0, set(child_ids))]})
+        mapper = lambda t: map_ids.get(t.id, t.id)
+        for task in self.browse(cr, uid, map_ids.values(), context):
+            new_child_ids = set(map(mapper, task.child_ids))
+            new_parent_ids = set(map(mapper, task.parent_ids))
+            if new_child_ids or new_parent_ids:
+                task.write({'parent_ids': [(6,0,list(new_parent_ids))],
+                            'child_ids':  [(6,0,list(new_child_ids))]})
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -771,7 +765,7 @@ class task(osv.osv):
         'date_end': fields.datetime('Ending Date',select=True),
         'date_deadline': fields.date('Deadline',select=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
-        'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select="1", track_visibility='onchange'),
+        'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select="1", track_visibility='onchange', change_default=True),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
         'notes': fields.text('Notes'),
