@@ -171,8 +171,10 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         if (mode === 'pivot') {
             this.$('.graph_heatmap label').removeClass('disabled');
+            this.$('.graph_main_content').css('position', 'inherit')
         } else {
             this.$('.graph_heatmap label').addClass('disabled');
+            this.$('.graph_main_content').css('position', 'relative')
         }
         this.display_data();
     },
