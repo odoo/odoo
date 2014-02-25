@@ -1,2 +1,5 @@
-sass:
-	sass -t expanded --compass --unix-newlines --watch base.sass:base.css&
+all: *.css
+%.css: %.sass
+	sass -t expanded --compass --unix-newlines $< $@
+watch:
+	sass -t expanded --compass --unix-newlines --watch .:.

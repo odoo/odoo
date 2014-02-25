@@ -77,16 +77,25 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     do_search: function (domain, context, group_by) {
+        if (this.ignore_do_search) {
+            this.ignore_do_search = false;
+            return;
+        }
+
         var self = this,
+<<<<<<< TREE
             groupbys = this.get_groupbys_dos(),
             col_group_by = groupbys.col_group_by;
+=======
+            col_group_by = self.get_groupbys_from_searchview('ColGroupBy', 'col_group_by'); 
+>>>>>>> MERGE-SOURCE
 
         if (!this.graph_widget) {
             if (group_by.length) {
                 this.widget_config.row_groupby = group_by;
             }
             if (col_group_by.length) {
-                this.widget_config.col_groupby = group_by;
+                this.widget_config.col_groupby = col_group_by;
             }
             this.graph_widget = new openerp.web_graph.Graph(this, this.model, domain, this.widget_config);
             this.graph_widget.appendTo(this.$el);
@@ -139,6 +148,14 @@ instance.web_graph.GraphView = instance.web.View.extend({
         var query = this.search_view.query;
 
         if (!_.has(this.search_view, '_s_groupby')) { return; }
+
+        if (row_groupby.length && col_groupby.length) {
+            // when two changes to the search view will be done, the method do_search
+            // will be called twice, once with the correct groupby and incorrect col_groupby,
+            // and once with correct informations. This flag is necessary to prevent the 
+            // incorrect informations to propagate and trigger useless queries
+            this.ignore_do_search = true;
+        }
 
         // add row groupbys
         var row_facet = this.make_row_groupby_facets(row_groupby),
