@@ -5,6 +5,10 @@ PosBox Documentation
 Posbox Setup Guide
 ==================
 
+.. image:: _images/posbox_setup.png
+    :width: 100%
+    :align: center
+
 Prerequisites
 -------------
 
@@ -20,64 +24,64 @@ You will need :
 -  A local network set up with DHCP ( this is the default setting )
 -  A RJ45 Ethrnet Cable
 -  An Epson USB TM-T20 Printer or another compatible printer.
--  A Honewell Voyager USB Barcode Scanner or another compatible scanner.
+-  A Honeywell Eclipse USB Barcode Scanner or another compatible scanner.
 -  An Epson compatible cash drawer.
 
-Setup
------
+Step By Step Setup Guide
+------------------------
 
 .. image:: _images/posbox_doc_schema.png
     :width: 100%
     :align: center
 
-1) Power the PosBox.
-~~~~~~~~~~~~~~~~~~~~
+Power the PosBox.
+~~~~~~~~~~~~~~~~
 
 Plug the PosBox to the 2A Power Adapter, a bright red status led should
 light up.
 
-2) Connect it to the Local Network
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Connect it to the Local Network
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Connect the PosBox to the Local Network with the RJ45 Cable. Make sure
 You connect the PosBox to the same Network as your POS device. Once
 connected a bright yellow status led should light up, and a green status
 led should flash.
 
-3) Connect the USB Printer
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Connect the USB Printer
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Put a paper roll in the printer, power it up, then connect it to one of
 the PosBox's USB port
 
-4) Connect the cash drawer
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Connect the cash drawer
+~~~~~~~~~~~~~~~~~~~~~~~
 
 The cash drawer should be connected to the printer with the RJ25 cable
 
-5) Connect the USB Barcode Scanner
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Connect the USB Barcode Scanner
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Connect the usb barcode scanner to one of the PosBox's USB port. The
 Barcode Scanner should immediately light up and emit a loud beep.
 
-6) Configure the USB Barcode Scanner
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Configure the USB Barcode Scanner
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The barcode scanner should be configured in QWERTY and emit a new line /
 return symbol after each scan. This is most likely the default
 configuration of your barcode scanner.
 
-7) Make sure the PosBox is ready
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Make sure the PosBox is ready
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Once powered, The PosBox needs less than a minute to boot. Once the
 PosBox is ready, it should print a status receipt with its IP Adress.
 Also, the last status led, just after the red power status led, should
 be permanently lit green.
 
-8) Set up the Point of Sale
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Setup the Point of Sale
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Make sure to activate the 'Print via Proxy', 'Remote Scanning' or
 'Cashdrawer' options in the Point of Sale configuration. If you are
@@ -87,8 +91,12 @@ was printed on the status receipt.
 If you are running multiple Point of Sales on the same PosBox, make sure
 that only one of them has Remote Scanning activated.
 
-9) Launch the Point of Sale.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+If you manually specify the PosBox's IP address, you must configure your
+network to make sure the PosBox's IP address doesn't change. Please
+refer to your Router documentation.
+
+Launch the Point of Sale.
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you didn't spcecify the PosBox's IP address in the config, the POS
 will need some time to perform a network scan to find the PosBox. This
@@ -97,8 +105,20 @@ is only done once.
 The Point of Sale is now connected to the PosBox and your Hardware
 should be ready to use.
 
+Multi-Pos Configuration
+-----------------------
+The advised way to setup a multi Point-of-Sale shop is to have one PosBox
+per Point-of-Sale. In this case it is mandatory to manually specify the
+IP address of each PosBox in each Point of Sale. You must also configure
+your network to make sure the PosBox's IP address doesn't change. Please
+refer to your Router documentation.
+
 PosBoxless Setup Guide
 ======================
+
+.. image:: _images/posboxless_setup.png
+    :width: 100%
+    :align: center
 
 If you are running your Point of Sale on a debian-based linux
 distribution, you do not need the PosBox as you can run its software
@@ -111,15 +131,15 @@ Prerequisites
 -------------
 
 -  A debian based linux distribution (Debian, Ubuntu, Mint, etc.)
--  A running trunk version of the OpenERP server
+-  A running OpenERP server (version trunk or saas-3 or 8.0 or later) 
 -  You must uninstall any esc-pos printer driver as it will conflict
    with OpenERP's built-in driver.
 
-Setup
------
+Step By Step Setup Guide
+------------------------
 
-1) Extra dependencies
-~~~~~~~~~~~~~~~~~~~~~
+Extra dependencies
+~~~~~~~~~~~~~~~~~~
 
 The driver modules requires the installation of new python modules:
 
@@ -128,14 +148,14 @@ The driver modules requires the installation of new python modules:
     $ sudo pip install pyserial
     $ sudo pip install --pre pyusb
 
-2) Database Setup
-~~~~~~~~~~~~~~~~~
+Database Setup
+~~~~~~~~~~~~~~
 
 You must create a database called ``posbox`` with the modules
 ``hw_proxy``, ``hw_escpos``, and ``hw_scanner`` installed.
 
-3) Access Rights
-~~~~~~~~~~~~~~~~
+Access Rights
+~~~~~~~~~~~~~
 
 The drivers need raw access to the printer and barcode scanner devices.
 Doing so requires a bit system administration. First we are going to
@@ -163,8 +183,8 @@ following content:
 
 Then you need to reboot your machine.
 
-4) Start the local OpenERP Installl
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Start the local OpenERP Installl
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We must launch the OpenERP server on the port ``8069`` with the correct
 database settings:
@@ -174,8 +194,8 @@ database settings:
     $ ./server/openerp-server --addons-path=addons,web/addons --db-filter='^posbox$' \
             --xmlrpc-port=8069 -d posbox
 
-5) Check that everything works
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Check that everything works
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Plug all your hardware to your machine's USB ports, and go to
 ``http://localhost/hw_proxy/status`` refresh the page a few times and
@@ -184,20 +204,19 @@ errors are: The paths on the distribution differ from the paths expected
 by the drivers, another process has grabbed exclusive access to the
 devices, the udev rules do not apply or a superceeded by others.
 
-5) Automatically Start OpenERP
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Automatically Start OpenERP
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You must now make sure that this OpenERP install is automatically
 started after boot. There are various ways to do so, and how to do it
 depends on your particular setup. We use *systemd* on the PosBox, but
 *upstart* or *sysvinit* are other options.
 
-6) Set up the Point of Sale
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Setup the Point of Sale
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-Make sure that one of the posbox Make sure the IP Adress field in the
-POS Config is either ``127.0.0.1`` or ``localhost`` or simply leave it
-empty.
+The IP Adress field in the POS Config must be either ``127.0.0.1`` 
+or ``localhost``. You can also leave it empty.
 
 PosBox Technical Documentation
 ==============================
@@ -231,7 +250,7 @@ Compatible Peripherals
 -  Barcode Scannners:
 
    -  Metapace S61
-   -  Honeywell Voyager 95x0 Series.
+   -  Honeywell Eclipse or Voyager 95x0 Series.
    -  Most other barcode scanners should work out of the box. Some
       barcode scanners need more power than the PosBox can provide and
       must be plugged in a self-powered USB HUB. This is the case for
@@ -265,6 +284,9 @@ found in instead ``/var/logs/syslog``
 We removed all graphical software from the default install to reduce to
 image size but nothing prevents you from reinstalling them.
 
+Accessing the PosBox
+--------------------
+
 Local Access
 ~~~~~~~~~~~~
 
@@ -284,8 +306,8 @@ Remote Access
 If you have the PosBox's IP address and a SSH client you can access the
 PosBox's system remotely. The login / password are ``pi``/``admin``
 
-Unsupported Printers
-~~~~~~~~~~~~~~~~~~~~
+Getting Unsupported Printers to Work
+------------------------------------
 
 The PosBox should be able to print to any ESC-POS printer, not just the
 Epson TM-T20. If You have such a printer, you can activate it with the
@@ -305,7 +327,7 @@ following steps:
    supported devices.
 
 Updating The PosBox Software
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------
 
 The best way to update the PosBox software is to download a new version
 of the image and flash the SD-Card with it. This operation is described
@@ -315,10 +337,10 @@ raspberry pi image to the latest one found at
 ``http://nightly.openerp.com/trunk/posbox/``
 
 Troubleshoot
-------------
+============
 
 The POS cannot connect to the PosBox.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------
 
 -  The easiest way to make sure the PosBox is properly set-up is to turn
    it on with the printer plugged in as it will print a receipt
@@ -346,7 +368,7 @@ The POS cannot connect to the PosBox.
    the PosBox's ip address in the POS config.
 
 The Barcode Scanner is not working
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------
 
 -  The PosBox needs a 2A power supply to work with some barcode
    scanners. If you are not using the provided power supply, make sure
@@ -357,15 +379,17 @@ The Barcode Scanner is not working
 -  Some poorly built barcode scanners do not advertise themselves as
    barcode scanners but as a usb keyboard instead, and will not be
    recognized by the PosBox.
+-  The barcode scanner must be configured in US QWERTY and emit a linefeed
+   after each codebar. 
 
 The Barcode Scanner is not working reliably
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------
 
 -  Make sure that no more than one device with 'Scan via Proxy' enabled
    are connected to the PosBox at the same time.
 
 Printing the receipt takes too much time.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------------
 
 -  A small delay before the first print is expected, as the PosBox will
    do some preprocessing to speed up the next printings. If you suffer
@@ -373,14 +397,14 @@ Printing the receipt takes too much time.
    between the POS and the PosBox.
 
 Some characters are not correctly printed on the receipt.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------------------------------
 
 -  The PosBox does not support all languages and characters. It
    currently supports latin and cyrillic based scripts, with basic
    japanese support.
 
 The Printer is Offline
-~~~~~~~~~~~~~~~~~~~~~~
+----------------------
 
 -  The PosBox only supports EPSON TM-T20 printers. Make sure the printer
    is connected, powered, has enough paper and has its lid closed, and
@@ -388,8 +412,41 @@ The Printer is Offline
    support.
 
 The Cashdrawer does not open.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------
 
 -  The cashdrawer should be connected to the printer and should be
    activated in the POS Configuration
+
+Credits
+=======
+The PosBox project was developped by Frédéric van der Essen with the 
+kind help of Gary Malherbe, Fabien Meghazi, Nicolas Wisniewsky, 
+Dimitri Del Marmol and Antony Lesuisse.
+
+This development would not have been possible without the Indiegogo
+campaign and those who contributed to it. Special thanks goes to the
+partners who backed the campaign with founding partner bundles:
+
+- Camptocamp 
+- BHC
+- openBig 
+- Eeezee-IT
+- Solarsis LDA
+- ACSONE
+- Vauxoo
+- Ekomurz
+- Datalp
+- Dao Systems
+- Eggs Solutions
+- OpusVL
+
+And also the partners who've backed the development with the Founding
+PosBox Bundle: 
+
+- Willow IT
+- E\. Akhalwaya & Sons
+- Multibase
+- Mindesa
+- bpso.biz
+- Shine IT.
 

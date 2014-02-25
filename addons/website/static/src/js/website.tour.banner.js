@@ -69,10 +69,10 @@
                     popover:   { fixed: true },
                 },
                 {
-                    snippet:   'three-columns',
+                    snippet:   'features',
                     placement: 'bottom',
                     title:     _t("Drag & Drop This Block"),
-                    content:   _t("Drag the <em>'Three Columns'</em> block and drop it below the banner."),
+                    content:   _t("Drag the <em>'Features'</em> block and drop it below the banner."),
                     popover:   { fixed: true },
                 },
                 {
