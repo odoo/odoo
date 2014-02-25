@@ -151,7 +151,7 @@
         </template>
 
         <template id="post_search">
-            <form class="navbar-form " role="search">
+            <form class="navbar-form " action="/questions/" method="get" role="search">
                 <div class="form-group search-navbar">
                     <input type="text" class="form-control" name="search" placeholder="Search Or Ask your Question" t-att-value="searches.get('search') or ''"/>
                 </div>
@@ -163,13 +163,11 @@
         <template id="index" name="Posts">
             <t t-call="website.layout">
                 <t t-set="head">
-                    <link rel='stylesheet' href='/website_blog/static/src/css/website_forum.css' />
+                    <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css' />
                 </t>
                 <div id="wrap" class="js_blog">
                     <div class="row">
-                        <form action="/questions/" method="get" class="pagination form-inline col-md-3">
-                            <t t-call="website_forum.post_search" />
-                        </form>
+                        <t t-call="website_forum.post_search" />
                     </div>
                     <div class="row">
                         <div class="col-xs-3">
@@ -306,96 +304,96 @@
 
         <template id="ask_question">
             <t t-call="website.layout">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="page-header">
-                            <h3>Please Ask your Question here</h3>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <ul>
-                            <li>
-                                please, try to make your question interesting to others
-                            </li>
-                            <li>
-                                provide enough details and, if possible, give an example
-                            </li>
-                            <li>
-                                be clear and concise, avoid unnecessary introductions (Hi, ... Thanks...)
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="row">
-                    <form action="/question/ask/" method="post" role="form">
+                <div class="col-md-9 col-xs-11">
+                    <div class="row">
                         <div class="col-xs-12">
-                            <input type="text"  name="question_name" required="True" t-attf-value="#{question_name or ''}" id="textbox_user_question" class="form-control" placeholder="Enter your Question" />
-                        </div>
-                        <div class="col-xs-12">
-                            Please enter a descriptive question (should finish by a '?')
-                        </div>
-                        <div class="col-xs-12">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <textarea  name="question_content" required="True" t-attf-value="#{question_content or ''}" class="form-control" id="textarea_ckeditor" rows="10" style="width : 100%" />
-                                </div>
+                            <div class="page-header">
+                                <h3>Please Ask your Question here</h3>
                             </div>
                         </div>
                         <div class="col-xs-12">
-                            Tags:
+                            <ul>
+                                <li>
+                                    please, try to make your question interesting to others
+                                </li>
+                                <li>
+                                    provide enough details and, if possible, give an example
+                                </li>
+                                <li>
+                                    be clear and concise, avoid unnecessary introductions (Hi, ... Thanks...)
+                                </li>
+                            </ul>
                         </div>
-                        <div class="col-xs-12">
-                            <input type="text" name="question_tag" t-attf-value="#{question_tag or ''}" class="form-control" id="textarea_tags" style="width : 100%"/>
-                        </div>
-                        <div class="col-xs-12">
-                            <button class="btn btn-default form-control" id="btn_ask_your_question">Ask Your Question</button>
-                        </div>
-                    </form>
-                </div> 
-                <script type="text/javascript" >
-                    CKEDITOR.replace("textarea_ckeditor");
-                </script>
+                    </div>
+                    <div class="row">
+                        <form action="/question/ask/" method="post" role="form">
+                            <div class="col-xs-12">
+                                <input type="text"  name="question_name" required="True" t-attf-value="#{question_name or ''}" id="textbox_user_question" class="form-control" placeholder="Enter your Question" />
+                            </div>
+                            <div class="col-xs-12">
+                                Please enter a descriptive question (should finish by a '?')
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <textarea  name="question_content" required="True" t-attf-value="#{question_content or ''}" class="form-control" id="textarea_ckeditor" rows="10" style="width : 100%" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                Tags:
+                            </div>
+                            <div class="col-xs-12">
+                                <input type="text" name="question_tag" t-attf-value="#{question_tag or ''}" class="form-control" id="textarea_tags" style="width : 100%"/>
+                            </div>
+                            <button class="btn btn-default " id="btn_ask_your_question">Post Your Question</button>
+                        </form>
+                    </div> 
+                    <script type="text/javascript" >
+                        CKEDITOR.replace("textarea_ckeditor");
+                    </script>
+                </div>
             </t>
         </template>
 
         <template id="post_answer">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="page-header">
-                        <h3>Your answer</h3>
-                    </div>
-                </div>
-                <div class="col-xs-12">
-                    <p>
-                        <b>Please try to give a substantial answer</b>.
-                        If you wanted to comment on the question or answer, just 
-                        <b>use the commenting tool.</b> 
-                        Please remember that you can always 
-                        <b>revise your answers</b> 
-                        - no need to answer the same question twice. Also, please 
-                        <b>don't forget to vote</b> 
-                        - it really helps to select the best questions and answers!
-                    </p>
-                </div>
-            </div>
-            <div class="row">
-                <form action="/question/postanswer/" method="post" role="form">
+            <div class="col-md-9 col-xs-11">
+                <div class="row">
                     <div class="col-xs-12">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <textarea  name="answer_content" required="True" t-attf-value="#{answer_content or ''}" class="form-control" id="textarea_ckeditor" rows="10" style="width : 100%" />
-                            </div>
+                        <div class="page-header">
+                            <h3>Your answer</h3>
                         </div>
                     </div>
                     <div class="col-xs-12">
-                        <input name="post_id" t-att-value="question.id" type="hidden"/>
-                        <button class="btn btn-default form-control" id="btn_ask_your_question">Post Your Answer</button>
+                        <p>
+                            <b>Please try to give a substantial answer</b>.
+                            If you wanted to comment on the question or answer, just 
+                            <b>use the commenting tool.</b> 
+                            Please remember that you can always 
+                            <b>revise your answers</b> 
+                            - no need to answer the same question twice. Also, please 
+                            <b>don't forget to vote</b> 
+                            - it really helps to select the best questions and answers!
+                        </p>
                     </div>
-                </form>
-            </div> 
-            <script type="text/javascript" >
-                CKEDITOR.replace("textarea_ckeditor");
-            </script>
+                </div>
+                <div class="row">
+                    <form action="/question/postanswer/" method="post" role="form">
+                        <div class="col-xs-12">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <textarea  name="answer_content" required="True" t-attf-value="#{answer_content or ''}" class="form-control" id="textarea_ckeditor" rows="10" style="width : 100%" />
+                                </div>
+                            </div>
+                        </div>
+                        <input name="post_id" t-att-value="question.id" type="hidden"/>
+                        <button class="btn btn-default" id="btn_ask_your_question">Post Your Answer</button>
+                    </form>
+                </div>
+                <script type="text/javascript" >
+                    CKEDITOR.replace("textarea_ckeditor");
+                </script>
+            </div>
         </template>
 
         <template id="post_description_full">
@@ -415,7 +413,6 @@
                             <t t-call="website_forum.tags" />
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-xs-12 page-header">
                             <span class="badge">

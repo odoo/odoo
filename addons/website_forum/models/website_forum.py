@@ -52,7 +52,7 @@ class Post(osv.Model):
         'forum_id': fields.many2one('website.forum', 'Forum'),
         
         'name': fields.char('Topic', size=64),
-        'content': fields.html('Contents', help='Automatically sanitized HTML contents'),
+        'content': fields.text('Contents', help='contents'),
         
         'create_date': fields.datetime('Asked on', select=True, readonly=True),
         'create_uid': fields.many2one('res.users', 'Asked by', select=True, readonly=True ),
