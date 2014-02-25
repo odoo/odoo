@@ -494,7 +494,7 @@ openerp.web_calendar = function(instance) {
             }
             else {
                 date_start = instance.web.auto_str_to_date(evt[this.date_start].split(' ')[0],'date');
-                date_stop = this.date_stop  ? instance.web.auto_str_to_date(evt[this.date_stop].split(' ')[0],'date').addMinutes(-1) : null;
+                date_stop = this.date_stop ? instance.web.auto_str_to_date(evt[this.date_stop].split(' ')[0],'date').addMinutes(-1) : null;
             }
 
             if (this.info_fields) {
@@ -769,10 +769,25 @@ openerp.web_calendar = function(instance) {
          */
         get_range_domain: function(domain, start, end) {
             var format = instance.web.date_to_str;
-            return new instance.web.CompoundDomain(
-                domain,
-                [[this.date_start, '>=', format(start.clone())],
-                 [this.date_start, '<=', format(end.clone())]]);
+            
+            extend_domain = [[this.date_start, '>=', format(start.clone())],
+                     [this.date_start, '<=', format(end.clone())]];
+
+            if (this.date_stop) {
+                //add at start 
+                extend_domain.splice(0,0,'|','|','&');
+                //add at end 
+                extend_domain.push(
+                                '&',
+                                [this.date_start, '<=', format(start.clone())],
+                                [this.date_stop, '>=', format(start.clone())],
+                                '&',
+                                [this.date_start, '<=', format(end.clone())],
+                                [this.date_stop, '>=', format(start.clone())]
+                );
+                //final -> (A & B) | (C & D) | (E & F) ->  | | & A B & C D & E F
+            }
+            return new instance.web.CompoundDomain(domain, extend_domain);
         },
 
         /**
