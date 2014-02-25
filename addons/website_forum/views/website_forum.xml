@@ -224,13 +224,13 @@
                 class="col-xs-7 col-xs-offset-5 col-sm-3 col-sm-offset-9 col-md-4 col-md-offset-8 col-lg-4 col-lg-offset-8 text-right">
                 <div class="panel panel-primary ">
                     <p class="text-center -heading">
-                        <small>asked Sep 12'13</small>
+                        <small>asked <span t-esc="question.create_date"></span></small>
                     </p>
                     <div class="row">
                         <div class="col-xs-3">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <img src="images/profile_picture/png/user_1.png" class="user-profile-image" alt="" />
+                                    <span t-field="question.create_uid.image" t-field-options='{"widget": "image"}'/>
                                 </div>
                             </div>
                         </div>
@@ -238,7 +238,7 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="text-left">
-                                        <a href="">Than N.</a>
+                                        <a href=""><div t-esc="question.create_uid.name"/></a>
                                     </div>
                                 </div>
                             </div>
