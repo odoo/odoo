@@ -547,7 +547,6 @@ class pos_order(osv.osv):
             if order['amount_return']:
                 session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
                 cash_journal = session.cash_journal_id
-                cash_statement = False
                 if not cash_journal:
                     cash_journal_ids = filter(lambda st: st.journal_id.type=='cash', session.statement_ids)
                     if not len(cash_journal_ids):
@@ -565,7 +564,7 @@ class pos_order(osv.osv):
             try:
                 self.signal_paid(cr, uid, [order_id])
             except Exception as e:
-                _logger.error('ERROR: Could not mark POS Order as Paid.\n'+str(e))
+                _logger.error('Could not mark POS Order as Paid: %s', tools.ustr(e))
 
             if to_invoice:
                 self.action_invoice(cr, uid, [order_id], context)
