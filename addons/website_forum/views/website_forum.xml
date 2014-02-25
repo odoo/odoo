@@ -129,21 +129,21 @@
             <ul class="media-list">
                 <li t-foreach="question.child_ids" t-as="answer" class="media">
                     <div class="row">
-                        <t t-call="website_forum.post_vote" />
+                        <t t-call="website_forum.post_vote"/>
                         <div class="col-md-9 col-xs-10">
                             <div class="row">
                                 <div class="col-xs-12">
                                     <span>
                                         <h4>
-                                            <t t-esc="answer.name" />
+                                            <t t-esc="answer.content"/>
                                         </h4>
                                     </span>
                                 </div>
                             </div>
                             <div class="row">
-                                <t t-call="website_forum.user_detail" />
+                                <t t-call="website_forum.user_detail"/>
                             </div>
-                            <t t-call="website_forum.post_links" />
+                            <t t-call="website_forum.post_links"/>
                         </div>
                     </div>
                 </li>
@@ -358,6 +358,46 @@
             </t>
         </template>
 
+        <template id="post_answer">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="page-header">
+                        <h3>Your answer</h3>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <p>
+                        <b>Please try to give a substantial answer</b>.
+                        If you wanted to comment on the question or answer, just 
+                        <b>use the commenting tool.</b> 
+                        Please remember that you can always 
+                        <b>revise your answers</b> 
+                        - no need to answer the same question twice. Also, please 
+                        <b>don't forget to vote</b> 
+                        - it really helps to select the best questions and answers!
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <form action="/question/postanswer/" method="post" role="form">
+                    <div class="col-xs-12">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <textarea  name="answer_content" required="True" t-attf-value="#{answer_content or ''}" class="form-control" id="textarea_ckeditor" rows="10" style="width : 100%" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <input name="post_id" t-att-value="question.id" type="hidden"/>
+                        <button class="btn btn-default form-control" id="btn_ask_your_question">Post Your Answer</button>
+                    </div>
+                </form>
+            </div> 
+            <script type="text/javascript" >
+                CKEDITOR.replace("textarea_ckeditor");
+            </script>
+        </template>
+
         <template id="post_description_full">
             <t t-call="website.layout">
                 <t t-call="website_forum.post_search" />
@@ -386,6 +426,7 @@
                     </div>
                     <t t-call="website_forum.answer"/>
                 </div>
+                <t t-call="website_forum.post_answer"/>
             </t>
         </template>
 

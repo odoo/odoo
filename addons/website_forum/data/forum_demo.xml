@@ -135,7 +135,7 @@ Thank you in advance</field>
 <!-- Answer -->
 
         <record id="answer_0" model="website.forum.post">
-            <field name="name">Just for posterity so other can see. Here are the steps to set automatic alerts on any contract.. i.e. HR Employee, or Fleet for example. I will use fleet as an example.
+            <field name="content">Just for posterity so other can see. Here are the steps to set automatic alerts on any contract.. i.e. HR Employee, or Fleet for example. I will use fleet as an example.
                 Step 1. As a user who has access rights to Technical Features, go to Settings --> Automated Actions. Create A new Automated Action. For the Related Document Model choose.. Contract information on a vehicle (you can also type in the actual model name.. fleet.vehicle.log.contract ) . Set the trigger date to ... Contract Expiration Date.
                 The Next Field (Delay After Trigger Date) is a bit ridiculous. Who wants to be reminded of a contract expiration AFTER the fact? The field should say Days Before Date to Fire Action and the number should be converted to a negative. IMHO. Any way... to get a workable solution you must enter in the number in the negative. So for instance like me if you want to be warned 35 days BEFORE the expiration... put in Delay After Trigger Date.. the number -35 But the sake of testing, right now just put in -1 for 1 day before. Save the Action.
                 Step 2. Go to Server Actions and create new Action. Call it Fleet Contract Expiration Warning. The Object will be the same as above .. Contract information on a vehicle. The Action Type is Email. For email address I just put my email. Under subject put in... [[object.name]]. This will tell you the name of the car. Message you can put any text message you like. Now save the Server Action.
@@ -147,7 +147,7 @@ Thank you in advance</field>
         </record>
         
         <record id="answer_1" model="website.forum.post">
-            <field name="name"> Hello everybody,
+            <field name="content"> Hello everybody,
                 I use a XML-RPC to access to invoices, I want to get the states of invoices, but always I get paid instead of Payé (French)
                 I use administrator to connect to the databse, he has as lang = 'fr_FR'
                 def _get_invoice_states(self, cr, uid, ids, field_name, args, context=None):
@@ -167,7 +167,7 @@ Thank you in advance</field>
         </record>
         
         <record id="answer_4" model="website.forum.post">
-            <field name="name">Yes you could download the module from internet on another 
+            <field name="content">Yes you could download the module from internet on another 
                     computer and unzip the file on the ERP server. 
                     Then you have to activate the module, see the tutorial on acespritechblog.wordpress.com (sorry I cannot post the full link)
             </field>
@@ -175,14 +175,14 @@ Thank you in advance</field>
         </record>
 
         <record id="answer_5" model="website.forum.post">
-            <field name="name">OpenERP v8 (next release) provides a web module and an e-commerce module: www.openerp.com/website_cms
+            <field name="content">OpenERP v8 (next release) provides a web module and an e-commerce module: www.openerp.com/website_cms
                             The CMS editor in OpernERP web is nice but I prefer drupal for customization and there is a drupal module for OpenERP. I think WP is better than OpenERP web too.
             </field>
             <field name="parent_id" ref="question_5" />
         </record>
         
         <record id="answer_6_0" model="website.forum.post">
-            <field name="name"> 
+            <field name="content"> 
                 no need to inherit account.voucher. after creating the account.voucher record, you just add this in your XMLRPC script.
 
                 self.sock.execute(self.dbname, self.uid, self.pwd, 'account.voucher', 
@@ -194,7 +194,7 @@ Thank you in advance</field>
         </record>
         
         <record id="answer_6_1" model="website.forum.post">
-            <field name="name"> 
+            <field name="content"> 
                I had the same issue and in my case I needed to remove the field "move_id" from account.voucher and adding the field "move_line_id" to account.voucher.line, have you tried that?
 
                move_line_id should match the ID of the account.move.line whose "move_id" field matches the "move_id" field of the invoice you created
@@ -209,7 +209,7 @@ Thank you in advance</field>
         </record>
         
         <record id="answer_9" model="website.forum.post">
-            <field name="name">
+            <field name="content">
                     Step 1: First make sure the CRM module is installed. If it isnt then you can click on the CRM module in the applications view.
                     
                     Step 2: Go to Settings -> Configuration -> General Settings and check the "Allow users to import data from CSV files" checkbox
@@ -231,7 +231,7 @@ Thank you in advance</field>
         </record>
         
         <record id="answer_10" model="website.forum.post">
-            <field name="name">
+            <field name="content">
                     Hello,
                     Email outgoing server can be configured in: Settings >> General Settings >> Email >> Outgoing mail server.
                     SMTP Server: Your SMTP server address
@@ -243,14 +243,14 @@ Thank you in advance</field>
         </record>
         
         <record id="answer_13_0" model="website.forum.post">
-            <field name="name">
+            <field name="content">
                 also settings-> update moduel list? can find this anywhere??
             </field>
             <field name="parent_id" ref="question_13" />
         </record>
 
         <record id="answer_13_1" model="website.forum.post">
-            <field name="name">
+            <field name="content">
                 Give your admin user the technical features right and you will be able to see more options in the settings menu. (use a refresh)
             </field>
             <field name="parent_id" ref="question_13" />

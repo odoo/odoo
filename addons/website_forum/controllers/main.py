@@ -113,11 +113,9 @@ class website_forum(http.Controller):
         create_context = dict(context)
         new_question_id = request.registry['website.forum.post'].create(
             request.cr, request.uid, {
-                'forum_id': forum_id,
-                'parent_id':post_id,
-                'name': question.get('name'),
-                'content': question.get('content'),
-                'tags' : question.get('tags'),
+                #'forum_id': forum_id,
+                'parent_id': post_id,
+                'content': question.get('answer_content'),
                 'state': 'active',
                 'active': True,
             }, context=create_context)
