@@ -193,7 +193,7 @@
                 <img class="img-circle" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(blog_post.create_uid.id)" style="width: 30px; margin-right: 10px;"/>
                 <small id="blog_author" t-field="blog_post.create_uid.name"/><br/>
             </div>
-            <div t-if="blog_post.content_image" id="fa-angle-down">
+            <div t-if="blog_post.content_image" id="blog_angle_down">
                 <a href="#blog_content" class="fa fa-angle-down fa-2x fa-inverse mt64"/>
             </div>
         </div>

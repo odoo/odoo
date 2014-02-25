@@ -23,7 +23,6 @@ $(document).ready(function() {
 
     function page_transist(event) {
         event.preventDefault();
-        var translationValue  = $('.cover_footer').get(0).getBoundingClientRect().top;
         newLocation = $('.js_next')[0].href;
         $('.cover_footer')
         .fadeIn(900, newpage);
@@ -40,8 +39,8 @@ $(document).ready(function() {
         });
     }
 
-    function arrow_scroll(event){
-        var node = $('#fa-angle-down')
+    function arrow_scroll(){
+        var node = $('#blog_angle_down')
         var stickyTop = node.offset().top - 50;
         $(window).scroll(function(event){
             var scrolltop = $(window).scrollTop()
@@ -50,24 +49,33 @@ $(document).ready(function() {
         });
     }
 
+    function page_upwards() {
+        var translationValue = $("#wrap:last-child").get(0).getBoundingClientRect().top;
+        $("#wrap:last-child")
+            .addClass('easing_upward')
+        setTimeout(function(){
+            $html = $(document.documentElement);
+            $("#wrap:first-child").add($html).scrollTop(0);
+            $("#wrap:last-child").removeClass('easing_upward');
+            $("#wrap:first").remove();
+        }, 500 );
+    }
+
     function newpage() {
         $.ajax({
             url: newLocation,
         }).done(function(data) {
             $('main').append($(data).find('main').html());
-            $("html").stop().animate({ scrollTop: $("#wrap:last-child").offset().top }, 1000,function(e){
-                $("#wrap:first").remove();
-                $(document).scrollTop($("#wrap:last-child").offset().top);
-                //bind again it takes control from now on, until page relaod.
-                $(document).find('.cover_footer').on('click',page_transist);
-                $(document).find('a[href^="#blog_content"]').on('click', animate);
-                var content = $(document).find("#blog_content p");
-                if (content && discussion){
-                   new openerp.website.blog_discussion({'content' : content});
-                }
-                if (share) $("p").share();
-                arrow_scroll();
-            });
+            page_upwards()
+            //bind again it takes control from now on, until page relaod.
+            $(document).find('.cover_footer').on('click',page_transist);
+            $(document).find('a[href^="#blog_content"]').on('click', animate);
+            var content = $(document).find("#blog_content p");
+            if (content && discussion){
+               new openerp.website.blog_discussion({'content' : content});
+            }
+            if (share) $("p").share();
+            arrow_scroll();
             if (newLocation != window.location) {
                 history.pushState(null, null, newLocation);
             }
