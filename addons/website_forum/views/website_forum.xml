@@ -348,9 +348,10 @@
                             </div>
                             <button class="btn btn-default " id="btn_ask_your_question">Post Your Question</button>
                         </form>
-                    </div> 
+                    </div>
                     <script type="text/javascript" >
                         CKEDITOR.replace("textarea_ckeditor");
+                        CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList'] ,['Outdent','Indent','Link','Unlink'],] ;
                     </script>
                 </div>
             </t>
@@ -392,6 +393,7 @@
                 </div>
                 <script type="text/javascript" >
                     CKEDITOR.replace("textarea_ckeditor");
+                    CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList'] ,['Outdent','Indent','Link','Unlink'],] ;
                 </script>
             </div>
         </template>
