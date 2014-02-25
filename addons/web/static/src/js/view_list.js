@@ -1654,9 +1654,12 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
 function synchronized(fn) {
     var fn_mutex = new $.Mutex();
     return function () {
+        var obj = this;
         var args = _.toArray(arguments);
-        args.unshift(this);
-        return fn_mutex.exec(fn.bind.apply(fn, args));
+        return fn_mutex.exec(function () {
+            if (obj.isDestroyed()) { return $.when(); }
+            return fn.apply(obj, args)
+        });
     };
 }
 var DataGroup =  instance.web.Class.extend({

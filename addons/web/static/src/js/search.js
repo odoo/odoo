@@ -414,7 +414,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 context: this.dataset.get_context(),
             });
 
-            $.when(load_view).then(function (r) {
+            this.alive($.when(load_view)).then(function (r) {
                 return self.search_view_loaded(r);
             }).fail(function () {
                 self.ready.reject.apply(null, arguments);
@@ -473,18 +473,19 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      * Sets up search view's view-wide auto-completion widget
      */
     setup_global_completion: function () {
-        var self = this;
-
         var autocomplete = this.$el.autocomplete({
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
-            search: function () { self.$el.autocomplete('close'); },
             focus: function (e) { e.preventDefault(); },
             html: true,
             autoFocus: true,
             minLength: 1,
             delay: 250,
         }).data('autocomplete');
+
+        this.$el.on('input', function () {
+            this.$el.autocomplete('close');
+        }.bind(this));
 
         // MonkeyPatch autocomplete instance
         _.extend(autocomplete, {
