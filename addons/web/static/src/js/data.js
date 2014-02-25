@@ -448,7 +448,8 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
      * Read records.
      *
      * @param {Array} ids identifiers of the records to read
-     * @param {Array} fields fields to read and return, by default all fields are returned
+     * @param {Array} [fields] fields to read and return, by default all fields are returned
+     * @param {Object} [options]
      * @returns {$.Deferred}
      */
     read_ids: function (ids, fields, options) {
@@ -456,10 +457,20 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
             return $.Deferred().resolve([]);
             
         options = options || {};
-        // TODO: reorder results to match ids list
         return this._model.call('read',
-            [ids, fields || false],
-            {context: this.get_context(options.context)});
+                [ids, fields || false],
+                {context: this.get_context(options.context)})
+            .then(function (records) {
+                if (records.length <= 1) { return records; }
+                var indexes = {};
+                for (var i = 0; i < ids.length; i++) {
+                    indexes[ids[i]] = i;
+                }
+                records.sort(function (a, b) {
+                    return indexes[a.id] - indexes[b.id];
+                });
+                return records;
+        });
     },
     /**
      * Read a slice of the records represented by this DataSet, based on its
