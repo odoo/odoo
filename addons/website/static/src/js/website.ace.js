@@ -45,12 +45,11 @@
                 try {
                     var dom = new DOMParser().parseFromString(this.xml, "text/xml");
                     error = dom.getElementsByTagName("parsererror");
-                } catch (e) {
-                    error = e;
-                }
-                return error.length === 0 || error;
-            } else if (window.ActiveXObject) {
-                // TODO test in IE
+                    return error.length === 0 || $(error).text();
+                } catch (e) {}
+            }
+            if (window.ActiveXObject) {
+                // IE
                 var msDom = new ActiveXObject("Microsoft.XMLDOM");
                 msDom.async = false;
                 msDom.loadXML(this.xml);
@@ -290,7 +289,7 @@
                     def.reject("server", session, error);
                 });
             } else {
-                def.reject(null, session, $(isWellFormed).text());
+                def.reject(null, session, isWellFormed);
             }
             return def;
         },
