@@ -2,7 +2,7 @@
 import datetime
 import logging
 import sys
-import urllib
+import werkzeug.urls
 import urllib2
 
 import openerp
@@ -59,7 +59,7 @@ def get_sys_logs(self, cr, uid):
 
     add_arg = {"timeout":30} if sys.version_info >= (2,6) else {}
     arguments = {'arg0': msg, "action": "update",}
-    arguments_raw = urllib.urlencode(arguments)
+    arguments_raw = werkzeug.url_encode(arguments)
 
     url = config.get("publisher_warranty_url")
 
@@ -94,13 +94,11 @@ class publisher_warranty_contract(osv.osv):
             # old behavior based on res.log; now on mail.message, that is not necessarily installed
             IMD = self.pool['ir.model.data']
             user = self.pool['res.users'].browse(cr, SUPERUSER_ID, SUPERUSER_ID)
-            try:
-                poster = IMD.get_object(cr, SUPERUSER_ID, 'mail', 'group_all_employees')
-            except ValueError:
-                # Cannot found group, post the message on the wall of the admin
+            poster = IMD.xmlid_to_object(cr, SUPERUSER_ID, 'mail.group_all_employees', context=context)
+            if not (poster and poster.exists()):
+                if not user.exists():
+                    return True
                 poster = user
-            if not poster.exists():
-                return True
             for message in result["messages"]:
                 try:
                     poster.message_post(body=message, subtype='mt_comment', partner_ids=[user.partner_id.id])

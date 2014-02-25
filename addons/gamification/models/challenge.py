@@ -387,6 +387,7 @@ class gamification_challenge(osv.Model):
                 end_date = challenge.end_date
 
             for line in challenge.line_ids:
+                # FIXME: allow to restrict to a subset of users
                 for user in challenge.user_ids:
 
                     goal_obj = self.pool.get('gamification.goal')
@@ -400,8 +401,9 @@ class gamification_challenge(osv.Model):
                         # resume canceled goals
                         domain.append(('state', '=', 'canceled'))
                         canceled_goal_ids = goal_obj.search(cr, uid, domain, context=context)
-                        goal_obj.write(cr, uid, canceled_goal_ids, {'state': 'inprogress'}, context=context)
-                        goal_obj.update(cr, uid, canceled_goal_ids, context=context)
+                        if canceled_goal_ids:
+                            goal_obj.write(cr, uid, canceled_goal_ids, {'state': 'inprogress'}, context=context)
+                            goal_obj.update(cr, uid, canceled_goal_ids, context=context)
 
                         # skip to next user
                         continue
@@ -431,7 +433,7 @@ class gamification_challenge(osv.Model):
     ##### JS utilities #####
 
     def _get_serialized_challenge_lines(self, cr, uid, challenge, user_id=False, restrict_goal_ids=False, restrict_top=False, context=None):
-        """Return a serialised version of the goals information
+        """Return a serialised version of the goals information if the user has not completed every goal
 
         :challenge: browse record of challenge to compute
         :user_id: res.users id of the user retrieving progress (False if no distinction, only for ranking challenges)
@@ -485,6 +487,7 @@ class gamification_challenge(osv.Model):
         (start_date, end_date) = start_end_date_for_period(challenge.period)
 
         res_lines = []
+        all_reached = True
         for line in challenge.line_ids:
             line_data = {
                 'name': line.definition_id.name,
@@ -516,13 +519,6 @@ class gamification_challenge(osv.Model):
                 domain.append(('user_id', '=', user_id))
                 sorting = goal_obj._order
                 limit = 1
-                # initialise in case search returns no results
-                line_data.update({
-                    'id': 0,
-                    'current': 0,
-                    'completeness': 0,
-                    'state': 'draft',
-                })
             else:
                 line_data.update({
                     'own_goal_id': False,
@@ -542,6 +538,8 @@ class gamification_challenge(osv.Model):
                         'completeness': goal.completeness,
                         'state': goal.state,
                     })
+                    if goal.state != 'reached':
+                        all_reached = False
                 else:
                     ranking += 1
                     if user_id and goal.user_id.id == user_id:
@@ -559,7 +557,12 @@ class gamification_challenge(osv.Model):
                         'completeness': goal.completeness,
                         'state': goal.state,
                     })
-            res_lines.append(line_data)
+                    if goal.state != 'reached':
+                        all_reached = False
+            if goal_ids:
+                res_lines.append(line_data)
+        if all_reached:
+            return []
         return res_lines
 
     ##### Reporting #####
@@ -624,22 +627,28 @@ class gamification_challenge(osv.Model):
         return self.write(cr, uid, challenge.id, {'last_report_date': fields.date.today()}, context=context)
 
     ##### Challenges #####
+    # TODO in trunk, remove unused parameter user_id
     def accept_challenge(self, cr, uid, challenge_ids, context=None, user_id=None):
         """The user accept the suggested challenge"""
-        user_id = user_id or uid
+        return self._accept_challenge(cr, uid, uid, challenge_ids, context=context)
+
+    def _accept_challenge(self, cr, uid, user_id, challenge_ids, context=None):
         user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
         message = "%s has joined the challenge" % user.name
-        self.message_post(cr, uid, challenge_ids, body=message, context=context)
+        self.message_post(cr, SUPERUSER_ID, challenge_ids, body=message, context=context)
         self.write(cr, SUPERUSER_ID, challenge_ids, {'invited_user_ids': [(3, user_id)], 'user_ids': [(4, user_id)]}, context=context)
-        return self.generate_goals_from_challenge(cr, uid, challenge_ids, context=context)
+        return self.generate_goals_from_challenge(cr, SUPERUSER_ID, challenge_ids, context=context)
 
+    # TODO in trunk, remove unused parameter user_id
     def discard_challenge(self, cr, uid, challenge_ids, context=None, user_id=None):
         """The user discard the suggested challenge"""
-        user_id = user_id or uid
+        return self._discard_challenge(cr, uid, uid, challenge_ids, context=context)
+
+    def _discard_challenge(self, cr, uid, user_id, challenge_ids, context=None):
         user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
         message = "%s has refused the challenge" % user.name
         self.message_post(cr, SUPERUSER_ID, challenge_ids, body=message, context=context)
-        return self.write(cr, uid, challenge_ids, {'invited_user_ids': (3, user_id)}, context=context)
+        return self.write(cr, SUPERUSER_ID, challenge_ids, {'invited_user_ids': (3, user_id)}, context=context)
 
     def reply_challenge_wizard(self, cr, uid, challenge_id, context=None):
         result = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'challenge_wizard')

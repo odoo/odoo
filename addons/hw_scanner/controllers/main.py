@@ -4,7 +4,7 @@ import os
 import time
 from os import listdir
 from os.path import join
-from threading import Thread
+from threading import Thread, Lock
 from select import select
 from Queue import Queue, Empty
 
@@ -26,6 +26,7 @@ except ImportError:
 class Scanner(Thread):
     def __init__(self):
         Thread.__init__(self)
+        self.lock = Lock()
         self.status = {'status':'connecting', 'messages':[]}
         self.input_dir = '/dev/input/by-id/'
         self.barcodes = Queue()
@@ -86,6 +87,12 @@ class Scanner(Thread):
             57:(" "," "),
         }
 
+    def lockedstart(self):
+        self.lock.acquire()
+        if not self.isAlive():
+            self.start()
+        self.lock.release()
+
     def set_status(self, status, message = None):
         if status == self.status['status']:
             if message != None and message != self.status['messages'][-1]:
@@ -102,15 +109,13 @@ class Scanner(Thread):
         elif status == 'disconnected' and message:
             _logger.warning('Disconnected Barcode Scanner: '+message)
 
-            
-
     def get_device(self):
         try:
             if not evdev:
                 return None
             devices   = [ device for device in listdir(self.input_dir)]
-            keyboards = [ device for device in devices if 'kbd' in device ]
-            scanners  = [ device for device in devices if ('barcode' in device.lower()) or ('scanner' in device.lower()) ]
+            keyboards = [ device for device in devices if ('kbd' in device) and ('keyboard' not in device.lower())]
+            scanners  = [ device for device in devices if ('barcode' in device.lower()) or ('scanner' in device.lower())]
             if len(scanners) > 0:
                 self.set_status('connected','Connected to '+scanners[0])
                 return evdev.InputDevice(join(self.input_dir,scanners[0]))
@@ -124,16 +129,14 @@ class Scanner(Thread):
             self.set_status('error',str(e))
             return None
 
-    @http.route('/hw_proxy/Vis_scanner_connected', type='json', auth='admin')
-    def is_scanner_connected(self):
-        return self.get_device() != None
-    
     def get_barcode(self):
         """ Returns a scanned barcode. Will wait at most 5 seconds to get a barcode, and will
             return barcode scanned in the past if they are not older than 5 seconds and have not
             been returned before. This is necessary to catch barcodes scanned while the POS is
             busy reading another barcode
         """
+
+        self.lockedstart()
 
         while True:
             try:
@@ -144,6 +147,7 @@ class Scanner(Thread):
                 return ''
     
     def get_status(self):
+        self.lockedstart()
         return self.status
 
     def run(self):
@@ -205,9 +209,8 @@ s = Scanner()
 hw_proxy.drivers['scanner'] = s
 
 class ScannerDriver(hw_proxy.Proxy):
-    @http.route('/hw_proxy/scanner', type='json', auth='admin')
+    @http.route('/hw_proxy/scanner', type='json', auth='none', cors='*')
     def scanner(self):
-        if not s.isAlive():
-            s.start()
         return s.get_barcode()
+        
         

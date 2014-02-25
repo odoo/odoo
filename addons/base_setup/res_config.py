@@ -35,15 +35,15 @@ class base_config_settings(osv.osv_memory):
             help="""Share or embbed any screen of openerp."""),
         'module_portal': fields.boolean('Activate the customer portal',
             help="""Give your customers access to their documents."""),
-        'module_portal_anonymous': fields.boolean('Activate the public portal',
-            help="""Enable the public part of openerp, openerp becomes a public website."""),
         'module_auth_oauth': fields.boolean('Use external authentication providers, sign in with google, facebook, ...'),
         'module_base_import': fields.boolean("Allow users to import data from CSV files"),
         'module_google_drive': fields.boolean('Attach Google documents to any record',
                                               help="""This installs the module google_docs."""),
         'module_google_calendar': fields.boolean('Allow the users to synchronize their calendar  with Google Calendar',
                                               help="""This installs the module google_calendar."""),
-        'font': fields.many2one('res.font', string="Report Font", help="Set the font into the report header, it will be used as default font in the RML reports of the user company"),
+        'font': fields.many2one('res.font', string="Report Font", domain=[('mode', 'in', ('Normal', 'Regular', 'all', 'Book'))],
+            help="Set the font into the report header, it will be used as default font in the RML reports of the user company"),
+
     }
     
     _defaults= {

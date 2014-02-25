@@ -20,21 +20,37 @@
 ##############################################################################
 
 import time
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
-# Overloaded sale_order to manage carriers :
-class sale_order(osv.osv):
+
+class sale_order_line(osv.Model):
+    _inherit = 'sale.order.line'
+
+    _columns = {
+        'is_delivery': fields.boolean("Is a Delivery"),
+    }
+
+    _defaults = {
+        'is_delivery': False
+    }
+
+
+class sale_order(osv.Model):
     _inherit = 'sale.order'
     _columns = {
-        'carrier_id':fields.many2one("delivery.carrier", "Delivery Method", help="Complete this field if you plan to invoice the shipping based on picking."),
+        'carrier_id': fields.many2one(
+            "delivery.carrier", string="Delivery Method",
+            help="Complete this field if you plan to invoice the shipping based on picking."),
     }
 
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         result = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
         if part:
             dtype = self.pool.get('res.partner').browse(cr, uid, part, context=context).property_delivery_carrier.id
-            result['value']['carrier_id'] = dtype
+            # TDE NOTE: not sure the aded 'if dtype' is valid
+            if dtype:
+                result['value']['carrier_id'] = dtype
         return result
 
     def _prepare_order_picking(self, cr, uid, order, context=None):
@@ -42,18 +58,25 @@ class sale_order(osv.osv):
         result.update(carrier_id=order.carrier_id.id)
         return result
 
+    def _delivery_unset(self, cr, uid, order, context=None):
+        line_ids = [line.id for line in order.order_line if line.is_delivery]
+        self.pool['sale.order.line'].unlink(cr, uid, line_ids, context=context)
+        order.refresh()
+        return True
+
     def delivery_set(self, cr, uid, ids, context=None):
-        order_obj = self.pool.get('sale.order')
         line_obj = self.pool.get('sale.order.line')
         grid_obj = self.pool.get('delivery.grid')
         carrier_obj = self.pool.get('delivery.carrier')
         acc_fp_obj = self.pool.get('account.fiscal.position')
+
         for order in self.browse(cr, uid, ids, context=context):
+            self._delivery_unset(cr, uid, order, context=context)
             grid_id = carrier_obj.grid_get(cr, uid, [order.carrier_id.id], order.partner_shipping_id.id)
             if not grid_id:
                 raise osv.except_osv(_('No Grid Available!'), _('No grid matching for this carrier!'))
 
-            if not order.state in ('draft'):
+            if order.state != 'draft':
                 raise osv.except_osv(_('Order not in Draft State!'), _('The order state have to be draft to add delivery lines.'))
 
             grid = grid_obj.browse(cr, uid, grid_id, context=context)
@@ -69,13 +92,7 @@ class sale_order(osv.osv):
                 'product_uom': grid.carrier_id.product_id.uom_id.id,
                 'product_id': grid.carrier_id.product_id.id,
                 'price_unit': grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context),
-                'tax_id': [(6,0,taxes_ids)],
-                'type': 'make_to_stock'
+                'tax_id': [(6, 0, taxes_ids)],
+                'type': 'make_to_stock',
+                'is_delivery': True
             })
-        #remove the value of the carrier_id field on the sale order
-        return self.write(cr, uid, ids, {'carrier_id': False}, context=context)
-        #return {'type': 'ir.actions.act_window_close'} action reload?
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

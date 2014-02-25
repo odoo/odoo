@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-import hashlib
 import pytz
 import re
 import time
 import openerp
 import openerp.service.report
 import uuid
+from werkzeug.exceptions import BadRequest
 from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil import rrule
@@ -34,9 +34,10 @@ from openerp import tools, SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
-from openerp import http
 from openerp.http import request
 from operator import itemgetter
+
+from werkzeug.exceptions import BadRequest
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -776,7 +777,7 @@ class calendar_event(osv.Model):
             else:
                 result[event] = ""
         return result
-
+    
     def _rrule_write(self, cr, uid, ids, field_name, field_value, args, context=None):
         if not isinstance(ids, list):
             ids = [ids]
@@ -789,7 +790,7 @@ class calendar_event(osv.Model):
                 data.update(update_data)
                 self.write(cr, uid, ids, data, context=context)
         return True
-
+    
     def _tz_get(self, cr, uid, context=None):
         return [(x.lower(), x) for x in pytz.all_timezones]
 
@@ -802,7 +803,7 @@ class calendar_event(osv.Model):
         },
     }
     _columns = {
-         'id': fields.integer('ID', readonly=True),
+        'id': fields.integer('ID', readonly=True),
         'state': fields.selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, track_visibility='onchange'),
         'name': fields.char('Meeting Subject', required=True, states={'done': [('readonly', True)]}),
         'is_attendee': fields.function(_compute, string='Attendee', type="boolean", multi='attendee'),
@@ -844,6 +845,7 @@ class calendar_event(osv.Model):
         'attendee_ids': fields.one2many('calendar.attendee', 'event_id', 'Attendees', ondelete='cascade'),
         'partner_ids': fields.many2many('res.partner', string='Attendees', states={'done': [('readonly', True)]}),
         'alarm_ids': fields.many2many('calendar.alarm', string='Reminders', ondelete="restrict"),
+
     }
     _defaults = {
         'end_type': 'count',
@@ -870,11 +872,9 @@ class calendar_event(osv.Model):
     ]
 
     def onchange_dates(self, cr, uid, ids, start_date, duration=False, end_date=False, allday=False, context=None):
+
         """Returns duration and/or end date based on values passed
         @param ids: List of calendar event's IDs.
-        @param start_date: Starting date
-        @param duration: Duration between start date and end date
-        @param end_date: Ending Datee
         """
         if context is None:
             context = {}
@@ -888,14 +888,14 @@ class calendar_event(osv.Model):
             value['duration'] = duration
 
         if allday:  # For all day event
-            start = datetime.strptime(start_date.split(' ')[0].split('T')[0], "%Y-%m-%d")
-            duration = 24.0
-            value['duration'] = duration
+            start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
             user = self.pool['res.users'].browse(cr, uid, uid)
             tz = pytz.timezone(user.tz) if user.tz else pytz.utc
             start = pytz.utc.localize(start).astimezone(tz)     # convert start in user's timezone
             start = start.astimezone(pytz.utc)                  # convert start back to utc
-            value['date'] = start.strftime("%Y-%m-%d") + ' 00:00:00'
+
+            value['duration'] = 24.0
+            value['date'] = datetime.strftime(start, "%Y-%m-%d %H:%M:%S")
         else:
             start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
 
@@ -1330,13 +1330,13 @@ class calendar_event(osv.Model):
                 new_id = get_real_ids(arg[2])
                 new_arg = (arg[0], arg[1], new_id)
             new_args.append(new_arg)
-        #offset, limit and count must be treated separately as we may need to deal with virtual ids
 
-        if context.get('virtual_id', True):
-            res = super(calendar_event, self).search(cr, uid, new_args, offset=0, limit=0, order=None, context=context, count=False)
-            res = self.get_recurrent_ids(cr, uid, res, args, order=order, context=context)
-        else:
-            res = super(calendar_event, self).search(cr, uid, new_args, offset=0, limit=0, order=order, context=context, count=False)
+        if not context.get('virtual_id', True):
+            return super(calendar_event, self).search(cr, uid, new_args, offset=offset, limit=limit, order=order, context=context, count=count)
+
+        # offset, limit, order and count must be treated separately as we may need to deal with virtual ids
+        res = super(calendar_event, self).search(cr, uid, new_args, offset=0, limit=0, order=None, context=context, count=False)
+        res = self.get_recurrent_ids(cr, uid, res, args, order=order, context=context)
         if count:
             return len(res)
         elif limit:
@@ -1353,15 +1353,55 @@ class calendar_event(osv.Model):
         res = super(calendar_event, self).copy(cr, uid, calendar_id2real_id(id), default, context)
         return res
 
+    def _detach_one_event(self, cr, uid, id, values=dict(), context=None):
+        real_event_id = calendar_id2real_id(id)
+        data = self.read(cr, uid, id, ['date', 'date_deadline', 'rrule', 'duration'])
+
+        if data.get('rrule'):
+            data.update(
+                values,
+                recurrent_id=real_event_id,
+                recurrent_id_date=data.get('date'),
+                rrule_type=False,
+                rrule='',
+                recurrency=False,
+                end_date = datetime.strptime(values.get('date', False) or data.get('date'),"%Y-%m-%d %H:%M:%S") 
+                                + timedelta(hours=values.get('duration', False) or data.get('duration'))
+            )
+
+            #do not copy the id
+            if data.get('id'):
+                del(data['id'])
+            new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
+            return new_id
+
+    def open_after_detach_event(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+
+        new_id = self._detach_one_event(cr, uid, ids[0], context=context)
+        return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'calendar.event',
+                'view_mode': 'form',
+                'res_id': new_id,
+                'target': 'current',
+                'flags': {'form': {'action_buttons': True, 'options' : { 'mode' : 'edit' } } }
+        }
+
+
+
+
     def write(self, cr, uid, ids, values, context=None):
         def _only_changes_to_apply_on_real_ids(field_names):
-            ''' return True if changes are only to be made on the real ids'''
+            ''' return True if changes are only to be made on the real ids'''   
             for field in field_names:
-                if field not in ['name', 'message_follower_ids','oe_update_date']:
-                    return False
-            return True
+                if field in ['date','active']:
+                    return True                
+            return False
 
         context = context or {}
+        
 
         if isinstance(ids, (str,int, long)):
             if len(str(ids).split('-')) == 1:
@@ -1383,31 +1423,14 @@ class calendar_event(osv.Model):
             # if we are setting the recurrency flag to False or if we are only changing fields that
             # should be only updated on the real ID and not on the virtual (like message_follower_ids):
             # then set real ids to be updated.
-            if not values.get('recurrency', True) or _only_changes_to_apply_on_real_ids(values.keys()):
+            if not values.get('recurrency', True) or not _only_changes_to_apply_on_real_ids(values.keys()):
                 ids.append(real_event_id)
                 continue
-
-            #if edit one instance of a reccurrent id
-            data = self.read(cr, uid, event_id, ['date', 'date_deadline', 'rrule', 'duration'])
-            if data.get('rrule'):
-                data.update(
-                    values,
-                    recurrent_id=real_event_id,
-                    recurrent_id_date=data.get('date'),
-                    rrule_type=False,
-                    rrule='',
-                    recurrency=False,
-                    end_date = datetime.strptime(values.get('date', False) or data.get('date'),"%Y-%m-%d %H:%M:%S")
-                                                + timedelta(hours=values.get('duration', False) or data.get('duration'))
-                )
-
-                #do not copy the id
-                if data.get('id'):
-                    del(data['id'])
-                new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
-                context.update({'active_id': new_id, 'active_ids': [new_id]})
-                continue
-
+            else:
+                data = self.read(cr, uid, event_id, ['date', 'date_deadline', 'rrule', 'duration'])
+                if data.get('rrule'):                 
+                    new_id = self._detach_one_event(cr, uid, event_id, values, context=None)
+        
         res = super(calendar_event, self).write(cr, uid, ids, values, context=context)
 
         # set end_date for calendar searching
@@ -1473,7 +1496,6 @@ class calendar_event(osv.Model):
         if context is None:
             context = {}
         fields2 = fields and fields[:] or None
-
         EXTRAFIELDS = ('class', 'user_id', 'duration', 'date', 'rrule', 'vtimezone')
         for f in EXTRAFIELDS:
             if fields and (f not in fields):
@@ -1518,6 +1540,7 @@ class calendar_event(osv.Model):
             for k in EXTRAFIELDS:
                 if (k in r) and (fields and (k not in fields)):
                     del r[k]
+
         if isinstance(ids, (str, int, long)):
             return result and result[0] or False
         return result
@@ -1531,7 +1554,7 @@ class calendar_event(osv.Model):
         ids_to_unlink = []
 
         # One time moved to google_Calendar, we can specify, if not in google, and not rec or get_inst = 0, we delete it
-        for event_id in ids:
+        for event_id in ids:            
             if unlink_level == 1 and len(str(event_id).split('-')) == 1:  # if  ID REAL
                 if self.browse(cr, uid, event_id).recurrent_id:
                     ids_to_exclure.append(event_id)

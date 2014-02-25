@@ -92,6 +92,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         connect_to_proxy: function(){
             var self = this;
+            var  done = new $.Deferred();
             this.barcode_reader.disconnect_from_proxy();
             this.pos_widget.loading_message(_t('Connecting to the PosBox'),0);
             this.pos_widget.loading_skip(function(){
@@ -106,7 +107,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     if(self.config.iface_scan_via_proxy){
                         self.barcode_reader.connect_to_proxy();
                     }
+                }).always(function(){
+                    done.resolve();
                 });
+            return done;
         },
 
         // helper function to load data from the server
@@ -134,13 +138,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         'phone',
                         'partner_id',
                     ],
-                    [['id','=',users[0].company_id[0]]]);
+                    [['id','=',users[0].company_id[0]]],
+                    {show_address_only: true});
                 }).then(function(companies){
                     self.company = companies[0];
-
-                    return self.fetch('res.partner',['contact_address'],[['id','=',companies[0].partner_id[0]]]);
-                }).then(function(company_partners){
-                    self.company.contact_address = company_partners[0].contact_address;
 
                     return self.fetch('product.uom', null, null);
                 }).then(function(units){
@@ -212,13 +213,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(packagings){
                     self.db.add_packagings(packagings);
 
-                    return self.fetch('pos.category', ['id','name','parent_id','child_id','image'])
+                    return self.fetch('product.public.category', ['id','name','parent_id','child_id','image'])
                 }).then(function(categories){
                     self.db.add_categories(categories);
 
                     return self.fetch(
                         'product.product', 
-                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code',
+                        ['name', 'list_price','price','public_categ_id', 'taxes_id', 'ean13', 'default_code',
                          'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description'],
                         [['sale_ok','=',true],['available_in_pos','=',true]],
                         {pricelist: self.pricelist.id} // context for price
@@ -259,12 +260,26 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.company_logo.crossOrigin = 'anonymous';
                     var  logo_loaded = new $.Deferred();
                     self.company_logo.onload = function(){
+                        var img = self.company_logo;
+                        var ratio = 1;
+                        var targetwidth = 300;
+                        var maxheight = 150;
+                        if( img.width !== targetwidth ){
+                            ratio = targetwidth / img.width;
+                        }
+                        if( img.height * ratio > maxheight ){
+                            ratio = maxheight / img.height;
+                        }
+                        var width  = Math.floor(img.width * ratio);
+                        var height = Math.floor(img.height * ratio);
                         var c = document.createElement('canvas');
-                            c.width  = self.company_logo.width;
-                            c.height = self.company_logo.height; 
+                            c.width  = width;
+                            c.height = height
                         var ctx = c.getContext('2d');
-                            ctx.drawImage(self.company_logo,0,0);
+                            ctx.drawImage(self.company_logo,0,0, width, height);
+                        
                         self.company_logo_base64 = c.toDataURL();
+                        window.logo64 = self.company_logo_base64;
                         logo_loaded.resolve();
                     };
                     self.company_logo.onerror = function(){
@@ -529,11 +544,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 this.order.removeOrderline(this);
                 return;
             }else{
-                var quant = Math.max(parseFloat(quantity) || 0, 0);
+                var quant = parseFloat(quantity) || 0;
                 var unit = this.get_unit();
                 if(unit){
-                    this.quantity    = Math.max(unit.rounding, round_pr(quant, unit.rounding));
-                    this.quantityStr = this.quantity.toFixed(Math.max(0,Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10))));
+                    this.quantity    = round_pr(quant, unit.rounding);
+                    this.quantityStr = this.quantity.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
                 }else{
                     this.quantity    = quant;
                     this.quantityStr = '' + this.quantity;
@@ -972,7 +987,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     email: company.email,
                     website: company.website,
                     company_registry: company.company_registry,
-                    contact_address: company.contact_address, 
+                    contact_address: company.partner_id[1], 
                     vat: company.vat,
                     name: company.name,
                     phone: company.phone,
@@ -1089,10 +1104,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             }
         },
         switchSign: function() {
+            console.log('switchsing');
             var oldBuffer;
             oldBuffer = this.get('buffer');
             this.set({
-                buffer: oldBuffer[0] === '-' ? oldBuffer.substr(1) : "-" + oldBuffer
+                buffer: oldBuffer[0] === '-' ? oldBuffer.substr(1) : "-" + oldBuffer 
             });
             this.trigger('set_value',this.get('buffer'));
         },
