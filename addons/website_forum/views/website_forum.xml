@@ -153,7 +153,7 @@
         <template id="post_search">
             <form class="navbar-form " role="search">
                 <div class="form-group search-navbar">
-                    <input type="text" class="form-control" placeholder="Search Or Ask  your Question" />
+                    <input type="text" class="form-control" name="search" placeholder="Search Or Ask your Question" t-att-value="searches.get('search') or ''"/>
                 </div>
                 <button type="submit" class="btn btn-default AskButton">Ask Question</button>
             </form>
@@ -166,22 +166,28 @@
                     <link rel='stylesheet' href='/website_blog/static/src/css/website_forum.css' />
                 </t>
                 <div id="wrap" class="js_blog">
-                    <t t-call="website_forum.post_search" />
+                    <div class="row">
+                        <form action="/questions/" method="get" class="pagination form-inline col-md-3">
+                            <t t-call="website_forum.post_search" />
+                        </form>
+                    </div>
                     <div class="row">
                         <div class="col-xs-3">
-                            <span itemprop="name" class="badge">
-                                <t t-esc="total_questions"/>
-                                Question
+                            <span class="badge">
+                                <t t-esc="total_questions"/> Question
                             </span>
                         </div>
                         <t t-call="website_forum.shorting" />
                     </div>
                     <ul id="tabs" class="nav nav-pills">
                         <li class="active">
-                            <a href="#all" data-toggle="tab">ALL</a>
+                            <a t-attf-href="#all" data-toggle="tab">ALL</a>
                         </li>
                         <li>
-                            <a href="#unanswerd" data-toggle="tab">Unanswerd</a>
+                            <a t-attf-href="#unanswerd" data-toggle="tab">UNANSWERD</a>
+                        </li>
+                        <li>
+                            <a t-attf-href="#followed" data-toggle="tab">FOLLOWED</a>
                         </li>
                     </ul>
                     <ul class="media-list">
@@ -297,7 +303,6 @@
                 </div>
             </div>
         </template>
-
 
         <template id="post_description_full">
             <t t-call="website.layout">

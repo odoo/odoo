@@ -40,16 +40,21 @@ class website_forum(http.Controller):
     def questions(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         forum_obj = request.registry['website.forum.post']
-        tag_obj = request.registry['website.forum.tag']
+        domain = [('parent_id', '=', False)]
+        search = searches.get('search',False)
+        if search:
+            domain += ['|',
+                ('name', 'ilike', search),
+                ('content', 'ilike', search)]
 
         step = 10
         question_count = forum_obj.search(
-            request.cr, request.uid, [('parent_id', '=', False)], count=True,
+            request.cr, request.uid, domain, count=True,
             context=request.context)
         pager = request.website.pager(url="/questions/", total=question_count, page=page, step=step, scope=10)
 
         obj_ids = forum_obj.search(
-            request.cr, request.uid, [('parent_id', '=', False)], limit=step,
+            request.cr, request.uid, domain, limit=step,
             offset=pager['offset'], context=request.context)
         question_ids = forum_obj.browse(request.cr, request.uid, obj_ids,
                                       context=request.context)
@@ -76,6 +81,7 @@ class website_forum(http.Controller):
             'question': question,
             'main_object': question,
             'range': range,
+            'searches': post
         }
         return request.website.render("website_forum.post_description_full", values)
 
