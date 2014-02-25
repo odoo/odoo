@@ -743,12 +743,12 @@
 
                   <div class="form-group col-lg-6" groups="sale.group_delivery_invoice_address">
                       <label>
-                          <input type="checkbox" name="shipping_different" t-att-checked="shipping"/>
+                          <input type="checkbox" name="shipping_different" t-att-checked="checkout.get('shipping_different')"/>
                           Ship to a different address
                       </label>
                   </div>
               </div>
-              <div class="js_shipping row mb16" t-att-style="not shipping and 'display:none' or ''" groups="sale.group_delivery_invoice_address">
+              <div class="js_shipping row mb16" t-att-style="not checkout.get('shipping_different') and 'display:none' or ''" groups="sale.group_delivery_invoice_address">
                   <h3 class="oe_shipping col-lg-12 mt16">Shipping Information</h3>
 
                   <div t-attf-class="form-group #{error.get('shipping_name') and 'has-error' or ''} col-lg-6">
@@ -795,6 +795,7 @@
           </div>
           <div class="col-lg-offset-1 col-lg-3 col-md-3 text-muted">
               <h3 class="page-header mt16">Your Order <small><a href="/shop/cart"><span class="fa fa-arrow-right"/> change</a></small></h3>
+              <t t-set="website_sale_order" t-value="website.sale_get_order()"/>
               <div class="row">
                   <div class="col-sm-6 text-right">Subtotal:</div>
                   <div class="col-sm-6"><span t-esc="website_sale_order.amount_untaxed" t-field-options='{

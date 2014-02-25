@@ -264,7 +264,7 @@ class website_sale(http.Controller):
         if tx and tx.state != 'draft':
             return request.redirect('/shop/payment/confirmation/%s' % order.id)
 
-    def checkout_values(self):
+    def checkout_values(self, data=None):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         orm_partner = registry.get('res.partner')
         orm_user = registry.get('res.users')
@@ -277,21 +277,34 @@ class website_sale(http.Controller):
         states = state_orm.browse(cr, SUPERUSER_ID, states_ids, context)
 
         checkout = {}
-        shipping = False
-        if request.uid != request.website.user_id.id:
-            partner = orm_user.browse(cr, SUPERUSER_ID, request.uid, context).partner_id
-            checkout.update( self.checkout_parse("billing", partner) )
+        if not data:
+            if request.uid != request.website.user_id.id:
+                partner = orm_user.browse(cr, SUPERUSER_ID, request.uid, context).partner_id
+                checkout.update( self.checkout_parse("billing", partner) )
 
-            shipping_ids = orm_partner.search(cr, SUPERUSER_ID, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], limit=1, context=context)
-            if shipping_ids:
-                shipping = orm_user.browse(cr, SUPERUSER_ID, request.uid, context)
-                checkout.update( self.checkout_parse("shipping", shipping) )
+                shipping_ids = orm_partner.search(cr, SUPERUSER_ID, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], limit=1, context=context)
+                if shipping_ids:
+                    shipping = orm_user.browse(cr, SUPERUSER_ID, request.uid, context)
+                    checkout.update( self.checkout_parse("shipping", shipping) )
+                    checkout['shipping_different'] = True
+            else:
+                order = request.website.sale_get_order(force_create=1, context=context)
+                if order.partner_id:
+                    domain = [("active", "=", False), ("partner_id", "=", order.partner_id.id)]
+                    user_ids = request.registry['res.users'].search(cr, SUPERUSER_ID, domain, context=context)
+                    if not user_ids or request.website.user_id.id not in user_ids:
+                        checkout.update( self.checkout_parse("billing", order.partner_id) )
+        else:
+            checkout = self.checkout_parse('billing', data)
+            if data.get("shipping_different"):
+                checkout.update(self.checkout_parse('shipping', data))
+                checkout["shipping_different"] = True
 
         values = {
             'countries': countries,
             'states': states,
-            'checkout': checkout.empty(),
-            'shipping': bool(shipping),
+            'checkout': checkout,
+            'shipping_different': checkout.get('shipping_different'),
             'error': {},
         }
         return values
@@ -315,9 +328,10 @@ class website_sale(http.Controller):
 
         # set data
         if isinstance(data, dict):
-            query = dict((field_name, data[field_name]) for field_name in all_fields if data[field_name])
+            query = dict((field_name, data[field_name]) for field_name in all_fields if data.get(field_name))
         else:
-            query = dict((prefix + field_name, getattr(data, field_name)) for field_name in all_fields if getattr(data, field_name))
+            query = dict((prefix + field_name, getattr(data, field_name))
+                for field_name in all_fields if field_name != "company" and getattr(data, field_name))
             if data.parent_id:
                 query[prefix + 'company'] = data.parent_id.name
 
@@ -344,18 +358,27 @@ class website_sale(http.Controller):
 
         return error
 
-    def checkout_form_save(self):
+    def checkout_form_save(self, post):
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+
+        order = request.website.sale_get_order(force_create=1, context=context)
+
+        orm_partner = registry.get('res.partner')
+        orm_user = registry.get('res.users')
+        order_line_obj = request.registry.get('sale.order')
+
+        billing_info = self.checkout_parse('billing', post)
 
         # save partner for order
-        company_name = checkout['company']
         company_id = None
-        if post['company']:
+        if billing_info.get('company'):
+            company_name = billing_info['company']
             company_ids = orm_partner.search(cr, SUPERUSER_ID, [("name", "ilike", company_name), ('is_company', '=', True)], context=context)
             company_id = (company_ids and company_ids[0]) or orm_partner.create(cr, SUPERUSER_ID, {'name': company_name, 'is_company': True}, context)
 
-        billing_info = dict((k, v) for k,v in checkout.items() if "shipping_" not in k and k != "company")
         billing_info['parent_id'] = company_id
 
+        # set partner_id
         partner_id = None
         if request.uid != request.website.user_id.id:
             partner_id = orm_user.browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
@@ -365,29 +388,25 @@ class website_sale(http.Controller):
             if not user_ids or request.website.user_id.id not in user_ids:
                 partner_id = order.partner_id.id
 
+        # save partner informations
         if partner_id:
             orm_partner.write(cr, SUPERUSER_ID, [partner_id], billing_info, context=context)
         else:
             partner_id = orm_partner.create(cr, SUPERUSER_ID, billing_info, context=context)
 
+        # set shipping_id
         shipping_id = None
         if post.get('shipping_different'):
-            shipping_info = {
-                'phone': post['shipping_phone'],
-                'zip': post['shipping_zip'],
-                'street': post['shipping_street'],
-                'city': post['shipping_city'],
-                'name': post['shipping_name'],
-                'email': post['email'],
-                'type': 'delivery',
-                'parent_id': partner_id,
-                'country_id': post['shipping_country_id'],
-                'state_id': post['shipping_state_id'],
-            }
-            domain = [(key, '_id' in key and '=' or 'ilike', '_id' in key and value and int(value) or value)
-                      for key, value in shipping_info.items() if key in info.mandatory_billing_fields + ["type", "parent_id"]]
+            shipping_info = self.checkout_parse('shipping', post)
+            shipping_info = dict ((field_name, shipping_info[field_name]) for field_name in shipping_info.items())
+            shipping_info['type'] = 'delivery'
+            shipping_info['parent_id'] = partner_id
 
+            domain = [(key, '_id' in key and '=' or 'ilike', value)
+                      for key, value in shipping_info.items() if key in self.mandatory_shipping_fields + ["type", "parent_id"]]
             shipping_ids = orm_partner.search(cr, SUPERUSER_ID, domain, context=context)
+            
+            # save shipping informations
             if shipping_ids:
                 shipping_id = shipping_ids[0]
                 orm_partner.write(cr, SUPERUSER_ID, [shipping_id], shipping_info, context)
@@ -409,38 +428,32 @@ class website_sale(http.Controller):
     def checkout(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
-        order = request.website.sale_get_order(cr, uid, force_create=1, context=context)
+        order = request.website.sale_get_order(force_create=1, context=context)
 
-        redirection = checkout_redirection(order)
+        redirection = self.checkout_redirection(order)
         if redirection:
             return redirection
 
         values = self.checkout_values()
-        checkout = values['checkout']
 
-        partner = None
         return request.website.render("website_sale.checkout", values)
 
     @http.route(['/shop/confirm_order'], type='http', auth="public", website=True, multilang=True)
     def confirm_order(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
-        order_line_obj = request.registry.get('sale.order')
 
-        order = request.website.sale_get_order(cr, uid, context=context)
+        order = request.website.sale_get_order(context=context)
 
-        redirection = checkout_redirection(order)
+        redirection = self.checkout_redirection(order)
         if redirection:
             return redirection
 
-        values = self.checkout_values()
-        checkout = values['checkout']
-        checkout.update(post)
-        error = values['error']
-
-        if error:
+        values = self.checkout_values(post)
+        values["error"] = self.checkout_form_validate(values["checkout"])
+        if values["error"]:
             return request.website.render("website_sale.checkout", values)
 
-        checkout_form_save()
+        self.checkout_form_save(values["checkout"])
 
         return request.redirect("/shop/payment")
 
@@ -462,7 +475,9 @@ class website_sale(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         payment_obj = request.registry.get('payment.acquirer')
 
-        redirection = checkout_redirection(order)
+        order = request.website.sale_get_order(context=context)
+
+        redirection = self.checkout_redirection(order)
         if redirection:
             return redirection
 
@@ -515,7 +530,7 @@ class website_sale(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         payment_obj = request.registry.get('payment.acquirer')
         transaction_obj = request.registry.get('payment.transaction')
-        order = request.website.sale_get_order(cr, uid, context=context)
+        order = request.website.sale_get_order(context=context)
 
         if not order or not order.order_line or acquirer_id is None:
             return request.redirect("/shop/checkout/")
@@ -607,7 +622,7 @@ class website_sale(http.Controller):
             tx = request.registry['payment.transaction'].browse(cr, uid, transaction_id, context=context)
 
         if sale_order_id is None:
-            order = request.website.sale_get_order(cr, uid, context=context)
+            order = request.website.sale_get_order(context=context)
         else:
             order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
             assert order.website_session_id == request.httprequest.session['website_session_id']
