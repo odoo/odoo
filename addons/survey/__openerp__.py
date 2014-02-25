@@ -47,9 +47,9 @@ sent mails with personal token for the invitation of the survey.
         'data/survey_cron.xml'
     ],
     'demo': ['data/survey_demo_user.xml',
-             'data/survey_demo_recruitment.xml',
              'data/survey_demo_feedback.xml',
-             'data/survey_demo_appraisal.xml'],
+             'data/survey.user_input.csv',
+             'data/survey.user_input_line.csv'],
     'installable': True,
     'auto_install': False,
     'application': True,

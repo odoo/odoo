@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_server_action_form_website">
+            <field name="name">ir.actions.server.form.website</field>
+            <field name="model">ir.actions.server</field>
+            <field name="inherit_id" ref="base.view_server_action_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name="website_published"
+                        attrs="{'invisible': [('state', '!=', 'code')]}"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

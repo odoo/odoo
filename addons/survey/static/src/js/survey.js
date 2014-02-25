@@ -35,7 +35,7 @@ $(document).ready(function () {
     // Printing mode: will disable all the controls in the form
     if (_.isUndefined(submit_controller)) {
         $('.js_surveyform :input').prop('disabled', true);
-        print_mode = true
+        print_mode = true;
     }
 
     // Custom code for right behavior of radio buttons with comments box
@@ -86,7 +86,7 @@ $(document).ready(function () {
                 console.warn("[survey] Unable to load prefill data");
             });
         return prefill_def;
-    };
+    }
 
     // Parameters for form submission
     $('.js_surveyform').ajaxForm({
@@ -129,7 +129,7 @@ $(document).ready(function () {
         // Activate the print dialog if needed
         if (print_mode){
             window.print();
-        };
+        }
     });
 
     console.debug("[survey] Custom JS for survey loaded!");

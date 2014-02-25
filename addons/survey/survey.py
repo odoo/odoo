@@ -252,11 +252,14 @@ class survey_survey(osv.Model):
 
     def action_start_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey form '''
+        trail = ""
+        if context and 'survey_token' in context:
+            trail = context['survey_token'] + "/"
         return {
             'type': 'ir.actions.act_url',
             'name': "Start Survey",
             'target': 'self',
-            'url': self.read(cr, uid, ids, ['public_url'], context=context)[0]['public_url']
+            'url': self.read(cr, uid, ids, ['public_url'], context=context)[0]['public_url'] + trail
         }
 
     def action_send_survey(self, cr, uid, ids, context=None):
@@ -298,11 +301,14 @@ class survey_survey(osv.Model):
 
     def action_print_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey printable view '''
+        trail = ""
+        if context and 'survey_token' in context:
+            trail = context['survey_token'] + "/"
         return {
             'type': 'ir.actions.act_url',
             'name': "Print Survey",
             'target': 'self',
-            'url': self.read(cr, uid, ids, ['print_url'], context=context)[0]['print_url']
+            'url': self.read(cr, uid, ids, ['print_url'], context=context)[0]['print_url'] + trail
         }
 
     def action_result_survey(self, cr, uid, ids, context=None):
@@ -700,7 +706,7 @@ class survey_user_input(osv.Model):
     def _quizz_get_score(self, cr, uid, ids, name, args, context=None):
         ret = dict()
         for user_input in self.browse(cr, uid, ids, context=context):
-            ret[user_input.id] = sum([uil.quizz_mark for uil in user_input.user_input_line_ids] or 0.0)
+            ret[user_input.id] = sum([uil.quizz_mark for uil in user_input.user_input_line_ids] or [0.0])
         return ret
 
     _columns = {
@@ -745,6 +751,7 @@ class survey_user_input(osv.Model):
         'type': 'manually',
         'state': 'new',
         'token': lambda s, cr, uid, c: uuid.uuid4().__str__(),
+        'quizz_score': 0.0,
     }
 
     _sql_constraints = [
