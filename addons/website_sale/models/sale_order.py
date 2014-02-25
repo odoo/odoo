@@ -107,7 +107,7 @@ class website(orm.Model):
         return [("sale_ok", "=", True)]
 
     def sale_get_order(self, cr, uid, ids, force_create=False, code=None, context=None):
-        sale_order_id = request.httprequest.session.get('sale_order_id')
+        sale_order_id = request.session.get('sale_order_id')
         sale_order = None
         # create so if needed
         if not sale_order_id and (force_create or code):  
@@ -122,7 +122,7 @@ class website(orm.Model):
                 sale_order_id = self.pool['sale.order'].create(cr, SUPERUSER_ID, values, context=context)
                 values = self.pool['sale.order'].onchange_partner_id(cr, SUPERUSER_ID, [], partner.id, context=context)['value']
                 self.pool['sale.order'].write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
-                request.httprequest.session['sale_order_id'] = sale_order_id
+                request.session['sale_order_id'] = sale_order_id
         if sale_order_id:
             # TODO cache partner_id session
             partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
@@ -146,19 +146,19 @@ class website(orm.Model):
                 self.pool['sale.order'].write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
         return sale_order
 
-    def sale_get_transaction(self, cr, uid, context=None):
+    def sale_get_transaction(self, cr, uid, ids, context=None):
         transaction_obj = self.pool.get('payment.transaction')
-        tx_id = request.httprequest.session.get('payment_transaction_id')
+        tx_id = request.session.get('sale_transaction_id')
         if tx_id:
             tx_ids = transaction_obj.search(cr, uid, [('id', '=', tx_id), ('state', 'not in', ['cancel'])], context=context)
             if tx_ids:
                 return transaction_obj.browse(cr, uid, tx_ids[0], context=context)
             else:
-                request.httprequest.session['payment_transaction_id'] = False
+                request.session['sale_transaction_id'] = False
         return False
 
-    def sale_reset(self, cr, uid, context=None):
-        request.httprequest.session.update({
+    def sale_reset(self, cr, uid, ids, context=None):
+        request.session.update({
             'sale_order_id': False,
             'sale_transaction_id': False,
         })

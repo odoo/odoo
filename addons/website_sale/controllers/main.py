@@ -207,18 +207,6 @@ class website_sale(http.Controller):
                 context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
-    @http.route(['/shop/add_product/'], type='http', auth="user", methods=['POST'], website=True, multilang=True)
-    def add_product(self, name=None, category=0, **post):
-        if not name:
-            name = _("New Product")
-        Product = request.registry.get('product.product')
-        product_id = Product.create(request.cr, request.uid, {
-            'name': name, 'public_categ_id': category
-        }, context=request.context)
-        product = Product.browse(request.cr, request.uid, product_id, context=request.context)
-
-        return request.redirect("/shop/product/%s/?enable_editor=1" % product.product_tmpl_id.id)
-
     @http.route(['/shop/cart'], type='http', auth="public", website=True, multilang=True)
     def cart(self, **post):
         order = request.website.sale_get_order()
@@ -245,12 +233,15 @@ class website_sale(http.Controller):
         return {
             'quantity': quantity,
             'cart_quantity': order.cart_quantity,
-            'website_sale.total': request.website._render("website_sale.total", {'website_sale_order': order}) # FIXME good template
+            'website_sale.total': request.website._render("website_sale.total", {
+                    'website_sale_order': request.website.sale_get_order()
+                })
         }
 
     #------------------------------------------------------
     # Checkout
     #------------------------------------------------------
+
     def checkout_redirection(self, order):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
@@ -454,6 +445,7 @@ class website_sale(http.Controller):
             return request.website.render("website_sale.checkout", values)
 
         self.checkout_form_save(values["checkout"])
+        request.session['sale_last_order_id'] = order.id
 
         return request.redirect("/shop/payment")
 
@@ -494,10 +486,10 @@ class website_sale(http.Controller):
         values.update(request.registry.get('sale.order')._get_website_data(cr, uid, order, context))
 
         # fetch all registered payment means
-        if tx:
-            acquirer_ids = [tx.acquirer_id.id]
-        else:
-            acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True)], context=context)
+        # if tx:
+        #     acquirer_ids = [tx.acquirer_id.id]
+        # else:
+        acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True)], context=context)
         values['acquirers'] = payment_obj.browse(cr, uid, acquirer_ids, context=context)
         render_ctx = dict(context, submit_class='btn btn-primary', submit_txt='Pay Now')
         for acquirer in values['acquirers']:
@@ -536,7 +528,7 @@ class website_sale(http.Controller):
             return request.redirect("/shop/checkout/")
 
         # find an already existing transaction
-        tx = context.get('website_sale_transaction')
+        tx = request.website.sale_get_transaction()
         if not tx:
             tx_id = transaction_obj.create(cr, SUPERUSER_ID, {
                 'acquirer_id': acquirer_id,
@@ -547,8 +539,8 @@ class website_sale(http.Controller):
                 'reference': order.name,
                 'sale_order_id': order.id,
             }, context=context)
-            request.httprequest.session['website_sale_transaction_id'] = tx_id
-        elif tx and tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
+            request.session['sale_transaction_id'] = tx_id
+        elif tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
             tx.write({
                 'acquirer_id': acquirer_id,
             })
@@ -562,7 +554,7 @@ class website_sale(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
 
         order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
-        assert order.website_session_id == request.httprequest.session['website_session_id']
+        assert order.id == request.session.get('sale_last_order_id')
 
         if not order:
             return {
@@ -617,7 +609,7 @@ class website_sale(http.Controller):
         sale_order_obj = request.registry['sale.order']
 
         if transaction_id is None:
-            tx = context.get('website_sale_transaction')
+            tx = request.website.sale_get_transaction()
         else:
             tx = request.registry['payment.transaction'].browse(cr, uid, transaction_id, context=context)
 
@@ -625,7 +617,7 @@ class website_sale(http.Controller):
             order = request.website.sale_get_order(context=context)
         else:
             order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
-            assert order.website_session_id == request.httprequest.session['website_session_id']
+            assert order.id == request.session.get('sale_last_order_id')
 
         if not tx or not order:
             return request.redirect('/shop/')
@@ -643,12 +635,12 @@ class website_sale(http.Controller):
             sale_order_obj.action_cancel(cr, SUPERUSER_ID, [order.id], context=request.context)
 
         # clean context and session, then redirect to the confirmation page
-        request.registry['website'].ecommerce_reset(cr, uid, context=context)
+        request.website.sale_reset(context=context)
 
-        return request.redirect('/shop/confirmation/%s' % order.id)
+        return request.redirect('/shop/confirmation/')
 
-    @http.route(['/shop/confirmation/<int:sale_order_id>'], type='http', auth="public", website=True, multilang=True)
-    def payment_confirmation(self, sale_order_id, **post):
+    @http.route(['/shop/confirmation/'], type='http', auth="public", website=True, multilang=True)
+    def payment_confirmation(self, **post):
         """ End of checkout process controller. Confirmation is basically seing
         the status of a sale.order. State at this point :
 
@@ -658,10 +650,11 @@ class website_sale(http.Controller):
         """
         cr, uid, context = request.cr, request.uid, request.context
 
-        order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
-        assert order.website_session_id == request.httprequest.session['website_session_id']
-
-        request.registry['website']._ecommerce_change_pricelist(cr, uid, None, context=context or {})
+        sale_order_id = request.session.get('sale_last_order_id')
+        if sale_order_id:
+            order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
+        else:
+            return request.redirect('/shop/')
 
         return request.website.render("website_sale.confirmation", {'order': order})
 
@@ -669,12 +662,14 @@ class website_sale(http.Controller):
     # Edit
     #------------------------------------------------------
 
-    @http.route(['/shop/add_product'], type='http', auth="user", methods=['POST'], website=True, multilang=True)
-    def add_product(self, name="New Product", category=0, **post):
+    @http.route(['/shop/add_product/'], type='http', auth="user", methods=['POST'], website=True, multilang=True)
+    def add_product(self, name=None, category=0, **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        product_obj = pool['product.product']
+        if not name:
+            name = _("New Product")
+        product_obj = request.registry.get('product.product')
         product_id = product_obj.create(cr, uid, { 'name': name, 'public_categ_id': category }, context=context)
-        product = product_obj.browse(cr, uid, product_id, context=request.context)
+        product = product_obj.browse(cr, uid, product_id, context=context)
 
         return request.redirect("/shop/product/%s/?enable_editor=1" % product.product_tmpl_id.id)
 

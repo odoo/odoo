@@ -12,14 +12,6 @@ $(document).ready(function () {
         $(ev.currentTarget).parents(".thumbnail").toggleClass("disabled");
     });
 
-    function set_my_cart_quantity(qty) {
-        var $q = $(".my_cart_quantity");
-        $q.parent().parent().removeClass("hidden", !qty);
-        $q.html(qty)
-            .hide()
-            .fadeIn(600);
-    }
-
     $(".oe_website_sale .oe_cart input.js_quantity").change(function () {
         var $input = $(this);
         var value = parseInt($input.val(), 10);
@@ -32,8 +24,11 @@ $(document).ready(function () {
                     location.reload();
                     return;
                 }
-                set_my_cart_quantity(data.cart_quantity);
+                var $q = $(".my_cart_quantity");
+                $q.parent().parent().removeClass("hidden", !data.quantity);
+                $q.html(data.cart_quantity).hide().fadeIn(600);
                 $input.val(data.quantity);
+                $("#cart_total").replaceWith(data['website_sale.total']);
             });
     });
 

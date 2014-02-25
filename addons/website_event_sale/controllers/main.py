@@ -27,17 +27,15 @@ from openerp.tools.translate import _
 
 
 class website_event(website_event):
+
     @http.route(['/event/add_cart'], type='http', auth="public", website=True, multilang=True)
     def add_cart(self, event_id, **post):
         user_obj = request.registry['res.users']
         order_line_obj = request.registry.get('sale.order.line')
         ticket_obj = request.registry.get('event.event.ticket')
         order_obj = request.registry.get('sale.order')
-        website = request.registry['website']
 
-        order = website.ecommerce_get_current_order(request.cr, request.uid, context=request.context)
-        if not order:
-            order = website.ecommerce_get_new_order(request.cr, request.uid, context=request.context)
+        order = request.website.sale_get_order(force_create=1)
 
         partner_id = user_obj.browse(request.cr, SUPERUSER_ID, request.uid,
                                      context=request.context).partner_id.id
