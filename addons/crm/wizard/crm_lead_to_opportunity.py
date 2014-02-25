@@ -127,7 +127,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         team_id = vals.get('section_id', False)
         data = self.browse(cr, uid, ids, context=context)[0]
         for lead_id in lead_ids:
-            partner_id = self._create_partner(cr, uid, lead_id, data.action, data.partner_id, context=context)
+            partner_id = self._create_partner(cr, uid, lead_id, data.action, data.partner_id.id, context=context)
             # FIXME: cannot pass user_ids as the salesman allocation only works in batch
             res = lead.convert_opportunity(cr, uid, [lead_id], partner_id, [], team_id, context=context)
         # FIXME: must perform salesman allocation in batch separately here
