@@ -81,14 +81,9 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.ignore_do_search = false;
             return;
         }
-
         var self = this,
-<<<<<<< TREE
-            groupbys = this.get_groupbys_dos(),
+            groupbys = this.get_groupbys_from_searchview(),
             col_group_by = groupbys.col_group_by;
-=======
-            col_group_by = self.get_groupbys_from_searchview('ColGroupBy', 'col_group_by'); 
->>>>>>> MERGE-SOURCE
 
         if (!this.graph_widget) {
             if (group_by.length) {
@@ -116,7 +111,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             searchdata = this.search_view.build_search_data();
 
         _.each(searchdata.groupbys, function (data) {
-            data = (_isString(data)) ? py.eval(data) : data;
+            data = (_.isString(data)) ? py.eval(data) : data;
             result.group_by = result.group_by.concat(data.group_by);
             if (data.col_group_by) {
                 result.col_group_by = result.col_group_by.concat(data.col_group_by);
