@@ -58,6 +58,13 @@ class website_forum(http.Controller):
             offset=pager['offset'], context=request.context)
         question_ids = forum_obj.browse(request.cr, request.uid, obj_ids,
                                       context=request.context)
+        #If dose not get any related question then redirect to ask question form.
+        if search and not question_ids:
+            values = {
+                'question_name': search,
+            }
+            return request.website.render("website_forum.ask_question", values)
+
         values = {
             'total_questions': question_count,
             'question_ids': question_ids,
@@ -85,31 +92,26 @@ class website_forum(http.Controller):
         }
         return request.website.render("website_forum.post_description_full", values)
 
-    @http.route('/question/postquestion/', type='http', auth="user", multilang=True, website=True)
-    def post_question(self, question_name="New question", **kwargs):
-        #TODO : reply a page that allows user to post a question
-        return self._add_question(question_name, request.context, **kwargs)
-
-    @http.route('/question/new/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    @http.route('/question/ask/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def register_question(self, forum_id=1, **question):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context)
-        new_question_id = request.registry['blog.post'].create(
+        new_question_id = request.registry['website.forum.post'].create(
             request.cr, request.uid, {
-                'forum_id': forum_id,
-                'name': question.get('name'),
-                'content': question.get('content'),
-                'tags' : question.get('tags'),
+                #'forum_id': forum_id,
+                'name': question.get('question_name'),
+                'content': question.get('question_content'),
+                #'tags' : question.get('question_tags'),
                 'state': 'active',
                 'active': True,
             }, context=create_context)
         return werkzeug.utils.redirect("/question/%s" % new_question_id)
 
-    @http.route('/question/new/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    @http.route('/question/postanswer/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def post_answer(self, post_id, forum_id=1, **question):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context)
-        new_question_id = request.registry['blog.post'].create(
+        new_question_id = request.registry['website.forum.post'].create(
             request.cr, request.uid, {
                 'forum_id': forum_id,
                 'parent_id':post_id,

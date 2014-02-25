@@ -304,6 +304,60 @@
             </div>
         </template>
 
+        <template id="ask_question">
+            <t t-call="website.layout">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="page-header">
+                            <h3>Please Ask your Question here</h3>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <ul>
+                            <li>
+                                please, try to make your question interesting to others
+                            </li>
+                            <li>
+                                provide enough details and, if possible, give an example
+                            </li>
+                            <li>
+                                be clear and concise, avoid unnecessary introductions (Hi, ... Thanks...)
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <form action="/question/ask/" method="post" role="form">
+                        <div class="col-xs-12">
+                            <input type="text"  name="question_name" required="True" t-attf-value="#{question_name or ''}" id="textbox_user_question" class="form-control" placeholder="Enter your Question" />
+                        </div>
+                        <div class="col-xs-12">
+                            Please enter a descriptive question (should finish by a '?')
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <textarea  name="question_content" required="True" t-attf-value="#{question_content or ''}" class="form-control" id="textarea_ckeditor" rows="10" style="width : 100%" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            Tags:
+                        </div>
+                        <div class="col-xs-12">
+                            <input type="text" name="question_tag" t-attf-value="#{question_tag or ''}" class="form-control" id="textarea_tags" style="width : 100%"/>
+                        </div>
+                        <div class="col-xs-12">
+                            <button class="btn btn-default form-control" id="btn_ask_your_question">Ask Your Question</button>
+                        </div>
+                    </form>
+                </div> 
+                <script type="text/javascript" >
+                    CKEDITOR.replace("textarea_ckeditor");
+                </script>
+            </t>
+        </template>
+
         <template id="post_description_full">
             <t t-call="website.layout">
                 <t t-call="website_forum.post_search" />
