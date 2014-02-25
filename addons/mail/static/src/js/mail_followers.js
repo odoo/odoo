@@ -73,8 +73,12 @@ openerp_mail_followers = function(session, mail) {
             this.$el.on('click', '.oe_subtype_list input', function(event) {
                 self.do_update_subscription(event);
                 var $list = self.$('.oe_subtype_list');
-                if(!$list.hasClass('open'))
+                if(!$list.hasClass('open')) {
                     $list.addClass('open');
+                }
+                if(self.$('.oe_subtype_list ul')[0].children.length < 1) {
+                    $list.removeClass('open');
+                }
                 event.stopPropagation();
             });
             // event: click on 'invite' button, that opens the invite wizard
@@ -296,6 +300,7 @@ openerp_mail_followers = function(session, mail) {
         },
         
         do_unfollow: function (user_pid) {
+            var self = this;
             if (confirm(_t("Warning! \nYou won't be notified of any email or discussion on this document. Do you really want to unfollow this document ?"))) {
                 _(this.$('.oe_msg_subtype_check')).each(function (record) {
                     $(record).attr('checked',false);
@@ -334,6 +339,8 @@ openerp_mail_followers = function(session, mail) {
             if (!checklist.length) {
                 if (!this.do_unfollow(user_pid)) {
                     $(event.target).attr("checked", "checked");
+                } else {
+                      self.$('.oe_subtype_list ul').empty(); 
                 }
             } else {
                 var context = new session.web.CompoundContext(this.build_context(), {});
