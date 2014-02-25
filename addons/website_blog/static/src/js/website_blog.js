@@ -2,14 +2,6 @@ $(document).ready(function() {
     var discussion = false;
     var share = false;
 
-    var node = $('#fa-angle-down')
-    var stickyTop = node.offset().top - 50;
-    $(window).scroll(function(event){
-        var scrolltop = $(window).scrollTop()
-        if (stickyTop > scrolltop)
-            node.stop().animate({"marginTop": ($(window).scrollTop() - 50) + "px"}, "slow" );
-    });
-
     var def = $.Deferred();
     openerp.jsonRpc("/blogpsot/get_custom_options", 'call', {
     }).then(function(res){
@@ -27,6 +19,7 @@ $(document).ready(function() {
     });
     $('.cover_footer').on('click',page_transist);
     $('a[href^="#blog_content"]').on('click', animate);
+    arrow_scroll();
 
     function page_transist(event) {
         event.preventDefault();
@@ -47,6 +40,16 @@ $(document).ready(function() {
         });
     }
 
+    function arrow_scroll(event){
+        var node = $('#fa-angle-down')
+        var stickyTop = node.offset().top - 50;
+        $(window).scroll(function(event){
+            var scrolltop = $(window).scrollTop()
+            if (stickyTop > scrolltop)
+                node.stop().animate({"marginTop": ($(window).scrollTop() - 50) + "px"}, "slow" );
+        });
+    }
+
     function newpage() {
         $.ajax({
             url: newLocation,
@@ -63,6 +66,7 @@ $(document).ready(function() {
                    new openerp.website.blog_discussion({'content' : content});
                 }
                 if (share) $("p").share();
+                arrow_scroll();
             });
             if (newLocation != window.location) {
                 history.pushState(null, null, newLocation);
