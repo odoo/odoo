@@ -331,11 +331,21 @@ class stock_quant(osv.osv):
         :param src_package_id: ID of the package that contains the quants to move
         :param dest_package_id: ID of the package that must be set on the moved quant
         """
+        to_move = {}
         for quant, qty in quants:
             if not quant:
                 #If quant is None, we will create a quant to move (and potentially a negative counterpart too)
                 quant = self._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, context=context)
-            self.move_single_quant_tuple(cr, uid, quant, qty, move, context=context)
+            to_move.update(self.move_single_quant_tuple(cr, uid, quant, qty, move, context=context))
+        # Write quants
+        for loc in to_move.keys():
+            self._check_location(cr, uid, loc, context=context)
+            vals = {
+                    'location_id': loc.id,
+                    'history_ids': [(4, move.id)],
+#                     'package_id': False
+                }
+            self.write(cr, uid, to_move[loc], vals, context=context)
 
     def check_preferred_location(self, cr, uid, move, qty, context=None):
         '''Checks the preferred location on the move, if any returned by a putaway strategy, and returns a list of
@@ -362,15 +372,9 @@ class stock_quant(osv.osv):
         :param move: browse record (stock.move)
         '''
         new_quant = self._quant_split(cr, uid, quant, qty, context=context)
-        vals = {
-            'location_id': location_to.id,
-            'history_ids': [(4, move.id)],
-        }
         #if the quant we are moving had been split and was inside a package, it means we unpacked it
-        if new_quant and new_quant.package_id:
-            vals['package_id'] = False
-        if self._check_location(cr, uid, location_to, context):
-            self.write(cr, SUPERUSER_ID, [quant.id], vals, context=context)
+#         if new_quant and new_quant.package_id:
+#             vals['package_id'] = False
         quant.refresh()
         return new_quant
 
@@ -381,12 +385,18 @@ class stock_quant(osv.osv):
         :param qty: float
         :param move: browse record (stock.move)
         '''
+        res = {}
         for location_to, qty in self.check_preferred_location(cr, uid, move, qty, context=context):
             if not quant:
                 break
             new_quant = self.move_single_quant(cr, uid, quant, location_to, qty, move, context=context)
-            self._quant_reconcile_negative(cr, uid, quant, move, context=context)
+            self._quant_reconcile_negative(cr, uid, quant, location_to, move, context=context)
+            if res.get(location_to):
+                res[location_to].append(quant.id)
+            else:
+                res[location_to] = [quant.id]
             quant = new_quant
+        return res
 
     def quants_get_prefered_domain(self, cr, uid, location, product, qty, domain=None, prefered_domain=False, fallback_domain=False, restrict_lot_id=False, restrict_partner_id=False, context=None):
         ''' This function tries to find quants in the given location for the given domain, by trying to first limit
@@ -497,7 +507,7 @@ class stock_quant(osv.osv):
             path.append((4, move.id))
         self.write(cr, SUPERUSER_ID, solved_quant_ids, {'history_ids': path}, context=context)
 
-    def _quant_reconcile_negative(self, cr, uid, quant, move, context=None):
+    def _quant_reconcile_negative(self, cr, uid, quant, location_id, move, context=None):
         """
             When new quant arrive in a location, try to reconcile it with
             negative quants. If it's possible, apply the cost of the new
@@ -513,7 +523,7 @@ class stock_quant(osv.osv):
         dom += [('package_id', '=', quant.package_id.id)]
         if move.move_dest_id:
             dom += [('negative_move_id', '=', move.move_dest_id.id)]
-        quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, dom, context=context)
+        quants = self.quants_get(cr, uid, location_id, quant.product_id, quant.qty, dom, context=context)
         for quant_neg, qty in quants:
             if not quant_neg:
                 continue
