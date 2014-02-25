@@ -334,22 +334,22 @@ class calendar_alarm_manager(osv.AbstractModel):
         res = {}
         base_request = """
                     SELECT
-                        crm.id,
-                        crm.date - interval '1' minute  * calcul_delta.max_delta AS first_alarm,
+                        cal.id,
+                        cal.date - interval '1' minute  * calcul_delta.max_delta AS first_alarm,
                         CASE
-                            WHEN crm.recurrency THEN crm.end_date - interval '1' minute  * calcul_delta.min_delta
-                            ELSE crm.date_deadline - interval '1' minute  * calcul_delta.min_delta
+                            WHEN cal.recurrency THEN cal.end_date - interval '1' minute  * calcul_delta.min_delta
+                            ELSE cal.date_deadline - interval '1' minute  * calcul_delta.min_delta
                         END as last_alarm,
-                        crm.date as first_event_date,
+                        cal.date as first_event_date,
                         CASE
-                            WHEN crm.recurrency THEN crm.end_date
-                            ELSE crm.date_deadline
+                            WHEN cal.recurrency THEN cal.end_date
+                            ELSE cal.date_deadline
                         END as last_event_date,
                         calcul_delta.min_delta,
                         calcul_delta.max_delta,
-                        crm.rrule AS rule
+                        cal.rrule AS rule
                     FROM
-                        calendar_event AS crm
+                        calendar_event AS cal
                         RIGHT JOIN
                             (
                                 SELECT
@@ -359,11 +359,11 @@ class calendar_alarm_manager(osv.AbstractModel):
                                         LEFT JOIN calendar_alarm AS alarm ON alarm.id = rel.calendar_alarm_id
                                 WHERE alarm.type in %s
                                 GROUP BY rel.calendar_event_id
-                            ) AS calcul_delta ON calcul_delta.calendar_event_id = crm.id
+                            ) AS calcul_delta ON calcul_delta.calendar_event_id = cal.id
              """
 
         filter_user = """
-                LEFT JOIN calendar_event_res_partner_rel AS part_rel ON part_rel.calendar_event_id = crm.id
+                LEFT JOIN calendar_event_res_partner_rel AS part_rel ON part_rel.calendar_event_id = cal.id
                     AND part_rel.res_partner_id = %s
         """
 
@@ -384,19 +384,14 @@ class calendar_alarm_manager(osv.AbstractModel):
         #Add filter on hours
         tuple_params += (seconds, seconds,)
 
-        cr.execute("""
-            SELECT
-                *
-            FROM (
-                    %s
-            ) AS ALL_EVENTS
-            WHERE
-                ALL_EVENTS.first_alarm < (now() at time zone 'utc' + interval '%s' second )
-                AND ALL_EVENTS.last_alarm > (now() at time zone 'utc' - interval '%s' second )
-           """ % base_request, tuple_params)
+        cr.execute("""SELECT *
+                        FROM ( %s ) AS ALL_EVENTS
+                       WHERE ALL_EVENTS.first_alarm < (now() at time zone 'utc' + interval '%%s' second )
+                         AND ALL_EVENTS.last_alarm > (now() at time zone 'utc' - interval '%%s' second )
+                   """ % base_request, tuple_params)
 
         for event_id, first_alarm, last_alarm, first_meeting, last_meeting, min_duration, max_duration, rule in cr.fetchall():
-            res[event_id].update({
+            res[event_id] = {
                 'event_id': event_id,
                 'first_alarm': first_alarm,
                 'last_alarm': last_alarm,
@@ -405,7 +400,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                 'min_duration': min_duration,
                 'max_duration': max_duration,
                 'rrule': rule
-            })
+            }
 
         return res
 
@@ -496,7 +491,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                 LastFound = False
                 for one_date in self.pool.get("calendar.event").get_recurrent_date_by_event(cr, uid, curEvent, context=context):
                     in_date_format = datetime.strptime(one_date, '%Y-%m-%d %H:%M:%S')
-                    LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, after=partner.cal_last_notif, mail=False, context=context)
+                    LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, after=partner.calendar_last_notif_ack, mail=False, context=context)
                     if LastFound:
                         for alert in LastFound:
                             all_notif.append(self.do_notif_reminder(cr, uid, alert, context=context))
@@ -506,7 +501,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                         break
             else:
                 in_date_format = datetime.strptime(curEvent.date, '%Y-%m-%d %H:%M:%S')
-                LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, partner.cal_last_notif, mail=False, context=context)
+                LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, partner.calendar_last_notif_ack, mail=False, context=context)
                 if LastFound:
                     for alert in LastFound:
                         all_notif.append(self.do_notif_reminder(cr, uid, alert, context=context))
@@ -521,7 +516,7 @@ class calendar_alarm_manager(osv.AbstractModel):
         alarm = self.pool['calendar.alarm'].browse(cr, uid, alert['alarm_id'], context=context)
 
         if alarm.type == 'email':
-            res = self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, event.attendee_ids, template_xmlid='calendar_template_meeting_reminder', context=context)
+            res = self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, [att.id for att in event.attendee_ids], template_xmlid='calendar_template_meeting_reminder', context=context)
 
         return res
 
