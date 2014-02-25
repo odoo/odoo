@@ -120,4 +120,62 @@ class TestRelatedField(common.TransactionCase):
         # restore res.partner fields
         self.partner._columns = old_columns
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+class TestPropertyField(common.TransactionCase):
+
+    def setUp(self):
+        super(TestPropertyField, self).setUp()
+        self.user = self.registry('res.users')
+        self.partner = self.registry('res.partner')
+        self.company = self.registry('res.company')
+        self.country = self.registry('res.country')
+        self.property = self.registry('ir.property')
+        self.imd = self.registry('ir.model.data')
+
+    def test_1_property_multicompany(self):
+        cr, uid = self.cr, self.uid
+
+        parent_company_id = self.imd.get_object_reference(cr, uid, 'base', 'main_company')[1]
+        country_be = self.imd.get_object_reference(cr, uid, 'base', 'be')[1]
+        country_fr = self.imd.get_object_reference(cr, uid, 'base', 'fr')[1]
+        group_partner_manager = self.imd.get_object_reference(cr, uid, 'base', 'group_partner_manager')[1]
+        group_multi_company = self.imd.get_object_reference(cr, uid, 'base', 'group_multi_company')[1]
+
+        sub_company = self.company.create(cr, uid, {'name': 'MegaCorp', 'parent_id': parent_company_id})
+        alice = self.user.create(cr, uid, {'name': 'Alice',
+            'login':'alice',
+            'email':'alice@youcompany.com',
+            'company_id':parent_company_id,
+            'company_ids':[(6, 0, [parent_company_id, sub_company])],
+            'country_id':country_be,
+            'groups_id': [(6, 0, [group_partner_manager, group_multi_company])]
+        })
+        bob = self.user.create(cr, uid, {'name': 'Bob',
+            'login':'bob',
+            'email':'bob@megacorp.com',
+            'company_id':sub_company,
+            'company_ids':[(6, 0, [parent_company_id, sub_company])],
+            'country_id':country_fr,
+            'groups_id': [(6, 0, [group_partner_manager, group_multi_company])]
+        })
+        
+        self.partner._columns = dict(self.partner._columns)
+        self.partner._columns.update({
+            'property_country': fields.property(type='many2one', relation="res.country", string="Country by company"),
+        })
+        self.partner._all_columns.update({
+            'property_country': fields.column_info('property_country', self.partner._columns['property_country'], None, None, None),
+        })
+        self.partner._field_create(cr)
+
+        partner_id = self.partner.create(cr, alice, {
+            'name': 'An International Partner',
+            'email': 'partner@example.com',
+            'company_id': parent_company_id,
+        })
+        self.partner.write(cr, bob, [partner_id], {'property_country': country_fr})
+        self.assertEqual(self.partner.browse(cr, bob, partner_id).property_country.id, country_fr, "Bob does not see the value he has set on the property field")
+
+        self.partner.write(cr, alice, [partner_id], {'property_country': country_be})
+        self.assertEqual(self.partner.browse(cr, alice, partner_id).property_country.id, country_be, "Alice does not see the value he has set on the property field")
+        self.assertEqual(self.partner.browse(cr, bob, partner_id).property_country.id, country_fr, "Changes made by Alice have overwritten Bob's value")

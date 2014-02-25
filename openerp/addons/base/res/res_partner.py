@@ -209,6 +209,7 @@ class res_partner(osv.osv, format_address):
         context = dict(context or {})
         context.pop('show_address', None)
         context.pop('show_address_only', None)
+        context.pop('show_email', None)
         return dict(self.name_get(cr, uid, ids, context=context))
 
     # indirections to avoid passing a copy of the overridable method when declaring the function field
