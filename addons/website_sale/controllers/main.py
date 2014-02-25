@@ -639,7 +639,7 @@ class Ecommerce(http.Controller):
                 'reference': order.name,
                 'sale_order_id': order.id,
             }, context=context)
-            request.httprequest.session['website_sale_transaction_id'] = tx_id
+            request.session['website_sale_transaction_id'] = tx_id
         elif tx and tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
             tx.write({
                 'acquirer_id': acquirer_id,
@@ -654,7 +654,7 @@ class Ecommerce(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
 
         order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
-        assert order.website_session_id == request.httprequest.session['website_session_id']
+        assert order.website_session_id == request.session['website_session_id']
 
         if not order:
             return {
@@ -717,7 +717,7 @@ class Ecommerce(http.Controller):
             order = self.get_order()
         else:
             order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
-            assert order.website_session_id == request.httprequest.session['website_session_id']
+            assert order.website_session_id == request.session['website_session_id']
 
         if not tx or not order:
             return request.redirect('/shop/')
@@ -751,7 +751,7 @@ class Ecommerce(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
 
         order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
-        assert order.website_session_id == request.httprequest.session['website_session_id']
+        assert order.website_session_id == request.session['website_session_id']
 
         request.registry['website']._ecommerce_change_pricelist(cr, uid, None, context=context or {})
 
