@@ -47,10 +47,10 @@
                         <field name="notify"
                             attrs="{'invisible':['|', ('post', '!=', True), ('composition_mode', '!=', 'mass_mail')]}"/>
                         <field name="same_thread"
-                            attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
+                            attrs="{'invisible':['|', ('composition_mode', '!=', 'mass_mail'), ('post', '=', False)]}"/>
                         <field name="reply_to" placeholder="Email address te redirect replies..."
-                            attrs="{'invisible':['|', ('same_thread', '=', True), ('composition_mode', '!=', 'mass_mail')],
-                                    'required':[('same_thread', '!=', True)]}"/>
+                            attrs="{'invisible':['|', '&amp;', ('same_thread', '=', True), ('post', '=', True), ('composition_mode', '!=', 'mass_mail')],
+                                    'required':['&amp;', '|', ('post', '=', False), ('same_thread', '=', False), ('composition_mode', '=', 'mass_mail')]}"/>
                     </group>
                     <field name="body"/>
                     <field name="attachment_ids" widget="many2many_binary" string="Attach a file"/>
