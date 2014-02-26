@@ -71,8 +71,30 @@
 
 		<template id="forum_header">
 			<div class="navbar navbar-default">
-				<div class="container">
-					<div class="raw col-md-12">
+				<br />
+				<div class="js_blog base_width">
+
+					<div class="container">
+						<ul class="nav nav-pills pull-left">
+							<li>
+								<a href="#">
+									<span class="badge pull-right">12000</span>
+									ALL
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									<span class="badge pull-right">4200</span>
+									UNANSWERD
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									<span class="badge pull-right">420</span>
+									FOLLOWED
+								</a>
+							</li>
+						</ul>
 						<ul class="nav nav-pills pull-right">
 							<li>
 								<a href="#">
@@ -91,69 +113,33 @@
 							</li>
 						</ul>
 					</div>
-					<div class="raw">
-						<div class="col-md-9">
-							<div class="form-inline">
-								<div class="pull-left">
-									<ul class="nav nav-pills">
-										<li class="active">
-											<a href="#">
-												<span class="badge pull-right">12000</span>
-												ALL
-											</a>
-										</li>
-										<li>
-											<a href="#">
-												<span class="badge pull-right">4200</span>
-												UNANSWERD
-											</a>
-										</li>
-										<li>
-											<a href="#">
-												<span class="badge pull-right">420</span>
-												FOLLOWED
-											</a>
-										</li>
-									</ul>
-								</div>
-								<div class="pull-right">
-									<input type="search" class="form-control input-lg" name="search"
-										placeholder="Search Or Ask your Question" t-att-value="searches.get('search') or ''" />
-								</div>
-							</div>
+					<div class="container">
+						<div class="col-md-9 pull-left">
+							<input type="search" class="form-control input-lg" name="search"
+								placeholder="Search Or Ask your Question" t-att-value="searches.get('search') or ''" />
 						</div>
-						<div class="form-inline col-md-3 pull-right">
+						<div class="col-md-3 pull-right">
 							<button type="submit" class="btn btn-danger btn-lg btn-block pull-left">ASK YOUR QUESTION</button>
 						</div>
 					</div>
 				</div>
+				<br />
 			</div>
 		</template>
 
 		<template id="shorting_answer">
 
-				<ul class="nav nav-pills pull-left">
-					<li>
-						<h4>
+			<ul class="nav nav-pills pull-left">
+				<li>
+					<h4>
 						<t t-esc="len(question_ids)" />
 						Questions
 					</h4>
-					</li>
-				</ul>
-				<!-- div class="col-md-2">
-					
-				</div>
-				<div class="col-md-2">
-					Short by »
-				</div>
-				<div class="col-md-2">
-					<a href="#">oldest</a>
-				</div>
-				<div class="col-md-2">
-					<a href="#">newest</a>
-				</div>
-				<div class="col-md-1">
-					<a href="#">most viewd</a>
+				</li>
+			</ul>
+			<!-- div class="col-md-2"> </div> <div class="col-md-2"> Short by » </div> 
+				<div class="col-md-2"> <a href="#">oldest</a> </div> <div class="col-md-2"> 
+				<a href="#">newest</a> </div> <div class="col-md-1"> <a href="#">most viewd</a> 
 				</div -->
 
 		</template>
@@ -169,7 +155,7 @@
 					<div class="container">
 						<div class="col-md-9">
 							<!-- t t-call="website_forum.shorting_answer" / -->
-							
+
 							<ul class="media-list">
 								<li t-foreach="question_ids" t-as="question"
 									class="media media_without_margin">
