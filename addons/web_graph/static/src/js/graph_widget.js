@@ -37,6 +37,8 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         if (this.mode !== 'pivot') {
             this.$('.graph_heatmap label').addClass('disabled');
+        } else {
+            this.$('.graph_main_content').css('position', 'initial');
         }
 
         return this.model.call('fields_get', []).then(function (f) {
@@ -159,8 +161,10 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         if (mode === 'pivot') {
             this.$('.graph_heatmap label').removeClass('disabled');
+            this.$('.graph_main_content').css('position', 'initial');
         } else {
             this.$('.graph_heatmap label').addClass('disabled');
+            this.$('.graph_main_content').css('position', 'relative');
         }
         this.display_data();
     },
