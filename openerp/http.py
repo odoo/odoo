@@ -172,9 +172,6 @@ class WebRequest(object):
                 self._cr = self.registry.db.cursor()
         return self._cr
 
-    def __getattr__(self, attr):
-        return getattr(self.httprequest, attr)
-
     def __enter__(self):
         _request_stack.push(self)
         return self
