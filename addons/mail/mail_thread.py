@@ -1822,7 +1822,7 @@ class mail_thread(osv.AbstractModel):
         msg_ids_not_comment = message_obj.search(cr, uid, [
                     ('model', '=', self._name),
                     ('res_id', '=', id),
-                    ('subtype_id.id', '!=', subtype_res_id)], context=context)
+                    ('subtype_id', '!=', subtype_res_id)], context=context)
         
         # update the messages
         message_obj.write(cr, uid, msg_ids_comment, {"res_id" : new_res_id, "model" : new_model}, context=context)

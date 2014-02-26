@@ -1,8 +1,22 @@
 
 from openerp.osv import osv, fields
 
+
 class crm_lead_to_project_issue_wizard(osv.TransientModel):
     """ wizard to convert a Lead into a Project Issue and move the Mail Thread """
+
+    _name = "crm.lead2projectissue.wizard"
+
+    _inherit = 'crm.partner.binding'
+
+    _columns = {
+        "lead_id" : fields.many2one("crm.lead","Lead", domain=[("type","=","lead")]),
+        "project_id" : fields.many2one("project.project", "Project", domain=[("use_issues","=",True)])
+    }
+
+    _defaults = {
+        "lead_id" : lambda self, cr, uid, context=None: context.get('active_id')
+    }
 
     def action_lead_to_project_issue(self, cr, uid, ids, context=None):
         # get the wizards and models
@@ -45,14 +59,3 @@ class crm_lead_to_project_issue_wizard(osv.TransientModel):
             'context' : context
         }
 
-
-    _name = "crm.lead2projectissue.wizard"
-    _inherit = 'crm.partner.binding'
-    _columns = {
-        "lead_id" : fields.many2one("crm.lead","Lead", domain=[("type","=","lead")]),
-        "project_id" : fields.many2one("project.project", "Project", domain=[("use_issues","=",True)])
-    }
-
-    _defaults = {
-        "lead_id" : lambda self, cr, uid, context=None: context.get('active_id')
-    }
