@@ -320,6 +320,8 @@ class stock_quant(osv.osv):
         move.refresh()
         if move.reserved_availability == move.product_qty and move.state in ('confirmed', 'waiting'):
             self.pool.get('stock.move').write(cr, uid, [move.id], {'state': 'assigned'}, context=context)
+        elif move.reserved_availability > 0 and not move.partially_available:
+            self.pool.get('stock.move').write(cr, uid, [move.id], {'partially_available': True}, context=context)
 
     def quants_move(self, cr, uid, quants, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, context=None):
         """Moves all given stock.quant in the destination location of the given move.
@@ -549,6 +551,8 @@ class stock_quant(osv.osv):
 
     def quants_unreserve(self, cr, uid, move, context=None):
         related_quants = [x.id for x in move.reserved_quant_ids]
+        if related_quants and move.partially_available:
+            self.pool.get("stock.move").write(cr, uid, [move.id], {'partially_available': False}, context=context)
         return self.write(cr, SUPERUSER_ID, related_quants, {'reservation_id': False, 'link_move_operation_id': False}, context=context)
 
     def _quants_get_order(self, cr, uid, location, product, quantity, domain=[], orderby='in_date', context=None):
@@ -686,13 +690,6 @@ class stock_picking(osv.osv):
                 res.add(move.picking_id.id)
         return list(res)
 
-    def _get_pickings_from_quant(self, cr, uid, ids, context=None):
-        res = set()
-        for quant in self.browse(cr, uid, ids, context=context):
-            if quant.reservation_id and quant.reservation_id.picking_id:
-                res.add(quant.reservation_id.picking_id.id)
-        return list(res)
-
     def _get_pack_operation_exist(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for pick in self.browse(cr, uid, ids, context=context):
@@ -724,8 +721,7 @@ class stock_picking(osv.osv):
         'move_type': fields.selection([('direct', 'Partial'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, help="It specifies goods to be deliver partially or all at once"),
         'state': fields.function(_state_get, type="selection", store={
             'stock.picking': (lambda self, cr, uid, ids, ctx: ids, ['move_type'], 20),
-            'stock.move': (_get_pickings, ['state', 'picking_id'], 20),
-            'stock.quant': (_get_pickings_from_quant, ['reservation_id'], 20)}, selection=[
+            'stock.move': (_get_pickings, ['state', 'picking_id', 'partially_available'], 20)}, selection=[
                 ('draft', 'Draft'),
                 ('cancel', 'Cancelled'),
                 ('waiting', 'Waiting Another Operation'),
@@ -1408,7 +1404,7 @@ class stock_move(osv.osv):
                        "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"\
                        "* Available: When products are reserved, it is set to \'Available\'.\n"\
                        "* Done: When the shipment is processed, the state is \'Done\'."),
-
+        'partially_available': fields.boolean('Partially Available', readonly = True, help = "Checks if the move has some stock reserved"),
         'price_unit': fields.float('Unit Price', help="Technical field used to record the product cost set by the user during a picking confirmation (when costing method used is 'average price' or 'real'). Value given in company currency and in product uom."),  # as it's a technical field, we intentionally don't provide the digits attribute
 
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
