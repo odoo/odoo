@@ -616,7 +616,8 @@ def render_bootstrap_template(db, template, values=None, debug=False, lazy=False
         registry = openerp.modules.registry.RegistryManager.get(db)
         with registry.cursor() as cr:
             view_obj = registry["ir.ui.view"]
-            return view_obj.render(cr, openerp.SUPERUSER_ID, template, values)
+            uid = request.uid or openerp.SUPERUSER_ID
+            return view_obj.render(cr, uid, template, values)
     if lazy:
         return LazyResponse(callback, template=template, values=values)
     else:
