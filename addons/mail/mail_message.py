@@ -100,7 +100,7 @@ class mail_message(osv.Model):
     def _get_to_read(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
         res = dict((id, False) for id in ids)
-        partner_id = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
+        partner_id = self.pool.get('res.users').read(cr, SUPERUSER_ID, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, uid, [
             ('partner_id', 'in', [partner_id]),
@@ -119,7 +119,7 @@ class mail_message(osv.Model):
     def _get_starred(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
         res = dict((id, False) for id in ids)
-        partner_id = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
+        partner_id = self.pool.get('res.users').read(cr, SUPERUSER_ID, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, uid, [
             ('partner_id', 'in', [partner_id]),
@@ -266,7 +266,7 @@ class mail_message(osv.Model):
             :return number of message mark as read
         """
         notification_obj = self.pool.get('mail.notification')
-        user_pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
+        user_pid = self.pool.get('res.users').read(cr, SUPERUSER_ID, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
         domain = [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)]
         if not create_missing:
             domain += [('read', '=', not read)]
@@ -294,7 +294,7 @@ class mail_message(osv.Model):
                 (i.e. when acting on displayed messages not notified)
         """
         notification_obj = self.pool.get('mail.notification')
-        user_pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
+        user_pid = self.pool.get('res.users').read(cr, SUPERUSER_ID, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
         domain = [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)]
         if not create_missing:
             domain += [('starred', '=', not starred)]
@@ -332,7 +332,7 @@ class mail_message(osv.Model):
         """
         res_partner_obj = self.pool.get('res.partner')
         ir_attachment_obj = self.pool.get('ir.attachment')
-        pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
+        pid = self.pool.get('res.users').read(cr, SUPERUSER_ID, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
 
         # 1. Aggregate partners (author_id and partner_ids) and attachments
         partner_ids = set()
@@ -653,7 +653,7 @@ class mail_message(osv.Model):
         elif not ids:
             return ids
 
-        pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
+        pid = self.pool.get('res.users').read(cr, SUPERUSER_ID, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
         author_ids, partner_ids, allowed_ids = set([]), set([]), set([])
         model_ids = {}
 
@@ -714,7 +714,7 @@ class mail_message(osv.Model):
             ids = [ids]
         not_obj = self.pool.get('mail.notification')
         fol_obj = self.pool.get('mail.followers')
-        partner_id = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=None).partner_id.id
+        partner_id = self.pool.get('res.users').read(cr, SUPERUSER_ID, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
 
         # Read mail_message.ids to have their values
         message_values = dict.fromkeys(ids, {})
