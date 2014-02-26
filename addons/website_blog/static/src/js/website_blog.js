@@ -58,6 +58,11 @@ $(document).ready(function() {
             $("#wrap:first-child").add($html).scrollTop(0);
             $("#wrap:last-child").removeClass('easing_upward');
             $("#wrap:first").remove();
+            var content = $(document).find("#blog_content p");
+            if (content && discussion){
+               new openerp.website.blog_discussion({'content' : content});
+            }
+           arrow_scroll();
         }, 500 );
     }
 
@@ -70,12 +75,7 @@ $(document).ready(function() {
             //bind again it takes control from now on, until page relaod.
             $(document).find('.cover_footer').on('click',page_transist);
             $(document).find('a[href^="#blog_content"]').on('click', animate);
-            var content = $(document).find("#blog_content p");
-            if (content && discussion){
-               new openerp.website.blog_discussion({'content' : content});
-            }
             if (share) $("p").share();
-            arrow_scroll();
             if (newLocation != window.location) {
                 history.pushState(null, null, newLocation);
             }
