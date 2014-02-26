@@ -2,613 +2,693 @@
 <openerp>
 	<data>
 
-        <template id="editor_head" inherit_id="website.editor_head" name="Fvent Editor">
-            <xpath expr="//script[@id='website_tour_js']" position="after">
-                <script type="text/javascript"
-                    src="/website_forum/static/src/js/website_forum.editor.js"></script>
-                <script type="text/javascript"
-                    src="/website_forum/static/src/js/website.tour.forum.js"></script>
-            </xpath>
-        </template>
+		<template id="editor_head" inherit_id="website.editor_head"
+			name="Fvent Editor">
+			<xpath expr="//script[@id='website_tour_js']" position="after">
+				<script type="text/javascript"
+					src="/website_forum/static/src/js/website_forum.editor.js"></script>
+				<script type="text/javascript"
+					src="/website_forum/static/src/js/website.tour.forum.js"></script>
+			</xpath>
+		</template>
 
-        <!-- Layout add nav and footer -->
-        <template id="header_footer_custom" inherit_id="website.layout"
-            name="Footer Questions Link">
-            <xpath expr="//footer//ul[@name='products']" position="inside">
-                <li>
-                    <a href="/forum">Support</a>
-                </li>
-            </xpath>
-        </template>
+		<!-- Layout add nav and footer -->
+		<template id="header_footer_custom" inherit_id="website.layout"
+			name="Footer Questions Link">
+			<xpath expr="//footer//ul[@name='products']" position="inside">
+				<li>
+					<a href="/forum">Support</a>
+				</li>
+			</xpath>
+		</template>
 
-        <!-- Page -->
+		<!-- Page -->
+		<template id="post_list">
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 question_font_size">
+					<a t-attf-href="/forum/question/#{ slug(question) }">
+						<t t-esc="question.name" />
+					</a>
+				</div>
+				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+					<div class="label label-info pull-right" style="padding-left: 20px; padding-right: 20px;">
+						<h3>
+							<t t-esc="len(question.vote_ids)" />
+						</h3>
+						Votes
+					</div>
+					<div class=" label label-success pull-right" style="padding-left: 20px; padding-right: 20px;">
+						<h3>
+							<t t-esc="len(question.child_ids)" />
+						</h3>
+						Answers
+					</div>
 
-        <template id="post_list">
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 question_font_size">
-                    <a t-attf-href="/forum/question/#{ slug(question) }">
-                        <t t-esc="question.name" /> 
-                    </a>
-                </div>
-                <h4>
-                    <div class="label label-info col-lg-1 col-md-1 text-center visible-md visible-lg" style="border-radius: 20px">
-                        <t t-esc="len(question.vote_ids)" />
-                        <br/>
-                        Votes
-                    </div>
-                    <div  class=" label label-success col-lg-1 col-md-1 text-center visible-md visible-lg" style="border-radius: 20px">
-                        <t t-esc="len(question.vote_ids)" />
-                        <br/>
-                        Answers
-                    </div>
-                    <div class="label label-warning col-lg-1 col-md-1 visible-md visible-lg" style="border-radius: 20px">
-                        <t t-esc="question.views" />
-                        <br/>
-                        Views
-                    </div>
-                </h4>
-                <t t-call="website_forum.tags" />
-                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4  text-muted" >
-                    <small>
-                        <t t-esc="question.write_date" />
-                        <a t-attf-href="/forum/user/#{ question.create_uid.id }">
-                            <t t-esc="question.create_uid.name" />
-                        </a>
-                        <a href="">
-                            <t t-esc="question.create_uid.karma" />
-                        </a>
-                    </small>
-                </div>
-                <div class="col-xs-12 col-sm-12 visible-xs visible-sm">
-                    <div class="col-xs-4 col-sm-4">
-                        <div class="label label-info">
-                            <t t-esc="len(question.vote_ids)" />
-                            Votes  
-                        </div>
-                    </div>
-                    <div class="col-xs-4 col-sm-4">
-                        <div class="label label-success text-center">
-                            <t t-esc="len(question.vote_ids)" />
-                            Answers
-                        </div>
-                    </div>
-                    <div class="col-xs-4 col-sm-4">
-                        <span class="label label-warning">
-                            <t t-esc="question.views" />
-                            Views
-                        </span>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <hr class="hr_no_margin"/>
-                </div>
-            </div>
-        </template>
+					<div class="label label-warning  pull-right" style="padding-left: 20px; padding-right: 20px;">
+						<h3>
+							<t t-esc="question.views" />
+						</h3>
+						Views
+					</div>
+				</div>
+				<t t-call="website_forum.tags" />
+				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-muted text-right">
+					<small>
+						<t t-esc="question.write_date" />
+						<a t-attf-href="/forum/user/#{ question.create_uid.id }">
+							<t t-esc="question.create_uid.name" />
+						</a>
+						<a href="">
+							<t t-esc="question.create_uid.karma" />
+						</a>
+					</small>
+				</div>
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<hr class="hr_no_margin" />
+				</div>
+			</div>
+		</template>
 
-        <template id="tags">
-            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-                <t t-foreach="question.tags" t-as="tag">
-                    <a t-attf-href="/forum/tag/#{ tag.id }" class="badge"><t t-esc="tag.name"/></a>
-                </t>
-            </div>
-        </template>
+		<template id="forum_header">
+			<div class="navbar navbar-default">
+				<div class="container">
+					<div class="raw col-md-12">
+						<ul class="nav nav-pills pull-right">
+							<li>
+								<a href="#">
+									tags
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									people
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									badges
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="raw">
+						<div class="col-md-9">
+							<div class="form-inline">
+								<div class="pull-left">
+									<ul class="nav nav-pills">
+										<li class="active">
+											<a href="#">
+												<span class="badge pull-right">12000</span>
+												ALL
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												<span class="badge pull-right">4200</span>
+												UNANSWERD
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												<span class="badge pull-right">420</span>
+												FOLLOWED
+											</a>
+										</li>
+									</ul>
+								</div>
+								<div class="pull-right">
+									<input type="search" class="form-control input-lg" name="search"
+										placeholder="Search Or Ask your Question" t-att-value="searches.get('search') or ''" />
+								</div>
+							</div>
+						</div>
+						<div class="form-inline col-md-3 pull-right">
+							<button type="submit" class="btn btn-danger btn-lg btn-block pull-left">ASK YOUR QUESTION</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</template>
 
-        <template id="shorting">
-            <div class="col-xs-3">
-                <h5>
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Short by
-                        <b class="caret"></b>
-                    </a>
+		<template id="shorting_answer">
 
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="#">By Date</a>
-                        </li>
-                        <li>
-                            <a href="#">By Activity</a>
-                        </li>
-                        <li>
-                            <a href="#">By Answer</a>
-                        </li>
-                        <li>
-                            <a href="#">By Votes</a>
-                        </li>
-                    </ul>
-                </h5>
-            </div>
-        </template>
-        
-        <template id="shorting_answer">
-            <div class="row-fluid"> 
-            <div class="col-xs-12" style="width: 1000px; background: buttonface; text-align:left;">
-                <b><div class="col-md-4">2 Answers</div></b>
-                <div class="col-md-2 col-md-push-4">
-                    Short by »
-                </div>
-                <div class="col-md-1 col-md-push-3" style="border-right: 1px solid #ccc;">
-                     <a href="#">oldest</a>
-                </div>
-                <div class="col-md-1 col-md-push-3" style="border-right: 1px solid #ccc;">
-                      <a href="#">newest</a>
-                </div>
-                <div class="col-md-2 col-md-push-3">
-                      <a href="#">most viewd</a>
-                </div>
-            </div>
-            </div>
-        </template>
+				<ul class="nav nav-pills pull-left">
+					<li>
+						<h4>
+						<t t-esc="len(question_ids)" />
+						Questions
+					</h4>
+					</li>
+				</ul>
+				<!-- div class="col-md-2">
+					
+				</div>
+				<div class="col-md-2">
+					Short by »
+				</div>
+				<div class="col-md-2">
+					<a href="#">oldest</a>
+				</div>
+				<div class="col-md-2">
+					<a href="#">newest</a>
+				</div>
+				<div class="col-md-1">
+					<a href="#">most viewd</a>
+				</div -->
 
-        <template id="answer">
-            <ul class="media-list">
-                <li t-foreach="question.child_ids" t-as="answer" class="media">
-                    <div class="row">
-                        <t t-call="website_forum.post_vote"/>
-                        <div class="col-md-9 col-xs-10">
-                            <div class="row col-xs-12">
-                                <span>
-                                    <h4>
-                                        <t t-esc="answer.content"/>
-                                    </h4>
-                                </span>
-                            </div>
-                            <div class="row">
-                                <t t-call="website_forum.user_detail"/>
-                            </div>
-                            <t t-call="website_forum.post_links"/>
-                        </div>
-                        <hr class="hr_no_margin"/>
-                    </div>
-                </li>
-            </ul>
-        </template>
+		</template>
 
-        <template id="post_search">
-            <form class="navbar-form " action="/forum/" method="get" role="search">
-                <div class="form-group search-navbar">
-                    <input type="text" class="form-control" name="search" placeholder="Search Or Ask your Question" t-att-value="searches.get('search') or ''"/>
-                    <button type="submit" class="btn btn-default AskButton" style="background-color : #df3f3f; color: white !important;">Ask Question</button>
-                </div>
-            </form>
-            <ul id="tabs" class="nav nav-pills">
-                <li class="active">
-                    <a t-attf-href="#all" data-toggle="tab">ALL</a>
-                </li>
-                <li>
-                    <a t-attf-href="#unanswerd" data-toggle="tab">UNANSWERD</a>
-                </li>
-                <li>
-                    <a t-attf-href="#followed" data-toggle="tab">FOLLOWED</a>
-                </li>
-            </ul>
-        </template>
-
-        <!-- index page of forum -->
-        <template id="index" name="Posts">
-            <t t-call="website.layout">
-                <t t-set="head">
-                    <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css' />
-                </t>
-                <div id="wrap" class="js_blog base_width">
-                    <div class="container">
-                        <div class="row">
-                            <t t-call="website_forum.post_search" />
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <span class="badge">
-                                    <t t-esc="total_questions"/> Question
-                                </span>
-                            </div>
-                            <t t-call="website_forum.shorting" />
-                        </div>
-                        <ul class="media-list">
-                            <li t-foreach="question_ids" t-as="question" class="media media_without_margin">
-                                <t t-call="website_forum.post_list" />
-                            </li>
-                        </ul>
-                        <div class="col-sm-7">
-                            <t t-call="website.pager" >
-                                <t t-set="classname">pull-right</t>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-            </t>
-        </template>
+		<!-- index page of forum -->
+		<template id="index" name="Posts">
+			<t t-call="website.layout">
+				<t t-set="head">
+					<link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css' />
+				</t>
+				<t t-call="website_forum.forum_header" />
+				<div id="wrap" class="js_blog base_width">
+					<div class="container">
+						<div class="col-md-9">
+							<!-- t t-call="website_forum.shorting_answer" / -->
+							
+							<ul class="media-list">
+								<li t-foreach="question_ids" t-as="question"
+									class="media media_without_margin">
+									<t t-call="website_forum.post_list" />
+								</li>
+							</ul>
+							<div class="col-sm-7">
+								<t t-call="website.pager">
+									<t t-set="classname">pull-right</t>
+								</t>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<h4>This is a right panel</h4>
+						</div>
+					</div>
+				</div>
+			</t>
+		</template>
 
 
-        <template id="404">
-            <t t-call="website.layout">
-                <div id="wrap">
-                    <div class="oe_structure oe_empty">
-                        <div class="container">
-                            <h1 class="mt32">Question not found!</h1>
-                            <p>Sorry, the requested question is not available anymore.</p>
-                            <p>
-                                <a t-attf-href="/forum/question/">Return to the question list.</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </t>
-        </template>
+		<!-- need to refactor below code -->
 
-        <template id="user_detail">
-            <div
-                class="col-xs-7 col-xs-offset-5 col-sm-3 col-sm-offset-9 col-md-4 col-md-offset-8 col-lg-4 col-lg-offset-8 text-right">
-                <div class="panel panel-primary ">
-                    <p class="text-center -heading">
-                        <small>asked <span t-esc="question.create_date"></span></small>
-                    </p>
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <span t-field="question.create_uid.image" t-field-options='{"widget": "image"}'/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-9">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <div class="text-left">
-                                        <a t-attf-href="/forum/user/#{ question.create_uid.id }"><div t-esc="question.create_uid.name"/></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <div style="font-size:10px" class="text-left">
-                                        <b style="color : green">11</b>
-                                        <span class="glyphicon glyphicon-certificate badge-gold"></span>
-                                        1
-                                        <span class="glyphicon glyphicon-certificate badge-silver"></span>
-                                        10
-                                        <span class="glyphicon glyphicon-certificate badge-bronze"></span>
-                                        5
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template>
+		<template id="tags">
+			<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+				<t t-foreach="question.tags" t-as="tag">
+					<a t-attf-href="/forum/tag/#{ tag.id }" class="badge">
+						<t t-esc="tag.name" />
+					</a>
+				</t>
+			</div>
+		</template>
 
-        <template id="post_vote">
-            <div class="col-md-1 col-xs-1">
-                <div class="row">
-                    <div class="col-xs-12 custom-arrow-height">
-                        <span class="glyphicon glyphicon-chevron-up" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 custom-vote-height">
-                        <h4>
-                            <span>0</span>
-                        </h4>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 custom-arrow-height">
-                        <span class="glyphicon glyphicon-chevron-down" />
-                    </div>
-                </div>
-            </div>
-        </template>
+		<template id="shorting">
+			<div class="col-xs-3">
+				<h5>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						Short by
+						<b class="caret"></b>
+					</a>
 
-        <template id="post_links">
-            <div class="row">
-                <div class="col-xs-12 text-right">
-                    <a class="action-links" href="">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                    <a class="action-links" href="">
-                        <span class="glyphicon glyphicon-flag"></span>
-                    </a>
-                    <a class="action-links" href="">
-                        <span class="glyphicon glyphicon-trash"></span>
-                    </a>
-                    <a class="action-links" href="">
-                        <span class="glyphicon glyphicon-link"></span>
-                    </a>
-                </div>
-            </div>
-        </template>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="#">By Date</a>
+						</li>
+						<li>
+							<a href="#">By Activity</a>
+						</li>
+						<li>
+							<a href="#">By Answer</a>
+						</li>
+						<li>
+							<a href="#">By Votes</a>
+						</li>
+					</ul>
+				</h5>
+			</div>
+		</template>
 
-        <template id="ask_question">
-            <t t-call="website.layout">
-                <div class="container">
-                    <div class="col-md-9 col-xs-11">
-                        <div class="row">
-                            <div class="col-xs-12 page-header">
-                                <h3>Please Ask your Question here</h3>
-                            </div>
-                            <div class="col-xs-12">
-                                <ul>
-                                    <li>
-                                        please, try to make your question interesting to others
-                                    </li>
-                                    <li>
-                                        provide enough details and, if possible, give an example
-                                    </li>
-                                    <li>
-                                        be clear and concise, avoid unnecessary introductions (Hi, ... Thanks...)
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <form action="/forum/question/ask/" method="post" role="form">
-                                <div class="col-xs-12">
-                                    <input type="text"  name="question_name" required="True" t-attf-value="#{question_name or ''}" id="textbox_user_question" class="form-control" placeholder="Enter your Question" />
-                                </div>
-                                <div class="col-xs-12">
-                                    Please enter a descriptive question (should finish by a '?')
-                                </div>
-                                <div class="col-xs-12">
-                                    <textarea  name="question_content" required="True" t-attf-value="#{question_content or ''}" class="form-control" id="textarea_ckeditor" rows="10" style="width : 100%" />
-                                </div>
-                                <div class="col-xs-12">
-                                    Tags:
-                                </div>
-                                <div class="col-xs-12">
-                                    <input type="text" name="question_tag" t-attf-value="#{question_tag or ''}" class="form-control" id="textarea_tags" style="width : 100%"/>
-                                </div>
-                                <div class="col-xs-8">
-                                    <button class="btn btn-default" id="btn_ask_your_question" style="background-color : #df3f3f; color: white !important;">Post Your Question</button>
-                                </div>
-                            </form>
-                        </div>
-                        <script type="text/javascript" >
-                            CKEDITOR.replace("textarea_ckeditor");
-                            CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList'] ,['Outdent','Indent','Link','Unlink'],] ;
-                        </script>
-                    </div>
-                </div>
-            </t>
-        </template>
 
-        <template id="post_answer">
-            <div class="col-md-9 col-xs-11">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="page-header">
-                            <h3>Your answer</h3>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <p>
-                            <b>Please try to give a substantial answer</b>.
-                            If you wanted to comment on the question or answer, just 
-                            <b>use the commenting tool.</b> 
-                            Please remember that you can always 
-                            <b>revise your answers</b> 
-                            - no need to answer the same question twice. Also, please 
-                            <b>don't forget to vote</b> 
-                            - it really helps to select the best questions and answers!
-                        </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <form action="/forum/question/postanswer/" method="post" role="form">
-                        <div class="col-xs-12">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <textarea  name="answer_content" required="True" t-attf-value="#{answer_content or ''}" class="form-control" id="textarea_ckeditor" rows="10" style="width : 100%" />
-                                </div>
-                            </div>
-                        </div>
-                        <input name="post_id" t-att-value="question.id" type="hidden"/>
-                        <div class="col-xs-8">
-                            <button class="btn btn-default" style="background-color : #df3f3f; color: white !important;" id="btn_ask_your_question">Post Your Answer</button>
-                        </div>
-                    </form>
-                </div>
-                <script type="text/javascript" >
-                    CKEDITOR.replace("textarea_ckeditor");
-                    CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList'] ,['Outdent','Indent','Link','Unlink'],] ;
-                </script>
-            </div>
-        </template>
 
-        <template id="post_description_full">
-            <t t-call="website.layout">
-                <div class="container MainBody">
-                    <t t-call="website_forum.post_search" />
-                    <t t-call="website_forum.post_vote" />
-                    <div class="row">
-                        <div class="col-md-9 col-xs-11">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <h4>
-                                        <div itemprop="name" t-field="question.name"></div>
-                                    </h4>
-                                </div>
-                            </div>
-                            <t t-call="website_forum.tags" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 page-header">
-                            <span class="badge">
-                                <t t-esc="len(question.child_ids)"/> Answer
-                            </span>
-                        </div>
-                        <t t-call="website_forum.shorting_answer"/>
-                    </div>
-                    <t t-call="website_forum.answer"/>
-                    <t t-call="website_forum.post_answer"/>
-                </div>
-            </t>
-        </template>
+		<template id="answer">
+			<ul class="media-list">
+				<li t-foreach="question.child_ids" t-as="answer" class="media">
+					<div class="row">
+						<t t-call="website_forum.post_vote" />
+						<div class="col-md-9 col-xs-10">
+							<div class="row col-xs-12">
+								<span>
+									<h4>
+										<t t-esc="answer.content" />
+									</h4>
+								</span>
+							</div>
+							<div class="row">
+								<t t-call="website_forum.user_detail" />
+							</div>
+							<t t-call="website_forum.post_links" />
+						</div>
+						<hr class="hr_no_margin" />
+					</div>
+				</li>
+			</ul>
+		</template>
 
-        <template id="user_detail_full">
-            <t t-call="website.layout">
-                <div class="container">
-                    <div class="row col-xs-12 page-header">
-                        <h3>
-                            <span>
-                                <t t-esc="user.name"/>'s profile - overview
-                            </span>
-                        </h3>
-                    </div>
-                    <div class="row">
-                        <ul class="nav nav-tabs">
-                            <li class="active" >
-                                <a href="#overview" data-toggle="tab">Overview</a>
-                            </li>
-                            <li >
-                                <a href="#network" data-toggle="tab" >Network</a>
-                            </li>
-                            <li>
-                                <a href="#karma" data-toggle="tab" >Karma</a>
-                            </li>
-                            <li>
-                                <a href="#followed_question" data-toggle="tab">Followed Question</a>
-                            </li>
-                            <li>
-                                <a href="#activity" data-toggle="tab">Activity</a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="overview">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <span t-field="user.image" class="user-big-profile-image" t-field-options='{"widget": "image"}' alt="User Name"/>
-                                    </div>
-                                    <div class="col-xs-9">
-                                        <div class="row col-xs-12">
-                                            <b>Registerd User</b>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-6">
-                                                Real Name :
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <b><t t-esc="user.name"/></b>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-6">
-                                                Member since :
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <b><t t-esc="user.create_date"/>3</b>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-6">
-                                                Last Seen :
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <b>Feb 15'14</b>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                Todays unused votes     30 votes left
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-    
-                                <div class="row">
-                                    <div class="col-xs-3 text-center" style="overflow : hidden">
-                                        <b><t t-esc="user.karma" /></b>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-3 text-center">
-                                        Karma
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <button class="btn btn-default">Follow TressCLoud</button>
-                                    </div>
-                                </div>
-    
-                                <div class="row col-xs-12 page-header">
-                                      <h3> <b> <t t-esc="len(user.question_ids)"/> Questions </b> </h3>
-                                </div>
-                                <div class="row col-xs-12">
-                                    <ul class="media-list">
-                                        <li t-foreach="user.question_ids" t-as="question" class="media">
-                                            <t t-call="website_forum.post_list" />
-                                        </li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="row col-xs-12 page-header">
-                                      <h3> <b> <t t-esc="len(user.answer_ids)"/> Answers </b> </h3>
-                                </div>
-                                <!--div class="row col-xs-12">
-                                    <ul class="media-list">
-                                        <li t-foreach="user.answer_ids" t-as="question" class="media">
-                                            <t t-call="website_forum.post_list" />
-                                        </li>
-                                    </ul>
-                                </div-->
-    
-                                <div class="row col-xs-12 page-header">
-                                      <h3> <b> <t t-esc="len(user.vote_ids)"/> Votes </b> </h3>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-2">
-                                        <h3>
-                                            <a href=""><span class="glyphicon glyphicon-thumbs-up"></span></a>
-                                            <b> 15 </b>
-                                        </h3>
-                                    </div>
-                                    <div class="col-xs-2">
-                                        <h3>
-                                            <a href="" ><span class="glyphicon glyphicon-thumbs-down"></span></a>
-                                           <b> 0 </b>
-                                        </h3>
-                                    </div>
-                                </div>
-    
-                                <div class="row col-xs-12 page-header">
-                                      <h3> <b> <t t-esc="len(user.tags)"/> Tags </b> </h3>
-                                </div>
-                                <!--div class="row col-xs-12">
-                                    <ul class="media-list">
-                                        <li t-foreach="user.tags" t-as="tag" class="media">
-                                            <t t-call="website_forum.tags" />
-                                        </li>
-                                    </ul>
-                                </div-->
-    
-                                <!--div class="row col-xs-12 page-header">
-                                      <h3> <b> <t t-esc="len(user.badges)"/> Badges </b> </h3>
-                                </div>
-                                <div class="row col-xs-12">
-                                    <ul class="media-list">
-                                        <li t-foreach="user.badges" t-as="badge" class="media">
-                                            <t t-call="website_forum.badge" />
-                                        </li>
-                                    </ul>
-                                </div-->
-                            </div>
-                            <div class="tab-pane" id="network">
-                                <h1>Network</h1>
-                            </div>
-                            <div class="tab-pane" id="karma">
-                                <h1>Karma</h1>
-                            </div>
-                            <div class="tab-pane" id="followed_question">
-                                <h1>Followed Questions</h1>
-                            </div>
-                            <div class="tab-pane" id="activity">
-                                <h1>Activity</h1>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </t>
-        </template>
+
+		<template id="404">
+			<t t-call="website.layout">
+				<div id="wrap">
+					<div class="oe_structure oe_empty">
+						<div class="container">
+							<h1 class="mt32">Question not found!</h1>
+							<p>Sorry, the requested question is not available anymore.</p>
+							<p>
+								<a t-attf-href="/forum/question/">Return to the question list.</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</t>
+		</template>
+
+		<template id="user_detail">
+			<div
+				class="col-xs-7 col-xs-offset-5 col-sm-3 col-sm-offset-9 col-md-4 col-md-offset-8 col-lg-4 col-lg-offset-8 text-right">
+				<div class="panel panel-primary ">
+					<p class="text-center -heading">
+						<small>
+							asked
+							<span t-esc="question.create_date"></span>
+						</small>
+					</p>
+					<div class="row">
+						<div class="col-xs-3">
+							<div class="row">
+								<div class="col-xs-12">
+									<span t-field="question.create_uid.image" t-field-options='{"widget": "image"}' />
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-9">
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="text-left">
+										<a t-attf-href="/forum/user/#{ question.create_uid.id }">
+											<div t-esc="question.create_uid.name" />
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<div style="font-size:10px" class="text-left">
+										<b style="color : green">11</b>
+										<span class="glyphicon glyphicon-certificate badge-gold"></span>
+										1
+										<span class="glyphicon glyphicon-certificate badge-silver"></span>
+										10
+										<span class="glyphicon glyphicon-certificate badge-bronze"></span>
+										5
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</template>
+
+		<template id="post_vote">
+			<div class="col-md-1 col-xs-1">
+				<div class="row">
+					<div class="col-xs-12 custom-arrow-height">
+						<span class="glyphicon glyphicon-chevron-up" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 custom-vote-height">
+						<h4>
+							<span>0</span>
+						</h4>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 custom-arrow-height">
+						<span class="glyphicon glyphicon-chevron-down" />
+					</div>
+				</div>
+			</div>
+		</template>
+
+		<template id="post_links">
+			<div class="row">
+				<div class="col-xs-12 text-right">
+					<a class="action-links" href="">
+						<span class="glyphicon glyphicon-pencil"></span>
+					</a>
+					<a class="action-links" href="">
+						<span class="glyphicon glyphicon-flag"></span>
+					</a>
+					<a class="action-links" href="">
+						<span class="glyphicon glyphicon-trash"></span>
+					</a>
+					<a class="action-links" href="">
+						<span class="glyphicon glyphicon-link"></span>
+					</a>
+				</div>
+			</div>
+		</template>
+
+		<template id="ask_question">
+			<t t-call="website.layout">
+				<div class="container">
+					<div class="col-md-9 col-xs-11">
+						<div class="row">
+							<div class="col-xs-12 page-header">
+								<h3>Please Ask your Question here</h3>
+							</div>
+							<div class="col-xs-12">
+								<ul>
+									<li>
+										please, try to make your question interesting to others
+									</li>
+									<li>
+										provide enough details and, if possible, give an example
+									</li>
+									<li>
+										be clear and concise, avoid unnecessary introductions (Hi,
+										...
+										Thanks...)
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="row">
+							<form action="/forum/question/ask/" method="post" role="form">
+								<div class="col-xs-12">
+									<input type="text" name="question_name" required="True"
+										t-attf-value="#{question_name or ''}" id="textbox_user_question"
+										class="form-control" placeholder="Enter your Question" />
+								</div>
+								<div class="col-xs-12">
+									Please enter a descriptive question (should
+									finish by a '?')
+								</div>
+								<div class="col-xs-12">
+									<textarea name="question_content" required="True"
+										t-attf-value="#{question_content or ''}" class="form-control"
+										id="textarea_ckeditor" rows="10" style="width : 100%" />
+								</div>
+								<div class="col-xs-12">
+									Tags:
+								</div>
+								<div class="col-xs-12">
+									<input type="text" name="question_tag" t-attf-value="#{question_tag or ''}"
+										class="form-control" id="textarea_tags" style="width : 100%" />
+								</div>
+								<div class="col-xs-8">
+									<button class="btn btn-default" id="btn_ask_your_question"
+										style="background-color : #df3f3f; color: white !important;">Post Your Question</button>
+								</div>
+							</form>
+						</div>
+						<script type="text/javascript">
+							CKEDITOR.replace("textarea_ckeditor");
+							CKEDITOR.config.toolbar =
+							[['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList']
+							,['Outdent','Indent','Link','Unlink'],] ;
+						</script>
+					</div>
+				</div>
+			</t>
+		</template>
+
+		<template id="post_answer">
+			<div class="col-md-9 col-xs-11">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="page-header">
+							<h3>Your answer</h3>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<p>
+							<b>Please try to give a substantial answer</b>
+							.
+							If you wanted to comment on the question or answer, just
+							<b>use the commenting tool.</b>
+							Please remember that you can always
+							<b>revise your answers</b>
+							- no need to answer the same question twice. Also, please
+							<b>don't forget to vote</b>
+							- it really helps to select the best questions and answers!
+						</p>
+					</div>
+				</div>
+				<div class="row">
+					<form action="/forum/question/postanswer/" method="post" role="form">
+						<div class="col-xs-12">
+							<div class="row">
+								<div class="col-xs-12">
+									<textarea name="answer_content" required="True"
+										t-attf-value="#{answer_content or ''}" class="form-control"
+										id="textarea_ckeditor" rows="10" style="width : 100%" />
+								</div>
+							</div>
+						</div>
+						<input name="post_id" t-att-value="question.id" type="hidden" />
+						<div class="col-xs-8">
+							<button class="btn btn-default"
+								style="background-color : #df3f3f; color: white !important;" id="btn_ask_your_question">
+								Post Your Answer
+							</button>
+						</div>
+					</form>
+				</div>
+				<script type="text/javascript">
+					CKEDITOR.replace("textarea_ckeditor");
+					CKEDITOR.config.toolbar =
+					[['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList']
+					,['Outdent','Indent','Link','Unlink'],] ;
+				</script>
+			</div>
+		</template>
+
+		<template id="post_description_full">
+			<t t-call="website.layout">
+				<div class="container MainBody">
+					<t t-call="website_forum.post_vote" />
+					<div class="row">
+						<div class="col-md-9 col-xs-11">
+							<div class="row">
+								<div class="col-xs-12">
+									<h4>
+										<div itemprop="name" t-field="question.name"></div>
+									</h4>
+								</div>
+							</div>
+							<t t-call="website_forum.tags" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12 page-header">
+							<span class="badge">
+								<t t-esc="len(question.child_ids)" />
+								Answer
+							</span>
+						</div>
+						<t t-call="website_forum.shorting_answer" />
+					</div>
+					<t t-call="website_forum.answer" />
+					<t t-call="website_forum.post_answer" />
+				</div>
+			</t>
+		</template>
+
+		<template id="user_detail_full">
+			<t t-call="website.layout">
+				<div class="container">
+					<div class="row col-xs-12 page-header">
+						<h3>
+							<span>
+								<t t-esc="user.name" />
+								's profile - overview
+							</span>
+						</h3>
+					</div>
+					<div class="row">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a href="#overview" data-toggle="tab">Overview</a>
+							</li>
+							<li>
+								<a href="#network" data-toggle="tab">Network</a>
+							</li>
+							<li>
+								<a href="#karma" data-toggle="tab">Karma</a>
+							</li>
+							<li>
+								<a href="#followed_question" data-toggle="tab">Followed Question</a>
+							</li>
+							<li>
+								<a href="#activity" data-toggle="tab">Activity</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane active" id="overview">
+								<div class="row">
+									<div class="col-xs-3">
+										<span t-field="user.image" class="user-big-profile-image"
+											t-field-options='{"widget": "image"}' alt="User Name" />
+									</div>
+									<div class="col-xs-9">
+										<div class="row col-xs-12">
+											<b>Registerd User</b>
+										</div>
+										<div class="row">
+											<div class="col-xs-6">
+												Real Name :
+											</div>
+											<div class="col-xs-6">
+												<b>
+													<t t-esc="user.name" />
+												</b>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-xs-6">
+												Member since :
+											</div>
+											<div class="col-xs-6">
+												<b>
+													<t t-esc="user.create_date" />
+													3
+												</b>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-xs-6">
+												Last Seen :
+											</div>
+											<div class="col-xs-6">
+												<b>Feb 15'14</b>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-xs-12">
+												Todays unused votes 30 votes left
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-xs-3 text-center" style="overflow : hidden">
+										<b>
+											<t t-esc="user.karma" />
+										</b>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-3 text-center">
+										Karma
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-12">
+										<button class="btn btn-default">Follow TressCLoud</button>
+									</div>
+								</div>
+
+								<div class="row col-xs-12 page-header">
+									<h3>
+										<b>
+											<t t-esc="len(user.question_ids)" />
+											Questions
+										</b>
+									</h3>
+								</div>
+								<div class="row col-xs-12">
+									<ul class="media-list">
+										<li t-foreach="user.question_ids" t-as="question" class="media">
+											<t t-call="website_forum.post_list" />
+										</li>
+									</ul>
+								</div>
+
+								<div class="row col-xs-12 page-header">
+									<h3>
+										<b>
+											<t t-esc="len(user.answer_ids)" />
+											Answers
+										</b>
+									</h3>
+								</div>
+								<!--div class="row col-xs-12"> <ul class="media-list"> <li t-foreach="user.answer_ids" 
+									t-as="question" class="media"> <t t-call="website_forum.post_list" /> </li> 
+									</ul> </div -->
+
+								<div class="row col-xs-12 page-header">
+									<h3>
+										<b>
+											<t t-esc="len(user.vote_ids)" />
+											Votes
+										</b>
+									</h3>
+								</div>
+								<div class="row">
+									<div class="col-xs-2">
+										<h3>
+											<a href="">
+												<span class="glyphicon glyphicon-thumbs-up"></span>
+											</a>
+											<b> 15 </b>
+										</h3>
+									</div>
+									<div class="col-xs-2">
+										<h3>
+											<a href="">
+												<span class="glyphicon glyphicon-thumbs-down"></span>
+											</a>
+											<b> 0 </b>
+										</h3>
+									</div>
+								</div>
+
+								<div class="row col-xs-12 page-header">
+									<h3>
+										<b>
+											<t t-esc="len(user.tags)" />
+											Tags
+										</b>
+									</h3>
+								</div>
+								<!--div class="row col-xs-12"> <ul class="media-list"> <li t-foreach="user.tags" 
+									t-as="tag" class="media"> <t t-call="website_forum.tags" /> </li> </ul> </div -->
+
+								<!--div class="row col-xs-12 page-header"> <h3> <b> <t t-esc="len(user.badges)"/> 
+									Badges </b> </h3> </div> <div class="row col-xs-12"> <ul class="media-list"> 
+									<li t-foreach="user.badges" t-as="badge" class="media"> <t t-call="website_forum.badge" 
+									/> </li> </ul> </div -->
+							</div>
+							<div class="tab-pane" id="network">
+								<h1>Network</h1>
+							</div>
+							<div class="tab-pane" id="karma">
+								<h1>Karma</h1>
+							</div>
+							<div class="tab-pane" id="followed_question">
+								<h1>Followed Questions</h1>
+							</div>
+							<div class="tab-pane" id="activity">
+								<h1>Activity</h1>
+							</div>
+						</div>
+					</div>
+				</div>
+			</t>
+		</template>
 
 	</data>
 </openerp>
