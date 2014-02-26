@@ -93,10 +93,11 @@
   !python {model: stock.picking}: |
     self.do_transfer(cr, uid, [ref('delivery_order_neg')], context=context)
 - 
-  Check the quants that you have 120 pieces pallet 1 in customers, -20 pieces pallet 2 in stock and 120 and 20 with customers and 20/30 in stock, 10 in customers from pallet 3 
+  Check the quants that you have 120 pieces pallet 1 in customers, -20 pieces pallet 2 in stock, 120 + 20 pieces 2 in customer with lot, and a total quantity of 50 in stock from pallet 3 (should be 20+30, as it has been split by reservation), finally 10 in customers from pallet 3
 - 
   !python {model: stock.quant}: |
     reco_id = self.search(cr ,uid , [('product_id','=',ref('product_neg'))], context=context)
+    pallet_3_stock_qty = 0
     for rec in self.browse(cr, uid, reco_id, context=context):
       if rec.package_id.name == 'Palneg 1' and rec.location_id.id == ref('stock_location_customers'):
         assert rec.qty == 120, "Should have 120 pieces on pallet 1"
@@ -106,11 +107,12 @@
       elif rec.lot_id.name == 'Lot neg' and rec.location_id.id == ref('stock_location_customers'):
         assert ((rec.qty == 20 or rec.qty == 120) and not rec.package_id), "Should have 140 pieces (120+20) in customer location from pallet 2 and lot A"
       elif rec.package_id.name == 'Palneg 3' and rec.location_id.id == ref('stock_location_stock'):
-        assert rec.qty == 30 or rec.qty == 20, "Should have 30 and 20 pieces in stock on pallet 3"
+        pallet_3_stock_qty += rec.qty
       elif not rec.package_id and not rec.lot_id and rec.location_id.id == ref('stock_location_customers'):
         assert rec.qty == 10, "Should have 10 pieces in customer location from pallet 3"
       else:
         assert False, "Unrecognized quant"
+    assert pallet_3_stock_qty == 50, "Should have 50 pieces in stock on pallet 3"
 - 
   Create a picking for reconciling the negative quant
 - 
