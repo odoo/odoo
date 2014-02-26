@@ -839,7 +839,6 @@
                     document.execCommand("enableInlineTableEditing", false, "false");
                 } catch (e) {}
 
-
                 // detect & setup any CKEDITOR widget within a newly dropped
                 // snippet. There does not seem to be a simple way to do it for
                 // HTML not inserted via ckeditor APIs:
