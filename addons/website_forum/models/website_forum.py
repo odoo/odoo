@@ -121,9 +121,10 @@ class Users(osv.Model):
     _inherit = 'res.users'
     
     _columns = {
-        'question_ids':fields.one2many('website.forum.post', 'create_uid', 'Questions', domain=[('parent_id','=',False)]),
-        'answer_ids':fields.one2many('website.forum.post', 'create_uid', 'Answers', domain=[('parent_id','=',False), ('child_ids','=',True)]),
+        'question_ids':fields.one2many('website.forum.post', 'create_uid', 'Questions', domain=[('parent_id', '=', False)]),
+        'answer_ids':fields.one2many('website.forum.post', 'create_uid', 'Answers', domain=[('parent_id', '!=', False)]),
         'vote_ids': fields.one2many('website.forum.post.vote', 'user_id', 'Votes'),
+        'tags': fields.many2many('website.forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tag'),
         
         'karma': fields.integer('Karma')
         

@@ -92,6 +92,15 @@ class website_forum(http.Controller):
         }
         return request.website.render("website_forum.post_description_full", values)
 
+    @http.route(['/question/user/<model("res.users"):user>'], type='http', auth="public", website=True, multilang=True)
+    def open_user(self, user, **post):
+        values = {
+            'user': user,
+            'main_object': user,
+            'searches': post
+        }
+        return request.website.render("website_forum.user_detail_full", values)
+
     @http.route('/question/ask/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def register_question(self, forum_id=1, **question):
         cr, uid, context = request.cr, request.uid, request.context
