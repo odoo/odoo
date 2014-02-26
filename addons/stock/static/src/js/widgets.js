@@ -40,7 +40,7 @@ function openerp_picking_widgets(instance){
                             loc: moveline.location_id[1],
                             id:  moveline.product_id[0],
                     },
-                    classes: (moveline.qty_remaining < 0 ? 'oe_invalid' : '')
+                    classes: (moveline.qty_remaining < 0 ? 'danger' : '')
                 });
             });
             
@@ -78,7 +78,7 @@ function openerp_picking_widgets(instance){
                         uom: op.product_uom ? product_uom[1] : '',
                         qty: op.product_qty,
                     },
-                    classes: 'js_pack_op '+ (op.id === model.get_selected_operation() ? 'oe_selected' : ''),
+                    classes: 'js_pack_op '+ (op.id === model.get_selected_operation() ? 'warning' : ''),
                     att_op_id: op.id,
                 });
             });
@@ -90,12 +90,12 @@ function openerp_picking_widgets(instance){
             this._super();
             var model = this.getParent();
             this.$('.js_pack_op').click(function(){
-                if (!this.classList.contains('oe_selected')){
-                    self.$('.js_pack_op').removeClass('oe_selected');
-                    $(this).addClass('oe_selected');
+                if (!this.classList.contains('warning')){
+                    self.$('.js_pack_op').removeClass('warning');
+                    $(this).addClass('warning');
                     model.set_selected_operation(parseInt($(this).attr('op-id')));
                 } else {
-                    $(this).removeClass('oe_selected');
+                    $(this).removeClass('warning');
                     model.set_selected_operation(null);
                 };
             });
@@ -115,7 +115,7 @@ function openerp_picking_widgets(instance){
                 rows.push({
                     cols:{ pack: pack.name},
                     id: pack.id,
-                    classes: pack === current_package ? ' oe_selected' : '' ,
+                    classes: pack === current_package ? ' warning' : '' ,
                 });
             });
             return rows;
@@ -127,7 +127,11 @@ function openerp_picking_widgets(instance){
                 var pack_id = parseInt($(this).attr('pack-id'));
                 $('.js_pack_print', this).click(function(){ model.print_package(pack_id); });
                 $('.js_pack_plus', this).click(function(){ model.copy_package_op(pack_id); });
-                $('.js_pack_minus', this).click(function(){ model.delete_package_op(pack_id); });
+                $('.js_pack_minus', this).click(function(){ 
+                    if(model.get_selected_package() && model.get_selected_package().id === pack_id){
+                        model.deselect_package();
+                    }
+                    model.delete_package_op(pack_id); });
                 $('.js_pack_select', this).click(function(){ 
                     if(model.get_selected_package() && model.get_selected_package().id === pack_id){
                         model.deselect_package();
@@ -185,7 +189,7 @@ function openerp_picking_widgets(instance){
             this.$('.js_pick_quit').click(function(){ self.quit(); });
             this.$('.js_pick_scan').click(function(){ self.scan_picking($(this).data('id')); });
             this.$('.js_pick_last').click(function(){ self.goto_last_picking_of_type($(this).data('id')); });
-            this.$('.oe_searchbox input').keyup(function(event){
+            this.$('.oe_searchbox').keyup(function(event){
                 self.on_searchbox($(this).val());
             });
             //remove navigtion bar from default openerp GUI
@@ -194,6 +198,7 @@ function openerp_picking_widgets(instance){
         start: function(){
             this._super();
             var self = this;
+            instance.webclient.set_content_full_screen(true);
             this.barcode_scanner.connect(function(barcode){
                 self.on_scan(barcode);
             });
@@ -240,7 +245,6 @@ function openerp_picking_widgets(instance){
         },
         on_scan: function(barcode){
             var self = this;
-
             for(var i = 0, len = this.pickings.length; i < len; i++){
                 var picking = this.pickings[i];
                 if(picking.name.toUpperCase() === $.trim(barcode.toUpperCase())){
@@ -248,11 +252,11 @@ function openerp_picking_widgets(instance){
                     break;
                 }
             }
-            this.$('.oe_picking_not_found').removeClass('oe_hidden');
+            this.$('.oe_picking_not_found').removeClass('hidden');
 
             clearTimeout(this.picking_not_found_timeout);
             this.picking_not_found_timeout = setTimeout(function(){
-                self.$('.oe_picking_not_found').addClass('oe_hidden');
+                self.$('.oe_picking_not_found').addClass('hidden');
             },2000);
 
         },
@@ -262,24 +266,27 @@ function openerp_picking_widgets(instance){
             clearTimeout(this.searchbox_timeout);
             this.searchbox_timout = setTimeout(function(){
                 if(query){
-                    self.$('.oe_picking_not_found').addClass('oe_hidden');
-                    self.$('.oe_picking_categories').addClass('oe_hidden');
+                    self.$('.oe_title_label').addClass('hidden');
+                    self.$('.oe_picking_not_found').addClass('hidden');
+                    self.$('.oe_picking_categories').addClass('hidden');
                     self.$('.oe_picking_search_results').html(
                         QWeb.render('PickingSearchResults',{results:self.search_picking(query)})
                     );
                     self.$('.oe_picking_search_results .oe_picking').click(function(){
                         self.goto_picking($(this).data('id'));
                     });
-                    self.$('.oe_picking_search_results').removeClass('oe_hidden');
+                    self.$('.oe_picking_search_results').removeClass('hidden');
                 }else{
-                    self.$('.oe_picking_categories').removeClass('oe_hidden');
-                    self.$('.oe_picking_search_results').addClass('oe_hidden');
+                    self.$('.oe_title_label').removeClass('hidden');
+                    self.$('.oe_picking_categories').removeClass('hidden');
+                    self.$('.oe_picking_search_results').addClass('hidden');
                 }
             },100);
         },
         quit: function(){
-            instance.webclient.set_content_full_screen(false);
-            window.location = '/'; // FIXME Ask niv how to do it correctly
+            return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_picking_type_form']], ['res_id']).pipe(function(res) {
+                    window.location = '/web#action=' + res[0]['res_id'];
+                });
         },
         destroy: function(){
             this._super();
@@ -431,15 +438,15 @@ function openerp_picking_widgets(instance){
                 self.package_selector.replace(self.$('.oe_placeholder_package_selector'));
                 
                 if( self.picking.id === self.pickings[0]){
-                    self.$('.js_pick_prev').addClass('oe_disabled');
+                    self.$('.js_pick_prev').addClass('disabled');
                 }else{
-                    self.$('.js_pick_prev').removeClass('oe_disabled');
+                    self.$('.js_pick_prev').removeClass('disabled');
                 }
                 
                 if( self.picking.id === self.pickings[self.pickings.length-1] ){
-                    self.$('.js_pick_next').addClass('oe_disabled');
+                    self.$('.js_pick_next').addClass('disabled');
                 }else{
-                    self.$('.js_pick_next').removeClass('oe_disabled');
+                    self.$('.js_pick_next').removeClass('disabled');
                 }
 
                 self.$('.oe_pick_app_header').text(self.get_header());
@@ -458,15 +465,15 @@ function openerp_picking_widgets(instance){
                     self.package_selector.renderElement();
 
                     if( self.picking.id === self.pickings[0]){
-                        self.$('.js_pick_prev').addClass('oe_disabled');
+                        self.$('.js_pick_prev').addClass('disabled');
                     }else{
-                        self.$('.js_pick_prev').removeClass('oe_disabled');
+                        self.$('.js_pick_prev').removeClass('disabled');
                     }
                     
                     if( self.picking.id === self.pickings[self.pickings.length-1] ){
-                        self.$('.js_pick_next').addClass('oe_disabled');
+                        self.$('.js_pick_next').addClass('disabled');
                     }else{
-                        self.$('.js_pick_next').removeClass('oe_disabled');
+                        self.$('.js_pick_next').removeClass('disabled');
                     }
                     self.$('.oe_pick_app_header').text(self.get_header());
                 });
@@ -695,7 +702,9 @@ function openerp_picking_widgets(instance){
         },
         quit: function(){
             this.destroy();
-            window.location = '/'; // FIXME Ask niv how to do it correctly
+            return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_picking_type_form']], ['res_id']).pipe(function(res) {
+                    window.location = '/web#action=' + res[0]['res_id'];
+                });
         },
         destroy: function(){
             this._super();

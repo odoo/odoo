@@ -48,26 +48,17 @@
 
     <t t-name='PickingEditorWidget'>
         <div class='oe_pick_list'>
-            <div class='oe_pick_list_header'>
+            <h2><strong><div class='oe_pick_list_header'>
                 Operations To Process
-            </div>
-            <table class='oe_pick_list_table'>
-
-                <colgroup>
-                    <col class='oe_pick_col_expand'></col>
-                    <col class='oe_pick_col_small'></col>
-                    <col class='oe_pick_col_small'></col>
-                    <col class='oe_pick_col_small'></col>
-                    <col class='oe_pick_col_expand'></col>
-                    <col class='oe_pick_col_small'></col>
-                </colgroup>
+            </div></strong></h2>
+            <table class='table table-striped'>
 
                 <thead>
                     <tr>
                         <th>Product</th> 
-                        <th class='oe_centeralign'>Qty</th> 
-                        <th class='oe_centeralign'>Rem</th> 
-                        <th class='oe_centeralign'>UoM</th> 
+                        <th class='text-center'>Qty</th> 
+                        <th class='text-center'>Rem</th> 
+                        <th class='text-center'>UoM</th> 
                         <th>Location</th> 
                         <th>Scan</th>
                     </tr>
@@ -77,11 +68,11 @@
                     <t t-foreach="widget.get_rows()" t-as="row">
                         <tr t-att-class="row.classes">
                             <td> <t t-esc="row.cols.product" /> </td>
-                            <td class='oe_centeralign'> <t t-esc="row.cols.qty" /> </td>
-                            <td class='oe_centeralign'> <t t-esc="row.cols.rem" /> </td>
-                            <td class='oe_centeralign'> <t t-esc="row.cols.uom" /> </td>
+                            <td class='text-center'> <t t-esc="row.cols.qty" /> </td>
+                            <td class='text-center'> <t t-esc="row.cols.rem" /> </td>
+                            <td class='text-center'> <t t-esc="row.cols.uom" /> </td>
                             <td> <t t-esc="row.cols.loc" /> </td>
-                            <td><span class='oe_row_button oe_expanded js_pack_scan' t-att-op-id='row.cols.id'>➔</span></td>
+                            <td><span class='btn btn-default js_pack_scan' t-att-op-id='row.cols.id'>➔</span></td>
                         </tr>
                     </t>
                 </tbody>
@@ -92,20 +83,14 @@
 
     <t t-name='PackageEditorWidget'>
         <div class='oe_pick_list'>
-            <div class='oe_pick_list_header'> <t t-esc="widget.get_header()" /> </div>
-            <table class='oe_pick_list_table'>
-
-                <colgroup>
-                    <col class='oe_pick_col_expand'></col>
-                    <col class='oe_pick_col_small'></col>
-                    <col class='oe_pick_col_small'></col>
-                </colgroup>
+            <h2><strong><div class='oe_pick_list_header'> <t t-esc="widget.get_header()" /> </div></strong></h2>
+            <table class='table table-striped'>
 
                 <thead>
                     <tr>
                         <th>Product</th> 
-                        <th class='oe_centeralign'>Qty</th> 
-                        <th class='oe_centeralign'>UoM</th> 
+                        <th class='text-center'>Qty</th> 
+                        <th class='text-center'>UoM</th> 
                     </tr>
                 </thead>
 
@@ -113,8 +98,8 @@
                     <t t-foreach="widget.get_rows()" t-as="row">
                         <tr t-att-class="row.classes" t-att-op-id="row.att_op_id">
                             <td> <t t-esc="row.cols.product" /> </td>
-                            <td class='oe_centeralign'> <t t-esc="row.cols.qty" /> </td>
-                            <td class='oe_centeralign'> <t t-esc="row.cols.uom" /> </td>
+                            <td class='qty text-center'> <t t-esc="row.cols.qty" /> </td>
+                            <td class='text-center'> <t t-esc="row.cols.uom" /> </td>
                         </tr>
                     </t>
                 </tbody>
@@ -125,29 +110,25 @@
 
     <t t-name='PackageSelectorWidget'>
         <div class='oe_pick_list'>
-            <div class='oe_pick_list_header'><t t-esc="widget.get_header()" /></div>
-            <table class='oe_pick_list_table'>
-
-                <colgroup>
-                    <col class='oe_pick_col_expand'></col>
-                    <col class='oe_pick_col_small'></col>
-                    <col class='oe_pick_col_small'></col>
-                    <col class='oe_pick_col_small'></col>
-                </colgroup>
+            <h2><strong><div class='oe_pick_list_header'><t t-esc="widget.get_header()" /></div></strong></h2>
+            <table class='table table-striped'>
 
                 <thead>
                     <tr>
-                        <th>Package</th> <th></th> <th></th> <th></th>
+                        <th>Package</th> <th></th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <t t-foreach="widget.get_rows()" t-as="row">
                         <tr t-att-class="'js_pack_row' + row.classes" t-att-pack-id="row.id">
-                            <td class='js_pack_select'> <t t-esc="row.cols.pack" /> </td>
-                            <td class='oe_centeralign'> <span class='oe_row_button js_pack_print'>Print</span> </td>
-                            <td class='oe_centeralign'> <span class='oe_row_button js_pack_plus'>Copy</span> </td>
-                            <td class='oe_centeralign'> <span class='oe_row_button js_pack_minus'>Delete</span> </td>
+                            <td class='js_pack_select col-md-8'> <t t-esc="row.cols.pack" /> </td>
+                            <td class='text-right col-md-4'> 
+                                <div class='btn btn-default js_pack_print'>Print</div>
+                                <div class='btn btn-default js_pack_plus'>Copy</div>
+                                <div class='btn btn-default js_pack_minus'>Delete</div>
+
+                            </td>
                         </tr>
                     </t>
                 </tbody>
@@ -156,116 +137,121 @@
         </div>
     </t>
     <t t-name="PickingSearchResults">
+        <h3><span class="label label-info">Search Results</span></h3>
         <t t-if="results.length === 0">
-            <div class='oe_search_empty'>
+            <div class='alert alert-warning'>
                 No picking found.
             </div>
         </t>
         <t t-if="results.length > 0">
-            <t t-foreach="results" t-as="picking">
-                <div class="oe_picking" t-att-data-id="picking.id">
-                    <span class='oe_picking_name'><t t-esc="picking.name" /></span>
-                </div>
-            </t>
+            <table class="table table-bordered table-striped">
+                <t t-foreach="results" t-as="picking">
+                    <tr>
+                        <td>
+                            <div class="oe_picking" t-att-data-id="picking.id">
+                                <span class='oe_picking_name'><t t-esc="picking.name" /></span>
+                            </div>
+                        </td>
+                    </tr>
+                </t>
+            </table>
         </t>
     </t>
 
     <t t-name="PickingMenuWidget">
-        <div class='oe_pick_widget'>
-            <table class='oe_pick_layout'>
-                <tr class='oe_pick_header_row'>
-                    <td class='oe_pick_header'>
-                        <div class='oe_pick_right_toolbar'>
-                            <div class='oe_pick_button js_pick_quit'> Quit </div>
-                        </div>
-                        <div class='oe_pick_toolbar'>
-                            <div class='oe_searchbox oe_left'>
-                                <input type='text' placeholder='Search'/>
+        <div class="row">
+                <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+                    <div class="container">
+                        <div class="navbar-header navbar-form navbar-right">
+                            <div class='form-group'>
+                                <input type='text' class="oe_searchbox form-control" placeholder='Search'/>
+                                <button type="button" class="btn btn-danger js_pick_quit">Quit</button>
                             </div>
+                            
                         </div>
-                    </td>
-                </tr>
-                <tr class='oe_pick_body_row'>
-                    <td class='oe_pick_body_cont'> 
-                        <div class='oe_pick_body'>
-                            <div class='oe_pick_app'>
+                    </div>
+                </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="jumbotron">
+                    <div class="container">
+                        <h3><span class="oe_title_label label label-info">Pickings</span></h3>
+                        <div class='oe_picking_not_found alert alert-warning hidden'>
+                            Scanned picking could not be found
+                        </div>
 
-                                <h3 class='oe_pick_app_title'>Pickings</h3>
+                        <div class='oe_picking_search_results'>
+                        </div>
 
-                                <div class='oe_picking_not_found oe_hidden'>
-                                    Scanned picking could not be found
-                                </div>
-
-                                <div class='oe_picking_search_results'>
-                                </div>
-
-                                <div class='oe_picking_categories'>
-                                    <p>
-                                        Select the type of picking you want to process.
-                                    </p>
-                                    <t t-foreach="widget.picking_types" t-as="type">
+                        <div class='oe_picking_categories'>
+                            <p>
+                                Select the type of picking you want to process.
+                            </p>
+                            <table class="table table-striped">
+                                
+                            <t t-foreach="widget.picking_types" t-as="type">
+                                <tr>
+                                    <td>
                                         <div t-att-class="'oe_picking ' + (widget.pickings_by_type[type.id].length === 0 ? 'oe_empty':'js_pick_last') " 
                                              t-att-data-id="type.id">
 
-                                            <span class='oe_picking_name'><t t-esc="type.complete_name" /></span>
-                                            <t t-if="widget.pickings_by_type[type.id].length === 0">
-                                                <span class='oe_pick_app_info'>Nothing to do</span>
-                                            </t>
-                                            <t t-if="widget.pickings_by_type[type.id].length === 1">
-                                                <span class='oe_pick_app_info'>1 picking</span>
-                                            </t>
-                                            <t t-if="widget.pickings_by_type[type.id].length > 1">
-                                                <span class='oe_pick_app_info'><t t-esc="widget.pickings_by_type[type.id].length" /> pickings </span>
+                                            <span><t t-esc="type.complete_name"/></span>
+                                            <t t-if="widget.pickings_by_type[type.id].length > 0">
+                                                <span class='badge pull-right'><t t-esc="widget.pickings_by_type[type.id].length" /> picking(s) </span>
                                             </t>
                                         </div>
-                                    </t>
-                                </div>
-                            </div>
+                                    </td>
+                                </tr>
+                            </t>
+                            </table>
                         </div>
-                    </td>
-                </tr>
-            </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </t>
 
 
-
     <t t-name="PickingMainWidget">
-        <div class='oe_pick_widget'>
-            <table class='oe_pick_layout'>
-                <tr class='oe_pick_header_row'>
-                    <td class='oe_pick_header'>
-                        <div class='oe_pick_right_toolbar'>
-                            <div class='oe_pick_button js_pick_menu'> Menu </div>
+        <div class='row'>
+                <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <button type="button" class="btn btn-default navbar-btn js_pick_prev">&lt; Previous</button>
+                            <button type="button" class="btn btn-default navbar-btn js_pick_next">Next &gt;</button>
+                            
                         </div>
-                        <div class='oe_pick_toolbar'>
-                            <div class='oe_pick_button oe_disabled js_pick_prev'>&lt; Previous</div>
-                            <div class='oe_pick_button oe_disabled js_pick_next'>Next &gt;</div>
+                        <div class="navbar-right">
+                            <button type="button" class="btn btn-primary navbar-btn js_pick_menu">Menu</button>
                         </div>
-
-                    </td>
-                </tr>
-                <tr class='oe_pick_body_row'>
-                    <td class='oe_pick_body_cont'> 
-                        <div class='oe_pick_body'>
-                            <div class='oe_pick_app'>
-                                <div class='oe_pick_button js_pick_done'> Done </div>
-                                <div class='oe_pick_button js_pick_print'> Print </div>
-                                <div class='oe_pick_app_header'>
-                                    <t t-esc='widget.get_header()' />
-                                </div>
-            
-                                <div class='oe_pick_button js_pick_pack'> Put in Pack </div>
-                                <div class='oe_placeholder_picking_editor'></div>
-                                <div class='oe_placeholder_package_editor'></div>
-                                <div class='oe_placeholder_package_selector'></div>
-                                <div class='oe_placeholder_menu'></div>
-
+                    </div>
+                </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="jumbotron">
+                    <div class="container">
+                        <div>
+                            <div class="text-right">
+                                    <button type="button" class='btn btn-danger js_pick_done'> Done </button>
+                                    <button type="button" class='btn btn-info js_pick_print'> Print </button>
+                            </div>
+                            <div>
+                                <h2><span class="oe_pick_app_header label label-info"><t t-esc='widget.get_header()' /></span></h2>
+                            </div>
+                            <div class="text-left">
+                                <button type="button" class='btn btn-default js_pick_pack'> Put in Pack </button>
                             </div>
                         </div>
-                    </td>
-                </tr>
-            </table>
+                        
+                        <div class='oe_placeholder_picking_editor'></div>
+                        <div class='oe_placeholder_package_editor'></div>
+                        <div class='oe_placeholder_package_selector'></div>
+                        <div class='oe_placeholder_menu'></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </t>
 

@@ -103,7 +103,6 @@ Dashboard / Reports for Warehouse Management will include:
     'application': True,
     'auto_install': False,
     'css': [
-        'static/src/css/picking.css',
         'static/src/css/stock.css',
     ],
     'js': [

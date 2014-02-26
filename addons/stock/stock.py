@@ -3730,6 +3730,11 @@ class stock_picking_type(osv.osv):
     _description = "The picking type determines the picking view"
     _order = 'sequence'
 
+    def open_barcode_interface(self, cr, uid, ids, context=None):
+        final_url="/barcode/web/"+str(ids[0]) if len(ids) else '0'
+        return {'type': 'ir.actions.act_url', 'url':final_url, 'target': 'self',}
+
+
     def _get_tristate_values(self, cr, uid, ids, field_name, arg, context=None):
         picking_obj = self.pool.get('stock.picking')
         res = dict.fromkeys(ids, [])

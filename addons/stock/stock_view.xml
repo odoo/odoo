@@ -1245,12 +1245,6 @@
 
         <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="3" groups="stock.group_locations"/>
 
-        <record id="action_stock_stock_ui" model="ir.actions.client">
-            <field name="name">Stock picking</field>
-            <field name="tag">stock.ui</field>
-            <field name="res_model">stock</field>
-        </record>
-
         <!--
             Reception Picking (By Stock Move)
             From stock_partial_move_view
@@ -1461,7 +1455,7 @@
                                 <div class="oe_kanban_content">
                                     <h4 class="oe_center"><field name="complete_name"/></h4>
                                     <div class="oe_right">
-                                        <a name="%(action_stock_stock_ui)d" type="action">
+                                        <a name="open_barcode_interface" type="object">
                                             <img src="/stock/static/src/img/scan.png" 
                                                 alt="Click to launch the barcode interface"
                                                 class="oe_stock_scan_image" title="Click to launch the barcode interface"/>

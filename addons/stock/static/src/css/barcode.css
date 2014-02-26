@@ -1,0 +1,118 @@
+/*hide OpenERP leftbar, table should use all width by default and display vertical scrollbar if needed*/
+.oe_leftbar {
+    display: none;
+}
+
+table.oe_webclient.oe_content_full_screen{
+	width: 100%;
+}
+
+body{
+	overflow-y: visible !important;
+}
+
+/* --- Styling of OpenERP Elements ---
+	Needed for loading and error box */
+
+/* Increase z-index value to insure that loading goes above navbar of bootstrap*/
+.openerp .oe_loading {
+  display: none;
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  right: 50%;
+  padding: 4px 12px;
+  background: #a61300;
+  color: white;
+  text-align: center;
+  border: 1px solid #990000;
+  border-top: none;
+  -moz-border-radius-bottomright: 8px;
+  -moz-border-radius-bottomleft: 8px;
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.openerp.ui-dialog {
+  display: none;
+  height: auto !important;
+  padding: 6px;
+  background-color: rgba(60, 60, 60, 0.7);
+  border: 1px solid;
+  border-color: #888888 #555555 #444444;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  -moz-box-shadow: 0 1px 12px rgba(0, 0, 0, 0.6);
+  -webkit-box-shadow: 0 1px 12px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.6);
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.openerp.ui-dialog .ui-dialog-content {
+  padding: 0;
+}
+.openerp.ui-dialog .ui-dialog-titlebar, .openerp.ui-dialog .ui-dialog-content, .openerp.ui-dialog .ui-dialog-buttonpane {
+  padding: 16px;
+}
+.openerp.ui-dialog .ui-dialog-titlebar {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #cacaca;
+  -moz-border-radius: 2px 2px 0 0;
+  -webkit-border-radius: 2px 2px 0 0;
+  border-radius: 2px 2px 0 0;
+  background-color: #ededed;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#dedede));
+  background-image: -webkit-linear-gradient(top, #fcfcfc, #dedede);
+  background-image: -moz-linear-gradient(top, #fcfcfc, #dedede);
+  background-image: -ms-linear-gradient(top, #fcfcfc, #dedede);
+  background-image: -o-linear-gradient(top, #fcfcfc, #dedede);
+  background-image: linear-gradient(to bottom, #fcfcfc, #dedede);
+}
+.openerp.ui-dialog .ui-dialog-titlebar .ui-dialog-title {
+  margin: 0;
+  padding: 0;
+}
+.openerp.ui-dialog .ui-dialog-content {
+  background: white;
+  width: auto !important;
+}
+.openerp.ui-dialog .ui-dialog-buttonpane {
+  border-top: 1px solid #e0e0e0;
+  background: #f5f7f9;
+  margin: 0;
+  -moz-border-radius: 0 0 2px 2px;
+  -webkit-border-radius: 0 0 2px 2px;
+  border-radius: 0 0 2px 2px;
+}
+.openerp.ui-dialog .ui-dialog-buttonpane button {
+  margin: 0 4px 0 0;
+}
+.openerp.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+  float: left;
+}
+.openerp.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button {
+  margin-right: 4px;
+}
+.openerp.ui-dialog .ui-dialog-titlebar-close {
+  display: none;
+}
+.openerp.ui-dialog .ui-dialog-titlebar-close:before {
+  content: "×";
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 16px;
+  color: black;
+  text-shadow: 0 1px 0 white;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+.openerp.ui-dialog .ui-dialog-titlebar-close:before:hover {
+  color: black;
+  text-decoration: none;
+}
