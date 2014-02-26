@@ -48,12 +48,13 @@ openerp.calendar = function(instance) {
                     });
                 }
             )
-            .fail(
-                // To override error from framework.js in RPC function
-                function(error, event) {
-                    event.preventDefault();
+            .fail(function (err, ev) {
+                if (err.code === -32098) {
+                    // Prevent the CrashManager to display an error
+                    // in case of an xhr error not due to a server error
+                    ev.preventDefault();
                 }
-            );
+            });
         },
         check_notifications: function() {
             var self= this;
