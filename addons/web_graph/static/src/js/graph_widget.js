@@ -37,6 +37,9 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         if (this.mode !== 'pivot') {
             this.$('.graph_heatmap label').addClass('disabled');
+            this.$('.graph_main_content').addClass('graph_chart_mode');
+        } else {
+            this.$('.graph_main_content').addClass('graph_pivot_mode');
         }
 
         return this.model.call('fields_get', []).then(function (f) {
@@ -149,6 +152,13 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             return;
         }
 
+        if (!dom_changed && col_reduced && row_reduced) {
+            this.pivot.fold_with_depth(this.pivot.rows, row_gbs.length);
+            this.pivot.fold_with_depth(this.pivot.cols, col_gbs.length);
+            this.display_data();
+            return;
+        } 
+
         if (dom_changed || row_gb_changed || col_gb_changed) {
             this.pivot.set(domain, row_gbs, col_gbs).then(this.proxy('display_data'));
         }
@@ -159,8 +169,10 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         if (mode === 'pivot') {
             this.$('.graph_heatmap label').removeClass('disabled');
+            this.$('.graph_main_content').removeClass('graph_chart_mode').addClass('graph_pivot_mode');
         } else {
             this.$('.graph_heatmap label').addClass('disabled');
+            this.$('.graph_main_content').removeClass('graph_pivot_mode').addClass('graph_chart_mode');
         }
         this.display_data();
     },
@@ -364,7 +376,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.$('.graph_main_content svg').remove();
         this.$('.graph_main_content div').remove();
         this.table.empty();
-        this.table.toggleClass('heatmap', this.heatmap_mode !== 'none')
+        this.table.toggleClass('heatmap', this.heatmap_mode !== 'none');
         this.width = this.$el.width();
         this.height = Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width()));
 
