@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import re
-
 from openerp.osv import osv, fields
 
 class res_partner(osv.Model):
@@ -45,167 +43,126 @@ class res_partner(osv.Model):
 from openerp import Model, fields
 from openerp import constrains, depends, model, multi, one, scope
 
-class res_partner(Model):
-    _inherit = 'res.partner'
 
-    number_of_employees = fields.Integer(compute='default_number_of_employees')
-    some_float_field = fields.Float(digits=(10,2))
-    some_reference_field = fields.Reference(selection='_references_models')
+class Category(Model):
+    _name = 'test_new_api.category'
 
-    name_size = fields.Integer(store=False,
-        compute='compute_name_size', search='search_name_size')
-    children_count = fields.Integer(compute='compute_children_count', store=True)
-    has_sibling = fields.Boolean(compute='compute_has_sibling', store=True)
-    family_size = fields.Integer(compute='compute_family_size', store=False)
+    name            = fields.Char(required=True)
+    parent          = fields.Many2one('test_new_api.category')
+    display_name    = fields.Char(store=False, readonly=True,
+                            compute='_compute_display_name',
+                            inverse='_inverse_display_name')
 
     @one
-    def default_number_of_employees(self):
-        self.number_of_employees = 1
-
-    @model
-    def _references_models(self):
-        return [('res.partner', 'Partner'), ('res.users', 'User')]
+    @depends('name', 'parent')
+    def _compute_display_name(self):
+        # this definition is recursive
+        if self.parent:
+            self.display_name = self.parent.display_name + ' / ' + self.name
+        else:
+            self.display_name = self.name
 
     @one
-    @depends('name')
-    def compute_name_size(self):
-        self.name_size = len(self.name or '')
+    def _inverse_display_name(self):
+        names = self.display_name.split('/')
+        # determine sequence of categories
+        categories = []
+        for name in names[:-1]:
+            category = self.search([('name', 'ilike', name.strip())])
+            categories.append(category[0])
+        categories.append(self)
+        # assign parents following sequence
+        for parent, child in zip(categories, categories[1:]):
+            if parent and child:
+                child.parent = parent
+        # assign name of last category, and reassign display_name (to normalize it)
+        self.name = names[-1].strip()
 
-    @model
-    def search_name_size(self, operator, value):
-        assert operator in ('=', '!=', '<', '<=', '>', '>=', 'in', 'not in')
-        assert isinstance(value, (int, long))
-        # retrieve all the partners that match with a specific SQL query
-        query = """SELECT id FROM "%s" WHERE char_length("name") %s %%s""" % \
+
+class Discussion(Model):
+    _name = 'test_new_api.discussion'
+
+    name            = fields.Char(string='Title', required=True)
+    categories      = fields.Many2many('test_new_api.category',
+                            'test_new_api_discussion_category', 'discussion', 'category')
+    participants    = fields.Many2many('res.users')
+    messages        = fields.One2many('test_new_api.message', 'discussion')
+
+
+class Message(Model):
+    _name = 'test_new_api.message'
+
+    discussion      = fields.Many2one('test_new_api.discussion',
+                            ondelete='cascade')
+    body            = fields.Text()
+    author          = fields.Many2one('res.users', compute='_default_author')
+    name            = fields.Char(string='Title', store=True, readonly=True,
+                            compute='_compute_name')
+    display_name    = fields.Char(string='Abstract', store=False, readonly=True,
+                            compute='_compute_display_name')
+    size            = fields.Integer(store=False, readonly=True,
+                            compute='_compute_size', search='_search_size')
+    discussion_name = fields.Char(related='discussion.name', store=False)
+
+    @one
+    def _default_author(self):
+        self.author = scope.user
+
+    @one
+    @constrains('author', 'discussion')
+    def _check_author(self):
+        if self.discussion and self.author not in self.discussion.participants:
+            raise ValueError("Author must be among the discussion participants.")
+
+    @one
+    @depends('author.name', 'discussion.name')
+    def _compute_name(self):
+        self.name = "[%s] %s" % (self.discussion.name or '', self.author.name)
+
+    @one
+    @depends('author.name', 'discussion.name', 'body')
+    def _compute_display_name(self):
+        stuff = "[%s] %s: %s" % (self.author.name, self.discussion.name or '', self.body or '')
+        self.display_name = stuff[:80]
+
+    @one
+    @depends('body')
+    def _compute_size(self):
+        self.size = len(self.body or '')
+
+    def _search_size(self, operator, value):
+        if operator not in ('=', '!=', '<', '<=', '>', '>=', 'in', 'not in'):
+            return []
+        # retrieve all the messages that match with a specific SQL query
+        query = """SELECT id FROM "%s" WHERE char_length("body") %s %%s""" % \
                 (self._table, operator)
-        cr = scope.cr
-        cr.execute(query, (value,))
-        ids = [t[0] for t in cr.fetchall()]
+        scope.cr.execute(query, (value,))
+        ids = [t[0] for t in scope.cr.fetchall()]
         return [('id', 'in', ids)]
 
-    @one
-    @depends('child_ids')
-    def compute_children_count(self):
-        self.children_count = len(self.child_ids)
 
-    # depends on function field => cascading recomputations
-    @one
-    @depends('parent_id.children_count')
-    def compute_has_sibling(self):
-        self.has_sibling = self.parent_id.children_count >= 2
+class Talk(Model):
+    _name = 'test_new_api.talk'
 
-    @one
-    @depends('child_ids')
-    def compute_family_size(self):
-        # this definition is recursive: @one guarantees computation one by one
-        self.family_size = 1 + sum(child.family_size for child in self.child_ids)
-
-    computed_company = fields.Many2one('res.company', compute='compute_relations', store=False)
-    computed_companies = fields.Many2many('res.company', compute='compute_relations', store=False)
-
-    @one
-    @depends('company_id')
-    def compute_relations(self):
-        self.computed_company = self.company_id
-        self.computed_companies = self.company_id
-
-    company_name = fields.Char(related='company_id.name', store=False)
+    parent = fields.Many2one('test_new_api.discussion', delegate=True)
 
 
-email_re = re.compile("^(.*) <(.*)>$")
+class MixedModel(Model):
+    _name = 'test_new_api.mixed'
 
-class field_inverse(Model):
-    _name = 'test_new_api.inverse'
+    number      = fields.Float(digits=(10, 2))
+    date        = fields.Date()
+    lang        = fields.Selection(string='Language', selection='_get_lang')
+    reference   = fields.Reference(string='Related Document', selection='_reference_models')
 
-    name = fields.Char()
-    email = fields.Char()
-    full_name = fields.Char(store=False,
-                    compute='compute_full_name', inverse='inverse_full_name')
+    @model
+    def _get_lang(self):
+        langs = scope['res.lang'].search([])
+        return [(lang.code, lang.name) for lang in langs]
 
-    @one
-    @constrains('name', 'email')
-    def _check_name_email(self):
-        if '@' in (self.name or ''):
-            raise ValueError("Name may not contain '@': %r" % self.name)
-        if self.email and '@' not in self.email:
-            raise ValueError("Email must contain '@': %r" % self.email)
-
-    @one
-    @depends('name', 'email')
-    def compute_full_name(self):
-        self.full_name = "%s <%s>" % (self.name, self.email)
-
-    @one
-    def inverse_full_name(self):
-        self.name, self.email = email_re.match(self.full_name).groups()
-
-
-class on_change_test(Model):
-    _name = 'test_new_api.on_change'
-
-    name = fields.Char()
-    name_size = fields.Integer(compute='compute_name_size', store=False)
-    name_utf8_size = fields.Integer(compute='compute_utf8_size', store=False)
-    description = fields.Char(compute='compute_description')
-    trick = fields.Char(compute='whatever', store=False)
-    lines = fields.One2many('test_new_api.on_change_line', 'parent')
-
-    @one
-    @depends('name')
-    def compute_name_size(self):
-        self.name_size = len(self.name or '')
-
-    @one
-    @depends('name')
-    def compute_utf8_size(self):
-        name = self.name or u''
-        self.name_utf8_size = len(name.encode('utf-8'))
-
-    @one
-    @depends('name', 'name_size', 'name_utf8_size')
-    def compute_description(self):
-        if self.name:
-            self.description = "%s (%d:%d)" % (
-                self.name or '', self.name_size, self.name_utf8_size)
-        else:
-            self.description = False
-
-    @one
-    def whatever(self):
-        self.trick = "wheeeeeld.null()eld.null"
-
-
-class on_change_line(Model):
-    _name = 'test_new_api.on_change_line'
-
-    name = fields.Char(compute='compute_name', store=False)
-    parent = fields.Many2one('test_new_api.on_change')
-
-    @one
-    @depends('parent.name', 'parent.name_size')
-    def compute_name(self):
-        if self.parent.name:
-            self.name = "%s (%d)" % (self.parent.name, self.parent.name_size)
-        else:
-            self.name = None
-
-
-class defaults(Model):
-    _name = 'test_new_api.defaults'
-
-    name = fields.Char(required=True, compute=fields.default(u'Bob the Builder'))
-    description = fields.Char()
-
-
-class InheritsParent(Model):
-    _name = 'test_new_api.inherits_parent'
-    name = fields.Char()
-
-
-class InheritsChild(Model):
-    _name = 'test_new_api.inherits_child'
-    parent = fields.Many2one('test_new_api.inherits_parent', delegate=True)
-
-
-class mock_model(Model):
-    _name = 'test_new_api.mock_model'
+    @model
+    def _reference_models(self):
+        models = scope['ir.model'].search([('state', '!=', 'manual')])
+        return [(model.model, model.name)
+                for model in models
+                if not model.model.startswith('ir.')]

@@ -1,82 +1,129 @@
 # -*- coding: utf-8 -*-
-import unittest2
+
+from openerp import scope
 from openerp.tests import common
 
 class TestOnChange(common.TransactionCase):
+
     def setUp(self):
         super(TestOnChange, self).setUp()
-        self.Model = self.registry('test_new_api.on_change')
+        self.Discussion = self.registry('test_new_api.discussion')
+        self.Message = self.registry('test_new_api.message')
 
-    @unittest2.expectedFailure
     def test_default_get(self):
-        # default_get behavior makes no sense? store=False fields are
-        # completely ignored, but Field.null() does not matter a bit so this
-        # yields a default for description but not trick or name_size
-        fields = self.Model.fields_get()
-        values = self.Model.default_get(fields.keys())
+        """ checking values returned by default_get() """
+        fields = ['name', 'categories', 'participants', 'messages']
+        values = self.Discussion.default_get(fields)
         self.assertEqual(values, {})
 
-    @unittest2.expectedFailure
     def test_get_field(self):
-        # BaseModel.__getattr__ always falls back to _get_field without caring
-        # whether what is requested is or is not a field. And _get_field expects
-        # to be called on a record and a record only, not on a model
+        """ checking that accessing an unknown attribute does nothing special """
         with self.assertRaises(AttributeError):
-            self.Model.not_really_a_method()
+            self.Discussion.not_really_a_method()
 
     def test_new_onchange(self):
-        result = self.Model.onchange('name', {
-            'name': u"Bob the Builder",
-            'name_size': 0,
-            'name_utf8_size': 0,
-            'description': False,
+        """ test the effect of onchange() """
+        discussion = scope.ref('test_new_api.discussion_0')
+        BODY = "What a beautiful day!"
+        USER = scope.user
+
+        result = self.Message.onchange('discussion', {
+            'discussion': discussion.id,
+            'name': "[%s] %s" % ('', USER.name),
+            'body': False,
+            'author': USER.id,
+            'size': 0,
         })
         self.assertEqual(result['value'], {
-            'name_size': 15,
-            'name_utf8_size': 15,
-            'description': u"Bob the Builder (15:15)",
+            'name': "[%s] %s" % (discussion.name, USER.name),
         })
 
-        result = self.Model.onchange('description', {
-            'name': u"Bob the Builder",
-            'name_size': 15,
-            'name_utf8_size': 15,
-            'description': u"Can we fix it? Yes we can!",
+        result = self.Message.onchange('body', {
+            'discussion': discussion.id,
+            'name': "[%s] %s" % (discussion.name, USER.name),
+            'body': BODY,
+            'author': USER.id,
+            'size': 0,
         })
-        self.assertEqual(result['value'], {})
+        self.assertEqual(result['value'], {
+            'size': len(BODY),
+        })
 
     def test_new_onchange_one2many(self):
-        tocheck = ['lines.name']
+        """ test the effect of onchange() on one2many fields """
+        tocheck = ['messages.name', 'messages.body', 'messages.author', 'messages.size']
+        BODY = "What a beautiful day!"
+        USER = scope.user
 
-        result = self.Model.onchange('name', {
-            'name': u"Bob the Builder",
-            'name_size': 0,
-            'name_utf8_size': 0,
-            'description': False,
-            'lines': [(0, 0, {'name': False})]
+        # create an independent message
+        message = self.Message.create({'body': BODY})
+        self.assertEqual(message.name, "[%s] %s" % ('', USER.name))
+
+        # modify messages
+        result = self.Discussion.onchange('messages', {
+            'name': "Foo",
+            'categories': [],
+            'participants': [],
+            'messages': [
+                (0, 0, {
+                    'name': "[%s] %s" % ('', USER.name),
+                    'body': BODY,
+                    'author': USER.id,
+                    'size': len(BODY),
+                }),
+                (1, message.id, {
+                    'name': "[%s] %s" % ('', USER.name),
+                    'body': BODY,
+                    'author': USER.id,
+                    'size': len(BODY),
+                }),
+            ],
         }, tocheck)
         self.assertEqual(result['value'], {
-            'name_size': 15,
-            'name_utf8_size': 15,
-            'description': u"Bob the Builder (15:15)",
-            'lines': [(0, 0, {'name': u"Bob the Builder (15)"})],
+            'messages': [
+                (0, 0, {
+                    'name': "[%s] %s" % ('', USER.name),
+                    'body': BODY,
+                    'author': USER.id,
+                    'size': len(BODY),
+                }),
+                (1, message.id, {
+                    'name': "[%s] %s" % ('', USER.name),
+                    'body': BODY,
+                    'author': USER.id,
+                    'size': len(BODY),
+                }),
+            ],
         })
 
-        # create a new line
-        line = self.registry('test_new_api.on_change_line').create({})
-        self.assertFalse(line.name)
-
-        # include the line in a new record
-        result = self.Model.onchange('name', {
-            'name': u"Bob the Builder",
-            'name_size': 0,
-            'name_utf8_size': 0,
-            'description': False,
-            'lines': [(4, line.id)]
+        # modify discussion name
+        result = self.Discussion.onchange('name', {
+            'name': "Foo",
+            'categories': [],
+            'participants': [],
+            'messages': [
+                (0, 0, {
+                    'name': "[%s] %s" % ('', USER.name),
+                    'body': BODY,
+                    'author': USER.id,
+                    'size': len(BODY),
+                }),
+                (4, message.id),
+            ],
         }, tocheck)
         self.assertEqual(result['value'], {
-            'name_size': 15,
-            'name_utf8_size': 15,
-            'description': u"Bob the Builder (15:15)",
-            'lines': [(1, line.id, {'name': u"Bob the Builder (15)"})],
+            'messages': [
+                (0, 0, {
+                    'name': "[%s] %s" % ("Foo", USER.name),
+                    'body': BODY,
+                    'author': USER.id,
+                    'size': len(BODY),
+                }),
+                (1, message.id, {
+                    'name': "[%s] %s" % ("Foo", USER.name),
+                    'body': BODY,
+                    'author': USER.id,
+                    'size': len(BODY),
+                }),
+            ],
         })

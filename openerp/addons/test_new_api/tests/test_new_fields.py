@@ -12,306 +12,268 @@ class TestNewFields(common.TransactionCase):
 
     def setUp(self):
         super(TestNewFields, self).setUp()
-        self.Partner = self.registry('res.partner')
-        self.User = self.registry('res.users')
+        self.Category = self.registry('test_new_api.category')
+        self.Discussion = self.registry('test_new_api.discussion')
+        self.Message = self.registry('test_new_api.message')
+        self.Mixed = self.registry('test_new_api.mixed')
 
     def test_00_basics(self):
         """ test accessing new fields """
-        # find a partner
-        partner = self.Partner.search([('name', 'ilike', 'j')])[0]
+        # find a discussion
+        discussion = scope.ref('test_new_api.discussion_0')
 
-        # read field as a record attribute
-        self.assertIsInstance(partner.children_count, (int, long))
+        # read field as a record attribute or as a record item
+        self.assertIsInstance(discussion.name, basestring)
+        self.assertIsInstance(discussion['name'], basestring)
+        self.assertEqual(discussion['name'], discussion.name)
 
-        # read field as a record item
-        self.assertIsInstance(partner['children_count'], (int, long))
-        self.assertEqual(partner['children_count'], partner.children_count)
-
-        # read field as a record item
-        values = partner.read(['children_count'])[0]
-        self.assertIsInstance(values, dict)
-        self.assertIsInstance(values['children_count'], (int, long))
-        self.assertEqual(values['children_count'], partner.children_count)
+        # read it with method read()
+        values = discussion.read(['name'])[0]
+        self.assertEqual(values['name'], discussion.name)
 
     def test_10_non_stored(self):
         """ test non-stored fields """
-        # find partners
-        alpha, beta, gamma = self.Partner.search([], limit=3)
+        # find messages
+        for message in self.Message.search([]):
+            # check definition of field
+            self.assertEqual(message.size, len(message.body or ''))
 
-        # check definition of the field
-        self.assertEqual(alpha.name_size, len(alpha.name))
-        self.assertEqual(beta.name_size, len(beta.name))
-        self.assertEqual(gamma.name_size, len(gamma.name))
-
-        # check recomputation after record is modified
-        alpha_name = alpha.name
-        alpha_size = len(alpha_name)
-        for n in xrange(10):
-            alpha.write({'name': alpha_name + ("!" * n)})
-            self.assertEqual(alpha.name_size, alpha_size + n)
+            # check recomputation after record is modified
+            size = message.size
+            message.write({'body': (message.body or '') + "!!!"})
+            self.assertEqual(message.size, size + 3)
 
     def test_11_stored(self):
         """ test stored fields """
-        # find partners with children
-        alpha, beta, gamma = self.Partner.search([('child_ids.name', '!=', False)], limit=3)
+        # find the demo discussion
+        discussion = scope.ref('test_new_api.discussion_0')
+        self.assertTrue(len(discussion.messages) > 0)
 
-        # check regular field
-        alpha.write({'number_of_employees': 10})
-        self.assertEqual(alpha.number_of_employees, 10)
+        # check messages
+        name0 = discussion.name or ""
+        for message in discussion.messages:
+            self.assertEqual(message.name, "[%s] %s" % (name0, message.author.name))
 
-        alpha.number_of_employees = 20
-        self.assertEqual(alpha.number_of_employees, 20)
-        alpha.invalidate_cache(['number_of_employees'])
-        self.assertEqual(alpha.number_of_employees, 20)
+        # modify discussion name, and check again messages
+        discussion.name = name1 = 'Talking about stuff...'
+        for message in discussion.messages:
+            self.assertEqual(message.name, "[%s] %s" % (name1, message.author.name))
 
-        # check definition of the field
-        self.assertEqual(alpha.children_count, len(alpha.child_ids))
-        self.assertEqual(beta.children_count, len(beta.child_ids))
-        self.assertEqual(gamma.children_count, len(gamma.child_ids))
-
-        # check recomputation after children are deleted
-        alpha_count = alpha.children_count
-        for n, child in enumerate(alpha.child_ids, start=1):
-            child.unlink()
-            self.assertEqual(alpha.children_count, alpha_count - n)
-
-        # check recomputation after children are created
-        self.assertEqual(alpha.children_count, 0)
-        foo = self.Partner.create({'name': 'Foo', 'parent_id': alpha.id})
-        self.assertEqual(alpha.children_count, 1)
-        self.assertFalse(foo.has_sibling)
-        self.Partner.create({'name': 'Bar', 'parent_id': alpha.id})
-        self.assertEqual(alpha.children_count, 2)
-        self.assertTrue(foo.has_sibling)
-        self.Partner.create({'name': 'Baz', 'parent_id': alpha.id})
-        self.assertEqual(alpha.children_count, 3)
-        self.assertTrue(foo.has_sibling)
-
-        # check recomputation after children are transfered to another partner
-        children = beta.child_ids + gamma.child_ids
-        beta_count = beta.children_count
-        gamma_count = gamma.children_count
-        for n, child in enumerate(beta.child_ids, start=1):
-            child.write({'parent_id': gamma.id})
-            self.assertEqual(beta.children_count, beta_count - n)
-            self.assertEqual(gamma.children_count, gamma_count + n)
-            for c in children:
-                self.assertEqual(c.has_sibling, c.parent_id.children_count >= 2)
+        # switch message from discussion, and check again
+        name2 = 'Another discussion'
+        discussion2 = discussion.copy({'name': name2})
+        message2 = discussion.messages[0]
+        message2.discussion = discussion2
+        for message in discussion2.messages:
+            self.assertEqual(message.name, "[%s] %s" % (name2, message.author.name))
 
     def test_12_recursive(self):
         """ test recursively dependent fields """
-        abel = self.Partner.create({'name': 'Abel'})
-        beth = self.Partner.create({'name': 'Bethany'})
-        cath = self.Partner.create({'name': 'Catherine'})
-        dean = self.Partner.create({'name': 'Dean'})
-        ethan = self.Partner.create({'name': 'Ethan'})
-        fanny = self.Partner.create({'name': 'Fanny'})
-        gabriel = self.Partner.create({'name': 'Gabriel'})
+        abel = self.Category.create({'name': 'Abel'})
+        beth = self.Category.create({'name': 'Bethany'})
+        cath = self.Category.create({'name': 'Catherine'})
+        dean = self.Category.create({'name': 'Dean'})
+        ewan = self.Category.create({'name': 'Ewan'})
+        finn = self.Category.create({'name': 'Finnley'})
+        gabe = self.Category.create({'name': 'Gabriel'})
 
-        beth.parent_id = abel
-        cath.parent_id = abel
-        dean.parent_id = beth
-        ethan.parent_id = beth
-        fanny.parent_id = beth
-        gabriel.parent_id = cath
+        beth.parent = cath.parent = abel
+        ewan.parent = finn.parent = beth
+        gabe.parent = cath
 
-        self.assertEqual(abel.child_ids, beth | cath)
-        self.assertEqual(beth.child_ids, dean | ethan | fanny)
-        self.assertEqual(cath.child_ids, gabriel)
+        self.assertEqual(ewan.display_name, "Abel / Bethany / Ewan")
+        self.assertEqual(finn.display_name, "Abel / Bethany / Finnley")
+        self.assertEqual(beth.display_name, "Abel / Bethany")
+        self.assertEqual(gabe.display_name, "Abel / Catherine / Gabriel")
 
-        self.assertEqual(abel.family_size, 7)
-        self.assertEqual(beth.family_size, 4)
-        self.assertEqual(cath.family_size, 2)
-        self.assertEqual(dean.family_size, 1)
-        self.assertEqual(ethan.family_size, 1)
-        self.assertEqual(fanny.family_size, 1)
-        self.assertEqual(gabriel.family_size, 1)
+        ewan.parent = cath
+        self.assertEqual(ewan.display_name, "Abel / Catherine / Ewan")
+
+        cath.parent = beth
+        self.assertEqual(ewan.display_name, "Abel / Bethany / Catherine / Ewan")
 
     def test_13_inverse(self):
         """ test inverse computation of fields """
-        model = self.registry('test_new_api.inverse')
+        abel = self.Category.create({'name': 'Abel'})
+        beth = self.Category.create({'name': 'Bethany'})
+        cath = self.Category.create({'name': 'Catherine'})
+        dean = self.Category.create({'name': 'Dean'})
+        ewan = self.Category.create({'name': 'Ewan'})
+        finn = self.Category.create({'name': 'Finnley'})
+        gabe = self.Category.create({'name': 'Gabriel'})
+        self.assertEqual(ewan.display_name, "Ewan")
 
-        joe = model.create({'name': 'Joe the plumber', 'email': 'joe@example.com'})
-        self.assertEqual(joe.name, 'Joe the plumber')
-        self.assertEqual(joe.email, 'joe@example.com')
-        self.assertEqual(joe.full_name, 'Joe the plumber <joe@example.com>')
+        ewan.display_name = "Abel / Bethany / Catherine / Erwan"
 
-        joe.name = 'Joseph Singer'
-        self.assertEqual(joe.full_name, 'Joseph Singer <joe@example.com>')
-
-        joe.email = 'joe@openerp.com'
-        self.assertEqual(joe.full_name, 'Joseph Singer <joe@openerp.com>')
-
-        joe.full_name = 'Joe Bailey <joe.bailey@whisky.com>'
-        self.assertEqual(joe.name, 'Joe Bailey')
-        self.assertEqual(joe.email, 'joe.bailey@whisky.com')
+        self.assertEqual(beth.parent, abel)
+        self.assertEqual(cath.parent, beth)
+        self.assertEqual(ewan.parent, cath)
+        self.assertEqual(ewan.name, "Erwan")
 
     def test_14_search(self):
         """ test search on computed fields """
-        all_ps = self.Partner.search([])
+        discussion = scope.ref('test_new_api.discussion_0')
 
-        # partition all partners based on their name size
-        partners_by_size = defaultdict(self.Partner.browse)
-        for p in all_ps:
-            partners_by_size[p.name_size] += p
+        # determine message sizes
+        sizes = set(message.size for message in discussion.messages)
 
-        max_size = max(partners_by_size)
-        for size in xrange(max_size + 1):
-            ps = self.Partner.search([('name_size', '=', size)])
-            self.assertEqual(ps, partners_by_size[size])
+        # search for messages based on their size
+        for size in sizes:
+            messages0 = self.Message.search(
+                [('discussion', '=', discussion.id), ('size', '<=', size)])
 
-        # check other comparisons
-        ps = self.Partner.search([('name_size', '>=', 6), ('name_size', '<', 12)])
-        qs = sum((p for p in all_ps if p.name_size >= 6 and p.name_size < 12),
-                 self.Partner.browse())
-        self.assertEqual(ps, qs)
+            messages1 = self.Message.browse()
+            for message in discussion.messages:
+                if message.size <= size:
+                    messages1 += message
+
+            self.assertEqual(messages0, messages1)
 
     def test_15_constraint(self):
         """ test new-style Python constraints """
-        model = self.registry('test_new_api.inverse')
-        record = model.create({'name': 'Joe the plumber', 'email': 'joe@example.com'})
+        discussion = scope.ref('test_new_api.discussion_0')
 
+        # remove oneself from discussion participants: we can no longer create
+        # messages in discussion
+        discussion.participants -= scope.user
         with self.assertRaises(Exception):
-            record.name = "Joe @ home"
+            self.Message.create({'discussion': discussion.id, 'body': 'Whatever'})
 
-        with self.assertRaises(Exception):
-            record.email = "joe.the.plumber"
+        # put back oneself into discussion participants: now we can create
+        # messages in discussion
+        discussion.participants += scope.user
+        self.Message.create({'discussion': discussion.id, 'body': 'Whatever'})
 
     def test_20_float(self):
         """ test float fields """
-        # find a partner
-        alpha = self.Partner.search([], limit=1)[0]
+        record = self.Mixed.create({})
 
         # assign value, and expect rounding
-        alpha.write({'some_float_field': 2.4999999999999996})
-        self.assertEqual(alpha.some_float_field, 2.50)
+        record.write({'number': 2.4999999999999996})
+        self.assertEqual(record.number, 2.50)
 
         # same with field setter
-        alpha.some_float_field = 2.4999999999999996
-        self.assertEqual(alpha.some_float_field, 2.50)
+        record.number = 2.4999999999999996
+        self.assertEqual(record.number, 2.50)
 
     def test_21_date(self):
         """ test date fields """
-        # find a partner
-        alpha = self.Partner.search([], limit=1)[0]
+        record = self.Mixed.create({})
 
         # one may assign False or None
-        alpha.date = None
-        self.assertIs(alpha.date, False)
+        record.date = None
+        self.assertFalse(record.date)
 
         # one may assign date and datetime objects
-        alpha.date = date(2012, 05, 01)
-        self.assertEqual(alpha.date, '2012-05-01')
+        record.date = date(2012, 05, 01)
+        self.assertEqual(record.date, '2012-05-01')
 
-        alpha.date = datetime(2012, 05, 01, 10, 45, 00)
-        self.assertEqual(alpha.date, '2012-05-01')
+        record.date = datetime(2012, 05, 01, 10, 45, 00)
+        self.assertEqual(record.date, '2012-05-01')
 
         # one may assign dates in the default format, and it must be checked
-        alpha.date = '2012-05-01'
-        self.assertEqual(alpha.date, '2012-05-01')
+        record.date = '2012-05-01'
+        self.assertEqual(record.date, '2012-05-01')
 
         with self.assertRaises(ValueError):
-            alpha.date = '12-5-1'
+            record.date = '12-5-1'
 
     def test_22_selection(self):
         """ test selection fields """
-        # find a partner
-        alpha = self.Partner.search([], limit=1)[0]
+        record = self.Mixed.create({})
 
         # one may assign False or None
-        alpha.type = None
-        self.assertIs(alpha.type, False)
+        record.lang = None
+        self.assertFalse(record.lang)
 
         # one may assign a value, and it must be checked
-        alpha.type = 'delivery'
-        with self.assertRaises(ValueError):
-            alpha.type = 'notacorrectvalue'
-
-        # same with dynamic selections
         for language in self.registry('res.lang').search([]):
-            alpha.lang = language.code
+            record.lang = language.code
         with self.assertRaises(ValueError):
-            alpha.lang = 'zz_ZZ'
+            record.lang = 'zz_ZZ'
 
     def test_23_relation(self):
         """ test relation fields """
         outer_scope = scope.current
-        demo = self.User.search([('login', '=', 'demo')]).one()
 
-        # retrieve two partners with children
-        alpha, beta = self.Partner.search([('child_ids', '!=', False)], limit=2)
-        alpha1 = alpha.child_ids[0]
+        demo = scope.ref('base.user_demo')
+        message = scope.ref('test_new_api.message_0_0')
 
-        # check scope of records
-        self.assertEqual(alpha1._scope, outer_scope)
-        self.assertEqual(beta._scope, outer_scope)
+        # check scope of record and related records
+        self.assertEqual(message._scope, outer_scope)
+        self.assertEqual(message.discussion._scope, outer_scope)
 
         with scope(user=demo) as inner_scope:
             self.assertNotEqual(inner_scope, outer_scope)
 
-            # assign alpha1's parent to a record in inner scope
-            inner_beta = beta.scoped()
-            alpha1.parent_id = inner_beta
+            # check scope of record and related records
+            self.assertEqual(message._scope, outer_scope)
+            self.assertEqual(message.discussion._scope, outer_scope)
 
-            # both alpha1 and its parent field must be in outer scope
-            self.assertEqual(alpha1._scope, outer_scope)
-            self.assertEqual(alpha1.parent_id._scope, outer_scope)
+            # migrate message into the current scope, and check again
+            inner_message = message.scoped()
+            self.assertEqual(inner_message._scope, inner_scope)
+            self.assertEqual(inner_message.discussion._scope, inner_scope)
 
-            # migrate alpha1 into the current scope, and check again
-            inner_alpha1 = alpha1.scoped()
-            self.assertEqual(inner_alpha1._scope, inner_scope)
-            self.assertEqual(inner_alpha1.parent_id._scope, inner_scope)
+            # assign record's parent to a record in inner scope
+            message.discussion = message.discussion.copy({'name': 'Copy'})
+
+            # both message and its parent field must be in outer scope
+            self.assertEqual(message._scope, outer_scope)
+            self.assertEqual(message.discussion._scope, outer_scope)
+
+            # migrate message into the current scope, and check again
+            self.assertEqual(inner_message._scope, inner_scope)
+            self.assertEqual(inner_message.discussion._scope, inner_scope)
 
     def test_24_reference(self):
         """ test reference fields. """
-        alpha, beta = self.Partner.search([], limit=2)
+        record = self.Mixed.create({})
 
         # one may assign False or None
-        alpha.some_reference_field = None
-        self.assertIs(alpha.some_reference_field, False)
+        record.reference = None
+        self.assertFalse(record.reference)
 
-        # one may assign a partner or a user
-        alpha.some_reference_field = beta
-        self.assertEqual(alpha.some_reference_field, beta)
-        alpha.some_reference_field = self.scope.user
-        self.assertEqual(alpha.some_reference_field, self.scope.user)
+        # one may assign a user or a partner...
+        record.reference = self.scope.user
+        self.assertEqual(record.reference, self.scope.user)
+        record.reference = self.scope.user.partner_id
+        self.assertEqual(record.reference, self.scope.user.partner_id)
+        # ... but no record from a model that starts with 'ir.'
         with self.assertRaises(ValueError):
-            alpha.some_reference_field = self.scope.user.company_id
+            record.reference = scope['ir.model'].search([], limit=1)
 
     def test_25_related(self):
         """ test related fields. """
-        partner = self.Partner.search([('company_id', '!=', False)], limit=1)[0]
-        company = partner.company_id
+        message = scope.ref('test_new_api.message_0_0')
+        discussion = message.discussion
 
         # check value of related field
-        self.assertEqual(partner.company_name, company.name)
-        self.assertEqual(partner['company_name'], company.name)
+        self.assertEqual(message.discussion_name, discussion.name)
 
-        # change company name, and check result
-        company.name = 'Foo'
-        self.assertEqual(partner.company_name, 'Foo')
-        self.assertEqual(partner['company_name'], 'Foo')
+        # change discussion name, and check result
+        discussion.name = 'Foo'
+        self.assertEqual(message.discussion_name, 'Foo')
 
-        # change company name via related field, and check result
-        partner.company_name = 'Bar'
-        self.assertEqual(company.name, 'Bar')
-        self.assertEqual(partner.company_name, 'Bar')
-        self.assertEqual(partner['company_name'], 'Bar')
+        # change discussion name via related field, and check result
+        message.discussion_name = 'Bar'
+        self.assertEqual(discussion.name, 'Bar')
+        self.assertEqual(message.discussion_name, 'Bar')
 
         # search on related field, and check result
-        search_on_related = self.Partner.search([('company_name', '=', 'Bar')])
-        search_on_regular = self.Partner.search([('company_id.name', '=', 'Bar')])
+        search_on_related = self.Message.search([('discussion_name', '=', 'Bar')])
+        search_on_regular = self.Message.search([('discussion.name', '=', 'Bar')])
         self.assertEqual(search_on_related, search_on_regular)
 
         # check that field attributes are copied
-        partner_field = partner.fields_get(['company_name'])['company_name']
-        company_field = company.fields_get(['name'])['name']
-        self.assertEqual(partner_field['required'], company_field['required'])
+        message_field = message.fields_get(['discussion_name'])['discussion_name']
+        discussion_field = discussion.fields_get(['name'])['name']
+        self.assertEqual(message_field['required'], discussion_field['required'])
 
     def test_26_inherited(self):
         """ test inherited fields. """
         # a bunch of fields are inherited from res_partner
-        for user in self.User.search([]):
+        for user in self.registry('res.users').search([]):
             partner = user.partner_id
             for field in ('is_company', 'name', 'email', 'country_id'):
                 self.assertEqual(getattr(user, field), getattr(partner, field))
@@ -319,79 +281,75 @@ class TestNewFields(common.TransactionCase):
 
     def test_30_read(self):
         """ test computed fields as returned by read(). """
-        alpha = self.Partner.search([], limit=1).one()
+        discussion = scope.ref('test_new_api.discussion_0')
 
-        name_size = alpha.name_size
-        company = alpha.computed_company
-        companies = alpha.computed_companies
+        for message in discussion.messages:
+            display_name = message.display_name
+            size = message.size
 
-        data = alpha.read(['name_size', 'computed_company', 'computed_companies'])[0]
-        self.assertEqual(data['name_size'], name_size)
-        self.assertEqual(data['computed_company'], company.name_get()[0])
-        self.assertEqual(data['computed_companies'], companies.unbrowse())
+            data = message.read(['display_name', 'size'])[0]
+            self.assertEqual(data['display_name'], display_name)
+            self.assertEqual(data['size'], size)
 
     def test_40_new(self):
         """ test new records. """
-        # create a new partner
-        partner = self.Partner.new()
-        self.assertFalse(partner.id)
+        discussion = scope.ref('test_new_api.discussion_0')
+
+        # create a new message
+        message = self.Message.new()
+        self.assertFalse(message.id)
 
         # assign some fields; should have no side effect
-        partner.name = "Foo"
-        self.assertEqual(partner.name, "Foo")
+        message.discussion = discussion
+        message.body = BODY = "May the Force be with you."
+        self.assertEqual(message.discussion, discussion)
+        self.assertEqual(message.body, BODY)
 
-        children = self.Partner.search([('parent_id', '=', False)], limit=2)
-        partner.child_ids = children
-        self.assertEqual(partner.child_ids, children)
+        self.assertNotIn(message, discussion.messages)
 
         # check computed values of fields
-        self.assertEqual(partner.active, True)
-        self.assertEqual(partner.number_of_employees, 1)
-        self.assertEqual(partner.name_size, 3)
-        self.assertEqual(partner.children_count, 2)
+        self.assertEqual(message.author, scope.user)
+        self.assertEqual(message.name, "[%s] %s" % (discussion.name, scope.user.name))
+        self.assertEqual(message.size, len(BODY))
 
     def test_41_defaults(self):
         """ test default values. """
-        fields = ['name', 'active', 'number_of_employees', 'name_size']
-        defaults = self.Partner.default_get(fields)
+        fields = ['discussion', 'body', 'author', 'size']
+        defaults = self.Message.default_get(fields)
 
-        self.assertFalse(defaults.get('name'))
-        self.assertFalse(defaults.get('name_size'))
-        self.assertEqual(defaults['active'], True)
-        self.assertEqual(defaults['number_of_employees'], 1)
+        self.assertFalse(defaults.get('discussion'))
+        self.assertFalse(defaults.get('body'))
+        self.assertEqual(defaults['author'], scope.user.id)
+        self.assertEqual(defaults['size'], 0)
 
-        fields = ['name', 'description']
-        defaults = self.registry('test_new_api.defaults').default_get(fields)
-        self.assertEqual(defaults.get('name'), u"Bob the Builder")
 
-class TestMagicalFields(common.TransactionCase):
+class TestMagicFields(common.TransactionCase):
 
     def setUp(self):
-        super(TestMagicalFields, self).setUp()
-        self.Model = self.registry('test_new_api.on_change')
+        super(TestMagicFields, self).setUp()
+        self.Discussion = self.registry('test_new_api.discussion')
 
     def test_write_date(self):
-        record = self.Model.create({'name': 'Booba'})
+        record = self.Discussion.create({'name': 'Booba'})
+        self.assertEqual(record.create_uid, scope.user)
+        self.assertEqual(record.write_uid, scope.user)
 
-        self.assertEqual(
-            record.write_uid,
-            self.registry('res.users').browse(self.uid))
 
 class TestInherits(common.TransactionCase):
+
     def setUp(self):
         super(TestInherits, self).setUp()
-        self.Parent = self.registry('test_new_api.inherits_parent')
-        self.Child = self.registry('test_new_api.inherits_child')
+        self.Talk = self.registry('test_new_api.talk')
 
     def test_inherits(self):
         """ Check that a many2one field with delegate=True adds an entry in _inherits """
-        self.assertEqual(self.Child._inherits, {'test_new_api.inherits_parent': 'parent'})
-        self.assertIn('name', self.Child._fields)
-        self.assertEqual(self.Child._fields['name'].related, ('parent', 'name'))
+        self.assertEqual(self.Talk._inherits, {'test_new_api.discussion': 'parent'})
+        self.assertIn('name', self.Talk._fields)
+        self.assertEqual(self.Talk._fields['name'].related, ('parent', 'name'))
 
-        child = self.Child.create({'name': 'Foo'})
-        parent = child.parent
-        self.assertTrue(parent)
-        self.assertEqual(child._name, 'test_new_api.inherits_child')
-        self.assertEqual(parent._name, 'test_new_api.inherits_parent')
-        self.assertEqual(child.name, parent.name)
+        talk = self.Talk.create({'name': 'Foo'})
+        discussion = talk.parent
+        self.assertTrue(discussion)
+        self.assertEqual(talk._name, 'test_new_api.talk')
+        self.assertEqual(discussion._name, 'test_new_api.discussion')
+        self.assertEqual(talk.name, discussion.name)
