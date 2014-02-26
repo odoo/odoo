@@ -992,7 +992,7 @@
     </span>
 </t>
 
-<t t-name="dropdown_selection">
+<t t-name="DropdownSelection">
     <span class="btn-group">
         <t t-foreach="states" t-as="rec">
             <a t-att-class="'btn btn-xs '+ rec.state_class" t-if="widget.get('value') === rec.name"  t-att-title="rec.state_name" >
@@ -1011,7 +1011,7 @@
         </ul>
     </span>
 </t>
-<t t-name="priority">
+<t t-name="Priority">
     <ul style="list-style: none; padding-left: 2px;">
         <t t-foreach="legends" t-as="rec" >
             <t t-if="widget.get('value') gte rec.name and !rec_first">
