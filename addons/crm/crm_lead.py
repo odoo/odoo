@@ -232,7 +232,7 @@ class crm_lead(format_address, osv.osv):
         'description': fields.text('Notes'),
         'write_date': fields.datetime('Update Date', readonly=True),
         'categ_ids': fields.many2many('crm.case.categ', 'crm_lead_category_rel', 'lead_id', 'category_id', 'Tags', \
-            domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]",help="Classify and analyse your lead/opportunities category like: Training, Service"),
+            domain="['|', ('section_id', '=', section_id), ('section_id', '=', False), ('object_id.model', '=', 'crm.lead')]", help="Classify and analyze your lead/opportunity categories like: Training, Service"),
         'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
             domain="['|',('section_id','=',section_id),('section_id','=',False)]", help="From which campaign (seminar, marketing campaign, mass mailing, ...) did this contact come from?"),
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel (mail, direct, phone, ...)"),
