@@ -151,6 +151,13 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             return;
         }
 
+        if (!dom_changed && col_reduced && row_reduced) {
+            this.pivot.fold_with_depth(this.pivot.rows, row_gbs.length);
+            this.pivot.fold_with_depth(this.pivot.cols, col_gbs.length);
+            this.display_data();
+            return;
+        } 
+
         if (dom_changed || row_gb_changed || col_gb_changed) {
             this.pivot.set(domain, row_gbs, col_gbs).then(this.proxy('display_data'));
         }
