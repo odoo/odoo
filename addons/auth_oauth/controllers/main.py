@@ -8,7 +8,7 @@ from werkzeug.exceptions import BadRequest
 import openerp
 from openerp import SUPERUSER_ID
 from openerp import http
-from openerp.http import request, LazyResponse
+from openerp.http import request
 from openerp.addons.web.controllers.main import db_monodb, set_cookie_and_redirect, login_and_redirect
 from openerp.modules.registry import RegistryManager
 from openerp.tools.translate import _
@@ -71,7 +71,7 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
         providers = self.list_providers()
 
         response = super(OAuthLogin, self).web_login(*args, **kw)
-        if isinstance(response, LazyResponse):
+        if response.is_qweb:
             error = request.params.get('oauth_error')
             if error == '1':
                 error = _("Sign up is not allowed on this database.")
@@ -82,9 +82,9 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
             else:
                 error = None
 
-            response.params['values']['providers'] = providers
+            response.qcontext['providers'] = providers
             if error:
-                response.params['values']['error'] = error
+                response.qcontext['error'] = error
 
         return response
 
