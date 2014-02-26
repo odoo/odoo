@@ -682,6 +682,7 @@ class stock_picking(osv.osv):
                     for move in pick.move_lines:
                         if move.reserved_quant_ids:
                             res[pick.id] = 'partially_available'
+                            break
         return res
 
     def _get_pickings(self, cr, uid, ids, context=None):
