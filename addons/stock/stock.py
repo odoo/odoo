@@ -656,19 +656,21 @@ class stock_picking(osv.osv):
         '''
         res = {}
         for pick in self.browse(cr, uid, ids, context=context):
-            if (not pick.move_lines) or any([x.state == 'draft' for x in pick.move_lines]):
+            cr.execute("select state, partially_available from stock_move where picking_id = %s", (pick.id,))
+            move_lines = cr.fetchall() #x[0] = state, x[1] partially available 
+            if (not move_lines) or any([x[0] == 'draft' for x in move_lines]):
                 res[pick.id] = 'draft'
                 continue
-            if all([x.state == 'cancel' for x in pick.move_lines]):
+            if all([x[0] == 'cancel' for x in move_lines]):
                 res[pick.id] = 'cancel'
                 continue
-            if all([x.state in ('cancel', 'done') for x in pick.move_lines]):
+            if all([x[0] in ('cancel', 'done') for x in move_lines]):
                 res[pick.id] = 'done'
                 continue
 
             order = {'confirmed': 0, 'waiting': 1, 'assigned': 2}
             order_inv = {0: 'confirmed', 1: 'waiting', 2: 'assigned'}
-            lst = [order[x.state] for x in pick.move_lines if x.state not in ('cancel', 'done')]
+            lst = [order[x[0]] for x in move_lines if x[0] not in ('cancel', 'done')]
             if pick.move_type == 'one':
                 res[pick.id] = order_inv[min(lst)]
             else:
@@ -678,16 +680,16 @@ class stock_picking(osv.osv):
                 res[pick.id] = order_inv[max(lst)]
                 if not all(x == 2 for x in lst):
                     #if all moves aren't assigned, check if we have one product partially available
-                    for move in pick.move_lines:
-                        if move.reserved_quant_ids:
+                    for move in move_lines:
+                        if move[1]:
                             res[pick.id] = 'partially_available'
         return res
 
     def _get_pickings(self, cr, uid, ids, context=None):
         res = set()
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.picking_id:
-                res.add(move.picking_id.id)
+        for move in self.read(cr, uid, ids, ['picking_id'], context=context):
+            if move['picking_id']:
+                res.add(move['picking_id'][0])
         return list(res)
 
     def _get_pack_operation_exist(self, cr, uid, ids, field_name, arg, context=None):
@@ -740,9 +742,9 @@ class stock_picking(osv.osv):
         ),
         'priority': fields.selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, string='Priority', required=True),
         'min_date': fields.function(get_min_max_date, multi="min_max_date", fnct_inv=_set_min_date,
-                 store={'stock.move': (_get_pickings, ['state', 'date_expected'], 20)}, type='datetime', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.", track_visibility='onchange'),
+                 store={'stock.move': (_get_pickings, ['date_expected'], 20)}, type='datetime', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.", track_visibility='onchange'),
         'max_date': fields.function(get_min_max_date, multi="min_max_date",
-                 store={'stock.move': (_get_pickings, ['state', 'date_expected'], 20)}, type='datetime', string='Max. Expected Date', select=2, help="Scheduled time for the last part of the shipment to be processed"),
+                 store={'stock.move': (_get_pickings, ['date_expected'], 20)}, type='datetime', string='Max. Expected Date', select=2, help="Scheduled time for the last part of the shipment to be processed"),
         'date': fields.datetime('Commitment Date', help="Date promised for the completion of the transfer order, usually set the time of the order and revised later on.", select=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, track_visibility='onchange'),
         'date_done': fields.datetime('Date of Transfer', help="Date of Completion", states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
@@ -3270,9 +3272,9 @@ class stock_package(osv.osv):
     def _get_packages(self, cr, uid, ids, context=None):
         """Returns packages from quants for store"""
         res = set()
-        for quant in self.browse(cr, uid, ids, context=context):
-            if quant.package_id:
-                res.add(quant.package_id.id)
+        for quant in self.read(cr, uid, ids, ['package_id'], context=context):
+            if quant['package_id']:
+                res.add(quant['package_id'][0])
         return list(res)
 
     def _get_packages_to_relocate(self, cr, uid, ids, context=None):
