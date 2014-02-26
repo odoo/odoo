@@ -139,6 +139,7 @@ class website_forum(http.Controller):
         values = {
             'question_ids': tag.post_ids,
             'pager': pager,
+            'searches': kwargs
         }
 
         return request.website.render("website_forum.index", values)

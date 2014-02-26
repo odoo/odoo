@@ -24,75 +24,69 @@
         <!-- Page -->
 
         <template id="post_list">
-            <div class="tab-pane active" id="all">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="row">
-                            <div class="col-xs-9">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <h4>
-                                            <a t-attf-href="/question/#{ slug(question) }">
-                                                <span>
-                                                    <t t-esc="question.name"/>
-                                                </span>
-                                            </a>
-                                        </h4>
-                                    </div>
-                                </div>
-                                <t t-call="website_forum.tags" />
-                                <div class="row">
-                                    <div class="col-xs-12 text-right">
-                                        <small>
-                                            <span>
-                                                <t t-esc="question.write_date" />
-                                            </span>
-                                            <a t-attf-href="/question/user/#{ question.create_uid.id }" >
-                                                <span>
-                                                    <t t-esc="question.create_uid.name"/>
-                                                </span>
-                                            </a>
-                                            <a href="">
-                                                <span>
-                                                    <t t-esc="question.create_uid.karma" />
-                                                </span>
-                                            </a>
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-3">
-                                <h5>
-                                    <span itemprop="Votes" class="label label-success">
-                                        <t t-esc="len(question.vote_ids)" />
-                                        Votes
-                                    </span>
-                                </h5>
-                            </div>
-                            <div class="col-xs-3">
-                                <h5>
-                                    <span itemprop="Votes" class="label label-success">
-                                        <t t-esc="len(question.vote_ids)" />
-                                        Answers
-                                    </span>
-                                </h5>
-                            </div>
-                            <div class="col-xs-3">
-                                <h5>
-                                    <span itemprop="Votes" class="label label-success">
-                                        <t t-esc="question.views" />
-                                        Views
-                                    </span>
-                                </h5>
-                            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 question_font_size">
+                    <a t-attf-href="/question/#{ slug(question) }">
+                        <t t-esc="question.name" /> 
+                    </a>
+                </div>
+                <h4>
+                    <div class="label label-info col-lg-1 col-md-1 text-center visible-md visible-lg" style="border-radius: 20px">
+                        <t t-esc="len(question.vote_ids)" />
+                        <br/>
+                        Votes
+                    </div>
+                    <div  class=" label label-success col-lg-1 col-md-1 text-center visible-md visible-lg" style="border-radius: 20px">
+                        <t t-esc="len(question.vote_ids)" />
+                        <br/>
+                        Answers
+                    </div>
+                    <div class="label label-warning col-lg-1 col-md-1 visible-md visible-lg" style="border-radius: 20px">
+                        <t t-esc="question.views" />
+                        <br/>
+                        Views
+                    </div>
+                </h4>
+                <t t-call="website_forum.tags" />
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4  text-muted" >
+                    <small>
+                        <t t-esc="question.write_date" />
+                        <a t-attf-href="/question/user/#{ question.create_uid.id }">
+                            <t t-esc="question.create_uid.name" />
+                        </a>
+                        <a href="">
+                            <t t-esc="question.create_uid.karma" />
+                        </a>
+                    </small>
+                </div>
+                <div class="col-xs-12 col-sm-12 visible-xs visible-sm">
+                    <div class="col-xs-4 col-sm-4">
+                        <div class="label label-info">
+                            <t t-esc="len(question.vote_ids)" />
+                            Votes  
                         </div>
                     </div>
+                    <div class="col-xs-4 col-sm-4">
+                        <div class="label label-success text-center">
+                            <t t-esc="len(question.vote_ids)" />
+                            Answers
+                        </div>
+                    </div>
+                    <div class="col-xs-4 col-sm-4">
+                        <span class="label label-warning">
+                            <t t-esc="question.views" />
+                            Views
+                        </span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <hr class="hr_no_margin"/>
                 </div>
             </div>
         </template>
 
         <template id="tags">
-            <div class="col-xs-12">
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
                 <t  t-foreach="question.tags" t-as="tag">
                     <a t-attf-href="/questions/tag/#{ tag.id }" class="badge"><t t-esc="tag.name"/></a>
                 </t>
@@ -127,9 +121,7 @@
         
         <template id="shorting_answer">
             <div class="row-fluid"> 
-            <div class="col-xs-12" style="width: 1000px;
-            background: buttonface;
-            text-align:left;">
+            <div class="col-xs-12" style="width: 1000px; background: buttonface; text-align:left;">
                 <b><div class="col-md-4">2 Answers</div></b>
                 <div class="col-md-2 col-md-push-4">
                     Short by »
@@ -153,14 +145,12 @@
                     <div class="row">
                         <t t-call="website_forum.post_vote"/>
                         <div class="col-md-9 col-xs-10">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <span>
-                                        <h4>
-                                            <t t-esc="answer.content"/>
-                                        </h4>
-                                    </span>
-                                </div>
+                            <div class="row col-xs-12">
+                                <span>
+                                    <h4>
+                                        <t t-esc="answer.content"/>
+                                    </h4>
+                                </span>
                             </div>
                             <div class="row">
                                 <t t-call="website_forum.user_detail"/>
@@ -187,38 +177,54 @@
                 <t t-set="head">
                     <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css' />
                 </t>
-                <div id="wrap" class="js_blog">
-                    <div class="row">
-                        <t t-call="website_forum.post_search" />
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <span class="badge">
-                                <t t-esc="total_questions"/> Question
-                            </span>
+                <div id="wrap" class="js_blog base_width">
+                    <div class="container">
+                        <div class="row">
+                            <t t-call="website_forum.post_search" />
                         </div>
-                        <t t-call="website_forum.shorting" />
-                    </div>
-                    <ul id="tabs" class="nav nav-pills">
-                        <li class="active">
-                            <a t-attf-href="#all" data-toggle="tab">ALL</a>
-                        </li>
-                        <li>
-                            <a t-attf-href="#unanswerd" data-toggle="tab">UNANSWERD</a>
-                        </li>
-                        <li>
-                            <a t-attf-href="#followed" data-toggle="tab">FOLLOWED</a>
-                        </li>
-                    </ul>
-                    <ul class="media-list">
-                        <li t-foreach="question_ids" t-as="question" class="media">
-                            <t t-call="website_forum.post_list" />
-                        </li>
-                    </ul>
-                    <div class="col-sm-7">
-                        <t t-call="website.pager" >
-                            <t t-set="classname">pull-right</t>
-                        </t>
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <span class="badge">
+                                    <t t-esc="total_questions"/> Question
+                                </span>
+                            </div>
+                            <t t-call="website_forum.shorting" />
+                        </div>
+                        <ul id="tabs" class="nav nav-pills">
+                            <li class="active">
+                                <a t-attf-href="#all" data-toggle="tab">ALL</a>
+                            </li>
+                            <li>
+                                <a t-attf-href="#unanswerd" data-toggle="tab">UNANSWERD</a>
+                            </li>
+                            <li>
+                                <a t-attf-href="#followed" data-toggle="tab">FOLLOWED</a>
+                            </li>
+                        </ul>
+                        <ul class="media-list">
+                            <div id="myTabs" class="tab-content">
+                                <div class="tab-pane active" id="all">
+                                    <li t-foreach="question_ids" t-as="question" class="media media_without_margin">
+                                        <t t-call="website_forum.post_list" />
+                                    </li>
+                                </div>
+                                <div class="tab-pane" id="unanswerd">
+                                    <li> 
+                                        Here is Unanswerd questions.
+                                    </li>
+                                </div>
+                                <div class="tab-pane" id="followed">
+                                    <li> 
+                                        Here is Followed questions.
+                                    </li>
+                                </div>
+                            </div>
+                        </ul>
+                        <div class="col-sm-7">
+                            <t t-call="website.pager" >
+                                <t t-set="classname">pull-right</t>
+                            </t>
+                        </div>
                     </div>
                 </div>
             </t>
