@@ -2404,7 +2404,14 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
         var li = $(e.target).closest( "li" );
         if (li.length) {
             var value = {};
-            value[self.name] = String(li.data('value'));
+            if (self.val == li.data('value') && self.check_star) {
+                value[self.name] = String(li.data('value') - 1);
+                self.check_star = false
+            } else {
+                value[self.name] = String(li.data('value'));
+                self.check_star = true;
+            }
+            self.val = li.data('value')
             if (self.record_id) {
                 return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
             } else {

@@ -1296,7 +1296,14 @@ instance.web_kanban.Priority = instance.web_kanban.AbstractField.extend({
         var li = $(e.target).closest( "li" );
         if (li.length) {
             var value = {};
-            value[self.name] = String(li.data('value'));
+            if (self.parent.val == li.data('value') && self.parent.check_star) {
+                value[self.name] = String(li.data('value') - 1);
+                self.parent.check_star = false
+            } else {
+                value[self.name] = String(li.data('value'));
+                self.parent.check_star = true;
+            }
+            self.parent.val = li.data('value')
             return self.parent.view.dataset._model.call('write', [[self.record_id], value, self.parent.view.dataset.get_context()]).done(self.reload_record.bind(self.parent));
         }
     },
