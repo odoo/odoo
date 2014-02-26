@@ -14,7 +14,7 @@
     website.QuestionTour = website.Tour.extend({
         id: 'question',
         name: "Create a question",
-        testPath: '/question(/[0-9]+/register)?',
+        testPath: '/forum(/[0-9]+/register)?',
         init: function (editor) {
             var self = this;
             self.steps = [

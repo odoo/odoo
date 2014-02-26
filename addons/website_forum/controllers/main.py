@@ -36,7 +36,7 @@ controllers = controllers()
 
 class website_forum(http.Controller):
 
-    @http.route(['/questions/', '/questions/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/forum/', '/forum/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
     def questions(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         forum_obj = request.registry['website.forum.post']
@@ -51,7 +51,7 @@ class website_forum(http.Controller):
         question_count = forum_obj.search(
             request.cr, request.uid, domain, count=True,
             context=request.context)
-        pager = request.website.pager(url="/questions/", total=question_count, page=page, step=step, scope=10)
+        pager = request.website.pager(url="/forum/", total=question_count, page=page, step=step, scope=10)
 
         obj_ids = forum_obj.search(
             request.cr, request.uid, domain, limit=step,
@@ -74,7 +74,7 @@ class website_forum(http.Controller):
 
         return request.website.render("website_forum.index", values)
 
-    @http.route(['/question/<model("website.forum.post"):question>/page/<page:page>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/forum/question/<model("website.forum.post"):question>/page/<page:page>'], type='http', auth="public", website=True, multilang=True)
     def question(self, question, page, **post):
         values = {
             'question': question,
@@ -82,7 +82,7 @@ class website_forum(http.Controller):
         }
         return request.website.render(page, values)
 
-    @http.route(['/question/<model("website.forum.post"):question>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/forum/question/<model("website.forum.post"):question>'], type='http', auth="public", website=True, multilang=True)
     def open_question(self, question, **post):
         values = {
             'question': question,
@@ -92,7 +92,7 @@ class website_forum(http.Controller):
         }
         return request.website.render("website_forum.post_description_full", values)
 
-    @http.route(['/question/user/<model("res.users"):user>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/forum/user/<model("res.users"):user>'], type='http', auth="public", website=True, multilang=True)
     def open_user(self, user, **post):
         values = {
             'user': user,
@@ -101,7 +101,7 @@ class website_forum(http.Controller):
         }
         return request.website.render("website_forum.user_detail_full", values)
 
-    @http.route('/question/ask/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    @http.route('/forum/question/ask/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def register_question(self, forum_id=1, **question):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context)
@@ -114,9 +114,9 @@ class website_forum(http.Controller):
                 'state': 'active',
                 'active': True,
             }, context=create_context)
-        return werkzeug.utils.redirect("/question/%s" % new_question_id)
+        return werkzeug.utils.redirect("/forum/question/%s" % new_question_id)
 
-    @http.route('/question/postanswer/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    @http.route('/forum/question/postanswer/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def post_answer(self, post_id, forum_id=1, **question):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context)
@@ -128,13 +128,13 @@ class website_forum(http.Controller):
                 'state': 'active',
                 'active': True,
             }, context=create_context)
-        return werkzeug.utils.redirect("/question/%s" % post_id)
+        return werkzeug.utils.redirect("/forum/question/%s" % post_id)
 
-    @http.route(['/questions/tag/<model("website.forum.tag"):tag>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/forum/tag/<model("website.forum.tag"):tag>'], type='http', auth="public", website=True, multilang=True)
     def tag_questions(self, tag, page=1, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         step = 10
-        pager = request.website.pager(url="/questions/", total=len(tag.post_ids), page=page, step=step, scope=10)
+        pager = request.website.pager(url="/forum/", total=len(tag.post_ids), page=page, step=step, scope=10)
 
         values = {
             'question_ids': tag.post_ids,

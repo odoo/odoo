@@ -16,7 +16,7 @@
             name="Footer Questions Link">
             <xpath expr="//footer//ul[@name='products']" position="inside">
                 <li>
-                    <a href="/questions">Support</a>
+                    <a href="/forum">Support</a>
                 </li>
             </xpath>
         </template>
@@ -26,7 +26,7 @@
         <template id="post_list">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 question_font_size">
-                    <a t-attf-href="/question/#{ slug(question) }">
+                    <a t-attf-href="/forum/question/#{ slug(question) }">
                         <t t-esc="question.name" /> 
                     </a>
                 </div>
@@ -51,7 +51,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4  text-muted" >
                     <small>
                         <t t-esc="question.write_date" />
-                        <a t-attf-href="/question/user/#{ question.create_uid.id }">
+                        <a t-attf-href="/forum/user/#{ question.create_uid.id }">
                             <t t-esc="question.create_uid.name" />
                         </a>
                         <a href="">
@@ -88,7 +88,7 @@
         <template id="tags">
             <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
                 <t t-foreach="question.tags" t-as="tag">
-                    <a t-attf-href="/questions/tag/#{ tag.id }" class="badge"><t t-esc="tag.name"/></a>
+                    <a t-attf-href="/forum/tag/#{ tag.id }" class="badge"><t t-esc="tag.name"/></a>
                 </t>
             </div>
         </template>
@@ -164,12 +164,23 @@
         </template>
 
         <template id="post_search">
-            <form class="navbar-form " action="/questions/" method="get" role="search">
+            <form class="navbar-form " action="/forum/" method="get" role="search">
                 <div class="form-group search-navbar">
                     <input type="text" class="form-control" name="search" placeholder="Search Or Ask your Question" t-att-value="searches.get('search') or ''"/>
                     <button type="submit" class="btn btn-default AskButton" style="background-color : #df3f3f; color: white !important;">Ask Question</button>
                 </div>
             </form>
+            <ul id="tabs" class="nav nav-pills">
+                <li class="active">
+                    <a t-attf-href="#all" data-toggle="tab">ALL</a>
+                </li>
+                <li>
+                    <a t-attf-href="#unanswerd" data-toggle="tab">UNANSWERD</a>
+                </li>
+                <li>
+                    <a t-attf-href="#followed" data-toggle="tab">FOLLOWED</a>
+                </li>
+            </ul>
         </template>
 
         <!-- index page of forum -->
@@ -191,35 +202,10 @@
                             </div>
                             <t t-call="website_forum.shorting" />
                         </div>
-                        <ul id="tabs" class="nav nav-pills">
-                            <li class="active">
-                                <a t-attf-href="#all" data-toggle="tab">ALL</a>
-                            </li>
-                            <li>
-                                <a t-attf-href="#unanswerd" data-toggle="tab">UNANSWERD</a>
-                            </li>
-                            <li>
-                                <a t-attf-href="#followed" data-toggle="tab">FOLLOWED</a>
-                            </li>
-                        </ul>
                         <ul class="media-list">
-                            <div id="myTabs" class="tab-content">
-                                <div class="tab-pane active" id="all">
-                                    <li t-foreach="question_ids" t-as="question" class="media media_without_margin">
-                                        <t t-call="website_forum.post_list" />
-                                    </li>
-                                </div>
-                                <div class="tab-pane" id="unanswerd">
-                                    <li> 
-                                        Here is Unanswerd questions.
-                                    </li>
-                                </div>
-                                <div class="tab-pane" id="followed">
-                                    <li> 
-                                        Here is Followed questions.
-                                    </li>
-                                </div>
-                            </div>
+                            <li t-foreach="question_ids" t-as="question" class="media media_without_margin">
+                                <t t-call="website_forum.post_list" />
+                            </li>
                         </ul>
                         <div class="col-sm-7">
                             <t t-call="website.pager" >
@@ -240,7 +226,7 @@
                             <h1 class="mt32">Question not found!</h1>
                             <p>Sorry, the requested question is not available anymore.</p>
                             <p>
-                                <a t-attf-href="/question/">Return to the question list.</a>
+                                <a t-attf-href="/forum/question/">Return to the question list.</a>
                             </p>
                         </div>
                     </div>
@@ -267,7 +253,7 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="text-left">
-                                        <a t-attf-href="/question/user/#{ question.create_uid.id }"><div t-esc="question.create_uid.name"/></a>
+                                        <a t-attf-href="/forum/user/#{ question.create_uid.id }"><div t-esc="question.create_uid.name"/></a>
                                     </div>
                                 </div>
                             </div>
@@ -336,10 +322,8 @@
                 <div class="container">
                     <div class="col-md-9 col-xs-11">
                         <div class="row">
-                            <div class="col-xs-12">
-                                <div class="page-header">
-                                    <h3>Please Ask your Question here</h3>
-                                </div>
+                            <div class="col-xs-12 page-header">
+                                <h3>Please Ask your Question here</h3>
                             </div>
                             <div class="col-xs-12">
                                 <ul>
@@ -356,7 +340,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <form action="/question/ask/" method="post" role="form">
+                            <form action="/forum/question/ask/" method="post" role="form">
                                 <div class="col-xs-12">
                                     <input type="text"  name="question_name" required="True" t-attf-value="#{question_name or ''}" id="textbox_user_question" class="form-control" placeholder="Enter your Question" />
                                 </div>
@@ -364,11 +348,7 @@
                                     Please enter a descriptive question (should finish by a '?')
                                 </div>
                                 <div class="col-xs-12">
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <textarea  name="question_content" required="True" t-attf-value="#{question_content or ''}" class="form-control" id="textarea_ckeditor" rows="10" style="width : 100%" />
-                                        </div>
-                                    </div>
+                                    <textarea  name="question_content" required="True" t-attf-value="#{question_content or ''}" class="form-control" id="textarea_ckeditor" rows="10" style="width : 100%" />
                                 </div>
                                 <div class="col-xs-12">
                                     Tags:
@@ -376,7 +356,9 @@
                                 <div class="col-xs-12">
                                     <input type="text" name="question_tag" t-attf-value="#{question_tag or ''}" class="form-control" id="textarea_tags" style="width : 100%"/>
                                 </div>
-                                <button class="btn btn-default " id="btn_ask_your_question">Post Your Question</button>
+                                <div class="col-xs-8">
+                                    <button class="btn btn-default" id="btn_ask_your_question" style="background-color : #df3f3f; color: white !important;">Post Your Question</button>
+                                </div>
                             </form>
                         </div>
                         <script type="text/javascript" >
@@ -410,7 +392,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <form action="/question/postanswer/" method="post" role="form">
+                    <form action="/forum/question/postanswer/" method="post" role="form">
                         <div class="col-xs-12">
                             <div class="row">
                                 <div class="col-xs-12">
@@ -419,7 +401,9 @@
                             </div>
                         </div>
                         <input name="post_id" t-att-value="question.id" type="hidden"/>
-                        <button class="btn btn-default" id="btn_ask_your_question">Post Your Answer</button>
+                        <div class="col-xs-8">
+                            <button class="btn btn-default" style="background-color : #df3f3f; color: white !important;" id="btn_ask_your_question">Post Your Answer</button>
+                        </div>
                     </form>
                 </div>
                 <script type="text/javascript" >
@@ -490,7 +474,6 @@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="overview">
-                                <hr/>
                                 <div class="row">
                                     <div class="col-xs-3">
                                         <span t-field="user.image" class="user-big-profile-image" t-field-options='{"widget": "image"}' alt="User Name"/>
