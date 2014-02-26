@@ -1686,6 +1686,9 @@
                     // ignore mutation if the *only* change is .cke_focus
                     return change.length !== 1 || change[0] === 'cke_focus';
                 case 'childList':
+                    setTimeout(function () {
+                        fixup_browser_crap(m.addedNodes);
+                    }, 0);
                     // Remove ignorable nodes from addedNodes or removedNodes,
                     // if either set remains non-empty it's considered to be an
                     // impactful change. Otherwise it's ignored.
@@ -1722,5 +1725,70 @@
             output.push(node);
         }
         return output;
+    }
+
+    var programmatic_styles = {
+        float: 1,
+        display: 1,
+        position: 1,
+        top: 1,
+        left: 1,
+        right: 1,
+        bottom: 1,
+    };
+    function fixup_browser_crap(nodes) {
+        if (!nodes || !nodes.length) { return; }
+        /**
+         * Checks that the node only has a @style, not e.g. @class or whatever
+         */
+        function has_only_style(node) {
+            for (var i = 0; i < node.attributes.length; i++) {
+                var attr = node.attributes[i];
+                if (attr.attributeName !== 'style') {
+                    return false;
+                }
+            }
+            return true;
+        }
+        function has_programmatic_style(node) {
+            for (var i = 0; i < node.style.length; i++) {
+              var style = node.style[i];
+              if (programmatic_styles[style]) {
+                  return true;
+              }
+            }
+            return false;
+        }
+
+        for (var i=0; i<nodes.length; ++i) {
+            var node = nodes[i];
+            if (node.nodeType !== document.ELEMENT_NODE) { continue; }
+
+            if (node.nodeName === 'SPAN'
+                    && has_only_style(node)
+                    && !has_programmatic_style(node)) {
+                // On backspace, webkit browsers create a <span> with a bunch of
+                // inline styles "remembering" where they come from. Refs:
+                //    http://www.neotericdesign.com/blog/2013/3/working-around-chrome-s-contenteditable-span-bug
+                //    https://code.google.com/p/chromium/issues/detail?id=226941
+                //    https://bugs.webkit.org/show_bug.cgi?id=114791
+                //    http://dev.ckeditor.com/ticket/9998
+                var child, parent = node.parentNode;
+                while (child = node.firstChild) {
+                    parent.insertBefore(child, node);
+                }
+                parent.removeChild(node);
+                // chances are we had e.g.
+                //  <p>foo</p>
+                //  <p>bar</p>
+                // merged the lines getting this in webkit
+                //  <p>foo<span>bar</span></p>
+                // after unwrapping the span, we have 2 text nodes
+                //  <p>[foo][bar]</p>
+                // where we probably want only one. Normalize will merge
+                // adjacent text nodes. However, does not merge text and cdata
+                parent.normalize();
+            }
+        }
     }
 })();
