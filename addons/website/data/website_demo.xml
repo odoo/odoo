@@ -127,7 +127,7 @@ partners = pool['res.partner'].browse(cr, uid, partner_ids, context=context)
 values = {
     'partners': partners,
 }
-response = request.website.render("website.template_partner_comment", values)
+response = request.render("website.template_partner_comment", values)
             </field>
             <field name="state">code</field>
             <field name="type">ir.actions.server</field>

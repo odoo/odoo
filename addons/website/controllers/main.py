@@ -19,7 +19,7 @@ import openerp
 from openerp.osv import fields
 from openerp.addons.website.models import website
 from openerp.addons.web import http
-from openerp.addons.web.http import request, LazyResponse
+from openerp.http import request, Response
 
 logger = logging.getLogger(__name__)
 
@@ -46,9 +46,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     @http.route(website=True, auth="public", multilang=True)
     def web_login(self, *args, **kw):
         response = super(Website, self).web_login(*args, **kw)
-        if isinstance(response, LazyResponse):
-            values = dict(response.params['values'], disable_footer=True)
-            response = request.website.render(response.params['template'], values)
+        response.qcontext['disable_footer'] = True
         return response
 
     @http.route('/page/<page:page>', type='http', auth="public", website=True, multilang=True)
@@ -69,27 +67,27 @@ class Website(openerp.addons.web.controllers.main.Home):
             else:
                 return request.registry['ir.http']._handle_exception(e, 404)
 
-        return request.website.render(page, values)
+        return request.render(page, values)
 
     @http.route(['/robots.txt'], type='http', auth="public", website=True)
     def robots(self):
-        response = request.website.render('website.robots', {'url_root': request.httprequest.url_root})
-        response.mimetype = 'text/plain'
-        return response
+        return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
 
     @http.route('/sitemap', type='http', auth='public', website=True, multilang=True)
     def sitemap(self):
-        return request.website.render('website.sitemap', {
+        return request.render('website.sitemap', {
             'pages': request.website.enumerate_pages()
         })
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True)
     def sitemap_xml(self):
-        response = request.website.render('website.sitemap_xml', {
+        values = {
             'pages': request.website.enumerate_pages()
-        })
-        response.headers['Content-Type'] = 'application/xml;charset=utf-8'
-        return response
+        }
+        headers = {
+            'Content-Type': 'application/xml;charset=utf-8',
+        }
+        return request.render('website.sitemap_xml', values, headers=headers)
 
     #------------------------------------------------------
     # Edit
@@ -129,7 +127,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             view.write(request.cr, request.uid, [view_id],
                        {'inherit_id': view_option_id}, context=request.context)
 
-        return request.website.render('website.themes', {'theme_changed': True})
+        return request.render('website.themes', {'theme_changed': True})
 
     @http.route(['/website/snippets'], type='json', auth="public", website=True)
     def snippets(self):
@@ -408,12 +406,12 @@ class Website(openerp.addons.web.controllers.main.Home):
         if action_id:
             action_ids = ServerActions.exists(cr, uid, [action_id], context=context)
             action_id = action_ids and action_ids[0] or None
-        # run it, return only LazyResponse that are templates to be rendered
+        # run it, return only if we got a Response object
         if action_id:
             action = ServerActions.browse(cr, uid, action_id, context=context)
             if action.state == 'code' and action.website_published:
                 action_res = ServerActions.run(cr, uid, [action_id], context=context)
-                if isinstance(action_res, LazyResponse):
+                if isinstance(action_res, Response):
                     res = action_res
         if res:
             return res
