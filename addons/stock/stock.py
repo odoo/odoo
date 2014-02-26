@@ -1598,12 +1598,12 @@ class stock_move(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             #Check UoM in meantime
             if vals.get('product_uom') or vals.get('product_id'):
-                product_uom = move.product_uom
+                product_uom = move.product_id.uom_id
                 move_uom = move.product_uom
                 if vals.get('product_uom'):
                     move_uom = self.pool.get('product.uom').browse(cr, uid, vals['product_uom'], context=context)
                 if vals.get('product_id'):
-                    product_uom = self.pool.get('product.product').browse(cr, uid, vals['product_id'], context=context)
+                    product_uom = self.pool.get('product.product').browse(cr, uid, vals['product_id'], context=context).uom_id
                 if move_uom.category_id.id != product_uom.category_id.id:
                     raise osv.except_osv(_('Operation Forbidden'), 
                                          _('Category of Product UoM must be the same as the category of the UoM of the move'))
