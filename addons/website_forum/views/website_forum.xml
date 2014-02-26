@@ -124,6 +124,28 @@
                 </h5>
             </div>
         </template>
+        
+        <template id="shorting_answer">
+            <div class="row-fluid"> 
+            <div class="col-xs-12" style="width: 1000px;
+            background: buttonface;
+            text-align:left;">
+                <b><div class="col-md-4">2 Answers</div></b>
+                <div class="col-md-2 col-md-push-4">
+                    Short by »
+                </div>
+                <div class="col-md-1 col-md-push-3" style="border-right: 1px solid #ccc;">
+                     <a href="#">oldest</a>
+                </div>
+                <div class="col-md-1 col-md-push-3" style="border-right: 1px solid #ccc;">
+                      <a href="#">newest</a>
+                </div>
+                <div class="col-md-2 col-md-push-3">
+                      <a href="#">most viewd</a>
+                </div>
+            </div>
+            </div>
+        </template>
 
         <template id="answer">
             <ul class="media-list">
@@ -421,7 +443,7 @@
                                 <t t-esc="len(question.child_ids)"/> Answer
                             </span>
                         </div>
-                        <t t-call="website_forum.shorting" />
+                        <t t-call="website_forum.shorting_answer"/>
                     </div>
                     <t t-call="website_forum.answer"/>
                 </div>
