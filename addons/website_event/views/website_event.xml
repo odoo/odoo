@@ -336,5 +336,63 @@
         </div>
     </t>
 </template>
+
+<template id="event_script" name="Country Events Snippet Script" inherit_id="website.layout">
+    <xpath expr="//head" position="inside">
+        <script type="text/javascript" src="/website_event/static/src/js/website_geolocation.js"></script>
+    </xpath>
+</template>
+
+<template id="country_events" name="Country Events" inherit_id="website.snippets">
+    <xpath expr="//div[@id='snippet_feature']" position="inside">
+        <div data-snippet-id="country_events" data-selector-children=".oe_structure, [data-oe-type=html]" class="country_events"> 
+            <div class="oe_snippet_thumbnail">
+                <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block-country_events.png" />
+                <span class="oe_snippet_thumbnail_title">Country Events</span>
+            </div>
+            <section class="oe_snippet_body country_events">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="country_events_list">
+                            <div class="text-muted text-center">
+                                <h1><i class="fa fa-map-marker fa-5x"></i></h1>
+                                <h3>Allow browser to use your Location.</h3>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                        </div>
+                        <div class="col-md-4">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+<template id="country_events_list" name="Country">
+    <t t-ignore="true">
+        <div class="mb16 country_events_list">
+            <img class="img-rounded img-responsive" t-att-src="'/website/image?model=res.country&amp;field=image&amp;id='+str(country.id)"></img>
+            <t t-if="events">
+                <h4><b>Events In <span t-esc="country.name"></span></b></h4>
+                <div t-foreach="events[:5]" t-as="country_event" class="oe_website_overflow_ellipsis mb8">
+                    <t t-if="not country_event['event'].website_published">
+                        <span class="label label-danger"><i class="fa fa-ban"></i></span>
+                    </t>
+                    <i class="fa fa-calendar"></i> <b><span t-esc="country_event['date']"/>: <span><a t-att-href="country_event['url']"><t t-esc="country_event['event'].name"/></a></span></b>
+                </div>
+            </t>
+            <t t-if="len(events) > 5">
+                <b class="text-center"><a t-att-href="'/event/?country='+str(country.id)">All events for <span t-esc="country.name"></span></a></b>
+            </t>
+            <t t-if="events == []">
+                <h4 ><b>No events available for <span t-esc="country.name"></span></b></h4>
+            </t>
+        </div>
+    </t>
+</template>
 </data>
 </openerp>

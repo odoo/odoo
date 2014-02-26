@@ -28,6 +28,7 @@ controllers = controllers()
 
 
 from datetime import datetime, timedelta
+import time
 from dateutil.relativedelta import relativedelta
 from openerp import tools
 import werkzeug.urls
@@ -215,3 +216,24 @@ class website_event(http.Controller):
         }
         event_id = Event.create(request.cr, request.uid, vals, context=context)
         return request.redirect("/event/%s/?enable_editor=1" % event_id)
+
+    @http.route('/event/get_country_event_list/<path:country_code>', type='http', auth='public', website=True)
+    def get_country_events(self,country_code ,**post):
+        cr, uid, context = request.cr, request.uid, request.context
+        event_obj = request.registry['event.event']
+        event_ids = event_obj.search(request.cr, request.uid, [('country_id.code', '=', country_code),('state', '=', 'confirm'),('date_begin','>=', time.strftime('%Y-%m-%d 00:00:00'))], order="date_begin", context=request.context)
+        events = event_obj.browse(request.cr, request.uid, event_ids, context=request.context)
+        country_obj = request.registry['res.country']
+        country_ids = country_obj.search(request.cr, request.uid, [('code', '=', country_code)], context=request.context)
+        country = country_obj.browse(request.cr, request.uid, country_ids[0], context=request.context)
+        result = {'events':[], 'country': country}
+        for event in events:
+            start_date = datetime.strptime(event.date_begin.split(' ')[0], "%Y-%m-%d")
+            end_date = datetime.strptime(event.date_end.split(' ')[0], "%Y-%m-%d")
+            if end_date == start_date:
+                result['events'].append({"date": start_date.strftime("%b")+" "+start_date.strftime("%e"), 
+                                         "event": event, 'url': event.website_url})
+            else:
+                result['events'].append({"date":start_date.strftime("%b")+" "+start_date.strftime("%e")+"-"+end_date.strftime("%e"),
+                                         "event": event, 'url': event.website_url})
+        return request.website.render("website_event.country_events_list",result)
