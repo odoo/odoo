@@ -69,7 +69,7 @@
       <h5><strong><a t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('search', 'filters', category=(category and int(category)), page=(pager['page']['num'] if pager['page']['num']>1 else None)) }}" t-field="product.name"/></strong></h5>
       <div class="product_price" t-if="product.product_variant_ids">
           <b>
-              <t t-if="abs(product.product_variant_ids[0].lst_price - product.product_variant_ids[0].price) &gt; 0.2">
+              <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
                 <del class="text-danger"
                   t-field="product.product_variant_ids[0].lst_price" t-field-options='{
                        "widget": "monetary",
