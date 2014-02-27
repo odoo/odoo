@@ -3483,7 +3483,7 @@ class BaseModel(object):
 
         # for recomputing new-style fields
         recs = self.browse(ids)
-        recs.modified(self._all_columns)
+        recs.modified(self._fields)
 
         self._check_concurrency(cr, ids, context)
 
@@ -3663,7 +3663,10 @@ class BaseModel(object):
 
         # for recomputing new-style fields
         recs = self.browse(ids)
-        recs.modified(vals)
+        modified_fields = list(vals)
+        if self._log_access:
+            modified_fields += ['write_date', 'write_uid']
+        recs.modified(modified_fields)
 
         parents_changed = []
         parent_order = self._parent_order or self._order
@@ -3713,7 +3716,6 @@ class BaseModel(object):
             upd0.append('write_uid=%s')
             upd0.append("write_date=(now() at time zone 'UTC')")
             upd1.append(user)
-            recs.modified(('write_uid', 'write_date'))
 
         if len(upd0):
             self.check_access_rule(cr, user, ids, 'write', context=context)
@@ -3833,9 +3835,7 @@ class BaseModel(object):
         result.sort()
 
         # for recomputing new-style fields
-        recs.modified(vals)
-        if self._log_access:
-            recs.modified(('write_uid', 'write_date'))
+        recs.modified(modified_fields)
 
         done = {}
         for order, model_name, ids_to_update, fields_to_recompute in result:
@@ -4095,9 +4095,10 @@ class BaseModel(object):
                     done.append((model_name, ids, fields2))
 
             # recompute new-style fields
-            recs.modified(vals)
+            modified_fields = list(vals)
             if self._log_access:
-                recs.modified(('create_uid', 'create_date', 'write_uid', 'write_date'))
+                modified_fields += ['create_uid', 'create_date', 'write_uid', 'write_date']
+            recs.modified(modified_fields)
             recs.recompute()
 
         if self._log_create and not (context and context.get('no_store_function', False)):
