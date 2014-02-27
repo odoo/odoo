@@ -611,6 +611,9 @@ class DateTimeConverter(osv.AbstractModel):
             strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
             pattern = openerp.tools.posix_to_ldml(strftime_pattern, locale=locale)
 
+        if options and options.get('hide_seconds'):
+            pattern = pattern.replace(":ss", "").replace(":s", "")
+        
         return babel.dates.format_datetime(value, format=pattern, locale=locale)
 
 class TextConverter(osv.AbstractModel):
