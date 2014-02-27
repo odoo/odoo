@@ -26,10 +26,6 @@ import os
 import release
 import sys
 import threading
-import time
-import types
-from pprint import pformat
-import psutil
 
 import tools
 import openerp
@@ -187,87 +183,5 @@ def init_alternative_logger():
     logger = logging.getLogger('openerp')
     logger.addHandler(handler)
     logger.setLevel(logging.ERROR)
-
-def replace_request_password(args):
-    # password is always 3rd argument in a request, we replace it in RPC logs
-    # so it's easier to forward logs for diagnostics/debugging purposes...
-    if len(args) > 2:
-        args = list(args)
-        args[2] = '*'
-    return tuple(args)
-
-def log(logger, level, prefix, msg, depth=None):
-    indent=''
-    indent_after=' '*len(prefix)
-    for line in (prefix+pformat(msg, depth=depth)).split('\n'):
-        logger.log(level, indent+line)
-        indent=indent_after
-
-def dispatch_rpc(service_name, method, params):
-    """ Handle a RPC call.
-
-    This is pure Python code, the actual marshalling (from/to XML-RPC) is done
-    in a upper layer.
-    """
-    try:
-        rpc_request = logging.getLogger(__name__ + '.rpc.request')
-        rpc_response = logging.getLogger(__name__ + '.rpc.response')
-        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
-        rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
-        if rpc_request_flag or rpc_response_flag:
-            start_time = time.time()
-            start_rss, start_vms = 0, 0
-            start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
-            if rpc_request and rpc_response_flag:
-                log(rpc_request,logging.DEBUG,'%s.%s'%(service_name,method), replace_request_password(params))
-
-        threading.current_thread().uid = None
-        threading.current_thread().dbname = None
-        if service_name == 'common':
-            dispatch = openerp.service.common.dispatch
-        elif service_name == 'db':
-            dispatch = openerp.service.db.dispatch
-        elif service_name == 'object':
-            dispatch = openerp.service.model.dispatch
-        elif service_name == 'report':
-            dispatch = openerp.service.report.dispatch
-        else:
-            dispatch = openerp.service.wsgi_server.rpc_handlers.get(service_name)
-        result = dispatch(method, params)
-
-        if rpc_request_flag or rpc_response_flag:
-            end_time = time.time()
-            end_rss, end_vms = 0, 0
-            end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
-            logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
-            if rpc_response_flag:
-                log(rpc_response,logging.DEBUG, logline, result)
-            else:
-                log(rpc_request,logging.DEBUG, logline, replace_request_password(params), depth=1)
-
-        return result
-    except openerp.osv.orm.except_orm:
-        raise
-    except openerp.exceptions.AccessError:
-        raise
-    except openerp.exceptions.AccessDenied:
-        raise
-    except openerp.exceptions.Warning:
-        raise
-    except openerp.exceptions.RedirectWarning:
-        raise
-    except openerp.exceptions.DeferredException, e:
-        _logger.exception(tools.exception_to_unicode(e))
-        post_mortem(e.traceback)
-        raise
-    except Exception, e:
-        _logger.exception(tools.exception_to_unicode(e))
-        post_mortem(sys.exc_info())
-        raise
-
-def post_mortem(info):
-    if tools.config['debug_mode'] and isinstance(info[2], types.TracebackType):
-        import pdb
-        pdb.post_mortem(info[2])
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -21,8 +21,10 @@ import time
 import traceback
 import urlparse
 import warnings
+from pprint import pformat
 
 import babel.core
+import psutil
 import psycopg2
 import simplejson
 import werkzeug.contrib.sessions
@@ -34,6 +36,7 @@ import werkzeug.wrappers
 import werkzeug.wsgi
 
 import openerp
+import openerp.netsvc
 from openerp.service import security, model as service_model
 import openerp.tools
 
@@ -49,6 +52,83 @@ request = _request_stack()
 """
     A global proxy that always redirect to the current request object.
 """
+
+def replace_request_password(args):
+    # password is always 3rd argument in a request, we replace it in RPC logs
+    # so it's easier to forward logs for diagnostics/debugging purposes...
+    if len(args) > 2:
+        args = list(args)
+        args[2] = '*'
+    return tuple(args)
+
+def log(logger, level, prefix, msg, depth=None):
+    indent=''
+    indent_after=' '*len(prefix)
+    for line in (prefix+pformat(msg, depth=depth)).split('\n'):
+        logger.log(level, indent+line)
+        indent=indent_after
+
+def dispatch_rpc(service_name, method, params):
+    """ Handle a RPC call.
+
+    This is pure Python code, the actual marshalling (from/to XML-RPC) is done
+    in a upper layer.
+    """
+    try:
+        rpc_request = logging.getLogger(__name__ + '.rpc.request')
+        rpc_response = logging.getLogger(__name__ + '.rpc.response')
+        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
+        rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
+        if rpc_request_flag or rpc_response_flag:
+            start_time = time.time()
+            start_rss, start_vms = 0, 0
+            start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
+            if rpc_request and rpc_response_flag:
+                log(rpc_request, logging.DEBUG, '%s.%s' % (service_name, method), replace_request_password(params))
+
+        threading.current_thread().uid = None
+        threading.current_thread().dbname = None
+        if service_name == 'common':
+            dispatch = openerp.service.common.dispatch
+        elif service_name == 'db':
+            dispatch = openerp.service.db.dispatch
+        elif service_name == 'object':
+            dispatch = openerp.service.model.dispatch
+        elif service_name == 'report':
+            dispatch = openerp.service.report.dispatch
+        else:
+            dispatch = openerp.service.wsgi_server.rpc_handlers.get(service_name)
+        result = dispatch(method, params)
+
+        if rpc_request_flag or rpc_response_flag:
+            end_time = time.time()
+            end_rss, end_vms = 0, 0
+            end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
+            logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
+            if rpc_response_flag:
+                log(rpc_response, logging.DEBUG, logline, result)
+            else:
+                log(rpc_request, logging.DEBUG, logline, replace_request_password(params), depth=1)
+
+        return result
+    except openerp.osv.orm.except_orm:
+        raise
+    except openerp.exceptions.AccessError:
+        raise
+    except openerp.exceptions.AccessDenied:
+        raise
+    except openerp.exceptions.Warning:
+        raise
+    except openerp.exceptions.RedirectWarning:
+        raise
+    except openerp.exceptions.DeferredException, e:
+        _logger.exception(openerp.tools.exception_to_unicode(e))
+        openerp.tools.debugger.post_mortem(openerp.tools.config, e.traceback)
+        raise
+    except Exception, e:
+        _logger.exception(openerp.tools.exception_to_unicode(e))
+        openerp.tools.debugger.post_mortem(openerp.tools.config, sys.exc_info())
+        raise
 
 def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=303):
     url = path
@@ -618,7 +698,7 @@ class SessionExpiredException(Exception):
 class Service(object):
     """
         .. deprecated:: 8.0
-        Use ``openerp.netsvc.dispatch_rpc()`` instead.
+        Use ``dispatch_rpc()`` instead.
     """
     def __init__(self, session, service_name):
         self.session = session
@@ -626,7 +706,7 @@ class Service(object):
 
     def __getattr__(self, method):
         def proxy_method(*args):
-            result = openerp.netsvc.dispatch_rpc(self.service_name, method, args)
+            result = dispatch_rpc(self.service_name, method, args)
             return result
         return proxy_method
 
@@ -699,7 +779,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
                 HTTP_HOST=wsgienv['HTTP_HOST'],
                 REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
             )
-            uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, login, password, env])
+            uid = dispatch_rpc('common', 'authenticate', [db, login, password, env])
         else:
             security.check(db, uid, password)
         self.db = db
@@ -803,14 +883,14 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     def send(self, service_name, method, *args):
         """
         .. deprecated:: 8.0
-        Use ``openerp.netsvc.dispatch_rpc()`` instead.
+        Use ``dispatch_rpc()`` instead.
         """
-        return openerp.netsvc.dispatch_rpc(service_name, method, args)
+        return dispatch_rpc(service_name, method, args)
 
     def proxy(self, service):
         """
         .. deprecated:: 8.0
-        Use ``openerp.netsvc.dispatch_rpc()`` instead.
+        Use ``dispatch_rpc()`` instead.
         """
         return Service(self, service)
 
@@ -1184,7 +1264,7 @@ class Root(object):
         return request.registry['ir.http'].routing_map()
 
 def db_list(force=False, httprequest=None):
-    dbs = openerp.netsvc.dispatch_rpc("db", "list", [force])
+    dbs = dispatch_rpc("db", "list", [force])
     return db_filter(dbs, httprequest=httprequest)
 
 def db_filter(dbs, httprequest=None):
@@ -1229,7 +1309,7 @@ class CommonController(Controller):
     @route('/jsonrpc', type='json', auth="none")
     def jsonrpc(self, service, method, args):
         """ Method used by client APIs to contact OpenERP. """
-        return openerp.netsvc.dispatch_rpc(service, method, args)
+        return dispatch_rpc(service, method, args)
 
     @route('/gen_session_id', type='json', auth="none")
     def gen_session_id(self):
