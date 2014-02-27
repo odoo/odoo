@@ -79,12 +79,10 @@ class EmailTemplate(osv.Model):
             html = html[5:-6]
         return html
 
-    def create(self, cr, uid, values, context=None):
-        if 'body_html' in values:
-            values['body_html'] = self._postprocess_html_replace_links(cr, uid, values['body_html'], context=context)
-        return super(EmailTemplate, self).create(cr, uid, values, context=context)
-
-    def write(self, cr, uid, ids, values, context=None):
-        if 'body_html' in values:
-            values['body_html'] = self._postprocess_html_replace_links(cr, uid, values['body_html'], context=context)
-        return super(EmailTemplate, self).write(cr, uid, ids, values, context=context)
+    def generate_email_batch(self, cr, uid, template_id, res_ids, context=None, fields=None):
+        """ Add a post processing after rendering, aka replace local URLs to absolute URLs. """
+        results = super(EmailTemplate, self).generate_email_batch(cr, uid, template_id, res_ids, context=context, fields=fields)
+        for res_id, value in results.iteritems():
+            if 'body_html' in value:
+                results[res_id]['body_html'] = self._postprocess_html_replace_links(cr, uid, value['body_html'], context=context)
+        return results
