@@ -181,19 +181,29 @@ class Ecommerce(http.Controller):
 
         return request.redirect(url)
 
-    def attributes_to_ids(self, attributes):
-        obj = request.registry.get('product.attribute.line')
-        domain = []
+    def attributes_to_ids(self, cr, uid, attributes):
+        req = """
+                SELECT  product_tmpl_id as id, count(*) as nb_match
+                FROM    product_attribute_line
+                WHERE   1!=1
+            """
+        nb = 0
         for key_val in attributes:
-            domain.append(("attribute_id", "=", key_val[0]))
+            attribute_id = key_val[0]
             if isinstance(key_val[1], list):
-                domain.append(("value", ">=", key_val[1][0]))
-                domain.append(("value", "<=", key_val[1][1]))
+                req += " OR ( attribute_id = %s AND value >= %s AND value <= %s)" % \
+                        (attribute_id, key_val[1][0], key_val[1][1])
+                nb += 1
             else:
-                domain.append(("value_id", "in", key_val[1:]))
-        att_ids = obj.search(request.cr, request.uid, domain, context=request.context)
-        att = obj.read(request.cr, request.uid, att_ids, ["product_tmpl_id"], context=request.context)
-        return [r["product_tmpl_id"][0] for r in att]
+                for value_id in key_val[1:]:
+                    req += " OR ( attribute_id = %s AND value_id = %s)" % \
+                        (attribute_id, value_id)
+                    nb += 1
+
+        req += " GROUP BY product_tmpl_id"
+        cr.execute(req)
+        result = cr.fetchall()
+        return [id for id, nb_match in result if nb_match >= nb]
 
     @http.route(['/shop/pricelist'], type='http', auth="public", website=True, multilang=True)
     def shop_promo(self, promo=None, **post):
@@ -221,7 +231,7 @@ class Ecommerce(http.Controller):
         if filters:
             filters = simplejson.loads(filters)
             if filters:
-                ids = self.attributes_to_ids(filters)
+                ids = self.attributes_to_ids(cr, uid, filters)
                 domain.append(('id', 'in', ids or [0]))
 
         url = "/shop/"

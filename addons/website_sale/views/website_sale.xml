@@ -608,9 +608,9 @@
                       <t t-set="attribute" t-value="Ecommerce.has_search_filter(attribute_id.id)"/>
                       <div style="margin: 0 20px;" class="js_slider"
                         t-att-data-id="attribute_id.id"
-                        t-att-data-value-min="attribute and attribute[1][0] or attribute_id.float_min"
+                        t-att-data-value-min="attribute and attribute[1][0] or attribute_id.float_min or '0'"
                         t-att-data-value-max="attribute and attribute[1][1] or attribute_id.float_max"
-                        t-att-data-min="attribute_id.float_min"
+                        t-att-data-min="attribute_id.float_min or '0'"
                         t-att-data-max="attribute_id.float_max"></div>
                   </li>
                 </t>
