@@ -62,13 +62,18 @@ openerp.report = function(instance) {
                     openerp.session.rpc('/report/check_wkhtmltopdf').then(function (presence) {
                         // Fallback of qweb-pdf if wkhtmltopdf is not installed
                         if (!presence && action.report_type == 'qweb-pdf') {
-                            self.do_notify(_t('Report'), _t('Unable to find Wkhtmltopdf on this system. The report will be shown in html.'), true);
+                            self.do_notify(_t('Report'), _t('Unable to find Wkhtmltopdf on this \
+system. The report will be shown in html.<br><br><a href="http://wkhtmltopdf.org/" _target="blank">\
+wkhtmltopdf.org</a>'), true);
                             window.open(report_url.substring(12), '_blank', 'height=768,width=1024');
                             instance.web.unblockUI();
                         }
                         else {
                             if (presence == 'upgrade') {
-                                self.do_notify(_t('Report'), _t('You should upgrade your version of Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as support for table-breaking between pages.'), true);
+                                self.do_notify(_t('Report'), _t('You should upgrade your version of\
+ Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\
+ support for table-breaking between pages.<br><br><a href="http://wkhtmltopdf.org/" \
+ target="_blank">wkhtmltopdf.org</a>'), true);
                             }
                             self.session.get_file({
                                 url: '/report/download',
