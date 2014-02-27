@@ -5145,6 +5145,16 @@ class BaseModel(object):
         assert 'id' not in values, "New records do not have an 'id'."
         record = self.browse((NewId(),))
         record._cache.update(values)
+
+        if record._scope.draft:
+            # The cache update does not set inverse fields, so do it manually.
+            # This is useful for computing a function field on secondary
+            # records, if that field depends on the main record.
+            for name in values:
+                field = self._fields[name]
+                if field.inverse_field and not field.related:
+                    field.inverse_field._update(record[name], record)
+
         return record
 
     #
@@ -5396,15 +5406,6 @@ class BaseModel(object):
             # create a new record with the values, except field_name
             record = self.new(values)
             record_values = dict(record._cache)
-
-            # HACK: the cache update does not set inverse fields, so do it
-            # manually. This is necessary for computing a function field on a
-            # secondary record, if that field depends on this record. Note that
-            # this hack only covers *one* level of relational fields!
-            for name in values:
-                field = self._fields[name]
-                if field.inverse_field and not field.related:
-                    field.inverse_field._update(record[name], record)
 
         # at this point, the cache should be clean
         assert not scope.dirty
