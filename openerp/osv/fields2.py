@@ -187,6 +187,9 @@ class Field(object):
     def __str__(self):
         return "%s.%s" % (self.model_name, self.name)
 
+    def __repr__(self):
+        return "%s.%s" % (self.model_name, self.name)
+
     def get_description(self):
         """ Return a dictionary that describes the field `self`. """
         desc = {'type': self.type, 'store': self.store}
@@ -285,16 +288,38 @@ class Field(object):
             # adapt value to the cache level
             value = self.convert_to_cache(value)
 
-            if _scope.draft or not all(records._ids):
-                # simply invalidate dependent fields
-                _scope.invalidate(self.modified_draft(records))
-            else:
-                records.write({self.name: self.convert_to_write(value)})
-
-            # store value in cache
-            records._cache[self] = value
             if _scope.draft:
-                records._dirty = True           # mark records as dirty
+                # determine dependent fields
+                spec = self.modified_draft(records)
+
+                # set value in cache, inverse field, and mark records as dirty
+                records._cache[self] = value
+                if self.inverse_field and not self.related:
+                    self.inverse_field._update(value, records)
+                records._dirty = True
+
+                # determine more dependent fields, and invalidate them
+                if self.relational:
+                    spec += self.modified_draft(records)
+                _scope.invalidate(spec)
+
+            elif not all(records._ids):
+                # TODO: one should separate existing records from new ones
+                # determine dependent fields
+                spec = self.modified_draft(records)
+
+                # set value in cache, and possibly set inverse field, too
+                records._cache[self] = value
+
+                # determine more dependent fields, and invalidate them
+                if self.relational:
+                    spec += self.modified_draft(records)
+                _scope.invalidate(spec)
+
+            else:
+                # simply write to the database, and update cache
+                records.write({self.name: self.convert_to_write(value)})
+                records._cache[self] = value
 
     #
     # Management of the computation of field values.
@@ -339,7 +364,7 @@ class Field(object):
 
     def determine_value(self, record):
         """ Determine the value of `self` for `record`. """
-        if self.store:
+        if self.store and not (self.compute and scope.draft):
             # recompute field on record if required
             recs_todo = scope.recomputation[self]
             if record in recs_todo:
@@ -528,7 +553,7 @@ class Field(object):
             else:
                 target = field.model.browse()
                 for record in field.model.browse(scope.cache[field]):
-                    if record.map(path) & records:
+                    if record._map_cache(path) & records:
                         target += record
             if target:
                 spec.append((field, target._ids))
@@ -841,8 +866,8 @@ class Many2one(_Relational):
         """ Whether `self` implements inheritance between model and comodel. """
         return self.name in self.model._inherits.itervalues()
 
-    def _add(self, records, value):
-        """ Add `value` to the value of `self` for `records`. """
+    def _update(self, records, value):
+        """ Update the value of `self` for `records` with `value`. """
         records._cache[self] = value
 
     def convert_to_cache(self, value):
@@ -889,8 +914,8 @@ class Many2one(_Relational):
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
 
-    def _add(self, records, value):
-        """ Add `value` to the value of `self` for `records`. """
+    def _update(self, records, value):
+        """ Update the value of `self` for `records` with `value`. """
         for record in records:
             record._cache[self] = record[self.name] | value
 

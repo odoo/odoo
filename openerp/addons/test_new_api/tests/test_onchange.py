@@ -79,22 +79,7 @@ class TestOnChange(common.TransactionCase):
                 }),
             ],
         }, tocheck)
-        self.assertEqual(result['value'], {
-            'messages': [
-                (0, 0, {
-                    'name': "[%s] %s" % ('', USER.name),
-                    'body': BODY,
-                    'author': USER.id,
-                    'size': len(BODY),
-                }),
-                (1, message.id, {
-                    'name': "[%s] %s" % ('', USER.name),
-                    'body': BODY,
-                    'author': USER.id,
-                    'size': len(BODY),
-                }),
-            ],
-        })
+        self.assertEqual(result['value'], {})
 
         # modify discussion name
         result = self.Discussion.onchange('name', {
@@ -111,19 +96,18 @@ class TestOnChange(common.TransactionCase):
                 (4, message.id),
             ],
         }, tocheck)
-        self.assertEqual(result['value'], {
-            'messages': [
-                (0, 0, {
-                    'name': "[%s] %s" % ("Foo", USER.name),
-                    'body': BODY,
-                    'author': USER.id,
-                    'size': len(BODY),
-                }),
-                (1, message.id, {
-                    'name': "[%s] %s" % ("Foo", USER.name),
-                    'body': BODY,
-                    'author': USER.id,
-                    'size': len(BODY),
-                }),
-            ],
-        })
+        self.assertItemsEqual(list(result['value']), ['messages'])
+        self.assertItemsEqual(result['value']['messages'], [
+            (0, 0, {
+                'name': "[%s] %s" % ("Foo", USER.name),
+                'body': BODY,
+                'author': USER.id,
+                'size': len(BODY),
+            }),
+            (1, message.id, {
+                'name': "[%s] %s" % ("Foo", USER.name),
+                'body': BODY,
+                'author': USER.id,
+                'size': len(BODY),
+            }),
+        ])

@@ -5107,15 +5107,24 @@ class BaseModel(object):
         """
         recs = self
         for name in field_name.split('.'):
+            vals = [rec[name] for rec in recs]
             field = recs._fields[name]
             if field.relational:
-                values = field.null()
-                for rec in recs:
-                    values |= rec[name]
-                recs = values
+                recs = reduce(operator.or_, vals, field.null())
             else:
-                # this will raise an exception if more fields are read!
-                recs = set(filter(None, (rec[name] for rec in recs)))
+                recs = set(filter(None, vals))
+        return recs
+
+    def _map_cache(self, field_name):
+        """ Same as `~.map`, but use cached values only. """
+        recs = self
+        for name in field_name.split('.'):
+            field = recs._fields[name]
+            vals = filter(None, [rec._cache.get(field) for rec in recs])
+            if field.relational:
+                recs = reduce(operator.or_, vals, field.null())
+            else:
+                recs = set(vals)
         return recs
 
     def update(self, values):
@@ -5381,21 +5390,21 @@ class BaseModel(object):
                 this for secondary fields that are not keys of `values`
         """
         scope = scope_proxy.current
+        field_value = values.pop(field_name)
 
         with scope.draft():
             # create a new record with the values, except field_name
             record = self.new(values)
             record_values = dict(record._cache)
-            record._cache.pop(field_name, None)
 
-        # HACK: the cache update does not set inverse fields, so do it manually.
-        # This is necessary for computing a function field on a secondary
-        # record, if that field depends on this record.
-        # Note that this hack only covers *one* level of relational fields!
-        for name in values:
-            field = self._fields[name]
-            if field.inverse_field and not field.related:
-                field.inverse_field._add(record[name], record)
+            # HACK: the cache update does not set inverse fields, so do it
+            # manually. This is necessary for computing a function field on a
+            # secondary record, if that field depends on this record. Note that
+            # this hack only covers *one* level of relational fields!
+            for name in values:
+                field = self._fields[name]
+                if field.inverse_field and not field.related:
+                    field.inverse_field._update(record[name], record)
 
         # at this point, the cache should be clean
         assert not scope.dirty
@@ -5405,10 +5414,10 @@ class BaseModel(object):
             method = getattr(record, 'onchange_' + field_name, None)
             if method is None:
                 # apply the change on the record
-                record[field_name] = values[field_name]
+                record[field_name] = field_value
             else:
                 # invoke specific onchange method, which may return a result
-                result = method(values[field_name])
+                result = method(field_value)
                 if result is not None:
                     return result
 
