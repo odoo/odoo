@@ -72,10 +72,10 @@
 		<template id="forum_header">
 			<div class="navbar navbar-default">
 				<br />
-				<div class="js_blog base_width">
+				<div class="container">
 
 					<div class="container">
-						<ul class="nav nav-pills pull-left">
+						<ul class="nav nav-pills pull-left" style="margin-left:2px">
 							<li>
 								<a href="#">
 									<span class="badge pull-right">12000</span>
@@ -95,7 +95,7 @@
 								</a>
 							</li>
 						</ul>
-						<ul class="nav nav-pills pull-right">
+						<ul class="nav nav-pills pull-right" style="margin-right:2px">
 							<li>
 								<a href="#">
 									tags
@@ -151,7 +151,7 @@
 					<link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css' />
 				</t>
 				<t t-call="website_forum.forum_header" />
-				<div id="wrap" class="js_blog base_width">
+				<div id="wrap">
 					<div class="container">
 						<div class="col-md-9">
 							<!-- t t-call="website_forum.shorting_answer" / -->
@@ -169,6 +169,7 @@
 							</div>
 						</div>
 						<div class="col-md-3">
+							<t t-raw="0"/>
 							<h4>This is a right panel</h4>
 						</div>
 					</div>
