@@ -529,6 +529,7 @@ class Report(http.Controller):
 
             if LooseVersion(version) < LooseVersion('0.12.0'):
                 _logger.warning('Upgrade WKHTMLTOPDF to (at least) 0.12.0')
+                return 'upgrade'
 
             return True
         except:
