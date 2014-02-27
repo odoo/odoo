@@ -29,7 +29,7 @@ import openerp.conf
 import openerp.loglevels as loglevels
 import logging
 import openerp.release as release
-from openerp.vendors import appdirs
+import appdirs
 
 class MyOption (optparse.Option, object):
     """ optparse Option with two additional attributes.
