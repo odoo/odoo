@@ -113,15 +113,17 @@
 							</li>
 						</ul>
 					</div>
-					<div class="container">
-						<div class="col-md-9 pull-left">
-							<input type="search" class="form-control input-lg" name="search"
-								placeholder="Search Or Ask your Question" t-att-value="searches.get('search') or ''" />
-						</div>
-						<div class="col-md-3 pull-right">
-							<button type="submit" class="btn btn-danger btn-lg btn-block pull-left">ASK YOUR QUESTION</button>
-						</div>
-					</div>
+                    <form action="/forum/" method="get" role="search">
+					    <div class="container">
+						    <div class="col-md-9 pull-left">
+							    <input type="search" class="form-control input-group-lg input-lg" name="search"
+								    placeholder="Search Or Ask your Question" t-att-value="searches.get('search') or ''" />
+						    </div>
+						    <div class="col-md-3 pull-right">
+							    <button type="submit" class="btn btn-danger btn-lg btn-block pull-left">ASK YOUR QUESTION</button>
+						    </div>
+					    </div>
+                    </form>
 				</div>
 				<br />
 			</div>
@@ -129,14 +131,14 @@
 	
 		<!-- Need to improve this template -->
 		<template id="shorting_answer">
-			<ul class="nav nav-pills pull-left">
+			<!--ul class="nav nav-pills pull-left">
 				<li>
 					<h4>
 						<t t-esc="len(question_ids)" />
 						Questions
 					</h4>
 				</li>
-			</ul>
+			</ul-->
 			<!-- div class="col-md-2"> </div> <div class="col-md-2"> Short by » </div> 
 				<div class="col-md-2"> <a href="#">oldest</a> </div> <div class="col-md-2"> 
 				<a href="#">newest</a> </div> <div class="col-md-1"> <a href="#">most viewd</a> 
