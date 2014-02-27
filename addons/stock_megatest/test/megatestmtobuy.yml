@@ -178,7 +178,7 @@
     pick_obj = self.pool.get('stock.picking')
     # Process those pickings and put in boxes of 20 pieces
     for pick in pickings:
-      pick_obj.do_prepare_partial(cr, uid, [pick.id])
+      #pick_obj.do_prepare_partial(cr, uid, [pick.id])
       #for ops in pick.pack_operation_ids:
       #  pick
       #  while ops.product_qty > 100:
@@ -198,6 +198,6 @@
     related_dest_pickings = [x.picking_id for x in move_dest_ids if x.picking_id]
     picks = list(set(related_dest_pickings))
     for pick in picks:
-      pick_obj.do_prepare_partial(cr, uid, [pick.id])
+      #pick_obj.do_prepare_partial(cr, uid, [pick.id])
       pick_obj.do_transfer(cr, uid, [pick.id])
     print "after second transfer", time.time()
