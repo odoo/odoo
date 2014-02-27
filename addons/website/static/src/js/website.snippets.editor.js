@@ -190,13 +190,14 @@
             var mt = parseInt($target.css("margin-top") || 0);
             var mb = parseInt($target.css("margin-bottom") || 0);
             $el.css({
-                'position': 'absolute',
                 'width': $target.outerWidth(),
-                'height': $target.outerHeight() + mt + mb+1,
-                'top': pos.top - mt,
+                'top': pos.top - mt - 5,
                 'left': pos.left
             });
-            $el.find(".oe_handle.size").css("bottom", (mb-7)+'px');
+            $el.find(">.e,>.w").css({'height': $target.outerHeight() + mt + mb+1});
+            $el.find(">.s").css({'top': $target.outerHeight() + mt + mb});
+            $el.find(">.size").css({'top': $target.outerHeight() + mt});
+            $el.find(">.s,>.n").css({'width': $target.outerWidth()-2});
         },
         show: function () {
             this.$el.removeClass("hidden");
@@ -213,8 +214,8 @@
 
         bind_snippet_click_editor: function () {
             var self = this;
-            $(document).on('click', "#wrapwrap", function (event) {
-                var $target = $(event.srcElement);
+            $("#wrapwrap").on('click', function (event) {
+                var $target = $(event.srcElement || event.target);
                 if (!$target.attr("data-snippet-id")) {
                     $target = $target.parents("[data-snippet-id]:first");
                 }
@@ -256,6 +257,12 @@
             }
             if (this.$active_snipped_id) {
                 this.snippet_blur(this.$active_snipped_id);
+                var $overlay = this.$active_snipped_id.data("overlay");
+                if ($overlay) {
+                    $overlay.remove();
+                    this.$active_snipped_id.removeData("overlay");
+                }
+                this.$active_snipped_id.removeData("snippet-editor");
                 this.$active_snipped_id = false;
             }
             if ($snippet && $snippet.length) {
@@ -571,6 +578,20 @@
                 var $target = $(this);
                 if (!$target.data('overlay')) {
                     var $zone = $(openerp.qweb.render('website.snippet_overlay'));
+
+                    // fix for pointer-events: none with ie9
+                    if (document.body && document.body.addEventListener) {
+                        $zone.on("click mousedown mousedown", function passThrough(event) {
+                            event.preventDefault();
+                            $target.each(function() {
+                               // check if clicked point (taken from event) is inside element
+                                event.srcElement = this;
+                                $(this).trigger(event.type);
+                            });
+                            return false;
+                        });
+                    }
+
                     $zone.appendTo('#oe_manipulators');
                     $zone.data('target',$target);
                     $target.data('overlay',$zone);
@@ -783,6 +804,7 @@
             this.parent = parent;
             this.$target = $(dom);
             this.$overlay = this.$target.data('overlay');
+            this.$overlay.find('a[data-toggle="dropdown"]').dropdown();
             this.snippet_id = this.$target.data("snippet-id");
             this._readXMLData();
             this.load_style_options();
