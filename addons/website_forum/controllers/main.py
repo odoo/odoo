@@ -84,11 +84,15 @@ class website_forum(http.Controller):
 
     @http.route(['/forum/question/<model("website.forum.post"):question>'], type='http', auth="public", website=True, multilang=True)
     def open_question(self, question, **post):
+        answer_done = False
+        for answer in question.child_ids:
+            if answer.create_uid.id == request.uid:
+                answer_done = True
         values = {
             'question': question,
             'main_object': question,
-            'range': range,
-            'searches': post
+            'searches': post,
+            'answer_done': answer_done
         }
         return request.website.render("website_forum.post_description_full", values)
 
@@ -129,6 +133,30 @@ class website_forum(http.Controller):
                 'active': True,
             }, context=create_context)
         return werkzeug.utils.redirect("/forum/question/%s" % post_id)
+
+    @http.route(['/forum/question/editanswer'], type='http', auth="user", website=True, multilang=True)
+    def edit_answer(self, post_id, **kwargs):
+        cr, uid, context = request.cr, request.uid, request.context
+        post = request.registry['website.forum.post'].browse(cr, uid, int(post_id), context=context)
+        for answer in post.child_ids:
+            if answer.create_uid.id == request.uid:
+                post_answer = answer
+        values = {
+            'post': post,
+            'post_answer': post_answer,
+            'searches': kwargs
+        }
+        return request.website.render("website_forum.edit_answer", values)
+
+    @http.route('/forum/question/saveanswer/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    def save_edited_answer(self, forum_id=1, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        answer_id = int(post.get('answer_id'))
+        
+        new_question_id = request.registry['website.forum.post'].write( cr, uid, [answer_id], {
+                'content': post.get('answer_content'),
+            }, context=context)
+        return werkzeug.utils.redirect("/forum/question/%s" % post.get('post_id'))
 
     @http.route(['/forum/tag/<model("website.forum.tag"):tag>'], type='http', auth="public", website=True, multilang=True)
     def tag_questions(self, tag, page=1, **kwargs):
