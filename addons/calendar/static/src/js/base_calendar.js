@@ -1,17 +1,20 @@
 openerp.calendar = function(instance) {
     var _t = instance.web._t;
     var QWeb = instance.web.qweb;
+
     instance.calendar = {};
     
 
     instance.web.WebClient = instance.web.WebClient.extend({
+        
+
         get_notif_box: function(me) {
             return $(me).closest(".ui-notify-message-style");
         },
         get_next_notif: function() {
             var self= this;
             this.rpc("/calendar/notify")
-            .then(
+            .done(
                 function(result) {
                     _.each(result,  function(res) {
                         setTimeout(function() {
@@ -44,21 +47,33 @@ openerp.calendar = function(instance) {
                         },res.timer * 1000);
                     });
                 }
-            );
+            )
+            .fail(function (err, ev) {
+                if (err.code === -32098) {
+                    // Prevent the CrashManager to display an error
+                    // in case of an xhr error not due to a server error
+                    ev.preventDefault();
+                }
+            });
         },
         check_notifications: function() {
             var self= this;
             self.get_next_notif();
-            setInterval(function(){
+            self.intervalNotif = setInterval(function(){
                 self.get_next_notif();
-            }, 5 * 60  * 1000 );
+            }, 5 * 60 * 1000 );
         },
         
         //Override the show_application of addons/web/static/src/js/chrome.js       
         show_application: function() {
             this._super();
             this.check_notifications();
-        },        
+        },
+        //Override addons/web/static/src/js/chrome.js       
+        on_logout: function() {
+            this._super();
+            clearInterval(self.intervalNotif);
+        },
     });
     
 
