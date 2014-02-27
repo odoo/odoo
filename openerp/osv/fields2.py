@@ -279,47 +279,38 @@ class Field(object):
         # the result should be in cache now
         return record._cache[self]
 
-    def __set__(self, records, value):
-        """ set the value of field `self` on `records` """
-        if not records:
-            raise Warning("Null record %s may not be assigned" % records)
+    def __set__(self, record, value):
+        """ set the value of field `self` on `record` """
+        if not record:
+            raise Warning("Null record %s may not be assigned" % record)
 
-        with records._scope as _scope:
+        # only one record is updated
+        record = record[0]
+
+        with record._scope as _scope:
             # adapt value to the cache level
             value = self.convert_to_cache(value)
 
-            if _scope.draft:
+            if _scope.draft or not record._id:
                 # determine dependent fields
-                spec = self.modified_draft(records)
+                spec = self.modified_draft(record)
 
-                # set value in cache, inverse field, and mark records as dirty
-                records._cache[self] = value
-                if self.inverse_field and not self.related:
-                    self.inverse_field._update(value, records)
-                records._dirty = True
+                # set value in cache, inverse field, and mark record as dirty
+                record._cache[self] = value
+                if _scope.draft:
+                    if self.inverse_field and not self.related:
+                        self.inverse_field._update(value, record)
+                    record._dirty = True
 
                 # determine more dependent fields, and invalidate them
                 if self.relational:
-                    spec += self.modified_draft(records)
-                _scope.invalidate(spec)
-
-            elif not all(records._ids):
-                # TODO: one should separate existing records from new ones
-                # determine dependent fields
-                spec = self.modified_draft(records)
-
-                # set value in cache, and possibly set inverse field, too
-                records._cache[self] = value
-
-                # determine more dependent fields, and invalidate them
-                if self.relational:
-                    spec += self.modified_draft(records)
+                    spec += self.modified_draft(record)
                 _scope.invalidate(spec)
 
             else:
                 # simply write to the database, and update cache
-                records.write({self.name: self.convert_to_write(value)})
-                records._cache[self] = value
+                record.write({self.name: self.convert_to_write(value)})
+                record._cache[self] = value
 
     #
     # Management of the computation of field values.
