@@ -58,13 +58,21 @@ openerp.report = function(instance) {
                     response[0] = report_url
                     response[1] = action.report_type
 
-                    this.session.get_file({
-                        url: '/report/download',
-                        data: {data: JSON.stringify(response)},
-                        complete: openerp.web.unblockUI,
-                        error: c.rpc_error.bind(c)
+                    openerp.session.rpc('/report/check_wkhtmltopdf').then(function (presence) {
+                        // Fallback of qweb-pdf if wkhtmltopdf is not installed
+                        if (!presence && action.report_type == 'qweb-pdf') {
+                            window.open(report_url.substring(12), '_blank', 'height=768,width=1024');
+                            instance.web.unblockUI();
+                        }
+                        else {
+                            self.session.get_file({
+                                url: '/report/download',
+                                data: {data: JSON.stringify(response)},
+                                complete: openerp.web.unblockUI,
+                                error: c.rpc_error.bind(c)
+                            });
+                        }
                     });
-                    return;
                 }
             } else {
                 return self._super(action, options);

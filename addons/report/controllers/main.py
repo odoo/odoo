@@ -39,6 +39,7 @@ except ImportError:
 import psutil
 import signal
 import os
+from distutils.version import LooseVersion
 
 
 from pyPdf import PdfFileWriter, PdfFileReader
@@ -270,7 +271,7 @@ class Report(http.Controller):
         :param save_in_attachment: dict of reports to save/load in/from the db
         :returns: Content of the pdf as a string
         """
-        command = ['wkhtmltopdf-0.12']
+        command = ['wkhtmltopdf']
         tmp_dir = tempfile.gettempdir()
 
         command_args = []
@@ -345,7 +346,7 @@ class Report(http.Controller):
 
                 if process.returncode != 0:
                     raise except_osv(_('Report (PDF)'),
-                                     _('wkhtmltopdf-0.12 failed with error code = %s. '
+                                     _('wkhtmltopdf failed with error code = %s. '
                                        'Message: %s') % (str(process.returncode), err))
 
                 # Save the pdf in attachment if marked
@@ -511,3 +512,25 @@ class Report(http.Controller):
         response.headers.add('Content-Length', len(file))
         response.set_cookie('fileToken', token)
         return response
+
+    @http.route('/report/check_wkhtmltopdf/', type='json', auth="user")
+    def check_wkhtmltopdf(self):
+        """Check the presence of wkhtmltopdf and return its version. If wkhtmltopdf
+        cannot be found, return False.
+        """
+        try:
+            process = subprocess.Popen(['wkhtmltopdf', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            out, err = process.communicate()
+            if err:
+                raise
+
+            version = out.splitlines()[1].strip()
+            version = version.split(' ')[1]
+
+            if LooseVersion(version) < LooseVersion('0.12.0'):
+                _logger.warning('Upgrade WKHTMLTOPDF to (at least) 0.12.0')
+
+            return True
+        except:
+            _logger.error('You need WKHTMLTOPDF to print a pdf version of this report.')
+            return False

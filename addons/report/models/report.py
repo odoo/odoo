@@ -258,8 +258,10 @@ class report(osv.Model):
                 dict_param[key] = False
             elif value.lower() == 'true':
                 dict_param[key] = True
-            elif ',' in value or '%2C' in value:
+            elif ',' in value:
                 dict_param[key] = [int(i) for i in value.split(',')]
+            elif '%2C' in value:
+                dict_param[key] = [int(i) for i in value.split('%2C')]
             else:
                 try:
                     i = int(value)
