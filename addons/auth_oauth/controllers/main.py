@@ -9,7 +9,7 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp import http
 from openerp.http import request
-from openerp.addons.web.controllers.main import db_monodb, set_cookie_and_redirect, login_and_redirect
+from openerp.addons.web.controllers.main import db_monodb, ensure_db, set_cookie_and_redirect, login_and_redirect
 from openerp.modules.registry import RegistryManager
 from openerp.tools.translate import _
 
@@ -72,6 +72,7 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
 
     @http.route()
     def web_login(self, *args, **kw):
+        ensure_db()
         providers = self.list_providers()
 
         response = super(OAuthLogin, self).web_login(*args, **kw)

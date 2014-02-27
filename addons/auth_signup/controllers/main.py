@@ -23,6 +23,7 @@ import werkzeug
 
 import openerp
 from openerp.addons.auth_signup.res_users import SignupError
+from openerp.addons.web.controllers.main import ensure_db
 from openerp import http
 from openerp.http import request
 from openerp.tools.translate import _
@@ -33,6 +34,7 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
 
     @http.route()
     def web_login(self, *args, **kw):
+        ensure_db()
         response = super(AuthSignupHome, self).web_login(*args, **kw)
         response.qcontext.update(self.get_auth_signup_config())
         return response
