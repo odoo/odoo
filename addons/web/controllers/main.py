@@ -638,6 +638,9 @@ class Home(http.Controller):
     def web_login(self, redirect=None, **kw):
         ensure_db()
 
+        if not request.uid:
+            request.uid = openerp.SUPERUSER_ID
+
         values = request.params.copy()
         if not redirect:
             redirect = '/web?' + request.httprequest.query_string
