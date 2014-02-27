@@ -22,37 +22,47 @@
 			</xpath>
 		</template>
 
-		<!-- Page -->
+		<!-- Forum Tags -->
+		<template id="tags">
+			<t t-foreach="question.tags" t-as="tag">
+				<a t-attf-href="/forum/tag/#{ tag.id }" class="badge">
+					<t t-esc="tag.name" />
+				</a>
+			</t>
+			<t t-if="not question.tags">
+				<div style="visibility:hidden;">No Tags</div>
+			</t>
+		</template>
+
+		<!-- List of Questions -->
 		<template id="post_list">
 			<div class="row">
-				<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 question_font_size">
+				<div class="col-md-8">
 					<a t-attf-href="/forum/question/#{ slug(question) }">
 						<t t-esc="question.name" />
 					</a>
 				</div>
-				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-					<div class="label label-info pull-right" style="padding-left: 20px; padding-right: 20px;">
-						<h3>
-							<t t-esc="len(question.vote_ids)" />
-						</h3>
+				<div class="col-md-4 text-right">
+					<span class="label label-primary status">
+						<t t-esc="len(question.vote_ids)" />
 						Votes
-					</div>
-					<div class=" label label-success pull-right" style="padding-left: 20px; padding-right: 20px;">
-						<h3>
-							<t t-esc="len(question.child_ids)" />
-						</h3>
+					</span>
+					<span class="label label-success status">
+						<t t-esc="len(question.child_ids)" />
 						Answers
-					</div>
-
-					<div class="label label-warning  pull-right" style="padding-left: 20px; padding-right: 20px;">
-						<h3>
-							<t t-esc="question.views" />
-						</h3>
+					</span>
+					<span class="label label-info status">
+						<t t-esc="question.views" />
 						Views
-					</div>
+					</span>
 				</div>
-				<t t-call="website_forum.tags" />
-				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-muted text-right">
+			</div>
+
+			<div class="row">
+				<div class="col-md-8 visible-lg">
+					<t t-call="website_forum.tags" />
+				</div>
+				<div class="col-md-4 text-muted text-right">
 					<small>
 						<t t-esc="question.write_date" />
 						<a t-attf-href="/forum/user/#{ question.create_uid.id }">
@@ -63,82 +73,128 @@
 						</a>
 					</small>
 				</div>
-				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<hr class="hr_no_margin" />
-				</div>
 			</div>
 		</template>
 
 		<template id="forum_header">
 			<div class="navbar navbar-default">
-				<br />
 				<div class="container">
-
-					<div class="container">
-						<ul class="nav nav-pills pull-left" style="margin-left:2px">
-							<li>
-								<a href="#">
-									<span class="badge pull-right">12000</span>
-									ALL
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									<span class="badge pull-right">4200</span>
-									UNANSWERD
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									<span class="badge pull-right">420</span>
-									FOLLOWED
-								</a>
-							</li>
-						</ul>
-						<ul class="nav nav-pills pull-right" style="margin-right:2px">
-							<li>
-								<a href="#">
-									tags
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									people
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									badges
-								</a>
-							</li>
-						</ul>
+					<div class="raw visible-lg">
+						<div class="col-md-9 nav nav-pills pull-left">
+							<ul class="col-md-5 nav nav-pills pull-left" style="visibility:hidden;">
+								<li>
+									<a href="#">
+										<span class="badge pull-right">0</span>
+										Blank Space
+									</a>
+								</li>
+							</ul>
+						</div>
+						<div class="col-md-3 nav nav-pills text-right">
+							<ul class="nav nav-pills">
+								<li>
+									<a href="#">
+										tags
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										people
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										badges
+									</a>
+								</li>
+							</ul>
+						</div>
 					</div>
-                    <form action="/forum/" method="get" role="search">
-					    <div class="container">
-						    <div class="col-md-9 pull-left">
-							    <input type="search" class="form-control input-group-lg input-lg" name="search"
-								    placeholder="Search Or Ask your Question" t-att-value="searches.get('search') or ''" />
-						    </div>
-						    <div class="col-md-3 pull-right">
-							    <button type="submit" class="btn btn-danger btn-lg btn-block pull-left">ASK YOUR QUESTION</button>
-						    </div>
-					    </div>
-                    </form>
+
+					<div class="raw">
+						<div class="col-md-4 forum_menu items">
+							<ul class="nav nav-pills">
+								<li class="active">
+									<a href="#">
+										ALL
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										UNANSWERD
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										FOLLOWED
+									</a>
+								</li>
+							</ul>
+						</div>
+						<form action="/forum/" method="get" role="search">
+							<div class="col-md-5 forum_menu">
+
+								<input type="search" class="form-control btn-block input-lg"
+									name="search" placeholder="Search Or Ask your Question"
+									t-att-value="searches.get('search') or ''" />
+							</div>
+							<div class="col-md-3 pull-right forum_menu visible-lg">
+								<button type="submit" class="btn btn-danger btn-lg btn-block pull-left">ASK YOUR QUESTION</button>
+							</div>
+						</form>
+					</div>
 				</div>
-				<br />
 			</div>
 		</template>
-	
+
+		<!-- Page -->
+		<template id="index" name="Forum Navigation">
+			<t t-call="website.layout">
+				<t t-set="head">
+					<link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css' />
+				</t>
+				<!-- div> <t t-call="website_forum.forum_header"/> </div -->
+				<div id="wrap" class="container">
+					<ul class="list-unstyled">
+						<li t-foreach="question_ids" t-as="question" class="question">
+							<t t-call="website_forum.post_list" />
+						</li>
+					</ul>
+					<div class="pull-center">
+						<t t-call="website.pager" />
+					</div>
+				</div>
+			</t>
+		</template>
+
+		<template id="index_right" name="Right Column"
+			inherit_option_id="website_forum.index">
+			<xpath expr="//div[@id='wrap']" position="replace">
+				<div class="container mt16 js_website_blog">
+					<div class="row">
+						<div class="col-lg-9 col-sm-9" id="blog_left_column">
+							<ul class="list-unstyled">
+								<li t-foreach="question_ids" t-as="question" class="question">
+									<t t-call="website_forum.post_list" />
+								</li>
+							</ul>
+							<div class="pull-left">
+								<t t-call="website.pager" />
+							</div>
+						</div>
+						<div class="col-lg-2 col-lg-offset-1 col-sm-2 visible-lg" id="blog_right_column">
+							<div>This is right panel</div>
+						</div>
+					</div>
+				</div>
+			</xpath>
+		</template>
+
+
 		<!-- Need to improve this template -->
 		<template id="shorting_answer">
-			<!--ul class="nav nav-pills pull-left">
-				<li>
-					<h4>
-						<t t-esc="len(question_ids)" />
-						Questions
-					</h4>
-				</li>
-			</ul-->
+			<!--ul class="nav nav-pills pull-left"> <li> <h4> <t t-esc="len(question_ids)" 
+				/> Questions </h4> </li> </ul -->
 			<!-- div class="col-md-2"> </div> <div class="col-md-2"> Short by » </div> 
 				<div class="col-md-2"> <a href="#">oldest</a> </div> <div class="col-md-2"> 
 				<a href="#">newest</a> </div> <div class="col-md-1"> <a href="#">most viewd</a> 
@@ -147,7 +203,7 @@
 		</template>
 
 		<!-- index page of forum -->
-		<template id="index" name="Posts">
+		<template id="index1" name="Posts">
 			<t t-call="website.layout">
 				<t t-set="head">
 					<link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css' />
@@ -165,13 +221,11 @@
 								</li>
 							</ul>
 							<div class="col-sm-7">
-								<t t-call="website.pager">
-									<t t-set="classname">pull-right</t>
-								</t>
+
 							</div>
 						</div>
 						<div class="col-md-3">
-							<t t-raw="0"/>
+							<t t-raw="0" />
 							<h4>This is a right panel</h4>
 						</div>
 					</div>
@@ -182,15 +236,7 @@
 
 		<!-- need to refactor below code -->
 
-		<template id="tags">
-			<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-				<t t-foreach="question.tags" t-as="tag">
-					<a t-attf-href="/forum/tag/#{ tag.id }" class="badge">
-						<t t-esc="tag.name" />
-					</a>
-				</t>
-			</div>
-		</template>
+
 
 		<template id="shorting">
 			<div class="col-xs-3">
