@@ -1,4 +1,9 @@
 -
+  Do it with the rights of Mr. Demo
+-
+  !context
+    uid: 'base.user_demo'
+-
   I first create a warehouse with pick-pack-ship and reception in 2 steps
 -
   !record {model: stock.warehouse, id: mwh_pps}:
@@ -198,6 +203,6 @@
     related_dest_pickings = [x.picking_id for x in move_dest_ids if x.picking_id]
     picks = list(set(related_dest_pickings))
     for pick in picks:
-      #pick_obj.do_prepare_partial(cr, uid, [pick.id])
+      pick_obj.do_prepare_partial(cr, uid, [pick.id])
       pick_obj.do_transfer(cr, uid, [pick.id])
     print "after second transfer", time.time()
