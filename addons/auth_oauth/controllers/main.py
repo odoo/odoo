@@ -9,7 +9,7 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp import http
 from openerp.http import request
-from openerp.addons.web.controllers.main import db_monodb, set_cookie_and_redirect, login_and_redirect
+from openerp.addons.web.controllers.main import db_monodb, ensure_db, set_cookie_and_redirect, login_and_redirect
 from openerp.modules.registry import RegistryManager
 from openerp.tools.translate import _
 
@@ -61,13 +61,18 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
         return providers
 
     def get_state(self, provider):
-        return dict(
+        state = dict(
             d=request.session.db,
             p=provider['id']
         )
+        token = request.params.get('token')
+        if token:
+            state['t'] = token
+        return state
 
     @http.route()
     def web_login(self, *args, **kw):
+        ensure_db()
         providers = self.list_providers()
 
         response = super(OAuthLogin, self).web_login(*args, **kw)
@@ -86,6 +91,24 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
             if error:
                 response.qcontext['error'] = error
 
+        return response
+
+    @http.route()
+    def web_auth_signup(self, *args, **kw):
+        providers = self.list_providers()
+        if len(providers) == 1:
+            werkzeug.exceptions.abort(werkzeug.utils.redirect(providers[0]['auth_link'], 303))
+        response = super(OAuthLogin, self).web_auth_signup(*args, **kw)
+        response.qcontext.update(providers=providers)
+        return response
+
+    @http.route()
+    def web_auth_reset_password(self, *args, **kw):
+        providers = self.list_providers()
+        if len(providers) == 1:
+            werkzeug.exceptions.abort(werkzeug.utils.redirect(providers[0]['auth_link'], 303))
+        response = super(OAuthLogin, self).web_auth_reset_password(*args, **kw)
+        response.qcontext.update(providers=providers)
         return response
 
 class OAuthController(http.Controller):

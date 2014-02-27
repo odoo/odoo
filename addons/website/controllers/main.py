@@ -45,9 +45,8 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route(website=True, auth="public", multilang=True)
     def web_login(self, *args, **kw):
-        response = super(Website, self).web_login(*args, **kw)
-        response.qcontext['disable_footer'] = True
-        return response
+        # TODO: can't we just put auth=public, ... in web client ?
+        return super(Website, self).web_login(*args, **kw)
 
     @http.route('/page/<page:page>', type='http', auth="public", website=True, multilang=True)
     def page(self, page, **opt):
@@ -383,7 +382,6 @@ class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     # Server actions
     #------------------------------------------------------
-
     @http.route('/website/action/<path_or_xml_id_or_id>', type='http', auth="public", website=True)
     def actions_server(self, path_or_xml_id_or_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
