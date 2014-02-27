@@ -5425,6 +5425,9 @@ class BaseModel(object):
             for field_seq in (tocheck or ()):
                 record.map(field_seq)
 
+            # consider field_name below, in case the value is dirty
+            record_values[field_name] = record[field_name]
+
             # determine result, and return it
             changed = {}
             for name, oldval in record_values.iteritems():

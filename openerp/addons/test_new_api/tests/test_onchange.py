@@ -79,7 +79,21 @@ class TestOnChange(common.TransactionCase):
                 }),
             ],
         }, tocheck)
-        self.assertEqual(result['value'], {})
+        self.assertItemsEqual(list(result['value']), ['messages'])
+        self.assertItemsEqual(result['value']['messages'], [
+            (0, 0, {
+                'name': "[%s] %s" % ("Foo", USER.name),
+                'body': BODY,
+                'author': USER.id,
+                'size': len(BODY),
+            }),
+            (1, message.id, {
+                'name': "[%s] %s" % ("Foo", USER.name),
+                'body': BODY,
+                'author': USER.id,
+                'size': len(BODY),
+            }),
+        ])
 
         # modify discussion name
         result = self.Discussion.onchange('name', {
