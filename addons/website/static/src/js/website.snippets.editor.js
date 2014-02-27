@@ -257,8 +257,11 @@
             }
             if (this.$active_snipped_id) {
                 this.snippet_blur(this.$active_snipped_id);
-                this.$active_snipped_id.data("overlay").remove();
-                this.$active_snipped_id.removeData("overlay");
+                var $overlay = this.$active_snipped_id.data("overlay");
+                if ($overlay) {
+                    $overlay.remove();
+                    this.$active_snipped_id.removeData("overlay");
+                }
                 this.$active_snipped_id.removeData("snippet-editor");
                 this.$active_snipped_id = false;
             }
