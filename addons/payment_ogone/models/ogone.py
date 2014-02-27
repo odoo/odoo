@@ -30,7 +30,7 @@ class PaymentAcquirerOgone(osv.Model):
         @TDETODO: complete me
         """
         return {
-            'ogone_standard_order_url': 'https://secure.ogone.com/ncol/%s/orderstandard.asp' % env,
+            'ogone_standard_order_url': 'https://secure.ogone.com/ncol/%s/orderstandard_utf8.asp' % env,
             'ogone_direct_order_url': 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % env,
             'ogone_direct_query_url': 'https://secure.ogone.com/ncol/%s/querydirect.asp' % env,
             'ogone_afu_agree_url': 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % env,
