@@ -25,13 +25,11 @@ class QUnitTest(unittest.TestCase):
 
 class QUnitSuite(unittest.TestSuite):
     def __init__(self, qunitfile, timeout=5000):
+        super(QUnitSuite, self).__init__()
         self.testfile = qunitfile
         self.timeout = timeout
         self._module = None
         self._test = None
-
-    def __iter__(self):
-        return iter([self])
 
     def run(self, result):
         try:
@@ -61,7 +59,7 @@ class QUnitSuite(unittest.TestSuite):
                 'timeout': self.timeout,
                 'inject': os.path.join(ROOT, 'qunit-phantomjs-bridge.js')
             })
-        ], stdout=subprocess.PIPE)
+        ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
         try:
             while True:
@@ -77,7 +75,12 @@ class QUnitSuite(unittest.TestSuite):
                 phantom.terminate()
 
     def process(self, line, result):
-        args = json.loads(line)
+        try:
+            args = json.loads(line)
+        except ValueError: # phantomjs stderr
+            if 'CoreText' not in line:
+                print line
+            return False
         event_name = args[0]
 
         if event_name == 'qunit.done':
@@ -110,6 +113,8 @@ class QUnitSuite(unittest.TestSuite):
             self._test.failed = True
             result.addFailure(
                 self._test, self.failure_to_str(*args[2:]))
+        elif event_name == 'console':
+            print args[1]
 
         return False
 

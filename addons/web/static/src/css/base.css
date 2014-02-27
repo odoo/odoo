@@ -78,6 +78,20 @@
 .openerp td {
   vertical-align: top;
 }
+.openerp .oe_title {
+  width: 50%;
+  float: left;
+}
+.openerp .oe_title:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+.openerp .oe_form_group {
+  clear: both;
+}
 .openerp .zebra tbody tr:nth-child(odd) td {
   background-color: #f0f0fa;
   background-color: #efeff8;
@@ -1205,10 +1219,7 @@
 .openerp .oe_about .oe_bottom a {
   color: #eeeeee;
 }
-.openerp .oe_form_uri {
-  color: #7c7bad;
-}
-.openerp .oe_form_uri:hover {
+.openerp a.oe_form_uri:hover {
   text-decoration: underline;
 }
 .openerp .oe_application {
@@ -1594,7 +1605,6 @@
   border-radius: 0 3px 3px 0;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_category, .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_value {
-  height: 18px;
   padding: 0 4px;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_category {
@@ -2021,7 +2031,6 @@
 }
 .openerp .oe_form > :not(.oe_form_nosheet) header .oe_button {
   margin: 3px 2px 1px;
-  float: left;
 }
 .openerp .oe_form > :not(.oe_form_nosheet) header .oe_button:first-child {
   margin-left: 6px;
@@ -2142,7 +2151,7 @@
 }
 .openerp .oe_form .oe_form_label_help[for] span, .openerp .oe_form .oe_form_label[for] span {
   font-size: 80%;
-  color: darkGreen;
+  color: darkgreen;
   vertical-align: top;
   position: relative;
   top: -4px;
@@ -3021,25 +3030,12 @@
   font-size: 95%;
   line-height: 1.2em;
 }
-.openerp .oe_debug_view_log label {
-  display: block;
-  width: 49%;
-  text-align: right;
-  float: left;
-  font-weight: bold;
-  color: #000099;
-}
-.openerp .oe_debug_view_log span {
-  display: block;
-  width: 49%;
-  float: right;
-  color: #333333;
-}
 .openerp .navbar {
   min-height: 32px;
   margin-bottom: 0px;
   border: none;
   z-index: 1;
+  position: static;
   background-color: #414141;
   background-color: #454343;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#646060), to(#262626));
@@ -3138,10 +3134,6 @@
   border: none;
   padding: 10px 0 3px 0;
 }
-.openerp .jqstooltip {
-  height: auto !important;
-  width: auto !important;
-}
 .openerp h5 {
   font-weight: bold;
   font-size: smaller;
@@ -3151,6 +3143,12 @@
 }
 .openerp .oe_msg_subtype_check {
   margin: 3px 3px 0 !important;
+}
+
+.jqstooltip {
+  height: auto !important;
+  width: auto !important;
+  padding: 0;
 }
 
 @-moz-document url-prefix() {

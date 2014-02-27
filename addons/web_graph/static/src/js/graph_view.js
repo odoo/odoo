@@ -50,7 +50,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             var field_name = field.attrs.name;
             if (_.has(field.attrs, 'interval')) {
                 field_name = field.attrs.name + ':' + field.attrs.interval;
-            } 
+            }
             if (_.has(field.attrs, 'type')) {
                 switch (field.attrs.type) {
                     case 'row':
@@ -77,23 +77,28 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     do_search: function (domain, context, group_by) {
+        if (this.ignore_do_search) {
+            this.ignore_do_search = false;
+            return;
+        }
         var self = this,
-            col_group_by = context.col_group_by || this.get_groupbys_from_searchview('ColGroupBy', 'col_group_by');
+            groupbys = this.get_groupbys_from_searchview(),
+            col_group_by = groupbys.col_group_by;
 
         if (!this.graph_widget) {
             if (group_by.length) {
                 this.widget_config.row_groupby = group_by;
             }
             if (col_group_by.length) {
-                this.widget_config.col_groupby = group_by;
+                this.widget_config.col_groupby = col_group_by;
             }
             this.graph_widget = new openerp.web_graph.Graph(this, this.model, domain, this.widget_config);
             this.graph_widget.appendTo(this.$el);
             this.ViewManager.on('switch_mode', this, function (e) {
-                var col_gb = self.get_groupbys_from_searchview('ColGroupBy', 'col_group_by'),
-                    row_gb = self.get_groupbys_from_searchview('GroupBy', 'group_by');
-
-                if (e === 'graph') this.graph_widget.set(domain, row_gb, col_gb);
+                if (e === 'graph') {
+                    var group_bys = self.get_groupbys_from_searchview();
+                    this.graph_widget.set(domain, group_bys.group_by, group_bys.col_group_by);
+                }
             });
             return;
         }
@@ -101,17 +106,27 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.graph_widget.set(domain, group_by, col_group_by);
     },
 
-    get_groupbys_from_searchview: function (cat_name, cat_field) {
-        var facet = this.search_view.query.findWhere({category:cat_name}),
-            groupby_list = facet ? facet.values.models : [];
-        return _.map(groupby_list, function (g) { 
-            var context = g.attributes.value.attrs.context;
-            if (_.isString(context)) {
-                return py.eval(context).group_by;
-            } else {
-                return context[cat_field]; 
+    get_groupbys_from_searchview: function () {
+        var result = { group_by: [], col_group_by: []},
+            searchdata = this.search_view.build_search_data();
+
+        _.each(searchdata.groupbys, function (data) {
+            data = (_.isString(data)) ? py.eval(data) : data;
+            result.group_by = result.group_by.concat(data.group_by);
+            if (data.col_group_by) {
+                result.col_group_by = result.col_group_by.concat(data.col_group_by);
             }
         });
+
+        if (result.col_group_by.length) {
+            return result;
+        }
+        _.each(searchdata.contexts, function (context) {
+            if (context.col_group_by) {
+                result.col_group_by = result.col_group_by.concat(context.col_group_by);
+            }
+        });
+        return result;
     },
 
     do_show: function () {
@@ -128,6 +143,14 @@ instance.web_graph.GraphView = instance.web.View.extend({
         var query = this.search_view.query;
 
         if (!_.has(this.search_view, '_s_groupby')) { return; }
+
+        if (row_groupby.length && col_groupby.length) {
+            // when two changes to the search view will be done, the method do_search
+            // will be called twice, once with the correct groupby and incorrect col_groupby,
+            // and once with correct informations. This flag is necessary to prevent the 
+            // incorrect informations to propagate and trigger useless queries
+            this.ignore_do_search = true;
+        }
 
         // add row groupbys
         var row_facet = this.make_row_groupby_facets(row_groupby),

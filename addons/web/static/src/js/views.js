@@ -496,44 +496,39 @@ instance.web.ActionManager = instance.web.Widget.extend({
     ir_actions_report_xml: function(action, options) {
         var self = this;
         instance.web.blockUI();
-        return instance.web.pyeval.eval_domains_and_contexts({
-            contexts: [action.context],
-            domains: []
-        }).then(function(res) {
-            action = _.clone(action);
-            action.context = res.context;
+        action = _.clone(action);
+        var eval_contexts = ([instance.session.user_context] || []).concat([action.context]);
+        action.context = instance.web.pyeval.eval('contexts',eval_contexts);
 
-            // iOS devices doesn't allow iframe use the way we do it,
-            // opening a new window seems the best way to workaround
-            if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
-                var params = {
-                    action: JSON.stringify(action),
-                    token: new Date().getTime()
-                };
-                var url = self.session.url('/web/report', params);
-                instance.web.unblockUI();
-                $('<a href="'+url+'" target="_blank"></a>')[0].click();
-                return;
-            }
-
-            var c = instance.webclient.crashmanager;
-            return $.Deferred(function (d) {
-                self.session.get_file({
-                    url: '/web/report',
-                    data: {action: JSON.stringify(action)},
-                    complete: instance.web.unblockUI,
-                    success: function(){
-                        if (!self.dialog) {
-                            options.on_close();
-                        }
-                        self.dialog_stop();
-                        d.resolve();
-                    },
-                    error: function () {
-                        c.rpc_error.apply(c, arguments);
-                        d.reject();
+        // iOS devices doesn't allow iframe use the way we do it,
+        // opening a new window seems the best way to workaround
+        if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+            var params = {
+                action: JSON.stringify(action),
+                token: new Date().getTime()
+            };
+            var url = self.session.url('/web/report', params);
+            instance.web.unblockUI();
+            $('<a href="'+url+'" target="_blank"></a>')[0].click();
+            return;
+        }
+        var c = instance.webclient.crashmanager;
+        return $.Deferred(function (d) {
+            self.session.get_file({
+                url: '/web/report',
+                data: {action: JSON.stringify(action)},
+                complete: instance.web.unblockUI,
+                success: function(){
+                    if (!self.dialog) {
+                        options.on_close();
                     }
-                });
+                    self.dialog_stop();
+                    d.resolve();
+                },
+                error: function () {
+                    c.rpc_error.apply(c, arguments);
+                    d.reject();
+                }
             });
         });
     },
@@ -600,6 +595,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     action_views_ids : views_ids
                 }, self.flags, self.flags[view.view_type] || {}, view.options || {})
             });
+            
             views_ids[view.view_type] = view.view_id;
         });
         if (this.flags.views_switcher === false) {
@@ -607,7 +603,11 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         }
         // If no default view defined, switch to the first one in sequence
         var default_view = this.flags.default_view || this.views_src[0].view_type;
-        return this.switch_mode(default_view);
+  
+
+        return this.switch_mode(default_view, null, this.flags[default_view] && this.flags[default_view].options);
+      
+        
     },
     switch_mode: function(view_type, no_store, view_options) {
         var self = this;
@@ -815,6 +815,11 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             contexts: [action_context].concat(contexts || []),
             group_by_seq: groupbys || []
         }).done(function (results) {
+            if (results.error) {
+                throw new Error(
+                        _.str.sprintf(_t("Failed to evaluate search criterions")+": \n%s",
+                                      JSON.stringify(results.error)));
+            }
             self.dataset._model = new instance.web.Model(
                 self.dataset.model, results.context, results.domain);
             var groupby = results.group_by.length
@@ -1259,7 +1264,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         this.dataset = dataset;
         this.model_id = model_id;
         if (args && args[0].error) {
-            this.do_warn( instance.web.qweb.render('message_error_uploading'), args[0].error);
+            this.do_warn(_t('Uploading Error'), args[0].error);
         }
         if (!model_id) {
             this.on_attachments_loaded([]);
@@ -1343,7 +1348,7 @@ instance.web.View = instance.web.Widget.extend({
                 "context": this.dataset.get_context(),
             });
         }
-        return view_loaded_def.then(function(r) {
+        return this.alive(view_loaded_def).then(function(r) {
             self.fields_view = r;
             // add css classes that reflect the (absence of) access rights
             self.$el.addClass('oe_view')

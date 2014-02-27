@@ -1,27 +1,24 @@
+import urllib
 import urlparse
 from openerp import sql_db, tools
 from qunitsuite.suite import QUnitSuite
 
 class WebSuite(QUnitSuite):
-    def __init__(self):
+    def __init__(self, module):
         url = urlparse.urlunsplit([
             'http',
             'localhost:{port}'.format(port=tools.config['xmlrpc_port']),
             '/web/tests',
-            'mod=*&source={db}&supadmin={supadmin}&password={password}'.format(
-                db=tools.config['db_name'],
-                # al: i dont understand why both are needed, db_password is the
-                # password for postgres and should not appear here of that i'm
-                # sure
-                #
-                # But runbot provides it with this wrong key so i let it here
-                # until it's fixed
-                supadmin=tools.config['db_password'] or 'admin',
-                password=tools.config['admin_passwd'] or 'admin'),
+            urllib.urlencode({
+                'mod': module,
+                'source': tools.config['db_name'],
+                'supadmin': tools.config['admin_passwd'],
+                'password': 'admin',
+            }),
             ''
         ])
         super(WebSuite, self).__init__(url, 50000)
 
 def load_tests(loader, standard_tests, _):
-    standard_tests.addTest(WebSuite())
+    standard_tests.addTest(WebSuite('web'))
     return standard_tests

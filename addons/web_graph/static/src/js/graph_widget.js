@@ -154,6 +154,13 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             return;
         }
 
+        if (!dom_changed && col_reduced && row_reduced) {
+            this.pivot.fold_with_depth(this.pivot.rows, row_gbs.length);
+            this.pivot.fold_with_depth(this.pivot.cols, col_gbs.length);
+            this.display_data();
+            return;
+        }
+
         if (dom_changed || row_gb_changed || col_gb_changed) {
             this.pivot.set(domain, row_gbs, col_gbs).then(this.proxy('display_data'));
         }
@@ -164,8 +171,10 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         if (mode === 'pivot') {
             this.$('.graph_heatmap label').removeClass('disabled');
+            this.$('.graph_main_content').css('position', 'inherit')
         } else {
             this.$('.graph_heatmap label').addClass('disabled');
+            this.$('.graph_main_content').css('position', 'relative')
         }
         this.display_data();
     },
@@ -263,9 +272,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             case 'swap_axis':
                 this.swap_axis();
                 break;
-            case 'expand_all':
-                this.pivot.expand_all().then(this.proxy('display_data'));
-                break;
             case 'update_values':
                 this.pivot.update_data().then(this.proxy('display_data'));
                 break;
@@ -295,25 +301,30 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         if (header.expanded) {
             this.fold(header);
-        } else {
-            if (header.path.length < header.root.groupby.length) {
-                this.expand(id);
-            } else {
-                if (!this.important_fields.length) {
-                    return;
-                }
-
-                var fields = _.map(this.important_fields, function (field) {
-                        return {id: field.field, value: field.string, type:self.fields[field.field.split(':')[0]].type};
-                });
-                this.dropdown = $(QWeb.render('field_selection', {fields:fields, header_id:id}));
-                $(event.target).after(this.dropdown);
-                this.dropdown.css({position:'absolute',
-                                   left:event.pageX,
-                                   top:event.pageY});
-                this.$('.field-selection').next('.dropdown-menu').toggle();
-            }
+            return;
+        } 
+        if (header.path.length < header.root.groupby.length) {
+            this.expand(id);
+            return;
+        } 
+        if (!this.important_fields.length) {
+            return;
         }
+
+        var fields = _.map(this.important_fields, function (field) {
+                return {id: field.field, value: field.string, type:self.fields[field.field.split(':')[0]].type};
+        });
+        if (this.dropdown) {
+            this.dropdown.remove();
+        }
+        this.dropdown = $(QWeb.render('field_selection', {fields:fields, header_id:id}));
+        $(event.target).after(this.dropdown);
+        this.dropdown.css({position:'absolute',
+                           left:event.pageX,
+                           top:event.pageY});
+        this.$('.field-selection').next('.dropdown-menu').toggle();
+        
+        
     },
 
     field_selection: function (event) {
