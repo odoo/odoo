@@ -1100,16 +1100,17 @@ class stock_picking(osv.osv):
                 todo_move_ids = []
                 toassign_move_ids = []
                 for move in picking.move_lines:
+                    remaining_qty = move.remaining_qty
                     if move.state in ('done', 'cancel'):
                         #ignore stock moves cancelled or already done
                         continue
                     elif move.state == 'draft':
                         toassign_move_ids.append(move.id)
-                    if move.remaining_qty == 0:
+                    if remaining_qty == 0:
                         if move.state in ('draft', 'assigned', 'confirmed'):
                             todo_move_ids.append(move.id)
-                    elif move.remaining_qty > 0 and move.remaining_qty < move.product_qty:
-                        new_move = stock_move_obj.split(cr, uid, move, move.remaining_qty, context=context)
+                    elif remaining_qty > 0 and remaining_qty < move.product_qty:
+                        new_move = stock_move_obj.split(cr, uid, move, remaining_qty, context=context)
                         todo_move_ids.append(move.id)
                         #Assign move as it was assigned before
                         toassign_move_ids.append(new_move)
@@ -1354,6 +1355,7 @@ class stock_move(osv.osv):
         for picking in self.browse(cr, uid, ids, context=context):
             res += [x.id for x in picking.move_lines]
         return res
+
 
     _columns = {
         'name': fields.char('Description', required=True, select=True),
@@ -3528,7 +3530,11 @@ class stock_pack_operation(osv.osv):
             for move in sorted_moves:
                 if move.product_id.id == product_id and move.state not in ['done', 'cancel']:
                     qty_on_link = min(move.remaining_qty, qty_to_assign)
-                    link_obj.create(cr, uid, {'move_id': move.id, 'operation_id': op.id, 'qty': qty_on_link}, context=context)
+                    before = time.time()
+                    cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
+                    (%s, %s, %s)""", (move.id, op.id, qty_on_link,))
+#                     link_obj.create(cr, uid, {'move_id': move.id, 'operation_id': op.id, 'qty': qty_on_link}, context=context)
+                    print "Link create", time.time() - before
                     qty_to_assign -= qty_on_link
                     move.refresh()
                     if qty_to_assign <= 0:
@@ -3541,7 +3547,9 @@ class stock_pack_operation(osv.osv):
                         #Entire packages means entire quants from those packages
                         if not quants_done.get(quant.id):
                             quants_done[quant.id] = 0
+                        before = time.time()
                         link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': quant.qty}, context=context)
+                        print "Link create", time.time() - before
             else:
                 qty = uom_obj._compute_qty(cr, uid, ops.product_uom_id.id, ops.product_qty, ops.product_id.uom_id.id)
                 #Check moves with same product
@@ -3595,6 +3603,7 @@ class stock_pack_operation(osv.osv):
             if op.product_id:
                 #TODO: Remaining qty: UoM conversions are done twice
                 normalized_qty = uom_obj._compute_qty(cr, uid, op.product_uom_id.id, op.remaining_qty, op.product_id.uom_id.id)
+                
                 if normalized_qty > 0:
                     _create_link_for_product(op.product_id.id, normalized_qty)
             elif op.package_id:
