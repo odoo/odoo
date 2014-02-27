@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -39,9 +39,6 @@ from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('openerp.tests')
-
-# addons path ','.joined
-_ad = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons') # default addons path (base)
 
 # addons path as a list
 ad_paths = []
@@ -90,8 +87,13 @@ def initialize_sys_path():
     if ad_paths:
         return
 
-    ad_paths = map(lambda m: os.path.abspath(tools.ustr(m.strip())), tools.config['addons_path'].split(','))
-    ad_paths.append(os.path.abspath(_ad)) # for get_module_path
+    ad_paths = [tools.config.addons_data_dir]
+    ad_paths += map(lambda m: os.path.abspath(tools.ustr(m.strip())), tools.config['addons_path'].split(','))
+
+    # add base module path
+    base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons'))
+    ad_paths += [base_path]
+
     sys.meta_path.append(AddonsImportHook())
 
 def get_module_path(module, downloaded=False, display_warning=True):
@@ -108,7 +110,7 @@ def get_module_path(module, downloaded=False, display_warning=True):
             return opj(adp, module)
 
     if downloaded:
-        return opj(_ad, module)
+        return opj(tools.config.addons_data_dir, module)
     if display_warning:
         _logger.warning('module %s: module not found', module)
     return False
