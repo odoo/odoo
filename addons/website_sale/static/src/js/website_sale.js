@@ -107,6 +107,10 @@ $(document).ready(function () {
                 $min.val( ui.values[ 0 ] );
                 $max.val( ui.values[ 1 ] );
                 $form.submit();
+            },
+            slide: function( event, ui ) {
+                $min.val( ui.values[ 0 ] );
+                $max.val( ui.values[ 1 ] );
             }
         });
         $min.val( $slider.slider( "values", 0 ) );
