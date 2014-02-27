@@ -162,9 +162,13 @@ class lang(osv.osv):
     ]
 
     @tools.ormcache(skiparg=3)
-    def _lang_data_get(self, cr, uid, lang_id, monetary=False):
+    def _lang_data_get(self, cr, uid, lang, monetary=False):
+        if type(lang) in (str, unicode):
+            lang = self.search(cr, uid, [('code', '=', lang)]) or \
+                self.search(cr, uid, [('code', '=', 'en_US')])
+            lang = lang[0]
         conv = localeconv()
-        lang_obj = self.browse(cr, uid, lang_id)
+        lang_obj = self.browse(cr, uid, lang)
         thousands_sep = lang_obj.thousands_sep or conv[monetary and 'mon_thousands_sep' or 'thousands_sep']
         decimal_point = lang_obj.decimal_point
         grouping = lang_obj.grouping
@@ -192,32 +196,29 @@ class lang(osv.osv):
             trans_obj.unlink(cr, uid, trans_ids, context=context)
         return super(lang, self).unlink(cr, uid, ids, context=context)
 
+    #
+    # IDS: can be a list of IDS or a list of XML_IDS
+    #
     def format(self, cr, uid, ids, percent, value, grouping=False, monetary=False, context=None):
         """ Format() will return the language-specific output for float values"""
-
         if percent[0] != '%':
             raise ValueError("format() must be given exactly one %char format specifier")
 
-        lang_grouping, thousands_sep, decimal_point = self._lang_data_get(cr, uid, ids[0], monetary)
-        eval_lang_grouping = eval(lang_grouping)
-
         formatted = percent % value
+
         # floats and decimal ints need special action!
-        if percent[-1] in 'eEfFgG':
-            seps = 0
-            parts = formatted.split('.')
+        if grouping:
+            lang_grouping, thousands_sep, decimal_point = \
+                self._lang_data_get(cr, uid, ids[0], monetary)
+            eval_lang_grouping = eval(lang_grouping)
 
-            if grouping:
-                parts[0], seps = intersperse(parts[0], eval_lang_grouping, thousands_sep)
+            if percent[-1] in 'eEfFgG':
+                parts = formatted.split('.')
+                parts[0], _ = intersperse(parts[0], eval_lang_grouping, thousands_sep)
 
-            formatted = decimal_point.join(parts)
-            while seps:
-                sp = formatted.find(' ')
-                if sp == -1: break
-                formatted = formatted[:sp] + formatted[sp+1:]
-                seps -= 1
-        elif percent[-1] in 'diu':
-            if grouping:
+                formatted = decimal_point.join(parts)
+
+            elif percent[-1] in 'diu':
                 formatted = intersperse(formatted, eval_lang_grouping, thousands_sep)[0]
 
         return formatted

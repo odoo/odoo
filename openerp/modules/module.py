@@ -20,37 +20,31 @@
 #
 ##############################################################################
 
+import functools
 import imp
 import itertools
-import os
-from os.path import join as opj
-import sys
-import types
-import zipimport
-
-import openerp.tools as tools
-import openerp.tools.osutil as osutil
-from openerp.tools.safe_eval import safe_eval as eval
-
-import zipfile
-import openerp.release as release
-
-import re
-import base64
-from zipfile import PyZipFile, ZIP_DEFLATED
-from cStringIO import StringIO
-
 import logging
+import os
+import re
+import sys
+import unittest
+from os.path import join as opj
+
+import unittest2
+
+import openerp
+import openerp.tools as tools
+import openerp.release as release
+from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('openerp.tests')
 
+# addons path as a list
 ad_paths = []
 
 # Modules already loaded
 loaded = []
-
-_logger = logging.getLogger(__name__)
 
 class AddonsImportHook(object):
     """
@@ -70,13 +64,10 @@ class AddonsImportHook(object):
             return self # We act as a loader too.
 
     def load_module(self, module_name):
+        if module_name in sys.modules:
+            return sys.modules[module_name]
 
-        module_parts = module_name.split('.')
-        if len(module_parts) == 3 and module_name.startswith('openerp.addons.'):
-            module_part = module_parts[2]
-            if module_name in sys.modules:
-                return sys.modules[module_name]
-
+        _1, _2, module_part = module_name.split('.')
         # Note: we don't support circular import.
         f, path, descr = imp.find_module(module_part, ad_paths)
         mod = imp.load_module('openerp.addons.' + module_part, f, path, descr)
@@ -124,7 +115,6 @@ def get_module_path(module, downloaded=False, display_warning=True):
         _logger.warning('module %s: module not found', module)
     return False
 
-
 def get_module_filetree(module, dir='.'):
     path = get_module_path(module)
     if not path:
@@ -136,12 +126,7 @@ def get_module_filetree(module, dir='.'):
     if dir.startswith('..') or (dir and dir[0] == '/'):
         raise Exception('Cannot access file outside the module')
 
-    if not os.path.isdir(path):
-        # zipmodule
-        zip = zipfile.ZipFile(path + ".zip")
-        files = ['/'.join(f.split('/')[1:]) for f in zip.namelist()]
-    else:
-        files = osutil.listdir(path, True)
+    files = openerp.tools.osutil.listdir(path, True)
 
     tree = {}
     for f in files:
@@ -157,68 +142,6 @@ def get_module_filetree(module, dir='.'):
         current[lst.pop(0)] = None
 
     return tree
-
-def zip_directory(directory, b64enc=True, src=True):
-    """Compress a directory
-
-    @param directory: The directory to compress
-    @param base64enc: if True the function will encode the zip file with base64
-    @param src: Integrate the source files
-
-    @return: a string containing the zip file
-    """
-
-    RE_exclude = re.compile('(?:^\..+\.swp$)|(?:\.py[oc]$)|(?:\.bak$)|(?:\.~.~$)', re.I)
-
-    def _zippy(archive, path, src=True):
-        path = os.path.abspath(path)
-        base = os.path.basename(path)
-        for f in osutil.listdir(path, True):
-            bf = os.path.basename(f)
-            if not RE_exclude.search(bf) and (src or bf == '__openerp__.py' or not bf.endswith('.py')):
-                archive.write(os.path.join(path, f), os.path.join(base, f))
-
-    archname = StringIO()
-    archive = PyZipFile(archname, "w", ZIP_DEFLATED)
-
-    # for Python 2.5, ZipFile.write() still expects 8-bit strings (2.6 converts to utf-8)
-    directory = tools.ustr(directory).encode('utf-8')
-
-    archive.writepy(directory)
-    _zippy(archive, directory, src=src)
-    archive.close()
-    archive_data = archname.getvalue()
-    archname.close()
-
-    if b64enc:
-        return base64.encodestring(archive_data)
-
-    return archive_data
-
-def get_module_as_zip(modulename, b64enc=True, src=True):
-    """Generate a module as zip file with the source or not and can do a base64 encoding
-
-    @param modulename: The module name
-    @param b64enc: if True the function will encode the zip file with base64
-    @param src: Integrate the source files
-
-    @return: a stream to store in a file-like object
-    """
-
-    ap = get_module_path(str(modulename))
-    if not ap:
-        raise Exception('Unable to find path for module %s' % modulename)
-
-    ap = ap.encode('utf8')
-    if os.path.isfile(ap + '.zip'):
-        val = file(ap + '.zip', 'rb').read()
-        if b64enc:
-            val = base64.encodestring(val)
-    else:
-        val = zip_directory(ap, b64enc, src)
-
-    return val
-
 
 def get_module_resource(module, *args):
     """Return the full path of a resource of the given module.
@@ -239,12 +162,6 @@ def get_module_resource(module, *args):
         # the module is a directory - ignore zip behavior
         if os.path.exists(resource_path):
             return resource_path
-    elif zipfile.is_zipfile(mod_path + '.zip'):
-        zip = zipfile.ZipFile( mod_path + ".zip")
-        files = ['/'.join(f.split('/')[1:]) for f in zip.namelist()]
-        resource_path = '/'.join(args)
-        if resource_path in files:
-            return opj(mod_path, resource_path)
     return False
 
 def get_module_icon(module):
@@ -262,7 +179,7 @@ def load_information_from_description_file(module):
     mod_path = get_module_path(module)
     if terp_file:
         info = {}
-        if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
+        if os.path.isfile(terp_file):
             # default values for descriptor
             info = {
                 'application': False,
@@ -303,7 +220,6 @@ def load_information_from_description_file(module):
     #      for 6.0
     _logger.debug('module %s: no __openerp__.py file found.', module)
     return {}
-
 
 def init_module_models(cr, module_name, obj_list):
     """ Initialize a list of models.
@@ -346,12 +262,7 @@ def load_openerp_module(module_name):
     initialize_sys_path()
     try:
         mod_path = get_module_path(module_name)
-        zip_mod_path = '' if not mod_path else mod_path + '.zip'
-        if not os.path.isfile(zip_mod_path):
-            __import__('openerp.addons.' + module_name)
-        else:
-            zimp = zipimport.zipimporter(zip_mod_path)
-            zimp.load_module(module_name)
+        __import__('openerp.addons.' + module_name)
 
         # Call the module's post-load hook. This can done before any model or
         # data has been initialized. This is ok as the post-load hook is for
@@ -361,8 +272,7 @@ def load_openerp_module(module_name):
             getattr(sys.modules['openerp.addons.' + module_name], info['post_load'])()
 
     except Exception, e:
-        mt = isinstance(e, zipimport.ZipImportError) and 'zip ' or ''
-        msg = "Couldn't load %smodule %s" % (mt, module_name)
+        msg = "Couldn't load module %s" % (module_name)
         _logger.critical(msg)
         _logger.critical(e)
         raise
@@ -382,7 +292,7 @@ def get_modules():
         def is_really_module(name):
             manifest_name = opj(dir, name, '__openerp__.py')
             zipfile_name = opj(dir, name)
-            return os.path.isfile(manifest_name) or zipfile.is_zipfile(zipfile_name)
+            return os.path.isfile(manifest_name)
         return map(clean, filter(is_really_module, os.listdir(dir)))
 
     plist = []
@@ -390,7 +300,6 @@ def get_modules():
     for ad in ad_paths:
         plist.extend(listdir(ad))
     return list(set(plist))
-
 
 def get_modules_with_version():
     modules = get_modules()
@@ -409,126 +318,108 @@ def adapt_version(version):
         version = '%s.%s' % (serie, version)
     return version
 
-
-def get_test_modules(module, submodule, explode):
-    """
-    Return a list of submodules containing tests.
-    `submodule` can be:
-      - None
-      - the name of a submodule
-      - '__fast_suite__'
-      - '__sanity_checks__'
-    """
-    # Turn command-line module, submodule into importable names.
-    if module is None:
-        pass
-    elif module == 'openerp':
-        module = 'openerp.tests'
-    else:
-        module = 'openerp.addons.' + module + '.tests'
-
+def get_test_modules(module):
+    """ Return a list of module for the addons potentialy containing tests to
+    feed unittest2.TestLoader.loadTestsFromModule() """
     # Try to import the module
+    module = 'openerp.addons.' + module + '.tests'
     try:
         __import__(module)
     except Exception, e:
-        if explode:
-            print 'Can not `import %s`.' % module
-            import logging
-            logging.exception('')
-            sys.exit(1)
-        else:
-            if str(e) == 'No module named tests':
-                # It seems the module has no `tests` sub-module, no problem.
-                pass
-            else:
-                _logger.exception('Can not `import %s`.', module)
-            return []
+        # If module has no `tests` sub-module, no problem.
+        if str(e) != 'No module named tests':
+            _logger.exception('Can not `import %s`.', module)
+        return []
 
-    # Discover available test sub-modules.
-    m = sys.modules[module]
-    submodule_names =  sorted([x for x in dir(m) \
-        if x.startswith('test_') and \
-        isinstance(getattr(m, x), types.ModuleType)])
-    submodules = [getattr(m, x) for x in submodule_names]
+    # include submodules too
+    result = [mod_obj for name, mod_obj in sys.modules.iteritems()
+              if mod_obj # mod_obj can be None
+              if name.startswith(module)
+              if re.search(r'test_\w+$', name)]
+    return result
 
-    def show_submodules_and_exit():
-        if submodule_names:
-            print 'Available submodules are:'
-            for x in submodule_names:
-                print ' ', x
-        sys.exit(1)
+# Use a custom stream object to log the test executions.
+class TestStream(object):
+    def __init__(self):
+        self.r = re.compile(r'^-*$|^ *... *$|^ok$')
+    def flush(self):
+        pass
+    def write(self, s):
+        if self.r.match(s):
+            return
+        first = True
+        for c in s.split('\n'):
+            if not first:
+                c = '` ' + c
+            first = False
+            _test_logger.info(c)
 
-    if submodule is None:
-        # Use auto-discovered sub-modules.
-        ms = submodules
-    elif submodule == '__fast_suite__':
-        # Obtain the explicit test sub-modules list.
-        ms = getattr(sys.modules[module], 'fast_suite', None)
-        # `suite` was used before the 6.1 release instead of `fast_suite`.
-        ms = ms if ms else getattr(sys.modules[module], 'suite', None)
-        if ms is None:
-            if explode:
-                print 'The module `%s` has no defined test suite.' % (module,)
-                show_submodules_and_exit()
-            else:
-                ms = []
-    elif submodule == '__sanity_checks__':
-        ms = getattr(sys.modules[module], 'checks', None)
-        if ms is None:
-            if explode:
-                print 'The module `%s` has no defined sanity checks.' % (module,)
-                show_submodules_and_exit()
-            else:
-                ms = []
-    else:
-        # Pick the command-line-specified test sub-module.
-        m = getattr(sys.modules[module], submodule, None)
-        ms = [m]
+current_test = None
 
-        if m is None:
-            if explode:
-                print 'The module `%s` has no submodule named `%s`.' % \
-                    (module, submodule)
-                show_submodules_and_exit()
-            else:
-                ms = []
-
-    return ms
-
-def run_unit_tests(module_name):
+def run_unit_tests(module_name, dbname):
     """
-    Return True or False if some tests were found and succeeded or failed.
-    Return None if no test was found.
+    :returns: ``True`` if all of ``module_name``'s tests succeeded, ``False``
+              if any of them failed.
+    :rtype: bool
     """
-    import unittest2
-    ms = get_test_modules(module_name, '__fast_suite__', explode=False)
-    # TODO: No need to try again if the above call failed because of e.g. a syntax error.
-    ms.extend(get_test_modules(module_name, '__sanity_checks__', explode=False))
-    suite = unittest2.TestSuite()
-    for m in ms:
-        suite.addTests(unittest2.TestLoader().loadTestsFromModule(m))
-    if ms:
-        _test_logger.info('module %s: executing %s `fast_suite` and/or `checks` sub-modules', module_name, len(ms))
-        # Use a custom stream object to log the test executions.
-        class MyStream(object):
-            def __init__(self):
-                self.r = re.compile(r'^-*$|^ *... *$|^ok$')
-            def flush(self):
-                pass
-            def write(self, s):
-                if self.r.match(s):
-                    return
-                first = True
-                for c in s.split('\n'):
-                    if not first:
-                        c = '` ' + c
-                    first = False
-                    _test_logger.info(c)
-        result = unittest2.TextTestRunner(verbosity=2, stream=MyStream()).run(suite)
-        if result.wasSuccessful():
-            return True
-        else:
-            _logger.error('module %s: at least one error occurred in a test', module_name)
-            return False
+    global current_test
+    current_test = module_name
+    mods = get_test_modules(module_name)
+    r = True
+    for m in mods:
+        tests = unwrap_suite(unittest2.TestLoader().loadTestsFromModule(m))
+        suite = unittest2.TestSuite(itertools.ifilter(runs_at_install, tests))
+        _logger.info('module %s: running test %s.', module_name, m.__name__)
+
+        result = unittest2.TextTestRunner(verbosity=2, stream=TestStream()).run(suite)
+
+        if not result.wasSuccessful():
+            r = False
+            _logger.error("Module %s: %d failures, %d errors",
+                          module_name, len(result.failures), len(result.errors))
+    current_test = None
+    return r
+
+def runs_at(test, hook, default):
+    # by default, tests do not run post install
+    test_runs = getattr(test, hook, default)
+
+    # for a test suite, we're done
+    if not isinstance(test, unittest.TestCase):
+        return test_runs
+
+    # otherwise check the current test method to see it's been set to a
+    # different state
+    method = getattr(test, test._testMethodName)
+    return getattr(method, hook, test_runs)
+
+runs_at_install = functools.partial(runs_at, hook='at_install', default=True)
+runs_post_install = functools.partial(runs_at, hook='post_install', default=False)
+
+def unwrap_suite(test):
+    """
+    Attempts to unpack testsuites (holding suites or cases) in order to
+    generate a single stream of terminals (either test cases or customized
+    test suites). These can then be checked for run/skip attributes
+    individually.
+
+    An alternative would be to use a variant of @unittest2.skipIf with a state
+    flag of some sort e.g. @unittest2.skipIf(common.runstate != 'at_install'),
+    but then things become weird with post_install as tests should *not* run
+    by default there
+    """
+    if isinstance(test, unittest.TestCase):
+        yield test
+        return
+
+    subtests = list(test)
+    # custom test suite (no test cases)
+    if not len(subtests):
+        yield test
+        return
+
+    for item in itertools.chain.from_iterable(
+            itertools.imap(unwrap_suite, subtests)):
+        yield item
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

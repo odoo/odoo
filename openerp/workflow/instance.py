@@ -106,7 +106,7 @@ class WorkflowInstance(object):
             for cur_instance_id, cur_model_name, cur_record_id in cr.fetchall():
                 cur_record = Record(cur_model_name, cur_record_id)
                 for act_name in act_names:
-                    WorkflowInstance(self.session, cur_record, {'id':cur_instance_id}).validate('subflow.{}'.format(act_name[0]))
+                    WorkflowInstance(self.session, cur_record, {'id':cur_instance_id}).validate('subflow.%s' % act_name[0])
 
         return ok
 

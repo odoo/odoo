@@ -22,10 +22,14 @@
 #
 ##############################################################################
 
-from lxml import etree
 import unittest2
-from . import test_mail_examples
+
+from lxml import etree
+
 from openerp.tools import html_sanitize, html_email_clean, append_content_to_html, plaintext2html, email_split
+
+import test_mail_examples
+
 
 class TestSanitizer(unittest2.TestCase):
     """ Test the html sanitizer that filters html to remove unwanted attributes """
@@ -33,7 +37,7 @@ class TestSanitizer(unittest2.TestCase):
     def test_basic_sanitizer(self):
         cases = [
             ("yop", "<p>yop</p>"),  # simple
-            ("lala<p>yop</p>xxx", "<div><p>lala</p><p>yop</p>xxx</div>"),  # trailing text
+            ("lala<p>yop</p>xxx", "<p>lala</p><p>yop</p>xxx"),  # trailing text
             ("Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci",
                 u"<p>Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci</p>"),  # unicode
         ]
@@ -275,6 +279,40 @@ class TestCleaner(unittest2.TestCase):
             self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
         for ext in test_mail_examples.THUNDERBIRD_1_OUT:
             self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
+
+    def test_70_read_more_and_shorten(self):
+        expand_options = {
+            'oe_expand_container_class': 'span_class',
+            'oe_expand_container_content': 'Herbert Einstein',
+            'oe_expand_separator_node': 'br_lapin',
+            'oe_expand_a_class': 'a_class',
+            'oe_expand_a_content': 'read mee',
+        }
+        new_html = html_email_clean(test_mail_examples.OERP_WEBSITE_HTML_1, remove=True, shorten=True, max_length=100, expand_options=expand_options)
+        for ext in test_mail_examples.OERP_WEBSITE_HTML_1_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
+        for ext in test_mail_examples.OERP_WEBSITE_HTML_1_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase overlimit content')
+        for ext in ['<span class="span_class">Herbert Einstein<br_lapin></br_lapin><a href="#" class="a_class">read mee</a></span>']:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly take into account specific expand options')
+
+        new_html = html_email_clean(test_mail_examples.OERP_WEBSITE_HTML_2, remove=True, shorten=True, max_length=200, expand_options=expand_options, protect_sections=False)
+        for ext in test_mail_examples.OERP_WEBSITE_HTML_2_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
+        for ext in test_mail_examples.OERP_WEBSITE_HTML_2_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase overlimit content')
+        for ext in ['<span class="span_class">Herbert Einstein<br_lapin></br_lapin><a href="#" class="a_class">read mee</a></span>']:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly take into account specific expand options')
+
+        new_html = html_email_clean(test_mail_examples.OERP_WEBSITE_HTML_2, remove=True, shorten=True, max_length=200, expand_options=expand_options, protect_sections=True)
+        for ext in test_mail_examples.OERP_WEBSITE_HTML_2_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
+        for ext in test_mail_examples.OERP_WEBSITE_HTML_2_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase overlimit content')
+        for ext in [
+                '<span class="span_class">Herbert Einstein<br_lapin></br_lapin><a href="#" class="a_class">read mee</a></span>',
+                'tasks using the gantt chart and control deadlines']:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly take into account specific expand options')
 
     def test_70_read_more(self):
         new_html = html_email_clean(test_mail_examples.BUG1, remove=True, shorten=True, max_length=100)

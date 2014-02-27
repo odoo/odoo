@@ -15,9 +15,9 @@ def registry(model):
 def cursor():
     return openerp.modules.registry.RegistryManager.get(DB).db.cursor()
 
-def model_exists(model_name):
+def get_module(module_name):
     registry = openerp.modules.registry.RegistryManager.get(DB)
-    return model_name in registry
+    return registry.get(module_name)
 
 def reload_registry():
     openerp.modules.registry.RegistryManager.new(
@@ -61,7 +61,7 @@ class test_uninstall(unittest2.TestCase):
     def test_01_install(self):
         """ Check a few things showing the module is installed. """
         install_module('test_uninstall')
-        assert model_exists('test_uninstall.model')
+        assert get_module('test_uninstall.model')
 
         assert search_registry('ir.model.data',
             [('module', '=', 'test_uninstall')])
@@ -72,7 +72,7 @@ class test_uninstall(unittest2.TestCase):
     def test_02_uninstall(self):
         """ Check a few things showing the module is uninstalled. """
         uninstall_module('test_uninstall')
-        assert not model_exists('test_uninstall.model')
+        assert not get_module('test_uninstall.model')
 
         assert not search_registry('ir.model.data',
             [('module', '=', 'test_uninstall')])

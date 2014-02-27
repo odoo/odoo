@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -27,11 +27,11 @@ the database, *not* a database abstraction toolkit. Database abstraction is what
 the ORM does, in fact.
 """
 
-
-__all__ = ['db_connect', 'close_db']
-
+from contextlib import contextmanager
 from functools import wraps
 import logging
+import time
+import uuid
 import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
@@ -347,6 +347,19 @@ class Cursor(object):
         """
         return self._cnx.rollback()
 
+    @contextmanager
+    @check
+    def savepoint(self):
+        """context manager entering in a new savepoint"""
+        name = uuid.uuid1().hex
+        self.execute('SAVEPOINT "%s"' % name)
+        try:
+            yield
+            self.execute('RELEASE SAVEPOINT "%s"' % name)
+        except:
+            self.execute('ROLLBACK TO SAVEPOINT "%s"' % name)
+            raise
+
     @check
     def __getattr__(self, name):
         return getattr(self._obj, name)
@@ -457,10 +470,10 @@ class ConnectionPool(object):
             raise PoolError('This connection does not below to the pool')
 
     @locked
-    def close_all(self, dsn):
+    def close_all(self, dsn=None):
         _logger.info('%r: Close all connections to %r', self, dsn)
         for i, (cnx, used) in tools.reverse_enumerate(self._connections):
-            if dsn_are_equals(cnx.dsn, dsn):
+            if dsn is None or dsn_are_equals(cnx.dsn, dsn):
                 cnx.close()
                 self._connections.pop(i)
 
@@ -521,6 +534,11 @@ def close_db(db_name):
     global _Pool
     if _Pool:
         _Pool.close_all(dsn(db_name))
+
+def close_all():
+    global _Pool
+    if _Pool:
+        _Pool.close_all()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

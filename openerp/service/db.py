@@ -145,7 +145,7 @@ def exp_get_progress(id):
             raise Exception, e
 
 def exp_drop(db_name):
-    if not exp_db_exist(db_name):
+    if db_name not in exp_list(True):
         return False
     openerp.modules.registry.RegistryManager.delete(db_name)
     openerp.sql_db.close_db(db_name)
@@ -306,7 +306,7 @@ def exp_list(document=False):
                 cr.execute("select datname from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in %s order by datname", (db_user, templates_list))
             else:
                 cr.execute("select datname from pg_database where datname not in %s order by datname", (templates_list,))
-            res = [str(name) for (name,) in cr.fetchall()]
+            res = [openerp.tools.ustr(name) for (name,) in cr.fetchall()]
         except Exception:
             res = []
     res.sort()

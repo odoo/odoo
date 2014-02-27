@@ -75,7 +75,7 @@
             <field name="zip">106</field>
             <field name="country_id" ref="base.tw"/>
             <field name="street">31 Hong Kong street</field>
-            <field name="email">info@asustek.com</field>
+            <field name="email">asusteK@yourcompany.example.com</field>
             <field name="phone">(+886) (02) 4162 2023</field>
             <field name="website">www.asustek.com</field>
             <field name="image" type="base64" file="base/static/img/res_partner_1-image.jpg"/>
@@ -88,7 +88,7 @@
             <field name="zip">1300</field>
             <field name="country_id" ref="base.be"/>
             <field name="street">69 rue de Namur</field>
-            <field name="email">info@agrolait.com</field>
+            <field name="email">agrolait@yourcompany.example.com</field>
             <field name="phone">+32 10 588 558</field>
             <field name="website">www.agrolait.com</field>
             <field name="image" type="base64" file="base/static/img/res_partner_2-image.jpg"/>
@@ -103,7 +103,7 @@
             <field model="res.country" name="country_id" search="[('name','=','China')]"/>
             <field name="country_id" ref="base.cn"/>
             <field name="street">52 Chop Suey street</field>
-            <field name="email">info@chinaexport.com</field>
+            <field name="email">chinaexport@yourcompany.example.com</field>
             <field name="phone">+86 21 6484 5671</field>
             <field name="website">www.chinaexport.com/</field>
             <field name="image" type="base64" file="base/static/img/res_partner_3-image.png"/>
@@ -120,7 +120,7 @@
             <field name="country_id" ref="base.us"/>
             <field model="res.country.state" name="state_id" search="[('code','ilike','ca')]"/>
             <field name="street">3661 Station Street</field>
-            <field name="email">info@deltapc.com</field>
+            <field name="email">deltapc@yourcompany.example.com</field>
             <field name="phone">+1 510 340 2385</field>
             <field name="website">www.distribpc.com/</field>
             <field name="image" type="base64" file="base/static/img/res_partner_4-image.png"/>
@@ -135,25 +135,25 @@
             <field model="res.country.state" name="state_id" search="[('code','ilike','il')]"/>
             <field name="zip">60610</field>
             <field name="city">Chicago</field>
-            <field name="email">epic@tech.info</field>
+            <field name="email">epic@yourcompany.example.com</field>
             <field name="phone">+1 312 349 2324</field>
             <field name="website">www.epic-tech.info//</field>
             <field name="image" type="base64" file="base/static/img/res_partner_5-image.jpg"/>
         </record>
 
         <record id="res_partner_6" model="res.partner">
-            <field name="name">Elec Import</field>
+            <field name="name">OpenElec Applications</field>
             <field eval="[(6, 0, [ref('res_partner_category_12')])]" name="category_id"/>
             <field eval="1" name="supplier"/>
             <field eval="0" name="customer"/>
             <field name="is_company">1</field>
-            <field name="city">Chicago</field>
-            <field name="zip">60623</field>
+            <field name="zip">90001</field>
+            <field name="city">Los Angeles</field>
             <field name="country_id" ref="base.us"/>
-            <field model="res.country.state" name="state_id" search="[('code','ilike','il')]"/>
+            <field model="res.country.state" name="state_id" search="[('code','ilike','ca')]"/>
             <field name="street">23 Rockwell Lane</field>
-            <field name="email">info@elecimport.com</field>
-            <field name="phone">+1 773 439 3000</field>
+            <field name="email">openelecapplications@yourcompany.example.com</field>
+            <field name="phone">+1 312 349 2121</field>
             <field name="image" type="base64" file="base/static/img/res_partner_6-image.jpg"/>
         </record>
 
@@ -168,7 +168,7 @@
             <field name="zip">B46 3AG</field>
             <field name="country_id" ref="base.uk"/>
             <field name="phone">+44 121 690 4596</field>
-            <field name="email">email@wealthyandsons.com</field>
+            <field name="email">wealthyandsons@yourcompany.example.com</field>
             <field name="website">www.wealthyandsons.com/</field>
             <field name="image" type="base64" file="base/static/img/res_partner_7-image.jpg"/>
         </record>
@@ -184,6 +184,7 @@
             <field name="zip">80352</field>
             <field name="country_id" ref="base.de"/>
             <field name="phone">+49 8932 450203 </field>
+            <field name="email">mediapole@yourcompany.example.com</field>
             <field name="image" type="base64" file="base/static/img/res_partner_8-image.jpg"/>
         </record>
         <record id="res_partner_9" model="res.partner">
@@ -195,7 +196,7 @@
             <field name="street">203, Systems Plaza</field>
             <field name="city">Mumbai</field>
             <field name="country_id" ref="base.in"/>
-            <field name="email">info@bestdesigners.in</field>
+            <field name="email">bestdesigners@yourcompany.example.com</field>
             <field name="phone">+91 22 3445 0349</field>
             <field name="website">www.bestdesigners.com</field>
             <field name="image" type="base64" file="base/static/img/res_partner_9-image.jpg"/>
@@ -209,7 +210,7 @@
             <field name="zip">33169</field>
             <field name="country_id" ref="base.us"/>
             <field model="res.country.state" name="state_id" search="[('code','=','FL')]"/>
-            <field name="email">contact@jackson.com</field>
+            <field name="email">jackson@yourcompany.example.com</field>
             <field name="phone">+1 786 525 0724</field>
             <field name="street">3203 Lamberts Branch Road</field>
             <field name="image" type="base64" file="base/static/img/res_partner_10-image.jpg"/>
@@ -228,6 +229,7 @@
             <field name="zip">08078</field>
             <field name="phone">+34 934 340 230</field>
             <field name="website">www.lumitech.com</field>
+            <field name="email">luminous@yourcompany.example.com</field>
             <field name="image" type="base64" file="base/static/img/res_partner_11-image.png"/>
         </record>
 
@@ -242,7 +244,7 @@
             <field name="phone">+33 4 49 23 44 54</field>
             <field name="country_id" ref="base.fr"/>
             <field name="street">93, Press Avenue</field>
-            <field name="email">info@c2c.com</field>
+            <field name="email">camptocamp@yourcompany.example.com</field>
             <field name="website">www.camptocamp.com</field>
             <field name="image" type="base64" file="base/static/img/res_partner_12-image.jpg"/>
         </record>
@@ -255,7 +257,7 @@
             <field name="city">Champs sur Marne</field>
             <field name="zip">77420</field>
             <field name="country_id" ref="base.fr"/>
-            <field name="email">info@axelor.com</field>
+            <field name="email">axelor@yourcompany.example.com</field>
             <field name="phone">+33 1 64 61 04 01</field>
             <field name="street">12 rue Albert Einstein</field>
             <field name="website">www.axelor.com/</field>
@@ -274,7 +276,7 @@
             <field name="country_id" ref="base.us"/>
             <field model="res.country.state" name="state_id" search="[('code','ilike','mi')]"/>
             <field name="street">60, Rosewood Court</field>
-            <field name="email">info@chamberworks.com</field>
+            <field name="email">chamberworks@yourcompany.example.com</field>
             <field name="phone">+1 313 222 3456</field>
             <field name="image" type="base64" file="base/static/img/res_partner_14-image.jpg"/>
         </record>
@@ -290,6 +292,7 @@
             <field name="country_id" ref="base.uk"/>
             <field name="city">London</field>
             <field name="phone">+44 20 1294 2193</field>
+            <field name="email">millennium@yourcompany.example.com</field>
             <field name="image" type="base64" file="base/static/img/res_partner_15-image.jpg"/>
         </record>
 
@@ -304,6 +307,7 @@
             <field name="phone">+55 11 2402 2045</field>
             <field name="country_id" ref="base.br"/>
             <field name="is_company">1</field>
+            <field name="email">sparksystems@yourcompany.example.com</field>
             <field name="image" type="base64" file="base/static/img/res_partner_16-image.png"/>
         </record>
 
@@ -313,7 +317,7 @@
             <field eval="1" name="customer"/>
             <field name="is_company">1</field>
             <field name="city">Rosario</field>
-            <field name="email">contact@nebula.ar</field>
+            <field name="email">nebula@yourcompany.example.com</field>
             <field name="street">34 Westwood Avenue</field>
             <field name="street2">Capital Federal</field>
             <field name="phone">+54 341 324 9459 </field>
@@ -328,7 +332,7 @@
             <field eval="[(6, 0, [ref('res_partner_category_5')])]" name="category_id"/>
             <field name="city">Boston</field>
             <field name="zip">02203</field>
-            <field name="email">info@thinkbig.com</field>
+            <field name="email">thinkbig@yourcompany.example.com</field>
             <field name="phone">+1 857 349 3049</field>
             <field name="country_id" ref="base.us"/>
             <field name="street">One Lincoln Street</field>
@@ -347,7 +351,7 @@
             <field name="country_id" ref="base.us"/>
             <field model="res.country.state" name="state_id" search="[('code','ilike','ca')]"/>
             <field name="street">10200 S. De Anza Blvd</field>
-            <field name="email">info@seagate.com</field>
+            <field name="email">seagate@yourcompany.example.com</field>
             <field name="phone">+1 800 732 4283</field>
             <field name="image" type="base64" file="base/static/img/res_partner_19-image.jpg"/>
         </record>
@@ -374,6 +378,7 @@
             <field name="city">Liverpool</field>
             <field name="country_id" ref="base.uk"/>
             <field name="zip">L25 4RL</field>
+            <field name="email">globalsolutions@yourcompany.example.com</field>
             <field name="image" type="base64" file="base/static/img/res_partner_21-image.png"/>
         </record>
 
@@ -390,6 +395,7 @@
             <field name="phone">+44 20 1294 2193</field>
             <field name="country_id" ref="base.uk"/>
             <field name="website">www.vicking-direct.com</field>
+            <field name="email">vickingdirect@yourcompany.example.com</field>
             <field name="image" type="base64" file="base/static/img/res_partner_22-image.jpg"/>
         </record>
 
@@ -404,12 +410,136 @@
             <field name="street2">Carretera Panamericana, Km 1, Urb. Delgado Chalbaud</field>
             <field name="city">Caracas</field>
             <field name="zip">1090</field>
-            <field name="email">info@vauxoo.com</field>
+            <field name="email">vauxoo@yourcompany.example.com</field>
             <field name="phone">+58 212 681 0538</field>
             <field name="country_id" ref="base.ve"/>
             <field name="website">vauxoo.com</field>
             <field name="image" type="base64" file="base/static/img/res_partner_23-image.jpg"/>
         </record>
-
+        <record id="res_partner_24" model="res.partner">
+            <field name="name">OpenCorp</field>
+            <field eval="[(6, 0, [ref('base.res_partner_category_7'), ref('base.res_partner_category_9')])]" name="category_id"/>
+            <field name="is_company">1</field>
+            <field name="city">Mortsel</field>
+            <field name="zip">2640</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="street">Avenue Louise 149/24</field>
+            <field name="email">opencorp@yourcompany.example.com</field>
+            <field name="phone">+32 3 450 97 11</field>
+            <field name="website">http://www.opencorp.com</field>
+        </record>
+        <record id="res_partner_25" model="res.partner">
+            <field name="name">Míng</field>
+            <field name="supplier">1</field>
+            <field eval="[(6, 0, [ref('res_partner_category_8'), ref('res_partner_category_14')])]" name="category_id"/>
+            <field name="is_company">1</field>
+            <field name="city">Shanghai</field>
+            <field name="zip">201208</field>
+            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
+            <field name="country_id" ref="base.cn"/>
+            <field name="street">89 Dong Lu Road</field>
+            <field name="email">míng@yourcompany.example.com</field>
+            <field name="phone">+86 215 069 5177</field>
+            <field name="website">http://www.míng.com</field>
+        </record>
+        <record id="res_partner_26" model="res.partner">
+            <field name="name">Federal</field>
+            <field name="supplier">1</field>
+            <field eval="[(6, 0, [ref('res_partner_category_8'), ref('res_partner_category_16')])]" name="category_id"/>
+            <field name="is_company">1</field>
+            <field name="city">Düsseldorf</field>
+            <field name="zip">40227</field>
+            <field name="country_id" ref="base.de"/>
+            <field name="street">Willi-Becker-Allee 10</field>
+            <field name="email">federal@yourcompany.example.com</field>
+            <field name="website">http://www.federal.com</field>
+        </record>
+        <record id="res_partner_address_1" model="res.partner">
+            <field name="name">Tang Tsui</field>
+            <field name="parent_id" eval="ref('res_partner_1')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Service Manager</field>
+            <field name="email">tang@asustek.com</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_2" model="res.partner">
+            <field name="name">Joseph Walters</field>
+            <field name="parent_id" eval="ref('res_partner_1')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Store Manager</field>
+            <field name="email">joseph.walters@asustek.com</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_7" model="res.partner">
+            <field name="name">Richard Ellis</field>
+            <field name="parent_id" eval="ref('res_partner_4')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Production Supervisor</field>
+            <field name="email">richard.ellis@deltapc.example.com</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_8" model="res.partner">
+            <field name="name">Paul Williams</field>
+            <field name="parent_id" eval="ref('res_partner_4')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Line Mechanic</field>
+            <field name="email">paul.williams@deltapc.example.com</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_9" model="res.partner">
+            <field name="name">Brian Williams</field>
+            <field name="parent_id" eval="ref('res_partner_4')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Computer Technician</field>
+            <field name="email">brian.williams@deltapc.example.com</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_12" model="res.partner">
+            <field name="name">James Miller</field>
+            <field name="parent_id" eval="ref('res_partner_6')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Electrical Supervisor</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_31" model="res.partner">
+            <field name="name">Edward Foster</field>
+            <field name="parent_id" eval="ref('res_partner_19')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Sales Representative</field>
+            <field name="email">efoster@seagate.com</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_27" model="res.partner">
+            <field name="name">Arthur Gomez</field>
+            <field name="parent_id" eval="ref('res_partner_16')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Software Developer</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_26" model="res.partner">
+            <field name="name">Julia Rivero</field>
+            <field name="parent_id" eval="ref('res_partner_16')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Technical Director</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_35" model="res.partner">
+            <field name="name">Peter Mitchell</field>
+            <field name="parent_id" eval="ref('res_partner_22')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Store Manager</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
     </data>
 </openerp>
+

@@ -40,9 +40,10 @@ def dispatch(method, params):
 
 def check(f):
     @wraps(f)
-    def wrapper(dbname, *args, **kwargs):
+    def wrapper(___dbname, *args, **kwargs):
         """ Wraps around OSV functions and normalises a few exceptions
         """
+        dbname = ___dbname      # NOTE: this forbid to use "___dbname" as arguments in http routes
 
         def tr(src, ttype):
             # We try to do the same as the _(), but without the frame
@@ -107,7 +108,7 @@ def check(f):
         tries = 0
         while True:
             try:
-                if openerp.registry(dbname)._init:
+                if openerp.registry(dbname)._init and not openerp.tools.config['test_enable']:
                     raise openerp.exceptions.Warning('Currently, this database is not fully loaded and can not be used.')
                 return f(dbname, *args, **kwargs)
             except OperationalError, e:

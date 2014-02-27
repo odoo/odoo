@@ -67,7 +67,8 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'LOAD_NAME', 'CALL_FUNCTION', 'COMPARE_OP', 'LOAD_ATTR',
     'STORE_NAME', 'GET_ITER', 'FOR_ITER', 'LIST_APPEND', 'DELETE_NAME',
     'JUMP_FORWARD', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE', 'JUMP_ABSOLUTE',
-    'MAKE_FUNCTION', 'SLICE+0', 'SLICE+1', 'SLICE+2', 'SLICE+3',
+    'MAKE_FUNCTION', 'SLICE+0', 'SLICE+1', 'SLICE+2', 'SLICE+3', 'BREAK_LOOP',
+    'CONTINUE_LOOP', 'RAISE_VARARGS',
     # New in Python 2.7 - http://bugs.python.org/issue4715 :
     'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE',
     'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'END_FINALLY'
@@ -174,7 +175,7 @@ def _import(name, globals=None, locals=None, fromlist=None, level=-1):
         return __import__(name, globals, locals, level)
     raise ImportError(name)
 
-def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False):
+def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False, locals_builtins=False):
     """safe_eval(expression[, globals[, locals[, mode[, nocopy]]]]) -> result
 
     System-restricted Python expression evaluation
@@ -218,29 +219,37 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
             locals_dict = dict(locals_dict)
 
     globals_dict.update(
-            __builtins__ = {
-                '__import__': _import,
-                'True': True,
-                'False': False,
-                'None': None,
-                'str': str,
-                'globals': locals,
-                'locals': locals,
-                'bool': bool,
-                'dict': dict,
-                'list': list,
-                'tuple': tuple,
-                'map': map,
-                'abs': abs,
-                'min': min,
-                'max': max,
-                'reduce': reduce,
-                'filter': filter,
-                'round': round,
-                'len': len,
-                'set' : set
-            }
+        __builtins__={
+            '__import__': _import,
+            'True': True,
+            'False': False,
+            'None': None,
+            'str': str,
+            'globals': locals,
+            'locals': locals,
+            'bool': bool,
+            'dict': dict,
+            'list': list,
+            'tuple': tuple,
+            'map': map,
+            'abs': abs,
+            'min': min,
+            'max': max,
+            'reduce': reduce,
+            'filter': filter,
+            'round': round,
+            'len': len,
+            'set': set,
+            'repr': repr,
+            'int': int,
+            'float': float,
+            'range': range,
+        }
     )
+    if locals_builtins:
+        if locals_dict is None:
+            locals_dict = {}
+        locals_dict.update(globals_dict.get('__builtins__'))
     c = test_expr(expr, _SAFE_OPCODES, mode=mode)
     try:
         return eval(c, globals_dict, locals_dict)

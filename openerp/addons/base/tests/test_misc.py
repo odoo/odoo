@@ -1,8 +1,6 @@
-# This test can be run stand-alone with something like:
-# > PYTHONPATH=. python2 openerp/tests/test_misc.py
-
 import unittest2
-from ..tools import misc
+
+from openerp.tools import misc
 
 
 class test_countingstream(unittest2.TestCase):

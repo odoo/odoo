@@ -24,6 +24,8 @@ import logging
 import operator
 import os
 import time
+import datetime
+import dateutil
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -268,7 +270,7 @@ class ir_actions_act_window(osv.osv):
         'filter': fields.boolean('Filter'),
         'auto_search':fields.boolean('Auto Search'),
         'search_view' : fields.function(_search_view, type='text', string='Search View'),
-        'multi': fields.boolean('Action on Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view"),
+        'multi': fields.boolean('Restrict to lists', help="If checked and the action is bound to a model, it will only appear in the More menu on list views"),
     }
 
     _defaults = {
@@ -550,6 +552,7 @@ class ir_actions_server(osv.osv):
 #  - uid: current user id
 #  - context: current context
 #  - time: Python time module
+#  - workflow: Workflow engine
 # If you plan to return an action, assign: action = {...}""",
         'use_relational_model': 'base',
         'use_create': 'new',
@@ -910,11 +913,38 @@ class ir_actions_server(osv.osv):
         if action.link_new_record and action.link_field_id:
             self.pool[action.model_id.model].write(cr, uid, [context.get('active_id')], {action.link_field_id.name: res_id})
 
+    def _get_eval_context(self, cr, uid, action, context=None):
+        """ Prepare the context used when evaluating python code, like the
+        condition or code server actions.
+
+        :param action: the current server action
+        :type action: browse record
+        :returns: dict -- evaluation context given to (safe_)eval """
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        obj_pool = self.pool[action.model_id.model]
+        obj = None
+        if context.get('active_model') == action.model_id.model and context.get('active_id'):
+            obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
+        return {
+            'self': obj_pool,
+            'object': obj,
+            'obj': obj,
+            'pool': self.pool,
+            'time': time,
+            'datetime': datetime,
+            'dateutil': dateutil,
+            'cr': cr,
+            'uid': uid,
+            'user': user,
+            'context': context,
+            'workflow': workflow
+        }
+
     def run(self, cr, uid, ids, context=None):
-        """ Run the server action. For each server action, the condition is
-        checked. Note that A void (aka False) condition is considered as always
+        """ Runs the server action. For each server action, the condition is
+        checked. Note that a void (``False``) condition is considered as always
         valid. If it is verified, the run_action_<STATE> method is called. This
-        allows easy inheritance of the server actions.
+        allows easy overriding of the server actions.
 
         :param dict context: context should contain following keys
 
@@ -932,33 +962,14 @@ class ir_actions_server(osv.osv):
         if context is None:
             context = {}
         res = False
-        user = self.pool.get('res.users').browse(cr, uid, uid)
-        active_ids = context.get('active_ids', [context.get('active_id')])
         for action in self.browse(cr, uid, ids, context):
-            obj_pool = self.pool[action.model_id.model]
-            obj = None
-            if context.get('active_model') == action.model_id.model and context.get('active_id'):
-                obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-
-            # evaluation context for python strings to evaluate
-            eval_context = {
-                'self': obj_pool,
-                'object': obj,
-                'obj': obj,
-                'pool': self.pool,
-                'time': time,
-                'cr': cr,
-                'uid': uid,
-                'user': user,
-            }
+            eval_context = self._get_eval_context(cr, uid, action, context=context)
             condition = action.condition
             if condition is False:
                 # Void (aka False) conditions are considered as True
                 condition = True
             if hasattr(self, 'run_action_%s_multi' % action.state):
-                # set active_ids in context only needed if one active_id
-                run_context = dict(context, active_ids=active_ids)
-                eval_context["context"] = run_context
+                run_context = eval_context['context']
                 expr = eval(str(condition), eval_context)
                 if not expr:
                     continue
@@ -968,6 +979,8 @@ class ir_actions_server(osv.osv):
 
             elif hasattr(self, 'run_action_%s' % action.state):
                 func = getattr(self, 'run_action_%s' % action.state)
+                active_id = context.get('active_id')
+                active_ids = context.get('active_ids', [active_id] if active_id else [])
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id
                     run_context = dict(context, active_ids=[active_id], active_id=active_id)
