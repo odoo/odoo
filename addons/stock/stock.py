@@ -852,8 +852,6 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             move_ids = [x.id for x in pick.move_lines if x.state in ['confirmed', 'waiting']]
             self.pool.get('stock.move').force_assign(cr, uid, move_ids, context=context)
-            if pick.pack_operation_exist:
-                self.do_prepare_partial(cr, uid, [pick.id], context=None)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
