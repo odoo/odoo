@@ -3147,7 +3147,7 @@ class BaseModel(object):
         if field not in self._cache:
             for values in result:
                 record = self.browse(values.pop('id'))
-                record._cache.update(values)
+                record._cache.update(self._convert_to_cache(values))
             if field not in self._cache:
                 e = AccessError("No value found for %s.%s" % (self, field_name))
                 self._cache[field] = FailedValue(e)
@@ -3215,7 +3215,7 @@ class BaseModel(object):
             # store result in cache for POST fields
             for vals in result:
                 record = self.browse(vals['id'])
-                record._cache.update(vals)
+                record._cache.update(self._convert_to_cache(vals))
 
             # determine the fields that must be processed now
             fields_post = [f for f in field_names if not self._columns[f]._classic_write]
@@ -3256,7 +3256,7 @@ class BaseModel(object):
         # store result in cache
         for vals in result:
             record = self.browse(vals.pop('id'))
-            record._cache.update(vals)
+            record._cache.update(self._convert_to_cache(vals))
 
         # store failed values in cache for the records that could not be read
         missing = self - self.browse(ids)
@@ -3621,7 +3621,7 @@ class BaseModel(object):
 
         # put the values of pure new-style fields into cache, and inverse them
         if new_vals:
-            self._cache.update(new_vals)
+            self._cache.update(self._convert_to_cache(new_vals))
             for key in new_vals:
                 self._fields[key].determine_inverse(self)
 
@@ -3898,7 +3898,7 @@ class BaseModel(object):
         record = self.browse(self._create(old_vals))
 
         # put the values of pure new-style fields into cache, and inverse them
-        record._cache.update(new_vals)
+        record._cache.update(self._convert_to_cache(new_vals))
         for key in new_vals:
             self._fields[key].determine_inverse(record)
 
@@ -5089,8 +5089,15 @@ class BaseModel(object):
         """ Return the list of record ids of this instance. """
         return filter(None, list(self._ids))
 
+    def _convert_to_cache(self, values):
+        """ Convert the `values` dictionary into cached values. """
+        return dict(
+            (name, self._fields[name].convert_to_cache(value))
+            for name, value in values.iteritems()
+        )
+
     def _convert_to_write(self, values):
-        """ Convert the `values` dictionary in the format of :meth:`write`. """
+        """ Convert the `values` dictionary into the format of :meth:`write`. """
         return dict(
             (name, self._fields[name].convert_to_write(value))
             for name, value in values.iteritems()
@@ -5144,7 +5151,7 @@ class BaseModel(object):
         """
         assert 'id' not in values, "New records do not have an 'id'."
         record = self.browse((NewId(),))
-        record._cache.update(values)
+        record._cache.update(self._convert_to_cache(values))
 
         if record._scope.draft:
             # The cache update does not set inverse fields, so do it manually.
@@ -5466,9 +5473,6 @@ class RecordCache(MutableMapping):
         """ Assign the cached value of `field` for all records in `records`. """
         if isinstance(field, basestring):
             field = self._recs._fields[field]
-        if not isinstance(value, SpecialValue):
-            with self._recs._scope:
-                value = field.convert_to_cache(value)
         values = dict.fromkeys(self._recs._ids, value)
         self._recs._scope.cache[field].update(values)
 

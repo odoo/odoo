@@ -861,7 +861,7 @@ class Many2one(_Relational):
         return self.name in self.model._inherits.itervalues()
 
     def _update(self, records, value):
-        """ Update the value of `self` for `records` with `value`. """
+        """ Update the cached value of `self` for `records` with `value`. """
         records._cache[self] = value
 
     def convert_to_cache(self, value):
@@ -909,7 +909,7 @@ class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
 
     def _update(self, records, value):
-        """ Update the value of `self` for `records` with `value`. """
+        """ Update the cached value of `self` for `records` with `value`. """
         for record in records:
             record._cache[self] = record[self.name] | value
 
