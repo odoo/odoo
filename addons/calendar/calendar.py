@@ -363,7 +363,7 @@ class calendar_alarm_manager(osv.AbstractModel):
              """
 
         filter_user = """
-                LEFT JOIN calendar_event_res_partner_rel AS part_rel ON part_rel.calendar_event_id = cal.id
+                RIGHT JOIN calendar_event_res_partner_rel AS part_rel ON part_rel.calendar_event_id = cal.id
                     AND part_rel.res_partner_id = %s
         """
 
