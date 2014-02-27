@@ -119,6 +119,12 @@ def redirect_with_hash(*args, **kw):
     """
     return http.redirect_with_hash(*args, **kw)
 
+def abort_and_redirect(url):
+    r = request.httprequest
+    response = werkzeug.utils.redirect(url, 302)
+    response = r.app.get_response(r, response, explicit_session=False)
+    werkzeug.exceptions.abort(response)
+
 def ensure_db(redirect='/web/database/selector'):
     # This helper should be used in web client auth="none" routes
     # if those routes needs a db to work with.
@@ -140,12 +146,8 @@ def ensure_db(redirect='/web/database/selector'):
         # may depend on data injected by the database route dispatcher.
         # Thus, we redirect the user to the same page but with the session cookie set.
         # This will force using the database route dispatcher...
-        r = request.httprequest
-        response = werkzeug.utils.redirect(r.url, 302)
         request.session.db = db
-        response = r.app.get_response(r, response, explicit_session=False)
-        werkzeug.exceptions.abort(response)
-        return
+        abort_and_redirect(request.httprequest.url)
 
     # if db not provided, use the session one
     if not db:
@@ -163,6 +165,7 @@ def ensure_db(redirect='/web/database/selector'):
     # always switch the session to the computed db
     if db != request.session.db:
         request.session.logout()
+        abort_and_redirect(request.httprequest.url)
 
     request.session.db = db
 
