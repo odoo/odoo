@@ -25,7 +25,7 @@ from urlparse import urljoin
 
 from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
 from openerp.osv import osv, fields
-from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT, ustr
 from ast import literal_eval
 from openerp.tools.translate import _
 
@@ -237,7 +237,12 @@ class res_users(osv.Model):
         # create a copy of the template user (attached to a specific partner_id if given)
         values['active'] = True
         context = dict(context or {}, no_reset_password=True)
-        return self.copy(cr, uid, template_user_id, values, context=context)
+        try:
+            with cr.savepoint():
+                return self.copy(cr, uid, template_user_id, values, context=context)
+        except Exception, e:
+            # copy may failed if asked login is not available.
+            raise SignupError(ustr(e))
 
     def reset_password(self, cr, uid, login, context=None):
         """ retrieve the user corresponding to login (login or email),

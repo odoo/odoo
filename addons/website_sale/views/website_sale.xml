@@ -32,10 +32,10 @@
 <!-- List of categories -->
 
 <template id="categories_recursive" name="Category list">
-  <li t-att-class="category.id == search.get('category') and 'active' or ''">
-      <a t-attf-href="/shop/category/#{ slug(category) }/" t-field="category.name"></a>
-      <ul t-if="category.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
-          <t t-foreach="category.child_id" t-as="category">
+  <li t-att-class="int(categ) == int(category or 0) and 'active' or ''">
+      <a t-attf-href="/shop/category/#{ slug(categ) }/" t-field="categ.name"></a>
+      <ul t-if="categ.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
+          <t t-foreach="categ.child_id" t-as="categ">
               <t t-call="website_sale.categories_recursive"/>
           </t>
       </ul>
@@ -45,14 +45,15 @@
 <!-- Product list -->
 
 <template id="search" name="Search hidden fields">
-  <input type="hidden" name="category" t-att-value="search.get('category') or ''"/>
-  <input type="hidden" name="filters" t-att-value="search.get('filters') or ''"/>
-  <div class="input-group">
-    <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
-    <span class="input-group-btn">
-      <button class="btn btn-default" type="submit"><i class="fa fa-search"/></button>
-    </span>
-  </div>
+  <form t-attf-action="/shop/{{'category/%s/' % slug(category) if category else ''}}" method="get" t-att-class="search_class">
+    <input t-if="search.get('filters')" type="hidden" name="filters" t-att-value="search.get('filters')"/>
+    <div class="input-group">
+      <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="submit"><i class="fa fa-search"/></button>
+      </span>
+    </div>
+  </form>
 </template>
 
 <template id="products_cart" name="Shopping cart">
@@ -61,12 +62,12 @@
     <div class="ribbon btn btn-danger">Sale</div>
   </div>
   <div class="oe_product_image">
-      <a itemprop="url" t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('category', 'search', 'filters') }}">
+      <a itemprop="url" t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('search', 'filters', category=(category and int(category)), page=(pager['page']['num'] if pager['page']['num']>1 else None)) }}">
           <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image"}'/>
       </a>
   </div>
   <section>
-      <h5><strong><a itemprop="name" t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('category', 'search', 'filters') }}" t-field="product.name"/></strong></h5>
+      <h5><strong><a itemprop="name" t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('search', 'filters', category=(category and int(category)), page=(pager['page']['num'] if pager['page']['num']>1 else None)) }}" t-field="product.name"/></strong></h5>
       <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
           <b>
               <t t-if="abs(product.product_variant_ids[0].lst_price - product.product_variant_ids[0].price) &gt; 0.2">
@@ -81,8 +82,8 @@
                    "display_currency": "website.pricelist_id.currency_id"
                }'>
               </span>
-              <meta itemprop="price" t-att-content="product.product_variant_ids[0].price"/>
-              <meta itemprop="priceCurrency" t-att-content="website.pricelist_id.currency_id.name"/>
+              <span itemprop="price" style="display:none;" t-esc="product.product_variant_ids[0].price"/>
+              <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
           </b>
       </div>
   </section>
@@ -104,9 +105,8 @@
         <div class="container oe_website_sale">
           <div class="products_pager">
             <div class="row">
-              <form action="/shop/" method="get" class="pagination form-inline col-md-3">
-                  <t t-call="website_sale.search" />
-              </form>
+              <t t-set="search_class">pagination form-inline col-md-3</t>
+              <t t-call="website_sale.search"/>
               <t t-call="website.pager"/>
             </div>
           </div>
@@ -278,15 +278,14 @@
           <div class="row">
             <div class="col-sm-4">
                 <ol class="breadcrumb">
-                    <li><a t-attf-href="/shop?{{ keep_query('search', 'filters') }}" onclick="history.go(-1); return false;">Products</a></li>
-                    <li t-if="search.get('category')"><a t-attf-href="/shop/?{{ keep_query('search', 'filters', 'category') }}" t-field="category.name"/></li>
+                    <li><a t-attf-href="/shop?{{ keep_query('search', 'filters', 'page') if not category else keep_query('search', 'filters') }}">Products</a></li>
+                    <li t-if="category"><a t-attf-href="/shop/category/{{ slug(category) }}/?{{ keep_query('search', 'filters', 'page') }}" t-field="category.name"/></li>
                     <li class="active"><span t-field="product.name"/></li>
                 </ol>
             </div>
             <div class="col-sm-3">
-              <form action="/shop/" method="get" class="pull-right">
-                  <t t-call="website_sale.search" />
-              </form>
+              <t t-set="search_class">pull-right</t>
+              <t t-call="website_sale.search"/>
             </div>
             <div class="col-sm-4" groups="base.group_sale_manager">
                 <t t-call="website.publish_management">
@@ -303,7 +302,7 @@
                 <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
             </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
                 <h1 itemprop="name" t-field="product.name">Product Name</h1>
-                <meta itemprop="url" t-attf-content="/shop/product/{{ slug(product) }}"/>
+                <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)"/>
                 <form action="/shop/add_cart/" class="js_add_cart_json" method="POST">
                     <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_ids[0].id"/>
                     <t t-if="len(product.product_variant_ids) &gt; 1">
@@ -335,13 +334,13 @@
                                  "widget": "monetary",
                                  "display_currency": "website.pricelist_id.currency_id"
                              }'/>
-                            <meta itemprop="price" t-att-content="product.product_variant_ids[0].price"/>
-                            <meta itemprop="priceCurrency" t-att-content="website.pricelist_id.currency_id.name"/>
+                            <span itemprop="price" style="display:none;" t-esc="product.product_variant_ids[0].price"/>
+                            <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
                         </h4>
                     </div>
                     <button class="btn btn-primary btn-lg mt8">Add to Cart</button>
                     <hr t-if="product.description_sale"/>
-                    <p t-field="product.description_sale" class="text-muted"/>
+                    <div><p t-field="product.description_sale" class="text-muted"/></div>
                     <hr/>
                     <p class="text-muted">
                         30-day money-back guarantee<br/>
@@ -571,8 +570,8 @@
 <template id="products_categories" inherit_option_id="website_sale.products" name="Product Categories">
   <xpath expr="//div[@id='products_grid_before']" position="inside">
       <ul class="nav nav-pills nav-stacked mt16">
-          <li t-att-class=" '' if search.get('category') else 'active' "><a href="/shop/">All Products</a></li>
-          <t t-foreach="categories" t-as="category">
+          <li t-att-class=" '' if category else 'active' "><a href="/shop/">All Products</a></li>
+          <t t-foreach="categories" t-as="categ">
               <t t-call="website_sale.categories_recursive"/>
           </t>
       </ul>
@@ -587,7 +586,7 @@
 
 <template id="products_attributes" inherit_id="website_sale.products" inherit_option_id="website_sale.products" name="Product attribute's Filters" groups="product.group_product_attributes">
   <xpath expr="//div[@id='products_grid_before']" position="inside">
-      <form t-attf-action="/shop/filters/?{{ keep_query('category', 'search') }}" class="attributes" method="post">
+      <form t-attf-action="/shop/filters/?{{ keep_query('search', category=(category and int(category))) }}" class="attributes" method="post">
           <ul class="nav nav-pills nav-stacked mt16">
               <t t-set="attribute_ids" t-value="Ecommerce.get_attribute_ids()"/>
               <t t-foreach="attribute_ids" t-as="attribute_id">

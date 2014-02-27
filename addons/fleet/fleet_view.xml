@@ -832,6 +832,9 @@
             </field>
         </record>
 
+        <!--
+            fleet.vehicle.cost
+            -->
         <record model='ir.actions.act_window' id='fleet_vehicle_service_types_act'>
             <field name="name">Service Types</field>
             <field name="res_model">fleet.service.type</field>
@@ -848,6 +851,17 @@
 
         <menuitem action="fleet_vehicle_service_types_act" parent="fleet_configuration" id="fleet_vehicle_service_types_menu" groups="base.group_no_one"/>
 
+        <record model='ir.ui.view' id='fleet_vehicle_cost_tree'>
+            <field name="name">fleet.vehicle.cost.tree</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <tree string="Vehicle Costs">
+                    <field name="vehicle_id"/>
+                    <field name="cost_subtype_id"/>
+                    <field name="date"/>
+                </tree>
+            </field>
+        </record>
 
         <record model='ir.ui.view' id='fleet_vehicle_costs_report'>
             <field name="name">fleet.vehicle.cost.graph</field>
@@ -939,31 +953,5 @@
         </record>
 
         <menuitem action="fleet_vehicle_costs_act" parent="fleet_vehicles" id="fleet_vehicle_costs_menu" groups="group_fleet_manager"/>
-<!--    
-        <record model='ir.ui.view' id='fleet_hr_employee_form'>
-            <field name="name">fleet.hr.employee.form</field>
-            <field name="model">hr.employee</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="hr.view_employee_form" />
-            <field name="arch" type="xml">
-                <notebook position="inside">
-                    <page string="Vehicle">
-                        <group>
-                            <field name="vehicle_id" widget="many2many_tags"/>
-                        </group>
-                    </page>
-                </notebook>
-            </field>
-        </record>
-
-     <record model="fleet.vehicle.model" id="citroen">
-            <field name="name">Citroen</field>
-        </record>
-
-        <record model="fleet.vehicle" id="stw_vehicle">
-            <field name="name">240BTN</field>
-            <field name="model_id" ref="citroen" />
-        </record>
- -->
     </data>
 </openerp>

@@ -77,7 +77,11 @@ website.Tour = openerp.Class.extend({
 
         website.Tour.busy = true;
 
-        this.localStorage.setItem("tour-"+this.id+"-test-automatic", automatic);
+        if (automatic) {
+            this.localStorage.setItem("tour-"+this.id+"-test-automatic", true);
+        } else {
+            this.localStorage.removeItem("tour-"+this.id+"-test-automatic");
+        }
         this.automatic = automatic;
 
         if (this.path) {
@@ -277,6 +281,14 @@ website.Tour = openerp.Class.extend({
                     self.nextStep(step.stepId, callback, overlaps);
                 }, self.defaultDelay);
             } else if (!overlaps || new Date().getTime() - time < overlaps) {
+                if (self.current.element) {
+                    var $popover = $(".popover.tour");
+                    if(!$(self.current.element).is(":visible")) {
+                        $popover.data("hide", true).fadeOut(300);
+                    } else if($popover.data("hide")) {
+                        $popover.data("hide", false).fadeIn(150);
+                    }
+                }
                 self.timer = setTimeout(checkNext, self.defaultDelay);
             } else {
                 self.reset();
@@ -336,9 +348,9 @@ website.Tour = openerp.Class.extend({
     },
     endTour: function () {
         if (parseInt(this.localStorage.getItem("tour-"+this.id+"-test"),10) >= this.steps.length-1) {
-            console.log('{ "event": "success" }');
+            console.log('ok');
         } else {
-            console.log('{ "event": "canceled" }');
+            console.log('error');
         }
         this.reset();
     },

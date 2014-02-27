@@ -24,7 +24,7 @@ import werkzeug
 import openerp
 from openerp.addons.auth_signup.res_users import SignupError
 from openerp import http
-from openerp.http import request, LazyResponse
+from openerp.http import request
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -34,8 +34,7 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
     @http.route()
     def web_login(self, *args, **kw):
         response = super(AuthSignupHome, self).web_login(*args, **kw)
-        if isinstance(response, LazyResponse):
-            response.params['values'].update(self.get_auth_signup_config())
+        response.qcontext.update(self.get_auth_signup_config())
         return response
 
     @http.route('/web/signup', type='http', auth='public', website=True, multilang=True)
@@ -52,9 +51,7 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
             except (SignupError, AssertionError), e:
                 qcontext['error'] = _(e.message)
 
-        def callback(template, values):
-            return request.registry['ir.ui.view'].render(request.cr, request.uid, template, values)
-        return LazyResponse(callback, template='auth_signup.signup', values=qcontext)
+        return request.render('auth_signup.signup', qcontext)
 
     @http.route('/web/reset_password', type='http', auth='public', website=True, multilang=True)
     def web_auth_reset_password(self, *args, **kw):
@@ -80,9 +77,7 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
                 qcontext['error'] = _("Could not reset your password")
                 _logger.exception('error when resetting password')
 
-        def callback(template, values):
-            return request.registry['ir.ui.view'].render(request.cr, request.uid, template, values)
-        return LazyResponse(callback, template='auth_signup.reset_password', values=qcontext)
+        return request.render('auth_signup.reset_password', qcontext)
 
     def get_auth_signup_config(self):
         """retrieve the module config (which features are enabled) for the login page"""
@@ -117,6 +112,10 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
         request.cr.commit()
 
     def _signup_with_values(self, token, values):
-        request.registry['res.users'].signup(request.cr, openerp.SUPERUSER_ID, values, token)
+        db, login, password = request.registry['res.users'].signup(request.cr, openerp.SUPERUSER_ID, values, token)
+        request.cr.commit()     # as authenticate will use its own cursor we need to commit the current transaction
+        uid = request.session.authenticate(db, login, password)
+        if not uid:
+            raise SignupError(_('Authentification Failed.'))
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
