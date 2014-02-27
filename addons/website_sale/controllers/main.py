@@ -422,12 +422,11 @@ class Ecommerce(http.Controller):
 
         partner = None
         public_id = request.registry['website'].get_public_user(cr, uid, context)
-        if not request.uid == public_id:
+        if request.uid != public_id:
             partner = orm_user.browse(cr, uid, uid, context).partner_id
         elif order.partner_id:
-            domain = [("active", "=", False), ("partner_id", "=", order.partner_id.id)]
-            user_ids = request.registry['res.users'].search(cr, SUPERUSER_ID, domain, context=context)
-            if not user_ids or public_id not in user_ids:
+            public_partner = orm_user.browse(cr, SUPERUSER_ID, public_id, context=context).partner_id.id
+            if public_partner != order.partner_id.id:
                 partner = orm_partner.browse(cr, SUPERUSER_ID, order.partner_id.id, context)
 
         if partner:
@@ -501,9 +500,8 @@ class Ecommerce(http.Controller):
         if request.uid != public_id:
             partner_id = orm_user.browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
         elif order.partner_id:
-            domain = [("active", "=", False), ("partner_id", "=", order.partner_id.id)]
-            user_ids = request.registry['res.users'].search(cr, SUPERUSER_ID, domain, context=context)
-            if not user_ids or public_id not in user_ids:
+            public_partner = orm_user.browse(cr, SUPERUSER_ID, public_id, context=context).partner_id.id
+            if public_partner != order.partner_id.id:
                 partner_id = order.partner_id.id
 
         if partner_id:
