@@ -5152,7 +5152,7 @@ class BaseModel(object):
             # records, if that field depends on the main record.
             for name in values:
                 field = self._fields[name]
-                if field.inverse_field and not field.related:
+                if field.inverse_field:
                     field.inverse_field._update(record[name], record)
 
         return record

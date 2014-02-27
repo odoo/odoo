@@ -298,7 +298,7 @@ class Field(object):
                 # set value in cache, inverse field, and mark record as dirty
                 record._cache[self] = value
                 if _scope.draft:
-                    if self.inverse_field and not self.related:
+                    if self.inverse_field:
                         self.inverse_field._update(value, record)
                     record._dirty = True
 
@@ -439,6 +439,9 @@ class Field(object):
             if attr.startswith('_related_'):
                 if not getattr(self, attr[9:]):
                     setattr(self, attr[9:], getattr(self, attr)(field))
+
+        # special case: related fields never have an inverse field!
+        self.inverse_field = None
 
     #
     # Field setup.
