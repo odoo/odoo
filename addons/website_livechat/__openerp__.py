@@ -12,10 +12,7 @@ OpenERP Website LiveChat
     'depends': ['website', 'im_livechat'],
     'installable': True,
     'data': [
-        'views/website_livechat.xml'
+        'views/website_livechat.xml',
+        'views/res_config.xml'
     ],
-    'demo': [ ],
-    'js': [],
-    'qweb': [],
-    'css': [],
 }
