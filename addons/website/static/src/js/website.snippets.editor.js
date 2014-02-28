@@ -25,6 +25,8 @@
             this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
                 website.snippet.start_animation();
+                // force to unactive slider cycling
+                setInterval(function () {$(".carousel").carousel("pause");},3000);
             });
 
             return this._super.apply(this, arguments);
@@ -1304,14 +1306,6 @@
                 this.$target.find(".item:first").addClass("active");
             }
         },
-        onFocus : function () {
-            this._super();
-            this.$target.carousel('pause');
-        },
-        onBlur : function () {
-            this._super();
-            this.$target.carousel('cycle');
-        },
         start : function () {
             var self = this;
             this._super();
@@ -1464,7 +1458,10 @@
                 self.$target.data("snippet-view").set_values();
             });
             this.$target.attr('contentEditable', 'false');
-            this.$target.find('> div > .oe_structure').attr('contentEditable', 'true');
+
+            this.$target.find('> div > .oe_structure').attr('contentEditable', 'true'); // saas-3 retro-compatibility
+
+            this.$target.find('> div > div:not(.oe_structure) > .oe_structure').attr('contentEditable', 'true');
         },
         scroll: function () {
             var self = this;
