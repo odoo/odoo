@@ -39,6 +39,7 @@ import ir_mail_server
 import ir_fields
 import ir_qweb
 import ir_http
+import ir_logging
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
