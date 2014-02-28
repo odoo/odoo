@@ -157,7 +157,7 @@
                 <t t-set="head">
                     <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css' />
                 </t>
-                <!-- div> <t t-call="website_forum.forum_header"/> </div -->
+                <div> <t t-call="website_forum.forum_header"/> </div>
                 <div id="wrap" class="container">
                     <ul class="list-unstyled">
                         <li t-foreach="question_ids" t-as="question" class="question">
@@ -174,9 +174,9 @@
         <template id="index_right" name="Right Column"
             inherit_option_id="website_forum.index">
             <xpath expr="//div[@id='wrap']" position="replace">
-                <div class="container mt16 js_website_blog">
+                <div class="container mt16">
                     <div class="row">
-                        <div class="col-lg-9 col-sm-9" id="blog_left_column">
+                        <div class="col-lg-9 col-sm-9">
                             <ul class="list-unstyled">
                                 <li t-foreach="question_ids" t-as="question" class="question">
                                     <t t-call="website_forum.post_list" />
@@ -186,7 +186,7 @@
                                 <t t-call="website.pager" />
                             </div>
                         </div>
-                        <div class="col-lg-2 col-lg-offset-1 col-sm-2 visible-lg" id="blog_right_column">
+                        <div class="col-lg-2 col-lg-offset-1 col-sm-2 visible-lg" id="question_right_column">
                             <div>This is right panel</div>
                         </div>
                     </div>
@@ -207,7 +207,7 @@
         </template>
 
         <!-- index page of forum -->
-        <template id="index1" name="Posts">
+        <!--template id="index1" name="Posts">
             <t t-call="website.layout">
                 <t t-set="head">
                     <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css' />
@@ -216,7 +216,7 @@
                 <div id="wrap">
                     <div class="container">
                         <div class="col-md-9">
-                            <!-- t t-call="website_forum.shorting_answer" / -->
+                            <t t-call="website_forum.shorting_answer" />
 
                             <ul class="media-list">
                                 <li t-foreach="question_ids" t-as="question"
@@ -235,7 +235,7 @@
                     </div>
                 </div>
             </t>
-        </template>
+        </template-->
 
 
         <!-- need to refactor below code -->
@@ -268,33 +268,6 @@
             </div>
         </template>
 
-
-
-        <template id="answer">
-            <ul class="media-list">
-                <li t-foreach="question.child_ids" t-as="answer" class="media">
-                    <div class="row">
-                        <t t-call="website_forum.post_vote" />
-                        <div class="col-md-9 col-xs-10">
-                            <div class="row col-xs-12">
-                                <span>
-                                    <h4>
-                                        <t t-esc="answer.content" />
-                                    </h4>
-                                </span>
-                            </div>
-                            <div class="row">
-                                <t t-call="website_forum.user_detail" />
-                            </div>
-                            <t t-call="website_forum.post_links" />
-                        </div>
-                        <hr class="hr_no_margin" />
-                    </div>
-                </li>
-            </ul>
-        </template>
-
-
         <template id="404">
             <t t-call="website.layout">
                 <div id="wrap">
@@ -312,10 +285,9 @@
         </template>
 
         <template id="user_detail">
-            <div
-                class="col-xs-7 col-xs-offset-5 col-sm-3 col-sm-offset-9 col-md-4 col-md-offset-8 col-lg-4 col-lg-offset-8 text-right">
-                <div class="panel panel-primary ">
-                    <p class="text-center -heading">
+            <div class="col-sm-3 col-sm-offset-9 col-md-offset-8 text-right">
+                <div class="panel panel-primary">
+                    <p class="text-center-heading">
                         <small>
                             asked
                             <span t-esc="question.create_date"></span>
@@ -334,7 +306,7 @@
                                 <div class="col-xs-12">
                                     <div class="text-left">
                                         <a t-attf-href="/forum/user/#{ question.create_uid.id }">
-                                            <div t-esc="question.create_uid.name" />
+                                            <t t-esc="question.create_uid.name" />
                                         </a>
                                     </div>
                                 </div>
@@ -542,46 +514,98 @@
             </t>
         </template>
 
-        <template id="post_description_full">
-            <t t-call="website.layout">
-                <div class="container MainBody">
-                    <t t-call="website_forum.post_vote" />
-                    <div class="row">
-                        <div class="col-md-9 col-xs-11">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <h4>
-                                        <div itemprop="name" t-field="question.name"></div>
-                                    </h4>
-                                </div>
+        <template id="answer">
+            <ul class="media-list">
+                <div>
+                    <li t-foreach="question.child_ids" t-as="answer" class="media">
+                        <div>
+                            <t t-call="website_forum.post_vote"/>
+                            <div class="row col-md-9" style="font-size:14px">
+                                <t t-esc="answer.content" />
                             </div>
-                            <t t-call="website_forum.tags" />
+                            <div class="row">
+                                <t t-call="website_forum.user_detail" />
+                            </div>
+                            <t t-call="website_forum.post_links" />
                         </div>
+                    </li>
+                </div>
+            </ul>
+        </template>
+
+        <template id="post_description_data">
+            <div class="row">
+                <div>
+                    <div>
+                        <t t-call="website_forum.post_vote"/>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12 page-header">
-                            <span class="badge">
-                                <t t-esc="len(question.child_ids)" />
-                                Answer
-                            </span>
+                    <div class="row col-md-9">
+                        <div class="row col-xs-12" style="font-size:12px">
+                            <h4>
+                                <t t-esc="question.name"/>
+                            </h4>
                         </div>
-                        <t t-call="website_forum.shorting_answer" />
-                    </div>
-                    <t t-call="website_forum.answer"/>
-                    <div t-if="not answer_done">
-                        <t t-call="website_forum.post_answer"/>
-                    </div>
-                    <div t-if="answer_done">
-                        <form action="/forum/question/editanswer/" method="post" role="form">
-                            <input name="post_id" t-att-value="question.id" type="hidden" />
-                                    <button class="btn btn-default btn-lg" id="btn_edit_your_question">
-                                        Edit Your Answer
-                                    </button>
-                                    <span> (only one answer per question is allowed) </span>
-                        </form>
+                        <t t-call="website_forum.tags" />
+                        <div class="row" t-if="question.content" style="font-size:14px">
+                            <t t-esc="question.content"/>
+                        </div>
                     </div>
                 </div>
+                <div class="row">
+                    <t t-call="website_forum.user_detail" />
+                </div>
+                <div class="badge">
+                    <t t-esc="len(question.child_ids)"/> Answer
+                </div>
+                <hr/>
+                <t t-call="website_forum.shorting_answer" />
+                <div class="row ">
+                    <div>
+                        <t t-call="website_forum.answer"/>
+                    </div>
+                </div>
+                <div t-if="not answer_done">
+                    <t t-call="website_forum.post_answer"/>
+                </div>
+                <div t-if="answer_done">
+                    <form action="/forum/question/editanswer/" method="post" role="form">
+                        <input name="post_id" t-att-value="question.id" type="hidden"/>
+                        <button class="btn btn-default btn-lg">
+                            Edit Your Answer
+                        </button>
+                        <span> (only one answer per question is allowed) </span>
+                    </form>
+                </div>
+            </div>
+            <hr/>
+        </template>
+
+        <template id="post_description_full" name="Question Navigation">
+            <t t-call="website.layout">
+                <div>
+                    <t t-call="website_forum.forum_header"/>
+                </div>
+                <div class="container" id="wrap">
+                    <t t-call="website_forum.post_description_data"/>
+                </div>
             </t>
+        </template>
+
+
+        <template id="post_description_full_right" name="Question Right Column"
+            inherit_option_id="website_forum.post_description_full">
+            <xpath expr="//div[@id='wrap']" position="replace">
+                <div class="container mt16 ">
+                    <div class="row">
+                        <div class="col-lg-9 col-sm-9" id="forum_left_column">
+                            <t t-call="website_forum.post_description_data"/>
+                        </div>
+                        <div class="col-lg-2 col-lg-offset-1 col-sm-2 visible-lg" id="forum_right_column">
+                            <div>This is Question right panel</div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
         </template>
 
         <template id="user_detail_full">
