@@ -19,12 +19,11 @@
         edit: function () {
             var self = this;
             $("body").off('click');
+            website.snippet.stop_animation();
             window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
             this.snippets.appendTo(this.$el);
-
             this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
-                website.snippet.stop_animation();
                 website.snippet.start_animation();
             });
 
@@ -1305,6 +1304,14 @@
                 this.$target.find(".item:first").addClass("active");
             }
         },
+        onFocus : function () {
+            this._super();
+            this.$target.carousel('pause');
+        },
+        onBlur : function () {
+            this._super();
+            this.$target.carousel('cycle');
+        },
         start : function () {
             var self = this;
             this._super();
@@ -1315,7 +1322,6 @@
             this.$editor.find(".js_add").on('click', function () {self.on_add_slide(); return false;});
             this.$editor.find(".js_remove").on('click', function () {self.on_remove_slide(); return false;});
 
-            this.$target.carousel('pause');
             this.rebind_event();
         },
         on_add_slide: function () {
