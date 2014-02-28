@@ -29,6 +29,7 @@ import threading
 
 import tools
 import openerp
+import openerp.loggers
 
 _logger = logging.getLogger(__name__)
 
@@ -85,6 +86,19 @@ class ColoredFormatter(DBFormatter):
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
         return DBFormatter.format(self, record)
 
+import platform
+def is_posix_operating_system():
+    return os.name == 'posix'
+
+def is_windows_operating_system():
+    return os.name == 'nt'
+
+def is_linux_operating_system():
+    return is_posix_operating_system() and platform.system() == 'Linux'
+
+def is_macosx_operating_system():
+    return is_posix_operating_system() and platform.system() == 'Darwin'
+
 def init_logger():
     from tools.translate import resetlocale
     resetlocale()
@@ -94,24 +108,32 @@ def init_logger():
 
     if tools.config['syslog']:
         # SysLog Handler
-        if os.name == 'nt':
+        if is_windows_operating_system():
             handler = logging.handlers.NTEventLogHandler("%s %s" % (release.description, release.version))
-        else:
+        elif is_linux_operating_system():
             handler = logging.handlers.SysLogHandler('/dev/log')
-        format = '%s %s' % (release.description, release.version) \
-                + ':%(dbname)s:%(levelname)s:%(name)s:%(message)s'
+        elif is_macosx_operating_system():  # There is no /dev/log on OSX
+            handler = logging.handlers.SysLogHandler('/var/run/log')
+        else:
+            raise Exception("There is no syslog handler for this Operating System: %s", platform.system())
+
+        format = '%s %s' % (release.description, release.version) + ':%(dbname)s:%(levelname)s:%(name)s:%(message)s'
 
     elif tools.config['logfile']:
         # LogFile Handler
         logf = tools.config['logfile']
         try:
+            # We check we have the right location for the log files
             dirname = os.path.dirname(logf)
             if dirname and not os.path.isdir(dirname):
                 os.makedirs(dirname)
+
             if tools.config['logrotate'] is not False:
-                handler = logging.handlers.TimedRotatingFileHandler(logf,'D',1,30)
-            elif os.name == 'posix':
+                handler = logging.handlers.TimedRotatingFileHandler(filename=logf, when='D', interval=1, backupCount=30)
+
+            elif is_posix_operating_system():
                 handler = logging.handlers.WatchedFileHandler(logf)
+
             else:
                 handler = logging.handlers.FileHandler(logf)
         except Exception:
@@ -125,12 +147,14 @@ def init_logger():
     # behind Apache with mod_wsgi, handler.stream will have type mod_wsgi.Log,
     # which has no fileno() method. (mod_wsgi.Log is what is being bound to
     # sys.stderr when the logging.StreamHandler is being constructed above.)
-    if isinstance(handler, logging.StreamHandler) \
-        and hasattr(handler.stream, 'fileno') \
-        and os.isatty(handler.stream.fileno()):
+    def has_fileno(stream):
+        return hasattr(stream, 'fileno') and os.isatty(stream.fileno())
+
+    if isinstance(handler, logging.StreamHandler) and has_fileno(handler.stream):
         formatter = ColoredFormatter(format)
     else:
         formatter = DBFormatter(format)
+
     handler.setFormatter(formatter)
 
     # Configure handlers
@@ -141,13 +165,22 @@ def init_logger():
     logging_configurations = DEFAULT_LOG_CONFIGURATION + pseudo_config + logconfig
     for logconfig_item in logging_configurations:
         loggername, level = logconfig_item.split(':')
+
         level = getattr(logging, level, logging.INFO)
+        
         logger = logging.getLogger(loggername)
         logger.handlers = []
         logger.setLevel(level)
         logger.addHandler(handler)
         if loggername != '':
             logger.propagate = False
+
+    # magic ;-)
+    # we manage the connection in the postgresqlhandler
+    postgresqlHandler = openerp.loggers.handlers.PostgreSQLHandler()
+    postgresqlHandler.setLevel(logging.WARNING)
+    logger = logging.getLogger()
+    logger.addHandler(postgresqlHandler)
 
     for logconfig_item in logging_configurations:
         _logger.debug('logger level set: "%s"', logconfig_item)

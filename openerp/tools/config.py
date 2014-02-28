@@ -72,9 +72,10 @@ class configmanager(object):
         }
 
         # Not exposed in the configuration file.
-        self.blacklist_for_save = set(
-            ['publisher_warranty_url', 'load_language', 'root_path',
-            'init', 'save', 'config', 'update', 'stop_after_init'])
+        self.blacklist_for_save = set([
+            'publisher_warranty_url', 'load_language', 'root_path',
+            'init', 'save', 'config', 'update', 'stop_after_init'
+        ])
 
         # dictionary mapping option destination (keys in self.options) to MyOptions.
         self.casts = {}
@@ -83,7 +84,10 @@ class configmanager(object):
         self.config_file = fname
         self.has_ssl = check_ssl()
 
-        self._LOGLEVELS = dict([(getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET')])
+        self._LOGLEVELS = dict([
+            (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) 
+            for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET')
+        ])
 
         version = "%s %s" % (release.description, release.version)
         self.parser = parser = optparse.OptionParser(version=version, option_class=MyOption)
@@ -176,12 +180,16 @@ class configmanager(object):
         group.add_option('--log-response', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.response:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.response:DEBUG')
         group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.addons.web.http:DEBUG", help='shortcut for --log-handler=openerp.addons.web.http:DEBUG')
         group.add_option('--log-sql', action="append_const", dest="log_handler", const="openerp.sql_db:DEBUG", help='shortcut for --log-handler=openerp.sql_db:DEBUG')
+        group.add_option('--log-pgsql-database', dest='log_pgsql_database', help="database where OpenERP will store the exceptions", my_default=False)
         # For backward-compatibility, map the old log levels to something
         # quite close.
-        levels = ['info', 'debug_rpc', 'warn', 'test', 'critical',
-            'debug_sql', 'error', 'debug', 'debug_rpc_answer', 'notset']
-        group.add_option('--log-level', dest='log_level', type='choice', choices=levels,
-            my_default='info', help='specify the level of the logging. Accepted values: ' + str(levels) + ' (deprecated option).')
+        levels = [
+            'info', 'debug_rpc', 'warn', 'test', 'critical',
+            'debug_sql', 'error', 'debug', 'debug_rpc_answer', 'notset'
+        ]
+        group.add_option('--log-level', dest='log_level', type='choice',
+                         choices=levels, my_default='info',
+                         help='specify the level of the logging. Accepted values: %s (deprecated option).' % (levels,))
 
         parser.add_option_group(group)
 

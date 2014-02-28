@@ -111,15 +111,9 @@ def dispatch_rpc(service_name, method, params):
                 log(rpc_request, logging.DEBUG, logline, replace_request_password(params), depth=1)
 
         return result
-    except openerp.osv.orm.except_orm:
-        raise
-    except openerp.exceptions.AccessError:
-        raise
-    except openerp.exceptions.AccessDenied:
-        raise
-    except openerp.exceptions.Warning:
-        raise
-    except openerp.exceptions.RedirectWarning:
+    except (openerp.osv.orm.except_orm, openerp.exceptions.AccessError, \
+            openerp.exceptions.AccessDenied, openerp.exceptions.Warning, \
+            openerp.exceptions.RedirectWarning):
         raise
     except openerp.exceptions.DeferredException, e:
         _logger.exception(openerp.tools.exception_to_unicode(e))
