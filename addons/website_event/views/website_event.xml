@@ -379,7 +379,7 @@
 <template id="country_events_list" name="Country">
     <t t-ignore="true">
         <t t-if="events">
-            <div class="mb16 country_events_list">
+            <div class="mb16 country_events_list css_editable_mode_hidden">
                 <t t-if="country">
                     <img class="img-rounded img-responsive" t-att-src="'/website/image?model=res.country&amp;field=image&amp;id='+str(country.id)"></img>
                     <h4><b>Events In <span t-esc="country.name"></span></b></h4>

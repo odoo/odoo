@@ -225,7 +225,7 @@ class website_event(http.Controller):
         if country_code:
             country_ids = country_obj.search(request.cr, request.uid, [('code', '=', country_code)], context=request.context)
             result['country'] = country_obj.browse(request.cr, request.uid, country_ids[0], context=request.context)
-            event_ids = event_obj.search(request.cr, request.uid, [('country_id.code', '=', country_code),('date_begin','>=', time.strftime('%Y-%m-%d 00:00:00'))], order="date_begin", context=request.context)
+            event_ids = event_obj.search(request.cr, request.uid, ['|', ('address_id', '=', None),('country_id.code', '=', country_code),('date_begin','>=', time.strftime('%Y-%m-%d 00:00:00'))], order="date_begin", context=request.context)
         if not event_ids:
             event_ids = event_obj.search(request.cr, request.uid, [('date_begin','>=', time.strftime('%Y-%m-%d 00:00:00'))], order="date_begin", context=request.context)
             result['country'] = False
