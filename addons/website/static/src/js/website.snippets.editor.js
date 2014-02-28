@@ -25,8 +25,17 @@
             this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
                 website.snippet.start_animation();
-                // force to unactive slider cycling
-                setInterval(function () {$(".carousel").carousel("pause");},3000);
+                $(website.snippet.readyAnimation).each(function() {
+                    var animation = $(this).data("snippet-view");
+                    if (animation) {
+                        animation.$target.on('focus', '*', function(){
+                            animation.stop();
+                        });
+                        animation.$target.on('blur', '*', function(){
+                            animation.start();
+                        });
+                    }
+                });
             });
 
             return this._super.apply(this, arguments);
