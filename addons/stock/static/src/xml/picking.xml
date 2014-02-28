@@ -137,25 +137,25 @@
         </div>
     </t>
     <t t-name="PickingSearchResults">
-        <h3><span class="label label-info">Search Results</span></h3>
-        <t t-if="results.length === 0">
-            <div class='alert alert-warning'>
-                No picking found.
-            </div>
-        </t>
-        <t t-if="results.length > 0">
-            <table class="table table-bordered table-striped">
+        <div class="panel-heading">
+            <h3 class="panel-title">Search Results</h3>
+        </div>
+        <div class="panel-body">
+            <t t-if="results.length === 0">
+                <strong>No picking found.</strong>
+            </t>
+            <t t-if="results.length > 0">
                 <t t-foreach="results" t-as="picking">
-                    <tr>
-                        <td>
-                            <div class="oe_picking" t-att-data-id="picking.id">
-                                <span class='oe_picking_name'><t t-esc="picking.name" /></span>
+                    <div class="col-lg-3 col-md-4">
+                        <div class="panel panel-default oe_picking" t-att-data-id="picking.id">
+                            <div class="panel-body">
+                                <strong class='oe_picking_name'><t t-esc="picking.name" /></strong>
                             </div>
-                        </td>
-                    </tr>
+                        </div>
+                    </div>
                 </t>
-            </table>
-        </t>
+            </t>
+        </div>
     </t>
 
     <t t-name="PickingMenuWidget">
@@ -181,7 +181,7 @@
                         Scanned picking could not be found
                     </div>
 
-                    <div class='oe_picking_search_results'>
+                    <div class='oe_picking_search_results panel panel-info'>
                     </div>
 
                     <div class='oe_picking_categories'>

@@ -264,7 +264,6 @@ function openerp_picking_widgets(instance){
             clearTimeout(this.searchbox_timeout);
             this.searchbox_timout = setTimeout(function(){
                 if(query){
-                    self.$('.oe_title_label').addClass('hidden');
                     self.$('.oe_picking_not_found').addClass('hidden');
                     self.$('.oe_picking_categories').addClass('hidden');
                     self.$('.oe_picking_search_results').html(
