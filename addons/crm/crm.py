@@ -120,14 +120,14 @@ class crm_case_section(osv.osv):
         month_begin = date.today().replace(day=1)
         section_result = [{
                           'value': 0,
-                          'tooltip': (month_begin + relativedelta.relativedelta(months=-i)).strftime('%B'),
+                          'tooltip': (month_begin + relativedelta.relativedelta(months=-i)).strftime('%B %Y'),
                           } for i in range(self._period_number - 1, -1, -1)]
         group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
         pattern = tools.DEFAULT_SERVER_DATE_FORMAT if obj.fields_get(cr, uid, groupby_field)[groupby_field]['type'] == 'date' else tools.DEFAULT_SERVER_DATETIME_FORMAT
         for group in group_obj:
             group_begin_date = datetime.strptime(group['__domain'][0][2], pattern)
             month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
-            section_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group_begin_date.strftime('%B')}
+            section_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field, 0)}
         return section_result
 
     def _get_opportunities_data(self, cr, uid, ids, field_name, arg, context=None):
@@ -140,13 +140,18 @@ class crm_case_section(osv.osv):
         month_begin = date.today().replace(day=1)
         date_begin = month_begin - relativedelta.relativedelta(months=self._period_number - 1)
         date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1])
-        date_domain = [('create_date', '>=', date_begin.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)), ('create_date', '<=', date_end.strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
+        lead_pre_domain = [('create_date', '>=', date_begin.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)), 
+                              ('create_date', '<=', date_end.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)),
+                              ('type', '=', 'lead')]
+        opp_pre_domain = [('date_deadline', '>=', date_begin.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)), 
+                      ('date_deadline', '<=', date_end.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)),
+                      ('type', '=', 'opportunity')]
         for id in ids:
             res[id] = dict()
-            lead_domain = date_domain + [('type', '=', 'lead'), ('section_id', '=', id)]
+            lead_domain = lead_pre_domain + [('section_id', '=', id)]
+            opp_domain = opp_pre_domain + [('section_id', '=', id)]
             res[id]['monthly_open_leads'] = self.__get_bar_values(cr, uid, obj, lead_domain, ['create_date'], 'create_date_count', 'create_date', context=context)
-            opp_domain = date_domain + [('type', '=', 'opportunity'), ('section_id', '=', id)]
-            res[id]['monthly_planned_revenue'] = self.__get_bar_values(cr, uid, obj, opp_domain, ['planned_revenue', 'create_date'], 'planned_revenue', 'create_date', context=context)
+            res[id]['monthly_planned_revenue'] = self.__get_bar_values(cr, uid, obj, opp_domain, ['planned_revenue', 'date_deadline'], 'planned_revenue', 'date_deadline', context=context)
         return res
 
     _columns = {

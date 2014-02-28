@@ -350,6 +350,7 @@
                             help="Leads that are assigned to any sales teams I am member of"/>
                     <filter string="Dead" name="dead"
                             domain="[('probability', '=', '0'), ('stage_id.fold', '=', True)]"/>
+                    <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator />
                     <filter string="Available for mass mailing"
                             name='not_opt_out' domain="[('opt_out', '=', False)]"
@@ -569,6 +570,7 @@
                     <filter string="My Team(s)"
                             domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
                             help="Opportunities that are assigned to any sales teams I am member of"/>
+                    <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <group expand="0" string="Group By..." colspan="16">
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>

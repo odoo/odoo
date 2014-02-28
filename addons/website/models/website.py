@@ -18,7 +18,7 @@ except ImportError:
 import openerp
 from openerp.osv import orm, osv, fields
 from openerp.tools.safe_eval import safe_eval
-from openerp.addons.web.http import request, LazyResponse
+from openerp.addons.web.http import request
 
 logger = logging.getLogger(__name__)
 
@@ -178,10 +178,8 @@ class website(osv.osv):
         return '%s.%s' % (module, slugify(name, max_length=50))
 
     def page_exists(self, cr, uid, ids, name, module='website', context=None):
-        page = self.page_for_name(cr, uid, ids, name, module=module, context=context)
-
         try:
-           self.pool["ir.model.data"].get_object_reference(cr, uid, module, name)
+           return self.pool["ir.model.data"].get_object_reference(cr, uid, module, name)
         except:
             return False
 
@@ -231,11 +229,8 @@ class website(osv.osv):
         return self.pool['ir.ui.view'].render(cr, uid, template, values=values, context=context)
 
     def render(self, cr, uid, ids, template, values=None, status_code=None, context=None):
-        def callback(template, values, context):
-            return self._render(cr, uid, ids, template, values, context)
-        if values is None:
-            values = {}
-        return LazyResponse(callback, status_code=status_code, template=template, values=values, context=context)
+        # TODO: remove this. (just kept for backward api compatibility for saas-3)
+        return request.render(template, values, uid=uid)
 
     def pager(self, cr, uid, ids, url, total, page=1, step=30, scope=5, url_args=None, context=None):
         # Compute Pager
@@ -251,7 +246,7 @@ class website(osv.osv):
             pmin = pmax - scope if pmax - scope > 0 else 1
 
         def get_url(page):
-            _url = "%spage/%s/" % (url, page)
+            _url = "%spage/%s/" % (url, page) if page > 1 else url
             if url_args:
                 _url = "%s?%s" % (_url, werkzeug.url_encode(url_args))
             return _url
@@ -351,6 +346,7 @@ class website(osv.osv):
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
         uid = self.get_public_user(cr, uid, context=context)
+        url_list = []
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue
@@ -372,7 +368,9 @@ class website(osv.osv):
             for values in generated:
                 domain_part, url = rule.build(values, append_unknown=False)
                 page = {'name': url, 'url': url}
-
+                if url in url_list:
+                    continue
+                url_list.append(url)
                 if not filtered and query_string and not self.page_matches(cr, uid, page, query_string, context=context):
                     continue
                 yield page
@@ -497,9 +495,14 @@ class website_menu(osv.osv):
         'parent_left': fields.integer('Parent Left', select=True),
         'parent_right': fields.integer('Parent Right', select=True),
     }
+
+    def __defaults_sequence(self, cr, uid, context):
+        menu = self.search_read(cr, uid, [(1,"=",1)], ["sequence"], limit=1, order="sequence DESC", context=context)
+        return menu and menu[0]["sequence"] or 0
+
     _defaults = {
         'url': '',
-        'sequence': 0,
+        'sequence': __defaults_sequence,
         'new_window': False,
     }
     _parent_store = True

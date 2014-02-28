@@ -19,16 +19,24 @@
 #
 ##############################################################################
 
-import time
-from openerp.report import report_sxw
+from openerp.addons.web import http
+from openerp.addons.web.http import request
 
-class bom_structure(report_sxw.rml_parse):
-    def __init__(self, cr, uid, name, context):
-        super(bom_structure, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update({
-            'time': time,
-            'get_children':self.get_children,
-        })
+
+class bom_structure(http.Controller):
+
+    @http.route(['/report/mrp.report_mrpbomstructure/<docids>'], type='http', auth='user', website=True, multilang=True)
+    def report_mrpbomstructure(self, docids):
+        ids = [int(i) for i in docids.split(',')]
+        ids = list(set(ids))
+        report_obj = request.registry['mrp.bom']
+        docs = report_obj.browse(request.cr, request.uid, ids, context=request.context)
+
+        docargs = {
+            'docs': docs,
+            'get_children': self.get_children,
+        }
+        return request.registry['report'].render(request.cr, request.uid, [], 'mrp.report_mrpbomstructure', docargs)
 
     def get_children(self, object, level=0):
         result = []
@@ -55,8 +63,5 @@ class bom_structure(report_sxw.rml_parse):
         children = _get_rec(object,level)
 
         return children
-
-report_sxw.report_sxw('report.bom.structure','mrp.bom','mrp/report/bom_structure.rml',parser=bom_structure,header='internal')
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

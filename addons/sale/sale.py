@@ -409,12 +409,7 @@ class sale_order(osv.osv):
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
         self.signal_quotation_sent(cr, uid, ids)
-        datas = {
-                 'model': 'sale.order',
-                 'ids': ids,
-                 'form': self.read(cr, uid, ids[0], context=context),
-        }
-        return {'type': 'ir.actions.report.xml', 'report_name': 'sale.order', 'datas': datas, 'nodestroy': True}
+        return self.pool['report'].get_action(cr, uid, ids, 'sale.report_saleorder', context=context)
 
     def manual_invoice(self, cr, uid, ids, context=None):
         """ create invoices for the given sales orders (ids), and open the form
@@ -1014,8 +1009,8 @@ class account_invoice(osv.Model):
         sale_order_obj = self.pool.get('sale.order')
         res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=context)
         so_ids = sale_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
-        if so_ids:
-            sale_order_obj.message_post(cr, uid, so_ids, body=_("Invoice paid"), context=context)
+        for so_id in so_ids:
+            sale_order_obj.message_post(cr, uid, so_id, body=_("Invoice paid"), context=context)
         return res
 
     def unlink(self, cr, uid, ids, context=None):

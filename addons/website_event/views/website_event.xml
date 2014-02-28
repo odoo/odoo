@@ -189,11 +189,6 @@
                     </ol>
                 </div>
                 <div class="col-sm-5" groups="event.group_event_manager">
-                    <t t-call="website.publish_management">
-                        <t t-set="object" t-value="event"/>
-                        <t t-set="publish_edit" t-value="True"/>
-                        <t t-set="publish_controller">/event/publish</t>
-                    </t>
                 </div>
             </div>
         </div>
@@ -266,7 +261,6 @@
                         <t t-call="website.publish_management">
                             <t t-set="object" t-value="comment"/>
                             <t t-set="publish_edit" t-value="True"/>
-                            <t t-set="publish_controller">/event/publish</t>
                         </t>
                         <t t-raw="comment.body"/>
                         <small class="pull-right muted text-right">
