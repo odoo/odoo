@@ -108,15 +108,14 @@ class AutoReload(object):
         self.handler = EventHandler(self)
         self.notifier = pyinotify.Notifier(self.wm, self.handler, timeout=0)
         mask = pyinotify.IN_MODIFY | pyinotify.IN_CREATE  # IN_MOVED_FROM, IN_MOVED_TO ?
-        for path in openerp.tools.config.options["addons_path"].split(','):
+        for path in openerp.modules.modules.ad_paths:
             _logger.info('Watching addons folder %s', path)
             self.wm.add_watch(path, mask, rec=True)
 
     def process_data(self, files):
         xml_files = [i for i in files if i.endswith('.xml')]
-        addons_path = openerp.tools.config.options["addons_path"].split(',')
         for i in xml_files:
-            for path in addons_path:
+            for path in openerp.modules.modules.ad_paths:
                 if i.startswith(path):
                     # find out wich addons path the file belongs to
                     # and extract it's module name
