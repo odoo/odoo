@@ -1515,7 +1515,7 @@ class calendar_event(osv.Model):
                     continue
             if r['class'] == 'private':
                 for f in r.keys():
-                    if f not in ('id', 'date', 'date_deadline', 'duration', 'user_id', 'state', 'interval', 'count'):
+                    if f not in ('id', 'date', 'date_deadline', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date'):
                         if isinstance(r[f], list):
                             r[f] = []
                         else:
