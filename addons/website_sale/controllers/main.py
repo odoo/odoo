@@ -713,7 +713,6 @@ class Ecommerce(http.Controller):
          - UDPATE ME
         """
         cr, uid, context = request.cr, request.uid, request.context
-        email_act = None
         sale_order_obj = request.registry['sale.order']
 
         if transaction_id is None:
@@ -727,17 +726,19 @@ class Ecommerce(http.Controller):
             order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
             assert order.website_session_id == request.httprequest.session['website_session_id']
 
-        if not tx or not order:
+        if not order:
             return request.redirect('/shop/')
+        elif order.amount_total and not tx:
+            return request.redirect('/shop/mycart')
 
         if not order.amount_total or tx.state == 'done':
             # confirm the quotation
             sale_order_obj.action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
             # send by email
-            email_act = sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
+            sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
         elif tx.state == 'pending':
             # send by email
-            email_act = sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
+            sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
         elif tx.state == 'cancel':
             # cancel the quotation
             sale_order_obj.action_cancel(cr, SUPERUSER_ID, [order.id], context=request.context)
