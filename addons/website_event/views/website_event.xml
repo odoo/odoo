@@ -117,6 +117,23 @@
     </xpath>
 </template>
 
+<template id="event_right_country_event" inherit_option_id="website_event.index" name="Country Events">
+    <xpath expr="//div[@id='right_column']" position="inside">
+        <div class="row">
+            <div class="col-md-12 mb16 country_events">
+                <div class="country_events_list">
+                    <div class="text-muted text-center">
+                        <h1>
+                            <i class="fa fa-flag fa-5x"></i>
+                        </h1>
+                        <h1>Events from Your Country</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </xpath>
+</template>
+
 <template id="event_left_column" inherit_option_id="website_event.index" inherit_id="website_event.index" name="Filters">
     <xpath expr="//div[@id='middle_column']" position="attributes">
         <attribute name="class">col-md-6</attribute>
@@ -357,24 +374,6 @@
         </div>
     </xpath>
 </template>
-
-<template id="event_right_country_event" inherit_option_id="website_event.index" name="Country Events">
-    <xpath expr="//div[@id='right_column']" position="inside">
-        <div class="row">
-            <div class="col-md-12 mb16 country_events">
-                <div class="country_events_list">
-                    <div class="text-muted text-center">
-                        <h1>
-                            <i class="fa fa-flag fa-5x"></i>
-                        </h1>
-                        <h1>Events from Your Country</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </xpath>
-</template>
-
 
 <template id="country_events_list" name="Country">
     <t t-ignore="true">
