@@ -17,7 +17,7 @@
                         <field name="website_path"
                             on_change="on_change_website_path(website_path, xml_id, context)"
                             attrs="{'invisible': ['|', ('website_published', '!=', True), ('state', '!=', 'code')]}"/>
-                        <field name="website_url" readonly="1"
+                        <field name="website_url" readonly="1" widget="url"
                             attrs="{'invisible': ['|', ('website_published', '!=', True), ('state', '!=', 'code')]}"/>
                     </xpath>
                 </data>

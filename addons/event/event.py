@@ -219,6 +219,7 @@ class event_event(osv.osv):
     ]
 
     def onchange_event_type(self, cr, uid, ids, type_event, context=None):
+        values = {}
         if type_event:
             type_info =  self.pool.get('event.type').browse(cr,uid,type_event,context)
             dic ={
@@ -228,7 +229,8 @@ class event_event(osv.osv):
               'seats_min': type_info.default_registration_min,
               'seats_max': type_info.default_registration_max,
             }
-            return {'value': dic}
+            values.update(dic)
+        return values
 
     def onchange_start_date(self, cr, uid, ids, date_begin=False, date_end=False, context=None):
         res = {'value':{}}
