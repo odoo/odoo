@@ -188,18 +188,6 @@ class website_event(http.Controller):
         }
         return request.website.render("website_event.event_description_full", values)
 
-    @http.route(['/event/publish'], type='json', auth="public", website=True)
-    def publish(self, id, object):
-        # if a user publish an event, he publish all linked res.partner
-        event = request.registry[object].browse(request.cr, request.uid, int(id))
-        if not event.website_published:
-            if event.organizer_id and not event.organizer_id.website_published:
-                event.organizer_id.write({'website_published': True})
-            if event.address_id and not event.address_id.website_published:
-                event.address_id.write({'website_published': True})
-
-        return controllers.publish(id, object)
-
     @http.route('/event/add_event/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def add_event(self, event_name="New Event", **kwargs):
         return self._add_event(event_name, request.context, **kwargs)
