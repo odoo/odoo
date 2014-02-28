@@ -1233,7 +1233,6 @@
         on_clone: function () {
             var $clone = this.$target.clone(false);
             var _class = $clone.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, '');
-            _class += ' col-md-1';
             $clone.attr("class", _class);
             this.$target.after($clone);
             this.hide_remove_button();
