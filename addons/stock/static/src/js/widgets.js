@@ -163,7 +163,6 @@ function openerp_picking_widgets(instance){
             return new instance.web.Model('stock.picking.type').get_func('search_read')([],[])
                 .then(function(types){
                     self.picking_types = types;
-                    
                     for(var i = 0; i < types.length; i++){
                         self.pickings_by_type[types[i].id] = [];
                     }
@@ -173,7 +172,6 @@ function openerp_picking_widgets(instance){
                                                                   
                 }).then(function(pickings){
                     self.pickings = pickings;
-
                     for(var i = 0; i < pickings.length; i++){
                         var picking = pickings[i];
                         self.pickings_by_type[picking.picking_type_id[0]].push(picking);

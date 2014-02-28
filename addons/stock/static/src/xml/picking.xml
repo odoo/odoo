@@ -159,62 +159,59 @@
     </t>
 
     <t t-name="PickingMenuWidget">
-        <div class="row">
-                <div class="navbar navbar-inverse navbar-static-top" role="navigation">
-                    <div class="container">
-                        <div class="navbar-header navbar-form navbar-right">
-                            <div class='form-group'>
-                                <input type='text' class="oe_searchbox form-control" placeholder='Search'/>
-                                <button type="button" class="btn btn-danger js_pick_quit">Quit</button>
-                            </div>
-                            
-                        </div>
-                    </div>
+        <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+            <div class="container">
+                <!-- <div class="navbar-header navbar-form"> -->
+                    <div class="navbar-header navbar-form navbar-left">
+                    <input type='text' class="oe_searchbox form-control pull-left" placeholder='Search'/>
                 </div>
+                <div class="navbar-header navbar-form navbar-right">
+                    <!-- <div class='form-group'> -->
+                        <button type="button" class="btn btn-danger js_pick_quit pull-right">Quit</button>
+                    </div>
+                    
+                </div>
+            <!-- </div> -->
         </div>
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="jumbotron">
-                    <div class="container">
-                        <h3><span class="oe_title_label label label-info">Pickings</span></h3>
-                        <div class='oe_picking_not_found alert alert-warning hidden'>
-                            Scanned picking could not be found
-                        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="oe_title_label">Pickings</h2>
+                    <div class='oe_picking_not_found alert alert-warning hidden'>
+                        Scanned picking could not be found
+                    </div>
 
-                        <div class='oe_picking_search_results'>
-                        </div>
+                    <div class='oe_picking_search_results'>
+                    </div>
 
-                        <div class='oe_picking_categories'>
-                            <p>
-                                Select the type of picking you want to process.
-                            </p>
-                            <table class="table table-striped">
-                                
-                            <t t-foreach="widget.picking_types" t-as="type">
-                                <tr>
-                                    <td>
-                                        <div t-att-class="'oe_picking ' + (widget.pickings_by_type[type.id].length === 0 ? 'oe_empty':'js_pick_last') " 
-                                             t-att-data-id="type.id">
-
-                                            <span><t t-esc="type.complete_name"/></span>
-                                            <t t-if="widget.pickings_by_type[type.id].length > 0">
-                                                <span class='badge pull-right'><t t-esc="widget.pickings_by_type[type.id].length" /> picking(s) </span>
-                                            </t>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </t>
-                            </table>
-                        </div>
+                    <div class='oe_picking_categories'>
+                        <p>
+                            Select the type of picking you want to process.
+                        </p>
                     </div>
                 </div>
             </div>
+            <div class="row oe_picking_categories">
+                <t t-foreach="widget.picking_types" t-as="type">
+                    <div class="col-lg-3 col-md-4">
+                        <div t-att-class="'oe_kanban oe_picking oe_kanban_color_' + type.color + ' ' + (widget.pickings_by_type[type.id].length === 0 ? 'oe_empty':'js_pick_last') " 
+                                         t-att-data-id="type.id">
+                            <t t-if="type.code == 'incoming'" ><span class="fa fa-sign-in fa-2x"></span></t>
+                            <t t-if="type.code == 'outgoing'" ><span class="fa fa-truck fa-2x fa-flip-horizontal"></span></t>
+                            <t t-if="type.code == 'internal'" ><span class="fa fa-retweet fa-2x"></span></t>
+                            <strong><span><t t-esc="type.complete_name"/></span></strong>
+                            <div><t t-if="widget.pickings_by_type[type.id].length > 0">
+                                <span class='badge'><t t-esc="widget.pickings_by_type[type.id].length" /> picking(s) </span>
+                            </t></div>
+                        </div>
+                    </div>
+                </t>
+            </div>    
         </div>
     </t>
 
 
     <t t-name="PickingMainWidget">
-        <div class='row'>
                 <div class="navbar navbar-inverse navbar-static-top" role="navigation">
                     <div class="container">
                         <div class="navbar-header">
@@ -227,30 +224,27 @@
                         </div>
                     </div>
                 </div>
-        </div>
+
+        <div class="container">
+
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="jumbotron">
-                    <div class="container">
-                        <div>
-                            <div class="text-right">
+            <div class="col-md-8">
+                            <div class="pull-right">
                                     <button type="button" class='btn btn-danger js_pick_done'> Done </button>
                                     <button type="button" class='btn btn-info js_pick_print'> Print </button>
                             </div>
-                            <div>
-                                <h2><span class="oe_pick_app_header label label-info"><t t-esc='widget.get_header()' /></span></h2>
-                            </div>
-                            <div class="text-left">
-                                <button type="button" class='btn btn-default js_pick_pack'> Put in Pack </button>
-                            </div>
-                        </div>
-                        
-                        <div class='oe_placeholder_picking_editor'></div>
+                             <h2 class="oe_pick_app_header" t-esc='widget.get_header()' />
+
+                        <div class='oe_placeholder_picking_editor'/>
+                        <button type="button" class='btn btn-default js_pick_pack pull-right'> Put in Pack </button>
+
                         <div class='oe_placeholder_package_editor'></div>
+
+            </div><div class="col-md-4">
+
                         <div class='oe_placeholder_package_selector'></div>
                         <div class='oe_placeholder_menu'></div>
                     </div>
-                </div>
             </div>
         </div>
     </t>
