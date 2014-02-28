@@ -419,11 +419,11 @@
                                 <div>
                                     <div class="oe_msg_attachment" t-foreach='message.attachment_ids' t-as='attachment'>
                                         <a t-att-href="'/mail/download_attachment?model=mail.message&amp;id='+str(message.id)+'&amp;method=download_attachment&amp;attachment_id='+str(attachment.id)" target="_blank">
-                                            <t t-if="attachment.file_type == 'webimage'">
+                                            <t t-if="attachment.file_type_icon == 'webimage'">
                                                 <img t-att-src="'/web/binary/image?model=ir.attachment&amp;field=datas&amp;id=' + str(attachment.id) + '&amp;resize=100,80'"
                                                     class='oe_attachment_embedded'></img>
                                             </t>
-                                            <t t-if="attachment.file_type != 'webimage'">
+                                            <t t-if="attachment.file_type_icon != 'webimage'">
                                                 <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type + '.png'"
                                                     class='oe_attachment_webimage'></img>
                                             </t>
