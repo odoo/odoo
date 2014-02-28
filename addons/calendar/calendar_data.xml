@@ -229,7 +229,7 @@
                             <div style="height: auto;width:450px; margin:0 auto;padding-top:20px;padding-bottom:40px;">
                                     <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#8A89BA;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;" href="/calendar/meeting/accept?db=${ctx['dbname']}&token=${object.access_token}&action=${ctx['action_id']}&id=${object.event_id.id}">Accept</a>
                                     <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#808080;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;" href="/calendar/meeting/decline?db=${ctx['dbname']}&token=${object.access_token}&action=${ctx['action_id']}&id=${object.event_id.id}">Decline</a>
-                                    <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#D8D8D8;text-decoration: none;color:#FFFFFF;" href="${/calendar/meeting/view?db=${ctx['dbname']}&token=${object.access_token}&action=${ctx['action_id']}&id=${object.event_id.id}">View</a>
+                                    <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#D8D8D8;text-decoration: none;color:#FFFFFF;" href="/calendar/meeting/view?db=${ctx['dbname']}&token=${object.access_token}&action=${ctx['action_id']}&id=${object.event_id.id}">View</a>
                             </div> 
                         </div>
                     </body>
