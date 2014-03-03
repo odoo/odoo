@@ -194,6 +194,12 @@
 <template id="track_view">
     <t t-call="website_event.layout">
         <div class="container">
+            <t t-call="website.publish_management">
+                <t t-set="object" t-value="track"/>
+                <t t-set="publish_edit" t-value="True"/>
+            </t>
+            <div class="clearfix"/>
+
             <h2 t-field="track.name" class="text-center"/>
             <h3 t-field="event.name" class="text-center text-muted"/>
             <ul t-if="track.tag_ids" class="text-center text-muted list-inline">
