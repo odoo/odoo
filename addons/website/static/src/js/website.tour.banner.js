@@ -47,7 +47,7 @@
                 },
                 {
                     waitFor:   '.oe_overlay_options .oe_options:visible',
-                    element:   '#wrap [data-snippet-id=carousel]:first .carousel-caption',
+                    element:   '#wrap .carousel:first .carousel-caption',
                     placement: 'top',
                     title:     _("Customize banner's text"),
                     content:   _("Click in the text and start editing it."),

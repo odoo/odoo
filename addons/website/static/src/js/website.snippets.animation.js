@@ -8,9 +8,10 @@
     website.snippet.start_animation = function ($target) {
         for (var k in website.snippet.animationRegistry) {
             var Animation = website.snippet.animationRegistry[k];
-            var selector = "[data-snippet-id='"+k+"']";
+            var selector = "";
             if (Animation.prototype.selector) {
-                selector += ", " + Animation.prototype.selector;
+                if (selector != "") selector += ", " 
+                selector += Animation.prototype.selector;
             }
             if ($target) {
                 if ($target.is(selector)) selector = $target;

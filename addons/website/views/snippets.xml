@@ -827,9 +827,9 @@
 
 </div>
 
-<div id="snippet_styles" class="hidden">
+<div id="snippet_options" class="hidden">
 
-    <div data-snippet-style-id='blog-style'
+    <div data-snippet-option-id='blog-style'
         data-selector="section:not(.carousel):not(.parallax)">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#">Style</a>
@@ -839,7 +839,7 @@
         </li>
     </div>
 
-    <div data-snippet-style-id='background'
+    <div data-snippet-option-id='background'
         data-selector="section, .carousel, .parallax">
         <li class="dropdown-submenu" data-required="true">
             <a tabindex="-1" href="#">Background</a>
@@ -896,7 +896,7 @@
         </li>
     </div>
 
-    <div data-snippet-style-id='carousel'
+    <div data-snippet-option-id='carousel'
         data-selector=".carousel">
         <li class="divider"></li>
         <li>
@@ -907,7 +907,7 @@
         </li>
     </div>
 
-    <div data-snippet-style-id='carousel-style'
+    <div data-snippet-option-id='carousel-style'
         data-selector="div[data-snippet-id='carousel']">
         <li class="dropdown-submenu" data-required="true">
             <a tabindex="-1" href="#">Layout</a>
@@ -919,27 +919,30 @@
         </li>
     </div>
 
-    <div data-snippet-style-id='margin-y'
+    <div data-snippet-option-id='margin-y'
         data-selector="section, .row > [class*='col-md-'], .carousel, .parallax, hr">
     </div>
 
-    <div data-snippet-style-id='resize'
+    <div data-snippet-option-id='resize'
         data-selector="section, .carousel, .parallax"
         data-selector-children=".oe_structure, [data-oe-type=html]">
+        <li>
+            <a href="#" class="button js_size_auto">Size Automatic</a>
+        </li>
     </div>
 
-    <div data-snippet-style-id='margin-x'
+    <div data-snippet-option-id='margin-x'
         data-selector=".row > [class*='col-md-']"
         data-selector-vertical-children='.row'>
     </div>
 
-    <div data-snippet-style-id='content'
+    <div data-snippet-option-id='content'
         data-selector="p, h1, h2, h3, blockquote, .well, .panel"
         data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
         data-selector-children=".content">
     </div>
 
-    <div data-snippet-style-id='parallax'
+    <div data-snippet-option-id='parallax'
         data-selector=".parallax">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#">Scroll Speed</a>

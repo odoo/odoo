@@ -36,7 +36,6 @@
             // FIXME: call clean_for_save on all snippets of the page, not only modified ones
             // important for banner of parallax that changes data automatically.
             this.snippets.clean_for_save();
-            remove_added_snippet_id();
             this._super();
         },
     });
@@ -49,38 +48,13 @@
                 })) {
             return;
         }
-        hack_to_add_snippet_id()
-    });
-
-    // puts $el at the same absolute position as $target
-    function hack_to_add_snippet_id () {
-        _.each(website.snippet.selector, function (val) {
-            $(val[0]).each(function() {
-                if (!$(this).is("[data-snippet-id]") && $(this).parents("[data-oe-model]").length) {
-                    $(this).attr("data-snippet-id", val[1]);
-                }
-            });
-        });
-    }
-    function remove_added_snippet_id () {
-        _.each(website.snippet.selector, function (val) {
-            $(val[0]).each(function() {
-                if ($(this).data("snippet-id") === val[1]) {
-                    $(this).removeAttr("data-snippet-id");
-                }
-            });
-        });
-    }
-
-    $(document).ready(function() {
-        hack_to_add_snippet_id();
     });
 
     // 'snippet-dropped' is triggered on '#oe_snippets' whith $target as attribute when a snippet is dropped
     // 'snippet-activated' is triggered on '#oe_snippets' (and on snippet) when a snippet is activated
 
     if (!website.snippet) website.snippet = {};
-    website.snippet.styles = {};
+    website.snippet.templateOptions = {};
     website.snippet.selector = [];
     website.snippet.BuildingBlock = openerp.Widget.extend({
         template: 'website.snippets',
@@ -92,7 +66,6 @@
                 $("<div id='oe_manipulators'></div>").appendTo('body');
             }
             this.$active_snipped_id = false;
-            hack_to_add_snippet_id();
             this.snippets = [];
 
             observer.observe(document.body, {
@@ -159,12 +132,12 @@
                 .then(function (html) {
                     var $html = $(html);
 
-                    var $styles = $html.find("[data-snippet-style-id]");
+                    var $styles = $html.find("[data-snippet-option-id]");
                     $styles.each(function () {
                         var $style = $(this);
-                        var style_id = $style.data('snippet-style-id');
-                        website.snippet.styles[style_id] = {
-                            'snippet-style-id' : style_id,
+                        var style_id = $style.data('snippet-option-id');
+                        website.snippet.templateOptions[style_id] = {
+                            'snippet-option-id' : style_id,
                             'selector': $style.data('selector'),
                             '$el': $style,
                             'selector-siblings': $style.data('selector-siblings'),
@@ -223,8 +196,8 @@
                 }
                 snipped_event_flag = true;
                 var selector = [];
-                for (var k in website.snippet.styles) {
-                    selector.push(website.snippet.styles[k].selector);
+                for (var k in website.snippet.templateOptions) {
+                    selector.push(website.snippet.templateOptions[k].selector);
                 }
                 selector = selector.join(",");
 
@@ -336,15 +309,15 @@
                     var selector_siblings = [];
                     var selector_children = [];
                     var selector_vertical_children = [];
-                    for (var k in website.snippet.styles) {
-                        if ($toInsert.is(website.snippet.styles[k].selector)) {
-                            selector.push(website.snippet.styles[k].selector);
-                            if (website.snippet.styles[k]['selector-siblings'])
-                                selector_siblings.push(website.snippet.styles[k]['selector-siblings']);
-                            if (website.snippet.styles[k]['selector-children'])
-                                selector_children.push(website.snippet.styles[k]['selector-children']);
-                            if (website.snippet.styles[k]['selector-vertical-children'])
-                                selector_vertical_children.push(website.snippet.styles[k]['selector-vertical-children']);
+                    for (var k in website.snippet.templateOptions) {
+                        if ($toInsert.is(website.snippet.templateOptions[k].selector)) {
+                            selector.push(website.snippet.templateOptions[k].selector);
+                            if (website.snippet.templateOptions[k]['selector-siblings'])
+                                selector_siblings.push(website.snippet.templateOptions[k]['selector-siblings']);
+                            if (website.snippet.templateOptions[k]['selector-children'])
+                                selector_children.push(website.snippet.templateOptions[k]['selector-children']);
+                            if (website.snippet.templateOptions[k]['selector-vertical-children'])
+                                selector_vertical_children.push(website.snippet.templateOptions[k]['selector-vertical-children']);
                         }
                     }
 
@@ -418,8 +391,8 @@
                                 $target.data("snippet-editor").drop_and_build_snippet($target);
                             }
 
-                            for (var k in website.snippet.styles) {
-                                $target.find(website.snippet.styles[k].selector).each(function () {
+                            for (var k in website.snippet.templateOptions) {
+                                $target.find(website.snippet.templateOptions[k].selector).each(function () {
                                     var $snippet = $(this);
                                     self.create_overlay($snippet);
                                     if ($snippet.data("snippet-editor")) {
@@ -545,7 +518,7 @@
         // generate drop zones covering the elements selected by the selector
         // we generate overlay drop zones only to get an idea of where the snippet are, the drop
         activate_overlay_zones: function(selector){
-            var $targets = this.dom_filter(selector || '[data-snippet-id]');
+            var $targets = this.dom_filter(selector);
             var self = this;
 
             if (typeof selector !== 'string' && !$targets.length) {
@@ -590,18 +563,18 @@
     });
 
 
-    website.snippet.styleRegistry = {};
-    website.snippet.StyleEditor = openerp.Class.extend({
+    website.snippet.options = {};
+    website.snippet.Option = openerp.Class.extend({
         // initialisation (don't overwrite)
         init: function (BuildingBlock, $target, snippet_id) {
             this.BuildingBlock = BuildingBlock;
             this.$target = $target;
-            var styles = this.$target.data("snippet-style-ids") || {};
+            var styles = this.$target.data("snippet-option-ids") || {};
             styles[snippet_id] = this;
-            this.$target.data("snippet-style-ids", styles);
+            this.$target.data("snippet-option-ids", styles);
             this.$overlay = this.$target.data('overlay');
-            this['snippet-style-id'] = snippet_id;
-            this.$el = website.snippet.styles[snippet_id].$el.find(">li").clone();
+            this['snippet-option-id'] = snippet_id;
+            this.$el = website.snippet.templateOptions[snippet_id].$el.find(">li").clone();
 
             this.required = this.$el.data("required");
 
@@ -717,7 +690,7 @@
         }
     });
 
-    website.snippet.styleRegistry.background = website.snippet.StyleEditor.extend({
+    website.snippet.options.background = website.snippet.Option.extend({
         _get_bg: function () {
             return this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
         },
@@ -782,7 +755,7 @@
             this.$el.find('li:has(li[data-class].active)').addClass("active");
         }
     });
-    website.snippet.styleRegistry.slider = website.snippet.StyleEditor.extend({
+    website.snippet.options.slider = website.snippet.Option.extend({
         drop_and_build_snippet: function() {
             var id = $(".carousel").length;
             this.id = "myCarousel" + id;
@@ -869,7 +842,7 @@
             }
         },
     });
-    website.snippet.styleRegistry.carousel = website.snippet.styleRegistry.slider.extend({
+    website.snippet.options.carousel = website.snippet.options.slider.extend({
         getSize: function () {
             this.grid = this._super();
             this.grid.size = 8;
@@ -895,8 +868,8 @@
             };
             this.$target.on('snippet-style-change snippet-style-preview', function (event, style, np) {
                 var $active = self.$target.find(".item.active");
-                if (style['snippet-style-id'] === "size") return;
-                if (style['snippet-style-id'] === "background") {
+                if (style['snippet-option-id'] === "size") return;
+                if (style['snippet-option-id'] === "background") {
                     $active.css("background-image", self.$target.css("background-image"));
                 }
                 if (np.$prev) {
@@ -923,7 +896,7 @@
             var $clone = this._super();
 
             // choose an other background
-            var bg = this.$target.data("snippet-style-ids").background;
+            var bg = this.$target.data("snippet-option-ids").background;
             if (!bg) return $clone;
 
             var $styles = bg.$el.find("li[data-class]:not(.oe_custom_bg)");
@@ -946,7 +919,7 @@
         },
     });
 
-    website.snippet.styleRegistry.resize = website.snippet.StyleEditor.extend({
+    website.snippet.options.marginAndResize = website.snippet.Option.extend({
         start: function () {
             var self = this;
             this._super();
@@ -1111,7 +1084,7 @@
             this.change_cursor();
         }
     });
-    website.snippet.styleRegistry["margin-y"] = website.snippet.styleRegistry.resize.extend({
+    website.snippet.options["margin-y"] = website.snippet.options.marginAndResize.extend({
         getSize: function () {
             this.grid = this._super();
             var grid = [0,4,8,16,32,48,64,92,128];
@@ -1125,7 +1098,7 @@
             return this.grid;
         },
     });
-    website.snippet.styleRegistry["margin-x"] = website.snippet.styleRegistry.resize.extend({
+    website.snippet.options["margin-x"] = website.snippet.options.marginAndResize.extend({
         getSize: function () {
             this.grid = this._super();
             var width = this.$target.parents(".row:first").first().outerWidth();
@@ -1223,15 +1196,24 @@
             this._super(compass, beginClass, current);
         },
     });
-    website.snippet.styleRegistry["resize"] = website.snippet.styleRegistry.resize.extend({
+    website.snippet.options["resize"] = website.snippet.options.marginAndResize.extend({
         getSize: function () {
             this.grid = this._super();
             this.grid.size = 8;
             return this.grid;
         },
+        start: function () {
+            var self = this;
+            this._super();
+            this.$el.find(".js_size_auto").on('click', function (event){
+                self.$target.css("height", "");
+                self.BuildingBlock.cover_target(self.$overlay, self.$target);
+                return false;
+            });
+        },
     });
 
-    website.snippet.styleRegistry.parallax = website.snippet.StyleEditor.extend({
+    website.snippet.options.parallax = website.snippet.Option.extend({
         getSize: function () {
             this.grid = this._super();
             this.grid.size = 8;
@@ -1362,7 +1344,6 @@
                 children: self.selector_children,
                 vertical_children: self.selector_vertical_children,
             });
-            console.log(self);
 
             $("body").addClass('move-important');
 
@@ -1391,7 +1372,7 @@
             this.selector_siblings = [];
             this.selector_children = [];
             this.selector_vertical_children = [];
-            _.each(website.snippet.styles, function (val) {
+            _.each(website.snippet.templateOptions, function (val) {
                 if (!self.$target.is(val.selector)) {
                     return;
                 }
@@ -1399,8 +1380,8 @@
                 if (val['selector-children']) self.selector_children.push(val['selector-children']);
                 if (val['selector-vertical-children']) self.selector_vertical_children.push(val['selector-vertical-children']);
 
-                var style = val['snippet-style-id'];
-                var Editor = website.snippet.styleRegistry[style] || website.snippet.StyleEditor;
+                var style = val['snippet-option-id'];
+                var Editor = website.snippet.options[style] || website.snippet.Option;
                 var editor = self.styles[style] = new Editor(self.BuildingBlock, self.$target, style);
                 $ul.append(editor.$el.addClass("snippet-style-" + style));
             });
