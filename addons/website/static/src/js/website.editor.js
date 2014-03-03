@@ -1463,7 +1463,7 @@
                 kwargs: {
                     fields: ['name', 'website_url'],
                     domain: [['res_model', '=', 'ir.ui.view']],
-                    order: 'name',
+                    order: 'id desc',
                     context: website.get_context(),
                 }
             });
