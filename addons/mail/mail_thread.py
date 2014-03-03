@@ -253,7 +253,7 @@ class mail_thread(osv.AbstractModel):
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not context.get('mail_create_nolog'):
-            self.message_post(cr, uid, thread_id, body=_('%s created') % (self._description), context=context)
+            self.message_post(cr, uid, thread_id, body=_('%s created') % (_(self._description)), context=context)
 
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
