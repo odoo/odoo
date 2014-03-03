@@ -5,13 +5,18 @@
     if (!website.snippet) website.snippet = {};
     website.snippet.readyAnimation = [];
 
-    website.snippet.start_animation = function () {
+    website.snippet.start_animation = function ($target) {
         for (var k in website.snippet.animationRegistry) {
             var Animation = website.snippet.animationRegistry[k];
             var selector = "[data-snippet-id='"+k+"']";
             if (Animation.prototype.selector) {
                 selector += ", " + Animation.prototype.selector;
             }
+            if ($target) {
+                if ($target.is(selector)) selector = $target;
+                else continue;
+            }
+
             $(selector).each(function() {
                 var $snipped_id = $(this);
                 if (    !$snipped_id.parents("#oe_snippets").length &&
@@ -32,7 +37,7 @@
             }
         });
     };
-    $(document).ready(website.snippet.start_animation);
+    $(document).ready(function () {website.snippet.start_animation();});
 
 
     website.snippet.animationRegistry = {};
@@ -67,7 +72,7 @@
     });
 
     website.snippet.animationRegistry.parallax = website.snippet.Animation.extend({
-        parallax: ".parallax",
+        selector: ".parallax",
         start: function () {
             var self = this;
             setTimeout(function () {self.set_values();});
