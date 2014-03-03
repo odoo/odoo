@@ -20,11 +20,11 @@
 ##############################################################################
 
 import time
-from openerp.report import report_sxw
-from openerp.osv import osv
+from openerp.addons.web import http
+from openerp.addons.web.http import request
 
 
-class order(report_sxw.rml_parse):
+class order(http.Controller):
 
     def get_lines(self, user,objects):
         lines=[]
@@ -60,19 +60,24 @@ class order(report_sxw.rml_parse):
             notes.append(obj.note)
         return notes
         
-    def __init__(self, cr, uid, name, context):
-        super(order, self).__init__(cr, uid, name, context)
+    @http.route(['/report/lunch.report_lunchorder/<docids>'], type='http', auth='user', website=True, multilang=True)
+    def report_lunch(self, docids):
+        self.cr, self.uid, self.context = request.cr, request.uid, request.context
+
+        ids = [int(i) for i in docids.split(',')]
+        report_obj = request.registry['lunch.order.line']
+        docs = report_obj.browse(self.cr, self.uid, ids, context=self.context)
+
         self.net_total=0.0
-        self.localcontext.update({
+        docargs = {
+            'docs': docs,
             'time': time,
             'get_lines': self.get_lines,
             'get_users': self.get_users,
             'get_total': self.get_total,
             'get_nettotal': self.get_nettotal,
             'get_note': self.get_note,
-        })
+        }
+        return request.registry['report'].render(self.cr, self.uid, [], 'lunch.report_lunchorder', docargs)
 
-report_sxw.report_sxw('report.lunch.order.line', 'lunch.order.line',
-        'addons/lunch/report/order.rml',parser=order, header='external')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

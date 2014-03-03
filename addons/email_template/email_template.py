@@ -381,12 +381,18 @@ class email_template(osv.osv):
                 for res_id in template_res_ids:
                     attachments = []
                     report_name = self.render_template(cr, uid, template.report_name, template.model, res_id, context=context)
-                    report_service = report_xml_pool.browse(cr, uid, template.report_template.id, context).report_name
+                    report = report_xml_pool.browse(cr, uid, template.report_template.id, context)
+                    report_service = report.report_name
                     # Ensure report is rendered using template's language
                     ctx = context.copy()
                     if template.lang:
                         ctx['lang'] = self.render_template_batch(cr, uid, template.lang, template.model, [res_id], context)[res_id]  # take 0 ?
-                    result, format = openerp.report.render_report(cr, uid, [res_id], report_service, {'model': template.model}, ctx)
+
+                    if report.report_type in ['qweb-html', 'qweb-pdf']:
+                        result, format = self.pool['report'].get_pdf(report, res_id, context=ctx), 'pdf'
+                    else:
+                        result, format = openerp.report.render_report(cr, uid, [res_id], report_service, {'model': template.model}, ctx)
+
                     result = base64.b64encode(result)
                     if not report_name:
                         report_name = 'report.' + report_service

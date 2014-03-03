@@ -1,4 +1,4 @@
-import openerp
+import openerp.tests
 
 class TestUi(openerp.tests.HttpCase):
     def test_admin(self):

@@ -1,7 +1,7 @@
 """Module to talk to EtherpadLite API."""
 
 import json
-import werkzeug.urls
+import urllib
 import urllib2
 
 
@@ -32,7 +32,7 @@ class EtherpadLiteClient:
 
         params = arguments or {}
         params.update({'apikey': self.apiKey})
-        data = werkzeug.url_encode(params, True)
+        data = urllib.urlencode(params, True)
 
         try:
             opener = urllib2.build_opener()

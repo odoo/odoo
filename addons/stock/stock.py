@@ -1919,13 +1919,6 @@ class stock_move(osv.osv):
                 continue
             else:
                 todo_moves.append(move)
-                #build the prefered domain based on quants that moved in previous linked done move
-                prev_quant_ids = []
-                for m2 in move.move_orig_ids:
-                    for q in m2.quant_ids:
-                        prev_quant_ids.append(q.id)
-                prefered_domain[move.id] = prev_quant_ids and [('id', 'in', prev_quant_ids)] or []
-                fallback_domain[move.id] = prev_quant_ids and [('id', 'not in', prev_quant_ids)] or []
 
                 #we always keep the quants already assigned and try to find the remaining quantity on quants not assigned only
                 main_domain[move.id] = [('reservation_id', '=', False), ('qty', '>', 0)]
@@ -1934,9 +1927,9 @@ class stock_move(osv.osv):
                 move_orig_ids = []
                 move2 = move
                 while move2:
-                    #loop on the split_from to find the ancestor of split moves
                     move_orig_ids += [x.id for x in move2.move_orig_ids]
-                    move2 = move2.split_from
+                    #loop on the split_from to find the ancestor of split moves only if the move has not direct ancestor (priority goes to them)
+                    move2 = not move2.move_orig_ids and move2.split_from or False
                 if move_orig_ids:
                     main_domain[move.id] += [('history_ids', 'in', move_orig_ids)]
 
@@ -1955,7 +1948,7 @@ class stock_move(osv.osv):
                 domain = main_domain[move.id] + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
                 qty_already_assigned = sum([q.qty for q in record.reserved_quant_ids])
                 qty = record.qty - qty_already_assigned
-                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_domain=prefered_domain[move.id], fallback_domain=fallback_domain[move.id], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_domain=[], fallback_domain=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)
 
         for move in todo_moves:
@@ -3700,14 +3693,22 @@ class stock_move_operation_link(osv.osv):
     def get_specific_domain(self, cr, uid, record, context=None):
         '''Returns the specific domain to consider for quant selection in action_assign() or action_done() of stock.move,
         having the record given as parameter making the link between the stock move and a pack operation'''
-        package_obj = self.pool.get('stock.quant.package')
 
         op = record.operation_id
         domain = []
-        if op.package_id:
-            domain.append(('id', 'in', package_obj.get_content(cr, uid, [op.package_id.id], context=context)))
+        if op.package_id and op.product_id:
+            #if removing a product from a box, we restrict the choice of quants to this box
+            domain.append(('package_id', '=', op.package_id.id))
+        elif op.package_id:
+            #if moving a box, we allow to take everything from inside boxes as well
+            domain.append(('package_id', 'child_of', [op.package_id.id]))
+        else:
+            #if not given any information about package, we don't open boxes
+            domain.append(('package_id', '=', False))
+        #if lot info is given, we restrict choice to this lot otherwise we can take any
         if op.lot_id:
             domain.append(('lot_id', '=', op.lot_id.id))
+        #if owner info is given, we restrict to this owner otherwise we restrict to no owner
         if op.owner_id:
             domain.append(('owner_id', '=', op.owner_id.id))
         else:

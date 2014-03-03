@@ -22,12 +22,12 @@ class Website(orm.Model):
     # ***********************************************************
 
     def ecommerce_get_pricelist_id(self, cr, uid, ids, context=None):
-        if not request.httprequest.session.get('ecommerce_pricelist'):
+        if not request.session.get('ecommerce_pricelist'):
             self._ecommerce_change_pricelist(cr, uid, None, context=context)
-        return request.httprequest.session.get('ecommerce_pricelist')
+        return request.session.get('ecommerce_pricelist')
 
     def _ecommerce_change_pricelist(self, cr, uid, code=None, context=None):
-        request.httprequest.session.setdefault('ecommerce_pricelist', False)
+        request.session.setdefault('ecommerce_pricelist', False)
 
         pricelist_id = False
         if code:
@@ -40,7 +40,7 @@ class Website(orm.Model):
             partner_id = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context).partner_id.id
             pricelist_id = self.pool.get('sale.order').onchange_partner_id(cr, SUPERUSER_ID, [], partner_id, context=context)['value']['pricelist_id']
 
-        request.httprequest.session['ecommerce_pricelist'] = pricelist_id
+        request.session['ecommerce_pricelist'] = pricelist_id
 
         order = self.ecommerce_get_current_order(cr, uid, context=context)
         if order:
@@ -134,11 +134,11 @@ class Website(orm.Model):
         SaleOrder = self.pool.get('sale.order')
         fields = [k for k, v in SaleOrder._columns.items()]
         values = SaleOrder.default_get(cr, SUPERUSER_ID, fields, context=context)
-        if request.httprequest.session.get('ecommerce_pricelist'):
-            values['pricelist_id'] = request.httprequest.session['ecommerce_pricelist']
+        if request.session.get('ecommerce_pricelist'):
+            values['pricelist_id'] = request.session['ecommerce_pricelist']
         values['partner_id'] = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
         values.update(SaleOrder.onchange_partner_id(cr, SUPERUSER_ID, [], values['partner_id'], context=context)['value'])
-        values['website_session_id'] = request.httprequest.session['website_session_id']
+        values['website_session_id'] = request.session['website_session_id']
         return values
 
     def _ecommerce_create_quotation(self, cr, uid, context=None):
@@ -154,30 +154,30 @@ class Website(orm.Model):
         SaleOrder = self.pool.get('sale.order')
 
         # add website_session_id key for access rules
-        if not request.httprequest.session.get('website_session_id'):
-            request.httprequest.session['website_session_id'] = str(uuid.uuid4())
+        if not request.session.get('website_session_id'):
+            request.session['website_session_id'] = str(uuid.uuid4())
 
         order_id = self._ecommerce_create_quotation(cr, uid, context=context)
-        request.httprequest.session['ecommerce_order_id'] = order_id
+        request.session['ecommerce_order_id'] = order_id
         context = dict(context or {}, pricelist=self.ecommerce_get_pricelist_id(cr, uid, None, context=context))
         return SaleOrder.browse(cr, SUPERUSER_ID, order_id, context=context)
 
     def ecommerce_get_current_order(self, cr, uid, context=None):
         SaleOrder = self.pool.get('sale.order')
         context = dict(context or {}, pricelist=self.ecommerce_get_pricelist_id(cr, uid, None, context=context))
-        order_id = request.httprequest.session.get('ecommerce_order_id')
+        order_id = request.session.get('ecommerce_order_id')
         if not order_id:
-            request.httprequest.session['ecommerce_order_id'] = False
+            request.session['ecommerce_order_id'] = False
             return False
         if not order_id in SaleOrder.exists(cr, uid, [order_id], context=context):
-            request.httprequest.session['ecommerce_order_id'] = False
+            request.session['ecommerce_order_id'] = False
             return False
         try:
             order = SaleOrder.browse(cr, SUPERUSER_ID, order_id, context=context)
-            assert order.website_session_id == request.httprequest.session['website_session_id']
+            assert order.website_session_id == request.session['website_session_id']
             return order
         except:
-            request.httprequest.session['ecommerce_order_id'] = False
+            request.session['ecommerce_order_id'] = False
             return False
 
     # ************************************************************
@@ -193,15 +193,15 @@ class Website(orm.Model):
         return False
 
     def ecommerce_get_current_transaction(self, cr, uid, context=None):
-        if request.httprequest.session.get('website_sale_transaction_id'):
-            tx = self._get_transaction(cr, uid, tx_id=request.httprequest.session['website_sale_transaction_id'], context=context)
+        if request.session.get('website_sale_transaction_id'):
+            tx = self._get_transaction(cr, uid, tx_id=request.session['website_sale_transaction_id'], context=context)
             if not tx:
-                request.httprequest.session['website_sale_transaction_id'] = False
+                request.session['website_sale_transaction_id'] = False
             return tx
         return False
 
     def ecommerce_reset(self, cr, uid, context=None):
-        request.httprequest.session.update({
+        request.session.update({
             'ecommerce_order_id': False,
             'ecommerce_pricelist': False,
             'website_sale_transaction_id': False,
