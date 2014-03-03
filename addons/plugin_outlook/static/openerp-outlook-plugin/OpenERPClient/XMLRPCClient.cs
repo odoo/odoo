@@ -47,10 +47,6 @@ namespace OpenERPClient
         [XmlRpcMethod("server_version")]
         string ServerVersion();
 
-        [XmlRpcMethod("check_connectivity")]
-        bool check_connectivity();
-
-
     }
     public interface Ixmlrpcconnect : IOpenERPCommon, IOpenERPDB, IOpenERPObject
     {
@@ -83,11 +79,6 @@ namespace OpenERPClient
         public string ServerVersion()
         {
             return rpcclient.ServerVersion();
-        }
-
-        public bool check_connectivity()
-        {
-            return rpcclient.check_connectivity();
         }
         #endregion
 

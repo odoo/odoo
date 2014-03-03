@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.addons.mail.tests.common import TestMail
 
 
-class test_invite(TestMailBase):
+class test_invite(TestMail):
 
     def test_00_basic_invite(self):
         cr, uid = self.cr, self.uid

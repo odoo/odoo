@@ -23,7 +23,6 @@ import logging
 import os
 import tempfile
 import getpass
-import urllib
 
 import werkzeug.urls
 import werkzeug.exceptions
@@ -38,8 +37,8 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp.modules.registry import RegistryManager
 from openerp.addons.web.controllers.main import login_and_redirect, set_cookie_and_redirect
-import openerp.addons.web.http as http
-from openerp.addons.web.http import request
+import openerp.http as http
+from openerp.http import request
 
 from .. import utils
 
@@ -79,7 +78,7 @@ class GoogleAppsAwareConsumer(consumer.GenericConsumer):
                     # update fields
                     for attr in ['claimed_id', 'identity']:
                         value = message.getArg(consumer.OPENID2_NS, attr, '')
-                        value = 'https://www.google.com/accounts/o8/user-xrds?uri=%s' % urllib.quote_plus(value)
+                        value = 'https://www.google.com/accounts/o8/user-xrds?uri=%s' % werkzeug.url_quote_plus(value)
                         message.setArg(consumer.OPENID2_NS, attr, value)
 
                     # now, resign the message

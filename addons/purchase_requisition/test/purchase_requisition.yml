@@ -31,6 +31,11 @@
         assert line.product_uom_id.id == procurement.product_uom.id, "UOM is not correspond."
         assert line.product_qty == procurement.product_qty, "Quantity is not correspond."
 -
+  Give access rights of Purchase Requisition User to open requisition
+-
+  !context
+    uid: 'res_users_purchase_requisition_user'
+-
   I open another requisition.
 -
   !python {model: purchase.requisition}: |
@@ -79,13 +84,3 @@
   !python {model: purchase.requisition}: |
     requisition = self.browse(cr, uid, ref('requisition1'), context=context)
     requisition.state == 'done', "Requisition should be closed."
--
-  I print a Requisition report
-- 
-  !python {model: purchase.requisition}: |
-    import os
-    import openerp.report
-    from openerp import tools
-    data, format = openerp.report.render_report(cr, uid, [ref('purchase_requisition.requisition1')], 'purchase.requisition', {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'purchase_requisition-purchase_requisition_report.'+format), 'wb+').write(data)

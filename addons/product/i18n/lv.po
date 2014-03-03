@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:24+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2014-01-28 06:08+0000\n"
+"X-Generator: Launchpad (build 16914)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -123,6 +123,8 @@ msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
 msgstr ""
+"Preces Mērvienības %s konversija uz Noklusējuma Mērvienību %s nav iespējama, "
+"jo tās abas ietilpst dažādās Kategorijās!"
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -685,7 +687,7 @@ msgstr ""
 #. module: product
 #: field:product.product,qty_available:0
 msgid "Quantity On Hand"
-msgstr ""
+msgstr "Faktiskais Atlikums"
 
 #. module: product
 #: field:product.price.type,name:0
@@ -1305,7 +1307,7 @@ msgid "Supplier Info"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:729
+#: code:addons/product/product.py:732
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1359,6 +1361,8 @@ msgid ""
 "gives highest priority to lowest sequence and stops as soon as a matching "
 "item is found."
 msgstr ""
+"Nosaka secību, kādā tiks procesētas cenrāža rindas. Procesējot vispirms tiks "
+"ņemta rinda ar viszemāko secības vērtību. Atlikušās rindas netiks procesētas."
 
 #. module: product
 #: view:product.product:0
@@ -1531,7 +1535,7 @@ msgstr "Aktīvs"
 #. module: product
 #: field:product.product,price_margin:0
 msgid "Variant Price Margin"
-msgstr ""
+msgstr "Varianta Uzcenojums"
 
 #. module: product
 #: field:product.pricelist,name:0
@@ -1561,7 +1565,7 @@ msgstr "Iepakojuma vienības EAN kods."
 #. module: product
 #: help:product.supplierinfo,product_uom:0
 msgid "This comes from the product form."
-msgstr ""
+msgstr "No preces kartiņas"
 
 #. module: product
 #: field:product.packaging,weight_ul:0
@@ -1587,7 +1591,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:product.product_price_type_action
 #: model:ir.ui.menu,name:product.menu_product_price_type
 msgid "Price Types"
-msgstr ""
+msgstr "Cenu Veidi"
 
 #. module: product
 #: help:product.template,uom_id:0
@@ -1827,7 +1831,7 @@ msgstr "Citi Produkti"
 #. module: product
 #: model:product.template,description:product.product_product_9_product_template
 msgid "This product is configured with example of push/pull flows"
-msgstr ""
+msgstr "Prece ir kā Push/Pull darba plūsmas piemērs"
 
 #. module: product
 #: field:product.product,message_ids:0
@@ -1874,7 +1878,7 @@ msgstr ""
 #. module: product
 #: field:product.product,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Krāsas Indekss"
 
 #. module: product
 #: help:product.template,sale_ok:0
@@ -2071,7 +2075,7 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 msgid "Context..."
-msgstr ""
+msgstr "Konteksts..."
 
 #. module: product
 #: field:product.packaging,ul:0
@@ -2107,7 +2111,7 @@ msgstr ""
 #. module: product
 #: field:product.product,image:0
 msgid "Image"
-msgstr ""
+msgstr "Attēls"
 
 #. module: product
 #: view:product.uom.categ:0
@@ -2161,6 +2165,8 @@ msgid ""
 "At least one pricelist has no active version !\n"
 "Please create or activate one."
 msgstr ""
+"Vismaz vienam cenrādim nav aktīvas versijas!\n"
+"Lūdzu izveidot vai aktivizēt."
 
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
@@ -2266,7 +2272,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_assembly_product_template
 msgid "Assembly Service Cost"
-msgstr ""
+msgstr "Preču Salikšanas Izmaksas"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2364,7 +2370,7 @@ msgid "15” LCD Monitor"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:376
+#: code:addons/product/pricelist.py:379
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
@@ -2466,7 +2472,7 @@ msgstr ""
 #. module: product
 #: constraint:product.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "Kļūda! Nevar veidot rekursīvas kategorijas."
 
 #. module: product
 #: help:product.product,image_medium:0
@@ -3184,3 +3190,119 @@ msgstr "Cenas atlaide"
 
 #~ msgid "Reference"
 #~ msgstr "Artikuls (Kods)"
+
+#~ msgid "Dozen"
+#~ msgstr "Ducis"
+
+#~ msgid "Service on Timesheet"
+#~ msgstr "Pakalpojums bāzēts uz Darba laika uzskaites Tabelēm"
+
+#, python-format
+#~ msgid "Cannot change the category of existing UoM '%s'."
+#~ msgstr "Nevar mainīt mērvienības \"%s\" kategoriju."
+
+#~ msgid "Product UoS View"
+#~ msgstr "Preces skatījums pārdošanas mērvienībā"
+
+#~ msgid "Wooden Table"
+#~ msgstr "Koka Galds"
+
+#~ msgid "Cabinet"
+#~ msgstr "Plaukts"
+
+#~ msgid "unknown"
+#~ msgstr "nezināms"
+
+#~ msgid "Quantity Available"
+#~ msgstr "Pieejamais Skaits"
+
+#~ msgid "Wood 10mm"
+#~ msgstr "Koks 10mm"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Brīdinājums"
+
+#~ msgid "Assembly Service"
+#~ msgstr "Preču Salikšana"
+
+#~ msgid "t"
+#~ msgstr "t"
+
+#~ msgid "Shelf Panel"
+#~ msgstr "Plaukts"
+
+#~ msgid "UoM Categories"
+#~ msgstr "Mērv. Kategorijas"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "Kļūda! Nevar izveidot rekursīvus saistītos locekļus."
+
+#~ msgid ""
+#~ "Create a product form for everything you buy or sell. Specify a supplier if "
+#~ "the product can be purchased."
+#~ msgstr ""
+#~ "Izveidot preces kartiņu visam, ko pērk vai pārdod. Norādīt piegādātāju, ja "
+#~ "prece var tikt nopirkta."
+
+#~ msgid ""
+#~ "Product's cost for accounting stock valuation. It is the base price for the "
+#~ "supplier price."
+#~ msgstr ""
+#~ "Preces pašizmaksa finanšu uzskaites nolūkiem. Tā ir faktiskā iepirkumu cena "
+#~ "bez PVN."
+
+#, python-format
+#~ msgid "UoM categories Mismatch!"
+#~ msgstr "Mērvienību kategorijas nesakrīt!"
+
+#~ msgid "Both stockable and consumable products"
+#~ msgstr "Gan noliktavas, gan patērējamā prece."
+
+#~ msgid ""
+#~ "Determine if the product is visible in the list of products within a "
+#~ "selection from a purchase order line."
+#~ msgstr "Nosaka, vai prece būs redzama sarakstā, veidojot iepirkumu."
+
+#~ msgid ""
+#~ "Will change the way procurements are processed. Consumable are product where "
+#~ "you don't manage stock."
+#~ msgstr ""
+#~ "Nosaka iepirkumu automātiskās pasūtīšanas veidu. Patērējamā prece ir fiziska "
+#~ "prece, kurai sistēma nekontrolē atlikumus."
+
+#~ msgid ""
+#~ "Create and manage the units of measure categories you want to be used in "
+#~ "your system. If several units of measure are in the same category, they can "
+#~ "be converted to each other. For example, in the unit of measure category "
+#~ "\"Time\", you will have the following UoM: Hours, Days."
+#~ msgstr ""
+#~ "Veidot un pārvaldīt sistēmas mērvienību kategorijas. Ja vienā kategorijā "
+#~ "ietilpst vairākas mērvienības, tās var tikt konvertētas viena par otru."
+
+#~ msgid ""
+#~ "Create and manage the units of measure you want to be used in your system. "
+#~ "You can define a conversion rate between several Units of Measure within the "
+#~ "same category."
+#~ msgstr ""
+#~ "Veidot un pārvaldīt sistēmas mērvienības. Var definēt konvertācijas "
+#~ "attiecību dažādām mērvienībām, kas ietilpst vienā kategorijā."
+
+#~ msgid ""
+#~ "Standard Price: the cost price is fixed and recomputed periodically (usually "
+#~ "at the end of the year), Average Price: the cost price is recomputed at each "
+#~ "reception of products."
+#~ msgstr ""
+#~ "Iepirkuma cena: preces pašizmaksa, kas ir fiksēta cena periodiskās "
+#~ "inventarizācijas metodes gadījumā vai tiek automātiski pārrēķināta preces "
+#~ "saņemšanas brīdī, ja tiek izmantota nepārtrauktās inventarizācijas metode."
+
+#~ msgid ""
+#~ "Produce will generate production order or tasks, according to the product "
+#~ "type. Buy will trigger purchase orders when requested."
+#~ msgstr ""
+#~ "\"Ražot\" ģenerēs ražošanas pasūtījumu vai uzdevumus projektu vadībā, "
+#~ "atkarībā no produktu tipa. \"Pirkt\" ģenerēs iepirkumus pēc pieprasījuma."
+
+#~ msgid "Create or Import Products"
+#~ msgstr "Veidot vai Importēt Preces"

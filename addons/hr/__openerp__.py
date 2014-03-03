@@ -54,7 +54,6 @@ You can manage:
         'security/ir.model.access.csv',
         'board_hr_view.xml',
         'hr_view.xml',
-        'hr_department_view.xml',
         'process/hr_process.xml',
         'hr_installer.xml',
         'hr_data.xml',
@@ -64,6 +63,7 @@ You can manage:
     ],
     'demo': ['hr_demo.xml'],
     'test': [
+        'test/hr_users.yml',
         'test/open2recruit2close_job.yml',
         'test/hr_demo.yml',
     ],

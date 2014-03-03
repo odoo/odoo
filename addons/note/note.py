@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools import html2plaintext
 
@@ -71,12 +72,6 @@ class note_note(osv.osv):
     def onclick_note_not_done(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'open': True}, context=context)
 
-    #used for undisplay the follower if it's the current user
-    def _get_my_current_partner(self, cr, uid, ids, name, args, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        pid = user.partner_id and user.partner_id.id or False
-        return dict.fromkeys(ids, pid)
-
     #return the default stage for the uid user
     def _get_default_stage_id(self,cr,uid,context=None):
         ids = self.pool.get('note.stage').search(cr,uid,[('user_id','=',uid)], context=context)
@@ -100,6 +95,7 @@ class note_note(osv.osv):
         'name': fields.function(_get_note_first_line, 
             string='Note Summary', 
             type='text', store=True),
+        'user_id': fields.many2one('res.users', 'Owner'),
         'memo': fields.html('Note Content'),
         'sequence': fields.integer('Sequence'),
         'stage_id': fields.function(_get_stage_per_user, 
@@ -112,9 +108,9 @@ class note_note(osv.osv):
         'date_done': fields.date('Date done'),
         'color': fields.integer('Color Index'),
         'tag_ids' : fields.many2many('note.tag','note_tags_rel','note_id','tag_id','Tags'),
-        'current_partner_id' : fields.function(_get_my_current_partner, type="many2one", relation='res.partner', string="Owner"),
     }
     _defaults = {
+        'user_id': lambda self, cr, uid, ctx=None: uid,
         'open' : 1,
         'stage_id' : _get_default_stage_id,
     }
@@ -146,6 +142,7 @@ class note_note(osv.osv):
                     if result and result[0]['stage_id'][0] == current_stage_ids[0]:
                         dom_in = result[0]['__domain'].pop()
                         result[0]['__domain'] = domain + ['|', dom_in, dom_not_in]
+                        result[0]['stage_id_count'] += nb_notes_ws
                     else:
                         # add the first stage column
                         result = [{
@@ -188,18 +185,15 @@ class res_users(osv.Model):
     _inherit = ['res.users']
     def create(self, cr, uid, data, context=None):
         user_id = super(res_users, self).create(cr, uid, data, context=context)
-        user = self.browse(cr, uid, uid, context=context)
-        note_obj = self.pool.get('note.stage')
-        data_obj = self.pool.get('ir.model.data')
-        model_id = data_obj.get_object_reference(cr, uid, 'base', 'group_user') #Employee Group
-        group_id = model_id and model_id[1] or False
-        if group_id in [x.id for x in user.groups_id]:
-            for note_xml_id in ['note_stage_00','note_stage_01','note_stage_02','note_stage_03','note_stage_04']:
+        note_obj = self.pool['note.stage']
+        data_obj = self.pool['ir.model.data']
+        is_employee = self.has_group(cr, user_id, 'base.group_user')
+        if is_employee:
+            for n in range(5):
+                xmlid = 'note_stage_%02d' % (n,)
                 try:
-                    data_id = data_obj._get_id(cr, uid, 'note', note_xml_id)
+                    _model, stage_id = data_obj.get_object_reference(cr, SUPERUSER_ID, 'note', xmlid)
                 except ValueError:
                     continue
-                stage_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
-                note_obj.copy(cr, uid, stage_id, default = { 
-                                        'user_id': user_id}, context=context)
+                note_obj.copy(cr, SUPERUSER_ID, stage_id, default={'user_id': user_id}, context=context)
         return user_id

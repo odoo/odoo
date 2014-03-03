@@ -11,7 +11,7 @@
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <field name="partner_id" string="Supplier" filter_domain="[('partner_id','child_of',self)]"/>
-                    <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('purchase','purchase_refund'))]"/>
+                    <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('purchase','purchase_refund'))]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <field name="period_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -33,7 +33,7 @@
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <field name="partner_id" string="Customer" filter_domain="[('partner_id','child_of',self)]"/>
-                    <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('sale','sale_refund'))]"/>
+                    <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('sale','sale_refund'))]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <field name="period_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -73,8 +73,14 @@
                     <group>
                         <group>
                             <field name="type" invisible="True"/>
-                            <field name="partner_id" domain="[('customer','=',True)]" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="partner_id" domain="[('customer','=',True)]" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
+                            <field name="account_id"
+                                  domain="[('type','in', ['liquidity', 'receivable'])]"/>
+                            <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id)" required="1"/>
+                            <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
+                            <field name="reference"
+                                 attrs="{'invisible':[('pay_now','!=','pay_now')]}"/>
                         </group>
                         <group>
                             <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id, date, amount, type, company_id, context)" groups="account.group_account_user"/>
@@ -112,15 +118,6 @@
 			                        </div>
                                     <field name="amount" class="oe_subtotal_footer_separator" nolabel="1"/>
                                 </group>                                    
-			                    <group>
-                                    <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id)" required="1"/>
-                                    <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
-                                    <field name="account_id"
-                                         attrs="{'invisible':[('pay_now','!=','pay_now')]}"
-                                          domain="[('type','=','liquidity')]"/>
-                                    <field name="reference"
-                                         attrs="{'invisible':[('pay_now','!=','pay_now')]}"/>
-                                </group>
 			                </group>
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
@@ -224,11 +221,11 @@
                     <h1><label for="number" string="Purchase Receipt"/> <field name="number" class="oe_inline" readonly="1"/></h1>
 
                     <field name="pay_now" invisible="1"/>
-                    <field name="account_id" domain="[('type','=','other')]"  invisible="True"/>
                     <field name="type" invisible="True"/>
                     <group>
                         <group>
                             <field name="partner_id" domain="[('supplier','=',True)]" string="Supplier" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" />
+                            <field name="account_id" domain="[('type', 'in', ['liquidity', 'payable'])]"/>
                             <field name="name" colspan="2"/>
                             <field name="reference"/>
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>

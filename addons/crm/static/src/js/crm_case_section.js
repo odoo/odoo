@@ -1,4 +1,40 @@
 openerp.crm = function(openerp) {
+    openerp.web_kanban.KanbanView.include({
+        crm_display_members_names: function() {
+            /*
+             * Set avatar title for members.
+             * In kanban views, many2many fields only return a list of ids.
+             * We can implement return value of m2m fields like [(1,"Adminstration"),...].
+             */
+            var self = this;
+            var members_ids = [];
+
+            // Collect members ids
+            self.$el.find('img[data-member_id]').each(function() {
+                members_ids.push($(this).data('member_id'));
+            });
+
+            // Find their matching names
+            var dataset = new openerp.web.DataSetSearch(self, 'res.users', self.session.context, [['id', 'in', _.uniq(members_ids)]]);
+            dataset.read_slice(['id', 'name']).done(function(result) {
+                _.each(result, function(v, k) {
+                    // Set the proper value in the DOM
+                    self.$el.find('img[data-member_id=' + v.id + ']').attr('title', v.name).tipsy({
+                        offset: 10
+                    });
+                });
+            });
+        },
+        on_groups_started: function() {
+            var self = this;
+            self._super.apply(self, arguments);
+
+            if (self.dataset.model === 'crm.case.section') {
+                self.crm_display_members_names();
+            }
+        },
+    });
+
     openerp.web_kanban.KanbanRecord.include({
         on_card_clicked: function() {
             if (this.view.dataset.model === 'crm.case.section') {
@@ -8,27 +44,4 @@ openerp.crm = function(openerp) {
             }
         },
     });
-
-    openerp.crm.SparklineBarWidget = openerp.web_kanban.AbstractField.extend({
-        className: "oe_sparkline_bar",
-        start: function() {
-            var self = this;
-            var title = this.$node.html();
-            setTimeout(function () {
-                var value = _.pluck(self.field.value, 'value');
-                var tooltips = _.pluck(self.field.value, 'tooltip');
-                self.$el.sparkline(value, {
-                    type: 'bar',
-                    barWidth: 5,
-                    tooltipFormat: '{{offset:offset}} {{value}}',
-                    tooltipValueLookups: {
-                        'offset': tooltips
-                    },
-                });
-                self.$el.tipsy({'delayIn': 0, 'html': true, 'title': function(){return title}, 'gravity': 'n'});
-            }, 0);
-        },
-    });
-    openerp.web_kanban.fields_registry.add("sparkline_bar", "openerp.crm.SparklineBarWidget");
-
 };

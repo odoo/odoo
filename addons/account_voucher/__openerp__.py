@@ -61,6 +61,7 @@ This module manages:
         'account_voucher_data.xml',
     ],
     'test' : [
+        'test/account_voucher_users.yml',
         'test/case5_suppl_usd_usd.yml',
         'test/account_voucher.yml',
         'test/sales_receipt.yml',

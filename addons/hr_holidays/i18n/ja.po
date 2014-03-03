@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:30+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2014-01-28 06:14+0000\n"
+"X-Generator: Launchpad (build 16914)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -33,7 +33,7 @@ msgid "Waiting Second Approval"
 msgstr "2番目の承認待ち"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:298
+#: code:addons/hr_holidays/hr_holidays.py:309
 #, python-format
 msgid ""
 "You cannot modify a leave request that has been approved. Contact a human "
@@ -75,7 +75,7 @@ msgstr "部門"
 #: model:ir.actions.act_window,name:hr_holidays.request_approve_allocation
 #: model:ir.ui.menu,name:hr_holidays.menu_request_approve_allocation
 msgid "Allocation Requests to Approve"
-msgstr ""
+msgstr "割当申請承認"
 
 #. module: hr_holidays
 #: help:hr.holidays,category_id:0
@@ -156,7 +156,7 @@ msgstr ""
 #: selection:hr.holidays.summary.employee,holiday_type:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_approved
 msgid "Approved"
-msgstr "承認済み"
+msgstr "承認済"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -200,7 +200,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_request_approve_holidays
 msgid "Leave Requests to Approve"
-msgstr "休暇申請の承認"
+msgstr "休暇申請承認"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.dept:0
@@ -270,12 +270,12 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:238
 #: code:addons/hr_holidays/hr_holidays.py:249
-#: code:addons/hr_holidays/hr_holidays.py:274
-#: code:addons/hr_holidays/hr_holidays.py:298
-#: code:addons/hr_holidays/hr_holidays.py:421
-#: code:addons/hr_holidays/hr_holidays.py:471
+#: code:addons/hr_holidays/hr_holidays.py:260
+#: code:addons/hr_holidays/hr_holidays.py:285
+#: code:addons/hr_holidays/hr_holidays.py:309
+#: code:addons/hr_holidays/hr_holidays.py:432
+#: code:addons/hr_holidays/hr_holidays.py:482
 #, python-format
 msgid "Warning!"
 msgstr "警告"
@@ -313,7 +313,7 @@ msgid "Sick Leaves"
 msgstr "病欠"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:478
+#: code:addons/hr_holidays/hr_holidays.py:489
 #, python-format
 msgid "Leave Request for %s"
 msgstr "%s の休暇申請"
@@ -384,7 +384,7 @@ msgid "Wheat"
 msgstr "小麦色"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:476
+#: code:addons/hr_holidays/hr_holidays.py:487
 #, python-format
 msgid "Allocation for %s"
 msgstr "%s の割当て"
@@ -408,7 +408,7 @@ msgid "Number of Days"
 msgstr "日数"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:471
+#: code:addons/hr_holidays/hr_holidays.py:482
 #, python-format
 msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when "
@@ -513,7 +513,7 @@ msgid "Start Date"
 msgstr "開始日"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:421
+#: code:addons/hr_holidays/hr_holidays.py:432
 #, python-format
 msgid ""
 "There are not enough %s allocated for employee %s; please create an "
@@ -616,7 +616,7 @@ msgstr ""
 #: view:hr.holidays:0
 #: field:hr.holidays,state:0
 msgid "Status"
-msgstr ""
+msgstr "ステータス"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -684,7 +684,7 @@ msgstr "未払い"
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
 #: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
 msgid "Leaves Summary"
-msgstr "休暇の要約"
+msgstr "休暇状況サマリ"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -761,7 +761,7 @@ msgid "Validated"
 msgstr "承諾済み"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:238
+#: code:addons/hr_holidays/hr_holidays.py:249
 #, python-format
 msgid "You cannot delete a leave which is in %s state."
 msgstr ""
@@ -770,7 +770,7 @@ msgstr ""
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 msgid "Allocation Request"
-msgstr "割当て申請"
+msgstr "割当申請"
 
 #. module: hr_holidays
 #: help:hr.holidays,holiday_type:0
@@ -812,7 +812,7 @@ msgstr "詳細"
 #: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_leaves_by_month
 msgid "My Leaves"
-msgstr "私の休暇"
+msgstr "自分の休暇"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.dept,depts:0
@@ -825,7 +825,7 @@ msgid "To Submit"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:343
+#: code:addons/hr_holidays/hr_holidays.py:354
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 #: field:resource.calendar.leaves,holiday_id:0
@@ -922,8 +922,8 @@ msgid "Messages and communication history"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:249
-#: code:addons/hr_holidays/hr_holidays.py:274
+#: code:addons/hr_holidays/hr_holidays.py:260
+#: code:addons/hr_holidays/hr_holidays.py:285
 #: sql_constraint:hr.holidays:0
 #, python-format
 msgid "The start date must be anterior to the end date."
@@ -946,7 +946,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"
-msgstr "割当て申請"
+msgstr "割当申請"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -996,7 +996,7 @@ msgstr ""
 #: selection:hr.holidays,state:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_confirmed
 msgid "To Approve"
-msgstr "承認する"
+msgstr "未承認"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_holidays_approved

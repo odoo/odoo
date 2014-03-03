@@ -114,7 +114,7 @@ class account_invoice(osv.osv):
                             #we check if the invoice is partially reconciled and if there are other invoices
                             #involved in this partial reconciliation (and we sum these invoices)
                             for line in aml.reconcile_partial_id.line_partial_ids:
-                                if line.invoice:
+                                if line.invoice and invoice.type == line.invoice.type:
                                     nb_inv_in_partial_rec += 1
                                     #store the max invoice id as for this invoice we will make a balance instead of a simple division
                                     max_invoice_id = max(max_invoice_id, line.invoice.id)
@@ -1431,6 +1431,7 @@ class account_invoice_line(osv.osv):
 
     _name = "account.invoice.line"
     _description = "Invoice Line"
+    _order = "invoice_id,sequence,id"
     _columns = {
         'name': fields.text('Description', required=True),
         'origin': fields.char('Source Document', size=256, help="Reference of the document that produced this invoice."),
@@ -1467,6 +1468,7 @@ class account_invoice_line(osv.osv):
         'discount': 0.0,
         'price_unit': _price_unit_default,
         'account_id': _default_account_id,
+        'sequence': 10,
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):

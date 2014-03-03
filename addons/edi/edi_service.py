@@ -53,7 +53,6 @@ def exp_import_edi_document(db_name, uid, passwd, edi_document, context=None):
 def exp_import_edi_url(db_name, uid, passwd, edi_url, context=None):
     return _edi_dispatch(db_name, 'import_edi', uid, None, edi_url)
 
-@openerp.http.rpc('edi')
 def dispatch(method, params):
     if method in ['import_edi_document',  'import_edi_url']:
         (db, uid, passwd) = params[0:3]
@@ -62,5 +61,7 @@ def dispatch(method, params):
         raise KeyError("Method not found: %s." % method)
     fn = globals()['exp_' + method]
     return fn(*params)
+
+openerp.service.wsgi_server.register_rpc_endpoint('edi', dispatch)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -50,13 +50,15 @@ The following topics should be covered by this module:
         'mrp_repair_view.xml',
         'mrp_repair_workflow.xml',
         'mrp_repair_report.xml',
+
+        'views/report_mrprepairorder.xml',
     ],
     'demo': ['mrp_repair_demo.yml'],
-    'test': ['test/test_mrp_repair_noneinv.yml',
+    'test': ['test/mrp_repair_users.yml',
+             'test/test_mrp_repair_noneinv.yml',
              'test/test_mrp_repair_b4inv.yml',
              'test/test_mrp_repair_afterinv.yml',
              'test/test_mrp_repair_cancel.yml',
-             'test/mrp_repair_report.yml'
     ],
     'installable': True,
     'auto_install': False,

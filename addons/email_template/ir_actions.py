@@ -33,47 +33,44 @@ class actions_server(osv.Model):
         return res
 
     _columns = {
-        'email_from': fields.char('From',
-                                  help="Sender address; define the template to see its value. If not set, the default "
-                                  "value will be the author's email alias if configured, or email address."),
-        'email_to': fields.char('To (Emails)',
-                                help="Comma-separated recipient addresses; define the template to see its value"),
-        'partner_to': fields.char('To (Partners)',
-                                  help="Comma-separated ids of recipient partners; define the template to see its value"),
-        'subject': fields.char('Subject',
-                               help="Email subject; define the template to see its value"),
-        'body_html': fields.text('Body',
-                                 help="Rich-text/HTML version of the message; define the template to see its value"),
-        'template_id': fields.many2one('email.template', 'Email Template', ondelete='set null',
-                                       help="Define the email template to use for the email to send.")
+        'email_from': fields.related(
+            'template_id', 'email_from', type='char',
+            readonly=True, string='From'
+        ),
+        'email_to': fields.related(
+            'template_id', 'email_to', type='char',
+            readonly=True, string='To (Emails)'
+        ),
+        'partner_to': fields.related(
+            'template_id', 'partner_to', type='char',
+            readonly=True, string='To (Partners)'
+        ),
+        'subject': fields.related(
+            'template_id', 'subject', type='char',
+            readonly=True, string='Subject'
+        ),
+        'body_html': fields.related(
+            'template_id', 'body_html', type='text',
+            readonly=True, string='Body'
+        ),
+        'template_id': fields.many2one(
+            'email.template', 'Email Template', ondelete='set null',
+            domain="[('model_id', '=', model_id)]",
+        ),
     }
 
     def on_change_template_id(self, cr, uid, ids, template_id, context=None):
         """ Render the raw template in the server action fields. """
+        fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to']
         if template_id:
-            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids']
             template_values = self.pool.get('email.template').read(cr, uid, template_id, fields, context)
             values = dict((field, template_values[field]) for field in fields if template_values.get(field))
             if not values.get('email_from'):
                 return {'warning': {'title': 'Incomplete template', 'message': 'Your template should define email_from'}, 'value': values}
         else:
-            values = self.default_get(cr, uid, ['subject', 'body_html', 'email_from', 'email_to', 'partner_to'], context=context)
+            values = dict.fromkeys(fields, False)
 
         return {'value': values}
-
-    def create(self, cr, uid, values, context=None):
-        if values.get('template_id'):
-            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids']
-            template_values = self.pool.get('email.template').read(cr, uid, values.get('template_id'), fields, context)
-            values.update(dict((field, template_values[field]) for field in fields if template_values.get(field)))
-        return super(actions_server, self).create(cr, uid, values, context=context)
-
-    def write(self, cr, uid, ids, values, context=None):
-        if values.get('template_id'):
-            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids']
-            template_values = self.pool.get('email.template').read(cr, uid, values.get('template_id'), fields, context)
-            values.update(dict((field, template_values[field]) for field in fields if template_values.get(field)))
-        return super(actions_server, self).write(cr, uid, ids, values, context=context)
 
     def run_action_email(self, cr, uid, action, eval_context=None, context=None):
         if not action.template_id or not context.get('active_id'):

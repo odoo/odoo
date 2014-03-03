@@ -18,19 +18,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import datetime
+import json
+import logging
+import select
+import time
 
 import openerp
 import openerp.tools.config
 import openerp.modules.registry
-import openerp.addons.web.http as http
-from openerp.addons.web.http import request
+from openerp import http
+from openerp.http import request
+from openerp.osv import osv, fields, expression
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
-import datetime
-from openerp.osv import osv, fields
-import time
-import logging
-import json
-import select
 
 _logger = logging.getLogger(__name__)
 
@@ -169,7 +169,7 @@ class im_message(osv.osv):
 
         # how fun it is to always need to reorder results from read
         mess_ids = self.search(cr, openerp.SUPERUSER_ID, ["&", ['id', '>', last], "|", ['from_id', '=', my_id], ['to_id', 'in', [my_id]]], order="id", context=context)
-        mess = self.read(cr, openerp.SUPERUSER_ID, mess_ids, ["id", "message", "from_id", "session_id", "date"], context=context)
+        mess = self.read(cr, openerp.SUPERUSER_ID, mess_ids, ["id", "message", "from_id", "session_id", "date", "technical"], context=context)
         index = {}
         for i in xrange(len(mess)):
             index[mess[i]["id"]] = mess[i]
@@ -182,12 +182,13 @@ class im_message(osv.osv):
         users_status = users.read(cr, openerp.SUPERUSER_ID, users_watch, ["im_status"], context=context)
         return {"res": mess, "last": last, "dbname": cr.dbname, "users_status": users_status}
 
-    def post(self, cr, uid, message, to_session_id, uuid=None, context=None):
+    def post(self, cr, uid, message, to_session_id, technical=False, uuid=None, context=None):
         assert_uuid(uuid)
         my_id = self.pool.get('im.user').get_my_id(cr, uid, uuid)
-        session = self.pool.get('im.session').browse(cr, uid, to_session_id, context)
-        to_ids = [x.id for x in session.user_ids if x.id != my_id]
-        self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from_id': my_id, 'to_id': [(6, 0, to_ids)], 'session_id': to_session_id}, context=context)
+        session_user_ids = self.pool.get('im.session').get_session_users(cr, uid, to_session_id, context=context).get("user_ids", [])
+        to_ids = [user_id for user_id in session_user_ids if user_id != my_id]
+        self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from_id': my_id,
+            'to_id': [(6, 0, to_ids)], 'session_id': to_session_id, 'technical': technical}, context=context)
         notify_channel(cr, "im_channel", {'type': 'message', 'receivers': [my_id] + to_ids})
         return False
 
@@ -201,26 +202,42 @@ class im_session(osv.osv):
         return res
 
     _columns = {
-        'user_ids': fields.many2many('im.user'),
+        'user_ids': fields.many2many('im.user', 'im_session_im_user_rel', 'im_session_id', 'im_user_id', 'Users'),
         "name": fields.function(_calc_name, string="Name", type='char'),
     }
 
     # Todo: reuse existing sessions if possible
-    def session_get(self, cr, uid, user_to, uuid=None, context=None):
+    def session_get(self, cr, uid, users_to, uuid=None, context=None):
         my_id = self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
+        users = [my_id] + users_to
+        domain = []
+        for user_to in users:
+            domain.append(('user_ids', 'in', [user_to]))
+        sids = self.search(cr, openerp.SUPERUSER_ID, domain, context=context, limit=1)
         session_id = None
-        if user_to:
-            # FP Note: does the ORM allows something better than this? == on many2many
-            sids = self.search(cr, openerp.SUPERUSER_ID, [('user_ids', 'in', [user_to]), ('user_ids', 'in', [my_id])], context=context, limit=1)
-            for session in self.browse(cr, uid, sids, context=context):
-                if len(session.user_ids) == 2:
-                    session_id = session.id
-                    break
+        for session in self.browse(cr, uid, sids, context=context):
+            if len(session.user_ids) == len(users):
+                session_id = session.id
+                break
         if not session_id:
             session_id = self.create(cr, openerp.SUPERUSER_ID, {
-                'user_ids': [(6, 0, [user_to, my_id])]
+                'user_ids': [(6, 0, users)]
             }, context=context)
         return self.read(cr, uid, session_id, context=context)
+
+    def get_session_users(self, cr, uid, session_id, context=None):
+        return self.read(cr, openerp.SUPERUSER_ID, session_id, ['user_ids'], context=context)
+
+    def add_to_session(self, cr, uid, session_id, user_id, uuid=None, context=None):
+        my_id = self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
+        session = self.read(cr, uid, session_id, context=context)
+        if my_id not in session.get("user_ids"):
+            raise Exception("Not allowed to modify a session when you are not in it.")
+        self.write(cr, uid, session_id, {"user_ids": [(4, user_id)]}, context=context)
+
+    def remove_me_from_session(self, cr, uid, session_id, uuid=None, context=None):
+        my_id = self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
+        self.write(cr, openerp.SUPERUSER_ID, session_id, {"user_ids": [(3, my_id)]}, context=context)
 
 class im_user(osv.osv):
     _name = "im.user"
@@ -235,11 +252,31 @@ class im_user(osv.osv):
             res[obj["id"]] = obj["im_last_status"] and (last_update + delta) > current
         return res
 
+    def _status_search(self, cr, uid, obj, name, domain, context=None):
+        current = datetime.datetime.now()
+        delta = datetime.timedelta(0, DISCONNECTION_TIMER)
+        field, operator, value = domain[0]
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            value = not value
+        if value:
+            return ['&', ('im_last_status', '=', True), ('im_last_status_update', '>', (current - delta).strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
+        else:
+            return ['|', ('im_last_status', '=', False), ('im_last_status_update', '<=', (current - delta).strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
+    # TODO: Remove fields arg in trunk. Also in im.js.
     def search_users(self, cr, uid, text_search, fields, limit, context=None):
         my_id = self.get_my_id(cr, uid, None, context)
-        found = self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False]],
+        group_employee = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')[1]
+        found = self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False], ["im_status", "=", True], ["user_id.groups_id", "in", [group_employee]]],
             order="name asc", limit=limit, context=context)
-        return self.read(cr, uid, found, fields, context=context)
+        if len(found) < limit:
+            found += self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False], ["im_status", "=", True], ["id", "not in", found]],
+                order="name asc", limit=limit, context=context)
+        if len(found) < limit:
+            found += self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False], ["im_status", "=", False], ["id", "not in", found]],
+                order="name asc", limit=limit-len(found), context=context)
+        users = self.read(cr,openerp.SUPERUSER_ID, found, ["name", "user_id", "uuid", "im_status"], context=context)
+        users.sort(key=lambda obj: found.index(obj['id']))
+        return users
 
     def im_connect(self, cr, uid, uuid=None, context=None):
         assert_uuid(uuid)
@@ -285,16 +322,19 @@ class im_user(osv.osv):
                 continue
         return res
 
+    def get_users(self, cr, uid, ids, context=None):
+        return self.read(cr,openerp.SUPERUSER_ID, ids, ["name", "im_status", "uuid"], context=context)
+
     _columns = {
         'name': fields.function(_get_name, type='char', size=200, string="Name", store=True, readonly=True),
         'assigned_name': fields.char(string="Assigned Name", size=200, required=False),
         'image': fields.related('user_id', 'image_small', type='binary', string="Image", readonly=True),
-        'user_id': fields.many2one("res.users", string="User", select=True, ondelete='cascade'),
+        'user_id': fields.many2one("res.users", string="User", select=True, ondelete='cascade', oldname='user'),
         'uuid': fields.char(string="UUID", size=50, select=True),
         'im_last_received': fields.integer(string="Instant Messaging Last Received Message"),
         'im_last_status': fields.boolean(strint="Instant Messaging Last Status"),
         'im_last_status_update': fields.datetime(string="Instant Messaging Last Status Update"),
-        'im_status': fields.function(_im_status, string="Instant Messaging Status", type='boolean'),
+        'im_status': fields.function(_im_status, string="Instant Messaging Status", type='boolean', fnct_search=_status_search),
     }
 
     _defaults = {
@@ -307,3 +347,16 @@ class im_user(osv.osv):
         ('user_uniq', 'unique (user_id)', 'Only one chat user per OpenERP user.'),
         ('uuid_uniq', 'unique (uuid)', 'Chat identifier already used.'),
     ]
+
+class res_users(osv.osv):
+    _inherit = "res.users"
+
+    def _get_im_user(self, cr, uid, ids, field_name, arg, context=None):
+        result = dict.fromkeys(ids, False)
+        for index, im_user in enumerate(self.pool['im.user'].search_read(cr, uid, domain=[('user_id', 'in', ids)], fields=['name', 'user_id'], context=context)):
+            result[ids[index]] = im_user.get('user_id') and (im_user['user_id'][0], im_user['name']) or False
+        return result
+
+    _columns = {
+        'im_user_id' : fields.function(_get_im_user, type='many2one', string="IM User", relation="im.user"),
+    }

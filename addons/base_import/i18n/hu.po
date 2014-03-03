@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-29 04:36+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2014-01-28 06:40+0000\n"
+"X-Generator: Launchpad (build 16914)\n"
 
 #. module: base_import
 #. openerp-web
@@ -1211,6 +1211,18 @@ msgid ""
 "                        take care of creating or modifying each record \n"
 "                        depending if it's new or not."
 msgstr ""
+"Ha egy fájlt importál ami tartalmaz egyet a következő \n"
+"                        oszlopból \"Külső ID\" vagy \"Adatbázis ID\", akkor "
+"a már \n"
+"                        importált rekord módosítva lesz annak újra "
+"létrehozása\n"
+"                        helyett. Ez nagyon hasznos mivel többszöri "
+"importálást \n"
+"                        is lehetővé tesz ugyanarra a CSV fájlra két "
+"importálás\n"
+"                        közti egy kis módosítás után. OpenERP gondoskodik \n"
+"                        a rekordok módosításról vagy létrehozásról attól\n"
+"                        függően, hogy az új vagy nem."
 
 #. module: base_import
 #. openerp-web
@@ -1267,6 +1279,13 @@ msgid ""
 "\n"
 "                        the fields relative to the order."
 msgstr ""
+"Ha be akar importálni megrendelést, mely több sort \n"
+"                        tartalmaz; akkor mindegyik megrendelési sornak, \n"
+"                        egy oszlopot kell hagyni a CSV fájlban. Az első\n"
+"                        megrendelés sorba az első oszlop adatai \n"
+"                        lesznek importálva. Minden további sor további \n"
+"                        oszlopot igényel, ahol a megrendelés információi \n"
+"                        függnek a hozzárendelt oszlopoktól."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
@@ -1319,6 +1338,12 @@ msgid ""
 "                        to the first company). You must first import the \n"
 "                        companies and then the persons."
 msgstr ""
+"A két létrehozott fájl az OpenERP-be való importálásra \n"
+"                        kész módosítás nélkül. Miután importálta ezeket \n"
+"                        a CSV fájlokat, 4 kapcsolata és \n"
+"                        3 vállalata lesz. (az első két kapcsolat az első \n"
+"                        vállalathoz kapcsolódik). Először a vállalatot \n"
+"                        kell importálni aztán a személyeket."
 
 #. module: base_import
 #. openerp-web
@@ -1332,6 +1357,14 @@ msgid ""
 "                        (displayed under the Browse CSV file bar after you \n"
 "                        select your file)."
 msgstr ""
+"Alapértelmezetten az importálás előnézetben a vesszők mint mező \n"
+"                        elválasztók és a kérdőjelek mint szöveg határolók \n"
+"                        szerepelnek. Ha a csv fájlnak nincsenek meg ezek a  "
+"\n"
+"                        beállításai, akkor módosíthatja a fájl formátum "
+"lehetőségekkel \n"
+"                        (kijelezve a kiválasztott CSV fájl böngészési sávja "
+"alatt)."
 
 #. module: base_import
 #. openerp-web
@@ -1388,8 +1421,14 @@ msgid ""
 "demo \n"
 "                        data."
 msgstr ""
+"Példának, it van egy \n"
+"                        purchase.order_functional_error_line_cant_adpat.CSV "
+"\n"
+"                        fájl egy pár árajánlatról amit beimportálhat, a demo "
+"adat \n"
+"                        alapján."
 
 #. module: base_import
 #: field:base_import.import,file:0
 msgid "File"
-msgstr ""
+msgstr "Fájl"

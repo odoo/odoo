@@ -335,7 +335,7 @@ class WebKitParser(report_sxw):
             try :
                 html = body_mako_tpl.render(dict(self.parser_instance.localcontext))
                 htmls.append(html)
-            except Exception:
+            except Exception, e:
                 msg = u"%s" % e
                 _logger.error(msg)
                 raise except_osv(_('Webkit render!'), msg)

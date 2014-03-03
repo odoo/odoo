@@ -19,8 +19,8 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
         },
         build_currency_template: function(){
 
-            if(this.pos && this.pos.get('currency')){
-                this.currency = this.pos.get('currency');
+            if(this.pos && this.pos.currency){
+                this.currency = this.pos.currency;
             }else{
                 this.currency = {symbol: '$', position: 'after', rounding: 0.01};
             }
@@ -41,10 +41,10 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
 
         },
         show: function(){
-            this.$el.show();
+            this.$el.removeClass('oe_hidden');
         },
         hide: function(){
-            this.$el.hide();
+            this.$el.addClass('oe_hidden');
         },
     });
 

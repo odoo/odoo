@@ -26,23 +26,51 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
-class sale_configuration(osv.osv_memory):
+
+class sale_configuration(osv.TransientModel):
     _inherit = 'sale.config.settings'
+
+    def set_group_product_variant(self, cr, uid, ids, context=None):
+        """ This method is automatically called by res_config as it begins
+            with set. It is used to implement the 'one group or another'
+            behavior. We have to perform some group manipulation by hand
+            because in res_config.execute(), set_* methods are called
+            after group_*; therefore writing on an hidden res_config file
+            could not work.
+            If group_product_variant is checked: remove group_product_mono
+            from group_user, remove the users. Otherwise, just add
+            group_product_mono in group_user.
+            The inverse logic about group_product_variant is managed by the
+            normal behavior of 'group_product_variant' field.
+        """
+        def ref(xml_id):
+            mod, xml = xml_id.split('.', 1)
+            return self.pool['ir.model.data'].get_object(cr, uid, mod, xml, context)
+
+        for obj in self.browse(cr, uid, ids, context=context):
+            config_group = ref('product.group_product_mono')
+            base_group = ref('base.group_user')
+            if obj.group_product_variant:
+                base_group.write({'implied_ids': [(3, config_group.id)]})
+                config_group.write({'users': [(3, u.id) for u in base_group.users]})
+            else:
+                base_group.write({'implied_ids': [(4, config_group.id)]})
+        return True
 
     _columns = {
         'group_invoice_so_lines': fields.boolean('Generate invoices based on the sales order lines',
             implied_group='sale.group_invoice_so_lines',
             help="To allow your salesman to make invoices for sales order lines using the menu 'Lines to Invoice'."),
         'timesheet': fields.boolean('Prepare invoices based on timesheets',
-            help = """For modifying account analytic view to show important data to project manager of services companies.
-                You can also view the report of account analytic summary user-wise as well as month wise.
-                This installs the module account_analytic_analysis."""),
+            help='For modifying account analytic view to show important data to project manager of services companies.'
+                 'You can also view the report of account analytic summary user-wise as well as month wise.\n'
+                 '-This installs the module account_analytic_analysis.'),
         'module_account_analytic_analysis': fields.boolean('Use contracts management',
-            help = """Allows to define your customer contracts conditions: invoicing
-            method (fixed price, on timesheet, advance invoice), the exact pricing
-            (650€/day for a developer), the duration (one year support contract).
-            You will be able to follow the progress of the contract and invoice automatically.
-            It installs the account_analytic_analysis module."""),
+            help='Allows to define your customer contracts conditions: invoicing '
+                 'method (fixed price, on timesheet, advance invoice), the exact pricing '
+                 '(650€/day for a developer), the duration (one year support contract).\n'
+                 'You will be able to follow the progress of the contract and invoice automatically.\n'
+                 '-It installs the account_analytic_analysis module.'),
         'time_unit': fields.many2one('product.uom', 'The default working time unit for services is'),
         'group_sale_pricelist':fields.boolean("Use pricelists to adapt your price per customers",
             implied_group='product.group_sale_pricelist',
@@ -58,26 +86,31 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
             implied_group='product.group_product_variant',
             help="""Allow to manage several variants per product. As an example, if you  sell T-Shirts, for the same "Linux T-Shirt", you may have variants on  sizes or colors; S, M, L, XL, XXL."""),
         'module_warning': fields.boolean("Allow configuring alerts by customer or products",
-            help="""Allow to configure notification on products and trigger them when a user wants to sell a given product or a given customer.
-Example: Product: this product is deprecated, do not purchase more than 5.
-                Supplier: don't forget to ask for an express delivery."""),
+            help='Allow to configure notification on products and trigger them when a user wants to sell a given product or a given customer.\n'
+                 'Example: Product: this product is deprecated, do not purchase more than 5.\n'
+                 'Supplier: don\'t forget to ask for an express delivery.'),
         'module_sale_margin': fields.boolean("Display margins on sales orders",
-            help="""This adds the 'Margin' on sales order.
-                This gives the profitability by calculating the difference between the Unit Price and Cost Price.
-                This installs the module sale_margin."""),
+            help='This adds the \'Margin\' on sales order.\n'
+                 'This gives the profitability by calculating the difference between the Unit Price and Cost Price.\n'
+                 '-This installs the module sale_margin.'),
+        'module_website_quote': fields.boolean("Allow online quotations and templates",
+            help='This adds the online quotation'),
         'module_sale_journal': fields.boolean("Allow batch invoicing of delivery orders through journals",
-            help="""Allows you to categorize your sales and deliveries (picking lists) between different journals,
-                and perform batch operations on journals.
-                This installs the module sale_journal."""),
+            help='Allows you to categorize your sales and deliveries (picking lists) between different journals, '
+                 'and perform batch operations on journals.\n'
+                 '-This installs the module sale_journal.'),
         'module_analytic_user_function': fields.boolean("One employee can have different roles per contract",
-            help="""Allows you to define what is the default function of a specific user on a given account.
-                This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.
-                But the possibility to change these values is still available.
-                This installs the module analytic_user_function."""),
+            help='Allows you to define what is the default function of a specific user on a given account.\n'
+                 'This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled. '
+                 'But the possibility to change these values is still available.\n'
+                 '-This installs the module analytic_user_function.'),
         'module_project': fields.boolean("Project"),
         'module_sale_stock': fields.boolean("Trigger delivery orders automatically from sales orders",
-            help="""Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.
-                    This installs the module sale_stock."""),
+            help='Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.\n'
+                 '-This installs the module sale_stock.'),
+        'group_sale_delivery_address': fields.boolean("Allow a different address for delivery and invoicing ",
+            implied_group='sale.group_delivery_invoice_address',
+            help="Allows you to specify different delivery and invoice addresses on a sales order."),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -87,12 +120,9 @@ Example: Product: this product is deprecated, do not purchase more than 5.
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             res['time_unit'] = user.company_id.project_time_mode_id.id
         else:
-            try:
-                product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
+            product = ir_model_data.xmlid_to_object(cr, uid, 'product.product_product_consultant')
+            if product and product.exists():
                 res['time_unit'] = product.uom_id.id
-            except ValueError:
-                # keep default value in that case
-                _logger.warning("Product with xml_id 'product.product_product_consultant' not found")
         return res
 
     def _get_default_time_unit(self, cr, uid, context=None):
@@ -108,10 +138,10 @@ Example: Product: this product is deprecated, do not purchase more than 5.
         wizard = self.browse(cr, uid, ids)[0]
 
         if wizard.time_unit:
-            try:
-                product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
+            product = ir_model_data.xmlid_to_object(cr, uid, 'product.product_product_consultant')
+            if product and product.exists():
                 product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
-            except ValueError:
+            else:
                 _logger.warning("Product with xml_id 'product.product_product_consultant' not found, UoMs not updated!")
 
         if wizard.module_project and wizard.time_unit:

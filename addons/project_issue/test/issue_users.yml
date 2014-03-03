@@ -1,0 +1,30 @@
+-
+  Create a user as 'Project manager'
+-
+  !record {model: res.users, id: res_users_project_issue_manager, view: False}:
+    company_id: base.main_company
+    name: Project Manager
+    login: prim
+    password: prim
+    email: issuemanager@yourcompany.com
+-
+  I added groups for Project manager.
+-
+  !record {model: res.users, id: res_users_project_issue_manager}:
+    groups_id:
+      - project.group_project_manager
+-
+  Create a user as 'Project user'
+-
+  !record {model: res.users, id: res_users_project_issue_user, view: False}:
+    company_id: base.main_company
+    name: Project User
+    login: priu
+    password: priu
+    email: issueuser@yourcompany.com
+-
+  I added groups for Project user.
+-
+  !record {model: res.users, id: res_users_project_issue_user}:
+    groups_id:
+      - project.group_project_user

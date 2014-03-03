@@ -1,6 +1,7 @@
 openerp.edi = function(instance) {
 var _t = instance.web._t;
-instance.edi = {}
+instance.edi = {};
+
 
 instance.edi.EdiImport = instance.web.Widget.extend({
 
@@ -10,11 +11,7 @@ instance.edi.EdiImport = instance.web.Widget.extend({
     },
     start: function() {
         if (!this.session.session_is_valid()) {
-            this.show_login();
-            this.session.on_session_valid.add({
-                callback: this.proxy('show_import'),
-                unique: true,
-            });
+            instance.redirect('/web/login?redir=' + encodeURIComponent(window.location));
         } else {
             this.show_import();
         }
@@ -23,12 +20,6 @@ instance.edi.EdiImport = instance.web.Widget.extend({
     show_import: function() {
         this.destroy_content();
         this.do_import();
-    },
-
-    show_login: function() {
-        this.destroy_content();
-        this.login = new instance.web.Login(this);
-        this.login.appendTo(this.$el);
     },
 
     destroy_content: function() {

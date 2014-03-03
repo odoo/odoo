@@ -3,6 +3,13 @@
 Changelog
 =========
 
+`trunk (saas-3)`
+----------------
+
+- ``hr.recruitment.stage``: added template_id field. If an email template is linked
+  to the stage, it is used to render and post a message on the applicant. This
+  allows for example to have template for accepted or refused applicants.
+
 `trunk (saas-2)`
 ----------------
 

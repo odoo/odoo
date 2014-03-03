@@ -62,19 +62,8 @@ class fleet_vehicle_cost(osv.Model):
                 res[record.id] = _('Unknown')
         return res
 
-    def _cost_name_get_fnc(self, cr, uid, ids, name, unknow_none, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            name = record.vehicle_id.name
-            if record.cost_subtype_id.name:
-                name += ' / '+ record.cost_subtype_id.name
-            if record.date:
-                name += ' / '+ record.date
-            res[record.id] = name
-        return res
-
     _columns = {
-        'name': fields.function(_cost_name_get_fnc, type="char", string='Name', store=True),
+        'name': fields.related('vehicle_id', 'name', type="char", string='Name', store=True),
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log'),
         'cost_subtype_id': fields.many2one('fleet.service.type', 'Type', help='Cost type purchased with this cost'),
         'amount': fields.float('Total Price'),
@@ -160,8 +149,8 @@ class fleet_vehicle_model(osv.Model):
         'brand_id': fields.many2one('fleet.vehicle.model.brand', 'Model Brand', required=True, help='Brand of the vehicle'),
         'vendors': fields.many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors'),
         'image': fields.related('brand_id', 'image', type="binary", string="Logo"),
-        'image_medium': fields.related('brand_id', 'image_medium', type="binary", string="Logo"),
-        'image_small': fields.related('brand_id', 'image_small', type="binary", string="Logo"),
+        'image_medium': fields.related('brand_id', 'image_medium', type="binary", string="Logo (medium)"),
+        'image_small': fields.related('brand_id', 'image_small', type="binary", string="Logo (small)"),
     }
 
 
@@ -354,8 +343,8 @@ class fleet_vehicle(osv.Model):
         'power': fields.integer('Power', help='Power in kW of the vehicle'),
         'co2': fields.float('CO2 Emissions', help='CO2 emissions of the vehicle'),
         'image': fields.related('model_id', 'image', type="binary", string="Logo"),
-        'image_medium': fields.related('model_id', 'image_medium', type="binary", string="Logo"),
-        'image_small': fields.related('model_id', 'image_small', type="binary", string="Logo"),
+        'image_medium': fields.related('model_id', 'image_medium', type="binary", string="Logo (medium)"),
+        'image_small': fields.related('model_id', 'image_small', type="binary", string="Logo (small)"),
         'contract_renewal_due_soon': fields.function(_get_contract_reminder_fnc, fnct_search=_search_contract_renewal_due_soon, type="boolean", string='Has Contracts to renew', multi='contract_info'),
         'contract_renewal_overdue': fields.function(_get_contract_reminder_fnc, fnct_search=_search_get_overdue_contract_reminder, type="boolean", string='Has Contracts Overdued', multi='contract_info'),
         'contract_renewal_name': fields.function(_get_contract_reminder_fnc, type="text", string='Name of contract to renew soon', multi='contract_info'),
@@ -559,7 +548,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         'inv_ref': fields.char('Invoice Reference', size=64),
         'vendor_id': fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
         'notes': fields.text('Notes'),
-        'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost'),
+        'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade'),
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
     }
     _defaults = {
@@ -600,7 +589,7 @@ class fleet_vehicle_log_services(osv.Model):
         'vendor_id': fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
         'notes': fields.text('Notes'),
-        'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost'),
+        'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade'),
     }
     _defaults = {
         'date': fields.date.context_today,
@@ -799,7 +788,7 @@ class fleet_vehicle_log_contract(osv.Model):
         'cost_frequency': fields.selection([('no','No'), ('daily', 'Daily'), ('weekly','Weekly'), ('monthly','Monthly'), ('yearly','Yearly')], 'Recurring Cost Frequency', help='Frequency of the recuring cost', required=True),
         'generated_cost_ids': fields.one2many('fleet.vehicle.cost', 'contract_id', 'Generated Costs', ondelete='cascade'),
         'sum_cost': fields.function(_get_sum_cost, type='float', string='Indicative Costs Total'),
-        'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost'),
+        'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade'),
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
     }
     _defaults = {

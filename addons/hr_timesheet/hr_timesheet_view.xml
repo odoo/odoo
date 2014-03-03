@@ -74,14 +74,15 @@
                         <filter string="Users" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Analytic account" icon="terp-folder-green" domain="[]" context="{'group_by':'account_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Timesheet Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Timesheet by Month"/>
                     </group>
                 </search>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="act_analytic_cost_revenue">
-            <field name="context">{'search_default_account_id': [active_id], 'default_account_id': active_id, 'search_default_group_date': 1, 'search_default_group_journal': 1}</field>
+            <field name="context">{'search_default_group_date': 1, 'search_default_group_journal': 1}</field>
+            <field name="domain">[('account_id','child_of', active_id)]</field>
             <field name="name">Costs &amp; Revenues</field>
             <field name="res_model">account.analytic.line</field>
             <field name="src_model">account.analytic.account</field>

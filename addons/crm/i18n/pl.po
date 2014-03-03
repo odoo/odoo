@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:08+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2014-01-28 05:48+0000\n"
+"X-Generator: Launchpad (build 16914)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -31,7 +31,7 @@ msgstr ""
 "przychodzących wiadomości."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:881
+#: code:addons/crm/crm_lead.py:897
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
@@ -150,7 +150,7 @@ msgid "Rule Name"
 msgstr "Nazwa reguły"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:280
+#: code:addons/crm/crm_phonecall.py:282
 #, python-format
 msgid "It's only possible to convert one phonecall at a time."
 msgstr ""
@@ -188,9 +188,10 @@ msgstr ""
 "kanban."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:624
-#: code:addons/crm/crm_lead.py:744
-#: code:addons/crm/crm_phonecall.py:280
+#: code:addons/crm/crm_lead.py:637
+#: code:addons/crm/crm_lead.py:758
+#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
 #, python-format
 msgid "Warning!"
 msgstr "Ostrzeżenie !"
@@ -217,7 +218,7 @@ msgid "Schedule Other Call"
 msgstr "Zaplanuj inny telefon"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:209
+#: code:addons/crm/crm_phonecall.py:211
 #: view:crm.phonecall:0
 #, python-format
 msgid "Phone Call"
@@ -300,7 +301,7 @@ msgid "Prospect Partner"
 msgstr "Potencjalny partner"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:982
+#: code:addons/crm/crm_lead.py:1018
 #, python-format
 msgid "No Subject"
 msgstr "Brak tematu"
@@ -415,7 +416,6 @@ msgid "Unread Messages"
 msgstr "Nieprzeczytane wiadomości"
 
 #. module: crm
-#: view:crm.segmentation:0
 #: field:crm.segmentation.line,segmentation_id:0
 #: model:ir.actions.act_window,name:crm.crm_segmentation-act
 msgid "Segmentation"
@@ -462,7 +462,7 @@ msgid "#Opportunities"
 msgstr "#Szans"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:624
+#: code:addons/crm/crm_lead.py:637
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
@@ -750,7 +750,7 @@ msgid "Statistics Dashboard"
 msgstr "Konsola statystyk"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:861
+#: code:addons/crm/crm_lead.py:877
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -810,7 +810,7 @@ msgid "Exclusive"
 msgstr "Wyłączny"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:584
+#: code:addons/crm/crm_lead.py:597
 #, python-format
 msgid "From %s : %s"
 msgstr "Od %s : %s"
@@ -981,7 +981,7 @@ msgid "Next Action"
 msgstr "Następna akcja"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:763
+#: code:addons/crm/crm_lead.py:777
 #, python-format
 msgid "<b>Partner</b> set to <em>%s</em>."
 msgstr "<b>Partner</b> został ustawiony na <em>%s</em>."
@@ -1071,7 +1071,7 @@ msgid "Creation Date"
 msgstr "Data utworzenia"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:698
+#: code:addons/crm/crm_lead.py:712
 #, python-format
 msgid "Lead <b>converted into an Opportunity</b>"
 msgstr "Sygnał <b>skonwertowany do szansy</b>"
@@ -1267,7 +1267,9 @@ msgid "Days to Close"
 msgstr "Dni do zamknięcia"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:1075
 #: field:crm.case.section,complete_name:0
+#, python-format
 msgid "unknown"
 msgstr "nieznany"
 
@@ -1351,7 +1353,7 @@ msgid "Lead Description"
 msgstr "Opis sygnału"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:565
+#: code:addons/crm/crm_lead.py:578
 #, python-format
 msgid "Merged opportunities"
 msgstr "Połączone szanse"
@@ -1639,7 +1641,7 @@ msgid "Month of call"
 msgstr "Miesiąc rozmowy"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:290
+#: code:addons/crm/crm_phonecall.py:292
 #, python-format
 msgid "Partner has been <b>created</b>."
 msgstr "Partner został <b>utworzony</b>."
@@ -1917,7 +1919,7 @@ msgid "Leads"
 msgstr "Sygnały"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:563
+#: code:addons/crm/crm_lead.py:576
 #, python-format
 msgid "Merged leads"
 msgstr "Połączone sygnały"
@@ -2013,7 +2015,6 @@ msgid "Global CC"
 msgstr "Globalne DW"
 
 #. module: crm
-#: view:crm.lead:0
 #: view:crm.phonecall:0
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone0
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone
@@ -2869,6 +2870,7 @@ msgstr "Funkcja"
 #. module: crm
 #: field:crm.case.section,note:0
 #: field:crm.phonecall,description:0
+#: view:crm.segmentation:0
 #: field:crm.segmentation,description:0
 msgid "Description"
 msgstr "Opis"
@@ -2952,7 +2954,7 @@ msgid "Working Hours"
 msgstr "Godziny pracy"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:968
+#: code:addons/crm/crm_lead.py:1002
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
@@ -2980,7 +2982,7 @@ msgid "Lost"
 msgstr "Porażka"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
 #, python-format
 msgid "Closed/Cancelled leads cannot be converted into opportunities."
 msgstr ""

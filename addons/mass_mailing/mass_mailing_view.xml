@@ -1,0 +1,379 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!--  MASS MAILING !-->
+        <record model="ir.ui.view" id="view_mail_mass_mailing_search">
+            <field name="name">mail.mass_mailing.search</field>
+            <field name="model">mail.mass_mailing</field>
+            <field name="arch" type="xml">
+               <search string="Mass Mailings">
+                    <field name="name" string="Mailings"/>
+                    <field name="mass_mailing_campaign_id"/>
+                    <field name="template_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Campaign" name="group_mass_mailing_campaign_id"
+                            context="{'group_by': 'mass_mailing_campaign_id'}"/>
+                        <filter string="Template" name="group_template_id"
+                            context="{'group_by': 'template_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_mass_mailing_tree">
+            <field name="name">mail.mass_mailing.tree</field>
+            <field name="model">mail.mass_mailing</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree string="Mass Mailings">
+                    <field name="name"/>
+                    <field name="sent"/>
+                    <field name="delivered"/>
+                    <field name="opened"/>
+                    <field name="replied"/>
+                    <field name="mass_mailing_campaign_id" invisible="1"/>
+                    <field name="template_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_mass_mailing_form">
+            <field name="name">mail.mass_mailing.form</field>
+            <field name="model">mail.mass_mailing</field>
+            <field name="arch" type="xml">
+                <form string="Mass Mailing" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="mass_mailing_campaign_id" readonly="True"/>
+                            </group>
+                            <group>
+                                <field name="template_id"/>
+                                <field name="domain"/>
+                                <field name="date"/>
+                            </group>
+                        </group>
+                        <group string="Email Statistics">
+                            <field name="statistics_ids" nolabel="1" colspan="2"/>
+                            <group>
+                                <field name="sent"/>
+                                <field name="opened"/>
+                                <field name="bounced"/>
+                            </group>
+                            <group>
+                                <field name="delivered"/>
+                                <field name="replied"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_mass_mailing_kanban">
+            <field name="name">mail.mass_mailing.kanban</field>
+            <field name="model">mail.mass_mailing</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name='color'/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing oe_kanban_mass_mailing_segment">
+                                 <div class="oe_kanban_content">
+                                    <div>
+                                        <h3>
+                                            <field name="name"/>
+                                        </h3>
+                                            <p style="margin-left: 10px; margin-top: 8px;">
+                                                Sent: <field name="date"/><br />
+                                                Campaign: <field name="mass_mailing_campaign_id"/>
+                                            </p>
+                                    </div>
+                                    <div>
+                                        <p class="oe_mail_stats">
+                                            <span class="oe_mail_result"><field name="sent"/></span><br />
+                                            Sent
+                                        </p>
+                                        <p class="oe_mail_stats">
+                                            <span class="oe_mail_result"><field name="delivered"/></span><br />
+                                            Delivered
+                                        </p>
+                                        <p class="oe_mail_stats">
+                                            <span class="oe_mail_result"><field name="opened"/></span><br />
+                                            Opened
+                                        </p>
+                                        <p class="oe_mail_stats">
+                                            <span class="oe_mail_result"><field name="replied"/></span><br />
+                                            Replied
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <div class="oe_sparkline_container">
+                                            <h4 class="oe_sparkline_bar_title">Opened</h4><br />
+                                            <field name="opened_monthly" widget="sparkline_bar" options="{'height': '50px', 'barWidth': 10, 'barSpacing': 5}"/>
+                                        </div>
+                                        <div class="oe_sparkline_container">
+                                            <h4 class="oe_sparkline_bar_title">Replied</h4><br />
+                                            <field name="replied_monthly" widget="sparkline_bar" options="{'height': '50px', 'barWidth': 10, 'barSpacing': 5}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="action_view_mass_mailings" model="ir.actions.act_window">
+            <field name="name">Mass Mailings</field>
+            <field name="res_model">mail.mass_mailing</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <record id="action_view_mass_mailings_from_campaign" model="ir.actions.act_window">
+            <field name="name">Mass Mailings</field>
+            <field name="res_model">mail.mass_mailing</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{
+                'search_default_mass_mailing_campaign_id': [active_id], 
+                'default_mass_mailing_campaign_id': active_id,
+            }
+            </field>
+        </record>
+
+        <!--  MASS MAILING CAMPAIGNS !-->
+        <record model="ir.ui.view" id="view_mail_mass_mailing_campaign_search">
+            <field name="name">mail.mass_mailing.campaign.search</field>
+            <field name="model">mail.mass_mailing.campaign</field>
+            <field name="arch" type="xml">
+               <search string="Mass Mailing Campaigns">
+                    <field name="name" string="Campaigns"/>
+                    <field name="user_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Responsibles" name="group_user_id"
+                            context="{'group_by': 'user_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_mass_mailing_campaign_tree">
+            <field name="name">mail.mass_mailing.campaign.tree</field>
+            <field name="model">mail.mass_mailing.campaign</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree string="Mass Mailing Campaigns">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_mass_mailing_campaign_form">
+            <field name="name">mail.mass_mailing.campaign.form</field>
+            <field name="model">mail.mass_mailing.campaign</field>
+            <field name="arch" type="xml">
+                <form string="Mass Mailing Campaign" version="7.0">
+                    <header>
+                        <button name="launch_mass_mailing_create_wizard" type="object"
+                            class="oe_highlight" string="Create a New Mailing"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="sent"/>
+                                <field name="opened"/>
+                                <field name="bounced"/>
+                            </group>
+                            <group>
+                                <field name="delivered"/>
+                                <field name="replied"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="mass_mailing_ids" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_mass_mailing_campaign_kanban">
+            <field name="name">mail.mass_mailing.campaign.kanban</field>
+            <field name="model">mail.mass_mailing.campaign</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="mass_mailing_kanban_ids"/>
+                    <field name='sent'/>
+                    <field name='color'/>
+                    <templates>
+                        <t t-name="mass_mailing.mass_mailing">
+                            <div class="oe_mass_mailings">
+                                <div>
+                                    <a name="%(action_view_mass_mailings_from_campaign)d" type="action">
+                                        <h4><t t-raw="mass_mailing.name"/></h4>
+                                    </a>
+                                </div>
+                                <div>
+                                    <p class="oe_mail_stats">
+                                        <span class="oe_mail_result"><t t-raw="mass_mailing.sent"/></span><br />
+                                        Sent
+                                    </p>
+                                    <p class="oe_mail_stats">
+                                        <span class="oe_mail_result"><t t-raw="mass_mailing.delivered"/></span><br />
+                                        Delivered
+                                    </p>
+                                    <p class="oe_mail_stats">
+                                        <span class="oe_mail_result"><t t-raw="mass_mailing.opened"/></span><br />
+                                        Opened
+                                    </p>
+                                    <p class="oe_mail_stats">
+                                        <span class="oe_mail_result"><t t-raw="mass_mailing.replied"/></span><br />
+                                        Replied
+                                    </p>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing oe_kanban_mass_mailing_campaign">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                    <span class="oe_e">i</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <t t-if="widget.view.is_action_enabled('edit')">
+                                            <li><a type="edit">Settings</a></li>
+                                        </t>
+                                        <t t-if="widget.view.is_action_enabled('edit')">
+                                            <li><a name="%(action_mail_mass_mailing_create)d" type="action">New Wave</a></li>
+                                        </t>
+                                        <t t-if="widget.view.is_action_enabled('delete')">
+                                            <li><a type="delete">Delete</a></li>
+                                        </t>
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                                 <div class="oe_kanban_content">
+                                    <h3>
+                                        <field name="name"/>
+                                    </h3>
+                                    <div>
+                                        <field name="delivered" widget="gauge" style="width:160px; height: 120px;"
+                                            options="{'max_field': 'sent'}"/>
+                                        <field name="opened" widget="gauge" style="width:160px; height: 120px;"
+                                            options="{'max_field': 'sent'}"/>
+                                        <field name="replied" widget="gauge" style="width:160px; height: 120px;"
+                                            options="{'max_field': 'sent'}"/>
+                                    </div>
+                                    <t t-foreach='record.mass_mailing_kanban_ids.value' t-as='mass_mailing'>
+                                        <t t-call="mass_mailing.mass_mailing"/>
+                                    </t>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="action_view_mass_mailing_campaigns" model="ir.actions.act_window">
+            <field name="name">Mass Mailing Campaigns</field>
+            <field name="res_model">mail.mass_mailing.campaign</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new mass mailing campaign.
+              </p><p>
+                Create a campaign to structure mass mailing and get analysis from email status.
+              </p>
+            </field>
+        </record>
+
+        <!--  MAIL MAIL STATISTICS !-->
+        <record model="ir.ui.view" id="view_mail_mail_statistics_search">
+            <field name="name">mail.mail.statistics.search</field>
+            <field name="model">mail.mail.statistics</field>
+            <field name="arch" type="xml">
+               <search string="Mail Statistics">
+                    <field name="mail_mail_id"/>
+                    <field name="message_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_mail_statistics_tree">
+            <field name="name">mail.mail.statistics.tree</field>
+            <field name="model">mail.mail.statistics</field>
+            <field name="arch" type="xml">
+                <tree string="Mail Statistics">
+                    <field name="mail_mail_id"/>
+                    <field name="message_id"/>
+                    <field name="opened"/>
+                    <field name="replied"/>
+                    <field name="bounced"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_mail_statistics_form">
+            <field name="name">mail.mail.statistics.form</field>
+            <field name="model">mail.mail.statistics</field>
+            <field name="arch" type="xml">
+                <form string="Mail Statistics" version="7.0">
+                    <group>
+                        <group>
+                            <field name="mail_mail_id"/>
+                            <field name="message_id"/>
+                            <field name="opened"/>
+                            <field name="replied"/>
+                            <field name="bounced"/>
+                        </group>
+                        <group>
+                            <field name="mass_mailing_id"/>
+                            <field name="mass_mailing_campaign_id"/>
+                            <field name="template_id"/>
+                            <field name="model"/>
+                            <field name="res_id"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_mail_mail_statistics" model="ir.actions.act_window">
+            <field name="name">Mail Statistics</field>
+            <field name="res_model">mail.mail.statistics</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Top menu item -->
+        <menuitem name="Marketing" id="base.marketing_menu" sequence="85" groups="base.group_user"/>
+
+        <!-- Add in marketing -->
+        <menuitem name="Mass Mailing" id="mass_mailing_campaign"
+            parent="base.marketing_menu" sequence="1"/>
+        <menuitem name="Campaigns" id="menu_email_campaigns"
+            parent="mass_mailing_campaign" sequence="1"
+            action="action_view_mass_mailing_campaigns"/>
+        <menuitem name="Mass Mailings" id="menu_email_mass_mailings"
+            parent="mass_mailing_campaign" sequence="2"
+            action="action_view_mass_mailings"/>
+
+        <!-- Add in Technical/Email -->
+        <menuitem name="Mail Statistics" id="menu_email_statistics"
+            parent="base.menu_email" sequence="50"
+            action="action_view_mail_mail_statistics"/>
+
+    </data>
+</openerp>

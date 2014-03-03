@@ -151,24 +151,18 @@ class pos_details(report_sxw.rml_parse):
         return self._ellipsis(name, maxlen, ' ...')
 
     def _get_tax_amount(self, form):
-        res = {}
-        temp = {}
-        list_ids = []
-        temp2 = 0.0
+        taxes = {}
+        account_tax_obj = self.pool.get('account.tax')
         user_ids = form['user_ids'] or self._get_all_users()
         pos_order_obj = self.pool.get('pos.order')
         pos_ids = pos_order_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','in',user_ids)])
-        temp.update({'name': ''})
         for order in pos_order_obj.browse(self.cr, self.uid, pos_ids):
-            temp2 += order.amount_tax
             for line in order.lines:
-                if len(line.product_id.taxes_id):
-                    tax = line.product_id.taxes_id[0]
-                    res[tax.name] = (line.price_unit * line.qty * (1-(line.discount or 0.0) / 100.0)) + (tax.id in list_ids and res[tax.name] or 0)
-                    list_ids.append(tax.id)
-                    temp.update({'name': tax.name})
-        temp.update({'amount': temp2})
-        return [temp] or False
+                line_taxes = account_tax_obj.compute_all(self.cr, self.uid, line.product_id.taxes_id, line.price_unit, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
+                for tax in line_taxes['taxes']:
+                    taxes.setdefault(tax['id'], {'name': tax['name'], 'amount':0.0})
+                    taxes[tax['id']]['amount'] += tax['amount']
+        return taxes.values()
 
     def _get_user_names(self, user_ids):
         user_obj = self.pool.get('res.users')

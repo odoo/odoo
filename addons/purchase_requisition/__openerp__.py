@@ -39,10 +39,13 @@ keep track and order all your purchase orders.
               'purchase_requisition_data.xml',
               'purchase_requisition_view.xml',
               'purchase_requisition_report.xml',
-              'security/ir.model.access.csv','purchase_requisition_sequence.xml'
+              'security/ir.model.access.csv','purchase_requisition_sequence.xml',
+
+              'views/report_purchaserequisition.xml',
     ],
     'auto_install': False,
     'test': [
+        'test/purchase_requisition_users.yml',
         'test/purchase_requisition_demo.yml',
         'test/purchase_requisition.yml',
         'test/cancel_purchase_requisition.yml',

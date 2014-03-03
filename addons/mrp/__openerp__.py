@@ -69,14 +69,18 @@ Dashboard / Reports for MRP will include:
         'process/service_product_process.xml',
         'process/procurement_process.xml',
         'report/mrp_report_view.xml',
-        'report/mrp_production_order_view.xml',
         'board_manufacturing_view.xml',
         'res_config_view.xml',
+
+        'views/report_mrporder.xml',
+        'views/report_mrpbomstructure.xml',
     ],
     'demo': ['mrp_demo.xml'],
     #TODO: This yml tests are needed to be completely reviewed again because the product wood panel is removed in product demo as it does not suit for new demo context of computer and consultant company
     # so the ymls are too complex to change at this stage
     'test': [
+         'test/bom_with_service_type_product.yml',
+         'test/mrp_users.yml',
          'test/order_demo.yml',
          'test/order_process.yml',
          'test/cancel_order.yml',

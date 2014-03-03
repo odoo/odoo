@@ -450,6 +450,7 @@ class account_analytic_account(osv.osv):
         'is_overdue_quantity' : fields.function(_is_overdue_quantity, method=True, type='boolean', string='Overdue Quantity',
                                                 store={
                                                     'account.analytic.line' : (_get_analytic_account, None, 20),
+                                                    'account.analytic.account': (lambda self, cr, uid, ids, c=None: ids, ['quantity_max'], 10),
                                                 }),
         'ca_invoiced': fields.function(_ca_invoiced_calc, type='float', string='Invoiced Amount',
             help="Total customer invoiced amount for this account.",
@@ -621,7 +622,7 @@ class account_analytic_account(osv.osv):
 
     def onchange_invoice_on_timesheets(self, cr, uid, ids, invoice_on_timesheets, context=None):
         if not invoice_on_timesheets:
-            return {}
+            return {'value': {'to_invoice': False}}
         result = {'value': {'use_timesheets': True}}
         try:
             to_invoice = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')
@@ -655,7 +656,7 @@ class account_analytic_account(osv.osv):
         if not contract.partner_id:
             raise osv.except_osv(_('No Customer Defined!'),_("You must first select a Customer for Contract %s!") % contract.name )
 
-        fpos = contract.partner_id.property_account_position.id or False
+        fpos = contract.partner_id.property_account_position or False
         journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', contract.company_id.id or False)], limit=1)
         if not journal_ids:
             raise osv.except_osv(_('Error!'),
@@ -663,17 +664,24 @@ class account_analytic_account(osv.osv):
 
         partner_payment_term = contract.partner_id.property_payment_term and contract.partner_id.property_payment_term.id or False
 
+        currency_id = False
+        if contract.pricelist_id:
+            currency_id = contract.pricelist_id.currency_id.id
+        elif contract.partner_id.property_product_pricelist:
+            currency_id = contract.partner_id.property_product_pricelist.currency_id.id
+        elif contract.company_id:
+            currency_id = contract.company_id.currency_id.id
 
         inv_data = {
            'reference': contract.code or False,
            'account_id': contract.partner_id.property_account_receivable.id,
            'type': 'out_invoice',
            'partner_id': contract.partner_id.id,
-           'currency_id': contract.partner_id.property_product_pricelist.id or False,
+           'currency_id': currency_id,
            'journal_id': len(journal_ids) and journal_ids[0] or False,
            'date_invoice': contract.recurring_next_date,
            'origin': contract.name,
-           'fiscal_position': fpos,
+           'fiscal_position': fpos and fpos.id,
            'payment_term': partner_payment_term,
            'company_id': contract.company_id.id or False,
         }
@@ -687,7 +695,7 @@ class account_analytic_account(osv.osv):
                 account_id = res.categ_id.property_account_income_categ.id
             account_id = fpos_obj.map_account(cr, uid, fpos, account_id)
 
-            taxes = res.taxes_id and res.taxes_id or False
+            taxes = res.taxes_id or False
             tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
 
             invoice_line_vals = {

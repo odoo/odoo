@@ -1,10 +1,20 @@
 -
+  Only sales manager Creates product so let's check with access rights of salemanager.
+-
+  !context
+    uid: 'res_sale_stock_salesmanager'
+-
   In order to test the onchange of the Sale Order, I create a product
 -
   !record {model: product.product, id: product_onchange1}:
     name: 'Devil Worship Book'
     list_price: 66.6
     procure_method: 'make_to_order'
+-
+  In sale order to test process of onchange of Sale Order with access rights of saleman.
+-
+  !context
+    uid: 'res_sale_stock_salesman'
 -
   Now i create a sale order that uses my new product
 -

@@ -9,42 +9,16 @@
         parent="base.menu_reporting"
         groups="group_stock_manager"/>
 
-    <record id="view_stock_tree" model="ir.ui.view">
-        <field name="name">report.stock.move.tree</field>
-        <field name="model">report.stock.move</field>
-        <field name="arch" type="xml">
-            <tree string="Moves Analysis" create="false">
-                <field name="date" invisible="1"/>
-                <field name="year" invisible="1" />
-                <field name="month" invisible="1"/>
-                <field name="day" invisible="1"/>
-                <field name="type" invisible="1"/>
-                <field name="company_id" invisible="1"/>
-                <field name="partner_id" invisible="1" context="{'contact_display':'partner'}" />
-                <field name="picking_id" invisible="1"/>
-                <field name="location_id" invisible="1"/>
-                <field name="location_dest_id" invisible="1"/>
-                <field name="product_id" invisible="1"/>
-                <field name="categ_id" invisible="1"/>
-                <field name="stock_journal" invisible="1"/>
-                <field name="state" invisible="1"/>
-                <field name="product_qty" sum="Total quantity"/>
-                <field name="product_qty_in" sum="Total incoming quantity" />
-                <field name="product_qty_out" sum="Total outgoing quantity"/>
-                <field name="value"  sum="Total value"/>
-                <field name="day_diff1"/>
-                <field name="day_diff"/>
-                <field name="day_diff2" string="Delay(Days)"/>
-           </tree>
-        </field>
-    </record>
     <record id="view_stock_graph" model="ir.ui.view">
          <field name="name">report.stock.move.graph</field>
          <field name="model">report.stock.move</field>
          <field name="arch" type="xml">
-             <graph string="Moves Analysis" type="bar">
-                 <field name="product_id"/>
-                 <field name="product_qty" operator="+"/>
+             <graph string="Moves Analysis" type="pivot">
+                 <field name="product_id" type="row"/>
+                 <field name="product_qty" type="measure"/>
+                 <field name="product_qty_in" type="measure"/>
+                 <field name="product_qty_out" type="measure"/>
+                 <field name="value" type="measure"/>
              </graph>
          </field>
     </record>
@@ -81,9 +55,9 @@
                     <filter string="Status" name="group_state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <filter string="Stock journal" name="group_stock_journal" icon="terp-folder-orange" context="{'group_by':'stock_journal'}"/>
                     <filter string="Company" name="group_state" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Day Planned"/>
-                    <filter string="Month" icon="terp-go-month" context="{'group_by':'date'}" help="Month Planned"/>
-                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"  help="Year Planned"/>
+                    <filter string="Date Planned (day)" icon="terp-go-day" context="{'group_by':'date:day'}" help="Day Planned"/>
+                    <filter string="Date Planned (month)" icon="terp-go-month" context="{'group_by':'date:month'}" help="Month Planned"/>
+                    <filter string="Date Planned (year)" icon="terp-go-year" context="{'group_by':'date:year'}" help="Year Planned"/>
                 </group>
             </search>
         </field>
@@ -93,43 +67,22 @@
         <field name="name">Moves Analysis</field>
         <field name="res_model">report.stock.move</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
+        <field name="view_mode">graph</field>
         <field name="search_view_id"  ref="view_stock_search"/>
+        <field name="view_id" ref="view_stock_graph"></field>
         <field name="context">{'contact_display': 'partner','search_default_done':1,'search_default_year':1, 'search_default_month':1, 'search_default_group_type':1, 'group_by': [], 'group_by_no_leaf':1,}</field>
         <field name="help">Moves Analysis allows you to easily check and analyse your company stock moves. Use this report when you want to analyse the different routes taken by your products and inventory management performance.</field>
     </record>
     <menuitem action="action_stock_move_report" id="menu_action_stock_move_report" parent="next_id_61" sequence="3"/>
 
-    <!-- Inventory Control -->
-    <record id="view_stock_inventory_tree" model="ir.ui.view">
-        <field name="name">report.stock.inventory.tree</field>
-        <field name="model">report.stock.inventory</field>
-        <field name="arch" type="xml">
-            <tree string="Inventory Analysis" create="false">
-                <field name="date" invisible="1"/>
-                <field name="year" invisible="1" />
-                <field name="month" invisible="1"/>
-                <field name="company_id" invisible="1"/>
-                <field name="location_type" invisible="1"/>
-                <field name="location_id" invisible="1"/>
-                <field name="partner_id" invisible="1" context="{'contact_display':'partner'}"/>
-                <field name="product_categ_id" invisible="1"/>
-                <field name="product_id" invisible="1"/>
-                <field name="prodlot_id" invisible="1"/>
-                <field name="state" invisible="1"/>
-                <field name="product_qty" sum="Total quantity"/>
-                <field name="value" sum="Total value"/>
-           </tree>
-        </field>
-    </record>
-
     <record id="view_stock_inventory_graph" model="ir.ui.view">
          <field name="name">report.stock.inventory.graph</field>
          <field name="model">report.stock.inventory</field>
          <field name="arch" type="xml">
-             <graph string="Inventory Analysis" type="bar">
-                 <field name="product_id"/>
-                 <field name="product_qty"/>
+             <graph string="Inventory Analysis" type="pivot">
+                 <field name="product_id" type="row"/>
+                 <field name="product_qty" type="measure"/>
+                 <field name="value" type="measure"/>
              </graph>
          </field>
     </record>
@@ -165,7 +118,7 @@
                     <filter name="group_company" string="Company" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}"/>
                     <filter name="group_location" string="Location" icon="terp-go-home" context="{'group_by':'location_id'}"/>
                     <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                    <filter string="Date" icon="terp-go-today" context="{'group_by':'date'}"/>
+                    <filter string="Moves Month" icon="terp-go-today" context="{'group_by':'date'}"/>
                     <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
                     <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                 </group>
@@ -177,7 +130,7 @@
         <field name="name">Inventory Analysis</field>
         <field name="res_model">report.stock.inventory</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
+        <field name="view_mode">graph</field>
         <field name="search_view_id"  eval="False"/>
         <field name="context">{'contact_display': 'partner', 'search_default_real':1,
 'search_default_year':1,'search_default_month':1, 'search_default_location_type_internal':1,'search_default_group_product':1,'group_by':[], 'group_by_no_leaf':1}</field>

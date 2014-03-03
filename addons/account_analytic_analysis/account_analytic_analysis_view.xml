@@ -219,7 +219,7 @@
                     <filter name="open" string="In Progress" domain="[('state','in',('open','draft'))]" help="Contracts in progress (open, draft)"/>
                     <filter name="pending" string="To Renew" domain="[('state','=','pending')]" help="Pending contracts"/>
                     <filter name="closed" string="Closed" domain="[('state','=','close')]" help="Closed contracts"/>
-                    <filter name="cancelled" string="Cancelled" domain="[('state','=','cancel')]" help="Cancelled contracts"/>
+                    <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]" help="Cancelled contracts"/>
                     <separator/>
                     <filter
                         string="Expired or consumed"
@@ -239,8 +239,8 @@
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Parent" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter string="Template" domain="[]" context="{'group_by':'template_id'}"/>
-                        <filter string="Start Date" domain="[]" context="{'group_by' : 'date_start'}" />
-                        <filter string="End Date" domain="[]" context="{'group_by' : 'date'}" />
+                        <filter string="Start Month" domain="[]" context="{'group_by' : 'date_start'}" />
+                        <filter string="End Month" domain="[]" context="{'group_by' : 'date'}" />
                         <filter string="Pricelist" domain="[]" context="{'group_by' : 'pricelist_id'}" />
                     </group>
                 </search>

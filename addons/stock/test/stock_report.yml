@@ -1,11 +1,16 @@
 -
+  Stock user can print all reports related to stock, so let's check data with giving the access rights of user.
+-
+  !context
+    uid: 'res_users_stock_user'
+-
   I print a stock overview report of location.
 -
   !python {model: stock.location}: |
     import os
     import openerp.report
     from openerp import tools
-    data, format = openerp.report.render_report(cr, uid, [ref('location_refrigerator')], 'lot.stock.overview', {}, {})
+    data, format = openerp.report.render_report(cr, uid, [ref('location_monitor')], 'lot.stock.overview', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'stock-overview'+format), 'wb+').write(data)
 -
@@ -15,7 +20,7 @@
     import os
     import openerp.report
     from openerp import tools
-    data, format = openerp.report.render_report(cr, uid, [ref('location_refrigerator')], 'lot.stock.overview_all', {}, {})
+    data, format = openerp.report.render_report(cr, uid, [ref('location_monitor')], 'lot.stock.overview_all', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'stock-overviewall'+format), 'wb+').write(data)
 -
@@ -25,7 +30,7 @@
     import os
     import openerp.report
     from openerp import tools
-    data, format = openerp.report.render_report(cr, uid, [ref('stock_inventory_icecream')], 'stock.inventory.move', {}, {})
+    data, format = openerp.report.render_report(cr, uid, [ref('stock_inventory_0')], 'stock.inventory.move', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'stock-stock_inventory_move.'+format), 'wb+').write(data)
 -
@@ -45,7 +50,7 @@
     import os
     import openerp.report
     from openerp import tools
-    data, format = openerp.report.render_report(cr, uid, [ref('product_icecream')], 'stock.product.history', {}, {})
+    data, format = openerp.report.render_report(cr, uid, [ref('product_product_6')], 'stock.product.history', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'stock-product_stock_report.'+format), 'wb+').write(data)
 

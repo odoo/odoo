@@ -8,25 +8,25 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:06+0000\n"
 "PO-Revision-Date: 2012-12-18 06:32+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"Last-Translator: Ferdinand <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:27+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2014-01-28 06:12+0000\n"
+"X-Generator: Launchpad (build 16914)\n"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
 msgid "For each product, on type service and on order"
 msgstr ""
-"Für jedes Produkt mit der Produktart Dienstleistungen (Service) und der "
+"Für jedes Produkt mit der Produktart 'Dienstleistungen (Service)' und der "
 "Beschaffungsmethode 'Beschaffe von Auftrag'"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_createtask0
 msgid "Product type is service, then its creates the task."
-msgstr "Für die Produktart Dienstleistungen, wird eine Aufgabe generiert."
+msgstr "Für die Produktart 'Dienstleistungen', wird eine Aufgabe generiert."
 
 #. module: project_mrp
 #: code:addons/project_mrp/project_procurement.py:92
@@ -42,7 +42,7 @@ msgstr "Falls Sie Dienstleistungen verkaufen"
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_mrptask0
 msgid "A task is created to provide the service."
-msgstr "Eine Aufgabe wurde erzeugt um die Dienstleistung zu erbringen."
+msgstr "Eine Aufgabe wurde erzeugt, um die Dienstleistung zu erbringen."
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_product_product
@@ -58,13 +58,13 @@ msgstr "Verkaufsauftrag Aufgabe"
 #: model:process.transition,note:project_mrp.process_transition_procuretask0
 msgid "if product type is 'service' then it creates the task."
 msgstr ""
-"Falls die Produktart Dienstleistung hinterlegt wurde, wird eine Aufgabe "
+"Falls die Produktart 'Dienstleistung' hinterlegt wurde, wird eine Aufgabe "
 "erzeugt."
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_ordertask0
 msgid "Order Task"
-msgstr "Bestelle Aufgabe"
+msgstr "Bestellungsaufgabe"
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_procuretask0
@@ -139,7 +139,7 @@ msgstr "Auftragsposition"
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_createtask0
 msgid "Create Task"
-msgstr "Erzeuge Aufgabe"
+msgstr "Aufgabe erzeugen"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_sale_order
@@ -233,9 +233,6 @@ msgstr "eine Aufgabe"
 #~ "Für den Fall, dass Sie Dienstleistungen auf Basis von Verkaufsaufträgen "
 #~ "verkaufen"
 
-#~ msgid "Error ! Task end-date must be greater then task start-date"
-#~ msgstr "Fehler! Aufgaben End-Datum muss größer als Aufgaben-Beginn sein"
-
 #~ msgid "Sale order line"
 #~ msgstr "Verkaufsauftragsposition"
 
@@ -244,3 +241,6 @@ msgstr "eine Aufgabe"
 
 #~ msgid "Order Reference must be unique per Company!"
 #~ msgstr "Die Bestellreferenz muss je Firma eindeutig sein"
+
+#~ msgid "Error ! Task end-date must be greater then task start-date"
+#~ msgstr "Fehler! Aufgaben Enddatum muss größer als Aufgabenbeginn sein"

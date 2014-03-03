@@ -241,11 +241,11 @@ class account_coda_import(osv.osv_memory):
                 if statement['debit'] == '1':    # 1=Debit
                     statement['balance_end_real'] = - statement['balance_end_real']
                 if statement['balance_end_realDate']:
-                    period_id = self.pool.get('account.period').search(cr, uid, [('date_start', '<=', statement['balance_end_realDate']), ('date_stop', '>=', statement['balance_end_realDate'])])
+                    period_id = self.pool.get('account.period').search(cr, uid, [('company_id', '=', statement['journal_id'].company_id.id), ('date_start', '<=', statement['balance_end_realDate']), ('date_stop', '>=', statement['balance_end_realDate'])])
                 else:
-                    period_id = self.pool.get('account.period').search(cr, uid, [('date_start', '<=', statement['date']), ('date_stop', '>=', statement['date'])])
+                    period_id = self.pool.get('account.period').search(cr, uid, [('company_id', '=', statement['journal_id'].company_id.id), ('date_start', '<=', statement['date']), ('date_stop', '>=', statement['date'])])
                 if not period_id and len(period_id) == 0:
-                    raise osv.except_osv(_('Error') + 'R0002', _("The CODA Statement New Balance date doesn't fall within a defined Accounting Period! Please create the Accounting Period for date %s.") % statement['balance_end_realDate'])
+                    raise osv.except_osv(_('Error') + 'R0002', _("The CODA Statement New Balance date doesn't fall within a defined Accounting Period! Please create the Accounting Period for date %s for the company %s.") % (statement['balance_end_realDate'], statement['journal_id'].company_id.name))
                 statement['period_id'] = period_id[0]
             elif line[0] == '9':
                 statement['balanceMin'] = float(rmspaces(line[22:37])) / 1000

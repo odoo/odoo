@@ -20,6 +20,13 @@
 using System;
 using System.Windows.Forms;
 using OpenERPClient;
+using System.Net;
+using System.IO;
+using System.Text;
+using System.Security;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
 
 namespace OpenERPOutlookPlugin
 {
@@ -50,6 +57,15 @@ namespace OpenERPOutlookPlugin
             }
         }
 
+        public static bool ValidateServerCertificate(
+                      object sender,
+                      X509Certificate certificate,
+                      X509Chain chain,
+                      SslPolicyErrors sslPolicyErrors)
+        {
+            // Somehow the cert always has PolicyErrors so I am returning true regardless.
+            return true;
+        }
 
         private void btn_server_ok_Click(object sender, EventArgs e)
         {
@@ -59,7 +75,10 @@ namespace OpenERPOutlookPlugin
                 OpenERPConnect openerp_connect = openerp_outlook.Connection;
                 string url = Tools.JoinURL(this.txt_server_host.Text, this.txt_server_port.Text, this.chkSSL.Checked);
                 this.txtServerURL.Text = url;
-                openerp_connect.check_connectivity();
+                if (this.chkSSL.Checked)
+                {
+                   ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback(ValidateServerCertificate);
+                }
                 this.Close();
             }
             catch (Exception ex)
@@ -74,6 +93,16 @@ namespace OpenERPOutlookPlugin
             this.Close();
         }
 
-
+        private void chkSSL_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.chkSSL.Checked)
+            {
+                txt_server_port.Text = "443";
+            }
+            else
+            {
+                txt_server_port.Text = "8069";
+            }
+        }
     }
 }

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:31+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2014-01-28 06:15+0000\n"
+"X-Generator: Launchpad (build 16914)\n"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -44,6 +44,8 @@ msgid ""
 "You cannot delete a partner which is assigned to project, but you can "
 "uncheck the active box."
 msgstr ""
+"Төсөлд оноогдсон хамтрагчийг устгах боломжгүй. Гэвч түүнийг идэвхгүй болгож "
+"чадна."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task_work
@@ -56,6 +58,7 @@ msgstr "Төслийн Даалгаврын Ажил"
 msgid ""
 "You cannot select a Analytic Account which is in Close or Cancelled state."
 msgstr ""
+"Хаагдсан эсвэл Цуцлагдсан төлөвтэй Шинжилгээний Дансыг сонгох боломжгүй."
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -90,11 +93,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Захиалагчийн гэрээ нэмэхдээ дарна.\n"
+"              </p><p>\n"
+"                Холбогдох нэхэмжлэлүүдийн явцыг мөшгих зорилгоор\n"
+"                Захиалагчийн төсөлтэй холбоотой гэрээнүүдийг эндээс олно.\n"
+"              </p>\n"
+"            "
 
 #. module: project_timesheet
 #: view:account.analytic.line:0
 msgid "Analytic Account/Project"
-msgstr ""
+msgstr "Шинжилгээний Данс/Төсөл"
 
 #. module: project_timesheet
 #: view:account.analytic.line:0
@@ -316,7 +326,7 @@ msgstr "Нэхэмжлэл"
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_triggerinvoice0
 msgid "Trigger invoices from sales order lines"
-msgstr ""
+msgstr "Борлуулалтын захиалгын мөрүүдээс нэхэмжлэл үүсгэх"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:100
@@ -344,7 +354,7 @@ msgstr "Даалгавар дахь ажил"
 #: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
 msgid "Invoice Tasks"
-msgstr ""
+msgstr "Даалгавруудыг нэхэмжлэх"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
@@ -387,6 +397,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
 "'%s'.</p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">Та цагийн хуудсаа '%s' төсөлд хөтлөнө "
+"үү.</p>"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0

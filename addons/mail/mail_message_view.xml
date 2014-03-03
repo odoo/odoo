@@ -56,7 +56,8 @@
             <field name="priority">25</field>
             <field name="arch" type="xml">
                 <search string="Messages Search">
-                    <field name="subject" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
+                    <field name="body" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
+                    <field name="subject"/>
                     <field name="type"/>
                     <field name="author_id"/>
                     <field name="partner_ids"/>
@@ -66,23 +67,13 @@
                     <filter string="To Read"
                             name="message_unread" help="Show messages to read"
                             domain="[('to_read', '=', True)]"/>
-                    <filter string="Read"
-                            name="message_read" help="Show already read messages"
-                            domain="[('to_read', '=', False)]"/>
-                    <separator/>
-                    <filter string="Comments"
-                            name="comments" help="Comments"
-                            domain="[('type', '=', 'comment')]"/>
-                    <filter string="Notifications"
-                            name="notifications" help="Notifications"
-                            domain="[('type', '=', 'notification')]"/>
-                    <filter string="Emails"
-                            name="emails" help="Emails"
-                            domain="[('type', '=', 'email')]"/>
                     <separator/>
                     <filter string="Has attachments"
                             name="attachments"
                             domain="[('attachment_ids', '!=', False)]"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Type" name="thread" domain="[]" context="{'group_by':'type'}"/>
+                    </group>
                 </search>
             </field>
         </record>

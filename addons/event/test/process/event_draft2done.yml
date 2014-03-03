@@ -1,4 +1,9 @@
 -
+  Give the access rights of Event user to organize an event and also do registration.
+-
+  !context
+    uid: 'res_users_eventuser'
+-
   I want to organize an event, 
   into this conference I should create two registration.
   One confirmed and attended the event and the other cancelled.
@@ -9,7 +14,7 @@
    name: event
    date_begin: 2012-01-01 19:05:15
    date_end: 2012-01-01 20:05:15
-   register_max: 10
+   seats_max: 10
 -
   I create a registration for the event
 -
@@ -28,7 +33,7 @@
   I check if the number of draft registrations in the event view is correct
 -
    !assert {model: event.event, id: event_event ,string: 'the number of draft registration is not correct'}:
-     - register_prospect == 15.00
+     - seats_unconfirmed == 15.00
 -
    I confirm the registration1
 -
@@ -44,7 +49,7 @@
    I check if the number of confirmed registration is correct
 -
    !assert {model: event.event,id: event_event,string: 'the number of confirmed registration is not correct'}:
-     - register_current  == 10.00
+     - seats_reserved  == 10.00
 -
    I close the registration
 -
@@ -59,7 +64,7 @@
    I check if attended registration is correct
 -
    !assert {model: event.event,id: event_event,string: 'the number of registration that attended the event is not correct'}:
-     - register_attended  == 10.00
+     - seats_used  == 10.00
 -
     I cancel the second registration
 -

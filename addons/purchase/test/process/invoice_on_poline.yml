@@ -1,4 +1,9 @@
 -
+   Purchase User confirm the order and create invoice based on purchase order line.
+-
+  !context
+    uid: 'res_users_purchase_user'
+-
    I confirm purchase order which has invoicing control method "Based on Purchase Order Lines".
 -
   !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_6}
@@ -18,9 +23,3 @@
      purchase_order = self.browse(cr, uid, ref("purchase_order_6"))
      for purchase_line in purchase_order.order_line:
        assert len(purchase_order.invoice_ids) == 1, "Invoice should be generated."
--
-  I set the default invoicing control method "Based on Purchase Order Lines".
--
-  !python {model: purchase.config.settings}: |
-    new_id = self.create(cr, uid, {'default_invoice_method': 'manual'})
-    self.execute(cr, uid, [new_id])

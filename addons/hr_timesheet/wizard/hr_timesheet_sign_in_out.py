@@ -133,7 +133,7 @@ class hr_si_project(osv.osv_memory):
 
     def check_state(self, cr, uid, ids, context=None):
         obj_model = self.pool.get('ir.model.data')
-        emp_id = self.default_get(cr, uid, context)['emp_id']
+        emp_id = self.default_get(cr, uid, ['emp_id'], context)['emp_id']
         # get the latest action (sign_in or out) for this employee
         cr.execute('select action from hr_attendance where employee_id=%s and action in (\'sign_in\',\'sign_out\') order by name desc limit 1', (emp_id,))
         res = (cr.fetchone() or ('sign_out',))[0]

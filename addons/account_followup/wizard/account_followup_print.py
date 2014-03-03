@@ -50,9 +50,9 @@ class account_followup_stat_by_partner(osv.osv):
         # to send him follow-ups separately . An assumption that the number of companies will not
         # reach 10 000 records is made, what should be enough for a time.
         cr.execute("""
-            create or replace view account_followup_stat_by_partner as (
+            create view account_followup_stat_by_partner as (
                 SELECT
-                    l.partner_id * 10000 + l.company_id as id,
+                    l.partner_id * 10000::bigint + l.company_id as id,
                     l.partner_id AS partner_id,
                     min(l.date) AS date_move,
                     max(l.date) AS date_move_last,
@@ -67,11 +67,10 @@ class account_followup_stat_by_partner(osv.osv):
                     a.active AND
                     a.type = 'receivable' AND
                     l.reconcile_id is NULL AND
-                    l.partner_id IS NOT NULL AND
-                    (l.blocked = False)
+                    l.partner_id IS NOT NULL
                     GROUP BY
                     l.partner_id, l.company_id
-            )""") #Blocked is to take into account litigation
+            )""")
 
 
 class account_followup_sending_results(osv.osv_memory):

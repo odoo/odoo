@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 04:55+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2014-01-28 05:30+0000\n"
+"X-Generator: Launchpad (build 16914)\n"
 
 #. module: project
 #: view:project.project:0
@@ -83,7 +83,7 @@ msgid "Start Task"
 msgstr "Aloita tehtävä"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid "Warning !"
 msgstr "Varoitus !"
@@ -133,8 +133,8 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:432
-#: code:addons/project/project.py:1318
+#: code:addons/project/project.py:444
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -183,6 +183,10 @@ msgid ""
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
 msgstr ""
+"Tämän raportin avulla voit analysoida projektien ja käyttäjien tehokkuutta. "
+"Voit analysoida tehtävien määriä, käytettyjen tuntien määriä verrattuna "
+"suunniteltuihin tunteihin, tehtävän avaamiseen tai päättämiseen käytettyjen "
+"päivien keskiarvoa jne."
 
 #. module: project
 #: view:project.task.delegate:0
@@ -232,7 +236,7 @@ msgstr ""
 #: view:report.project.task.user:0
 #: field:report.project.task.user,partner_id:0
 msgid "Contact"
-msgstr "Yhteyshenkilö"
+msgstr "Yhteystieto"
 
 #. module: project
 #: model:process.transition,name:project.process_transition_delegate0
@@ -387,7 +391,7 @@ msgid "Assigned to"
 msgstr "Annettu tehtäväksi"
 
 #. module: project
-#: code:addons/project/project.py:1021
+#: code:addons/project/project.py:1033
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "Delegoitu käyttäjä tulisi olla määriteltynä"
@@ -544,7 +548,7 @@ msgstr "Odottavat tehtävät"
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "_Evaluate"
-msgstr ""
+msgstr "_Arvioi"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -702,7 +706,7 @@ msgstr "Uuden tehtävän kuvaus"
 #. module: project
 #: field:report.project.task.user,delay_endings_days:0
 msgid "Overpassed Deadline"
-msgstr "Ylitetty aikaraja"
+msgstr "Määräaika ylitetty"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -927,7 +931,7 @@ msgstr ""
 #. module: project
 #: view:project.task.delegate:0
 msgid "_Delegate"
-msgstr ""
+msgstr "_Delegoi"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -1102,7 +1106,7 @@ msgstr "Odottavat tehtävät"
 #. module: project
 #: view:project.task:0
 msgid "Show only tasks having a deadline"
-msgstr "Näytä vain tehtävät joilla on takaraja"
+msgstr "Näytä vain tehtävät joilla on määräaika"
 
 #. module: project
 #: model:project.category,name:project.project_category_04
@@ -1195,9 +1199,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Laskettu: käytetty aika + jäljelläoleva aika"
 
 #. module: project
-#: code:addons/project/project.py:356
-#: code:addons/project/project.py:377
-#: code:addons/project/project.py:709
+#: code:addons/project/project.py:368
+#: code:addons/project/project.py:389
+#: code:addons/project/project.py:721
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopio)"
@@ -1405,7 +1409,7 @@ msgstr ""
 "projektipäällikkö kun tehtävä on luonnostilassa."
 
 #. module: project
-#: code:addons/project/project.py:220
+#: code:addons/project/project.py:230
 #, python-format
 msgid "Attachments"
 msgstr ""
@@ -1502,6 +1506,10 @@ msgid ""
 "boolean 'active' field: if the task is linked to a template or unactivated "
 "project, it will be hidden unless specifically asked."
 msgstr ""
+"Tämän kentän arvo lasketaan automaattisesti, ja se käyttäytyy samalla tavoin "
+"kuin arvoltaan 'aktiivinen' boolean-kenttä: jos tehtävä on yhdistetty ei-"
+"aktiiviseen tai malliprojektiin, sitä ei näytetä, paitsi erikseen "
+"pyydettäessä."
 
 #. module: project
 #: model:res.request.link,name:project.req_link_task
@@ -1533,7 +1541,7 @@ msgid "Overpassed Tasks"
 msgstr "Ohitetut tehtävät"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1582,7 +1590,7 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Deadlines"
-msgstr "Takarajat"
+msgstr "Määräajat"
 
 #. module: project
 #: code:addons/project/wizard/project_task_delegate.py:69
@@ -1594,7 +1602,7 @@ msgid "CHECK: "
 msgstr "TARKISTA: "
 
 #. module: project
-#: code:addons/project/project.py:432
+#: code:addons/project/project.py:444
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr "Sinun pitää määritellä projektin jäsenet '%s' !"
@@ -1822,7 +1830,7 @@ msgid "Starting Date"
 msgstr "Aloituspäivämäärä"
 
 #. module: project
-#: code:addons/project/project.py:398
+#: code:addons/project/project.py:410
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -1984,7 +1992,7 @@ msgid "Reevaluation Task"
 msgstr "Uudelleenarviointi tehtävä"
 
 #. module: project
-#: code:addons/project/project.py:1318
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Ole hyvä ja poista tähän tunnukseen linkitetty projekti ensin."
@@ -2036,6 +2044,8 @@ msgid ""
 "If you check this field, this stage will be proposed by default on each new "
 "project. It will not assign this stage to existing projects."
 msgstr ""
+"Valitsemalla tämän kentän tätä vaihetta ehdotetaan automaattisesti kaikille "
+"uusille projekteille. Vaihetta ei aseteta jo olemassa oleville projekteille."
 
 #. module: project
 #: field:project.task,partner_id:0

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Wizard form view -->
+        <record model="ir.ui.view" id="view_mail_mass_mailing_create_form">
+            <field name="name">mail.mass_mailing.create.form</field>
+            <field name="model">mail.mass_mailing.create</field>
+            <field name="arch" type="xml">
+                <form string="Create a Mass Mailing" version="7.0">
+                    <group>
+                        <field name="model_model" invisible="1"/>
+                        <field name="domain" invisible="1"/>
+
+                        <label for="mass_mailing_campaign_id"/>
+                        <div>
+                            <field name="mass_mailing_campaign_id"/>
+                            <p class="oe_grey"
+                                attrs="{'invisible': [('mass_mailing_campaign_id', '!=', False)]}">
+                                Please choose a mass mailing campaign that will hold the new mailing.
+                            </p>
+                        </div>
+
+                        <label for="model_id"/>
+                        <div>                        
+                            <field name="model_id"
+                                on_change="on_change_model_id(model_id, context)"/>
+                            <p class="oe_grey"
+                                attrs="{'invisible': [('model_id', '!=', False)]}">
+                                Please choose a model on which you will run the mass mailing.
+                            </p>
+                        </div>
+
+                        <label for="filter_id"/>
+                        <div>
+                            <field name="filter_id"
+                                on_change="on_change_filter_id(filter_id, context)"/>
+                            <p class="oe_grey"
+                                attrs="{'invisible': [('filter_id', '!=', False)]}">
+                                Please choose a filter that will be applied on the model
+                                to find the records on which you will run the mass mailing.
+                            </p>
+                        </div>
+
+                        <label for="template_id"/>
+                        <div>
+                            <field name="template_id"/>
+                            <p class="oe_grey"
+                                attrs="{'invisible': [('template_id', '!=', False)]}">
+                                Please choose the template to use to render the emails
+                                to send.
+                            </p>
+                        </div>
+
+                        <label for="name"/>
+                        <div>
+                            <field name="name"/>
+                            <p class="oe_grey">
+                                Please choose the name of the mailing.
+                            </p>
+                        </div>
+
+                        <button name="launch_composer" type="object"
+                            string="Create mailing and launch email composer"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_mail_mass_mailing_create">
+            <field name="name">Create Mass Mailing</field>
+            <field name="res_model">mail.mass_mailing.create</field>
+            <field name="src_model">mail.mass_mailing.campaign</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'default_mass_mailing_campaign_id': active_id}</field>
+        </record>
+
+    </data>
+</openerp>

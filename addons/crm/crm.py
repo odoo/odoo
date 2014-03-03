@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import calendar
 from datetime import date, datetime
 from dateutil import relativedelta
 
@@ -67,8 +68,9 @@ class crm_case_stage(osv.osv):
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
         'case_default': fields.boolean('Default to New Sales Team',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
-        'fold': fields.boolean('Fold by Default',
-                        help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
+        'fold': fields.boolean('Folded in Kanban View',
+                               help='This stage is folded in the kanban view when'
+                               'there are no records in that stage to display.'),
         'type': fields.selection([('lead', 'Lead'),
                                     ('opportunity', 'Opportunity'),
                                     ('both', 'Both')],
@@ -77,8 +79,8 @@ class crm_case_stage(osv.osv):
     }
 
     _defaults = {
-        'sequence': lambda *args: 1,
-        'probability': lambda *args: 0.0,
+        'sequence': 1,
+        'probability': 0.0,
         'on_change': True,
         'fold': False,
         'type': 'both',
@@ -117,14 +119,15 @@ class crm_case_section(osv.osv):
         """
         month_begin = date.today().replace(day=1)
         section_result = [{
-                            'value': 0,
-                            'tooltip': (month_begin + relativedelta.relativedelta(months=-i)).strftime('%B'),
-                            } for i in range(self._period_number - 1, -1, -1)]
+                          'value': 0,
+                          'tooltip': (month_begin + relativedelta.relativedelta(months=-i)).strftime('%B %Y'),
+                          } for i in range(self._period_number - 1, -1, -1)]
         group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
+        pattern = tools.DEFAULT_SERVER_DATE_FORMAT if obj.fields_get(cr, uid, groupby_field)[groupby_field]['type'] == 'date' else tools.DEFAULT_SERVER_DATETIME_FORMAT
         for group in group_obj:
-            group_begin_date = datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATE_FORMAT)
+            group_begin_date = datetime.strptime(group['__domain'][0][2], pattern)
             month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
-            section_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group_begin_date.strftime('%B')}
+            section_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field, 0)}
         return section_result
 
     def _get_opportunities_data(self, cr, uid, ids, field_name, arg, context=None):
@@ -135,13 +138,20 @@ class crm_case_section(osv.osv):
         obj = self.pool.get('crm.lead')
         res = dict.fromkeys(ids, False)
         month_begin = date.today().replace(day=1)
-        groupby_begin = (month_begin + relativedelta.relativedelta(months=-4)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        date_begin = month_begin - relativedelta.relativedelta(months=self._period_number - 1)
+        date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1])
+        lead_pre_domain = [('create_date', '>=', date_begin.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)), 
+                              ('create_date', '<=', date_end.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)),
+                              ('type', '=', 'lead')]
+        opp_pre_domain = [('date_deadline', '>=', date_begin.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)), 
+                      ('date_deadline', '<=', date_end.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)),
+                      ('type', '=', 'opportunity')]
         for id in ids:
             res[id] = dict()
-            lead_domain = [('type', '=', 'lead'), ('section_id', '=', id), ('create_date', '>=', groupby_begin)]
+            lead_domain = lead_pre_domain + [('section_id', '=', id)]
+            opp_domain = opp_pre_domain + [('section_id', '=', id)]
             res[id]['monthly_open_leads'] = self.__get_bar_values(cr, uid, obj, lead_domain, ['create_date'], 'create_date_count', 'create_date', context=context)
-            opp_domain = [('type', '=', 'opportunity'), ('section_id', '=', id), ('create_date', '>=', groupby_begin)]
-            res[id]['monthly_planned_revenue'] = self.__get_bar_values(cr, uid, obj, opp_domain, ['planned_revenue', 'create_date'], 'planned_revenue', 'create_date', context=context)
+            res[id]['monthly_planned_revenue'] = self.__get_bar_values(cr, uid, obj, opp_domain, ['planned_revenue', 'date_deadline'], 'planned_revenue', 'date_deadline', context=context)
         return res
 
     _columns = {
@@ -160,7 +170,7 @@ class crm_case_section(osv.osv):
         'note': fields.text('Description'),
         'working_hours': fields.float('Working Hours', digits=(16, 2)),
         'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
                                     help="The email address associated with this team. New emails received will automatically "
                                          "create new leads assigned to the team."),
         'color': fields.integer('Color Index'),
@@ -254,13 +264,6 @@ class crm_case_resource_type(osv.osv):
         'name': fields.char('Campaign Name', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
-
-def _links_get(self, cr, uid, context=None):
-    """Gets links value for reference field"""
-    obj = self.pool.get('res.request.link')
-    ids = obj.search(cr, uid, [])
-    res = obj.read(cr, uid, ids, ['object', 'name'], context)
-    return [(r['object'], r['name']) for r in res]
 
 class crm_payment_mode(osv.osv):
     """ Payment Mode for Fund """

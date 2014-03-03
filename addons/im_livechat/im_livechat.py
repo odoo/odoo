@@ -19,15 +19,16 @@
 #
 ##############################################################################
 
-import openerp
-import openerp.addons.im.im as im
 import json
 import random
 import jinja2
+
+import openerp
+import openerp.addons.im.im as im
 from openerp.osv import osv, fields
 from openerp import tools
-import openerp.addons.web.http as http
-from openerp.addons.web.http import request
+from openerp import http
+from openerp.http import request
 
 env = jinja2.Environment(
     loader=jinja2.PackageLoader('openerp.addons.im_livechat', "."),
@@ -39,10 +40,10 @@ class LiveChatController(http.Controller):
 
     def _auth(self, db):
         reg = openerp.modules.registry.RegistryManager.get(db)
-        uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, "anonymous", "anonymous", None])
+        uid = request.uid
         return reg, uid
 
-    @http.route('/im_livechat/loader', auth="none")
+    @http.route('/im_livechat/loader', auth="public")
     def loader(self, **kwargs):
         p = json.loads(kwargs["p"])
         db = p["db"]
@@ -58,7 +59,7 @@ class LiveChatController(http.Controller):
             return request.make_response(env.get_template("loader.js").render(info),
                  headers=[('Content-Type', "text/javascript")])
 
-    @http.route('/im_livechat/web_page', auth="none")
+    @http.route('/im_livechat/web_page', auth="public")
     def web_page(self, **kwargs):
         p = json.loads(kwargs["p"])
         db = p["db"]
@@ -71,7 +72,7 @@ class LiveChatController(http.Controller):
             return request.make_response(env.get_template("web_page.html").render(info),
                  headers=[('Content-Type', "text/html")])
 
-    @http.route('/im_livechat/available', type='json', auth="none")
+    @http.route('/im_livechat/available', type='json', auth="public")
     def available(self, db, channel):
         reg, uid = self._auth(db)
         with reg.cursor() as cr:
@@ -170,12 +171,12 @@ class im_livechat_channel(osv.osv):
         return users
 
     def get_session(self, cr, uid, channel_id, uuid, context=None):
-        my_id = self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
-        users = self.get_available_users(cr, uid, channel_id, context=context)
+        self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
+        users = self.get_available_users(cr, openerp.SUPERUSER_ID, channel_id, context=context)
         if len(users) == 0:
             return False
         user_id = random.choice(users).id
-        session = self.pool.get("im.session").session_get(cr, uid, user_id, uuid, context=context)
+        session = self.pool.get("im.session").session_get(cr, uid, [user_id], uuid, context=context)
         self.pool.get("im.session").write(cr, openerp.SUPERUSER_ID, session.get("id"), {'channel_id': channel_id}, context=context)
         return session.get("id")
 
@@ -210,5 +211,5 @@ class im_session(osv.osv):
     _inherit = 'im.session'
 
     _columns = {
-        'channel_id': fields.many2one("im.user", "Channel"),
+        'channel_id': fields.many2one("im_livechat.channel", "Channel"),
     }

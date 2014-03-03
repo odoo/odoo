@@ -12,7 +12,7 @@
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <field name="partner_id" string="Customer" filter_domain="[('partner_id','child_of',self)]"/>
-                    <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
+                    <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <field name="period_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -35,7 +35,7 @@
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <field name="partner_id" string="Supplier" filter_domain="[('partner_id','child_of',self)]"/>
-                    <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
+                    <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <field name="period_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>

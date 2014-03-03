@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:48+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2014-01-28 06:36+0000\n"
+"X-Generator: Launchpad (build 16914)\n"
 
 #. module: mail
 #: view:mail.followers:0
@@ -29,6 +29,7 @@ msgstr "publisher_warranty.contract"
 
 #. module: mail
 #: field:mail.compose.message,author_id:0
+#: view:mail.mail:0
 #: field:mail.message,author_id:0
 msgid "Author"
 msgstr "Avtor"
@@ -71,6 +72,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.my.openerp.com>"
 msgstr ""
+"Ime vzdevka v e-mailu, npr. 'jobs', če želite iskati e-maile za "
+"<jobs@example.my.openerp.com>"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
@@ -112,6 +115,8 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found for incoming emails."
 msgstr ""
+"Elektronski naslov pošiljatelja. To polje je označeno, če ni najden ustrezen "
+"partner za vhodno pošto."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -139,7 +144,7 @@ msgstr "Neprebrana sporočila"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:296
+#: code:addons/mail/static/src/xml/mail.xml:313
 #, python-format
 msgid "show"
 msgstr "prikaži"
@@ -150,10 +155,12 @@ msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
 msgstr ""
+"Člani te skupine bodo avtomatično dodani kot sledilci. Lahko bodo upravljali "
+"svojo prijavo tudi ročno, če bo treba."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail.js:1019
+#: code:addons/mail/static/src/js/mail.js:1029
 #, python-format
 msgid "Do you really want to delete this message?"
 msgstr "Res želite brisati to sporočilo ?"
@@ -171,13 +178,13 @@ msgstr "Iskanje skupin"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:159
+#: code:addons/mail/static/src/js/mail_followers.js:157
 #, python-format
 msgid "followers"
 msgstr "sledilci"
 
 #. module: mail
-#: code:addons/mail/mail_message.py:726
+#: code:addons/mail/mail_message.py:737
 #, python-format
 msgid "Access Denied"
 msgstr "Dostop zavrnjen"
@@ -189,6 +196,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr ""
+"Slika srednje velikosti za to skupino. Avtomatično bo prilagojena na "
+"128x128px, z upoštevanjem razmerja. Uporabite to polje v pogledih forme ali "
+"nekaterih pogledih kanban."
 
 #. module: mail
 #. openerp-web
@@ -203,7 +213,7 @@ msgid "Support"
 msgstr "Podpora"
 
 #. module: mail
-#: code:addons/mail/mail_message.py:727
+#: code:addons/mail/mail_message.py:738
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. "
@@ -231,14 +241,14 @@ msgstr "Nit"
 #: code:addons/mail/static/src/xml/mail.xml:29
 #, python-format
 msgid "Open the full mail composer"
-msgstr ""
+msgstr "Odpri celotni oblikovalca elektronske pošte"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:29
 #, python-format
 msgid "&ograve"
-msgstr ""
+msgstr "&ograve"
 
 #. module: mail
 #: field:base.config.settings,alias_domain:0
@@ -248,7 +258,7 @@ msgstr ""
 #. module: mail
 #: field:mail.group,group_ids:0
 msgid "Auto Subscription"
-msgstr ""
+msgstr "avto-prijava"
 
 #. module: mail
 #: field:mail.mail,references:0
@@ -269,8 +279,8 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:98
-#: code:addons/mail/static/src/xml/mail.xml:110
+#: code:addons/mail/static/src/xml/mail.xml:96
+#: code:addons/mail/static/src/xml/mail.xml:108
 #, python-format
 msgid "uploading"
 msgstr "nalaganje"
@@ -289,6 +299,9 @@ msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
 msgstr ""
+"Tip sporočila: elektronska pošta za elektronsko sporočilo, zaznamek za "
+"sistemsko sporočilo, komentar za ostala sporočila kot npr. uporabnikov "
+"odgovor"
 
 #. module: mail
 #: help:mail.message.subtype,relation_field:0
@@ -312,7 +325,7 @@ msgstr "Odgovori"
 #: code:addons/mail/wizard/invite.py:37
 #, python-format
 msgid "<div>You have been invited to follow %s.</div>"
-msgstr ""
+msgstr "<div>Bili ste povabljeni, da sledite %s.</div>"
 
 #. module: mail
 #: help:mail.group,message_unread:0
@@ -340,7 +353,7 @@ msgstr "Vrsta sporočila"
 #. module: mail
 #: field:mail.mail,auto_delete:0
 msgid "Auto Delete"
-msgstr ""
+msgstr "avtomatsko brisanje"
 
 #. module: mail
 #. openerp-web
@@ -348,17 +361,17 @@ msgstr ""
 #: view:mail.group:0
 #, python-format
 msgid "Unfollow"
-msgstr ""
+msgstr "prekini sledenje"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:295
+#: code:addons/mail/static/src/xml/mail.xml:312
 #, python-format
 msgid "show one more message"
-msgstr ""
+msgstr "pokaži še eno sporočilo"
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:74
+#: code:addons/mail/mail_mail.py:75
 #: code:addons/mail/res_users.py:69
 #, python-format
 msgid "Invalid Action!"
@@ -369,7 +382,7 @@ msgstr "Napačno dejanje!"
 #: code:addons/mail/static/src/xml/mail.xml:25
 #, python-format
 msgid "User img"
-msgstr ""
+msgstr "slika uporabnika"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_mail
@@ -404,17 +417,16 @@ msgstr ""
 #. module: mail
 #: field:mail.message.subtype,relation_field:0
 msgid "Relation field"
-msgstr ""
+msgstr "Polje povezave"
 
 #. module: mail
 #: selection:mail.compose.message,type:0
 #: selection:mail.message,type:0
 msgid "System notification"
-msgstr ""
+msgstr "Sistemsko sporočilo"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
-#: view:mail.mail:0
 msgid "Partner"
 msgstr "Stranka"
 
@@ -450,7 +462,7 @@ msgstr "Od"
 #: view:mail.mail:0
 #: view:mail.message.subtype:0
 msgid "Email message"
-msgstr ""
+msgstr "Elektronsko sporočilo"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_config_settings
@@ -467,10 +479,10 @@ msgstr "Pošlji"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:155
+#: code:addons/mail/static/src/js/mail_followers.js:153
 #, python-format
 msgid "No followers"
-msgstr ""
+msgstr "Ni sledilcev"
 
 #. module: mail
 #: view:mail.mail:0
@@ -498,8 +510,8 @@ msgstr "Arhivi"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:97
-#: code:addons/mail/static/src/xml/mail.xml:109
+#: code:addons/mail/static/src/xml/mail.xml:95
+#: code:addons/mail/static/src/xml/mail.xml:107
 #, python-format
 msgid "Delete this attachment"
 msgstr "Brisanje  priponke"
@@ -514,7 +526,7 @@ msgstr "Odgovori"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:157
+#: code:addons/mail/static/src/js/mail_followers.js:155
 #, python-format
 msgid "One follower"
 msgstr ""
@@ -569,7 +581,7 @@ msgstr "Prejemniki"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:142
+#: code:addons/mail/static/src/xml/mail.xml:140
 #, python-format
 msgid "<<<"
 msgstr "<<<"
@@ -614,7 +626,7 @@ msgstr "Nadrejeno sporočilo"
 #: field:mail.message,res_id:0
 #: field:mail.wizard.invite,res_id:0
 msgid "Related Document ID"
-msgstr ""
+msgstr "ID povezanega dokumenta"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_to_me_feeds
@@ -657,7 +669,7 @@ msgid "Move to Inbox"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/wizard/mail_compose_message.py:165
+#: code:addons/mail/wizard/mail_compose_message.py:193
 #, python-format
 msgid "Re:"
 msgstr ""
@@ -684,7 +696,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:320
+#: code:addons/mail/static/src/xml/mail.xml:337
 #, python-format
 msgid "like"
 msgstr "kot"
@@ -730,7 +742,7 @@ msgid "on"
 msgstr "vklopljeno"
 
 #. module: mail
-#: code:addons/mail/mail_message.py:915
+#: code:addons/mail/mail_message.py:926
 #, python-format
 msgid ""
 "The following partners chosen as recipients for the email have no email "
@@ -796,7 +808,7 @@ msgid "Send Now"
 msgstr "Pošlji zdaj"
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:74
+#: code:addons/mail/mail_mail.py:75
 #, python-format
 msgid ""
 "Unable to send email, please configure the sender's email address or alias."
@@ -816,7 +828,7 @@ msgstr "Fotografija"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:56
+#: code:addons/mail/static/src/xml/mail.xml:54
 #: code:addons/mail/static/src/xml/mail.xml:191
 #: view:mail.compose.message:0
 #: view:mail.wizard.invite:0
@@ -926,7 +938,7 @@ msgstr "Obvestilo"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail.js:650
+#: code:addons/mail/static/src/js/mail.js:654
 #, python-format
 msgid "Please complete partner's informations"
 msgstr ""
@@ -1079,7 +1091,7 @@ msgstr "Razširjeni filtri..."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:122
+#: code:addons/mail/static/src/xml/mail.xml:120
 #, python-format
 msgid "To:"
 msgstr "Za:"
@@ -1103,7 +1115,7 @@ msgstr "Privzeto"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:294
+#: code:addons/mail/static/src/xml/mail.xml:311
 #, python-format
 msgid "show more message"
 msgstr ""
@@ -1144,7 +1156,7 @@ msgstr ""
 #: field:mail.message,subtype_id:0
 #: view:mail.message.subtype:0
 msgid "Subtype"
-msgstr ""
+msgstr "Podvrsta"
 
 #. module: mail
 #: view:mail.group:0
@@ -1160,10 +1172,10 @@ msgstr "Začeto"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:296
+#: code:addons/mail/static/src/xml/mail.xml:313
 #, python-format
 msgid "more messages"
-msgstr ""
+msgstr "več sporočil"
 
 #. module: mail
 #: code:addons/mail/update.py:93
@@ -1238,7 +1250,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:125
+#: code:addons/mail/static/src/xml/mail.xml:123
 #: view:mail.compose.message:0
 #, python-format
 msgid "Followers of"
@@ -1285,8 +1297,8 @@ msgstr "Celotno podjetje"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:131
-#: code:addons/mail/static/src/xml/mail.xml:278
+#: code:addons/mail/static/src/xml/mail.xml:129
+#: code:addons/mail/static/src/xml/mail.xml:292
 #: view:mail.compose.message:0
 #, python-format
 msgid "and"
@@ -1304,7 +1316,7 @@ msgstr "Mesec kreiranja"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:306
+#: code:addons/mail/static/src/xml/mail.xml:323
 #, python-format
 msgid "Compose new Message"
 msgstr "Novo sporočilo"
@@ -1348,6 +1360,8 @@ msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
 msgstr ""
+"Napačen izraz, mora biti skladen z definicijo python slovarja, npr. "
+"\"{'field':'value'}\""
 
 #. module: mail
 #: field:mail.alias,alias_model_id:0
@@ -1389,7 +1403,7 @@ msgid "Outgoing mail server"
 msgstr "Odhodni SMTP strežnik"
 
 #. module: mail
-#: code:addons/mail/mail_message.py:919
+#: code:addons/mail/mail_message.py:930
 #, python-format
 msgid "Partners email addresses not found"
 msgstr ""
@@ -1457,7 +1471,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:128
+#: code:addons/mail/static/src/xml/mail.xml:126
 #, python-format
 msgid "this document"
 msgstr "ta dokument"
@@ -1491,7 +1505,7 @@ msgstr "Sporočila"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:141
+#: code:addons/mail/static/src/xml/mail.xml:139
 #, python-format
 msgid "others..."
 msgstr "drugi..."
@@ -1574,7 +1588,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:321
+#: code:addons/mail/static/src/xml/mail.xml:338
 #, python-format
 msgid "unlike"
 msgstr ""
@@ -1586,6 +1600,8 @@ msgid ""
 "Author of the message. If not set, email_from may hold an email address that "
 "did not match any partner."
 msgstr ""
+"Avtor sporočila. Če ni nastavljen, lahko email_from vsebuje elektronski "
+"naslov, ki ni povezan z nobenim partnerjem."
 
 #. module: mail
 #: help:mail.mail,email_cc:0

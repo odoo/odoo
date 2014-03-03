@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import openerp
 from openerp.addons.crm import crm
 from openerp.osv import fields, osv
 from openerp import tools
@@ -53,8 +54,8 @@ class crm_helpdesk(osv.osv):
             'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
             'email_from': fields.char('Email', size=128, help="Destination email for email gateway"),
             'date': fields.datetime('Date'),
-            'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
-            'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
+            'ref': fields.reference('Reference', selection=openerp.addons.base.res.res_request.referencable_models),
+            'ref2': fields.reference('Reference 2', selection=openerp.addons.base.res.res_request.referencable_models),
             'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
@@ -80,7 +81,7 @@ class crm_helpdesk(osv.osv):
         'active': lambda *a: 1,
         'user_id': lambda s, cr, uid, c: uid,
         'state': lambda *a: 'draft',
-        'date': lambda *a: fields.datetime.now(),
+        'date': fields.datetime.now,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
@@ -126,7 +127,8 @@ class crm_helpdesk(osv.osv):
             through message_process.
             This override updates the document according to the email.
         """
-        if custom_values is None: custom_values = {}
+        if custom_values is None:
+            custom_values = {}
         desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
@@ -137,32 +139,6 @@ class crm_helpdesk(osv.osv):
             'partner_id': msg.get('author_id', False),
         }
         defaults.update(custom_values)
-        return super(crm_helpdesk,self).message_new(cr, uid, msg, custom_values=defaults, context=context)
-
-    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
-        """ Overrides mail_thread message_update that is called by the mailgateway
-            through message_process.
-            This method updates the document according to the email.
-        """
-        if isinstance(ids, (str, int, long)):
-            ids = [ids]
-        if update_vals is None: update_vals = {}
-
-        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
-            update_vals['priority'] = msg.get('priority')
-
-        maps = {
-            'cost':'planned_cost',
-            'revenue': 'planned_revenue',
-            'probability':'probability'
-        }
-        for line in msg['body'].split('\n'):
-            line = line.strip()
-            res = tools.command_re.match(line)
-            if res and maps.get(res.group(1).lower()):
-                key = maps.get(res.group(1).lower())
-                update_vals[key] = res.group(2).lower()
-
-        return super(crm_helpdesk,self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
+        return super(crm_helpdesk, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

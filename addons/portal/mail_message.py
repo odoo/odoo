@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, orm
 from openerp.tools.translate import _
 
@@ -32,10 +33,13 @@ class mail_message(osv.Model):
         """ Override that adds specific access rights of mail.message, to remove
             all internal notes if uid is a non-employee
         """
+        if uid == SUPERUSER_ID:
+            return super(mail_message, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
+                context=context, count=False, access_rights_uid=access_rights_uid)
         group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
         group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_user')[1]
         if group_user_id not in [group.id for group in group_ids]:
-            args = ['&', '|', ('type', '!=', 'comment'), ('subtype_id', '!=', False)] + list(args)
+            args = [('subtype_id', '!=', False)] + list(args)
 
         return super(mail_message, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
             context=context, count=False, access_rights_uid=access_rights_uid)
@@ -45,6 +49,8 @@ class mail_message(osv.Model):
             - read:
                 - raise if the type is comment and subtype NULL (internal note)
         """
+        if uid == SUPERUSER_ID:
+            return super(mail_message, self).check_access_rule(cr, uid, ids=ids, operation=operation, context=context)
         group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
         group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_user')[1]
         if group_user_id not in [group.id for group in group_ids]:

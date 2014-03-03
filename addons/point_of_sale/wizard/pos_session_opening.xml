@@ -15,7 +15,7 @@
                         <field name="pos_state" invisible="1" />
                     </group>
                     <field name="pos_session_id" invisible="1"/>
-                    <button name="open_ui" type="object" string="Start Selling" 
+                    <button name="open_ui" type="object" string="Resume Session" 
                         attrs="{'invisible' : [('pos_state', 'not in', ('opened',))]}" 
                         class="oe_highlight"
                     />
