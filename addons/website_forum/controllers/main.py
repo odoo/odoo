@@ -110,10 +110,14 @@ class website_forum(http.Controller):
 
     @http.route(['/forum/user/<model("res.users"):user>'], type='http', auth="public", website=True, multilang=True)
     def open_user(self, user, **post):
+        answers = {}
+        for answer in user.answer_ids:
+            answers[answer.parent_id] = True
         values = {
             'user': user,
             'main_object': user,
-            'searches': post
+            'searches': post,
+            'answers': answers.keys()
         }
         return request.website.render("website_forum.user_detail_full", values)
 

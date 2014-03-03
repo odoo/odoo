@@ -44,7 +44,7 @@
                         <span t-field="question.views"/> Views
                     </div>
                 </div>
-                <div>
+                <div style="margin-left: 95px;">
                     <div class="question-name">
                         <a t-attf-href="/forum/question/#{ slug(question) }" t-field="question.name"/>
                     </div>
@@ -367,7 +367,7 @@
                             <span t-if="len(question.child_ids)&lt;=1">Answer</span>
                         </div>
                     </div>
-                    <div style="margin-left: 120px;">
+                    <div style="margin-left: 95px;">
                         <h1 t-field="question.name" class="mt0"/>
                         <t t-raw="question.content"/>
 
@@ -400,7 +400,7 @@
                             <a href="#" class="fa fa-2x fa-check"/>
                         </div>
                     </div>
-                    <div style="margin-left: 120px;" class="clearfix">
+                    <div style="margin-left: 95px;" class="clearfix">
                         <t t-raw="answer.content" />
                         <div class="mt16">
                             <div class="pull-right">
@@ -466,180 +466,98 @@
 
         <template id="user_detail_full">
             <t t-call="website_forum.header">
-                <div class="container">
-                    <div class="row col-xs-12 page-header">
-                        <h3>
-                            <span>
-                                <t t-esc="user.name" />
-                                's profile - overview
-                            </span>
-                        </h3>
+                <h1 class="mt0 page-header">
+                    <span t-field="user.name" />
+                    <small>profile</small>
+                </h1>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <span t-field="user.image"
+                            t-field-options='{"widget": "image", "class": "img img-responsive img-circle"}'/>
                     </div>
-                    <div class="row">
-                        <ul class="nav nav-tabs">
-                            <li class="active">
-                                <a href="#overview" data-toggle="tab">Overview</a>
-                            </li>
-                            <li>
-                                <a href="#network" data-toggle="tab">Network</a>
-                            </li>
-                            <li>
-                                <a href="#karma" data-toggle="tab">Karma</a>
-                            </li>
-                            <li>
-                                <a href="#followed_question" data-toggle="tab">Followed Question</a>
-                            </li>
-                            <li>
-                                <a href="#activity" data-toggle="tab">Activity</a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="overview">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <span t-field="user.image" class="user-big-profile-image"
-                                            t-field-options='{"widget": "image"}' alt="User Name" />
-                                    </div>
-                                    <div class="col-xs-9">
-                                        <div class="row col-xs-12">
-                                            <b>Registerd User</b>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-6">
-                                                Real Name :
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <b>
-                                                    <t t-esc="user.name" />
-                                                </b>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-6">
-                                                Member since :
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <b>
-                                                    <t t-esc="user.create_date" />
-                                                    3
-                                                </b>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-6">
-                                                Last Seen :
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <b>Feb 15'14</b>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                Todays unused votes 30 votes left
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-xs-3 text-center" style="overflow : hidden">
-                                        <b>
-                                            <t t-esc="user.karma" />
-                                        </b>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-3 text-center">
-                                        Karma
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <button class="btn btn-default">Follow TressCLoud</button>
-                                    </div>
-                                </div>
-
-                                <div class="row col-xs-12 page-header">
-                                    <h3>
-                                        <b>
-                                            <t t-esc="len(user.question_ids)" />
-                                            Questions
-                                        </b>
-                                    </h3>
-                                </div>
-                                <div class="row col-xs-12">
-                                    <ul class="media-list">
-                                        <li t-foreach="user.question_ids" t-as="question" class="media">
-                                            <t t-call="website_forum.post_list" />
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="row col-xs-12 page-header">
-                                    <h3>
-                                        <b>
-                                            <t t-esc="len(user.answer_ids)" />
-                                            Answers
-                                        </b>
-                                    </h3>
-                                </div>
-                                <!--div class="row col-xs-12"> <ul class="media-list"> <li t-foreach="user.answer_ids" 
-                                    t-as="question" class="media"> <t t-call="website_forum.post_list" /> </li> 
-                                    </ul> </div -->
-
-                                <div class="row col-xs-12 page-header">
-                                    <h3>
-                                        <b>
-                                            <t t-esc="len(user.vote_ids)" />
-                                            Votes
-                                        </b>
-                                    </h3>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-2">
-                                        <h3>
-                                            <a href="">
-                                                <span class="glyphicon glyphicon-thumbs-up"></span>
-                                            </a>
-                                            <b> 15 </b>
-                                        </h3>
-                                    </div>
-                                    <div class="col-xs-2">
-                                        <h3>
-                                            <a href="">
-                                                <span class="glyphicon glyphicon-thumbs-down"></span>
-                                            </a>
-                                            <b> 0 </b>
-                                        </h3>
-                                    </div>
-                                </div>
-
-                                <div class="row col-xs-12 page-header">
-                                    <h3>
-                                        <b>
-                                            <t t-esc="len(user.tags)" />
-                                            Tags
-                                        </b>
-                                    </h3>
-                                </div>
-                                <!--div class="row col-xs-12 page-header"> <h3> <b> <t t-esc="len(user.badges)"/> 
-                                    Badges </b> </h3> </div> <div class="row col-xs-12"> <ul class="media-list"> 
-                                    <li t-foreach="user.badges" t-as="badge" class="media"> <t t-call="website_forum.badge" 
-                                    /> </li> </ul> </div -->
+                    <div class="col-sm-10">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                Karma :
                             </div>
-                            <div class="tab-pane" id="network">
-                                <h1>Network</h1>
+                            <div class="col-sm-6">
+                                <b t-field="user.karma" />
                             </div>
-                            <div class="tab-pane" id="karma">
-                                <h1>Karma</h1>
+                            <div class="col-sm-6">
+                                Member since :
                             </div>
-                            <div class="tab-pane" id="followed_question">
-                                <h1>Followed Questions</h1>
+                            <div class="col-sm-6">
+                                <b>
+                                    <t t-esc="user.create_date" />
+                                    3
+                                </b>
                             </div>
-                            <div class="tab-pane" id="activity">
-                                <h1>Activity</h1>
+                            <div class="col-sm-6">
+                                Last Seen :
+                            </div>
+                            <div class="col-sm-6">
+                                <b>Feb 15'14</b>
+                            </div>
+                            <div class="col-sm-12">
+                                Todays unused votes 30 votes left
                             </div>
                         </div>
+                        <h2>
+                            <t t-esc="len(user.vote_ids)" />
+                            <span>Votes</span>
+                        </h2>
+                        <h3>
+                            <span class="glyphicon glyphicon-thumbs-up"></span>
+                            <b> 15 </b>
+                        </h3>
+                        <h3>
+                            <span class="glyphicon glyphicon-thumbs-down"></span>
+                            <b> 0 </b>
+                        </h3>
+                    </div>
+                </div>
+
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#overview" data-toggle="tab">Questions</a>
+                    </li>
+                    <li>
+                        <a href="#karma" data-toggle="tab">Activity</a>
+                    </li>
+                    <li>
+                        <a href="#followed_question" data-toggle="tab">Followed Question</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="overview">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h2 class="page-header">
+                                    <t t-esc="len(user.question_ids)" />
+                                    <span>Questions</span>
+                                </h2>
+                                <div t-foreach="user.question_ids" t-as="question" class="mb16">
+                                    <t t-call="website_forum.post_list" />
+                                </div>
+                            </div><div class="col-md-6">
+                                <h2 class="page-header">
+                                    <t t-esc="len(user.answer_ids)" />
+                                    <span>Answers</span>
+                                </h2>
+                                <div t-foreach="answers" t-as="question" class="mb16">
+                                    <t t-call="website_forum.post_list" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="karma">
+                        <h1>Karma</h1>
+                    </div>
+                    <div class="tab-pane" id="followed_question">
+                        <h1>Followed Questions</h1>
+                    </div>
+                    <div class="tab-pane" id="activity">
+                        <h1>Activity</h1>
                     </div>
                 </div>
             </t>
