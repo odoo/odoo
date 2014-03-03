@@ -86,38 +86,8 @@
                         </div>
                         <div class="collapse navbar-collapse" id="oe-help-navbar-collapse">
                             <ul class="nav navbar-nav">
-                                <li t-if="searches.get('type') not in ('all', 'unanswered','followed')">
+                                <li>
                                     <a href="/forum">Questions</a>
-                                </li>
-                                <li class="dropdown" t-if="searches.get('type') in ('all', 'unanswered','followed')">
-                                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                      <t t-if="searches.get('type') == 'all'">All Questions</t>
-                                      <t t-if="searches.get('type') == 'unanswered'">Unanswered Questions</t>
-                                      <t t-if="searches.get('type') == 'followed'">Followed Questions</t>
-                                      <b class="caret"/>
-                                  </a>
-                                  <ul class="dropdown-menu">
-                                      <li class="dropdown-header">Filter on</li>
-                                      <li t-att-class="searches.get('type') == 'all' and 'active' or '' ">
-                                          <a t-attf-href="/forum/?{{ keep_query( type='all') }}">All</a>
-                                      </li>
-                                      <li t-att-class="searches.get('type') == 'unanswered' and 'active' or '' ">
-                                          <a t-attf-href="/forum/?{{ keep_query( type='unanswered') }}">Unanswered</a>
-                                      </li>
-                                      <li t-att-class="searches.get('type') == 'followed' and 'active' or '' ">
-                                          <a t-attf-href="/forum/?{{ keep_query( type='followed') }}">Followed</a>
-                                      </li>
-                                      <li class="dropdown-header">Sort by</li>
-                                      <li>
-                                          <a href="#" class="active">Last activity date</a> <!-- default order to implement -->
-                                      </li>
-                                      <li>
-                                          <a href="#">Most answered</a>
-                                      </li>
-                                      <li>
-                                          <a href="#">Most voted</a>
-                                      </li>
-                                  </ul>
                                 </li>
                                 <li t-att-class="searches.get('users') and 'active' or '' ">
                                     <a href="/forum/users">People</a>
@@ -170,6 +140,40 @@
 
         <template id="index">
             <t t-call="website_forum.header">
+                <h1 class="page-header mt0">
+                    <t t-esc="total_questions"/>
+                    <span>Questions</span>
+                    <small class="dropdown" t-if="searches.get('type') in ('all', 'unanswered','followed')">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                          <t t-if="searches.get('type') == 'all'">No filter</t>
+                          <t t-if="searches.get('type') == 'unanswered'">Filter: Unanswered</t>
+                          <t t-if="searches.get('type') == 'followed'">Filter: Followed</t>
+                          <b class="caret"/>
+                      </a>
+                      <ul class="dropdown-menu">
+                          <li class="dropdown-header">Filter on</li>
+                          <li t-att-class="searches.get('type') == 'all' and 'active' or '' ">
+                              <a t-attf-href="/forum/?{{ keep_query( type='all') }}">All</a>
+                          </li>
+                          <li t-att-class="searches.get('type') == 'unanswered' and 'active' or '' ">
+                              <a t-attf-href="/forum/?{{ keep_query( type='unanswered') }}">Unanswered</a>
+                          </li>
+                          <li t-att-class="searches.get('type') == 'followed' and 'active' or '' ">
+                              <a t-attf-href="/forum/?{{ keep_query( type='followed') }}">Followed</a>
+                          </li>
+                          <li class="dropdown-header">Sort by</li>
+                          <li>
+                              <a href="#" class="active">Last activity date</a> <!-- default order to implement -->
+                          </li>
+                          <li>
+                              <a href="#">Most answered</a>
+                          </li>
+                          <li>
+                              <a href="#">Most voted</a>
+                          </li>
+                      </ul>
+                    </small>
+                </h1>
                 <div t-foreach="question_ids" t-as="question" class="mb16">
                     <t t-call="website_forum.post_list" />
                 </div>
@@ -337,10 +341,6 @@
                     </div>
                 </div>
             </t>
-        </template>
-
-        <template id="answer">
-
         </template>
 
         <template id="post_description_full" name="Question Navigation">
