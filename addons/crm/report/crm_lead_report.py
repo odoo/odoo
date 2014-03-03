@@ -89,10 +89,6 @@ class crm_lead_report(osv.osv):
                     id,
                     c.date_deadline,
 
-                    to_char(c.create_date, 'YYYY') as creation_year,
-                    to_char(c.create_date, 'MM') as creation_month,
-                    to_char(c.create_date, 'YYYY-MM-DD') as creation_day,
-
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
 

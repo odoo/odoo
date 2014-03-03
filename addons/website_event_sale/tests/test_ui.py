@@ -1,4 +1,4 @@
-import openerp
+import openerp.tests
 
 inject = [
     "./../../../website/static/src/js/website.tour.test.js",

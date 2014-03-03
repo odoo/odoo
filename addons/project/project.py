@@ -358,6 +358,11 @@ class project(osv.osv):
         default['state'] = 'open'
         default['line_ids'] = []
         default['tasks'] = []
+
+        # Don't prepare (expensive) data to copy children (analytic accounts),
+        # they are discarded in analytic.copy(), and handled in duplicate_template() 
+        default['child_ids'] = []
+
         proj = self.browse(cr, uid, id, context=context)
         if not default.get('name', False):
             default.update(name=_("%s (copy)") % (proj.name))
@@ -690,23 +695,13 @@ class task(osv.osv):
         return {'value': vals}
 
     def duplicate_task(self, cr, uid, map_ids, context=None):
-        for new in map_ids.values():
-            task = self.browse(cr, uid, new, context)
-            child_ids = [ ch.id for ch in task.child_ids]
-            if task.child_ids:
-                for child in task.child_ids:
-                    if child.id in map_ids.keys():
-                        child_ids.remove(child.id)
-                        child_ids.append(map_ids[child.id])
-
-            parent_ids = [ ch.id for ch in task.parent_ids]
-            if task.parent_ids:
-                for parent in task.parent_ids:
-                    if parent.id in map_ids.keys():
-                        parent_ids.remove(parent.id)
-                        parent_ids.append(map_ids[parent.id])
-            #FIXME why there is already the copy and the old one
-            self.write(cr, uid, new, {'parent_ids':[(6,0,set(parent_ids))], 'child_ids':[(6,0, set(child_ids))]})
+        mapper = lambda t: map_ids.get(t.id, t.id)
+        for task in self.browse(cr, uid, map_ids.values(), context):
+            new_child_ids = set(map(mapper, task.child_ids))
+            new_parent_ids = set(map(mapper, task.parent_ids))
+            if new_child_ids or new_parent_ids:
+                task.write({'parent_ids': [(6,0,list(new_parent_ids))],
+                            'child_ids':  [(6,0,list(new_child_ids))]})
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
