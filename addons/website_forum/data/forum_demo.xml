@@ -155,7 +155,14 @@ Thank you in advance</field>
             <field name="tags" eval="[(4,ref('website_forum.tags_6'))]"/>
             <field name="forum_id" ref="website_forum.forum_help"/>
         </record>
-        
+
+        <record id="base.user_demo" model="res.users">
+            <field name="forum" eval="True"/>
+        </record>
+        <record id="base.user_admin" model="res.users">
+            <field name="forum" eval="True"/>
+        </record>
+
 <!-- Answer -->
 
         <record id="answer_0" model="website.forum.post">

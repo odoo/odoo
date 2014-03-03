@@ -114,15 +114,23 @@ class Post(osv.Model):
 class Users(osv.Model):
     _inherit = 'res.users'
     _columns = {
+        # TODO: Remove these 3 field and compute number in /user controller
         'question_ids':fields.one2many('website.forum.post', 'create_uid', 'Questions', domain=[('parent_id', '=', False)]),
         'answer_ids':fields.one2many('website.forum.post', 'create_uid', 'Answers', domain=[('parent_id', '!=', False)]),
         'vote_ids': fields.one2many('website.forum.post.vote', 'user_id', 'Votes'),
+
+        # Field to remove
         'tags': fields.many2many('website.forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tag'),
+
         'create_date': fields.datetime('Create Date', select=True, readonly=True),
-        'karma': fields.integer('Karma') # Use Gamification for this
+        'karma': fields.integer('Karma'), # Use Gamification for this
+        'forum': fields.boolean('Is Forum Member')
 
         # TODO: 'tag_ids':fields.function()
         # Badges : use the gamification module
+    }
+    _defaults = {
+        'forum': False
     }
 
 class PostHistory(osv.Model):

@@ -35,7 +35,6 @@ from openerp.addons.website.controllers.main import Website as controllers
 controllers = controllers()
 
 class website_forum(http.Controller):
-
     @http.route(['/forum/', '/forum/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
     def questions(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
@@ -138,7 +137,10 @@ class website_forum(http.Controller):
 
     @http.route('/forum/question/postanswer/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def post_answer(self, post_id, forum_id=1, **question):
+        # TODO: set forum on user to True
         cr, uid, context = request.cr, request.uid, request.context
+        request.registry['res.users'].write(cr, uid, uid, {'forum': True}, context=context)
+
         create_context = dict(context)
         new_question_id = request.registry['website.forum.post'].create(
             request.cr, request.uid, {
@@ -153,6 +155,7 @@ class website_forum(http.Controller):
     @http.route(['/forum/question/editanswer'], type='http', auth="user", website=True, multilang=True)
     def edit_answer(self, post_id, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
+        request.registry['res.users'].write(cr, uid, uid, {'forum': True}, context=context)
         post = request.registry['website.forum.post'].browse(cr, uid, int(post_id), context=context)
         for answer in post.child_ids:
             if answer.create_uid.id == request.uid:
@@ -167,8 +170,8 @@ class website_forum(http.Controller):
     @http.route('/forum/question/saveanswer/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def save_edited_answer(self, forum_id=1, **post):
         cr, uid, context = request.cr, request.uid, request.context
+        request.registry['res.users'].write(cr, uid, uid, {'forum': True}, context=context)
         answer_id = int(post.get('answer_id'))
-        
         new_question_id = request.registry['website.forum.post'].write( cr, uid, [answer_id], {
                 'content': post.get('answer_content'),
             }, context=context)
@@ -206,10 +209,10 @@ class website_forum(http.Controller):
         user_obj = request.registry['res.users']
 
         step = 30
-        tag_count = user_obj.search(cr, uid, [], count=True, context=context)
+        tag_count = user_obj.search(cr, uid, [('forum','=',True)], count=True, context=context)
         pager = request.website.pager(url="/forum/users/", total=tag_count, page=page, step=step, scope=30)
 
-        obj_ids = user_obj.search(cr, uid, [], limit=step, offset=pager['offset'], context=context)
+        obj_ids = user_obj.search(cr, uid, [('forum','=',True)], limit=step, offset=pager['offset'], context=context)
         users = user_obj.browse(cr, uid, obj_ids, context=context)
         searches['users'] = 'True'
 
