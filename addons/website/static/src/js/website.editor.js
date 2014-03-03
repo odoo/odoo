@@ -20,6 +20,10 @@
             website.form(this.pathname, 'POST');
         });
 
+        $(document).on('click', '.cke_editable label', function (ev) {
+            ev.preventDefault();
+        });
+
         $(document).on('submit', '.cke_editable form', function (ev) {
             // Disable form submition in editable mode
             ev.preventDefault();

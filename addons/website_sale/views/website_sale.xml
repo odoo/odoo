@@ -419,11 +419,11 @@
                                 <div>
                                     <div class="oe_msg_attachment" t-foreach='message.attachment_ids' t-as='attachment'>
                                         <a t-att-href="'/mail/download_attachment?model=mail.message&amp;id='+str(message.id)+'&amp;method=download_attachment&amp;attachment_id='+str(attachment.id)" target="_blank">
-                                            <t t-if="attachment.file_type == 'webimage'">
+                                            <t t-if="attachment.file_type_icon == 'webimage'">
                                                 <img t-att-src="'/web/binary/image?model=ir.attachment&amp;field=datas&amp;id=' + str(attachment.id) + '&amp;resize=100,80'"
                                                     class='oe_attachment_embedded'></img>
                                             </t>
-                                            <t t-if="attachment.file_type != 'webimage'">
+                                            <t t-if="attachment.file_type_icon != 'webimage'">
                                                 <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type + '.png'"
                                                     class='oe_attachment_webimage'></img>
                                             </t>
@@ -608,9 +608,9 @@
                       <t t-set="attribute" t-value="Ecommerce.has_search_filter(attribute_id.id)"/>
                       <div style="margin: 0 20px;" class="js_slider"
                         t-att-data-id="attribute_id.id"
-                        t-att-data-value-min="attribute and attribute[1][0] or attribute_id.float_min"
+                        t-att-data-value-min="attribute and attribute[1][0] or attribute_id.float_min or '0'"
                         t-att-data-value-max="attribute and attribute[1][1] or attribute_id.float_max"
-                        t-att-data-min="attribute_id.float_min"
+                        t-att-data-min="attribute_id.float_min or '0'"
                         t-att-data-max="attribute_id.float_max"></div>
                   </li>
                 </t>
@@ -784,7 +784,7 @@
                   <div class="form-group col-lg-6" groups="sale.group_delivery_invoice_address">
                       <label>
                           <input type="checkbox" name="shipping_different" t-att-checked="shipping"/>
-                          Ship to a different address
+                          <span>Ship to a different address</span>
                       </label>
                   </div>
               </div>

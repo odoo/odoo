@@ -19,13 +19,23 @@
         edit: function () {
             var self = this;
             $("body").off('click');
+            website.snippet.stop_animation();
             window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
             this.snippets.appendTo(this.$el);
-
             this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
-                website.snippet.stop_animation();
                 website.snippet.start_animation();
+                $(website.snippet.readyAnimation).each(function() {
+                    var animation = $(this).data("snippet-view");
+                    if (animation) {
+                        animation.$target.on('focus', '*', function(){
+                            animation.stop();
+                        });
+                        animation.$target.on('blur', '*', function(){
+                            animation.start();
+                        });
+                    }
+                });
             });
 
             return this._super.apply(this, arguments);
@@ -1232,7 +1242,6 @@
         on_clone: function () {
             var $clone = this.$target.clone(false);
             var _class = $clone.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, '');
-            _class += ' col-md-1';
             $clone.attr("class", _class);
             this.$target.after($clone);
             this.hide_remove_button();
@@ -1315,7 +1324,6 @@
             this.$editor.find(".js_add").on('click', function () {self.on_add_slide(); return false;});
             this.$editor.find(".js_remove").on('click', function () {self.on_remove_slide(); return false;});
 
-            this.$target.carousel('pause');
             this.rebind_event();
         },
         on_add_slide: function () {
@@ -1458,7 +1466,10 @@
                 self.$target.data("snippet-view").set_values();
             });
             this.$target.attr('contentEditable', 'false');
-            this.$target.find('> div > .oe_structure').attr('contentEditable', 'true');
+
+            this.$target.find('> div > .oe_structure').attr('contentEditable', 'true'); // saas-3 retro-compatibility
+
+            this.$target.find('> div > div:not(.oe_structure) > .oe_structure').attr('contentEditable', 'true');
         },
         scroll: function () {
             var self = this;

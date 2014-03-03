@@ -186,12 +186,11 @@ class IrAttachment(osv.Model):
     def get_attachment_type(self, cr, uid, ids, name, args, context=None):
         result = {}
         for attachment in self.browse(cr, uid, ids, context=context):
-            fileext = os.path.splitext(attachment.datas_fname)[1].lower()
-            if not fileext or not fileext[1:] in self._fileext_to_type:
-                return 'unknown'
-            result[attachment.id] = self._fileext_to_type[fileext[1:]]
+            fileext = os.path.splitext(attachment.datas_fname or '')[1].lower()[1:]
+            result[attachment.id] = self._fileext_to_type.get(fileext, 'unknown')
         return result
 
     _columns = {
-        'file_type': fields.function(get_attachment_type, type='char', string='File Type'),
+        'file_type_icon': fields.function(get_attachment_type, type='char', string='File Type Icon'),
+        'file_type': fields.related('file_type_icon', type='char'),     # FIXME remove in trunk
     }

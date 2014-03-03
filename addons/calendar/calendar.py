@@ -363,7 +363,7 @@ class calendar_alarm_manager(osv.AbstractModel):
              """
 
         filter_user = """
-                LEFT JOIN calendar_event_res_partner_rel AS part_rel ON part_rel.calendar_event_id = cal.id
+                RIGHT JOIN calendar_event_res_partner_rel AS part_rel ON part_rel.calendar_event_id = cal.id
                     AND part_rel.res_partner_id = %s
         """
 
@@ -1515,7 +1515,7 @@ class calendar_event(osv.Model):
                     continue
             if r['class'] == 'private':
                 for f in r.keys():
-                    if f not in ('id', 'date', 'date_deadline', 'duration', 'user_id', 'state', 'interval', 'count'):
+                    if f not in ('id', 'date', 'date_deadline', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date'):
                         if isinstance(r[f], list):
                             r[f] = []
                         else:
