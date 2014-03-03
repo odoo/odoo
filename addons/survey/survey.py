@@ -104,7 +104,7 @@ class survey_survey(osv.Model):
         """ Computes an URL for the survey results """
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
             'web.base.url')
-        return {id: urljoin(base_url, "survey/result/%s/" % id) for id in ids}
+        return {id: urljoin(base_url, "survey/results/%s/" % id) for id in ids}
 
     # Model fields #
 
@@ -479,6 +479,9 @@ class survey_question(osv.Model):
             oldname='minimum_req_ans'),
         'constr_error_msg': fields.char("Error message",
             oldname='req_error_msg'),
+        'user_input_line_ids': fields.one2many('survey.user_input_line',
+                                               'question_id', 'Answers',
+                                               domain=[('skipped', '=', False)]),
     }
     _defaults = {
         'page_id': lambda s, cr, uid, c: c.get('page_id'),

@@ -36,12 +36,13 @@ sent mails with personal token for the invitation of the survey.
     'summary': 'Create surveys, collect answers and print statistics',
     'author': 'OpenERP SA',
     'website': 'https://www.openerp.com/apps/survey/',
-    'depends': ['email_template', 'mail', 'website', 'web_kanban_gauge'],
+    'depends': ['email_template', 'mail', 'website', 'web_kanban_gauge', 'web_graph'],
     'data': [
         'security/survey_security.xml',
         'security/ir.model.access.csv',
         'views/survey_views.xml',
         'views/survey_templates.xml',
+        'views/survey_result.xml',
         'wizard/survey_email_compose_message.xml',
         'data/survey_cron.xml'
     ],
