@@ -118,18 +118,18 @@
                     <div class="raw">
                         <div class="col-md-4 forum_menu items">
                             <ul class="nav nav-pills">
-                                <li class="active">
-                                    <a href="#">
-                                        ALL
+                                <li t-att-class=" 'active' if searches.get('type') == str('all') or searches.get('type') == None else '' ">
+                                    <a t-attf-href="/forum/?{{ keep_query( type='all') }}">
+                                        ALL<t t-esc="searches.get('type')"/>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="#">
+                                <li t-att-class=" 'active' if searches.get('type') == str('unanswered') else '' ">
+                                    <a t-attf-href="/forum/?{{ keep_query( type='unanswered') }}">
                                         UNANSWERD
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="#">
+                                <li t-att-class=" 'active' if searches.get('type') == 'followed' else '' ">
+                                    <a t-attf-href="/forum/?{{ keep_query( type='followed') }}">
                                         FOLLOWED
                                     </a>
                                 </li>

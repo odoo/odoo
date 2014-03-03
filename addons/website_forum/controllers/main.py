@@ -40,24 +40,28 @@ class website_forum(http.Controller):
     def questions(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         forum_obj = request.registry['website.forum.post']
+        user_obj = request.registry['res.users']
         domain = [('parent_id', '=', False)]
         search = searches.get('search',False)
+        type = searches.get('type',False)
         if search:
             domain += ['|',
                 ('name', 'ilike', search),
                 ('content', 'ilike', search)]
+        if type == 'unanswered':
+            domain += [ ('child_ids', '=', False) ]
+        #TODO: update domain to show followed questions of user
+        if type == 'followed':
+            user = user_obj.browse(cr, uid, uid, context=context)
+            domain += [ ('id', 'in', [que.id for que in user.question_ids]) ]
 
         step = 10
-        question_count = forum_obj.search(
-            request.cr, request.uid, domain, count=True,
-            context=request.context)
+        question_count = forum_obj.search(cr, uid, domain, count=True, context=context)
         pager = request.website.pager(url="/forum/", total=question_count, page=page, step=step, scope=10)
 
-        obj_ids = forum_obj.search(
-            request.cr, request.uid, domain, limit=step,
-            offset=pager['offset'], context=request.context)
-        question_ids = forum_obj.browse(request.cr, request.uid, obj_ids,
-                                      context=request.context)
+        obj_ids = forum_obj.search(cr, uid, domain, limit=step, offset=pager['offset'], context=context)
+        question_ids = forum_obj.browse(cr, uid, obj_ids, context=context)
+
         #If dose not get any related question then redirect to ask question form.
         if search and not question_ids:
             values = {
