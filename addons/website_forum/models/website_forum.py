@@ -125,6 +125,7 @@ class Users(osv.Model):
         'answer_ids':fields.one2many('website.forum.post', 'create_uid', 'Answers', domain=[('parent_id', '!=', False)]),
         'vote_ids': fields.one2many('website.forum.post.vote', 'user_id', 'Votes'),
         'tags': fields.many2many('website.forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tag'),
+        'create_date': fields.datetime('Create Date', select=True, readonly=True),
         
         'karma': fields.integer('Karma')
         

@@ -44,6 +44,8 @@ class website_forum(http.Controller):
         domain = [('parent_id', '=', False)]
         search = searches.get('search',False)
         type = searches.get('type',False)
+        if not type:
+            searches['type'] = 'all'
         if search:
             domain += ['|',
                 ('name', 'ilike', search),
@@ -175,3 +177,45 @@ class website_forum(http.Controller):
         }
 
         return request.website.render("website_forum.index", values)
+
+    @http.route(['/forum/tags', '/forum/tags/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
+    def tags(self, page=1, **searches):
+        cr, uid, context = request.cr, request.uid, request.context
+        tag_obj = request.registry['website.forum.tag']
+
+        step = 30
+        tag_count = tag_obj.search(cr, uid, [], count=True, context=context)
+        pager = request.website.pager(url="/forum/tags/", total=tag_count, page=page, step=step, scope=30)
+
+        obj_ids = tag_obj.search(cr, uid, [], limit=step, offset=pager['offset'], context=context)
+        tags = tag_obj.browse(cr, uid, obj_ids, context=context)
+        searches['tags'] = 'True'
+
+        values = {
+            'tags': tags,
+            'pager': pager,
+            'searches': searches,
+        }
+
+        return request.website.render("website_forum.tag", values)
+
+    @http.route(['/forum/users', '/forum/users/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
+    def users(self, page=1, **searches):
+        cr, uid, context = request.cr, request.uid, request.context
+        user_obj = request.registry['res.users']
+
+        step = 30
+        tag_count = user_obj.search(cr, uid, [], count=True, context=context)
+        pager = request.website.pager(url="/forum/users/", total=tag_count, page=page, step=step, scope=30)
+
+        obj_ids = user_obj.search(cr, uid, [], limit=step, offset=pager['offset'], context=context)
+        users = user_obj.browse(cr, uid, obj_ids, context=context)
+        searches['users'] = 'True'
+
+        values = {
+            'users': users,
+            'pager': pager,
+            'searches': searches,
+        }
+
+        return request.website.render("website_forum.users", values)

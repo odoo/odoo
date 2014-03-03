@@ -96,18 +96,18 @@
                         </div>
                         <div class="col-md-3 nav nav-pills text-right">
                             <ul class="nav nav-pills">
-                                <li>
-                                    <a href="#">
+                                <li t-att-class="searches.get('tags') and 'active' or '' ">
+                                    <a href="/forum/tags">
                                         tags
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="#">
+                                <li t-att-class="searches.get('users') and 'active' or '' ">
+                                    <a href="/forum/users">
                                         people
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="#">
+                                <li t-att-class="searches.get('badge') and 'active' or '' ">
+                                    <a href="/forum/badge">
                                         badges
                                     </a>
                                 </li>
@@ -118,17 +118,17 @@
                     <div class="raw">
                         <div class="col-md-4 forum_menu items">
                             <ul class="nav nav-pills">
-                                <li t-att-class=" 'active' if searches.get('type') == str('all') or searches.get('type') == None else '' ">
+                                <li t-att-class="searches.get('type') == 'all' and 'active' or '' ">
                                     <a t-attf-href="/forum/?{{ keep_query( type='all') }}">
                                         ALL
                                     </a>
                                 </li>
-                                <li t-att-class=" 'active' if searches.get('type') == str('unanswered') else '' ">
+                                <li t-att-class="searches.get('type') == 'unanswered' and 'active' or '' ">
                                     <a t-attf-href="/forum/?{{ keep_query( type='unanswered') }}">
                                         UNANSWERD
                                     </a>
                                 </li>
-                                <li t-att-class=" 'active' if searches.get('type') == 'followed' else '' ">
+                                <li t-att-class="searches.get('type') == 'followed' and 'active' or '' ">
                                     <a t-attf-href="/forum/?{{ keep_query( type='followed') }}">
                                         FOLLOWED
                                     </a>
@@ -608,8 +608,82 @@
             </xpath>
         </template>
 
+        <template id="tag">
+            <t t-call="website.layout">
+                <div>
+                    <t t-call="website_forum.forum_header"/>
+                </div>
+                <!--Todo: Improve kanban-->
+                <div class="container">
+                    <t t-foreach="tags" t-as="tag">
+                        <a t-attf-href="/forum/tag/#{ tag.id }" class="badge">
+                            <t t-esc="tag.name" />
+                        </a>
+                        <span> 
+                            X <t t-esc="len(tag.post_ids)"/>
+                        </span>
+                    </t>
+                    <div class="pull-left">
+                        <t t-call="website.pager" />
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="users">
+            <t t-call="website.layout">
+                <div>
+                    <t t-call="website_forum.forum_header"/>
+                </div>
+                <div class="container">
+                    <t t-foreach="users" t-as="user">
+                        <div class="row">
+                            <div class="col-xs-3 ">
+                                <div class="row">
+                                    <div class="col-xs-12 col-md-3">
+                                        <span t-field="user.image" t-field-options='{"widget": "image"}' />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-9">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="text-left">
+                                            <a t-attf-href="/forum/user/#{ user.id }">
+                                                <t t-esc="user.name" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div style="font-size:10px" class="text-left">
+                                            <b style="color : green">11</b>
+                                            <span class="glyphicon glyphicon-certificate badge-gold"></span>
+                                            1
+                                            <span class="glyphicon glyphicon-certificate badge-silver"></span>
+                                            10
+                                            <span class="glyphicon glyphicon-certificate badge-bronze"></span>
+                                            5
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                    </t>
+                    <div class="pull-left">
+                        <t t-call="website.pager" />
+                    </div>
+                </div>
+            </t>
+        </template>
+
         <template id="user_detail_full">
             <t t-call="website.layout">
+                <div>
+                    <t t-call="website_forum.forum_header"/>
+                </div>
                 <div class="container">
                     <div class="row col-xs-12 page-header">
                         <h3>
