@@ -86,11 +86,14 @@ class website_hr_recruitment(http.Controller):
 
         value = {
             'source_id' : imd.xmlid_to_res_id(cr, SUPERUSER_ID, 'hr_recruitment.source_website_company'),
+            'name': '%s\'s Application' % post.get('partner_name'), 
         }
-        for f in ['phone', 'email_from', 'partner_name', 'description']:
+        for f in ['email_from', 'partner_name', 'description']:
             value[f] = post.get(f)
         for f in ['department_id', 'job_id']:
             value[f] = int(post.get(f) or 0)
+        # Retro-compatibility for saas-3. "phone" field should be replace by "partner_phone" in the template in trunk.
+        value['partner_phone'] = post.pop('phone', False)
 
         applicant_id = request.registry['hr.applicant'].create(cr, SUPERUSER_ID, value, context=context)
         if post['ufile']:
