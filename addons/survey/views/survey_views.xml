@@ -250,8 +250,6 @@
                                 <h3 class="oe_kanban_ellipsis"><t t-esc="record.title.raw_value.toString()"></t></h3>
                                 <div t-if="record.visible_to_user.raw_value === false">
                                     <center>
-                                        <field name="tot_sent_survey" widget="gauge" style="width:160px; height: 120px;"
-                                            options="{'max_field': 'tot_sent_survey'}"/>
                                         <field name="tot_start_survey" widget="gauge" style="width:160px; height: 120px;"
                                             options="{'max_field': 'tot_sent_survey'}"/>
                                         <field name="tot_comp_survey" widget="gauge" style="width:160px; height: 120px;"
@@ -260,8 +258,6 @@
                                 </div>
                                 <div t-if="record.visible_to_user.raw_value === true">
                                     <center>
-                                        <field name="tot_start_survey" widget="gauge" style="width:160px; height: 120px;"
-                                            options="{'max_field': 'tot_start_survey'}"/>
                                         <field name="tot_comp_survey" widget="gauge" style="width:160px; height: 120px;"
                                             options="{'max_field': 'tot_start_survey'}"/>
                                     </center>
