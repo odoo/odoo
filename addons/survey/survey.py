@@ -1057,5 +1057,3 @@ def dict_keys_startswith(dictionary, string):
     .. note::
         This function uses dictionary comprehensions (Python >= 2.7)'''
     return {k: dictionary[k] for k in filter(lambda key: key.startswith(string), dictionary.keys())}
-
-# vim: exp and tab: smartindent: tabstop=4: softtabstop=4: shiftwidth=4:

@@ -57,5 +57,3 @@ sent mails with personal token for the invitation of the survey.
     'images': [],
     'css': ['static/src/css/survey.css'],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

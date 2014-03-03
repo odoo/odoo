@@ -218,5 +218,3 @@ class survey_mail_compose_message(osv.TransientModel):
                 create_response_and_send_mail(wizard, token, partner['id'], partner['email'])
 
         return {'type': 'ir.actions.act_window_close'}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

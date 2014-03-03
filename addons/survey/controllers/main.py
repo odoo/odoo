@@ -430,5 +430,3 @@ def dict_soft_update(dictionary, key, value):
         dictionary[key].append(value)
     else:
         dictionary.update({key: [value]})
-
-# vim: exp and tab: smartindent: tabstop=4: softtabstop=4: shiftwidth=4:
