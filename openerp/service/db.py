@@ -6,7 +6,7 @@ import logging
 import os
 import threading
 import traceback
-from contextlib import contextmanager, closing
+from contextlib import closing
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -28,7 +28,8 @@ def _initialize_db(id, db_name, demo, lang, user_password):
         self_actions[id]['progress'] = 0
         db = openerp.sql_db.db_connect(db_name)
         with closing(db.cursor()) as cr:
-            openerp.modules.db.initialize(cr) # TODO this should be removed as it is done by RegistryManager.new().
+            # TODO this should be removed as it is done by RegistryManager.new().
+            openerp.modules.db.initialize(cr)
             openerp.tools.config['lang'] = lang
             cr.commit()
 
@@ -55,14 +56,13 @@ def _initialize_db(id, db_name, demo, lang, user_password):
         self_actions[id]['traceback'] = traceback.format_exc()
 
 def dispatch(method, params):
-    if method in [ 'create', 'get_progress', 'drop', 'dump',
-        'restore', 'rename',
-        'change_admin_password', 'migrate_databases',
-        'create_database', 'duplicate_database' ]:
+    if method in ['create', 'get_progress', 'drop', 'dump', 'restore', 'rename',
+                  'change_admin_password', 'migrate_databases',
+                  'create_database', 'duplicate_database']:
         passwd = params[0]
         params = params[1:]
         security.check_super(passwd)
-    elif method in [ 'db_exist', 'list', 'list_lang', 'server_version' ]:
+    elif method in ['db_exist', 'list', 'list_lang', 'server_version']:
         # params = params
         # No security check for these methods
         pass
@@ -78,9 +78,9 @@ def _create_empty_database(name):
         cr.execute("SELECT datname FROM pg_database WHERE datname = %s",
                    (name,))
         if cr.fetchall():
-            raise openerp.exceptions.Warning(" %s database already exists!" % name )
+            raise openerp.exceptions.Warning("database %r already exists!" % (name,))
         else:
-            cr.autocommit(True) # avoid transaction block
+            cr.autocommit(True)     # avoid transaction block
             cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (name, chosen_template))
 
 def exp_create(db_name, demo, lang, user_password='admin'):
@@ -96,7 +96,7 @@ def exp_create(db_name, demo, lang, user_password='admin'):
 
     _logger.info('CREATE DATABASE %s', db_name.lower())
     create_thread = threading.Thread(target=_initialize_db,
-            args=(id, db_name, demo, lang, user_password))
+                                     args=(id, db_name, demo, lang, user_password))
     create_thread.start()
     self_actions[id]['thread'] = create_thread
     return id
@@ -121,14 +121,14 @@ def exp_duplicate_database(db_original_name, db_name):
     openerp.sql_db.close_db(db_original_name)
     db = openerp.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
-        cr.autocommit(True) # avoid transaction block
+        cr.autocommit(True)     # avoid transaction block
         cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (db_name, db_original_name))
     return True
 
 def exp_get_progress(id):
     if self_actions[id]['thread'].isAlive():
 #       return openerp.modules.init_progress[db_name]
-        return min(self_actions[id].get('progress', 0),0.95), []
+        return min(self_actions[id].get('progress', 0), 0.95), []
     else:
         clean = self_actions[id]['clean']
         if clean:
@@ -140,9 +140,8 @@ def exp_get_progress(id):
             self_actions.pop(id)
             return 1.0, users
         else:
-            e = self_actions[id]['exception'] # TODO this seems wrong: actions[id]['traceback'] is set, but not 'exception'.
-            self_actions.pop(id)
-            raise Exception, e
+            a = self_actions.pop(id)
+            raise Exception, a['exception'], a['traceback']     # flake8: noqa
 
 def exp_drop(db_name):
     if db_name not in exp_list(True):
@@ -152,18 +151,17 @@ def exp_drop(db_name):
 
     db = openerp.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
-        cr.autocommit(True) # avoid transaction block
+        cr.autocommit(True)     # avoid transaction block
         # Try to terminate all other connections that might prevent
         # dropping the database
         try:
-
             # PostgreSQL 9.2 renamed pg_stat_activity.procpid to pid:
             # http://www.postgresql.org/docs/9.2/static/release-9-2.html#AEN110389
             pid_col = 'pid' if cr._cnx.server_version >= 90200 else 'procpid'
 
             cr.execute("""SELECT pg_terminate_backend(%(pid_col)s)
                           FROM pg_stat_activity
-                          WHERE datname = %%s AND 
+                          WHERE datname = %%s AND
                                 %(pid_col)s != pg_backend_pid()""" % {'pid_col': pid_col},
                        (db_name,))
         except Exception:
@@ -190,7 +188,7 @@ def _set_pg_password_in_environment():
     set, and removing it afterwards.
 
     See also http://www.postgresql.org/docs/8.4/static/libpq-envars.html
-    
+
     .. note:: This is not thread-safe, and should never be enabled for
          SaaS (giving SaaS users the super-admin password is not a good idea
          anyway)
@@ -222,11 +220,11 @@ def exp_dump(db_name):
         res = stdout.close()
 
         if not data or res:
-            _logger.error(
-                    'DUMP DB: %s failed! Please verify the configuration of the database password on the server. '
-                    'You may need to create a .pgpass file for authentication, or specify `db_password` in the '
-                    'server configuration file.\n %s', db_name, data)
-            raise Exception, "Couldn't dump database"
+            _logger.error('DUMP DB: %s failed! Please verify the configuration of the database '
+                          'password on the server. You may need to create a .pgpass file for '
+                          'authentication, or specify `db_password` in the server configuration '
+                          'file.\n %s', db_name, data)
+            raise Exception("Couldn't dump database")
         _logger.info('DUMP DB successful: %s', db_name)
 
         return base64.encodestring(data)
@@ -235,7 +233,7 @@ def exp_restore(db_name, data):
     with _set_pg_password_in_environment():
         if exp_db_exist(db_name):
             _logger.warning('RESTORE DB: %s already exists', db_name)
-            raise Exception, "Database already exists"
+            raise Exception("Database already exists")
 
         _create_empty_database(db_name)
 
@@ -249,20 +247,20 @@ def exp_restore(db_name, data):
         cmd.append('--dbname=' + db_name)
         args2 = tuple(cmd)
 
-        buf=base64.decodestring(data)
+        buf = base64.decodestring(data)
         if os.name == "nt":
             tmpfile = (os.environ['TMP'] or 'C:\\') + os.tmpnam()
             file(tmpfile, 'wb').write(buf)
-            args2=list(args2)
+            args2 = list(args2)
             args2.append(tmpfile)
-            args2=tuple(args2)
+            args2 = tuple(args2)
         stdin, stdout = openerp.tools.exec_pg_command_pipe(*args2)
         if not os.name == "nt":
             stdin.write(base64.decodestring(data))
         stdin.close()
         res = stdout.close()
         if res:
-            raise Exception, "Couldn't restore database"
+            raise Exception("Couldn't restore database")
         _logger.info('RESTORE DB: %s', db_name)
 
         return True
@@ -273,7 +271,7 @@ def exp_rename(old_name, new_name):
 
     db = openerp.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
-        cr.autocommit(True) # avoid transaction block
+        cr.autocommit(True)     # avoid transaction block
         try:
             cr.execute('ALTER DATABASE "%s" RENAME TO "%s"' % (old_name, new_name))
             _logger.info('RENAME DB: %s -> %s', old_name, new_name)
