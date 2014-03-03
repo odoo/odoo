@@ -378,28 +378,38 @@
 <template id="country_events_list" name="Country">
     <t t-ignore="true">
         <t t-if="events">
-            <div class="mb16 country_events_list css_editable_mode_hidden">
-                <t t-if="country">
-                    <img class="img-rounded img-responsive" t-att-src="'/website/image?model=res.country&amp;field=image&amp;id='+str(country.id)"></img>
-                    <h4><b>Events In <span t-esc="country.name"></span></b></h4>
-                </t>
-                <t t-if="not country">
-                    <h4><b>Upcoming Events</b></h4>
-                </t>
-                <div t-foreach="events[:5]" t-as="country_event" class="oe_website_overflow_ellipsis mb8">
-                    <t t-if="not country_event['event'].website_published">
-                        <span class="label label-danger"><i class="fa fa-ban"></i></span>
+            <div class="country_events_list">
+                <div class="mb16 css_editable_mode_hidden">
+                    <t t-if="country">
+                        <img class="img-rounded img-responsive" t-att-src="'/website/image?model=res.country&amp;field=image&amp;id='+str(country.id)"></img>
+                        <h4><b>Events In <span t-esc="country.name"></span></b></h4>
                     </t>
-                    <i class="fa fa-calendar"></i> <b><span t-esc="country_event['date']"/>: <span><a t-att-href="country_event['url']"><t t-esc="country_event['event'].name"/></a></span></b>
+                    <t t-if="not country">
+                        <h4><b>Upcoming Events</b></h4>
+                    </t>
+                    <div t-foreach="events[:5]" t-as="country_event" class="oe_website_overflow_ellipsis mb8">
+                        <t t-if="not country_event['event'].website_published">
+                            <span class="label label-danger"><i class="fa fa-ban"></i></span>
+                        </t>
+                        <i class="fa fa-calendar"></i> <b><span t-esc="country_event['date']"/>: <span><a t-att-href="country_event['url']"><t t-esc="country_event['event'].name"/></a></span></b>
+                    </div>
+                    <t t-if="len(events) > 5">
+                        <div t-if="country">
+                            <b><a t-att-href="'/event/?country='+str(country.id)">See All events from <span t-esc="country.name"></span></a></b>
+                        </div>
+                        <div t-if="not country">
+                            <b><a t-att-href="'/event/"> See All Upcoming events </a></b>
+                        </div>
+                    </t>
                 </div>
-                <t t-if="len(events) > 5">
-                    <div t-if="country" class="text-center">
-                        <b><a t-att-href="'/event/?country='+str(country.id)">See All events from <span t-esc="country.name"></span></a></b>
+                <div class="css_non_editable_mode_hidden">
+                    <div class="text-muted text-center">
+                        <h1>
+                            <i class="fa fa-flag fa-5x"></i>
+                        </h1>
+                        <h1>Events from Your Country</h1>
                     </div>
-                    <div t-if="not country" class="text-center">
-                        <b><a t-att-href="'/event/"> See All Upcoming events </a></b>
-                    </div>
-                </t>
+                </div>
             </div>
         </t>
     </t>
