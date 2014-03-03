@@ -65,12 +65,6 @@ class website_forum(http.Controller):
         question_ids = forum_obj.browse(cr, uid, obj_ids, context=context)
 
         #If dose not get any related question then redirect to ask question form.
-        if search and not question_ids:
-            values = {
-                'question_name': search,
-            }
-            return request.website.render("website_forum.ask_question", values)
-
         values = {
             'total_questions': question_count,
             'question_ids': question_ids,
@@ -79,6 +73,13 @@ class website_forum(http.Controller):
         }
 
         return request.website.render("website_forum.index", values)
+
+    @http.route(['/forum/ask'], type='http', auth="public", website=True, multilang=True)
+    def question_ask(self, **post):
+        values = {
+            'searches': {}
+        }
+        return request.website.render("website_forum.ask_question", values)
 
     @http.route(['/forum/question/<model("website.forum.post"):question>/page/<page:page>'], type='http', auth="public", website=True, multilang=True)
     def question(self, question, page, **post):
@@ -178,25 +179,16 @@ class website_forum(http.Controller):
 
         return request.website.render("website_forum.index", values)
 
-    @http.route(['/forum/tags', '/forum/tags/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/forum/tags'], type='http', auth="public", website=True, multilang=True)
     def tags(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         tag_obj = request.registry['website.forum.tag']
-
-        step = 30
-        tag_count = tag_obj.search(cr, uid, [], count=True, context=context)
-        pager = request.website.pager(url="/forum/tags/", total=tag_count, page=page, step=step, scope=30)
-
-        obj_ids = tag_obj.search(cr, uid, [], limit=step, offset=pager['offset'], context=context)
+        obj_ids = tag_obj.search(cr, uid, [], limit=None, context=context)
         tags = tag_obj.browse(cr, uid, obj_ids, context=context)
-        searches['tags'] = 'True'
-
         values = {
             'tags': tags,
-            'pager': pager,
-            'searches': searches,
+            'searches': {}
         }
-
         return request.website.render("website_forum.tag", values)
 
     @http.route(['/forum/users', '/forum/users/page/<int:page>'], type='http', auth="public", website=True, multilang=True)

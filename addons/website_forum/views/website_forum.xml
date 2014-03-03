@@ -77,11 +77,19 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <a class="navbar-brand" href="#">Help</a>
+                            <a class="navbar-brand" href="/forum">Help</a>
+                            <!-- FP Note: Replace by this when controllers have changed
+                                <a class="navbar-brand" t-attf-href="/forum/#{slug(forum)}">
+                                    <span t-field="forum.name"/>
+                                </a>
+                            -->
                         </div>
                         <div class="collapse navbar-collapse" id="oe-help-navbar-collapse">
                             <ul class="nav navbar-nav">
-                                <li class="dropdown">
+                                <li t-if="searches.get('type') not in ('all', 'unanswered','followed')">
+                                    <a href="/forum">Questions</a>
+                                </li>
+                                <li class="dropdown" t-if="searches.get('type') in ('all', 'unanswered','followed')">
                                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                       <t t-if="searches.get('type') == 'all'">All Questions</t>
                                       <t t-if="searches.get('type') == 'unanswered'">Unanswered Questions</t>
@@ -119,6 +127,9 @@
                                 </li>
                                 <li t-att-class="searches.get('badge') and 'active' or '' ">
                                     <a href="/forum/badge">Badges</a>
+                                </li>
+                                <li>
+                                    <a href="/user/1"><span class="label label-success">You got the <em>New Author</em> badge!</span></a>
                                 </li>
                             </ul>
                             <form class="navbar-form navbar-right" role="search" action="/forum/" method="get">
@@ -178,131 +189,71 @@
         </template>
 
         <template id="user_detail">
-            <div class="col-sm-3 col-sm-offset-9 col-md-offset-8 text-right">
-                <div class="panel panel-primary">
-                    <p class="text-center-heading">
-                        <small>
-                            asked
-                            <span t-esc="question.create_date"></span>
-                        </small>
-                    </p>
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <span t-field="question.create_uid.image" t-field-options='{"widget": "image"}' />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-9">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <div class="text-left">
-                                        <a t-attf-href="/forum/user/#{ question.create_uid.id }">
-                                            <t t-esc="question.create_uid.name" />
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <div style="font-size:10px" class="text-left">
-                                        <b style="color : green">11</b>
-                                        <span class="glyphicon glyphicon-certificate badge-gold"></span>
-                                        1
-                                        <span class="glyphicon glyphicon-certificate badge-silver"></span>
-                                        10
-                                        <span class="glyphicon glyphicon-certificate badge-bronze"></span>
-                                        5
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template>
-
-        <template id="post_vote">
-        </template>
-
-        <template id="post_links">
-            <div class="row">
-                <div class="col-xs-12 text-right">
-                    <a class="action-links" href="">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                    <a class="action-links" href="">
-                        <span class="glyphicon glyphicon-flag"></span>
-                    </a>
-                    <a class="action-links" href="">
-                        <span class="glyphicon glyphicon-trash"></span>
-                    </a>
-                    <a class="action-links" href="">
-                        <span class="glyphicon glyphicon-link"></span>
-                    </a>
+            <div>
+                <span t-field="user.image" t-field-options='{"widget": "image", "class":"pull-left img img-circle img-avatar"}' />
+                <div>
+                    <a t-attf-href="/forum/user/#{ slug(user) }" t-field="user.name"/>
+                    <t t-raw="separator or ', '"/>
+                    <b>11 badges:</b>
+                    <span class="fa fa-certificate badge-gold"></span>
+                    1
+                    <span class="fa fa-certificate badge-silver"></span>
+                    10
+                    <span class="fa fa-certificate badge-bronze"></span>
+                    5
+                    <br/>
+                    <t t-raw="0"/>
                 </div>
             </div>
         </template>
 
         <template id="ask_question">
-            <t t-call="website.layout">
-                <div class="container">
-                    <div class="col-md-9 col-xs-11">
-                        <div class="row">
-                            <div class="col-xs-12 page-header">
-                                <h3>Please Ask your Question here</h3>
-                            </div>
-                            <div class="col-xs-12">
-                                <ul>
-                                    <li>
-                                        please, try to make your question interesting to others
-                                    </li>
-                                    <li>
-                                        provide enough details and, if possible, give an example
-                                    </li>
-                                    <li>
-                                        be clear and concise, avoid unnecessary introductions (Hi,
-                                        ...
-                                        Thanks...)
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <form action="/forum/question/ask/" method="post" role="form">
-                                <div class="col-xs-12">
-                                    <input type="text" name="question_name" required="True"
-                                        t-attf-value="#{question_name or ''}" id="textbox_user_question"
-                                        class="form-control" placeholder="Enter your Question" />
-                                </div>
-                                <div class="col-xs-12">
-                                    Please enter a descriptive question (should
-                                    finish by a '?')
-                                </div>
-                                <div class="col-xs-12">
-                                    <textarea name="question_content" required="True"
-                                        t-attf-value="#{question_content or ''}" class="form-control"
-                                        id="textarea_ckeditor" rows="10" style="width : 100%" />
-                                </div>
-                                <div class="col-xs-12">
-                                    Tags:
-                                </div>
-                                <div class="col-xs-12">
-                                    <input type="text" name="question_tag" t-attf-value="#{question_tag or ''}"
-                                        class="form-control" id="textarea_tags" style="width : 100%" />
-                                </div>
-                                <div class="col-xs-8">
-                                    <button class="btn btn-default" id="btn_ask_your_question"
-                                        style="background-color : #df3f3f; color: white !important;">Post Your Question</button>
-                                </div>
-                            </form>
-                        </div>
-                        <script type="text/javascript">
-                            CKEDITOR.replace("textarea_ckeditor");
-                        </script>
+            <t t-call="website_forum.header">
+                <h1 class="mt0">Ask your Question</h1>
+                <ul>
+                    <li>
+                        please, try to make your question interesting to others
+                    </li>
+                    <li>
+                        provide enough details and, if possible, give an example
+                    </li>
+                    <li>
+                        be clear and concise, avoid unnecessary introductions (Hi,
+                        ...
+                        Thanks...)
+                    </li>
+                </ul>
+
+                <form action="/forum/question/ask/" method="post" role="form">
+                    <div class="col-xs-12">
+                        <input type="text" name="question_name" required="True"
+                            t-attf-value="#{question_name or ''}" id="textbox_user_question"
+                            class="form-control" placeholder="Enter your Question" />
                     </div>
-                </div>
+                    <div class="col-xs-12">
+                        Please enter a descriptive question (should
+                        finish by a '?')
+                    </div>
+                    <div class="col-xs-12">
+                        <textarea name="question_content" required="True"
+                            t-attf-value="#{question_content or ''}" class="form-control"
+                            id="textarea_ckeditor" rows="10" style="width : 100%" />
+                    </div>
+                    <div class="col-xs-12">
+                        Tags:
+                    </div>
+                    <div class="col-xs-12">
+                        <input type="text" name="question_tag" t-attf-value="#{question_tag or ''}"
+                            class="form-control" id="textarea_tags" style="width : 100%" />
+                    </div>
+                    <div class="col-xs-8">
+                        <button class="btn btn-default" id="btn_ask_your_question"
+                            style="background-color : #df3f3f; color: white !important;">Post Your Question</button>
+                    </div>
+                </form>
+                <script type="text/javascript">
+                    CKEDITOR.replace("textarea_ckeditor");
+                </script>
             </t>
         </template>
 
@@ -389,34 +340,20 @@
         </template>
 
         <template id="answer">
-            <ul class="media-list">
-                <div>
-                    <li t-foreach="question.child_ids" t-as="answer" class="media">
-                        <div>
-                            <t t-call="website_forum.post_vote"/>
-                            <div class="row col-md-9" style="font-size:14px">
-                                <t t-esc="answer.content" />
-                            </div>
-                            <div class="row">
-                                <t t-call="website_forum.user_detail" />
-                            </div>
-                            <t t-call="website_forum.post_links" />
-                        </div>
-                    </li>
-                </div>
-            </ul>
+
         </template>
 
         <template id="post_description_full" name="Question Navigation">
             <t t-call="website_forum.header">
                 <div class="question">
-                    <div class="pull-left text-center">
+                    <div class="text-center pull-left">
                         <div t-attf-class="box oe_grey">
-                            <div class="fa fa-thumbs-up text-success"/>
-                            <div>
+                            <a href="#" class="fa fa-thumbs-up text-success"/>
                             <span t-esc="len(question.vote_ids)"/>
+                            <a href="#" class="fa fa-thumbs-down text-warning"/>
+                            <div>
+                                votes
                             </div>
-                            <div class="fa fa-thumbs-down text-warning"/>
                         </div>
                         <div class="text-muted">
                             <span t-esc="len(question.child_ids)"/>
@@ -424,116 +361,105 @@
                             <span t-if="len(question.child_ids)&lt;=1">Answer</span>
                         </div>
                     </div>
-                    <div>
+                    <div style="margin-left: 120px;">
                         <h1 t-field="question.name" class="mt0"/>
                         <t t-raw="question.content"/>
-                        <div>
-                            <t t-foreach="question.tags" t-as="tag">
-                                <a t-attf-href="/forum/tag/#{ tag.id }" class="badge" t-field="tag.name"/>
+
+                        <div class="mt16 clearfix">
+                            <div class="pull-right">
+                                <t t-foreach="question.tags" t-as="tag">
+                                    <a t-attf-href="/forum/tag/#{ tag.id }" class="badge" t-field="tag.name"/>
+                                </t>
+                            </div>
+                            <t t-set="user" t-value="question.create_uid"/>
+                            <t t-call="website_forum.user_detail">
+                                <span class="text-muted">Asked on <span t-field="question.write_date"/></span>
                             </t>
-                        </div>
-                        <div class="row">
-                            <t t-call="website_forum.user_detail" />
                         </div>
                     </div>
                 </div>
                 <hr/>
 
-                <div class="row">
-                    <t t-call="website_forum.answer"/>
+                <div t-foreach="question.child_ids" t-as="answer" class="mt16 mb32">
+                    <div class="text-center pull-left">
+                        <div t-attf-class="box oe_grey">
+                            <a href="#" class="fa fa-thumbs-up text-success"/>
+                            <span t-esc="len(question.vote_ids)"/>
+                            <a href="#" class="fa fa-thumbs-down text-warning"/>
+                            <div>
+                                votes
+                            </div>
+                        </div>
+                        <div class="text-muted">
+                            <a href="#" class="fa fa-2x fa-check"/>
+                        </div>
+                    </div>
+                    <div style="margin-left: 120px;" class="clearfix">
+                        <t t-raw="answer.content" />
+                        <div class="mt16">
+                            <div class="pull-right">
+                                <a class="action-links" href="">
+                                    <span class="fa fa-edit"></span>
+                                </a>
+                                <a class="action-links" href="">
+                                    <span class="fa fa-flag"></span>
+                                </a>
+                                <a class="action-links" href="">
+                                    <span class="fa-trash-o"></span>
+                                </a>
+                                <a class="action-links" href="">
+                                    <span class="fa fa-link"></span>
+                                </a>
+                            </div>
+                            <t t-set="user" t-value="answer.create_uid"/>
+                            <t t-call="website_forum.user_detail">
+                                <span class="text-muted">Answered on <span t-field="answer.create_date"/></span>
+                            </t>
+                        </div>
+                    </div>
                 </div>
                 <div t-if="not answer_done">
                     <t t-call="website_forum.post_answer"/>
-                </div>
-                <div t-if="answer_done">
-                    <form action="/forum/question/editanswer/" method="post" role="form">
-                        <input name="post_id" t-att-value="question.id" type="hidden"/>
-                        <button class="btn btn-default btn-lg">
-                            Edit Your Answer
-                        </button>
-                        <span> (only one answer per question is allowed) </span>
-                    </form>
                 </div>
             </t>
         </template>
 
 
         <template id="tag">
-            <t t-call="website.layout">
-                <div>
-                    <t t-call="website_forum.header"/>
-                </div>
-                <!--Todo: Improve kanban-->
-                <div class="container">
-                    <t t-foreach="tags" t-as="tag">
-                        <a t-attf-href="/forum/tag/#{ tag.id }" class="badge">
-                            <t t-esc="tag.name" />
+            <t t-call="website_forum.header">
+                <h1 class="mt0">
+                    Question by Tags
+                </h1>
+                <div class="row">
+                    <div class="col-sm-3 mt16" t-foreach="tags" t-as="tag">
+                        <a t-attf-href="/forum/tag/#{ slug(tag) }" class="badge">
+                            <span t-field="tag.name" />
                         </a>
                         <span> 
                             X <t t-esc="len(tag.post_ids)"/>
                         </span>
-                    </t>
-                    <div class="pull-left">
-                        <t t-call="website.pager" />
                     </div>
                 </div>
             </t>
         </template>
 
         <template id="users">
-            <t t-call="website.layout">
-                <div>
-                    <t t-call="website_forum.header"/>
-                </div>
-                <div class="container">
-                    <t t-foreach="users" t-as="user">
-                        <div class="row">
-                            <div class="col-xs-3 ">
-                                <div class="row">
-                                    <div class="col-xs-12 col-md-3">
-                                        <span t-field="user.image" t-field-options='{"widget": "image"}' />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-9">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <div class="text-left">
-                                            <a t-attf-href="/forum/user/#{ user.id }">
-                                                <t t-esc="user.name" />
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <div style="font-size:10px" class="text-left">
-                                            <b style="color : green">11</b>
-                                            <span class="glyphicon glyphicon-certificate badge-gold"></span>
-                                            1
-                                            <span class="glyphicon glyphicon-certificate badge-silver"></span>
-                                            10
-                                            <span class="glyphicon glyphicon-certificate badge-bronze"></span>
-                                            5
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    
-                    </t>
-                    <div class="pull-left">
-                        <t t-call="website.pager" />
+            <t t-call="website_forum.header">
+                <div class="row">
+                    <div t-foreach="users" t-as="user" class="col-sm-4">
+                        <t t-set="separator"><br/></t>
+                        <t t-call="website_forum.user_detail"/>
+                        <span class="text-muted">Joined on <span t-field="user.create_date"/></span>
                     </div>
+                </div>
+                <div class="pull-left">
+                    <t t-call="website.pager" />
                 </div>
             </t>
         </template>
 
         <template id="user_detail_full">
-            <t t-call="website.layout">
-                <div>
-                    <t t-call="website_forum.header"/>
-                </div>
+            <t t-call="website_forum.header">
                 <div class="container">
                     <div class="row col-xs-12 page-header">
                         <h3>

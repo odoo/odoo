@@ -30,17 +30,13 @@ from openerp.addons.website.models.website import slug
 #TODO: Do we need a forum object like blog object ? Need to check with BE team 
 class Forum(osv.Model):
     _name = 'website.forum'
-    _description = 'Blogs'
+    _description = 'Forums'
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = 'name'
- 
     _columnss = {
-        'name': fields.char('Name', required=True),
-        'description': fields.text('Description'),
-        'forum_post_ids': fields.one2many(
-            'website.forum.post', 'forum_id',
-            'Posts',
-        ),
+        'name': fields.char('Name', required=True, translate=True),
+        'faq': fields.html('FAQ'),
+        'right_column': fields.html('FAQ'),
     }
 
 class Post(osv.Model):
@@ -49,11 +45,9 @@ class Post(osv.Model):
     _inherit = ['mail.thread', 'website.seo.metadata']
 
     _columns = {
-        'forum_id': fields.many2one('website.forum', 'Forum'),
-        
+        'forum_id': fields.many2one('website.forum', 'Forum', required=True),
         'name': fields.char('Topic', size=64),
         'content': fields.text('Contents', help='contents'),
-        
         'create_date': fields.datetime('Asked on', select=True, readonly=True),
         'create_uid': fields.many2one('res.users', 'Asked by', select=True, readonly=True ),
         'write_date': fields.datetime('Update on', select=True, readonly=True ),
@@ -119,20 +113,16 @@ class Post(osv.Model):
 
 class Users(osv.Model):
     _inherit = 'res.users'
-    
     _columns = {
         'question_ids':fields.one2many('website.forum.post', 'create_uid', 'Questions', domain=[('parent_id', '=', False)]),
         'answer_ids':fields.one2many('website.forum.post', 'create_uid', 'Answers', domain=[('parent_id', '!=', False)]),
         'vote_ids': fields.one2many('website.forum.post.vote', 'user_id', 'Votes'),
         'tags': fields.many2many('website.forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tag'),
         'create_date': fields.datetime('Create Date', select=True, readonly=True),
-        
-        'karma': fields.integer('Karma')
-        
+        'karma': fields.integer('Karma') # Use Gamification for this
+
         # TODO: 'tag_ids':fields.function()
-        # Badges : we will use the groups to define badges, two purpose will get solved
-        # - Define Groups as Badges with Forum as an Application 
-        # - Access control
+        # Badges : use the gamification module
     }
 
 class PostHistory(osv.Model):
@@ -168,6 +158,7 @@ class ForumActivity(osv.Model):
         'user_id': fields.many2one('res.users', 'User'),
         'create_date': fields.datetime('Created on', select=True, readonly=True),
         'create_uid': fields.many2one('res.users', 'Created by', select=True, readonly=True),
+        # Use the gamification module instead!
         'badge_id': fields.many2one('res.groups', 'Badge'),
         'karma_add': fields.integer('Added Karma'),
         'karma_sub': fields.integer('Karma Removed')
@@ -180,5 +171,6 @@ class Tags(osv.Model):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'post_ids': fields.many2many('website.forum.post', 'forum_tag_que_rel', 'tag_id', 'forum_id', 'Questions', readonly=True),
+        'forum_id': fields.many2one('website.forum', 'Forum', required=True)
    }
-    
+
