@@ -356,9 +356,6 @@
                                 "data-selector-siblings, data-selector-children or data-selector-vertical-children tag for mutate action");
                             return;
                         }
-                        console.log(selector_siblings);
-                        console.log(selector_children);
-                        console.log(selector_vertical_children);
                         self.activate_insertion_zones({
                             siblings: selector_siblings.join(","),
                             children: selector_children.join(","),
@@ -1361,10 +1358,11 @@
             self.$overlay.addClass("hidden");
 
             self.BuildingBlock.activate_insertion_zones({
-                siblings: self.$el ? self.$el.data('selector-siblings') : false,
-                children:   self.$el ? self.$el.data('selector-children') : false,
-                vertical_children: self.$el ? self.$el.data('selector-vertical-children') : false,
+                siblings: self.selector_siblings,
+                children: self.selector_children,
+                vertical_children: self.selector_vertical_children,
             });
+            console.log(self);
 
             $("body").addClass('move-important');
 
@@ -1390,15 +1388,32 @@
             var $styles = this.$overlay.find('.oe_options');
             var $ul = $styles.find('ul:first');
             this.styles = {};
+            this.selector_siblings = [];
+            this.selector_children = [];
+            this.selector_vertical_children = [];
             _.each(website.snippet.styles, function (val) {
                 if (!self.$target.is(val.selector)) {
                     return;
                 }
+                if (val['selector-siblings']) self.selector_siblings.push(val['selector-siblings']);
+                if (val['selector-children']) self.selector_children.push(val['selector-children']);
+                if (val['selector-vertical-children']) self.selector_vertical_children.push(val['selector-vertical-children']);
+
                 var style = val['snippet-style-id'];
                 var Editor = website.snippet.styleRegistry[style] || website.snippet.StyleEditor;
                 var editor = self.styles[style] = new Editor(self.BuildingBlock, self.$target, style);
                 $ul.append(editor.$el.addClass("snippet-style-" + style));
             });
+            this.selector_siblings = this.selector_siblings.join(",");
+            if (this.selector_siblings === "")
+                this.selector_siblings = false;
+            this.selector_children = this.selector_children.join(",");
+            if (this.selector_children === "")
+                this.selector_children = false;
+            this.selector_vertical_children = this.selector_vertical_children.join(",");
+            if (this.selector_vertical_children === "")
+                this.selector_vertical_children = false;
+
 
             if ($ul.find("li").length) {
                 $styles.removeClass("hidden");
