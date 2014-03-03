@@ -692,7 +692,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.setdefault("uid", None)
         self.setdefault("login", None)
         self.setdefault("password", None)
-        self.setdefault("context", {'tz': "UTC", "uid": None})
+        self.setdefault("context", {})
 
     def get_context(self):
         """
