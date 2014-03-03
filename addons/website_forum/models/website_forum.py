@@ -87,14 +87,14 @@ class Post(osv.Model):
     }
     
     def create_history(self, cr, uid, ids, vals, context=None):
-        for forum in ids:
+        for post in ids:
             history = self.pool.get('website.forum.post.history')
             if vals.get('content'):
                 create_date = vals.get('create_date')
                 res = {
                     'name': 'Update %s - %s' % (create_date, vals.get('name')),
                     'content': vals.get('content', ''),
-                    'forum_id': forum
+                    'post_id': post
                 }
                 if vals.get('version'):
                     res.update({'version':vals.get('version')})

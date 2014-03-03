@@ -120,7 +120,7 @@
                             <ul class="nav nav-pills">
                                 <li t-att-class=" 'active' if searches.get('type') == str('all') or searches.get('type') == None else '' ">
                                     <a t-attf-href="/forum/?{{ keep_query( type='all') }}">
-                                        ALL<t t-esc="searches.get('type')"/>
+                                        ALL
                                     </a>
                                 </li>
                                 <li t-att-class=" 'active' if searches.get('type') == str('unanswered') else '' ">
