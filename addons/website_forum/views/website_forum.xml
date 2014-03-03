@@ -98,9 +98,6 @@
                                 <li t-att-class="searches.get('badge') and 'active' or '' ">
                                     <a href="/forum/badge">Badges</a>
                                 </li>
-                                <li>
-                                    <a href="/user/1"><span class="label label-success">You got the <em>New Author</em> badge!</span></a>
-                                </li>
                             </ul>
                             <form class="navbar-form navbar-right" role="search" action="/forum/" method="get">
                                 <div class="form-group">
@@ -117,6 +114,11 @@
                 <div id="wrap" class="container">
                     <div class="row">
                         <div class="col-sm-9">
+                            <div class="alert alert-success alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                                <strong>Congratulation!</strong> You received the <em>New Author</em> badge!<br/>
+                                <a href="/forum/badge" class="fa fa-arrow-right">View Your Badges</a>
+                            </div>
                             <t t-raw="0"/>
                         </div><div class="col-sm-3" id="right-column">
                             <a class="btn btn-primary btn-lg btn-block mb16" href="/forum/ask">Ask a Question</a>
