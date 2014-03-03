@@ -72,7 +72,7 @@ def report_configuration():
     """
     config = openerp.tools.config
     _logger.info("OpenERP version %s", __version__)
-    for name, value in [('addons paths', config['addons_path']),
+    for name, value in [('addons paths', openerp.modules.module.ad_paths),
                         ('database hostname', config['db_host'] or 'localhost'),
                         ('database port', config['db_port'] or '5432'),
                         ('database user', config['db_user'])]:

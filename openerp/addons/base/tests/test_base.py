@@ -289,6 +289,7 @@ class test_base(common.TransactionCase):
           {'name': 'Alice', 'login': 'alice', 'color': 1, 'function': 'Friend'},
           {'name': 'Bob', 'login': 'bob', 'color': 2, 'function': 'Friend'},
           {'name': 'Eve', 'login': 'eve', 'color': 3, 'function': 'Eavesdropper'},
+          {'name': 'Nab', 'login': 'nab', 'color': 2, 'function': '5$ Wrench'},
         ]:
           self.res_users.create(cr, uid, user_data)
 
@@ -297,6 +298,14 @@ class test_base(common.TransactionCase):
         for group_data in groups_data:
           self.assertIn('color', group_data, "Aggregated data for the column 'color' is not present in read_group return values")
           self.assertEqual(group_data['color'], 3, "Incorrect sum for aggregated data for the column 'color'")
+
+        groups_data = self.res_users.read_group(cr, uid, domain=[('login', 'in', ('alice', 'bob', 'eve'))], fields=['name', 'color'], groupby='name', orderby='name DESC, color asc')
+        self.assertEqual(len(groups_data), 3, "Incorrect number of results when grouping on a field")
+        self.assertEqual([user['name'] for user in groups_data], ['Eve', 'Bob', 'Alice'], 'Incorrect ordering of the list')
+
+        groups_data = self.res_users.read_group(cr, uid, domain=[('login', 'in', ('alice', 'bob', 'eve', 'nab'))], fields=['function', 'color'], groupby='function', orderby='color ASC')
+        self.assertEqual(len(groups_data), 3, "Incorrect number of results when grouping on a field")
+        self.assertEqual(groups_data, sorted(groups_data, key=lambda x: x['color']), 'Incorrect ordering of the list')
 
 class test_partner_recursion(common.TransactionCase):
 
@@ -375,6 +384,59 @@ class test_translation(common.TransactionCase):
         fr_context_cat = self.res_category.browse(cr, uid, self.new_fr_cat_id, context={'lang':'fr_FR'})
         self.assertEqual(fr_context_cat.name, 'Clients (copie)', "Did not used default value for translated value")
 
+test_state = None
+#: Stores state information across multiple test classes
+def setUpModule():
+    global test_state
+    test_state = {}
+def tearDownModule():
+    global test_state
+    test_state = None
+
+class TestPhaseInstall00(unittest2.TestCase):
+    """
+    WARNING: Relies on tests being run in alphabetical order
+    """
+    @classmethod
+    def setUpClass(cls):
+        cls.state = None
+
+    def test_00_setup(self):
+        type(self).state = 'init'
+
+    @common.at_install(False)
+    def test_01_no_install(self):
+        type(self).state = 'error'
+
+    def test_02_check(self):
+        self.assertEqual(
+            self.state, 'init',
+            "Testcase state should not have been transitioned from 00")
+
+class TestPhaseInstall01(unittest2.TestCase):
+    at_install = False
+
+    def test_default_norun(self):
+        self.fail("An unmarket test in a non-at-install case should not run")
+
+    @common.at_install(True)
+    def test_set_run(self):
+        test_state['set_at_install'] = True
+
+class TestPhaseInstall02(unittest2.TestCase):
+    """
+    Can't put the check for test_set_run in the same class: if
+    @common.at_install does not work for test_set_run, it won't work for
+    the other one either. Thus move checking of whether test_set_run has
+    correctly run indeed to a separate class.
+
+    Warning: relies on *classes* being run in alphabetical order in test
+    modules
+    """
+    def test_check_state(self):
+        self.assertTrue(
+            test_state.get('set_at_install'),
+            "The flag should be set if local overriding of runstate")
 
 if __name__ == '__main__':
     unittest2.main()

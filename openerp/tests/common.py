@@ -4,18 +4,16 @@ The module :mod:`openerp.tests.common` provides unittest2 test cases and a few
 helpers and classes to write tests.
 
 """
+import errno
 import json
 import logging
 import os
 import select
 import subprocess
-import sys
 import threading
 import time
 import unittest2
-import uuid
 import xmlrpclib
-import threading
 
 import openerp
 from openerp import scope
@@ -56,6 +54,28 @@ def release_test_cursor(session_id):
             return True
     return False
 
+def at_install(flag):
+    """ Sets the at-install state of a test, the flag is a boolean specifying
+    whether the test should (``True``) or should not (``False``) run during
+    module installation.
+
+    By default, tests are run at install.
+    """
+    def decorator(obj):
+        obj.at_install = flag
+        return obj
+    return decorator
+def post_install(flag):
+    """ Sets the post-install state of a test. The flag is a boolean
+    specifying whether the test should or should not run after a set of
+    module installations.
+
+    By default, tests are *not* run after installation.
+    """
+    def decorator(obj):
+        obj.post_install = flag
+        return obj
+    return decorator
 
 class BaseCase(unittest2.TestCase):
     """
@@ -173,38 +193,54 @@ class HttpCase(TransactionCase):
 
         """
         t0 = time.time()
-        buf = ''
-        while 1:
+        buf = bytearray()
+        while True:
             # timeout
-            if time.time() > t0 + timeout:
-                raise Exception("phantomjs test timeout (%ss)" % timeout)
+            self.assertLess(time.time(), t0 + timeout,
+                "PhantomJS tests should take less than %s seconds" % timeout)
 
             # read a byte
-            ready, _, _ = select.select([phantom.stdout], [], [], 0.5)
+            try:
+                ready, _, _ = select.select([phantom.stdout], [], [], 0.5)
+            except select.error, e:
+                # In Python 2, select.error has no relation to IOError or
+                # OSError, and no errno/strerror/filename, only a pair of
+                # unnamed arguments (matching errno and strerror)
+                err, _ = e.args
+                if err == errno.EINTR: continue
+                raise
+
             if ready:
                 s = phantom.stdout.read(1)
-                if s:
-                    buf += s
-                else:
+                if not s:
                     break
+                buf.append(s)
 
             # process lines
             if '\n' in buf:
                 line, buf = buf.split('\n', 1)
-                _logger.info("phantomjs: %s", line)
+
+                line = str(line)
+                if 'CoreText' in line:
+                    continue
                 if line == "ok":
-                    _logger.info("phantomjs test successful")
-                    return
-                if line == "error":
-                    raise Exception("phantomjs test failed")
+                    break
+                if line.startswith("error"):
+                    line_ = line[6:]
+                    try: line_ = json.loads(line_)
+                    except ValueError: pass
+                    self.fail(line_ or "phantomjs test failed")
+
+                try: line = json.loads(line)
+                except ValueError: pass
+                _logger.info("phantomjs: %s", line)
 
     def phantom_run(self, cmd, timeout):
-        _logger.info('executing %s', cmd)
+        _logger.debug('executing `%s`', ' '.join(cmd))
         try:
             phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         except OSError:
-            _logger.info("phantomjs not found, test skipped")
-            return
+            raise unittest2.SkipTest("PhantomJS not found")
         try:
             self.phantom_poll(phantom, timeout)
         finally:

@@ -21,6 +21,7 @@
 
 import copy
 import win32
+import appdirs
 from config import config
 from misc import *
 from convert import *
