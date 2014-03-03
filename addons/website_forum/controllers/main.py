@@ -74,6 +74,11 @@ class website_forum(http.Controller):
 
         return request.website.render("website_forum.index", values)
 
+    @http.route(['/forum/<model("website.forum"):forum>/faq'], type='http', auth="public", website=True, multilang=True)
+    def faq(self, forum, **post):
+        values = { 'searches': {}, 'forum':forum }
+        return request.website.render("website_forum.faq", values)
+
     @http.route(['/forum/ask'], type='http', auth="public", website=True, multilang=True)
     def question_ask(self, **post):
         values = {

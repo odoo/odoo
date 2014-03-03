@@ -139,6 +139,12 @@
         </template>
 
         <template id="index">
+            <t t-call="website_forum.faq">
+                <div t-field="forum.faq"/>
+            </t>
+        </template>
+
+        <template id="index">
             <t t-call="website_forum.header">
                 <h1 class="page-header mt0">
                     <t t-esc="total_questions"/>
