@@ -519,7 +519,10 @@
 
                 <ul class="nav nav-tabs">
                     <li class="active">
-                        <a href="#overview" data-toggle="tab">Questions</a>
+                        <a href="#questions" data-toggle="tab"><t t-esc="len(user.question_ids)"/> Questions</a>
+                    </li>
+                    <li>
+                        <a href="#answers" data-toggle="tab"><t t-esc="len(user.answer_ids)"/> Answers</a>
                     </li>
                     <li>
                         <a href="#karma" data-toggle="tab">Activity</a>
@@ -528,26 +531,14 @@
                         <a href="#followed_question" data-toggle="tab">Followed Question</a>
                     </li>
                 </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="overview">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h2 class="page-header">
-                                    <t t-esc="len(user.question_ids)" />
-                                    <span>Questions</span>
-                                </h2>
-                                <div t-foreach="user.question_ids" t-as="question" class="mb16">
-                                    <t t-call="website_forum.post_list" />
-                                </div>
-                            </div><div class="col-md-6">
-                                <h2 class="page-header">
-                                    <t t-esc="len(user.answer_ids)" />
-                                    <span>Answers</span>
-                                </h2>
-                                <div t-foreach="answers" t-as="question" class="mb16">
-                                    <t t-call="website_forum.post_list" />
-                                </div>
-                            </div>
+                <div class="tab-content mt16">
+                    <div class="tab-pane active" id="questions">
+                        <div t-foreach="user.question_ids" t-as="question">
+                            <t t-call="website_forum.post_list" />
+                        </div>
+                    </div><div class="tab-pane" id="answers">
+                        <div t-foreach="answers" t-as="question">
+                            <t t-call="website_forum.post_list" />
                         </div>
                     </div>
                     <div class="tab-pane" id="karma">
