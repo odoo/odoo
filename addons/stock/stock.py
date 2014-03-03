@@ -322,12 +322,12 @@ class stock_quant(osv.osv):
         if move.reserved_availability == move.product_qty and move.state in ('confirmed', 'waiting'):
             self.pool.get('stock.move').write(cr, uid, [move.id], {'state': 'assigned'}, context=context)
 
-    def quants_move(self, cr, uid, quants, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, context=None):
+    def quants_move(self, cr, uid, quants, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, location_dest_id = False, context=None):
         """Moves all given stock.quant in the destination location of the given move.
 
         :param quants: list of tuple(browse record(stock.quant) or None, quantity to move)
         :param move: browse record (stock.move)
-        :param lot_id: ID of the lot that mus be set on the quants to move
+        :param lot_id: ID of the lot that must be set on the quants to move
         :param owner_id: ID of the partner that must own the quants to move
         :param src_package_id: ID of the package that contains the quants to move
         :param dest_package_id: ID of the package that must be set on the moved quant
@@ -335,24 +335,11 @@ class stock_quant(osv.osv):
         for quant, qty in quants:
             if not quant:
                 #If quant is None, we will create a quant to move (and potentially a negative counterpart too)
-                quant = self._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, context=context)
-            self.move_single_quant_tuple(cr, uid, quant, qty, move, context=context)
+                quant = self._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location = location_dest_id, context=context)
+            if not location_dest_id:
+                location_dest_id = move.location_dest_id
+            self.move_single_quant_tuple(cr, uid, quant, qty, move, location_dest_id, context=context)
 
-    def check_preferred_location(self, cr, uid, move, qty, context=None):
-        '''Checks the preferred location on the move, if any returned by a putaway strategy, and returns a list of
-        tuple(location, qty) where the quant have to be moved
-
-        :param move: browse record (stock.move)
-        :param qty: float
-        :returns: list of tuple build as [(browse record (stock.move), float)]
-        '''
-        #TODO: rewrite according to pack ops
-#         if move.putaway_ids:
-#             res = []
-#             for record in move.putaway_ids:
-#                 res.append((record.location_id, record.quantity))
-#             return res
-        return [(move.location_dest_id, qty)]
 
     def move_single_quant(self, cr, uid, quant, location_to, qty, move, context=None):
         '''Moves the given 'quant' in 'location_to' for the given 'qty', and logs the stock.move that triggered this move in the quant history.
@@ -375,19 +362,18 @@ class stock_quant(osv.osv):
         quant.refresh()
         return new_quant
 
-    def move_single_quant_tuple(self, cr, uid, quant, qty, move, context=None):
+    def move_single_quant_tuple(self, cr, uid, quant, qty, move, location_dest_id, context=None):
         '''Effectively process the move of a tuple (quant record, qty to move). This may result in several quants moved
         if the preferred locations on the move say so but by default it will only move the quant record given as argument
         :param quant: browse record (stock.quant)
         :param qty: float
         :param move: browse record (stock.move)
         '''
-        for location_to, qty in self.check_preferred_location(cr, uid, move, qty, context=context):
-            if not quant:
-                break
-            new_quant = self.move_single_quant(cr, uid, quant, location_to, qty, move, context=context)
-            self._quant_reconcile_negative(cr, uid, quant, move, context=context)
-            quant = new_quant
+        if not quant:
+            return True
+        new_quant = self.move_single_quant(cr, uid, quant, location_dest_id, qty, move, context=context)
+        self._quant_reconcile_negative(cr, uid, quant, move, context=context)
+        quant = new_quant
 
     def quants_get_prefered_domain(self, cr, uid, location, product, qty, domain=None, prefered_domain=False, fallback_domain=False, restrict_lot_id=False, restrict_partner_id=False, context=None):
         ''' This function tries to find quants in the given location for the given domain, by trying to first limit
@@ -1011,7 +997,7 @@ class stock_picking(osv.osv):
                 else:
                     qtys_remaining[move.product_id] = qty
             (putaway_quants_dict, putaway_remaining_dict) = self._putaway_apply(cr, uid, picking, quants, qtys_remaining, context=context)
-            packages = list(set([x.package_id for x in putaway_quants_dict.keys() if x]))
+            packages = list(set([x.package_id for x in putaway_quants_dict.keys() if x and x.package_id]))
 
             # Try to find as much as possible top-level packages that can be moved
             top_lvl_packages = set()
@@ -2037,7 +2023,7 @@ class stock_move(osv.osv):
                     #if a package and a result_package is given, we don't enter here because it will be processed by process_packaging() later
                     #but for operations having only result_package_id, we will create new quants in the final package directly
                     package_id = record.operation_id.result_package_id.id or False
-                quant_obj.quants_move(cr, uid, quants, move, lot_id=ops.lot_id.id, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id, dest_package_id=package_id, context=context)
+                quant_obj.quants_move(cr, uid, quants, move, lot_id=ops.lot_id.id, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id, dest_package_id=package_id, location_dest_id = ops.location_dest_id, context=context)
                 #packaging process
                 pack_op_obj.process_packaging(cr, uid, ops, [x[0].id for x in quants if x[0]], context=context)
                 move_qty[move.id] -= record.qty
