@@ -42,7 +42,7 @@ import os
 from distutils.version import LooseVersion
 
 
-from pyPdf import PdfFileWriter, PdfFileReader
+#from pyPdf import PdfFileWriter, PdfFileReader
 from werkzeug import exceptions
 from werkzeug.test import Client
 from werkzeug.wrappers import BaseResponse
