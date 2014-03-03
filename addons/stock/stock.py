@@ -344,13 +344,14 @@ class stock_quant(osv.osv):
 
         :param move: browse record (stock.move)
         :param qty: float
-        :returns: list of tuple build as [(browe record (stock.move), float)]
+        :returns: list of tuple build as [(browse record (stock.move), float)]
         '''
-        if move.putaway_ids:
-            res = []
-            for record in move.putaway_ids:
-                res.append((record.location_id, record.quantity))
-            return res
+        #TODO: rewrite according to pack ops
+#         if move.putaway_ids:
+#             res = []
+#             for record in move.putaway_ids:
+#                 res.append((record.location_id, record.quantity))
+#             return res
         return [(move.location_dest_id, qty)]
 
     def move_single_quant(self, cr, uid, quant, location_to, qty, move, context=None):
@@ -933,37 +934,84 @@ class stock_picking(osv.osv):
         self.action_assign(cr, uid, picking_ids, context=context)
         self.do_prepare_partial(cr, uid, picking_ids, context=context)
 
+    def _quant_putaway_apply(self, cr, uid, picking, quant, putaway, context=None):
+        if putaway.method == 'fixed' and putaway.location_spec_id:
+            return putaway.location_spec_id
+        return False
+
+
+    def _putaway_apply(self, cr, uid, picking, quants, qtys_remaining, context=None):
+        """
+         Apply putaway strategy to quants and remaining quantities
+        """
+        product_putaway = {}
+        quant_dict = {}
+        for quant in quants:
+            location = False
+            # Search putaway strategy
+            if product_putaway.get(quant.product_id.id):
+                putaway = product_putaway[quant.product_id.id]
+            else:
+                putaway = self.pool.get('stock.location').get_putaway_strategy(cr, uid, picking.location_dest_id, quant.product_id, context=context)
+                product_putaway[quant.product_id.id] = putaway
+            if putaway:
+                location = self._quant_putaway_apply(cr, uid, picking, quant, putaway, context=context)
+                if location:
+                    quant_dict[quant] = [(quant.qty, location,)]
+            if not location:
+                quant_dict[quant] = [(quant.qty, picking.location_dest_id,)]
+
+        remaining_dict = {}
+        for product in qtys_remaining.keys():
+            location = False
+            if product_putaway.get(product):
+                putaway = product_putaway[product]
+            else:
+                putaway = self.pool.get('stock.location').get_putaway_strategy(cr, uid, picking.location_dest_id, product, context=context)
+                product_putaway[product] = putaway
+            if putaway:
+                location = self._quant_putaway_apply(cr, uid, picking, False, putaway, context=context)
+                if location:
+                    remaining_dict[product] = [(qtys_remaining[product], location,)]
+            if not location:
+                remaining_dict[product] = [(qtys_remaining[product], picking.location_dest_id,)]
+        return (quant_dict, remaining_dict,)
+
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
         context = context or {}
         pack_operation_obj = self.pool.get('stock.pack.operation')
         pack_obj = self.pool.get("stock.quant.package")
         quant_obj = self.pool.get("stock.quant")
+
+        
         #get list of existing operations and delete them
         existing_package_ids = pack_operation_obj.search(cr, uid, [('picking_id', 'in', picking_ids)], context=context)
         if existing_package_ids:
             pack_operation_obj.unlink(cr, uid, existing_package_ids, context)
 
         for picking in self.browse(cr, uid, picking_ids, context=context):
-            packages = []
             reserved_move = {}
-            qtys_remaining = {}
+            qtys_remaining = {} #Quantity remaining after calculating reserved quants
+            quants = []
 
             #Calculate packages, reserved quants, qtys of this picking's moves
             for move in picking.move_lines:
+                quants += move.reserved_quant_ids
                 if move.state not in ('assigned', 'confirmed'):
                     continue
-                packages += [x.package_id for x in move.reserved_quant_ids if x.package_id]
                 reserved_move[move.id] = set([x.id for x in move.reserved_quant_ids])
                 if move.state == 'assigned':
-                    qty = move.product_qty
+                    qty = move.product_qty - move.reserved_availability
                 else:
-                    qty = move.reserved_availability
+                    qty = 0
 
                 #Add qty to qtys remaining
-                if qtys_remaining.get(move.product_id.id):
-                    qtys_remaining[move.product_id.id] += qty
+                if qtys_remaining.get(move.product_id):
+                    qtys_remaining[move.product_id] += qty
                 else:
-                    qtys_remaining[move.product_id.id] = qty
+                    qtys_remaining[move.product_id] = qty
+            (putaway_quants_dict, putaway_remaining_dict) = self._putaway_apply(cr, uid, picking, quants, qtys_remaining, context=context)
+            packages = list(set([x.package_id for x in putaway_quants_dict.keys() if x]))
 
             # Try to find as much as possible top-level packages that can be moved
             top_lvl_packages = set()
@@ -973,8 +1021,28 @@ class stock_picking(osv.osv):
                 test_pack = pack
                 while loop:
                     quants = pack_obj.get_content(cr, uid, [test_pack.id], context=context)
-                    move_list = [m.id for m in picking.move_lines]
-                    if all([(x.reservation_id and x.reservation_id.id in move_list or False) for x in quant_obj.browse(cr, uid, quants, context=context)]):
+                    quants_to_compare = putaway_quants_dict.keys()
+#                     move_list = [m.id for m in picking.move_lines]
+                    common_location = False
+                    all_in = True
+                    for quant in quant_obj.browse(cr, uid, quants, context=context):
+                        # If the quant is not in the quants to compare and not in the common location
+                        if not quant in quants_to_compare:
+                            all_in = False
+                            break
+                        else:
+                            for quants_tup in putaway_quants_dict[quant]:
+                                if not common_location:
+                                    common_location = quants_tup[1]
+                                elif common_location != quants_tup[1]:
+                                    all_in = False
+                                    break
+#                         if not (quant in quants_to_compare and (not common_location or putaway_quants_dict[quant][1] == common_location)):
+#                             all_in = False
+#                             break
+#                         elif not common_location and quant in quants_to_compare:
+#                             common_location = putaway_quants_dict[quant][1]
+                    if all_in:
                         good_pack = test_pack.id
                         if test_pack.parent_id:
                             test_pack = test_pack.parent_id
@@ -991,34 +1059,40 @@ class stock_picking(osv.osv):
             # Create pack operations for the top-level packages found
             for pack in pack_obj.browse(cr, uid, list(top_lvl_packages), context=context):
                 quants = pack_obj.get_content(cr, uid, [pack.id], context=context)
-                for quant in quant_obj.browse(cr, uid, quants, context=context):
-                    reserved_move[quant.reservation_id.id] -= set([quant.id])
-                    qtys_remaining[quant.product_id.id] -= quant.qty
+                quant = quant_obj.browse(cr, uid, quants[0], context=context)
                 pack_operation_obj.create(cr, uid, {
                         'picking_id': picking.id,
                         'package_id': pack.id,
                         'product_qty': 1.0,
+                        'location_id': pack.location_id.id,
+                        'location_dest_id': putaway_quants_dict[quant][0][1].id,
                     }, context=context)
+                for quant in quant_obj.browse(cr, uid, quants, context=context):
+                    reserved_move[quant.reservation_id.id] -= set([quant.id])
+                    del putaway_quants_dict[quant]
+                    qtys_remaining[quant.product_id] -= quant.qty
 
-            # Go through all remaining reserved quants and group by product, package, lot, owner
+
             qtys_grouped = {}
-            for move, quant_set in reserved_move.items():
-                for quant in quant_obj.browse(cr, uid, list(quant_set), context=context):
-                    qtys_remaining[quant.product_id.id] -= quant.qty
-                    key = (quant.product_id.id, quant.package_id.id, quant.lot_id.id, quant.owner_id.id)
-                    if qtys_grouped.get(key):
-                        qtys_grouped[key] += quant.qty
-                    else:
-                        qtys_grouped[key] = quant.qty
-
+            # Go through all remaining reserved quants and group by product, package, lot, owner, source location and dest location
+            for quant in putaway_quants_dict.keys():
+                for quant_tup in putaway_quants_dict[quant]:
+                    if quant_tup[0] > 0:
+                        key = (quant.product_id.id, quant.package_id.id, quant.lot_id.id, quant.owner_id.id, quant.location_id.id, quant_tup[1].id)
+                        if qtys_grouped.get(key):
+                            qtys_grouped[key] += quant_tup[0]
+                        else:
+                            qtys_grouped[key] = quant_tup[0]
+                    
             # Add remaining qtys (in cases of force_assign for example)
-            for product in qtys_remaining.keys():
-                if qtys_remaining[product] > 0:
-                    key = (product, False, False, False)
-                    if qtys_grouped.get(key):
-                        qtys_grouped[key] += qtys_remaining[product]
-                    else:
-                        qtys_grouped[key] = qtys_remaining[product]
+            for product in putaway_remaining_dict.keys():
+                for product_tup in putaway_remaining_dict[product]:
+                    if product_tup[0] > 0:
+                        key = (product.id, False, False, False, picking.location_id.id, product_tup[1].id)
+                        if qtys_grouped.get(key):
+                            qtys_grouped[key] += product_tup[0]
+                        else:
+                            qtys_grouped[key] = product_tup[0]
 
             # Create the necessary operations for the grouped quants and remaining qtys
             for key, qty in qtys_grouped.items():
@@ -1029,6 +1103,8 @@ class stock_picking(osv.osv):
                                         'package_id': key[1],
                                         'lot_id': key[2],
                                         'owner_id': key[3],
+                                        'location_id': key[4], 
+                                        'location_dest_id': key[5],
                                         'product_uom_id': self.pool.get("product.product").browse(cr, uid, key[0], context=context).uom_id.id,
                                         }, context=context)
 
@@ -1446,7 +1522,6 @@ class stock_move(osv.osv):
         'string_availability_info': fields.function(_get_string_qty_information, type='text', string='Availability', readonly=True, help='Show various information on stock availability for this move'),
         'restrict_lot_id': fields.many2one('stock.production.lot', 'Lot', help="Technical field used to depict a restriction on the lot of quants to consider when marking this move as 'done'"),
         'restrict_partner_id': fields.many2one('res.partner', 'Owner ', help="Technical field used to depict a restriction on the ownership of quants to consider when marking this move as 'done'"),
-        'putaway_ids': fields.one2many('stock.move.putaway', 'move_id', 'Put Away Suggestions'),
         'route_ids': fields.many2many('stock.location.route', 'stock_location_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route to be followed by the procurement order"),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', help="Technical field depicting the warehouse to consider for the route selection on the next procurement (if any)."),
     }
@@ -1517,10 +1592,7 @@ class stock_move(osv.osv):
             if move.state in ('done', 'cancel'):
                 raise osv.except_osv(_('Operation Forbidden!'), _('Cannot unreserve a done move'))
             quant_obj.quants_unreserve(cr, uid, move, context=context)
-            putaway_values = []
-            for putaway_rec in move.putaway_ids:
-                putaway_values.append((2, putaway_rec.id))
-            self.write(cr, uid, [move.id], {'state': 'confirmed', 'putaway_ids': putaway_values}, context=context)
+            self.write(cr, uid, [move.id], {'state': 'confirmed'}, context=context)
 
     def _prepare_procurement_from_move(self, cr, uid, move, context=None):
         origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or "/")
@@ -1568,37 +1640,7 @@ class stock_move(osv.osv):
                     push_obj._apply(cr, uid, rule, move, context=context)
         return True
 
-    # Create the stock.move.putaway records
-    def _putaway_apply(self, cr, uid, move, putaway, context=None):
-        # Should call different methods here in later versions
-        moveputaway_obj = self.pool.get('stock.move.putaway')
-        quant_obj = self.pool.get('stock.quant')
-        if putaway.method == 'fixed' and putaway.location_spec_id:
-            qty = move.product_qty
-            for row in quant_obj.read_group(cr, uid, [('reservation_id', '=', move.id)], ['qty', 'lot_id'], ['lot_id'], context=context):
-                vals = {
-                    'move_id': move.id,
-                    'location_id': putaway.location_spec_id.id,
-                    'quantity': row['qty'],
-                    'lot_id': row.get('lot_id') and row['lot_id'][0] or False,
-                }
-                moveputaway_obj.create(cr, SUPERUSER_ID, vals, context=context)
-                qty -= row['qty']
 
-            #if the quants assigned aren't fully explaining where the products have to be moved
-            if qty > 0:
-                vals = {
-                    'move_id': move.id,
-                    'location_id': putaway.location_spec_id.id,
-                    'quantity': qty,
-                }
-                moveputaway_obj.create(cr, SUPERUSER_ID, vals, context=context)
-
-    def _putaway_check(self, cr, uid, ids, context=None):
-        for move in self.browse(cr, uid, ids, context=context):
-            putaway = self.pool.get('stock.location').get_putaway_strategy(cr, uid, move.location_dest_id, move.product_id, context=context)
-            if putaway:
-                self._putaway_apply(cr, uid, move, putaway, context=context)
 
     def _create_procurement(self, cr, uid, move, context=None):
         """ This will create a procurement order """
@@ -1840,7 +1882,6 @@ class stock_move(osv.osv):
         @return: True
         """
         #check putaway method
-        self._putaway_check(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'assigned'})
 
     def check_tracking(self, cr, uid, move, lot_id, context=None):
@@ -1923,8 +1964,6 @@ class stock_move(osv.osv):
         #force assignation of consumable products and picking type auto_force_assign
         if to_assign_moves:
             self.force_assign(cr, uid, to_assign_moves, context=context)
-        #check if a putaway rule is likely to be processed and store result on the move
-        self._putaway_check(cr, uid, ids, context=context)
 
     def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels the moves and if all moves are cancelled it cancels the picking.
@@ -3184,15 +3223,6 @@ class stock_location_path(osv.osv):
             })
             move_obj.action_confirm(cr, uid, [move_id], context=None)
 
-class stock_move_putaway(osv.osv):
-    _name = 'stock.move.putaway'
-    _description = 'Proposed Destination'
-    _columns = {
-        'move_id': fields.many2one('stock.move', required=True),
-        'location_id': fields.many2one('stock.location', 'Location', required=True),
-        'lot_id': fields.many2one('stock.production.lot', 'Lot'),
-        'quantity': fields.float('Quantity', required=True),
-    }
 
 
 
@@ -3465,6 +3495,8 @@ class stock_pack_operation(osv.osv):
         'currency': fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", ondelete='CASCADE'),
         'linked_move_operation_ids': fields.one2many('stock.move.operation.link', 'operation_id', string='Linked Moves', readonly=True, help='Moves impacted by this operation for the computation of the remaining quantities'),
         'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Qty'),
+        'location_id': fields.many2one('stock.location', 'Location From'),
+        'location_dest_id': fields.many2one('stock.location', 'Location To'),
     }
 
     _defaults = {
