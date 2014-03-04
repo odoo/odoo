@@ -141,12 +141,13 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
     //noinspection FallthroughInSwitchStatementJS
     switch (value) {
         case '':
-            if (descriptor.type === 'char') {
+            if (descriptor.type === 'char' || descriptor.type === 'text') {
                 return '';
             }
             console.warn('Field', descriptor, 'had an empty string as value, treating as false...');
             return value_if_empty === undefined ?  '' : value_if_empty;
         case false:
+        case undefined:
         case Infinity:
         case -Infinity:
             return value_if_empty === undefined ?  '' : value_if_empty;
@@ -195,7 +196,7 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
                         + ' ' + normalize_format(l10n.time_format));
         case 'date':
             if (typeof(value) == "string")
-                value = instance.web.auto_str_to_date(value);
+                value = instance.web.str_to_date(value.substring(0,10));
             return value.toString(normalize_format(l10n.date_format));
         case 'time':
             if (typeof(value) == "string")
@@ -204,7 +205,7 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
         case 'selection': case 'statusbar':
             // Each choice is [value, label]
             if(_.isArray(value)) {
-                 value = value[0];
+                 return value[1];
             }
             var result = _(descriptor.selection).detect(function (choice) {
                 return choice[0] === value;

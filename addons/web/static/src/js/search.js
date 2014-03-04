@@ -71,7 +71,10 @@ my.SearchQuery = B.Collection.extend({
     },
     add: function (values, options) {
         options = options || {};
-        if (!(values instanceof Array)) {
+
+        if (!values) {
+            values = [];
+        } else if (!(values instanceof Array)) {
             values = [values];
         }
 
@@ -82,11 +85,15 @@ my.SearchQuery = B.Collection.extend({
                     && facet.get('field') === model.get('field');
             });
             if (previous) {
-                previous.values.add(model.get('values'));
+                previous.values.add(model.get('values'), _.omit(options, 'at', 'merge'));
                 return;
             }
             B.Collection.prototype.add.call(this, model, options);
         }, this);
+        // warning: in backbone 1.0+ add is supposed to return the added models,
+        // but here toggle may delegate to add and return its value directly.
+        // return value of neither seems actually used but should be tested
+        // before change, probably
         return this;
     },
     toggle: function (value, options) {
@@ -407,7 +414,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 context: this.dataset.get_context(),
             });
 
-            $.when(load_view).then(function (r) {
+            this.alive($.when(load_view)).then(function (r) {
                 return self.search_view_loaded(r);
             }).fail(function () {
                 self.ready.reject.apply(null, arguments);
@@ -466,18 +473,19 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      * Sets up search view's view-wide auto-completion widget
      */
     setup_global_completion: function () {
-        var self = this;
-
         var autocomplete = this.$el.autocomplete({
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
-            search: function () { self.$el.autocomplete('close'); },
             focus: function (e) { e.preventDefault(); },
             html: true,
             autoFocus: true,
             minLength: 1,
-            delay: 0,
+            delay: 250,
         }).data('autocomplete');
+
+        this.$el.on('input', function () {
+            this.$el.autocomplete('close');
+        }.bind(this));
 
         // MonkeyPatch autocomplete instance
         _.extend(autocomplete, {
@@ -528,7 +536,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 resp(_(arguments).chain()
                     .compact()
                     .map(function (completion) {
-                        console.log(completion);
                         if (completion.length && completion[0].facet !== undefined) {
                             completion[0].first = true;
                         }
@@ -1864,9 +1871,14 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
             new instance.web.Model(this.view.model).call('fields_get', {
                     context: this.view.dataset.context
                 }).done(function(data) {
-                    self.fields = _.extend({
+                    self.fields = {
                         id: { string: 'ID', type: 'id' }
-                    }, data);
+                    };
+                    _.each(data, function(field_def, field_name) {
+                        if (field_def.selectable !== false && field_name != 'id') {
+                            self.fields[field_name] = field_def;
+                        }
+                    });
         })).done(function () {
             self.append_proposition();
         });

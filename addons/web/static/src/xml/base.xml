@@ -58,46 +58,6 @@
     </div>
 </t>
 
-<t t-name="Login">
-    <div class="oe_login">
-        <div class="oe_login_bottom"> </div>
-        <div class="oe_login_error_message"/>
-        <div class="oe_login_pane">
-            <div class="oe_login_logo"><img src='/web/static/src/img/logo2.png'/></div>
-            <form action="" method="post">
-                <div class="oe_login_dbpane" >
-                    Database:
-                    <input name="db" t-att-value="widget.selected_db || ''"/>
-                </div>
-                <ul>
-                    <li>Username</li>
-                    <li><input name="login" type="text" value="" autofocus="autofocus"/></li>
-                    <li>Password</li>
-                    <li><input name="password" type="password" value=""/></li>
-                    <li><button name="submit">Log in</button></li>
-                </ul>
-            </form>
-            <div class="oe_login_footer">
-                <a href="#" class="oe_login_manage_db">Manage Databases</a> |
-                <a href="http://www.openerp.com" target="_blank">Powered by <span>OpenERP</span></a>
-            </div>
-        </div>
-    </div>
-</t>
-<t t-name="Login.dblist">
-    <select name="db">
-        <t t-foreach="db_list" t-as="db">
-            <t t-if="selected_db === db">
-                <option t-att-value="db" selected="true">
-                    <t t-esc="db"/></option>
-            </t>
-            <t t-if="selected_db !== db">
-                <option t-att-value="db"><t t-esc="db"/></option>
-            </t>
-        </t>
-    </select>
-</t>
-
 <t t-name="DatabaseManager">
     <div class="oe_view_manager_view_form">
         <div class="oe_form">
@@ -320,7 +280,7 @@
 </t>
 <t t-name="DatabaseManager.menu">
     <div class="oe_secondary_menu_section">Database Management</div>
-    <ul class="oe_secondary_submenu">
+    <ul class="oe_secondary_submenu nav nav-pills nav-stacked">
         <li><a href="#db_create">Create</a></li>
         <li><a href="#db_duplicate">Duplicate</a></li>
         <li><a href="#db_drop">Drop</a></li>
@@ -362,15 +322,13 @@
 </t>
 
 <t t-name="Menu">
-    <ul class="oe_menu" t-if="widget.data">
+    <ul class="nav navbar-nav navbar-left" t-if="widget.data">
         <li t-foreach="widget.data.data.children" t-as="menu">
             <t t-call="Menu.link"/>
         </li>
-        <li class="oe_menu_more_container" style="display: none;">
-            <span class="oe_topbar_item oe_menu_more_link oe_dropdown_toggle oe_dropdown_arrow">
-                More
-                <ul class="oe_menu_more oe_dropdown_menu"/>
-            </span>
+        <li id="menu_more_container" class="dropdown" style="display: none;">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
+            <ul id="menu_more" class="dropdown-menu"></ul>
         </li>
     </ul>
 </t>
@@ -389,7 +347,7 @@
     </div>
 </t>
 <t t-name="Menu.secondary.submenu">
-    <ul t-if="menu.children.length" class="oe_secondary_submenu">
+    <ul t-if="menu.children.length" class="oe_secondary_submenu nav nav-pills nav-stacked">
         <li t-foreach="menu.children" t-as="menu">
             <t t-call="Menu.link"/>
             <!--<span class="oe_menu_label">8</span>-->
@@ -410,24 +368,28 @@
 </t>
 
 <t t-name="Menu.needaction_counter">
-    <div class="oe_tag oe_tag_dark oe_menu_counter">
+    <div id="menu_counter" class="badge pull-right">
         <t t-if="widget.needaction_counter &gt; 99"> 99+ </t>
         <t t-if="widget.needaction_counter &lt;= 99"> <t t-esc="widget.needaction_counter"/> </t>
     </div>
 </t>
 
 <t t-name="UserMenu">
-    <span class="oe_user_menu oe_topbar_item oe_dropdown_toggle oe_dropdown_arrow">
-        <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
-        <span class="oe_topbar_name"/>
-        <ul class="oe_dropdown_menu">
-            <li><a href="#" data-menu="settings">Preferences</a></li>
-            <li><a href="#" data-menu="account">My OpenERP.com account</a></li>
-            <li><a href="#" data-menu="about">About OpenERP</a></li>
-            <li><a href="#" data-menu="help">Help</a></li>
-            <li><a href="#" data-menu="logout">Log out</a></li>
-        </ul>
-    </span>
+    <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
+                <span class="oe_topbar_name"/> <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="#" data-menu="settings">Preferences</a></li>
+                <li><a href="#" data-menu="account">My OpenERP.com account</a></li>
+                <li><a href="#" data-menu="about">About OpenERP</a></li>
+                <li><a href="#" data-menu="help">Help</a></li>
+                <li><a href="#" data-menu="logout">Log out</a></li>
+            </ul>
+        </li>
+    </ul>
 </t>
 <t t-name="UserMenu.about">
 
@@ -450,7 +412,7 @@
     <div class="openerp openerp_webclient_container">
     <table class="oe_webclient">
         <tr>
-            <td colspan="2" class="oe_topbar">
+            <td colspan="2" class="navbar navbar-default navbar-static-top oe_navbar" role="navigation">
                 <div class="oe_menu_placeholder"/>
                 <div class="oe_user_menu_placeholder"/>
                 <div class="oe_systray"/>
@@ -574,23 +536,32 @@
 </t>
 <t t-name="ViewManagerDebugViewLog">
     <div class="oe_debug_view_log">
-        <label>ID:</label>
-        <span><t t-esc="perm.id"/></span>
-
-        <label>XML ID:</label>
-        <span><t t-esc="perm.xmlid"/></span>
-
-        <label>Creation User:</label>
-        <span><t t-esc="format(perm.create_uid, { 'type' : 'many2one' }, '/')"/></span>
-
-        <label>Creation Date:</label>
-        <span><t t-esc="format(perm.create_date, { 'type' : 'datetime' }, '/')"/></span>
-
-        <label>Latest Modification by:</label>
-        <span><t t-esc="format(perm.write_uid, { 'type' : 'many2one' }, '/')"/></span>
-
-        <label>Latest Modification Date:</label>
-        <span><t t-esc="format(perm.write_date, { 'type' : 'datetime' }, '/')"/></span>
+        <table class="table table-condensed table-striped">
+            <tr>
+                <th>ID:</th>
+                <td><t t-esc="perm.id"/></td>
+            </tr>
+            <tr>
+                <th>XML ID:</th>
+                <td><t t-esc="perm.xmlid or '/'"/></td>
+            </tr>
+            <tr>
+                <th>Creation User:</th>
+                <td><t t-esc="format(perm.create_uid, { 'type' : 'many2one' }, '/')"/></td>
+            </tr>
+            <tr>
+                <th>Creation Date:</th>
+                <td><t t-esc="format(perm.create_date, { 'type' : 'datetime' }, '/')"/></td>
+            </tr>
+            <tr>
+                <th>Latest Modification by:</th>
+                <td><t t-esc="format(perm.write_uid, { 'type' : 'many2one' }, '/')"/></td>
+            </tr>
+            <tr>
+                <th>Latest Modification Date:</th>
+                <td><t t-esc="format(perm.write_date, { 'type' : 'datetime' }, '/')"/></td>
+            </tr>
+        </table>
     </div>
 </t>
 <t t-name="ViewPager">
@@ -1334,7 +1305,7 @@
 <t t-name="FieldBinaryFileUploader.files">
     <div class="oe_attachments">
         <t t-if="!widget.get('effective_readonly')">
-            <t t-foreach="widget.get('value')" t-as="id">
+            <t t-foreach="values" t-as="id">
                 <t t-set="file" t-value="widget.data[id]"/>
                 <div class="oe_attachment">
                     <span t-if="(file.upload or file.percent_loaded&lt;100)" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-attf-name="{file.name || file.filename}">
@@ -1448,7 +1419,7 @@
         <button type="button" class="oe_button oe_selectcreatepopup-search-select oe_highlight" disabled="disabled">Select</button>
     </t>
     <button type="button" class="oe_button oe_selectcreatepopup-search-create">Create</button>
-    or <a class="oe_button oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
+    or <a class="oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
 </t>
 <t t-name="AbstractFormPopup.buttons">
     <t t-if="! readonly">
@@ -1461,7 +1432,7 @@
         </t>
         or
     </t>
-    <a class="oe_button oe_abstractformpopup-form-close oe_bold oe_form_button_cancel" href="javascript:void(0)">
+    <a class="oe_abstractformpopup-form-close oe_bold oe_form_button_cancel" href="javascript:void(0)">
         <t t-if="! readonly">
             Discard
         </t>

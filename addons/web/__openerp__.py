@@ -12,7 +12,10 @@ This module provides the core of the OpenERP Web Client.
     'depends': ['base'],
     'auto_install': True,
     'post_load': 'wsgi_postload',
-    'js' : [
+    'data': [
+        'views/webclient_templates.xml',
+    ],
+    'js': [
         "static/lib/es5-shim/es5-shim.min.js",
         "static/lib/datejs/globalization/en-US.js",
         "static/lib/datejs/core.js",
@@ -20,7 +23,6 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/datejs/sugarpak.js",
         "static/lib/datejs/extras.js",
         "static/lib/jquery/jquery.js",
-        "static/lib/jquery.MD5/jquery.md5.js",
         "static/lib/jquery.form/jquery.form.js",
         "static/lib/jquery.validate/jquery.validate.js",
         "static/lib/jquery.ba-bbq/jquery.ba-bbq.js",
@@ -37,12 +39,14 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/jquery.tipsy/jquery.tipsy.js",
         "static/lib/jquery.textext/jquery.textext.js",
         "static/lib/jquery.timeago/jquery.timeago.js",
+        "static/lib/bootstrap/js/bootstrap.js",
         "static/lib/qweb/qweb2.js",
         "static/lib/underscore/underscore.js",
         "static/lib/underscore.string/lib/underscore.string.js",
         "static/lib/backbone/backbone.js",
         "static/lib/cleditor/jquery.cleditor.js",
         "static/lib/py.js/lib/py.js",
+        "static/lib/select2/select2.js",
         "static/src/js/openerpframework.js",
         "static/src/js/boot.js",
         "static/src/js/testing.js",
@@ -66,6 +70,8 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/jquery.tipsy/tipsy.css",
         "static/lib/jquery.textext/jquery.textext.css",
         "static/lib/fontawesome/css/font-awesome.css",
+        "static/lib/bootstrap/css/bootstrap.css",
+        "static/lib/select2/select2.css",
         "static/src/css/base.css",
         "static/src/css/data_export.css",
         "static/lib/cleditor/jquery.cleditor.css",
@@ -89,5 +95,4 @@ This module provides the core of the OpenERP Web Client.
         "static/test/list-editable.js",
         "static/test/mutex.js"
     ],
-    'bootstrap': True,
 }

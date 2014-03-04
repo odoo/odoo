@@ -147,6 +147,19 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.inner_action = last_widget.action;
         }
     },
+    add_breadcrumb_url: function (url, label) {
+        // Add a pseudo breadcrumb that will redirect to an url
+        this.push_breadcrumb({
+            show: function() {
+                instance.web.redirect(url);
+            },
+            hide: function() {},
+            destroy: function() {},
+            get_title: function() {
+                return label;
+            }
+        });
+    },
     get_title: function() {
         var titles = [];
         for (var i = 0; i < this.breadcrumbs.length; i += 1) {
@@ -217,6 +230,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
     do_load_state: function(state, warm) {
         var self = this,
             action_loaded;
+        if (!warm && 'return_label' in state) {
+            var return_url = state.return_url || document.referrer;
+            if (return_url) {
+                this.add_breadcrumb_url(return_url, state.return_label);
+            }
+        }
         if (state.action) {
             if (_.isString(state.action) && instance.web.client_actions.contains(state.action)) {
                 var action_client = {
@@ -225,7 +244,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     params: state,
                     _push_me: state._push_me,
                 };
-                this.null_action();
+                if (warm) {
+                    this.null_action();
+                }
                 action_loaded = this.do_action(action_client);
             } else {
                 var run_action = (!this.inner_widget || !this.inner_widget.action) || this.inner_widget.action.id !== state.action;
@@ -245,7 +266,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
                         add_context.active_ids = [state.active_id];
                     }
                     add_context.params = state;
-                    this.null_action();
+                    if (warm) {
+                        this.null_action();
+                    }
                     action_loaded = this.do_action(state.action, { additional_context: add_context });
                     $.when(action_loaded || null).done(function() {
                         instance.webclient.menu.has_been_loaded.done(function() {
@@ -258,7 +281,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
             }
         } else if (state.model && state.id) {
             // TODO handle context & domain ?
-            this.null_action();
+            if (warm) {
+                this.null_action();
+            }
             var action = {
                 res_model: state.model,
                 res_id: state.id,
@@ -268,7 +293,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
             action_loaded = this.do_action(action);
         } else if (state.sa) {
             // load session action
-            this.null_action();
+            if (warm) {
+                this.null_action();
+            }
             action_loaded = this.rpc('/web/session/get_session_action',  {key: state.sa}).then(function(action) {
                 if (action) {
                     return self.do_action(action);
@@ -304,6 +331,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             action_menu_id: null,
             additional_context: {},
         });
+
         if (action === false) {
             action = { type: 'ir.actions.act_window_close' };
         } else if (_.isString(action) && instance.web.client_actions.contains(action)) {
@@ -468,49 +496,48 @@ instance.web.ActionManager = instance.web.Widget.extend({
     ir_actions_report_xml: function(action, options) {
         var self = this;
         instance.web.blockUI();
-        return instance.web.pyeval.eval_domains_and_contexts({
-            contexts: [action.context],
-            domains: []
-        }).then(function(res) {
-            action = _.clone(action);
-            action.context = res.context;
+        action = _.clone(action);
+        var eval_contexts = ([instance.session.user_context] || []).concat([action.context]);
+        action.context = instance.web.pyeval.eval('contexts',eval_contexts);
 
-            // iOS devices doesn't allow iframe use the way we do it,
-            // opening a new window seems the best way to workaround
-            if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
-                var params = {
-                    action: JSON.stringify(action),
-                    token: new Date().getTime()
-                };
-                var url = self.session.url('/web/report', params);
-                instance.web.unblockUI();
-                $('<a href="'+url+'" target="_blank"></a>')[0].click();
-                return;
-            }
-
-            var c = instance.webclient.crashmanager;
-            return $.Deferred(function (d) {
-                self.session.get_file({
-                    url: '/web/report',
-                    data: {action: JSON.stringify(action)},
-                    complete: instance.web.unblockUI,
-                    success: function(){
-                        if (!self.dialog) {
-                            options.on_close();
-                        }
-                        self.dialog_stop();
-                        d.resolve();
-                    },
-                    error: function () {
-                        c.rpc_error.apply(c, arguments);
-                        d.reject();
+        // iOS devices doesn't allow iframe use the way we do it,
+        // opening a new window seems the best way to workaround
+        if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+            var params = {
+                action: JSON.stringify(action),
+                token: new Date().getTime()
+            };
+            var url = self.session.url('/web/report', params);
+            instance.web.unblockUI();
+            $('<a href="'+url+'" target="_blank"></a>')[0].click();
+            return;
+        }
+        var c = instance.webclient.crashmanager;
+        return $.Deferred(function (d) {
+            self.session.get_file({
+                url: '/web/report',
+                data: {action: JSON.stringify(action)},
+                complete: instance.web.unblockUI,
+                success: function(){
+                    if (!self.dialog) {
+                        options.on_close();
                     }
-                });
+                    self.dialog_stop();
+                    d.resolve();
+                },
+                error: function () {
+                    c.rpc_error.apply(c, arguments);
+                    d.reject();
+                }
             });
         });
     },
     ir_actions_act_url: function (action) {
-        window.open(action.url, action.target === 'self' ? '_self' : '_blank');
+        if (action.target === 'self') {
+            instance.web.redirect(action.url);
+        } else {
+            window.open(action.url, '_blank');
+        }
         return $.when();
     },
 });
@@ -568,6 +595,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     action_views_ids : views_ids
                 }, self.flags, self.flags[view.view_type] || {}, view.options || {})
             });
+            
             views_ids[view.view_type] = view.view_id;
         });
         if (this.flags.views_switcher === false) {
@@ -575,7 +603,11 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         }
         // If no default view defined, switch to the first one in sequence
         var default_view = this.flags.default_view || this.views_src[0].view_type;
-        return this.switch_mode(default_view);
+  
+
+        return this.switch_mode(default_view, null, this.flags[default_view] && this.flags[default_view].options);
+      
+        
     },
     switch_mode: function(view_type, no_store, view_options) {
         var self = this;
@@ -783,6 +815,11 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             contexts: [action_context].concat(contexts || []),
             group_by_seq: groupbys || []
         }).done(function (results) {
+            if (results.error) {
+                throw new Error(
+                        _.str.sprintf(_t("Failed to evaluate search criterions")+": \n%s",
+                                      JSON.stringify(results.error)));
+            }
             self.dataset._model = new instance.web.Model(
                 self.dataset.model, results.context, results.domain);
             var groupby = results.group_by.length
@@ -1178,11 +1215,12 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var self = this;
         self.getParent().sidebar_eval_context().done(function (sidebar_eval_context) {
             var ids = self.getParent().get_selected_ids();
+            var domain;
             if (self.getParent().get_active_domain) {
-                var domain = self.getParent().get_active_domain();
+                domain = self.getParent().get_active_domain();
             }
             else {
-                var domain = $.Deferred().resolve(undefined);
+                domain = $.Deferred().resolve(undefined);
             }
             if (ids.length === 0) {
                 instance.web.dialog($("<div />").text(_t("You must choose at least one record.")), { title: _t("Warning"), modal: true });
@@ -1226,7 +1264,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         this.dataset = dataset;
         this.model_id = model_id;
         if (args && args[0].error) {
-            this.do_warn( instance.web.qweb.render('message_error_uploading'), args[0].error);
+            this.do_warn(_t('Uploading Error'), args[0].error);
         }
         if (!model_id) {
             this.on_attachments_loaded([]);
@@ -1310,7 +1348,7 @@ instance.web.View = instance.web.Widget.extend({
                 "context": this.dataset.get_context(),
             });
         }
-        return view_loaded_def.then(function(r) {
+        return this.alive(view_loaded_def).then(function(r) {
             self.fields_view = r;
             // add css classes that reflect the (absence of) access rights
             self.$el.addClass('oe_view')
@@ -1355,14 +1393,24 @@ instance.web.View = instance.web.Widget.extend({
             }
         };
         var context = new instance.web.CompoundContext(dataset.get_context(), action_data.context || {});
+
+        // response handler
         var handler = function (action) {
             if (action && action.constructor == Object) {
-                var ncontext = new instance.web.CompoundContext(context);
+                // filter out context keys that are specific to the current action.
+                // Wrong default_* and search_default_* values will no give the expected result
+                // Wrong group_by values will simply fail and forbid rendering of the destination view
+                var ncontext = new instance.web.CompoundContext(
+                    _.object(_.reject(_.pairs(dataset.get_context().eval()), function(pair) {
+                      return pair[0].match('^(?:(?:default_|search_default_).+|group_by|group_by_no_leaf|active_id|active_ids)$') !== null;
+                    }))
+                );
+                ncontext.add(action_data.context || {});
+                ncontext.add({active_model: dataset.model});
                 if (record_id) {
                     ncontext.add({
                         active_id: record_id,
                         active_ids: [record_id],
-                        active_model: dataset.model
                     });
                 }
                 ncontext.add(action.context || {});

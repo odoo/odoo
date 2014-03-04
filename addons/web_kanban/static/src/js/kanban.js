@@ -43,6 +43,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.currently_dragging = {};
         this.limit = options.limit || 40;
         this.add_group_mutex = new $.Mutex();
+        this.last_position = 'static';
     },
     view_loading: function(r) {
         return this.load_kanban(r);
@@ -350,20 +351,38 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var self = this;
         if (this.group_by) {
             // Kanban cards drag'n'drop
-            var $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards');
+            var prev_widget, is_folded, record;
+            var $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards, .oe_kanban_column .oe_kanban_folded_column_cards');
             $columns.sortable({
                 handle : '.oe_kanban_draghandle',
                 start: function(event, ui) {
                     self.currently_dragging.index = ui.item.parent().children('.oe_kanban_record').index(ui.item);
-                    self.currently_dragging.group = ui.item.parents('.oe_kanban_column:first').data('widget');
+                    self.currently_dragging.group = prev_widget = ui.item.parents('.oe_kanban_column:first').data('widget');
                     ui.item.find('*').on('click.prevent', function(ev) {
                         return false;
                     });
+                    record = ui.item.data('widget');
+                    record.$el.bind('mouseup',function(ev,ui){
+                        if (is_folded) {
+                            record.$el.hide();
+                        }
+                        record.$el.unbind('mouseup');
+                    })
                     ui.placeholder.height(ui.item.height());
                 },
+                over: function(event, ui) {
+                    var parent = $(event.target).parent();
+                    prev_widget.highlight(false);
+                    is_folded = parent.hasClass('oe_kanban_group_folded'); 
+                    if (is_folded) {
+                        var widget = parent.data('widget');
+                        widget.highlight(true);
+                        prev_widget = widget;
+                    }
+                 },
                 revert: 150,
                 stop: function(event, ui) {
-                    var record = ui.item.data('widget');
+                    prev_widget.highlight(false);
                     var old_index = self.currently_dragging.index;
                     var new_index = ui.item.parent().children('.oe_kanban_record').index(ui.item);
                     var old_group = self.currently_dragging.group;
@@ -438,9 +457,13 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             this.dataset.write(record.id, data, {}).done(function() {
                 record.do_reload();
                 new_group.do_save_sequences();
+                if (new_group.state.folded) {
+                    new_group.do_action_toggle_fold();
+                    record.prependTo(new_group.$records.find('.oe_kanban_column_cards'));
+                }
             }).fail(function(error, evt) {
                 evt.preventDefault();
-                alert(_t("An error has occured while moving the record to this group: ") + data.message);
+                alert(_t("An error has occured while moving the record to this group: ") + error.data.message);
                 self.do_reload(); // TODO: use draggable + sortable in order to cancel the dragging when the rcp fails
             });
         }
@@ -473,6 +496,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             || (!this.options.action.help && !this.options.action.get_empty_list_help)) {
             return;
         }
+        this.last_position = this.$el.find('table:first').css("position");
         this.$el.find('table:first').css("position", "absolute");
         $(QWeb.render('KanbanView.nocontent', { content : this.options.action.get_empty_list_help || this.options.action.help})).insertAfter(this.$('table:first'));
         this.$el.find('.oe_view_nocontent').click(function() {
@@ -480,8 +504,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         });
     },
     remove_no_result: function() {
-        this.$el.find('table:first').css("position", false);
-        this.$el.find('.oe_view_nocontent').remove();
+        this.$el.find('table:first').css("position", this.last_position);
+        this.$el.find('.oe_view_nocontent').remove();        
     },
 
     /*
@@ -555,7 +579,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
                 } catch(e) {}
             }
             _.each(this.view.aggregates, function(value, key) {
-                self.aggregates[value] = group.get('aggregates')[key];
+                self.aggregates[value] = instance.web.format_value(group.get('aggregates')[key], {type: 'float'});
             });
         }
 
@@ -792,6 +816,15 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
                 self.view.dataset.ids.push(id);
                 self.do_add_records(records, true);
             });
+    },
+    highlight: function(show){
+        if(show){
+            this.$el.addClass('oe_kanban_column_higlight');
+            this.$records.addClass('oe_kanban_column_higlight');
+        }else{
+            this.$el.removeClass('oe_kanban_column_higlight');
+            this.$records.removeClass('oe_kanban_column_higlight');
+        }
     }
 });
 
@@ -1066,13 +1099,6 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     kanban_color: function(variable) {
         var color = this.kanban_getcolor(variable);
         return color === '' ? '' : 'oe_kanban_color_' + color;
-    },
-    kanban_gravatar: function(email, size) {
-        size = size || 22;
-        email = _.str.trim(email || '').toLowerCase();
-        var default_ = _.str.isBlank(email) ? 'mm' : 'identicon';
-        var email_md5 = $.md5(email);
-        return 'http://www.gravatar.com/avatar/' + email_md5 + '.png?s=' + size + '&d=' + default_;
     },
     kanban_image: function(model, field, id, cache, options) {
         options = options || {};

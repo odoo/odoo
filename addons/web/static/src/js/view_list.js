@@ -508,7 +508,6 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         var reloaded = $.Deferred();
         this.$el.find('.oe_list_content').append(
             this.groups.render(function () {
-                // Keep '=='. This is not a mistake, this is a wanted behaviour to match null & undefined
                 if (self.dataset.index == null) {
                     if (self.records.length) {
                         self.dataset.index = 0;
@@ -1057,7 +1056,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     id = parseInt(ref_match[2], 10);
                 new instance.web.DataSet(this.view, model).name_get([id]).done(function(names) {
                     if (!names.length) { return; }
-                    record.set(column.id, names[0][1]);
+                    record.set(column.id + '__display', names[0][1]);
                 });
             }
         } else if (column.type === 'many2one') {
@@ -1131,11 +1130,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             if (column.invisible === '1') {
                 return;
             }
-            if (column.tag === 'button') {
-                cells.push('<td class="oe_button" title="' + column.string + '">&nbsp;</td>');
-            } else {
-                cells.push('<td title="' + column.string + '">&nbsp;</td>');
-            }
+            cells.push('<td title="' + column.string + '">&nbsp;</td>');
         });
         if (this.options.deletable) {
             cells.push('<td class="oe_list_record_delete"><button type="button" style="visibility: hidden"> </button></td>');
@@ -1319,7 +1314,8 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
         }
     },
     close: function () {
-        this.$row.children().last().empty();
+        this.$row.children().last().find('button').remove();
+        this.$row.children().last().find('span').remove();
         this.records.reset();
     },
     /**
@@ -1474,14 +1470,13 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
 
         var view = this.view,
            limit = view.limit(),
-               d = new $.Deferred(),
             page = this.datagroup.openable ? this.page : view.page;
 
         var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field";}), 'name');
         var options = { offset: page * limit, limit: limit, context: {bin_size: true} };
         //TODO xmo: investigate why we need to put the setTimeout
-        $.async_when().done(function() {
-            dataset.read_slice(fields, options).done(function (records) {
+        return $.async_when().then(function() {
+            return dataset.read_slice(fields, options).then(function (records) {
                 // FIXME: ignominious hacks, parents (aka form view) should not send two ListView#reload_content concurrently
                 if (self.records.length) {
                     self.records.reset(null, {silent: true});
@@ -1491,7 +1486,8 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 } else {
                     if (dataset.size() == records.length) {
                         // only one page
-                        self.$row.find('td.oe_list_group_pagination').empty();
+                        self.$row.find('td.oe_list_group_pagination').find('button').remove();
+                        self.$row.find('td.oe_list_group_pagination').find('span').remove();
                     } else {
                         var pages = Math.ceil(dataset.size() / limit);
                         self.$row
@@ -1513,13 +1509,12 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
 
                 self.records.add(records, {silent: true});
                 list.render();
-                d.resolve(list);
                 if (_.isEmpty(records)) {
                     view.no_result();
                 }
+                return list;
             });
         });
-        return d.promise();
     },
     setup_resequence_rows: function (list, dataset) {
         // drag and drop enabled if list is not sorted and there is a
@@ -1600,11 +1595,12 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     self.render_groups(groups));
                 if (post_render) { post_render(); }
             }, function (dataset) {
-                self.render_dataset(dataset).done(function (list) {
+                self.render_dataset(dataset).then(function (list) {
                     self.children[null] = list;
                     self.elements =
                         [list.$current.replaceAll($el)[0]];
                     self.setup_resequence_rows(list, dataset);
+                }).always(function() {
                     if (post_render) { post_render(); }
                 });
             });
@@ -1658,9 +1654,12 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
 function synchronized(fn) {
     var fn_mutex = new $.Mutex();
     return function () {
+        var obj = this;
         var args = _.toArray(arguments);
-        args.unshift(this);
-        return fn_mutex.exec(fn.bind.apply(fn, args));
+        return fn_mutex.exec(function () {
+            if (obj.isDestroyed()) { return $.when(); }
+            return fn.apply(obj, args)
+        });
     };
 }
 var DataGroup =  instance.web.Class.extend({
@@ -2133,6 +2132,7 @@ instance.web.list.columns = new instance.web.Registry({
     'field.handle': 'instance.web.list.Handle',
     'button': 'instance.web.list.Button',
     'field.many2onebutton': 'instance.web.list.Many2OneButton',
+    'field.reference': 'instance.web.list.Reference',
     'field.many2many': 'instance.web.list.Many2Many'
 });
 instance.web.list.columns.for_ = function (id, field, node) {
@@ -2355,6 +2355,19 @@ instance.web.list.Many2Many = instance.web.list.Column.extend({
         if (!_.isEmpty(row_data[this.id].value)) {
             // If value, use __display version for printing
             row_data[this.id] = row_data[this.id + '__display'];
+        }
+        return this._super(row_data, options);
+    }
+});
+instance.web.list.Reference = instance.web.list.Column.extend({
+    _format: function (row_data, options) {
+        if (!_.isEmpty(row_data[this.id].value)) {
+            // If value, use __display version for printing
+            if (!!row_data[this.id + '__display']) {
+                row_data[this.id] = row_data[this.id + '__display'];
+            } else {
+                row_data[this.id] = {'value': ''};
+            }
         }
         return this._super(row_data, options);
     }

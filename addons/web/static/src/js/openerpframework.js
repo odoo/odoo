@@ -809,7 +809,8 @@ var genericJsonRpc = function(fct_name, params, fct) {
         params: params,
         id: Math.floor(Math.random() * 1000 * 1000 * 1000)
     };
-    return fct(data).pipe(function(result) {
+    var xhr = fct(data);
+    var result = xhr.pipe(function(result) {
         if (result.error !== undefined) {
             console.error("Server application error", result.error);
             return $.Deferred().reject("server", result.error);
@@ -821,7 +822,30 @@ var genericJsonRpc = function(fct_name, params, fct) {
         var def = $.Deferred();
         return def.reject.apply(def, ["communication"].concat(_.toArray(arguments)));
     });
+    // FIXME: jsonp?
+    result.abort = function () { xhr.abort && xhr.abort(); };
+    return result;
 };
+
+/**
+ * Replacer function for JSON.stringify, serializes Date objects to UTC
+ * datetime in the OpenERP Server format.
+ *
+ * However, if a serialized value has a toJSON method that method is called
+ * *before* the replacer is invoked. Date#toJSON exists, and thus the value
+ * passed to the replacer is a string, the original Date has to be fetched
+ * on the parent object (which is provided as the replacer's context).
+ *
+ * @param {String} k
+ * @param {Object} v
+ * @returns {Object}
+ */
+function date_to_utc(k, v) {
+    var value = this[k];
+    if (!(value instanceof Date)) { return v; }
+
+    return openerp.datetime_to_str(value);
+}
 
 openerp.jsonRpc = function(url, fct_name, params, settings) {
     return genericJsonRpc(fct_name, params, function(data) {
@@ -829,7 +853,7 @@ openerp.jsonRpc = function(url, fct_name, params, settings) {
             url: url,
             dataType: 'json',
             type: 'POST',
-            data: JSON.stringify(data),
+            data: JSON.stringify(data, date_to_utc),
             contentType: 'application/json'
         }));
     });
@@ -838,7 +862,7 @@ openerp.jsonRpc = function(url, fct_name, params, settings) {
 openerp.jsonpRpc = function(url, fct_name, params, settings) {
     settings = settings || {};
     return genericJsonRpc(fct_name, params, function(data) {
-        var payload_str = JSON.stringify(data);
+        var payload_str = JSON.stringify(data, date_to_utc);
         var payload_url = $.param({r:payload_str});
         var force2step = settings.force2step || false;
         delete settings.force2step;
@@ -950,6 +974,7 @@ openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
         this.session_id = options.session_id || null;
         this.override_session = options.override_session || !!options.session_id || false;
         this.avoid_recursion = false;
+        this.use_cors = options.use_cors || false;
         this.setup(origin);
     },
     setup: function(origin) {
@@ -993,7 +1018,7 @@ openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
     },
     check_session_id: function() {
         var self = this;
-        if (this.avoid_recursion)
+        if (this.avoid_recursion || self.use_cors)
             return $.when();
         if (this.session_id)
             return $.when(); // we already have the session id
@@ -1045,6 +1070,15 @@ openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
             var fct;
             if (self.origin_server) {
                 fct = openerp.jsonRpc;
+                if (self.override_session) {
+                    options.headers = _.extend({}, options.headers, {
+                        "X-Openerp-Session-Id": self.override_session ? self.session_id || '' : ''
+                    });
+                }
+            } else if (self.use_cors) {
+                fct = openerp.jsonRpc;
+                url = self.url(url, null);
+                options.session_id = self.session_id || '';
                 if (self.override_session) {
                     options.headers = _.extend({}, options.headers, {
                         "X-Openerp-Session-Id": self.override_session ? self.session_id || '' : ''
@@ -1155,7 +1189,8 @@ openerp.Model = openerp.Class.extend({
             kwargs = args;
             args = [];
         }
-        return this.session().rpc('/web/dataset/call_kw', {
+        var call_kw = '/web/dataset/call_kw/' + this.name + '/' + method;
+        return this.session().rpc(call_kw, {
             model: this.name,
             method: method,
             args: args,
@@ -1236,15 +1271,14 @@ openerp.TranslationDataBase = openerp.Class.extend(/** @lends instance.Translati
 openerp._t = new openerp.TranslationDataBase().build_translation_function();
 
 openerp.get_cookie = function(c_name) {
-    if (document.cookie.length > 0) {
-        var c_start = document.cookie.indexOf(c_name + "=");
-        if (c_start != -1) {
-            c_start = c_start + c_name.length + 1;
-            var c_end = document.cookie.indexOf(";", c_start);
-            if (c_end == -1) {
-                c_end = document.cookie.length;
-            }
-            return unescape(document.cookie.substring(c_start, c_end));
+    var cookies = document.cookie ? document.cookie.split('; ') : [];
+    for (var i = 0, l = cookies.length; i < l; i++) {
+        var parts = cookies[i].split('=');
+        var name = parts.shift();
+        var cookie = parts.join('=');
+
+        if (c_name && c_name === name) {
+            return cookie;
         }
     }
     return "";
@@ -1292,7 +1326,10 @@ openerp.str_to_datetime = function(str) {
     if ( !res ) {
         throw new Error("'" + str + "' is not a valid datetime");
     }
-    var tmp = new Date(0);
+    var tmp = new Date(2000,0,1);
+    tmp.setUTCMonth(1970);
+    tmp.setUTCMonth(0);
+    tmp.setUTCDate(1);
     tmp.setUTCFullYear(parseFloat(res[1]));
     tmp.setUTCMonth(parseFloat(res[2]) - 1);
     tmp.setUTCDate(parseFloat(res[3]));
@@ -1324,7 +1361,7 @@ openerp.str_to_date = function(str) {
     if ( !res ) {
         throw new Error("'" + str + "' is not a valid date");
     }
-    var tmp = new Date(0);
+    var tmp = new Date(2000,0,1);
     tmp.setFullYear(parseFloat(res[1]));
     tmp.setMonth(parseFloat(res[2]) - 1);
     tmp.setDate(parseFloat(res[3]));
