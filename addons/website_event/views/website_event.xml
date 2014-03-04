@@ -120,7 +120,7 @@
 <template id="event_right_country_event" inherit_option_id="website_event.index" name="Country Events">
     <xpath expr="//div[@id='right_column']" position="inside">
         <div class="row">
-            <div class="col-md-12 mb16 country_events">
+            <div class="col-md-12 mb16 mt16 country_events">
                 <div class="country_events_list">
                     <div class="text-muted text-center">
                         <h1>
@@ -358,16 +358,18 @@
     <xpath expr="//div[@id='snippet_content']" position="inside">
         <div data-snippet-id="country_events" data-selector-siblings="p, h2, h3, blockquote" data-selector-children=".content">
             <div class="oe_snippet_thumbnail">
-                <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block-country_events.png" />
+                <div style="background: white;box-shadow:none;-webkit-box-shadow:none;" class="oe_snippet_thumbnail_img" >
+                    <i class="fa fa-flag fa-5x text-muted"></i>
+                </div>
                 <span class="oe_snippet_thumbnail_title">Country Events</span>
             </div>
-            <div class="oe_snippet_body country_events">
+            <div class="oe_snippet_body country_events mb16 mt16">
                 <div class="country_events_list">
                     <div class="text-muted text-center">
-                        <h1>
+                        <div>
                             <i class="fa fa-flag fa-5x"></i>
-                        </h1>
-                        <h1>Events from Your Country</h1>
+                        </div>
+                        <div>Events of to visitor's country</div>
                     </div>
                 </div>
             </div>
@@ -379,7 +381,7 @@
     <t t-ignore="true">
         <t t-if="events">
             <div class="country_events_list">
-                <div class="mb16 css_editable_mode_hidden">
+                <div class="css_editable_mode_hidden">
                     <t t-if="country">
                         <img class="img-rounded img-responsive" t-att-src="'/website/image?model=res.country&amp;field=image&amp;id='+str(country.id)"></img>
                         <h4><b>Events In <span t-esc="country.name"></span></b></h4>
@@ -387,11 +389,17 @@
                     <t t-if="not country">
                         <h4><b>Upcoming Events</b></h4>
                     </t>
-                    <div t-foreach="events[:5]" t-as="country_event" class="oe_website_overflow_ellipsis mb8">
-                        <t t-if="not country_event['event'].website_published">
+                    <div t-foreach="events[:5]" t-as="event_dict" class="oe_website_overflow_ellipsis mb8">
+                        <t t-if="not event_dict['event'].website_published">
                             <span class="label label-danger"><i class="fa fa-ban"></i></span>
                         </t>
-                        <i class="fa fa-calendar"></i> <b><span t-esc="country_event['date']"/>: <span><a t-att-href="country_event['url']"><t t-esc="country_event['event'].name"/></a></span></b>
+                        <t t-if="event_dict['event'].address_id">
+                            <i class="fa fa-map-marker"></i>
+                        </t>
+                        <t t-if="not event_dict['event'].address_id">
+                            <i class="fa fa-cloud"></i>
+                        </t>
+                        <b><span t-esc="event_dict['date']"/>: <span><a t-att-href="event_dict['url']"><t t-esc="event_dict['event'].name"/></a></span></b>
                     </div>
                     <t t-if="len(events) > 5">
                         <div t-if="country">
@@ -404,10 +412,10 @@
                 </div>
                 <div class="css_non_editable_mode_hidden">
                     <div class="text-muted text-center">
-                        <h1>
+                       <div>
                             <i class="fa fa-flag fa-5x"></i>
-                        </h1>
-                        <h1>Events from Your Country</h1>
+                        </div>
+                        <div>Events of to visitor's country</div>
                     </div>
                 </div>
             </div>

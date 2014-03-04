@@ -221,15 +221,15 @@ class website_event(http.Controller):
         event_obj = request.registry['event.event']
         cr, uid, context,event_ids = request.cr, request.uid, request.context,[]
         country_code = self.get_visitors_country()['country_code']
-        result = {'events':[]}
+        result = {'events':[],'country':False}
         if country_code:
             country_ids = country_obj.search(request.cr, request.uid, [('code', '=', country_code)], context=request.context)
-            result['country'] = country_obj.browse(request.cr, request.uid, country_ids[0], context=request.context)
-            event_ids = event_obj.search(request.cr, request.uid, ['|', ('address_id', '=', None),('country_id.code', '=', country_code),('date_begin','>=', time.strftime('%Y-%m-%d 00:00:00'))], order="date_begin", context=request.context)
+            event_ids = event_obj.search(request.cr, request.uid, ['|', ('address_id', '=', None),('country_id.code', '=', country_code),('date_begin','>=', time.strftime('%Y-%m-%d 00:00:00')),('state', '=', 'confirm')], order="date_begin", context=request.context)
         if not event_ids:
-            event_ids = event_obj.search(request.cr, request.uid, [('date_begin','>=', time.strftime('%Y-%m-%d 00:00:00'))], order="date_begin", context=request.context)
-            result['country'] = False
-        for event in event_obj.browse(request.cr, request.uid, event_ids, context=request.context):
+            event_ids = event_obj.search(request.cr, request.uid, [('date_begin','>=', time.strftime('%Y-%m-%d 00:00:00')),('state', '=', 'confirm')], order="date_begin", context=request.context)
+        for event in event_obj.browse(request.cr, request.uid, event_ids, context=request.context)[:6]:
+            if country_code and event.country_id.code == country_code:
+                result['country'] = country_obj.browse(request.cr, request.uid, country_ids[0], context=request.context)
             result['events'].append({
                  "date": self.get_formated_date(event),
                  "event": event,
