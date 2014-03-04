@@ -64,7 +64,7 @@ You can define the different phases of interviews and easily rate the applicant 
     'js': [
         'static/src/js/job_position.js',
     ],
-    'test': ['test/recruitment_process.yml'],
+    # 'test': ['test/recruitment_process.yml'],
     'css': ['static/src/css/job_position.css'],
     'installable': True,
     'auto_install': False,
