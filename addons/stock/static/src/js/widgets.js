@@ -26,21 +26,31 @@ function openerp_picking_widgets(instance){
         template: 'PickingEditorWidget',
         init: function(parent,options){
             this._super(parent,options);
+            this.search_result = '';
         },
         get_rows: function(){
             var model = this.getParent();
             var rows = [];
+            var self = this;
 
             _.each( model.packoplines, function(packopline){
+                var select_search_src = (packopline.location_id[1] && packopline.location_id[1].indexOf(self.search_result) !== -1);
+                var select_search_dst = (packopline.location_dest_id[1] && packopline.location_dest_id[1].indexOf(self.search_result) !== -1);
                 rows.push({
                     cols: { product: packopline.product_id[1],
-                            qty: packopline.product_uom_qty,
+                            qty: packopline.product_qty,
                             rem: packopline.remaining_qty,
-                            uom: packopline.product_uom[1],
+                            uom: packopline.product_uom_id[1],
+                            lot: packopline.lot_id[1],
+                            pack: packopline.package_id[1],
+                            container: packopline.result_package_id[1],
                             loc: packopline.location_id[1],
+                            dest: packopline.location_dest_id[1],
                             id:  packopline.product_id[0],
                     },
-                    classes: (moveline.qty_remaining < 0 ? 'danger' : '')
+                    classes: (packopline.qty_remaining < 0 ? 'danger' : '') + (self.search_result === '' || select_search_src || select_search_dst ? '' : 'hidden'),
+                    highlight_src: self.search_result !== '' && select_search_src,
+                    highlight_dst: self.search_result !== '' && select_search_dst,
                 });
             });
             
@@ -54,10 +64,13 @@ function openerp_picking_widgets(instance){
                 console.log('Id:',id);
                 self.getParent().scan_product_id(id);
             });
-
             //remove navigtion bar from default openerp GUI
             $('td.navbar').html('<div></div>');
         },
+        on_searchbox: function(query){
+            this.search_result = query;
+            return true;
+        }
     });
 
     module.PackageEditorWidget = instance.web.Widget.extend({
@@ -413,6 +426,9 @@ function openerp_picking_widgets(instance){
             this.$('.js_pick_prev').click(function(){ self.picking_prev(); });
             this.$('.js_pick_next').click(function(){ self.picking_next(); });
             this.$('.js_pick_menu').click(function(){ self.menu(); });
+            this.$('.oe_searchbox').keyup(function(event){
+                self.on_searchbox($(this).val());
+            });
 
             this.hotkey_handler = function(event){
                 if(event.keyCode === 37 ){  // Left Arrow
@@ -450,6 +466,11 @@ function openerp_picking_widgets(instance){
 
             }).fail(function(error) {console.log(error);});
 
+        },
+        on_searchbox: function(query){
+            var self = this;
+            self.picking_editor.on_searchbox(query);
+            self.refresh_ui(self.picking);
         },
         // reloads the data from the provided picking and refresh the ui. 
         // (if no picking_id is provided, gets the first picking in the db)
