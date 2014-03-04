@@ -179,7 +179,7 @@ class Field(object):
         if not self.string:
             self.string = name.replace('_', ' ').capitalize()
 
-    @lazy_property
+    @property
     def model(self):
         """ return the model instance of `self` """
         return scope[self.model_name]
@@ -805,7 +805,7 @@ class _Relational(Field):
     def __init__(self, **kwargs):
         super(_Relational, self).__init__(**kwargs)
 
-    @lazy_property
+    @property
     def comodel(self):
         """ return the comodel instance of `self` """
         return scope[self.comodel_name]
