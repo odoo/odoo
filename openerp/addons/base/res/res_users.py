@@ -167,8 +167,9 @@ class res_users(osv.osv):
     }
 
     def on_change_login(self, cr, uid, ids, login, context=None):
-        v = {'email': login} if tools.single_email_re.match(login) else {}
-        return {'value': v}
+        if login and tools.single_email_re.match(login):
+            return {'value': {'email': login}}
+        return {}
 
     def on_change_company_id(self, cr, uid, ids, company_id):
         return {'warning' : {
