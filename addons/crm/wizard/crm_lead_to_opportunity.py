@@ -100,10 +100,8 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             else:
                 user_in_section = False
             if not user_in_section:
-                section_id = False
-                section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
-                if section_ids:
-                    section_id = section_ids[0]
+                result = self.pool['crm.lead'].on_change_user(cr, uid, ids, user_id, context=context)
+                section_id = result.get('value') and result['value'].get('section_id') and result['value']['section_id'] or False
         return {'value': {'section_id': section_id}}
 
     def view_init(self, cr, uid, fields, context=None):
