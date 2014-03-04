@@ -163,6 +163,7 @@ class Field(object):
     def reset(self):
         """ Prepare `self` for a new setup. This resets all lazy properties. """
         lazy_property.reset_all(self)
+        self.__dict__.pop('setup', None)
 
     def copy(self, **kwargs):
         """ make a copy of `self`, possibly modified with parameters `kwargs` """
@@ -465,10 +466,9 @@ class Field(object):
         """ Complete the setup of `self`: make it process its dependencies and
             store triggers on other fields to be recomputed.
         """
-        return self._setup              # trigger _setup() if not done yet
+        # trick: calling self.setup() again will do nothing
+        self.setup = lambda: None
 
-    @lazy_property
-    def _setup(self):
         if self.related:
             # setup all attributes of related field
             self.setup_related()
@@ -1026,9 +1026,17 @@ class Many2many(_RelationalMulti):
         super(Many2many, self).__init__(comodel_name=comodel_name, relation=relation,
             column1=column1, column2=column2, string=string, **kwargs)
 
+    def setup(self):
+        super(Many2many, self).setup()
+        if self.store and not self.relation:
+            model = self.model
+            column = model._columns[self.name]
+            if not isinstance(column, fields.function):
+                self.relation, self.column1, self.column2 = column._sql_names(model)
+
     @lazy_property
     def inverse_field(self):
-        if not self.compute:
+        if self.relation:
             expected = (self.relation, self.column2, self.column1)
             for field in self.comodel._fields.itervalues():
                 if isinstance(field, Many2many) and \
