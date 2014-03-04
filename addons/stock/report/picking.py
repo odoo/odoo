@@ -68,24 +68,25 @@ class picking(report_sxw.rml_parse):
 
     def get_internal_picking_dest_lines(self, picking):
         res = []
-        for line in picking.move_lines:
-            row = {'description': self.get_product_desc(line)}
-            if not line.putaway_ids:
-                row['quantity'] = line.product_uom_qty
-                row['uom'] = line.product_uom.name
-                row['location_id'] = line.location_dest_id.name
-                row['barcode'] = line.product_id.ean13
-                row['lot_id'] = ''
-                res.append(row)
-            else:
-                for rec in line.putaway_ids:
-                    row2 = row.copy()
-                    row2['quantity'] = rec.quantity
-                    row2['uom'] = line.product_id.uom_id.name
-                    row2['location_id'] = rec.location_id.name
-                    row2['lot_id'] = rec.lot_id and rec.lot_id.name or ''
-                    row2['barcode'] = rec.lot_id and rec.lot_id.name or line.product_id.ean13
-                    res.append(row2)
+        #TODO: rewrite according to pack ops
+#         for line in picking.move_lines:
+#             row = {'description': self.get_product_desc(line)}
+#             if not line.putaway_ids:
+#                 row['quantity'] = line.product_uom_qty
+#                 row['uom'] = line.product_uom.name
+#                 row['location_id'] = line.location_dest_id.name
+#                 row['barcode'] = line.product_id.ean13
+#                 row['lot_id'] = ''
+#                 res.append(row)
+#             else:
+#                 for rec in line.putaway_ids:
+#                     row2 = row.copy()
+#                     row2['quantity'] = rec.quantity
+#                     row2['uom'] = line.product_id.uom_id.name
+#                     row2['location_id'] = rec.location_id.name
+#                     row2['lot_id'] = rec.lot_id and rec.lot_id.name or ''
+#                     row2['barcode'] = rec.lot_id and rec.lot_id.name or line.product_id.ean13
+#                     res.append(row2)
         return res
 
 report_sxw.report_sxw('report.stock.picking.list', 'stock.picking', 'addons/stock/report/picking.rml', parser=picking)
