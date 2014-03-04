@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import hashlib
 import inspect
 import itertools
 import logging
@@ -564,36 +563,9 @@ class ir_attachment(osv.osv):
                     'max_height': 768,
                 })
         return result
-    def _datas_checksum(self, cr, uid, ids, name, arg, context=None):
-        return dict(
-            (attach['id'], self._compute_checksum(attach))
-            for attach in self.read(
-                cr, uid, ids, ['res_model', 'res_id', 'type', 'datas'],
-                context=context)
-        )
-
-    def _compute_checksum(self, attachment_dict):
-        if attachment_dict.get('res_model') == 'ir.ui.view'\
-                and not attachment_dict.get('res_id')\
-                and attachment_dict.get('type', 'binary') == 'binary'\
-                and attachment_dict.get('datas'):
-            return hashlib.new('sha1', attachment_dict['datas']).hexdigest()
-        return None
-
     _columns = {
-        'datas_checksum': fields.function(_datas_checksum, size=40,
-              string="Datas checksum", type='char', store=True, select=True),
         'website_url': fields.function(_website_url_get, string="Attachment URL", type='char')
     }
-
-    def create(self, cr, uid, values, context=None):
-        chk = self._compute_checksum(values)
-        if chk:
-            match = self.search(cr, uid, [('datas_checksum', '=', chk)], context=context)
-            if match:
-                return match[0]
-        return super(ir_attachment, self).create(
-            cr, uid, values, context=context)
 
     def try_remove(self, cr, uid, ids, context=None):
         """ Removes a web-based image attachment if it is used by no view
