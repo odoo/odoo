@@ -31,6 +31,7 @@ from openerp.addons.web.http import request
 
 from dateutil.relativedelta import relativedelta
 from openerp.addons.website.controllers.main import Website as controllers
+from openerp.addons.website.models.website import slug
 
 controllers = controllers()
 
@@ -88,7 +89,7 @@ class website_forum(http.Controller):
 
         step = 10
         question_count = forum_obj.search(cr, uid, domain, count=True, context=context)
-        pager = request.website.pager(url="/forum/%s/" % forum.id, total=question_count, page=page, step=step, scope=10)
+        pager = request.website.pager(url="/forum/%s/" % slug(forum), total=question_count, page=page, step=step, scope=10)
 
         obj_ids = forum_obj.search(cr, uid, domain, limit=step, offset=pager['offset'], context=context)
         question_ids = forum_obj.browse(cr, uid, obj_ids, context=context)
@@ -168,7 +169,7 @@ class website_forum(http.Controller):
                 'state': 'active',
                 'active': True,
             }, context=create_context)
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (forum.id,new_question_id))
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),new_question_id))
 
     @http.route('/forum/<model("website.forum"):forum>/question/postanswer/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def post_answer(self, forum ,post_id, **question):
@@ -185,7 +186,7 @@ class website_forum(http.Controller):
                 'state': 'active',
                 'active': True,
             }, context=create_context)
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (forum.id,post_id))
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post_id))
 
     @http.route(['/forum/<model("website.forum"):forum>/question/editanswer'], type='http', auth="user", website=True, multilang=True)
     def edit_answer(self, forum, post_id, **kwargs):
@@ -211,7 +212,7 @@ class website_forum(http.Controller):
         new_question_id = request.registry['website.forum.post'].write( cr, uid, [answer_id], {
                 'content': post.get('answer_content'),
             }, context=context)
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (forum.id,post.get('post_id')))
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('post_id')))
 
     @http.route(['/forum/<model("website.forum"):forum>/tag/<model("website.forum.tag"):tag>'], type='http', auth="public", website=True, multilang=True)
     def tag_questions(self, forum, tag, page=1, **kwargs):
