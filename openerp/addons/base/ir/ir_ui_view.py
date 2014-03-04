@@ -688,6 +688,16 @@ class view(osv.osv):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
                 if not node.get(action) and not Model.check_access_rights(cr, user, operation, raise_exception=False):
                     node.set(action, 'false')
+            if node.tag in ('kanban'):
+                group_by_field = node.get('default_group_by')
+                if group_by_field:
+                    group_by_object = Model.fields_get(cr, user, None, context)[group_by_field]
+                    if (group_by_object['type'] == 'many2one'):
+                        group_by_model = Model.pool.get(group_by_object['relation'])
+                        for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
+                            if not node.get(action) and not group_by_model.check_access_rights(cr, user, operation, raise_exception=False):
+                                node.set(action, 'false')
+
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
         for k in fields.keys():
             if k not in fields_def:
