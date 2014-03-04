@@ -1054,16 +1054,7 @@ class Menu(http.Controller):
         """
         s = request.session
         Menus = s.model('ir.ui.menu')
-        # If a menu action is defined use its domain to get the root menu items
-        user_menu_id = s.model('res.users').read([s.uid], ['menu_id'],
-                                                 request.context)[0]['menu_id']
-
         menu_domain = [('parent_id', '=', False)]
-        if user_menu_id:
-            domain_string = s.model('ir.actions.act_window').read(
-                [user_menu_id[0]], ['domain'],request.context)[0]['domain']
-            if domain_string:
-                menu_domain = ast.literal_eval(domain_string)
 
         return Menus.search(menu_domain, 0, False, False, request.context)
 
