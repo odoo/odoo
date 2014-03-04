@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-02-13 16:09+0000\n"
+"PO-Revision-Date: 2014-02-18 07:45+0000\n"
 "Last-Translator: Yoshi Tashiro <yostashiro@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-14 07:44+0000\n"
+"X-Launchpad-Export-Date: 2014-02-19 05:40+0000\n"
 "X-Generator: Launchpad (build 16916)\n"
 
 #. module: mrp
@@ -43,12 +43,12 @@ msgstr "システムが構成部品を探す場所"
 #. module: mrp
 #: field:mrp.production,workcenter_lines:0
 msgid "Work Centers Utilisation"
-msgstr "作業センタ活用"
+msgstr "作業区活用"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
 msgid "Routing Work Centers"
-msgstr "工順作業センタ"
+msgstr "工順作業区"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,cycle:0
@@ -108,7 +108,7 @@ msgstr ""
 msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
-msgstr "この作業センタは工順の特定の操作の中で反復回数実行される必要があります。"
+msgstr "この作業区は工順の特定の操作の中で反復回数実行される必要があります。"
 
 #. module: mrp
 #: view:product.product:0
@@ -229,7 +229,7 @@ msgstr "容量情報"
 #. module: mrp
 #: field:mrp.routing,workcenter_lines:0
 msgid "Work Centers"
-msgstr "作業センタ"
+msgstr "作業区"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -245,6 +245,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                クリックして工順を作成してください。\n"
+"              </p><p>\n"
+"                Routings allow you to create and manage the manufacturing\n"
+"                operations that should be followed within your work centers "
+"in\n"
+"                order to produce a product. They are attached to bills of\n"
+"                materials that will define the required raw materials.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: view:mrp.production:0
@@ -331,7 +341,7 @@ msgstr "エラー。再帰的な部品表を作ることはできません。"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
 msgid "Work Center Usage"
-msgstr "作業センタの用途"
+msgstr "作業区用途"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procurestockableproduct0
@@ -382,7 +392,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,product_id:0
 msgid "Work Center Product"
-msgstr "作業センタ製品"
+msgstr "作業区製品"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -510,7 +520,7 @@ msgstr "製品タイプはサービスです。"
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
 msgid "Specify Cost of Work Center per cycle."
-msgstr "サイクル当りの作業センタのコストを指定して下さい。"
+msgstr "サイクルあたりの作業区の原価を指定してください。"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_bom0
@@ -542,7 +552,7 @@ msgstr ""
 msgid ""
 "The Bill of Material is linked to a routing, i.e. the succession of work "
 "centers."
-msgstr "部品表は工順、すなわち作業センタの連携とリンクしています。"
+msgstr "部品表は工順（作業区間の連携を定義したもの）に紐付きます。"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -585,7 +595,7 @@ msgstr "製造の検索"
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
-msgstr "作業センタの工順のリストを表示する時の順序を与えます。"
+msgstr "工順作業区のリスト表示順に使われます。"
 
 #. module: mrp
 #: field:mrp.bom,child_complete_ids:0
@@ -650,7 +660,7 @@ msgstr "消費構成品"
 #: model:ir.model,name:mrp.model_mrp_workcenter_load
 #: model:ir.model,name:mrp.model_report_workcenter_load
 msgid "Work Center Load"
-msgstr "作業センタの負荷"
+msgstr "作業区負荷"
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:55
@@ -688,8 +698,8 @@ msgid ""
 "operations and to plan future loads on work centers based on production "
 "plannification."
 msgstr ""
-"完成品を製造するための操作のリスト（作業センタのリスト）。工順は操作の間の作業センタのコストを計算し、製造計画化を基本とする作業センタの将来の負荷を計画す"
-"るために主に利用されます。"
+"完成品を製造するための操作のリスト（作業区のリスト）。工順は操作の間の作業区のコストを計算し、製造計画化を基本とする作業区の将来の負荷を計画するために主に"
+"利用されます。"
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
@@ -762,6 +772,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                クリックして作業区を追加してください。\n"
+"              </p><p>\n"
+"                Work Centers allow you to create and manage manufacturing\n"
+"                units. They consist of workers and/or machines, which are\n"
+"                considered as units for task assignation as well as "
+"capacity\n"
+"                and planning forecast.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_minimumstockrule0
@@ -987,7 +1007,7 @@ msgstr "在庫可能製品"
 #: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Work Center name"
-msgstr "作業センタ名"
+msgstr "作業区名"
 
 #. module: mrp
 #: field:mrp.routing,code:0
@@ -1120,14 +1140,14 @@ msgstr ""
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
 msgid "Specify Cost of Work Center per hour."
-msgstr "時間当りの作業センタコストを指定して下さい。"
+msgstr "時間あたりの作業区コストを指定してください。"
 
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
 msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
-msgstr "この作業センタが並列に処理できる操作の数。この作業センタが5人の作業員のチームを表すなら、サイクル当りの容量は5となります。"
+msgstr "この作業区が並列に処理できる操作の数。この作業区が5人の作業員のチームを表すなら、サイクル当りの容量は5となります。"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
@@ -1186,7 +1206,7 @@ msgstr "リソース"
 msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified "
 "routing."
-msgstr "特定工順の操作を達成するためのこの作業センタの時間（時）"
+msgstr "特定工順の操作を達成するためのこの作業区の時間（時）"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
@@ -1221,7 +1241,7 @@ msgstr "システムは在庫にするための製品を待っています。こ
 #. module: mrp
 #: view:mrp.routing:0
 msgid "Work Center Operations"
-msgstr "作業センタ操作"
+msgstr "作業区操作"
 
 #. module: mrp
 #: view:mrp.routing:0
@@ -1257,7 +1277,7 @@ msgstr "製品"
 #. module: mrp
 #: view:report.workcenter.load:0
 msgid "Work Center load"
-msgstr "作業センタの負荷"
+msgstr "作業区の負荷"
 
 #. module: mrp
 #: help:mrp.production,location_dest_id:0
@@ -1271,8 +1291,7 @@ msgid ""
 "Routing is indicated then,the third tab of a production order (Work Centers) "
 "will be automatically pre-completed."
 msgstr ""
-"工順は全ての作業センタが長さとサイクルがどのくらい使われるかを示します。工順が示される場合、製造オーダー（作業センタ）の第３のタブは自動的に事前完了します"
-"。"
+"工順は全ての作業区が長さとサイクルがどのくらい使われるかを示します。工順が示される場合、製造オーダ（作業区）の第３のタブは自動的に事前完了します。"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:505
@@ -1383,7 +1402,7 @@ msgstr "構成部品仕入先"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Production Work Centers"
-msgstr "製造作業センタ"
+msgstr "製造作業区"
 
 #. module: mrp
 #: view:mrp.workcenter:0
@@ -1446,7 +1465,7 @@ msgstr ""
 #. module: mrp
 #: view:report.workcenter.load:0
 msgid "Work Center Loads"
-msgstr "作業センタの負荷"
+msgstr "作業区負荷"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
@@ -1545,7 +1564,7 @@ msgstr "製造オーダ開始"
 #: view:mrp.workcenter:0
 #: field:report.workcenter.load,workcenter_id:0
 msgid "Work Center"
-msgstr "作業センタ"
+msgstr "作業区"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -1634,7 +1653,7 @@ msgstr "オーダーの作成"
 msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
-msgstr "作業センタの説明。この作業センタは何がサイクルであるかをここで説明して下さい。"
+msgstr "作業区の説明。この作業区は何がサイクルであるかをここで説明してください。"
 
 #. module: mrp
 #: field:mrp.production,date_finished:0
@@ -1670,8 +1689,8 @@ msgid ""
 "operations and to plan future loads on work centers based on production "
 "planning."
 msgstr ""
-"完成品を製造するための操作のリスト（作業センタのリスト）。工順は操作の間の作業センタのコストを計算し、製造計画化を基本とする作業センタの将来の負荷を計画す"
-"るために主に利用されます。"
+"完成品を製造するための操作のリスト（作業区のリスト）。工順は操作の間の作業区のコストを計算し、製造計画化を基本とする作業区の将来の負荷を計画するために主に"
+"利用されます。"
 
 #. module: mrp
 #: view:change.production.qty:0
@@ -1755,6 +1774,8 @@ msgid ""
 "lines (in the \"Work Centers\" tab).\n"
 "                This installs the module mrp_operations."
 msgstr ""
+"製造オーダ作業明細（「作業区」タブ）に状態、開始日、停止日の項目を追加します。\n"
+"                mrp_operationsモジュールをインストールします。"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:737

@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-02-13 00:38+0000\n"
-"Last-Translator: gobi <Unknown>\n"
+"PO-Revision-Date: 2014-02-19 09:15+0000\n"
+"Last-Translator: Jacara <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-13 06:47+0000\n"
+"X-Launchpad-Export-Date: 2014-02-20 05:42+0000\n"
 "X-Generator: Launchpad (build 16916)\n"
 
 #. module: mrp
@@ -357,7 +357,7 @@ msgstr "Бараа Үйлдвэрлэх"
 #. module: mrp
 #: constraint:mrp.bom:0
 msgid "Error ! You cannot create recursive BoM."
-msgstr "Алдаа ! Тойрог хамааралтай орц үүсгэж болохгүй."
+msgstr "Алдаа ! Тойрог хамааралтай технилогийн карт үүсгэх боломжгүй."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
@@ -529,8 +529,8 @@ msgstr ""
 "              </p><p>\n"
 "                OpenERP-д үзүүлэлт гэдэг нь нэг барааг үйлдвэрлэхдээ "
 "ялгаатай \n"
-"                орцуудыг сонгох тохиолдолд хэрэглэгддэг. Орц бүрт олон "
-"үзүүлэлтийг\n"
+"                орцуудыг сонгох тохиолдолд хэрэглэгддэг. Технилогийн карт "
+"бүрт олон үзүүлэлтийг\n"
 "                оноох боломжтой. Борлуулалтын ажилтан борлуулалтын захиалга "
 "үүсгэхдээ\n"
 "                олон үзүүлэлтийг холбож өгөх боломжтой бөгөөд OpenERP нь "
@@ -651,7 +651,7 @@ msgstr "Нөөцийн үнэ"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_product_bom_structure
 msgid "Product BoM Structure"
-msgstr "Барааны Орцын Бүтэц"
+msgstr "Технологийн картын бүрэлдэхүүн"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -667,7 +667,7 @@ msgstr "Шугамын дамжлагуудыг жагсаалтаар хару�
 #. module: mrp
 #: field:mrp.bom,child_complete_ids:0
 msgid "BoM Hierarchy"
-msgstr "Орцын удамшил"
+msgstr "Технологийн картын шатлал"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockproduction0
@@ -705,7 +705,7 @@ msgstr "Бэлтгэлтийн Саатал"
 #. module: mrp
 #: field:mrp.bom,bom_lines:0
 msgid "BoM Lines"
-msgstr "Орцын мөрүүд"
+msgstr "Технологийн картын мөрүүд"
 
 #. module: mrp
 #: field:mrp.workcenter,time_start:0
@@ -744,7 +744,7 @@ msgstr "Дамжлагын Ачаалал"
 #: code:addons/mrp/procurement.py:55
 #, python-format
 msgid "No BoM defined for this product !"
-msgstr "Энэ бараанд орц тодорхойлогдоогүй байна !"
+msgstr "Энэ бараанд ямар ч технологийн карт тодорхойлогдоогүй байна !"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action2
@@ -799,20 +799,22 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Орцын бүрэлдхүүнийг нэмэхдээ дарна уу.\n"
+"                Технологийн картын бүрэлдэхүүн нэмэх бол энд дарна уу.\n"
 "              </p><p>\n"
-"                Орцын бүрэлдхүүн гэдэг нь орцыг бүрдүүлэхэд хэрэглэгддэг "
-"бүрэлдхүүн болон \n"
-"                дайвар бүтээгдэхүүнүүд юм. Энэ менюг ашиглан бүрэлдхүүн ямар "
-"орцод орсон \n"
-"                болохыг хайдаг.\n"
+"                Технологийн карт бүрэлдэхүүн гэдэг нь орцыг бүрдүүлэхэд "
+"хэрэглэгддэг бүрэлдэхүүн болон \n"
+"                дайвар бүтээгдэхүүнүүд юм. Энэ цэсийг ашиглан бүрэлдэхүүн "
+"ямар орцод орсон \n"
+"                болохыг хайж мэдэх боломжтой.\n"
 "              </p>\n"
 "            "
 
 #. module: mrp
 #: constraint:mrp.bom:0
 msgid "BoM line product should not be same as BoM product."
-msgstr "Орцын мөр нь орцын бараатайгаа ижил байж болохгүй."
+msgstr ""
+"Технологийн картын бүрэлдэхүүнд орж буй бараа нь технологийн карт тодорхойлж "
+"буй бэлэн бүтээгдэхүүнтэй ижил байж болохгүй."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1006,7 +1008,7 @@ msgid ""
 "All product quantities must be greater than 0.\n"
 "You should install the mrp_byproduct module if you want to manage extra "
 "products on BoMs !"
-msgstr "Бүх бүтээгдэхүүнийг тоог 0-оос эхэлж үүсгэнэ."
+msgstr "Бүх барааны тоо хэмжээ 0-ээс их байх ёстой."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1066,14 +1068,16 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,type:0
 msgid "BoM Type"
-msgstr "Орцын төрөл"
+msgstr "Технологийн картын төрөл"
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:57
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
-msgstr "'%s' татан авалтын саатал: 'Бараанд орц тодорхойлогдоогүй !'"
+msgstr ""
+"'%s' нөхөн дүүргэлт саатав: 'Бараанд технологийн карт тодорхойлогдоогүй "
+"байна!'"
 
 #. module: mrp
 #: view:mrp.property:0
@@ -1188,7 +1192,7 @@ msgstr "Нөөцлүүлэх"
 #. module: mrp
 #: report:bom.structure:0
 msgid "BOM Name"
-msgstr "Орцын нэр"
+msgstr "Технологийн картын нэр"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_manufacturing_open
@@ -1549,7 +1553,7 @@ msgstr "Үйлдвэрлэлийн дамжлагыг хайх"
 #. module: mrp
 #: view:mrp.bom:0
 msgid "BoM Structure"
-msgstr "Орцын бүтэц"
+msgstr "Технологийн картын бүтэц"
 
 #. module: mrp
 #: field:mrp.production,date_start:0
@@ -1833,8 +1837,8 @@ msgstr "Нөөц"
 #: help:mrp.bom,date_stop:0
 msgid "Validity of this BoM or component. Keep empty if it's always valid."
 msgstr ""
-"Орц эсвэл бүрэлдэхүүний зөв эсэхийн шалгалт. Хэрэв байнга зөв бол хоосон "
-"үлдээнэ."
+"Технологийн карт болон бүрэлдэхүүнүүд зөв эсэхийн шалгалт. Хэрэв байнга зөв "
+"бол хоосон үлдээнэ."
 
 #. module: mrp
 #: field:mrp.production,product_uos:0
@@ -2034,7 +2038,7 @@ msgstr "Бүрэлдэхүүнүүд"
 #: report:bom.structure:0
 #: model:ir.actions.report.xml,name:mrp.report_bom_structure
 msgid "BOM Structure"
-msgstr "Орцын бүтэц"
+msgstr "Технологийн картын бүтэц"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_jit:0
@@ -2252,7 +2256,7 @@ msgstr ""
 #. module: mrp
 #: field:procurement.order,bom_id:0
 msgid "BoM"
-msgstr "Орц"
+msgstr "Технологийн карт"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_inout
@@ -2314,12 +2318,12 @@ msgstr "Хангах болон Үйлдвэрлэх"
 #. module: mrp
 #: field:mrp.bom,bom_id:0
 msgid "Parent BoM"
-msgstr "Эцэг орц"
+msgstr "Толгой технологийн карт"
 
 #. module: mrp
 #: report:bom.structure:0
 msgid "BOM Ref"
-msgstr "Орцын код"
+msgstr "Технологийн картын код"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:765
