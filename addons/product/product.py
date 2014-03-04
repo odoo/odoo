@@ -159,6 +159,7 @@ class product_uom(osv.osv):
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!')
     ]
 
+    
     def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False, round=True):
         if not from_uom_id or not qty or not to_uom_id:
             return qty
@@ -807,7 +808,10 @@ class product_product(osv.osv):
 
         result = []
         for product in self.browse(cr, SUPERUSER_ID, ids, context=context):
-            sellers = filter(lambda x: x.name.id == partner_id, product.seller_ids)
+            if partner_id:
+                sellers = filter(lambda x: x.name.id == partner_id, product.seller_ids)
+            else:
+                sellers = False
             if sellers:
                 for s in sellers:
                     mydict = {

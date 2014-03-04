@@ -286,7 +286,7 @@ class mail_thread(osv.AbstractModel):
         res = []
         for field, operator, value in args:
             assert field == name
-            partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+            partner_id = self.pool.get('res.users').read(cr, SUPERUSER_ID, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
             if (operator == '=' and value) or (operator == '!=' and not value):  # is a follower
                 res_ids = self.search(cr, uid, [('message_follower_ids', 'in', [partner_id])], context=context)
             else:  # is not a follower or unknown domain
@@ -354,7 +354,7 @@ class mail_thread(osv.AbstractModel):
 
         # subscribe uid unless asked not to
         if not context.get('mail_create_nosubscribe'):
-            pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid).partner_id.id
+            pid = self.pool.get('res.users').read(cr, SUPERUSER_ID, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
             message_follower_ids = values.get('message_follower_ids') or []  # webclient can send None or False
             message_follower_ids.append([4, pid])
             values['message_follower_ids'] = message_follower_ids
@@ -1586,7 +1586,7 @@ class mail_thread(osv.AbstractModel):
         mail_followers_obj = self.pool.get('mail.followers')
         subtype_obj = self.pool.get('mail.message.subtype')
 
-        user_pid = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        user_pid = self.pool.get('res.users').read(cr, SUPERUSER_ID, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
         if set(partner_ids) == set([user_pid]):
             try:
                 self.check_access_rights(cr, uid, 'read')
@@ -1776,7 +1776,7 @@ class mail_thread(osv.AbstractModel):
 
     def message_mark_as_unread(self, cr, uid, ids, context=None):
         """ Set as unread. """
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        partner_id = self.pool.get('res.users').read(cr, SUPERUSER_ID, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
         cr.execute('''
             UPDATE mail_notification SET
                 read=false
@@ -1788,7 +1788,7 @@ class mail_thread(osv.AbstractModel):
 
     def message_mark_as_read(self, cr, uid, ids, context=None):
         """ Set as read. """
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        partner_id = self.pool.get('res.users').read(cr, SUPERUSER_ID, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
         cr.execute('''
             UPDATE mail_notification SET
                 read=true

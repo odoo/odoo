@@ -67,7 +67,7 @@ class sale_order(osv.osv):
     def _get_orders_procurements(self, cr, uid, ids, context=None):
         res = set()
         for proc in self.pool.get('procurement.order').browse(cr, uid, ids, context=context):
-            if proc.sale_line_id:
+            if proc.state =='done' and proc.sale_line_id:
                 res.add(proc.sale_line_id.order_id.id)
         return list(res)
 
@@ -102,7 +102,6 @@ class sale_order(osv.osv):
             ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""On demand: A draft invoice can be created from the sales order when needed. \nOn delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \nBefore delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."""),
         'shipped': fields.function(_get_shipped, string='Delivered', type='boolean', store={
-                'stock.move': (_get_orders, ['state'], 10),
                 'procurement.order': (_get_orders_procurements, ['state'], 10)
             }),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
@@ -454,3 +453,18 @@ class stock_picking(osv.osv):
                     created_lines = sale_line_obj.invoice_line_create(cr, uid, sale_line_ids, context=context)
                     invoice_line_obj.write(cr, uid, created_lines, {'invoice_id': invoice_id}, context=context)
         return invoice_id
+    
+    
+class procurement_order(osv.osv):
+    _inherit = 'procurement.order'
+    
+    def group_picking_assign(self, cr, uid, proc_ids, context=None):
+        moves = []
+        procurements = proc_ids
+        while procurements:
+            related_moves = []
+            for proc in self.browse(cr, uid, procurements, context=context):
+                related_moves += proc.move_ids
+            procurements = self.search(cr, uid, [('move_dest_id', 'in', [x.id for x in related_moves])], context=context)
+            moves += related_moves
+        self.pool.get("stock.move")._group_picking_assign(cr, uid, moves, context=context)
