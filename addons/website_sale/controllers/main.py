@@ -714,6 +714,7 @@ class Ecommerce(http.Controller):
         """
         cr, uid, context = request.cr, request.uid, request.context
         sale_order_obj = request.registry['sale.order']
+        email_act = None
 
         if transaction_id is None:
             tx = context.get('website_sale_transaction')
@@ -735,13 +736,23 @@ class Ecommerce(http.Controller):
             # confirm the quotation
             sale_order_obj.action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
             # send by email
-            sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
+            email_act = sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
         elif tx.state == 'pending':
             # send by email
-            sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
+            email_act = sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
         elif tx.state == 'cancel':
             # cancel the quotation
             sale_order_obj.action_cancel(cr, SUPERUSER_ID, [order.id], context=request.context)
+
+        # send the email
+        if email_act and email_act.get('context'):
+            composer_values = {}
+            email_ctx = email_act['context']
+            public_id = request.registry['website'].get_public_user(cr, uid, context)
+            if uid == public_id:
+                composer_values['email_from'] = request.registry['res.users'].browse(cr, SUPERUSER_ID, public_id, context=context).company_id.email
+            composer_id = request.registry['mail.compose.message'].create(cr, SUPERUSER_ID, composer_values, context=email_ctx)
+            request.registry['mail.compose.message'].send_mail(cr, SUPERUSER_ID, [composer_id], context=email_ctx)
 
         # clean context and session, then redirect to the confirmation page
         request.registry['website'].ecommerce_reset(cr, uid, context=context)
