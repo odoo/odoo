@@ -23,7 +23,7 @@ import simplejson
 import logging
 from lxml import etree
 import re
-import urllib
+import werkzeug.urls
 import urllib2
 
 from openerp.osv import osv
@@ -89,7 +89,7 @@ class config(osv.osv):
 
         try:
             req = urllib2.Request(
-                'https://spreadsheets.google.com/feeds/cells/%s/od6/private/full/batch?%s' % (spreadsheet_key, urllib.urlencode({'v': 3, 'access_token': access_token})),
+                'https://spreadsheets.google.com/feeds/cells/%s/od6/private/full/batch?%s' % (spreadsheet_key, werkzeug.url_encode({'v': 3, 'access_token': access_token})),
                 data=request,
                 headers={'content-type': 'application/atom+xml', 'If-Match': '*'})
             urllib2.urlopen(req)

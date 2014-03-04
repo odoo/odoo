@@ -24,12 +24,10 @@ from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
-from faces import *
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.float_utils import float_compare
 from openerp.tools.translate import _
-
 
 class resource_calendar(osv.osv):
     """ Calendar model for a resource. It has
@@ -159,9 +157,9 @@ class resource_calendar(osv.osv):
         for interval in intervals:
             res += interval[1] - interval[0]
             if res > limit and remove_at_end:
-                interval = (interval[0], interval[1] + relativedelta(seconds=(limit-res).total_seconds()))
+                interval = (interval[0], interval[1] + relativedelta(seconds=seconds(limit-res)))
             elif res > limit:
-                interval = (interval[0] + relativedelta(seconds=(res-limit).total_seconds()), interval[1])
+                interval = (interval[0] + relativedelta(seconds=seconds(res-limit)), interval[1])
             results.append(interval)
             if res > limit:
                 break
@@ -367,7 +365,7 @@ class resource_calendar(osv.osv):
             default_interval, context)
         for interval in intervals:
             res += interval[1] - interval[0]
-        return (res.total_seconds() / 3600.0)
+        return seconds(res) / 3600.0
 
     def get_working_hours(self, cr, uid, id, start_dt, end_dt, compute_leaves=False,
                           resource_id=None, default_interval=None, context=None):
@@ -450,7 +448,7 @@ class resource_calendar(osv.osv):
                 res = datetime.timedelta()
                 for interval in working_intervals:
                     res += interval[1] - interval[0]
-                remaining_hours -= (res.total_seconds() / 3600.0)
+                remaining_hours -= (seconds(res) / 3600.0)
                 if backwards:
                     intervals = new_working_intervals + intervals
                 else:
@@ -821,5 +819,9 @@ class resource_calendar_leaves(osv.osv):
             return {'value': result}
         return {'value': {'calendar_id': []}}
 
+def seconds(td):
+    assert isinstance(td, datetime.timedelta)
+
+    return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10.**6
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

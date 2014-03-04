@@ -28,10 +28,6 @@ class mrp_workorder(osv.osv):
     _description = "Work Order Report"
     _auto = False
     _columns = {
-        'year': fields.char('Year', size=64, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
-        'day': fields.char('Day', size=64, readonly=True),
         'nbr': fields.integer('# of Lines', readonly=True),
         'date': fields.date('Date', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
@@ -50,9 +46,6 @@ class mrp_workorder(osv.osv):
             create or replace view mrp_workorder as (
                 select
                     to_date(to_char(wl.date_planned, 'MM-dd-YYYY'),'MM-dd-YYYY') as date,
-                    to_char(wl.date_planned, 'YYYY') as year,
-                    to_char(wl.date_planned, 'MM') as month,
-                    to_char(wl.date_planned, 'YYYY-MM-DD') as day,
                     min(wl.id) as id,
                     mp.product_id as product_id,
                     sum(wl.hour) as total_hours,

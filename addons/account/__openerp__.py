@@ -122,7 +122,9 @@ for a particular financial year and for preparation of vouchers there is a modul
         'edi/invoice_action_data.xml',
         'account_bank_view.xml',
         'res_config_view.xml',
-        'account_pre_install.yml'
+        'account_pre_install.yml',
+
+        'views/report_vat.xml',
     ],
     'js': [
         'static/src/js/account_move_reconciliation.js',

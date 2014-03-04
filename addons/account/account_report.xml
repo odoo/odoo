@@ -27,13 +27,13 @@
         <report auto="False" id="account_intracom" menu="False" model="account.move.line" name="account.intracom" string="IntraCom"/>
 
         <report
-            auto="False"
-            id="account_vat_declaration"
-            menu="False"
-            model="account.tax.code"
-            name="account.vat.declaration"
-            rml="account/report/account_tax_report.rml"
-            string="Taxes Report"/>
+                id="action_report_vat"
+                model="account.tax.code"
+                report_type="qweb-pdf"
+                string="Account tax"
+                name="account.report_vat"
+                file="account.report_vat"
+        />
 
         <menuitem
             id="menu_tax_report"

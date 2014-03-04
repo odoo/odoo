@@ -58,6 +58,10 @@ class sale_order(osv.osv):
             val += c.get('amount', 0.0)
         return val
 
+    def _amount_all_wrapper(self, cr, uid, ids, field_name, arg, context=None):
+        """ Wrapper because of direct method passing as parameter for function fields """
+        return self._amount_all(cr, uid, ids, field_name, arg, context=context)
+
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         cur_obj = self.pool.get('res.currency')
         res = {}
@@ -199,19 +203,19 @@ class sale_order(osv.osv):
             fnct_search=_invoiced_search, type='boolean', help="It indicates that sales order has at least one invoice."),
         'note': fields.text('Terms and conditions'),
 
-        'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
+        'amount_untaxed': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums', help="The amount without tax.", track_visibility='always'),
-        'amount_tax': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Taxes',
+        'amount_tax': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Taxes',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums', help="The tax amount."),
-        'amount_total': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Total',
+        'amount_total': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Total',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
@@ -405,12 +409,7 @@ class sale_order(osv.osv):
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
         self.signal_quotation_sent(cr, uid, ids)
-        datas = {
-                 'model': 'sale.order',
-                 'ids': ids,
-                 'form': self.read(cr, uid, ids[0], context=context),
-        }
-        return {'type': 'ir.actions.report.xml', 'report_name': 'sale.order', 'datas': datas, 'nodestroy': True}
+        return self.pool['report'].get_action(cr, uid, ids, 'sale.report_saleorder', context=context)
 
     def manual_invoice(self, cr, uid, ids, context=None):
         """ create invoices for the given sales orders (ids), and open the form
@@ -1010,8 +1009,8 @@ class account_invoice(osv.Model):
         sale_order_obj = self.pool.get('sale.order')
         res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=context)
         so_ids = sale_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
-        if so_ids:
-            sale_order_obj.message_post(cr, uid, so_ids, body=_("Invoice paid"), context=context)
+        for so_id in so_ids:
+            sale_order_obj.message_post(cr, uid, so_id, body=_("Invoice paid"), context=context)
         return res
 
     def unlink(self, cr, uid, ids, context=None):

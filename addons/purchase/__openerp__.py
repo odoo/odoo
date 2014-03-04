@@ -64,6 +64,9 @@ Dashboard / Reports for Purchase Management will include:
         'report/purchase_report_view.xml',
         'edi/purchase_order_action_data.xml',
         'res_config_view.xml',
+
+        'views/report_purchaseorder.xml',
+        'views/report_purchasequotation.xml',
     ],
     'test': [
         'test/ui/purchase_users.yml',
@@ -74,7 +77,6 @@ Dashboard / Reports for Purchase Management will include:
         'test/process/merge_order.yml',
         'test/process/edi_purchase_order.yml',
         'test/process/invoice_on_poline.yml',
-        'test/ui/print_report.yml',
         'test/ui/duplicate_order.yml',
         'test/ui/delete_order.yml',
     ],

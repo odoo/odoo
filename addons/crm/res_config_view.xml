@@ -7,6 +7,7 @@
             <field name="model">sale.config.settings</field>
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
+                <data>
 	            <div name="config_sale" position="before">
 	                <separator string="After-Sale Services"/>
                     <group>
@@ -26,11 +27,31 @@
                     <group>
                         <label for="id" string="Manage Sales Teams"/>
                         <div>
-                            <field name="group_multi_salesteams" class="oe_inline"/>
-                            <label for="group_multi_salesteams"/>
+                            <div>
+                                <field name="group_multi_salesteams" class="oe_inline"/>
+                                <label for="group_multi_salesteams"/>
+                            </div>
+                            
                         </div>
                     </group>
 	            </div>
+                <xpath expr="//group[@name='On Mail Client']" position="before">
+                    <group name="default_alias">
+                        <label for="id" string="Leads Email Alias"/>
+                        <div attrs="{'invisible': [('alias_domain', '=', False)]}">
+                            <div>
+                                <field name="alias_prefix" class="oe_inline" attrs="{'required': [('alias_domain', '!=', False)]}"/>
+                                @
+                                <field name="alias_domain" class="oe_inline" readonly="1"/>
+                            </div>
+                            <p>
+                                All emails sent to this address and processed by the mailgateway
+                                will create a new lead.
+                            </p>
+                        </div>
+                    </group>
+                </xpath>
+                </data>
             </field>
         </record>
 
