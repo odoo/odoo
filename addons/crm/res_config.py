@@ -30,7 +30,7 @@ class crm_configuration(osv.TransientModel):
     def set_group_multi_salesteams(self, cr, uid, ids, context=None):
         """ This method is automatically called by res_config as it begins
             with set. It is used to implement the 'one group or another'
-            behavior. We have to perform some group manipulation by hand
+            behavior. We have to perform some group manipulation by hand    
             because in res_config.execute(), set_* methods are called
             after group_*; therefore writing on an hidden res_config file
             could not work.
