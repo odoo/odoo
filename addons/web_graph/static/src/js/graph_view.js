@@ -81,9 +81,9 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.ignore_do_search = false;
             return;
         }
-
         var self = this,
-            col_group_by = self.get_groupbys_from_searchview('ColGroupBy', 'col_group_by'); 
+            groupbys = this.get_groupbys_from_searchview(),
+            col_group_by = groupbys.col_group_by;
 
         if (!this.graph_widget) {
             if (group_by.length) {
@@ -95,10 +95,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.graph_widget = new openerp.web_graph.Graph(this, this.model, domain, this.widget_config);
             this.graph_widget.appendTo(this.$el);
             this.ViewManager.on('switch_mode', this, function (e) {
-                var col_gb = self.get_groupbys_from_searchview('ColGroupBy', 'col_group_by'),
-                    row_gb = self.get_groupbys_from_searchview('GroupBy', 'group_by');
-
-                if (e === 'graph') this.graph_widget.set(domain, row_gb, col_gb);
+                if (e === 'graph') {
+                    var group_bys = self.get_groupbys_from_searchview();
+                    this.graph_widget.set(domain, group_bys.group_by, group_bys.col_group_by);
+                }
             });
             return;
         }
@@ -106,19 +106,27 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.graph_widget.set(domain, group_by, col_group_by);
     },
 
-    extract_groupby: function (cat_field, context) {
-        context = (_.isString(context)) ? py.eval(context) : context;
-        return context[cat_field];
-    },
+    get_groupbys_from_searchview: function () {
+        var result = { group_by: [], col_group_by: []},
+            searchdata = this.search_view.build_search_data();
 
-    get_groupbys_from_searchview: function (cat_name, cat_field) {
-        var self=this,
-            facet = this.search_view.query.findWhere({category:cat_name}),
-            groupby_list = facet ? facet.values.models : [];
-        return _.map(groupby_list, function (g) { 
-            var context = g.attributes.value.attrs.context;
-            return self.extract_groupby(cat_field, context);
+        _.each(searchdata.groupbys, function (data) {
+            data = (_.isString(data)) ? py.eval(data) : data;
+            result.group_by = result.group_by.concat(data.group_by);
+            if (data.col_group_by) {
+                result.col_group_by = result.col_group_by.concat(data.col_group_by);
+            }
         });
+
+        if (result.col_group_by.length) {
+            return result;
+        }
+        _.each(searchdata.contexts, function (context) {
+            if (context.col_group_by) {
+                result.col_group_by = result.col_group_by.concat(context.col_group_by);
+            }
+        });
+        return result;
     },
 
     do_show: function () {

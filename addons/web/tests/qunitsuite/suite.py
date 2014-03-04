@@ -59,7 +59,7 @@ class QUnitSuite(unittest.TestSuite):
                 'timeout': self.timeout,
                 'inject': os.path.join(ROOT, 'qunit-phantomjs-bridge.js')
             })
-        ], stdout=subprocess.PIPE)
+        ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
         try:
             while True:
@@ -75,7 +75,12 @@ class QUnitSuite(unittest.TestSuite):
                 phantom.terminate()
 
     def process(self, line, result):
-        args = json.loads(line)
+        try:
+            args = json.loads(line)
+        except ValueError: # phantomjs stderr
+            if 'CoreText' not in line:
+                print line
+            return False
         event_name = args[0]
 
         if event_name == 'qunit.done':

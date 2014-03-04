@@ -38,11 +38,14 @@
                 {% endif %}
             </div>
 
-            <hr/>
             {% if debug %}
                 <input type="hidden" name="debug" value=""/>
             {% endif %}
-            <input type="submit" value="Continue" class="btn btn-primary pull-right"/>
+
+            <noscript>
+                <hr/>
+                <input type="submit" value="Continue" class="btn btn-primary pull-right"/>
+            </noscript>
 
             <div class="oe_single_form_footer">
                 <a class="oe_login_manage_db" href="/web/database/manager{% if debug %}?debug{% endif %}">Manage Databases</a> |

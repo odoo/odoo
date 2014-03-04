@@ -33,7 +33,7 @@ import openerp.modules.registry
 from openerp.tools.translate import _
 from openerp import http
 
-from openerp.http import request, serialize_exception as _serialize_exception, LazyResponse
+from openerp.http import request, serialize_exception as _serialize_exception
 
 _logger = logging.getLogger(__name__)
 
@@ -119,6 +119,12 @@ def redirect_with_hash(*args, **kw):
     """
     return http.redirect_with_hash(*args, **kw)
 
+def abort_and_redirect(url):
+    r = request.httprequest
+    response = werkzeug.utils.redirect(url, 302)
+    response = r.app.get_response(r, response, explicit_session=False)
+    werkzeug.exceptions.abort(response)
+
 def ensure_db(redirect='/web/database/selector'):
     # This helper should be used in web client auth="none" routes
     # if those routes needs a db to work with.
@@ -140,12 +146,8 @@ def ensure_db(redirect='/web/database/selector'):
         # may depend on data injected by the database route dispatcher.
         # Thus, we redirect the user to the same page but with the session cookie set.
         # This will force using the database route dispatcher...
-        r = request.httprequest
-        response = werkzeug.utils.redirect(r.url, 302)
         request.session.db = db
-        response = r.app.get_response(r, response, explicit_session=False)
-        werkzeug.exceptions.abort(response)
-        return
+        abort_and_redirect(request.httprequest.url)
 
     # if db not provided, use the session one
     if not db:
@@ -163,6 +165,7 @@ def ensure_db(redirect='/web/database/selector'):
     # always switch the session to the computed db
     if db != request.session.db:
         request.session.logout()
+        abort_and_redirect(request.httprequest.url)
 
     request.session.db = db
 
@@ -591,12 +594,13 @@ html_template = """<!DOCTYPE html>
 </html>
 """
 
-def render_bootstrap_template(db, template, values=None, debug=False, lazy=False, **kw):
-    if request and request.debug:
+def render_bootstrap_template(template, values=None, debug=False, db=None, **kw):
+    if not db:
+        db = request.db
+    if request.debug:
         debug = True
     if values is None:
         values = {}
-    values.update(kw)
     values['debug'] = debug
     values['current_db'] = db
     try:
@@ -612,15 +616,7 @@ def render_bootstrap_template(db, template, values=None, debug=False, lazy=False
         values['modules'] = module_boot(db=db)
     values['modules'] = simplejson.dumps(values['modules'])
 
-    def callback(template, values):
-        registry = openerp.modules.registry.RegistryManager.get(db)
-        with registry.cursor() as cr:
-            view_obj = registry["ir.ui.view"]
-            return view_obj.render(cr, openerp.SUPERUSER_ID, template, values)
-    if lazy:
-        return LazyResponse(callback, template=template, values=values)
-    else:
-        return callback(template, values)
+    return request.render(template, values, **kw)
 
 class Home(http.Controller):
 
@@ -633,14 +629,20 @@ class Home(http.Controller):
         ensure_db()
 
         if request.session.uid:
-            html = render_bootstrap_template(request.session.db, "web.webclient_bootstrap")
-            return request.make_response(html, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
+            headers = {
+                'Cache-Control': 'no-cache',
+                'Content-Type': 'text/html; charset=utf-8',
+            }
+            return render_bootstrap_template("web.webclient_bootstrap", headers=headers)
         else:
             return http.local_redirect('/web/login', query=request.params)
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
         ensure_db()
+
+        if not request.uid:
+            request.uid = openerp.SUPERUSER_ID
 
         values = request.params.copy()
         if not redirect:
@@ -651,7 +653,7 @@ class Home(http.Controller):
             if uid is not False:
                 return http.redirect_with_hash(redirect)
             values['error'] = "Wrong login/password"
-        return render_bootstrap_template(request.session.db, 'web.login', values, lazy=True)
+        return render_bootstrap_template('web.login', values)
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key, redirect="/web", **kw):
