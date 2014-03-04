@@ -334,7 +334,7 @@ class Ecommerce(http.Controller):
         # must have a draft sale order with lines at this point, otherwise reset
         order = self.get_order()
         if order and order.state != 'draft':
-            request.registry['website'].sale_reset_order(cr, uid, context=context)
+            request.registry['website'].ecommerce_reset(cr, uid, context=context)
             return request.redirect('/shop/')
 
         self.get_pricelist()
