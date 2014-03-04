@@ -49,17 +49,20 @@
     <t t-name='PickingEditorWidget'>
         <div class='oe_pick_list'>
             <h2><strong><div class='oe_pick_list_header'>
-                Operations To Process
+                Operations Informations
             </div></strong></h2>
             <table class='table table-striped'>
-
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Product</th> 
-                        <th class='text-center'>Qty</th> 
-                        <th class='text-center'>Rem</th> 
-                        <th class='text-center'>UoM</th> 
-                        <th>Location</th> 
+                        <th class='text-center'>Total Qty</th> 
+                        <th class='text-center'>Qty done</th> 
+                        <!-- <th class='text-center'>UoM</th>  -->
+                        <th>Source Location</th>
+                        <th>Destination Location</th>
+                        <th>Lot</th>
+                        <th>Pack</th> 
                         <th>Scan</th>
                     </tr>
                 </thead>
@@ -67,10 +70,14 @@
                 <tbody>
                     <t t-foreach="widget.get_rows()" t-as="row">
                         <tr t-att-class="row.classes">
+                            <td> <input type="checkbox"/></td>
                             <td> <t t-esc="row.cols.product" /> </td>
-                            <td class='text-center'> <t t-esc="row.cols.qty" /> </td>
+                            <td class='text-center'> <t t-esc="row.cols.qty" /> <t t-esc="row.cols.uom" /> </td>
                             <td class='text-center'> <t t-esc="row.cols.rem" /> </td>
-                            <td class='text-center'> <t t-esc="row.cols.uom" /> </td>
+                            <!-- <td class='text-center'>  </td> -->
+                            <td> <t t-esc="row.cols.loc" /> </td>
+                            <td> <t t-esc="row.cols.loc" /> </td>
+                            <td> <t t-esc="row.cols.loc" /> </td>
                             <td> <t t-esc="row.cols.loc" /> </td>
                             <td><span class='btn btn-default js_pack_scan' t-att-op-id='row.cols.id'>➔</span></td>
                         </tr>
@@ -212,39 +219,34 @@
 
 
     <t t-name="PickingMainWidget">
-                <div class="navbar navbar-inverse navbar-static-top" role="navigation">
-                    <div class="container">
-                        <div class="navbar-header">
-                            <button type="button" class="btn btn-default navbar-btn js_pick_prev">&lt; Previous</button>
-                            <button type="button" class="btn btn-default navbar-btn js_pick_next">Next &gt;</button>
-                            
-                        </div>
-                        <div class="navbar-right">
-                            <button type="button" class="btn btn-primary navbar-btn js_pick_menu">Menu</button>
-                        </div>
-                    </div>
+        <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+            <div class="container">
+                <div class="navbar-right">
+                    <button type="button" class="btn btn-default navbar-btn js_pick_prev">&lt; Previous</button>
+                    <button type="button" class="btn btn-default navbar-btn js_pick_next">Next &gt;</button>
+                    
                 </div>
+                <div class="navbar-header">
+                    <button type="button" class="btn btn-primary navbar-btn js_pick_menu">Menu</button>
+                </div>
+            </div>
+        </div>
 
         <div class="container">
-
-        <div class="row">
-            <div class="col-md-8">
-                            <div class="pull-right">
-                                    <button type="button" class='btn btn-danger js_pick_done'> Done </button>
-                                    <button type="button" class='btn btn-info js_pick_print'> Print </button>
-                            </div>
-                             <h2 class="oe_pick_app_header" t-esc='widget.get_header()' />
-
-                        <div class='oe_placeholder_picking_editor'/>
-                        <button type="button" class='btn btn-default js_pick_pack pull-right'> Put in Pack </button>
-
-                        <div class='oe_placeholder_package_editor'></div>
-
-            </div><div class="col-md-4">
-
-                        <div class='oe_placeholder_package_selector'></div>
-                        <div class='oe_placeholder_menu'></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="pull-right">
+                            <button type="button" class='btn btn-danger js_pick_done'> Done </button>
+                            <button type="button" class='btn btn-info js_pick_print'> Print </button>
                     </div>
+                    <h2 class="oe_pick_app_header" t-esc='widget.get_header()' />
+                    <div class='oe_placeholder_picking_editor'/>
+                    <button type="button" class='btn btn-default js_pick_pack pull-right'> Put in Pack </button>
+                    <!-- <div class='oe_placeholder_package_editor'></div> -->
+                </div>
+                <!-- <div class="col-md-4">
+                    <div class='oe_placeholder_package_selector'></div>
+                </div> -->
             </div>
         </div>
     </t>

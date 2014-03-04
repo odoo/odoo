@@ -31,14 +31,14 @@ function openerp_picking_widgets(instance){
             var model = this.getParent();
             var rows = [];
 
-            _.each( model.movelines, function(moveline){
+            _.each( model.packoplines, function(packopline){
                 rows.push({
-                    cols: { product: moveline.product_id[1],
-                            qty: moveline.product_uom_qty,
-                            rem: moveline.remaining_qty,
-                            uom: moveline.product_uom[1],
-                            loc: moveline.location_id[1],
-                            id:  moveline.product_id[0],
+                    cols: { product: packopline.product_id[1],
+                            qty: packopline.product_uom_qty,
+                            rem: packopline.remaining_qty,
+                            uom: packopline.product_uom[1],
+                            loc: packopline.location_id[1],
+                            id:  packopline.product_id[0],
                     },
                     classes: (moveline.qty_remaining < 0 ? 'danger' : '')
                 });
@@ -301,7 +301,7 @@ function openerp_picking_widgets(instance){
 
             this.picking = null;
             this.pickings = [];
-            this.movelines = null;
+            this.packoplines = null;
             this.operations = null;
             this.selected_operation = { id: null, picking_id: null};
             this.packages = null;
@@ -374,9 +374,9 @@ function openerp_picking_widgets(instance){
 
             return loaded_picking.then(function(){
 
-                    return new instance.web.Model('stock.move').call('read',[self.picking.move_lines, [], new instance.web.CompoundContext()]);
-                }).then(function(movelines){
-                    self.movelines = movelines;
+                    return new instance.web.Model('stock.pack.operation').call('read',[self.picking.pack_operation_ids, [], new instance.web.CompoundContext()]);
+                }).then(function(packoplines){
+                    self.packoplines = packoplines;
 
                     return new instance.web.Model('stock.pack.operation').call('read',[self.picking.pack_operation_ids, [], new instance.web.CompoundContext()]);
                 }).then(function(operations){
