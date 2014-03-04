@@ -285,8 +285,9 @@ class ThreadedServer(CommonServer):
         _logger.info("Initiating shutdown")
         _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
 
-        self.httpd.shutdown()
-        self.close_socket(self.httpd.socket)
+        if self.httpd:
+            self.httpd.shutdown()
+            self.close_socket(self.httpd.socket)
 
         # Manually join() all threads before calling sys.exit() to allow a second signal
         # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
