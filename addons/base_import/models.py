@@ -114,6 +114,9 @@ class ir_import(orm.TransientModel):
             elif field['type'] == 'one2many' and depth:
                 f['fields'] = self.get_fields(
                     cr, uid, field['relation'], context=context, depth=depth-1)
+                f['fields'].append(dict(fields=[], required=False, id='id', name='.id', string=_("Database ID")))
+                import pudb
+                pudb.set_trace()
 
             fields.append(f)
 
