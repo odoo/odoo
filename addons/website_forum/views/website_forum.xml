@@ -26,7 +26,8 @@
             name="Footer Questions Link">
             <xpath expr="//footer//ul[@name='products']" position="inside">
                 <li>
-                    <a href="/forum">Q&amp;A</a>
+                    <!--TODO: remove static id -->
+                    <a href="/forum/1">Q&amp;A</a>
                 </li>
             </xpath>
         </template>
@@ -46,17 +47,17 @@
                 </div>
                 <div style="margin-left: 95px;">
                     <div class="question-name">
-                        <a t-attf-href="/forum/question/#{ slug(question) }" t-field="question.name"/>
+                        <a t-attf-href="/forum/#{ forum.id }/question/#{ slug(question) }" t-field="question.name"/>
                     </div>
                     <div class="text-muted">
-                        by <a t-attf-href="/forum/user/#{ question.create_uid.id }" t-field="question.create_uid"/>, 
+                        by <a t-attf-href="/forum/#{ forum.id }/user/#{ question.create_uid.id }" t-field="question.create_uid"/>, 
                         on <span t-field="question.write_date"/>
                         <div t-if="len(question.vote_ids)">
                             <strong>with <span t-esc="len(question.vote_ids)"/> votes</strong>
                         </div>
                     </div>
                     <t t-foreach="question.tags" t-as="tag">
-                        <a t-attf-href="/forum/tag/#{ tag.id }" class="badge" t-field="tag.name"/>
+                        <a t-attf-href="/forum/#{ forum.id }/tag/#{ tag.id }" class="badge" t-field="tag.name"/>
                     </t>
                 </div>
             </div>
@@ -87,19 +88,19 @@
                         <div class="collapse navbar-collapse" id="oe-help-navbar-collapse">
                             <ul class="nav navbar-nav">
                                 <li>
-                                    <a href="/forum">Questions</a>
+                                    <a t-attf-href="/forum/#{ forum.id }">Questions</a>
                                 </li>
                                 <li t-att-class="searches.get('users') and 'active' or '' ">
-                                    <a href="/forum/users">People</a>
+                                    <a t-attf-href="/forum/#{ forum.id }/users">People</a>
                                 </li>
                                 <li t-att-class="searches.get('tags') and 'active' or '' ">
-                                    <a href="/forum/tags">Tags</a>
+                                    <a t-attf-href="/forum/#{ forum.id }/tags">Tags</a>
                                 </li>
                                 <li t-att-class="searches.get('badge') and 'active' or '' ">
-                                    <a href="/forum/badge">Badges</a>
+                                    <a t-attf-href="/forum/#{ forum.id }/badge">Badges</a>
                                 </li>
                             </ul>
-                            <form class="navbar-form navbar-right" role="search" action="/forum/" method="get">
+                            <form class="navbar-form navbar-right" role="search" t-attf-action="/forum/#{ forum.id }" method="get">
                                 <div class="form-group">
                                     <input type="search" class="form-control"
                                         name="search" placeholder="Search a question..."
@@ -117,11 +118,11 @@
                             <div class="alert alert-success alert-dismissable">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                                 <strong>Congratulation!</strong> You received the <em>New Author</em> badge!<br/>
-                                <a href="/forum/badge" class="fa fa-arrow-right">View Your Badges</a>
+                                <a t-attf-href="/forum/#{ forum.id }/badge" class="fa fa-arrow-right">View Your Badges</a>
                             </div>
                             <t t-raw="0"/>
                         </div><div class="col-sm-3" id="right-column">
-                            <a class="btn btn-primary btn-lg btn-block mb16" href="/forum/ask">Ask a Question</a>
+                            <a class="btn btn-primary btn-lg btn-block mb16" t-attf-href="/forum/#{ forum.id }/ask">Ask a Question</a>
 
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -130,7 +131,7 @@
                                 <div class="panel-body">
                                     This community is for professional and enthusiast about our
                                     products and services.<br/>
-                                    <a href="/forum/faq" class="fa fa-arrow-right"> Read Guidelines</a>
+                                    <a t-attf-href="/forum/#{ forum.id }/faq" class="fa fa-arrow-right"> Read Guidelines</a>
                                 </div>
                             </div>
 
@@ -140,9 +141,24 @@
             </t>
         </template>
 
-        <template id="index">
-            <t t-call="website_forum.faq">
-                <div t-field="forum.faq"/>
+        <template id="faq">
+            <t t-call="website_forum.header">
+                <!--TODO: Improve template -->
+                <div>
+                    <h1>F.A.Q</h1>
+                </div>
+            </t>
+        </template>
+
+        <template id="forum_index">
+            <t t-call="website.layout">
+                <!--TODO: Improve template -->
+                <t t-foreach="forum_ids" t-as="forum">
+                    <a t-attf-href="/forum/#{ forum.id }" class="box oe_green" t-field="forum.name"/>
+                </t>
+                <!--t t-call="website_forum.faq">
+                    <div t-field="forum.faq"/>
+                </t-->
             </t>
         </template>
 
@@ -161,13 +177,13 @@
                       <ul class="dropdown-menu">
                           <li class="dropdown-header">Filter on</li>
                           <li t-att-class="searches.get('type') == 'all' and 'active' or '' ">
-                              <a t-attf-href="/forum/?{{ keep_query( type='all') }}">All</a>
+                              <a t-attf-href="/forum/#{ forum.id }/?{{ keep_query( type='all') }}">All</a>
                           </li>
                           <li t-att-class="searches.get('type') == 'unanswered' and 'active' or '' ">
-                              <a t-attf-href="/forum/?{{ keep_query( type='unanswered') }}">Unanswered</a>
+                              <a t-attf-href="/forum/#{ forum.id }/?{{ keep_query( type='unanswered') }}">Unanswered</a>
                           </li>
                           <li t-att-class="searches.get('type') == 'followed' and 'active' or '' ">
-                              <a t-attf-href="/forum/?{{ keep_query( type='followed') }}">Followed</a>
+                              <a t-attf-href="/forum/#{ forum.id }/?{{ keep_query( type='followed') }}">Followed</a>
                           </li>
                           <li class="dropdown-header">Sort by</li>
                           <li>
@@ -204,7 +220,7 @@
             <div>
                 <span t-field="user.image" t-field-options='{"widget": "image", "class":"pull-left img img-circle img-avatar"}' />
                 <div>
-                    <a t-attf-href="/forum/user/#{ slug(user) }" t-field="user.name"/>
+                    <a t-attf-href="/forum/#{ forum.id }/user/#{ slug(user) }" t-field="user.name"/>
                     <t t-raw="separator or ', '"/>
                     <b>11 badges:</b>
                     <span class="fa fa-certificate badge-gold"></span>
@@ -236,7 +252,7 @@
                     </li>
                 </ul>
 
-                <form action="/forum/question/ask/" method="post" role="form">
+                <form t-attf-action="/forum/#{ forum.id }/question/ask/" method="post" role="form">
                     <div class="col-xs-12">
                         <input type="text" name="question_name" required="True"
                             t-attf-value="#{question_name or ''}" id="textbox_user_question"
@@ -292,7 +308,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <form action="/forum/question/postanswer/" method="post" role="form">
+                    <form t-attf-action="/forum/#{ forum.id }/question/postanswer/" method="post" role="form">
                         <div class="col-xs-12">
                             <div class="row">
                                 <div class="col-xs-12">
@@ -325,7 +341,7 @@
                             <h3>Edit answer</h3>
                         </div>
                         <div class="row">
-                            <form action="/forum/question/saveanswer/" method="post" role="form">
+                            <form t-attf-action="/forum/#{ forum.id }/question/saveanswer/" method="post" role="form">
                                 <div >
                                     <div class="row">
                                         <div class="col-xs-12">
@@ -376,7 +392,7 @@
                         <div class="mt16 clearfix">
                             <div class="pull-right">
                                 <t t-foreach="question.tags" t-as="tag">
-                                    <a t-attf-href="/forum/tag/#{ tag.id }" class="badge" t-field="tag.name"/>
+                                    <a t-attf-href="/forum/#{ forum.id }/tag/#{ tag.id }" class="badge" t-field="tag.name"/>
                                 </t>
                             </div>
                             <t t-set="user" t-value="question.create_uid"/>
@@ -440,7 +456,7 @@
                 </h1>
                 <div class="row">
                     <div class="col-sm-3 mt16" t-foreach="tags" t-as="tag">
-                        <a t-attf-href="/forum/tag/#{ slug(tag) }" class="badge">
+                        <a t-attf-href="/forum/#{ forum.id }/tag/#{ slug(tag) }" class="badge">
                             <span t-field="tag.name" />
                         </a>
                         <span> 

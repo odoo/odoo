@@ -32,8 +32,7 @@ class Forum(osv.Model):
     _name = 'website.forum'
     _description = 'Forums'
     _inherit = ['mail.thread', 'website.seo.metadata']
-    _order = 'name'
-    _columnss = {
+    _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'faq': fields.html('FAQ'),
         'right_column': fields.html('FAQ'),
