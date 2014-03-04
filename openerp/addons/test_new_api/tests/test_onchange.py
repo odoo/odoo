@@ -27,24 +27,24 @@ class TestOnChange(common.TransactionCase):
         BODY = "What a beautiful day!"
         USER = scope.user
 
-        result = self.Message.onchange('discussion', {
+        result = self.Message.onchange({
             'discussion': discussion.id,
             'name': "[%s] %s" % ('', USER.name),
             'body': False,
             'author': USER.id,
             'size': 0,
-        })
+        }, 'discussion')
         self.assertEqual(result['value'], {
             'name': "[%s] %s" % (discussion.name, USER.name),
         })
 
-        result = self.Message.onchange('body', {
+        result = self.Message.onchange({
             'discussion': discussion.id,
             'name': "[%s] %s" % (discussion.name, USER.name),
             'body': BODY,
             'author': USER.id,
             'size': 0,
-        })
+        }, 'body')
         self.assertEqual(result['value'], {
             'size': len(BODY),
         })
@@ -60,7 +60,7 @@ class TestOnChange(common.TransactionCase):
         self.assertEqual(message.name, "[%s] %s" % ('', USER.name))
 
         # modify messages
-        result = self.Discussion.onchange('messages', {
+        result = self.Discussion.onchange({
             'name': "Foo",
             'categories': [],
             'participants': [],
@@ -78,7 +78,7 @@ class TestOnChange(common.TransactionCase):
                     'size': len(BODY),
                 }),
             ],
-        }, tocheck)
+        }, 'messages', tocheck)
         self.assertItemsEqual(list(result['value']), ['messages'])
         self.assertItemsEqual(result['value']['messages'], [
             (0, 0, {
@@ -96,7 +96,7 @@ class TestOnChange(common.TransactionCase):
         ])
 
         # modify discussion name
-        result = self.Discussion.onchange('name', {
+        result = self.Discussion.onchange({
             'name': "Foo",
             'categories': [],
             'participants': [],
@@ -109,7 +109,7 @@ class TestOnChange(common.TransactionCase):
                 }),
                 (4, message.id),
             ],
-        }, tocheck)
+        }, 'name', tocheck)
         self.assertItemsEqual(list(result['value']), ['messages'])
         self.assertItemsEqual(result['value']['messages'], [
             (0, 0, {

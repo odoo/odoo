@@ -5437,11 +5437,12 @@ class BaseModel(object):
     #
 
     @api.multi
-    def onchange(self, field_name, values, tocheck=None):
+    def onchange(self, values, field_name, tocheck=None):
         """ Perform an onchange on the given field.
 
+            :param values: dictionary mapping field names to values, giving the
+                current state of modification
             :param field_name: name of the modified field_name
-            :param values: dictionary of values giving the current state of modification
             :param tocheck: list of (dot-separated) field names to check; use
                 this for secondary fields that are not keys of `values`
         """
