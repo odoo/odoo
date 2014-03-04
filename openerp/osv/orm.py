@@ -76,7 +76,7 @@ _schema = logging.getLogger(__name__ + '.schema')
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from openerp.tools import SKIPPED_ELEMENT_TYPES
 
-regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
+regex_order = re.compile('^( *([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
 # TODO for trunk, raise the value to 1000
@@ -2698,7 +2698,7 @@ class BaseModel(object):
 
         aggregated_fields = [
             f for f in fields
-            if f not in ('id', 'sequence')
+            if f not in ('id', 'sequence', groupby)
             if fget[f]['type'] in ('integer', 'float')
             if (f in self._all_columns and getattr(self._all_columns[f].column, '_classic_write'))]
         for f in aggregated_fields:
@@ -2716,6 +2716,7 @@ class BaseModel(object):
             count_field = groupby
 
         prefix_terms = lambda prefix, terms: (prefix + " " + ",".join(terms)) if terms else ''
+        prefix_term = lambda prefix, term: ('%s %s' % (prefix, term)) if term else ''
 
         query = """
             SELECT min(%(table)s.id) AS id, count(%(table)s.id) AS %(count_field)s_count
@@ -2731,11 +2732,11 @@ class BaseModel(object):
             'count_field': count_field,
             'extra_fields': prefix_terms(',', select_terms),
             'from': from_clause,
-            'where': prefix_terms('WHERE', [where_clause]),
+            'where': prefix_term('WHERE', where_clause),
             'groupby': prefix_terms('GROUP BY', groupby_terms),
             'orderby': prefix_terms('ORDER BY', orderby_terms),
-            'limit': prefix_terms('LIMIT', [str(int(limit))] if limit else []),
-            'offset': prefix_terms('OFFSET', [str(int(offset))] if offset else []),
+            'limit': prefix_term('LIMIT', int(limit) if limit else None),
+            'offset': prefix_term('OFFSET', int(offset) if limit else None),
         }
         cr.execute(query, where_clause_params)
         alldata = {}
