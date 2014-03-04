@@ -60,10 +60,10 @@ Key Features
         # 'hr_evaluation_installer.xml',
     ],
     # "demo": ["hr_evaluation_demo.xml"],
-    # 'test': [
-    #     'test/test_hr_evaluation.yml',
-    #     'test/hr_evalution_demo.yml',
-    # ],
+    'test': [
+        'test/test_hr_evaluation.yml',
+        'test/hr_evalution_demo.yml',
+    ],
     'auto_install': False,
     'installable': True,
     'application': True,
