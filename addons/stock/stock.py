@@ -30,6 +30,7 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FO
 from openerp import SUPERUSER_ID
 import openerp.addons.decimal_precision as dp
 import logging
+from profilehooks import profile
 _logger = logging.getLogger(__name__)
 
 #----------------------------------------------------------
@@ -1996,6 +1997,7 @@ class stock_move(osv.osv):
             packs |= set([q.package_id.id for q in move.quant_ids if q.package_id and q.qty > 0])
         return pack_obj._check_location_constraint(cr, uid, list(packs), context=context)
 
+    @profile(immediate=True)
     def action_done(self, cr, uid, ids, context=None):
         """ Process completly the moves given as ids and if all moves are done, it will finish the picking.
         """
@@ -3444,6 +3446,15 @@ class stock_pack_operation(osv.osv):
             res[record.move_id.product_id.id] -= record.qty
         return res
 
+    def _get_remaining_qty_product_uom(self, cr, uid, ops, context=None):
+        uom_obj = self.pool.get('product.uom')
+        qty = ops.product_qty
+        if ops.product_uom_id:
+            qty = uom_obj._compute_qty_obj(cr, uid, ops.product_uom_id, ops.product_qty, ops.product_id.uom_id, context=context)
+        for record in ops.linked_move_operation_ids:
+            qty -= record.qty
+        return qty
+
     def _get_remaining_qty(self, cr, uid, ids, name, args, context=None):
         uom_obj = self.pool.get('product.uom')
         res = {}
@@ -3531,14 +3542,12 @@ class stock_pack_operation(osv.osv):
             qty_to_assign = qty
             for move in sorted_moves:
                 if move.product_id.id == product_id and move.state not in ['done', 'cancel']:
-                    qty_on_link = min(move.remaining_qty, qty_to_assign)
-                    before = time.time()
+                    qty_on_link = min(qty_move_rem[move.id], qty_to_assign)
                     cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
                     (%s, %s, %s)""", (move.id, op.id, qty_on_link,))
+                    qty_move_rem[move.id] -= qty_on_link
 #                     link_obj.create(cr, uid, {'move_id': move.id, 'operation_id': op.id, 'qty': qty_on_link}, context=context)
-                    print "Link create", time.time() - before
                     qty_to_assign -= qty_on_link
-                    move.refresh()
                     if qty_to_assign <= 0:
                         break
 
@@ -3549,8 +3558,8 @@ class stock_pack_operation(osv.osv):
                         #Entire packages means entire quants from those packages
                         if not quants_done.get(quant.id):
                             quants_done[quant.id] = 0
-                        before = time.time()
                         link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': quant.qty}, context=context)
+                        qty_move_rem[quant.reservation_id.id] -= quant.qty
             else:
                 qty = uom_obj._compute_qty_obj(cr, uid, ops.product_uom_id, ops.product_qty, ops.product_id.uom_id, context=context)
                 #Check moves with same product
@@ -3578,6 +3587,7 @@ class stock_pack_operation(osv.osv):
                                 quants_done[quant.id] = 0
                             qty -= qty_todo
                             link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': qty_todo}, context=context)
+                            qty_move_rem[quant.reservation_id.id] -= qty_todo
 
         link_obj = self.pool.get('stock.move.operation.link')
         uom_obj = self.pool.get('product.uom')
@@ -3585,14 +3595,20 @@ class stock_pack_operation(osv.osv):
         quant_obj = self.pool.get('stock.quant')
         quants_done = {}
 
+        qty_rem = {}
+        qty_move_rem = {}
         operations = self.browse(cr, uid, op_ids, context=context)
         operations.sort(key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
         sorted_moves = []
         for op in operations:
             if not sorted_moves:
                 #sort moves in order to process first the ones that have already reserved quants
+                for move in op.picking_id.move_lines:
+                    prod_qty = move.product_qty
+                    qty_rem[move.id] = prod_qty - move.reserved_availability
+                    qty_move_rem[move.id] = prod_qty
                 sorted_moves = op.picking_id.move_lines
-                sorted_moves.sort(key=lambda x: x.product_qty - x.reserved_availability)
+                sorted_moves.sort(key=lambda x: qty_rem[x.id])
 
             to_unlink_ids = [x.id for x in op.linked_move_operation_ids]
             if to_unlink_ids:
@@ -3604,7 +3620,7 @@ class stock_pack_operation(osv.osv):
             op.refresh()
             if op.product_id:
                 #TODO: Remaining qty: UoM conversions are done twice
-                normalized_qty = uom_obj._compute_qty_obj(cr, uid, op.product_uom_id, op.remaining_qty, op.product_id.uom_id)
+                normalized_qty = self._get_remaining_qty_product_uom(cr, uid, op, context)
                 if normalized_qty > 0:
                     quants_reserve_ok = False
                     _create_link_for_product(op.product_id.id, normalized_qty)
