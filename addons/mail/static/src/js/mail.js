@@ -6,6 +6,7 @@ openerp.mail = function (session) {
 
     openerp_mail_followers(session, mail);          // import mail_followers.js
     openerp_FieldMany2ManyTagsEmail(session);       // import manyy2many_tags_email.js
+    openerp_announcement(session);
 
     /**
      * ------------------------------------------------------------
@@ -113,57 +114,6 @@ openerp.mail = function (session) {
             }
             return out;
         },
-
-        // returns the file type of a file based on its extension 
-        // As it only looks at the extension it is quite approximative. 
-        filetype: function(url){
-            var url = url && url.filename || url;
-            var tokens = typeof url == 'string' ? url.split('.') : [];
-            if(tokens.length <= 1){
-                return 'unknown';
-            }
-            var extension = tokens[tokens.length -1];
-            if(extension.length === 0){
-                return 'unknown';
-            }else{
-                extension = extension.toLowerCase();
-            }
-            var filetypes = {
-                'webimage':     ['png','jpg','jpeg','jpe','gif'], // those have browser preview
-                'image':        ['tif','tiff','tga',
-                                 'bmp','xcf','psd','ppm','pbm','pgm','pnm','mng',
-                                 'xbm','ico','icon','exr','webp','psp','pgf','xcf',
-                                 'jp2','jpx','dng','djvu','dds'],
-                'vector':       ['ai','svg','eps','vml','cdr','xar','cgm','odg','sxd'],
-                'print':        ['dvi','pdf','ps'],
-                'document':     ['doc','docx','odm','odt'],
-                'presentation': ['key','keynote','odp','pps','ppt'],
-                'font':         ['otf','ttf','woff','eot'],
-                'archive':      ['zip','7z','ace','apk','bzip2','cab','deb','dmg','gzip','jar',
-                                 'rar','tar','gz','pak','pk3','pk4','lzip','lz','rpm'],
-                'certificate':  ['cer','key','pfx','p12','pem','crl','der','crt','csr'],
-                'audio':        ['aiff','wav','mp3','ogg','flac','wma','mp2','aac',
-                                 'm4a','ra','mid','midi'],
-                'video':        ['asf','avi','flv','mkv','m4v','mpeg','mpg','mpe','wmv','mp4','ogm'],
-                'text':         ['txt','rtf','ass'],
-                'html':         ['html','xhtml','xml','htm','css'],
-                'disk':         ['iso','nrg','img','ccd','sub','cdi','cue','mds','mdx'],
-                'script':       ['py','js','c','cc','cpp','cs','h','java','bat','sh',
-                                 'd','rb','pl','as','cmd','coffee','m','r','vbs','lisp'],
-                'spreadsheet':  ['123','csv','ods','numbers','sxc','xls','vc','xlsx'],
-                'binary':       ['exe','com','bin','app'],
-            };
-            for(filetype in filetypes){
-                var ext_list = filetypes[filetype];
-                for(var i = 0, len = ext_list.length; i < len; i++){
-                    if(extension === ext_list[i]){
-                        return filetype;
-                    }
-                }
-            }
-            return 'unknown';
-        },
-
     };
 
 
@@ -303,7 +253,6 @@ openerp.mail = function (session) {
                 var attach = this.attachment_ids[l];
                 if (!attach.formating) {
                     attach.url = mail.ChatterUtils.get_attachment_url(this.session, this.id, attach.id);
-                    attach.filetype = mail.ChatterUtils.filetype(attach.filename || attach.name);
                     attach.name = mail.ChatterUtils.breakword(attach.name || attach.filename);
                     attach.formating = true;
                 }
@@ -834,7 +783,9 @@ openerp.mail = function (session) {
                 // go to the parented message
                 var message = this.parent_thread.parent_message;
                 var parent_message = message.parent_id ? message.parent_thread.parent_message : message;
-                var messages = [parent_message].concat(parent_message.get_childs());
+                if(parent_message){
+                    var messages = [parent_message].concat(parent_message.get_childs());
+                }
             } else if (this.options.emails_from_on_composer) {
                 // get all wall messages if is not a mail.Wall
                 _.each(this.options.root_thread.messages, function (msg) {messages.push(msg); messages.concat(msg.get_childs());});
@@ -974,20 +925,12 @@ openerp.mail = function (session) {
         },
 
         on_record_clicked: function  (event) {
-            event.stopPropagation();
             var state = {
                 'model': this.model,
                 'id': this.res_id,
                 'title': this.record_name
             };
             session.webclient.action_manager.do_push_state(state);
-            this.do_action({
-                res_model: state.model,
-                res_id: state.id,
-                type: 'ir.actions.act_window',
-                views: [[false, 'form']]
-            });
-            return false;
         },
 
         /* Call the on_compose_message on the thread of this message. */
@@ -1435,7 +1378,7 @@ openerp.mail = function (session) {
         message_fetch: function (replace_domain, replace_context, ids, callback) {
             return this.ds_message.call('message_read', [
                     // ids force to read
-                    ids == false ? undefined : ids, 
+                    ids === false ? undefined : ids, 
                     // domain + additional
                     (replace_domain ? replace_domain : this.domain), 
                     // ids allready loaded
@@ -1800,16 +1743,18 @@ openerp.mail = function (session) {
                 'read_action': 'unread',
                 'show_record_name': false,
                 'show_compact_message': 1,
+                'display_log_button' : true,
             }, this.node.params);
-
             if (this.node.attrs.placeholder) {
                 this.node.params.compose_placeholder = this.node.attrs.placeholder;
             }
             if (this.node.attrs.readonly) {
                 this.node.params.readonly = this.node.attrs.readonly;
             }
-
-            this.domain = this.node.params && this.node.params.domain || [];
+            if ('display_log_button' in this.options) {
+                this.node.params.display_log_button = this.options.display_log_button;
+            }
+            this.domain = (this.node.params && this.node.params.domain) || (this.field && this.field.domain) || [];
 
             if (!this.ParentViewManager.is_action_enabled('edit')) {
                 this.node.params.show_link = false;

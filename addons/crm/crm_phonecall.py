@@ -117,9 +117,11 @@ class crm_phonecall(osv.osv):
         model_data = self.pool.get('ir.model.data')
         phonecall_dict = {}
         if not categ_id:
-            res_id = model_data._get_id(cr, uid, 'crm', 'categ_phone2')
-            if res_id:
+            try:
+                res_id = model_data._get_id(cr, uid, 'crm', 'categ_phone2')
                 categ_id = model_data.browse(cr, uid, res_id, context=context).res_id
+            except ValueError:
+                pass
         for call in self.browse(cr, uid, ids, context=context):
             if not section_id:
                 section_id = call.section_id and call.section_id.id or False
@@ -262,14 +264,16 @@ class crm_phonecall(osv.osv):
         Open meeting's calendar view to schedule a meeting on current phonecall.
         :return dict: dictionary value for created meeting view
         """
+        partner_ids = []
         phonecall = self.browse(cr, uid, ids[0], context)
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
+        if phonecall.partner_id and phonecall.partner_id.email:
+            partner_ids.append(phonecall.partner_id.id)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
         res['context'] = {
             'default_phonecall_id': phonecall.id,
-            'default_partner_id': phonecall.partner_id and phonecall.partner_id.id or False,
+            'default_partner_ids': partner_ids,
             'default_user_id': uid,
             'default_email_from': phonecall.email_from,
-            'default_state': 'open',
             'default_name': phonecall.name,
         }
         return res

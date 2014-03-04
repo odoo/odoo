@@ -27,14 +27,10 @@ class sale_report(osv.osv):
     _description = "Sales Orders Statistics"
     _auto = False
     _rec_name = 'date'
+
     _columns = {
         'date': fields.date('Date Order', readonly=True),
         'date_confirm': fields.date('Date Confirm', readonly=True),
-        'year': fields.char('Year', size=4, readonly=True),
-        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
-            ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'), ('09', 'September'),
-            ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', readonly=True),
         'product_uom_qty': fields.float('# of Qty', readonly=True),
@@ -60,22 +56,16 @@ class sale_report(osv.osv):
     }
     _order = 'date desc'
 
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'sale_report')
-        cr.execute("""
-            create or replace view sale_report as (
-                select
-                    min(l.id) as id,
+    def _select(self):
+        select_str = """
+             SELECT min(l.id) as id,
                     l.product_id as product_id,
                     t.uom_id as product_uom,
                     sum(l.product_uom_qty / u.factor * u2.factor) as product_uom_qty,
                     sum(l.product_uom_qty * l.price_unit * (100.0-l.discount) / 100.0) as price_total,
-                    1 as nbr,
+                    count(*) as nbr,
                     s.date_order as date,
                     s.date_confirm as date_confirm,
-                    to_char(s.date_order, 'YYYY') as year,
-                    to_char(s.date_order, 'MM') as month,
-                    to_char(s.date_order, 'YYYY-MM-DD') as day,
                     s.partner_id as partner_id,
                     s.user_id as user_id,
                     s.company_id as company_id,
@@ -84,16 +74,23 @@ class sale_report(osv.osv):
                     t.categ_id as categ_id,
                     s.pricelist_id as pricelist_id,
                     s.project_id as analytic_account_id
-                from
-                    sale_order s
-                    join sale_order_line l on (s.id=l.order_id)
+        """
+        return select_str
+
+    def _from(self):
+        from_str = """
+                sale_order_line l
+                      join sale_order s on (l.order_id=s.id) 
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
                     left join product_uom u on (u.id=l.product_uom)
                     left join product_uom u2 on (u2.id=t.uom_id)
-                group by
-                    l.product_id,
-                    l.product_uom_qty,
+        """
+        return from_str
+
+    def _group_by(self):
+        group_by_str = """
+            GROUP BY l.product_id,
                     l.order_id,
                     t.uom_id,
                     t.categ_id,
@@ -105,7 +102,16 @@ class sale_report(osv.osv):
                     s.state,
                     s.pricelist_id,
                     s.project_id
-            )
-        """)
+        """
+        return group_by_str
+
+    def init(self, cr):
+        # self._table = sale_report
+        tools.drop_view_if_exists(cr, self._table)
+        cr.execute("""CREATE or REPLACE VIEW %s as (
+            %s
+            FROM ( %s )
+            %s
+            )""" % (self._table, self._select(), self._from(), self._group_by()))
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

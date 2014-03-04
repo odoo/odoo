@@ -32,17 +32,17 @@ from openerp import tools
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
 
-    def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
+    def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, skip_exception=False, context=None):
         ''' Runs through scheduler.
         @param use_new_cursor: False or the dbname
         '''
         if use_new_cursor:
             use_new_cursor = cr.dbname
-        self._procure_confirm(cr, uid, use_new_cursor=use_new_cursor, context=context)
+        self._procure_confirm(cr, uid, use_new_cursor=use_new_cursor, skip_exception=skip_exception, context=context)
         self._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
                 use_new_cursor=use_new_cursor, context=context)
 
-    def _procure_confirm(self, cr, uid, ids=None, use_new_cursor=False, context=None):
+    def _procure_confirm(self, cr, uid, ids=None, use_new_cursor=False, skip_exception=False, context=None):
         '''
         Call the scheduler to check the procurement order
 
@@ -51,6 +51,7 @@ class procurement_order(osv.osv):
         @param uid: The current user ID for security checks
         @param ids: List of selected IDs
         @param use_new_cursor: False or the dbname
+        @param skip_exception: boolean
         @param context: A standard dictionary for contextual values
         @return:  Dictionary of values
         '''
@@ -61,19 +62,15 @@ class procurement_order(osv.osv):
                 cr = openerp.registry(use_new_cursor).db.cursor()
 
             procurement_obj = self.pool.get('procurement.order')
-            if not ids:
-                ids = procurement_obj.search(cr, uid, [('state', '=', 'exception')], order="date_planned")
-            self.signal_button_restart(cr, uid, ids)
-            if use_new_cursor:
-                cr.commit()
+            if not skip_exception:
+                if not ids:
+                    ids = procurement_obj.search(cr, uid, [('state', '=', 'exception')], order="date_planned")
+                self.signal_button_restart(cr, uid, ids)
+                if use_new_cursor:
+                    cr.commit()
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             maxdate = (datetime.today() + relativedelta(days=company.schedule_range)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-            start_date = fields.datetime.now()
             offset = 0
-            report = []
-            report_total = 0
-            report_except = 0
-            report_later = 0
             while True:
                 ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_order')], offset=offset, limit=500, order='priority, date_planned', context=context)
                 for proc in procurement_obj.browse(cr, uid, ids, context=context):
@@ -81,14 +78,7 @@ class procurement_order(osv.osv):
                         self.signal_button_check(cr, uid, [proc.id])
                     else:
                         offset += 1
-                        report_later += 1
 
-                    if proc.state == 'exception':
-                        report.append(_('PROC %d: on order - %3.2f %-5s - %s') % \
-                                (proc.id, proc.product_qty, proc.product_uom.name,
-                                    proc.product_id.name))
-                        report_except += 1
-                    report_total += 1
                 if use_new_cursor:
                     cr.commit()
                 if not ids:
@@ -102,22 +92,11 @@ class procurement_order(osv.osv):
                     if maxdate >= proc.date_planned:
                         self.signal_button_check(cr, uid, [proc.id])
                         report_ids.append(proc.id)
-                    else:
-                        report_later += 1
-                    report_total += 1
-
-                    if proc.state == 'exception':
-                        report.append(_('PROC %d: from stock - %3.2f %-5s - %s') % \
-                                (proc.id, proc.product_qty, proc.product_uom.name,
-                                    proc.product_id.name,))
-                        report_except += 1
-
 
                 if use_new_cursor:
                     cr.commit()
                 offset += len(ids)
                 if not ids: break
-            end_date = fields.datetime.now()
 
             if use_new_cursor:
                 cr.commit()

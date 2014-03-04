@@ -55,11 +55,6 @@ class account_invoice_report(osv.osv):
 
     _columns = {
         'date': fields.date('Date', readonly=True),
-        'year': fields.char('Year', size=4, readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
-        'month': fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_qty':fields.float('Qty', readonly=True),
         'uom_name': fields.char('Reference Unit of Measure', size=128, readonly=True),
@@ -105,7 +100,7 @@ class account_invoice_report(osv.osv):
 
     def _select(self):
         select_str = """
-            SELECT sub.id, sub.date, sub.year, sub.month, sub.day, sub.product_id, sub.partner_id, sub.country_id,
+            SELECT sub.id, sub.date, sub.product_id, sub.partner_id, sub.country_id,
                 sub.payment_term, sub.period_id, sub.uom_name, sub.currency_id, sub.journal_id,
                 sub.fiscal_position, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
@@ -118,9 +113,6 @@ class account_invoice_report(osv.osv):
         select_str = """
                 SELECT min(ail.id) AS id,
                     ai.date_invoice AS date,
-                    to_char(ai.date_invoice::timestamp with time zone, 'YYYY'::text) AS year,
-                    to_char(ai.date_invoice::timestamp with time zone, 'MM'::text) AS month,
-                    to_char(ai.date_invoice::timestamp with time zone, 'YYYY-MM-DD'::text) AS day,
                     ail.product_id, ai.partner_id, ai.payment_term, ai.period_id,
                     CASE
                      WHEN u.uom_type::text <> 'reference'::text
@@ -192,9 +184,6 @@ class account_invoice_report(osv.osv):
     def _group_by(self):
         group_by_str = """
                 GROUP BY ail.product_id, ai.date_invoice, ai.id,
-                    to_char(ai.date_invoice::timestamp with time zone, 'YYYY'::text),
-                    to_char(ai.date_invoice::timestamp with time zone, 'MM'::text),
-                    to_char(ai.date_invoice::timestamp with time zone, 'YYYY-MM-DD'::text),
                     ai.partner_id, ai.payment_term, ai.period_id, u.name, ai.currency_id, ai.journal_id,
                     ai.fiscal_position, ai.user_id, ai.company_id, ai.type, ai.state, pt.categ_id,
                     ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual,

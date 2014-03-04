@@ -9,8 +9,9 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp import http
 from openerp.http import request
-from openerp.addons.web.controllers.main import db_monodb, set_cookie_and_redirect, login_and_redirect
+from openerp.addons.web.controllers.main import db_monodb, ensure_db, set_cookie_and_redirect, login_and_redirect
 from openerp.modules.registry import RegistryManager
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -19,37 +20,98 @@ _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 def fragment_to_query_string(func):
     @functools.wraps(func)
-    def wrapper(self, **kw):
+    def wrapper(self, *a, **kw):
         if not kw:
             return """<html><head><script>
                 var l = window.location;
                 var q = l.hash.substring(1);
-                var r = '/' + l.search;
+                var r = l.pathname + l.search;
                 if(q.length !== 0) {
                     var s = l.search ? (l.search === '?' ? '' : '&') : '?';
                     r = l.pathname + l.search + s + q;
                 }
                 window.location = r;
             </script></head><body></body></html>"""
-        return func(self, **kw)
+        return func(self, *a, **kw)
     return wrapper
-
 
 #----------------------------------------------------------
 # Controller
 #----------------------------------------------------------
-class OAuthController(http.Controller):
-
-    @http.route('/auth_oauth/list_providers', type='json', auth='none')
-    def list_providers(self, dbname):
+class OAuthLogin(openerp.addons.web.controllers.main.Home):
+    def list_providers(self):
         try:
-            registry = RegistryManager.get(dbname)
-            with registry.cursor() as cr:
-                providers = registry.get('auth.oauth.provider')
-                l = providers.read(cr, SUPERUSER_ID, providers.search(cr, SUPERUSER_ID, [('enabled', '=', True)]))
+            provider_obj = request.registry.get('auth.oauth.provider')
+            providers = provider_obj.search_read(request.cr, SUPERUSER_ID, [('enabled', '=', True)])
         except Exception:
-            l = []
-        return l
+            providers = []
+        for provider in providers:
+            return_url = request.httprequest.url_root + 'auth_oauth/signin'
+            state = self.get_state(provider)
+            params = dict(
+                debug=request.debug,
+                response_type='token',
+                client_id=provider['client_id'],
+                redirect_uri=return_url,
+                scope=provider['scope'],
+                state=simplejson.dumps(state),
+            )
+            provider['auth_link'] = provider['auth_endpoint'] + '?' + werkzeug.url_encode(params)
+
+        return providers
+
+    def get_state(self, provider):
+        state = dict(
+            d=request.session.db,
+            p=provider['id']
+        )
+        token = request.params.get('token')
+        if token:
+            state['t'] = token
+        return state
+
+    @http.route()
+    def web_login(self, *args, **kw):
+        ensure_db()
+        providers = self.list_providers()
+
+        response = super(OAuthLogin, self).web_login(*args, **kw)
+        if response.is_qweb:
+            error = request.params.get('oauth_error')
+            if error == '1':
+                error = _("Sign up is not allowed on this database.")
+            elif error == '2':
+                error = _("Access Denied")
+            elif error == '3':
+                error = _("You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email.")
+            else:
+                error = None
+
+            response.qcontext['providers'] = providers
+            if error:
+                response.qcontext['error'] = error
+
+        return response
+
+    @http.route()
+    def web_auth_signup(self, *args, **kw):
+        providers = self.list_providers()
+        if len(providers) == 1:
+            werkzeug.exceptions.abort(werkzeug.utils.redirect(providers[0]['auth_link'], 303))
+        response = super(OAuthLogin, self).web_auth_signup(*args, **kw)
+        response.qcontext.update(providers=providers)
+        return response
+
+    @http.route()
+    def web_auth_reset_password(self, *args, **kw):
+        providers = self.list_providers()
+        if len(providers) == 1:
+            werkzeug.exceptions.abort(werkzeug.utils.redirect(providers[0]['auth_link'], 303))
+        response = super(OAuthLogin, self).web_auth_reset_password(*args, **kw)
+        response.qcontext.update(providers=providers)
+        return response
+
+class OAuthController(http.Controller):
 
     @http.route('/auth_oauth/signin', type='http', auth='none')
     @fragment_to_query_string
@@ -66,27 +128,27 @@ class OAuthController(http.Controller):
                 cr.commit()
                 action = state.get('a')
                 menu = state.get('m')
-                url = '/'
+                url = '/web'
                 if action:
-                    url = '/#action=%s' % action
+                    url = '/web#action=%s' % action
                 elif menu:
-                    url = '/#menu_id=%s' % menu
+                    url = '/web#menu_id=%s' % menu
                 return login_and_redirect(*credentials, redirect_url=url)
             except AttributeError:
                 # auth_signup is not installed
                 _logger.error("auth_signup not installed on database %s: oauth sign up cancelled." % (dbname,))
-                url = "/#action=login&oauth_error=1"
+                url = "/web/login?oauth_error=1"
             except openerp.exceptions.AccessDenied:
                 # oauth credentials not valid, user could be on a temporary session
                 _logger.info('OAuth2: access denied, redirect to main page in case a valid session exists, without setting cookies')
-                url = "/#action=login&oauth_error=3"
+                url = "/web/login?oauth_error=3"
                 redirect = werkzeug.utils.redirect(url, 303)
                 redirect.autocorrect_location_header = False
                 return redirect
             except Exception, e:
                 # signup error
                 _logger.exception("OAuth2: %s" % str(e))
-                url = "/#action=login&oauth_error=2"
+                url = "/web/login?oauth_error=2"
 
         return set_cookie_and_redirect(url)
 
@@ -105,7 +167,7 @@ class OAuthController(http.Controller):
             try:
                 model, provider_id = IMD.get_object_reference(cr, SUPERUSER_ID, 'auth_oauth', 'provider_openerp')
             except ValueError:
-                return set_cookie_and_redirect('/?db=%s' % dbname)
+                return set_cookie_and_redirect('/web?db=%s' % dbname)
             assert model == 'auth.oauth.provider'
 
         state = {

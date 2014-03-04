@@ -41,49 +41,41 @@
             <field name="message_id">1111000@OpenERP.com</field>
             <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="replied" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="state">sent</field>
         </record>
         <record id="mass_mail_email_2" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
             <field name="message_id">1111001@OpenERP.com</field>
             <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="replied" eval="(DateTime.today() - relativedelta(days=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="state">sent</field>
         </record>
         <record id="mass_mail_email_3" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
             <field name="message_id">1111002@OpenERP.com</field>
             <field name="opened" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="state">sent</field>
         </record>
         <record id="mass_mail_email_4" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
             <field name="message_id">1111003@OpenERP.com</field>
-            <field name="state">sent</field>
         </record>
         <record id="mass_mail_email_5" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
             <field name="message_id">1111004@OpenERP.com</field>
             <field name="bounced" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="state">sent</field>
         </record>
 
         <record id="mass_mail_email_2_1" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_2')"/>
             <field name="message_id">1111005@OpenERP.com</field>
             <field name="opened" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="state">sent</field>
         </record>
         <record id="mass_mail_email_2_2" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_2')"/>
             <field name="message_id">1111006@OpenERP.com</field>
             <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="state">sent</field>
         </record>
         <record id="mass_mail_email_2_3" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_2')"/>
             <field name="message_id">1111007@OpenERP.com</field>
-            <field name="state">sent</field>
         </record>
 
     </data>

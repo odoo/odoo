@@ -28,6 +28,15 @@ class stock_picking(osv.osv):
     _inherit = "stock.picking"
     _description = "Picking List"
 
+    def _prepare_invoice_line(self, cr, uid, group, picking, move_line, invoice_id,
+        invoice_vals, context=None):
+        """Overwrite to add move_id reference"""
+        res = super(stock_picking, self)._prepare_invoice_line(cr, uid, group, picking, move_line, invoice_id, invoice_vals, context=context)
+        res.update({
+            'move_id': move_line.id,
+        })
+        return res
+
     def action_invoice_create(self, cr, uid, ids, journal_id=False,
             group=False, type='out_invoice', context=None):
         '''Return ids of created invoices for the pickings'''

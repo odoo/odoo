@@ -23,7 +23,7 @@ from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
-import urllib
+import werkzeug.urls
 import urllib2
 import json
 import re
@@ -60,10 +60,9 @@ class config(osv.Model):
     def get_access_token(self, cr, uid, scope=None, context=None):
         ir_config = self.pool['ir.config_parameter']
         google_drive_refresh_token = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_refresh_token')
-        group_config = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_erp_manager')[1]
-        user = self.pool['res.users'].read(cr, uid, uid, "groups_id")
+        user_is_admin = self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager')
         if not google_drive_refresh_token:
-            if group_config in user['groups_id']:
+            if user_is_admin:
                 raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %(menu:base_setup.menu_general_configuration)s."), context=context)
             else:
                 raise osv.except_osv(_('Error!'), _("Google Drive is not yet configured. Please contact your administrator."))
@@ -71,7 +70,7 @@ class config(osv.Model):
         google_drive_client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_secret')
         #For Getting New Access Token With help of old Refresh Token
 
-        data = urllib.urlencode(dict(client_id=google_drive_client_id,
+        data = werkzeug.url_encode(dict(client_id=google_drive_client_id,
                                      refresh_token=google_drive_refresh_token,
                                      client_secret=google_drive_client_secret,
                                      grant_type="refresh_token",
@@ -81,7 +80,7 @@ class config(osv.Model):
             req = urllib2.Request('https://accounts.google.com/o/oauth2/token', data, headers)
             content = urllib2.urlopen(req).read()
         except urllib2.HTTPError:
-            if group_config in user['groups_id']:
+            if user_is_admin:
                 raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during the token generation. Please request again an authorization code in %(menu:base_setup.menu_general_configuration)s."), context=context)
             else:
                 raise osv.except_osv(_('Error!'), _("Google Drive is not yet configured. Please contact your administrator."))
@@ -121,7 +120,7 @@ class config(osv.Model):
             res['url'] = content['alternateLink']
             key = self._get_key_from_url(res['url'])
             request_url = "https://www.googleapis.com/drive/v2/files/%s/permissions?emailMessage=This+is+a+drive+file+created+by+OpenERP&sendNotificationEmails=false&access_token=%s" % (key, access_token)
-            data = {'role': 'reader', 'type': 'anyone', 'value': '', 'withLink': True}
+            data = {'role': 'writer', 'type': 'anyone', 'value': '', 'withLink': True}
             try:
                 req = urllib2.Request(request_url, json.dumps(data), headers)
                 urllib2.urlopen(req)
@@ -134,7 +133,7 @@ class config(osv.Model):
                     req = urllib2.Request(request_url, json.dumps(data), headers)
                     urllib2.urlopen(req)
                 except urllib2.HTTPError:
-                    raise self.pool.get('res.config.settings').get_config_warning(cr, _("The permission 'writer' for your email '%s' has not been written on the document. Is this email a valid Google Account ?" % user.email), context=context)
+                    pass
         return res 
 
     def get_google_drive_config(self, cr, uid, res_model, res_id, context=None):
