@@ -198,8 +198,6 @@ class product_product(osv.osv):
                  "In a context with a single Warehouse, this includes "
                  "goods stored in the Stock Location of this Warehouse, or any "
                  "of its children.\n"
-                 "stored in the Stock Location of the Warehouse of this Shop, "
-                 "or any of its children.\n"
                  "Otherwise, this includes goods stored in any Stock Location "
                  "with 'internal' type."),
         'incoming_qty': fields.function(_product_available, multi='qty_available',
@@ -212,9 +210,6 @@ class product_product(osv.osv):
                  "In a context with a single Warehouse, this includes "
                  "goods arriving to the Stock Location of this Warehouse, or "
                  "any of its children.\n"
-                 "In a context with a single Shop, this includes goods "
-                 "arriving to the Stock Location of the Warehouse of this "
-                 "Shop, or any of its children.\n"
                  "Otherwise, this includes goods arriving to any Stock "
                  "Location with 'internal' type."),
         'outgoing_qty': fields.function(_product_available, multi='qty_available',
@@ -227,9 +222,6 @@ class product_product(osv.osv):
                  "In a context with a single Warehouse, this includes "
                  "goods leaving the Stock Location of this Warehouse, or "
                  "any of its children.\n"
-                 "In a context with a single Shop, this includes goods "
-                 "leaving the Stock Location of the Warehouse of this "
-                 "Shop, or any of its children.\n"
                  "Otherwise, this includes goods leaving any Stock "
                  "Location with 'internal' type."),
         'track_incoming': fields.boolean('Track Incoming Lots', help="Forces to specify a Serial Number for all moves containing this product and coming from a Supplier Location"),

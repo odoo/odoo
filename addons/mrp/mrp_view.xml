@@ -560,7 +560,7 @@
             <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
             <field name="arch" type="xml">
                  <xpath expr="//group[@name='lot']" position="inside">
-                    <field name="track_production" groups="stock.group_tracking_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
+                    <field name="track_production" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
                 </xpath>
             </field>
         </record>
