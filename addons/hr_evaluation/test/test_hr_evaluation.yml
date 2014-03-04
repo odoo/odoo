@@ -1,7 +1,7 @@
 -
   I check that state of "Employee Evaluation" survey is Open.
 -
-  !assert {model: survey.survey, id: survey_2, severity: error, string: Survey should be in OPen state}:
+  !assert {model: survey.survey, id: appraisal_form, severity: error, string: Survey should be in OPen state}:
     - state == 'open'
 -
   I start the evaluation process by click on "Start Evaluation" button.
