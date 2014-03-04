@@ -1956,7 +1956,7 @@ class stock_move(osv.osv):
             if move.state != 'assigned':
                 qty_already_assigned = move.reserved_availability
                 qty = move.product_qty - qty_already_assigned
-                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain[move.id], prefered_domain=prefered_domain[move.id], fallback_domain=fallback_domain[move.id], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain[move.id], prefered_domain=[], fallback_domain=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 quant_obj.quants_reserve(cr, uid, quants, move, context=context)
 
         #force assignation of consumable products and picking type auto_force_assign
