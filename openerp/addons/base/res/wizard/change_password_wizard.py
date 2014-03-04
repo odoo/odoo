@@ -55,7 +55,7 @@ class change_password_wizard(osv.TransientModel):
             user_ids.append(user.id)
         self.pool.get('change.password.user').change_password_button(cr, uid, user_ids, context=context)
         # don't keep temporary password copies in the database longer than necessary
-        self.pool.get('change.password.user').unlink(cr, uid, user_ids)
+        self.pool.get('change.password.user').write(cr, uid, user_ids, {'new_passwd': False})
         return {
             'type': 'ir.actions.act_window_close',
         }
