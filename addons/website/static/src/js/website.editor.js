@@ -1441,6 +1441,7 @@
                 this.page += $target.hasClass('previous') ? -1 : 1;
                 this.display_attachments();
             },
+            'click .existing-attachment-remove': 'try_remove',
         }),
         init: function (parent) {
             this.image = null;
@@ -1473,6 +1474,7 @@
             this.display_attachments();
         },
         display_attachments: function () {
+            this.$('.help-block').empty();
             var per_screen = IMAGES_PER_ROW * IMAGES_ROWS;
 
             var from = this.page * per_screen;
@@ -1499,6 +1501,34 @@
                 this.parent.set_image(link);
             }
             this.close()
+        },
+
+        try_remove: function (e) {
+            var $help_block = this.$('.help-block').empty();
+            var self = this;
+            var id = parseInt($(e.target).data('id'), 10);
+            var attachment = _.findWhere(this.records, {id: id});
+
+            return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                model: 'ir.attachment',
+                method: 'try_remove',
+                args: [],
+                kwargs: {
+                    ids: [id],
+                    context: website.get_context()
+                }
+            }).then(function (prevented) {
+                if (_.isEmpty(prevented)) {
+                    self.records = _.without(self.records, attachment);
+                    self.display_attachments();
+                    return;
+                }
+                $help_block.replaceWith(openerp.qweb.render(
+                    'website.editor.dialog.image.existing.error', {
+                        views: prevented[id]
+                    }
+                ));
+            });
         },
     });
 

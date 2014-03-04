@@ -9,6 +9,7 @@ import urlparse
 
 import werkzeug
 import werkzeug.exceptions
+import werkzeug.utils
 import werkzeug.wrappers
 # optional python-slugify import (https://github.com/un33k/python-slugify)
 try:
@@ -593,6 +594,33 @@ class ir_attachment(osv.osv):
                 return match[0]
         return super(ir_attachment, self).create(
             cr, uid, values, context=context)
+
+    def try_remove(self, cr, uid, ids, context=None):
+        """ Removes a web-based image attachment if it is used by no view
+        (template)
+
+        Returns a dict mapping attachments which would not be removed (if any)
+        mapped to the views preventing their removal
+        """
+        Views = self.pool['ir.ui.view']
+        attachments_to_remove = []
+        # views blocking removal of the attachment
+        removal_blocked_by = {}
+
+        for attachment in self.browse(cr, uid, ids, context=context):
+            # in-document URLs are html-escaped, a straight search will not
+            # find them
+            url = werkzeug.utils.escape(attachment.website_url)
+            ids = Views.search(cr, uid, [('arch', 'like', url)], context=context)
+
+            if ids:
+                removal_blocked_by[attachment.id] = Views.read(
+                    cr, uid, ids, ['name'], context=context)
+            else:
+                attachments_to_remove.append(attachment.id)
+        if attachments_to_remove:
+            self.unlink(cr, uid, attachments_to_remove, context=context)
+        return removal_blocked_by
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
