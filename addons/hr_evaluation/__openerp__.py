@@ -50,8 +50,8 @@ Key Features
 * Interview Requests are generated automatically by OpenERP according to employees evaluation plans. Each user receives automatic emails and requests to perform a periodical evaluation of their colleagues.
 """,
     "data": [
-        #'security/ir.model.access.csv',
-        #'security/hr_evaluation_security.xml',
+        'security/ir.model.access.csv',
+        'security/hr_evaluation_security.xml',
         'hr_evaluation_view.xml',
         'report/hr_evaluation_report_view.xml',
         'board_hr_evaluation_view.xml',
