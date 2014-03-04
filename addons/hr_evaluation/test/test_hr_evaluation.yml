@@ -2,7 +2,7 @@
   I set the "Employee Evaluation" survey in open state.
 -
   !python {model: survey.survey}: |
-    self.write(cr, uid, [ref("survey_2")], {'state': 'open'}, context)
+    self.write(cr, uid, [ref("appraisal_form")], {'state': 'open'}, context)
 -
   I check that state of "Employee Evaluation" survey is Open.
 -

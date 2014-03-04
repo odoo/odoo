@@ -56,10 +56,10 @@ Key Features
         'report/hr_evaluation_report_view.xml',
         'board_hr_evaluation_view.xml',
         'survey_data_appraisal.xml',
-        # 'hr_evaluation_data.xml',
-        # 'hr_evaluation_installer.xml',
+        'hr_evaluation_data.xml',
+        'hr_evaluation_installer.xml',
     ],
-    # "demo": ["hr_evaluation_demo.xml"],
+    "demo": ["hr_evaluation_demo.xml"],
     'test': [
         'test/test_hr_evaluation.yml',
         'test/hr_evalution_demo.yml',
