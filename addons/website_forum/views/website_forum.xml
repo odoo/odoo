@@ -26,8 +26,7 @@
             name="Footer Questions Link">
             <xpath expr="//footer//ul[@name='products']" position="inside">
                 <li>
-                    <!--TODO: remove static id -->
-                    <a href="/forum/1">Q&amp;A</a>
+                    <a t-attf-href="/forum/%(website_forum.forum_help)d/">Q&amp;A</a>
                 </li>
             </xpath>
         </template>
@@ -159,6 +158,18 @@
                 <!--t t-call="website_forum.faq">
                     <div t-field="forum.faq"/>
                 </t-->
+            </t>
+        </template>
+
+        <template id="forum">
+            <t t-call="website.layout">
+                <!--TODO: Improve template -->
+                <div class="row">
+                    <h1 class="text-center" t-attf-href="/forum/#{ forum.id }" t-field="forum.name"/>
+                </div>
+                <div class="row">
+                    <h1 class="text-center" t-attf-href="/forum/#{ forum.id }/faq" t-field="forum.faq"/>
+                </div>
             </t>
         </template>
 

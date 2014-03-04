@@ -39,23 +39,38 @@ class website_forum(http.Controller):
     @http.route(['/forum/'], type='http', auth="public", website=True, multilang=True)
     def forum(self, **searches):
         cr, uid, context = request.cr, request.uid, request.context
-        forum_obj = request.registry['website.forum']
-        obj_ids = forum_obj.search(cr, uid, [], context=context)
-        forum_ids = forum_obj.browse(cr, uid, obj_ids, context=context)
+        Forum = request.registry['website.forum']
+        obj_ids = Forum.search(cr, uid, [], context=context)
+        forum_ids = Forum.browse(cr, uid, obj_ids, context=context)
 
         values = {
             'forum_ids': forum_ids,
             'searches': {},
         }
-
         return request.website.render("website_forum.forum_index", values)
+
+    @http.route(['/forum/<model("website.forum"):forum>/view'], type='http', auth="public", website=True, multilang=True)
+    def view_forum(self, forum, **searches):
+        values = {
+            'forum': forum,
+        }
+        return request.website.render("website_forum.forum", values)
+
+    @http.route('/forum/add_forum/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    def add_forum(self, forum_name="New Forum", **kwargs):
+        vals = {
+            'name': forum_name,
+            'faq': 'F.A.Q'
+        }
+        forum_id = request.registry['website.forum'].create(request.cr, request.uid, vals, context=request.context)
+        return request.redirect("/forum/%s/view/?enable_editor=1" % forum_id)
 
     @http.route(['/forum/<model("website.forum"):forum>/', '/forum/<model("website.forum"):forum>/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
     def questions(self, forum, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         forum_obj = request.registry['website.forum.post']
         user_obj = request.registry['res.users']
-        domain = [('parent_id', '=', False)]
+        domain = [('forum_id', '=', forum.id), ('parent_id', '=', False)]
         search = searches.get('search',False)
         type = searches.get('type',False)
         if not type:
