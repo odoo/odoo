@@ -31,7 +31,7 @@ from openerp import SUPERUSER_ID
 import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
-
+from profilehooks import profile
 #----------------------------------------------------------
 # Incoterms
 #----------------------------------------------------------
@@ -382,6 +382,8 @@ class stock_quant(osv.osv):
             the choice on the quants that match the prefered_domain as well. But if the qty requested is not reached
             it tries to find the remaining quantity by using the fallback_domain.
         '''
+        if location.usage in ['inventory', 'production', 'supplier']:
+            return [(None, qty)]
         if prefered_domain and fallback_domain:
             if domain is None:
                 domain = []
@@ -502,36 +504,38 @@ class stock_quant(osv.osv):
         dom += [('package_id', '=', quant.package_id.id)]
         if move.move_dest_id:
             dom += [('negative_move_id', '=', move.move_dest_id.id)]
-        quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, dom, context=context)
-        for quant_neg, qty in quants:
-            if not quant_neg:
-                continue
-            to_solve_quant_ids = self.search(cr, uid, [('propagated_from_id', '=', quant_neg.id)], context=context)
-            if not to_solve_quant_ids:
-                continue
-            solving_qty = qty
-            solved_quant_ids = []
-            for to_solve_quant in self.browse(cr, uid, to_solve_quant_ids, context=context):
-                if solving_qty <= 0:
+        quants = self.search(cr, uid, [('product_id', '=', quant.product_id.id), ('qty','<', 0)], context=context)
+        if quants:
+            quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, dom, context=context)
+            for quant_neg, qty in quants:
+                if not quant_neg:
                     continue
-                solved_quant_ids.append(to_solve_quant.id)
-                self._quant_split(cr, uid, to_solve_quant, min(solving_qty, to_solve_quant.qty), context=context)
-                solving_qty -= min(solving_qty, to_solve_quant.qty)
-            remaining_solving_quant = self._quant_split(cr, uid, solving_quant, qty, context=context)
-            remaining_neg_quant = self._quant_split(cr, uid, quant_neg, -qty, context=context)
-            #if the reconciliation was not complete, we need to link together the remaining parts
-            if remaining_neg_quant:
-                remaining_to_solve_quant_ids = self.search(cr, uid, [('propagated_from_id', '=', quant_neg.id), ('id', 'not in', solved_quant_ids)], context=context)
-                if remaining_to_solve_quant_ids:
-                    self.write(cr, SUPERUSER_ID, remaining_to_solve_quant_ids, {'propagated_from_id': remaining_neg_quant.id}, context=context)
-            #delete the reconciled quants, as it is replaced by the solved quants
-            self.unlink(cr, SUPERUSER_ID, [quant_neg.id], context=context)
-            #price update + accounting entries adjustments
-            self._price_update(cr, uid, solved_quant_ids, solving_quant.cost, context=context)
-            #merge history (and cost?)
-            self._quants_merge(cr, uid, solved_quant_ids, solving_quant, context=context)
-            self.unlink(cr, SUPERUSER_ID, [solving_quant.id], context=context)
-            solving_quant = remaining_solving_quant
+                to_solve_quant_ids = self.search(cr, uid, [('propagated_from_id', '=', quant_neg.id)], context=context)
+                if not to_solve_quant_ids:
+                    continue
+                solving_qty = qty
+                solved_quant_ids = []
+                for to_solve_quant in self.browse(cr, uid, to_solve_quant_ids, context=context):
+                    if solving_qty <= 0:
+                        continue
+                    solved_quant_ids.append(to_solve_quant.id)
+                    self._quant_split(cr, uid, to_solve_quant, min(solving_qty, to_solve_quant.qty), context=context)
+                    solving_qty -= min(solving_qty, to_solve_quant.qty)
+                remaining_solving_quant = self._quant_split(cr, uid, solving_quant, qty, context=context)
+                remaining_neg_quant = self._quant_split(cr, uid, quant_neg, -qty, context=context)
+                #if the reconciliation was not complete, we need to link together the remaining parts
+                if remaining_neg_quant:
+                    remaining_to_solve_quant_ids = self.search(cr, uid, [('propagated_from_id', '=', quant_neg.id), ('id', 'not in', solved_quant_ids)], context=context)
+                    if remaining_to_solve_quant_ids:
+                        self.write(cr, SUPERUSER_ID, remaining_to_solve_quant_ids, {'propagated_from_id': remaining_neg_quant.id}, context=context)
+                #delete the reconciled quants, as it is replaced by the solved quants
+                self.unlink(cr, SUPERUSER_ID, [quant_neg.id], context=context)
+                #price update + accounting entries adjustments
+                self._price_update(cr, uid, solved_quant_ids, solving_quant.cost, context=context)
+                #merge history (and cost?)
+                self._quants_merge(cr, uid, solved_quant_ids, solving_quant, context=context)
+                self.unlink(cr, SUPERUSER_ID, [solving_quant.id], context=context)
+                solving_quant = remaining_solving_quant
 
     def _price_update(self, cr, uid, ids, newprice, context=None):
         self.write(cr, SUPERUSER_ID, ids, {'cost': newprice}, context=context)
@@ -549,8 +553,8 @@ class stock_quant(osv.osv):
         domain += location and [('location_id', 'child_of', location.id)] or []
         domain += [('product_id', '=', product.id)] + domain
         #don't take into account location that are production, supplier or inventory
-        ignore_location_ids = self.pool.get('stock.location').search(cr, uid, [('usage', 'in', ('production', 'supplier', 'inventory'))], context=context)
-        domain.append(('location_id','not in',ignore_location_ids))
+        #ignore_location_ids = self.pool.get('stock.location').search(cr, uid, [('usage', 'in', ('production', 'supplier', 'inventory'))], context=context)
+        #domain.append(('location_id','not in',ignore_location_ids))
         res = []
         offset = 0
         while quantity > 0:
@@ -1143,6 +1147,7 @@ class stock_picking(osv.osv):
         else:
             stock_move_obj.do_unreserve(cr, uid, move_ids, context=context)
             stock_move_obj.action_assign(cr, uid, move_ids, context=context)
+
 
     def do_transfer(self, cr, uid, picking_ids, context=None):
         """
@@ -3552,19 +3557,18 @@ class stock_pack_operation(osv.osv):
         res_id = super(stock_pack_operation, self).create(cr, uid, vals, context=context)
         self.recompute_rem_qty_from_operation(cr, uid, [res_id], context=context)
         return res_id
-
+    @profile(immediate=True)
     def recompute_rem_qty_from_operation(self, cr, uid, op_ids, context=None):
         def _create_link_for_product(product_id, qty):
             qty_to_assign = qty
-            for move in sorted_moves:
-                if move.product_id.id == product_id and move.state not in ['done', 'cancel']:
-                    qty_on_link = min(qty_move_rem[move.id], qty_to_assign)
-                    cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
-                    (%s, %s, %s)""", (move.id, op.id, qty_on_link,))
-                    qty_move_rem[move.id] -= qty_on_link
-                    qty_to_assign -= qty_on_link
-                    if qty_to_assign <= 0:
-                        break
+            for move in prod_move[product_id]:
+                qty_on_link = min(qty_move_rem[move.id], qty_to_assign)
+                cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
+                (%s, %s, %s)""", (move.id, op.id, qty_on_link,))
+                qty_move_rem[move.id] -= qty_on_link
+                qty_to_assign -= qty_on_link
+                if qty_to_assign <= 0:
+                    break
             return qty_to_assign == 0
 
         def _check_quants_reserved(ops):
@@ -3612,7 +3616,7 @@ class stock_pack_operation(osv.osv):
         package_obj = self.pool.get('stock.quant.package')
         quant_obj = self.pool.get('stock.quant')
         quants_done = {}
-
+        prod_move = {}
         qty_rem = {}
         qty_move_rem = {}
         operations = self.browse(cr, uid, op_ids, context=context)
@@ -3628,8 +3632,13 @@ class stock_pack_operation(osv.osv):
                     for quant in move.reserved_quant_ids:
                         qty_rem[move.id] -= quant.qty
                         quants_done[quant.id] = quant.qty
-                sorted_moves = op.picking_id.move_lines
+                sorted_moves = [x for x in op.picking_id.move_lines if x.state not in ['done', 'cancel']]
                 sorted_moves.sort(key=lambda x: qty_rem[x.id])
+                for move in sorted_moves:
+                    if not prod_move.get(move.product_id.id):
+                        prod_move[move.product_id.id] = [move]
+                    else:
+                        prod_move[move.product_id.id].append(move)
 
             to_unlink_ids = [x.id for x in op.linked_move_operation_ids]
             if to_unlink_ids:
@@ -3648,8 +3657,6 @@ class stock_pack_operation(osv.osv):
                 prod_quants = self._get_remaining_prod_quantities(cr, uid, op, context=context)
                 for product_id, qty in prod_quants.items():
                     if qty > 0:
-                        if op.product_id.type != 'consu':
-                            quants_reserve_ok = False
                         remaining_qty_ok = remaining_qty_ok and _create_link_for_product(product_id, qty)
                         
         quants_reserve_ok = all([quants_done[x] == 0 for x in quants_done.keys()])
