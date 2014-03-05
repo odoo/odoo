@@ -306,9 +306,8 @@ class mail_thread(osv.AbstractModel):
             auto_join=True,
             string='Messages',
             help="Messages and communication history"),
-        'message_last_update': fields.datetime('Last Message Date',
-            help='Date of the last message posted on the record. Only messages going'
-                 'through the message_post API are taken into account for better performances.'),
+        'message_last_post': fields.datetime('Last Message Date',
+            help='Date of the last message posted on the record.'),
         'message_unread': fields.function(_get_message_data,
             fnct_search=_search_message_unread, multi="_get_message_data",
             type='boolean', string='Unread Messages',
@@ -1558,10 +1557,10 @@ class mail_thread(osv.AbstractModel):
         # Post the message
         msg_id = mail_message.create(cr, uid, values, context=context)
 
-        # Post-process: subscribe author, update message_last_update
-        if model and model != 'mail.thread' and thread_id:
+        # Post-process: subscribe author, update message_last_post
+        if model and model != 'mail.thread' and thread_id and subtype_id:
             # done with SUPERUSER_ID, because on some models users can post only with read access, not necessarily write access
-            self.write(cr, SUPERUSER_ID, [thread_id], {'message_last_update': fields.datetime.now()}, context=context)
+            self.write(cr, SUPERUSER_ID, [thread_id], {'message_last_post': fields.datetime.now()}, context=context)
         message = mail_message.browse(cr, uid, msg_id, context=context)
         if message.author_id and thread_id and type != 'notification' and not context.get('mail_create_nosubscribe'):
             self.message_subscribe(cr, uid, [thread_id], [message.author_id.id], context=context)
