@@ -26,7 +26,7 @@
     'version': '0.1',
     'description': """Glue module holding mail improvements for website.""",
     'author': 'OpenERP SA',
-    'depends': ['website', 'mail'],
+    'depends': ['website', 'mail', 'email_template'],
     'data': [
         'views/snippets.xml',
         'views/website_mail.xml',

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import fnmatch
+import hashlib
 import inspect
 import itertools
 import logging
@@ -7,7 +7,6 @@ import math
 import re
 import urlparse
 
-import simplejson
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.wrappers
@@ -20,28 +19,23 @@ except ImportError:
 import openerp
 from openerp.osv import orm, osv, fields
 from openerp.tools.safe_eval import safe_eval
-from openerp.addons.web.http import request, LazyResponse
+from openerp.addons.web.http import request
 
 logger = logging.getLogger(__name__)
 
-def keep_query(*args, **kw):
-    if not args and not kw:
-        args = ('*',)
-    params = kw.copy()
-    query_params = frozenset(werkzeug.url_decode(request.httprequest.query_string).keys())
-    for keep_param in args:
-        for param in fnmatch.filter(query_params, keep_param):
-            if param not in params and param in request.params:
-                params[param] = request.params[param]
-    return werkzeug.urls.url_encode(params)
-
 def url_for(path_or_uri, lang=None):
+    if isinstance(path_or_uri, unicode):
+        path_or_uri = path_or_uri.encode('utf-8')
+    current_path = request.httprequest.path
+    if isinstance(current_path, unicode):
+        current_path = current_path.encode('utf-8')
     location = path_or_uri.strip()
     force_lang = lang is not None
     url = urlparse.urlparse(location)
 
     if request and not url.netloc and not url.scheme and (url.path or force_lang):
-        location = urlparse.urljoin(request.httprequest.path, location)
+        location = urlparse.urljoin(current_path, location)
+
         lang = lang or request.context.get('lang')
         langs = [lg[0] for lg in request.website.get_languages()]
 
@@ -59,7 +53,7 @@ def url_for(path_or_uri, lang=None):
                 ps.insert(1, lang)
             location = '/'.join(ps)
 
-    return location
+    return location.decode('utf-8')
 
 def is_multilang_url(path, langs=None):
     if not langs:
@@ -78,7 +72,11 @@ def is_multilang_url(path, langs=None):
 
 def slugify(s, max_length=None):
     if slugify_lib:
-        return slugify_lib.slugify(s, max_length)
+        # There are 2 different libraries only python-slugify is supported
+        try:
+            return slugify_lib.slugify(s, max_length=max_length)
+        except TypeError:
+            pass
     spaceless = re.sub(r'\s+', '-', s)
     specialless = re.sub(r'[^-_A-Za-z0-9]', '', spaceless)
     return specialless[:max_length]
@@ -90,7 +88,10 @@ def slug(value):
     else:
         # assume name_search result tuple
         id, name = value
-    return "%s-%d" % (slugify(name), id)
+    slugname = slugify(name)
+    if not slugname:
+        return str(id)
+    return "%s-%d" % (slugname, id)
 
 def urlplus(url, params):
     return werkzeug.Href(url)(params or None)
@@ -178,10 +179,8 @@ class website(osv.osv):
         return '%s.%s' % (module, slugify(name, max_length=50))
 
     def page_exists(self, cr, uid, ids, name, module='website', context=None):
-        page = self.page_for_name(cr, uid, ids, name, module=module, context=context)
-
         try:
-           self.pool["ir.model.data"].get_object_reference(cr, uid, module, name)
+           return self.pool["ir.model.data"].get_object_reference(cr, uid, module, name)
         except:
             return False
 
@@ -215,7 +214,6 @@ class website(osv.osv):
 
         request.redirect = lambda url: werkzeug.utils.redirect(url_for(url))
         request.context.update(
-            is_master_lang=is_master_lang,
             editable=is_website_publisher,
             translatable=not is_master_lang,
         )
@@ -228,44 +226,12 @@ class website(osv.osv):
         return self.pool["ir.ui.view"].browse(cr, uid, view_id, context=context)
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
-        user = self.pool.get("res.users")
-        if not context:
-            context = {}
-
-        # Take a context
-        qweb_values = context.copy()
-        # add some values
-        if values:
-            qweb_values.update(values)
-        # fill some defaults
-        qweb_values.update(
-            request=request,
-            json=simplejson,
-            website=request.website,
-            url_for=url_for,
-            keep_query=keep_query,
-            slug=slug,
-            res_company=request.website.company_id,
-            user_id=user.browse(cr, uid, uid),
-            quote_plus=werkzeug.url_quote_plus,
-        )
-        qweb_values.setdefault('editable', False)
-
-        # in edit mode ir.ui.view will tag nodes
-        context['inherit_branding'] = qweb_values['editable']
-
-        view = self.get_template(cr, uid, ids, template)
-
-        if 'main_object' not in qweb_values:
-            qweb_values['main_object'] = view
-        return view.render(qweb_values, engine='website.qweb', context=context)
+        # TODO: remove this. (just kept for backward api compatibility for saas-3)
+        return self.pool['ir.ui.view'].render(cr, uid, template, values=values, context=context)
 
     def render(self, cr, uid, ids, template, values=None, status_code=None, context=None):
-        def callback(template, values, context):
-            return self._render(cr, uid, ids, template, values, context)
-        if values is None:
-            values = {}
-        return LazyResponse(callback, status_code=status_code, template=template, values=values, context=context)
+        # TODO: remove this. (just kept for backward api compatibility for saas-3)
+        return request.render(template, values, uid=uid)
 
     def pager(self, cr, uid, ids, url, total, page=1, step=30, scope=5, url_args=None, context=None):
         # Compute Pager
@@ -281,7 +247,7 @@ class website(osv.osv):
             pmin = pmax - scope if pmax - scope > 0 else 1
 
         def get_url(page):
-            _url = "%spage/%s/" % (url, page)
+            _url = "%spage/%s/" % (url, page) if page > 1 else url
             if url_args:
                 _url = "%s?%s" % (_url, werkzeug.url_encode(url_args))
             return _url
@@ -381,6 +347,7 @@ class website(osv.osv):
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
         uid = self.get_public_user(cr, uid, context=context)
+        url_list = []
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue
@@ -402,7 +369,9 @@ class website(osv.osv):
             for values in generated:
                 domain_part, url = rule.build(values, append_unknown=False)
                 page = {'name': url, 'url': url}
-
+                if url in url_list:
+                    continue
+                url_list.append(url)
                 if not filtered and query_string and not self.page_matches(cr, uid, page, query_string, context=context):
                     continue
                 yield page
@@ -527,9 +496,14 @@ class website_menu(osv.osv):
         'parent_left': fields.integer('Parent Left', select=True),
         'parent_right': fields.integer('Parent Right', select=True),
     }
+
+    def __defaults_sequence(self, cr, uid, context):
+        menu = self.search_read(cr, uid, [(1,"=",1)], ["sequence"], limit=1, order="sequence DESC", context=context)
+        return menu and menu[0]["sequence"] or 0
+
     _defaults = {
         'url': '',
-        'sequence': 0,
+        'sequence': __defaults_sequence,
         'new_window': False,
     }
     _parent_store = True
@@ -589,9 +563,36 @@ class ir_attachment(osv.osv):
                     'max_height': 768,
                 })
         return result
+    def _datas_checksum(self, cr, uid, ids, name, arg, context=None):
+        return dict(
+            (attach['id'], self._compute_checksum(attach))
+            for attach in self.read(
+                cr, uid, ids, ['res_model', 'res_id', 'type', 'datas'],
+                context=context)
+        )
+
+    def _compute_checksum(self, attachment_dict):
+        if attachment_dict.get('res_model') == 'ir.ui.view'\
+                and not attachment_dict.get('res_id')\
+                and attachment_dict.get('type', 'binary') == 'binary'\
+                and attachment_dict.get('datas'):
+            return hashlib.new('sha1', attachment_dict['datas']).hexdigest()
+        return None
+
     _columns = {
+        'datas_checksum': fields.function(_datas_checksum, size=40,
+              string="Datas checksum", type='char', store=True, select=True),
         'website_url': fields.function(_website_url_get, string="Attachment URL", type='char')
     }
+
+    def create(self, cr, uid, values, context=None):
+        chk = self._compute_checksum(values)
+        if chk:
+            match = self.search(cr, uid, [('datas_checksum', '=', chk)], context=context)
+            if match:
+                return match[0]
+        return super(ir_attachment, self).create(
+            cr, uid, values, context=context)
 
 class res_partner(osv.osv):
     _inherit = "res.partner"

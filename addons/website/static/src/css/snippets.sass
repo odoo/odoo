@@ -147,6 +147,7 @@
 
 .resize_editor_busy
     background-color: rgba(0,0,0,0.3)
+
 .oe_overlay
     display: none
     position: absolute
@@ -161,7 +162,7 @@
         border-style: dashed
         border-width: 1px
         +box-shadow(0px 0px 0px 1px rgba(255,255,255,0.3), 0px 0px 0px 1px rgba(255,255,255,0.3) inset)
-        border-color: rgba(0, 0, 0, 0.5)
+        border-color: rgba(0, 0, 0, 0.3)
     .oe_handle
         display: block !important
         pointer-events: auto
@@ -194,23 +195,38 @@
                 background: rgba(0, 0, 0, .5)
                 color: #fff
                 +box-shadow(0 0 5px 3px rgba(255,255,255,.7))
+        &.e, &.w
+            &:before
+                content: "\f0d9-\f0da"
+                line-height: 16px
         &.e
             left: auto
             top: 2px
             height: 100%
             right: -6px
             cursor: w-resize
+        &.w
+            top: 2px
+            height: 100%
+            left: -6px
+            cursor: e-resize
+        &.s, &.n
             &:before
-                content: "\F061"
+                z-index: 0
+                content: "\f07d"
+                text-align: center
+                padding: 1px
         &.s
             top: auto
             left: 2px
             width: 100%
             bottom: -6px
             cursor: n-resize
-            &:before
-                z-index: 0
-                content: "\F063"
+        &.n
+            left: 2px
+            width: 100%
+            top: -6px
+            cursor: s-resize
         &.size
             top: auto
             left: 2px
@@ -234,20 +250,6 @@
                 border-color: rgba(0, 0, 0, 0.5)
                 position: relative
                 top: 8px
-        &.w
-            top: 2px
-            height: 100%
-            left: -6px
-            cursor: e-resize
-            &:before
-                content: "\F060"
-        &.n
-            left: 2px
-            width: 100%
-            top: -6px
-            cursor: s-resize
-            &:before
-                content: "\F062"
 
     .icon.btn
         display: inline-block
@@ -268,6 +270,29 @@
             min-width: 180px
         .dropdown-menu select,.dropdown-menu input
             display: block
+
+    &.block-w-left .w:before
+        content: "\F061" !important
+    &.block-w-right .w:before
+        content: "\F060" !important
+    &.block-w-left.block-w-right .w
+        display: none !important
+    &.block-e-left .e:before
+        content: "\F061" !important
+    &.block-e-right .e:before
+        content: "\F060" !important
+    &.block-e-left.block-e-right .e
+        display: none !important
+
+    &.block-s-top .s:before
+        content: "\F063" !important
+    &.block-s-bottom .s:before
+        content: "\f062" !important
+    &.block-n-top .n:before
+        content: "\F063" !important
+    &.block-n-bottom .n:before
+        content: "\f062" !important
+
 
 .s-resize-important, .s-resize-important *
     cursor: s-resize !important

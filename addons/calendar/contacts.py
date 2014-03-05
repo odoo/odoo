@@ -26,7 +26,7 @@ class calendar_contacts(osv.osv):
 
     _columns = {
         'user_id': fields.many2one('res.users','Me'),
-        'partner_id': fields.many2one('res.partner','Employee',required=True, domain=[('customer','=',True)]),
+        'partner_id': fields.many2one('res.partner','Employee',required=True, domain=[]),
         'active':fields.boolean('active'),        
      }
     _defaults = {

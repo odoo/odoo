@@ -4,6 +4,12 @@
 
 <!-- Layout add nav and footer -->
 
+<template id="debugger" inherit_id="website.debugger" name="Event Debugger">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_sale/static/src/js/website.tour.sale.js"></script>
+    </xpath>
+</template>
+
 <template id="editor_head" inherit_id="website.editor_head" name="Shop Editor" groups="base.group_sale_manager">
   <xpath expr="//script[@id='website_tour_js']" position="after">
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale.editor.js"></script>
@@ -26,10 +32,10 @@
 <!-- List of categories -->
 
 <template id="categories_recursive" name="Category list">
-  <li t-att-class="category.id == search.get('category') and 'active' or ''">
-      <a t-attf-href="/shop/category/#{ slug(category) }/" t-field="category.name"></a>
-      <ul t-if="category.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
-          <t t-foreach="category.child_id" t-as="category">
+  <li t-att-class="int(categ) == int(category or 0) and 'active' or ''">
+      <a t-attf-href="/shop/category/#{ slug(categ) }/" t-field="categ.name"></a>
+      <ul t-if="categ.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
+          <t t-foreach="categ.child_id" t-as="categ">
               <t t-call="website_sale.categories_recursive"/>
           </t>
       </ul>
@@ -39,28 +45,30 @@
 <!-- Product list -->
 
 <template id="search" name="Search hidden fields">
-  <input type="hidden" name="category" t-att-value="search.get('category') or ''"/>
-  <input type="hidden" name="filters" t-att-value="search.get('filters') or ''"/>
-  <div class="input-group">
-    <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
-    <span class="input-group-btn">
-      <button class="btn btn-default" type="submit"><i class="fa fa-search"/></button>
-    </span>
-  </div>
+  <form t-attf-action="/shop/{{'category/%s/' % slug(category) if category else ''}}" method="get" t-att-class="search_class">
+    <input t-if="search.get('filters')" type="hidden" name="filters" t-att-value="search.get('filters')"/>
+    <div class="input-group">
+      <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="submit"><i class="fa fa-search"/></button>
+      </span>
+    </div>
+  </form>
 </template>
 
 <template id="products_cart" name="Shopping cart">
+  <div itemscope="itemscope" itemtype="http://schema.org/Product">
   <div class="ribbon-wrapper">
     <div class="ribbon btn btn-danger">Sale</div>
   </div>
   <div class="oe_product_image">
-      <a t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('category', 'search', 'filters') }}">
-          <span t-field="product.image" t-field-options='{"widget": "image"}'/>
+      <a itemprop="url" t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('search', 'filters', category=(category and int(category)), page=(pager['page']['num'] if pager['page']['num']>1 else None)) }}">
+          <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image"}'/>
       </a>
   </div>
   <section>
-      <h5><strong><a t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('category', 'search', 'filters') }}" t-field="product.name"/></strong></h5>
-      <div class="product_price" t-if="product.product_variant_ids">
+      <h5><strong><a itemprop="name" t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('search', 'filters', category=(category and int(category)), page=(pager['page']['num'] if pager['page']['num']>1 else None)) }}" t-field="product.name"/></strong></h5>
+      <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
           <b>
               <t t-if="abs(product.product_variant_ids[0].lst_price - product.product_variant_ids[0].price) &gt; 0.2">
                 <del class="text-danger"
@@ -72,10 +80,14 @@
               <span t-field="product.product_variant_ids[0].price"  t-field-options='{
                    "widget": "monetary",
                    "display_currency": "website.pricelist_id.currency_id"
-               }'/>
+               }'>
+              </span>
+              <span itemprop="price" style="display:none;" t-esc="product.product_variant_ids[0].price"/>
+              <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
           </b>
       </div>
   </section>
+  </div>
 </template>
 
 <template id="products" name="Products">
@@ -93,9 +105,8 @@
         <div class="container oe_website_sale">
           <div class="products_pager">
             <div class="row">
-              <form action="/shop/" method="get" class="pagination form-inline col-md-3">
-                  <t t-call="website_sale.search" />
-              </form>
+              <t t-set="search_class">pagination form-inline col-md-3</t>
+              <t t-call="website_sale.search"/>
               <t t-call="website.pager"/>
             </div>
           </div>
@@ -210,7 +221,7 @@
 <template id="product_description" inherit_option_id="website_sale.products_cart" name="Product Description">
   <xpath expr="//div[@class='product_price']" position="before">
       <div class="text-info oe_subdescription oe_shadow" t-field="product.description_sale"/>
-      <div class="text-info oe_subdescription" t-field="product.description_sale"/>
+      <div itemprop="description" class="text-info oe_subdescription" t-field="product.description_sale"/>
   </xpath>
 </template>
 
@@ -261,21 +272,20 @@
           <link rel='stylesheet' href='/website_sale/static/src/css/website_mail.css'/>
       </t>
       <t t-set="additional_title" t-value="product.name"/>
-      <div id="wrap" class="js_sale">
+      <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
 
         <section class="container mt8">
           <div class="row">
             <div class="col-sm-4">
                 <ol class="breadcrumb">
-                    <li><a t-attf-href="/shop?{{ keep_query('search', 'filters') }}" onclick="history.go(-1); return false;">Products</a></li>
-                    <li t-if="search.get('category')"><a t-attf-href="/shop/?{{ keep_query('search', 'filters', 'category') }}" t-field="category.name"/></li>
+                    <li><a t-attf-href="/shop?{{ keep_query('search', 'filters', 'page') if not category else keep_query('search', 'filters') }}">Products</a></li>
+                    <li t-if="category"><a t-attf-href="/shop/category/{{ slug(category) }}/?{{ keep_query('search', 'filters', 'page') }}" t-field="category.name"/></li>
                     <li class="active"><span t-field="product.name"/></li>
                 </ol>
             </div>
             <div class="col-sm-3">
-              <form action="/shop/" method="get" class="pull-right">
-                  <t t-call="website_sale.search" />
-              </form>
+              <t t-set="search_class">pull-right</t>
+              <t t-call="website_sale.search"/>
             </div>
             <div class="col-sm-4" groups="base.group_sale_manager">
                 <t t-call="website.publish_management">
@@ -289,10 +299,10 @@
         <section class="container oe_website_sale" id="product_detail">
           <div class="row">
             <div class="col-sm-7 col-md-7 col-lg-7">
-                <span t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
+                <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
             </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
-                <h1 t-field="product.name">Product Name</h1>
-
+                <h1 itemprop="name" t-field="product.name">Product Name</h1>
+                <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)"/>
                 <form action="/shop/add_cart/" class="js_add_cart_json" method="POST">
                     <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_ids[0].id"/>
                     <t t-if="len(product.product_variant_ids) &gt; 1">
@@ -308,7 +318,7 @@
                         </label>
                     </t>
 
-                    <div class="product_price mt16" t-if="product.product_variant_ids">
+                    <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt16" t-if="product.product_variant_ids">
                         <h4>
                             <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
                             <span class="text-danger" style="text-decoration: line-through;"
@@ -324,11 +334,13 @@
                                  "widget": "monetary",
                                  "display_currency": "website.pricelist_id.currency_id"
                              }'/>
+                            <span itemprop="price" style="display:none;" t-esc="product.product_variant_ids[0].price"/>
+                            <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
                         </h4>
                     </div>
                     <button class="btn btn-primary btn-lg mt8">Add to Cart</button>
                     <hr t-if="product.description_sale"/>
-                    <p t-field="product.description_sale" class="text-muted"/>
+                    <div><p t-field="product.description_sale" class="text-muted"/></div>
                     <hr/>
                     <p class="text-muted">
                         30-day money-back guarantee<br/>
@@ -339,7 +351,7 @@
             </div>
           </div>
         </section>
-        <div t-field="product.website_description" class="oe_structure mt16" id="product_full_description"/>
+        <div itemprop="description" t-field="product.website_description" class="oe_structure mt16" id="product_full_description"/>
       </div>
   </t>
 </template>
@@ -525,7 +537,7 @@
                   <a t-if="website_sale_order and website_sale_order.website_order_line" href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="fa fa-long-arrow-right"/></a>
                   <div class="oe_structure"/>
               </div>
-              <div class="col-lg-3 col-lg-offset-1 col-sm-3 text-muted" id="right_column">
+              <div class="col-lg-3 col-lg-offset-1 col-sm-3 col-md-3 text-muted" id="right_column">
                   <h4>Policies</h4>
                   <ul class="list-unstyled mb32">
                       <li>&#9745; 30-days money-back guarantee</li>
@@ -558,8 +570,8 @@
 <template id="products_categories" inherit_option_id="website_sale.products" name="Product Categories">
   <xpath expr="//div[@id='products_grid_before']" position="inside">
       <ul class="nav nav-pills nav-stacked mt16">
-          <li t-att-class=" '' if search.get('category') else 'active' "><a href="/shop/">All Products</a></li>
-          <t t-foreach="categories" t-as="category">
+          <li t-att-class=" '' if category else 'active' "><a href="/shop/">All Products</a></li>
+          <t t-foreach="categories" t-as="categ">
               <t t-call="website_sale.categories_recursive"/>
           </t>
       </ul>
@@ -574,7 +586,7 @@
 
 <template id="products_attributes" inherit_id="website_sale.products" inherit_option_id="website_sale.products" name="Product attribute's Filters" groups="product.group_product_attributes">
   <xpath expr="//div[@id='products_grid_before']" position="inside">
-      <form t-attf-action="/shop/filters/?{{ keep_query('category', 'search') }}" class="attributes" method="post">
+      <form t-attf-action="/shop/filters/?{{ keep_query('search', category=(category and int(category))) }}" class="attributes" method="post">
           <ul class="nav nav-pills nav-stacked mt16">
               <t t-set="attribute_ids" t-value="Ecommerce.get_attribute_ids()"/>
               <t t-foreach="attribute_ids" t-as="attribute_id">
@@ -823,7 +835,7 @@
               </div>
               <button type="submit" class="btn btn-default btn-primary pull-right mb32">Confirm <span class="fa fa-long-arrow-right"/></button>
           </div>
-          <div class="col-lg-offset-1 col-lg-3 text-muted">
+          <div class="col-lg-offset-1 col-lg-3 col-md-3 text-muted">
               <h3 class="page-header mt16">Your Order <small><a href="/shop/mycart"><span class="fa fa-arrow-right"/> change</a></small></h3>
               <div class="row">
                   <div class="col-sm-6 text-right">Subtotal:</div>

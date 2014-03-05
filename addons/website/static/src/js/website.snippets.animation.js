@@ -2,7 +2,7 @@
     'use strict';
 
     var website = openerp.website;
-    website.snippet = {};
+    if (!website.snippet) website.snippet = {};
     website.snippet.readyAnimation = [];
 
     website.snippet.start_animation = function () {
@@ -105,7 +105,7 @@
                 var offset = 0;
                 var padding =  parseInt($(document.body).css("padding-top"));
                 if (speed < 1) {
-                    var inner_offset = self.$target.outerHeight() - this.height / this.width * document.body.clientWidth;
+                    var inner_offset = - self.$target.outerHeight() + this.height / this.width * document.body.clientWidth;
                     var outer_offset = self.$target.offset().top - (document.body.clientHeight - self.$target.outerHeight()) - padding;
                     offset = - outer_offset * speed + inner_offset;
                 } else {

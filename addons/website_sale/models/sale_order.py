@@ -38,7 +38,7 @@ class SaleOrderLine(osv.Model):
 
         if ids and not product_id:
             order_line = self.browse(cr, SUPERUSER_ID, ids[0], context=context)
-            assert order_line.order_id.website_session_id == request.httprequest.session['website_session_id']
+            assert order_line.order_id.website_session_id == request.session['website_session_id']
             product_id = product_id or order_line.product_id.id
 
         return self.product_id_change(
