@@ -566,8 +566,9 @@
     website.snippet.options = {};
     website.snippet.Option = openerp.Class.extend({
         // initialisation (don't overwrite)
-        init: function (BuildingBlock, $target, snippet_id) {
+        init: function (BuildingBlock, editor, $target, snippet_id) {
             this.BuildingBlock = BuildingBlock;
+            this.editor = editor;
             this.$target = $target;
             var styles = this.$target.data("snippet-option-ids") || {};
             styles[snippet_id] = this;
@@ -687,6 +688,11 @@
                 .first()
                 .addClass("active");
             this.$el.find('li:has(li[data-class].active)').addClass("active");
+        },
+        /* clean_for_save
+        *  function called just before save vue
+        */
+        clean_for_save: function () {
         }
     });
 
@@ -1382,7 +1388,7 @@
 
                 var style = val['snippet-option-id'];
                 var Editor = website.snippet.options[style] || website.snippet.Option;
-                var editor = self.styles[style] = new Editor(self.BuildingBlock, self.$target, style);
+                var editor = self.styles[style] = new Editor(self.BuildingBlock, self, self.$target, style);
                 $ul.append(editor.$el.addClass("snippet-style-" + style));
             });
             this.selector_siblings = this.selector_siblings.join(",");
@@ -1473,6 +1479,9 @@
         *  function called just before save vue
         */
         clean_for_save: function () {
+            for (var i in this.styles){
+                this.styles[i].clean_for_save();
+            }
             this.$target.removeAttr('contentEditable')
                 .find('*').removeAttr('contentEditable');
             this.$target.removeAttr('attributeEditable')

@@ -229,11 +229,13 @@
             dialog.on('click', '.btn-primary', function () {
                 def.resolve(field.val(), field, dialog);
                 dialog.remove();
+                $('.modal-backdrop').remove();
             });
         });
         dialog.on('hidden.bs.modal', function () {
             def.reject();
             dialog.remove();
+            $('.modal-backdrop').remove();
         });
         if (field.is('input[type="text"], select')) {
             field.keypress(function (e) {
