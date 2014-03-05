@@ -323,7 +323,7 @@ class Ecommerce(http.Controller):
 
         # must have a draft sale order with lines at this point, otherwise reset
         order = self.get_order()
-        if order and order.state != 'draft':
+        if order and order.state not in ['draft','shopping_cart']:
             request.registry['website'].sale_reset_order(cr, uid, context=context)
             return request.redirect('/shop/')
 
