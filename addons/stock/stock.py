@@ -3626,7 +3626,7 @@ class stock_pack_operation(osv.osv):
                     qty_rem[move.id] = prod_qty
                     qty_move_rem[move.id] = prod_qty
                     for quant in move.reserved_quant_ids:
-                        qty_rem -= quant.qty
+                        qty_rem[move.id] -= quant.qty
                         quants_done[quant.id] = quant.qty
                 sorted_moves = op.picking_id.move_lines
                 sorted_moves.sort(key=lambda x: qty_rem[x.id])
