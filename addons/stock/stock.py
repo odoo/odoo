@@ -1103,11 +1103,14 @@ class stock_picking(osv.osv):
     def do_recompute_remaining_quantities(self, cr, uid, picking_ids, context=None):
         pack_op_obj = self.pool.get('stock.pack.operation')
         quants_res = True
+        remaining_res = True
         for picking in self.browse(cr, uid, picking_ids, context=context):
             op_ids = [op.id for op in picking.pack_operation_ids]
             if op_ids:
-                quants_res = quants_res and pack_op_obj.recompute_rem_qty_from_operation(cr, uid, op_ids, context=context)
-        return quants_res
+                (quants_ok, remaining_ok) = pack_op_obj.recompute_rem_qty_from_operation(cr, uid, op_ids, context=context)
+                quants_res = quants_res and quants_ok
+                remaining_res = remaining_res and remaining_ok
+        return (quants_res, remaining_res)
 
     def _create_extra_moves(self, cr, uid, picking, context=None):
         '''This function creates move lines on a picking, at the time of do_transfer, based on
@@ -1142,6 +1145,7 @@ class stock_picking(osv.osv):
             stock_move_obj.do_unreserve(cr, uid, move_ids, context=context)
             stock_move_obj.action_assign(cr, uid, move_ids, context=context)
 
+    @profile(immediate=True)
     def do_transfer(self, cr, uid, picking_ids, context=None):
         """
             If no pack operation, we do simple action_done of the picking
@@ -1155,15 +1159,14 @@ class stock_picking(osv.osv):
                 self.action_done(cr, uid, [picking.id], context=context)
                 continue
             else:
-                quants_ok = self.do_recompute_remaining_quantities(cr, uid, [picking.id], context=context)
+                (quants_ok, remaining_ok) = self.do_recompute_remaining_quantities(cr, uid, [picking.id], context=context)
                 #create extra moves in the picking (unexpected product moves coming from pack operations)
-                if not quants_ok:
+                if not remaining_ok:
                     self._create_extra_moves(cr, uid, picking, context=context)
                 picking.refresh()
                 #split move lines eventually
                 todo_move_ids = []
                 toassign_move_ids = []
-                no_rereserve = True
                 for move in picking.move_lines:
                     remaining_qty = move.remaining_qty
                     if move.state in ('done', 'cancel'):
@@ -1171,17 +1174,15 @@ class stock_picking(osv.osv):
                         continue
                     elif move.state == 'draft':
                         toassign_move_ids.append(move.id)
-                        no_rereserve = False
                     if remaining_qty == 0:
                         if move.state in ('draft', 'assigned', 'confirmed'):
                             todo_move_ids.append(move.id)
                     elif remaining_qty > 0 and remaining_qty < move.product_qty:
-                        no_rereserve = False
                         new_move = stock_move_obj.split(cr, uid, move, remaining_qty, context=context)
                         todo_move_ids.append(move.id)
                         #Assign move as it was assigned before
                         toassign_move_ids.append(new_move)
-                if not quants_ok or not no_rereserve:
+                if (not quants_ok or not remaining_ok) and not picking.location_id.usage in ("supplier", "production", "inventory"):
                     self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
                 if todo_move_ids and not context.get('do_only_split'):
                     self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=context)
@@ -1316,7 +1317,7 @@ class stock_move(osv.osv):
 
     def get_price_unit(self, cr, uid, move, context=None):
         """ Returns the unit price to store on the quant """
-        return move.price_unit or move.product_id.standard_price
+        return move.price_unit #or move.product_id.standard_price
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
@@ -1923,6 +1924,7 @@ class stock_move(osv.osv):
         if check and not lot_id:
             raise osv.except_osv(_('Warning!'), _('You must assign a serial number for the product %s') % (move.product_id.name))
 
+    @profile(immediate=True)
     def action_assign(self, cr, uid, ids, context=None):
         """ Checks the product type and accordingly writes the state.
         """
@@ -2022,7 +2024,6 @@ class stock_move(osv.osv):
             packs |= set([q.package_id.id for q in move.quant_ids if q.package_id and q.qty > 0])
         return pack_obj._check_location_constraint(cr, uid, list(packs), context=context)
 
-    @profile(immediate=True)
     def action_done(self, cr, uid, ids, context=None):
         """ Process completly the moves given as ids and if all moves are done, it will finish the picking.
         """
@@ -3564,10 +3565,10 @@ class stock_pack_operation(osv.osv):
                     cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
                     (%s, %s, %s)""", (move.id, op.id, qty_on_link,))
                     qty_move_rem[move.id] -= qty_on_link
-#                     link_obj.create(cr, uid, {'move_id': move.id, 'operation_id': op.id, 'qty': qty_on_link}, context=context)
                     qty_to_assign -= qty_on_link
                     if qty_to_assign <= 0:
                         break
+            return qty_to_assign == 0
 
         def _check_quants_reserved(ops):
             if ops.package_id and not ops.product_id:
@@ -3576,7 +3577,8 @@ class stock_pack_operation(osv.osv):
                         #Entire packages means entire quants from those packages
                         if not quants_done.get(quant.id):
                             quants_done[quant.id] = 0
-                        link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': quant.qty}, context=context)
+                        cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
+                    (%s, %s, %s)""", (quant.reservation_id.id, ops.id, quant.qty,))
                         qty_move_rem[quant.reservation_id.id] -= quant.qty
             else:
                 qty = uom_obj._compute_qty_obj(cr, uid, ops.product_uom_id, ops.product_qty, ops.product_id.uom_id, context=context)
@@ -3604,8 +3606,9 @@ class stock_pack_operation(osv.osv):
                                 qty_todo = quant_qty
                                 quants_done[quant.id] = 0
                             qty -= qty_todo
-                            link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': qty_todo}, context=context)
-                            qty_move_rem[quant.reservation_id.id] -= qty_todo
+                            cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
+                    (%s, %s, %s)""", (move.id, ops.id, qty_todo,))
+                            qty_move_rem[move.id] -= qty_todo
 
         link_obj = self.pool.get('stock.move.operation.link')
         uom_obj = self.pool.get('product.uom')
@@ -3623,8 +3626,11 @@ class stock_pack_operation(osv.osv):
                 #sort moves in order to process first the ones that have already reserved quants
                 for move in op.picking_id.move_lines:
                     prod_qty = move.product_qty
-                    qty_rem[move.id] = prod_qty - move.reserved_availability
+                    qty_rem[move.id] = prod_qty
                     qty_move_rem[move.id] = prod_qty
+                    for quant in move.reserved_quant_ids:
+                        qty_rem -= quant.qty
+                        quants_done[quant.id] = quant.qty
                 sorted_moves = op.picking_id.move_lines
                 sorted_moves.sort(key=lambda x: qty_rem[x.id])
 
@@ -3633,22 +3639,24 @@ class stock_pack_operation(osv.osv):
                 link_obj.unlink(cr, uid, to_unlink_ids, context=context)
             _check_quants_reserved(op)
 
-        quants_reserve_ok = True
+        remaining_qty_ok = True
         for op in operations:
             op.refresh()
             if op.product_id:
                 #TODO: Remaining qty: UoM conversions are done twice
                 normalized_qty = self._get_remaining_qty_product_uom(cr, uid, op, context)
                 if normalized_qty > 0:
-                    quants_reserve_ok = False
-                    _create_link_for_product(op.product_id.id, normalized_qty)
+                    remaining_qty_ok = remaining_qty_ok and _create_link_for_product(op.product_id.id, normalized_qty)
             elif op.package_id:
                 prod_quants = self._get_remaining_prod_quantities(cr, uid, op, context=context)
                 for product_id, qty in prod_quants.items():
                     if qty > 0:
-                        quants_reserve_ok = False
-                        _create_link_for_product(product_id, qty)
-        return quants_reserve_ok
+                        if op.product_id.type != 'consu':
+                            quants_reserve_ok = False
+                        remaining_qty_ok = remaining_qty_ok and _create_link_for_product(product_id, qty)
+                        
+        quants_reserve_ok = all([quants_done[x] == 0 for x in quants_done.keys()])
+        return (quants_reserve_ok, remaining_qty_ok)
 
     def process_packaging(self, cr, uid, operation, quants, context=None):
         ''' Process the packaging of a given operation, after the quants have been moved. If there was not enough quants found
