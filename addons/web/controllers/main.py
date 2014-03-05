@@ -930,10 +930,11 @@ class Database(http.Controller):
             return simplejson.dumps([[],[{'error': openerp.tools.ustr(e), 'title': _('Backup Database')}]])
 
     @http.route('/web/database/restore', type='http', auth="none")
-    def restore(self, db_file, restore_pwd, new_db):
+    def restore(self, db_file, restore_pwd, new_db, mode):
         try:
+            copy = mode == 'copy'
             data = base64.b64encode(db_file.read())
-            request.session.proxy("db").restore(restore_pwd, new_db, data)
+            request.session.proxy("db").restore(restore_pwd, new_db, data, copy)
             return ''
         except openerp.exceptions.AccessDenied, e:
             raise Exception("AccessDenied")
