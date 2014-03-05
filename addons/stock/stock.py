@@ -30,7 +30,6 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FO
 from openerp import SUPERUSER_ID
 import openerp.addons.decimal_precision as dp
 import logging
-from profilehooks import profile
 _logger = logging.getLogger(__name__)
 
 #----------------------------------------------------------
@@ -1145,7 +1144,6 @@ class stock_picking(osv.osv):
             stock_move_obj.do_unreserve(cr, uid, move_ids, context=context)
             stock_move_obj.action_assign(cr, uid, move_ids, context=context)
 
-    @profile(immediate=True)
     def do_transfer(self, cr, uid, picking_ids, context=None):
         """
             If no pack operation, we do simple action_done of the picking
@@ -1924,7 +1922,6 @@ class stock_move(osv.osv):
         if check and not lot_id:
             raise osv.except_osv(_('Warning!'), _('You must assign a serial number for the product %s') % (move.product_id.name))
 
-    @profile(immediate=True)
     def action_assign(self, cr, uid, ids, context=None):
         """ Checks the product type and accordingly writes the state.
         """
