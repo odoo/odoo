@@ -74,6 +74,7 @@ class website_forum(http.Controller):
         domain = [('forum_id', '=', forum.id), ('parent_id', '=', False)]
         search = searches.get('search',False)
         type = searches.get('type',False)
+
         if not type:
             searches['type'] = 'all'
         if search:
@@ -238,7 +239,7 @@ class website_forum(http.Controller):
         values = {
             'tags': tags,
             'forum': forum,
-            'searches': {}
+            'searches': {'tags': True}
         }
         return request.website.render("website_forum.tag", values)
 

@@ -86,7 +86,7 @@
                         </div>
                         <div class="collapse navbar-collapse" id="oe-help-navbar-collapse">
                             <ul class="nav navbar-nav">
-                                <li>
+                                <li t-att-class="searches.get('type') in ('all', 'unanswered','followed') and 'active' or '' ">
                                     <a t-attf-href="/forum/#{ slug(forum) }">Questions</a>
                                 </li>
                                 <li t-att-class="searches.get('users') and 'active' or '' ">
@@ -484,7 +484,7 @@
                         <a href="#answers" data-toggle="tab"><t t-esc="len(user.answer_ids)"/> Answers</a>
                     </li>
                     <li>
-                        <a href="#karma" data-toggle="tab">Activity</a>
+                        <a href="#activity" data-toggle="tab">Activity</a>
                     </li>
                     <li>
                         <a href="#followed_question" data-toggle="tab">Followed Question</a>
@@ -507,11 +507,42 @@
                         <h1>Followed Questions</h1>
                     </div>
                     <div class="tab-pane" id="activity">
-                        <h1>Activity</h1>
+                        <t t-call="website_forum.user_activity" />
                     </div>
                 </div>
             </t>
         </template>
 
+        <template id="user_activity">
+            <ul class="media-list">
+                <li t-foreach="user.activity_ids" t-as="activity" class="media">
+                    <div class="col-xs-2">
+                        <small>
+                            <t t-esc="activity.create_date"/>
+                        </small>
+                    </div>
+                    <div class="col-xs-2">
+                        <div class="label label-info">
+                            <b t-field="activity.type" />
+                        </div>
+                    </div>
+                    <div class="col-xs-8" t-if="not activity.post_id.parent_id">
+                        <a>
+                            <t t-esc="activity.name"/>
+                        </a>
+                    </div>
+                    <div class="col-xs-8" t-if="activity.post_id.parent_id">
+                        <a>
+                            <t t-esc="activity.post_id.parent_id.name"/>
+                        </a>
+                        <span class="glyphicon glyphicon-play"> </span>
+                        <t t-esc="activity.post_id.content[0:100]" />
+                        <span>
+                            <strong> ... </strong>
+                        </span>
+                    </div>
+                </li>
+            </ul>
+        </template>
     </data>
 </openerp>

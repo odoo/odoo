@@ -78,10 +78,10 @@ class Post(osv.Model):
         'state': 'active',
         'active': True
     }
-    
+
     def create_history(self, cr, uid, ids, vals, context=None):
+        History = self.pool['website.forum.post.history']
         for post in ids:
-            history = self.pool.get('website.forum.post.history')
             if vals.get('content'):
                 create_date = vals.get('create_date')
                 res = {
@@ -91,11 +91,40 @@ class Post(osv.Model):
                 }
                 if vals.get('version'):
                     res.update({'version':vals.get('version')})
-                    
+
                 if vals.get('tags'):
                     res.update({'tags':vals.get('tags')})
-                    
-                history.create(cr, uid, res)
+
+                History.create(cr, uid, res, context=context)
+
+    def create_activity(self, cr, uid, ids, method, context=None):
+        Activity = self.pool['website.forum.activity']
+        for post in self.browse(cr, uid, ids, context=context):
+            res = {
+                'name': post.name,
+                'post_id': post.id,
+                'user_id': uid,
+            }
+
+            if post.parent_id:
+                res.update({'type': 'edited_answer'})
+                if method == 'create':
+                    res.update({'type': 'answered_question'})
+                if method == 'unlink':
+                    res.update({'type': 'deleted_answer'})
+                if method == 'vote':
+                    res.update({'type': 'voted_answer'})
+
+            else:
+                res.update({'type': 'edited_question'})
+                if method == 'create':
+                    res.update({'type': 'asked_question'})
+                if method == 'unlink':
+                    res.update({'type': 'deleted_question'})
+                if method == 'vote':
+                    res.update({'type': 'voteted_question'})
+
+            Activity.create(cr, uid, res, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -103,12 +132,18 @@ class Post(osv.Model):
         create_context = dict(context, mail_create_nolog=True)
         post_id = super(Post, self).create(cr, uid, vals, context=create_context)
         self.create_history(cr, uid, [post_id], vals, context)
+        self.create_activity(cr, uid, [post_id], method='create', context=context)
         return post_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        result = super(Post, self).write(cr, uid, ids, vals, context)
-        self.create_history(cr, uid, ids, vals, context)
+        result = super(Post, self).write(cr, uid, ids, vals, context=context)
+        self.create_history(cr, uid, ids, vals, context=context)
+        self.create_activity(cr, uid, ids, method='write', context=context)
         return result
+
+    def unlink(self, cr, uid, ids, context=None):
+        self.create_activity(cr, uid, ids, method='unlink', context=context)
+        return super(Post, self).unlink(cr, uid, ids, context=context)
 
 class Users(osv.Model):
     _inherit = 'res.users'
@@ -117,6 +152,7 @@ class Users(osv.Model):
         'question_ids':fields.one2many('website.forum.post', 'create_uid', 'Questions', domain=[('parent_id', '=', False)]),
         'answer_ids':fields.one2many('website.forum.post', 'create_uid', 'Answers', domain=[('parent_id', '!=', False)]),
         'vote_ids': fields.one2many('website.forum.post.vote', 'user_id', 'Votes'),
+        'activity_ids': fields.one2many('website.forum.activity', 'user_id', 'Activity'),
 
         # Field to remove
         'tags': fields.many2many('website.forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tag'),
@@ -137,11 +173,11 @@ class PostHistory(osv.Model):
     _description = 'Post History'
     _inherit = ['website.seo.metadata']
     _columns = {
-        'post_id': fields.many2one('website.forum.post', 'Post'),
+        'name': fields.char('Update Notes', size=64, required=True),
+        'post_id': fields.many2one('website.forum.post', 'Post', ondelete='cascade'),
         'create_date': fields.datetime('Created on', select=True, readonly=True),
         'create_uid': fields.many2one('res.users', 'Created by', select=True, readonly=True),
         'version': fields.integer('Version'),
-        'name': fields.char('Update Notes', size=64, required=True),
         'content': fields.html('Contents', help='Automatically sanitized HTML contents'),
         'tags': fields.many2many('website.forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tag'),
     }
@@ -150,23 +186,36 @@ class Vote(osv.Model):
     _name = 'website.forum.post.vote'
     _description = 'Vote'
     _columns = {
-        'post_id': fields.many2one('website.forum.post', 'Post'),
+        'post_id': fields.many2one('website.forum.post', 'Post', required=True),
         'user_id': fields.many2one('res.users', 'User'),
-        'vote': fields.integer('rate'), 
+        'vote': fields.integer('rate'),
     }
+
+    def create(self, cr, uid, vals, context=None):
+        vote_id = super(Vote, self).create(cr, uid, vals, context=context)
+        self.pool['website.forum.post'].create_activity(cr, uid, [vals.get('post_id')], method='vote', context=context)
+        return vote_id
 
 class ForumActivity(osv.Model):
     _name = "website.forum.activity"
     _description = "Activity"
+    _order = "id desc"
 
     _columns = {
-        'name': fields.char('Order Reference', size=64, required=True),
+        'name': fields.char('Name', size=64),
         'post_id': fields.many2one('website.forum.post', 'Post'),
         'user_id': fields.many2one('res.users', 'User'),
         'create_date': fields.datetime('Created on', select=True, readonly=True),
-        'create_uid': fields.many2one('res.users', 'Created by', select=True, readonly=True),
         # Use the gamification module instead!
         'badge_id': fields.many2one('res.groups', 'Badge'),
+        #NOTE: we can create new ForumActivityType object instead of selection
+        'type': fields.selection([('asked_question', 'asked a question'), ('answered_question', 'answered a question'),
+                                  ('edited_question', 'edited question'), ('edited_answer', 'edited answer'),
+                                  ('commented_question', 'commented question'), ('commented_answer', 'commented answer'),
+                                  ('deleted_question', 'deleted question'), ('deleted_answer', 'deleted answer'),
+                                  ('voted_question', 'voted question'), ('voted_answer', 'voted answer'),
+                                  ('received_badge', 'received badge'),
+                                  ], 'Activity Type'),
         'karma_add': fields.integer('Added Karma'),
         'karma_sub': fields.integer('Karma Removed')
    }
@@ -180,4 +229,3 @@ class Tags(osv.Model):
         'post_ids': fields.many2many('website.forum.post', 'forum_tag_que_rel', 'tag_id', 'forum_id', 'Questions', readonly=True),
         'forum_id': fields.many2one('website.forum', 'Forum', required=True)
    }
-
