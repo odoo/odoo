@@ -51,7 +51,8 @@
                 o.url = $('.cover')[0].style.background.replace('url(','').replace(')','');
             });
             editor.on('save', self, function (o) {
-                $('.cover').css("background-image", o.url && o.url !== "" ? 'url(' + o.url + ')' : "");
+                $('.cover').css("background-image", o.url && o.url !== "" ? 'url(' + o.url + ')' : "" )
+                .addClass('cover_header');
             });
             editor.appendTo('body');
         },
