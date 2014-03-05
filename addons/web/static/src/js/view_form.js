@@ -438,29 +438,44 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             $(".oe_form_pager_state", this.$pager).html(_.str.sprintf(_t("%d / %d"), this.dataset.index + 1, this.dataset.ids.length));
         }
     },
+    parse_on_change_v8: function (onchange, widget) {
+        // onchange V8: call onchange(field_values, field_name, tocheck)
+        var field_values = this.get_fields_values();
+        if (this.dataset.parent_view) {
+            // this belongs to a parent view: add parent field if possible
+            var parent_view = this.dataset.parent_view;
+            var child_name = this.dataset.child_name;
+            var parent_name = parent_view.get_field_desc(child_name).relation_field;
+            if (parent_name) {
+                // consider all fields except the inverse of the parent field
+                var parent_values = parent_view.get_fields_values();
+                delete parent_values[child_name];
+                field_values[parent_name] = parent_values;
+            }
+        }
+        // add all known subfields in views into tocheck
+        var tocheck = [];
+        _.each(this.fields, function(field, name) {
+            _.each(field.field.views, function(view) {
+                _.each(view.fields, function(subfield, subname) {
+                    tocheck.push(name + "." + subname);
+                });
+            });
+        });
+        return {
+            method: "onchange",
+            args: [field_values, widget.name, tocheck]
+        };
+    },
     parse_on_change: function (on_change, widget) {
         var self = this;
         var onchange = _.str.trim(on_change);
         var call = onchange.match(/^(\w+)\((.*?)\)$/);
         if (!call) {
-            if (!(onchange === "1" || onchange === "true")) {
-                throw new Error(_.str.sprintf(_t("Wrong on change format: %s"), onchange));
+            if (onchange === "1" || onchange === "true") {
+                return this.parse_on_change_v8(onchange, widget);
             }
-            // onchange V8: call onchange(field_values, field_name, tocheck)
-            var field_values = self.get_fields_values();
-            var tocheck = [];
-            _.each(self.fields, function(field, name) {
-                // add potential subfields in views into tocheck
-                _.each(field.field.views, function(view) {
-                    _.each(view.fields, function(subfield, subname) {
-                        tocheck.push(name + "." + subname);
-                    });
-                });
-            });
-            return {
-                method: "onchange",
-                args: [field_values, widget.name, tocheck]
-            };
+            throw new Error(_.str.sprintf(_t("Wrong on change format: %s"), onchange));
         }
 
         var method = call[1];
