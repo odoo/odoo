@@ -33,7 +33,7 @@ from openerp.osv.orm import Model
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import config
 from openerp.tools.translate import _
-from openerp.osv.orm import except_orm, browse_record
+from openerp.osv.orm import except_orm, browse_record, MAGIC_COLUMNS
 
 _logger = logging.getLogger(__name__)
 
@@ -300,6 +300,8 @@ class ir_model_fields(osv.osv):
 
     def _drop_column(self, cr, uid, ids, context=None):
         for field in self.browse(cr, uid, ids, context):
+            if field.name in MAGIC_COLUMNS:
+                continue
             model = self.pool[field.model]
             cr.execute('select relkind from pg_class where relname=%s', (model._table,))
             result = cr.fetchone()

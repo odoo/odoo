@@ -74,7 +74,7 @@ _schema = logging.getLogger(__name__ + '.schema')
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from openerp.tools import SKIPPED_ELEMENT_TYPES
 
-regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
+regex_order = re.compile('^( *([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
 # TODO for trunk, raise the value to 1000
@@ -1124,7 +1124,7 @@ class BaseModel(object):
 
         def _get_xml_id(self, cr, uid, r):
             model_data = self.pool.get('ir.model.data')
-            data_ids = model_data.search(cr, uid, [('model', '=', r._table_name), ('res_id', '=', r['id'])])
+            data_ids = model_data.search(cr, uid, [('model', '=', r._model._name), ('res_id', '=', r['id'])])
             if len(data_ids):
                 d = model_data.read(cr, uid, data_ids, ['name', 'module'])[0]
                 if d['module']:
@@ -1134,13 +1134,13 @@ class BaseModel(object):
             else:
                 postfix = 0
                 while True:
-                    n = self._table+'_'+str(r['id']) + (postfix and ('_'+str(postfix)) or '' )
+                    n = r._model._table+'_'+str(r['id']) + (postfix and ('_'+str(postfix)) or '' )
                     if not model_data.search(cr, uid, [('name', '=', n)]):
                         break
                     postfix += 1
                 model_data.create(cr, SUPERUSER_ID, {
                     'name': n,
-                    'model': self._name,
+                    'model': r._model._name,
                     'res_id': r['id'],
                     'module': '__export__',
                 })
@@ -2604,36 +2604,42 @@ class BaseModel(object):
                 r['__fold'] = folded.get(r[groupby] and r[groupby][0], False)
         return result
 
-    def _read_group_generate_order_by(self, orderby, aggregated_fields, groupby, query):
+    def _read_group_prepare(self, orderby, aggregated_fields, groupby, qualified_groupby_field, query, groupby_type=None):
         """
-        Generates the ORDER BY sql clause for the read group method. Adds the missing JOIN clause
+        Prepares the GROUP BY and ORDER BY terms for the read_group method. Adds the missing JOIN clause
         to the query if order should be computed against m2o field. 
         :param orderby: the orderby definition in the form "%(field)s %(order)s"
         :param aggregated_fields: list of aggregated fields in the query
         :param groupby: the current groupby field name
-        :param query: the query object used to construct the query afterwards
+        :param qualified_groupby_field: the fully qualified SQL name for the grouped field
+        :param osv.Query query: the query under construction
+        :param groupby_type: the type of the grouped field
+        :return: (groupby_terms, orderby_terms)
         """
-        orderby_list = []
-        ob = []
-        for order_splits in orderby.split(','):
-            order_split = order_splits.split()
-            orderby_field = order_split[0]
-            fields = openerp.osv.fields
-            if isinstance(self._all_columns[orderby_field].column, (fields.date, fields.datetime)):
-                continue
-            orderby_dir = len(order_split) == 2 and order_split[1].upper() == 'ASC' and 'ASC' or 'DESC'
-            if orderby_field == groupby:
-                orderby_item = self._generate_order_by(order_splits, query).replace('ORDER BY ', '')
-                if orderby_item:
-                    orderby_list.append(orderby_item)
-                    ob += [obi.split()[0] for obi in orderby_item.split(',')]
-            elif orderby_field in aggregated_fields:
-                orderby_list.append('%s %s' % (orderby_field,orderby_dir))
+        orderby_terms = []
+        groupby_terms = [qualified_groupby_field] if groupby else []
+        if not orderby:
+            return groupby_terms, orderby_terms    
 
-        if orderby_list:
-            return ' ORDER BY %s' % (','.join(orderby_list)), ob and ','.join(ob) or ''
-        else:
-            return '', ''
+        self._check_qorder(orderby)
+        for order_part in orderby.split(','):
+            order_split = order_part.split()
+            order_field = order_split[0]
+            if order_field == groupby:
+                if groupby_type == 'many2one':
+                    order_clause = self._generate_order_by(order_part, query).replace('ORDER BY ', '')
+                    if order_clause:
+                        orderby_terms.append(order_clause)
+                        groupby_terms += [order_term.split()[0] for order_term in order_clause.split(',')]
+                else:
+                    orderby_terms.append(order_part)
+            elif order_field in aggregated_fields:
+                orderby_terms.append(order_part)
+            else:
+                # Cannot order by a field that will not appear in the results (needs to be grouped or aggregated)
+                _logger.warn('%s: read_group order by `%s` ignored, cannot sort on empty columns (not grouped/aggregated)',
+                             self._name, order_part)
+        return groupby_terms, orderby_terms
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         """
@@ -2695,9 +2701,9 @@ class BaseModel(object):
 
         # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         fget = self.fields_get(cr, uid, fields)
-        flist = ''
-        group_count = group_by = groupby
         group_by_params = {}
+        select_terms = []
+        groupby_type = None
         if groupby:
             if fget.get(groupby):
                 groupby_type = fget[groupby]['type']
@@ -2717,12 +2723,9 @@ class BaseModel(object):
                         'interval': interval,
                     }
                     qualified_groupby_field = "to_char(%s,%%s)" % qualified_groupby_field
-                    flist = "%s as %s " % (qualified_groupby_field, groupby)
                 elif groupby_type == 'boolean':
                     qualified_groupby_field = "coalesce(%s,false)" % qualified_groupby_field
-                    flist = "%s as %s " % (qualified_groupby_field, groupby)
-                else:
-                    flist = qualified_groupby_field
+                select_terms.append("%s as %s " % (qualified_groupby_field, groupby))
             else:
                 # Don't allow arbitrary values, as this would be a SQL injection vector!
                 raise except_orm(_('Invalid group_by'),
@@ -2730,36 +2733,50 @@ class BaseModel(object):
 
         aggregated_fields = [
             f for f in fields
-            if f not in ('id', 'sequence')
+            if f not in ('id', 'sequence', groupby)
             if fget[f]['type'] in ('integer', 'float')
             if (f in self._all_columns and getattr(self._all_columns[f].column, '_classic_write'))]
         for f in aggregated_fields:
             group_operator = fget[f].get('group_operator', 'sum')
-            if flist:
-                flist += ', '
             qualified_field = self._inherits_join_calc(f, query)
-            flist += "%s(%s) AS %s" % (group_operator, qualified_field, f)
+            select_terms.append("%s(%s) AS %s" % (group_operator, qualified_field, f))
 
-        order = orderby or groupby
-        orderby_clause = ''
-        ob = ''
-        if order:
-            orderby_clause, ob = self._read_group_generate_order_by(order, aggregated_fields, groupby, query)
-
-        gb = groupby and (' GROUP BY ' + qualified_groupby_field) or ''
+        order = orderby or groupby or ''
+        groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, groupby, qualified_groupby_field, query, groupby_type)
 
         from_clause, where_clause, where_clause_params = query.get_sql()
         if group_by_params and group_by_params.get('groupby_format'):
             where_clause_params = [group_by_params['groupby_format']] + where_clause_params + [group_by_params['groupby_format']]
-        where_clause = where_clause and ' WHERE ' + where_clause
-        limit_str = limit and ' limit %d' % limit or ''
-        offset_str = offset and ' offset %d' % offset or ''
         if len(groupby_list) < 2 and context.get('group_by_no_leaf'):
-            group_count = '_'
-        cr.execute('SELECT min(%s.id) AS id, count(%s.id) AS %s_count' % (self._table, self._table, group_count) + (flist and ',') + flist + ' FROM ' + from_clause + where_clause + gb + (ob and ',') + ob + orderby_clause + limit_str + offset_str, where_clause_params)
-        alldata = {}
-        groupby = group_by
+            count_field = '_'
+        else:
+            count_field = groupby
 
+        prefix_terms = lambda prefix, terms: (prefix + " " + ",".join(terms)) if terms else ''
+        prefix_term = lambda prefix, term: ('%s %s' % (prefix, term)) if term else ''
+
+        query = """
+            SELECT min(%(table)s.id) AS id, count(%(table)s.id) AS %(count_field)s_count
+                   %(extra_fields)s
+            FROM %(from)s
+            %(where)s
+            %(groupby)s
+            %(orderby)s
+            %(limit)s
+            %(offset)s
+        """ % {
+            'table': self._table,
+            'count_field': count_field,
+            'extra_fields': prefix_terms(',', select_terms),
+            'from': from_clause,
+            'where': prefix_term('WHERE', where_clause),
+            'groupby': prefix_terms('GROUP BY', groupby_terms),
+            'orderby': prefix_terms('ORDER BY', orderby_terms),
+            'limit': prefix_term('LIMIT', int(limit) if limit else None),
+            'offset': prefix_term('OFFSET', int(offset) if limit else None),
+        }
+        cr.execute(query, where_clause_params)
+        alldata = {}
         fetched_data = cr.dictfetchall()
 
         data_ids = []
@@ -2769,8 +2786,6 @@ class BaseModel(object):
             alldata[r['id']] = r
             data_ids.append(r['id'])
             del r['id']
-
-
 
         if groupby:
             data = self.read(cr, uid, data_ids, [groupby], context=context)
