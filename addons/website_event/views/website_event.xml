@@ -383,7 +383,7 @@
             <div class="country_events_list">
                 <div class="css_editable_mode_hidden">
                     <t t-if="country">
-                        <img class="img-rounded img-responsive" t-att-src="'/website/image?model=res.country&amp;field=image&amp;id='+str(country.id)"></img>
+                        <img style="max-height:10em;" class="img-rounded img-responsive" t-att-src="'/website/image?model=res.country&amp;field=image&amp;id='+str(country.id)"></img>
                         <h4><b>Events In <span t-esc="country.name"></span></b></h4>
                     </t>
                     <t t-if="not country">
