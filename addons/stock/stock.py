@@ -1148,7 +1148,7 @@ class stock_picking(osv.osv):
             stock_move_obj.do_unreserve(cr, uid, move_ids, context=context)
             stock_move_obj.action_assign(cr, uid, move_ids, context=context)
 
-
+    @profile(immediate=True)
     def do_transfer(self, cr, uid, picking_ids, context=None):
         """
             If no pack operation, we do simple action_done of the picking
@@ -3557,7 +3557,7 @@ class stock_pack_operation(osv.osv):
         res_id = super(stock_pack_operation, self).create(cr, uid, vals, context=context)
         self.recompute_rem_qty_from_operation(cr, uid, [res_id], context=context)
         return res_id
-    @profile(immediate=True)
+    
     def recompute_rem_qty_from_operation(self, cr, uid, op_ids, context=None):
         def _create_link_for_product(product_id, qty):
             qty_to_assign = qty
@@ -3610,6 +3610,7 @@ class stock_pack_operation(osv.osv):
                             cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
                     (%s, %s, %s)""", (move.id, ops.id, qty_todo,))
                             qty_move_rem[move.id] -= qty_todo
+                qty_op_rem[ops] = qty
 
         link_obj = self.pool.get('stock.move.operation.link')
         uom_obj = self.pool.get('product.uom')
@@ -3619,9 +3620,13 @@ class stock_pack_operation(osv.osv):
         prod_move = {}
         qty_rem = {}
         qty_move_rem = {}
+        qty_op_rem = {}
         operations = self.browse(cr, uid, op_ids, context=context)
         operations.sort(key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
         sorted_moves = []
+        cr.execute("""DELETE FROM stock_move_operation_link WHERE 
+            operation_id in %s
+            """, (tuple([x.id for x in operations]),))
         for op in operations:
             if not sorted_moves:
                 #sort moves in order to process first the ones that have already reserved quants
@@ -3640,6 +3645,7 @@ class stock_pack_operation(osv.osv):
                     else:
                         prod_move[move.product_id.id].append(move)
 
+            
             to_unlink_ids = [x.id for x in op.linked_move_operation_ids]
             if to_unlink_ids:
                 link_obj.unlink(cr, uid, to_unlink_ids, context=context)
@@ -3650,7 +3656,7 @@ class stock_pack_operation(osv.osv):
             op.refresh()
             if op.product_id:
                 #TODO: Remaining qty: UoM conversions are done twice
-                normalized_qty = self._get_remaining_qty_product_uom(cr, uid, op, context)
+                normalized_qty = qty_op_rem[op]
                 if normalized_qty > 0:
                     remaining_qty_ok = remaining_qty_ok and _create_link_for_product(op.product_id.id, normalized_qty)
             elif op.package_id:
