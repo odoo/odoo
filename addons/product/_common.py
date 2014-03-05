@@ -18,12 +18,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
+from openerp import tools
+
+import math
+import logging
+_logger = logging.getLogger(__name__)
+
+
 def rounding(f, r):
+	# TODO for trunk: log deprecation warning
+	# _logger.warning("Deprecated rounding method, please use tools.float_round to round floats.")
+	return tools.float_round(f, precision_rounding=r)
+
+# TODO for trunk: add rounding method parameter to tools.float_round and remove this method
+def ceiling(f, r):
     if not r:
         return f
-    return round(f / r) * r
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+    return math.ceil(f / r) * r

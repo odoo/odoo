@@ -21,7 +21,7 @@
 
 import time
 
-from _common import rounding
+from _common import ceiling
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -296,7 +296,7 @@ class product_pricelist(osv.osv):
                         if price is not False:
                             price_limit = price
                             price = price * (1.0+(res['price_discount'] or 0.0))
-                            price = rounding(price, res['price_round']) #TOFIX: rounding with tools.float_rouding
+                            price = ceiling(price, res['price_round'])
                             price += (res['price_surcharge'] or 0.0)
                             if res['price_min_margin']:
                                 price = max(price, price_limit+res['price_min_margin'])
