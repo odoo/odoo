@@ -31,7 +31,7 @@ def fragment_to_query_string(func):
                     var s = l.search ? (l.search === '?' ? '' : '&') : '?';
                     r = l.pathname + l.search + s + q;
                 }
-                if (r == l) {
+                if (r == l.pathname) {
                     r = '/';
                 }
                 window.location = r;
