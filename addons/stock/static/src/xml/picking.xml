@@ -70,14 +70,13 @@
 
                 <tbody>
                     <t t-foreach="widget.get_rows()" t-as="row">
-                        <tr t-att-class="row.classes">
+                        <tr t-att-class="row.classes + 'js_pack_op_line'">
                             <td> <input type="checkbox"/></td>
                             <td> <t t-esc="row.cols.product" /> </td>
                             <td class='text-center'> <t t-esc="row.cols.qty" /> <t t-esc="row.cols.uom" /> </td>
                             <td class='text-center'> <t t-esc="row.cols.rem" /> </td>
-                            <!-- <td class='text-center'>  </td> -->
-                            <td t-att-class="(row.highlight_src === true ? 'warning':'') "> <t t-esc="row.cols.loc" /> </td>
-                            <td t-att-class="(row.highlight_dst === true ? 'warning':'') "> <t t-esc="row.cols.dest" /> </td>
+                            <td class="js_loc"> <t t-esc="row.cols.loc" /> </td>
+                            <td class="js_loc"> <t t-esc="row.cols.dest" /> </td>
                             <td> <t t-esc="row.cols.lot" /> </td>
                             <td> <t t-esc="row.cols.pack" /> </td>
                             <td> <t t-esc="row.cols.container" /> </td>

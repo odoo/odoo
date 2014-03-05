@@ -26,7 +26,6 @@ function openerp_picking_widgets(instance){
         template: 'PickingEditorWidget',
         init: function(parent,options){
             this._super(parent,options);
-            this.search_result = '';
         },
         get_rows: function(){
             var model = this.getParent();
@@ -34,8 +33,6 @@ function openerp_picking_widgets(instance){
             var self = this;
 
             _.each( model.packoplines, function(packopline){
-                var select_search_src = (packopline.location_id[1] && packopline.location_id[1].indexOf(self.search_result) !== -1);
-                var select_search_dst = (packopline.location_dest_id[1] && packopline.location_dest_id[1].indexOf(self.search_result) !== -1);
                 rows.push({
                     cols: { product: packopline.product_id[1],
                             qty: packopline.product_qty,
@@ -48,9 +45,7 @@ function openerp_picking_widgets(instance){
                             dest: packopline.location_dest_id[1],
                             id:  packopline.product_id[0],
                     },
-                    classes: (packopline.qty_remaining < 0 ? 'danger' : '') + (self.search_result === '' || select_search_src || select_search_dst ? '' : 'hidden'),
-                    highlight_src: self.search_result !== '' && select_search_src,
-                    highlight_dst: self.search_result !== '' && select_search_dst,
+                    classes: (packopline.qty_remaining < 0 ? 'danger' : ''),
                 });
             });
             
@@ -68,7 +63,17 @@ function openerp_picking_widgets(instance){
             $('td.navbar').html('<div></div>');
         },
         on_searchbox: function(query){
-            this.search_result = query;
+            var self = this;
+            if (query !== '') {
+                this.$('.js_loc:not(.js_loc:contains('+query+'))').removeClass('warning');
+                this.$('.js_loc:contains('+query+')').addClass('warning');
+                this.$('.js_pack_op_line:not(.js_pack_op_line:has(.js_loc:contains('+query+')))').addClass('hidden');
+                this.$('.js_pack_op_line:has(.js_loc:contains('+query+'))').removeClass('hidden');
+            }
+            if (query === '') {
+                this.$('.js_loc').removeClass('warning');
+                this.$('.js_pack_op_line.hidden').removeClass('hidden');
+            }
             return true;
         }
     });
@@ -470,7 +475,7 @@ function openerp_picking_widgets(instance){
         on_searchbox: function(query){
             var self = this;
             self.picking_editor.on_searchbox(query);
-            self.refresh_ui(self.picking);
+            // self.refresh_ui(self.picking);
         },
         // reloads the data from the provided picking and refresh the ui. 
         // (if no picking_id is provided, gets the first picking in the db)
