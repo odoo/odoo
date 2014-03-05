@@ -199,7 +199,7 @@ class hr_evaluation(osv.Model):
                     int_id = hr_eval_inter_obj.create(cr, uid, {
                         'evaluation_id': evaluation.id,
                         'survey_id': phase.survey_id.id,
-                        'date_deadline': (parser.parse(datetime.now().strftime('%Y-%m-%d')) + relativedelta(months =+ 1)).strftime('%Y-%m-%d'),
+                        'deadline': (parser.parse(datetime.now().strftime('%Y-%m-%d')) + relativedelta(months =+ 1)).strftime('%Y-%m-%d'),
                         'user_id': child.user_id.id,
                         'user_to_review_id': evaluation.employee_id.id
                     }, context=context)
@@ -263,7 +263,7 @@ class hr_evaluation(osv.Model):
             if employee_id.parent_id and employee_id.parent_id.user_id:
                 vals['message_follower_ids'] = [(4, employee_id.parent_id.user_id.partner_id.id)]
         if 'date' in vals:
-            new_vals = {'date_deadline': vals.get('date')}
+            new_vals = {'deadline': vals.get('date')}
             obj_hr_eval_iterview = self.pool.get('hr.evaluation.interview')
             for evalutation in self.browse(cr, uid, ids, context=context):
                 for survey_req in evalutation.survey_request_ids:
