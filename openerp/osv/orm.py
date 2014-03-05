@@ -5477,6 +5477,13 @@ class BaseModel(object):
             # consider field_name below, in case the value is dirty
             record_values[field_name] = record[field_name]
 
+            # map fields to the corresponding set of subfields to consider
+            subfields = defaultdict(set)
+            for dotname in (tocheck or ()):
+                if '.' in dotname:
+                    name, subname = dotname.split('.')
+                    subfields[name].add(subname)
+
             # determine result, and return it
             changed = {}
             for name, oldval in record_values.iteritems():
@@ -5484,7 +5491,7 @@ class BaseModel(object):
                 if newval != oldval or \
                         isinstance(newval, BaseModel) and newval._dirty:
                     field = self._fields[name]
-                    changed[name] = field.convert_to_write(newval, self)
+                    changed[name] = field.convert_to_write(newval, self, subfields[name])
 
             return {'value': changed}
 

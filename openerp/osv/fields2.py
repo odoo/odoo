@@ -236,10 +236,13 @@ class Field(object):
         """
         return value
 
-    def convert_to_write(self, value, target=None):
+    def convert_to_write(self, value, target=None, fnames=None):
         """ convert `value` from the cache to a valid value for method
-            :meth:`BaseModel.write`. The optional parameter `target` gives the
-            record to be modified by this value.
+            :meth:`BaseModel.write`.
+
+            :param target: optional, the record to be modified with this value
+            :param fnames: for relational fields only, an optional collection of
+                field names to convert
         """
         return self.convert_to_read(value)
 
@@ -886,7 +889,7 @@ class Many2one(_Relational):
         else:
             return value.id
 
-    def convert_to_write(self, value, target=None):
+    def convert_to_write(self, value, target=None, fnames=None):
         return value.id
 
     def convert_to_export(self, value):
@@ -950,7 +953,7 @@ class _RelationalMulti(_Relational):
     def convert_to_read(self, value, use_name_get=True):
         return value.unbrowse()
 
-    def convert_to_write(self, value, target=None):
+    def convert_to_write(self, value, target=None, fnames=None):
         result = []
 
         # remove/delete former records
@@ -962,13 +965,16 @@ class _RelationalMulti(_Relational):
         else:
             result.append((5,))
 
+        if fnames is None:
+            # take all fields in cache, except the inverse of self
+            fnames = set(self.model._fields)
+            if self.inverse_field:
+                fnames.discard(self.inverse_field.name)
+
         # add new and existing records
         for record in value:
             if not record._id or record._dirty:
-                # take all fields in cache, except the inverse of self!
-                values = dict(record._cache)
-                if self.inverse_field:
-                    values.pop(self.inverse_field.name, None)
+                values = dict((k, v) for k, v in record._cache.iteritems() if k in fnames)
                 values = record._convert_to_write(values)
                 if not record._id:
                     result.append((0, 0, values))
