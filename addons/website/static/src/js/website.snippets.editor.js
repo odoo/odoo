@@ -267,12 +267,6 @@
             }
             if (this.$active_snipped_id) {
                 this.snippet_blur(this.$active_snipped_id);
-                var $overlay = this.$active_snipped_id.data("overlay");
-                if ($overlay) {
-                    $overlay.remove();
-                    this.$active_snipped_id.removeData("overlay");
-                }
-                this.$active_snipped_id.removeData("snippet-editor");
                 this.$active_snipped_id = false;
             }
             if ($snippet && $snippet.length) {
@@ -432,7 +426,6 @@
                                 $target.data("overlay").remove();
                                 $target.removeData("overlay");
                             }
-                            self.create_overlay($target);
                             $target.find("[data-snippet-id]").each(function () {
                                 var $snippet = $(this);
                                 $snippet.removeData("snippet-editor");
@@ -440,10 +433,10 @@
                                     $snippet.data("overlay").remove();
                                     $snippet.removeData("overlay");
                                 }
-                                self.create_overlay($snippet);
                             });
                             // end
 
+                            self.create_overlay($target);
                             self.make_active($target);
                         },0);
                     } else {
