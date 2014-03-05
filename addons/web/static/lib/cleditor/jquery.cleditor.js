@@ -47,7 +47,7 @@
       docCSSFile:   // CSS file used to style the document contained within the editor
                     "", 
       bodyStyle:    // style to assign to document body contained within the editor
-                    "margin:4px; font:10pt Arial,Verdana; cursor:text"
+                    "margin:4px; color:#4c4c4c; font-size:13px; font-family:\"Lucida Grande\",Helvetica,Verdana,Arial,sans-serif; cursor:text"
     },
 
     // Define all usable toolbar buttons - the init string property is 
@@ -306,8 +306,17 @@
 
     // Bind the window resize event when the width or height is auto or %
     if (/auto|%/.test("" + options.width + options.height))
-      $(window).bind('resize.cleditor', function () { refresh(editor); });
-
+      $(window).bind('resize.cleditor', function () {
+        //Forcefully blurred iframe contentWindow, chrome, IE, safari doesn't trigger blur on window resize and due to which text disappears
+        var contentWindow = editor.$frame[0].contentWindow;
+        if(!$.browser.mozilla && contentWindow){
+          $(contentWindow).trigger('blur');
+        }
+        // CHM Note MonkeyPatch: if the DOM is not remove, refresh the cleditor
+        if(editor.$main.parent().parent().size()) {
+          refresh(editor);
+        }
+      });
     // Create the iframe and resize the controls
     refresh(editor);
 
@@ -357,7 +366,6 @@
 
   // change - shortcut for .bind("change", handler) or .trigger("change")
   fn.change = function change(handler) {
-    console.log('change test');
     var $this = $(this);
     return handler ? $this.bind(CHANGE, handler) : $this.trigger(CHANGE);
   };
@@ -929,7 +937,7 @@
 
       var $toolbar = editor.$toolbar,
           $group = $toolbar.children("div:last"),
-          wid = $main.width();
+          wid = /%/.test("" + options.width) ? options.width : $main.width();
 
       // Resize the toolbar
       var hgt = $group.offset().top + $group.outerHeight() - $toolbar.offset().top + 1;
