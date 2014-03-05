@@ -290,6 +290,7 @@ class WebsiteBlog(http.Controller):
             request.cr, request.uid, {
                 'blog_id': blog_id,
                 'name': _("Blog Post Title"),
+                'sub_title': _("Subtitle"),
                 'content': '',
                 'website_published': False,
             }, context=create_context)
