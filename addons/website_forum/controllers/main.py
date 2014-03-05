@@ -188,11 +188,11 @@ class website_forum(http.Controller):
             }, context=create_context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post_id))
 
-    @http.route(['/forum/<model("website.forum"):forum>/question/editanswer'], type='http', auth="user", website=True, multilang=True)
-    def edit_answer(self, forum, post_id, **kwargs):
+    @http.route(['/forum/<model("website.forum"):forum>/question/<model("website.forum.post"):post>/editanswer'], type='http', auth="user", website=True, multilang=True)
+    def edit_answer(self, forum, post, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         request.registry['res.users'].write(cr, uid, uid, {'forum': True}, context=context)
-        post = request.registry['website.forum.post'].browse(cr, uid, int(post_id), context=context)
+        post = request.registry['website.forum.post'].browse(cr, uid, post.id, context=context)
         for answer in post.child_ids:
             if answer.create_uid.id == request.uid:
                 post_answer = answer

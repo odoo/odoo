@@ -250,45 +250,19 @@
             <t t-call="website_forum.header">
                 <h1 class="mt0">Ask your Question</h1>
                 <ul>
-                    <li>
-                        please, try to make your question interesting to others
-                    </li>
-                    <li>
-                        provide enough details and, if possible, give an example
-                    </li>
-                    <li>
-                        be clear and concise, avoid unnecessary introductions (Hi,
-                        ...
-                        Thanks...)
-                    </li>
+                    <li> please, try to make your question interesting to others </li>
+                    <li> provide enough details and, if possible, give an example </li>
+                    <li> be clear and concise, avoid unnecessary introductions (Hi, ... Thanks...) </li>
                 </ul>
-
                 <form t-attf-action="/forum/#{ slug(forum) }/question/ask/" method="post" role="form">
-                    <div class="col-xs-12">
-                        <input type="text" name="question_name" required="True"
-                            t-attf-value="#{question_name or ''}" id="textbox_user_question"
-                            class="form-control" placeholder="Enter your Question" />
-                    </div>
-                    <div class="col-xs-12">
-                        Please enter a descriptive question (should
-                        finish by a '?')
-                    </div>
-                    <div class="col-xs-12">
-                        <textarea name="question_content" required="True"
-                            t-attf-value="#{question_content or ''}" class="form-control"
-                            id="textarea_ckeditor" rows="10" style="width : 100%" />
-                    </div>
-                    <div class="col-xs-12">
-                        Tags:
-                    </div>
-                    <div class="col-xs-12">
-                        <input type="text" name="question_tag" t-attf-value="#{question_tag or ''}"
-                            class="form-control" id="textarea_tags" style="width : 100%" />
-                    </div>
-                    <div class="col-xs-8">
-                        <button class="btn btn-default" id="btn_ask_your_question"
-                            style="background-color : #df3f3f; color: white !important;">Post Your Question</button>
-                    </div>
+                    <input type="text" name="question_name" required="True" t-attf-value="#{question_name or ''}"
+                        class="form-control" placeholder="Enter your Question"/>
+                    <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
+                    <textarea name="question_content" required="True" class="form-control"
+                        t-attf-value="#{question_content or ''}" id="textarea_ckeditor"/>
+                    <input type="text" name="question_tag" t-attf-value="#{question_tag or ''}"
+                        class="form-control" style="margin-top: 10px" placeholder="Tags"/>
+                    <button class="btn btn-default forum_button" id="btn_ask_your_question"> Post Your Question </button>
                 </form>
                 <script type="text/javascript">
                     CKEDITOR.replace("textarea_ckeditor");
@@ -297,84 +271,36 @@
         </template>
 
         <template id="post_answer">
-            <div class="col-md-9 col-xs-11">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="page-header">
-                            <h3>Your answer</h3>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <p>
-                            <b>Please try to give a substantial answer</b>
-                            .
-                            If you wanted to comment on the question or answer, just
-                            <b>use the commenting tool.</b>
-                            Please remember that you can always
-                            <b>revise your answers</b>
-                            - no need to answer the same question twice. Also, please
-                            <b>don't forget to vote</b>
-                            - it really helps to select the best questions and answers!
-                        </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <form t-attf-action="/forum/#{ slug(forum) }/question/postanswer/" method="post" role="form">
-                        <div class="col-xs-12">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <textarea name="answer_content" required="True"
-                                        t-attf-value="#{answer_content or ''}" class="form-control"
-                                        id="textarea_ckeditor" rows="10" style="width : 100%" />
-                                </div>
-                            </div>
-                        </div>
-                        <input name="post_id" t-att-value="question.id" type="hidden" />
-                        <div class="col-xs-8">
-                            <button class="btn btn-default"
-                                style="background-color : #df3f3f; color: white !important;" id="btn_ask_your_question">
-                                Post Your Answer
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                <script type="text/javascript">
-                    CKEDITOR.replace("textarea_ckeditor");
-                </script>
-            </div>
+            <h3 class="mt10">Your answer</h3>
+            <p>
+                <b>Please try to give a substantial answer.</b> If you wanted to comment on the question or answer, just
+                <b>use the commenting tool.</b> Please remember that you can always <b>revise your answers</b>
+                - no need to answer the same question twice. Also, please <b>don't forget to vote</b>
+                - it really helps to select the best questions and answers!
+            </p>
+            <form t-attf-action="/forum/#{ slug(forum) }/question/postanswer/" method="post" role="form">
+                <textarea name="answer_content" t-attf-value="#{answer_content or ''}"
+                    class="form-control" id="textarea_ckeditor" required="True"/>
+                <input name="post_id" t-att-value="question.id" type="hidden"/>
+                <button class="btn btn-default forum_button" id="btn_ask_your_question"> Post Your Answer </button>
+            </form>
+            <script type="text/javascript">
+                CKEDITOR.replace("textarea_ckeditor");
+            </script>
         </template>
 
         <template id="edit_answer">
-            <t t-call="website.layout">
-                <div class="container">
-                    <div class="col-md-9 col-xs-11">
-                        <div class="row">
-                            <h3>Edit answer</h3>
-                        </div>
-                        <div class="row">
-                            <form t-attf-action="/forum/#{ slug(forum) }/question/saveanswer/" method="post" role="form">
-                                <div >
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <textarea name="answer_content" required="True" value="content" class="form-control"
-                                                id="textarea_ckeditor" rows="10" style="width : 100%" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <input name="post_id" t-att-value="post.id" type="hidden"/>
-                                <input name="answer_id" t-att-value="post_answer.id" type="hidden"/>
-                                <div>
-                                    <button class="btn btn-default btn-lg">
-                                        Save edit
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                        <script type="text/javascript">
-                            CKEDITOR.replace("textarea_ckeditor");
-                        </script>
-                    </div>
-                </div>
+            <t t-call="website_forum.header">
+                <h3>Edit answer</h3>
+                <form t-attf-action="/forum/#{ slug(forum) }/question/saveanswer/" method="post" role="form">
+                    <textarea name="answer_content" required="True" value="content" class="form-control" id="textarea_ckeditor"/>
+                    <input name="post_id" t-att-value="post.id" type="hidden"/>
+                    <input name="answer_id" t-att-value="post_answer.id" type="hidden"/>
+                    <button class="btn btn-default btn-lg forum_button"> Save edit </button>
+                </form>
+                <script type="text/javascript">
+                    CKEDITOR.replace("textarea_ckeditor");
+                </script>
             </t>
         </template>
 
@@ -455,6 +381,10 @@
                 </div>
                 <div t-if="not answer_done">
                     <t t-call="website_forum.post_answer"/>
+                </div>
+                <div t-if="answer_done">
+                    <a class="btn btn-primary mb16" t-attf-href="/forum/#{ slug(forum) }/question/#{ question.id }/editanswer">Edit Your Previous Answer</a>
+                    <span style="margin-bottom: 10px;">(only one answer per question is allowed)</span>
                 </div>
             </t>
         </template>
