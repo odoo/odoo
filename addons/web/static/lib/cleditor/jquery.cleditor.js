@@ -306,8 +306,12 @@
 
     // Bind the window resize event when the width or height is auto or %
     if (/auto|%/.test("" + options.width + options.height))
-      $(window).bind('resize.cleditor', function () { refresh(editor); });
-
+      $(window).bind('resize.cleditor', function () {
+        // CHM Note MonkeyPatch: if the DOM is not remove, refresh the cleditor
+        if(editor.$main.parent().parent().size()) {
+          refresh(editor);
+        }
+      });
     // Create the iframe and resize the controls
     refresh(editor);
 
