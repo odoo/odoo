@@ -5188,8 +5188,9 @@ class BaseModel(object):
             initialized with the `values` dictionary. Such a record does not
             exist in the database.
         """
-        assert 'id' not in values, "New records do not have an 'id'."
-        record = self.browse((NewId(),))
+        # if 'id' is present, browse the corresponding record
+        new_id = values.get('id') or NewId()
+        record = self.browse([new_id])
         record._cache.update(self._convert_to_cache(values))
 
         if record._scope.draft:
