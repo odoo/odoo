@@ -3212,7 +3212,7 @@ class BaseModel(object):
                                 msg = "Table '%s': dropping index for column '%s' of type '%s' as it is not required anymore"
                                 _schema.debug(msg, self._table, k, f._type)
 
-                            if isinstance(f, fields.many2one) or isinstance(f, fields.function) and f._type == 'many2one' and f.store:
+                            if isinstance(f, fields.many2one) or (isinstance(f, fields.function) and f._type == 'many2one' and f.store):
                                 dest_model = self.pool.get(f._obj)
                                 if dest_model._table != 'ir_actions':
                                     self._m2o_fix_foreign_key(cr, self._table, k, dest_model, f.ondelete)
@@ -3247,7 +3247,7 @@ class BaseModel(object):
                                 todo_end.append((order, self._update_store, (f, k)))
 
                             # and add constraints if needed
-                            if isinstance(f, fields.many2one) or isinstance(f, fields.function) and f._type == 'many2one' and f.store:
+                            if isinstance(f, fields.many2one) or (isinstance(f, fields.function) and f._type == 'many2one' and f.store):
                                 if not self.pool.get(f._obj):
                                     raise except_orm('Programming Error', 'There is no reference available for %s' % (f._obj,))
                                 dest_model = self.pool.get(f._obj)
