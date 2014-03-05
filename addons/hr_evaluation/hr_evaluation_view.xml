@@ -129,7 +129,7 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="action"/>
-                    <field name="survey_id"/>
+                    <field name="survey_id" domain="[('res_model','=','hr_evaluation')]"/>
                     <field name="wait"/>
                 </tree>
             </field>
@@ -188,7 +188,7 @@
                                 </div>
                                 <group>
                                     <group>
-                                        <field name="survey_id"/>
+                                        <field name="survey_id" domain="[('res_model','=','hr_evaluation')]"/>
                                         <field name="user_to_review_id"/>
                                         <field name="user_id" string="Interviewer" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_hr_manager']}"/>
                                     </group>
@@ -310,7 +310,7 @@
                         </div>
                         <group>
                             <group>
-                                <field name="survey_id"/>
+                                <field name="survey_id" domain="[('res_model','=','hr_evaluation')]"/>
                                 <field name="user_to_review_id"/>
                                 <field name="user_id" string="Interviewer" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_hr_manager']}"/>
                             </group>
@@ -331,7 +331,7 @@
             <field name="arch" type="xml">
                 <tree string="Interview Appraisal">
                     <field name="deadline" string="Deadline Date"/>
-                    <field name="survey_id"/>
+                    <field name="survey_id" domain="[('res_model','=','hr_evaluation')]"/>
                     <field name="user_id" string="Interviewer"/>
                     <field name="user_to_review_id"/>
                     <field name="request_id" readonly="1" invisible="True"/>
