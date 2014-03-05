@@ -516,33 +516,18 @@
         <template id="user_activity">
             <ul class="media-list">
                 <li t-foreach="user.activity_ids" t-as="activity" class="media">
-                    <div class="col-xs-2">
-                        <small>
-                            <t t-esc="activity.create_date"/>
-                        </small>
-                    </div>
-                    <div class="col-xs-2">
-                        <div class="label label-info">
-                            <b t-field="activity.type" />
-                        </div>
-                    </div>
-                    <div class="col-xs-8" t-if="not activity.post_id.parent_id">
-                        <a>
-                            <t t-esc="activity.name"/>
-                        </a>
-                    </div>
-                    <div class="col-xs-8" t-if="activity.post_id.parent_id">
-                        <a>
-                            <t t-esc="activity.post_id.parent_id.name"/>
-                        </a>
-                        <span class="glyphicon glyphicon-play"> </span>
-                        <t t-esc="activity.post_id.content[0:100]" />
-                        <span>
-                            <strong> ... </strong>
-                        </span>
-                    </div>
+                    <small t-esc="activity.create_date" class="pull-left"/>
+                    <span t-field="activity.type" class="label label-info"/>
+                    <a t-esc="activity.name" t-if="not activity.post_id.parent_id"/>
+                    <t t-if="activity.post_id.parent_id">
+                        <a t-esc="activity.post_id.parent_id.name"/>
+                        <span class="glyphicon glyphicon-play"/>
+                        <t t-esc="activity.post_id.content[0:100]"/>
+                        <strong> ... </strong>
+                    </t>
                 </li>
             </ul>
         </template>
+
     </data>
 </openerp>
