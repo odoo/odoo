@@ -441,9 +441,26 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     parse_on_change: function (on_change, widget) {
         var self = this;
         var onchange = _.str.trim(on_change);
-        var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
+        var call = onchange.match(/^(\w+)\((.*?)\)$/);
         if (!call) {
-            throw new Error(_.str.sprintf( _t("Wrong on change format: %s"), onchange ));
+            if (!(onchange === "1" || onchange === "true")) {
+                throw new Error(_.str.sprintf(_t("Wrong on change format: %s"), onchange));
+            }
+            // onchange V8: call onchange(field_values, field_name, tocheck)
+            var field_values = self.get_fields_values();
+            var tocheck = [];
+            _.each(self.fields, function(field, name) {
+                // add potential subfields in views into tocheck
+                _.each(field.field.views, function(view) {
+                    _.each(view.fields, function(subfield, subname) {
+                        tocheck.push(name + "." + subname);
+                    });
+                });
+            });
+            return {
+                method: "onchange",
+                args: [field_values, widget.name, tocheck]
+            };
         }
 
         var method = call[1];
