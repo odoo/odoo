@@ -148,6 +148,8 @@ class mail_mail(osv.Model):
         """ Generate URLs for links in mails:
             - partner is an user and has read access to the document: direct link to document with model, res_id
         """
+        if context is None:
+            context = {}
         if partner and partner.user_ids:
             base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
             # the parameters to encode for the query and fragment part of url
@@ -160,9 +162,9 @@ class mail_mail(osv.Model):
                 fragment['message_id'] = mail.mail_message_id.id
             elif mail.model and mail.res_id:
                 fragment.update(model=mail.model, res_id=mail.res_id)
-            
+
             url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
-            return _("""<span class='oe_mail_footer_access'><small>Access your messages and documents <a style='color:inherit' href="%s">in OpenERP</a></small></span>""") % url
+            return _("""<span class='oe_mail_footer_access'><small>about <a style='color:inherit' href="%s">%s %s</a></small></span>""") % (url, context.get('model_name', ''), mail.record_name)
         else:
             return None
 
@@ -239,10 +241,19 @@ class mail_mail(osv.Model):
                 email sending process has failed
             :return: True
         """
+        if context is None:
+            context = {}
         ir_mail_server = self.pool.get('ir.mail_server')
-                
         for mail in self.browse(cr, SUPERUSER_ID, ids, context=context):
             try:
+                # TDE note: remove me when model_id field is present on mail.message - done here to avoid doing it multiple times in the sub method
+                if mail.model:
+                    model_id = self.pool['ir.model'].search(cr, SUPERUSER_ID, [('model', '=', mail.model)], context=context)[0]
+                    model = self.pool['ir.model'].browse(cr, SUPERUSER_ID, model_id, context=context)
+                else:
+                    model = None
+                if model:
+                    context['model_name'] = model.name
                 # handle attachments
                 attachments = []
                 for attach in mail.attachment_ids:
