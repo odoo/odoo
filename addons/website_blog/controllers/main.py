@@ -243,7 +243,7 @@ class WebsiteBlog(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         blog_post = request.registry['blog.post']
         message_id = blog_post.message_post(
-            cr, SUPERUSER_ID, int(blog_post_id),
+            cr, uid, int(blog_post_id),
             body=post.get('comment'),
             type='comment',
             subtype='mt_comment',
