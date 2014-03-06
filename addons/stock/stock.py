@@ -3556,14 +3556,15 @@ class stock_pack_operation(osv.osv):
     def recompute_rem_qty_from_operation(self, cr, uid, op_ids, context=None):
         def _create_link_for_product(product_id, qty):
             qty_to_assign = qty
-            for move in prod_move[product_id]:
-                qty_on_link = min(qty_move_rem[move.id], qty_to_assign)
-                cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
-                (%s, %s, %s)""", (move.id, op.id, qty_on_link,))
-                qty_move_rem[move.id] -= qty_on_link
-                qty_to_assign -= qty_on_link
-                if qty_to_assign <= 0:
-                    break
+            if prod_move.get(product_id):
+                for move in prod_move[product_id]:
+                    qty_on_link = min(qty_move_rem[move.id], qty_to_assign)
+                    cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
+                    (%s, %s, %s)""", (move.id, op.id, qty_on_link,))
+                    qty_move_rem[move.id] -= qty_on_link
+                    qty_to_assign -= qty_on_link
+                    if qty_to_assign <= 0:
+                        break
             return qty_to_assign == 0
 
         def _check_quants_reserved(ops):

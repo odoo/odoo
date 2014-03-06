@@ -48,8 +48,9 @@ class stock_history(osv.osv):
                 if '__domain' in line:
                     lines = self.search(cr, uid, line['__domain'], context=context)
                     inv_value = 0.0
-                    for line2 in self.browse(cr, uid, lines, context=context):
-                        inv_value += line2.inventory_value
+                    lines2 = self._get_inventory_value(cr, uid, lines, "", [], context)
+                    for line2 in lines2.keys():
+                        inv_value += lines2[line2]
                     line['inventory_value'] = inv_value
         return res
 
