@@ -5,7 +5,7 @@
     if (!website.snippet) website.snippet = {};
     website.snippet.readyAnimation = [];
 
-    website.snippet.start_animation = function ($target) {
+    website.snippet.start_animation = function (editable_mode, $target) {
         for (var k in website.snippet.animationRegistry) {
             var Animation = website.snippet.animationRegistry[k];
             var selector = "";
@@ -24,7 +24,7 @@
                         !$snipped_id.parent("body").length &&
                         !$snipped_id.data("snippet-view")) {
                     website.snippet.readyAnimation.push($snipped_id);
-                    $snipped_id.data("snippet-view", new Animation($snipped_id));
+                    $snipped_id.data("snippet-view", new Animation($snipped_id, editable_mode));
                 }
             });
         }
@@ -49,9 +49,9 @@
         $: function () {
             return this.$el.find.apply(this.$el, arguments);
         },
-        init: function (dom) {
+        init: function (dom, editable_mode) {
             this.$el = this.$target = $(dom);
-            this.start();
+            this.start(editable_mode);
         },
         /*
         *  start

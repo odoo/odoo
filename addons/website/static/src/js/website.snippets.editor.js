@@ -25,7 +25,7 @@
             this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
                 website.snippet.stop_animation();
-                website.snippet.start_animation();
+                website.snippet.start_animation(true);
             });
 
             return this._super.apply(this, arguments);
@@ -382,7 +382,7 @@
                             $("#oe_snippets").trigger('snippet-dropped', $target);
 
                             // after rte
-                            website.snippet.start_animation($target);
+                            website.snippet.start_animation(true, $target);
 
                             self.create_overlay($target);
                             if ($target.data("snippet-editor")) {

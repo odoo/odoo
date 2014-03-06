@@ -5,9 +5,10 @@
 
     website.snippet.animationRegistry.follow = website.snippet.Animation.extend({
         selector: ".js_follow",
-        start: function () {
+        start: function (editable_mode) {
             var self = this;
 
+            // set value and display button
             openerp.jsonRpc('/website_mail/is_follower/', 'call', {
                 model: this.$target.data('object'),
                 id: +this.$target.data('id'),
@@ -18,41 +19,38 @@
                 self.$target.attr("data-follow", data.is_follower ? 'on' : 'off');
                 self.$target.removeClass("hidden");
             });
+
+            // not if editable mode to allow designer to edit alert field
+            if (!editable_mode) {
+                $('.js_follow > .alert').addClass("hidden");
+                $('.js_follow > .input-group-btn.hidden').removeClass("hidden");
+                this.$target.find('.js_follow_btn, .js_unfollow_btn').on('click', function (event) {
+                    event.preventDefault();
+                    self.on_click();
+                });
+            }
+        },
+        on_click: function () {
+            var self = this;
+            var $email = this.$target.find(".js_follow_email:visible");
+
+            if ($email.length && !$email.val().match(/.+@.+/)) {
+                this.$target.addClass('has-error');
+                return false;
+            }
+            this.$target.removeClass('has-error');
+
+            openerp.jsonRpc('/website_mail/follow', 'call', {
+                'id': +this.$target.data('id'),
+                'object': this.$target.data('object'),
+                'message_is_follower': this.$target.attr("data-follow") || "off",
+                'email': $email.length ? $email.val() : false,
+            }).then(function (follow) {
+                if (follow) {
+                    self.$target.find(" > *").toggleClass("hidden");
+                }
+                self.$target.attr("data-follow", follow ? 'on' : 'off');
+            });
         },
     });
 })();
-
-$(document).ready(function () {
-
-    $('.js_follow > .alert').addClass("hidden");
-    $('.js_follow > .input-group-btn.hidden').removeClass("hidden");
-
-    $('.js_follow_btn, .js_unfollow_btn').on('click', function (ev) {
-        ev.preventDefault();
-
-        var $follow = $(this).parents("div.js_follow");
-        var $email = $follow.find(".js_follow_email:visible");
-
-        if ($email.length && !$email.val().match(/.+@.+/)) {
-            $follow.addClass('has-error');
-            return false;
-        }
-
-        $email.removeClass('has-error');
-
-        var message_is_follower = $follow.attr("data-follow") || "off";
-        $follow.attr("data-follow", message_is_follower == 'off' ? 'on' : 'off');
-
-        openerp.jsonRpc('/website_mail/follow', 'call', {
-            'id': +$follow.data('id'),
-            'object': $follow.data('object'),
-            'message_is_follower': message_is_follower,
-            'email': $email.length ? $email.val() : false,
-        }).then(function (follow) {
-            if (follow) {
-                $follow.find(" > *").toggleClass("hidden");
-            }
-            $follow.attr("data-follow", follow ? 'on' : 'off');
-        });
-    });
-});
