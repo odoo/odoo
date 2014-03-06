@@ -31,10 +31,6 @@
             return this._super.apply(this, arguments);
         },
         save: function () {
-            this.snippets.make_active(false);
-
-            // FIXME: call clean_for_save on all snippets of the page, not only modified ones
-            // important for banner of parallax that changes data automatically.
             this.snippets.clean_for_save();
             this._super();
         },
@@ -55,6 +51,7 @@
 
     if (!website.snippet) website.snippet = {};
     website.snippet.templateOptions = {};
+    website.snippet.globalSelector = "";
     website.snippet.selector = [];
     website.snippet.BuildingBlock = openerp.Widget.extend({
         template: 'website.snippets',
@@ -132,6 +129,7 @@
                 .then(function (html) {
                     var $html = $(html);
 
+                    var selector = [];
                     var $styles = $html.find("[data-snippet-option-id]");
                     $styles.each(function () {
                         var $style = $(this);
@@ -144,8 +142,10 @@
                             'selector-children': $style.data('selector-children'),
                             'selector-vertical-children': $style.data('selector-vertical-children')
                         };
+                        selector.push($style.data('selector'));
                     });
                     $styles.addClass("hidden");
+                    website.snippet.globalSelector = selector.join(",");
 
                     self.$snippets = $html.find(".tab-content > div > div").addClass("oe_snippet");
                     self.$el.append($html);
@@ -195,17 +195,12 @@
                     return;
                 }
                 snipped_event_flag = true;
-                var selector = [];
-                for (var k in website.snippet.templateOptions) {
-                    selector.push(website.snippet.templateOptions[k].selector);
-                }
-                selector = selector.join(",");
 
                 setTimeout(function () {snipped_event_flag = false;}, 0);
                 var $target = $(event.srcElement);
 
-                if (!$target.is(selector)) {
-                    $target = $target.parents(selector).first();
+                if (!$target.is(website.snippet.globalSelector)) {
+                    $target = $target.parents(website.snippet.globalSelector).first();
                 }
                 if (!self.dom_filter($target).length) {
                     $target = false;
@@ -231,13 +226,16 @@
             }
         },
         clean_for_save: function () {
-            for (var k in this.snippets) {
-                if (!this.snippets.hasOwnProperty(k)) { continue; }
-                var editor = $(this.snippets[k]).data("snippet-editor");
+            var self = this;
+            $(website.snippet.globalSelector).each(function () {
+                var $snippet = $(this);
+                self.make_active($snippet);
+                self.make_active(false);
+                var editor = $snippet.data("snippet-editor");
                 if (editor) {
                     editor.clean_for_save();
                 }
-            }
+            });
         },
         make_active: function ($snippet) {
             if ($snippet && this.$active_snipped_id && this.$active_snipped_id.get(0) === $snippet.get(0)) {

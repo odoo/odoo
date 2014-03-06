@@ -12,15 +12,11 @@
                 model: this.$target.data('object'),
                 id: +this.$target.data('id'),
             }).always(function (data) {
-
-                var $input = self.$target.find('input.js_follow_email');
-                if(data.is_public) {
-                    $input.removeClass("hidden");
-                } else {
-                    $input.addClass("hidden");
-                }
-
+                self.$target.find('input.js_follow_email')
+                    .val(data.email ? data.email : "")
+                    .attr("disabled", data.email.length ? "disabled" : false);
                 self.$target.attr("data-follow", data.is_follower ? 'on' : 'off');
+                self.$target.removeClass("hidden");
             });
         },
     });

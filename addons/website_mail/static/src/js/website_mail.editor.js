@@ -31,6 +31,9 @@
             this.$el.find(".js_mailing_list").on("click", _.bind(this.on_prompt, this));
             this._super();
         },
+        clean_for_save: function () {
+            this.$target.addClass("hidden");
+        },
     });
 })();
 

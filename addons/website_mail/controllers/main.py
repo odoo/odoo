@@ -59,10 +59,10 @@ class WebsiteMail(http.Controller):
 
     @http.route(['/website_mail/is_follower/'], type='json', auth="public", website=True)
     def call(self, model, id, **post):
-        public_id = request.registry['website'].get_public_user(request.cr, request.uid, request.context)
+        email = request.registry['res.users'].browse(request.cr, request.uid, request.uid, request.context).partner_id.email
         value = request.registry.get(model).read(request.cr, request.uid, [id], ['message_is_follower'], request.context)
         return {
-            'is_public': request.uid == public_id, 
+            'email': email, 
             'is_follower': value and value[0]['message_is_follower'] or False
         }
 
