@@ -289,29 +289,17 @@ class website_forum(http.Controller):
 
     @http.route('/forum/<model("website.forum"):forum>/post_vote/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def post_vote(self, forum, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        vote_obj = request.registry['website.forum.post.vote']
-        post_id = post.get('post_id');
-        post_ids = vote_obj.search(cr, uid, [('post_id', '=', int(post_id))],context=None)
+        cr, uid, context, post_id = request.cr, request.uid, request.context, int(post.get('post_id'))
+        Vote = request.registry['website.forum.post.vote']
+        vote_ids = Vote.search(cr, uid, [('post_id', '=', post_id)], context=context)
 
-        if (not post_ids) and '1' == post.get('vote'):
-            up_post_vote_id = vote_obj.create(
-                cr, uid, {
-                    'post_id': post_id,
-                    'user_id': uid,
-                    'vote': post.get('vote'),
-                }, context=context)
-        elif post_ids and '1' == post.get('vote'):
-            vote_obj.unlink(cr, uid, post_ids, context)
-
-        if (not post_ids) and '-1' == post.get('vote'):
-            down_post_vote_id = vote_obj.create(
-                cr, uid, {
-                    'post_id': post_id,
-                    'user_id': uid,
-                    'vote': post.get('vote'),
-                }, context=context)
-        elif post_ids and '-1' == post.get('vote'):
-             vote_obj.unlink(cr, uid, post_ids, context)
+        if vote_ids:
+            Vote.unlink(cr, uid, vote_ids, context=context)
+        else:
+            Vote.create(cr, uid, {
+                            'post_id': post_id,
+                            'user_id': uid,
+                            'vote': post.get('vote'),
+                        }, context=context)
 
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('question_id')))

@@ -332,25 +332,11 @@
                 <div class="question">
                     <div class="text-center pull-left">
                         <div t-attf-class="box oe_grey">
-                            <t t-if="question.user_vote == 0">
-                                <a class="fa fa-thumbs-up" t-attf-href="javascript:getsupport(#{ question.id },#{ 1 });"/>
-                            </t>
-                            <t t-if="question.user_vote == -1">
-                                <a class="fa fa-thumbs-up" t-attf-href="javascript:getsupport(#{ question.id },#{ 1 });"/>
-                            </t>
-                            <t t-if="question.user_vote == 1">
-                                <a class="fa fa-thumbs-up text-success" t-attf-href="javascript:getsupport(#{ question.id },#{ 1 });"/>
-                            </t>
+                            <a t-attf-class="fa fa-thumbs-up #{question.user_vote == 1 and 'text-success' or ''}" 
+                                t-attf-href="javascript:getsupport(#{ question.id },#{ 1 });"/>
                             <span t-esc="question.vote_count"/>
-                            <t t-if="question.user_vote == 0">
-                                <a class="fa fa-thumbs-down" t-attf-href="javascript:getsupport(#{ question.id },#{ -1 });"/>
-                            </t>
-                            <t t-if="question.user_vote == -1">
-                                <a class="fa fa-thumbs-down text-warning" t-attf-href="javascript:getsupport(#{ question.id },#{ -1 });"/>
-                            </t>
-                            <t t-if="question.user_vote == 1">
-                                <a class="fa fa-thumbs-down" t-attf-href="javascript:getsupport(#{ question.id },#{ -1 });"/>
-                            </t>
+                            <a t-attf-class="fa fa-thumbs-down #{question.user_vote == -1 and 'text-warning' or ''}" 
+                                t-attf-href="javascript:getsupport(#{ question.id },#{ -1 });"/>
                             <div>
                                 votes
                             </div>
@@ -386,25 +372,11 @@
                 <div t-foreach="question.child_ids" t-as="answer" class="mt16 mb32">
                     <div class="text-center pull-left">
                         <div t-attf-class="box oe_grey">
-                            <t t-if="answer.user_vote == 0">
-                                <a class="fa fa-thumbs-up" t-attf-href="javascript:getsupport(#{ answer.id },#{ 1 });"/>
-                            </t>
-                            <t t-if="answer.user_vote == -1">
-                                <a class="fa fa-thumbs-up" t-attf-href="javascript:getsupport(#{ answer.id },#{ 1 });"/>
-                            </t>
-                            <t t-if="answer.user_vote == 1">
-                                <a class="fa fa-thumbs-up text-success" t-attf-href="javascript:getsupport(#{ answer.id },#{ 1 });"/>
-                            </t>
+                            <a t-attf-class="fa fa-thumbs-up #{answer.user_vote == 1 and 'text-success' or ''}" 
+                                t-attf-href="javascript:getsupport(#{ answer.id },#{ 1 });"/>
                             <span t-esc="answer.vote_count"/>
-                            <t t-if="answer.user_vote == -1">
-                                <a class="fa fa-thumbs-down text-warning" t-attf-href="javascript:getsupport(#{ answer.id },#{ -1 });"/>
-                            </t>
-                            <t t-if="answer.user_vote == 0">
-                                <a class="fa fa-thumbs-down" t-attf-href="javascript:getsupport(#{ answer.id },#{ -1 });"/>
-                            </t>
-                            <t t-if="answer.user_vote == 1">
-                                <a class="fa fa-thumbs-down" t-attf-href="javascript:getsupport(#{ answer.id },#{ -1 });"/>
-                            </t>
+                            <a t-attf-class="fa fa-thumbs-down #{answer.user_vote == -1 and 'text-warning' or ''}" 
+                                t-attf-href="javascript:getsupport(#{ answer.id },#{ -1 });"/>
                             <div>
                                 votes
                             </div>

@@ -55,7 +55,7 @@ class Post(osv.Model):
                             res[post.id] = -1
         return res
 
-    def _get_votes_length(self, cr, uid, ids, field_name, arg, context):
+    def _get_vote_count(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, 0)
         for post in self.browse(cr, uid, ids, context=context):
             if post.vote_ids:
@@ -98,7 +98,7 @@ class Post(osv.Model):
             help="Comments on forum post",
         ),
         'user_vote':fields.function(_get_votes, string="Number of user votes", type='boolean'),
-        'vote_count':fields.function(_get_votes_length, string="Number of user votes count", type='integer'),
+        'vote_count':fields.function(_get_vote_count, string="Number of user votes count", type='integer'),
 
     }
     _defaults = {
