@@ -274,7 +274,7 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
             active_ids = active_ids.union(remaining_lead_ids)
             ctx['active_ids'] = list(active_ids)
         # Remove me in trunk
-        ctx['no_force_assignation'] = True 
+        ctx['no_force_assignation'] = ctx.get('no_force_assignation', True) 
         # Uncomment me in trunk
         # ctx['no_force_assignation'] = not data.force_assignation
         return self.action_apply(cr, uid, ids, context=ctx)
