@@ -38,7 +38,9 @@
             }
         });
     };
-    $(document).ready(function () {website.snippet.start_animation();});
+    $(document).ready(function () {
+        website.snippet.start_animation();
+    });
 
 
     website.snippet.animationRegistry = {};
@@ -110,7 +112,7 @@
             img.onload = function () {
                 var offset = 0;
                 var padding =  parseInt($(document.body).css("padding-top"));
-                if (speed < 1) {
+                if (speed > 1) {
                     var inner_offset = - self.$target.outerHeight() + this.height / this.width * document.body.clientWidth;
                     var outer_offset = self.$target.offset().top - (document.body.clientHeight - self.$target.outerHeight()) - padding;
                     offset = - outer_offset * speed + inner_offset;

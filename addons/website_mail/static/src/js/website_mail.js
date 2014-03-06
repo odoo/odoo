@@ -1,30 +1,62 @@
+(function () {
+    'use strict';
+
+    var website = openerp.website;
+
+    website.snippet.animationRegistry.follow = website.snippet.Animation.extend({
+        selector: ".js_follow",
+        start: function () {
+            var self = this;
+
+            openerp.jsonRpc('/website_mail/is_follower/', 'call', {
+                model: this.$target.data('object'),
+                id: +this.$target.data('id'),
+            }).always(function (data) {
+
+                var $input = self.$target.find('input.js_follow_email');
+                if(data.is_public) {
+                    $input.removeClass("hidden");
+                } else {
+                    $input.addClass("hidden");
+                }
+
+                self.$target.attr("data-follow", data.is_follower ? 'on' : 'off');
+            });
+        },
+    });
+})();
+
 $(document).ready(function () {
 
-    $(document).on('click', '.js_follow_btn, .js_unfollow_btn', function (ev) {
+    $('.js_follow > .alert').addClass("hidden");
+    $('.js_follow > .input-group-btn.hidden').removeClass("hidden");
+
+    $('.js_follow_btn, .js_unfollow_btn').on('click', function (ev) {
         ev.preventDefault();
 
-        var self = this;
-        var $data = $(this).parents("div.js_follow");
-        var $email = $data.find(".js_follow_email");
+        var $follow = $(this).parents("div.js_follow");
+        var $email = $follow.find(".js_follow_email:visible");
 
         if ($email.length && !$email.val().match(/.+@.+/)) {
+            $follow.addClass('has-error');
             return false;
         }
 
-        var message_is_follower = $data.attr("data-follow") || "off";
-        $data.attr("data-follow", message_is_follower == 'off' ? 'on' : 'off');
+        $email.removeClass('has-error');
+
+        var message_is_follower = $follow.attr("data-follow") || "off";
+        $follow.attr("data-follow", message_is_follower == 'off' ? 'on' : 'off');
 
         openerp.jsonRpc('/website_mail/follow', 'call', {
-            'id': $data.data('id'),
-            'object': $data.data('object'),
+            'id': +$follow.data('id'),
+            'object': $follow.data('object'),
             'message_is_follower': message_is_follower,
             'email': $email.length ? $email.val() : false,
-        }).then(function (result) {
-            if (result) {
-                $data.find(" > *").toggleClass("hidden");
+        }).then(function (follow) {
+            if (follow) {
+                $follow.find(" > *").toggleClass("hidden");
             }
-            $data.attr("data-follow", result ? 'on' : 'off');
+            $follow.attr("data-follow", follow ? 'on' : 'off');
         });
     });
-
 });

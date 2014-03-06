@@ -18,7 +18,7 @@
         },
         edit: function () {
             var self = this;
-            $("body").off('click');
+            $("[data-oe-model] *, [data-oe-type=html] *").off('click');
             window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
             this.snippets.appendTo(this.$el);
 

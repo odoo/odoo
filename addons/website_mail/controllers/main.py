@@ -56,3 +56,13 @@ class WebsiteMail(http.Controller):
         follower_ids = [p.id for p in obj.message_follower_ids]
 
         return partner_ids[0] in follower_ids and 1 or 0
+
+    @http.route(['/website_mail/is_follower/'], type='json', auth="public", website=True)
+    def call(self, model, id, **post):
+        public_id = request.registry['website'].get_public_user(request.cr, request.uid, request.context)
+        value = request.registry.get(model).read(request.cr, request.uid, [id], ['message_is_follower'], request.context)
+        return {
+            'is_public': request.uid == public_id, 
+            'is_follower': value and value[0]['message_is_follower'] or False
+        }
+

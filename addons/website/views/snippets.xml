@@ -829,6 +829,16 @@
 
 <div id="snippet_options" class="hidden">
 
+    <t t-call="website.snippet_options"/>
+
+</div>
+
+    </div>
+</div>
+</template>
+
+<template id="snippet_options">
+
     <div data-snippet-option-id='blog-style'
         data-selector="section:not(.carousel):not(.parallax)">
         <li class="dropdown-submenu">
@@ -957,10 +967,14 @@
         </li>
     </div>
 
-</div>
-
+    <div data-snippet-option-id='content'
+        data-selector="p, h1, h2, h3, blockquote, .well, .panel"
+        data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
+        data-selector-children=".content">
     </div>
-</div>
+
 </template>
+
+
 </data>
 </openerp>
