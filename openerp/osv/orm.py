@@ -3159,7 +3159,7 @@ class BaseModel(object):
         # Note: do not prefetch fields when self.pool._init is True, because
         # some columns may be missing from the database!
         column = self._columns[field_name]
-        if column._prefetch and not self.pool._init:
+        if column._prefetch and not (self.pool._init or scope_proxy.draft):
             fnames = set(fname
                 for fname, fcolumn in self._columns.iteritems()
                 if fcolumn._prefetch)
@@ -5454,6 +5454,15 @@ class BaseModel(object):
             # create a new record with the values, except field_name
             record = self.new(values)
             record_values = dict(record._cache)
+
+            # prefetch all surrounding records: this avoids encountering dirty
+            # records later because of the evaluation of related fields, etc.
+            for name, field in record._fields.iteritems():
+                value = record[name]
+                if field.relational:
+                    for name in value._fields:
+                        for rec in value:
+                            rec[name]
 
         # at this point, the cache should be clean
         assert not scope.dirty

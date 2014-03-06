@@ -27,6 +27,7 @@ class TestOnChange(common.TransactionCase):
         BODY = "What a beautiful day!"
         USER = scope.user
 
+        scope.invalidate_all()
         result = self.Message.onchange({
             'discussion': discussion.id,
             'name': "[%s] %s" % ('', USER.name),
@@ -38,6 +39,7 @@ class TestOnChange(common.TransactionCase):
             'name': "[%s] %s" % (discussion.name, USER.name),
         })
 
+        scope.invalidate_all()
         result = self.Message.onchange({
             'discussion': discussion.id,
             'name': "[%s] %s" % (discussion.name, USER.name),
@@ -60,6 +62,7 @@ class TestOnChange(common.TransactionCase):
         self.assertEqual(message.name, "[%s] %s" % ('', USER.name))
 
         # modify messages
+        scope.invalidate_all()
         result = self.Discussion.onchange({
             'name': "Foo",
             'categories': [],
@@ -96,6 +99,7 @@ class TestOnChange(common.TransactionCase):
         ])
 
         # modify discussion name
+        scope.invalidate_all()
         result = self.Discussion.onchange({
             'name': "Foo",
             'categories': [],
