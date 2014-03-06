@@ -308,6 +308,15 @@ class sale_order(osv.osv):
             'company_id': order.company_id.id,
             'note': line.name,
         }
+        
+    def _order_line_move_date(self, cr, uid, line, context=None):
+        """Compute the Stock Move date for the Sale Order Line"""
+        date_planned = datetime.strptime(line.order_id.date_order,
+                                         DEFAULT_SERVER_DATE_FORMAT)
+        date_planned += timedelta(days=line.delay or 0.0)
+        date_planned -= timedelta(days=line.order_id.company_id.security_lead)
+        return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
 
     def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, context=None):
         location_id = order.shop_id.warehouse_id.lot_stock_id.id
@@ -415,7 +424,7 @@ class sale_order(osv.osv):
             if line.state == 'done':
                 continue
 
-            date_planned = self._get_date_planned(cr, uid, order, line, order.date_order, context=context)
+            date_planned = self._order_line_move_date(cr, uid, line, context=context)
 
             if line.product_id:
                 if line.product_id.type in ('product', 'consu'):
