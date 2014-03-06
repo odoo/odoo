@@ -30,7 +30,7 @@ def rounding(f, r):
 	# _logger.warning("Deprecated rounding method, please use tools.float_round to round floats.")
 	return tools.float_round(f, precision_rounding=r)
 
-# TODO for trunk: add rounding method parameter to tools.float_round and remove this method
+# TODO for trunk: add rounding method parameter to tools.float_round and use this method as hook
 def ceiling(f, r):
     if not r:
         return f
