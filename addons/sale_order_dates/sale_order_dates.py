@@ -30,29 +30,26 @@ class sale_order_dates(osv.osv):
     _inherit = 'sale.order'
 
     def copy(self, cr, uid, id, default=None, context=None):
-        """Don't copy the requested date along with the Sale Order"""
-        if default is None:
-            default = {}
-        else:
-            default = default.copy()
-        default['requested_date'] = False
+        """Don't copy the requested date along with the Sales Order"""
+        default = dict(default or {}, requested_date=False)
         return super(sale_order_dates, self).copy(cr, uid, id, default=default,
-                                            context=context)
-    
-    def _order_line_move_date(self, cr, uid, line, context=None):
+                                                  context=context)
+ 
+    def _get_date_planned(self, cr, uid, order, line, start_date, context=None):   
         """Compute the expected date from the requested date, not the order date"""
-        order=line.order_id
         if order and order.requested_date:
-            date_planned = datetime.strptime(order.requested_date,
-                                             DEFAULT_SERVER_DATE_FORMAT)
+            planned_str = self.date_to_datetime(cr, uid,
+                                                order.requested_date, context)
+            date_planned = datetime.strptime(planned_str,
+                                             DEFAULT_SERVER_DATETIME_FORMAT)
             date_planned -= timedelta(days=order.company_id.security_lead)
             return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        else:
-            return super(sale_order_dates, self)._order_line_move_date(cr, uid, line)
+        return super(sale_order_dates, self)._get_date_planned(
+                cr, uid, order, line, start_date, context=context)
         
     def _get_effective_date(self, cr, uid, ids, name, arg, context=None):
         """Read the shipping date from the related packings"""
-        # XXX would be better if it returned the date the picking was processed
+        # TODO: would be better if it returned the date the picking was processed?
         res = {}
         dates_list = []
         for order in self.browse(cr, uid, ids, context=context):
@@ -70,11 +67,13 @@ class sale_order_dates(osv.osv):
         res = {}
         dates_list = []
         for order in self.browse(cr, uid, ids, context=context):
+            order_datetime_str = self.date_to_datetime(cr, uid, order.date_order,
+                                                       context)
+            order_datetime = datetime.strptime(order_datetime_str,
+                                               DEFAULT_SERVER_DATETIME_FORMAT)
             dates_list = []
             for line in order.order_line:
-                dt = (datetime.strptime(order.date_order,
-                                        DEFAULT_SERVER_DATE_FORMAT)
-                     + timedelta(days=line.delay or 0.0) )
+                dt = order_datetime + timedelta(days=line.delay or 0.0)
                 dt_s = dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
                 dates_list.append(dt_s)
             if dates_list:
@@ -93,13 +92,12 @@ class sale_order_dates(osv.osv):
                              "unable to honor the customer's request.")
                 }
             }
-        else:
-            return {}
+        return {}
 
     _columns = {
         'commitment_date': fields.function(_get_commitment_date, store=True,
             type='date', string='Commitment Date',
-            help="Date by which the products is sure to be delivered. This is "
+            help="Date by which the products are sure to be delivered. This is "
                  "a date that you can promise to the customer, based on the "
                  "Product Lead Times."),
         'requested_date': fields.date('Requested Date',
