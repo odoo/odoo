@@ -124,7 +124,8 @@ class res_company(osv.osv):
         'rml_footer': fields.text('Report Footer', help="Footer text displayed at the bottom of all reports."),
         'rml_footer_readonly': fields.related('rml_footer', type='text', string='Report Footer', readonly=True),
         'custom_footer': fields.boolean('Custom Footer', help="Check this to define the report footer manually.  Otherwise it will be filled in automatically."),
-        'font': fields.many2one('res.font', string="Font",help="Set the font into the report header, it will be used as default font in the RML reports of the user company"),
+        'font': fields.many2one('res.font', string="Font", domain=[('mode', 'in', ('Normal', 'Regular', 'all', 'Book'))],
+            help="Set the font into the report header, it will be used as default font in the RML reports of the user company"),
         'logo': fields.related('partner_id', 'image', string="Logo", type="binary"),
         'logo_web': fields.function(_get_logo_web, string="Logo Web", type="binary", store={
             'res.company': (lambda s, c, u, i, x: i, ['partner_id'], 10),
@@ -147,7 +148,7 @@ class res_company(osv.osv):
         'website': fields.related('partner_id', 'website', string="Website", type="char", size=64),
         'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32),
         'company_registry': fields.char('Company Registry', size=64),
-        'paper_format': fields.selection([('a4', 'A4'), ('us_letter', 'US Letter')], "Paper Format", required=True),
+        'rml_paper_format': fields.selection([('a4', 'A4'), ('us_letter', 'US Letter')], "Paper Format", required=True, oldname='paper_format'),
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
@@ -388,8 +389,8 @@ class res_company(osv.osv):
     _header_a4 = _header_main % ('21.7cm', '27.7cm', '27.7cm', '27.7cm', '27.8cm', '27.3cm', '25.3cm', '25.0cm', '25.0cm', '24.6cm', '24.6cm', '24.5cm', '24.5cm')
     _header_letter = _header_main % ('20cm', '26.0cm', '26.0cm', '26.0cm', '26.1cm', '25.6cm', '23.6cm', '23.3cm', '23.3cm', '22.9cm', '22.9cm', '22.8cm', '22.8cm')
 
-    def onchange_paper_format(self, cr, uid, ids, paper_format, context=None):
-        if paper_format == 'us_letter':
+    def onchange_rml_paper_format(self, cr, uid, ids, rml_paper_format, context=None):
+        if rml_paper_format == 'us_letter':
             return {'value': {'rml_header': self._header_letter}}
         return {'value': {'rml_header': self._header_a4}}
 
@@ -398,7 +399,7 @@ class res_company(osv.osv):
 
     _defaults = {
         'currency_id': _get_euro,
-        'paper_format': 'a4',
+        'rml_paper_format': 'a4',
         'rml_header':_get_header,
         'rml_header2': _header2,
         'rml_header3': _header3,

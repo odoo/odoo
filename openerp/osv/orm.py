@@ -770,8 +770,6 @@ class BaseModel(object):
                     (name_id, context['module'], 'ir.model', model_id)
                 )
 
-        cr.commit()
-
         cr.execute("SELECT * FROM ir_model_fields WHERE model=%s", (self._name,))
         cols = {}
         for rec in cr.dictfetchall():
@@ -838,7 +836,6 @@ class BaseModel(object):
                 for key, val in vals.items():
                     if cols[k][key] != vals[key]:
                         cr.execute('update ir_model_fields set field_description=%s where model=%s and name=%s', (vals['field_description'], vals['model'], vals['name']))
-                        cr.commit()
                         cr.execute("""UPDATE ir_model_fields SET
                             model_id=%s, field_description=%s, ttype=%s, relation=%s,
                             select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s, translate=%s, serialization_field_id=%s
@@ -849,7 +846,6 @@ class BaseModel(object):
                                 vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['serialization_field_id'], vals['model'], vals['name']
                             ))
                         break
-        cr.commit()
 
     #
     # Goal: try to apply inheritance at the instanciation level and
@@ -2189,6 +2185,37 @@ class BaseModel(object):
                 r['__fold'] = folded.get(r[groupby] and r[groupby][0], False)
         return result
 
+    def _read_group_generate_order_by(self, orderby, aggregated_fields, groupby, query):
+        """
+        Generates the ORDER BY sql clause for the read group method. Adds the missing JOIN clause
+        to the query if order should be computed against m2o field. 
+        :param orderby: the orderby definition in the form "%(field)s %(order)s"
+        :param aggregated_fields: list of aggregated fields in the query
+        :param groupby: the current groupby field name
+        :param query: the query object used to construct the query afterwards
+        """
+        orderby_list = []
+        ob = []
+        for order_splits in orderby.split(','):
+            order_split = order_splits.split()
+            orderby_field = order_split[0]
+            fields = openerp.osv.fields
+            if isinstance(self._all_columns[orderby_field].column, (fields.date, fields.datetime)):
+                continue
+            orderby_dir = len(order_split) == 2 and order_split[1].upper() == 'ASC' and 'ASC' or 'DESC'
+            if orderby_field == groupby:
+                orderby_item = self._generate_order_by(order_splits, query).replace('ORDER BY ', '')
+                if orderby_item:
+                    orderby_list.append(orderby_item)
+                    ob += [obi.split()[0] for obi in orderby_item.split(',')]
+            elif orderby_field in aggregated_fields:
+                orderby_list.append('%s %s' % (orderby_field,orderby_dir))
+
+        if orderby_list:
+            return ' ORDER BY %s' % (','.join(orderby_list)), ob and ','.join(ob) or ''
+        else:
+            return '', ''
+
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         """
         Get the list of records in list view grouped by the given ``groupby`` fields
@@ -2301,6 +2328,12 @@ class BaseModel(object):
             qualified_field = self._inherits_join_calc(f, query)
             flist += "%s(%s) AS %s" % (group_operator, qualified_field, f)
 
+        order = orderby or groupby
+        orderby_clause = ''
+        ob = ''
+        if order:
+            orderby_clause, ob = self._read_group_generate_order_by(order, aggregated_fields, groupby, query)
+
         gb = groupby and (' GROUP BY ' + qualified_groupby_field) or ''
 
         from_clause, where_clause, where_clause_params = query.get_sql()
@@ -2309,20 +2342,21 @@ class BaseModel(object):
         offset_str = offset and ' offset %d' % offset or ''
         if len(groupby_list) < 2 and context.get('group_by_no_leaf'):
             group_count = '_'
-        cr.execute('SELECT min(%s.id) AS id, count(%s.id) AS %s_count' % (self._table, self._table, group_count) + (flist and ',') + flist + ' FROM ' + from_clause + where_clause + gb + limit_str + offset_str, where_clause_params)
+        cr.execute('SELECT min(%s.id) AS id, count(%s.id) AS %s_count' % (self._table, self._table, group_count) + (flist and ',') + flist + ' FROM ' + from_clause + where_clause + gb + (ob and ',') + ob + orderby_clause + limit_str + offset_str, where_clause_params)
         alldata = {}
         groupby = group_by
-        for r in cr.dictfetchall():
+
+        fetched_data = cr.dictfetchall()
+
+        data_ids = []
+        for r in fetched_data:
             for fld, val in r.items():
                 if val is None: r[fld] = False
             alldata[r['id']] = r
+            data_ids.append(r['id'])
             del r['id']
 
-        order = orderby or groupby
-        data_ids = self.search(cr, uid, [('id', 'in', alldata.keys())], order=order, context=context)
 
-        # the IDs of records that have groupby field value = False or '' should be included too
-        data_ids += set(alldata.keys()).difference(data_ids)
 
         if groupby:
             data = self.read(cr, uid, data_ids, [groupby], context=context)
@@ -2694,7 +2728,7 @@ class BaseModel(object):
                         f_pg_notnull = res['attnotnull']
                         if isinstance(f, fields.function) and not f.store and\
                                 not getattr(f, 'nodrop', False):
-                            _logger.info('column %s (%s) in table %s removed: converted to a function !\n',
+                            _logger.info('column %s (%s) converted to a function, removed from table %s',
                                          k, f.string, self._table)
                             cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE' % (self._table, k))
                             cr.commit()
@@ -2716,10 +2750,16 @@ class BaseModel(object):
                                 ('float8', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                             ]
                             if f_pg_type == 'varchar' and f._type == 'char' and ((f.size is None and f_pg_size) or f_pg_size < f.size):
-                                cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
-                                cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, pg_varchar(f.size)))
-                                cr.execute('UPDATE "%s" SET "%s"=temp_change_size::%s' % (self._table, k, pg_varchar(f.size)))
-                                cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
+                                try:
+                                    with cr.savepoint():
+                                        cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" TYPE %s' % (self._table, k, pg_varchar(f.size)))
+                                except psycopg2.NotSupportedError:
+                                    # In place alter table cannot be done because a view is depending of this field.
+                                    # Do a manual copy. This will drop the view (that will be recreated later)
+                                    cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
+                                    cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, pg_varchar(f.size)))
+                                    cr.execute('UPDATE "%s" SET "%s"=temp_change_size::%s' % (self._table, k, pg_varchar(f.size)))
+                                    cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
                                 cr.commit()
                                 _schema.debug("Table '%s': column '%s' (type varchar) changed size from %s to %s",
                                     self._table, k, f_pg_size or 'unlimited', f.size or 'unlimited')
@@ -2727,10 +2767,10 @@ class BaseModel(object):
                                 if (f_pg_type==c[0]) and (f._type==c[1]):
                                     if f_pg_type != f_obj_type:
                                         ok = True
-                                        cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
+                                        cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO __temp_type_cast' % (self._table, k))
                                         cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, c[2]))
-                                        cr.execute(('UPDATE "%s" SET "%s"=temp_change_size'+c[3]) % (self._table, k))
-                                        cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
+                                        cr.execute(('UPDATE "%s" SET "%s"= __temp_type_cast'+c[3]) % (self._table, k))
+                                        cr.execute('ALTER TABLE "%s" DROP COLUMN  __temp_type_cast CASCADE' % (self._table,))
                                         cr.commit()
                                         _schema.debug("Table '%s': column '%s' changed type from %s to %s",
                                             self._table, k, c[0], c[1])
@@ -4622,24 +4662,22 @@ class BaseModel(object):
 
         blacklist_given_fields(self)
 
-        fields_to_read = [f for f in self.check_field_access_rights(cr, uid, 'read', None)
-                          if f not in blacklist]
-        data = self.read(cr, uid, [id], fields_to_read, context=context)
+
+        fields_to_copy = dict((f,fi) for f, fi in self._all_columns.iteritems()
+                                     if f not in default
+                                     if f not in blacklist
+                                     if not isinstance(fi.column, fields.function))
+
+        data = self.read(cr, uid, [id], fields_to_copy.keys(), context=context)
         if data:
             data = data[0]
         else:
-            raise IndexError(_("Record #%d of %s not found, cannot copy!") % (id, self._name))
+            raise IndexError( _("Record #%d of %s not found, cannot copy!") %( id, self._name))
 
         res = dict(default)
-        for f, colinfo in self._all_columns.items():
+        for f, colinfo in fields_to_copy.iteritems():
             field = colinfo.column
-            if f in default:
-                pass
-            elif f in blacklist:
-                pass
-            elif isinstance(field, fields.function):
-                pass
-            elif field._type == 'many2one':
+            if field._type == 'many2one':
                 res[f] = data[f] and data[f][0]
             elif field._type == 'one2many':
                 other = self.pool[field._obj]

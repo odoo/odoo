@@ -129,12 +129,10 @@ class WebRequest(object):
         self.session_id = httprequest.session.sid
         self.disable_db = False
         self.uid = None
-        self.func = None
-        self.func_arguments = {}
+        self.endpoint = None
         self.auth_method = None
         self._cr_cm = None
         self._cr = None
-        self.func_request_type = None
         # set db/uid trackers - they're cleaned up at the WSGI
         # dispatching phase in openerp.service.wsgi_server.application
         if self.db:
@@ -168,7 +166,10 @@ class WebRequest(object):
         """
         # some magic to lazy create the cr
         if not self._cr:
-            self._cr = self.registry.db.cursor()
+            # Test cursors
+            self._cr = openerp.tests.common.acquire_test_cursor(self.session_id)
+            if not self._cr:
+                self._cr = self.registry.db.cursor()
         return self._cr
 
     def __enter__(self):
@@ -177,45 +178,47 @@ class WebRequest(object):
 
     def __exit__(self, exc_type, exc_value, traceback):
         _request_stack.pop()
+
         if self._cr:
-            if exc_type is None:
-                self._cr.commit()
-            self._cr.close()
+            # Dont commit test cursors
+            if not openerp.tests.common.release_test_cursor(self.session_id):
+                if exc_type is None:
+                    self._cr.commit()
+                self._cr.close()
         # just to be sure no one tries to re-use the request
         self.disable_db = True
         self.uid = None
 
-    def set_handler(self, func, arguments, auth):
+    def set_handler(self, endpoint, arguments, auth):
         # is this needed ?
         arguments = dict((k, v) for k, v in arguments.iteritems()
                          if not k.startswith("_ignored_"))
 
-        self.func = func
-        self.func_request_type = func.routing['type']
-        self.func_arguments = arguments
+        endpoint.arguments = arguments
+        self.endpoint = endpoint
         self.auth_method = auth
 
     def _call_function(self, *args, **kwargs):
         request = self
-        if self.func_request_type != self._request_type:
+        if self.endpoint.routing['type'] != self._request_type:
             raise Exception("%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'" \
-                % (self.func, self.httprequest.path, self.func_request_type, self._request_type))
+                % (self.endpoint.original, self.httprequest.path, self.endpoint.routing['type'], self._request_type))
 
-        kwargs.update(self.func_arguments)
+        kwargs.update(self.endpoint.arguments)
 
         # Backward for 7.0
-        if getattr(self.func.method, '_first_arg_is_req', False):
+        if self.endpoint.first_arg_is_req:
             args = (request,) + args
         # Correct exception handling and concurency retry
         @service_model.check
         def checked_call(___dbname, *a, **kw):
-            return self.func(*a, **kw)
+            return self.endpoint(*a, **kw)
 
         # FIXME: code and rollback management could be cleaned
         try:
             if self.db:
                 return checked_call(self.db, *args, **kwargs)
-            return self.func(*args, **kwargs)
+            return self.endpoint(*args, **kwargs)
         except Exception:
             if self._cr:
                 self._cr.rollback()
@@ -259,8 +262,23 @@ def route(route=None, **kw):
             else:
                 routes = [route]
             routing['routes'] = routes
-        f.routing = routing
-        return f
+        @functools.wraps(f)
+        def response_wrap(*args, **kw):
+            response = f(*args, **kw)
+            if isinstance(response, Response) or f.routing_type == 'json':
+                return response
+            elif isinstance(response, werkzeug.wrappers.BaseResponse):
+                response = Response.force_type(response)
+                response.set_default()
+                return response
+            elif isinstance(response, basestring):
+                return Response(response)
+            else:
+                _logger.warn("<function %s.%s> returns an invalid response type for an http request" % (f.__module__, f.__name__))
+            return response
+        response_wrap.routing = routing
+        response_wrap.original_func = f
+        return response_wrap
     return decorator
 
 class JsonRequest(WebRequest):
@@ -373,7 +391,7 @@ class JsonRequest(WebRequest):
             mime = 'application/json'
             body = simplejson.dumps(response)
 
-        r = werkzeug.wrappers.Response(body, headers=[('Content-Type', mime), ('Content-Length', len(body))])
+        r = Response(body, headers=[('Content-Type', mime), ('Content-Length', len(body))])
         return r
 
 def serialize_exception(e):
@@ -431,23 +449,16 @@ class HttpRequest(WebRequest):
         self.params = params
 
     def dispatch(self):
-        # TODO: refactor this correctly. This is a quick fix for pos demo.
-        if request.httprequest.method == 'OPTIONS' and request.func and request.func.routing.get('cors'):
-            response = werkzeug.wrappers.Response(status=200)
-            response.headers.set('Access-Control-Allow-Origin', request.func.routing['cors'])
-            methods = 'GET, POST'
-            if request.func_request_type == 'json':
-                methods = 'POST'
-            elif request.func.routing.get('methods'):
-                methods = ', '.join(request.func.routing['methods'])
-            response.headers.set('Access-Control-Allow-Methods', methods)
-            response.headers.set('Access-Control-Max-Age',60*60*24)
-            response.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-            return response
+        if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
+            headers = {
+                'Access-Control-Max-Age': 60 * 60 * 24,
+                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+            }
+            return Response(status=200, headers=headers)
 
         r = self._call_function(**self.params)
         if not r:
-            r = werkzeug.wrappers.Response(status=204)  # no content
+            r = Response(status=204)  # no content
         return r
 
     def make_response(self, data, headers=None, cookies=None):
@@ -464,11 +475,23 @@ class HttpRequest(WebRequest):
         :type headers: ``[(name, value)]``
         :param collections.Mapping cookies: cookies to set on the client
         """
-        response = werkzeug.wrappers.Response(data, headers=headers)
+        response = Response(data, headers=headers)
         if cookies:
             for k, v in cookies.iteritems():
                 response.set_cookie(k, v)
         return response
+
+    def render(self, template, qcontext=None, **kw):
+        """ Lazy render of QWeb template.
+
+        The actual rendering of the given template will occur at then end of
+        the dispatching. Meanwhile, the template and/or qcontext can be
+        altered or even replaced by a static response.
+
+        :param basestring template: template to render
+        :param dict qcontext: Rendering context to use
+        """
+        return Response(template=template, qcontext=qcontext, **kw)
 
     def not_found(self, description=None):
         """ Helper for 404 response, return its result from the method
@@ -524,7 +547,15 @@ class Controller(object):
 class EndPoint(object):
     def __init__(self, method, routing):
         self.method = method
+        self.original = getattr(method, 'original_func', method)
         self.routing = routing
+        self.arguments = {}
+
+    @property
+    def first_arg_is_req(self):
+        # Backward for 7.0
+        return getattr(self.method, '_first_arg_is_req', False)
+
     def __call__(self, *args, **kw):
         return self.method(*args, **kw)
 
@@ -547,9 +578,19 @@ def routing_map(modules, nodb_only, converters=None):
                 if inspect.ismethod(mv) and hasattr(mv, 'routing'):
                     routing = dict(type='http', auth='user', methods=None, routes=None)
                     methods_done = list()
+                    routing_type = None
                     for claz in reversed(mv.im_class.mro()):
                         fn = getattr(claz, mv.func_name, None)
                         if fn and hasattr(fn, 'routing') and fn not in methods_done:
+                            fn_type = fn.routing.get('type')
+                            if not routing_type:
+                                routing_type = fn_type
+                            else:
+                                if fn_type and routing_type != fn_type:
+                                    _logger.warn("Subclass re-defines <function %s.%s> with different type than original."
+                                                    " Will use original type: %r", fn.__module__, fn.__name__, routing_type)
+                                fn.routing['type'] = routing_type
+                            fn.original_func.routing_type = routing_type
                             methods_done.append(fn)
                             routing.update(fn.routing)
                     if not nodb_only or nodb_only == (routing['auth'] == "none"):
@@ -592,7 +633,7 @@ class Service(object):
 class Model(object):
     """
         .. deprecated:: 8.0
-        Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
+        Use the resistry and cursor in ``openerp.http.request`` instead.
     """
     def __init__(self, session, model):
         self.session = session
@@ -886,19 +927,51 @@ mimetypes.add_type('application/font-woff', '.woff')
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
 
-class LazyResponse(werkzeug.wrappers.Response):
-    """ Lazy werkzeug response.
-    API not yet frozen"""
+class Response(werkzeug.wrappers.Response):
+    """ Response object passed through controller route chain.
 
-    def __init__(self, callback, status_code=None, **kwargs):
-        super(LazyResponse, self).__init__(mimetype='text/html')
-        if status_code:
-            self.status_code = status_code
-        self.callback = callback
-        self.params = kwargs
-    def process(self):
-        response = self.callback(**self.params)
-        self.response.append(response)
+    In addition to the werkzeug.wrappers.Response parameters, this
+    classe's constructor can take the following additional parameters
+    for QWeb Lazy Rendering.
+
+    :param basestring template: template to render
+    :param dict qcontext: Rendering context to use
+    :param int uid: User id to use for the ir.ui.view render call
+    """
+    default_mimetype = 'text/html'
+    def __init__(self, *args, **kw):
+        template = kw.pop('template', None)
+        qcontext = kw.pop('qcontext', None)
+        uid = kw.pop('uid', None)
+        super(Response, self).__init__(*args, **kw)
+        self.set_default(template, qcontext, uid)
+
+    def set_default(self, template=None, qcontext=None, uid=None):
+        self.template = template
+        self.qcontext = qcontext or dict()
+        self.uid = uid
+        # Support for Cross-Origin Resource Sharing
+        if request.endpoint and 'cors' in request.endpoint.routing:
+            self.headers.set('Access-Control-Allow-Origin', request.endpoint.routing['cors'])
+            methods = 'GET, POST'
+            if request.endpoint.routing['type'] == 'json':
+                methods = 'POST'
+            elif request.endpoint.routing.get('methods'):
+                methods = ', '.join(request.endpoint.routing['methods'])
+            self.headers.set('Access-Control-Allow-Methods', methods)
+
+    @property
+    def is_qweb(self):
+        return self.template is not None
+
+    def render(self):
+        view_obj = request.registry["ir.ui.view"]
+        uid = self.uid or request.uid or openerp.SUPERUSER_ID
+        return view_obj.render(request.cr, uid, self.template, self.qcontext, context=request.context)
+
+    def flatten(self):
+        self.response.append(self.render())
+        self.template = None
 
 class DisableCacheMiddleware(object):
     def __init__(self, app):
@@ -922,33 +995,12 @@ class DisableCacheMiddleware(object):
             start_response(status, new_headers)
         return self.app(environ, start_wrapped)
 
-def session_path():
-    try:
-        import pwd
-        username = pwd.getpwuid(os.geteuid()).pw_name
-    except ImportError:
-        try:
-            username = getpass.getuser()
-        except Exception:
-            username = "unknown"
-    path = os.path.join(tempfile.gettempdir(), "oe-sessions-" + username)
-    try:
-        os.mkdir(path, 0700)
-    except OSError as exc:
-        if exc.errno == errno.EEXIST:
-            # directory exists: ensure it has the correct permissions
-            # this will fail if the directory is not owned by the current user
-            os.chmod(path, 0700)
-        else:
-            raise
-    return path
-
 class Root(object):
     """Root WSGI application for the OpenERP Web Client.
     """
     def __init__(self):
         # Setup http sessions
-        path = session_path()
+        path = openerp.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
         self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
 
@@ -1033,9 +1085,9 @@ class Root(object):
             return HttpRequest(httprequest)
 
     def get_response(self, httprequest, result, explicit_session):
-        if isinstance(result, LazyResponse):
+        if isinstance(result, Response) and result.is_qweb:
             try:
-                result.process()
+                result.flatten()
             except(Exception), e:
                 if request.db:
                     result = request.registry['ir.http']._handle_exception(e)
@@ -1043,7 +1095,7 @@ class Root(object):
                     raise
 
         if isinstance(result, basestring):
-            response = werkzeug.wrappers.Response(result, mimetype='text/html')
+            response = Response(result, mimetype='text/html')
         else:
             response = result
 
@@ -1057,16 +1109,6 @@ class Root(object):
         # - It could allow session fixation attacks.
         if not explicit_session and hasattr(response, 'set_cookie'):
             response.set_cookie('session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60)
-
-        # Support for Cross-Origin Resource Sharing
-        if request.func and 'cors' in request.func.routing:
-            response.headers.set('Access-Control-Allow-Origin', request.func.routing['cors'])
-            methods = 'GET, POST'
-            if request.func_request_type == 'json':
-                methods = 'POST'
-            elif request.func.routing.get('methods'):
-                methods = ', '.join(request.func.routing['methods'])
-            response.headers.set('Access-Control-Allow-Methods', methods)
 
         return response
 
@@ -1126,7 +1168,7 @@ def db_list(force=False, httprequest=None):
 
 def db_filter(dbs, httprequest=None):
     httprequest = httprequest or request.httprequest
-    h = httprequest.environ['HTTP_HOST'].split(':')[0]
+    h = httprequest.environ.get('HTTP_HOST', '').split(':')[0]
     d = h.split('.')[0]
     r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
     dbs = [i for i in dbs if re.match(r, i)]
@@ -1178,6 +1220,6 @@ root = None
 def wsgi_postload():
     global root
     root = Root()
-    openerp.wsgi.register_wsgi_handler(root)
+    openerp.service.wsgi_server.register_wsgi_handler(root)
 
 # vim:et:ts=4:sw=4:

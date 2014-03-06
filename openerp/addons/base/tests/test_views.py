@@ -417,6 +417,61 @@ class TestNoModel(common.TransactionCase):
             ET.tostring(sarch, encoding='utf-8'),
             ET.tostring(self.arch, encoding='utf-8'))
 
+class TestTemplating(common.TransactionCase):
+    def setUp(self):
+        import openerp.modules
+        super(TestTemplating, self).setUp()
+        self._pool = openerp.modules.registry.RegistryManager.get(common.DB)
+        self._init = self._pool._init
+        # fuck off
+        self._pool._init = False
+
+    def tearDown(self):
+        self._pool._init = self._init
+        super(TestTemplating, self).tearDown()
+
+    def test_branding_inherit(self):
+        Views = self.registry('ir.ui.view')
+        id = Views.create(self.cr, self.uid, {
+            'name': "Base view",
+            'type': 'qweb',
+            'arch': """<root>
+                <item order="1"/>
+            </root>
+            """
+        })
+        id2 = Views.create(self.cr, self.uid, {
+            'name': "Extension",
+            'type': 'qweb',
+            'inherit_id': id,
+            'arch': """<xpath expr="//item" position="before">
+                <item order="2"/>
+            </xpath>
+            """
+        })
+
+        arch_string = Views.read_combined(
+            self.cr, self.uid, id, fields=['arch'],
+            context={'inherit_branding': True})['arch']
+
+        arch = ET.fromstring(arch_string)
+        Views.distribute_branding(arch)
+
+        [initial] = arch.xpath('//item[@order=1]')
+        self.assertEqual(
+            str(id),
+            initial.get('data-oe-id'),
+            "initial should come from the root view")
+        self.assertEqual(
+            '/root[1]/item[1]',
+            initial.get('data-oe-xpath'),
+            "initial's xpath should be within the root view only")
+
+        [second] = arch.xpath('//item[@order=2]')
+        self.assertEqual(
+            str(id2),
+            second.get('data-oe-id'),
+            "second should come from the extension view")
 
 class test_views(common.TransactionCase):
 

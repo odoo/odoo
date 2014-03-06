@@ -276,15 +276,10 @@ def exp_rename(old_name, new_name):
         cr.autocommit(True) # avoid transaction block
         try:
             cr.execute('ALTER DATABASE "%s" RENAME TO "%s"' % (old_name, new_name))
+            _logger.info('RENAME DB: %s -> %s', old_name, new_name)
         except Exception, e:
             _logger.error('RENAME DB: %s -> %s failed:\n%s', old_name, new_name, e)
             raise Exception("Couldn't rename database %s to %s: %s" % (old_name, new_name, e))
-        else:
-            fs = os.path.join(openerp.tools.config['root_path'], 'filestore')
-            if os.path.exists(os.path.join(fs, old_name)):
-                os.rename(os.path.join(fs, old_name), os.path.join(fs, new_name))
-
-            _logger.info('RENAME DB: %s -> %s', old_name, new_name)
     return True
 
 def exp_db_exist(db_name):
@@ -311,7 +306,7 @@ def exp_list(document=False):
                 cr.execute("select datname from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in %s order by datname", (db_user, templates_list))
             else:
                 cr.execute("select datname from pg_database where datname not in %s order by datname", (templates_list,))
-            res = [str(name) for (name,) in cr.fetchall()]
+            res = [openerp.tools.ustr(name) for (name,) in cr.fetchall()]
         except Exception:
             res = []
     res.sort()

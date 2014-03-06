@@ -41,8 +41,9 @@ except ImportError:
     from StringIO import StringIO   # NOQA
 
 import openerp
-from openerp import modules, tools, addons
+from openerp import modules, tools
 from openerp.modules.db import create_categories
+from openerp.modules import get_module_resource
 from openerp.tools.parse_version import parse_version
 from openerp.tools.translate import _
 from openerp.osv import fields, osv, orm
@@ -154,7 +155,7 @@ class module(osv.osv):
     def _get_desc(self, cr, uid, ids, field_name=None, arg=None, context=None):
         res = dict.fromkeys(ids, '')
         for module in self.browse(cr, uid, ids, context=context):
-            path = addons.get_module_resource(module.name, 'static/description/index.html')
+            path = get_module_resource(module.name, 'static/description/index.html')
             if path:
                 with tools.file_open(path, 'rb') as desc_file:
                     doc = desc_file.read()
@@ -233,7 +234,7 @@ class module(osv.osv):
     def _get_icon_image(self, cr, uid, ids, field_name=None, arg=None, context=None):
         res = dict.fromkeys(ids, '')
         for module in self.browse(cr, uid, ids, context=context):
-            path = addons.get_module_resource(module.name, 'static', 'description', 'icon.png')
+            path = get_module_resource(module.name, 'static', 'description', 'icon.png')
             if path:
                 image_file = tools.file_open(path, 'rb')
                 try:

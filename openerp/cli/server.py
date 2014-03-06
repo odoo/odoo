@@ -72,7 +72,7 @@ def report_configuration():
     """
     config = openerp.tools.config
     _logger.info("OpenERP version %s", __version__)
-    for name, value in [('addons paths', config['addons_path']),
+    for name, value in [('addons paths', openerp.modules.module.ad_paths),
                         ('database hostname', config['db_host'] or 'localhost'),
                         ('database port', config['db_port'] or '5432'),
                         ('database user', config['db_user'])]:
@@ -88,29 +88,6 @@ def setup_pid_file():
         with open(config['pidfile'], 'w') as fd:
             pidtext = "%d" % (os.getpid())
             fd.write(pidtext)
-
-def preload_registry(dbname):
-    """ Preload a registry, and start the cron."""
-    try:
-        update_module = True if openerp.tools.config['init'] or openerp.tools.config['update'] else False
-        registry = openerp.modules.registry.RegistryManager.new(dbname, update_module=update_module)
-    except Exception:
-        _logger.exception('Failed to initialize database `%s`.', dbname)
-        return False
-    return registry._assertion_report.failures == 0
-
-def run_test_file(dbname, test_file):
-    """ Preload a registry, possibly run a test file, and start the cron."""
-    try:
-        config = openerp.tools.config
-        registry = openerp.modules.registry.RegistryManager.new(dbname, update_module=config['init'] or config['update'])
-        cr = registry.db.cursor()
-        _logger.info('loading test file %s', test_file)
-        openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'test', True)
-        cr.rollback()
-        cr.close()
-    except Exception:
-        _logger.exception('Failed to initialize database `%s` and run test file `%s`.', dbname, test_file)
 
 def export_translation():
     config = openerp.tools.config
@@ -156,8 +133,7 @@ def main(args):
     config = openerp.tools.config
 
     if config["test_file"]:
-        run_test_file(config['db_name'], config['test_file'])
-        sys.exit(0)
+        config["test_enable"] = True
 
     if config["translate_out"]:
         export_translation()
@@ -172,23 +148,17 @@ def main(args):
     if config['workers']:
         openerp.multi_process = True
 
-    # preload registries, needed for -u --stop_after_init
-    rc = 0
+    preload = []
     if config['db_name']:
-        for dbname in config['db_name'].split(','):
-            if not preload_registry(dbname):
-                rc += 1
+        preload = config['db_name'].split(',')
 
-    if not config["stop_after_init"]:
-        setup_pid_file()
-        openerp.service.server.start()
-        if config['pidfile']:
-            os.unlink(config['pidfile'])
-    else:
-        sys.exit(rc)
+    stop = config["stop_after_init"]
 
-    _logger.info('OpenERP server is running, waiting for connections...')
-    quit_on_signals()
+    setup_pid_file()
+    rc = openerp.service.server.start(preload=preload, stop=stop)
+    if config['pidfile']:
+        os.unlink(config['pidfile'])
+    sys.exit(rc)
 
 class Server(Command):
     def run(self, args):
