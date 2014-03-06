@@ -851,7 +851,8 @@ def load_test_file_py(registry, test_file):
                 stream = openerp.modules.module.TestStream()
                 result = unittest2.TextTestRunner(verbosity=2, stream=stream).run(suite)
                 success = result.wasSuccessful()
-                registry._assertion_report.report_result(success)
+                if hasattr(registry._assertion_report,'report_result'):
+                    registry._assertion_report.report_result(success)
                 if not success:
                     _logger.error('%s: at least one error occurred in a test', test_file)
 
