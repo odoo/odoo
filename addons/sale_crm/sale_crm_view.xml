@@ -27,7 +27,7 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
-                    <field name="section_id" widget="selection" groups="base.group_multi_salesteams"/>
+                    <field name="section_id" options="{'no_create': True}" groups="base.group_multi_salesteams"/>
                     <field name="categ_ids" widget="many2many_tags"/>
                 </field>
             </field>

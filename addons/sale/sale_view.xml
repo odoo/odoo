@@ -205,8 +205,8 @@
                                     <field groups="base.group_no_one" name="origin"/>
                                 </group>
                                 <group name="sale_pay">
-                                    <field name="payment_term" widget="selection"/>
-                                    <field name="fiscal_position" widget="selection"/>
+                                    <field name="payment_term" options="{'no_create': True}"/>
+                                    <field name="fiscal_position" options="{'no_create': True}"/>
                                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                                 </group>
                                 <group>
