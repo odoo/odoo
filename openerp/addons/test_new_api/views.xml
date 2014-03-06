@@ -42,6 +42,10 @@
                         <notebook>
                             <page string="Messages">
                                 <field name="messages">
+                                    <tree name="Messages">
+                                        <field name="name"/>
+                                        <field name="body"/>
+                                    </tree>
                                     <form string="Message" version="7.0">
                                         <group>
                                             <field name="name"/>
@@ -94,7 +98,7 @@
         </record>
 
         <!-- Category tree view -->
-        <record id="message_tree" model="ir.ui.view">
+        <record id="category_tree" model="ir.ui.view">
             <field name="name">category tree view</field>
             <field name="model">test_new_api.category</field>
             <field name="arch" type="xml">
@@ -105,7 +109,7 @@
         </record>
 
         <!-- Category form view -->
-        <record id="message_form" model="ir.ui.view">
+        <record id="category_form" model="ir.ui.view">
             <field name="name">category form view</field>
             <field name="model">test_new_api.category</field>
             <field name="arch" type="xml">
