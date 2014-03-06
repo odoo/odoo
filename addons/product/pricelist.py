@@ -295,7 +295,8 @@ class product_pricelist(osv.osv):
                         if price is not False:
                             price_limit = price
                             price = price * (1.0+(res['price_discount'] or 0.0))
-                            price = tools.float_rouding(price, precision_rounding=res['price_round'])
+                            if res['price_round']:
+                                price = tools.float_round(price, precision_rounding=res['price_round'])
                             price += (res['price_surcharge'] or 0.0)
                             if res['price_min_margin']:
                                 price = max(price, price_limit+res['price_min_margin'])
