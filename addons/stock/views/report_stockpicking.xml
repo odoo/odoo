@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+       <template id="report_picking">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <div t-if="o.picking_type_id">
+                                <span t-field="o.picking_type_id.name"/>
+                                <table class="table table-condensed">
+                                    <tr t-foreach="o.pack_operation_ids" t-as="pack_operation">
+                                        <td><span t-field="pack_operation.product_id"/></td>
+                                        <td><span t-field="pack_operation.product_id"/></td>
+                                        <td><span t-field="pack_operation.product_qty"/></td>
+                                        <td><span t-field="pack_operation.location_id"/></td>
+                                        <td><span t-field="pack_operation.package_id"/></td>
+                                        <td><span t-field="pack_operation.lot_id"/></td>
+                                        <td><span t-field="pack_operation.location_dest_id"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </t>
+                 </t>
+             </t>
+        </template>
+    </data>
+</openerp>
