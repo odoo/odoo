@@ -31,7 +31,6 @@ from openerp import SUPERUSER_ID
 import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
-from profilehooks import profile
 #----------------------------------------------------------
 # Incoterms
 #----------------------------------------------------------
@@ -496,16 +495,16 @@ class stock_quant(osv.osv):
         """
         if quant.location_id.usage != 'internal':
             return False
-        solving_quant = quant
-        dom = [('qty', '<', 0)]
-        if quant.lot_id:
-            dom += [('lot_id', '=', quant.lot_id.id)]
-        dom += [('owner_id', '=', quant.owner_id.id)]
-        dom += [('package_id', '=', quant.package_id.id)]
-        if move.move_dest_id:
-            dom += [('negative_move_id', '=', move.move_dest_id.id)]
         quants = self.search(cr, uid, [('product_id', '=', quant.product_id.id), ('qty','<', 0)], limit=1, context=context)
         if quants:
+            solving_quant = quant
+            dom = [('qty', '<', 0)]
+            if quant.lot_id:
+                dom += [('lot_id', '=', quant.lot_id.id)]
+            dom += [('owner_id', '=', quant.owner_id.id)]
+            dom += [('package_id', '=', quant.package_id.id)]
+            if move.move_dest_id:
+                dom += [('negative_move_id', '=', move.move_dest_id.id)]
             quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, dom, context=context)
             for quant_neg, qty in quants:
                 if not quant_neg:
@@ -1148,7 +1147,6 @@ class stock_picking(osv.osv):
             stock_move_obj.do_unreserve(cr, uid, move_ids, context=context)
             stock_move_obj.action_assign(cr, uid, move_ids, context=context)
 
-    @profile(immediate=True)
     def do_transfer(self, cr, uid, picking_ids, context=None):
         """
             If no pack operation, we do simple action_done of the picking

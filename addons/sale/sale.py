@@ -27,7 +27,7 @@ from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
 import openerp.addons.decimal_precision as dp
 from openerp import workflow
-from profilehooks import profile
+
 
 class sale_order(osv.osv):
     _name = "sale.order"
@@ -669,7 +669,7 @@ class sale_order(osv.osv):
         for sale_order in self.browse(cr, uid, ids, context=context):
             self.write(cr, uid, ids, {'state': 'progress' if sale_order.invoice_exists else 'manual'}, context=context)
         return True
-    @profile(immediate=True)
+
     def action_ship_create(self, cr, uid, ids, context=None):
         """Create the required procurements to supply sales order lines, also connecting
         the procurements to appropriate stock moves in order to bring the goods to the
