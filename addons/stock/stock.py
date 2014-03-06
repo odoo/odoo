@@ -30,6 +30,7 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FO
 from openerp import SUPERUSER_ID
 import openerp.addons.decimal_precision as dp
 import logging
+
 _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 # Incoterms
@@ -3397,6 +3398,17 @@ class stock_package(osv.osv):
         child_package_ids = self.search(cr, uid, [('id', 'child_of', ids)], context=context)
         return self.pool.get('stock.quant').search(cr, uid, [('package_id', 'in', child_package_ids)], context=context)
 
+    def get_contents(self, cr, uid, pack, context=None):
+        quants = pack.quant_ids
+        children_ids = pack.children_ids
+        while children_ids:
+            children2_ids = []
+            for child in children_ids:
+                quants += child.quant_ids
+                children2_ids += child.children_ids
+            children_ids = children2_ids
+        return quants
+
     def get_content_package(self, cr, uid, ids, context=None):
         quants_ids = self.get_content(cr, uid, ids, context=context)
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'stock', 'quantsact', context=context)
@@ -3569,7 +3581,8 @@ class stock_pack_operation(osv.osv):
 
         def _check_quants_reserved(ops):
             if ops.package_id and not ops.product_id:
-                for quant in quant_obj.browse(cr, uid, package_obj.get_content(cr, uid, [ops.package_id.id]), context=context):
+                qty_op_rem[ops.id] = {}
+                for quant in self.get_contents(cr, uid, ops.package_id):
                     if quant.reservation_id and quant.reservation_id.id in [x.id for x in ops.picking_id.move_lines] and (not quants_done.get(quant.id)):
                         #Entire packages means entire quants from those packages
                         if not quants_done.get(quant.id):
@@ -3577,36 +3590,40 @@ class stock_pack_operation(osv.osv):
                         cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
                     (%s, %s, %s)""", (quant.reservation_id.id, ops.id, quant.qty,))
                         qty_move_rem[quant.reservation_id.id] -= quant.qty
+                    else:
+                        if qty_op_rem[ops.id].get(quant.product_id.id):
+                            qty_op_rem[ops.id][quant.product_id.id] += quant.qty
             else:
                 qty = uom_obj._compute_qty_obj(cr, uid, ops.product_uom_id, ops.product_qty, ops.product_id.uom_id, context=context)
                 #Check moves with same product
-                for move in [x for x in ops.picking_id.move_lines if ops.product_id.id == x.product_id.id]:
-                    for quant in move.reserved_quant_ids:
-                        if not qty > 0:
-                            break
-                        if ops.package_id:
-                            flag = quant.package_id and bool(package_obj.search(cr, uid, [('id', 'child_of', [ops.package_id.id]), ('id', '=', quant.package_id.id)], context=context)) or False
-                        else:
-                            flag = not quant.package_id.id
-                        flag = flag and ((ops.lot_id and ops.lot_id.id == quant.lot_id.id) or not ops.lot_id)
-                        flag = flag and (ops.owner_id.id == quant.owner_id.id)
-                        if flag:
-                            quant_qty = quant.qty
-                            if quants_done.get(quant.id):
-                                if quants_done[quant.id] == 0:
-                                    continue
-                                quant_qty = quants_done[quant.id]
-                            if quant_qty > qty:
-                                qty_todo = qty
-                                quants_done[quant.id] = quant_qty - qty
+                if prod_move.get(ops.product_id.id):
+                    for move in prod_move[ops.product_id.id]:
+                        for quant in move.reserved_quant_ids:
+                            if not qty > 0:
+                                break
+                            if ops.package_id:
+                                flag = quant.package_id and bool(package_obj.search(cr, uid, [('id', 'child_of', [ops.package_id.id]), ('id', '=', quant.package_id.id)], context=context)) or False
                             else:
-                                qty_todo = quant_qty
-                                quants_done[quant.id] = 0
-                            qty -= qty_todo
-                            cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
-                    (%s, %s, %s)""", (move.id, ops.id, qty_todo,))
-                            qty_move_rem[move.id] -= qty_todo
-                qty_op_rem[ops] = qty
+                                flag = not quant.package_id.id
+                            flag = flag and ((ops.lot_id and ops.lot_id.id == quant.lot_id.id) or not ops.lot_id)
+                            flag = flag and (ops.owner_id.id == quant.owner_id.id)
+                            if flag:
+                                quant_qty = quant.qty
+                                if quants_done.get(quant.id):
+                                    if quants_done[quant.id] == 0:
+                                        continue
+                                    quant_qty = quants_done[quant.id]
+                                if quant_qty > qty:
+                                    qty_todo = qty
+                                    quants_done[quant.id] = quant_qty - qty
+                                else:
+                                    qty_todo = quant_qty
+                                    quants_done[quant.id] = 0
+                                qty -= qty_todo
+                                cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
+                        (%s, %s, %s)""", (move.id, ops.id, qty_todo,))
+                                qty_move_rem[move.id] -= qty_todo
+                qty_op_rem[ops.id] = qty
 
         link_obj = self.pool.get('stock.move.operation.link')
         uom_obj = self.pool.get('product.uom')
@@ -3640,11 +3657,6 @@ class stock_pack_operation(osv.osv):
                         prod_move[move.product_id.id] = [move]
                     else:
                         prod_move[move.product_id.id].append(move)
-
-            
-            to_unlink_ids = [x.id for x in op.linked_move_operation_ids]
-            if to_unlink_ids:
-                link_obj.unlink(cr, uid, to_unlink_ids, context=context)
             _check_quants_reserved(op)
 
         remaining_qty_ok = True
@@ -3652,12 +3664,11 @@ class stock_pack_operation(osv.osv):
             op.refresh()
             if op.product_id:
                 #TODO: Remaining qty: UoM conversions are done twice
-                normalized_qty = qty_op_rem[op]
+                normalized_qty = qty_op_rem[op.id]
                 if normalized_qty > 0:
                     remaining_qty_ok = remaining_qty_ok and _create_link_for_product(op.product_id.id, normalized_qty)
             elif op.package_id:
-                prod_quants = self._get_remaining_prod_quantities(cr, uid, op, context=context)
-                for product_id, qty in prod_quants.items():
+                for product_id, qty in qty_op_rem[op.id].items():
                     if qty > 0:
                         remaining_qty_ok = remaining_qty_ok and _create_link_for_product(product_id, qty)
                         
