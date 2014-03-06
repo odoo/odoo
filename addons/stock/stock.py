@@ -504,7 +504,7 @@ class stock_quant(osv.osv):
         dom += [('package_id', '=', quant.package_id.id)]
         if move.move_dest_id:
             dom += [('negative_move_id', '=', move.move_dest_id.id)]
-        quants = self.search(cr, uid, [('product_id', '=', quant.product_id.id), ('qty','<', 0)], context=context)
+        quants = self.search(cr, uid, [('product_id', '=', quant.product_id.id), ('qty','<', 0)], limit=1, context=context)
         if quants:
             quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, dom, context=context)
             for quant_neg, qty in quants:
@@ -2080,10 +2080,7 @@ class stock_move(osv.osv):
                 fallback_domain = [('reservation_id', '=', False)]
                 self.check_tracking(cr, uid, move, move.restrict_lot_id.id, context=context)
                 qty = move_qty[move.id]
-                if move.location_id.usage in ('supplier', 'inventory', 'production'):
-                    quants = [(None, move.product_uom_qty)]
-                else:
-                    quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain, prefered_domain=prefered_domain, fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain, prefered_domain=prefered_domain, fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 quant_obj.quants_move(cr, uid, quants, move, lot_id=move.restrict_lot_id.id, owner_id=move.restrict_partner_id.id, context=context)
             #unreserve the quants and make them available for other operations/moves
             quant_obj.quants_unreserve(cr, uid, move, context=context)
