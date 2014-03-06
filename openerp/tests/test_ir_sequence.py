@@ -116,7 +116,7 @@ class test_ir_sequence_no_gap(unittest2.TestCase):
             n0 = registry('ir.sequence').next_by_code(cr0, ADMIN_USER_ID, 'test_sequence_type_2', {})
             assert n0
             n1 = registry('ir.sequence').next_by_code(cr1, ADMIN_USER_ID, 'test_sequence_type_2', {})
-        assert e.exception.pgcode == psycopg2.errorcodes.LOCK_NOT_AVAILABLE
+        self.assertEqual(e.exception.pgcode, psycopg2.errorcodes.LOCK_NOT_AVAILABLE, msg="postgresql returned an incorrect errcode")
         cr0.close()
         cr1.close()
 
