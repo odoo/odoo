@@ -205,7 +205,7 @@ website.Tour = openerp.Class.extend({
 
             if (!step.element) step.orphan = true;
             if (step.snippet) {
-                step.element = '#oe_snippets div.oe_snippet[data-snippet-id="'+step.snippet+'"] .oe_snippet_thumbnail';
+                step.element = '#oe_snippets '+step.snippet+' .oe_snippet_thumbnail';
             }
 
         }
