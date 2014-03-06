@@ -21,8 +21,6 @@
 from openerp import tools
 
 import math
-import logging
-_logger = logging.getLogger(__name__)
 
 
 def rounding(f, r):
