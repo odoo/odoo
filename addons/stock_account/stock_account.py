@@ -127,7 +127,7 @@ class stock_quant(osv.osv):
 
     def move_single_quant(self, cr, uid, quant, location_to, qty, move, context=None):
         quant_record = super(stock_quant, self).move_single_quant(cr, uid, quant, location_to, qty, move, context=context)
-        #self._account_entry_move(cr, uid, quant, move, context=context)
+        self._account_entry_move(cr, uid, quant, move, context=context)
         return quant_record
 
 
