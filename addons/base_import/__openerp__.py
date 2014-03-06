@@ -32,6 +32,8 @@ Re-implement openerp's file import system:
     ],
     'css': [
         'static/lib/select2/select2.css',
+        # TODO for trunk: use bootstrap version
+        # 'static/lib/select2/select2-bootstrap.css',
         'static/src/css/import.css',
     ],
     'js': [
