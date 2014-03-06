@@ -10,11 +10,23 @@
                 <group name="sale_pay" position="after">
                     <group colspan="2" col="2" >
                         <separator string="Dates" colspan="2"/>
-                        <field name="requested_date"/>
+                        <field name="requested_date" on_change="onchange_requested_date(requested_date, commitment_date)"/>
                         <field name="commitment_date"/>
                         <field name="effective_date"/>
                     </group>
                 </group>
+            </field>
+        </record>
+        <record id="view_order_tree_date" model="ir.ui.view">
+            <field name="name">sale.order.tree.inherit5</field>
+            <field name="model">sale.order</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+                <field name="date_order" position="after">
+                    <field name="requested_date"/>
+                    <field name="commitment_date"/>
+                </field>
             </field>
         </record>
 
