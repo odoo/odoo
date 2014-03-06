@@ -42,6 +42,29 @@ class Post(osv.Model):
     _name = 'website.forum.post'
     _description = "Question"
     _inherit = ['mail.thread', 'website.seo.metadata']
+    
+    def _get_votes(self, cr, uid, ids, field_name, arg, context):
+        res = dict.fromkeys(ids, False)
+        for post in self.browse(cr, uid, ids, context=context):
+            if post.vote_ids:
+                for vote in post.vote_ids:
+                    if vote.user_id.id == uid:
+                        if vote.vote == '1':
+                            res[post.id] = 1
+                        else:
+                            res[post.id] = -1
+        return res
+
+    def _get_votes_length(self, cr, uid, ids, field_name, arg, context):
+        res = dict.fromkeys(ids, 0)
+        for post in self.browse(cr, uid, ids, context=context):
+            if post.vote_ids:
+                for vote in post.vote_ids:
+                    if vote.vote == '1':
+                        res[post.id] += 1
+                    else:
+                        res[post.id] -= 1
+        return res
 
     _columns = {
         'forum_id': fields.many2one('website.forum', 'Forum', required=True),
@@ -73,6 +96,9 @@ class Post(osv.Model):
             string='Post Messages',
             help="Comments on forum post",
         ),
+        'user_vote':fields.function(_get_votes, string="Number of user votes", type='boolean'),
+        'vote_count':fields.function(_get_votes_length, string="Number of user votes count", type='integer'),
+
     }
     _defaults = {
         'state': 'active',
@@ -122,7 +148,7 @@ class Post(osv.Model):
                 if method == 'unlink':
                     res.update({'type': 'deleted_question'})
                 if method == 'vote':
-                    res.update({'type': 'voteted_question'})
+                    res.update({'type': 'voted_question'})
 
             Activity.create(cr, uid, res, context=context)
 
@@ -188,12 +214,12 @@ class Vote(osv.Model):
     _columns = {
         'post_id': fields.many2one('website.forum.post', 'Post', required=True),
         'user_id': fields.many2one('res.users', 'User'),
-        'vote': fields.integer('rate'),
+        'vote': fields.selection([('1', '1'),('-1', '-1')], 'rate'),
     }
 
     def create(self, cr, uid, vals, context=None):
         vote_id = super(Vote, self).create(cr, uid, vals, context=context)
-        self.pool['website.forum.post'].create_activity(cr, uid, [vals.get('post_id')], method='vote', context=context)
+        self.pool['website.forum.post'].create_activity(cr, uid, [int(vals.get('post_id'))], method='vote', context=context)
         return vote_id
 
 class ForumActivity(osv.Model):
