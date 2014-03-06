@@ -9,7 +9,10 @@ import os.path
 import platform
 import psutil
 import random
-import resource
+if os.name == 'posix':
+    import resource
+else:
+    resource = None
 import select
 import signal
 import socket
@@ -638,6 +641,8 @@ class Worker(object):
                 raise
 
     def process_limit(self):
+        if resource is None:
+            return
         # If our parent changed sucide
         if self.ppid != os.getppid():
             _logger.info("Worker (%s) Parent changed", self.pid)
