@@ -425,6 +425,9 @@ class YamlInterpreter(object):
 
                     if not el.attrib.get('on_change', False):
                         continue
+                    if el.attrib['on_change'] in ('1', 'true'):
+                        _logger.warning("New-style on_change not implemented at import")
+                        continue
                     match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'])
                     assert match, "Unable to parse the on_change '%s'!" % (el.attrib['on_change'], )
 

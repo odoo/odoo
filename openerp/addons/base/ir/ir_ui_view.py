@@ -628,6 +628,35 @@ class view(osv.osv):
         orm.transfer_modifiers_to_node(modifiers, node)
         return fields
 
+    def add_on_change(self, cr, user, model_name, arch):
+        """ Add attribute on_change="1" on fields that are dependencies of
+            computed fields on the same view.
+        """
+        # map each field object to its corresponding nodes in arch
+        field_nodes = collections.defaultdict(list)
+
+        def collect(node, model):
+            if node.tag == 'field':
+                field = model._fields.get(node.get('name'))
+                if field:
+                    field_nodes[field].append(node)
+                    if field.relational:
+                        model = field.comodel
+            for child in node:
+                collect(child, model)
+
+        collect(arch, self.pool[model_name])
+
+        for field, nodes in field_nodes.iteritems():
+            # if any of the fields that depend on field is in arch, add
+            # on_change="1" on the nodes referring to field
+            if any(dep in field_nodes for dep, path in field._triggers):
+                for node in nodes:
+                    if not node.get('on_change'):
+                        node.set('on_change', '1')
+
+        return arch
+
     def _disable_workflow_buttons(self, cr, user, model, node):
         """ Set the buttons in node to readonly if the user can't activate them. """
         if model is None or user == 1:
@@ -682,6 +711,7 @@ class view(osv.osv):
         else:
             fields = Model.fields_get(cr, user, None, context)
 
+        node = self.add_on_change(cr, user, model, node)
         fields_def = self.postprocess(cr, user, model, node, view_id, False, fields, context=context)
         node = self._disable_workflow_buttons(cr, user, model, node)
         if node.tag in ('kanban', 'tree', 'form', 'gantt'):
