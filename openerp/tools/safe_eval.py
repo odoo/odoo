@@ -67,7 +67,8 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'LOAD_NAME', 'CALL_FUNCTION', 'COMPARE_OP', 'LOAD_ATTR',
     'STORE_NAME', 'GET_ITER', 'FOR_ITER', 'LIST_APPEND', 'DELETE_NAME',
     'JUMP_FORWARD', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE', 'JUMP_ABSOLUTE',
-    'MAKE_FUNCTION', 'SLICE+0', 'SLICE+1', 'SLICE+2', 'SLICE+3',
+    'MAKE_FUNCTION', 'SLICE+0', 'SLICE+1', 'SLICE+2', 'SLICE+3', 'BREAK_LOOP',
+    'CONTINUE_LOOP', 'RAISE_VARARGS',
     # New in Python 2.7 - http://bugs.python.org/issue4715 :
     'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE',
     'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'END_FINALLY'
@@ -224,9 +225,14 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'False': False,
                 'None': None,
                 'str': str,
+                'unicode': unicode,
                 'globals': locals,
                 'locals': locals,
                 'bool': bool,
+                'int': int,
+                'float': float,
+                'long': long,
+                'enumerate': enumerate,
                 'dict': dict,
                 'list': list,
                 'tuple': tuple,
@@ -234,11 +240,22 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'abs': abs,
                 'min': min,
                 'max': max,
+                'sum': sum,
                 'reduce': reduce,
                 'filter': filter,
                 'round': round,
                 'len': len,
-                'set' : set
+                'set': set,
+                'all': all,
+                'any': any,
+                'ord': ord,
+                'chr': chr,
+                'cmp': cmp,
+                'divmod': divmod,
+                'isinstance': isinstance,
+                'range': range,
+                'xrange': xrange,
+                'zip': zip,
             }
     )
     c = test_expr(expr, _SAFE_OPCODES, mode=mode)
