@@ -51,14 +51,12 @@
             <h2><strong><div class='oe_pick_list_header'>
                 Operations Informations
             </div></strong></h2>
-            <table class='table table-striped'>
+            <table class='table table-condensed'>
                 <thead>
                     <tr>
-                        <th></th>
                         <th>Product</th> 
                         <th class='text-center'>Total Qty</th> 
                         <th class='text-center'>Qty done</th> 
-                        <!-- <th class='text-center'>UoM</th>  -->
                         <th>Source Location</th>
                         <th>Destination Location</th>
                         <th>Lot</th>
@@ -70,17 +68,16 @@
 
                 <tbody>
                     <t t-foreach="widget.get_rows()" t-as="row">
-                        <tr t-att-class="row.classes + 'js_pack_op_line'">
-                            <td> <input type="checkbox"/></td>
+                        <tr t-att-class="row.classes + ' js_pack_op_line'" t-att-data-id="row.cols.id">
                             <td> <t t-esc="row.cols.product" /> </td>
                             <td class='text-center'> <t t-esc="row.cols.qty" /> <t t-esc="row.cols.uom" /> </td>
-                            <td class='text-center'> <t t-esc="row.cols.rem" /> </td>
+                            <td class='js_qty_rem text-center'> <t t-esc="row.cols.rem" /> </td>
                             <td class="js_loc"> <t t-esc="row.cols.loc" /> </td>
                             <td class="js_loc"> <t t-esc="row.cols.dest" /> </td>
                             <td> <t t-esc="row.cols.lot" /> </td>
                             <td> <t t-esc="row.cols.pack" /> </td>
-                            <td> <t t-esc="row.cols.container" /> </td>
-                            <td><span class='btn btn-default js_pack_scan' t-att-op-id='row.cols.id'>➔</span></td>
+                            <td class="js_container"> <t t-esc="row.cols.container" /> </td>
+                            <td><span class='btn btn-default js_pack_scan' t-att-op-id='row.cols.product_id'>➔</span></td>
                         </tr>
                     </t>
                 </tbody>
@@ -241,7 +238,8 @@
                             <button type="button" class='btn btn-info js_pick_print'> Print </button>
                     </div>
                     <h2 class="oe_pick_app_header" t-esc='widget.get_header()' />
-                    <input type='text' class="oe_searchbox align-center" placeholder='Filter by location...'/>
+                    <input type='text' class="oe_searchbox align-left" placeholder='Filter by location...'/>
+                    <button type='button' class='btn btn-default js_clear_search'>Clear</button>
                     <button type="button" class='btn btn-default js_pick_pack pull-right'> Put in Pack </button>
                     <div class='oe_placeholder_picking_editor'/>
                     

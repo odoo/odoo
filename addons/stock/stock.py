@@ -1216,20 +1216,34 @@ class stock_picking(osv.osv):
         #return id of next picking to work on
         return self.get_next_picking_for_ui(cr, uid, context=context)
 
-    def action_pack(self, cr, uid, picking_ids, context=None):
+    def action_pack(self, cr, uid, picking_ids, operation_filter_ids=None, context=None):
         """ Create a package with the current pack_operation_ids of the picking that aren't yet in a pack.
-        Used in the barcode scanner UI and the normal interface as well. """
+        Used in the barcode scanner UI and the normal interface as well. 
+        operation_filter_ids is used by barcode scanner interface to specify a subset of operation to pack"""
+        if operation_filter_ids == None:
+            operation_filter_ids = []
         stock_operation_obj = self.pool.get('stock.pack.operation')
         package_obj = self.pool.get('stock.quant.package')
         stock_move_obj = self.pool.get('stock.move')
         for picking_id in picking_ids:
-            operation_ids = stock_operation_obj.search(cr, uid, [('picking_id', '=', picking_id), ('result_package_id', '=', False)], context=context)
+            operation_search_domain = [('picking_id', '=', picking_id), ('result_package_id', '=', False)]
+            if operation_filter_ids != []:
+                operation_search_domain.append(('id', 'in', operation_filter_ids))
+            operation_ids = stock_operation_obj.search(cr, uid, operation_search_domain, context=context)
+            pack_operation_ids = []
             if operation_ids:
                 for operation in stock_operation_obj.browse(cr, uid, operation_ids, context=context):
-                    for record in operation.linked_move_operation_ids:
-                        stock_move_obj.check_tracking(cr, uid, record.move_id, operation.package_id.id or operation.lot_id.id, context=context)
+                    #If we haven't done all qty in operation, we have to split into 2 operation
+                    op = operation
+                    if (operation.qty_done < operation.product_qty):
+                        new_operation = stock_operation_obj.copy(cr, uid, operation.id, {'product_qty': operation.qty_done,'qty_done': operation.qty_done}, context=context)
+                        stock_operation_obj.write(cr, uid, operation.id, {'product_qty': operation.product_qty - operation.qty_done,'qty_done': 0}, context=context)
+                        op = stock_operation_obj.browse(cr, uid, new_operation, context=context)
+                    pack_operation_ids.append(op.id)
+                    for record in op.linked_move_operation_ids:
+                        stock_move_obj.check_tracking(cr, uid, record.move_id, op.package_id.id or op.lot_id.id, context=context)
                 package_id = package_obj.create(cr, uid, {}, context=context)
-                stock_operation_obj.write(cr, uid, operation_ids, {'result_package_id': package_id}, context=context)
+                stock_operation_obj.write(cr, uid, pack_operation_ids, {'result_package_id': package_id}, context=context)
         return True
 
     def process_product_id_from_ui(self, cr, uid, picking_id, product_id, context=None):
@@ -3471,6 +3485,7 @@ class stock_pack_operation(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', ondelete="CASCADE"),  # 1
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
+        'qty_done': fields.float('Quantity Processed', digits_compute=dp.get_precision('Product Unit of Measure')),
         'package_id': fields.many2one('stock.quant.package', 'Package'),  # 2
         'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number'),
         'result_package_id': fields.many2one('stock.quant.package', 'Container Package', help="If set, the operations are packed into this package", required=False, ondelete='cascade'),
@@ -3483,10 +3498,13 @@ class stock_pack_operation(osv.osv):
         'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Qty'),
         'location_id': fields.many2one('stock.location', 'Location From'),
         'location_dest_id': fields.many2one('stock.location', 'Location To'),
+        'processed': fields.selection([('true','Yes'), ('false','No')],'Has been processed?', required=True),
     }
 
     _defaults = {
         'date': fields.date.context_today,
+        'qty_done': 0,
+        'processed': lambda *a: 'false',
     }
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -3621,13 +3639,14 @@ class stock_pack_operation(osv.osv):
         if existing_operation_ids:
             #existing operation found for the given domain and picking => increment its quantity
             operation_id = existing_operation_ids[0]
-            qty = self.browse(cr, uid, operation_id, context=context).product_qty + 1
-            self.write(cr, uid, [operation_id], {'product_qty': qty}, context=context)
+            qty = self.browse(cr, uid, operation_id, context=context).qty_done + 1
+            self.write(cr, uid, [operation_id], {'qty_done': qty}, context=context)
         else:
             #no existing operation found for the given domain and picking => create a new one
             values = {
                 'picking_id': picking_id,
                 'product_qty': 1,
+                'qty_done': 1,
             }
             for key in domain:
                 var_name, dummy, value = key

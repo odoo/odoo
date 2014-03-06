@@ -26,140 +26,181 @@ function openerp_picking_widgets(instance){
         template: 'PickingEditorWidget',
         init: function(parent,options){
             this._super(parent,options);
+            this.rows = [];
         },
         get_rows: function(){
             var model = this.getParent();
-            var rows = [];
+            this.rows = [];
             var self = this;
 
             _.each( model.packoplines, function(packopline){
-                rows.push({
-                    cols: { product: packopline.product_id[1],
-                            qty: packopline.product_qty,
-                            rem: packopline.remaining_qty,
-                            uom: packopline.product_uom_id[1],
-                            lot: packopline.lot_id[1],
-                            pack: packopline.package_id[1],
-                            container: packopline.result_package_id[1],
-                            loc: packopline.location_id[1],
-                            dest: packopline.location_dest_id[1],
-                            id:  packopline.product_id[0],
-                    },
-                    classes: (packopline.qty_remaining < 0 ? 'danger' : ''),
-                });
+                if (packopline.processed === 'false'){
+                    var pack = undefined;
+                    if (packopline.product_id[1] !== undefined){ pack = packopline.package_id[1];}
+                    self.rows.push({
+                        cols: { product: packopline.product_id[1] || packopline.package_id[1],
+                                qty: packopline.product_qty,
+                                rem: packopline.qty_done,
+                                uom: packopline.product_uom_id[1],
+                                lot: packopline.lot_id[1],
+                                pack: pack,
+                                container: packopline.result_package_id[1],
+                                loc: packopline.location_id[1],
+                                dest: packopline.location_dest_id[1],
+                                id: packopline.id,
+                                product_id: packopline.product_id[0],
+                        },
+                        classes: (packopline.product_qty <= packopline.qty_done ? 'active' : ''),
+                    });
+                }
             });
             
-            return rows;
+            return self.rows;
         },
         renderElement: function(){
             var self = this;
             this._super();
             this.$('.js_pack_scan').click(function(){
                 var id = parseInt($(this).attr('op-id'));
-                console.log('Id:',id);
                 self.getParent().scan_product_id(id);
+            });
+            this.$('.js_pack_op_line').click(function(){
+                if (this.classList.contains('warning')){
+                    $(this).removeClass('warning');
+                }
+                else{
+                    $(this).addClass('warning');
+                }
             });
             //remove navigtion bar from default openerp GUI
             $('td.navbar').html('<div></div>');
         },
         on_searchbox: function(query){
-            var self = this;
+            //hide line that has no location matching the query and highlight location that match the query
             if (query !== '') {
-                this.$('.js_loc:not(.js_loc:contains('+query+'))').removeClass('warning');
-                this.$('.js_loc:contains('+query+')').addClass('warning');
+                this.$('.js_loc:not(.js_loc:contains('+query+'))').removeClass('info');
+                this.$('.js_loc:contains('+query+')').addClass('info');
                 this.$('.js_pack_op_line:not(.js_pack_op_line:has(.js_loc:contains('+query+')))').addClass('hidden');
                 this.$('.js_pack_op_line:has(.js_loc:contains('+query+'))').removeClass('hidden');
             }
+            //if no query specified, then show everything
             if (query === '') {
-                this.$('.js_loc').removeClass('warning');
-                this.$('.js_pack_op_line.hidden').removeClass('hidden');
+                this.$('.js_pack_op_line.warning').removeClass('warning');
+                this.$('.js_loc').removeClass('info');
+                this.$('.js_pack_op_line.hidden').removeClass('hidden');    
             }
-            return true;
+        },
+        get_current_op_selection: function(){
+            //get ids of visible on the screen
+            pack_op_ids = []
+            if (this.$('.js_pack_op_line.warning:not(.js_pack_op_line.hidden)').length > 0){
+                console.log('some selected');
+                this.$('.js_pack_op_line.warning:not(.js_pack_op_line.hidden)').each(function(){
+                    cur_id = this.attributes.getNamedItem('data-id').value;
+                    pack_op_ids.push(parseInt(cur_id));
+                });
+            }
+            else{
+                console.log('nothing selected');
+                this.$('.js_pack_op_line:not(.js_pack_op_line.hidden)').each(function(){
+                    cur_id = this.attributes.getNamedItem('data-id').value;
+                    pack_op_ids.push(parseInt(cur_id));
+                });
+            }
+            //get list of element in this.rows where rem > 0 and container is empty
+            list = []
+            _.each(this.rows, function(row){
+                if (row.cols.rem > 0 && row.cols.container === undefined){
+                    list.push(row.cols.id);
+                }
+            });
+            //return only those visible with rem qty > 0 and container empty
+            return _.intersection(pack_op_ids, list);
         }
     });
 
-    module.PackageEditorWidget = instance.web.Widget.extend({
-        template: 'PackageEditorWidget',
-        get_header: function(){
-            var model = this.getParent();
-            var current_package = model.get_selected_package();
-            return current_package ? 'Operations for Package: ' + current_package.name : 'Current Operations';
-        },
-        get_rows: function(){
-            var model = this.getParent();
-            var rows = [];
-            var ops = model.get_current_operations();
-            _.each( ops, function(op){
-                rows.push({
-                    cols: {
-                        product: (op.package_id ? op.package_id[1] : op.product_id[1]) + (op.lot_id ? ' Lot: ' + op.lot_id[1] : ''),
-                        uom: op.product_uom ? product_uom[1] : '',
-                        qty: op.product_qty,
-                    },
-                    classes: 'js_pack_op '+ (op.id === model.get_selected_operation() ? 'warning' : ''),
-                    att_op_id: op.id,
-                });
-            });
+    // module.PackageEditorWidget = instance.web.Widget.extend({
+    //     template: 'PackageEditorWidget',
+    //     get_header: function(){
+    //         var model = this.getParent();
+    //         var current_package = model.get_selected_package();
+    //         return current_package ? 'Operations for Package: ' + current_package.name : 'Current Operations';
+    //     },
+    //     get_rows: function(){
+    //         var model = this.getParent();
+    //         var rows = [];
+    //         var ops = model.get_current_operations();
+    //         _.each( ops, function(op){
+    //             rows.push({
+    //                 cols: {
+    //                     product: (op.package_id ? op.package_id[1] : op.product_id[1]) + (op.lot_id ? ' Lot: ' + op.lot_id[1] : ''),
+    //                     uom: op.product_uom ? product_uom[1] : '',
+    //                     qty: op.product_qty,
+    //                 },
+    //                 classes: 'js_pack_op '+ (op.id === model.get_selected_operation() ? 'warning' : ''),
+    //                 att_op_id: op.id,
+    //             });
+    //         });
 
-            return rows;
-        },
-        renderElement: function(){
-            var self = this;
-            this._super();
-            var model = this.getParent();
-            this.$('.js_pack_op').click(function(){
-                if (!this.classList.contains('warning')){
-                    self.$('.js_pack_op').removeClass('warning');
-                    $(this).addClass('warning');
-                    model.set_selected_operation(parseInt($(this).attr('op-id')));
-                } else {
-                    $(this).removeClass('warning');
-                    model.set_selected_operation(null);
-                };
-            });
-        },
-    });
+    //         return rows;
+    //     },
+    //     renderElement: function(){
+    //         var self = this;
+    //         this._super();
+    //         var model = this.getParent();
+    //         this.$('.js_pack_op').click(function(){
+    //             if (!this.classList.contains('warning')){
+    //                 self.$('.js_pack_op').removeClass('warning');
+    //                 $(this).addClass('warning');
+    //                 model.set_selected_operation(parseInt($(this).attr('op-id')));
+    //             } else {
+    //                 $(this).removeClass('warning');
+    //                 model.set_selected_operation(null);
+    //             };
+    //         });
+    //     },
+    // });
 
-    module.PackageSelectorWidget = instance.web.Widget.extend({
-        template: 'PackageSelectorWidget',
-        get_header: function(){
-            return this._header || 'Packages:';
-        },
-        get_rows: function(){
-            var model = this.getParent();
-            var current_package = model.get_selected_package();
-            var rows = [];
-            _.each( model.packages, function(pack){
-                rows.push({
-                    cols:{ pack: pack.name},
-                    id: pack.id,
-                    classes: pack === current_package ? ' warning' : '' ,
-                });
-            });
-            return rows;
-        },
-        renderElement: function(){
-            this._super();
-            var model = this.getParent();
-            this.$('.js_pack_row').each(function(){
-                var pack_id = parseInt($(this).attr('pack-id'));
-                $('.js_pack_print', this).click(function(){ model.print_package(pack_id); });
-                $('.js_pack_plus', this).click(function(){ model.copy_package_op(pack_id); });
-                $('.js_pack_minus', this).click(function(){ 
-                    if(model.get_selected_package() && model.get_selected_package().id === pack_id){
-                        model.deselect_package();
-                    }
-                    model.delete_package_op(pack_id); });
-                $('.js_pack_select', this).click(function(){ 
-                    if(model.get_selected_package() && model.get_selected_package().id === pack_id){
-                        model.deselect_package();
-                    }else{
-                        model.select_package(pack_id); 
-                    }
-                });
-            });
-        },
-    });
+    // module.PackageSelectorWidget = instance.web.Widget.extend({
+    //     template: 'PackageSelectorWidget',
+    //     get_header: function(){
+    //         return this._header || 'Packages:';
+    //     },
+    //     get_rows: function(){
+    //         var model = this.getParent();
+    //         var current_package = model.get_selected_package();
+    //         var rows = [];
+    //         _.each( model.packages, function(pack){
+    //             rows.push({
+    //                 cols:{ pack: pack.name},
+    //                 id: pack.id,
+    //                 classes: pack === current_package ? ' warning' : '' ,
+    //             });
+    //         });
+    //         return rows;
+    //     },
+    //     renderElement: function(){
+    //         this._super();
+    //         var model = this.getParent();
+    //         this.$('.js_pack_row').each(function(){
+    //             var pack_id = parseInt($(this).attr('pack-id'));
+    //             $('.js_pack_print', this).click(function(){ model.print_package(pack_id); });
+    //             $('.js_pack_plus', this).click(function(){ model.copy_package_op(pack_id); });
+    //             $('.js_pack_minus', this).click(function(){ 
+    //                 if(model.get_selected_package() && model.get_selected_package().id === pack_id){
+    //                     model.deselect_package();
+    //                 }
+    //                 model.delete_package_op(pack_id); });
+    //             $('.js_pack_select', this).click(function(){ 
+    //                 if(model.get_selected_package() && model.get_selected_package().id === pack_id){
+    //                     model.deselect_package();
+    //                 }else{
+    //                     model.select_package(pack_id); 
+    //                 }
+    //             });
+    //         });
+    //     },
+    // });
 
     module.PickingMenuWidget = module.MobileWidget.extend({
         template: 'PickingMenuWidget',
@@ -434,6 +475,14 @@ function openerp_picking_widgets(instance){
             this.$('.oe_searchbox').keyup(function(event){
                 self.on_searchbox($(this).val());
             });
+            this.$('.js_clear_search').click(function(){ 
+                self.on_searchbox(''); 
+                self.$('.oe_searchbox').val('');
+            });
+            this.$('.js_pack_op_line').click(function(){
+                console.log("click line");
+                $(this).addClass('warning');
+            });
 
             this.hotkey_handler = function(event){
                 if(event.keyCode === 37 ){  // Left Arrow
@@ -449,11 +498,11 @@ function openerp_picking_widgets(instance){
                 self.picking_editor = new module.PickingEditorWidget(self);
                 self.picking_editor.replace(self.$('.oe_placeholder_picking_editor'));
 
-                self.package_editor = new module.PackageEditorWidget(self);
-                self.package_editor.replace(self.$('.oe_placeholder_package_editor'));
+                // self.package_editor = new module.PackageEditorWidget(self);
+                // self.package_editor.replace(self.$('.oe_placeholder_package_editor'));
 
-                self.package_selector = new module.PackageSelectorWidget(self);
-                self.package_selector.replace(self.$('.oe_placeholder_package_selector'));
+                // self.package_selector = new module.PackageSelectorWidget(self);
+                // self.package_selector.replace(self.$('.oe_placeholder_package_selector'));
                 
                 if( self.picking.id === self.pickings[0]){
                     self.$('.js_pick_prev').addClass('disabled');
@@ -475,17 +524,20 @@ function openerp_picking_widgets(instance){
         on_searchbox: function(query){
             var self = this;
             self.picking_editor.on_searchbox(query);
-            // self.refresh_ui(self.picking);
         },
         // reloads the data from the provided picking and refresh the ui. 
         // (if no picking_id is provided, gets the first picking in the db)
         refresh_ui: function(picking_id){
             var self = this;
+            var remove_search_filter = true;
+            if (self.picking.id === picking_id){
+                remove_search_filter = false;
+            }
             return this.load(picking_id)
-                .then(function(){ 
+                .then(function(){
                     self.picking_editor.renderElement();
-                    self.package_editor.renderElement();
-                    self.package_selector.renderElement();
+                    // self.package_editor.renderElement();
+                    // self.package_selector.renderElement();
 
                     if( self.picking.id === self.pickings[0]){
                         self.$('.js_pick_prev').addClass('disabled');
@@ -499,6 +551,13 @@ function openerp_picking_widgets(instance){
                         self.$('.js_pick_next').removeClass('disabled');
                     }
                     self.$('.oe_pick_app_header').text(self.get_header());
+                    if (remove_search_filter){
+                        self.$('.oe_searchbox').val('');
+                        self.on_searchbox('');
+                    }
+                    else{
+                        self.on_searchbox(self.$('.oe_searchbox').val());
+                    }
                 });
         },
         get_header: function(){
@@ -538,13 +597,15 @@ function openerp_picking_widgets(instance){
         },
         pack: function(){
             var self = this;
-            new instance.web.Model('stock.picking')
-                .call('action_pack',[[[self.picking.id]]])
-                .then(function(){
-                    instance.session.user_context.current_package_id = false;
-
-                    return self.refresh_ui(self.picking.id);
-                });
+            var pack_op_ids = self.picking_editor.get_current_op_selection();
+            if (pack_op_ids.length !== 0){
+                new instance.web.Model('stock.picking')
+                    .call('action_pack',[[[self.picking.id]], pack_op_ids])
+                    .then(function(){
+                        instance.session.user_context.current_package_id = false;
+                        return self.refresh_ui(self.picking.id);
+                    });
+            }
         },
         done: function(){
             var self = this;
@@ -605,44 +666,44 @@ function openerp_picking_widgets(instance){
                 }
             }
         },
-        copy_package_op: function(pack_id){
-            var self = this;
-            new instance.web.Model('stock.quant.package').call('copy_pack',[pack_id])
-                .then(function(){
-                    return self.refresh_ui(self.picking.id);
-                });
-        },
-        delete_package_op: function(pack_id){
-            var self = this;
-            new instance.web.Model('stock.pack.operation').call('search', [[['result_package_id', '=', pack_id]]])
-                .then(function(op_ids) {
-                    new instance.web.Model('stock.pack.operation').call('unlink', [op_ids])
-                        .then(function() {
-                            return self.refresh_ui(self.picking.id);
-                        });
-                });
-        },
-        deselect_package: function(){
-            instance.session.user_context.current_package_id = false;
-            this.package_editor.renderElement();
-            this.package_selector.renderElement();
-        },
-        select_package: function(package_id){
-            instance.session.user_context.current_package_id = package_id;
-            this.package_editor.renderElement();
-            this.package_selector.renderElement();
-        },
-        get_selected_package: function(){
-            var current_package;
+        // copy_package_op: function(pack_id){
+        //     var self = this;
+        //     new instance.web.Model('stock.quant.package').call('copy_pack',[pack_id])
+        //         .then(function(){
+        //             return self.refresh_ui(self.picking.id);
+        //         });
+        // },
+        // delete_package_op: function(pack_id){
+        //     var self = this;
+        //     new instance.web.Model('stock.pack.operation').call('search', [[['result_package_id', '=', pack_id]]])
+        //         .then(function(op_ids) {
+        //             new instance.web.Model('stock.pack.operation').call('unlink', [op_ids])
+        //                 .then(function() {
+        //                     return self.refresh_ui(self.picking.id);
+        //                 });
+        //         });
+        // },
+        // deselect_package: function(){
+        //     instance.session.user_context.current_package_id = false;
+        //     this.package_editor.renderElement();
+        //     this.package_selector.renderElement();
+        // },
+        // select_package: function(package_id){
+        //     instance.session.user_context.current_package_id = package_id;
+        //     this.package_editor.renderElement();
+        //     this.package_selector.renderElement();
+        // },
+        // get_selected_package: function(){
+        //     var current_package;
 
-            _.each( this.packages, function(pack){
-                if(pack.id === instance.session.user_context.current_package_id){
-                    current_package = pack;
-                }
-            });
+        //     _.each( this.packages, function(pack){
+        //         if(pack.id === instance.session.user_context.current_package_id){
+        //             current_package = pack;
+        //         }
+        //     });
 
-            return current_package;
-        },
+        //     return current_package;
+        // },
         get_current_operations: function(){
             var current_package_id = instance.session.user_context.current_package_id;
             var ops = [];
@@ -656,7 +717,6 @@ function openerp_picking_widgets(instance){
                 }
                 ops.push(op);
             });
-            console.log('Current Operations:',ops);
             return ops;
         },
         get_selected_operation: function(){
@@ -708,7 +768,6 @@ function openerp_picking_widgets(instance){
                 }else if(e.keyCode >= 48 && e.keyCode <= 57){ // NUMPAD NUMBERS
                     numpad.push(e.keyCode - 48);
                 }else if(e.keyCode === 13){ // ENTER
-                    console.log('enter');
                     if(numpad.length > 0){
                         self.set_operation_quantity(parseInt(numpad.join('')));
                     }
