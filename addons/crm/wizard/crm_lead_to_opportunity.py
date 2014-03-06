@@ -69,11 +69,10 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         if context.get('active_id'):
             tomerge = [int(context['active_id'])]
 
-            email = False
             partner_id = res.get('partner_id')
             lead = lead_obj.browse(cr, uid, int(context['active_id']), context=context)
+            email = lead.partner_id and lead.partner_id.email or lead.email_from
 
-            #TOFIX: use mail.mail_message.to_mail
             tomerge.extend(self._get_duplicated_leads(cr, uid, partner_id, email))
             tomerge = list(set(tomerge))
 
