@@ -376,6 +376,9 @@
                                 <span class="text-muted">Asked on <span t-field="question.write_date"/></span>
                             </t>
                         </div>
+                        <t t-call="website_forum.comments">
+                            <t t-set="object" t-value="question"/>
+                        </t>
                     </div>
                 </div>
                 <hr/>
@@ -432,6 +435,10 @@
                                 <span class="text-muted">Answered on <span t-field="answer.create_date"/></span>
                             </t>
                         </div>
+                        
+                        <t t-call="website_forum.comments">
+                            <t t-set="object" t-value="answer"/>
+                        </t>
                     </div>
                 </div>
                 <div t-if="not answer_done">
@@ -444,6 +451,28 @@
             </t>
         </template>
 
+        <template id="comments">
+            <h4 class="mt10"> <b>Comments</b> </h4>
+            <div class="mb10 css_editable_mode_hidden">
+                <form id="comment" t-attf-action="/forum/#{ slug(forum) }/comment" method="POST">
+                    <input name="post_id" t-att-value="object.id" type="hidden"/>
+                    <textarea rows="2" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
+                    <button type="submit" class="btn btn-primary mt8">Post</button>
+                </form>
+            </div>
+            <div class="clearfix"/>
+            <ul class="media-list" id="comments-list">
+                <li t-foreach="object.website_message_ids" t-as="message" class="media">
+                    <div class="media-body">
+                        <div t-field="message.body"/>
+                        <h5 class="media-heading">
+                            <a t-attf-href="/forum/#{ slug(forum) }/user/#{ message.author_id.id }" t-field="message.author_id"/>
+                            <small>on <span t-field="message.date"/></small>
+                        </h5>
+                    </div>
+                </li>
+            </ul>
+        </template>
 
         <template id="tag">
             <t t-call="website_forum.header">
@@ -573,9 +602,11 @@
                 <li t-foreach="user.activity_ids" t-as="activity" class="media">
                     <small t-esc="activity.create_date" class="pull-left"/>
                     <span t-field="activity.type" class="label label-info"/>
-                    <a t-esc="activity.name" t-if="not activity.post_id.parent_id"/>
+                    <a t-esc="activity.name" t-if="not activity.post_id.parent_id"
+                        t-attf-href="/forum/#{ slug(forum) }/question/#{ activity.post_id.id }"/>
                     <t t-if="activity.post_id.parent_id">
-                        <a t-esc="activity.post_id.parent_id.name"/>
+                        <a t-esc="activity.post_id.parent_id.name"
+                            t-attf-href="/forum/#{ slug(forum) }/question/#{ activity.post_id.parent_id.id }"/>
                         <span class="glyphicon glyphicon-play"/>
                         <t t-esc="activity.post_id.content[0:100]"/>
                         <strong> ... </strong>

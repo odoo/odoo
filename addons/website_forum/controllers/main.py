@@ -143,6 +143,28 @@ class website_forum(http.Controller):
         }
         return request.website.render("website_forum.post_description_full", values)
 
+    @http.route(['/forum/<model("website.forum"):forum>/comment'], type='http', auth="public", methods=['POST'], website=True)
+    def post_comment(self, forum, post_id=1, **kwargs):
+        cr, uid, context = request.cr, request.uid, request.context
+        if kwargs.get('comment'):
+            user = request.registry['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
+            group_ids = user.groups_id
+            group_id = request.registry["ir.model.data"].get_object_reference(cr, uid, 'website_mail', 'group_comment')[1]
+            if group_id in [group.id for group in group_ids]:
+                Post = request.registry['website.forum.post']
+                Post.check_access_rights(cr, uid, 'read')
+                Post.message_post(
+                    cr, SUPERUSER_ID, int(post_id),
+                    body=kwargs.get('comment'),
+                    type='comment',
+                    subtype='mt_comment',
+                    author_id=user.partner_id.id,
+                    context=dict(context, mail_create_nosubcribe=True))
+
+        post = request.registry['website.forum.post'].browse(cr, uid, int(post_id), context=context)
+        question_id = post.parent_id.id if post.parent_id else post.id
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),question_id))
+
     @http.route(['/forum/<model("website.forum"):forum>/user/<model("res.users"):user>'], type='http', auth="public", website=True, multilang=True)
     def open_user(self, forum, user, **post):
         answers = {}

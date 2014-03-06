@@ -74,19 +74,20 @@ class Post(osv.Model):
         'create_uid': fields.many2one('res.users', 'Asked by', select=True, readonly=True ),
         'write_date': fields.datetime('Update on', select=True, readonly=True ),
         'write_uid': fields.many2one('res.users', 'Update by', select=True, readonly=True),
-        
+
         'tags': fields.many2many('website.forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tag'),
         'vote_ids':fields.one2many('website.forum.post.vote', 'post_id', 'Vote'),
-        
+
         'favourite_ids': fields.many2many('res.users', 'forum_favourite_rel', 'forum_id', 'user_id', 'Favourite'),
-        
+
         'state': fields.selection([('active', 'Active'),('close', 'Close'),('offensive', 'Offensive')], 'Status'),
         'active': fields.boolean('Active'),
         'views': fields.integer('Views'),
-        
+
         'parent_id': fields.many2one('website.forum.post', 'Parent'),
         'child_ids': fields.one2many('website.forum.post', 'parent_id', 'Child'),
-        
+
+        'history_ids': fields.one2many('blog.post.history', 'post_id', 'History', help='Last post modifications'),
         # TODO FIXME: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
