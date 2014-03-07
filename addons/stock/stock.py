@@ -127,6 +127,7 @@ class stock_location(osv.osv):
         'scrap_location': fields.boolean('Is a Scrap Location?', help='Check this box to allow using this location to put scrapped/damaged goods.'),
         'removal_strategy_ids': fields.one2many('product.removal', 'location_id', 'Removal Strategies'),
         'putaway_strategy_ids': fields.one2many('product.putaway', 'location_id', 'Put Away Strategies'),
+        'loc_barcode': fields.char('Location barcode'),
     }
     _defaults = {
         'active': True,
@@ -137,6 +138,12 @@ class stock_location(osv.osv):
         'posz': 0,
         'scrap_location': False,
     }
+    _sql_constraints = [('loc_barcode_company_uniq', 'unique (loc_barcode,company_id)', 'The barcode for a location must be unique per company !')]
+
+    def create(self, cr, uid, default, context=None):
+        if not default.get('loc_barcode', False):
+            default.update({'loc_barcode': default.get('complete_name', False)})
+        return super(stock_location,self).create(cr, uid, default, context=context)
 
     def get_putaway_strategy(self, cr, uid, location, product, context=None):
         pa = self.pool.get('product.putaway')
@@ -1255,6 +1262,13 @@ class stock_picking(osv.osv):
         package_obj = self.pool.get('stock.quant.package')
         product_obj = self.pool.get('product.product')
         stock_operation_obj = self.pool.get('stock.pack.operation')
+        stock_location_obj = self.pool.get('stock.location')
+        #check if the barcode correspond to a location
+        matching_location_ids = stock_location_obj.search(cr, uid, [('loc_barcode', '=', barcode_str)], context=context)
+        if matching_location_ids:
+            #if we have a location, return immediatly with the location name
+            location = stock_location_obj.browse(cr, uid, matching_location_ids[0], context=None)
+            return {'filter_loc': stock_location_obj._name_get(cr, uid, location, context=None)}
         #check if the barcode correspond to a product
         matching_product_ids = product_obj.search(cr, uid, ['|', ('ean13', '=', barcode_str), ('default_code', '=', barcode_str)], context=context)
         if matching_product_ids:
@@ -1271,6 +1285,7 @@ class stock_picking(osv.osv):
         if matching_package_ids:
             stock_operation_obj._search_and_increment(cr, uid, picking_id, [('package_id', '=', matching_package_ids[0])], context=context)
 
+        return False
 
 class stock_production_lot(osv.osv):
     _name = 'stock.production.lot'

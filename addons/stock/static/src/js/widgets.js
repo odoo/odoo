@@ -219,7 +219,6 @@ function openerp_picking_widgets(instance){
             this.pickings_by_type = {};
             this.pickings_by_id = {};
             this.picking_search_string = "";
-            
         },
         load: function(){
             var self = this;
@@ -574,9 +573,21 @@ function openerp_picking_widgets(instance){
             var self = this;
             new instance.web.Model('stock.picking')
                 .call('process_barcode_from_ui', [self.picking.id, ean])
-                .then(function(){
-                    self.reset_selected_operation();
-                    return self.refresh_ui(self.picking.id);
+                .then(function(result){
+                    if (typeof(result)!="boolean"){
+                        //check if we have receive a location as answer
+                        if (result.filter_loc !== undefined){
+                            self.$('.oe_searchbox').val(result.filter_loc);
+                            self.on_searchbox(result.filter_loc);
+                        }
+                    }
+                    else{
+                        return self.refresh_ui(self.picking.id);
+                        //TODO add a then to highlight the line that was scanned, do same to scan_product_id
+                        // .then(function(product_id){
+                        //     self.
+                        // });
+                    }
                 });
         },
         scan_product_id: function(product_id){ //performs the same operation as a scan, but with product id instead
@@ -584,7 +595,6 @@ function openerp_picking_widgets(instance){
             new instance.web.Model('stock.picking')
                 .call('process_product_id_from_ui', [self.picking.id, product_id])
                 .then(function(){
-                    self.reset_selected_operation();
                     return self.refresh_ui(self.picking.id);
                 });
         },
@@ -729,15 +739,6 @@ function openerp_picking_widgets(instance){
             }else{
                 return null;
             }
-        },
-        reset_selected_operation: function(){
-            if(this.selected_operation.picking_id === this.picking.id){
-                this.selected_operation.id = null;
-            }
-        },
-        set_selected_operation: function(id){
-            this.selected_operation.picking_id = this.picking.id;
-            this.selected_operation.id = id;
         },
         set_operation_quantity: function(quantity){
             var self = this;
