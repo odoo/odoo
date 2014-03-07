@@ -60,7 +60,7 @@ class website_event(http.Controller):
         room_list = []
         new_schedule = OrderedDict()
         location_object = request.registry.get('event.track.location')
-        
+        event_track_obj = request.registry.get('event.track')
         for track in fetch_tracks:
             room_list.append(track[1])
             if not unsort_tracks.has_key(track[2][:8]):
@@ -69,6 +69,7 @@ class website_event(http.Controller):
                 unsort_tracks[track[2][:8]][track[5]] = []
             end_time = datetime.datetime.strptime(track[5], '%Y-%m-%d %H:%M:%S') + datetime.timedelta(minutes = int(track[3]))
             new_schedule[track[0]] = {'time': track[5],'end_time': end_time}
+            speaker = event_track_obj.browse(request.cr, request.uid, track[0], context=request.context)['speaker_ids']
             unsort_tracks[track[2][:8]][track[5]].append({
                              'id': track[0],
                              'title': track[4],
@@ -76,9 +77,9 @@ class website_event(http.Controller):
                              'location_id': track[1],
                              'duration':track[3],
                              'location_id': track[1],
-                             'end_time': end_time
+                             'end_time': end_time,
+                             'speaker_ids': [s.name for s in speaker],
                        })
-        print "new schecule",new_schedule
         #Get All Locations
         room_list = list(set(room_list))
         room_list.sort()
@@ -119,7 +120,6 @@ class website_event(http.Controller):
 
         def html2text(html):
             return re.sub(r'<[^>]+>', "", html)
-
         values = {
             'event': event,
             'main_object': event,

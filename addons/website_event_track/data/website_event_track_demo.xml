@@ -26,6 +26,7 @@
         <field name="date" eval="time.strftime('2014-06-04 06:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location5"/>
         <field name="duration" eval="80"/>
+        <field eval="[(4, ref('base.res_partner_2')),(4, ref('base.res_partner_3'))]" name="speaker_ids"/>
         
     </record>
     <record id="event_track2" model="event.track">
@@ -34,7 +35,8 @@
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime('2014-06-04 8:30:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location5"/>
-        <field name="duration" eval="50"/>       
+        <field name="duration" eval="50"/>
+        <field eval="[(4, ref('base.res_partner_3'))]" name="speaker_ids"/>
     </record>
     <record id="event_track3" model="event.track">
         <field name="name">How to develop real time apps, the live chat module explained.</field>
@@ -42,7 +44,8 @@
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime('2014-06-04 10:30:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location5"/>
-        <field name="duration" eval="20"/>       
+        <field name="duration" eval="20"/>
+        <field eval="[(4, ref('base.res_partner_4'))]" name="speaker_ids"/>
     </record>
     <record id="event_track4" model="event.track">
         <field name="name">How to develop automated tests in the OpenERP web client.</field>
@@ -50,7 +53,8 @@
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime('2014-06-04 9:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location5"/>
-        <field name="duration" eval="20"/>       
+        <field name="duration" eval="20"/>
+        <field eval="[(4, ref('base.res_partner_2'))]" name="speaker_ids"/>
     </record>
     <record id="event_track5" model="event.track">
         <field name="name">The new way to promote your modules in the Apps platform and OpenERP website.</field>
@@ -59,6 +63,7 @@
         <field name="date" eval="time.strftime('2014-06-04 6:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location6"/>
         <field name="duration" eval="20"/>
+        <field eval="[(4, ref('base.res_partner_4'))]" name="speaker_ids"/>
     </record>
     <record id="event_track6" model="event.track">
         <field name="name">Detailed roadmap of accounting new modules and improvements for version 8.</field>
@@ -67,6 +72,7 @@
         <field name="date" eval="time.strftime('2014-06-04 6:30:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location6"/>
         <field name="duration" eval="20"/>
+        <field eval="[(4, ref('base.res_partner_5'))]" name="speaker_ids"/>
     </record>
     <record id="event_track7" model="event.track">
         <field name="name">A technical explanation of OpenERP as a CMS and a eCommerce platform for version 8.</field>
@@ -75,6 +81,7 @@
         <field name="date" eval="time.strftime('2014-06-04 8:30:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location6"/>
         <field name="duration" eval="50"/>
+        <field eval="[(4, ref('base.res_partner_6'))]" name="speaker_ids"/>
     </record>
     <record id="event_track8" model="event.track">
         <field name="name">Discover OpenERP CRM: How to optimize your sales, from leads to sales orders.</field>
@@ -84,6 +91,7 @@
         <field name="location_id" ref="website_event_track.event_track_location7"/>
         <field name="duration" eval="20"/>
         <field name="color">2</field>
+        <field eval="[(4, ref('base.res_partner_7'))]" name="speaker_ids"/>
     </record>
     <record id="event_track9" model="event.track">
         <field name="name">How to use OpenERP for your HR process: recruitment, leaves management, appraisals, expenses, etc.</field>
@@ -94,6 +102,7 @@
         <field name="location_id" ref="website_event_track.event_track_location7"/>
         <field name="duration" eval="50"/>
         <field name="color">2</field>
+        <field eval="[(4, ref('base.res_partner_8'))]" name="speaker_ids"/>
     </record>
     <record id="event_track10" model="event.track">
         <field name="name">Raising qualitive insights with the survey app</field>
@@ -111,6 +120,7 @@
         <field name="date" eval="time.strftime('2014-06-04 10:30:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location7"/>
         <field name="duration" eval="20"/>
+        <field eval="[(4, ref('base.res_partner_4'))]" name="speaker_ids"/>
     </record>
     <record id="event_track12" model="event.track">
         <field name="name">Manage your events with OpenERP, the new training modules.</field>
@@ -119,6 +129,7 @@
         <field name="date" eval="time.strftime('2014-06-04 11:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location7"/>
         <field name="duration" eval="20"/>
+        <field eval="[(4, ref('base.res_partner_2')),(4, ref('base.res_partner_8'))]" name="speaker_ids"/>
     </record>
     <record id="event_track13" model="event.track">
         <field name="name">Advanced reporting with Google Spreadsheets integration.</field>
@@ -127,6 +138,7 @@
         <field name="date" eval="time.strftime('2014-06-04 6:30:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location8"/>
         <field name="duration" eval="50"/>
+        <field eval="[(4, ref('base.res_partner_9'))]" name="speaker_ids"/>
     </record>
     <record id="event_track14" model="event.track">
         <field name="name">New Paypal modules (portal, handling, installments).</field>
@@ -135,6 +147,7 @@
         <field name="date" eval="time.strftime('2014-06-04 7:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location8"/>
         <field name="duration" eval="20"/>
+        <field eval="[(4, ref('base.res_partner_10'))]" name="speaker_ids"/>
     </record>
     <record id="event_track15" model="event.track">
         <field name="name">OpenERP Mobile for Notes, Meetings and Messages.</field>
@@ -143,6 +156,7 @@
         <field name="date" eval="time.strftime('2014-06-04 10:30:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location8"/>
         <field name="duration" eval="20"/>
+        <field eval="[(4, ref('base.res_partner_11'))]" name="speaker_ids"/>
     </record>
     <record id="event_track16" model="event.track">
         <field name="name">OpenERP as your Enterprise Social Network.</field>
@@ -151,6 +165,7 @@
         <field name="date" eval="time.strftime('2014-06-04 11:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location8"/>
         <field name="duration" eval="20"/>
+        <field eval="[(4, ref('base.res_partner_12'))]" name="speaker_ids"/>
     </record>
     <record id="event_track17" model="event.track">
         <field name="name">The Art of Making an OpenERP Demo.</field>
@@ -159,6 +174,8 @@
         <field name="date" eval="time.strftime('2014-06-04 6:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="20"/>
+        <field eval="[(4, ref('base.res_partner_10'))]" name="speaker_ids"/>
+         
     </record>
     <record id="event_track18" model="event.track">
         <field name="name">How to build your marketing strategy for the purpose of generating leads with OpenERP.</field>
@@ -168,6 +185,7 @@
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="20"/>
         <field name="color">5</field>
+        <field eval="[(4, ref('base.res_partner_13'))]" name="speaker_ids"/>
     </record>
     <record id="event_track19" model="event.track">
         <field name="name">Advanced lead management with OpenERP: tips and tricks from the fields</field>
@@ -177,6 +195,7 @@
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="20"/>
         <field name="color">5</field>
+        <field eval="[(4, ref('base.res_partner_14'))]" name="speaker_ids"/>
     </record>
     <record id="event_track20" model="event.track">
         <field name="name">New Certification Program (valid from Oct. 2013).</field>
@@ -185,6 +204,7 @@
         <field name="date" eval="time.strftime('2014-06-04 10:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="20"/>
+        <field eval="[(4, ref('base.res_partner_15'))]" name="speaker_ids"/>
     </record>
     <record id="event_track21" model="event.track">
         <field name="name">Recruiting high skilled talents with OpenERP HR apps</field>
@@ -202,6 +222,7 @@
         <field name="date" eval="time.strftime('2014-06-04 11:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="20"/>
+        <field eval="[(4, ref('base.res_partner_15'))]" name="speaker_ids"/>
     </record>
     <record id="event_track23" model="event.track">
         <field name="name">Key Success factors selling OpenERP.</field>
@@ -210,6 +231,7 @@
         <field name="date" eval="time.strftime('2014-06-04 7:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="20"/>
+        <field eval="[(4, ref('base.res_partner_16'))]" name="speaker_ids"/>
     </record>
     <record id="event_track24" model="event.track">
         <field name="name">Merge proposals review, code sprint (entire day).</field>
@@ -218,6 +240,7 @@
         <field name="date" eval="time.strftime('2014-06-04 6:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location10"/>
         <field name="duration" eval="80"/>
+        <field eval="[(4, ref('base.res_partner_17')),(4, ref('base.res_partner_18'))]" name="speaker_ids"/>
     </record>
     <record id="event_track25" model="event.track">
         <field name="name">Merge proposals review, code sprint (entire afternoon)</field>
@@ -226,6 +249,7 @@
         <field name="date" eval="time.strftime('2014-06-04 8:30:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location10"/>
         <field name="duration" eval="170"/>
+        <field eval="[(4, ref('base.res_partner_17')),(4, ref('base.res_partner_18'))]" name="speaker_ids"/>
     </record>
     <record id="event_track26" model="event.track">
         <field name="name">Registration &amp; Coffee - Main entrance + Partners' Village</field>
@@ -240,6 +264,7 @@
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime('2014-06-04 04:00:00')"></field>
         <field name="duration" eval="60"/>
+        <field eval="[(4, ref('base.res_partner_1'))]" name="speaker_ids"/>
     </record>
     <record id="event_track28" model="event.track">
         <field name="name">OpenERP Status &amp; Strategy 2014</field>
@@ -247,6 +272,7 @@
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime('2014-06-04 5:00:00')"></field>
         <field name="duration" eval="30"/>
+        <field eval="[(4, ref('base.res_partner_2'))]" name="speaker_ids"/>
     </record>
     <record id="event_track29" model="event.track">
         <field name="name">The new marketing strategy.</field>
@@ -254,6 +280,7 @@
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime('2014-06-04 5:30:00')"></field>
         <field name="duration" eval="15"/>
+        <field eval="[(4, ref('base.res_partner_19'))]" name="speaker_ids"/>
     </record>
     <record id="event_track30" model="event.track">
         <field name="name">Morning break</field>
