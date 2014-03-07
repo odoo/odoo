@@ -3600,6 +3600,21 @@ class stock_pack_operation(osv.osv):
                     if qty > 0:
                         _create_link_for_product(product_id, qty)
 
+    def action_drop_down(self, cr, uid, ids, context=None):
+        ''' Used by barcode interface to say that pack_operation has been moved from src location 
+            to destination location, if qty_done is less than product_qty than we have to split the
+            operation in two to process the one with the qty moved
+        '''
+        processed_ids = []
+        for pack_op in self.browse(cr, uid, ids, context=None):
+            op = pack_op.id
+            if pack_op.qty_done < pack_op.product_qty:
+                # we split the operation in two
+                op = self.copy(cr, uid, pack_op.id, {'product_qty': pack_op.qty_done, 'qty_done': pack_op.qty_done}, context=context)
+                self.write(cr, uid, ids, {'product_qty': pack_op.product_qty - pack_op.qty_done, 'qty_done': 0}, context=context)
+            processed_ids.append(op)      
+        self.write(cr, uid, processed_ids, {'processed': 'true'}, context=context)
+
     def process_packaging(self, cr, uid, operation, quants, context=None):
         ''' Process the packaging of a given operation, after the quants have been moved. If there was not enough quants found
         a quant already has been with the good package information so we don't consider that case in this method'''

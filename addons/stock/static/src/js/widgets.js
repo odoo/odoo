@@ -54,6 +54,10 @@ function openerp_picking_widgets(instance){
                     });
                 }
             });
+
+            self.rows.sort(function (a,b) {
+                return (b.classes === '') - (a.classes === '');
+            });
             
             return self.rows;
         },
@@ -87,10 +91,10 @@ function openerp_picking_widgets(instance){
             if (query === '') {
                 this.$('.js_pack_op_line.warning').removeClass('warning');
                 this.$('.js_loc').removeClass('info');
-                this.$('.js_pack_op_line.hidden').removeClass('hidden');    
+                this.$('.js_pack_op_line.hidden').removeClass('hidden');
             }
         },
-        get_current_op_selection: function(){
+        get_current_op_selection: function(ignore_container){
             //get ids of visible on the screen
             pack_op_ids = []
             if (this.$('.js_pack_op_line.warning:not(.js_pack_op_line.hidden)').length > 0){
@@ -110,7 +114,7 @@ function openerp_picking_widgets(instance){
             //get list of element in this.rows where rem > 0 and container is empty
             list = []
             _.each(this.rows, function(row){
-                if (row.cols.rem > 0 && row.cols.container === undefined){
+                if (row.cols.rem > 0 && (ignore_container || row.cols.container === undefined)){
                     list.push(row.cols.id);
                 }
             });
@@ -309,11 +313,11 @@ function openerp_picking_widgets(instance){
                     break;
                 }
             }
-            this.$('.oe_picking_not_found').removeClass('hidden');
+            this.$('.js_picking_not_found').removeClass('hidden');
 
             clearTimeout(this.picking_not_found_timeout);
             this.picking_not_found_timeout = setTimeout(function(){
-                self.$('.oe_picking_not_found').addClass('hidden');
+                self.$('.js_picking_not_found').addClass('hidden');
             },2000);
 
         },
@@ -323,19 +327,19 @@ function openerp_picking_widgets(instance){
             clearTimeout(this.searchbox_timeout);
             this.searchbox_timout = setTimeout(function(){
                 if(query){
-                    self.$('.oe_picking_not_found').addClass('hidden');
-                    self.$('.oe_picking_categories').addClass('hidden');
-                    self.$('.oe_picking_search_results').html(
+                    self.$('.js_picking_not_found').addClass('hidden');
+                    self.$('.js_picking_categories').addClass('hidden');
+                    self.$('.js_picking_search_results').html(
                         QWeb.render('PickingSearchResults',{results:self.search_picking(query)})
                     );
-                    self.$('.oe_picking_search_results .oe_picking').click(function(){
+                    self.$('.js_picking_search_results .oe_picking').click(function(){
                         self.goto_picking($(this).data('id'));
                     });
-                    self.$('.oe_picking_search_results').removeClass('hidden');
+                    self.$('.js_picking_search_results').removeClass('hidden');
                 }else{
-                    self.$('.oe_title_label').removeClass('hidden');
-                    self.$('.oe_picking_categories').removeClass('hidden');
-                    self.$('.oe_picking_search_results').addClass('hidden');
+                    self.$('.js_title_label').removeClass('hidden');
+                    self.$('.js_picking_categories').removeClass('hidden');
+                    self.$('.js_picking_search_results').addClass('hidden');
                 }
             },100);
         },
@@ -467,6 +471,7 @@ function openerp_picking_widgets(instance){
 
             this.$('.js_pick_quit').click(function(){ self.quit(); });
             this.$('.js_pick_pack').click(function(){ self.pack(); });
+            this.$('.js_pick_drop_down').click(function(){ self.drop_down();});
             this.$('.js_pick_done').click(function(){ self.done(); });
             this.$('.js_pick_print').click(function(){ self.print_picking(); });
             this.$('.js_pick_prev').click(function(){ self.picking_prev(); });
@@ -478,10 +483,6 @@ function openerp_picking_widgets(instance){
             this.$('.js_clear_search').click(function(){ 
                 self.on_searchbox(''); 
                 self.$('.oe_searchbox').val('');
-            });
-            this.$('.js_pack_op_line').click(function(){
-                console.log("click line");
-                $(this).addClass('warning');
             });
 
             this.hotkey_handler = function(event){
@@ -497,12 +498,6 @@ function openerp_picking_widgets(instance){
             $.when(this.loaded).done(function(){
                 self.picking_editor = new module.PickingEditorWidget(self);
                 self.picking_editor.replace(self.$('.oe_placeholder_picking_editor'));
-
-                // self.package_editor = new module.PackageEditorWidget(self);
-                // self.package_editor.replace(self.$('.oe_placeholder_package_editor'));
-
-                // self.package_selector = new module.PackageSelectorWidget(self);
-                // self.package_selector.replace(self.$('.oe_placeholder_package_selector'));
                 
                 if( self.picking.id === self.pickings[0]){
                     self.$('.js_pick_prev').addClass('disabled');
@@ -536,8 +531,6 @@ function openerp_picking_widgets(instance){
             return this.load(picking_id)
                 .then(function(){
                     self.picking_editor.renderElement();
-                    // self.package_editor.renderElement();
-                    // self.package_selector.renderElement();
 
                     if( self.picking.id === self.pickings[0]){
                         self.$('.js_pick_prev').addClass('disabled');
@@ -597,12 +590,23 @@ function openerp_picking_widgets(instance){
         },
         pack: function(){
             var self = this;
-            var pack_op_ids = self.picking_editor.get_current_op_selection();
+            var pack_op_ids = self.picking_editor.get_current_op_selection(false);
             if (pack_op_ids.length !== 0){
                 new instance.web.Model('stock.picking')
                     .call('action_pack',[[[self.picking.id]], pack_op_ids])
                     .then(function(){
                         instance.session.user_context.current_package_id = false;
+                        return self.refresh_ui(self.picking.id);
+                    });
+            }
+        },
+        drop_down: function(){
+            var self = this;
+            var pack_op_ids = self.picking_editor.get_current_op_selection(true);
+            if (pack_op_ids.length !== 0){
+                new instance.web.Model('stock.pack.operation')
+                    .call('action_drop_down', [pack_op_ids])
+                    .then(function(){
                         return self.refresh_ui(self.picking.id);
                     });
             }
