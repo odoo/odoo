@@ -83,8 +83,9 @@ class website_forum(http.Controller):
         if type == 'followed':
             domain += [ ('create_uid', '=', uid) ]
 
+        step = 10
         question_count = Forum.search(cr, uid, domain, count=True, context=context)
-        pager = request.website.pager(url="/forum/%s/" % slug(forum), total=question_count, page=page, step=10, scope=10)
+        pager = request.website.pager(url="/forum/%s/" % slug(forum), total=question_count, page=page, step=step, scope=10)
 
         obj_ids = Forum.search(cr, uid, domain, limit=step, offset=pager['offset'], context=context)
         question_ids = Forum.browse(cr, uid, obj_ids, context=context)

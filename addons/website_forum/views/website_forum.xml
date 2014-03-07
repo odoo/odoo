@@ -234,11 +234,11 @@
                     <a t-attf-href="/forum/#{ slug(forum) }/user/#{ slug(user) }" t-field="user.name"/>
                     <t t-raw="separator or ', '"/>
                     <b><t t-esc="len(user.badges)"/> badges:</b>
-                    <span class="fa fa-certificate badge-gold"/>
+                    <span class="fa fa-circle badge-gold"/>
                     <t t-esc="user.gold_badge"/>
-                    <span class="fa fa-certificate badge-silver"/>
+                    <span class="fa fa-circle badge-silver"/>
                     <t t-esc="user.silver_badge"/>
-                    <span class="fa fa-certificate badge-bronze"/>
+                    <span class="fa fa-circle badge-bronze"/>
                     <t t-esc="user.bronze_badge"/>
                     <br/>
                     <t t-raw="0"/>
@@ -471,6 +471,9 @@
                 </h1>
                 <div class="mt16" t-foreach="badges" t-as="badge">
                     <a t-attf-href="/forum/#{ slug(forum) }/badge/#{ slug(badge) }" class="badge pull-left">
+                        <span t-if="badge.level == 'gold'" class="fa fa-circle badge-gold"/>
+                        <span t-if="badge.level == 'silver'" class="fa fa-circle badge-silver"/>
+                        <span t-if="badge.level == 'bronze'" class="fa fa-circle badge-bronze"/>
                         <span t-field="badge.name" />
                     </a>
                     <span style="margin-left:5px">
@@ -487,7 +490,12 @@
                     <b>Badge "<span t-field="badge.name"/>"</b>
                 </h3>
                 <div>
-                    <span class="pull-left badge" t-field="badge.name"/>
+                    <div class="pull-left badge">
+                        <span t-if="badge.level == 'gold'" class="fa fa-circle badge-gold"/>
+                        <span t-if="badge.level == 'silver'" class="fa fa-circle badge-silver"/>
+                        <span t-if="badge.level == 'bronze'" class="fa fa-circle badge-bronze"/>
+                        <span t-field="badge.name"/>
+                    </div>
                     <span t-field="badge.description" style="margin-left:20px"/>
                 </div>
                 <h4 class="mt32">
