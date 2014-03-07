@@ -30,6 +30,7 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FO
 from openerp import SUPERUSER_ID
 import openerp.addons.decimal_precision as dp
 import logging
+from profilehooks import profile
 
 _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
@@ -296,7 +297,7 @@ class stock_quant(osv.osv):
         result['domain'] = "[('id','in',[" + ','.join(map(str, move_ids)) + "])]"
         return result
 
-    def quants_reserve(self, cr, uid, quants, move, link=False, context=None):
+    def quants_reserve(self, cr, uid, quants, move, link=False, qty_assigned_before = False, context=None):
         '''This function reserves quants for the given move (and optionally given link). If the total of quantity reserved is enough, the move's state
         is also set to 'assigned'
 
@@ -305,6 +306,10 @@ class stock_quant(osv.osv):
         :param link: browse record (stock.move.operation.link)
         '''
         toreserve = []
+        if not qty_assigned_before:
+            reserved_availability = move.reserved_availability
+        else:
+            reserved_availability = qty_assigned_before
         #split quants if needed
         for quant, qty in quants:
             if qty <= 0.0 or (quant and quant.qty <= 0.0):
@@ -313,14 +318,14 @@ class stock_quant(osv.osv):
                 continue
             self._quant_split(cr, uid, quant, qty, context=context)
             toreserve.append(quant.id)
+            reserved_availability += quant.qty
         #reserve quants
         if toreserve:
             self.write(cr, SUPERUSER_ID, toreserve, {'reservation_id': move.id, 'link_move_operation_id': link and link.id or False}, context=context)
         #check if move'state needs to be set as 'assigned'
-        move.refresh()
-        if move.reserved_availability == move.product_qty and move.state in ('confirmed', 'waiting'):
+        if reserved_availability == move.product_qty and move.state in ('confirmed', 'waiting'):
             self.pool.get('stock.move').write(cr, uid, [move.id], {'state': 'assigned'}, context=context)
-        elif move.reserved_availability > 0 and not move.partially_available:
+        elif reserved_availability > 0 and not move.partially_available:
             self.pool.get('stock.move').write(cr, uid, [move.id], {'partially_available': True}, context=context)
 
     def quants_move(self, cr, uid, quants, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, location_dest_id = False, context=None):
@@ -958,6 +963,8 @@ class stock_picking(osv.osv):
                 remaining_dict[product] = [(qtys_remaining[product], picking.location_dest_id,)]
         return (quant_dict, remaining_dict,)
 
+
+    @profile(immediate=True)
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
         context = context or {}
         pack_operation_obj = self.pool.get('stock.pack.operation')
@@ -1088,6 +1095,7 @@ class stock_picking(osv.osv):
                                         'location_dest_id': key[5],
                                         'product_uom_id': self.pool.get("product.product").browse(cr, uid, key[0], context=context).uom_id.id,
                                         }, context=context)
+            self.do_recompute_remaining_quantities(cr, uid, [picking.id], context=context)
 
     def do_unreserve(self, cr, uid, picking_ids, context=None):
         """
@@ -1926,6 +1934,7 @@ class stock_move(osv.osv):
         if check and not lot_id:
             raise osv.except_osv(_('Warning!'), _('You must assign a serial number for the product %s') % (move.product_id.name))
 
+    @profile(immediate=True)
     def action_assign(self, cr, uid, ids, context=None):
         """ Checks the product type and accordingly writes the state.
         """
@@ -1988,7 +1997,7 @@ class stock_move(osv.osv):
                 qty_already_assigned = move.reserved_availability
                 qty = move.product_qty - qty_already_assigned
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain[move.id], prefered_domain=[], fallback_domain=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
-                quant_obj.quants_reserve(cr, uid, quants, move, context=context)
+                quant_obj.quants_reserve(cr, uid, quants, move, qty_assigned_before = qty_already_assigned, context=context)
 
         #force assignation of consumable products and picking type auto_force_assign
         if to_assign_moves:
@@ -3557,12 +3566,12 @@ class stock_pack_operation(osv.osv):
         res = super(stock_pack_operation, self).write(cr, uid, ids, vals, context=context)
         if isinstance(ids, (int, long)):
             ids = [ids]
-        self.recompute_rem_qty_from_operation(cr, uid, ids, context=context)
+        #self.recompute_rem_qty_from_operation(cr, uid, ids, context=context)
         return res
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(stock_pack_operation, self).create(cr, uid, vals, context=context)
-        self.recompute_rem_qty_from_operation(cr, uid, [res_id], context=context)
+        #self.recompute_rem_qty_from_operation(cr, uid, [res_id], context=context)
         return res_id
     
     def recompute_rem_qty_from_operation(self, cr, uid, op_ids, context=None):
