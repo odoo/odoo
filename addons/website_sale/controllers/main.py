@@ -90,7 +90,7 @@ class table_compute(object):
 
             for y2 in range(y):
                 for x2 in range(x):
-                    self.table[(pos/PPR)+y2][(pos%PPR)+x2] = False
+                    self.table[(pos/PPR)+y2][(pos%PPR)+x2] = None
             self.table[pos/PPR][pos%PPR] = {
                 'product': p, 'x':x, 'y': y,
                 'class': " ".join(map(lambda x: x.html_class, p.website_style_ids))
