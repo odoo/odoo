@@ -57,6 +57,7 @@ class stock_history(osv.osv):
     def _get_inventory_value(self, cr, uid, ids, name, attr, context=None):
         product_obj = self.pool.get("product.product")
         res = {}
+        #Browse takes an immense amount of time because it seems to reload the report
         for line in self.browse(cr, uid, ids, context=context):
             if line.product_id.cost_method == 'real':
                 res[line.id] = line.quantity * line.price_unit_on_quant

@@ -3582,8 +3582,9 @@ class stock_pack_operation(osv.osv):
         def _check_quants_reserved(ops):
             if ops.package_id and not ops.product_id:
                 qty_op_rem[ops.id] = {}
-                for quant in self.get_contents(cr, uid, ops.package_id):
-                    if quant.reservation_id and quant.reservation_id.id in [x.id for x in ops.picking_id.move_lines] and (not quants_done.get(quant.id)):
+                package_obj.get_contents(cr, uid, ops.package_id)
+                for quant in package_obj.get_contents(cr, uid, ops.package_id):
+                    if quant.id in quants_done.keys() and (quants_done[quant.id] == quant.qty):
                         #Entire packages means entire quants from those packages
                         if not quants_done.get(quant.id):
                             quants_done[quant.id] = 0
