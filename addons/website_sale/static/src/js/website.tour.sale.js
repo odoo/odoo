@@ -51,7 +51,7 @@
                 },
                 {
                     title:     "test with input error",
-                    element:   'form[action="/shop/confirm_order/"] .btn',
+                    element:   'form[action="/shop/confirm_order/"] .btn:contains("Confirm")',
                     onload: function (tour) {
                         $("input[name='phone']").val("");
                     },
@@ -59,7 +59,7 @@
                 {
                     title:     "test without input error",
                     waitFor:   'form[action="/shop/confirm_order/"] .has-error',
-                    element:   'form[action="/shop/confirm_order/"] .btn',
+                    element:   'form[action="/shop/confirm_order/"] .btn:contains("Confirm")',
                     onload: function (tour) {
                         if ($("input[name='name']").val() === "")
                             $("input[name='name']").val("website_sale-test-shoptest");

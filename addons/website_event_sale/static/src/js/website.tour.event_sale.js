@@ -44,7 +44,7 @@
                 {
                     title:     "Complete checkout",
                     waitFor:   '#top_menu .my_cart_quantity:contains(5)',
-                    element:   'form[action="/shop/confirm_order/"] .btn',
+                    element:   'form[action="/shop/confirm_order/"] .btn:contains("Confirm")',
                     onload: function (tour) {
                         if ($("input[name='name']").val() === "")
                             $("input[name='name']").val("website_sale-test-shoptest");
