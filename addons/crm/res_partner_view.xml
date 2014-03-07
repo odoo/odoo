@@ -97,7 +97,7 @@
                         <button class="oe_inline" type="action"
                             string="Schedule Meetings"
                             name="%(calendar.action_calendar_event)d"
-                            context="{'search_default_partner_ids': active_id, 'default_partner_ids' : [active_id]}"/>
+                            context="{'user_id': user_id}"/>
                         <button class="oe_inline" type="action" string="Calls" 
                             name="%(crm.crm_case_categ_phone_incoming0)d" 
                             context="{'search_default_partner_id': active_id, 'default_duration': 1.0}" />
