@@ -10,8 +10,7 @@ Report
     'depends': ['base'],
     'data': [
         'views/layouts.xml',
-        'views/paperformat_view.xml',
-        'views/res_company_view.xml',
+        'views/views.xml',
         'data/report_paperformat.xml',
         'security/ir.model.access.csv',
     ],
