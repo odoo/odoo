@@ -22,7 +22,7 @@
                 {
                     title:     "click on add to cart",
                     waitFor:   'input[name="product_id"]:eq(1)[checked]',
-                    element:   'form[action="/shop/add_cart/"] button',
+                    element:   'form[action="/shop/add_cart/"] .btn',
                 },
                 {
                     title:     "add suggested",
