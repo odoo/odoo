@@ -42,6 +42,10 @@
 
 <template id="agenda">
     <t t-call="website_event.layout">
+        <t t-set="head">
+          <script type="text/javascript" src="/website_event_track/static/src/js/website_event_track.js"></script>
+          <t t-raw="head or ''"/>
+      </t>
         <section data-snippet-id="title">
             <h1 class="text-center mb0" t-field="event.name"/>
         </section>
@@ -51,74 +55,46 @@
             </div>
             <div class="col-md-12" id="right_column">
                 <p class="text-muted fa fa-info-circle"> You can click on cells to highlight your interests.</p>
-                <h3 class="page-header mt0">
-                    Monday, 3rd June
-                    <small>23 talks</small>
-                </h3>
-                <table class="table table-bordered table-condensed">
-                    <tr>
-                        <th></th>
-                        <th class="active"><a href="#">Room 1</a></th>
-                        <th class="active"><a href="#">Room 2</a></th>
-                        <th class="active"><a href="#">Room 3</a></th>
-                        <th class="active"><a href="#">Room 5</a></th>
-                        <th class="active"><a href="#">Room 6</a></th>
-                    </tr>
-                    <tr>
-                        <td class="active"><b>09:00</b><br/><span class="text-muted">10:00</span></td>
-                        <th colspan="5" class="success text-center">
-                            <a href="#">Plenary Session</a><br/>
-                            Room 5
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="active"><b>10:00</b><br/><span class="text-muted">10:30</span></td>
-                        <td><a href="#">fkdsj kl jkl sdfjksdfj kl</a></td>
-                        <td rowspan="2" class="danger"><a href="#">Learning Python</a></td>
-                        <td></td>
-                        <td><a href="#">Learning Pytdon</a></td>
-                        <td><a href="#">Boost your Sales Witd OpenERP CRM</a></td>
-                    </tr>
-                    <tr>
-                        <th class="active">10:30<br/><span class="text-muted">11:00</span></th>
-                        <td></td>
-                        <td>Boost your Sales Witd OpenERP CRM</td>
-                        <td>Learning Pytdon</td>
-                        <td rowspan="2">fkdsj kl jkl sdfjksdfj kl</td>
-                    </tr>
-                    <tr>
-                        <th class="active">11:00<br/><span class="text-muted">12:00</span></th>
-                        <td class="danger">Learning Pytdon</td>
-                        <td>Boost your Sales Witd OpenERP CRM</td>
-                        <td>Learning Pytdon</td>
-                        <td>this is a test</td>
-                    </tr>
-                    <tr class="active">
-                        <td colspan="6" class="text-center text-muted"><span class="fa fa-clock-o"/></td>
-                    </tr>
-                    <tr>
-                        <th class="active">14:00<br/><span class="text-muted">15:00</span></th>
-                        <td>Boost your Sales Witd OpenERP CRM</td>
-                        <td class="danger">Learning Pytdon</td>
-                        <td></td>
-                        <td>fkdsj kl jkl sdfjksdfj kl</td>
-                        <td>fkdsj kl jkl sdfjksdfj kl</td>
-                    </tr><tr>
-                        <td class="active"><b>10:00</b><br/><span class="text-muted">10:30</span></td>
-                        <td>fkdsj kl jkl sdfjksdfj kl</td>
-                        <td rowspan="2" class="danger">Learning Python</td>
-                        <td></td>
-                        <td>Learning Pytdon</td>
-                        <td>Boost your Sales Witd OpenERP CRM</td>
-                    </tr>
-                    <tr>
-                        <th class="active">10:30<br/><span class="text-muted">11:00</span></th>
-                        <td></td>
-                        <td>Boost your Sales Witd OpenERP CRM</td>
-                        <td>Learning Pytdon</td>
-                        <td rowspan="2">fkdsj kl jkl sdfjksdfj kl</td>
-                    </tr>
-                </table>
+
+                <t t-foreach="days" t-as="day">
+                    <h3 class="page-header mt0">
+                        <t t-esc="day"/>
+                        <small>23 talks</small>
+                        <input type="text" class="pull-right" id="start_search"></input>
+                    </h3>
+                    <table id="table_search" class="table table-bordered table-condensed">
+                        <tr>
+                            <th></th>
+                            <t t-foreach="room_list" t-as="room">
+                                <th t-attf-style="width: #{100/len(room_list)+1}%;" class="active"><a href="#"><t t-esc="room[1]"/></a></th>
+                            </t>
+                        </tr>
+                        <t t-set="index" t-value="0"/>
+                        <t t-set="for_all" t-value="True"/>
+                        <t t-foreach="days[day]" t-as="slot">
+                            <tr>
+                                <td t-attf-style="width: #{100/len(room_list)+1}%;"><t t-esc= "slot"/></td>
+                                <t t-foreach="room_list" t-as="room">
+                                    <t t-if="not days[day][slot][index]['location_id'] and for_all" >
+                                        <t t-set="for_all" t-value="False"/>
+                                        <td id="seach_enable" t-att-colspan="len(room_list)" class="success text-center"> <t t-esc="days[day][slot][index]['title']" /></td>
+                                    </t>
+                                    <t t-if="days[day][slot][index]['location_id']" >
+                                         <td t-attf-style="width: #{100/len(room_list)+1}%;" id="seach_enable">
+                                            <t  t-if="days[day][slot][index]['location_id'] == room[0]" >
+                                                <t t-esc="days[day][slot][index]['title']" />
+                                                
+                                                <t  t-if="days[day][slot][index]['id'] != days[day][slot][-1]['id']" >
+                                                    <t t-set="index" t-value="index + 1"/>
+                                                </t>
+                                            </t>
+                                         </td>
+                                     </t>
+                                </t>
+                            </tr>
+                        </t>
+                    </table>
+                </t>
             </div>
           </div>
         </section>
@@ -194,12 +170,6 @@
 <template id="track_view">
     <t t-call="website_event.layout">
         <div class="container">
-            <t t-call="website.publish_management">
-                <t t-set="object" t-value="track"/>
-                <t t-set="publish_edit" t-value="True"/>
-            </t>
-            <div class="clearfix"/>
-
             <h2 t-field="track.name" class="text-center"/>
             <h3 t-field="event.name" class="text-center text-muted"/>
             <ul t-if="track.tag_ids" class="text-center text-muted list-inline">

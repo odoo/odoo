@@ -23,7 +23,9 @@ import openerp
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
-
+import datetime
+import dateutil.parser as dparser
+from collections import OrderedDict
 import re
 import werkzeug.utils
 
@@ -40,9 +42,63 @@ class website_event(http.Controller):
     # TODO: not implemented
     @http.route(['/event/<model("event.event"):event>/agenda/'], type='http', auth="public", website=True, multilang=True)
     def event_agenda(self, event, tag=None, **post):
+        
+        request.cr.execute('''
+            Select id, location_id, groupby_datetime, duration, name, date from (
+                Select id, location_id, to_char(date_trunc('hour',date),'mm-dd-yy hh AM') as
+                groupby_datetime, duration, name, event_id, date, count(*) as tot from event_track
+                group by event_id, duration, id, location_id, date, date_trunc('hour',date)
+                order by date, date_trunc('hour',date)
+            ) 
+            event_query where event_query.event_id = %s 
+                group by  event_query.location_id, event_query.id, 
+                  event_query.groupby_datetime, event_query.duration,event_query.name, event_query.date;
+            ''',(event.id,))
+        
+        fetch_tracks = request.cr.fetchall()
+        unsort_tracks = {}
+        room_list = []
+        new_schedule = OrderedDict()
+        location_object = request.registry.get('event.track.location')
+        
+        for track in fetch_tracks:
+            room_list.append(track[1])
+            if not unsort_tracks.has_key(track[2][:8]):
+                unsort_tracks[track[2][:8]] = {}
+            if not unsort_tracks[track[2][:8]].has_key(track[5]):
+                unsort_tracks[track[2][:8]][track[5]] = []
+            end_time = datetime.datetime.strptime(track[5], '%Y-%m-%d %H:%M:%S') + datetime.timedelta(minutes = int(track[3]))
+            new_schedule[track[0]] = {'time': track[5],'end_time': end_time}
+            unsort_tracks[track[2][:8]][track[5]].append({
+                             'id': track[0],
+                             'title': track[4],
+                             'time': track[5],
+                             'location_id': track[1],
+                             'duration':track[3],
+                             'location_id': track[1],
+                             'end_time': end_time
+                       })
+        print "new schecule",new_schedule
+        #Get All Locations
+        room_list = list(set(room_list))
+        room_list.sort()
+        rooms = []
+        for room in room_list:
+            if room:rooms.append([room, location_object.browse(request.cr, openerp.SUPERUSER_ID, room).name])
+        
+        sort_track = {}
+        
+        for track in unsort_tracks.keys():
+            sorted_key = sorted(unsort_tracks[track].keys() ,key=lambda x: (dparser.parse(x)).strftime('%a, %d %b %Y %H:%M:%S'))
+            sort_track[track] = OrderedDict()
+            for tra in sorted_key:
+                sort_track[track][tra] = sorted(unsort_tracks[track][tra], key=lambda x: x['location_id'])
+        
         values = {
             'event': event,
             'main_object': event,
+            'room_list': rooms,
+            'days': sort_track,
         }
         return request.website.render("website_event_track.agenda", values)
 
