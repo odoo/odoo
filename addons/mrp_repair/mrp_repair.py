@@ -109,10 +109,12 @@ class mrp_repair(osv.osv):
         return res
 
     def _get_lines(self, cr, uid, ids, context=None):
-        result = {}
-        for line in self.pool.get('mrp.repair.line').browse(cr, uid, ids, context=context):
-            result[line.repair_id.id] = True
-        return result.keys()
+        return self.pool['mrp.repair'].search(
+            cr, uid, [('operations', 'in', ids)], context=context)
+
+    def _get_fee_lines(self, cr, uid, ids, context=None):
+        return self.pool['mrp.repair'].search(
+            cr, uid, [('fees_lines', 'in', ids)], context=context)
 
     _columns = {
         'name': fields.char('Repair Reference',size=24, required=True, states={'confirmed':[('readonly',True)]}),
@@ -163,16 +165,19 @@ class mrp_repair(osv.osv):
             store={
                 'mrp.repair': (lambda self, cr, uid, ids, c={}: ids, ['operations'], 10),
                 'mrp.repair.line': (_get_lines, ['price_unit', 'price_subtotal', 'product_id', 'tax_id', 'product_uom_qty', 'product_uom'], 10),
+                'mrp.repair.fee': (_get_fee_lines, ['price_unit', 'price_subtotal', 'product_id', 'tax_id', 'product_uom_qty', 'product_uom'], 10),
             }),
         'amount_tax': fields.function(_amount_tax, string='Taxes',
             store={
                 'mrp.repair': (lambda self, cr, uid, ids, c={}: ids, ['operations'], 10),
                 'mrp.repair.line': (_get_lines, ['price_unit', 'price_subtotal', 'product_id', 'tax_id', 'product_uom_qty', 'product_uom'], 10),
+                'mrp.repair.fee': (_get_fee_lines, ['price_unit', 'price_subtotal', 'product_id', 'tax_id', 'product_uom_qty', 'product_uom'], 10),
             }),
         'amount_total': fields.function(_amount_total, string='Total',
             store={
                 'mrp.repair': (lambda self, cr, uid, ids, c={}: ids, ['operations'], 10),
                 'mrp.repair.line': (_get_lines, ['price_unit', 'price_subtotal', 'product_id', 'tax_id', 'product_uom_qty', 'product_uom'], 10),
+                'mrp.repair.fee': (_get_fee_lines, ['price_unit', 'price_subtotal', 'product_id', 'tax_id', 'product_uom_qty', 'product_uom'], 10),
             }),
     }
 
