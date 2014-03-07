@@ -1259,6 +1259,7 @@ class mail_thread(osv.AbstractModel):
             parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', decode(message['In-Reply-To']))])
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
+            msg_dict['parent_message'] = message.get('In-Reply-To')
 
         if message.get('References') and 'parent_id' not in msg_dict:
             parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', 'in',
