@@ -78,8 +78,8 @@
             <field name="model">ir.actions.report.xml</field>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='multi']" position="after">
-                        <field name="paperformat_id"/>
+                    <xpath expr="//field[@name='attachment']" position="after">
+                        <field name="paperformat_id" attrs="{'invisible':[('report_type','not in',['qweb-pdf'])]}"/>
                         <button
                             type="object"
                             class="oe_link"
