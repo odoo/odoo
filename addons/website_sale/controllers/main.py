@@ -58,14 +58,19 @@ class table_compute(object):
         self.table = {}
 
     def _check_place(self, posx, posy, sizex, sizey):
+        res = True
         for y in range(sizey):
             for x in range(sizex):
                 if posx+x>=PPR:
-                    return False
+                    res = False
+                    break
                 row = self.table.setdefault(posy+y, {})
                 if row.setdefault(posx+x) is not None:
-                    return False
-        return True
+                    res = False
+                    break
+            for x in range(PPR):
+                self.table[posy+y].setdefault(x, None)
+        return res
 
     def process(self, products):
         # Compute products positions on the grid
@@ -90,7 +95,7 @@ class table_compute(object):
 
             for y2 in range(y):
                 for x2 in range(x):
-                    self.table[(pos/PPR)+y2][(pos%PPR)+x2] = None
+                    self.table[(pos/PPR)+y2][(pos%PPR)+x2] = False
             self.table[pos/PPR][pos%PPR] = {
                 'product': p, 'x':x, 'y': y,
                 'class': " ".join(map(lambda x: x.html_class, p.website_style_ids))
@@ -106,7 +111,10 @@ class table_compute(object):
         for col in range(len(rows)):
             cols = rows[col].items()
             cols.sort()
-            rows[col] = map(lambda x: x[1], cols)
+            x += len(cols)
+            rows[col] = [c for c in map(lambda x: x[1], cols) if c != False]
+        rows = filter(bool, rows)
+
         return filter(bool, rows)
 
 
