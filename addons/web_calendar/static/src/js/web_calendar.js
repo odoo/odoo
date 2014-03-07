@@ -1397,8 +1397,8 @@ openerp.web_calendar = function(instance) {
             this.$el.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
         },
         filter_click: function(e) {
-            var self = this;
-            self.view.all_filters[parseInt(e.srcElement.value)].is_checked = e.srcElement.checked;
+            var self = this;            
+            self.view.all_filters[parseInt(e.target.value)].is_checked = e.target.checked;
             self.view.$calendar.fullCalendar('refetchEvents');
         },
         addUpdateButton: function() {
