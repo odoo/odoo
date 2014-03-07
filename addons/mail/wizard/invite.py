@@ -73,7 +73,7 @@ class invite_wizard(osv.osv_memory):
                     mail_id = mail_mail.create(cr, uid, {
                         'model': wizard.res_model,
                         'res_id': wizard.res_id,
-                        'subject': 'Invitation to follow %s' % document.name_get()[0][1],
+                        'subject': _('Invitation to follow %s') % document.name_get()[0][1],
                         'body_html': '%s' % wizard.message,
                         'auto_delete': True,
                         }, context=context)
