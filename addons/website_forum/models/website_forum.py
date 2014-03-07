@@ -42,7 +42,8 @@ class Post(osv.Model):
     _name = 'website.forum.post'
     _description = "Question"
     _inherit = ['mail.thread', 'website.seo.metadata']
-    
+    _order = "id desc"
+
     def _get_votes(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, False)
         for post in self.browse(cr, uid, ids, context=context):
@@ -187,12 +188,6 @@ class Users(osv.Model):
             }
         return result
     _columns = {
-        # TODO: Remove these 3 field and compute number in /user controller
-        'question_ids':fields.one2many('website.forum.post', 'create_uid', 'Questions', domain=[('parent_id', '=', False)]),
-        'answer_ids':fields.one2many('website.forum.post', 'create_uid', 'Answers', domain=[('parent_id', '!=', False)]),
-        'vote_ids': fields.one2many('website.forum.post.vote', 'user_id', 'Votes'),
-        'activity_ids': fields.one2many('website.forum.activity', 'user_id', 'Activity'),
-
         # Field to remove
         'tags': fields.many2many('website.forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tag'),
 

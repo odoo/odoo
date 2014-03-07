@@ -561,26 +561,26 @@
                             </div>
                         </div>
                         <h2>
-                            <t t-esc="len(user.vote_ids)" />
+                            <t t-esc="total_votes"/>
                             <span>Votes</span>
                         </h2>
                         <h3>
                             <span class="glyphicon glyphicon-thumbs-up"></span>
-                            <b> 15 </b>
+                            <b> <t t-esc="up_votes" /> </b>
                         </h3>
                         <h3>
                             <span class="glyphicon glyphicon-thumbs-down"></span>
-                            <b> 0 </b>
+                            <b> <t t-esc="down_votes" /> </b>
                         </h3>
                     </div>
                 </div>
 
                 <ul class="nav nav-tabs">
                     <li class="active">
-                        <a href="#questions" data-toggle="tab"><t t-esc="len(user.question_ids)"/> Questions</a>
+                        <a href="#questions" data-toggle="tab"><t t-esc="len(questions)"/> Questions</a>
                     </li>
                     <li>
-                        <a href="#answers" data-toggle="tab"><t t-esc="len(user.answer_ids)"/> Answers</a>
+                        <a href="#answers" data-toggle="tab"><t t-esc="len(answers)"/> Answers</a>
                     </li>
                     <li>
                         <a href="#activity" data-toggle="tab">Activity</a>
@@ -594,7 +594,7 @@
                 </ul>
                 <div class="tab-content mt16">
                     <div class="tab-pane active" id="questions">
-                        <div t-foreach="user.question_ids" t-as="question">
+                        <div t-foreach="questions" t-as="question">
                             <t t-call="website_forum.post_list" />
                         </div>
                     </div><div class="tab-pane" id="answers">
@@ -620,7 +620,7 @@
 
         <template id="user_activity">
             <ul class="media-list">
-                <li t-foreach="user.activity_ids" t-as="activity" class="media">
+                <li t-foreach="activities" t-as="activity" class="media">
                     <small t-esc="activity.create_date" class="pull-left"/>
                     <span t-field="activity.type" class="label label-info"/>
                     <a t-esc="activity.name" t-if="not activity.post_id.parent_id"
