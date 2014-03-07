@@ -1282,6 +1282,11 @@
     });
 
     website.snippet.editorRegistry.slider = website.snippet.editorRegistry.resize.extend({
+        getSize: function () {
+            this.grid = this._super();
+            this.grid.size = 8;
+            return this.grid;
+        },
         drop_and_build_snippet: function() {
             var id = $(".carousel").length;
             this.id = "myCarousel" + id;
@@ -1369,11 +1374,6 @@
     });
 
     website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.slider.extend({
-        getSize: function () {
-            this.grid = this._super();
-            this.grid.size = 8;
-            return this.grid;
-        },
         clean_for_save: function () {
             this._super();
             this.$target.css("background-image", "");
