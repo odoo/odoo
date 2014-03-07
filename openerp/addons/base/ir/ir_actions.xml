@@ -62,16 +62,16 @@
                             <field name="report_name"/>
                         </group>
                         <group>
-                            <field name="attachment"/>
-                            <field name="attachment_use"/>
                             <field name="multi"/>
+                            <field name="attachment_use"/>
+                            <field name="attachment"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Security">
                             <field name="groups_id"/>
                         </page>
-                        <page string="RML Configuration">
+                        <page string="RML Configuration" attrs="{'invisible':[('report_type','not in',['pdf','sxw'])]}">
                             <group>
                                 <group string="RML Report">
                                     <field name="header"/>
@@ -113,7 +113,8 @@
                         filter_domain="['|', '|', '|', '|', ('name','ilike',self), ('model','ilike',self), ('type','ilike',self), ('report_name','ilike',self), ('report_type','ilike',self)]"
                         string="Report"/>
                     <group expand="0" string="Group By" colspan="4">
-                        <filter string="Report Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'report_type'}"/>
+                        <filter string="Report Type" domain="[]" context="{'group_by':'report_type'}"/>
+                        <filter string="Report Model" domain="[]" context="{'group_by':'model'}"/>
                     </group>
                 </search>
             </field>

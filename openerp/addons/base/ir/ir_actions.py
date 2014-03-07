@@ -139,8 +139,14 @@ class ir_actions_report_xml(osv.osv):
         'name': fields.char('Name', size=64, required=True, translate=True),
 
         'model': fields.char('Model', required=True),
-        'report_type': fields.char('Report Type', required=True, help="Report Type: qweb-html, qweb-pdf, custom"),
-        'report_name': fields.char('Service Name', required=True, help="URL of the report is /report/<service name>/<ids>"),
+        'report_type': fields.selection([('qweb-pdf', 'PDF'),
+                    ('qweb-html', 'HTML'),
+                    ('other', 'Other'),
+                    ('pdf', 'RML pdf (deprecated)'),
+                    ('sxw', 'RML sxw (deprecated)'),
+                    ('webkit', 'Webkit (deprecated)'),
+                    ], 'Report Type', required=True, help="PDF will use wkhtmltopdf to render html to pdf, HTML will directly show html, Other will force download the controller output keeping the MIME type."),
+        'report_name': fields.char('Controller Name', required=True, help="URL of the report will be /report/<controller name>/<ids>, the default controller also use this field to get the name of the qweb ir.ui.view to render. For RML reports, this is the LocalService name."),
         'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
 
         # options
