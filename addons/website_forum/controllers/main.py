@@ -241,7 +241,7 @@ class website_forum(http.Controller):
     def tag_questions(self, forum, tag, page=1, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         step = 10
-        pager = request.website.pager(url="/forum/", total=len(tag.post_ids), page=page, step=step, scope=10)
+        pager = request.website.pager(url="/forum/%s/tag" % slug(forum), total=len(tag.post_ids), page=page, step=step, scope=10)
 
         values = {
             'question_ids': tag.post_ids,
@@ -264,6 +264,37 @@ class website_forum(http.Controller):
             'searches': {'tags': True}
         }
         return request.website.render("website_forum.tag", values)
+
+    @http.route(['/forum/<model("website.forum"):forum>/badges'], type='http', auth="public", website=True, multilang=True)
+    def badges(self, forum, **searches):
+        cr, uid, context = request.cr, request.uid, request.context
+        Badge = request.registry['gamification.badge']
+        badge_ids = Badge.search(cr, uid, [('forum', '=', True)], context=context)
+        badges = Badge.browse(cr, uid, badge_ids, context=context)
+        values = {
+            'badges': badges,
+            'forum': forum,
+            'searches': {'badges': True}
+        }
+        return request.website.render("website_forum.badge", values)
+
+    @http.route(['/forum/<model("website.forum"):forum>/badge/<model("gamification.badge"):badge>'], type='http', auth="public", website=True, multilang=True)
+    def badge_users(self, forum, badge, page=1, **kwargs):
+        cr, uid, context = request.cr, request.uid, request.context
+        step = 10
+        pager = request.website.pager(url="/forum/%s/badge" % slug(forum), total=len(badge.owner_ids), page=page, step=step, scope=10)
+
+        users = [badge_user.user_id for badge_user in badge.owner_ids]
+        print users
+        values = {
+            'badge': badge,
+            'users': users,
+            'pager': pager,
+            'forum': forum,
+            'searches': kwargs
+        }
+
+        return request.website.render("website_forum.badge_user", values)
 
     @http.route(['/forum/<model("website.forum"):forum>/users', '/forum/users/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
     def users(self, forum, page=1, **searches):
@@ -297,9 +328,9 @@ class website_forum(http.Controller):
             Vote.unlink(cr, uid, vote_ids, context=context)
         else:
             Vote.create(cr, uid, {
-                            'post_id': post_id,
-                            'user_id': uid,
-                            'vote': post.get('vote'),
-                        }, context=context)
+                'post_id': post_id,
+                'user_id': uid,
+                'vote': post.get('vote'),
+            }, context=context)
 
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('question_id')))

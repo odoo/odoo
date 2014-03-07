@@ -174,6 +174,18 @@ class Post(osv.Model):
 
 class Users(osv.Model):
     _inherit = 'res.users'
+
+    def _get_user_badge_level(self, cr, uid, ids, name, args, context=None):
+        """Return total badge per level of users"""
+        result = dict.fromkeys(ids, False)
+        badge_user_obj = self.pool.get('gamification.badge.user')
+        for id in ids:
+            result[id] = {
+                'gold_badge': badge_user_obj.search(cr, uid, [('badge_id.level', '=', 'gold'), ('user_id', '=', id)], context=context, count=True),
+                'silver_badge': badge_user_obj.search(cr, uid, [('badge_id.level', '=', 'silver'), ('user_id', '=', id)], context=context, count=True),
+                'bronze_badge': badge_user_obj.search(cr, uid, [('badge_id.level', '=', 'bronze'), ('user_id', '=', id)], context=context, count=True),
+            }
+        return result
     _columns = {
         # TODO: Remove these 3 field and compute number in /user controller
         'question_ids':fields.one2many('website.forum.post', 'create_uid', 'Questions', domain=[('parent_id', '=', False)]),
@@ -186,10 +198,12 @@ class Users(osv.Model):
 
         'create_date': fields.datetime('Create Date', select=True, readonly=True),
         'karma': fields.integer('Karma'), # Use Gamification for this
-        'forum': fields.boolean('Is Forum Member')
+        'forum': fields.boolean('Is Forum Member'),
 
-        # TODO: 'tag_ids':fields.function()
-        # Badges : use the gamification module
+        'badges': fields.one2many('gamification.badge.user', 'user_id', 'Badges'),
+        'gold_badge':fields.function(_get_user_badge_level, string="Number of gold badges", type='integer', multi='badge_level'),
+        'silver_badge':fields.function(_get_user_badge_level, string="Number of silver badges", type='integer', multi='badge_level'),
+        'bronze_badge':fields.function(_get_user_badge_level, string="Number of bronze badges", type='integer', multi='badge_level'),
     }
     _defaults = {
         'forum': False
@@ -222,6 +236,17 @@ class Vote(osv.Model):
         vote_id = super(Vote, self).create(cr, uid, vals, context=context)
         self.pool['website.forum.post'].create_activity(cr, uid, [int(vals.get('post_id'))], method='vote', context=context)
         return vote_id
+
+class Badge(osv.Model):
+    _inherit = 'gamification.badge'
+    _columns = {
+        'forum': fields.boolean('Is Forum Badge'),
+        #NOTE: we can create new BadgeLevel object instead of selection
+        'level': fields.selection([('gold', 'gold'), ('silver', 'silver'), ('bronze', 'bronze')], 'Badge Level'),
+    }
+    _defaults = {
+        'forum': False
+    }
 
 class ForumActivity(osv.Model):
     _name = "website.forum.activity"

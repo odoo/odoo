@@ -95,8 +95,8 @@
                                 <li t-att-class="searches.get('tags') and 'active' or '' ">
                                     <a t-attf-href="/forum/#{ slug(forum) }/tags">Tags</a>
                                 </li>
-                                <li t-att-class="searches.get('badge') and 'active' or '' ">
-                                    <a t-attf-href="/forum/#{ slug(forum) }/badge">Badges</a>
+                                <li t-att-class="searches.get('badges') and 'active' or '' ">
+                                    <a t-attf-href="/forum/#{ slug(forum) }/badges">Badges</a>
                                 </li>
                             </ul>
                             <form class="navbar-form navbar-right" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
@@ -229,17 +229,17 @@
 
         <template id="user_detail">
             <div>
-                <span t-field="user.image" t-field-options='{"widget": "image", "class":"pull-left img img-circle img-avatar"}' />
+                <span t-field="user.image" t-field-options='{"widget": "image", "class":"pull-left img img-circle img-avatar"}'/>
                 <div>
                     <a t-attf-href="/forum/#{ slug(forum) }/user/#{ slug(user) }" t-field="user.name"/>
                     <t t-raw="separator or ', '"/>
-                    <b>11 badges:</b>
-                    <span class="fa fa-certificate badge-gold"></span>
-                    1
-                    <span class="fa fa-certificate badge-silver"></span>
-                    10
-                    <span class="fa fa-certificate badge-bronze"></span>
-                    5
+                    <b><t t-esc="len(user.badges)"/> badges:</b>
+                    <span class="fa fa-certificate badge-gold"/>
+                    <t t-esc="user.gold_badge"/>
+                    <span class="fa fa-certificate badge-silver"/>
+                    <t t-esc="user.silver_badge"/>
+                    <span class="fa fa-certificate badge-bronze"/>
+                    <t t-esc="user.bronze_badge"/>
                     <br/>
                     <t t-raw="0"/>
                 </div>
@@ -464,6 +464,49 @@
             </t>
         </template>
 
+        <template id="badge">
+            <t t-call="website_forum.header">
+                <h1 class="mt0">
+                    Users with Badges
+                </h1>
+                <div class="mt16" t-foreach="badges" t-as="badge">
+                    <a t-attf-href="/forum/#{ slug(forum) }/badge/#{ slug(badge) }" class="badge pull-left">
+                        <span t-field="badge.name" />
+                    </a>
+                    <span style="margin-left:5px">
+                        X <t t-esc="len(badge.owner_ids)"/>
+                    </span>
+                    <span t-field="badge.description" style="margin-left:20px"/>
+                </div>
+            </t>
+        </template>
+
+        <template id="badge_user">
+            <t t-call="website_forum.header">
+                <h3 class="mt32 mb32"> 
+                    <b>Badge "<span t-field="badge.name"/>"</b>
+                </h3>
+                <div>
+                    <span class="pull-left badge" t-field="badge.name"/>
+                    <span t-field="badge.description" style="margin-left:20px"/>
+                </div>
+                <h4 class="mt32">
+                    <t class="pull-left" t-esc="len(badge.owner_ids)"/>
+                    <span t-if="len(badge.owner_ids)&gt;1">users</span>
+                    <span t-if="len(badge.owner_ids)&lt;=1">user</span>
+                    received this badge:
+                </h4>
+                <div class="row">
+                    <div class="col-sm-3 mt16" t-foreach="users" t-as="user">
+                        <span t-field="user.image" t-field-options='{"widget": "image", "class":"pull-left img img-circle img-avatar"}'/>
+                        <div>
+                            <a t-attf-href="/forum/#{ slug(forum) }/user/#{ slug(user) }" t-field="user.name"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
         <template id="users">
             <t t-call="website_forum.header">
                 <div class="row">
@@ -543,6 +586,9 @@
                         <a href="#activity" data-toggle="tab">Activity</a>
                     </li>
                     <li>
+                        <a href="#badges" data-toggle="tab">Badges</a>
+                    </li>
+                    <li>
                         <a href="#followed_question" data-toggle="tab">Followed Question</a>
                     </li>
                 </ul>
@@ -558,6 +604,9 @@
                     </div>
                     <div class="tab-pane" id="karma">
                         <h1>Karma</h1>
+                    </div>
+                    <div class="tab-pane" id="badges">
+                        <t t-call="website_forum.user_badges" />
                     </div>
                     <div class="tab-pane" id="followed_question">
                         <h1>Followed Questions</h1>
@@ -585,6 +634,17 @@
                     </t>
                 </li>
             </ul>
+        </template>
+
+        <template id="user_badges">
+            <div class="col-sm-3 mt16" t-foreach="user.badges" t-as="badge">
+                <a t-attf-href="/forum/#{ slug(forum) }/badge/#{ slug(badge.badge_id) }" class="badge">
+                    <span t-field="badge.badge_id.name" />
+                </a>
+                <span> 
+                    X <t t-esc="len(badge.badge_id.owner_ids)"/>
+                </span>
+            </div>
         </template>
 
     </data>
