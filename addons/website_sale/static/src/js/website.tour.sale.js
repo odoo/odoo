@@ -26,7 +26,7 @@
                 },
                 {
                     title:     "add suggested",
-                    element:   'form[action="/shop/add_cart/"] button.btn-link:contains("Add to Cart")',
+                    element:   'form[action="/shop/add_cart/"] .btn-link:contains("Add to Cart")',
                 },
                 {
                     title:     "add one more iPod",
@@ -51,7 +51,7 @@
                 },
                 {
                     title:     "test with input error",
-                    element:   'form[action="/shop/confirm_order/"] button',
+                    element:   'form[action="/shop/confirm_order/"] .btn',
                     onload: function (tour) {
                         $("input[name='phone']").val("");
                     },
@@ -59,7 +59,7 @@
                 {
                     title:     "test without input error",
                     waitFor:   'form[action="/shop/confirm_order/"] .has-error',
-                    element:   'form[action="/shop/confirm_order/"] button',
+                    element:   'form[action="/shop/confirm_order/"] .btn',
                     onload: function (tour) {
                         if ($("input[name='name']").val() === "")
                             $("input[name='name']").val("website_sale-test-shoptest");
@@ -79,7 +79,7 @@
                 {
                     title:     "Pay Now",
                     waitFor:   '#payment_method label:has(input:checked):has(img[title="transfer"])',
-                    element:   '.oe_sale_acquirer_button button[name="submit"]:visible',
+                    element:   '.oe_sale_acquirer_button .btn[name="submit"]:visible',
                 },
                 {
                     title:     "finish",

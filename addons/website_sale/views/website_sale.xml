@@ -50,7 +50,7 @@
     <div class="input-group">
       <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
       <span class="input-group-btn">
-        <button class="btn btn-default" type="submit"><i class="fa fa-search"/></button>
+        <a class="btn btn-default a-submit"><i class="fa fa-search"/></a>
       </span>
     </div>
   </form>
@@ -231,7 +231,7 @@
   <xpath expr="//div[@class='product_price']" position="inside">
       <form action="/shop/add_cart/" method="post" style="display: inline-block;">
           <input name="product_id" t-att-value="product.product_variant_ids[0].id" type="hidden"/>
-          <button type="submit" class="btn btn-default btn-xs fa fa-shopping-cart"/>
+          <a class="btn btn-default btn-xs fa fa-shopping-cart a-submit"/>
       </form>
   </xpath>
 </template>
@@ -336,7 +336,7 @@
                              }'/>
                         </h4>
                     </div>
-                    <a class="btn btn-danger btn-lg mt8 a-submit">Add to Cart</a>
+                    <a class="btn btn-primary btn-lg mt8 a-submit">Add to Cart</a>
                     <hr t-if="product.description_sale"/>
                     <div><p t-field="product.description_sale" class="text-muted"/></div>
                     <hr/>
@@ -441,7 +441,7 @@
                         <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
                         <div class="pull-left mb32" style="width: 75%%">
                             <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
-                            <button type="submit" class="btn btn-primary mt8">Post</button>
+                            <a class="btn btn-primary mt8 a-submit">Post</a>
                         </div>
                     </form>
                 </div>
@@ -673,7 +673,7 @@
                   <td class="text-center">
                       <form action="/shop/add_cart/" method="post">
                           <input name="product_id" t-att-value="product.product_variant_ids[0].id" type="hidden"/>
-                          <button type="submit" class="btn btn-link"><strong>Add to Cart</strong></button>
+                          <a class="btn btn-link a-submit"><strong>Add to Cart</strong></a>
                       </form>
                   </td>
               </tr>
@@ -692,7 +692,7 @@
           <div class="input-group">
               <input name="promo" class='form-control' type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or ''"/>
               <div class="input-group-btn">
-                  <button class="btn btn-default">Apply</button>
+                  <a class="btn btn-default a-submit">Apply</a>
               </div>
           </div>
       </form>
@@ -831,7 +831,7 @@
                       </select>
                   </div>
               </div>
-              <button type="submit" class="btn btn-default btn-primary pull-right mb32">Confirm <span class="fa fa-long-arrow-right"/></button>
+              <a class="btn btn-default btn-primary pull-right mb32 a-submit">Confirm <span class="fa fa-long-arrow-right"/></a>
           </div>
           <div class="col-lg-offset-1 col-lg-3 col-md-3 text-muted">
               <h3 class="page-header mt16">Your Order <small><a href="/shop/mycart"><span class="fa fa-arrow-right"/> change</a></small></h3>
@@ -969,9 +969,9 @@
           <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
             <div class="col-lg-8 col-sm-8">
               <form target="_self" action="/shop/payment/validate/" method="post" class="pull-right">
-                  <button width="100px" class="btn btn-primary" name="submit">
+                  <a style="width:100px;" class="btn btn-primary a-submit">
                     <span>Pay Now <span class="fa fa-long-arrow-right"></span></span>
-                  </button>
+                  </a>
               </form>
             </div>
           </div>
