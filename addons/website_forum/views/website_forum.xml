@@ -152,9 +152,16 @@
         <template id="forum_index">
             <t t-call="website.layout">
                 <!--TODO: Improve template -->
-                <t t-foreach="forum_ids" t-as="forum">
-                    <a t-attf-href="/forum/#{ slug(forum) }" class="box oe_green" t-field="forum.name"/>
+                <t t-set="head">
+                    <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css' />
                 </t>
+                <div class="container">
+                    <t t-foreach="forum_ids" t-as="forum">
+                        <div class="speech-bubble speech-bubble-bottom mt32 mb32 pull-left" style="margin-left:30px">
+                            <a style="color:white" t-attf-href="/forum/#{ slug(forum) }" t-field="forum.name"/>
+                        </div>
+                    </t>
+                </div>
                 <!--t t-call="website_forum.faq">
                     <div t-field="forum.faq"/>
                 </t-->
