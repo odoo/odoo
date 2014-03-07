@@ -63,24 +63,25 @@
                         <input type="text" class="pull-right" id="start_search"></input>
                     </h3>
                     <table id="table_search" class="table table-bordered table-condensed">
+                        <t t-set="td_width" t-value="100/len(room_list)+1"/>
                         <tr>
-                            <th></th>
+                            <th t-attf-style="width: #{td_width}px;"> </th>
                             <t t-foreach="room_list" t-as="room">
-                                <th t-attf-style="width: #{100/len(room_list)+1}%;" class="active"><a href="#"><t t-esc="room[1]"/></a></th>
+                                <th t-attf-style="width: #{td_width}px;" class="active"><a href="#"><t t-esc="room[1]"/></a></th>
                             </t>
                         </tr>
                         <t t-set="index" t-value="0"/>
                         <t t-set="for_all" t-value="True"/>
                         <t t-foreach="days[day]" t-as="slot">
                             <tr>
-                                <td t-attf-style="width: #{100/len(room_list)+1}%;"><t t-esc= "slot"/></td>
+                                <td t-attf-style="width: #{td_width}px;"><t t-esc= "slot"/></td>
                                 <t t-foreach="room_list" t-as="room">
                                     <t t-if="not days[day][slot][index]['location_id'] and for_all" >
                                         <t t-set="for_all" t-value="False"/>
                                         <td id="seach_enable" t-att-colspan="len(room_list)" class="success text-center"> <t t-esc="days[day][slot][index]['title']" /></td>
                                     </t>
                                     <t t-if="days[day][slot][index]['location_id']" >
-                                         <td t-attf-style="width: #{100/len(room_list)+1}%;" id="seach_enable">
+                                         <td t-attf-style="width: #{td_width}px;" id="seach_enable">
                                             <t  t-if="days[day][slot][index]['location_id'] == room[0]" >
                                                 <t t-esc="days[day][slot][index]['title']" />
                                                 
