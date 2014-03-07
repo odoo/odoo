@@ -56,7 +56,7 @@
   </form>
 </template>
 
-<template id="products_cart" name="Shopping cart">
+<template id="products_cart" name="Product Cell">
   <div class="ribbon-wrapper">
     <div class="ribbon btn btn-danger">Sale</div>
   </div>
@@ -187,7 +187,7 @@
 
                       </td>
                       </t>
-                      <td t-if="td_product == None"/>
+                      <td t-if="not td_product"/>
                     </t>
                   </tr>
                 </tbody>
