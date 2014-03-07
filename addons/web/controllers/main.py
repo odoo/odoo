@@ -356,7 +356,13 @@ def manifest_glob(extension, addons=None, db=None, include_remotes=False):
                     r.append((None, pattern))
             else:
                 for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
-                    r.append((path, fs2web(path[len(addons_path):])))
+                    # Hack for IE, who limit 288Ko, 4095 rules, 31 sheets
+                    # http://support.microsoft.com/kb/262161/en
+                    if pattern == "static/lib/bootstrap/css/bootstrap.css":
+                        if include_remotes:
+                            r.insert(0, (None, fs2web(path[len(addons_path):])))
+                    else:
+                        r.append((path, fs2web(path[len(addons_path):])))
     return r
 
 def manifest_list(extension, mods=None, db=None, debug=False):
