@@ -387,6 +387,7 @@
                         <h4><b>Events In <span t-esc="country.name"></span></b></h4>
                     </t>
                     <t t-if="not country">
+                        <img style="max-height:10em;" class="img-rounded img-responsive" src="/website_event/static/src/img/world_map.jpg"></img>
                         <h4><b>Upcoming Events</b></h4>
                     </t>
                     <div t-foreach="events[:5]" t-as="event_dict" class="oe_website_overflow_ellipsis mb8">
