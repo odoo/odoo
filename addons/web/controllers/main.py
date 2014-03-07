@@ -14,6 +14,7 @@ import hashlib
 import os
 import re
 import simplejson
+import sys
 import time
 import urllib2
 import zlib
@@ -37,10 +38,14 @@ from openerp.http import request, serialize_exception as _serialize_exception
 
 _logger = logging.getLogger(__name__)
 
-env = jinja2.Environment(
-    loader=jinja2.PackageLoader('openerp.addons.web', "views"),
-    autoescape=True
-)
+if hasattr(sys, 'frozen'):
+    # When running on compiled windows binary, we don't have access to package loader.
+    path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
+    loader = jinja2.FileSystemLoader(path)
+else:
+    loader = jinja2.PackageLoader('openerp.addons.web', "views")
+
+env = jinja2.Environment(loader=loader, autoescape=True)
 env.filters["json"] = simplejson.dumps
 
 #----------------------------------------------------------
