@@ -987,7 +987,7 @@ class stock_picking(osv.osv):
                     continue
                 reserved_move[move.id] = set([x.id for x in move.reserved_quant_ids])
                 if move.state == 'assigned':
-                    qty = move.product_qty - move.reserved_availability
+                    qty = move.product_qty - sum([x.qty for x in move.reserved_quant_ids])
                 else:
                     qty = 0
 
@@ -997,7 +997,7 @@ class stock_picking(osv.osv):
                 else:
                     qtys_remaining[move.product_id] = qty
             (putaway_quants_dict, putaway_remaining_dict) = self._putaway_apply(cr, uid, picking, quants, qtys_remaining, context=context)
-            packages = list(set([x.package_id for x in putaway_quants_dict.keys() if x and x.package_id]))
+            packages = list(set([x.package_id for x in quants if x and x.package_id]))
 
             # Try to find as much as possible top-level packages that can be moved
             top_lvl_packages = set()
