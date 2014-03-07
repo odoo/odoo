@@ -30,7 +30,6 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FO
 from openerp import SUPERUSER_ID
 import openerp.addons.decimal_precision as dp
 import logging
-from profilehooks import profile
 
 _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
@@ -964,7 +963,7 @@ class stock_picking(osv.osv):
         return (quant_dict, remaining_dict,)
 
 
-    @profile(immediate=True)
+
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
         context = context or {}
         pack_operation_obj = self.pool.get('stock.pack.operation')
@@ -1155,6 +1154,7 @@ class stock_picking(osv.osv):
         else:
             stock_move_obj.do_unreserve(cr, uid, move_ids, context=context)
             stock_move_obj.action_assign(cr, uid, move_ids, context=context)
+
 
     def do_transfer(self, cr, uid, picking_ids, context=None):
         """
@@ -1934,7 +1934,6 @@ class stock_move(osv.osv):
         if check and not lot_id:
             raise osv.except_osv(_('Warning!'), _('You must assign a serial number for the product %s') % (move.product_id.name))
 
-    @profile(immediate=True)
     def action_assign(self, cr, uid, ids, context=None):
         """ Checks the product type and accordingly writes the state.
         """
@@ -2027,11 +2026,11 @@ class stock_move(osv.osv):
                     self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'})
         return self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False})
 
-    def _check_package_from_moves(self, cr, uid, ids, context=None):
+    def _check_package_from_moves(self, cr, uid, moves, context=None):
         pack_obj = self.pool.get("stock.quant.package")
         packs = set()
-        for move in self.browse(cr, uid, ids, context=context):
-            packs |= set([q.package_id.id for q in move.quant_ids if q.package_id and q.qty > 0])
+        for move in moves:
+            packs |= set([q.package_id for q in move.quant_ids if q.package_id and q.qty > 0])
         return pack_obj._check_location_constraint(cr, uid, list(packs), context=context)
 
     def action_done(self, cr, uid, ids, context=None):
@@ -2104,7 +2103,7 @@ class stock_move(osv.osv):
                 procurement_ids.append(move.procurement_id.id)
         
         # Check the packages have been placed in the correct locations
-        self._check_package_from_moves(cr, uid, ids, context=context)
+        self._check_package_from_moves(cr, uid, self.browse(cr, uid, ids, context=context), context=context)
         # Apply on picking
         self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         self.pool.get('procurement.order').check(cr, uid, procurement_ids, context=context)
@@ -3361,18 +3360,16 @@ class stock_package(osv.osv):
         'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').get(cr, uid, 'stock.quant.package') or _('Unknown Pack')
     }
 
-    def _check_location_constraint(self, cr, uid, ids, context=None):
+    def _check_location_constraint(self, cr, uid, packs, context=None):
         '''checks that all quants in a package are stored in the same location. This function cannot be used
            as a constraint because it needs to be checked on pack operations (they may not call write on the
            package)
         '''
-        quant_obj = self.pool.get('stock.quant')
-        for pack in self.browse(cr, uid, ids, context=context):
+        for pack in packs:
             parent = pack
             while parent.parent_id:
                 parent = parent.parent_id
-            quant_ids = self.get_content(cr, uid, [parent.id], context=context)
-            quants = quant_obj.browse(cr, uid, quant_ids, context=context)
+            quants = self.get_contents(cr, uid, parent, context=context)
             location_id = quants and quants[0].location_id.id or False
             if not all([quant.location_id.id == location_id for quant in quants if quant.qty > 0]):
                 raise osv.except_osv(_('Error'), _('Everything inside a package should be in the same location'))
