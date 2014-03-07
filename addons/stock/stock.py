@@ -963,7 +963,6 @@ class stock_picking(osv.osv):
         return (quant_dict, remaining_dict,)
 
 
-
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
         context = context or {}
         pack_operation_obj = self.pool.get('stock.pack.operation')
@@ -1007,14 +1006,14 @@ class stock_picking(osv.osv):
                 good_pack = False
                 test_pack = pack
                 while loop:
-                    quants = pack_obj.get_content(cr, uid, [test_pack.id], context=context)
+                    quants = pack_obj.get_contents(cr, uid, test_pack, context=context)
                     quants_to_compare = putaway_quants_dict.keys()
 #                     move_list = [m.id for m in picking.move_lines]
                     common_location = False
                     all_in = True
-                    for quant in quant_obj.browse(cr, uid, quants, context=context):
+                    for quant in quants:
                         # If the quant is not in the quants to compare and not in the common location
-                        if not quant in quants_to_compare:
+                        if not quant.id in quants_to_compare:
                             all_in = False
                             break
                         else:
