@@ -35,6 +35,7 @@ Ask questions, get answers, no distractions
          'views/website_forum.xml',
          'security/ir.model.access.csv',
          'security/website_forum.xml',
+         'data/forum_badges_data.xml',
     ],
     'qweb': [
          'static/src/xml/*.xml'
