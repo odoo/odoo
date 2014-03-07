@@ -302,7 +302,7 @@ class Ecommerce(http.Controller):
         }
         return request.website.render("website_sale.product", values)
 
-    @http.route(['/shop/product/comment'], type='http', auth="public", methods=['POST'], website=True)
+    @http.route(['/shop/product/<int:product_template_id>/comment'], type='http', auth="public", methods=['POST'], website=True)
     def product_comment(self, product_template_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         if post.get('comment'):
