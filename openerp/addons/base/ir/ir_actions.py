@@ -172,7 +172,7 @@ class ir_actions_report_xml(osv.osv):
         'auto': True,
         'header': True,
         'report_sxw_content': False,
-        'report_type': 'qweb-pdf',
+        'report_type': 'pdf',
         'attachment': False,
     }
 
