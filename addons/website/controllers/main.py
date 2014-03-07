@@ -95,8 +95,15 @@ class Website(openerp.addons.web.controllers.main.Home):
     # Edit
     #------------------------------------------------------
     @http.route('/website/add/<path:path>', type='http', auth="user", website=True)
-    def pagenew(self, path, noredirect=False):
+    def pagenew(self, path, noredirect=False, add_menu=None):
         xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
+        if add_menu:
+            model, id  = request.registry["ir.model.data"].get_object_reference(request.cr, request.uid, 'website', 'main_menu')
+            request.registry['website.menu'].create(request.cr, request.uid, {
+                    'name': path,
+                    'url': "/page/" + xml_id,
+                    'parent_id': id,
+                }, context=request.context)
         url = "/page/" + xml_id
         if noredirect:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
@@ -179,6 +186,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                     result.append({
                         'name': v.inherit_option_id.name,
                         'id': v.id,
+                        'xml_id': v.xml_id,
                         'inherit_id': v.inherit_id.id,
                         'header': True,
                         'active': False
@@ -187,6 +195,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 result.append({
                     'name': v.name,
                     'id': v.id,
+                    'xml_id': v.xml_id,
                     'inherit_id': v.inherit_id.id,
                     'header': False,
                     'active': (v.inherit_id.id == v.inherit_option_id.id) or (not optional and v.inherit_id.id)
@@ -239,27 +248,32 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/website/attach', type='http', auth='user', methods=['POST'], website=True)
     def attach(self, func, upload):
-        req = request.httprequest
 
         url = message = None
         try:
-            attachment_id = request.registry['ir.attachment'].create(request.cr, request.uid, {
+            image_data = upload.read()
+            image = Image.open(cStringIO.StringIO(image_data))
+            w, h = image.size
+            if w*h > 42e6: # Nokia Lumia 1020 photo resolution
+                raise ValueError(
+                    u"Image size excessive, uploaded images must be smaller "
+                    u"than 42 million pixel")
+
+            Attachments = request.registry['ir.attachment']
+            attachment_id = Attachments.create(request.cr, request.uid, {
                 'name': upload.filename,
-                'datas': upload.read().encode('base64'),
+                'datas': image_data.encode('base64'),
                 'datas_fname': upload.filename,
                 'res_model': 'ir.ui.view',
             }, request.context)
 
-            url = website.urlplus('/website/image', {
-                'model': 'ir.attachment',
-                'id': attachment_id,
-                'field': 'datas',
-                'max_height': MAX_IMAGE_HEIGHT,
-                'max_width': MAX_IMAGE_WIDTH,
-            })
+            [attachment] = Attachments.read(
+                request.cr, request.uid, [attachment_id], ['website_url'],
+                context=request.context)
+            url = attachment['website_url']
         except Exception, e:
             logger.exception("Failed to upload image to attachment")
-            message = str(e)
+            message = unicode(e)
 
         return """<script type='text/javascript'>
             window.parent['%s'](%s, %s);

@@ -5,8 +5,8 @@
     <data>
         <template id="auth_signup.login" inherit_id="web.login" name="Sign up - Reset Password">
             <xpath expr="//button[@type='submit']" position="before">
-                <a t-if="signup" t-attf-href="?mode=signup{{ '&amp;debug' if debug else '' }}" class="btn btn-link pull-right">Sign up</a>
-                <a t-if="reset" t-attf-href="?mode=reset{{ '&amp;debug' if debug else '' }}" class="btn btn-link pull-right">Reset Password</a>
+                <a t-if="signup" t-attf-href="?{{ keep_query('*', mode='signup') }}" class="btn btn-link pull-right">Sign up</a>
+                <a t-if="reset" t-attf-href="?{{ keep_query('*', mode='reset') }}" class="btn btn-link pull-right">Reset Password</a>
             </xpath>
         </template>
 
@@ -29,21 +29,21 @@
 
                 <t t-set="reset_without_token" t-value="mode == 'reset' and not token"/>
 
-                <form class="oe_signup_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post">
+                <form class="oe_signup_form" role="form" method="post">
                     <t t-call="web.database_select"/>
+
+                    <div class="form-group field-login">
+                        <label for="login" class="control-label">Your Email</label>
+                        <input type="email" name="login" t-att-value="login" id="login" class="form-control" autofocus="autofocus"
+                            required="required" t-att-disabled="'disabled' if mode == 'reset' and token else None"/>
+                        <input type="hidden" name="login" t-att-value="login" t-if="mode == 'reset' and token"/>
+                    </div>
 
                     <div class="form-group field-name" t-if="not reset_without_token">
                         <label for="name" class="control-label">Your Name</label>
                         <input type="text" name="name" t-att-value="name" id="name" class="form-control" placeholder="e.g. John Doe"
-                            required="required" autofocus="autofocus" t-att-disabled="'disabled' if mode == 'reset' and token else None"/>
-                    </div>
-
-                    <div class="form-group field-login">
-                        <label for="login" class="control-label">Your Email</label>
-                        <input type="text" name="login" t-att-value="login" id="login" class="form-control"
-                            t-att-autofocus="'autofocus' if reset_without_token else None"
-                            required="required" t-att-disabled="'disabled' if mode == 'reset' and token else None"/>
-                        <input type="hidden" name="login" t-att-value="login" t-if="mode == 'reset' and token"/>
+                            required="required" t-att-disabled="'disabled' if mode == 'reset' and token else None"
+                            t-att-autofocus="'autofocus' if mode != 'reset' and login else None"/>
                     </div>
 
                     <div class="form-group field-password" t-if="not reset_without_token">
@@ -68,7 +68,7 @@
                     <input type="hidden" name="mode" t-att-value="mode"/>
                     <input type="hidden" name="token" t-att-value="token"/>
                     <div class="clearfix oe_login_buttons">
-                        <a href="/web/login" class="btn btn-link pull-right">Back to Login</a>
+                        <a t-attf-href="?{{ keep_query('*', mode='login') }}" class="btn btn-link pull-right">Back to Login</a>
                         <button type="submit" class="btn btn-primary pull-left">
                             <t t-if="mode == 'signup'">Sign up</t>
                             <t t-if="mode == 'reset'">Reset password</t>

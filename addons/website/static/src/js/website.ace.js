@@ -39,14 +39,21 @@
             this.xml = text;
         },
         isWellFormed: function () {
+            var error;
             if (document.implementation.createDocument) {
-                var dom = new DOMParser().parseFromString(this.xml, "text/xml");
-                return dom.getElementsByTagName("parsererror").length === 0;
-            } else if (window.ActiveXObject) {
-                // TODO test in IE
+                // use try catch for ie
+                try {
+                    var dom = new DOMParser().parseFromString(this.xml, "text/xml");
+                    error = dom.getElementsByTagName("parsererror");
+                    return error.length === 0 || $(error).text();
+                } catch (e) {}
+            }
+            if (window.ActiveXObject) {
+                // IE
                 var msDom = new ActiveXObject("Microsoft.XMLDOM");
                 msDom.async = false;
-                return !msDom.loadXML(this.xml);
+                msDom.loadXML(this.xml);
+                return !msDom.parseError.errorCode || msDom.parseError.reason + "\nline " + msDom.parseError.line;
             }
             return true;
         },
@@ -256,28 +263,35 @@
             }), function (session) {
                 return session.isDirty;
             });
-            var requests = _.map(toSave, self.saveView);
+            this.clearError();
+            var requests = _.map(toSave, function (session) {
+                return self.saveView(session);
+            });
             $.when.apply($, requests).then(function () {
                 self.reloadPage.call(self);
-            }).fail(function (source, error) {
-                var message = _.isString(error) ? error
-                    : (error && error.data && error.data.arguments && error.data.arguments[0] === "Access Denied") ? "Access denied: please sign in"
-                    : (error && error.message) ? error.message
-                    : "Unexpected error";
-                self.displayError.call(self, message);
+            }).fail(function (source, session, error) {
+                self.displayError.call(self, source, session, error);
             });
         },
         saveView: function (session) {
+            var self = this;
             var xml = new website.ace.XmlDocument(session.text);
-            if (xml.isWellFormed()) {
-                return openerp.jsonRpc('/web/dataset/call', 'call', {
+            var isWellFormed = xml.isWellFormed();
+            var def = $.Deferred();
+            if (isWellFormed === true) {
+                openerp.jsonRpc('/web/dataset/call', 'call', {
                     model: 'ir.ui.view',
                     method: 'write',
                     args: [[session.id], { 'arch':  xml.xml }, website.get_context()],
+                }).then(function () {
+                    def.resolve();
+                }).fail(function (source, error) {
+                    def.reject("server", session, error);
                 });
             } else {
-                return $.Deferred().reject(null, "Malformed XML document");
+                def.reject(null, session, isWellFormed);
             }
+            return def;
         },
         updateHash: function () {
             window.location.hash = hash + "?view=" + this.selectedViewId();
@@ -286,9 +300,61 @@
             this.updateHash();
             window.location.reload();
         },
-        displayError: function (error) {
-            // TODO Improve feedback (e.g. update 'Save' button + tooltip)
-            alert(error);
+        clearError: function () {
+            this.$(".ace_layer.ace_text-layer .ace_line").css("background", "");
+        },
+        displayError: function (source, session, error) {
+            var self = this;
+            var line, test;
+            // format error message
+            var message = _.isString(error) ? error
+                : (error && error.data && error.data.arguments && error.data.arguments[0] === "Access Denied") ? "Access denied: please sign in"
+                : (error && error.data && error.data.message) ? error.data.message
+                : (error && error.message) ? error.message
+                : "Unexpected error";
+            if (source == "server") {
+                message = eval(message.replace(/^\(/g, '([')
+                    .replace(/\)$/g, '])')
+                    .replace(/u'/g, "'")
+                    .replace(/<([^>]+)>/g, '<b style="color:#661100;">&lt;\$1&gt;</b>'))[1];
+                line = -1;
+            } else {
+                line = message.match(/line ([0-9]+)/i);
+                line = line ? parseInt(line[1],10) : -1;
+                test = new RegExp("^\\s*"+line+"\\s*$");
+            }
+
+            function gotoline() {
+                self.aceEditor.gotoLine(line);
+                setTimeout(function () {
+                    var $lines = self.$(".ace_editor .ace_gutter .ace_gutter-cell");
+                    var index = $lines.filter(function () {
+                        return test.test($(this).text());
+                    }).index();
+                    if (index>0) {
+                        self.$(".ace_layer.ace_text-layer .ace_line:eq(" + index + ")").css("background", "#661100");
+                    }
+                },100);
+            }
+            function onchangeSession (e) {
+                self.aceEditor.off('changeSession', onchangeSession);
+                gotoline();
+            }
+
+            var $list = this.$("#ace-view-list");
+            if (+$list.val() == session.id) {
+                if (line>-1) gotoline();
+            } else {
+                if (line) self.aceEditor.on('changeSession', onchangeSession);
+                this.$("#ace-view-list").val(session.id).change();
+            }
+
+            var $dialog = $(openerp.qweb.render('website.error_dialog', {
+                title: session.text.match(/\s+name=['"]([^'"]+)['"]/i)[1],
+                message:"<b>Malformed XML document</b>:<br/>" + message
+            }));
+            $dialog.appendTo("body");
+            $dialog.modal('show');
         },
         open: function () {
             this.$el.removeClass('oe_ace_closed').addClass('oe_ace_open');

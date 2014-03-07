@@ -2,15 +2,14 @@
     'use strict';
 
 var website = openerp.website;
+
+if (typeof QWeb2 !== "undefined")
 website.add_template_file('/website/static/src/xml/website.tour.xml');
 
+if (website.EditorBar)
 website.EditorBar.include({
     tours: [],
     start: function () {
-        // $('.tour-backdrop').click(function (e) {
-        //     e.stopImmediatePropagation();
-        //     e.preventDefault();
-        // });
         var self = this;
         var menu = $('#help-menu');
         _.each(this.tours, function (tour) {
@@ -21,31 +20,11 @@ website.EditorBar.include({
             });
             menu.append($menuItem);
         });
-
-        this.waitRTEReady = false;
-        this.on('rte:called', this, function () {self.waitRTEReady = true; });
-        this.on('rte:ready', this,  function () {self.waitRTEReady = false;});
-
-        var res = this._super();
-        website.Tour.waitReady.call(this, this.testRunning);
-        return res;
+        return this._super();
     },
     registerTour: function (tour) {
         website.Tour.add(tour);
         this.tours.push(tour);
-    },
-    testRunning: function () {
-        if (this.waitRTEReady) {
-            this.on('rte:ready', this, function () {
-                website.Tour.each(function () {
-                    this.running();
-                });
-            });
-        } else {
-            website.Tour.each(function () {
-                this.running();
-            });
-        }
     }
 });
 
@@ -82,23 +61,12 @@ $.ajaxSetup({
     }
 });
 
-
 website.Tour = openerp.Class.extend({
     steps: [],
     defaultDelay: 50, //ms
+    defaultOverLaps: 5000, //ms
     localStorage: window.localStorage,
-    init: function (url) {
-        this.tour = new Tour({
-            name: this.id,
-            storage: this.tourStorage,
-            keyboard: false,
-            template: this.popover(),
-            onHide: function () {
-                window.scrollTo(0, 0);
-            }
-        });
-        this.registerSteps();
-    },
+    init: function () {},
 
     run: function (automatic) {
         this.reset();
@@ -111,13 +79,18 @@ website.Tour = openerp.Class.extend({
 
         if (automatic) {
             this.localStorage.setItem("tour-"+this.id+"-test-automatic", true);
+        } else {
+            this.localStorage.removeItem("tour-"+this.id+"-test-automatic");
         }
+        this.automatic = automatic;
 
-        // redirect to begin of the tour
         if (this.path) {
-            var path = this.path.split('?');
-            window.location.href = path[0] + "?tutorial."+this.id+"=true" + path.slice(1, path.length).join("?");
-            return;
+            // redirect to begin of the tour in function of the language
+            if (!this.testUrl(this.path+"(#.*)?$")) {
+                var path = this.path.split('#');
+                window.location.href = "/"+this.getLang()+path[0] + "#tutorial."+this.id+"=true&" + path.slice(1, path.length).join("#");
+                return;
+            }
         }
 
         var self = this;
@@ -125,12 +98,13 @@ website.Tour = openerp.Class.extend({
         website.Tour.waitReady.call(this, function () {self._running();});
     },
     running: function () {
-        if (+this.localStorage.getItem("tour-"+this.id+"-test") >= this.steps.length) {
+        var self = this;
+        if (+this.localStorage.getItem("tour-"+this.id+"-test") >= this.steps.length-1) {
             this.endTour();
             return;
         }
 
-        if (website.Tour.is_busy() || !this.testUrl()) return;
+        if (website.Tour.is_busy()) return;
 
         // launch tour with url
         this.checkRunningUrl();
@@ -138,22 +112,32 @@ website.Tour = openerp.Class.extend({
         // mark tour as busy (only one test running)
         if (this.localStorage.getItem("tour-"+this.id+"-test") != null) {
             website.Tour.busy = true;
+            this.automatic = !!this.localStorage.getItem("tour-"+this.id+"-test-automatic");
+        }
+
+        if (!this.testPathUrl()) {
+            if (this.automatic) {
+                this.timer = setTimeout(function () {
+                    self.reset();
+                    throw new Error("Wrong url for running " + self.id
+                        + '\ntestPath: ' + self.testPath
+                        + '\nhref: ' + window.location.href
+                        + "\nreferrer: " + document.referrer
+                    );
+                },this.defaultOverLaps);
+            }
+            return;
         }
 
         var self = this;
         website.Tour.waitReady.call(this, function () {self._running();});
     },
-
     _running: function () {
         var stepId = this.localStorage.getItem("tour-"+this.id+"-test");
-        var automatic = !!this.localStorage.getItem("tour-"+this.id+"-test-automatic");
-        
+
         if (stepId != null) {
-            if (!this.check(this.step(stepId))) {
-                var step = this.next(stepId);
-                stepId = step ? step.stepId : stepId;
-            }
-            this.nextStep(stepId,  automatic ? this.autoNextStep : null, automatic ? 5000 : null);
+            this.registerTour();
+            this.nextStep(stepId,  this.automatic ? this.autoNextStep : null, this.automatic ? this.defaultOverLaps : null);
         }
     },
 
@@ -174,30 +158,51 @@ website.Tour = openerp.Class.extend({
         $('.popover.tour').remove();
     },
 
-    testUrl: function () {
-        return !this.testPath || this.testPath.test(window.location.href);
+    getLang: function () {
+        return $("html").attr("lang").replace(/-/, '_');
+    },
+    testUrl: function (url) {
+        return new RegExp("(/"+this.getLang()+")?"+url, "i").test(window.location.href);
+    },
+    testPathUrl: function () {
+        if (!this.testPath || this.testUrl(this.testPath)) return true;
     },
     checkRunningUrl: function () {
-        if (window.location.search.indexOf("tutorial."+this.id+"=true") > -1) {
+        if (window.location.hash.indexOf("tutorial."+this.id+"=true") > -1) {
             this.localStorage.setItem("tour-"+this.id+"-test", 0);
-            window.location.href = window.location.href.replace(/tutorial.+=true&?/, '');
+            window.location.hash = window.location.hash.replace(/tutorial.+=true&?/, '');
         }
     },
 
+    registerTour: function () {
+        this.tour = new Tour({
+            name: this.id,
+            storage: this.tourStorage,
+            keyboard: false,
+            template: this.popover(),
+            onHide: function () {
+                window.scrollTo(0, 0);
+            }
+        });
+        this.registerSteps();
+    },
     registerSteps: function () {
         for (var index=0, len=this.steps.length; index<len; index++) {
             var step = this.steps[index];
             step.stepId = step.stepId || ""+index;
 
-            if (!step.waitNot && index > 0 && $(this.steps[index-1].template).has("button[data-role='next']").size()) {
-                step.waitNot = '.popover.tour';
+            if (!step.waitNot && index > 0 && this.steps[index-1] &&
+                this.steps[index-1].popover && this.steps[index-1].popover.next) {
+                step.waitNot = '.popover.tour:visible';
             }
             if (!step.waitFor && index > 0 && this.steps[index-1].snippet) {
                 step.waitFor = '.oe_overlay_options .oe_options:visible';
             }
 
-            step._title = step.title;
-            step.title = openerp.qweb.render('website.tour_popover_title', { title: step.title });
+            step._title = step._title || step.title;
+            step.title = this.popoverTitle({ title: step._title });
+            step.template = step.template || this.popover( step.popover );
+
             if (!step.element) step.orphan = true;
             if (step.snippet) {
                 step.element = '#oe_snippets div.oe_snippet[data-snippet-id="'+step.snippet+'"] .oe_snippet_thumbnail';
@@ -205,9 +210,10 @@ website.Tour = openerp.Class.extend({
 
         }
 
-        if ($(this.steps[index-1].template).has("button[data-role='next']").size()) {
+        if (this.steps[index-1] &&
+            this.steps[index-1].popover && this.steps[index-1].popover.next) {
             var step = {
-                stepId:    index,
+                stepId:    ""+index,
                 waitNot:   '.popover.tour:visible'
             };
             this.steps.push(step);
@@ -216,8 +222,21 @@ website.Tour = openerp.Class.extend({
         this.tour.addSteps(this.steps);
     },
 
+    popoverTitle: function (options) {
+        try {
+            return openerp.qweb.render('website.tour_popover_title', options);
+        } catch (e) {
+            if (!this.automatic) throw e;
+            return options.title;
+        }
+    },
     popover: function (options) {
-        return openerp.qweb.render('website.tour_popover', options);
+        try {
+            return openerp.qweb.render('website.tour_popover', options);
+        } catch (e) {
+            if (!this.automatic) throw e;
+            return "";
+        }
     },
 
     timer: null,
@@ -262,10 +281,23 @@ website.Tour = openerp.Class.extend({
                     self.nextStep(step.stepId, callback, overlaps);
                 }, self.defaultDelay);
             } else if (!overlaps || new Date().getTime() - time < overlaps) {
+                if (self.current.element) {
+                    var $popover = $(".popover.tour");
+                    if(!$(self.current.element).is(":visible")) {
+                        $popover.data("hide", true).fadeOut(300);
+                    } else if($popover.data("hide")) {
+                        $popover.data("hide", false).fadeIn(150);
+                    }
+                }
                 self.timer = setTimeout(checkNext, self.defaultDelay);
             } else {
                 self.reset();
-                throw new Error("Time overlaps to arrive to step " + step.stepId + ": '" + step._title + "'");
+                throw new Error("Time overlaps to arrive to step " + step.stepId + ": '" + step._title + "'"
+                    + '\nelement: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden")))
+                    + '\nwaitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size())
+                    + '\nwaitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size())
+                    + '\n\n' + $("body").html()
+                );
             }
         }
         checkNext();
@@ -288,7 +320,7 @@ website.Tour = openerp.Class.extend({
                 $(".popover.tour").remove();
                 // go to step in bootstrap tour
                 this.tour.goto(index);
-                if (step.callback) step.callback();
+                if (step.onload) step.onload();
                 next = steps.shift();
                 break;
             }
@@ -315,7 +347,11 @@ website.Tour = openerp.Class.extend({
         }
     },
     endTour: function () {
-        console.log('{ "event": "success" }');
+        if (parseInt(this.localStorage.getItem("tour-"+this.id+"-test"),10) >= this.steps.length-1) {
+            console.log('{ "event": "success" }');
+        } else {
+            console.log('{ "event": "canceled" }');
+        }
         this.reset();
     },
     autoNextStep: function () {
@@ -351,7 +387,10 @@ website.Tour = openerp.Class.extend({
             } else if (step.sampleText) {
             
                 $element.trigger($.Event("keydown", { srcElement: $element }));
-                if ($element.is("select") || $element.is("input") ) {
+                if ($element.is("input") ) {
+                    $element.val(step.sampleText);
+                } if ($element.is("select")) {
+                    $element.find("[value='"+step.sampleText+"'], option:contains('"+step.sampleText+"')").attr("selected", true);
                     $element.val(step.sampleText);
                 } else {
                     $element.html(step.sampleText);
@@ -397,7 +436,10 @@ website.Tour.busy = false;
 website.Tour.add = function (tour) {
     website.Tour.waitReady(function () {
         tour = tour.id ? tour : new tour();
-        website.Tour.tours[tour.id] = tour;
+        if (!website.Tour.tours[tour.id]) {
+            website.Tour.tours[tour.id] = tour;
+            tour.running();
+        }
     });
 };
 website.Tour.get = function (id) {
@@ -413,7 +455,7 @@ website.Tour.each = function (callback) {
 website.Tour.waitReady = function (callback) {
     var self = this;
     $(document).ready(function () {
-        if ($.ajaxBusy == null || $.ajaxBusy) {
+        if ($.ajaxBusy) {
             $(document).ajaxStop(function() {
                 setTimeout(function () {
                     callback.call(self);
@@ -428,18 +470,20 @@ website.Tour.waitReady = function (callback) {
     });
 };
 website.Tour.run_test = function (id) {
-    website.Tour.get(id).run(true);
+    website.Tour.waitReady(function () {
+        if (!website.Tour.is_busy()) {
+            website.Tour.tours[id].run(true);
+        }
+    });
 };
 website.Tour.is_busy = function () {
     for (var k in this.localStorage) {
         if (!k.indexOf("tour-")) {
-            return true;
+            return k;
         }
     }
     return website.Tour.busy;
 };
-
-
 
 
 }());

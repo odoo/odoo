@@ -34,11 +34,13 @@
                 <div class="item image_text active" style="background-image: url('/website/static/src/img/banner/color_splash.jpg')">
                     <div class="container">
                         <div class="carousel-caption content">
-                            <h2>Your Banner Title</h2>
-                            <h3>Click to customize this text</h3>
-                            <p>
-                                <a href="/page/website.contactus" class="btn btn-success btn-large">Contact us</a>
-                            </p>
+                            <div>
+                                <h2>Your Banner Title</h2>
+                                <h3>Click to customize this text</h3>
+                                <p>
+                                    <a href="/page/website.contactus" class="btn btn-success btn-large">Contact us</a>
+                                </p>
+                            </div>
                         </div>
                         <img class="carousel-image hidden-xs" src="/website/static/src/img/banner/banner_picture.png" alt="Banner OpenERP Image"/>
                     </div>
@@ -179,15 +181,6 @@
                 </div>
             </div>
         </section>
-    </div>
-
-
-    <div data-snippet-id="hr" data-selector-children=".oe_structure, [data-oe-type=html]">
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_separator.png"/>
-            <span class="oe_snippet_thumbnail_title">Separator</span>        
-        </div>
-        <hr class="oe_snippet_body"/>
     </div>
 
 
@@ -370,6 +363,15 @@
                 key features. To compare products, use the inside columns.
             </div>
         </div>
+    </div>
+
+
+    <div data-snippet-id="hr" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_separator.png"/>
+            <span class="oe_snippet_thumbnail_title">Separator</span>        
+        </div>
+        <hr class="oe_snippet_body"/>
     </div>
 
 </div>
@@ -790,7 +792,7 @@
             </ul>
         </li>
         <section class="oe_snippet_body parallax"
-                style="height: 320px; background-image: url('/website/static/src/img/banner/mountains.jpg')"
+                style="background-image: url('/website/static/src/img/banner/mountains.jpg')"
                 data-scroll-background-ratio="0.3">
                 <div><div class="oe_structure"/></div>
         </section>
@@ -802,10 +804,9 @@
             <span class="oe_snippet_thumbnail_title">Parallax Slider</span>        
         </div>
         <section class="oe_snippet_body parallax" data-snippet-id="parallax"
-                 style="height: 320px; background-image: url('/website/static/src/img/parallax/quote.png')"
+                 style="background-image: url('/website/static/src/img/parallax/quote.png')"
                 data-scroll-background-ratio="0.3">
-            <div>
-                <div class="oe_structure">
+            <div><div><div class="oe_structure">
                     <div id="myQuoteCarousel" class="carousel quotecarousel slide mb0" data-snippet-id="slider">
                         <!-- Indicators -->
                         <ol class="carousel-indicators mb0">
@@ -852,8 +853,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+            </div></div></div>
         </section>
     </div>
 
@@ -903,7 +903,7 @@
     </div>
 
     <div data-snippet-style-id='background' data-selector="section, section[data-snippet-id='parallax'], div[data-snippet-id='carousel'], div[data-snippet-id='slider']">
-        <li class="dropdown-submenu">
+        <li class="dropdown-submenu" data-required="true">
             <a tabindex="-1" href="#">Background</a>
             <ul class="dropdown-menu">
                 <li class="dropdown-submenu">

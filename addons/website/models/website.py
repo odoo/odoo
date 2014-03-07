@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import fnmatch
 import inspect
 import itertools
 import logging
@@ -7,9 +6,9 @@ import math
 import re
 import urlparse
 
-import simplejson
 import werkzeug
 import werkzeug.exceptions
+import werkzeug.utils
 import werkzeug.wrappers
 # optional python-slugify import (https://github.com/un33k/python-slugify)
 try:
@@ -24,24 +23,19 @@ from openerp.addons.web.http import request, LazyResponse
 
 logger = logging.getLogger(__name__)
 
-def keep_query(*args, **kw):
-    if not args and not kw:
-        args = ('*',)
-    params = kw.copy()
-    query_params = frozenset(werkzeug.url_decode(request.httprequest.query_string).keys())
-    for keep_param in args:
-        for param in fnmatch.filter(query_params, keep_param):
-            if param not in params and param in request.params:
-                params[param] = request.params[param]
-    return werkzeug.urls.url_encode(params)
-
 def url_for(path_or_uri, lang=None):
+    if isinstance(path_or_uri, unicode):
+        path_or_uri = path_or_uri.encode('utf-8')
+    current_path = request.httprequest.path
+    if isinstance(current_path, unicode):
+        current_path = current_path.encode('utf-8')
     location = path_or_uri.strip()
     force_lang = lang is not None
     url = urlparse.urlparse(location)
 
     if request and not url.netloc and not url.scheme and (url.path or force_lang):
-        location = urlparse.urljoin(request.httprequest.path, location)
+        location = urlparse.urljoin(current_path, location)
+
         lang = lang or request.context.get('lang')
         langs = [lg[0] for lg in request.website.get_languages()]
 
@@ -59,7 +53,7 @@ def url_for(path_or_uri, lang=None):
                 ps.insert(1, lang)
             location = '/'.join(ps)
 
-    return location
+    return location.decode('utf-8')
 
 def is_multilang_url(path, langs=None):
     if not langs:
@@ -78,7 +72,11 @@ def is_multilang_url(path, langs=None):
 
 def slugify(s, max_length=None):
     if slugify_lib:
-        return slugify_lib.slugify(s, max_length)
+        # There are 2 different libraries only python-slugify is supported
+        try:
+            return slugify_lib.slugify(s, max_length=max_length)
+        except TypeError:
+            pass
     spaceless = re.sub(r'\s+', '-', s)
     specialless = re.sub(r'[^-_A-Za-z0-9]', '', spaceless)
     return specialless[:max_length]
@@ -178,10 +176,8 @@ class website(osv.osv):
         return '%s.%s' % (module, slugify(name, max_length=50))
 
     def page_exists(self, cr, uid, ids, name, module='website', context=None):
-        page = self.page_for_name(cr, uid, ids, name, module=module, context=context)
-
         try:
-           self.pool["ir.model.data"].get_object_reference(cr, uid, module, name)
+           return self.pool["ir.model.data"].get_object_reference(cr, uid, module, name)
         except:
             return False
 
@@ -215,7 +211,6 @@ class website(osv.osv):
 
         request.redirect = lambda url: werkzeug.utils.redirect(url_for(url))
         request.context.update(
-            is_master_lang=is_master_lang,
             editable=is_website_publisher,
             translatable=not is_master_lang,
         )
@@ -228,37 +223,8 @@ class website(osv.osv):
         return self.pool["ir.ui.view"].browse(cr, uid, view_id, context=context)
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
-        user = self.pool.get("res.users")
-        if not context:
-            context = {}
-
-        # Take a context
-        qweb_values = context.copy()
-        # add some values
-        if values:
-            qweb_values.update(values)
-        # fill some defaults
-        qweb_values.update(
-            request=request,
-            json=simplejson,
-            website=request.website,
-            url_for=url_for,
-            keep_query=keep_query,
-            slug=slug,
-            res_company=request.website.company_id,
-            user_id=user.browse(cr, uid, uid),
-            quote_plus=werkzeug.url_quote_plus,
-        )
-        qweb_values.setdefault('editable', False)
-
-        # in edit mode ir.ui.view will tag nodes
-        context['inherit_branding'] = qweb_values['editable']
-
-        view = self.get_template(cr, uid, ids, template)
-
-        if 'main_object' not in qweb_values:
-            qweb_values['main_object'] = view
-        return view.render(qweb_values, engine='website.qweb', context=context)
+        # TODO: remove this. (just kept for backward api compatibility for saas-3)
+        return self.pool['ir.ui.view'].render(cr, uid, template, values=values, context=context)
 
     def render(self, cr, uid, ids, template, values=None, status_code=None, context=None):
         def callback(template, values, context):
@@ -281,7 +247,7 @@ class website(osv.osv):
             pmin = pmax - scope if pmax - scope > 0 else 1
 
         def get_url(page):
-            _url = "%spage/%s/" % (url, page)
+            _url = "%spage/%s/" % (url, page) if page > 1 else url
             if url_args:
                 _url = "%s?%s" % (_url, werkzeug.url_encode(url_args))
             return _url
@@ -381,6 +347,7 @@ class website(osv.osv):
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
         uid = self.get_public_user(cr, uid, context=context)
+        url_list = []
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue
@@ -402,7 +369,9 @@ class website(osv.osv):
             for values in generated:
                 domain_part, url = rule.build(values, append_unknown=False)
                 page = {'name': url, 'url': url}
-
+                if url in url_list:
+                    continue
+                url_list.append(url)
                 if not filtered and query_string and not self.page_matches(cr, uid, page, query_string, context=context):
                     continue
                 yield page
@@ -527,9 +496,14 @@ class website_menu(osv.osv):
         'parent_left': fields.integer('Parent Left', select=True),
         'parent_right': fields.integer('Parent Right', select=True),
     }
+
+    def __defaults_sequence(self, cr, uid, context):
+        menu = self.search_read(cr, uid, [(1,"=",1)], ["sequence"], limit=1, order="sequence DESC", context=context)
+        return menu and menu[0]["sequence"] or 0
+
     _defaults = {
         'url': '',
-        'sequence': 0,
+        'sequence': __defaults_sequence,
         'new_window': False,
     }
     _parent_store = True
@@ -593,13 +567,40 @@ class ir_attachment(osv.osv):
         'website_url': fields.function(_website_url_get, string="Attachment URL", type='char')
     }
 
+    def try_remove(self, cr, uid, ids, context=None):
+        """ Removes a web-based image attachment if it is used by no view
+        (template)
+
+        Returns a dict mapping attachments which would not be removed (if any)
+        mapped to the views preventing their removal
+        """
+        Views = self.pool['ir.ui.view']
+        attachments_to_remove = []
+        # views blocking removal of the attachment
+        removal_blocked_by = {}
+
+        for attachment in self.browse(cr, uid, ids, context=context):
+            # in-document URLs are html-escaped, a straight search will not
+            # find them
+            url = werkzeug.utils.escape(attachment.website_url)
+            ids = Views.search(cr, uid, [('arch', 'like', url)], context=context)
+
+            if ids:
+                removal_blocked_by[attachment.id] = Views.read(
+                    cr, uid, ids, ['name'], context=context)
+            else:
+                attachments_to_remove.append(attachment.id)
+        if attachments_to_remove:
+            self.unlink(cr, uid, attachments_to_remove, context=context)
+        return removal_blocked_by
+
 class res_partner(osv.osv):
     _inherit = "res.partner"
 
     def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
         partner = self.browse(cr, uid, ids[0], context=context)
         params = {
-            'center': '%s, %s %s, %s' % (partner.street, partner.city, partner.zip, partner.country_id and partner.country_id.name_get()[0][1] or ''),
+            'center': '%s, %s %s, %s' % (partner.street or '', partner.city or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
             'size': "%sx%s" % (height, width),
             'zoom': zoom,
             'sensor': 'false',

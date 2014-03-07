@@ -282,12 +282,16 @@ ul.nav-stacked > li > a {
 }
 
 /* ---- SNIPPETS --- */
+.oe_img_bg {
+  background-size: 100%;
+}
+
 [data-snippet-id], .colmd, .hr, .blockquote {
   overflow: hidden;
 }
 
 @media (max-width: 400px) {
-  [data-snippet-id] {
+  [data-snippet-id]:not([data-snippet-id="carousel"]) {
     height: auto !important;
   }
 }
@@ -296,24 +300,27 @@ ul.nav-stacked > li > a {
 }
 .carousel-inner .item {
   height: 100%;
-  background-size: 100%;
+  background-size: cover;
 }
 
 .carousel .carousel-caption {
-  left: auto;
-  right: auto;
-  bottom: 10%;
+  position: absolute;
+  right: 50%;
+  left: 50%;
+  bottom: 20px;
+}
+.carousel .carousel-caption > div {
+  position: absolute;
   text-align: left;
   padding: 20px;
   background: rgba(0, 0, 0, 0.4);
+  bottom: 20px;
 }
 .carousel .carousel-caption h1, .carousel .carousel-caption h2, .carousel .carousel-caption h3 {
   margin-top: 10px;
   margin-bottom: 10px;
 }
 .carousel .carousel-image {
-  right: 50%;
-  left: 50%;
   top: 5%;
   bottom: 5%;
   position: absolute;
@@ -328,13 +335,35 @@ ul.nav-stacked > li > a {
   right: 10%;
   top: 10%;
   bottom: auto;
+}
+.carousel .item.text_only .carousel-caption > div {
   text-align: center;
   background: transparent;
+  bottom: auto;
+  width: 100%;
+}
+.carousel .item.text_image .carousel-caption {
+  left: 10%;
+}
+.carousel .item.text_image .carousel-caption > div {
+  right: 50%;
+  margin-right: -20%;
+  max-width: 550px;
+}
+.carousel .item.text_image .carousel-image {
+  right: 10%;
+  left: 50%;
 }
 .carousel .item.image_text .carousel-caption {
   right: 10%;
 }
+.carousel .item.image_text .carousel-caption > div {
+  left: 50%;
+  margin-left: -20%;
+  max-width: 550px;
+}
 .carousel .item.image_text .carousel-image {
+  right: 50%;
   left: 10%;
 }
 .carousel .carousel-control {
@@ -365,22 +394,15 @@ div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
 }
 
 .parallax {
-  position: relative;
-  background-size: 100%;
-  display: table;
-  width: 100%;
-  min-height: 100px;
-}
-.parallax.oe_small {
-  min-height: 200px;
-}
-.parallax.oe_medium {
-  min-height: 300px;
-}
-.parallax.oe_big {
-  min-height: 450px;
+  background-size: cover;
 }
 .parallax > div {
+  position: relative;
+  display: table;
+  width: 100%;
+  min-height: 200px;
+}
+.parallax > div > div {
   display: table-cell;
   vertical-align: middle;
   padding: 32px 0;
@@ -446,10 +468,6 @@ div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
 }
 
 /* Misc */
-.oe_img_bg {
-  background-size: 100%;
-}
-
 .texttop {
   vertical-align: top;
 }

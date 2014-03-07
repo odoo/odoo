@@ -228,33 +228,40 @@ ul.nav-stacked > li > a
         a
             color: white
 
+
 /* ---- SNIPPETS --- */
+
+.oe_img_bg
+    background-size: 100%
+
 [data-snippet-id],.colmd,.hr,.blockquote
     overflow: hidden
 
 @media (max-width: 400px)
-    [data-snippet-id]
+    [data-snippet-id]:not([data-snippet-id="carousel"])
         height: auto !important
 
 .carousel-inner
     height: 100%
     .item
         height: 100%
-        background-size: 100%
+        background-size: cover
 .carousel
     .carousel-caption
-        left: auto
-        right: auto
-        bottom: 10%
-        text-align: left
-        padding: 20px
-        background: rgba(0, 0, 0, 0.4)
+        position: absolute
+        right: 50%
+        left: 50%
+        bottom: 20px
+        > div
+            position: absolute
+            text-align: left
+            padding: 20px
+            background: rgba(0, 0, 0, 0.4)
+            bottom: 20px
         h1, h2, h3
             margin-top: 10px
             margin-bottom: 10px
     .carousel-image
-        right: 50%
-        left: 50%
         top: 5%
         bottom: 5%
         position: absolute
@@ -268,12 +275,30 @@ ul.nav-stacked > li > a
             right: 10%
             top: 10%
             bottom: auto
-            text-align: center
-            background: transparent
+            > div
+                text-align: center
+                background: transparent
+                bottom: auto
+                width: 100%
+    .item.text_image
+        .carousel-caption
+            left: 10%
+            > div
+                right: 50%
+                margin-right: -20%
+                max-width: 550px
+        .carousel-image
+            right: 10%
+            left: 50%
     .item.image_text
         .carousel-caption
             right: 10%
+            > div
+                left: 50%
+                margin-left: -20%
+                max-width: 550px
         .carousel-image
+            right: 50%
             left: 10%
     .carousel-control
         cursor: pointer
@@ -299,21 +324,16 @@ div.carousel[data-snippet-id="slider"]
             background-color: grey
 
 .parallax
-    position: relative
-    background-size: 100%
-    display: table
-    width: 100%
-    min-height: 100px
-    &.oe_small
-        min-height: 200px
-    &.oe_medium
-        min-height: 300px
-    &.oe_big
-        min-height: 450px
+    background-size: cover
     > div
-        display: table-cell
-        vertical-align: middle
-        padding: 32px 0
+        position: relative
+        display: table
+        width: 100%
+        min-height: 200px
+        > div
+            display: table-cell
+            vertical-align: middle
+            padding: 32px 0
 
 /* Background */
 
@@ -361,9 +381,6 @@ div.carousel[data-snippet-id="slider"]
         color: #ddd
 
 /* Misc */
-
-.oe_img_bg
-    background-size: 100%
 
 .texttop
     vertical-align: top

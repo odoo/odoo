@@ -69,6 +69,8 @@
         website.is_editable = website.is_editable || $('html').data('editable');
         website.is_editable_button= website.is_editable_button || $('html').data('editable');
         dom_ready.resolve();
+        // fix for ie
+        if($.fn.placeholder) $('input, textarea').placeholder();
     });
 
     website.init_kanban = function ($kanban) {
@@ -206,6 +208,7 @@
 
         var def = $.Deferred();
         var dialog = $(openerp.qweb.render('website.prompt', options)).appendTo("body");
+        options.$dialog = dialog;
         var field = dialog.find(options.field_type).first();
         field.val(options.default);
         field.fillWith = function (data) {
@@ -226,7 +229,7 @@
             dialog.modal('show');
             field.focus();
             dialog.on('click', '.btn-primary', function () {
-                def.resolve(field.val(), field);
+                def.resolve(field.val(), field, dialog);
                 dialog.remove();
             });
         });
@@ -247,13 +250,13 @@
 
     website.form = function (url, method, params) {
         var form = document.createElement('form');
-        form.action = url;
-        form.method = method;
+        form.setAttribute('action', url);
+        form.setAttribute('method', method);
         _.each(params, function (v, k) {
             var param = document.createElement('input');
-            param.type = 'hidden';
-            param.name = k;
-            param.value = v;
+            param.setAttribute('type', 'hidden');
+            param.setAttribute('name', k);
+            param.setAttribute('value', v);
             form.appendChild(param);
         });
         document.body.appendChild(form);
