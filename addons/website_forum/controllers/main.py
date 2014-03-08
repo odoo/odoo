@@ -133,7 +133,7 @@ class website_forum(http.Controller):
         return request.website.render("website_forum.post_description_full", values)
 
     @http.route(['/forum/<model("website.forum"):forum>/comment'], type='http', auth="public", methods=['POST'], website=True)
-    def post_comment(self, forum, post_id=1, **kwargs):
+    def post_comment(self, forum, post_id, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         if kwargs.get('comment'):
             user = request.registry['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
@@ -147,6 +147,7 @@ class website_forum(http.Controller):
                     body=kwargs.get('comment'),
                     type='comment',
                     subtype='mt_comment',
+                    content_subtype='plaintext',
                     author_id=user.partner_id.id,
                     context=dict(context, mail_create_nosubcribe=True))
 

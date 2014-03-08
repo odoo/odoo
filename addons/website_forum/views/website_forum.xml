@@ -578,26 +578,28 @@
         </template>
 
         <template id="comments">
-            <h4 class="mt10"> <b>Comments</b> </h4>
-            <div class="mb10 css_editable_mode_hidden">
-                <form id="comment" t-attf-action="/forum/#{ slug(forum) }/comment" method="POST">
-                    <input name="post_id" t-att-value="object.id" type="hidden"/>
-                    <textarea rows="2" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
-                    <button type="submit" class="btn btn-primary mt8">Post</button>
-                </form>
-            </div>
-            <div class="clearfix"/>
-            <ul class="media-list" id="comments-list">
-                <li t-foreach="object.website_message_ids" t-as="message" class="media">
-                    <div class="media-body">
-                        <div t-field="message.body"/>
-                        <h5 class="media-heading">
+            <div class="row clearfix">
+                <div class="col-sm-10 col-sm-offset-2">
+                    <div t-foreach="object.website_message_ids" t-as="message">
+                        <small class="text-muted">
+                            <div t-field="message.body"/>
                             <a t-attf-href="/forum/#{ slug(forum) }/user/#{ message.author_id.id }" t-field="message.author_id"/>
-                            <small>on <span t-field="message.date"/></small>
-                        </h5>
+                            on <span t-field="message.date" t-field-options='{"format":"short"}'/>
+                        </small>
+                        <hr class="mt4 mb4"/>
                     </div>
-                </li>
-            </ul>
+                    <div class="css_editable_mode_hidden">
+                        <a data-toggle="collapse" t-attf-data-target="#comment#{ object._name.replace('.','') + '-' + str(object.id) }">
+                            add a comment
+                        </a>
+                        <form t-attf-id="comment#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse" t-attf-action="/forum/#{ slug(forum) }/comment" method="POST">
+                            <input name="post_id" t-att-value="object.id" type="hidden"/>
+                            <textarea name="comment" class="form-control" placeholder="Comment this post..."/>
+                            <button type="submit" class="btn btn-primary mt8">Post</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </template>
 
         <template id="tag">
@@ -817,7 +819,7 @@
                     <a t-attf-href="/forum/#{ slug(forum) }/badge/#{ slug(badge.badge_id) }" class="badge">
                         <span t-field="badge.badge_id.name" />
                     </a>
-                    <span> 
+                    <span>
                         X <t t-esc="len(badge.badge_id.owner_ids)"/>
                     </span>
                 </div>
