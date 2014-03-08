@@ -235,12 +235,12 @@ class Vote(osv.Model):
 class Badge(osv.Model):
     _inherit = 'gamification.badge'
     _columns = {
-        'forum': fields.boolean('Is Forum Badge'),
-        #NOTE: we can create new BadgeLevel object instead of selection
-        'level': fields.selection([('gold', 'gold'), ('silver', 'silver'), ('bronze', 'bronze')], 'Badge Level'),
+        'forum': fields.boolean('Is a Forum Badge'),
+        'level': fields.selection([('bronze', 'bronze'), ('silver', 'silver'), ('gold', 'gold')], 'Badge Level'),
     }
     _defaults = {
-        'forum': False
+        'forum': False,
+        'level': 'bronze'
     }
 
 class ForumActivity(osv.Model):
