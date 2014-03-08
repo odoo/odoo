@@ -715,10 +715,10 @@
                         <tr>
                             <td rowspan="2" valign="top"><span class="text-muted">contributions</span></td>
                             <td>member since</td>
-                            <td><span t-field="user.create_date"/></td>
+                            <td><span t-field="user.create_date" t-field-options='{"format": "MMMM d, YYYY"}'/></td>
                         </tr><tr>
                             <td>last connection</td>
-                            <td><span t-field="user.login_date"/></td>
+                            <td><span t-field="user.login_date" t-field-options='{"format": "long"}'/></td>
                         </tr>
                         </table>
                     </div><div class="col-sm-5">
