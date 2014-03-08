@@ -589,7 +589,7 @@
                         <hr class="mt4 mb4"/>
                     </div>
                     <div class="css_editable_mode_hidden">
-                        <a data-toggle="collapse" t-attf-data-target="#comment#{ object._name.replace('.','') + '-' + str(object.id) }">
+                        <a data-toggle="collapse" t-attf-data-target="#comment#{ object._name.replace('.','') + '-' + str(object.id) }" class="pull-right">
                             add a comment
                         </a>
                         <form t-attf-id="comment#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse" t-attf-action="/forum/#{ slug(forum) }/comment" method="POST">
