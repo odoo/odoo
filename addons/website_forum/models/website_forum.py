@@ -188,9 +188,6 @@ class Users(osv.Model):
             }
         return result
     _columns = {
-        # Field to remove
-        'tags': fields.many2many('website.forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tag'),
-
         'create_date': fields.datetime('Create Date', select=True, readonly=True),
         'karma': fields.integer('Karma'), # Use Gamification for this
         'forum': fields.boolean('Is Forum Member'),
@@ -201,7 +198,8 @@ class Users(osv.Model):
         'bronze_badge':fields.function(_get_user_badge_level, string="Number of bronze badges", type='integer', multi='badge_level'),
     }
     _defaults = {
-        'forum': False
+        'forum': False,
+        'karma': 0
     }
 
 class PostHistory(osv.Model):
@@ -243,11 +241,14 @@ class Badge(osv.Model):
         'level': 'bronze'
     }
 
+
+# TODO:
+# remove this object and replace by mail.message of type notes on related post
+# type = message types
 class ForumActivity(osv.Model):
     _name = "website.forum.activity"
     _description = "Activity"
     _order = "id desc"
-
     _columns = {
         'name': fields.char('Name', size=64),
         'post_id': fields.many2one('website.forum.post', 'Post'),
@@ -263,6 +264,7 @@ class ForumActivity(osv.Model):
                                   ('voted_question', 'voted question'), ('voted_answer', 'voted answer'),
                                   ('received_badge', 'received badge'),
                                   ], 'Activity Type'),
+        # merge these 2 fields into one: karma: fields.integer (that can be positive or negative)
         'karma_add': fields.integer('Added Karma'),
         'karma_sub': fields.integer('Karma Removed')
    }

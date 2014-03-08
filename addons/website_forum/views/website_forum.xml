@@ -690,7 +690,7 @@
                     <div t-foreach="users" t-as="user" class="col-sm-4">
                         <t t-set="separator"><br/></t>
                         <t t-call="website_forum.user_detail"/>
-                        <span class="text-muted">Joined on <span t-field="user.create_date"/></span>
+                        <span class="text-muted">Joined on <span t-field="user.create_date" t-field-options='{"format":"short"}'/></span>
                     </div>
                 </div>
                 <div class="pull-left">
@@ -715,10 +715,10 @@
                         <tr>
                             <td rowspan="2" valign="top"><span class="text-muted">contributions</span></td>
                             <td>member since</td>
-                            <td><span t-field="user.create_date" t-field-options='{"format": "MMMM d, YYYY"}'/></td>
+                            <td><span t-field="user.create_date" t-field-options='{"format": "short"}'/></td>
                         </tr><tr>
                             <td>last connection</td>
-                            <td><span t-field="user.login_date" t-field-options='{"format": "long"}'/></td>
+                            <td><span t-field="user.login_date" t-field-options='{"format": "short"}'/></td>
                         </tr>
                         </table>
                     </div><div class="col-sm-5">
@@ -812,14 +812,17 @@
         </template>
 
         <template id="user_badges">
-            <div class="col-sm-3 mt16" t-foreach="user.badges" t-as="badge">
-                <a t-attf-href="/forum/#{ slug(forum) }/badge/#{ slug(badge.badge_id) }" class="badge">
-                    <span t-field="badge.badge_id.name" />
-                </a>
-                <span> 
-                    X <t t-esc="len(badge.badge_id.owner_ids)"/>
-                </span>
+            <div class="row mb32">
+                <div class="col-sm-3 mt16" t-foreach="user.badges" t-as="badge">
+                    <a t-attf-href="/forum/#{ slug(forum) }/badge/#{ slug(badge.badge_id) }" class="badge">
+                        <span t-field="badge.badge_id.name" />
+                    </a>
+                    <span> 
+                        X <t t-esc="len(badge.badge_id.owner_ids)"/>
+                    </span>
+                </div>
             </div>
+            <b t-if="not user.badges" class="mb32">No badge yet!</b>
         </template>
 
     </data>
