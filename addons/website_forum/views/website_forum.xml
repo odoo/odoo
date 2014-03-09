@@ -119,21 +119,11 @@
                             <t t-raw="0"/>
                         </div><div class="col-sm-3" id="right-column">
                             <a class="btn btn-primary btn-lg btn-block mb16" t-attf-href="/forum/#{ slug(forum) }/ask">Ask a Question</a>
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">About This Forum</h3>
-                                </div>
-                                <div class="panel-body">
-                                    This community is for professional and enthusiast about our
-                                    products and services.<br/>
-                                    <a t-attf-href="/forum/#{ slug(forum) }/faq" class="fa fa-arrow-right"> Read Guidelines</a>
-                                </div>
-                            </div>
-
+                            <div t-field="forum.right_column"/>
                         </div>
                     </div>
                 </div>
+                <div class="oe_structure"/>
             </t>
         </template>
 
@@ -411,9 +401,9 @@
                 <div t-if="not answer_done">
                     <t t-call="website_forum.post_answer"/>
                 </div>
-                <div t-if="answer_done">
-                    <a class="btn btn-primary mb16" t-attf-href="/forum/#{ slug(forum) }/question/#{ question.id }/editanswer">Edit Your Previous Answer</a>
-                    <span style="margin-bottom: 10px;">(only one answer per question is allowed)</span>
+                <div t-if="answer_done" class="mb16">
+                    <a class="btn btn-primary" t-attf-href="/forum/#{ slug(forum) }/question/#{ question.id }/editanswer">Edit Your Previous Answer</a>
+                    <span class="text-muted">(only one answer per question is allowed)</span>
                 </div>
             </t>
         </template>

@@ -35,8 +35,8 @@ class Forum(osv.Model):
     _inherit = ['mail.thread', 'website.seo.metadata']
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
-        'faq': fields.html('FAQ'),
-        'right_column': fields.html('FAQ'),
+        'faq': fields.html('Guidelines'),
+        'right_column': fields.html('Right Column'),
     }
     def _get_default_faq(self, cr, uid, context={}):
         fname = openerp.modules.get_module_resource('website_forum', 'data', 'forum_default_faq.html')
@@ -45,7 +45,17 @@ class Forum(osv.Model):
         return False
 
     _defaults = {
-        'faq': _get_default_faq
+        'faq': _get_default_faq,
+        'right_column': """<div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">About This Forum</h3>
+                </div>
+                <div class="panel-body">
+                    This community is for professional and enthusiast about our
+                    products and services.<br/>
+                    <a t-attf-href="/forum/1/faq" class="fa fa-arrow-right"> Read Guidelines</a>
+                </div>
+            </div>"""
     }
 
 class Post(osv.Model):
