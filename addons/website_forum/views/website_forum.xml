@@ -298,20 +298,17 @@
 
         <template id="forum_index">
             <t t-call="website.layout">
-                <!--TODO: Improve template -->
-                <t t-set="head">
-                    <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css' />
-                </t>
                 <div class="container">
-                    <t t-foreach="forum_ids" t-as="forum">
-                        <div class="speech-bubble speech-bubble-bottom mt32 mb32 pull-left" style="margin-left:30px">
-                            <a style="color:white" t-attf-href="/forum/#{ slug(forum) }" t-field="forum.name"/>
+                    <h1 class="mb32">Our forums</h1>
+                    <div class="row">
+                        <div t-foreach="forums" t-as="forum" class="col-sm-3 text-center mb32">
+                            <a t-attf-href="/forum/#{ slug(forum) }">
+                                <div class="fa fa-5x fa-comment mb16"/>
+                                <div t-field="forum.name"/>
+                            </a>
                         </div>
-                    </t>
+                    </div>
                 </div>
-                <!--t t-call="website_forum.faq">
-                    <div t-field="forum.faq"/>
-                </t-->
             </t>
         </template>
 
@@ -416,7 +413,7 @@
                         t-attf-value="#{question_content or ''}" id="textarea_ckeditor"/>
                     <input type="text" name="question_tag" t-attf-value="#{question_tag or ''}"
                         class="form-control" style="margin-top: 10px" placeholder="Tags"/>
-                    <button class="btn btn-default forum_button" id="btn_ask_your_question"> Post Your Question </button>
+                    <button class="btn btn-primary" id="btn_ask_your_question">Post Your Question</button>
                 </form>
                 <script type="text/javascript">
                     CKEDITOR.replace("textarea_ckeditor");
@@ -436,7 +433,7 @@
                 <textarea name="answer_content" t-attf-value="#{answer_content or ''}"
                     class="form-control" id="textarea_ckeditor" required="True"/>
                 <input name="post_id" t-att-value="question.id" type="hidden"/>
-                <button class="btn btn-default forum_button" id="btn_ask_your_question"> Post Your Answer </button>
+                <button class="btn btn-primary" id="btn_ask_your_question">Post Your Answer</button>
             </form>
             <script type="text/javascript">
                 CKEDITOR.replace("textarea_ckeditor");
@@ -450,7 +447,7 @@
                     <textarea name="answer_content" required="True" value="content" class="form-control" id="textarea_ckeditor"/>
                     <input name="post_id" t-att-value="post.id" type="hidden"/>
                     <input name="answer_id" t-att-value="post_answer.id" type="hidden"/>
-                    <button class="btn btn-default btn-lg forum_button"> Save edit </button>
+                    <button class="btn btn-primary btn-lg">Save</button>
                 </form>
                 <script type="text/javascript">
                     CKEDITOR.replace("textarea_ckeditor");
@@ -580,7 +577,7 @@
         <template id="comments">
             <div class="row clearfix">
                 <div class="col-sm-10 col-sm-offset-2">
-                    <div t-foreach="object.website_message_ids" t-as="message">
+                    <div t-foreach="object.website_message_ids" t-as="message" class="oe_grey">
                         <small class="text-muted">
                             <div t-field="message.body"/>
                             <a t-attf-href="/forum/#{ slug(forum) }/user/#{ message.author_id.id }" t-field="message.author_id"/>

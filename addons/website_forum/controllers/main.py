@@ -42,12 +42,8 @@ class website_forum(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         Forum = request.registry['website.forum']
         obj_ids = Forum.search(cr, uid, [], context=context)
-        forum_ids = Forum.browse(cr, uid, obj_ids, context=context)
-
-        values = {
-            'forum_ids': forum_ids,
-            'searches': {},
-        }
+        forums = Forum.browse(cr, uid, obj_ids, context=context)
+        values = { 'forums': forums }
         return request.website.render("website_forum.forum_index", values)
 
     @http.route(['/forum/<model("website.forum"):forum>/view'], type='http', auth="public", website=True, multilang=True)
