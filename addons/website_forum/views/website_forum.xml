@@ -641,7 +641,7 @@
         </template>
 
         <template id="user_badges">
-            <div class="row mb32">
+            <div class="row mb16">
                 <div class="col-sm-3 mt16" t-foreach="user.badges" t-as="badge">
                     <a t-attf-href="/forum/#{ slug(forum) }/badge/#{ slug(badge.badge_id) }" class="badge">
                         <span t-field="badge.badge_id.name" />
@@ -651,7 +651,10 @@
                     </span>
                 </div>
             </div>
-            <b t-if="not user.badges" class="mb32">No badge yet!</b>
+            <div class="mb16" t-if="not user.badges">
+                <b>No badge yet!</b><br/>
+                <a t-attf-href="/forum/#{ slug(forum) }/badges" class="fa fa-arrow-right"> Check available badges</a>
+            </div>
         </template>
 
     </data>
