@@ -46,19 +46,14 @@ class website_forum(http.Controller):
         values = { 'forums': forums }
         return request.website.render("website_forum.forum_index", values)
 
-    @http.route(['/forum/<model("website.forum"):forum>/view'], type='http', auth="public", website=True, multilang=True)
-    def view_forum(self, forum, **searches):
-        return request.website.render("website_forum.forum", {'forum': forum })
-
     @http.route('/forum/add_forum/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def add_forum(self, forum_name="New Forum", **kwargs):
         forum_id = request.registry['website.forum'].create(request.cr, request.uid, {
             'name': forum_name,
-            'faq': 'F.A.Q'
         }, context=request.context)
-        return request.redirect("/forum/%s/view/?enable_editor=1" % forum_id)
+        return request.redirect("/forum/%s" % forum_id)
 
-    @http.route(['/forum/<model("website.forum"):forum>/', '/forum/<model("website.forum"):forum>/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/forum/<model("website.forum"):forum>', '/forum/<model("website.forum"):forum>/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
     def questions(self, forum, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         Forum = request.registry['website.forum.post']
@@ -124,6 +119,7 @@ class website_forum(http.Controller):
             'question': question,
             'searches': post,
             'answer_done': answer_done,
+            'reversed': reversed,
             'forum': forum,
         }
         return request.website.render("website_forum.post_description_full", values)

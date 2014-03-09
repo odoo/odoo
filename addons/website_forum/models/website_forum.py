@@ -21,6 +21,7 @@
 
 import re
 
+import openerp
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
@@ -37,6 +38,15 @@ class Forum(osv.Model):
         'faq': fields.html('FAQ'),
         'right_column': fields.html('FAQ'),
     }
+    def _get_default_faq(self, cr, uid, context={}):
+        fname = openerp.modules.get_module_resource('website_forum', 'data', 'forum_default_faq.html')
+        with open(fname, 'r') as f:
+            return f.read()
+        return False
+
+    _defaults = {
+        'faq': _get_default_faq
+    }
 
 class Post(osv.Model):
     _name = 'website.forum.post'
@@ -46,6 +56,7 @@ class Post(osv.Model):
 
     def _get_votes(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, False)
+        # TODO: implement this with a read_group call instead of browsing all records
         for post in self.browse(cr, uid, ids, context=context):
             if post.vote_ids:
                 for vote in post.vote_ids:
@@ -68,9 +79,9 @@ class Post(osv.Model):
         return res
 
     _columns = {
+        'name': fields.char('Title', size=128),
         'forum_id': fields.many2one('website.forum', 'Forum', required=True),
-        'name': fields.char('Topic', size=64),
-        'content': fields.text('Contents', help='contents'),
+        'content': fields.text('Content'),
         'create_date': fields.datetime('Asked on', select=True, readonly=True),
         'create_uid': fields.many2one('res.users', 'Asked by', select=True, readonly=True ),
         'write_date': fields.datetime('Update on', select=True, readonly=True ),
@@ -83,10 +94,10 @@ class Post(osv.Model):
 
         'state': fields.selection([('active', 'Active'),('close', 'Close'),('offensive', 'Offensive')], 'Status'),
         'active': fields.boolean('Active'),
-        'views': fields.integer('Views'),
+        'views': fields.integer('Page Views'),
 
-        'parent_id': fields.many2one('website.forum.post', 'Parent'),
-        'child_ids': fields.one2many('website.forum.post', 'parent_id', 'Child'),
+        'parent_id': fields.many2one('website.forum.post', 'Question'),
+        'child_ids': fields.one2many('website.forum.post', 'parent_id', 'Answers'),
 
         'history_ids': fields.one2many('blog.post.history', 'post_id', 'History', help='Last post modifications'),
         # TODO FIXME: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
@@ -98,9 +109,12 @@ class Post(osv.Model):
             string='Post Messages',
             help="Comments on forum post",
         ),
-        'user_vote':fields.function(_get_votes, string="Number of user votes", type='boolean'),
-        'vote_count':fields.function(_get_vote_count, string="Number of user votes count", type='integer'),
 
+        # TODO: add a store={} on those two fields. Why is it a boolean?
+        'user_vote':fields.function(_get_votes, string="My Vote", type='boolean'),
+
+        # TODO: add a store={} on those two fields
+        'vote_count':fields.function(_get_vote_count, string="Votes", type='integer'),
     }
     _defaults = {
         'state': 'active',
@@ -159,13 +173,12 @@ class Post(osv.Model):
             context = {}
         create_context = dict(context, mail_create_nolog=True)
         post_id = super(Post, self).create(cr, uid, vals, context=create_context)
-        self.create_history(cr, uid, [post_id], vals, context)
         self.create_activity(cr, uid, [post_id], method='create', context=context)
         return post_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        result = super(Post, self).write(cr, uid, ids, vals, context=context)
         self.create_history(cr, uid, ids, vals, context=context)
+        result = super(Post, self).write(cr, uid, ids, vals, context=context)
         self.create_activity(cr, uid, ids, method='write', context=context)
         return result
 
