@@ -28,26 +28,55 @@
                              <span t-field="o.picking_type_id"/>: 
                              <span t-field="o.name"/>
                              </h2>
+                             
+                             <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th><strong>Order (Origin)</strong></th>
+                                    <th><strong>Scheduled Date</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span t-field="o.origin"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.min_date"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                    </table>
+                             
+                             
                              <h3>Quantities Demanded</h3>
                              <table class="table table-condensed">
                                 <tr t-foreach="o.move_lines" t-as="move">
                                     <td><span t-field="move.product_id"/></td>
-                                    <td><span t-field="move.product_uom_qty"/><span t-field="move.product_uom"/></td>
+                                    <td><span t-field="move.product_uom_qty"/> <span t-field="move.product_uom" groups="product.group_uom"/></td>
                                     <td><span t-field="move.location_id"/></td>
                                     <td><span t-field="move.location_dest_id"/></td>
                                 </tr>
                             </table>
+                            <div t-if="o.pack_operation_ids">
                             <h3>Quantities Chosen</h3>
                             <table class="table table-condensed">
                                 <tr t-foreach="o.pack_operation_ids" t-as="pack_operation">
                                     <td><span t-field="pack_operation.product_id"/></td>
-                                    <td><span t-field="pack_operation.product_qty"/></td>
-                                    <td><span t-field="pack_operation.location_id"/></td>
-                                    <td><span t-field="pack_operation.package_id"/></td>
-                                    <td><span t-field="pack_operation.lot_id"/></td>
-                                    <td><span t-field="pack_operation.location_dest_id"/></td>
+                                    <td><span t-field="pack_operation.product_qty"/> <span t-field="pack_operation.product_uom_id" groups="product.group_uom"/></td>
+                                    <td><span t-field="pack_operation.location_id"/>
+                                        <span t-if="pack_operation.package_id">:</span>
+                                        <span t-field="pack_operation.package_id"/>
+                                        <span t-if="pack_operation.lot_id">:</span>
+                                        <span t-field="pack_operation.lot_id"/>
+                                        </td>
+                                    <td><span t-field="pack_operation.location_dest_id"/>
+                                        <span t-if="pack_operation.result_package_id">:</span>
+                                        <span t-field="pack_operation.result_package_id"/>
+                                        </td>
                                 </tr>
                             </table>
+                            </div>
                         </div>
                     </t>
                  </t>
