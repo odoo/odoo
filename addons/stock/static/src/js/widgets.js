@@ -64,6 +64,7 @@ function openerp_picking_widgets(instance){
         renderElement: function(){
             var self = this;
             this._super();
+            this.disconnect_numpad();
             this.$('.js_pack_scan').click(function(){
                 var id = parseInt($(this).attr('op-id'));
                 self.getParent().scan_product_id(id);
@@ -75,9 +76,29 @@ function openerp_picking_widgets(instance){
                 else{
                     $(this).addClass('warning');
                 }
+                self.check_change_quantity();
             });
             //remove navigtion bar from default openerp GUI
             $('td.navbar').html('<div></div>');
+        },
+        check_change_quantity: function(){
+            var self = this;
+            if (this.$('.js_pack_op_line.warning:not(.hidden)').length === 1){
+                cur_id = this.$('.js_pack_op_line.warning:not(.hidden)')[0].attributes.getNamedItem('data-id').value;
+                op_id = parseInt(cur_id);
+                this.$('.js_pack_op_line:not(.hidden)[data-id='+op_id+'] > .js_row_qty').addClass('blink_me');
+                var value = [0,0]
+                _.each(this.rows, function(row){
+                    if (row.cols.id === op_id){
+                        value = [row.cols.rem, row.cols.qty, row.cols.uom];
+                    }
+                });
+                this.connect_numpad(value, op_id);
+            }
+            else{
+                this.disconnect_numpad();
+                this.$('.js_row_qty.blink_me').removeClass('blink_me');
+            }
         },
         on_searchbox: function(query){
             //hide line that has no location matching the query and highlight location that match the query
@@ -98,14 +119,12 @@ function openerp_picking_widgets(instance){
             //get ids of visible on the screen
             pack_op_ids = []
             if (this.$('.js_pack_op_line.warning:not(.js_pack_op_line.hidden)').length > 0){
-                console.log('some selected');
                 this.$('.js_pack_op_line.warning:not(.js_pack_op_line.hidden)').each(function(){
                     cur_id = this.attributes.getNamedItem('data-id').value;
                     pack_op_ids.push(parseInt(cur_id));
                 });
             }
             else{
-                console.log('nothing selected');
                 this.$('.js_pack_op_line:not(.js_pack_op_line.hidden)').each(function(){
                     cur_id = this.attributes.getNamedItem('data-id').value;
                     pack_op_ids.push(parseInt(cur_id));
@@ -120,7 +139,58 @@ function openerp_picking_widgets(instance){
             });
             //return only those visible with rem qty > 0 and container empty
             return _.intersection(pack_op_ids, list);
-        }
+        },
+        unhighlight: function(){
+            this.$('.js_pack_op_line.warning').removeClass('warning');
+            this.$('.js_row_qty.blink_me').removeClass('blink_me');
+        },
+        connect_numpad: function(value, op_id){
+            var self = this;
+            var numpad = [];
+            var numpad_timestamp;
+            var processed = value[0];
+            var total = value[1];
+            var uom = '';
+            if (value[2] !== undefined){ uom = value[2]; }
+
+            this.refresh = function(){
+                if (numpad.length === 0){
+                    self.$('.js_row_qty.blink_me').text(processed + ' / ' + total + ' ' + uom);
+                }
+                else {
+                    self.$('.js_row_qty.blink_me').text(parseInt(numpad.join('')) + ' / ' + total + ' ' + uom);
+                }
+            }
+            
+            this.numpad_handler = function(e){
+                console.log(e.keyCode);
+                if(numpad_timestamp + 1500 < new Date().getTime()){
+                    numpad = [];
+                }
+                if(e.keyCode === 27){ // ESC
+                    numpad = [];
+                }
+                else if(e.keyCode === 8){ // BACKSPACE
+                    numpad.pop();
+                }else if(e.keyCode >= 48 && e.keyCode <= 57){ // NUMPAD NUMBERS
+                    numpad.push(e.keyCode - 48);
+                }else if(e.keyCode === 13){ // ENTER
+                    self.unhighlight();
+                    self.disconnect_numpad();
+                    if(numpad.length > 0){
+                        self.getParent().set_operation_quantity(parseInt(numpad.join('')), op_id);
+                    }
+                    // numpad = [];
+                }
+                self.refresh();
+                numpad_timestamp = new Date().getTime();
+            };
+            $('body').on('keydown', this.numpad_handler);
+        },
+        disconnect_numpad: function(){
+            jQuery.event.trigger({ type : 'keydown', which : 27 });
+            $('body').off('keydown', this.numpad_handler);
+        },
     });
 
     // module.PackageEditorWidget = instance.web.Widget.extend({
@@ -462,7 +532,7 @@ function openerp_picking_widgets(instance){
             this._super();
             var self = this;
             instance.webclient.set_content_full_screen(true);
-            this.connect_numpad();
+            // this.connect_numpad();
             this.barcode_scanner.connect(function(ean){
                 self.scan(ean);
             });
@@ -574,19 +644,16 @@ function openerp_picking_widgets(instance){
             new instance.web.Model('stock.picking')
                 .call('process_barcode_from_ui', [self.picking.id, ean])
                 .then(function(result){
-                    if (typeof(result)!="boolean"){
+                    if (result.filter_loc !== false){
                         //check if we have receive a location as answer
                         if (result.filter_loc !== undefined){
                             self.$('.oe_searchbox').val(result.filter_loc);
                             self.on_searchbox(result.filter_loc);
                         }
                     }
-                    else{
+                    console.log(result.operation_id);
+                    if (result.operation_id !== false){
                         return self.refresh_ui(self.picking.id);
-                        //TODO add a then to highlight the line that was scanned, do same to scan_product_id
-                        // .then(function(product_id){
-                        //     self.
-                        // });
                     }
                 });
         },
@@ -594,7 +661,7 @@ function openerp_picking_widgets(instance){
             var self = this;
             new instance.web.Model('stock.picking')
                 .call('process_product_id_from_ui', [self.picking.id, product_id])
-                .then(function(){
+                .then(function(result){
                     return self.refresh_ui(self.picking.id);
                 });
         },
@@ -740,53 +807,64 @@ function openerp_picking_widgets(instance){
                 return null;
             }
         },
-        set_operation_quantity: function(quantity){
+        set_operation_quantity: function(quantity, op_id){
             var self = this;
-            var op = this.get_selected_operation();
-            if( !op ){
-                //TODO typing the ean of a product manually ?
-                //(scanning the barcode is already handled somewhere else, and i don't know how to differenciate the 2 operations)
-                // and the result is that if i uncomment the next line, scanning a product counts it twice
-                //self.scan(quantity);
-            }
-
-            else {if(typeof quantity === 'number' && quantity >= 0){
+            if(quantity >= 0){
                 new instance.web.Model('stock.pack.operation')
-                    .call('write',[[op],{'product_qty': quantity }])
+                    .call('write',[[op_id],{'qty_done': quantity }])
                     .then(function(){
                         self.refresh_ui(self.picking.id);
                     });
-            }}
+            }
 
         },
-        connect_numpad: function(){
-            var self = this;
-            var numpad = [];
-            var numpad_timestamp;
+        // set_operation_quantity: function(quantity){
+        //     var self = this;
+        //     var op = this.get_selected_operation();
+        //     if( !op ){
+        //         //TODO typing the ean of a product manually ?
+        //         //(scanning the barcode is already handled somewhere else, and i don't know how to differenciate the 2 operations)
+        //         // and the result is that if i uncomment the next line, scanning a product counts it twice
+        //         //self.scan(quantity);
+        //     }
+
+        //     else {if(typeof quantity === 'number' && quantity >= 0){
+        //         new instance.web.Model('stock.pack.operation')
+        //             .call('write',[[op],{'product_qty': quantity }])
+        //             .then(function(){
+        //                 self.refresh_ui(self.picking.id);
+        //             });
+        //     }}
+
+        // },
+        // connect_numpad: function(){
+        //     var self = this;
+        //     var numpad = [];
+        //     var numpad_timestamp;
             
-            this.numpad_handler = function(e){ 
-                if(numpad_timestamp + 1500 < new Date().getTime()){
-                    numpad = [];
-                }
-                if(e.keyCode === 27 || e.keyCode === 8){ // ESC or BACKSPACE
-                    numpad = [];
-                }else if(e.keyCode >= 48 && e.keyCode <= 57){ // NUMPAD NUMBERS
-                    numpad.push(e.keyCode - 48);
-                }else if(e.keyCode === 13){ // ENTER
-                    if(numpad.length > 0){
-                        self.set_operation_quantity(parseInt(numpad.join('')));
-                    }
-                    numpad = [];
-                }else{
-                    numpad = [];
-                }
-                numpad_timestamp = new Date().getTime();
-            };
-            $('body').on('keypress', this.numpad_handler);
-        },
-        disconnect_numpad: function(){
-            $('body').off('keypress', this.numpad_handler);
-        },
+        //     this.numpad_handler = function(e){ 
+        //         if(numpad_timestamp + 1500 < new Date().getTime()){
+        //             numpad = [];
+        //         }
+        //         if(e.keyCode === 27 || e.keyCode === 8){ // ESC or BACKSPACE
+        //             numpad = [];
+        //         }else if(e.keyCode >= 48 && e.keyCode <= 57){ // NUMPAD NUMBERS
+        //             numpad.push(e.keyCode - 48);
+        //         }else if(e.keyCode === 13){ // ENTER
+        //             if(numpad.length > 0){
+        //                 self.set_operation_quantity(parseInt(numpad.join('')));
+        //             }
+        //             numpad = [];
+        //         }else{
+        //             numpad = [];
+        //         }
+        //         numpad_timestamp = new Date().getTime();
+        //     };
+        //     $('body').on('keypress', this.numpad_handler);
+        // },
+        // disconnect_numpad: function(){
+        //     $('body').off('keypress', this.numpad_handler);
+        // },
         quit: function(){
             this.destroy();
             return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_picking_type_form']], ['res_id']).pipe(function(res) {
@@ -795,7 +873,7 @@ function openerp_picking_widgets(instance){
         },
         destroy: function(){
             this._super();
-            this.disconnect_numpad();
+            // this.disconnect_numpad();
             this.barcode_scanner.disconnect();
             $('body').off('keyup',this.hotkey_handler);
             instance.webclient.set_content_full_screen(false);

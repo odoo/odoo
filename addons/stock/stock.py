@@ -1263,29 +1263,35 @@ class stock_picking(osv.osv):
         product_obj = self.pool.get('product.product')
         stock_operation_obj = self.pool.get('stock.pack.operation')
         stock_location_obj = self.pool.get('stock.location')
+        answer = {'filter_loc': False, 'operation_id': False}
         #check if the barcode correspond to a location
         matching_location_ids = stock_location_obj.search(cr, uid, [('loc_barcode', '=', barcode_str)], context=context)
         if matching_location_ids:
             #if we have a location, return immediatly with the location name
             location = stock_location_obj.browse(cr, uid, matching_location_ids[0], context=None)
-            return {'filter_loc': stock_location_obj._name_get(cr, uid, location, context=None)}
+            answer['filter_loc'] = stock_location_obj._name_get(cr, uid, location, context=None)
+            return answer
+            # return {'filter_loc': stock_location_obj._name_get(cr, uid, location, context=None)}
         #check if the barcode correspond to a product
         matching_product_ids = product_obj.search(cr, uid, ['|', ('ean13', '=', barcode_str), ('default_code', '=', barcode_str)], context=context)
         if matching_product_ids:
-            self.process_product_id_from_ui(cr, uid, picking_id, matching_product_ids[0], context=context)
-
+            op_id = self.process_product_id_from_ui(cr, uid, picking_id, matching_product_ids[0], context=context)
+            answer['operation_id'] = op_id
+            return answer
         #check if the barcode correspond to a lot
         matching_lot_ids = lot_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
         if matching_lot_ids:
             lot = lot_obj.browse(cr, uid, matching_lot_ids[0], context=context)
-            stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', lot.product_id.id), ('lot_id', '=', lot.id)], context=context)
-
+            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', lot.product_id.id), ('lot_id', '=', lot.id)], context=context)
+            answer['operation_id'] = op_id
+            return answer
         #check if the barcode correspond to a package
         matching_package_ids = package_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
         if matching_package_ids:
-            stock_operation_obj._search_and_increment(cr, uid, picking_id, [('package_id', '=', matching_package_ids[0])], context=context)
-
-        return False
+            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('package_id', '=', matching_package_ids[0])], context=context)
+            answer['operation_id'] = op_id
+            return answer
+        return answer
 
 class stock_production_lot(osv.osv):
     _name = 'stock.production.lot'
@@ -3688,7 +3694,7 @@ class stock_pack_operation(osv.osv):
                     update_dict['product_uom_id'] = uom_id
                 values.update(update_dict)
             operation_id = self.create(cr, uid, values, context=context)
-        return True
+        return operation_id
 
 
 class stock_move_operation_link(osv.osv):
