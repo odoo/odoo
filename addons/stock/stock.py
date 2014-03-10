@@ -341,9 +341,24 @@ class stock_quant(osv.osv):
             if not quant:
                 #If quant is None, we will create a quant to move (and potentially a negative counterpart too)
                 quant = self._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location = location_dest_id, context=context)
-            if not location_dest_id:
-                location_dest_id = move.location_dest_id
-            self.move_single_quant_tuple(cr, uid, quant, qty, move, location_dest_id, context=context)
+        if not location_dest_id:
+            location_dest_id = move.location_dest_id
+        self.move_single_quant_tuples(cr, uid, [x for x in quants if x[0]], move, location_dest_id, context=context)
+
+
+
+    def move_single_quant_tuples(self, cr, uid, quants, move, location_dest_id, context=None):
+        whole_quants = []
+        for quant, qty in quants:
+            if not quant:
+                continue
+            new_quant = self._quant_split(cr, uid, quant, qty, context=context)
+            whole_quants.append(quant.id)
+        if self._check_location(cr, uid, location_dest_id, context=context) and whole_quants:
+            self.write(cr, SUPERUSER_ID, whole_quants, {'location_id': location_dest_id.id, 
+                                                        'history_ids': [(4, move.id)]}, context=context)
+            self._quants_reconcile_negative(cr, uid, whole_quants, move, context=context)
+
 
 
     def move_single_quant(self, cr, uid, quant, location_to, qty, move, context=None):
@@ -492,54 +507,60 @@ class stock_quant(osv.osv):
             path.append((4, move.id))
         self.write(cr, SUPERUSER_ID, solved_quant_ids, {'history_ids': path}, context=context)
 
+
+    def _quants_reconcile_negative(self, cr, uid, quants, move, context=None):
+        if quants[0].location_id.usage != 'internal':
+            return False
+        quants_rec = self.search(cr, uid, [('product_id', '=', move.product_id.id), ('qty','<', 0)], limit=1, context=context)
+        if quants_rec:
+            for quant in quants:
+                quant.refresh()
+                self._quant_reconcile_negative(cr, uid, quant, move, context=context)
+
     def _quant_reconcile_negative(self, cr, uid, quant, move, context=None):
         """
             When new quant arrive in a location, try to reconcile it with
             negative quants. If it's possible, apply the cost of the new
             quant to the conter-part of the negative quant.
         """
-        if quant.location_id.usage != 'internal':
-            return False
-        quants = self.search(cr, uid, [('product_id', '=', quant.product_id.id), ('qty','<', 0)], limit=1, context=context)
-        if quants:
-            solving_quant = quant
-            dom = [('qty', '<', 0)]
-            if quant.lot_id:
-                dom += [('lot_id', '=', quant.lot_id.id)]
-            dom += [('owner_id', '=', quant.owner_id.id)]
-            dom += [('package_id', '=', quant.package_id.id)]
-            if move.move_dest_id:
-                dom += [('negative_move_id', '=', move.move_dest_id.id)]
-            quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, dom, context=context)
-            for quant_neg, qty in quants:
-                if not quant_neg:
+        solving_quant = quant
+        dom = [('qty', '<', 0)]
+        if quant.lot_id:
+            dom += [('lot_id', '=', quant.lot_id.id)]
+        dom += [('owner_id', '=', quant.owner_id.id)]
+        dom += [('package_id', '=', quant.package_id.id)]
+        if move.move_dest_id:
+            dom += [('negative_move_id', '=', move.move_dest_id.id)]
+        quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, dom, context=context)
+        for quant_neg, qty in quants:
+            if not quant_neg:
+                continue
+            to_solve_quant_ids = self.search(cr, uid, [('propagated_from_id', '=', quant_neg.id)], context=context)
+            if not to_solve_quant_ids:
+                continue
+            solving_qty = qty
+            solved_quant_ids = []
+            for to_solve_quant in self.browse(cr, uid, to_solve_quant_ids, context=context):
+                if solving_qty <= 0:
                     continue
-                to_solve_quant_ids = self.search(cr, uid, [('propagated_from_id', '=', quant_neg.id)], context=context)
-                if not to_solve_quant_ids:
-                    continue
-                solving_qty = qty
-                solved_quant_ids = []
-                for to_solve_quant in self.browse(cr, uid, to_solve_quant_ids, context=context):
-                    if solving_qty <= 0:
-                        continue
-                    solved_quant_ids.append(to_solve_quant.id)
-                    self._quant_split(cr, uid, to_solve_quant, min(solving_qty, to_solve_quant.qty), context=context)
-                    solving_qty -= min(solving_qty, to_solve_quant.qty)
-                remaining_solving_quant = self._quant_split(cr, uid, solving_quant, qty, context=context)
-                remaining_neg_quant = self._quant_split(cr, uid, quant_neg, -qty, context=context)
-                #if the reconciliation was not complete, we need to link together the remaining parts
-                if remaining_neg_quant:
-                    remaining_to_solve_quant_ids = self.search(cr, uid, [('propagated_from_id', '=', quant_neg.id), ('id', 'not in', solved_quant_ids)], context=context)
-                    if remaining_to_solve_quant_ids:
-                        self.write(cr, SUPERUSER_ID, remaining_to_solve_quant_ids, {'propagated_from_id': remaining_neg_quant.id}, context=context)
-                #delete the reconciled quants, as it is replaced by the solved quants
-                self.unlink(cr, SUPERUSER_ID, [quant_neg.id], context=context)
-                #price update + accounting entries adjustments
-                self._price_update(cr, uid, solved_quant_ids, solving_quant.cost, context=context)
-                #merge history (and cost?)
-                self._quants_merge(cr, uid, solved_quant_ids, solving_quant, context=context)
-                self.unlink(cr, SUPERUSER_ID, [solving_quant.id], context=context)
-                solving_quant = remaining_solving_quant
+                solved_quant_ids.append(to_solve_quant.id)
+                self._quant_split(cr, uid, to_solve_quant, min(solving_qty, to_solve_quant.qty), context=context)
+                solving_qty -= min(solving_qty, to_solve_quant.qty)
+            remaining_solving_quant = self._quant_split(cr, uid, solving_quant, qty, context=context)
+            remaining_neg_quant = self._quant_split(cr, uid, quant_neg, -qty, context=context)
+            #if the reconciliation was not complete, we need to link together the remaining parts
+            if remaining_neg_quant:
+                remaining_to_solve_quant_ids = self.search(cr, uid, [('propagated_from_id', '=', quant_neg.id), ('id', 'not in', solved_quant_ids)], context=context)
+                if remaining_to_solve_quant_ids:
+                    self.write(cr, SUPERUSER_ID, remaining_to_solve_quant_ids, {'propagated_from_id': remaining_neg_quant.id}, context=context)
+            #delete the reconciled quants, as it is replaced by the solved quants
+            self.unlink(cr, SUPERUSER_ID, [quant_neg.id], context=context)
+            #price update + accounting entries adjustments
+            self._price_update(cr, uid, solved_quant_ids, solving_quant.cost, context=context)
+            #merge history (and cost?)
+            self._quants_merge(cr, uid, solved_quant_ids, solving_quant, context=context)
+            self.unlink(cr, SUPERUSER_ID, [solving_quant.id], context=context)
+            solving_quant = remaining_solving_quant
 
     def _price_update(self, cr, uid, ids, newprice, context=None):
         self.write(cr, SUPERUSER_ID, ids, {'cost': newprice}, context=context)

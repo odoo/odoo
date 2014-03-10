@@ -130,6 +130,13 @@ class stock_quant(osv.osv):
         self._account_entry_move(cr, uid, quant, move, context=context)
         return quant_record
 
+    def move_single_quant_tuples(self, cr, uid, quants, move, location_dest_id, context=None):
+        quant_record = super(stock_quant, self).move_single_quant_tuples(cr, uid, quants, move, location_dest_id, context=context)
+        if move.product_id.valuation == 'real_time':
+            for quant in quants:
+                self._account_entry_move(cr, uid, quant, move, context=context)
+        return quant_record
+
 
     def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
         """
