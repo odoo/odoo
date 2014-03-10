@@ -378,14 +378,6 @@ class Website(openerp.addons.web.controllers.main.Home):
             del response.headers['Content-Length']
 
         return response
-    
-    @http.route(['/website/current_user/'], type='json', auth="public", website=True)
-    def get_current_user(self, fields):
-        cr, uid, context = request.cr, request.uid, request.context
-        if request.registry["website"].get_public_user(cr, uid, context=context) != uid:
-            return request.registry["res.users"].read(cr, openerp.SUPERUSER_ID, [uid], fields, context=context)[0]
-        else:
-            return None
 
     #------------------------------------------------------
     # Server actions

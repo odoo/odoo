@@ -143,25 +143,10 @@
                 "https://plus.google.com/share?url="+url);
             this.$target.find("a").click(function () {
                 window.open(this.href,'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
+                return false;
             });
-            
-            var $modal = this.$target.find(".oe_share_mail_modal");
-            var $from = $modal.find("input[name='from']").parent().parent();
-            this.$target.find(".oe_share_mail").off("click").click(function () {
-                // open popover
-                $modal.modal("show");
-            });
-            $modal.find("input[name='url']").attr("value", window.location.href);
-            openerp.jsonRpc('/website/current_user/', 'call', {
-                fields: ["email"]
-            }).then(function (result) {
-                if (result) $from.addClass("hidden");
-                else $from.removeClass("hidden");
-            });
-            $modal.find(".btn-primary").click(function () {
-                $modal.modal("hide");
-                console.log("valid");
-            });
+            this.$target.find(".oe_share_mail").attr("href",
+                "mailto:?body="+url+"&subject="+title).off("click");
         },
     });
 })();
