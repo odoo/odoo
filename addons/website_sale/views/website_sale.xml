@@ -118,7 +118,7 @@
                       <t t-if="td_product">
                       <t t-set="product" t-value="td_product['product']"/>
                       <td t-att-colspan="td_product['x'] != 1 and td_product['x']"
-                          t-att-rowspan="td_product['y'] != 1 and td_product['y']"
+                          t-att-rowspan="td_product['y'] != 1 and td_product['x'] != 4 and td_product['y']"
                           t-attf-class="oe_product oe_grid oe-height-#{td_product['y']*2} #{ td_product['class'] }">
 
                           <div class="oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
