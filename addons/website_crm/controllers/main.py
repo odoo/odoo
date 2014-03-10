@@ -15,8 +15,14 @@ class contactus(http.Controller):
         )
         return url
 
+    @http.route(['/page/website.contactus'], type='http', auth="public", website=True, multilang=True)
+    def contact(self, **kwargs):
+        return request.website.render("website.contactus", {
+                'kwargs': kwargs.items()
+            })
+
     @http.route(['/crm/contactus'], type='http', auth="public", website=True, multilang=True)
-    def contactus(self, description=None, partner_name=None, phone=None, contact_name=None, email_from=None, name=None):
+    def contactus(self, description=None, partner_name=None, phone=None, contact_name=None, email_from=None, name=None, **kwargs):
         post = {}
         post['description'] = description
         post['partner_name'] = partner_name
@@ -35,6 +41,7 @@ class contactus(http.Controller):
             if not post.get(field):
                 error.add(field)
         if error:
+            values.update(kwargs=kwargs.items())
             return request.website.render("website.contactus", values)
 
         # if not given: subject is contact name
@@ -48,9 +55,18 @@ class contactus(http.Controller):
         except ValueError:
             pass
 
+        environ = request.httprequest.headers.environ
+        values['description'] = "%s\n-----------------------------\nIP: %s\nUSER_AGENT: %s\nACCEPT_LANGUAGE: %s" % (
+            values['description'],
+            environ.get("REMOTE_ADDR"),
+            environ.get("HTTP_USER_AGENT"),
+            environ.get("HTTP_ACCEPT_LANGUAGE"))
+        for field in kwargs.items():
+            values['description'] = "%s\n%s: %s" % (values['description'], field[0], field[1])
+
         request.registry['crm.lead'].create(request.cr, SUPERUSER_ID, post, request.context)
         company = request.website.company_id
         values = {
-            'google_map_url': self.generate_google_map_url(company.street, company.city, company.zip, company.country_id and company.country_id.name_get()[0][1] or '')
+            'google_map_url': self.generate_google_map_url(company.street, company.city, company.zip, company.country_id and company.country_id.name_get()[0][1] or ''),
         }
         return request.website.render("website_crm.contactus_thanks", values)
