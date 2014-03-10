@@ -441,6 +441,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     parse_on_change_v8: function (onchange, widget) {
         // onchange V8: call onchange(field_values, field_name, tocheck)
         var field_values = this.get_fields_values();
+        if (field_values.id.toString().match(instance.web.BufferedDataSet.virtual_id_regex)) {
+            delete field_values.id;
+        }
         if (this.dataset.parent_view) {
             // this belongs to a parent view: add parent field if possible
             var parent_view = this.dataset.parent_view;
