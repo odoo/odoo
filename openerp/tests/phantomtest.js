@@ -96,14 +96,17 @@ function PhantomTest() {
     // ----------------------------------------------------
     // run test
     // ----------------------------------------------------
-    this.run = function(url_path, code, ready) {
+    this.run = function() {
+        var url_path = this.options.url_path,
+                code = this.options.code,
+               ready = this.options.ready;
         if(self.options.login) {
-            qp = [];
+            var qp = [];
             qp.push('db=' + self.options.db);
             qp.push('login=' + self.options.login);
             qp.push('key=' + self.options.password);
             qp.push('redirect=' + encodeURIComponent(url_path));
-            var url_path = "/login?" + qp.join('&');
+            url_path = "/login?" + qp.join('&');
         }
         var url = self.origin + url_path;
         self.page.open(url, function(status) {
@@ -132,8 +135,7 @@ function PhantomTest() {
 
 // js mode or jsfile mode
 if(phantom.args.length === 1) {
-    pt = new PhantomTest();
-    pt.run(pt.options.url_path, pt.options.code, pt.options.ready);
+    new PhantomTest().run();
 }
 
 // vim:et:
