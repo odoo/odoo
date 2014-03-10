@@ -127,4 +127,41 @@
         }
     });
 
+    website.snippet.animationRegistry.share = website.snippet.Animation.extend({
+        selector: ".oe_share",
+        start: function () {
+            var self = this;
+            var url = encodeURIComponent(window.location.href);
+            var title = encodeURIComponent($("title").text());
+            this.$target.find(".oe_share_facebook").attr("href",
+                "https://www.facebook.com/sharer/sharer.php?u="+url);
+            this.$target.find(".oe_share_twitter").attr("href",
+                "https://twitter.com/intent/tweet?text="+title+"&related=&url="+url);
+            this.$target.find(".oe_share_linkedin").attr("href",
+                "http://www.linkedin.com/shareArticle?mini=true&url="+url+"&title="+title+"&summary=&source=");
+            this.$target.find(".oe_share_google").attr("href",
+                "https://plus.google.com/share?url="+url);
+            this.$target.find("a").click(function () {
+                window.open(this.href,'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
+            });
+            
+            var $modal = this.$target.find(".oe_share_mail_modal");
+            var $from = $modal.find("input[name='from']").parent().parent();
+            this.$target.find(".oe_share_mail").off("click").click(function () {
+                // open popover
+                $modal.modal("show");
+            });
+            $modal.find("input[name='url']").attr("value", window.location.href);
+            openerp.jsonRpc('/website/current_user/', 'call', {
+                fields: ["email"]
+            }).then(function (result) {
+                if (result) $from.addClass("hidden");
+                else $from.removeClass("hidden");
+            });
+            $modal.find(".btn-primary").click(function () {
+                $modal.modal("hide");
+                console.log("valid");
+            });
+        },
+    });
 })();
