@@ -29,3 +29,22 @@
         }),
     });
 })();
+
+
+$(document).ready(function () {
+
+    $('.fa-thumbs-up ,.fa-thumbs-down').on('click', function (ev) {
+        ev.preventDefault();
+        var $link = $(ev.currentTarget);
+        var value = $link.attr("value")
+        openerp.jsonRpc("/forum/post_vote/", 'call', {
+                'post_id': $link.attr("id"),
+                'vote': value})
+            .then(function (data) {
+                $link.parent().find("#vote_count").html(data);
+                //TODO: set proper class
+                $link.addClass("text-success");
+            });
+        return false;
+    });
+});

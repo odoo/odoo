@@ -284,37 +284,15 @@
 
         <template id="post_description_full" name="Question Navigation">
             <t t-call="website_forum.header">
-                <form t-attf-action="/forum/#{ slug(forum) }/post_vote/" enctype="multipart/form-data" method="post" id="post_vote"  role="form">
-                    <input name="question_id" t-att-value="question.id" type="hidden"/>
-                    <script type="text/javascript">
-                        {
-                            function getsupport (post_value, up_down)
-                            {
-                                var f=document.getElementById("post_vote")
-                                var input = document.createElement("input");
-                                input.name= "post_id";
-                                input.type = "hidden";
-                                input.value = post_value;
-                                var vote = document.createElement("input");
-                                vote.name= "vote";
-                                vote.type = "hidden";
-                                vote.value = up_down;
-                                f.appendChild(input);
-                                f.appendChild(vote);
-                                document.getElementById('post_vote').submit();
-                            }
-                        }
-                    </script>
-                </form>
 
                 <div class="question">
                     <div class="text-center pull-left">
                         <div t-attf-class="box oe_grey">
                             <a t-attf-class="fa fa-thumbs-up #{question.user_vote == 1 and 'text-success' or ''}" 
-                                t-attf-href="javascript:getsupport(#{ question.id },#{ 1 });"/>
-                            <span t-esc="question.vote_count"/>
+                                t-attf-id="#{question.id}" t-attf-value="1"/>
+                            <span id="vote_count" t-esc="question.vote_count"/>
                             <a t-attf-class="fa fa-thumbs-down #{question.user_vote == -1 and 'text-warning' or ''}" 
-                                t-attf-href="javascript:getsupport(#{ question.id },#{ -1 });"/>
+                                t-attf-id="#{question.id}" t-attf-value="-1"/>
                             <div>
                                 votes
                             </div>
@@ -364,10 +342,10 @@
                     <div class="text-center pull-left">
                         <div t-attf-class="box oe_grey">
                             <a t-attf-class="fa fa-thumbs-up #{answer.user_vote == 1 and 'text-success' or ''}" 
-                                t-attf-href="javascript:getsupport(#{ answer.id },#{ 1 });"/>
-                            <span t-esc="answer.vote_count"/>
+                                t-attf-id="#{answer.id}" t-attf-value="1"/>
+                            <span id="vote_count" t-esc="answer.vote_count"/>
                             <a t-attf-class="fa fa-thumbs-down #{answer.user_vote == -1 and 'text-warning' or ''}" 
-                                t-attf-href="javascript:getsupport(#{ answer.id },#{ -1 });"/>
+                                t-attf-id="#{answer.id}" t-attf-value="-1"/>
                             <div>
                                 votes
                             </div>
