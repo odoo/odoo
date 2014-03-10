@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import hashlib
 import inspect
 import itertools
 import logging
@@ -18,7 +19,7 @@ except ImportError:
 import openerp
 from openerp.osv import orm, osv, fields
 from openerp.tools.safe_eval import safe_eval
-from openerp.addons.web.http import request, LazyResponse
+from openerp.addons.web.http import request
 
 logger = logging.getLogger(__name__)
 
@@ -229,11 +230,8 @@ class website(osv.osv):
         return self.pool['ir.ui.view'].render(cr, uid, template, values=values, context=context)
 
     def render(self, cr, uid, ids, template, values=None, status_code=None, context=None):
-        def callback(template, values, context):
-            return self._render(cr, uid, ids, template, values, context)
-        if values is None:
-            values = {}
-        return LazyResponse(callback, status_code=status_code, template=template, values=values, context=context)
+        # TODO: remove this. (just kept for backward api compatibility for saas-3)
+        return request.render(template, values, uid=uid)
 
     def pager(self, cr, uid, ids, url, total, page=1, step=30, scope=5, url_args=None, context=None):
         # Compute Pager
@@ -565,9 +563,36 @@ class ir_attachment(osv.osv):
                     'max_height': 768,
                 })
         return result
+    def _datas_checksum(self, cr, uid, ids, name, arg, context=None):
+        return dict(
+            (attach['id'], self._compute_checksum(attach))
+            for attach in self.read(
+                cr, uid, ids, ['res_model', 'res_id', 'type', 'datas'],
+                context=context)
+        )
+
+    def _compute_checksum(self, attachment_dict):
+        if attachment_dict.get('res_model') == 'ir.ui.view'\
+                and not attachment_dict.get('res_id')\
+                and attachment_dict.get('type', 'binary') == 'binary'\
+                and attachment_dict.get('datas'):
+            return hashlib.new('sha1', attachment_dict['datas']).hexdigest()
+        return None
+
     _columns = {
+        'datas_checksum': fields.function(_datas_checksum, size=40,
+              string="Datas checksum", type='char', store=True, select=True),
         'website_url': fields.function(_website_url_get, string="Attachment URL", type='char')
     }
+
+    def create(self, cr, uid, values, context=None):
+        chk = self._compute_checksum(values)
+        if chk:
+            match = self.search(cr, uid, [('datas_checksum', '=', chk)], context=context)
+            if match:
+                return match[0]
+        return super(ir_attachment, self).create(
+            cr, uid, values, context=context)
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
