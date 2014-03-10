@@ -53,8 +53,8 @@ class ir_http(osv.AbstractModel):
     def _get_converters(self):
         return {'model': ModelConverter, 'models': ModelsConverter}
 
-    def _find_handler(self):
-        return self.routing_map().bind_to_environ(request.httprequest.environ).match()
+    def _find_handler(self, return_rule=False):
+        return self.routing_map().bind_to_environ(request.httprequest.environ).match(return_rule=return_rule)
 
     def _auth_method_user(self):
         request.uid = request.session.uid
@@ -89,7 +89,8 @@ class ir_http(osv.AbstractModel):
     def _dispatch(self):
         # locate the controller method
         try:
-            func, arguments = self._find_handler()
+            rule, arguments = self._find_handler(return_rule=True)
+            func = rule.endpoint
         except werkzeug.exceptions.NotFound, e:
             return self._handle_exception(e)
 
@@ -102,7 +103,7 @@ class ir_http(osv.AbstractModel):
                 convert_exception_to(
                     werkzeug.exceptions.Forbidden))
 
-        processing = self._postprocess_args(arguments)
+        processing = self._postprocess_args(arguments, rule)
         if processing:
             return processing
 
@@ -118,7 +119,7 @@ class ir_http(osv.AbstractModel):
 
         return result
 
-    def _postprocess_args(self, arguments):
+    def _postprocess_args(self, arguments, rule):
         """ post process arg to set uid on browse records """
         for arg in arguments.itervalues():
             if isinstance(arg, orm.browse_record) and arg._uid is UID_PLACEHOLDER:
