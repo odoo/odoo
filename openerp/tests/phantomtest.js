@@ -2,22 +2,17 @@
 
 function waitFor (ready, callback, timeout, timeoutMessageCallback) {
     timeout = timeout || 10000;
-    var start = new Date().getTime();
-    var condition = ready();
-    var interval = setInterval(function() {
-        if ((new Date().getTime() - start < timeout) && !condition ) {
-            condition = ready();
+    var start = new Date;
+
+    (function waitLoop() {
+        if(new Date - start > timeout) {
+            error(timeoutMessageCallback ? timeoutMessageCallback() : "Timeout after "+timeout+" ms");
+        } else if (ready()) {
+            callback();
         } else {
-            if(!condition) {
-                var message = timeoutMessageCallback ? timeoutMessageCallback() : "Timeout after "+timeout+" ms";
-                console.log("Waiting for " + ready);
-                error(message);
-            } else {
-                clearInterval(interval);
-                callback();
-            }
+            setTimeout(waitLoop, 250);
         }
-    }, 250);
+    }());
 }
 
 function error(message) {
@@ -118,13 +113,12 @@ function PhantomTest() {
                 console.log('loaded', url, status);
                 // process ready
                 waitFor(function() {
-                    return self.page.evaluate(function (ready) { 
+                    return self.page.evaluate(function (ready) {
+                        console.log("waiting for", ready);
                         var r = false;
                         try {
                             r = !!eval(ready);
-                        } catch(ex) {
-                            console.log("waiting for " + ready);
-                        }
+                        } catch(ex) { }
                         return r;
                     }, ready);
                 // run test
