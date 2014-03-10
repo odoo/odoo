@@ -244,7 +244,8 @@ class website_forum(http.Controller):
     def tag_questions(self, forum, tag, page=1, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         Post = request.registry['website.forum.post']
-        obj_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('id', 'in', 'tag.post_ids')], context=context)
+        post_ids = [que.id for que in tag.post_ids]
+        obj_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('id', 'in', post_ids)], context=context)
         question_ids = Post.browse(cr, uid, obj_ids, context=context)
         pager = request.website.pager(url="/forum/%s/tag" % slug(forum), total=len(tag.post_ids), page=page, step=10, scope=10)
 

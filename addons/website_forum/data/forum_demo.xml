@@ -119,7 +119,7 @@ Thank you in advance</field>
             <field name="forum_id" ref="website_forum.forum_help"/>
             <field name="views">5</field>
             <field name="content">hi, how to import csv into customer database? Thanks</field>
-            <field name="tags" eval="[(4,ref('website_forum.tags_2'))]"/>
+            <field name="tags" eval="[(4,ref('website_forum.tags_2')), (4,ref('website_forum.tags_1'))]"/>
         </record>
                 
         <record id="question_10" model="website.forum.post">
@@ -129,7 +129,7 @@ Thank you in advance</field>
                                There are options to send the invoice,sales order,
                                quotations etc by the email.But the issue is even after the button 'Send By Email' is clicked,
                                the email is not received to the recipients .Those emails are stored in the Archives under the Messaging window.How to configure incoming and outgoing mails in openerp</field>
-           <field name="tags" eval="[(4,ref('website_forum.tags_1'))]"/>
+            <field name="tags" eval="[(4,ref('website_forum.tags_1'))]"/>
             <field name="forum_id" ref="website_forum.forum_help"/>
         </record>
         
@@ -299,7 +299,7 @@ Thank you in advance</field>
         </record>
         
         <record id="tags_1" model="website.forum.tag">
-            <field name="post_ids" eval="[(4,ref('website_forum.question_10'))]"/>
+            <field name="post_ids" eval="[(4,ref('website_forum.question_10')), (4,ref('website_forum.question_9'))]"/>
         </record>
         
         <record id="tags_2" model="website.forum.tag">
