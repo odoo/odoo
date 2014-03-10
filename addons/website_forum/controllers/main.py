@@ -101,20 +101,13 @@ class website_forum(http.Controller):
         values = { 'searches': {}, 'forum': forum }
         return request.website.render("website_forum.ask_question", values)
 
-    @http.route(['/forum/<model("website.forum"):forum>/question/<model("website.forum.post"):question>/page/<page:page>'], type='http', auth="public", website=True, multilang=True)
-    def question(self, forum, question, page, **post):
-        values = {
-            'question': question,
-            'forum': forum
-        }
-        return request.website.render(page, values)
-
     @http.route(['/forum/<model("website.forum"):forum>/question/<model("website.forum.post"):question>'], type='http', auth="public", website=True, multilang=True)
-    def open_question(self, forum, question, **post):
+    def question(self, forum, question, **post):
         answer_done = False
         for answer in question.child_ids:
             if answer.create_uid.id == request.uid:
                 answer_done = True
+        post['type'] = 'question'
         values = {
             'question': question,
             'searches': post,
@@ -169,6 +162,7 @@ class website_forum(http.Controller):
 
         activity_ids = Activity.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('user_id', '=', user.id)], context=context)
         activities = Activity.browse(cr, uid, activity_ids, context=context)
+        post['users'] = 'True'
 
         values = {
             'user': user,
@@ -248,6 +242,7 @@ class website_forum(http.Controller):
         obj_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('id', 'in', post_ids)], context=context)
         question_ids = Post.browse(cr, uid, obj_ids, context=context)
         pager = request.website.pager(url="/forum/%s/tag" % slug(forum), total=len(tag.post_ids), page=page, step=10, scope=10)
+        kwargs['tags'] = 'True'
 
         values = {
             'question_ids': question_ids,
@@ -286,6 +281,7 @@ class website_forum(http.Controller):
     @http.route(['/forum/<model("website.forum"):forum>/badge/<model("gamification.badge"):badge>'], type='http', auth="public", website=True, multilang=True)
     def badge_users(self, forum, badge, **kwargs):
         users = [badge_user.user_id for badge_user in badge.owner_ids]
+        kwargs['badges'] = 'True'
 
         values = {
             'badge': badge,

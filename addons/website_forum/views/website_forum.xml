@@ -83,7 +83,7 @@
                         </div>
                         <div class="collapse navbar-collapse" id="oe-help-navbar-collapse">
                             <ul class="nav navbar-nav">
-                                <li t-att-class="searches.get('type') in ('all', 'unanswered','followed') and 'active' or '' ">
+                                <li t-att-class="searches.get('type') in ('all', 'unanswered','followed','question') and 'active' or '' ">
                                     <a t-attf-href="/forum/#{ slug(forum) }">Questions</a>
                                 </li>
                                 <li t-att-class="searches.get('users') and 'active' or '' ">
