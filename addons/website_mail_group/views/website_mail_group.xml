@@ -10,6 +10,9 @@
     </template>
     <template id="mail_groups" name="My Groups">
         <t t-call="website.layout">
+            <t t-set="head">
+                <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.js"></script>
+            </t>
             <div class="row">
                 <div class="container">
                     <div class="col-md-3 col-md-push-1">
@@ -26,12 +29,8 @@
                                     <br/>
                                     <small t-esc="group.description"/>
                                     <br/>
-                                    <t t-if="group.message_is_follower">
-                                        <a class="btn btn-primary" t-attf-href="/groups/unfollow/#{ group.id }">UnFollow</a>
-                                    </t>
-                                    <t t-if="not group.message_is_follower">
-                                        <a class="btn btn-default" t-attf-href="/groups/follow/#{ group.id }">Join Group</a>
-                                    </t>
+                                    <a t-attf-class="btn btn-default js_group #{group.message_is_follower and 'hidden' or 'visible'} follow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=follow" t-attf-id="#{group.id}">Join Group</a>
+                                    <a t-attf-class="btn btn-primary js_group #{group.message_is_follower and 'visible' or 'hidden'} unfollow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=unfollow" t-attf-id="#{group.id}">UnFollow</a>
                                 </div>
                             </div>
                         </t>
@@ -41,9 +40,9 @@
         </t>
     </template>
     <template id="navigation_menu">
-        <ul class="nav nav-pills nav-stacked">
+        <ul class="nav nav-pills nav-stacked" id="group_follows">
             <t t-foreach="groups" t-as="group">
-                <li t-if="group.message_is_follower"><a t-attf-href="/groups/#{group.id}" t-esc="group.name"/></li>
+                <li t-attf-class="#{group.message_is_follower and 'visible' or 'hidden'}" t-att-id="group.id"><a t-attf-href="/groups/#{group.id}" t-esc="group.name"/></li>
             </t>
         </ul>
     </template>
@@ -69,7 +68,7 @@
                                     <t t-foreach="thread_list" t-as="thread">
                                         <tr>
                                             <td>
-                                                <a t-attf-href="/groups/thread/#{thread.id}" t-esc="thread.subject"></a>
+                                                <a t-attf-href="/groups/#{active_group.id}/message/#{thread.id}" t-esc="thread.subject"></a>
                                                 <img class="img-rounded pull-right mt0" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(thread.id)" style="width : 30px"/>
                                                 <p><small>by <t t-esc="thread.author_id.name and thread.author_id.name or thread.email_from"/> on <t t-esc="thread.date"/></small></p>
                                             </td>
@@ -101,7 +100,7 @@
                             </div>
                         </div>
                     </div>
-                    <t t-foreach="child_thread" t-as="message">
+                    <div class="row" t-foreach="child_thread" t-as="message">
                         <div class="col-md-1 mt0">
                             <img class="img-rounded pull-right mt0" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(message.id)" style="width : 30px"/>
                         </div>
@@ -111,7 +110,7 @@
                                 <t t-raw="message.body"/>
                             </div>
                         </div>
-                    </t>
+                    </div>
                 </div>
             </div>
         </t>

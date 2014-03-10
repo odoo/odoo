@@ -19,14 +19,9 @@
 #
 ##############################################################################
 
-from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-import werkzeug
-import datetime
-import time
 
-from openerp.tools.translate import _
 
 class MailGroup(http.Controller):
     _thread_per_page = 10
@@ -35,45 +30,38 @@ class MailGroup(http.Controller):
         "/groups",
     ], type='http', auth="public", website=True)
     def view(self, **post):
-        cr, uid, context = request.cr , request.uid, request.context
+        cr, uid, context = request.cr, request.uid, request.context
         group_obj = request.registry.get('mail.group')
-        user_obj = request.registry.get('res.users')
-        group_ids = group_obj.search(cr, SUPERUSER_ID, [], context=context)
+        group_ids = group_obj.search(cr, uid, [], context=context)
         values = {
             'groups': group_obj.browse(cr, uid, group_ids, context),
         }
         return request.website.render('website_mail_group.mail_groups', values)
 
     @http.route([
-        "/groups/follow/<int:group_id>",
-    ], type='http', auth="public", website=True)
-    def follow(self, group_id, **post):
-        cr, uid, context = request.cr , request.uid, request.context
+        "/groups/subscription",
+    ], type='json', auth="public", website=True)
+    def subscription(self, group_id=0, action=False ,**post):
+        cr, uid, context = request.cr, request.uid, request.context
         group_obj = request.registry.get('mail.group')
-        group_obj.message_subscribe_users(cr, uid, [group_id], context=context)
-        return werkzeug.utils.redirect('/groups')
+        if action:
+            group_obj.message_subscribe_users(cr, uid, [group_id], context=context)
+        else:
+            group_obj.message_unsubscribe_users(cr, uid, [group_id], context=context)
+        return []
 
     @http.route([
-        "/groups/unfollow/<int:group_id>",
+        "/groups/<model('mail.group'):group>/",
+        "/groups/<model('mail.group'):group>/page/<int:page>/"
     ], type='http', auth="public", website=True)
-    def unfollow(self, group_id, **post):
-        cr, uid, context = request.cr , request.uid, request.context
-        group_obj = request.registry.get('mail.group')
-        group_obj.message_unsubscribe_users(cr, uid, [group_id], context=context)
-        return werkzeug.utils.redirect('/groups')
-
-    @http.route([
-        "/groups/<int:group_id>/",
-        "/groups/<int:group_id>/page/<int:page>/"
-    ], type='http', auth="public", website=True)
-    def thread(self, group_id, page=1, **post):
-        cr, uid, context = request.cr , request.uid, request.context
+    def thread(self, group, page=1, **post):
+        cr, uid, context = request.cr, request.uid, request.context
         group_obj = request.registry.get('mail.group')
         thread_obj = request.registry.get('mail.message')
-        thread_ids = thread_obj.search(cr, uid, [('type','=','email'),('model','=','mail.group'),('res_id','=',group_id),('parent_message','=',False)])
-        group_ids = group_obj.search(cr, SUPERUSER_ID, [])
+        thread_ids = thread_obj.search(cr, uid, [('type','=','email'), ('model','=','mail.group'), ('res_id','=',group.id), ('parent_message','=',False)])
+        group_ids = group_obj.search(cr, uid, [])
         pager = request.website.pager(
-            url='/groups/%s/' % group_id,
+            url='/groups/%s/' % group.id,
             total=len(thread_ids),
             page=page,
             step=self._thread_per_page,
@@ -84,21 +72,20 @@ class MailGroup(http.Controller):
         values = {
             'groups': group_obj.browse(cr, uid, group_ids, context),
             'thread_list': thread_obj.browse(cr, uid, thread_ids, context),
-            'active_group': group_obj.browse(cr, uid, group_id, context),
+            'active_group': group,
             'pager': pager,
         }
         return request.website.render('website_mail_group.group_thread_list', values)
 
     @http.route([
-        "/groups/thread/<int:message_id>",
+        "/groups/<model('mail.group'):group>/message/<model('mail.message'):message>",
     ], type='http', auth="public", website=True)
-    def get_thread(self, message_id, **post):
-        cr, uid, context = request.cr , request.uid, request.context
-        group_obj = request.registry.get('mail.group')
+    def get_thread(self, group, message, **post):
+        cr, uid, context = request.cr, request.uid, request.context
         thread_obj = request.registry.get('mail.message')
-        child_ids = thread_obj.search(cr, uid, [('parent_id','=',message_id)])
+        child_ids = thread_obj.search(cr, uid, [('parent_id','=',message.id)])
         values = {
-            'main_thread' : thread_obj.browse(cr, uid, message_id, context),
-            'child_thread' : thread_obj.browse(cr, uid, child_ids, context),
+            'main_thread': message,
+            'child_thread': thread_obj.browse(cr, uid, child_ids, context),
         }
         return request.website.render('website_mail_group.group_thread', values)
