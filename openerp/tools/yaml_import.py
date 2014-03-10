@@ -425,30 +425,36 @@ class YamlInterpreter(object):
 
                     if not el.attrib.get('on_change', False):
                         continue
+
                     if el.attrib['on_change'] in ('1', 'true'):
-                        _logger.warning("New-style on_change not implemented at import")
-                        continue
-                    match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'])
-                    assert match, "Unable to parse the on_change '%s'!" % (el.attrib['on_change'], )
+                        # New-style on_change
+                        # TODO: this call does not take into account subrecords
+                        # (one2many and many2many fields)
+                        result = model.onchange(record_dict, field_name, [])
 
-                    # creating the context
-                    class parent2(object):
-                        def __init__(self, d):
-                            self.d = d
-                        def __getattr__(self, name):
-                            return self.d.get(name, False)
+                    else:
+                        match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'])
+                        assert match, "Unable to parse the on_change '%s'!" % (el.attrib['on_change'], )
 
-                    ctx = record_dict.copy()
-                    ctx['context'] = self.context
-                    ctx['uid'] = SUPERUSER_ID
-                    ctx['parent'] = parent2(parent)
-                    for a in fg:
-                        if a not in ctx:
-                            ctx[a] = process_val(a, defaults.get(a, False))
+                        # creating the context
+                        class parent2(object):
+                            def __init__(self, d):
+                                self.d = d
+                            def __getattr__(self, name):
+                                return self.d.get(name, False)
 
-                    # Evaluation args
-                    args = map(lambda x: eval(x, ctx), match.group(2).split(','))
-                    result = getattr(model, match.group(1))(self.cr, SUPERUSER_ID, [], *args)
+                        ctx = record_dict.copy()
+                        ctx['context'] = self.context
+                        ctx['uid'] = SUPERUSER_ID
+                        ctx['parent'] = parent2(parent)
+                        for a in fg:
+                            if a not in ctx:
+                                ctx[a] = process_val(a, defaults.get(a, False))
+
+                        # Evaluation args
+                        args = map(lambda x: eval(x, ctx), match.group(2).split(','))
+                        result = getattr(model, match.group(1))(self.cr, SUPERUSER_ID, [], *args)
+
                     for key, val in (result or {}).get('value', {}).items():
                         assert key in fg, (
                             "The field %r returned from the onchange call %r "
