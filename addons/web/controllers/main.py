@@ -427,6 +427,15 @@ def set_cookie_and_redirect(redirect_url):
     redirect.autocorrect_location_header = False
     return redirect
 
+def login_redirect():
+    url = '/web/login?'
+    if request.debug:
+        url += 'debug&'
+    return """<html><head><script>
+        window.location = '%sredirect=' + encodeURIComponent(window.location);
+    </script></head></html>
+    """ % (url,)
+
 def load_actions_from_ir_values(key, key2, models, meta):
     Values = request.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, request.context)
@@ -633,7 +642,7 @@ class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
     def index(self, s_action=None, db=None, **kw):
-        return http.local_redirect('/web', query=request.params)
+        return http.local_redirect('/web', query=request.params, keep_hash=True)
 
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, **kw):
@@ -643,7 +652,7 @@ class Home(http.Controller):
             html = render_bootstrap_template(request.session.db, "web.webclient_bootstrap")
             return request.make_response(html, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
         else:
-            return http.local_redirect('/web/login', query=request.params)
+            return login_redirect()
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
