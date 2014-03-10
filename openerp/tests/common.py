@@ -16,6 +16,8 @@ import unittest2
 import urllib2
 import xmlrpclib
 
+from datetime import datetime, timedelta
+
 import openerp
 
 _logger = logging.getLogger(__name__)
@@ -194,11 +196,12 @@ class HttpCase(TransactionCase):
         Other lines are relayed to the test log.
 
         """
-        t0 = time.time()
+        t0 = datetime.now()
+        td = timedelta(seconds=timeout)
         buf = bytearray()
         while True:
             # timeout
-            self.assertLess(time.time(), t0 + timeout,
+            self.assertLess(datetime.now() - t0, td,
                 "PhantomJS tests should take less than %s seconds" % timeout)
 
             # read a byte
