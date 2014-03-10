@@ -223,7 +223,7 @@ class calendar_attendee(osv.Model):
         })
 
         for attendee in self.browse(cr, uid, ids, context=context):
-            if attendee.email and email_from:
+            if attendee.email and email_from and attendee.email != email_from:
                 ics_file = self.get_ics_file(cr, uid, attendee.event_id, context=context)
                 mail_id = template_pool.send_mail(cr, uid, template_id, attendee.id, context=local_context)
 
