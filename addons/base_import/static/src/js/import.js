@@ -482,5 +482,13 @@ openerp.base_import = function (instance) {
             { name: 'import_succeeded', from: 'importing', to: 'imported'},
             { name: 'import_failed', from: 'importing', to: 'results' }
         ]
-    })
+    });
+
+    $.extend($.fn.select2.defaults, {
+        formatNoMatches: function () { return _t("No matches found"); },
+        formatLoadMore: function (pageNumber) { return _t("Loading more results..."); },
+        formatSearching: function () { return _t("Searching..."); }
+    });
+
 };
+
