@@ -56,13 +56,13 @@ class contactus(http.Controller):
             pass
 
         environ = request.httprequest.headers.environ
-        values['description'] = "%s\n-----------------------------\nIP: %s\nUSER_AGENT: %s\nACCEPT_LANGUAGE: %s" % (
-            values['description'],
+        post['description'] = "%s\n-----------------------------\nIP: %s\nUSER_AGENT: %s\nACCEPT_LANGUAGE: %s" % (
+            post['description'],
             environ.get("REMOTE_ADDR"),
             environ.get("HTTP_USER_AGENT"),
             environ.get("HTTP_ACCEPT_LANGUAGE"))
         for field in kwargs.items():
-            values['description'] = "%s\n%s: %s" % (values['description'], field[0], field[1])
+            post['description'] = "%s\n%s: %s" % (post['description'], field[0], field[1])
 
         request.registry['crm.lead'].create(request.cr, SUPERUSER_ID, post, request.context)
         company = request.website.company_id
