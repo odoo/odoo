@@ -62,7 +62,7 @@
   </div>
   <div class="oe_product_image">
       <a t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('search', 'filters', category=(category and int(category)), page=(pager['page']['num'] if pager['page']['num']>1 else None)) }}">
-          <span t-field="product.image" t-field-options='{"widget": "image"}'/>
+          <img class="img img-responsive" t-attf-src="/website/image/product.template/#{product.id}/image#{'' if product_image_big else '?max_width=300&amp;max_height=300'}"/>
       </a>
   </div>
   <section>
@@ -182,6 +182,7 @@
                               </div>
                             </div>
 
+                            <t t-set="product_image_big" t-value="td_product['x']+td_product['y'] > 2"/>
                             <t t-call="website_sale.products_cart"/>
                           </div>
 
