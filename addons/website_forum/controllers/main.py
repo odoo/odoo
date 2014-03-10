@@ -155,19 +155,19 @@ class website_forum(http.Controller):
         Vote = request.registry['website.forum.post.vote']
         Activity = request.registry['website.forum.activity']
 
-        question_ids = Post.search(cr, uid, [('create_uid', '=', user.id), ('parent_id', '=', False)], context=context)
+        question_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('create_uid', '=', user.id), ('parent_id', '=', False)], context=context)
         questions = Post.browse(cr, uid, question_ids, context=context)
 
         #TODO: showing questions in which user answered
-        obj_ids = Post.search(cr, uid, [('create_uid', '=', user.id), ('parent_id', '!=', False)], context=context)
+        obj_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('create_uid', '=', user.id), ('parent_id', '!=', False)], context=context)
         answer_ids = Post.browse(cr, uid, obj_ids, context=context)
         answers = [answer.parent_id for answer in answer_ids]
 
-        total_votes = Vote.search(cr, uid, [('post_id.create_uid', '=', user.id)], count=True, context=context)
-        up_votes = Vote.search(cr, uid, [('post_id.create_uid', '=', user.id), ('vote', '=', '1')], count=True, context=context)
-        down_votes = Vote.search(cr, uid, [('post_id.create_uid', '=', user.id), ('vote', '=', '-1')], count=True, context=context)
+        total_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.create_uid', '=', user.id)], count=True, context=context)
+        up_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.create_uid', '=', user.id), ('vote', '=', '1')], count=True, context=context)
+        down_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.create_uid', '=', user.id), ('vote', '=', '-1')], count=True, context=context)
 
-        activity_ids = Activity.search(cr, uid, [('user_id', '=', user.id)], context=context)
+        activity_ids = Activity.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('user_id', '=', user.id)], context=context)
         activities = Activity.browse(cr, uid, activity_ids, context=context)
 
         values = {
@@ -242,10 +242,14 @@ class website_forum(http.Controller):
 
     @http.route(['/forum/<model("website.forum"):forum>/tag/<model("website.forum.tag"):tag>'], type='http', auth="public", website=True, multilang=True)
     def tag_questions(self, forum, tag, page=1, **kwargs):
+        cr, uid, context = request.cr, request.uid, request.context
+        Post = request.registry['website.forum.post']
+        obj_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('id', 'in', 'tag.post_ids')], context=context)
+        question_ids = Post.browse(cr, uid, obj_ids, context=context)
         pager = request.website.pager(url="/forum/%s/tag" % slug(forum), total=len(tag.post_ids), page=page, step=10, scope=10)
 
         values = {
-            'question_ids': tag.post_ids,
+            'question_ids': question_ids,
             'pager': pager,
             'forum': forum,
             'searches': kwargs
@@ -256,7 +260,7 @@ class website_forum(http.Controller):
     def tags(self, forum, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         Tag = request.registry['website.forum.tag']
-        obj_ids = Tag.search(cr, uid, [], limit=None, context=context)
+        obj_ids = Tag.search(cr, uid, [('forum_id', '=', forum.id)], limit=None, context=context)
         tags = Tag.browse(cr, uid, obj_ids, context=context)
         values = {
             'tags': tags,
