@@ -96,10 +96,7 @@ function PhantomTest() {
     // ----------------------------------------------------
     // run test
     // ----------------------------------------------------
-    this.run = function() {
-        var url_path = this.options.url_path,
-                code = this.options.code,
-               ready = this.options.ready;
+    this.run = function(url_path, code, ready) {
         if(self.options.login) {
             var qp = [];
             qp.push('db=' + self.options.db);
@@ -116,12 +113,15 @@ function PhantomTest() {
                 console.log('loaded', url, status);
                 // process ready
                 waitFor(function() {
+                    console.log("waiting for: calling page evaluate");
                     return self.page.evaluate(function (ready) {
                         console.log("waiting for", ready);
                         var r = false;
                         try {
+                            console.log("waiting for: page evaluating ", ready);
                             r = !!eval(ready);
                         } catch(ex) { }
+                        console.log("waiting for: returning from page evaluate");
                         return r;
                     }, ready);
                 // run test
@@ -135,7 +135,8 @@ function PhantomTest() {
 
 // js mode or jsfile mode
 if(phantom.args.length === 1) {
-    new PhantomTest().run();
+    pt = new PhantomTest();
+    pt.run(pt.options.url_path, pt.options.code, pt.options.ready);
 }
 
 // vim:et:
