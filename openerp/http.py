@@ -206,20 +206,19 @@ class WebRequest(object):
         # Backward for 7.0
         if getattr(self.func.method, '_first_arg_is_req', False):
             args = (request,) + args
+
         # Correct exception handling and concurency retry
         @service_model.check
         def checked_call(___dbname, *a, **kw):
-            return self.func(*a, **kw)
-
-        # FIXME: code and rollback management could be cleaned
-        try:
-            if self.db:
-                return checked_call(self.db, *args, **kwargs)
-            return self.func(*args, **kwargs)
-        except Exception:
+            # The decorator can call us more than once if there is an database error. In this
+            # case, the request cursor is unusable. Rollback transaction to create a new one.
             if self._cr:
                 self._cr.rollback()
-            raise
+            return self.func(*a, **kw)
+
+        if self.db:
+            return checked_call(self.db, *args, **kwargs)
+        return self.func(*args, **kwargs)
 
     @property
     def debug(self):
