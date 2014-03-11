@@ -926,11 +926,14 @@ class crm_lead(base_stage, format_address, osv.osv):
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
-        if vals.get('stage_id') and not vals.get('probability'):
-            # change probability of lead(s) if required by stage
+        if vals.get('stage_id'):
             stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
-            if stage.on_change:
+            if not vals.get('probability') and stage.on_change:
+                # change probability of lead(s) if required by stage
                 vals['probability'] = stage.probability
+            # set closed date when won or lost
+            if not vals.get('date_closed') and (vals.get('probability', 0) >= 100 or stage.state == 'canceled'):
+                vals['date_closed'] = fields.datetime.now()
         return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
