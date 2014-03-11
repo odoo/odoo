@@ -127,11 +127,6 @@ class stock_quant(osv.osv):
                 self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_dest, journal_id, context=ctx)
 
 
-    def move_single_quant(self, cr, uid, quant, location_to, qty, move, context=None):
-        quant_record = super(stock_quant, self).move_single_quant(cr, uid, quant, location_to, qty, move, context=context)
-        self._account_entry_move(cr, uid, quant, move, context=context)
-        return quant_record
-
     def move_single_quant_tuples(self, cr, uid, quants, move, location_dest_id, context=None):
         quant_record = super(stock_quant, self).move_single_quant_tuples(cr, uid, quants, move, location_dest_id, context=context)
         if move.product_id.valuation == 'real_time':
@@ -191,6 +186,7 @@ class stock_quant(osv.osv):
         #the company currency... so we need to use round() before creating the accounting entries.
         valuation_amount = currency_obj.round(cr, uid, quant.company_id.currency_id, valuation_amount * qty)
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
+
         debit_line_vals = {
                     'name': move.name,
                     'product_id': quant.product_id.id,
@@ -226,7 +222,7 @@ class stock_quant(osv.osv):
                 quant_cost_qty[quant.cost] += quant.qty
             else:
                 quant_cost[quant.cost] = quant
-                quant_cost[quant.cost] = quant.qty
+                quant_cost_qty[quant.cost] = quant.qty
         move_obj = self.pool.get('account.move')
         for cost in quant_cost_qty.keys():
             move_lines = self._prepare_account_move_line(cr, uid, quant_cost[quant.cost], move, credit_account_id, debit_account_id, qty = quant_cost_qty[cost], context=context)

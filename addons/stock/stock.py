@@ -364,42 +364,6 @@ class stock_quant(osv.osv):
             self._quants_reconcile_negative(cr, uid, whole_quants, move, context=context)
 
 
-
-    def move_single_quant(self, cr, uid, quant, location_to, qty, move, context=None):
-        '''Moves the given 'quant' in 'location_to' for the given 'qty', and logs the stock.move that triggered this move in the quant history.
-        If needed, the quant may be split if it's not totally moved.
-
-        :param quant: browse record (stock.quant)
-        :param location_to: browse record (stock.location)
-        :param qty: float
-        :param move: browse record (stock.move)
-        '''
-        new_quant = self._quant_split(cr, uid, quant, qty, context=context)
-        vals = {
-            'location_id': location_to.id,
-            'history_ids': [(4, move.id)],
-        }
-        #if the quant we are moving had been split and was inside a package, it means we unpacked it
-        if new_quant and new_quant.package_id:
-            vals['package_id'] = False
-        if self._check_location(cr, uid, location_to, context):
-            self.write(cr, SUPERUSER_ID, [quant.id], vals, context=context)
-        quant.refresh()
-        return new_quant
-
-    def move_single_quant_tuple(self, cr, uid, quant, qty, move, location_dest_id, context=None):
-        '''Effectively process the move of a tuple (quant record, qty to move). This may result in several quants moved
-        if the preferred locations on the move say so but by default it will only move the quant record given as argument
-        :param quant: browse record (stock.quant)
-        :param qty: float
-        :param move: browse record (stock.move)
-        '''
-        if not quant:
-            return True
-        new_quant = self.move_single_quant(cr, uid, quant, location_dest_id, qty, move, context=context)
-        self._quant_reconcile_negative(cr, uid, quant, move, context=context)
-        quant = new_quant
-
     def quants_get_prefered_domain(self, cr, uid, location, product, qty, domain=None, prefered_domain=False, fallback_domain=False, restrict_lot_id=False, restrict_partner_id=False, context=None):
         ''' This function tries to find quants in the given location for the given domain, by trying to first limit
             the choice on the quants that match the prefered_domain as well. But if the qty requested is not reached
@@ -1458,7 +1422,7 @@ class stock_move(osv.osv):
 
     def get_price_unit(self, cr, uid, move, context=None):
         """ Returns the unit price to store on the quant """
-        return move.price_unit #or move.product_id.standard_price
+        return move.price_unit or move.product_id.standard_price
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
@@ -1965,7 +1929,7 @@ class stock_move(osv.osv):
     def _group_picking_assign(self, cr, uid, moves, context=None):
         if not context:
             context = {}
-        if context.get("no_picking_assign") and context['no_picking_assign']:
+        if context.get("no_picking_assign"):
             return False
         move_dict = {}
         for move in moves:
@@ -3609,14 +3573,6 @@ class stock_pack_operation(osv.osv):
             res[record.move_id.product_id.id] -= record.qty
         return res
 
-    def _get_remaining_qty_product_uom(self, cr, uid, ops, context=None):
-        uom_obj = self.pool.get('product.uom')
-        qty = ops.product_qty
-        if ops.product_uom_id:
-            qty = uom_obj._compute_qty_obj(cr, uid, ops.product_uom_id, ops.product_qty, ops.product_id.uom_id, context=context)
-        for record in ops.linked_move_operation_ids:
-            qty -= record.qty
-        return qty
 
     def _get_remaining_qty(self, cr, uid, ids, name, args, context=None):
         uom_obj = self.pool.get('product.uom')
@@ -3691,6 +3647,7 @@ class stock_pack_operation(osv.osv):
     }
 
     def write(self, cr, uid, ids, vals, context=None):
+        context = context or {}
         res = super(stock_pack_operation, self).write(cr, uid, ids, vals, context=context)
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -3704,6 +3661,7 @@ class stock_pack_operation(osv.osv):
         return res
 
     def create(self, cr, uid, vals, context=None):
+        context = context or {}
         res_id = super(stock_pack_operation, self).create(cr, uid, vals, context=context)
         if vals.get("picking_id") and not context.get("no_recompute"):
             self.pool.get("stock.picking").do_recompute_remaining_quantities(cr, uid, [vals['picking_id']], context=context)
