@@ -19,6 +19,8 @@
         'product_id': ref('product_icecream'),
         'product_uom_id': ref('product.product_uom_kgm'),
         'product_qty': 40
+        'location_id': ref('stock.stock_location_suppliers'),
+        'location_dest_id': ref('stock.stock_location_14')
     })
     context.update({'active_model': 'stock.picking', 'active_id': ref('incomming_shipment'), 'active_ids': [ref('incomming_shipment')]})
     pick.do_transfer(context=context)
@@ -47,6 +49,8 @@
         'product_id': ref('product_icecream'),
         'product_uom_id': ref('product.product_uom_kgm'),
         'product_qty': 10
+        'location_id': ref('stock.stock_location_suppliers'),
+        'location_dest_id': ref('stock.stock_location_14')
     })
     backorder.do_transfer(context=context)
 -
