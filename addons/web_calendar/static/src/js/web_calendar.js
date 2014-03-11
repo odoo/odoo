@@ -21,6 +21,7 @@ openerp.web_calendar = function(instance) {
     }
 
     function get_fc_defaultOptions() {
+        shortTimeformat = Date.CultureInfo.formatPatterns.shortTime;
         return {
             weekNumberTitle: _t("W"),
             allDayText: _t("all-day"),
@@ -29,7 +30,17 @@ openerp.web_calendar = function(instance) {
             dayNames: Date.CultureInfo.dayNames,
             dayNamesShort: Date.CultureInfo.abbreviatedDayNames,
             firstDay: Date.CultureInfo.firstDayOfWeek,
-            weekNumbers: true
+            weekNumbers: true,
+            axisFormat : shortTimeformat.replace(/:mm/,'(:mm)'),
+            timeFormat : {
+               // for agendaWeek and agendaDay               
+               agenda: shortTimeformat + '{ - ' + shortTimeformat + '}', // 5:00 - 6:30
+                // for all other views
+                '': shortTimeformat.replace(/:mm/,'(:mm)')  // 7pm
+            },
+            weekMode : 'liquid',
+            aspectRatio: 1.8,
+            snapMinutes: 15,
         };
     }
 
@@ -258,17 +269,7 @@ openerp.web_calendar = function(instance) {
 
                 unselectAuto: false,
 
-                // Options
-                timeFormat : {
-                   // for agendaWeek and agendaDay
-                    agenda: 'h:mm{ - h:mm}', // 5:00 - 6:30
 
-                    // for all other views
-                    '': 'h(:mm)tt'  // 7pm
-                },
-                weekMode : 'liquid',
-                aspectRatio: 1.8,
-                snapMinutes: 15,
             });
         },
 
