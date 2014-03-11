@@ -13,7 +13,7 @@
             <t t-set="head">
                 <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.js"></script>
             </t>
-            <div class="row">
+            <div class="row mt16">
                 <div class="container">
                     <div class="col-md-3 col-md-push-1">
                         <t t-call="website_mail_group.navigation_menu"/>
@@ -28,8 +28,8 @@
                                 <br/>
                                 <small t-esc="group.description"/>
                                 <br/>
-                                <a t-attf-class="btn btn-default js_group #{group.message_is_follower and 'hidden' or 'visible'} follow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=follow" t-attf-id="#{group.id}">Join Group</a>
-                                <a t-attf-class="btn btn-primary js_group #{group.message_is_follower and 'visible' or 'hidden'} unfollow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=unfollow" t-attf-id="#{group.id}">UnFollow</a>
+                                <a groups="base.group_user" t-attf-class="btn btn-default js_group #{group.message_is_follower and 'hidden' or 'visible'} follow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=follow" t-attf-id="#{group.id}">Join Group</a>
+                                <a groups="base.group_user" t-attf-class="btn btn-primary js_group #{group.message_is_follower and 'visible' or 'hidden'} unfollow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=unfollow" t-attf-id="#{group.id}">UnFollow</a>
                             </div>
                         </div>
                     </div>

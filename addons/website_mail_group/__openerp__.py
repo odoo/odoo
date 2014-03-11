@@ -14,6 +14,7 @@ OpenERP Mail Group : Mailing List Archive
         'views/website_mail_group.xml',
         'views/website_mail_group_backend.xml',
         'data/website_mail_group_data.xml',
+        'security/website_mail_group.xml',
     ],
     'demo': [
         'data/website_mail_group_demo.xml'

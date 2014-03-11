@@ -32,6 +32,7 @@ class MailGroup(http.Controller):
     def view(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
         group_obj = request.registry.get('mail.group')
+        
         group_ids = group_obj.search(cr, uid, [], context=context)
         values = {
             'groups': group_obj.browse(cr, uid, group_ids, context),
@@ -39,7 +40,7 @@ class MailGroup(http.Controller):
         return request.website.render('website_mail_group.mail_groups', values)
 
     @http.route([
-        "/groups/subscription",
+        "/groups/subscription/",
     ], type='json', auth="public", website=True)
     def subscription(self, group_id=0, action=False ,**post):
         cr, uid, context = request.cr, request.uid, request.context
