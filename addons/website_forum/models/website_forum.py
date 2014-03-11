@@ -106,7 +106,7 @@ class Post(osv.Model):
         'active': fields.boolean('Active'),
         'views': fields.integer('Page Views'),
 
-        'parent_id': fields.many2one('website.forum.post', 'Question'),
+        'parent_id': fields.many2one('website.forum.post', 'Question', ondelete='cascade'),
         'child_ids': fields.one2many('website.forum.post', 'parent_id', 'Answers'),
 
         'history_ids': fields.one2many('blog.post.history', 'post_id', 'History', help='Last post modifications'),

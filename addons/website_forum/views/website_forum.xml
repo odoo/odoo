@@ -322,7 +322,7 @@
                                         </a>
                                     </li>
                                     <li><a class="text-muted" href="">edit</a></li>
-                                    <li><a class="text-muted" href="">delete</a></li>
+                                    <li><a class="text-muted" t-attf-href="/forum/#{ slug(forum) }/delete/question/#{ question.id }">delete</a></li>
                                     <li><a class="text-muted" href="">share</a></li>
                                 </ul>
                             </div>
@@ -338,7 +338,7 @@
                 </div>
                 <hr/>
 
-                <div t-foreach="question.child_ids" t-as="answer" class="mt16 mb32">
+                <div t-foreach="question.child_ids" t-as="answer" class="mt16 mb32" id="answer">
                     <div class="text-center pull-left">
                         <div t-attf-class="box oe_grey">
                             <a t-attf-class="fa fa-thumbs-up #{answer.user_vote == 1 and 'text-success' or ''}" 
@@ -365,7 +365,7 @@
                                     </a>
                                 </li>
                                 <li><a class="text-muted" href="">edit</a></li>
-                                <li><a class="text-muted" href="">delete</a></li>
+                                <li><a class="text-muted delete" href="" t-attf-id="#{answer.id}">delete</a></li>
                                 <li><a class="text-muted" href="">share</a></li>
                             </ul>
                             <t t-set="user" t-value="answer.create_uid"/>

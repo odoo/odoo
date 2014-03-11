@@ -331,3 +331,17 @@ class website_forum(http.Controller):
         record = Post.browse(cr, uid, post_id, context=context)
 
         return record.vote_count
+
+    @http.route('/forum/post_delete/', type='json', auth="user", multilang=True, methods=['POST'], website=True)
+    def delete_answer(self, **kwarg):
+        cr, uid, context = request.cr, request.uid, request.context
+        Post = request.registry['website.forum.post']
+        Post.unlink(cr, uid, [int(kwarg.get('post_id'))], context=context)
+        return True
+    
+    @http.route('/forum/<model("website.forum"):forum>/delete/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
+    def delete_question(self, forum, post, **kwarg):
+        cr, uid, context = request.cr, request.uid, request.context
+        Post = request.registry['website.forum.post']
+        Post.unlink(cr, uid, [post.id], context=context)
+        return werkzeug.utils.redirect("/forum/%s/" % (slug(forum)))
