@@ -50,19 +50,12 @@ openerp.testing = {};
     testing.current_module = null;
     testing.templates = { };
     testing.add_template = function (name) {
-        try {
-            console.log(name + " loading ...");
-            var xhr = window.QWeb2.Engine.prototype.get_xhr();
-            console.log(name + " loaded ...");
-            xhr.open('GET', name, false);
-            xhr.send(null);
-            (testing.templates[testing.current_module] =
-                testing.templates[testing.current_module] || [])
-                    .push(xhr.responseXML);
-        }
-        catch(e) {
-            console.log(name + " ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRROOOOR");
-        }
+        var xhr = QWeb2.Engine.prototype.get_xhr();
+        xhr.open('GET', name, false);
+        xhr.send(null);
+        (testing.templates[testing.current_module] =
+            testing.templates[testing.current_module] || [])
+                .push(xhr.responseXML);
     };
     /**
      * Function which does not do anything
