@@ -43,40 +43,9 @@ class website_event(http.Controller):
     @http.route(['/event/<model("event.event"):event>/agenda/'], type='http', auth="public", website=True, multilang=True)
     def event_agenda(self, event, tag=None, **post):
         def algo_for_timetable(new_start_date, new_end_date):
-            global new_schedule
-            if not new_schedule:
-                new_schedule.append([new_start_date, new_end_date])
-                return
-            first_start_date = new_schedule[0][0]
-            first_end_date = new_schedule[0][1]
-            last_start_date = new_schedule[-1][0]
-            last_end_date = new_schedule[-1][1]
-            print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-            print "first date",first_start_date,first_end_date
-            print "last date",last_start_date,last_end_date
-            print "new date",new_start_date,new_end_date
-
-            #totally outter
-            if first_start_date > new_start_date and new_end_date > last_end_date:
-                new_schedule.insert(0, [new_start_date, first_start_date])
-                new_schedule.append([last_end_date, new_end_date])
-                return
-            
-            #lower outer
-            if first_start_date > new_end_date:
-                new_schedule.insert(0, [new_start_date, new_end_date])
-                new_schedule.insert(1, [new_end_date, first_start_date])
-                return
-            
-            # upper outer
-            if new_start_date > last_end_date:
-                new_schedule.append([last_end_date, new_start_date])
-                new_schedule.append([new_start_date, new_end_date])
-                return
-
-            #When inner time
-            if first_start_date < new_start_date and last_end_date > new_end_date:
-                for index,ct in enumerate([new_start_date, new_end_date]):
+            def insert_time(time):
+                global new_schedule
+                for index,ct in enumerate(time):
                     for index2,dt in enumerate(new_schedule):
                         st = dt[0]
                         et = dt[1]
@@ -85,13 +54,52 @@ class website_event(http.Controller):
                             new_schedule.pop(index2)
                             new_schedule.insert(index2, [ct, et])
                             new_schedule.insert(index2, [st, ct])
-                            break
-                            
-            for x in new_schedule:
-                print "final schedule",x[0],x[1]
+            global new_schedule
+            if not new_schedule:
+                new_schedule.append([new_start_date, new_end_date])
+                return
+            first_start_date = new_schedule[0][0]
+            first_end_date = new_schedule[0][1]
+            last_start_date = new_schedule[-1][0]
+            last_end_date = new_schedule[-1][1]
 
-
+            #totally outter
+            if first_start_date >= new_start_date and new_end_date >= last_end_date:
+                if not new_start_date == first_start_date:
+                    new_schedule.insert(0, [new_start_date, first_start_date])
+                if not last_end_date ==  new_end_date:
+                    new_schedule.append([last_end_date, new_end_date])
+                return
             
+            #lower outer
+            if first_start_date >= new_end_date:
+                new_schedule.insert(0, [new_start_date, new_end_date])
+                if not new_end_date == first_start_date:
+                    new_schedule.insert(1, [new_end_date, first_start_date])
+                return
+            
+            # upper outer
+            if new_start_date >= last_end_date:
+                if not last_end_date == new_start_date:
+                    new_schedule.append([last_end_date, new_start_date])
+                new_schedule.append([new_start_date, new_end_date])
+                return
+            
+            #When inner time
+            if first_start_date <= new_start_date and last_end_date >= new_end_date:
+                insert_time([new_start_date, new_end_date])
+                return
+            
+            #when start date is more and end date in range
+            if first_start_date > new_start_date and last_end_date >= new_end_date:
+                    new_schedule.insert(0, [new_start_date, first_start_date])
+                    insert_time([new_end_date])
+            
+            #when end date is more and start date in range
+            if new_end_date > last_end_date and new_start_date >= first_start_date:
+                 insert_time([new_start_date])
+                 new_schedule.append([last_end_date, new_end_date])
+                 return
 
         request.cr.execute('''
             Select id, location_id, groupby_datetime, duration, name, date from (
