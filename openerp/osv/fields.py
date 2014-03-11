@@ -236,15 +236,24 @@ class char(_column):
 class text(_column):
     _type = 'text'
 
+
 class html(text):
     _type = 'html'
     _symbol_c = '%s'
-    def _symbol_f(x):
-        if x is None or x == False:
+
+    def _symbol_set_html(self, value):
+        if value is None or value is False:
             return None
-        return html_sanitize(x)
-        
-    _symbol_set = (_symbol_c, _symbol_f)
+        if not self._sanitize:
+            return value
+        return html_sanitize(value)
+
+    def __init__(self, string='unknown', sanitize=True, **args):
+        super(html, self).__init__(string=string, **args)
+        self._sanitize = sanitize
+        # symbol_set redefinition because of sanitize specific behavior
+        self._symbol_f = self._symbol_set_html
+        self._symbol_set = (self._symbol_c, self._symbol_f)
 
 import __builtin__
 

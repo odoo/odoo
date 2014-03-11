@@ -1117,6 +1117,10 @@ class ir_model_data(osv.osv):
                     # Don't remove the LOG_ACCESS_COLUMNS unless _log_access
                     # has been turned off on the model.
                     field = self.pool[model].browse(cr, uid, [res_id], context=context)[0]
+                    if not field.exists():
+                        _logger.info('Deleting orphan external_ids %s', external_ids)
+                        self.unlink(cr, uid, external_ids)
+                        continue
                     if field.name in openerp.osv.orm.LOG_ACCESS_COLUMNS and self.pool[field.model]._log_access:
                         continue
                     if field.name == 'id':

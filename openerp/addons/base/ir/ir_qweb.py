@@ -32,7 +32,7 @@ class QWebException(Exception):
 class QWebTemplateNotFound(QWebException):
     pass
 
-def convert_to_qweb_exception(etype=None, **kw):
+def raise_qweb_exception(etype=None, **kw):
     if etype is None:
         etype = QWebException
     orig_type, original, tb = sys.exc_info()
@@ -43,7 +43,7 @@ def convert_to_qweb_exception(etype=None, **kw):
             e.qweb[k] = v
         # Will use `raise foo from bar` in python 3 and rename cause to __cause__
         e.qweb['cause'] = original
-        return e
+        raise
 
 class QWebContext(dict):
     def __init__(self, cr, uid, data, loader=None, templates=None, context=None):
@@ -166,7 +166,7 @@ class QWeb(orm.AbstractModel):
             try:
                 xml_doc = qwebcontext.loader(name)
             except ValueError:
-                raise convert_to_qweb_exception(QWebTemplateNotFound, message="Loader could not find template %r" % name, template=origin_template)
+                raise_qweb_exception(QWebTemplateNotFound, message="Loader could not find template %r" % name, template=origin_template)
             self.load_document(xml_doc, qwebcontext=qwebcontext)
 
         if name in qwebcontext.templates:
@@ -179,7 +179,7 @@ class QWeb(orm.AbstractModel):
             return qwebcontext.safe_eval(expr)
         except Exception:
             template = qwebcontext.get('__template__')
-            raise convert_to_qweb_exception(message="Could not evaluate expression %r" % expr, expression=expr, template=template)
+            raise_qweb_exception(message="Could not evaluate expression %r" % expr, expression=expr, template=template)
 
     def eval_object(self, expr, qwebcontext):
         return self.eval(expr, qwebcontext)
@@ -207,7 +207,7 @@ class QWeb(orm.AbstractModel):
             return str(expr % qwebcontext)
         except Exception:
             template = qwebcontext.get('__template__')
-            raise convert_to_qweb_exception(message="Format error for expression %r" % expr, expression=expr, template=template)
+            raise_qweb_exception(message="Format error for expression %r" % expr, expression=expr, template=template)
 
     def eval_bool(self, expr, qwebcontext):
         return int(bool(self.eval(expr, qwebcontext)))
@@ -292,7 +292,7 @@ class QWeb(orm.AbstractModel):
                     raise
                 except Exception:
                     template = qwebcontext.get('__template__')
-                    raise convert_to_qweb_exception(message="Could not render element %r" % element.nodeName, node=element, template=template)
+                    raise_qweb_exception(message="Could not render element %r" % element.nodeName, node=element, template=template)
         name = str(element.nodeName)
         inner = "".join(g_inner)
         trim = template_attributes.get("trim", 0)
@@ -611,6 +611,9 @@ class DateTimeConverter(osv.AbstractModel):
             strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
             pattern = openerp.tools.posix_to_ldml(strftime_pattern, locale=locale)
 
+        if options and options.get('hide_seconds'):
+            pattern = pattern.replace(":ss", "").replace(":s", "")
+        
         return babel.dates.format_datetime(value, format=pattern, locale=locale)
 
 class TextConverter(osv.AbstractModel):
