@@ -364,7 +364,13 @@ def manifest_glob(extension, addons=None, db=None, include_remotes=False):
                     r.append((None, pattern))
             else:
                 for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
-                    r.append((path, fs2web(path[len(addons_path):])))
+                    # Hack for IE, who limit 288Ko, 4095 rules, 31 sheets
+                    # http://support.microsoft.com/kb/262161/en
+                    if pattern == "static/lib/bootstrap/css/bootstrap.css":
+                        if include_remotes:
+                            r.insert(0, (None, fs2web(path[len(addons_path):])))
+                    else:
+                        r.append((path, fs2web(path[len(addons_path):])))
     return r
 
 def manifest_list(extension, mods=None, db=None, debug=False):
@@ -428,6 +434,15 @@ def set_cookie_and_redirect(redirect_url):
     redirect = werkzeug.utils.redirect(redirect_url, 303)
     redirect.autocorrect_location_header = False
     return redirect
+
+def login_redirect():
+    url = '/web/login?'
+    if request.debug:
+        url += 'debug&'
+    return """<html><head><script>
+        window.location = '%sredirect=' + encodeURIComponent(window.location);
+    </script></head></html>
+    """ % (url,)
 
 def load_actions_from_ir_values(key, key2, models, meta):
     Values = request.session.model('ir.values')
@@ -627,7 +642,7 @@ class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
     def index(self, s_action=None, db=None, **kw):
-        return http.local_redirect('/web', query=request.params)
+        return http.local_redirect('/web', query=request.params, keep_hash=True)
 
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, **kw):
@@ -640,7 +655,7 @@ class Home(http.Controller):
             }
             return render_bootstrap_template("web.webclient_bootstrap", headers=headers)
         else:
-            return http.local_redirect('/web/login', query=request.params)
+            return login_redirect()
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
@@ -1603,8 +1618,8 @@ class Export(http.Controller):
             model, map(operator.itemgetter('name'), export_fields_list))
 
         return [
-            {'name': field_name, 'label': fields_data[field_name]}
-            for field_name in fields_data.keys()
+            {'name': field['name'], 'label': fields_data[field['name']]}
+            for field in export_fields_list
         ]
 
     def fields_info(self, model, export_fields):

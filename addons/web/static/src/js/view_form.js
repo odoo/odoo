@@ -2835,9 +2835,7 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         var def;
         if (this.field.type === "many2one") {
             var model = new openerp.Model(openerp.session, this.field.relation);
-            def = model.call("search", [this.get("domain")], {"context": this.build_context()}).then(function(record_ids) {
-                return model.call("name_get", [record_ids] , {"context": self.build_context()});
-            });
+            def = model.call("name_search", ['', this.get("domain")], {"context": this.build_context()});
         } else {
             var values = _.reject(this.field.selection, function (v) { return v[0] === false && v[1] === ''; });
             def = $.when(values);
