@@ -51,7 +51,9 @@ openerp.testing = {};
     testing.templates = { };
     testing.add_template = function (name) {
         try {
-            var xhr = QWeb2.Engine.prototype.get_xhr();
+            console.log(name + " loading ...");
+            var xhr = window.QWeb2.Engine.prototype.get_xhr();
+            console.log(name + " loaded ...");
             xhr.open('GET', name, false);
             xhr.send(null);
             (testing.templates[testing.current_module] =
