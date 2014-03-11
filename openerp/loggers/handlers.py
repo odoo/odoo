@@ -31,6 +31,9 @@ from openerp import tools
 # in the database, --log-pgsql-database=YOUR_DBNAME
 # By default the system will use the current database
 
+class NoDatabaseError(Exception):
+    pass
+
 class PostgreSQLHandler(logging.Handler):
     @contextlib.contextmanager
     def create_connection(self):
@@ -50,7 +53,7 @@ class PostgreSQLHandler(logging.Handler):
             db_name = db_name_from_cli
 
         if not db_name:
-            return
+            raise NoDatabaseError("There is no defined database on this request")
 
         parameters = {
             'user': tools.config['db_user'] or None,
@@ -67,8 +70,7 @@ class PostgreSQLHandler(logging.Handler):
         except Exception, ex:  # Use a specific exception
             print ex
 
-    def emit(self, record):
-        # We use a context manager to be tolerant to the errors (error of connections,...)
+    def _internal_emit(self, record):
         with self.create_connection() as conn:
             exception = False
             if record.exc_info:
@@ -81,7 +83,7 @@ class PostgreSQLHandler(logging.Handler):
             dbname = getattr(current_thread, 'dbname', False)
 
             parameters = (
-                now, uid, now, uid, 'server', dbname, record.name, 
+                now, uid, now, uid, 'server', dbname, record.name,
                 logging.getLevelName(record.levelno), record.msg, exception,
                 record.filename, record.funcName, record.lineno
             )
@@ -89,12 +91,17 @@ class PostgreSQLHandler(logging.Handler):
             with conn.cursor() as cursor:
                 cursor.execute("""
                     INSERT INTO ir_logging(
-                        create_date, create_uid, write_date, write_uid, 
+                        create_date, create_uid, write_date, write_uid,
                         type, dbname, name, level, message, exception, path, func,
                         line
                     )
                     VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    """,
-                    parameters
-                )
+                    """, parameters)
                 conn.commit()
+
+    def emit(self, record):
+        # We use a context manager to be tolerant to the errors (error of connections,...)
+        try:
+            self._internal_emit(record)
+        except NoDatabaseError:
+            pass
