@@ -113,9 +113,8 @@ class table_compute(object):
             cols.sort()
             x += len(cols)
             rows[col] = [c for c in map(lambda x: x[1], cols) if c != False]
-        rows = filter(bool, rows)
 
-        return filter(bool, rows)
+        return rows
 
 
 class Ecommerce(http.Controller):
