@@ -9,14 +9,11 @@ class AccountPaymentConfig(osv.TransientModel):
     _columns = {
         'module_payment_paypal': fields.boolean(
             'Manage Payments Using Paypal',
-            help='Blahblahblah\n'
-                 '-It installs the module payment_paypal.'),
+            help='-It installs the module payment_paypal.'),
         'module_payment_ogone': fields.boolean(
             'Manage Payments Using Ogone',
-            help='Blahblahblah\n'
-                 '-It installs the module payment_ogone.'),
+            help='-It installs the module payment_ogone.'),
         'module_payment_adyen': fields.boolean(
             'Manage Payments Using Adyen',
-            help='Blahblahblah\n'
-                 '-It installs the module payment_adyen.'),
+            help='-It installs the module payment_adyen.'),
     }

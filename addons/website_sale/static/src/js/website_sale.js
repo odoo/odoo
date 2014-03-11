@@ -61,6 +61,10 @@ $(document).ready(function () {
         return false;
     });
 
+    $('.a-submit').on('click', function () {
+        $(this).closest('form').submit();
+    });
+
     // change price when they are variants
     $('form.js_add_cart_json label').on('mouseup', function (ev) {
         ev.preventDefault();
@@ -107,6 +111,10 @@ $(document).ready(function () {
                 $min.val( ui.values[ 0 ] );
                 $max.val( ui.values[ 1 ] );
                 $form.submit();
+            },
+            slide: function( event, ui ) {
+                $min.val( ui.values[ 0 ] );
+                $max.val( ui.values[ 1 ] );
             }
         });
         $min.val( $slider.slider( "values", 0 ) );

@@ -72,6 +72,10 @@
         start: function () {
             this.$target.carousel({interval: 10000});
         },
+        stop: function () {
+            this.$target.carousel('pause');
+            this.$target.removeData("bs.carousel");
+        },
     });
 
     website.snippet.animationRegistry.parallax = website.snippet.Animation.extend({

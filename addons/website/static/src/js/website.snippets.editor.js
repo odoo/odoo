@@ -19,13 +19,23 @@
         edit: function () {
             var self = this;
             $("[data-oe-model] *, [data-oe-type=html] *").off('click');
+            website.snippet.stop_animation();
             window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
             this.snippets.appendTo(this.$el);
-
             this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
-                website.snippet.stop_animation();
-                website.snippet.start_animation(true);
+                website.snippet.start_animation();
+                $(website.snippet.readyAnimation).each(function() {
+                    var animation = $(this).data("snippet-view");
+                    if (animation) {
+                        animation.$target.on('focus', '*', function(){
+                            animation.stop();
+                        });
+                        animation.$target.on('blur', '*', function(){
+                            animation.start();
+                        });
+                    }
+                });
             });
 
             return this._super.apply(this, arguments);
@@ -166,13 +176,14 @@
             var mt = parseInt($target.css("margin-top") || 0);
             var mb = parseInt($target.css("margin-bottom") || 0);
             $el.css({
-                'position': 'absolute',
                 'width': $target.outerWidth(),
-                'height': $target.outerHeight() + mt + mb+1,
-                'top': pos.top - mt,
+                'top': pos.top - mt - 5,
                 'left': pos.left
             });
-            $el.find(".oe_handle.size").css("bottom", (mb-7)+'px');
+            $el.find(">.e,>.w").css({'height': $target.outerHeight() + mt + mb+1});
+            $el.find(">.s").css({'top': $target.outerHeight() + mt + mb});
+            $el.find(">.size").css({'top': $target.outerHeight() + mt});
+            $el.find(">.s,>.n").css({'width': $target.outerWidth()-2});
         },
         show: function () {
             this.$el.removeClass("hidden");
@@ -189,7 +200,6 @@
 
         bind_snippet_click_editor: function () {
             var self = this;
-            var snipped_event_flag = false;
             $("#wrapwrap").on('click', function (event) {
                 if (snipped_event_flag) {
                     return;
@@ -197,7 +207,7 @@
                 snipped_event_flag = true;
 
                 setTimeout(function () {snipped_event_flag = false;}, 0);
-                var $target = $(event.srcElement);
+                var $target = $(event.srcElement || event.target);
 
                 if (!$target.is(website.snippet.globalSelector)) {
                     $target = $target.parents(website.snippet.globalSelector).first();
@@ -381,14 +391,13 @@
                         setTimeout(function () {
                             $("#oe_snippets").trigger('snippet-dropped', $target);
 
-                            // after rte
                             website.snippet.start_animation(true, $target);
 
+                            // drop_and_build_snippet
                             self.create_overlay($target);
                             if ($target.data("snippet-editor")) {
                                 $target.data("snippet-editor").drop_and_build_snippet($target);
                             }
-
                             for (var k in website.snippet.templateOptions) {
                                 $target.find(website.snippet.templateOptions[k].selector).each(function () {
                                     var $snippet = $(this);
@@ -398,6 +407,23 @@
                                     }
                                 });
                             }
+
+                            // reset snippet for rte
+                            $target.removeData("snippet-editor");
+                            if ($target.data("overlay")) {
+                                $target.data("overlay").remove();
+                                $target.removeData("overlay");
+                            }
+                            $target.find("[data-snippet-id]").each(function () {
+                                var $snippet = $(this);
+                                $snippet.removeData("snippet-editor");
+                                if ($snippet.data("overlay")) {
+                                    $snippet.data("overlay").remove();
+                                    $snippet.removeData("overlay");
+                                }
+                            });
+                            self.create_overlay($target);
+                            // end
 
                             self.make_active($target);
                         },0);
@@ -543,6 +569,20 @@
                 var $target = $(this);
                 if (!$target.data('overlay')) {
                     var $zone = $(openerp.qweb.render('website.snippet_overlay'));
+
+                    // fix for pointer-events: none with ie9
+                    if (document.body && document.body.addEventListener) {
+                        $zone.on("click mousedown mousedown", function passThrough(event) {
+                            event.preventDefault();
+                            $target.each(function() {
+                               // check if clicked point (taken from event) is inside element
+                                event.srcElement = this;
+                                $(this).trigger(event.type);
+                            });
+                            return false;
+                        });
+                    }
+
                     $zone.appendTo('#oe_manipulators');
                     $zone.data('target',$target);
                     $target.data('overlay',$zone);
@@ -759,6 +799,7 @@
             this.$el.find('li:has(li[data-class].active)').addClass("active");
         }
     });
+
     website.snippet.options.slider = website.snippet.Option.extend({
         drop_and_build_snippet: function() {
             var id = $(".carousel").length;
@@ -1154,7 +1195,6 @@
         on_clone: function () {
             var $clone = this.$target.clone(false);
             var _class = $clone.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, '');
-            _class += ' col-md-1';
             $clone.attr("class", _class);
             this.$target.after($clone);
             this.hide_remove_button();
@@ -1200,6 +1240,7 @@
             this._super(compass, beginClass, current);
         },
     });
+
     website.snippet.options["resize"] = website.snippet.options.marginAndResize.extend({
         getSize: function () {
             this.grid = this._super();
@@ -1234,7 +1275,10 @@
                 self.$target.data("snippet-view").set_values();
             });
             this.$target.attr('contentEditable', 'false');
-            this.$target.find('> div > .oe_structure').attr('contentEditable', 'true');
+
+            this.$target.find('> div > .oe_structure').attr('contentEditable', 'true'); // saas-3 retro-compatibility
+
+            this.$target.find('> div > div:not(.oe_structure) > .oe_structure').attr('contentEditable', 'true');
         },
         scroll: function () {
             var self = this;

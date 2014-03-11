@@ -390,22 +390,15 @@ div.carousel .carousel-indicators .active {
 }
 
 .parallax {
-  position: relative;
   background-size: cover;
-  display: table;
-  width: 100%;
-  min-height: 100px;
-}
-.parallax.oe_small {
-  min-height: 200px;
-}
-.parallax.oe_medium {
-  min-height: 300px;
-}
-.parallax.oe_big {
-  min-height: 450px;
 }
 .parallax > div {
+  position: relative;
+  display: table;
+  width: 100%;
+  min-height: 200px;
+}
+.parallax > div > div {
   display: table-cell;
   vertical-align: middle;
   padding: 32px 0;
