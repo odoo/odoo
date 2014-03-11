@@ -42,7 +42,57 @@ class website_event(http.Controller):
     # TODO: not implemented
     @http.route(['/event/<model("event.event"):event>/agenda/'], type='http', auth="public", website=True, multilang=True)
     def event_agenda(self, event, tag=None, **post):
-        
+        def algo_for_timetable(new_start_date, new_end_date):
+            global new_schedule
+            if not new_schedule:
+                new_schedule.append([new_start_date, new_end_date])
+                return
+            first_start_date = new_schedule[0][0]
+            first_end_date = new_schedule[0][1]
+            last_start_date = new_schedule[-1][0]
+            last_end_date = new_schedule[-1][1]
+            print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+            print "first date",first_start_date,first_end_date
+            print "last date",last_start_date,last_end_date
+            print "new date",new_start_date,new_end_date
+
+            #totally outter
+            if first_start_date > new_start_date and new_end_date > last_end_date:
+                new_schedule.insert(0, [new_start_date, first_start_date])
+                new_schedule.append([last_end_date, new_end_date])
+                return
+            
+            #lower outer
+            if first_start_date > new_end_date:
+                new_schedule.insert(0, [new_start_date, new_end_date])
+                new_schedule.insert(1, [new_end_date, first_start_date])
+                return
+            
+            # upper outer
+            if new_start_date > last_end_date:
+                new_schedule.append([last_end_date, new_start_date])
+                new_schedule.append([new_start_date, new_end_date])
+                return
+
+            #When inner time
+            if first_start_date < new_start_date and last_end_date > new_end_date:
+                for index,ct in enumerate([new_start_date, new_end_date]):
+                    for index2,dt in enumerate(new_schedule):
+                        st = dt[0]
+                        et = dt[1]
+                        if st == ct or et == ct:break
+                        if st < ct and et > ct:
+                            new_schedule.pop(index2)
+                            new_schedule.insert(index2, [ct, et])
+                            new_schedule.insert(index2, [st, ct])
+                            break
+                            
+            for x in new_schedule:
+                print "final schedule",x[0],x[1]
+
+
+            
+
         request.cr.execute('''
             Select id, location_id, groupby_datetime, duration, name, date from (
                 Select id, location_id, to_char(date_trunc('hour',date),'mm-dd-yy hh AM') as
@@ -58,7 +108,8 @@ class website_event(http.Controller):
         fetch_tracks = request.cr.fetchall()
         unsort_tracks = {}
         room_list = []
-        new_schedule = OrderedDict()
+        global new_schedule
+        new_schedule = []
         location_object = request.registry.get('event.track.location')
         event_track_obj = request.registry.get('event.track')
         for track in fetch_tracks:
@@ -67,8 +118,11 @@ class website_event(http.Controller):
                 unsort_tracks[track[2][:8]] = {}
             if not unsort_tracks[track[2][:8]].has_key(track[5]):
                 unsort_tracks[track[2][:8]][track[5]] = []
-            end_time = datetime.datetime.strptime(track[5], '%Y-%m-%d %H:%M:%S') + datetime.timedelta(minutes = int(track[3]))
-            new_schedule[track[0]] = {'time': track[5],'end_time': end_time}
+                
+            start_time = datetime.datetime.strptime(track[5], '%Y-%m-%d %H:%M:%S')
+            end_time = start_time + datetime.timedelta(minutes = int(track[3]))
+            algo_for_timetable(start_time, end_time)
+
             speaker = event_track_obj.browse(request.cr, request.uid, track[0], context=request.context)['speaker_ids']
             unsort_tracks[track[2][:8]][track[5]].append({
                              'id': track[0],
