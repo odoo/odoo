@@ -19,21 +19,19 @@
                         <t t-call="website_mail_group.navigation_menu"/>
                     </div>
                     <div class="col-md-8">
-                        <t t-foreach="groups" t-as="group">
-                            <div class="col-md-6" style="min-height: 150px">
-                                <div class="col-md-3 col-md-pull-1">
-                                    <img t-att-src="'/website/image?model=mail.group&amp;field=image_small&amp;id='+str(group['id'])"/>
-                                </div>
-                                <div class="col-md-8">
-                                    <a t-attf-href="/groups/#{group.id}" t-esc="group.name"/>
-                                    <br/>
-                                    <small t-esc="group.description"/>
-                                    <br/>
-                                    <a t-attf-class="btn btn-default js_group #{group.message_is_follower and 'hidden' or 'visible'} follow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=follow" t-attf-id="#{group.id}">Join Group</a>
-                                    <a t-attf-class="btn btn-primary js_group #{group.message_is_follower and 'visible' or 'hidden'} unfollow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=unfollow" t-attf-id="#{group.id}">UnFollow</a>
-                                </div>
+                        <div class="col-md-6" style="min-height: 150px" t-foreach="groups" t-as="group">
+                            <div class="col-md-3 col-md-pull-1">
+                                <img t-att-src="'/website/image?model=mail.group&amp;field=image_small&amp;id='+str(group['id'])"/>
                             </div>
-                        </t>
+                            <div class="col-md-8">
+                                <a t-attf-href="/groups/#{group.id}" t-esc="group.name"/>
+                                <br/>
+                                <small t-esc="group.description"/>
+                                <br/>
+                                <a t-attf-class="btn btn-default js_group #{group.message_is_follower and 'hidden' or 'visible'} follow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=follow" t-attf-id="#{group.id}">Join Group</a>
+                                <a t-attf-class="btn btn-primary js_group #{group.message_is_follower and 'visible' or 'hidden'} unfollow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=unfollow" t-attf-id="#{group.id}">UnFollow</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -65,15 +63,13 @@
                             <div class="panel-heading" t-esc="active_group.name"/>
                             <table class="table table-bordered">
                                 <tbody>
-                                    <t t-foreach="thread_list" t-as="thread">
-                                        <tr>
-                                            <td>
-                                                <a t-attf-href="/groups/#{active_group.id}/message/#{thread.id}" t-esc="thread.subject"></a>
-                                                <img class="img-rounded pull-right mt0" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(thread.id)" style="width : 30px"/>
-                                                <p><small>by <t t-esc="thread.author_id.name and thread.author_id.name or thread.email_from"/> on <t t-esc="thread.date"/></small></p>
-                                            </td>
-                                        </tr>
-                                    </t>
+                                    <tr t-foreach="thread_list" t-as="thread">
+                                        <td>
+                                            <a t-attf-href="/groups/#{active_group.id}/message/#{thread.id}" t-esc="thread.subject"></a>
+                                            <img class="img-rounded pull-right mt0" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(thread.id)" style="width : 30px"/>
+                                            <p><small>by <t t-esc="thread.author_id.name and thread.author_id.name or thread.email_from"/> on <t t-esc="thread.date"/></small></p>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -89,25 +85,25 @@
             </t>
             <div class="row mt32">
                 <div class="container">
-                    <div class="col-md-1 mt0">
-                        <img class="img-rounded pull-right mt0" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(main_thread.id)" style="width : 30px"/>
-                    </div>
-                    <div class="col-md-11">
-                        <div class="panel panel-default">
-                            <div class="panel-heading" t-esc="main_thread.subject"/>
-                            <div class="panel-body">
-                                <t t-raw="main_thread.body"/>
+                    <div class="row">
+                        <div class="col-md-1">
+                            <img class="img-rounded pull-right" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(main_thread.id)" style="width : 30px"/>
+                        </div>
+                        <div class="col-md-11">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" t-esc="main_thread.subject"/>
+                                <div class="panel-body" t-raw="main_thread.body"/>
                             </div>
                         </div>
                     </div>
                     <div class="row" t-foreach="child_thread" t-as="message">
-                        <div class="col-md-1 mt0">
-                            <img class="img-rounded pull-right mt0" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(message.id)" style="width : 30px"/>
+                        <div class="col-md-1">
+                            <img class="img-rounded pull-right" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(message.id)" style="width : 30px"/>
                         </div>
                         <div class="col-md-11">
                             <div class="panel panel-default">
-                                <div class="panel-heading panel-line" t-esc="message.subject"/>
-                                <t t-raw="message.body"/>
+                                <div class="panel-heading" t-esc="message.subject"/>
+                                <div class="panel-body" t-raw="message.body"/>
                             </div>
                         </div>
                     </div>

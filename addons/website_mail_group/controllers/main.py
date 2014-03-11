@@ -58,7 +58,7 @@ class MailGroup(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         group_obj = request.registry.get('mail.group')
         thread_obj = request.registry.get('mail.message')
-        thread_ids = thread_obj.search(cr, uid, [('type','=','email'), ('model','=','mail.group'), ('res_id','=',group.id), ('parent_message','=',False)])
+        thread_ids = thread_obj.search(cr, uid, [('type','=','email'), ('model','=','mail.group'), ('res_id','=',group.id), ('parent_id','=',False)])
         group_ids = group_obj.search(cr, uid, [])
         pager = request.website.pager(
             url='/groups/%s/' % group.id,
@@ -83,7 +83,7 @@ class MailGroup(http.Controller):
     def get_thread(self, group, message, **post):
         cr, uid, context = request.cr, request.uid, request.context
         thread_obj = request.registry.get('mail.message')
-        child_ids = thread_obj.search(cr, uid, [('parent_id','=',message.id)])
+        child_ids = thread_obj.search(cr, uid, [('parent_id','=',message.id)], order='date')
         values = {
             'main_thread': message,
             'child_thread': thread_obj.browse(cr, uid, child_ids, context),
