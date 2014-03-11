@@ -64,6 +64,9 @@ function openerp_picking_widgets(instance){
         renderElement: function(){
             var self = this;
             this._super();
+            //we need this disconnect here in case we click with the mouse on scan
+            //because the page will reload, removing the focus on line but numpad will
+            //still be active
             this.disconnect_numpad();
             this.$('.js_pack_scan').click(function(){
                 var id = parseInt($(this).attr('op-id'));
@@ -83,6 +86,7 @@ function openerp_picking_widgets(instance){
         },
         check_change_quantity: function(){
             var self = this;
+            //if we only have one line selected, connect numpad and allow to change qty
             if (this.$('.js_pack_op_line.warning:not(.hidden)').length === 1){
                 cur_id = this.$('.js_pack_op_line.warning:not(.hidden)')[0].attributes.getNamedItem('data-id').value;
                 op_id = parseInt(cur_id);
@@ -188,6 +192,9 @@ function openerp_picking_widgets(instance){
             $('body').on('keydown', this.numpad_handler);
         },
         disconnect_numpad: function(){
+            //we need to similate that the escape button was pressed when disconnecting numpad to insure
+            //that if we had written some value and not saved them we refresh the view to show the correct
+            //value.
             jQuery.event.trigger({ type : 'keydown', which : 27 });
             $('body').off('keydown', this.numpad_handler);
         },
@@ -785,28 +792,28 @@ function openerp_picking_widgets(instance){
 
         //     return current_package;
         // },
-        get_current_operations: function(){
-            var current_package_id = instance.session.user_context.current_package_id;
-            var ops = [];
-            _.each( this.operations, function(op){
-                if(!current_package_id){
-                    if(op.result_package_id !== false){
-                        return;
-                    }
-                }else if(op.result_package_id[0] !== current_package_id){
-                    return;
-                }
-                ops.push(op);
-            });
-            return ops;
-        },
-        get_selected_operation: function(){
-            if(   this.selected_operation.picking_id === this.picking.id && this.selected_operation.id ){
-                return this.selected_operation.id;
-            }else{
-                return null;
-            }
-        },
+        // get_current_operations: function(){
+        //     var current_package_id = instance.session.user_context.current_package_id;
+        //     var ops = [];
+        //     _.each( this.operations, function(op){
+        //         if(!current_package_id){
+        //             if(op.result_package_id !== false){
+        //                 return;
+        //             }
+        //         }else if(op.result_package_id[0] !== current_package_id){
+        //             return;
+        //         }
+        //         ops.push(op);
+        //     });
+        //     return ops;
+        // },
+        // get_selected_operation: function(){
+        //     if(   this.selected_operation.picking_id === this.picking.id && this.selected_operation.id ){
+        //         return this.selected_operation.id;
+        //     }else{
+        //         return null;
+        //     }
+        // },
         set_operation_quantity: function(quantity, op_id){
             var self = this;
             if(quantity >= 0){
