@@ -88,6 +88,12 @@ class Post(osv.Model):
                         res[post.id] -= 1
         return res
 
+    def _get_vote(self, cr, uid, ids, context=None):
+        result = {}
+        for vote in self.pool.get('website.forum.post.vote').browse(cr, uid, ids, context=context):
+            result[vote.post_id.id] = True
+        return result.keys()
+
     _columns = {
         'name': fields.char('Title', size=128),
         'forum_id': fields.many2one('website.forum', 'Forum', required=True),
@@ -120,14 +126,23 @@ class Post(osv.Model):
             help="Comments on forum post",
         ),
 
-        # TODO: add a store={} on those two fields. Why is it a boolean?
-        'user_vote':fields.function(_get_votes, string="My Vote", type='boolean'),
+        'user_vote':fields.function(_get_votes, string="My Vote", type='boolean',
+            store={
+                'website.forum.post': (lambda self, cr, uid, ids, c={}: ids, ['vote_ids'], 10),
+                'website.forum.post.vote': (_get_vote, [], 10),
+            }
+        ),
 
-        # TODO: add a store={} on those two fields
-        'vote_count':fields.function(_get_vote_count, string="Votes", type='integer'),
+        'vote_count':fields.function(_get_vote_count, string="Votes", type='integer',
+            store={
+                'website.forum.post': (lambda self, cr, uid, ids, c={}: ids, ['vote_ids'], 10),
+                'website.forum.post.vote': (_get_vote, [], 10),
+            }
+        ),
     }
     _defaults = {
         'state': 'active',
+        'vote_count': 0,
         'active': True
     }
 
@@ -296,8 +311,18 @@ class Tags(osv.Model):
     _name = "website.forum.tag"
     _description = "Tag"
     _inherit = ['website.seo.metadata']
+
+    def _get_questions(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        Post = self.pool['website.forum.post']
+        for tag in ids:
+            question_ids = Post.search(cr, uid , [('tags.id', '=', tag)], context=context)
+            result[tag] = question_ids
+        return result
+
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'post_ids': fields.many2many('website.forum.post', 'forum_tag_que_rel', 'tag_id', 'forum_id', 'Questions', readonly=True),
-        'forum_id': fields.many2one('website.forum', 'Forum', required=True)
+        'forum_id': fields.many2one('website.forum', 'Forum', required=True),
+        'post_ids': fields.function(_get_questions, type='many2many', relation="website.forum.post", string="Questions",
+        ),
    }
