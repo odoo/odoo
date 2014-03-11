@@ -24,7 +24,13 @@ openerp.web_calendar = function(instance) {
         shortTimeformat = Date.CultureInfo.formatPatterns.shortTime;
         return {
             weekNumberTitle: _t("W"),
-            allDayText: _t("all-day"),
+            allDayText: _t("All day"),
+            buttonText : {
+                today:    _t("Today"),
+                month:    _t("Month"),
+                week:     _t("Week"),
+                day:      _t("Day")
+            },
             monthNames: Date.CultureInfo.monthNames,
             monthNamesShort: Date.CultureInfo.abbreviatedMonthNames,
             dayNames: Date.CultureInfo.dayNames,
@@ -294,11 +300,18 @@ openerp.web_calendar = function(instance) {
             var self = this;
              
             if (!this.sidebar && this.options.$sidebar) {
+                translate = get_fc_defaultOptions();
                 this.sidebar = new instance.web_calendar.Sidebar(this);
                 this.sidebar.appendTo(this.$el.find('.oe_calendar_sidebar_container'));
 
                 this.$small_calendar = self.$el.find(".oe_calendar_mini");
-                this.$small_calendar.datepicker({ onSelect: self.calendarMiniChanged(self) });
+                this.$small_calendar.datepicker({ 
+                    onSelect: self.calendarMiniChanged(self),
+                    dayNamesMin : translate.dayNamesShort,
+                    monthNames: translate.monthNamesShort,
+                    firstDay: translate.firstDay,
+                });
+
             
                 if (this.useContacts) {
                     //Get my Partner ID
