@@ -168,30 +168,28 @@ class stock_quant(osv.osv):
     ''') % (acc_src, acc_dest, acc_valuation, journal_id))
         return journal_id, acc_src, acc_dest, acc_valuation
 
-    def _prepare_account_move_line(self, cr, uid, quant, move, credit_account_id, debit_account_id, qty=0, context=None):
+    def _prepare_account_move_line(self, cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=None):
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
         processing of the given quant.
         """
-        if qty == 0:
-            qty = quant.qty
         if context is None:
             context = {}
         currency_obj = self.pool.get('res.currency')
         if context.get('force_valuation_amount'):
             valuation_amount = context.get('force_valuation_amount')
         else:
-            valuation_amount = quant.product_id.cost_method == 'real' and quant.cost or quant.product_id.standard_price
+            valuation_amount = move.product_id.cost_method == 'real' and cost or move.product_id.standard_price
         #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         #the company currency... so we need to use round() before creating the accounting entries.
-        valuation_amount = currency_obj.round(cr, uid, quant.company_id.currency_id, valuation_amount * qty)
+        valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
 
         debit_line_vals = {
                     'name': move.name,
-                    'product_id': quant.product_id.id,
+                    'product_id': move.product_id.id,
                     'quantity': qty,
-                    'product_uom_id': quant.product_id.uom_id.id,
+                    'product_uom_id': move.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,
@@ -201,9 +199,9 @@ class stock_quant(osv.osv):
         }
         credit_line_vals = {
                     'name': move.name,
-                    'product_id': quant.product_id.id,
+                    'product_id': move.product_id.id,
                     'quantity': qty,
-                    'product_uom_id': quant.product_id.uom_id.id,
+                    'product_uom_id': move.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,
@@ -225,7 +223,7 @@ class stock_quant(osv.osv):
                 quant_cost_qty[quant.cost] = quant.qty
         move_obj = self.pool.get('account.move')
         for cost in quant_cost_qty.keys():
-            move_lines = self._prepare_account_move_line(cr, uid, quant_cost[quant.cost], move, credit_account_id, debit_account_id, qty = quant_cost_qty[cost], context=context)
+            move_lines = self._prepare_account_move_line(cr, uid, move, quant_cost_qty[cost], cost, credit_account_id, debit_account_id, context=context)
             return move_obj.create(cr, uid, {'journal_id': journal_id,
                                       'line_id': move_lines,
                                       'ref': move.picking_id and move.picking_id.name}, context=context)
