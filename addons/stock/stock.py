@@ -919,14 +919,14 @@ class stock_picking(osv.osv):
         pack_obj = self.pool.get("stock.quant.package")
         quant_obj = self.pool.get("stock.quant")
         top_lvl_packages = set()
-        quants_to_compare = [x.id for x in quants_suggested_locations.keys()]
+        quants_to_compare = quants_suggested_locations.keys()
         for pack in list(set([x.package_id for x in quants_suggested_locations.keys() if x and x.package_id])):
             loop = True
-            good_pack = False
             test_pack = pack
+            good_pack = False
+            pack_destination = False
             while loop:
                 pack_quants = pack_obj.get_content(cr, uid, [test_pack.id], context=context)
-                pack_destination = False
                 all_in = True
                 for quant in quant_obj.browse(cr, uid, pack_quants, context=context):
                     # If the quant is not in the quants to compare and not in the common location
@@ -1156,6 +1156,8 @@ class stock_picking(osv.osv):
                         todo_move_ids.append(move.id)
                         #Assign move as it was assigned before
                         toassign_move_ids.append(new_move)
+                    else:
+                        todo_move_ids.append(move.id)
                 self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
                 if todo_move_ids and not context.get('do_only_split'):
                     self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=context)
@@ -1861,8 +1863,6 @@ class stock_move(osv.osv):
         context = context or {}
         quant_obj = self.pool.get("stock.quant")
         to_assign_moves = []
-        prefered_domain = {}
-        fallback_domain = {}
         main_domain = {}
         todo_moves = []
         operations = set()
