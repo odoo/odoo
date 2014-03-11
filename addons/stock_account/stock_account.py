@@ -70,7 +70,7 @@ class stock_quant(osv.osv):
             move = self._get_latest_move(cr, uid, quant, context=context)
             # this is where we post accounting entries for adjustment
             ctx['force_valuation_amount'] = newprice - quant.cost
-            self._account_entry_move(cr, uid, quant, move, context=ctx)
+            self._account_entry_move(cr, uid, [quant], move, context=ctx)
             #update the standard price of the product, only if we would have done it if we'd have had enough stock at first, which means
             #1) the product cost's method is 'real'
             #2) we just fixed a negative quant caused by an outgoing shipment
@@ -80,25 +80,27 @@ class stock_quant(osv.osv):
     """
     Accounting Valuation Entries
 
-    location_from: can be None if it's a new quant
+    quants: Quants to create accounting valuation entries for
+    move: Move to use
     """
-    def _account_entry_move(self, cr, uid, quant, move, context=None):
+    def _account_entry_move(self, cr, uid, quants, move, context=None):
         location_from = move.location_id
-        location_to = quant.location_id
+        location_to = quants[0].location_id
         if context is None:
             context = {}
-        if quant.product_id.valuation != 'real_time':
+        if quants[0].product_id.valuation != 'real_time':
             return False
-        if quant.owner_id:
+        if quants[0].owner_id:
             #if the quant isn't owned by the company, we don't make any valuation entry
             return False
-        if quant.qty <= 0:
+        if quants[0].qty <= 0:
             #we don't make any stock valuation for negative quants because the valuation is already made for the counterpart.
             #At that time the valuation will be made at the product cost price and afterward there will be new accounting entries
             #to make the adjustments when we know the real cost price.
             return False
-        company_from = self._location_owner(cr, uid, quant, location_from, context=context)
-        company_to = self._location_owner(cr, uid, quant, location_to, context=context)
+        
+        company_from = self._location_owner(cr, uid, quants[0], location_from, context=context)
+        company_to = self._location_owner(cr, uid, quants[0], location_to, context=context)
         if company_from == company_to:
             return False
 
@@ -109,9 +111,9 @@ class stock_quant(osv.osv):
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=ctx)
             if location_from and location_from.usage == 'customer':
                 #goods returned from customer
-                self._create_account_move_line(cr, uid, quant, move, acc_dest, acc_valuation, journal_id, context=ctx)
+                self._create_account_move_line(cr, uid, quants, move, acc_dest, acc_valuation, journal_id, context=ctx)
             else:
-                self._create_account_move_line(cr, uid, quant, move, acc_src, acc_valuation, journal_id, context=ctx)
+                self._create_account_move_line(cr, uid, quants, move, acc_src, acc_valuation, journal_id, context=ctx)
 
         # Create Journal Entry for products leaving the company
         if company_from:
@@ -120,9 +122,9 @@ class stock_quant(osv.osv):
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=ctx)
             if location_to and location_to.usage == 'supplier':
                 #goods returned to supplier
-                self._create_account_move_line(cr, uid, quant, move, acc_valuation, acc_src, journal_id, context=ctx)
+                self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_src, journal_id, context=ctx)
             else:
-                self._create_account_move_line(cr, uid, quant, move, acc_valuation, acc_dest, journal_id, context=ctx)
+                self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_dest, journal_id, context=ctx)
 
 
     def move_single_quant(self, cr, uid, quant, location_to, qty, move, context=None):
@@ -133,8 +135,8 @@ class stock_quant(osv.osv):
     def move_single_quant_tuples(self, cr, uid, quants, move, location_dest_id, context=None):
         quant_record = super(stock_quant, self).move_single_quant_tuples(cr, uid, quants, move, location_dest_id, context=context)
         if move.product_id.valuation == 'real_time':
-            for quant in quants:
-                self._account_entry_move(cr, uid, quant, move, context=context)
+            quants_filt = [x[0] for x in quants]
+            self._account_entry_move(cr, uid, quants_filt, move, context=context)
         return quant_record
 
 
@@ -171,11 +173,13 @@ class stock_quant(osv.osv):
     ''') % (acc_src, acc_dest, acc_valuation, journal_id))
         return journal_id, acc_src, acc_dest, acc_valuation
 
-    def _prepare_account_move_line(self, cr, uid, quant, move, credit_account_id, debit_account_id, context=None):
+    def _prepare_account_move_line(self, cr, uid, quant, move, credit_account_id, debit_account_id, qty=0, context=None):
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
         processing of the given quant.
         """
+        if qty == 0:
+            qty = quant.qty
         if context is None:
             context = {}
         currency_obj = self.pool.get('res.currency')
@@ -185,12 +189,12 @@ class stock_quant(osv.osv):
             valuation_amount = quant.product_id.cost_method == 'real' and quant.cost or quant.product_id.standard_price
         #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         #the company currency... so we need to use round() before creating the accounting entries.
-        valuation_amount = currency_obj.round(cr, uid, quant.company_id.currency_id, valuation_amount * quant.qty)
+        valuation_amount = currency_obj.round(cr, uid, quant.company_id.currency_id, valuation_amount * qty)
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         debit_line_vals = {
                     'name': move.name,
                     'product_id': quant.product_id.id,
-                    'quantity': quant.qty,
+                    'quantity': qty,
                     'product_uom_id': quant.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
@@ -202,7 +206,7 @@ class stock_quant(osv.osv):
         credit_line_vals = {
                     'name': move.name,
                     'product_id': quant.product_id.id,
-                    'quantity': quant.qty,
+                    'quantity': qty,
                     'product_uom_id': quant.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
@@ -213,12 +217,22 @@ class stock_quant(osv.osv):
         }
         return [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
 
-    def _create_account_move_line(self, cr, uid, quant, move, credit_account_id, debit_account_id, journal_id, context=None):
+    def _create_account_move_line(self, cr, uid, quants, move, credit_account_id, debit_account_id, journal_id, context=None):
+        #group quants by cost
+        quant_cost = {}
+        quant_cost_qty = {}
+        for quant in quants:
+            if quant_cost.get(quant.cost):
+                quant_cost_qty[quant.cost] += quant.qty
+            else:
+                quant_cost[quant.cost] = quant
+                quant_cost[quant.cost] = quant.qty
         move_obj = self.pool.get('account.move')
-        move_lines = self._prepare_account_move_line(cr, uid, quant, move, credit_account_id, debit_account_id, context=context)
-        return move_obj.create(cr, uid, {'journal_id': journal_id,
-                                  'line_id': move_lines,
-                                  'ref': move.picking_id and move.picking_id.name}, context=context)
+        for cost in quant_cost_qty.keys():
+            move_lines = self._prepare_account_move_line(cr, uid, quant_cost[quant.cost], move, credit_account_id, debit_account_id, qty = quant_cost_qty[cost], context=context)
+            return move_obj.create(cr, uid, {'journal_id': journal_id,
+                                      'line_id': move_lines,
+                                      'ref': move.picking_id and move.picking_id.name}, context=context)
 
     #def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
     #    move = self._get_latest_move(cr, uid, to_solve_quant, context=context)

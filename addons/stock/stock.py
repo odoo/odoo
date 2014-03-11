@@ -337,13 +337,15 @@ class stock_quant(osv.osv):
         :param src_package_id: ID of the package that contains the quants to move
         :param dest_package_id: ID of the package that must be set on the moved quant
         """
+        quantsto = []
         for quant, qty in quants:
             if not quant:
                 #If quant is None, we will create a quant to move (and potentially a negative counterpart too)
                 quant = self._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location = location_dest_id, context=context)
+            quantsto.append((quant, qty),)
         if not location_dest_id:
             location_dest_id = move.location_dest_id
-        self.move_single_quant_tuples(cr, uid, [x for x in quants if x[0]], move, location_dest_id, context=context)
+        self.move_single_quant_tuples(cr, uid, quantsto, move, location_dest_id, context=context)
 
 
 
@@ -353,10 +355,12 @@ class stock_quant(osv.osv):
             if not quant:
                 continue
             new_quant = self._quant_split(cr, uid, quant, qty, context=context)
-            whole_quants.append(quant.id)
+            quant.refresh()
+            whole_quants.append(quant)
         if self._check_location(cr, uid, location_dest_id, context=context) and whole_quants:
-            self.write(cr, SUPERUSER_ID, whole_quants, {'location_id': location_dest_id.id, 
-                                                        'history_ids': [(4, move.id)]}, context=context)
+            vals = {'location_id': location_dest_id.id, 
+                    'history_ids': [(4, move.id)]}
+            self.write(cr, SUPERUSER_ID, [x.id for x in whole_quants], vals, context=context)
             self._quants_reconcile_negative(cr, uid, whole_quants, move, context=context)
 
 
