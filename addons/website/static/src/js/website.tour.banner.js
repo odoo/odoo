@@ -47,10 +47,10 @@
                 },
                 {
                     waitFor:   '.oe_overlay_options .oe_options:visible',
-                    element:   '#wrap [data-snippet-id=carousel]:first .carousel-caption',
+                    element:   '#wrap [data-snippet-id=carousel]:first .carousel-caption > div',
                     placement: 'top',
-                    title:     _("Customize banner's text"),
-                    content:   _("Click in the text and start editing it."),
+                    title:     _t("Customize banner's text"),
+                    content:   _t("Click in the text and start editing it."),
                     popover:   { next: _t("Continue") },
                 },
                 {
@@ -66,6 +66,13 @@
                     placement: 'bottom',
                     title:     _t("Add Another Block"),
                     content:   _t("Let's add another building block to your page."),
+                    popover:   { fixed: true },
+                },
+                {
+                    element:   'a[href="#snippet_feature"]',
+                    placement: 'bottom',
+                    title:     _t("Feature blocks list"),
+                    content:   _t("Click on 'Features' to see the feature blocks list."),
                     popover:   { fixed: true },
                 },
                 {

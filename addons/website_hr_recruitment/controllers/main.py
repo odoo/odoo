@@ -7,7 +7,6 @@ from openerp.tools.translate import _
 from openerp.addons.web.http import request
 
 class website_hr_recruitment(http.Controller):
-
     @http.route([
         '/jobs',
         '/jobs/department/<model("hr.department"):department>',
@@ -61,27 +60,48 @@ class website_hr_recruitment(http.Controller):
 
     @http.route(['/jobs/apply/<model("hr.job"):job>'], type='http', auth="public", website=True, multilang=True)
     def jobs_apply(self, job):
-        return request.website.render("website_hr_recruitment.apply", { 'job': job })
+        error = {}
+        default = {}
+        if 'website_hr_recruitment_error' in request.session:
+            error = request.session.pop('website_hr_recruitment_error')
+            default = request.session.pop('website_hr_recruitment_default')
+        return request.website.render("website_hr_recruitment.apply", { 'job': job, 'error': error, 'default': default})
 
     @http.route(['/jobs/thankyou'], methods=['POST'], type='http', auth="public", website=True, multilang=True)
     def jobs_thankyou(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
         imd = request.registry['ir.model.data']
-        value = {
-            'name': _('Online Form'),
-            'user_id': False,
-            'source_id' : imd.xmlid_to_res_id(cr, SUPERUSER_ID, 'hr_recruitment.source_website_company'),
-        }
-        for f in ['phone', 'email_from', 'partner_name', 'description', 'department_id', 'job_id']:
-            value[f] = post.get(f)
 
-        job_id = request.registry['hr.applicant'].create(cr, SUPERUSER_ID, value, context=context)
+        error = {}
+        for field_name in ["partner_name", "phone", "email_from"]:
+            if not post.get(field_name):
+                error[field_name] = 'missing'
+        if error:
+            request.session['website_hr_recruitment_error'] = error
+            ufile = post.pop('ufile')
+            if ufile:
+                error['ufile'] = 'reset'
+            request.session['website_hr_recruitment_default'] = post
+            return request.redirect('/jobs/apply/%s' % post.get("job_id"))
+
+        value = {
+            'source_id' : imd.xmlid_to_res_id(cr, SUPERUSER_ID, 'hr_recruitment.source_website_company'),
+            'name': '%s\'s Application' % post.get('partner_name'), 
+        }
+        for f in ['email_from', 'partner_name', 'description']:
+            value[f] = post.get(f)
+        for f in ['department_id', 'job_id']:
+            value[f] = int(post.get(f) or 0)
+        # Retro-compatibility for saas-3. "phone" field should be replace by "partner_phone" in the template in trunk.
+        value['partner_phone'] = post.pop('phone', False)
+
+        applicant_id = request.registry['hr.applicant'].create(cr, SUPERUSER_ID, value, context=context)
         if post['ufile']:
             attachment_value = {
                 'name': post['ufile'].filename,
                 'res_name': value['partner_name'],
                 'res_model': 'hr.applicant',
-                'res_id': job_id,
+                'res_id': applicant_id,
                 'datas': base64.encodestring(post['ufile'].read()),
                 'datas_fname': post['ufile'].filename,
             }
