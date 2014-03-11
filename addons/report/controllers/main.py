@@ -42,7 +42,6 @@ import os
 from distutils.version import LooseVersion
 
 
-#from pyPdf import PdfFileWriter, PdfFileReader
 from werkzeug import exceptions
 from werkzeug.test import Client
 from werkzeug.wrappers import BaseResponse
@@ -51,7 +50,10 @@ from reportlab.graphics.barcode import createBarcodeDrawing
 
 
 _logger = logging.getLogger(__name__)
-
+try:
+    from pyPdf import PdfFileWriter, PdfFileReader
+except ImportError:
+    PdfFileWriter = PdfFileReader = None
 
 class Report(http.Controller):
 
