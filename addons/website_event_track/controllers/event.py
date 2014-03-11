@@ -124,12 +124,13 @@ class website_event(http.Controller):
                 unsort_tracks[track[2][:8]] = {}
             if not unsort_tracks[track[2][:8]].has_key(track[5]):
                 unsort_tracks[track[2][:8]][track[5]] = []
-                
+
             start_time = datetime.datetime.strptime(track[5], '%Y-%m-%d %H:%M:%S')
             end_time = start_time + datetime.timedelta(minutes = int(track[3]))
             new_schedule = algo_for_timetable(start_time, end_time, new_schedule)
-            
-            speaker = event_track_obj.browse(request.cr, request.uid, track[0], context=request.context)['speaker_ids']
+            event_track = event_track_obj.browse(request.cr, request.uid, track[0], context=request.context)
+            if event_track.color > 9 : color = 0;
+            else: color = event_track.color
             unsort_tracks[track[2][:8]][track[5]].append({
                              'id': track[0],
                              'title': track[4],
@@ -138,7 +139,8 @@ class website_event(http.Controller):
                              'duration':track[3],
                              'location_id': track[1],
                              'end_time': end_time,
-                             'speaker_ids': [s.name for s in speaker],
+                             'speaker_ids': [s.name for s in event_track.speaker_ids],
+                             'color': color,
                        })
         #Get All Locations
         room_list = list(set(room_list))

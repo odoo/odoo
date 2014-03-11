@@ -90,8 +90,12 @@
                                         </td>
                                     </t>
                                     <t t-if="days[day][slot][index]['location_id']" >
-                                         <td t-attf-style="width: #{td_width}px;" id="seach_enable">
-                                            <t  t-if="days[day][slot][index]['location_id'] == room[0]" >
+                                        <t t-if="days[day][slot][index]['location_id'] != room[0]">
+                                            <td t-attf-style="width: #{td_width}px;">
+                                            </td>
+                                        </t>
+                                        <t  t-if="days[day][slot][index]['location_id'] == room[0]" >
+                                            <td t-attf-style="width: #{td_width}px;" t-attf-class="event_color_#{days[day][slot][index]['color']}" id="seach_enable">
                                                 <t t-esc="days[day][slot][index]['title']" />
                                                 <t t-foreach="days[day][slot][index]['speaker_ids']" t-as="speaker">
                                                      <t t-if="speaker == days[day][slot][index]['speaker_ids'][:1][0]">By </t>
@@ -101,8 +105,8 @@
                                                 <t  t-if="days[day][slot][index]['id'] != days[day][slot][-1]['id']" >
                                                     <t t-set="index" t-value="index + 1"/>
                                                 </t>
-                                            </t>
-                                         </td>
+                                             </td>
+                                        </t>
                                      </t>
                                 </t>
                             </tr>
