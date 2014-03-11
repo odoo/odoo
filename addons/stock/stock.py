@@ -997,7 +997,7 @@ class stock_picking(osv.osv):
                     'package_id': pack.id,
                     'product_qty': 1.0,
                     'location_id': pack.location_id.id,
-                    'location_dest_id': quants_suggested_locations[pack_quants[0]],
+                    'location_dest_id': quants_suggested_locations[quant_obj.browse(cr, uid, pack_quants[0], context=context)],
                 })
             #remove the quants inside the package so that they are excluded from the rest of the computation
             for quant in quant_obj.browse(cr, uid, pack_quants, context=context):
