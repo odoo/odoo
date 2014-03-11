@@ -164,52 +164,26 @@ class Post(osv.Model):
 
                 History.create(cr, uid, res, context=context)
 
-    def create_activity(self, cr, uid, ids, method, context=None):
-        Activity = self.pool['website.forum.activity']
-        for post in self.browse(cr, uid, ids, context=context):
-            res = {
-                'name': post.name,
-                'post_id': post.id,
-                'user_id': uid,
-            }
-
-            if post.parent_id:
-                res.update({'type': 'edited_answer'})
-                if method == 'create':
-                    res.update({'type': 'answered_question'})
-                if method == 'unlink':
-                    res.update({'type': 'deleted_answer'})
-                if method == 'vote':
-                    res.update({'type': 'voted_answer'})
-
-            else:
-                res.update({'type': 'edited_question'})
-                if method == 'create':
-                    res.update({'type': 'asked_question'})
-                if method == 'unlink':
-                    res.update({'type': 'deleted_question'})
-                if method == 'vote':
-                    res.update({'type': 'voted_question'})
-
-            Activity.create(cr, uid, res, context=context)
-
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
         create_context = dict(context, mail_create_nolog=True)
         post_id = super(Post, self).create(cr, uid, vals, context=create_context)
-        self.create_activity(cr, uid, [post_id], method='create', context=context)
+        body = "asked a question"
+        if vals.get("parent_id"):
+            body = "answered a question"
+        self.message_post(cr, uid, [post_id], body=body, context=context)
         return post_id
 
     def write(self, cr, uid, ids, vals, context=None):
         self.create_history(cr, uid, ids, vals, context=context)
         result = super(Post, self).write(cr, uid, ids, vals, context=context)
-        self.create_activity(cr, uid, ids, method='write', context=context)
+        for post in self.browse(cr, uid, ids, context=context):
+            body = "edited question"
+            if post.parent_id:
+                body = "edited answer"
+            self.message_post(cr, uid, ids, body=body, context=context)
         return result
-
-    def unlink(self, cr, uid, ids, context=None):
-        self.create_activity(cr, uid, ids, method='unlink', context=context)
-        return super(Post, self).unlink(cr, uid, ids, context=context)
 
 class Users(osv.Model):
     _inherit = 'res.users'
@@ -225,6 +199,7 @@ class Users(osv.Model):
                 'bronze_badge': badge_user_obj.search(cr, uid, [('badge_id.level', '=', 'bronze'), ('user_id', '=', id)], context=context, count=True),
             }
         return result
+
     _columns = {
         'create_date': fields.datetime('Create Date', select=True, readonly=True),
         'karma': fields.integer('Karma'), # Use Gamification for this
@@ -265,7 +240,12 @@ class Vote(osv.Model):
 
     def create(self, cr, uid, vals, context=None):
         vote_id = super(Vote, self).create(cr, uid, vals, context=context)
-        self.pool['website.forum.post'].create_activity(cr, uid, [int(vals.get('post_id'))], method='vote', context=context)
+        Post = self.pool["website.forum.post"]
+        record = Post.browse(cr, uid, vals.get('post_id'), context=context)
+        body = "voted question"
+        if record.parent_id:
+            body = "voted answer"
+        Post.message_post(cr, uid, [record.id], body=body, context=context)
         return vote_id
 
 class Badge(osv.Model):
@@ -278,34 +258,6 @@ class Badge(osv.Model):
         'forum': False,
         'level': 'bronze'
     }
-
-
-# TODO:
-# remove this object and replace by mail.message of type notes on related post
-# type = message types
-class ForumActivity(osv.Model):
-    _name = "website.forum.activity"
-    _description = "Activity"
-    _order = "id desc"
-    _columns = {
-        'name': fields.char('Name', size=64),
-        'post_id': fields.many2one('website.forum.post', 'Post'),
-        'user_id': fields.many2one('res.users', 'User'),
-        'create_date': fields.datetime('Created on', select=True, readonly=True),
-        # Use the gamification module instead!
-        'badge_id': fields.many2one('res.groups', 'Badge'),
-        #NOTE: we can create new ForumActivityType object instead of selection
-        'type': fields.selection([('asked_question', 'asked a question'), ('answered_question', 'answered a question'),
-                                  ('edited_question', 'edited question'), ('edited_answer', 'edited answer'),
-                                  ('commented_question', 'commented question'), ('commented_answer', 'commented answer'),
-                                  ('deleted_question', 'deleted question'), ('deleted_answer', 'deleted answer'),
-                                  ('voted_question', 'voted question'), ('voted_answer', 'voted answer'),
-                                  ('received_badge', 'received badge'),
-                                  ], 'Activity Type'),
-        # merge these 2 fields into one: karma: fields.integer (that can be positive or negative)
-        'karma_add': fields.integer('Added Karma'),
-        'karma_sub': fields.integer('Karma Removed')
-   }
 
 class Tags(osv.Model):
     _name = "website.forum.tag"

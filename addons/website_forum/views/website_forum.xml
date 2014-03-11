@@ -605,15 +605,16 @@
         <template id="user_activity">
             <ul class="media-list">
                 <li t-foreach="activities" t-as="activity" class="media">
-                    <small t-esc="activity.create_date" class="pull-left"/>
-                    <span t-field="activity.type" class="label label-info"/>
-                    <a t-esc="activity.name" t-if="not activity.post_id.parent_id"
-                        t-attf-href="/forum/#{ slug(forum) }/question/#{ activity.post_id.id }"/>
-                    <t t-if="activity.post_id.parent_id">
-                        <a t-esc="activity.post_id.parent_id.name"
-                            t-attf-href="/forum/#{ slug(forum) }/question/#{ activity.post_id.parent_id.id }"/>
+                    <t t-set="post" t-value="posts.get(activity.res_id)"/>
+                    <small t-esc="activity.date" class="pull-left"/>
+                    <span t-field="activity.body" class="label label-info pull-left"/>
+                    <a t-esc="post.name" t-if="not post.parent_id"
+                        t-attf-href="/forum/#{ slug(forum) }/question/#{ activity.res_id }"/>
+                    <t t-if="post.parent_id">
+                        <a t-esc="post.parent_id.name"
+                            t-attf-href="/forum/#{ slug(forum) }/question/#{ post.parent_id.id }"/>
                         <span class="glyphicon glyphicon-play"/>
-                        <t t-esc="activity.post_id.content[0:100]"/>
+                        <t t-esc="post.content[0:100]"/>
                         <strong> ... </strong>
                     </t>
                 </li>

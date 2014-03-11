@@ -146,22 +146,26 @@ class website_forum(http.Controller):
         User = request.registry['res.users']
         Post = request.registry['website.forum.post']
         Vote = request.registry['website.forum.post.vote']
-        Activity = request.registry['website.forum.activity']
+        Activity = request.registry['mail.message']
 
         question_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('create_uid', '=', user.id), ('parent_id', '=', False)], context=context)
-        questions = Post.browse(cr, uid, question_ids, context=context)
+        user_questions = Post.browse(cr, uid, question_ids, context=context)
 
-        #TODO: showing questions in which user answered
+        #showing questions in which user answered
         obj_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('create_uid', '=', user.id), ('parent_id', '!=', False)], context=context)
-        answer_ids = Post.browse(cr, uid, obj_ids, context=context)
-        answers = [answer.parent_id for answer in answer_ids]
+        user_answers = Post.browse(cr, uid, obj_ids, context=context)
+        answers = [answer.parent_id for answer in user_answers]
 
         total_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.create_uid', '=', user.id)], count=True, context=context)
         up_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.create_uid', '=', user.id), ('vote', '=', '1')], count=True, context=context)
         down_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.create_uid', '=', user.id), ('vote', '=', '-1')], count=True, context=context)
 
-        activity_ids = Activity.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('user_id', '=', user.id)], context=context)
+        user_post_ids = user_questions + obj_ids
+        activity_ids = Activity.search(cr, uid, [('res_id', 'in', user_post_ids), ('model', '=', 'website.forum.post')], context=context)
         activities = Activity.browse(cr, uid, activity_ids, context=context)
+        posts = {}
+        for rec in user_answers + user_questions:
+            posts[rec.id] = rec
         post['users'] = 'True'
 
         values = {
@@ -169,12 +173,13 @@ class website_forum(http.Controller):
             'main_object': user,
             'searches': post,
             'forum': forum,
-            'questions': questions,
+            'questions': user_questions,
             'answers': answers,
             'total_votes': total_votes,
             'up_votes': up_votes,
             'down_votes': down_votes,
-            'activities': activities
+            'activities': activities,
+            'posts': posts
         }
         return request.website.render("website_forum.user_detail_full", values)
 
