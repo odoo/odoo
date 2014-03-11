@@ -42,7 +42,7 @@ class mail_message(osv.Model):
             args = [('subtype_id', '!=', False)] + list(args)
 
         return super(mail_message, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
-            context=context, count=False, access_rights_uid=access_rights_uid)
+            context=context, count=count, access_rights_uid=access_rights_uid)
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         """ Add Access rules of mail.message for non-employee user:
