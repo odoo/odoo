@@ -4796,7 +4796,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
             if (self.initial_ids) {
                 self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
-                    contexts, groupbys);
+                    contexts.concat(self.context), groupbys);
                 self.initial_ids = undefined;
             } else {
                 self.do_search(domains.concat([self.domain]), contexts.concat(self.context), groupbys);
