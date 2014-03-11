@@ -42,8 +42,16 @@ $(document).ready(function () {
                 'vote': value})
             .then(function (data) {
                 $link.parent().find("#vote_count").html(data);
-                //TODO: set proper class
-                $link.addClass("text-success");
+                if (data == 0) {
+                    $link.parent().find(".text-success").removeClass("text-success");
+                    $link.parent().find(".text-warning").removeClass("text-warning");
+                } else {
+                    if (value == 1) {
+                        $link.addClass("text-success");
+                    } else {
+                        $link.addClass("text-warning");
+                    }
+                }
             });
         return false;
     });
