@@ -17,9 +17,13 @@ class contactus(http.Controller):
 
     @http.route(['/page/website.contactus'], type='http', auth="public", website=True, multilang=True)
     def contact(self, **kwargs):
-        return request.website.render("website.contactus", {
-                'kwargs': kwargs.items()
-            })
+        values = {}
+        for field in ['description', 'partner_name', 'phone', 'contact_name', 'email_from', 'name']:
+            if kwargs.get(field):
+                values[field] = kwargs.pop(field)
+        values.update(kwargs=kwargs.items())
+        print values
+        return request.website.render("website.contactus", values)
 
     @http.route(['/crm/contactus'], type='http', auth="public", website=True, multilang=True)
     def contactus(self, description=None, partner_name=None, phone=None, contact_name=None, email_from=None, name=None, **kwargs):
@@ -56,11 +60,12 @@ class contactus(http.Controller):
             pass
 
         environ = request.httprequest.headers.environ
-        post['description'] = "%s\n-----------------------------\nIP: %s\nUSER_AGENT: %s\nACCEPT_LANGUAGE: %s" % (
+        post['description'] = "%s\n-----------------------------\nIP: %s\nUSER_AGENT: %s\nACCEPT_LANGUAGE: %s\nREFERER: %s" % (
             post['description'],
             environ.get("REMOTE_ADDR"),
             environ.get("HTTP_USER_AGENT"),
-            environ.get("HTTP_ACCEPT_LANGUAGE"))
+            environ.get("HTTP_ACCEPT_LANGUAGE"),
+            environ.get("HTTP_REFERER"))
         for field in kwargs.items():
             post['description'] = "%s\n%s: %s" % (post['description'], field[0], field[1])
 

@@ -35,7 +35,7 @@
             <div t-attf-class="form-group #{error and 'description' in error and 'has-error' or ''}">
                 <label class="col-md-3 col-sm-4 control-label" for="description">Your Question</label>
                 <div class="col-md-7 col-sm-8">
-                    <textarea  class="form-control" name="description" style="min-height: 120px" required="True" t-attf-value="#{description or ''}"/>
+                    <textarea  class="form-control" name="description" style="min-height: 120px" required="True"><t t-esc="description or ''"/></textarea>
                 </div>
             </div>
             <div class="form-group">
