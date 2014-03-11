@@ -3,7 +3,7 @@ from openerp.osv import fields, osv
 
 class website_config_settings(osv.osv_memory):
     _name = 'website.config.settings'
-    _inherit = 'base.config.settings'
+    _inherit = 'res.config.settings'
 
     _columns = {
         'website_id': fields.many2one('website', string="website", required=True),
