@@ -54,7 +54,7 @@
      * is editable but its attributes should not be considered editable
      */
     function is_editable_node(element) {
-        return (element.data('oe-model') !== 'ir.ui.view'
+        return !(element.data('oe-model') === 'ir.ui.view'
               || element.data('cke-realelement')
               || (is_editing_host(element) && element.getAttribute('attributeEditable') !== 'true')
               || element.isReadOnly());
@@ -630,11 +630,11 @@
             var $link_button = this.make_hover_button(_t("Change"), function () {
                 var sel = new CKEDITOR.dom.element(previous);
                 editor.getSelection().selectElement(sel);
-                if (previous.tagName.toUpperCase() === 'A') {
-                    link_dialog(editor);
-                } else if(sel.hasClass('fa')) {
+                if(sel.hasClass('fa')) {
                     new website.editor.FontIconsDialog(editor, previous)
                         .appendTo(document.body);
+                } else if (previous.tagName.toUpperCase() === 'A') {
+                    link_dialog(editor);
                 }
                 $link_button.hide();
                 previous = null;
