@@ -640,6 +640,7 @@ openerp.web_calendar = function(instance) {
                 if (this.date_stop) {
                     data[this.date_stop] = instance.web.parse_value(date_stop_day, this.fields[this.date_stop]);
                 }
+                diff_seconds = Math.round((date_stop_day.getTime() - date_start_day.getTime()) / 1000);
                                 
             }
             else {
@@ -647,6 +648,7 @@ openerp.web_calendar = function(instance) {
                 if (this.date_stop) {
                     data[this.date_stop] = instance.web.parse_value(event_end, this.fields[this.date_stop]);
                 }
+                diff_seconds = Math.round((event_end.getTime() - event.start.getTime()) / 1000);
             }
 
             if (this.all_day) {
@@ -654,7 +656,7 @@ openerp.web_calendar = function(instance) {
             }
 
             if (this.date_delay) {
-                var diff_seconds = Math.round((date_stop_day.getTime() - date_start_day.getTime()) / 1000);
+                
                 data[this.date_delay] = diff_seconds / 3600;
             }
             return data;
