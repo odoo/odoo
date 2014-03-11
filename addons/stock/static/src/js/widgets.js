@@ -32,11 +32,33 @@ function openerp_picking_widgets(instance){
             var model = this.getParent();
             this.rows = [];
             var self = this;
-
+            var pack_created = [];
             _.each( model.packoplines, function(packopline){
                 if (packopline.processed === 'false'){
                     var pack = undefined;
                     if (packopline.product_id[1] !== undefined){ pack = packopline.package_id[1];}
+                    //also check that we don't have a line already existing for that package
+                    if (packopline.result_package_id[1] !== undefined && $.inArray(packopline.result_package_id[1], pack_created)){
+                        self.rows.push({
+                            cols: { product: packopline.result_package_id[1],
+                                    qty: undefined,
+                                    rem: undefined,
+                                    uom: undefined,
+                                    lot: undefined,
+                                    pack: undefined,
+                                    container: packopline.result_package_id[1],
+                                    container_id: undefined,
+                                    loc: packopline.location_id[1],
+                                    dest: packopline.location_dest_id[1],
+                                    id: packopline.result_package_id[0],
+                                    product_id: undefined,
+                                    can_scan: false,
+                                    head_container : true,
+                            },
+                            classes: ('active container_head'),
+                        });
+                        pack_created.push(packopline.result_package_id[1]);
+                    }
                     self.rows.push({
                         cols: { product: packopline.product_id[1] || packopline.package_id[1],
                                 qty: packopline.product_qty,
@@ -45,21 +67,33 @@ function openerp_picking_widgets(instance){
                                 lot: packopline.lot_id[1],
                                 pack: pack,
                                 container: packopline.result_package_id[1],
+                                container_id: packopline.result_package_id[0],
                                 loc: packopline.location_id[1],
                                 dest: packopline.location_dest_id[1],
                                 id: packopline.id,
                                 product_id: packopline.product_id[0],
+                                can_scan: packopline.result_package_id[1] === undefined ? true : false,
+                                head_container: false,
                         },
-                        classes: (packopline.product_qty <= packopline.qty_done ? 'active' : ''),
+                        classes: ((packopline.product_qty <= packopline.qty_done) && packopline.result_package_id[1] === undefined ? 'active ' : '') + (packopline.result_package_id[1] !== undefined ? 'in_container_hidden' : ''),
                     });
                 }
             });
-
-            self.rows.sort(function (a,b) {
-                return (b.classes === '') - (a.classes === '');
+            //sort element by things to do, then things done, then grouped by packages
+            group_by_container = _.groupBy(self.rows, function(row){
+                return row.cols.container;
             });
-            
-            return self.rows;
+            group_by_container.undefined.sort(function(a,b){return (b.classes === '') - (a.classes === '');});
+            var sorted_row = [];
+
+            $.each(group_by_container, function(key, value){
+                $.each(value, function(k,v){
+                    console.log(v);
+                    sorted_row.push(v);
+                });
+            });
+
+            return sorted_row;
         },
         renderElement: function(){
             var self = this;
@@ -81,16 +115,32 @@ function openerp_picking_widgets(instance){
                 }
                 self.check_change_quantity();
             });
+            this.$('.js_unfold').click(function(){
+                var op_id = this.attributes.getNamedItem('container-id').value;
+                //select all js_pack_op_line with class in_container_hidden and correct container-id
+                select = self.$('.js_pack_op_line.in_container_hidden[container-id='+op_id+']')
+                if (select.length > 0){
+                    //we unfold
+                    select.removeClass('in_container_hidden');
+                    select.addClass('in_container'); 
+                }
+                else{
+                    //we fold
+                    select = self.$('.js_pack_op_line.in_container[container-id='+op_id+']')
+                    select.removeClass('in_container');
+                    select.addClass('in_container_hidden'); 
+                }
+            });
             //remove navigtion bar from default openerp GUI
             $('td.navbar').html('<div></div>');
         },
         check_change_quantity: function(){
             var self = this;
             //if we only have one line selected, connect numpad and allow to change qty
-            if (this.$('.js_pack_op_line.warning:not(.hidden)').length === 1){
-                cur_id = this.$('.js_pack_op_line.warning:not(.hidden)')[0].attributes.getNamedItem('data-id').value;
+            if (this.$('.js_pack_op_line.warning:not(.hidden):not(.container_head)').length === 1){
+                cur_id = this.$('.js_pack_op_line.warning:not(.hidden):not(.container_head)')[0].attributes.getNamedItem('data-id').value;
                 op_id = parseInt(cur_id);
-                this.$('.js_pack_op_line:not(.hidden)[data-id='+op_id+'] > .js_row_qty').addClass('blink_me');
+                this.$('.js_pack_op_line:not(.hidden):not(.container_head)[data-id='+op_id+'] > .js_row_qty').addClass('blink_me');
                 var value = [0,0]
                 _.each(this.rows, function(row){
                     if (row.cols.id === op_id){
@@ -122,14 +172,14 @@ function openerp_picking_widgets(instance){
         get_current_op_selection: function(ignore_container){
             //get ids of visible on the screen
             pack_op_ids = []
-            if (this.$('.js_pack_op_line.warning:not(.js_pack_op_line.hidden)').length > 0){
-                this.$('.js_pack_op_line.warning:not(.js_pack_op_line.hidden)').each(function(){
+            if (this.$('.js_pack_op_line.warning:not(.js_pack_op_line.hidden):not(.container_head)').length > 0){
+                this.$('.js_pack_op_line.warning:not(.js_pack_op_line.hidden):not(.container_head)').each(function(){
                     cur_id = this.attributes.getNamedItem('data-id').value;
                     pack_op_ids.push(parseInt(cur_id));
                 });
             }
             else{
-                this.$('.js_pack_op_line:not(.js_pack_op_line.hidden)').each(function(){
+                this.$('.js_pack_op_line:not(.js_pack_op_line.hidden):not(.container_head)').each(function(){
                     cur_id = this.attributes.getNamedItem('data-id').value;
                     pack_op_ids.push(parseInt(cur_id));
                 });
