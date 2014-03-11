@@ -1326,8 +1326,8 @@ class calendar_event(osv.Model):
         if not context.get('virtual_id', True):
             return super(calendar_event, self).search(cr, uid, new_args, offset=offset, limit=limit, order=order, context=context, count=count)
 
-        # offset, limit, order and count must be treated separately as we may need to deal with virtual ids        
-        res = super(calendar_event, self).search(cr, uid, new_args, offset=offset, limit=limit, order=order, context=context, count=count)
+        # offset, limit, order and count must be treated separately as we may need to deal with virtual ids
+        res = super(calendar_event, self).search(cr, uid, new_args, offset=0, limit=0, order=None, context=context, count=False)
         res = self.get_recurrent_ids(cr, uid, res, args, order=order, context=context)
         if count:
             return len(res)
