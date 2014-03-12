@@ -350,3 +350,36 @@ class website_forum(http.Controller):
         Post = request.registry['website.forum.post']
         Post.unlink(cr, uid, [post.id], context=context)
         return werkzeug.utils.redirect("/forum/%s/" % (slug(forum)))
+
+    @http.route('/forum/<model("website.forum"):forum>/edit/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
+    def edit_question(self, forum, post, **kwarg):
+        cr, uid, context = request.cr, request.uid, request.context
+        Post = request.registry['website.forum.post']
+        values = {
+            'post': post,
+            'forum': forum,
+            'searches': kwarg
+        }
+        return request.website.render("website_forum.edit_question", values)
+
+    @http.route('/forum/<model("website.forum"):forum>/question/savequestion/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    def save_edited_question(self, forum, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        request.registry['website.forum.post'].write( cr, uid, [int(post.get('post_id'))], {
+                'content': post.get('answer_content'),
+                'name': post.get('question_name'),
+            }, context=context)
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('post_id')))
+
+    @http.route('/forum/<model("website.forum"):forum>/answer/<model("website.forum.post"):post>/edit/<model("website.forum.post"):answer>', type='http', auth="user", multilang=True, website=True)
+    def edit_ans(self, forum, post, answer, **kwarg):
+        cr, uid, context = request.cr, request.uid, request.context
+        Post = request.registry['website.forum.post']
+        values = {
+            'post': post,
+            'post_answer': answer,
+            'forum': forum,
+            'searches': kwarg
+        }
+        return request.website.render("website_forum.edit_answer", values)
+

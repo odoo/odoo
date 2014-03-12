@@ -282,6 +282,26 @@
             </t>
         </template>
 
+        <template id="edit_question">
+            <t t-call="website_forum.header">
+                <h3>Edit question</h3>
+                <form t-attf-action="/forum/#{ slug(forum) }/question/savequestion/" method="post" role="form">
+                    <input type="text" name="question_name" required="True" t-attf-value="#{post.name or ''}"
+                        class="form-control" placeholder="Edit your Question"/>
+                    <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
+                    <textarea name="answer_content" required="True" value="content" class="form-control" id="textarea_ckeditor">
+                        <t t-esc="post.content"/>
+                    </textarea>
+                    <input type="text" name="question_tag" class="form-control" style="margin-top: 10px" placeholder="Tags"/>
+                    <input name="post_id" t-att-value="post.id" type="hidden"/>
+                    <button class="btn btn-primary btn-lg">Save</button>
+                </form>
+                <script type="text/javascript">
+                    CKEDITOR.replace("answer_content");
+                </script>
+            </t>
+        </template>
+
         <template id="post_description_full" name="Question Navigation">
             <t t-call="website_forum.header">
 
@@ -321,7 +341,7 @@
                                             comment
                                         </a>
                                     </li>
-                                    <li><a class="text-muted" href="">edit</a></li>
+                                    <li><a class="text-muted" t-attf-href="/forum/#{ slug(forum) }/edit/question/#{ question.id }">edit</a></li>
                                     <li><a class="text-muted" t-attf-href="/forum/#{ slug(forum) }/delete/question/#{ question.id }">delete</a></li>
                                     <li><a class="text-muted" href="">share</a></li>
                                 </ul>
@@ -364,7 +384,7 @@
                                         comment
                                     </a>
                                 </li>
-                                <li><a class="text-muted" href="">edit</a></li>
+                                <li><a class="text-muted" t-attf-href="/forum/#{ slug(forum) }/answer/#{ question.id }/edit/#{ answer.id }">edit</a></li>
                                 <li><a class="text-muted delete" href="" t-attf-id="#{answer.id}">delete</a></li>
                                 <li><a class="text-muted" href="">share</a></li>
                             </ul>

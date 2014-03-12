@@ -168,10 +168,13 @@ class Post(osv.Model):
         if context is None:
             context = {}
         create_context = dict(context, mail_create_nolog=True)
-        post_id = super(Post, self).create(cr, uid, vals, context=create_context)
         body = "asked a question"
         if vals.get("parent_id"):
             body = "answered a question"
+            #Note: because of no name it gives error on slug so set name of question in answer
+            question = self.browse(cr, uid, vals.get("parent_id"), context=context)
+            vals['name'] = question.name
+        post_id = super(Post, self).create(cr, uid, vals, context=create_context)
         self.message_post(cr, uid, [post_id], body=body, context=context)
         return post_id
 
