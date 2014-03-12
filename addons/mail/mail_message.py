@@ -181,6 +181,7 @@ class mail_message(osv.Model):
         'subject': fields.char('Subject'),
         'date': fields.datetime('Date'),
         'message_id': fields.char('Message-Id', help='Message unique identifier', select=1, readonly=1),
+        'parent_message': fields.char('Immediate Parent', select=1, readonly=1),
         'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
         'to_read': fields.function(_get_to_read, fnct_search=_search_to_read,
             type='boolean', string='To read',
@@ -834,7 +835,6 @@ class mail_message(osv.Model):
         if context is None:
             context = {}
         default_starred = context.pop('default_starred', False)
-
         if 'email_from' not in values:  # needed to compute reply_to
             values['email_from'] = self._get_default_from(cr, uid, context=context)
         if 'message_id' not in values:

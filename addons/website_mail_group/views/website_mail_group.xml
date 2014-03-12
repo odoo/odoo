@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <template id="mail_groups" name="My Groups">
+        <t t-call="website.layout">
+            <t t-set="head">
+                <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.js"></script>
+            </t>
+            <div class="container">
+                <h1>
+                    Our Mailing Lists
+                </h1>
+                <div class="row">
+                    <div class="col-md-3 mt32 mb64" t-foreach="groups" t-as="group">
+                        <img t-att-src="'/website/image?model=mail.group&amp;field=image_small&amp;id='+str(group['id'])" class="pull-left"/>
+                        <div>
+                            <a t-attf-href="/groups/#{group.id}" t-esc="group.name"/>
+                            <div t-esc="group.description" class="text-muted"/>
+                            <a groups="base.group_user" t-attf-class="btn btn-default js_group #{group.message_is_follower and 'hidden' or 'visible'} follow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=follow" t-attf-id="#{group.id}">Join Group</a>
+                            <a groups="base.group_user" t-attf-class="btn btn-primary js_group #{group.message_is_follower and 'visible' or 'hidden'} unfollow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=unfollow" t-attf-id="#{group.id}">UnFollow</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="group_thread_list">
+        <t t-call="website.layout">
+            <section class="container">
+                <div class="row">
+                    <div class="col-md-5">
+                        <t t-call="website.pager"/>
+                    </div>
+                </div>
+            </section>
+
+            <section class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <ul class="nav nav-pills nav-stacked" id="group_follows">
+                            <t t-foreach="groups" t-as="group">
+                                <li t-attf-class="#{group.message_is_follower and 'visible' or 'hidden'}" t-att-id="group.id">
+                                    <a t-attf-href="/groups/#{group.id}" t-esc="group.name"/>
+                                </li>
+                            </t>
+                        </ul>
+                    </div>
+                    <div class="col-md-9">
+                        <ul class="media-list">
+                            <li t-foreach="thread_list" t-as="thread" class="media">
+                                <a t-attf-href="/groups/#{active_group.id}/message/#{thread.id}" class="pull-left">
+                                    <img class="img-rounded pull-right mt0" style="height: 40px"
+                                        t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(thread.id)"/>
+                                </a>
+                                <div class="media-body">
+                                    <h4 class="media-heading">
+                                        <a t-attf-href="/groups/#{active_group.id}/message/#{thread.id}" t-esc="thread.subject"/>
+                                        <br/>
+                                        <small>by <t t-esc="thread.author_id.name and thread.author_id.name or thread.email_from"/> on <t t-esc="thread.date"/></small>
+                                    </h4>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <template id="group_thread">
+        <t t-call="website.layout">
+            <t t-set="head">
+                <link rel='stylesheet' href='/website_mail_group/static/src/css/website_mail_group.css'/>
+            </t>
+            <div class="row mt32">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-1">
+                            <img class="img-rounded pull-right" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(main_thread.id)" style="width : 30px"/>
+                        </div>
+                        <div class="col-md-11">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" t-esc="main_thread.subject"/>
+                                <div class="panel-body" t-raw="main_thread.body"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" t-foreach="child_thread" t-as="message">
+                        <div class="col-md-1">
+                            <img class="img-rounded pull-right" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(message.id)" style="width : 30px"/>
+                        </div>
+                        <div class="col-md-11">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" t-esc="message.subject"/>
+                                <div class="panel-body" t-raw="message.body"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</data>
+</openerp>
