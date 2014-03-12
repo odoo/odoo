@@ -127,6 +127,12 @@ class stock_quant(osv.osv):
                 self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_dest, journal_id, context=ctx)
 
 
+    def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location=False, context=None):
+        quant = super(stock_quant, self)._quant_create(cr, uid, qty, move, lot_id, owner_id, src_package_id, dest_package_id, force_location, context=context)
+        if move.product_id.valuation == 'real_time':
+            self._account_entry_move(cr, uid, [quant], move, context)
+        return quant
+
     def move_single_quant_tuples(self, cr, uid, quants, move, location_dest_id,  dest_package_id, context=None):
         quant_record = super(stock_quant, self).move_single_quant_tuples(cr, uid, quants, move, location_dest_id,  dest_package_id, context=context)
         if move.product_id.valuation == 'real_time':
