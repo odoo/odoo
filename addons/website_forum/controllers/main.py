@@ -54,7 +54,7 @@ class website_forum(http.Controller):
         return request.redirect("/forum/%s" % forum_id)
 
     @http.route(['/forum/<model("website.forum"):forum>', '/forum/<model("website.forum"):forum>/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
-    def questions(self, forum, page=1, **searches):
+    def questions(self, forum, page=1, filters='', **searches):
         cr, uid, context = request.cr, request.uid, request.context
         Forum = request.registry['website.forum.post']
         domain = [('forum_id', '=', forum.id), ('parent_id', '=', False)]
@@ -65,13 +65,12 @@ class website_forum(http.Controller):
                 ('name', 'ilike', search),
                 ('content', 'ilike', search)]
 
-        type = searches.get('type',False)
-        if not type:
-            searches['type'] = 'all'
-        if type == 'unanswered':
+        if not filters:
+            filters = 'all'
+        if filters == 'unanswered':
             domain += [ ('child_ids', '=', False) ]
         #TODO: update domain to show followed questions of user
-        if type == 'followed':
+        if filters == 'followed':
             domain += [ ('create_uid', '=', uid) ]
 
         step = 10
@@ -86,6 +85,7 @@ class website_forum(http.Controller):
             'question_ids': question_ids,
             'forum': forum,
             'pager': pager,
+            'filters': filters,
             'searches': searches,
         }
 
