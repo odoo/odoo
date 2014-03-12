@@ -126,7 +126,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         leads = lead.browse(cr, uid, lead_ids, context=context)
         for lead_id in leads:
             partner_id = self._create_partner(cr, uid, lead_id.id, data.action, lead_id.partner_id.id, context=context)
-            res = lead.convert_opportunity(cr, uid, [lead_id.id], partner_id, [], team_id, context=context)
+            res = lead.convert_opportunity(cr, uid, [lead_id.id], partner_id, [], False, context=context)
         user_ids = vals.get('user_ids', False)
         if context.get('no_force_assignation'):
             leads_to_allocate = [lead_id.id for lead_id in leads if not lead_id.user_id]
