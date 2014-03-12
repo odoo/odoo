@@ -198,14 +198,3 @@
     assert order.invoiced == True, "Sale order is not invoiced."
     assert order.invoiced_rate == 100, "Invoiced progress is not 100%."
     assert order.state == 'done', 'Order should be in closed.'
--
-  I print a sale order report.
--
-  !python {model: sale.order}: |
-    import os
-    import openerp.report
-    from openerp import tools
-    data, format = openerp.report.render_report(cr, uid, [ref('sale.sale_order_6')], 'sale.order', {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'sale-sale_order.'+format), 'wb+').write(data)
-

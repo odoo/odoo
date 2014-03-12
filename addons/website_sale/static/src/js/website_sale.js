@@ -42,6 +42,10 @@ $(document).ready(function () {
         return false;
     });
 
+    $('.a-submit').on('click', function () {
+        $(this).closest('form').submit();
+    });
+
     // change price when they are variants
     $('form.js_add_cart_json label').on('mouseup', function (ev) {
         ev.preventDefault();
@@ -59,5 +63,41 @@ $(document).ready(function () {
     var $form = $("form.attributes");
     $form.on("change", "label input", function () {
         $form.submit();
+    });
+    $(".js_slider", $form).each(function() {
+        var $slide = $(this);
+        var $slider = $('<div>'+
+                '<input type="hidden" name="att-'+$slide.data("id")+'-minmem" value="'+$slide.data("min")+'"/>'+
+                '<input type="hidden" name="att-'+$slide.data("id")+'-maxmem" value="'+$slide.data("max")+'"/>'+
+            '</div>');
+        var $min = $("<input readonly name='att-"+$slide.data("id")+"-min'/>")
+            .css("border", "0").css("width", "50%")
+            .val($slide.data("min"));
+        var $max = $("<input readonly name='att-"+$slide.data("id")+"-max'/>")
+            .css("border", "0").css("width", "50%").css("text-align", "right")
+            .val($slide.data("max"));
+        $slide.append($min);
+        $slide.append($max);
+        $slide.append($slider);
+        $slider.slider({
+            range: true,
+            min: +$slide.data("min"),
+            max: +$slide.data("max"),
+            values: [
+                $slide.data("value-min") ? +$slide.data("value-min") : +$slide.data("min"),
+                $slide.data("value-max") ? +$slide.data("value-max") : +$slide.data("max")
+            ],
+            change: function( event, ui ) {
+                $min.val( ui.values[ 0 ] );
+                $max.val( ui.values[ 1 ] );
+                $form.submit();
+            },
+            slide: function( event, ui ) {
+                $min.val( ui.values[ 0 ] );
+                $max.val( ui.values[ 1 ] );
+            }
+        });
+        $min.val( $slider.slider( "values", 0 ) );
+        $max.val( $slider.slider( "values", 1 ) );
     });
 });

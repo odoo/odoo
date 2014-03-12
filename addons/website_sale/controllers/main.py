@@ -14,14 +14,19 @@ class table_compute(object):
         self.table = {}
 
     def _check_place(self, posx, posy, sizex, sizey):
+        res = True
         for y in range(sizey):
             for x in range(sizex):
                 if posx+x>=PPR:
-                    return False
+                    res = False
+                    break
                 row = self.table.setdefault(posy+y, {})
                 if row.setdefault(posx+x) is not None:
-                    return False
-        return True
+                    res = False
+                    break
+            for x in range(PPR):
+                self.table[posy+y].setdefault(x, None)
+        return res
 
     def process(self, products):
         # Compute products positions on the grid
@@ -62,8 +67,10 @@ class table_compute(object):
         for col in range(len(rows)):
             cols = rows[col].items()
             cols.sort()
-            rows[col] = map(lambda x: x[1], cols)
-        return filter(bool, rows)
+            x += len(cols)
+            rows[col] = [c for c in map(lambda x: x[1], cols) if c != False]
+
+        return rows
 
         # TODO keep with input type hidden
 

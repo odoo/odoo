@@ -59,7 +59,7 @@
                                     </t>
                                 </div>
                                 <div>
-                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin"> </span> <i>to</i> <span itemprop="endDate" t-field="event.date_end"> </span>
+                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin" t-field-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.date_end" t-field-options='{"hide_seconds":"True"}'> </span>
                                 </div>
                                 <div itemprop="location" t-field="event.address_id" t-field-options='{
                                     "widget": "contact",
@@ -189,11 +189,6 @@
                     </ol>
                 </div>
                 <div class="col-sm-5" groups="event.group_event_manager">
-                    <t t-call="website.publish_management">
-                        <t t-set="object" t-value="event"/>
-                        <t t-set="publish_edit" t-value="True"/>
-                        <t t-set="publish_controller">/event/publish</t>
-                    </t>
                 </div>
             </div>
         </div>
@@ -226,8 +221,8 @@
         <div itemscope="itemscope" itemtype="http://schema.org/Event" class="container">
             <h1 itemprop="name" class="text-center" t-field="event.name"></h1>
             <h4 class="text-center text-muted">
-                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin"/> to
-                <span itemprop="endDate" t-field="event.date_end"/>
+                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin" t-field-options='{"hide_seconds":"True"}'/> to
+                <span itemprop="endDate" t-field="event.date_end" t-field-options='{"hide_seconds":"True"}'/>
             </h4>
             <h4 class="text-center text-muted"
                 t-field="event.address_id" t-field-options='{
@@ -266,12 +261,11 @@
                         <t t-call="website.publish_management">
                             <t t-set="object" t-value="comment"/>
                             <t t-set="publish_edit" t-value="True"/>
-                            <t t-set="publish_controller">/event/publish</t>
                         </t>
                         <t t-raw="comment.body"/>
                         <small class="pull-right muted text-right">
                             <div t-field="comment.author_id"/>
-                            <div t-field="comment.date"/>
+                            <div t-field="comment.date" t-field-options='{"hide_seconds":"True"}'/>
                         </small>
                     </div>
                 </li>
@@ -300,8 +294,8 @@
                     <h4>When</h4>
                 </div>
                 <div class="panel-body">
-                    <i class="fa fa-clock-o"></i> from <span t-field="event.date_begin"> </span><br/>
-                    <i class="fa fa-clock-o"></i> to <span t-field="event.date_end"> </span>
+                    <i class="fa fa-clock-o"></i> From <span t-field="event.date_begin" t-field-options='{"hide_seconds":"True"}'> </span><br/>
+                    <i class="fa fa-clock-o"></i> To <span t-field="event.date_end" t-field-options='{"hide_seconds":"True"}'> </span>
                 </div>
             </div>
 

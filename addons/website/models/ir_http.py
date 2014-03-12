@@ -85,21 +85,18 @@ class ir_http(orm.AbstractModel):
 
         return self._dispatch()
 
-    def _postprocess_args(self, arguments):
-        url = request.httprequest.url
-        for arg in arguments.itervalues():
-            if isinstance(arg, orm.browse_record) and isinstance(arg._uid, RequestUID):
-                placeholder = arg._uid
-                arg._uid = request.uid
-                try:
-                    good_slug = slug(arg)
-                    if str(arg.id) != placeholder.value and placeholder.value != good_slug:
-                        # TODO: properly recompose the url instead of using replace()
-                        url = url.replace(placeholder.value, good_slug)
-                except KeyError:
-                    return self._handle_exception(werkzeug.exceptions.NotFound())
-        if url != request.httprequest.url:
-            werkzeug.exceptions.abort(werkzeug.utils.redirect(url))
+    def _postprocess_args(self, arguments, rule):
+        for arg, val in arguments.items():
+            # Replace uid placeholder by the current request.uid
+            if isinstance(val, orm.browse_record) and isinstance(val._uid, RequestUID):
+                val._uid = request.uid
+        try:
+            _, path = rule.build(arguments)
+            assert path is not None
+        except Exception:
+            return self._handle_exception(werkzeug.exceptions.NotFound())
+        if path != request.httprequest.path:
+            return werkzeug.utils.redirect(path)
 
     def _handle_exception(self, exception=None, code=500):
         if isinstance(exception, werkzeug.exceptions.HTTPException) and hasattr(exception, 'response') and exception.response:

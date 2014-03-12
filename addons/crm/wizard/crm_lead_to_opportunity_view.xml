@@ -58,6 +58,8 @@
                     <group string="Assign opportunities to">
                         <field name="section_id" groups="base.group_multi_salesteams"/>
                         <field name="user_ids" widget="many2many_tags"/>
+                        <!-- Uncomment me in trunk -->
+                        <!-- <field name="force_assignation" /> -->
                     </group>
                     <label for="opportunity_ids" string="Leads with existing duplicates (for information)" help="Leads that you selected that have duplicates. If the list is empty, it means that no duplicates were found" attrs="{'invisible': [('deduplicate', '=', False)]}"/>
                     <group attrs="{'invisible': [('deduplicate', '=', False)]}">

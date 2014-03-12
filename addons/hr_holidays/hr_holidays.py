@@ -370,7 +370,8 @@ class hr_holidays(osv.osv):
                     'date': record.date_from,
                     'end_date': record.date_to,
                     'date_deadline': record.date_to,
-                    'state': 'open',            # to block that meeting date in the calendar                    
+                    'state': 'open',            # to block that meeting date in the calendar
+                    'class': 'confidential'
                 }   
                 #Add the partner_id (if exist) as an attendee             
                 if record.user_id and record.user_id.partner_id:

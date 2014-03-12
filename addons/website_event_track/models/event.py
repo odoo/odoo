@@ -59,6 +59,7 @@ class event_track_location(osv.osv):
 
 class event_track(osv.osv):
     _name = "event.track"
+    _description = 'Event Tracks'
     _order = 'priority, date'
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'website.seo.metadata']
 
