@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2014-03-10 19:00+0000\n"
+"PO-Revision-Date: 2014-03-11 17:03+0000\n"
 "Last-Translator: williamlsd <mudy@tdmm.net>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-11 06:08+0000\n"
-"X-Generator: Launchpad (build 16948)\n"
+"X-Launchpad-Export-Date: 2014-03-12 05:25+0000\n"
+"X-Generator: Launchpad (build 16963)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -253,7 +253,7 @@ msgstr "Pindahkan baris rekonsiliasi terpilih"
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
 msgid "Accounting entries are an input of the reconciliation."
-msgstr "Catatan akuntansi adalah sebuah masukan dari rekonsiliasi"
+msgstr "Entri akunting adalah input rekonsiliasi"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
@@ -412,18 +412,18 @@ msgstr "Mengizinkan anda menggunakan akunting analitik"
 #: view:account.invoice.report:0
 #: field:account.invoice.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Pramuniaga"
 
 #. module: account
 #: view:account.bank.statement:0
 #: view:account.invoice:0
 msgid "Responsible"
-msgstr "Bertanggung Jawab"
+msgstr "Tanggung-jawab"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_accounts_wizard
 msgid "account.bank.accounts.wizard"
-msgstr "tuntunan.akun.bank"
+msgstr "account.bank.accounts.wizard"
 
 #. module: account
 #: field:account.move.line,date_created:0
@@ -434,7 +434,7 @@ msgstr "Tanggal pembuatan"
 #. module: account
 #: view:account.invoice:0
 msgid "Cancel Invoice"
-msgstr ""
+msgstr "Batalkan Tagihan"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -472,18 +472,25 @@ msgid ""
 "this box, you will be able to do invoicing & payments,\n"
 "                but not accounting (Journal Items, Chart of Accounts, ...)"
 msgstr ""
+"Memungkinkan anda mengatur aktiva yang dimiliki oleh perusahaan atau "
+"perseorangan.\n"
+"                Menyimpan depresiasi yang terjadi pada aktiva tersebut , dan "
+"membuat akun bergerak untuk baris depresiasinya.\n"
+"                Menginstal modul account_asset. Jika anda tidak mencentang "
+"kotak ini, anda bisa melakukan penagihan dan pembayaran, tetapi tidak bisa "
+"melakukan pembukuan (Jurnal Items, Chart of Accounts, ...)"
 
 #. module: account
 #: help:account.bank.statement.line,name:0
 msgid "Originator to Beneficiary Information"
-msgstr ""
+msgstr "Pembuat Informasi Penerima"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_move_line_quickadd.xml:8
 #, python-format
 msgid "Period :"
-msgstr ""
+msgstr "Periode :"
 
 #. module: account
 #: field:account.account.template,chart_template_id:0
@@ -491,12 +498,13 @@ msgstr ""
 #: field:account.tax.template,chart_template_id:0
 #: field:wizard.multi.charts.accounts,chart_template_id:0
 msgid "Chart Template"
-msgstr "Salinan Bagan Akun"
+msgstr "Template Bagan"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create refund, reconcile and create a new draft invoice"
 msgstr ""
+"Perubahan: buat pengembalian, rekonsiliasi, dan membuat draft tagihan baru"
 
 #. module: account
 #: help:account.config.settings,tax_calculation_rounding_method:0
@@ -510,11 +518,19 @@ msgid ""
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
 msgstr ""
+"Jika anda memilih 'Round per line' : untuk setiap pajak, nilai pajak awal "
+"akan dihitung dan dibulatkan untuk setiap baris PO/SO/Tagihan kemudian hasil "
+"pembulatan ini dijumlahkan, hasilnya adalah total pajak. Jika anda memilih "
+"'Round globally': untuk setiap pajak, jumlah pajak akan dihitung untuk "
+"setiap baris PO/SO/tagihan, kemudian jumlahnya barulah di bulatkan. Jika "
+"anda menjual dengan pajak, anda harusnya memilih 'Round per line' karena "
+"tentunya anda menginginkan agar nilai pajak pada subtotal sama dengan jumlah "
+"total pajak setiap baris."
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
 msgid "wizard.multi.charts.accounts"
-msgstr "tuntunan.multi.bagan.akun"
+msgstr "wizard.multi.charts.accounts"
 
 #. module: account
 #: help:account.model.line,amount_currency:0
@@ -524,12 +540,12 @@ msgstr "Jumlah yang ditampilkan dalam mata uang pilihan lainnya"
 #. module: account
 #: view:account.journal:0
 msgid "Available Coins"
-msgstr ""
+msgstr "Koin yang tersedia"
 
 #. module: account
 #: field:accounting.report,enable_filter:0
 msgid "Enable Comparison"
-msgstr "Perbandingan diperbolehkan"
+msgstr "Izinkan Perbandingan"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -577,7 +593,7 @@ msgstr "Induk target"
 #. module: account
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence of this line when displaying the invoice."
-msgstr ""
+msgstr "Memberikan urutan baris ini saat menampilkan tagihan"
 
 #. module: account
 #: field:account.bank.statement,account_id:0
@@ -621,7 +637,7 @@ msgstr "Bukan transaksi yang dapat direkonsiliasi"
 #: report:account.general.ledger:0
 #: report:account.general.ledger_landscape:0
 msgid "Counterpart"
-msgstr "Lawan"
+msgstr "Counterpart"
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -655,7 +671,7 @@ msgstr "Semua"
 #. module: account
 #: field:account.config.settings,decimal_precision:0
 msgid "Decimal precision on journal entries"
-msgstr ""
+msgstr "Presisi desimal pada entri jurnal"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -681,6 +697,8 @@ msgid ""
 "Specified journal does not have any account move entries in draft state for "
 "this period."
 msgstr ""
+"Jurnal dimaksud tidak memiliki entri akun bergerak pada kondisi draft untuk "
+"periode ini."
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -703,12 +721,12 @@ msgstr "Urutan Utama harus berbeda dari yang sekarang !"
 #: code:addons/account/wizard/account_change_currency.py:70
 #, python-format
 msgid "Current currency is not configured properly."
-msgstr ""
+msgstr "Mata uang saat ini tidak terkonfigurasi dengan baik."
 
 #. module: account
 #: field:account.journal,profit_account_id:0
 msgid "Profit Account"
-msgstr ""
+msgstr "Akun Profit"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1156
@@ -729,11 +747,19 @@ msgid ""
 "either the user pressed the button \"Nothing more to reconcile\" during the "
 "manual reconciliation process."
 msgstr ""
+"Tanggal dimana partner entri akunting terakhir kali sepenuhnya ter-"
+"rekonsiliasi. Berbeda dengan tanggal terakhir dimana suatu rekonsiliasi "
+"dilakukan untuk partner ini, karena disini kita menggambarkan fakta bahwa "
+"tidak ada lagi yang perlu di rekonsiliasi pada tanggal ini. Hal ini dapat "
+"dicapai dengan 2 cara berbeda: bisa entri debit/kredit terakhir yang belum "
+"di rekonsiliasi untuk partner ini di rekonsiliasikan, atau pengguna "
+"menggunakan tombol \"Tidak ada lagi yang perlu di rekonsiliasi\" pada proses "
+"rekonsiliasi manual."
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_type_sales
 msgid "Report of the Sales by Account Type"
-msgstr ""
+msgstr "Laporan Penjualan Menurut Tipe Akun"
 
 #. module: account
 #: code:addons/account/account.py:3201
@@ -745,7 +771,7 @@ msgstr "SAJ"
 #: code:addons/account/account.py:1591
 #, python-format
 msgid "Cannot create move with currency different from .."
-msgstr ""
+msgstr "Tidak dapat membuat gerakan dengan mata uang berbeda dari .."
 
 #. module: account
 #: model:email.template,report_name:account.email_template_edi_invoice
@@ -753,6 +779,8 @@ msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
 msgstr ""
+"Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
+"and 'draft' or ''}"
 
 #. module: account
 #: view:account.period:0
@@ -781,12 +809,16 @@ msgid ""
 "The amount expressed in the secondary currency must be positive when the "
 "journal item is a debit and negative when if it is a credit."
 msgstr ""
+"Jumlah pada mata uang sekunder harus positif saat item jurnal adalah debit "
+"dan negatif saat kredit."
 
 #. module: account
 #: constraint:account.move:0
 msgid ""
 "You cannot create more than one move per period on a centralized journal."
 msgstr ""
+"Anda tidak dapat membuat lebih dari satu pergerakan per periode pada jurnal "
+"tersentralisasi."
 
 #. module: account
 #: help:account.tax,account_analytic_paid_id:0
@@ -795,6 +827,9 @@ msgid ""
 "lines for refunds. Leave empty if you don't want to use an analytic account "
 "on the invoice tax lines by default."
 msgstr ""
+"Set akun analitik yang akan digunakan sebagai default pada baris pajak "
+"tagihan untuk pengembalian. Tinggalkan kosong jika sebagai default anda "
+"tidak ingin menggunakan akun analitik pada baris pajak tagihan."
 
 #. module: account
 #: view:account.account:0
@@ -812,12 +847,12 @@ msgstr "Akun Piutang"
 #. module: account
 #: view:account.config.settings:0
 msgid "Configure your company bank accounts"
-msgstr ""
+msgstr "Konfigurasi akun bank perusahaan anda."
 
 #. module: account
 #: view:account.invoice.refund:0
 msgid "Create Refund"
-msgstr ""
+msgstr "Buat Pengembalian"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -825,13 +860,13 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
-"Tanggal pada jurnal entri tidak sesuai dengan Period ! Anda harus merubah "
-"atau menghilangkan tanggal ini pada jurnal."
+"Tanggal pada jurnal entri tidak sesuai dengan Periode ! Anda harus merubah "
+"tanggal atau menghilangkan batasan ini dari jurnal."
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
 msgid "General Ledger Report"
-msgstr "Laporan Buku Besar Umum"
+msgstr "Laporan Buku Besar"
 
 #. module: account
 #: view:account.invoice:0
@@ -847,12 +882,12 @@ msgstr "Apakah anda yakin untuk membuat catatan baru?"
 #: code:addons/account/account_invoice.py:1361
 #, python-format
 msgid "Invoice partially paid: %s%s of %s%s (%s%s remaining)."
-msgstr ""
+msgstr "Tagihan dibayar parsial: %s%s dari %s%s (%s%s tersisa)."
 
 #. module: account
 #: view:account.invoice:0
 msgid "Print Invoice"
-msgstr "Print Faktur"
+msgstr "Cetak Tagihan"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:111
@@ -861,16 +896,19 @@ msgid ""
 "Cannot %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
 msgstr ""
+"Tidak dapat %s tagihan yang sudah di rekonsiliasi, tagihan seharusnya di-"
+"unreconciled terlebih dulu. Anda hanya dapat melakukan pengembalian atas "
+"tagihan ini."
 
 #. module: account
 #: view:account.account:0
 msgid "Account code"
-msgstr ""
+msgstr "Kode akun"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "Display children with hierarchy"
-msgstr "Tampilkan anak dengan terstruktur"
+msgstr "Tampilkan hirarki anak"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
