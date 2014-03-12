@@ -13,7 +13,10 @@ import subprocess
 import threading
 import time
 import unittest2
+import urllib2
 import xmlrpclib
+
+from datetime import datetime, timedelta
 
 import openerp
 
@@ -150,7 +153,7 @@ class SingleTransactionCase(BaseCase):
 
 
 class HttpCase(TransactionCase):
-    """ Transactionnal HTTP TestCase with a phantomjs helper.
+    """ Transactionnal HTTP TestCase with url_open and phantomjs helpers.
     """
 
     def __init__(self, methodName='runTest'):
@@ -171,10 +174,16 @@ class HttpCase(TransactionCase):
         self.cr._test_lock = threading.RLock()
         HTTP_SESSION[self.session_id] = self.cr
 
-
     def tearDown(self):
         del HTTP_SESSION[self.session_id]
         super(HttpCase, self).tearDown()
+
+    def url_open(self, url, data=None, timeout=10):
+        opener = urllib2.build_opener()
+        opener.addheaders.append(('Cookie', 'session_id=%s' % self.session_id))
+        if url.startswith('/'):
+            url = "http://localhost:%s%s" % (PORT, url)
+        return opener.open(url, data, timeout)
 
     def phantom_poll(self, phantom, timeout):
         """ Phantomjs Test protocol.
@@ -187,11 +196,12 @@ class HttpCase(TransactionCase):
         Other lines are relayed to the test log.
 
         """
-        t0 = time.time()
+        t0 = datetime.now()
+        td = timedelta(seconds=timeout)
         buf = bytearray()
         while True:
             # timeout
-            self.assertLess(time.time(), t0 + timeout,
+            self.assertLess(datetime.now() - t0, td,
                 "PhantomJS tests should take less than %s seconds" % timeout)
 
             # read a byte
