@@ -54,10 +54,11 @@ class website_forum(http.Controller):
         return request.redirect("/forum/%s" % forum_id)
 
     @http.route(['/forum/<model("website.forum"):forum>', '/forum/<model("website.forum"):forum>/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
-    def questions(self, forum, page=1, filters='', **searches):
+    def questions(self, forum, page=1, filters='', sorting='', **searches):
         cr, uid, context = request.cr, request.uid, request.context
         Forum = request.registry['website.forum.post']
         domain = [('forum_id', '=', forum.id), ('parent_id', '=', False)]
+        order = "id desc"
 
         search = searches.get('search',False)
         if search:
@@ -73,11 +74,18 @@ class website_forum(http.Controller):
         if filters == 'followed':
             domain += [ ('create_uid', '=', uid) ]
 
+        if sorting == 'date':
+            order = 'write_date desc'
+        if sorting == 'answered':
+            order = 'child_count desc'
+        if sorting == 'vote':
+            order = 'vote_count desc'
+
         step = 10
         question_count = Forum.search(cr, uid, domain, count=True, context=context)
         pager = request.website.pager(url="/forum/%s/" % slug(forum), total=question_count, page=page, step=step, scope=10)
 
-        obj_ids = Forum.search(cr, uid, domain, limit=step, offset=pager['offset'], context=context)
+        obj_ids = Forum.search(cr, uid, domain, limit=step, offset=pager['offset'], order=order, context=context)
         question_ids = Forum.browse(cr, uid, obj_ids, context=context)
 
         values = {
@@ -86,6 +94,7 @@ class website_forum(http.Controller):
             'forum': forum,
             'pager': pager,
             'filters': filters,
+            'sorting': sorting,
             'searches': searches,
         }
 
@@ -107,10 +116,11 @@ class website_forum(http.Controller):
         for answer in question.child_ids:
             if answer.create_uid.id == request.uid:
                 answer_done = True
-        post['type'] = 'question'
+        filters = 'question'
         values = {
             'question': question,
             'searches': post,
+            'filters': filters,
             'answer_done': answer_done,
             'reversed': reversed,
             'forum': forum,

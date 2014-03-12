@@ -159,28 +159,31 @@
                           <t t-if="filters == 'all'">No filter</t>
                           <t t-if="filters == 'unanswered'">filter: Unanswered</t>
                           <t t-if="filters == 'followed'">filter: Followed</t>
+                          <t t-if="sorting == 'date'"> Sort by: Last activity date</t>
+                          <t t-if="sorting == 'answered'"> Sort by: Most answered</t>
+                          <t t-if="sorting == 'vote'"> Sort by: Most votes</t>
                           <b class="caret"/>
                       </a>
                       <ul class="dropdown-menu">
                           <li class="dropdown-header">Filter on</li>
                           <li t-att-class="filters == 'all' and 'active' or '' ">
-                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( filters='all') }}">All</a>
+                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'sorting', filters='all') }}">All</a>
                           </li>
                           <li t-att-class="filters == 'unanswered' and 'active' or '' ">
-                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( filters='unanswered') }}">Unanswered</a>
+                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'sorting', filters='unanswered') }}">Unanswered</a>
                           </li>
                           <li t-att-class="filters == 'followed' and 'active' or '' ">
-                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( filters='followed') }}">Followed</a>
+                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'sorting', filters='followed') }}">Followed</a>
                           </li>
                           <li class="dropdown-header">Sort by</li>
-                          <li>
-                              <a href="#" class="active">Last activity date</a> <!-- default order to implement -->
+                          <li t-att-class="sorting == 'date' and 'active' or '' ">
+                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'filters', sorting='date') }}">Last activity date</a>
                           </li>
-                          <li>
-                              <a href="#">Most answered</a>
+                          <li t-att-class="sorting == 'answered' and 'active' or '' ">
+                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'filters', sorting='answered') }}">Most answered</a>
                           </li>
-                          <li>
-                              <a href="#">Most voted</a>
+                          <li t-att-class="sorting == 'vote' and 'active' or '' ">
+                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'filters', sorting='vote') }}">Most voted</a>
                           </li>
                       </ul>
                     </small>

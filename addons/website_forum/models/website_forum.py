@@ -62,7 +62,6 @@ class Post(osv.Model):
     _name = 'website.forum.post'
     _description = "Question"
     _inherit = ['mail.thread', 'website.seo.metadata']
-    _order = "id desc"
 
     def _get_votes(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, False)
@@ -94,6 +93,16 @@ class Post(osv.Model):
             result[vote.post_id.id] = True
         return result.keys()
 
+    def _get_child_count(self, cr, uid, ids, field_name=False, arg={}, context=None):
+        res = dict.fromkeys(ids, 0)
+        for post in self.browse(cr, uid, ids, context=context):
+            if post.parent_id:
+                res[post.parent_id.id] = len(post.parent_id.child_ids)
+        return res
+
+    def _get_child(self, cr, uid, ids, context=None):
+        return ids
+
     _columns = {
         'name': fields.char('Title', size=128),
         'forum_id': fields.many2one('website.forum', 'Forum', required=True),
@@ -114,6 +123,11 @@ class Post(osv.Model):
 
         'parent_id': fields.many2one('website.forum.post', 'Question'),
         'child_ids': fields.one2many('website.forum.post', 'parent_id', 'Answers'),
+        'child_count':fields.function(_get_child_count, string="Answers", type='integer',
+            store={
+                'website.forum.post': (_get_child, [], 10),
+            }
+        ),
 
         'history_ids': fields.one2many('blog.post.history', 'post_id', 'History', help='Last post modifications'),
         # TODO FIXME: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
@@ -143,7 +157,7 @@ class Post(osv.Model):
     _defaults = {
         'state': 'active',
         'vote_count': 0,
-        'active': True
+        'active': True,
     }
 
     def create_history(self, cr, uid, ids, vals, context=None):
