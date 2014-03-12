@@ -35,7 +35,7 @@ class mail_message(osv.Model):
         """
         if uid == SUPERUSER_ID:
             return super(mail_message, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
-                context=context, count=False, access_rights_uid=access_rights_uid)
+                context=context, count=count, access_rights_uid=access_rights_uid)
         group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
         group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_user')[1]
         if group_user_id not in [group.id for group in group_ids]:
