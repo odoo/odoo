@@ -337,32 +337,35 @@ class stock_quant(osv.osv):
         :param src_package_id: ID of the package that contains the quants to move
         :param dest_package_id: ID of the package that must be set on the moved quant
         """
-        quantsto = []
+        quants_reconcile = []
+        quants_move = []
+        if not location_dest_id:
+            location_dest_id = move.location_dest_id
+        self._check_location(cr, uid, location_dest_id, context=context)
         for quant, qty in quants:
             if not quant:
                 #If quant is None, we will create a quant to move (and potentially a negative counterpart too)
                 quant = self._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location = location_dest_id, context=context)
-            quantsto.append((quant, qty),)
-        if not location_dest_id:
-            location_dest_id = move.location_dest_id
-        self.move_single_quant_tuples(cr, uid, quantsto, move, location_dest_id, dest_package_id, context=context)
-
+            else:
+                quants_move += [(quant, qty)]
+            quants_reconcile.append(quant)
+        if quants_move:
+            self.move_single_quant_tuples(cr, uid, quants_move, move, location_dest_id, dest_package_id, context=context)
+        self._quants_reconcile_negative(cr, uid, quants_reconcile, move, context=context)
 
 
     def move_single_quant_tuples(self, cr, uid, quants, move, location_dest_id, dest_package_id, context=None):
         whole_quants = []
         for quant, qty in quants:
-            if not quant:
-                continue
             new_quant = self._quant_split(cr, uid, quant, qty, context=context)
             quant.refresh()
-            whole_quants.append(quant)
-        if self._check_location(cr, uid, location_dest_id, context=context) and whole_quants:
+            whole_quants.append(quant.id)
+        if whole_quants:
             vals = {'location_id': location_dest_id.id, 
                     'history_ids': [(4, move.id)], 
                     'package_id': dest_package_id}
-            self.write(cr, SUPERUSER_ID, [x.id for x in whole_quants], vals, context=context)
-            self._quants_reconcile_negative(cr, uid, whole_quants, move, context=context)
+            self.write(cr, SUPERUSER_ID, whole_quants, vals, context=context)
+
 
 
     def quants_get_prefered_domain(self, cr, uid, location, product, qty, domain=None, prefered_domain=False, fallback_domain=False, restrict_lot_id=False, restrict_partner_id=False, context=None):
