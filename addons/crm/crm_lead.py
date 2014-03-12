@@ -410,7 +410,7 @@ class crm_lead(format_address, osv.osv):
                         'probability = 0 %, select "Change Probability Automatically".\n'
                         'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
         for stage_id, lead_ids in stages_leads.items():
-            self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
+            self.write(cr, uid, lead_ids, {'stage_id': stage_id, 'date_closed': fields.datetime.now()}, context=context)
         return True
 
     def case_mark_won(self, cr, uid, ids, context=None):
@@ -431,7 +431,7 @@ class crm_lead(format_address, osv.osv):
                         'probability = 100 % and select "Change Probability Automatically".\n'
                         'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
         for stage_id, lead_ids in stages_leads.items():
-            self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
+            self.write(cr, uid, lead_ids, {'stage_id': stage_id, 'date_closed': fields.datetime.now()}, context=context)
         return True
 
     def case_escalate(self, cr, uid, ids, context=None):

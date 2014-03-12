@@ -352,10 +352,10 @@ class mail_compose_message(osv.TransientModel):
         :return dict results: for each res_id, the generated template values for
                               subject, body, email_from and reply_to
         """
-        subjects = self.render_template_batch(cr, uid, wizard.subject, wizard.model, res_ids, context)
-        bodies = self.render_template_batch(cr, uid, wizard.body, wizard.model, res_ids, context)
-        emails_from = self.render_template_batch(cr, uid, wizard.email_from, wizard.model, res_ids, context)
-        replies_to = self.render_template_batch(cr, uid, wizard.reply_to, wizard.model, res_ids, context)
+        subjects = self.render_template_batch(cr, uid, wizard.subject, wizard.model, res_ids, context=context)
+        bodies = self.render_template_batch(cr, uid, wizard.body, wizard.model, res_ids, context=context, post_process=True)
+        emails_from = self.render_template_batch(cr, uid, wizard.email_from, wizard.model, res_ids, context=context)
+        replies_to = self.render_template_batch(cr, uid, wizard.reply_to, wizard.model, res_ids, context=context)
 
         results = dict.fromkeys(res_ids, False)
         for res_id in res_ids:
@@ -367,7 +367,7 @@ class mail_compose_message(osv.TransientModel):
             }
         return results
 
-    def render_template_batch(self, cr, uid, template, model, res_ids, context=None):
+    def render_template_batch(self, cr, uid, template, model, res_ids, context=None, post_process=False):
         """ Render the given template text, replace mako-like expressions ``${expr}``
         with the result of evaluating these expressions with an evaluation context
         containing:
