@@ -880,6 +880,10 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
                             sign = -1;
                             field = field.slice(1);
                         }
+                        //m2o should be searched based on value[1] not based whole value(i.e. [id, value])
+                        if(_.isArray(a[field]) && a[field].length == 2 && _.isString(a[field][1])){
+                            return sign * compare(a[field][1], b[field][1]);
+                        }
                         return sign * compare(a[field], b[field]);
                     }, 0);
                 });
