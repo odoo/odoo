@@ -69,6 +69,8 @@
         website.is_editable = website.is_editable || $('html').data('editable');
         website.is_editable_button= website.is_editable_button || $('html').data('editable');
         dom_ready.resolve();
+        // fix for ie
+        if($.fn.placeholder) $('input, textarea').placeholder();
     });
 
     website.init_kanban = function ($kanban) {

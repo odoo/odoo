@@ -80,8 +80,8 @@
 
             <script type="text/javascript" src="/website/static/src/js/website.js"></script>
             
-            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
             <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
+            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
 
             <t t-raw="head or ''" name='layout_head'/>
         </head>
@@ -113,7 +113,7 @@
                                             </b>
                                         </a>
                                         <ul class="dropdown-menu js_usermenu" role="menu">
-                                            <li><a href="/web" role="menuitem">Administration</a></li>
+                                            <li><a href="/web" role="menuitem">My Account</a></li>
                                             <li class="divider"/>
                                             <li><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
                                         </ul>
@@ -271,6 +271,8 @@
         <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
         <script type="text/javascript" src='/website/static/lib/nearest/jquery.nearest.js'></script>
         <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
+
+        <script type="text/javascript" src="/website/static/lib/jquery.placeholder/jquery.placeholder.js"></script>
 
         <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
         <script type="text/javascript" src="/website/static/src/js/website.editor.newpage.js" groups="base.group_website_designer"></script>
