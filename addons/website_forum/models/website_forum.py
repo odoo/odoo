@@ -228,7 +228,7 @@ class PostHistory(osv.Model):
     _description = 'Post History'
     _inherit = ['website.seo.metadata']
     _columns = {
-        'name': fields.char('Post Title')
+        'name': fields.char('Post Title'),
         'post_id': fields.many2one('website.forum.post', 'Post', ondelete='cascade'),
         'date': fields.datetime('Created on', select=True, readonly=True),
         'user_id': fields.many2one('res.users', 'Created by', select=True, readonly=True),
@@ -267,7 +267,7 @@ class Vote(osv.Model):
         vote_ids = self.search(cr, uid, [('post_id', '=', post_id), ('user_id','=',uid)], context=context)
         if vote_ids:
             self.write(cr, uid, vote_uid, {
-                'vote': vote)
+                'vote': vote
             }, context=context)
         else:
             self.create(cr, uid, {
@@ -279,8 +279,6 @@ class Vote(osv.Model):
 class Badge(osv.Model):
     _inherit = 'gamification.badge'
     _columns = {
-        # TODO: remove this forum field and use level is not False instead
-        'forum': fields.boolean('Is a Forum Badge'),
         'level': fields.selection([('bronze', 'bronze'), ('silver', 'silver'), ('gold', 'gold')], 'Forum Badge Level'),
     }
 

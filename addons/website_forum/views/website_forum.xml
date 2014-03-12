@@ -35,10 +35,10 @@
         <template id="post_list">
             <div class="question clearfix">
                 <div class="pull-left text-center">
-                    <div t-attf-class="box #{len(question.child_ids) and 'oe_green' or 'oe_grey'}">
-                        <span t-esc="len(question.child_ids)"/>
-                        <div t-if="len(question.child_ids)&gt;1">Answers</div>
-                        <div t-if="len(question.child_ids)&lt;=1">Answer</div>
+                    <div t-attf-class="box #{question.child_count and 'oe_green' or 'oe_grey'}">
+                        <span t-esc="question.child_count"/>
+                        <div t-if="question.child_count&gt;1">Answers</div>
+                        <div t-if="question.child_count&lt;=1">Answer</div>
                     </div>
                     <div class="text-muted text-center">
                         <span t-field="question.views"/> Views
@@ -90,10 +90,10 @@
                                     <a t-attf-href="/forum/#{ slug(forum) }/users">People</a>
                                 </li>
                                 <li t-att-class="searches.get('tags') and 'active' or '' ">
-                                    <a t-attf-href="/forum/#{ slug(forum) }/tags">Tags</a>
+                                    <a t-attf-href="/forum/#{ slug(forum) }/tag">Tags</a>
                                 </li>
                                 <li t-att-class="searches.get('badges') and 'active' or '' ">
-                                    <a t-attf-href="/forum/#{ slug(forum) }/badges">Badges</a>
+                                    <a t-attf-href="/forum/#{ slug(forum) }/badge">Badges</a>
                                 </li>
                             </ul>
                             <form class="navbar-form navbar-right" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
@@ -301,9 +301,9 @@
                             </div>
                         </div>
                         <div class="text-muted">
-                            <span t-esc="len(question.child_ids)"/>
-                            <span t-if="len(question.child_ids)&gt;1">Answers</span>
-                            <span t-if="len(question.child_ids)&lt;=1">Answer</span>
+                            <span t-esc="question.child_count"/>
+                            <span t-if="question.child_count&gt;1">Answers</span>
+                            <span t-if="question.child_count&lt;=1">Answer</span>
                         </div>
                     </div>
                     <div style="margin-left: 95px;">
@@ -637,7 +637,7 @@
             </div>
             <div class="mb16" t-if="not user.badges">
                 <b>No badge yet!</b><br/>
-                <a t-attf-href="/forum/#{ slug(forum) }/badges" class="fa fa-arrow-right"> Check available badges</a>
+                <a t-attf-href="/forum/#{ slug(forum) }/badge" class="fa fa-arrow-right"> Check available badges</a>
             </div>
         </template>
 

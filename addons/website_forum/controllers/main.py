@@ -253,10 +253,9 @@ class website_forum(http.Controller):
     def tag_questions(self, forum, tag, page=1, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         Post = request.registry['website.forum.post']
-        post_ids = [que.id for que in tag.post_ids]
-        obj_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('id', 'in', post_ids)], context=context)
+        obj_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('tags', '=', tag.id)], context=context)
         question_ids = Post.browse(cr, uid, obj_ids, context=context)
-        pager = request.website.pager(url="/forum/%s/tag" % slug(forum), total=len(tag.post_ids), page=page, step=10, scope=10)
+        pager = request.website.pager(url="/forum/%s/tag" % slug(forum), total=len(obj_ids), page=page, step=10, scope=10)
         kwargs['tags'] = 'True'
 
         values = {
@@ -267,7 +266,7 @@ class website_forum(http.Controller):
         }
         return request.website.render("website_forum.index", values)
 
-    @http.route(['/forum/<model("website.forum"):forum>/tags'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/forum/<model("website.forum"):forum>/tag'], type='http', auth="public", website=True, multilang=True)
     def tags(self, forum, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         Tag = request.registry['website.forum.tag']
@@ -280,11 +279,11 @@ class website_forum(http.Controller):
         }
         return request.website.render("website_forum.tag", values)
 
-    @http.route(['/forum/<model("website.forum"):forum>/badges'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/forum/<model("website.forum"):forum>/badge'], type='http', auth="public", website=True, multilang=True)
     def badges(self, forum, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         Badge = request.registry['gamification.badge']
-        badge_ids = Badge.search(cr, uid, [('forum', '=', True)], context=context)
+        badge_ids = Badge.search(cr, uid, [('level', '!=', False)], context=context)
         badges = Badge.browse(cr, uid, badge_ids, context=context)
         values = {
             'badges': badges,
