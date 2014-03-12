@@ -54,10 +54,11 @@ class website_forum(http.Controller):
         return request.redirect("/forum/%s" % forum_id)
 
     @http.route(['/forum/<model("website.forum"):forum>', '/forum/<model("website.forum"):forum>/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
-    def questions(self, forum, page=1, **searches):
+    def questions(self, forum, page=1, filters='', sorting='', **searches):
         cr, uid, context = request.cr, request.uid, request.context
         Forum = request.registry['website.forum.post']
         domain = [('forum_id', '=', forum.id), ('parent_id', '=', False)]
+        order = "id desc"
 
         search = searches.get('search',False)
         if search:
@@ -65,20 +66,26 @@ class website_forum(http.Controller):
                 ('name', 'ilike', search),
                 ('content', 'ilike', search)]
 
-        type = searches.get('type',False)
-        if not type:
-            searches['type'] = 'all'
-        if type == 'unanswered':
+        if not filters:
+            filters = 'all'
+        if filters == 'unanswered':
             domain += [ ('child_ids', '=', False) ]
         #TODO: update domain to show followed questions of user
-        if type == 'followed':
+        if filters == 'followed':
             domain += [ ('create_uid', '=', uid) ]
+
+        if sorting == 'date':
+            order = 'write_date desc'
+        if sorting == 'answered':
+            order = 'child_count desc'
+        if sorting == 'vote':
+            order = 'vote_count desc'
 
         step = 10
         question_count = Forum.search(cr, uid, domain, count=True, context=context)
         pager = request.website.pager(url="/forum/%s/" % slug(forum), total=question_count, page=page, step=step, scope=10)
 
-        obj_ids = Forum.search(cr, uid, domain, limit=step, offset=pager['offset'], context=context)
+        obj_ids = Forum.search(cr, uid, domain, limit=step, offset=pager['offset'], order=order, context=context)
         question_ids = Forum.browse(cr, uid, obj_ids, context=context)
 
         values = {
@@ -86,6 +93,8 @@ class website_forum(http.Controller):
             'question_ids': question_ids,
             'forum': forum,
             'pager': pager,
+            'filters': filters,
+            'sorting': sorting,
             'searches': searches,
         }
 
@@ -107,10 +116,11 @@ class website_forum(http.Controller):
         for answer in question.child_ids:
             if answer.create_uid.id == request.uid:
                 answer_done = True
-        post['type'] = 'question'
+        filters = 'question'
         values = {
             'question': question,
             'searches': post,
+            'filters': filters,
             'answer_done': answer_done,
             'reversed': reversed,
             'forum': forum,
@@ -243,10 +253,9 @@ class website_forum(http.Controller):
     def tag_questions(self, forum, tag, page=1, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         Post = request.registry['website.forum.post']
-        post_ids = [que.id for que in tag.post_ids]
-        obj_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('id', 'in', post_ids)], context=context)
+        obj_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('tags', '=', tag.id)], context=context)
         question_ids = Post.browse(cr, uid, obj_ids, context=context)
-        pager = request.website.pager(url="/forum/%s/tag" % slug(forum), total=len(tag.post_ids), page=page, step=10, scope=10)
+        pager = request.website.pager(url="/forum/%s/tag" % slug(forum), total=len(obj_ids), page=page, step=10, scope=10)
         kwargs['tags'] = 'True'
 
         values = {
@@ -257,7 +266,7 @@ class website_forum(http.Controller):
         }
         return request.website.render("website_forum.index", values)
 
-    @http.route(['/forum/<model("website.forum"):forum>/tags'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/forum/<model("website.forum"):forum>/tag'], type='http', auth="public", website=True, multilang=True)
     def tags(self, forum, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         Tag = request.registry['website.forum.tag']
@@ -270,11 +279,11 @@ class website_forum(http.Controller):
         }
         return request.website.render("website_forum.tag", values)
 
-    @http.route(['/forum/<model("website.forum"):forum>/badges'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/forum/<model("website.forum"):forum>/badge'], type='http', auth="public", website=True, multilang=True)
     def badges(self, forum, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         Badge = request.registry['gamification.badge']
-        badge_ids = Badge.search(cr, uid, [('forum', '=', True)], context=context)
+        badge_ids = Badge.search(cr, uid, [('level', '!=', False)], context=context)
         badges = Badge.browse(cr, uid, badge_ids, context=context)
         values = {
             'badges': badges,
@@ -322,20 +331,7 @@ class website_forum(http.Controller):
     def post_vote(self, **post):
         cr, uid, context, post_id = request.cr, request.uid, request.context, int(post.get('post_id'))
         Vote = request.registry['website.forum.post.vote']
-        Post = request.registry['website.forum.post']
-        vote_ids = Vote.search(cr, uid, [('post_id', '=', post_id)], context=context)
-
-        if vote_ids:
-            Vote.unlink(cr, uid, vote_ids, context=context)
-        else:
-            Vote.create(cr, uid, {
-                'post_id': post_id,
-                'user_id': uid,
-                'vote': post.get('vote'),
-            }, context=context)
-        record = Post.browse(cr, uid, post_id, context=context)
-
-        return record.vote_count
+        return Vote.vote(cr, uid, post_id, post.get('vote'), context)
 
     @http.route('/forum/post_delete/', type='json', auth="user", multilang=True, methods=['POST'], website=True)
     def delete_answer(self, **kwarg):

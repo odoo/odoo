@@ -35,10 +35,10 @@
         <template id="post_list">
             <div class="question clearfix">
                 <div class="pull-left text-center">
-                    <div t-attf-class="box #{len(question.child_ids) and 'oe_green' or 'oe_grey'}">
-                        <span t-esc="len(question.child_ids)"/>
-                        <div t-if="len(question.child_ids)&gt;1">Answers</div>
-                        <div t-if="len(question.child_ids)&lt;=1">Answer</div>
+                    <div t-attf-class="box #{question.child_count and 'oe_green' or 'oe_grey'}">
+                        <span t-esc="question.child_count"/>
+                        <div t-if="question.child_count&gt;1">Answers</div>
+                        <div t-if="question.child_count&lt;=1">Answer</div>
                     </div>
                     <div class="text-muted text-center">
                         <span t-field="question.views"/> Views
@@ -51,8 +51,8 @@
                     <div class="text-muted">
                         by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.create_uid.id }" t-field="question.create_uid"/>, 
                         on <span t-field="question.write_date"/>
-                        <div t-if="len(question.vote_ids)">
-                            <strong>with <span t-esc="len(question.vote_ids)"/> votes</strong>
+                        <div t-if="question.vote_count">
+                            <strong>with <span t-esc="question.vote_count"/> votes</strong>
                         </div>
                     </div>
                     <t t-foreach="question.tags" t-as="tag">
@@ -83,17 +83,17 @@
                         </div>
                         <div class="collapse navbar-collapse" id="oe-help-navbar-collapse">
                             <ul class="nav navbar-nav">
-                                <li t-att-class="searches.get('type') in ('all', 'unanswered','followed','question') and 'active' or '' ">
+                                <li t-att-class="filters in ('all', 'unanswered','followed','question') and 'active' or '' ">
                                     <a t-attf-href="/forum/#{ slug(forum) }">Questions</a>
                                 </li>
                                 <li t-att-class="searches.get('users') and 'active' or '' ">
                                     <a t-attf-href="/forum/#{ slug(forum) }/users">People</a>
                                 </li>
                                 <li t-att-class="searches.get('tags') and 'active' or '' ">
-                                    <a t-attf-href="/forum/#{ slug(forum) }/tags">Tags</a>
+                                    <a t-attf-href="/forum/#{ slug(forum) }/tag">Tags</a>
                                 </li>
                                 <li t-att-class="searches.get('badges') and 'active' or '' ">
-                                    <a t-attf-href="/forum/#{ slug(forum) }/badges">Badges</a>
+                                    <a t-attf-href="/forum/#{ slug(forum) }/badge">Badges</a>
                                 </li>
                             </ul>
                             <form class="navbar-form navbar-right" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
@@ -154,33 +154,36 @@
                 <h1 class="page-header mt0">
                     <t t-esc="total_questions"/>
                     <span>Questions</span>
-                    <small class="dropdown" t-if="searches.get('type') in ('all', 'unanswered','followed')">
+                    <small class="dropdown" t-if="filters in ('all', 'unanswered','followed')">
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                          <t t-if="searches.get('type') == 'all'">No filter</t>
-                          <t t-if="searches.get('type') == 'unanswered'">Filter: Unanswered</t>
-                          <t t-if="searches.get('type') == 'followed'">Filter: Followed</t>
+                          <t t-if="filters == 'all'">No filter</t>
+                          <t t-if="filters == 'unanswered'">filter: Unanswered</t>
+                          <t t-if="filters == 'followed'">filter: Followed</t>
+                          <t t-if="sorting == 'date'"> Sort by: Last activity date</t>
+                          <t t-if="sorting == 'answered'"> Sort by: Most answered</t>
+                          <t t-if="sorting == 'vote'"> Sort by: Most votes</t>
                           <b class="caret"/>
                       </a>
                       <ul class="dropdown-menu">
                           <li class="dropdown-header">Filter on</li>
-                          <li t-att-class="searches.get('type') == 'all' and 'active' or '' ">
-                              <a t-attf-href="/forum/#{ slug(forum) }/?{{ keep_query( type='all') }}">All</a>
+                          <li t-att-class="filters == 'all' and 'active' or '' ">
+                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'sorting', filters='all') }}">All</a>
                           </li>
-                          <li t-att-class="searches.get('type') == 'unanswered' and 'active' or '' ">
-                              <a t-attf-href="/forum/#{ slug(forum) }/?{{ keep_query( type='unanswered') }}">Unanswered</a>
+                          <li t-att-class="filters == 'unanswered' and 'active' or '' ">
+                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'sorting', filters='unanswered') }}">Unanswered</a>
                           </li>
-                          <li t-att-class="searches.get('type') == 'followed' and 'active' or '' ">
-                              <a t-attf-href="/forum/#{ slug(forum) }/?{{ keep_query( type='followed') }}">Followed</a>
+                          <li t-att-class="filters == 'followed' and 'active' or '' ">
+                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'sorting', filters='followed') }}">Followed</a>
                           </li>
                           <li class="dropdown-header">Sort by</li>
-                          <li>
-                              <a href="#" class="active">Last activity date</a> <!-- default order to implement -->
+                          <li t-att-class="sorting == 'date' and 'active' or '' ">
+                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'filters', sorting='date') }}">Last activity date</a>
                           </li>
-                          <li>
-                              <a href="#">Most answered</a>
+                          <li t-att-class="sorting == 'answered' and 'active' or '' ">
+                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'filters', sorting='answered') }}">Most answered</a>
                           </li>
-                          <li>
-                              <a href="#">Most voted</a>
+                          <li t-att-class="sorting == 'vote' and 'active' or '' ">
+                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'filters', sorting='vote') }}">Most voted</a>
                           </li>
                       </ul>
                     </small>
@@ -318,9 +321,9 @@
                             </div>
                         </div>
                         <div class="text-muted">
-                            <span t-esc="len(question.child_ids)"/>
-                            <span t-if="len(question.child_ids)&gt;1">Answers</span>
-                            <span t-if="len(question.child_ids)&lt;=1">Answer</span>
+                            <span t-esc="question.child_count"/>
+                            <span t-if="question.child_count&gt;1">Answers</span>
+                            <span t-if="question.child_count&lt;=1">Answer</span>
                         </div>
                     </div>
                     <div style="margin-left: 95px;">
@@ -371,8 +374,8 @@
                             </div>
                         </div>
                         <div class="text-muted" id="correct">
-                            <a t-attf-id="#{answer.id}" t-if="answer.correct" class="fa fa-2x fa-check oe_answer_true"/>
-                            <a t-attf-id="#{answer.id}" t-if="not answer.correct" class="fa fa-2x fa-check oe_answer_false"/>
+                            <a href="" t-attf-id="#{answer.id}" t-if="answer.correct" class="fa fa-2x fa-check oe_answer_true"/>
+                            <a href="" t-attf-id="#{answer.id}" t-if="not answer.correct" class="fa fa-2x fa-check oe_answer_false"/>
                         </div>
                     </div>
                     <div style="margin-left: 95px;" class="clearfix">
@@ -446,7 +449,7 @@
                             <span t-field="tag.name" />
                         </a>
                         <span> 
-                            X <t t-esc="len(tag.post_ids)"/>
+                            X <t t-esc="tag.posts_count"/>
                         </span>
                     </div>
                 </div>
@@ -473,7 +476,7 @@
                                 <span t-field="badge.name" />
                             </a>
                         </td><td>
-                            <b t-esc="len(badge.owner_ids)"/>
+                            <b t-esc="badge.stat_count_distinct"/>
                             <i class="text-muted">awarded users</i>
                         </td><td>
                             <span t-field="badge.description"/>
@@ -498,9 +501,9 @@
                     <span t-field="badge.description" style="margin-left:20px"/>
                 </div>
                 <h4 class="mt32">
-                    <t class="pull-left" t-esc="len(badge.owner_ids)"/>
-                    <span t-if="len(badge.owner_ids)&gt;1">users</span>
-                    <span t-if="len(badge.owner_ids)&lt;=1">user</span>
+                    <t class="pull-left" t-esc="badge.stat_count_distinct"/>
+                    <span t-if="badge.stat_count_distinct&gt;1">users</span>
+                    <span t-if="badge.stat_count_distinct&lt;=1">user</span>
                     received this badge:
                 </h4>
                 <div class="row">
@@ -649,13 +652,13 @@
                         <span t-field="badge.badge_id.name" />
                     </a>
                     <span>
-                        X <t t-esc="len(badge.badge_id.owner_ids)"/>
+                        X <t t-esc="badge.badge_id.stat_count_distinct"/>
                     </span>
                 </div>
             </div>
             <div class="mb16" t-if="not user.badges">
                 <b>No badge yet!</b><br/>
-                <a t-attf-href="/forum/#{ slug(forum) }/badges" class="fa fa-arrow-right"> Check available badges</a>
+                <a t-attf-href="/forum/#{ slug(forum) }/badge" class="fa fa-arrow-right"> Check available badges</a>
             </div>
         </template>
 

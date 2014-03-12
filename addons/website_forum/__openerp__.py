@@ -23,7 +23,7 @@
 {
     'name': 'Forum',
     'category': 'Website',
-    'summary': 'Ask Questions and give Answers',
+    'summary': 'Forum, FAQ, Q&A',
     'version': '1.0',
     'description': """
 Ask questions, get answers, no distractions
