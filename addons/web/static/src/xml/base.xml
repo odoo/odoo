@@ -1360,6 +1360,16 @@
         <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </button>
 </t>
+<t t-name="StatButton">
+    <label type="button" class="oe_stat_button btn btn-default"
+        t-att-style="widget.node.attrs.style"
+        t-att-tabindex="widget.node.attrs.tabindex"
+        t-att-autofocus="widget.node.attrs.autofocus"
+        t-att-accesskey="widget.node.attrs.accesskey">
+        <t t-if="widget.icon"><div class="stat_button_icon"><t t-raw="widget.icon"/></div></t>
+        <span t-if="widget.string"><t t-esc="widget.string"/></span>
+    </label>
+</t>
 <t t-name="WidgetButton.tooltip" t-extend="WidgetLabel.tooltip">
     <t t-jquery="div.oe_tooltip_string" t-operation="replace">
         <div class="oe_tooltip_string" t-if="debug || widget.string">

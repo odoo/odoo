@@ -1218,6 +1218,9 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         $('button', doc).each(function() {
             $(this).attr('data-button-type', $(this).attr('type')).attr('type', 'button');
         });
+        $('statbutton', doc).each(function() {
+            $(this).attr('data-button-type', $(this).attr('type')).attr('type', 'button');
+        });
         // IE's html parser is also a css parser. How convenient...
         $('board', doc).each(function() {
             $(this).attr('layout', $(this).attr('style'));
@@ -1277,6 +1280,9 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         var defs = [];
         _.each(this.to_replace, function(el) {
             defs.push(el[0].replace(el[1]));
+            if (el[1].children().length) {
+                el[0].$el.append(el[1].children());
+            }
         });
         this.to_replace = [];
         return $.when.apply($, defs);
@@ -1304,7 +1310,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         var tagname = $tag[0].nodeName.toLowerCase();
         if (this.tags_registry.contains(tagname)) {
             this.tags_to_init.push($tag);
-            return $tag;
+            return (tagname === 'statbutton') ? this.process_statbutton($tag) : $tag;
         }
         var fn = self['process_' + tagname];
         if (fn) {
@@ -1321,6 +1327,17 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             return $tag;
         }
     },
+    process_statbutton: function ($button) {
+        var self = this;
+        console.log('yenrst');
+        if ($button.children().length) {
+            $button.children().each(function() {
+                self.process($(this));
+            });
+        } 
+        return $button;
+    },
+
     process_widget: function($widget) {
         this.widgets_to_init.push($widget);
         return $widget;
@@ -1976,7 +1993,6 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
         var self = this;
 
         var context = this.build_context();
-
         return this.view.do_execute_action(
             _.extend({}, this.node.attrs, {context: context}),
             this.view.dataset, this.view.datarecord.id, function () {
@@ -1988,6 +2004,22 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
         this.$el.prop('disabled', disabled);
         this.$el.css('color', disabled ? 'grey' : '');
     }
+});
+
+instance.web.form.StatButton = instance.web.form.WidgetButton.extend({
+    template: 'StatButton',
+
+    init: function(field_manager, node) {
+        var icon = node.attrs.icon;
+        this._super(field_manager, node);
+
+        // debugger;
+        if (icon) {
+            this.icon = "<span class=\"fa " + icon + "\"></span>";
+        }
+
+    },
+
 });
 
 /**
@@ -5899,6 +5931,7 @@ instance.web.form.widgets = new instance.web.Registry({
  */
 instance.web.form.tags = new instance.web.Registry({
     'button' : 'instance.web.form.WidgetButton',
+    'statbutton' : 'instance.web.form.StatButton',
 });
 
 instance.web.form.custom_widgets = new instance.web.Registry({
