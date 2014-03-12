@@ -74,7 +74,8 @@ class stock_history(osv.osv):
         'date': fields.datetime('Operation Date'),
         'price_unit_on_quant': fields.float('Value'),
         'cost_method': fields.char('Cost Method'),
-        'inventory_value': fields.function(_get_inventory_value, string="Inventory Value", type='float', readonly=True),
+        'inventory_value': fields.float('Inventory val'),
+        #'inventory_value': fields.function(_get_inventory_value, string="Inventory Value", type='float', readonly=True),
     }
 
     def init(self, cr):
@@ -90,7 +91,8 @@ class stock_history(osv.osv):
                     quant.qty AS quantity,
                     stock_move.date AS date,
                     ir_property.value_text AS cost_method,
-                    quant.cost as price_unit_on_quant
+                    quant.cost as price_unit_on_quant,
+                    rel.cost as inventory_value
                 FROM
                     stock_move
                 LEFT JOIN
@@ -103,6 +105,9 @@ class stock_history(osv.osv):
                     product_template ON product_template.id = product_product.product_tmpl_id
                 LEFT JOIN
                     ir_property ON (ir_property.name = 'cost_method' and ir_property.res_id = 'product.template,' || product_template.id::text)
+                LEFT JOIN
+                    (select p.cost as cost, p.product_template_id as tmpl from prices_history as p, (select max(datetime) as datetime, product_template_id from prices_history group by company_id, product_template_id, datetime) as b where b.product_template_id = p.product_template_id and p.datetime = b.datetime) rel
+                    ON rel.tmpl = product_template.id
                 WHERE stock_move.state = 'done' AND location.usage = 'internal'
                 ) UNION
                 (SELECT
@@ -114,7 +119,8 @@ class stock_history(osv.osv):
                     - quant.qty AS quantity,
                     stock_move.date AS date,
                     ir_property.value_text AS cost_method,
-                    quant.cost as price_unit_on_quant
+                    quant.cost as price_unit_on_quant,
+                    0.0 as inventory_value
                 FROM
                     stock_move
                 LEFT JOIN
