@@ -663,6 +663,9 @@ class Home(http.Controller):
     def web_login(self, redirect=None, **kw):
         ensure_db()
 
+        if request.httprequest.method == 'GET' and redirect and request.session.uid:
+            return http.redirect_with_hash(redirect)
+
         values = request.params.copy()
         if not redirect:
             redirect = '/web?' + request.httprequest.query_string
