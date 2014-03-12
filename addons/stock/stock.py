@@ -345,11 +345,11 @@ class stock_quant(osv.osv):
             quantsto.append((quant, qty),)
         if not location_dest_id:
             location_dest_id = move.location_dest_id
-        self.move_single_quant_tuples(cr, uid, quantsto, move, location_dest_id, context=context)
+        self.move_single_quant_tuples(cr, uid, quantsto, move, location_dest_id, dest_package_id, context=context)
 
 
 
-    def move_single_quant_tuples(self, cr, uid, quants, move, location_dest_id, context=None):
+    def move_single_quant_tuples(self, cr, uid, quants, move, location_dest_id, dest_package_id, context=None):
         whole_quants = []
         for quant, qty in quants:
             if not quant:
@@ -359,7 +359,8 @@ class stock_quant(osv.osv):
             whole_quants.append(quant)
         if self._check_location(cr, uid, location_dest_id, context=context) and whole_quants:
             vals = {'location_id': location_dest_id.id, 
-                    'history_ids': [(4, move.id)]}
+                    'history_ids': [(4, move.id)], 
+                    'package_id': dest_package_id}
             self.write(cr, SUPERUSER_ID, [x.id for x in whole_quants], vals, context=context)
             self._quants_reconcile_negative(cr, uid, whole_quants, move, context=context)
 
@@ -2166,13 +2167,15 @@ class stock_move(osv.osv):
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, record.qty, domain=dom, prefered_domain=prefered_domain, 
                                                               fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 package_id = False
-                if not record.operation_id.package_id:
-                    #if a package and a result_package is given, we don't enter here because it will be processed by process_packaging() later
+                if not ops.product_id and ops.package_id:
+                    #if a package and a result_package is given, we will put package_id, otherwise it will be result_pakege
                     #but for operations having only result_package_id, we will create new quants in the final package directly
-                    package_id = record.operation_id.result_package_id.id or False
+                    package_id = ops.package_id.id
+                else:
+                    package_id = ops.result_package_id.id
                 quant_obj.quants_move(cr, uid, quants, move, lot_id=ops.lot_id.id, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id, dest_package_id=package_id, location_dest_id = ops.location_dest_id, context=context)
-                #packaging process
-                pack_op_obj.process_packaging(cr, uid, ops, [x[0].id for x in quants if x[0]], context=context)
+                # Handle pack in pack
+                pack_op_obj.process_packaging(cr, uid, ops, context=context)
                 move_qty[move.id] -= record.qty
         #Check for remaining qtys and unreserve/check move_dest_id in 
         for move in self.browse(cr, uid, ids, context=context):
@@ -3669,20 +3672,12 @@ class stock_pack_operation(osv.osv):
     
 
 
-    def process_packaging(self, cr, uid, operation, quants, context=None):
+    def process_packaging(self, cr, uid, operation, context=None):
         ''' Process the packaging of a given operation, after the quants have been moved. If there was not enough quants found
         a quant already has been with the good package information so we don't consider that case in this method'''
-        quant_obj = self.pool.get("stock.quant")
         pack_obj = self.pool.get("stock.quant.package")
-        for quant in quants:
-            if quant:
-                if operation.product_id:
-                    #if a product + a package information is given, we consider that we took a part of an existing package (unpacking)
-                    quant_obj.write(cr, SUPERUSER_ID, quant, {'package_id': operation.result_package_id.id}, context=context)
-                elif operation.package_id and operation.result_package_id:
-                    #move the whole pack into the final package if any
-                    pack_obj.write(cr, uid, [operation.package_id.id], {'parent_id': operation.result_package_id.id}, context=context)
-
+        if not operation.product_id and operation.package_id and operation.result_package_id.id != operation.package_id.parent_id.id:
+            pack_obj.write(cr, SUPERUSER_ID, [operation.package_id.id], {'result_package_id': operation.result_package_id.id}, context=context)
 
 
 
