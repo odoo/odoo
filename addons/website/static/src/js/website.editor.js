@@ -383,7 +383,11 @@
                         });
                     },
                     upcast: function (el) {
-                        return el.hasClass('fa');
+                        return el.hasClass('fa')
+                            // ignore ir.ui.view (other data-oe-model should
+                            // already have been matched by oeref and
+                            // monetary?
+                            && !el.attributes['data-oe-model'];
                     }
                 });
             }
@@ -645,6 +649,11 @@
                 previous = null;
             }, 'btn-sm');
 
+            function is_icons_widget(element) {
+                var w = editor.widgets.getByElement(element);
+                return w && w.name === 'icons';
+            }
+
             // previous is the state of the button-trigger: it's the
             // currently-ish hovered element which can trigger a button showing.
             // -ish, because when moving to the button itself ``previous`` is
@@ -654,9 +663,15 @@
                 // Back from edit button -> ignore
                 if (previous && previous === this) { return; }
 
+                // hover button should appear for "editable" links and images
+                // (img and a nodes whose *attributes* are editable, they
+                // can not be "editing hosts") *or* for non-editing-host
+                // elements bearing an ``fa`` class. These should have been
+                // made into CKE widgets which are editing hosts by
+                // definition, so instead check if the element has been
+                // converted/upcasted to an fa widget
                 var selected = new CKEDITOR.dom.element(this);
-                // FIXME: fa nodes may not be editable widgets (?)
-                if (!is_editable_node(selected) && !selected.hasClass('fa')) {
+                if (!(is_editable_node(selected) || is_icons_widget(selected))) {
                     return;
                 }
 
