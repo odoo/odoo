@@ -139,6 +139,7 @@ class Post(osv.Model):
                 'website.forum.post.vote': (_get_vote, [], 10),
             }
         ),
+        'correct': fields.boolean('Correct Answer'),
     }
     _defaults = {
         'state': 'active',

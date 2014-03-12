@@ -383,3 +383,14 @@ class website_forum(http.Controller):
         }
         return request.website.render("website_forum.edit_answer", values)
 
+    @http.route('/forum/correct_answer/', type='json', auth="user", multilang=True, methods=['POST'], website=True)
+    def correct_answer(self, **kwarg):
+        cr, uid, context = request.cr, request.uid, request.context
+        Post = request.registry['website.forum.post']
+        post = Post.browse(cr, uid, int(kwarg.get('post_id')), context=context)
+        if post.create_uid.id == uid:
+            correct = False if post.correct else True
+            Post.write( cr, uid, [int(kwarg.get('post_id'))], {
+                'correct': correct,
+            }, context=context)
+        return correct

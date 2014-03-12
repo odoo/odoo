@@ -59,12 +59,27 @@ $(document).ready(function () {
     $('.delete').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        var value = $link.attr("value")
         openerp.jsonRpc("/forum/post_delete/", 'call', {
                 'post_id': $link.attr("id")})
             .then(function (data) {
                 $link.parents('#answer').remove();
             });
+        return false;
+    });
+    
+    $('.fa-check').on('click', function (ev) {
+        ev.preventDefault();
+        var $link = $(ev.currentTarget);
+        openerp.jsonRpc("/forum/correct_answer/", 'call', {
+                'post_id': $link.attr("id")})
+              .then(function (data) {
+                  if (data) {
+                    $link.removeClass("oe_answer_false").addClass('oe_answer_true');
+                  }
+                  else {
+                    $link.removeClass("oe_answer_true").addClass('oe_answer_false');
+                  }
+             });
         return false;
     });
 

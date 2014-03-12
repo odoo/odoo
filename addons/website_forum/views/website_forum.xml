@@ -370,8 +370,9 @@
                                 votes
                             </div>
                         </div>
-                        <div class="text-muted">
-                            <a href="#" class="fa fa-2x fa-check"/>
+                        <div class="text-muted" id="correct">
+                            <a t-attf-id="#{answer.id}" t-if="answer.correct" class="fa fa-2x fa-check oe_answer_true"/>
+                            <a t-attf-id="#{answer.id}" t-if="not answer.correct" class="fa fa-2x fa-check oe_answer_false"/>
                         </div>
                     </div>
                     <div style="margin-left: 95px;" class="clearfix">
