@@ -54,7 +54,7 @@ class MailMessage(osv.Model):
             args = ['&', ('website_published', '=', True)] + list(args)
 
         return super(MailMessage, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
-                                                context=context, count=False, access_rights_uid=access_rights_uid)
+                                                context=context, count=count, access_rights_uid=access_rights_uid)
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         """ Add Access rules of mail.message for non-employee user:

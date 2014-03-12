@@ -152,7 +152,7 @@
                                 <t t-esc="speaker.name"/>, 
                             </t>
                         </li>
-                        <li class="text-muted fa fa-calendar"> <span t-field="track.date"/></li>
+                        <li class="text-muted fa fa-calendar"> <span t-field="track.date" t-field-options='{"hide_seconds":"True"}'/></li>
                         <li class="text-muted fa fa-map-marker" t-if="track.location_id">
                             <span t-field="track.location_id"/>
                         </li>
@@ -230,7 +230,7 @@
                         </div>
                         <div class="panel-body">
                             <b>Date</b><br/>
-                            <span t-field="track.date"/><br/>
+                            <span t-field="track.date" t-field-options='{"hide_seconds":"True"}'/><br/>
                             <b>Duration</b><br/>
                             <span t-field="track.duration"/> minutes<br/>
                             <b>Location</b><br/>

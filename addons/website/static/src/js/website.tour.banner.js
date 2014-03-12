@@ -47,7 +47,7 @@
                 },
                 {
                     waitFor:   '.oe_overlay_options .oe_options:visible',
-                    element:   '#wrap [data-snippet-id=carousel]:first .carousel-caption',
+                    element:   '#wrap [data-snippet-id=carousel]:first .carousel-caption > div',
                     placement: 'top',
                     title:     _t("Customize banner's text"),
                     content:   _t("Click in the text and start editing it. Click continue once it's done."),
@@ -69,10 +69,17 @@
                     popover:   { fixed: true },
                 },
                 {
-                    snippet:   'three-columns',
+                    element:   'a[href="#snippet_feature"]',
+                    placement: 'bottom',
+                    title:     _t("Feature blocks list"),
+                    content:   _t("Click on 'Features' to see the feature blocks list."),
+                    popover:   { fixed: true },
+                },
+                {
+                    snippet:   'features',
                     placement: 'bottom',
                     title:     _t("Drag & Drop This Block"),
-                    content:   _t("Drag the <em>'Three Columns'</em> block and drop it below the banner."),
+                    content:   _t("Drag the <em>'Features'</em> block and drop it below the banner."),
                     popover:   { fixed: true },
                 },
                 {

@@ -161,7 +161,7 @@ class mail_mail(osv.Model):
             elif mail.model and mail.res_id:
                 fragment.update(model=mail.model, res_id=mail.res_id)
 
-            url = urljoin(base_url, "/web/login?%s#%s" % (urlencode(query), urlencode(fragment)))
+            url = urljoin(base_url, "/web?%s#%s" % (urlencode(query), urlencode(fragment)))
             return _("""<span class='oe_mail_footer_access'><small>Access your messages and documents <a style='color:inherit' href="%s">in OpenERP</a></small></span>""") % url
         else:
             return None

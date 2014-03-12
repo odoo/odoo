@@ -418,6 +418,17 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
           setTimeout(function () { that.$element.trigger('slid') }, 0)
         })
         .emulateTransitionEnd(600)
+    } else if(this.$element.hasClass('slide')) {
+        this.$element.trigger(e)
+        if (e.isDefaultPrevented()) return
+        $active.animate({left: (direction == 'right' ? '100%' : '-100%')}, 600, function(){
+          $active.removeClass('active')
+          that.sliding = false
+          setTimeout(function() { that.$element.trigger('slid')}, 0)
+        })
+        $next.addClass(type).css({left: (direction == 'right' ? '-100%' : '100%')}).animate({left: 0}, 600, function() {
+          $next.removeClass(type).addClass('active')
+        })
     } else {
       this.$element.trigger(e)
       if (e.isDefaultPrevented()) return

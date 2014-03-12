@@ -20,6 +20,10 @@
             website.form(this.pathname, 'POST');
         });
 
+        $(document).on('click', '.cke_editable label', function (ev) {
+            ev.preventDefault();
+        });
+
         $(document).on('submit', '.cke_editable form', function (ev) {
             // Disable form submition in editable mode
             ev.preventDefault();
@@ -626,11 +630,11 @@
             var $link_button = this.make_hover_button(_t("Change"), function () {
                 var sel = new CKEDITOR.dom.element(previous);
                 editor.getSelection().selectElement(sel);
-                if (previous.tagName.toUpperCase() === 'A') {
-                    link_dialog(editor);
-                } else if(sel.hasClass('fa')) {
+                if(sel.hasClass('fa')) {
                     new website.editor.FontIconsDialog(editor, previous)
                         .appendTo(document.body);
+                } else if (previous.tagName.toUpperCase() === 'A') {
+                    link_dialog(editor);
                 }
                 $link_button.hide();
                 previous = null;
@@ -838,7 +842,6 @@
                     document.execCommand("enableObjectResizing", false, "false");
                     document.execCommand("enableInlineTableEditing", false, "false");
                 } catch (e) {}
-
 
                 // detect & setup any CKEDITOR widget within a newly dropped
                 // snippet. There does not seem to be a simple way to do it for
@@ -1438,6 +1441,7 @@
                 this.page += $target.hasClass('previous') ? -1 : 1;
                 this.display_attachments();
             },
+            'click .existing-attachment-remove': 'try_remove',
         }),
         init: function (parent) {
             this.image = null;
@@ -1460,7 +1464,7 @@
                 kwargs: {
                     fields: ['name', 'website_url'],
                     domain: [['res_model', '=', 'ir.ui.view']],
-                    order: 'name',
+                    order: 'id desc',
                     context: website.get_context(),
                 }
             });
@@ -1470,6 +1474,7 @@
             this.display_attachments();
         },
         display_attachments: function () {
+            this.$('.help-block').empty();
             var per_screen = IMAGES_PER_ROW * IMAGES_ROWS;
 
             var from = this.page * per_screen;
@@ -1496,6 +1501,34 @@
                 this.parent.set_image(link);
             }
             this.close()
+        },
+
+        try_remove: function (e) {
+            var $help_block = this.$('.help-block').empty();
+            var self = this;
+            var id = parseInt($(e.target).data('id'), 10);
+            var attachment = _.findWhere(this.records, {id: id});
+
+            return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                model: 'ir.attachment',
+                method: 'try_remove',
+                args: [],
+                kwargs: {
+                    ids: [id],
+                    context: website.get_context()
+                }
+            }).then(function (prevented) {
+                if (_.isEmpty(prevented)) {
+                    self.records = _.without(self.records, attachment);
+                    self.display_attachments();
+                    return;
+                }
+                $help_block.replaceWith(openerp.qweb.render(
+                    'website.editor.dialog.image.existing.error', {
+                        views: prevented[id]
+                    }
+                ));
+            });
         },
     });
 

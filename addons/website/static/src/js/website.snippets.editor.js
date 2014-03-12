@@ -19,13 +19,23 @@
         edit: function () {
             var self = this;
             $("body").off('click');
+            website.snippet.stop_animation();
             window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
             this.snippets.appendTo(this.$el);
-
             this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
-                website.snippet.stop_animation();
                 website.snippet.start_animation();
+                $(website.snippet.readyAnimation).each(function() {
+                    var animation = $(this).data("snippet-view");
+                    if (animation) {
+                        animation.$target.on('focus', '*', function(){
+                            animation.stop();
+                        });
+                        animation.$target.on('blur', '*', function(){
+                            animation.start();
+                        });
+                    }
+                });
             });
 
             return this._super.apply(this, arguments);
@@ -190,13 +200,14 @@
             var mt = parseInt($target.css("margin-top") || 0);
             var mb = parseInt($target.css("margin-bottom") || 0);
             $el.css({
-                'position': 'absolute',
                 'width': $target.outerWidth(),
-                'height': $target.outerHeight() + mt + mb+1,
-                'top': pos.top - mt,
+                'top': pos.top - mt - 5,
                 'left': pos.left
             });
-            $el.find(".oe_handle.size").css("bottom", (mb-7)+'px');
+            $el.find(">.e,>.w").css({'height': $target.outerHeight() + mt + mb+1});
+            $el.find(">.s").css({'top': $target.outerHeight() + mt + mb});
+            $el.find(">.size").css({'top': $target.outerHeight() + mt});
+            $el.find(">.s,>.n").css({'width': $target.outerWidth()-2});
         },
         show: function () {
             this.$el.removeClass("hidden");
@@ -213,8 +224,8 @@
 
         bind_snippet_click_editor: function () {
             var self = this;
-            $(document).on('click', "#wrapwrap", function (event) {
-                var $target = $(event.srcElement);
+            $("#wrapwrap").on('click', function (event) {
+                var $target = $(event.srcElement || event.target);
                 if (!$target.attr("data-snippet-id")) {
                     $target = $target.parents("[data-snippet-id]:first");
                 }
@@ -415,7 +426,6 @@
                                 $target.data("overlay").remove();
                                 $target.removeData("overlay");
                             }
-                            self.create_overlay($target);
                             $target.find("[data-snippet-id]").each(function () {
                                 var $snippet = $(this);
                                 $snippet.removeData("snippet-editor");
@@ -423,10 +433,10 @@
                                     $snippet.data("overlay").remove();
                                     $snippet.removeData("overlay");
                                 }
-                                self.create_overlay($snippet);
                             });
                             // end
 
+                            self.create_overlay($target);
                             self.make_active($target);
                         },0);
                     } else {
@@ -571,6 +581,20 @@
                 var $target = $(this);
                 if (!$target.data('overlay')) {
                     var $zone = $(openerp.qweb.render('website.snippet_overlay'));
+
+                    // fix for pointer-events: none with ie9
+                    if (document.body && document.body.addEventListener) {
+                        $zone.on("click mousedown mousedown", function passThrough(event) {
+                            event.preventDefault();
+                            $target.each(function() {
+                               // check if clicked point (taken from event) is inside element
+                                event.srcElement = this;
+                                $(this).trigger(event.type);
+                            });
+                            return false;
+                        });
+                    }
+
                     $zone.appendTo('#oe_manipulators');
                     $zone.data('target',$target);
                     $target.data('overlay',$zone);
@@ -783,6 +807,7 @@
             this.parent = parent;
             this.$target = $(dom);
             this.$overlay = this.$target.data('overlay');
+            this.$overlay.find('a[data-toggle="dropdown"]').dropdown();
             this.snippet_id = this.$target.data("snippet-id");
             this._readXMLData();
             this.load_style_options();
@@ -1210,7 +1235,6 @@
         on_clone: function () {
             var $clone = this.$target.clone(false);
             var _class = $clone.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, '');
-            _class += ' col-md-1';
             $clone.attr("class", _class);
             this.$target.after($clone);
             this.hide_remove_button();
@@ -1258,6 +1282,11 @@
     });
 
     website.snippet.editorRegistry.slider = website.snippet.editorRegistry.resize.extend({
+        getSize: function () {
+            this.grid = this._super();
+            this.grid.size = 8;
+            return this.grid;
+        },
         drop_and_build_snippet: function() {
             var id = $(".carousel").length;
             this.id = "myCarousel" + id;
@@ -1293,7 +1322,6 @@
             this.$editor.find(".js_add").on('click', function () {self.on_add_slide(); return false;});
             this.$editor.find(".js_remove").on('click', function () {self.on_remove_slide(); return false;});
 
-            this.$target.carousel('pause');
             this.rebind_event();
         },
         on_add_slide: function () {
@@ -1346,11 +1374,6 @@
     });
 
     website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.slider.extend({
-        getSize: function () {
-            this.grid = this._super();
-            this.grid.size = 8;
-            return this.grid;
-        },
         clean_for_save: function () {
             this._super();
             this.$target.css("background-image", "");
@@ -1436,7 +1459,10 @@
                 self.$target.data("snippet-view").set_values();
             });
             this.$target.attr('contentEditable', 'false');
-            this.$target.find('> div > .oe_structure').attr('contentEditable', 'true');
+
+            this.$target.find('> div > .oe_structure').attr('contentEditable', 'true'); // saas-3 retro-compatibility
+
+            this.$target.find('> div > div:not(.oe_structure) > .oe_structure').attr('contentEditable', 'true');
         },
         scroll: function () {
             var self = this;

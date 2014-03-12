@@ -30,7 +30,7 @@ from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import fields, osv, expression
 from openerp.tools.translate import _
-from openerp.tools.float_utils import float_round
+from openerp.tools.float_utils import float_round as round
 
 import openerp.addons.decimal_precision as dp
 
@@ -2144,7 +2144,7 @@ class account_tax(osv.osv):
         tax_compute_precision = precision
         if taxes and taxes[0].company_id.tax_calculation_rounding_method == 'round_globally':
             tax_compute_precision += 5
-        totalin = totalex = float_round(price_unit * quantity, precision)
+        totalin = totalex = round(price_unit * quantity, precision)
         tin = []
         tex = []
         for tax in taxes:

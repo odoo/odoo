@@ -259,20 +259,18 @@ class Website(openerp.addons.web.controllers.main.Home):
                     u"Image size excessive, uploaded images must be smaller "
                     u"than 42 million pixel")
 
-            attachment_id = request.registry['ir.attachment'].create(request.cr, request.uid, {
+            Attachments = request.registry['ir.attachment']
+            attachment_id = Attachments.create(request.cr, request.uid, {
                 'name': upload.filename,
                 'datas': image_data.encode('base64'),
                 'datas_fname': upload.filename,
                 'res_model': 'ir.ui.view',
             }, request.context)
 
-            url = website.urlplus('/website/image', {
-                'model': 'ir.attachment',
-                'id': attachment_id,
-                'field': 'datas',
-                'max_height': MAX_IMAGE_HEIGHT,
-                'max_width': MAX_IMAGE_WIDTH,
-            })
+            [attachment] = Attachments.read(
+                request.cr, request.uid, [attachment_id], ['website_url'],
+                context=request.context)
+            url = attachment['website_url']
         except Exception, e:
             logger.exception("Failed to upload image to attachment")
             message = unicode(e)
