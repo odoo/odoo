@@ -51,8 +51,8 @@
                     <div class="text-muted">
                         by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.create_uid.id }" t-field="question.create_uid"/>, 
                         on <span t-field="question.write_date"/>
-                        <div t-if="len(question.vote_ids)">
-                            <strong>with <span t-esc="len(question.vote_ids)"/> votes</strong>
+                        <div t-if="question.vote_count">
+                            <strong>with <span t-esc="question.vote_count"/> votes</strong>
                         </div>
                     </div>
                     <t t-foreach="question.tags" t-as="tag">
@@ -425,7 +425,7 @@
                             <span t-field="tag.name" />
                         </a>
                         <span> 
-                            X <t t-esc="len(tag.posts_count)"/>
+                            X <t t-esc="tag.posts_count"/>
                         </span>
                     </div>
                 </div>
@@ -452,7 +452,7 @@
                                 <span t-field="badge.name" />
                             </a>
                         </td><td>
-                            <b t-esc="len(badge.owner_ids)"/>
+                            <b t-esc="badge.stat_count_distinct"/>
                             <i class="text-muted">awarded users</i>
                         </td><td>
                             <span t-field="badge.description"/>
@@ -477,9 +477,9 @@
                     <span t-field="badge.description" style="margin-left:20px"/>
                 </div>
                 <h4 class="mt32">
-                    <t class="pull-left" t-esc="len(badge.owner_ids)"/>
-                    <span t-if="len(badge.owner_ids)&gt;1">users</span>
-                    <span t-if="len(badge.owner_ids)&lt;=1">user</span>
+                    <t class="pull-left" t-esc="badge.stat_count_distinct"/>
+                    <span t-if="badge.stat_count_distinct&gt;1">users</span>
+                    <span t-if="badge.stat_count_distinct&lt;=1">user</span>
                     received this badge:
                 </h4>
                 <div class="row">
@@ -628,7 +628,7 @@
                         <span t-field="badge.badge_id.name" />
                     </a>
                     <span>
-                        X <t t-esc="len(badge.badge_id.owner_ids)"/>
+                        X <t t-esc="badge.badge_id.stat_count_distinct"/>
                     </span>
                 </div>
             </div>
