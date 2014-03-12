@@ -19,13 +19,13 @@
                     <t t-foreach="js" t-as="js_file">
                         <script type="text/javascript" t-att-src="js_file"></script>
                     </t>
+                    <script type="text/javascript">
+                        $(function() {
+                            var s = new openerp.init(<t t-raw="modules"/>);
+                            var login_form = new openerp.web.LoginForm($('.oe_signup_form'));
+                        });
+                    </script>
                 </t>
-                <script type="text/javascript">
-                    $(function() {
-                        var s = new openerp.init(<t t-raw="modules"/>);
-                        var login_form = new openerp.web.LoginForm($('.oe_signup_form'));
-                    });
-                </script>
 
                 <t t-set="reset_without_token" t-value="mode == 'reset' and not token"/>
 
