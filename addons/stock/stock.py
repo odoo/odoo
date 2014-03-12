@@ -2244,15 +2244,14 @@ class stock_inventory(osv.osv):
         for inv in self.browse(cr, uid, ids, context=context):
             for inventory_line in inv.line_ids:
                 if inventory_line.product_qty < 0 and inventory_line.product_qty != inventory_line.th_qty:
-                    raise osv.except_osv(_('Warning'),_('You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s' % (inventory_line.product_id.name, inventory_line.product_qty)))
+                    raise osv.except_osv(_('Warning'), _('You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s' % (inventory_line.product_id.name, inventory_line.product_qty)))
             if not inv.move_ids:
                 self.action_check(cr, uid, [inv.id], context=context)
             inv.refresh()
-            #the action_done on stock_move has to be done in 2 steps:
-            #first, we start moving the products from stock to inventory loss
-            move_obj.action_done(cr, uid, [x.id for x in inv.move_ids if x.location_id.usage == 'internal'], context=context)
-            #then, we move from inventory loss. This 2 steps process is needed because some moved quant may need to be put again in stock
-            move_obj.action_done(cr, uid, [x.id for x in inv.move_ids if x.location_id.usage != 'internal'], context=context)
+            #The inventory is posted as a single step which means quants cannot be moved from an internal location to another using an inventory
+            #as they will be moved to inventory loss, and other quants will be created to the encoded quant location. This is a normal behavior
+            #as quants cannot be reuse from inventory location (users can still manually move the products before/after the inventory if they want).
+            move_obj.action_done(cr, uid, [x.id for x in inv.move_ids], context=context)
             self.write(cr, uid, [inv.id], {'state': 'done', 'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         return True
 
