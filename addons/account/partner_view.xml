@@ -64,10 +64,15 @@
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button type="action" string="Invoices" 
+                    <statbutton type="action" 
                         name="%(account.action_invoice_tree)d" 
-                        context="{'search_default_partner_id': active_id,'default_partner_id': active_id}" groups="account.group_account_invoice"/>
-                    <button type="action" string="Journal Items" name="%(account.action_account_moves_all_tree)d" groups="account.group_account_user"/>
+                        icon="fa-pencil-square-o"
+                        context="{'search_default_partner_id': active_id,'default_partner_id': active_id}" groups="account.group_account_invoice">
+                        <field string="Invoices" name="invoices_stat_button" attrs="{'readonly':1}"/>
+                    </statbutton>
+                    <statbutton type="action" name="%(account.action_account_moves_all_tree)d" groups="account.group_account_user" icon="fa-book">
+                        <field string="Journal Items" name="journal_items_stat_button" attrs="{'readonly':1}"/>                        
+                    </statbutton>
                     <button type="action" string="Contracts" name="%(account.action_open_partner_analytic_accounts)d"
                             groups="analytic.group_analytic_accounting"/>
                 </xpath>

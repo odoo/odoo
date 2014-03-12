@@ -162,6 +162,24 @@ class res_partner(osv.osv):
     def _debit_search(self, cr, uid, obj, name, args, context=None):
         return self._asset_difference_search(cr, uid, obj, name, 'payable', args, context=context)
 
+    def _invoices_stat_button(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        obj = self.pool.get('account.invoice')        
+        for partner in self.browse(cr, uid, ids, context):
+            domain = [('id', 'in', map(int, partner.invoice_ids))]
+            group_obj = obj.read_group(cr, uid, domain, ['amount_total'], [''], context=context)
+            total = group_obj[0]['amount_total']
+            res[partner.id] = """
+                    <div><strong>%s</strong> invoices</div>
+                    <div>Total: %s</div>
+            """ % (len(partner.invoice_ids), total)
+        return res
+
+    def _journal_items_stat_button(self, cr, uid, ids, field_name, arg, context=None):
+        html = "<div><strong>%s</strong> Journal Items</div>"
+        return {partner.id: html % len(partner.journal_items_ids) for partner in self.browse(cr, uid, ids, context)}
+        res = {}
+
     def has_something_to_reconcile(self, cr, uid, partner_id, context=None):
         '''
         at least a debit, a credit and a line older than the last reconciliation date of the partner
@@ -190,6 +208,9 @@ class res_partner(osv.osv):
             fnct_search=_credit_search, string='Total Receivable', multi='dc', help="Total amount this customer owes you."),
         'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, string='Total Payable', multi='dc', help="Total amount you have to pay to this supplier."),
         'debit_limit': fields.float('Payable Limit'),
+        'invoices_stat_button': fields.function(_invoices_stat_button, string="Invoices", type='html'),
+        'journal_items_ids': fields.one2many('account.move.line', 'partner_id', 'Journal Items'),
+        'journal_items_stat_button': fields.function(_journal_items_stat_button, string='Journal Items', type='html'),
         'property_account_payable': fields.property(
             type='many2one',
             relation='account.account',
