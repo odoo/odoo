@@ -253,7 +253,9 @@
                     color: #fff
                     +box-shadow(0 0 5px 3px rgba(255,255,255,.7))
         &.readonly
-            content: ""
+            cursor: auto !important
+            &:before, &.size
+                display: none !important
 
     .icon.btn
         display: inline-block

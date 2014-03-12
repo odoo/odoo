@@ -180,10 +180,10 @@
                 'top': pos.top - mt - 5,
                 'left': pos.left
             });
-            $el.find(">.e,>.w").css({'height': $target.outerHeight() + mt + mb+1});
-            $el.find(">.s").css({'top': $target.outerHeight() + mt + mb});
-            $el.find(">.size").css({'top': $target.outerHeight() + mt});
-            $el.find(">.s,>.n").css({'width': $target.outerWidth()-2});
+            $el.find(".oe_handle.e,.oe_handle.w").css({'height': $target.outerHeight() + mt + mb+1});
+            $el.find(".oe_handle.s").css({'top': $target.outerHeight() + mt + mb});
+            $el.find(".oe_handle.size").css({'top': $target.outerHeight() + mt});
+            $el.find(".oe_handle.s,.oe_handle.n").css({'width': $target.outerWidth()-2});
         },
         show: function () {
             this.$el.removeClass("hidden");
@@ -969,16 +969,13 @@
         start: function () {
             var self = this;
             this._super();
-            var $box = $(openerp.qweb.render("website.snippets.resize"));
 
             var resize_values = this.getSize();
-            if (!resize_values.n) $box.find(".oe_handle.n").remove();
-            if (!resize_values.s) $box.find(".oe_handle.s").remove();
-            if (!resize_values.e) $box.find(".oe_handle.e").remove();
-            if (!resize_values.w) $box.find(".oe_handle.w").remove();
-            if (!resize_values.size) $box.find(".oe_handle.size").remove();
-
-            this.$overlay.append($box.find(".oe_handles").html());
+            if (resize_values.n) this.$overlay.find(".oe_handle.n").removeClass("readonly");
+            if (resize_values.s) this.$overlay.find(".oe_handle.s").removeClass("readonly");
+            if (resize_values.e) this.$overlay.find(".oe_handle.e").removeClass("readonly");
+            if (resize_values.w) this.$overlay.find(".oe_handle.w").removeClass("readonly");
+            if (resize_values.size) this.$overlay.find(".oe_handle.size").removeClass("readonly");
 
             this.$overlay.find(".oe_handle:not(:has(.oe_handle_button)), .oe_handle .oe_handle_button").on('mousedown', function (event){
                 event.preventDefault();
