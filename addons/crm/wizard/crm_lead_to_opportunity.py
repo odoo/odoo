@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.tools import email_split
 import re
 
 class crm_lead2opportunity_partner(osv.osv_memory):
@@ -46,19 +47,17 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         Search for opportunities that have the same partner and that arent done or cancelled
         """
         lead_obj = self.pool.get('crm.lead')
-        email = re.findall(r'([^ ,<@]+@[^> ,]+)', email or '')
+        emails = set(email_split(email) + [email])
         final_stage_domain = [('stage_id.probability', '<', 100), '|', ('stage_id.probability', '>', 0), ('stage_id.sequence', '<=', 1)]
         partner_match_domain = []
-        if email:
-            partner_match_domain.append(('email_from', '=ilike', email[0]))
+        for email in emails:
+            partner_match_domain.append(('email_from', '=ilike', email))
         if partner_id:
             partner_match_domain.append(('partner_id', '=', partner_id))
-        if email and partner_id:
-            partner_match_domain.insert(0, '|')
+        partner_match_domain = ['|'] * (len(partner_match_domain) - 1) + partner_match_domain
         if not partner_match_domain:
             return []        
         return lead_obj.search(cr, uid, partner_match_domain + final_stage_domain)
-
 
     def default_get(self, cr, uid, fields, context=None):
         """
