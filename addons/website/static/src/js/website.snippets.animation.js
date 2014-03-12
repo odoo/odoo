@@ -134,23 +134,18 @@
     website.snippet.animationRegistry.share = website.snippet.Animation.extend({
         selector: ".oe_share",
         start: function () {
-            var self = this;
             var url = encodeURIComponent(window.location.href);
             var title = encodeURIComponent($("title").text());
-            this.$target.find(".oe_share_facebook").attr("href",
-                "https://www.facebook.com/sharer/sharer.php?u="+url);
-            this.$target.find(".oe_share_twitter").attr("href",
-                "https://twitter.com/intent/tweet?text="+title+"&related=&url="+url);
-            this.$target.find(".oe_share_linkedin").attr("href",
-                "http://www.linkedin.com/shareArticle?mini=true&url="+url+"&title="+title+"&summary=&source=");
-            this.$target.find(".oe_share_google").attr("href",
-                "https://plus.google.com/share?url="+url);
-            this.$target.find("a").click(function () {
-                window.open(this.href,'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
-                return false;
+            this.$target.find("a").each(function () {
+                var $a = $(this);
+                $a.attr("href", $(this).attr("href").replace("{url}", url).replace("{title}", title));
+                if ($a.attr("target") && $a.attr("target").match(/_blank/i)) {
+                    $a.click(function () {
+                        window.open(this.href,'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
+                        return false;
+                    });
+                }
             });
-            this.$target.find(".oe_share_mail").attr("href",
-                "mailto:?body="+url+"&subject="+title).off("click");
         },
     });
 })();

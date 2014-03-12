@@ -200,6 +200,7 @@
 
         bind_snippet_click_editor: function () {
             var self = this;
+            var snipped_event_flag;
             $("#wrapwrap").on('click', function (event) {
                 if (snipped_event_flag) {
                     return;
