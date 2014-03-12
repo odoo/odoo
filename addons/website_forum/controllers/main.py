@@ -322,17 +322,4 @@ class website_forum(http.Controller):
     def post_vote(self, **post):
         cr, uid, context, post_id = request.cr, request.uid, request.context, int(post.get('post_id'))
         Vote = request.registry['website.forum.post.vote']
-        Post = request.registry['website.forum.post']
-        vote_ids = Vote.search(cr, uid, [('post_id', '=', post_id)], context=context)
-
-        if vote_ids:
-            Vote.unlink(cr, uid, vote_ids, context=context)
-        else:
-            Vote.create(cr, uid, {
-                'post_id': post_id,
-                'user_id': uid,
-                'vote': post.get('vote'),
-            }, context=context)
-        record = Post.browse(cr, uid, post_id, context=context)
-
-        return record.vote_count
+        return Vote.vote(cr, uid, post_id, post.get('vote'), context)

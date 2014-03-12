@@ -147,22 +147,16 @@ class Post(osv.Model):
     }
 
     def create_history(self, cr, uid, ids, vals, context=None):
-        History = self.pool['website.forum.post.history']
-        for post in ids:
-            if vals.get('content'):
-                create_date = vals.get('create_date')
-                res = {
-                    'name': 'Update %s - %s' % (create_date, vals.get('name')),
-                    'content': vals.get('content', ''),
-                    'post_id': post
-                }
-                if vals.get('version'):
-                    res.update({'version':vals.get('version')})
-
-                if vals.get('tags'):
-                    res.update({'tags':vals.get('tags')})
-
-                History.create(cr, uid, res, context=context)
+        hist_obj = self.pool['website.forum.post.history']
+        for post in self.browse(cr, uid, ids, context=context):
+            hist_obj.create(cr, uid, {
+                'post_id': post.id,
+                'content': post.content,
+                'name': post.name,
+                'tags': [(6,0, [x.id for x in post.tags])],
+                'date': post.write_date or post.create_date,
+                'user_id': post.write_uid and post.write_uid.id or post.create_uid.id
+            }, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -202,7 +196,7 @@ class Users(osv.Model):
 
     _columns = {
         'create_date': fields.datetime('Create Date', select=True, readonly=True),
-        'karma': fields.integer('Karma'), # Use Gamification for this
+        'karma': fields.integer('Karma'), # Use a function field for this
         'forum': fields.boolean('Is Forum Member'),
 
         'badges': fields.one2many('gamification.badge.user', 'user_id', 'Badges'),
@@ -220,11 +214,10 @@ class PostHistory(osv.Model):
     _description = 'Post History'
     _inherit = ['website.seo.metadata']
     _columns = {
-        'name': fields.char('Update Notes', size=64, required=True),
+        'name': fields.char('Post Title')
         'post_id': fields.many2one('website.forum.post', 'Post', ondelete='cascade'),
-        'create_date': fields.datetime('Created on', select=True, readonly=True),
-        'create_uid': fields.many2one('res.users', 'Created by', select=True, readonly=True),
-        'version': fields.integer('Version'),
+        'date': fields.datetime('Created on', select=True, readonly=True),
+        'user_id': fields.many2one('res.users', 'Created by', select=True, readonly=True),
         'content': fields.html('Contents', help='Automatically sanitized HTML contents'),
         'tags': fields.many2many('website.forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tag'),
     }
@@ -235,9 +228,15 @@ class Vote(osv.Model):
     _columns = {
         'post_id': fields.many2one('website.forum.post', 'Post', required=True),
         'user_id': fields.many2one('res.users', 'User'),
-        'vote': fields.selection([('1', '1'),('-1', '-1')], 'rate'),
+        'vote': fields.selection([('1', '1'),('-1', '-1'),('0','0')], 'Vote'),
     }
-
+    _defaults = {
+        'user_id': lambda self, cr, uid, ctx: uid,
+        'vote': lambda *args: 1
+    }
+    # TODO: improve this: translate strings _()
+    # no need to have different text for question/answer
+    # need different text for upvote, downvote
     def create(self, cr, uid, vals, context=None):
         vote_id = super(Vote, self).create(cr, uid, vals, context=context)
         Post = self.pool["website.forum.post"]
@@ -248,33 +247,42 @@ class Vote(osv.Model):
         Post.message_post(cr, uid, [record.id], body=body, context=context)
         return vote_id
 
+    def vote(self, cr, uid, post_id, vote, context=None):
+        assert int(vote) in (1, -1, 0), "vote can be -1 or 1, nothing else"
+        post_obj = self.pool.get('website.forum.post')
+        vote_ids = self.search(cr, uid, [('post_id', '=', post_id), ('user_id','=',uid)], context=context)
+        if vote_ids:
+            self.write(cr, uid, vote_uid, {
+                'vote': vote)
+            }, context=context)
+        else:
+            self.create(cr, uid, {
+                'post_id': post_id,
+                'vote': vote,
+            }, context=context)
+        return post_obj.browse(cr, uid, post_id, context=context).vote_count
+
 class Badge(osv.Model):
     _inherit = 'gamification.badge'
     _columns = {
+        # TODO: remove this forum field and use level is not False instead
         'forum': fields.boolean('Is a Forum Badge'),
-        'level': fields.selection([('bronze', 'bronze'), ('silver', 'silver'), ('gold', 'gold')], 'Badge Level'),
-    }
-    _defaults = {
-        'forum': False,
-        'level': 'bronze'
+        'level': fields.selection([('bronze', 'bronze'), ('silver', 'silver'), ('gold', 'gold')], 'Forum Badge Level'),
     }
 
 class Tags(osv.Model):
     _name = "website.forum.tag"
     _description = "Tag"
     _inherit = ['website.seo.metadata']
-
-    def _get_questions(self, cr, uid, ids, field_name, arg, context=None):
+    def _get_posts_count(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         Post = self.pool['website.forum.post']
         for tag in ids:
-            question_ids = Post.search(cr, uid , [('tags.id', '=', tag)], context=context)
-            result[tag] = question_ids
+            result[tag] = Post.search_count(cr, uid , [('tags', '=', tag)], context=context)
         return result
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'forum_id': fields.many2one('website.forum', 'Forum', required=True),
-        'post_ids': fields.function(_get_questions, type='many2many', relation="website.forum.post", string="Questions",
-        ),
+        'posts_count': fields.function(_get_posts_count, type='integer', string="# of Posts"),
    }
