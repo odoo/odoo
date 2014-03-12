@@ -2369,13 +2369,16 @@ class stock_inventory_line(osv.osv):
     _name = "stock.inventory.line"
     _description = "Inventory Line"
     _rec_name = "inventory_id"
-    _order = "inventory_id, location_name, product_code, product_name, prod_lot_id"
+    _order = "inventory_id, location_name, product_code, product_name, prodlot_name"
 
     def _get_product_name_change(self, cr, uid, ids, context=None):
         return self.pool.get('stock.inventory.line').search(cr, uid, [('product_id', 'in', ids)], context=context)
 
     def _get_location_change(self, cr, uid, ids, context=None):
         return self.pool.get('stock.inventory.line').search(cr, uid, [('location_id', 'in', ids)], context=context)
+
+    def _get_prodlot_change(self, cr, uid, ids, context=None):
+        return self.pool.get('stock.inventory.line').search(cr, uid, [('prod_lot_id', 'in', ids)], context=context)
 
     _columns = {
         'inventory_id': fields.many2one('stock.inventory', 'Inventory', ondelete='cascade', select=True),
@@ -2389,15 +2392,18 @@ class stock_inventory_line(osv.osv):
         'state': fields.related('inventory_id', 'state', type='char', string='Status', readonly=True),
         'th_qty': fields.float('Theoretical Quantity', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Owner'),
-        'product_name': fields.related('product_id', 'name', type='char', string='Product name', store={
+        'product_name': fields.related('product_id', 'name', type='char', string='Product Name', store={
                                                                                             'product.product': (_get_product_name_change, ['name', 'default_code'], 20),
                                                                                             'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['product_id'], 20),}),
-        'product_code': fields.related('product_id', 'default_code', type='char', string='Product code', store={
+        'product_code': fields.related('product_id', 'default_code', type='char', string='Product Code', store={
                                                                                             'product.product': (_get_product_name_change, ['name', 'default_code'], 20),
                                                                                             'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['product_id'], 20),}),
-        'location_name': fields.related('location_id', 'complete_name', type='char', string='Location name', store={
+        'location_name': fields.related('location_id', 'complete_name', type='char', string='Location Name', store={
                                                                                             'stock.location': (_get_location_change, ['name', 'location_id', 'active'], 20),
                                                                                             'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['location_id'], 20),}),
+        'prodlot_name': fields.related('prod_lot_id', 'name', type='char', string='Serial Number Name', store={
+                                                                                            'stock.production.lot': (_get_prodlot_change, ['name'], 20),
+                                                                                            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['prod_lot_id'], 20),}),
     }
 
     _defaults = {
