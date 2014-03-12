@@ -555,8 +555,14 @@ class stock_quant(osv.osv):
         ''' Implementation of removal strategies
             If it can not reserve, it will return a tuple (None, qty)
         '''
+        if context is None:
+            context = {}
         domain += location and [('location_id', 'child_of', location.id)] or []
-        domain += [('product_id', '=', product.id)] + domain
+        domain += [('product_id', '=', product.id)]
+        if context.get('force_company'):
+            domain += [('company_id', '=', context.get('force_company'))]
+        else:
+            domain += [('company_id', '=', self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id)]
         #don't take into account location that are production, supplier or inventory
         ignore_location_ids = self.pool.get('stock.location').search(cr, uid, [('usage', 'in', ('production', 'supplier', 'inventory'))], context=context)
         domain.append(('location_id','not in',ignore_location_ids))
