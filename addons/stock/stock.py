@@ -31,7 +31,7 @@ from openerp import SUPERUSER_ID
 import openerp.addons.decimal_precision as dp
 import logging
 
-from profilehooks import profile
+# from profilehooks import profile
 
 _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
@@ -2029,7 +2029,7 @@ class stock_move(osv.osv):
         if check and not lot_id:
             raise osv.except_osv(_('Warning!'), _('You must assign a serial number for the product %s') % (move.product_id.name))
 
-    @profile(immediate=True)
+#     @profile(immediate=True)
     def action_assign(self, cr, uid, ids, context=None):
         """ Checks the product type and accordingly writes the state.
         """
