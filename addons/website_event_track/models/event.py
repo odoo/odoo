@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
+import datetime
 
 class event_track_tag(osv.osv):
     _name = "event.track.tag"
@@ -100,6 +101,21 @@ class event_track(osv.osv):
         'stage_id': _default_stage_id,
         'priority': '2'
     }
+    def _check_if_track_overlap(self, cr, uid, ids, context=None):
+        for track in self.browse(cr, uid, ids, context=context):
+            ids_to_compare = self.search(cr, uid, [("id","!=",track.id),('event_id', '=', track.event_id.id),('location_id', '=', track.location_id.id)])
+            start_time = datetime.datetime.strptime(track.date, '%Y-%m-%d %H:%M:%S')
+            end_time = start_time + datetime.timedelta(minutes = track.duration)
+            for com_track in self.browse(cr, uid, ids_to_compare, context=context):
+                com_start_time = datetime.datetime.strptime(com_track.date, '%Y-%m-%d %H:%M:%S')
+                com_end_time = com_start_time + datetime.timedelta(minutes = com_track.duration)
+                if (com_start_time <= start_time and com_end_time > start_time) or (com_start_time < end_time and com_end_time >= end_time):
+                    return False
+        return True
+
+    _constraints = [
+        (_check_if_track_overlap, 'This track is overlapping', ['This track is overlapping']),
+    ]
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         stage_obj = self.pool.get('event.track.stage')
         result = stage_obj.name_search(cr, uid, '', context=context)
