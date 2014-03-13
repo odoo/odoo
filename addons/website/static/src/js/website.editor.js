@@ -346,14 +346,40 @@
             requires: 'widget',
 
             init: function (editor) {
+                var specials = {
+                    // Can't find the correct ACL rule to only allow img tags
+                    image: { content: '*' },
+                    html: { text: '*' },
+                    monetary: {
+                        text: {
+                            selector: 'span.oe_currency_value',
+                            allowedContent: { }
+                        }
+                    }
+                };
+                _(specials).each(function (editable, type) {
+                    editor.widgets.add(type, {
+                        draggable: false,
+                        editables: editable,
+                        upcast: function (el) {
+                            return  el.attributes['data-oe-type'] === type;
+
+                        }
+                    });
+                });
                 editor.widgets.add('oeref', {
-                    editables: { text: '*' },
                     draggable: false,
-
+                    editables: {
+                        text: {
+                            selector: '*',
+                            allowedContent: { }
+                        },
+                    },
                     upcast: function (el) {
-                        var matches = el.attributes['data-oe-type'] && el.attributes['data-oe-type'] !== 'monetary';
-                        if (!matches) { return false; }
-
+                        var type = el.attributes['data-oe-type'];
+                        if (!type || (type in specials)) {
+                            return false;
+                        }
                         if (el.attributes['data-oe-original']) {
                             while (el.children.length) {
                                 el.children[0].remove();
@@ -363,16 +389,9 @@
                             ));
                         }
                         return true;
-                    },
-                });
-                editor.widgets.add('monetary', {
-                    editables: { text: 'span.oe_currency_value' },
-                    draggable: false,
-
-                    upcast: function (el) {
-                        return el.attributes['data-oe-type'] === 'monetary';
                     }
                 });
+
                 editor.widgets.add('icons', {
                     draggable: false,
 
