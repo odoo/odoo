@@ -71,7 +71,9 @@
             <field name="model">account_followup.followup</field>
             <field name="arch" type="xml">
                 <form string="Follow-up" version="7.0">
-                    <h1><field name="company_id" widget="selection" class="oe_inline"/></h1>
+                    <h1><field name="name"/></h1>
+                    <label for="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" widget="selection" class="oe_inline" groups="base.group_multi_company"/>
                     <p class="oe_grey">
                         To remind customers of paying their invoices, you can
                         define different actions depending on how severely
@@ -113,6 +115,7 @@
             <field name="res_model">account_followup.followup</field>
             <field name="search_view_id" ref="view_account_followup_filter"/>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define follow-up levels and their related actions.
