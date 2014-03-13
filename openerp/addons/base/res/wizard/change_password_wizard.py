@@ -50,15 +50,21 @@ class change_password_wizard(osv.TransientModel):
 
     def change_password_button(self, cr, uid, id, context=None):
         wizard = self.browse(cr, uid, id, context=context)[0]
-        user_ids = []
-        for user in wizard.user_ids:
-            user_ids.append(user.id)
-        self.pool.get('change.password.user').change_password_button(cr, uid, user_ids, context=context)
+        need_reload = any(uid == user.user_id.id for user in wizard.user_ids)
+        line_ids = [user.id for user in wizard.user_ids]
+
+        self.pool.get('change.password.user').change_password_button(cr, uid, line_ids, context=context)
         # don't keep temporary password copies in the database longer than necessary
-        self.pool.get('change.password.user').unlink(cr, uid, user_ids)
-        return {
-            'type': 'ir.actions.act_window_close',
-        }
+        self.pool.get('change.password.user').write(cr, uid, line_ids, {'new_passwd': False}, context=context)
+
+        if need_reload:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'reload'
+            }
+
+        return {'type': 'ir.actions.act_window_close'}
+
 
 class change_password_user(osv.TransientModel):
     """
