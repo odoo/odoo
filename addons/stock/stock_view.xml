@@ -769,7 +769,7 @@
                                     <button name="recheck_availability" string="Recheck Availability" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','not in',('assigned', 'partially_available'))]}" groups="stock.group_stock_user" class="oe_link oe_right oe_inline"/>
                                 </group>
                             </group>
-                            <field name="pack_operation_ids" attrs="{'invisible': [('pack_operation_exist', '=', False)]}" context="{'default_owner_id': owner_id}">
+                            <field name="pack_operation_ids" attrs="{'invisible': [('pack_operation_exist', '=', False)]}" context="{'default_owner_id': owner_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
                                 <tree editable="top">   
                                     <field name="location_id"/>
                                     <field name="product_id" on_change='product_id_change(product_id, product_uom_id, product_qty, context)'/>
@@ -791,6 +791,8 @@
                                     <field name="picking_type_id"/>
                                     <field name="picking_type_code" invisible="1"/>
                                     <field name="quant_reserved_exist" invisible="1"/>                                    
+                                    <field name="location_id" invisible="1"/>
+                                    <field name="location_dest_id" invisible="1"/>
                                 </group>
                                 <group>
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>

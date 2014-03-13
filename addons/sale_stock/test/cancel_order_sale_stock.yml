@@ -20,7 +20,9 @@
         'picking_id': pick.id,
         'product_id': ref('product.product_product_27'),
         'product_uom_id': ref('product.product_uom_unit'),
-        'product_qty': 1
+        'product_qty': 1,
+        'location_id': pick.location_id.id,
+        'location_dest_id': pick.location_dest_id.id,
     })
     pick.do_transfer(context=context)
 -
