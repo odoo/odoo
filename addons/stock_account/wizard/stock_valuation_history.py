@@ -41,27 +41,32 @@ class stock_history(osv.osv):
     _auto = False
     _order = 'date asc'
 
-#     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
-#         res = super(stock_history, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
-#         if 'inventory_value' in fields:
-#             for line in res:
-#                 if '__domain' in line:
-#                     lines = self.search(cr, uid, line['__domain'], context=context)
-#                     inv_value = 0.0
-#                     for line2 in self.browse(cr, uid, lines, context=context):
-#                         inv_value += line2.inventory_value
-#                     line['inventory_value'] = inv_value
-#         return res
-# 
-#     def _get_inventory_value(self, cr, uid, ids, name, attr, context=None):
-#         product_obj = self.pool.get("product.product")
-#         res = {}
-#         for line in self.browse(cr, uid, ids, context=context):
-#             if line.product_id.cost_method == 'real':
-#                 res[line.id] = line.quantity * line.price_unit_on_quant
-#             else:
-#                 res[line.id] = line.quantity * product_obj.get_history_price(cr, uid, line.product_id.id, line.company_id.id, context=context)
-#         return res
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        res = super(stock_history, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+        import time
+        if 'inventory_value' in fields:
+            for line in res:
+                if '__domain' in line:
+                    lines = self.search(cr, uid, line['__domain'], context=context)
+                    inv_value = 0.0
+                    product_obj = self.pool.get("product.product")
+                    print time.time()
+                    for line_rec in self.browse(cr, uid, lines, context=context):
+                        inv_value += line_rec.quantity * product_obj.get_history_price(cr, uid, line_rec.product_id.id, line_rec.company_id.id, context=context)
+                    line['inventory_value'] = inv_value
+                    print "end", time.time()
+        return res
+ 
+    def _get_inventory_value(self, cr, uid, ids, name, attr, context=None):
+        print "pass"
+        product_obj = self.pool.get("product.product")
+        res = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            if line.product_id.cost_method == 'real':
+                res[line.id] = line.quantity * line.price_unit_on_quant
+            else:
+                res[line.id] = line.quantity * product_obj.get_history_price(cr, uid, line.product_id.id, line.company_id.id, context=context)
+        return res
 
     _columns = {
         'move_id': fields.many2one('stock.move', 'Stock Move', required=True),
@@ -74,8 +79,7 @@ class stock_history(osv.osv):
         'date': fields.datetime('Operation Date'),
         'price_unit_on_quant': fields.float('Value'),
         'cost_method': fields.char('Cost Method'),
-        'inventory_value': fields.float('Inventory val'),
-        #'inventory_value': fields.function(_get_inventory_value, string="Inventory Value", type='float', readonly=True),
+        'inventory_value': fields.function(_get_inventory_value, string="Inventory Value", type='float', readonly=True),
     }
 
     def init(self, cr):
@@ -91,12 +95,9 @@ class stock_history(osv.osv):
                     quant.qty AS quantity,
                     stock_move.date AS date,
                     ir_property.value_text AS cost_method,
-                    quant.cost as price_unit_on_quant,
-                    rel.cost as inventory_value
+                    quant.cost as price_unit_on_quant
                 FROM
-                    stock_move
-                LEFT JOIN
-                   stock_quant quant ON quant.id IN (SELECT quant_id FROM stock_quant_move_rel WHERE move_id = stock_move.id)
+                    stock_quant as quant, stock_quant_move_rel, stock_move
                 LEFT JOIN
                    stock_location location ON stock_move.location_dest_id = location.id
                 LEFT JOIN
@@ -105,10 +106,8 @@ class stock_history(osv.osv):
                     product_template ON product_template.id = product_product.product_tmpl_id
                 LEFT JOIN
                     ir_property ON (ir_property.name = 'cost_method' and ir_property.res_id = 'product.template,' || product_template.id::text)
-                LEFT JOIN
-                    (select p.cost as cost, p.product_template_id as tmpl from prices_history as p, (select max(datetime) as datetime, product_template_id from prices_history group by company_id, product_template_id, datetime) as b where b.product_template_id = p.product_template_id and p.datetime = b.datetime) rel
-                    ON rel.tmpl = product_template.id
-                WHERE stock_move.state = 'done' AND location.usage = 'internal'
+                WHERE stock_move.state = 'done' AND location.usage = 'internal' AND stock_quant_move_rel.quant_id = quant.id 
+                AND stock_quant_move_rel.move_id = stock_move.id
                 ) UNION
                 (SELECT
                     '-' || stock_move.id::text || '-' || quant.id::text AS id,
@@ -119,12 +118,9 @@ class stock_history(osv.osv):
                     - quant.qty AS quantity,
                     stock_move.date AS date,
                     ir_property.value_text AS cost_method,
-                    quant.cost as price_unit_on_quant,
-                    0.0 as inventory_value
+                    quant.cost as price_unit_on_quant
                 FROM
-                    stock_move
-                LEFT JOIN
-                   stock_quant quant ON quant.id IN (SELECT quant_id FROM stock_quant_move_rel WHERE move_id = stock_move.id)
+                    stock_quant as quant, stock_quant_move_rel, stock_move
                 LEFT JOIN
                    stock_location location ON stock_move.location_id = location.id
                 LEFT JOIN
@@ -133,6 +129,7 @@ class stock_history(osv.osv):
                     product_template ON product_template.id = product_product.product_tmpl_id
                 LEFT JOIN
                     ir_property ON (ir_property.name = 'cost_method' and ir_property.res_id = 'product.template,' || product_template.id::text)
-                WHERE stock_move.state = 'done' AND location.usage = 'internal'
+                WHERE stock_move.state = 'done' AND location.usage = 'internal' AND stock_quant_move_rel.quant_id = quant.id 
+                AND stock_quant_move_rel.move_id = stock_move.id
                 )
             )""")
