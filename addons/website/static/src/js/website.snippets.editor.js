@@ -202,13 +202,17 @@
             var self = this;
             var snipped_event_flag;
             $("#wrapwrap").on('click', function (event) {
-                if (snipped_event_flag) {
+                if (snipped_event_flag || !event.srcElement) {
                     return;
                 }
                 snipped_event_flag = true;
 
                 setTimeout(function () {snipped_event_flag = false;}, 0);
-                var $target = $(event.srcElement || event.target);
+                var $target = $(event.srcElement);
+
+                if ($target.parents(".oe_overlay").length) {
+                    return;
+                }
 
                 if (!$target.is(website.snippet.globalSelector)) {
                     $target = $target.parents(website.snippet.globalSelector).first();
@@ -1445,6 +1449,7 @@
             if ($ul.find("li").length) {
                 $styles.removeClass("hidden");
             }
+            this.$overlay.find('[data-toggle="dropdown"]').dropdown();
         },
 
         get_parent_block: function () {
