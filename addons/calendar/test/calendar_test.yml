@@ -68,7 +68,7 @@
 -
   I create a recuring rule for my event
 -
-  !record {model: crm.meeting, id: crm_meeting_sprintreview1}:
+  !record {model: calendar.event, id: calendar.event_sprintreview1}:
     name: Begin of month meeting
     date: !eval time.strftime('%Y-%m-%d 12:00:00')
     recurrency: true
@@ -76,7 +76,7 @@
 -
   I check that the attributes are set correctly
 -
-  !assert {model: crm.meeting, id: crm_meeting_sprintreview1}:
+  !assert {model: calendar.event, id: calendar.event_sprintreview1}:
     - rrule_type == 'monthly'
     - count == 12
     - select1 == 'day'
