@@ -1020,6 +1020,8 @@ class calendar_event(osv.osv):
         return self._rrule_write(self, cr, uid, ids, field_name, field_value, args, context=context)
 
     def _rrule_write(self, obj, cr, uid, ids, field_name, field_value, args, context=None):
+        if not isinstance(ids, list):
+            ids = [ids]
         data = self._get_empty_rrule_data()
         if field_value:
             data['recurrency'] = True
