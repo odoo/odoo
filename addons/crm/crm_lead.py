@@ -440,7 +440,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         for lead in self.browse(cr, uid, ids):
             stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 0.0),('on_change','=',True)], context=context)
             if stage_id:
-                self.case_set(cr, uid, [lead.id], values_to_update={'probability': 0.0}, new_stage_id=stage_id, context=context)
+                self.case_set(cr, uid, [lead.id], values_to_update={'probability': 0.0, 'date_closed': fields.datetime.now()}, new_stage_id=stage_id, context=context)
         return True
 
     def case_mark_won(self, cr, uid, ids, context=None):
@@ -448,7 +448,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         for lead in self.browse(cr, uid, ids):
             stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 100.0),('on_change','=',True)], context=context)
             if stage_id:
-                self.case_set(cr, uid, [lead.id], values_to_update={'probability': 100.0}, new_stage_id=stage_id, context=context)
+                self.case_set(cr, uid, [lead.id], values_to_update={'probability': 100.0, 'date_closed': fields.datetime.now()}, new_stage_id=stage_id, context=context)
         return True
 
     def set_priority(self, cr, uid, ids, priority):
@@ -926,11 +926,14 @@ class crm_lead(base_stage, format_address, osv.osv):
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
-        if vals.get('stage_id') and not vals.get('probability'):
-            # change probability of lead(s) if required by stage
+        if vals.get('stage_id'):
             stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
-            if stage.on_change:
+            if not vals.get('probability') and stage.on_change:
+                # change probability of lead(s) if required by stage
                 vals['probability'] = stage.probability
+            # set closed date when won or lost
+            if not vals.get('date_closed') and (vals.get('probability', 0) >= 100 or stage.state == 'canceled'):
+                vals['date_closed'] = fields.datetime.now()
         return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):

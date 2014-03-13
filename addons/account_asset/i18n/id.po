@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-03-11 08:50+0000\n"
+"Last-Translator: williamlsd <mudy@tdmm.net>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 05:57+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-03-12 05:25+0000\n"
+"X-Generator: Launchpad (build 16963)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -27,27 +27,27 @@ msgstr ""
 #: field:account.asset.history,method_end:0
 #: field:asset.modify,method_end:0
 msgid "Ending date"
-msgstr ""
+msgstr "Tanggal akhir"
 
 #. module: account_asset
 #: field:account.asset.asset,value_residual:0
 msgid "Residual Value"
-msgstr ""
+msgstr "Nilai residual"
 
 #. module: account_asset
 #: field:account.asset.category,account_expense_depreciation_id:0
 msgid "Depr. Expense Account"
-msgstr ""
+msgstr "Depr Akun Biaya"
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "Dikelompokan berdasarkan ..."
 
 #. module: account_asset
 #: field:asset.asset.report,gross_value:0
 msgid "Gross Amount"
-msgstr ""
+msgstr "Jumlah Kotor"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -58,7 +58,7 @@ msgstr ""
 #: field:asset.asset.report,asset_id:0
 #: model:ir.model,name:account_asset.model_account_asset_asset
 msgid "Asset"
-msgstr ""
+msgstr "Aktiva"
 
 #. module: account_asset
 #: help:account.asset.asset,prorata:0
@@ -67,12 +67,14 @@ msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January"
 msgstr ""
+"Mengindikasikan bahwa entri depresiasi pertama untuk aset ini harus "
+"dilakukan dari tanggal pembelian, bukan dari tanggal satu Januari."
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
 #: selection:account.asset.category,method:0
 msgid "Linear"
-msgstr ""
+msgstr "Linier"
 
 #. module: account_asset
 #: field:account.asset.asset,company_id:0
@@ -85,19 +87,19 @@ msgstr "Perusahaan"
 #. module: account_asset
 #: view:asset.modify:0
 msgid "Modify"
-msgstr ""
+msgstr "Ubah"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0
 #: view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Running"
-msgstr ""
+msgstr "Sedang berjalan"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Atur menjadi draft"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -105,24 +107,24 @@ msgstr ""
 #: model:ir.model,name:account_asset.model_asset_asset_report
 #: model:ir.ui.menu,name:account_asset.menu_action_asset_asset_report
 msgid "Assets Analysis"
-msgstr ""
+msgstr "Analisa Aset"
 
 #. module: account_asset
 #: field:asset.modify,name:0
 msgid "Reason"
-msgstr ""
+msgstr "Alasan"
 
 #. module: account_asset
 #: field:account.asset.asset,method_progress_factor:0
 #: field:account.asset.category,method_progress_factor:0
 msgid "Degressive Factor"
-msgstr ""
+msgstr "Faktor Penurunan Nilai"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal
 msgid "Asset Categories"
-msgstr ""
+msgstr "Kategori Aset"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -130,40 +132,40 @@ msgstr ""
 #: field:account.move.line,entry_ids:0
 #: model:ir.actions.act_window,name:account_asset.act_entries_open
 msgid "Entries"
-msgstr ""
+msgstr "Entri"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 #: field:account.asset.asset,depreciation_line_ids:0
 msgid "Depreciation Lines"
-msgstr ""
+msgstr "Baris Depresiasi"
 
 #. module: account_asset
 #: help:account.asset.asset,salvage_value:0
 msgid "It is the amount you plan to have that you cannot depreciate."
-msgstr ""
+msgstr "Adalah besaran yang anda rencanakan yang tidak dapat di depresiasi."
 
 #. module: account_asset
 #: help:account.asset.asset,method_period:0
 msgid "The amount of time between two depreciations, in months"
-msgstr ""
+msgstr "Waktu antara dua depresiasi, dalam bulan"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
 #: view:asset.asset.report:0
 #: field:asset.asset.report,depreciation_date:0
 msgid "Depreciation Date"
-msgstr ""
+msgstr "Tanggal Depresiasi"
 
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You cannot create recursive assets."
-msgstr ""
+msgstr "Salah ! Anda tidak dapat membuat aset rekursif"
 
 #. module: account_asset
 #: field:asset.asset.report,posted_value:0
 msgid "Posted Amount"
-msgstr ""
+msgstr "Jumlah terposting"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -173,12 +175,12 @@ msgstr ""
 #: model:ir.ui.menu,name:account_asset.menu_finance_assets
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
 msgid "Assets"
-msgstr ""
+msgstr "Aset"
 
 #. module: account_asset
 #: field:account.asset.category,account_depreciation_id:0
 msgid "Depreciation Account"
-msgstr ""
+msgstr "Akun Depresiasi"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -187,34 +189,34 @@ msgstr ""
 #: view:asset.modify:0
 #: field:asset.modify,note:0
 msgid "Notes"
-msgstr ""
+msgstr "Catatan"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_id:0
 msgid "Depreciation Entry"
-msgstr ""
+msgstr "Entri Depresiasi"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:82
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Ada Kesalahan !"
 
 #. module: account_asset
 #: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
-msgstr ""
+msgstr "# Baris Depresiasi"
 
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
 msgid "Number of Months in a Period"
-msgstr ""
+msgstr "Jumlah Bulan dalam Satu Periode"
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets in draft state"
-msgstr ""
+msgstr "Aset pada kondisi draft"
 
 #. module: account_asset
 #: field:account.asset.asset,method_end:0
@@ -222,37 +224,37 @@ msgstr ""
 #: selection:account.asset.category,method_time:0
 #: selection:account.asset.history,method_time:0
 msgid "Ending Date"
-msgstr ""
+msgstr "Tanggal Akhir"
 
 #. module: account_asset
 #: field:account.asset.asset,code:0
 msgid "Reference"
-msgstr ""
+msgstr "Referensi"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Account Asset"
-msgstr ""
+msgstr "Akun Aset"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
 #: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
 msgid "Compute Assets"
-msgstr ""
+msgstr "Hitung Aset"
 
 #. module: account_asset
 #: field:account.asset.category,method_period:0
 #: field:account.asset.history,method_period:0
 #: field:asset.modify,method_period:0
 msgid "Period Length"
-msgstr ""
+msgstr "Lama Periode"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0
 #: view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Draft"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -262,24 +264,24 @@ msgstr "Tanggal pembelian aset"
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Change Duration"
-msgstr ""
+msgstr "Ubah Durasi"
 
 #. module: account_asset
 #: help:account.asset.asset,method_number:0
 #: help:account.asset.category,method_number:0
 #: help:account.asset.history,method_number:0
 msgid "The number of depreciations needed to depreciate your asset"
-msgstr ""
+msgstr "Jumlah depresiasi yang dibutuhkan untuk mendepresiasi aset anda"
 
 #. module: account_asset
 #: view:account.asset.category:0
 msgid "Analytic Information"
-msgstr ""
+msgstr "Informasi Analitik"
 
 #. module: account_asset
 #: field:account.asset.category,account_analytic_id:0
 msgid "Analytic account"
-msgstr ""
+msgstr "Akun Analitik"
 
 #. module: account_asset
 #: field:account.asset.asset,method:0
@@ -297,24 +299,24 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.depreciation.line,remaining_value:0
 msgid "Next Period Depreciation"
-msgstr ""
+msgstr "Periode Depresiasi Berikutnya"
 
 #. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
-msgstr ""
+msgstr "Waktu dalam bulan antara dua depresiasi"
 
 #. module: account_asset
 #: view:asset.modify:0
 #: model:ir.actions.act_window,name:account_asset.action_asset_modify
 #: model:ir.model,name:account_asset.model_asset_modify
 msgid "Modify Asset"
-msgstr ""
+msgstr "Ubah Aktiva"
 
 #. module: account_asset
 #: field:account.asset.asset,salvage_value:0
 msgid "Salvage Value"
-msgstr ""
+msgstr "Nilai Likuidasi Aset"
 
 #. module: account_asset
 #: field:account.asset.asset,category_id:0
@@ -322,68 +324,68 @@ msgstr ""
 #: field:account.invoice.line,asset_category_id:0
 #: view:asset.asset.report:0
 msgid "Asset Category"
-msgstr ""
+msgstr "Kategori Aktiva"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Assets in closed state"
-msgstr ""
+msgstr "Aktiva pada kondisi tertutup"
 
 #. module: account_asset
 #: field:account.asset.asset,parent_id:0
 msgid "Parent Asset"
-msgstr ""
+msgstr "Aktiva induk"
 
 #. module: account_asset
 #: view:account.asset.history:0
 #: model:ir.model,name:account_asset.model_account_asset_history
 msgid "Asset history"
-msgstr ""
+msgstr "Histori Aktiva"
 
 #. module: account_asset
 #: view:account.asset.category:0
 msgid "Search Asset Category"
-msgstr ""
+msgstr "Cari Kategori Aktiva"
 
 #. module: account_asset
 #: view:asset.modify:0
 msgid "months"
-msgstr ""
+msgstr "bulan"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Baris Tagihan"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Depreciation Board"
-msgstr ""
+msgstr "Papan Depresiasi"
 
 #. module: account_asset
 #: field:asset.asset.report,unposted_value:0
 msgid "Unposted Amount"
-msgstr ""
+msgstr "Jumlah Belum Terposting"
 
 #. module: account_asset
 #: field:account.asset.asset,method_time:0
 #: field:account.asset.category,method_time:0
 #: field:account.asset.history,method_time:0
 msgid "Time Method"
-msgstr ""
+msgstr "Metode Waktu"
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
 msgid "or"
-msgstr ""
+msgstr "atau"
 
 #. module: account_asset
 #: field:account.asset.asset,note:0
 #: field:account.asset.category,note:0
 #: field:account.asset.history,note:0
 msgid "Note"
-msgstr ""
+msgstr "Catatan"
 
 #. module: account_asset
 #: help:account.asset.history,method_time:0
@@ -394,6 +396,12 @@ msgid ""
 "Ending Date: Choose the time between 2 depreciations and the date the "
 "depreciations won't go beyond."
 msgstr ""
+"Metode yang digunakan untuk menghitung tanggal dan angka pada baris "
+"depresiasi.\n"
+"Angka Depresiasi: Angka tetap dari baris depresiasi dan waktu antara 2 "
+"depresiasi.\n"
+"Tanggal Akhir: Pilih waktu antara 2 depresiasi dimana tanggal depresiasi "
+"tidak melebihinya."
 
 #. module: account_asset
 #: help:account.asset.asset,method_time:0
@@ -406,16 +414,22 @@ msgid ""
 "  * Ending Date: Choose the time between 2 depreciations and the date the "
 "depreciations won't go beyond."
 msgstr ""
+"Pilih metode untuk digunakan untuk menghitung tanggal dan jumlah baris "
+"depresiasi.\n"
+"  * Jumlah Depresiasi: Angkat baris depresiasi tetap dan waktu antara 2 "
+"depresiasi.\n"
+"  * Tanggal Akhir: Pilih waktu antara 2 depresiasi dan tanggal depresiasi "
+"tidak boleh melebihinya."
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets in running state"
-msgstr ""
+msgstr "Aktiva pada kondisi berjalan"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Closed"
-msgstr ""
+msgstr "Ditutup"
 
 #. module: account_asset
 #: help:account.asset.asset,state:0
@@ -426,43 +440,48 @@ msgid ""
 "You can manually close an asset when the depreciation is over. If the last "
 "line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
+"Saat aktiva dibuat, statusnya adalah 'Draft'.\n"
+"Jika aktiva di konfirmasi, statusnya menjadi 'Berjalan' dan baris depresiasi "
+"dapat di posting pada pembukuan.\n"
+"Anda dapat menutup secara manual suatu aktiva saat depresiasi sudah "
+"berakhir. Jika baris akhir depresiasi dimasukkan, aktiva otomatis tertutup."
 
 #. module: account_asset
 #: field:account.asset.asset,state:0
 #: field:asset.asset.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: account_asset
 #: field:account.asset.asset,partner_id:0
 #: field:asset.asset.report,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Posted depreciation lines"
-msgstr ""
+msgstr "Baris depresiasi terposting"
 
 #. module: account_asset
 #: field:account.asset.asset,child_ids:0
 msgid "Children Assets"
-msgstr ""
+msgstr "Aktiva anak"
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Date of depreciation"
-msgstr ""
+msgstr "Tanggal depresiasi"
 
 #. module: account_asset
 #: field:account.asset.history,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Pengguna"
 
 #. module: account_asset
 #: field:account.asset.category,account_asset_id:0
 msgid "Asset Account"
-msgstr ""
+msgstr "Akun Aktiva"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -473,17 +492,17 @@ msgstr "Filter Tambahan..."
 #: view:account.asset.asset:0
 #: view:asset.depreciation.confirmation.wizard:0
 msgid "Compute"
-msgstr ""
+msgstr "Hitung"
 
 #. module: account_asset
 #: view:account.asset.history:0
 msgid "Asset History"
-msgstr ""
+msgstr "Histori Aktiva"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
 msgid "asset.depreciation.confirmation.wizard"
-msgstr ""
+msgstr "wizard.konfirmasi.depresiasi.aktiva"
 
 #. module: account_asset
 #: field:account.asset.asset,active:0
@@ -493,12 +512,12 @@ msgstr "Aktif"
 #. module: account_asset
 #: field:account.asset.depreciation.line,parent_state:0
 msgid "State of Asset"
-msgstr ""
+msgstr "Status Aktiva"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,name:0
 msgid "Depreciation Name"
-msgstr ""
+msgstr "Nama Depresiasi"
 
 #. module: account_asset
 #: view:account.asset.asset:0
