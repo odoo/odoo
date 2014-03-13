@@ -31,6 +31,8 @@ from openerp import SUPERUSER_ID
 import openerp.addons.decimal_precision as dp
 import logging
 
+from profilehooks import profile
+
 _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 # Incoterms
@@ -1100,12 +1102,13 @@ class stock_picking(osv.osv):
             if prod_move.get(product_id):
                 for move in prod_move[product_id]:
                     qty_on_link = min(qty_move_rem[move.id], qty_to_assign)
-                    cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
-                    (%s, %s, %s)""", (move.id, op.id, qty_on_link,))
-                    qty_move_rem[move.id] -= qty_on_link
-                    qty_to_assign -= qty_on_link
-                    if qty_to_assign <= 0:
-                        break
+                    if qty_on_link > 0:
+                        cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
+                        (%s, %s, %s)""", (move.id, op.id, qty_on_link,))
+                        qty_move_rem[move.id] -= qty_on_link
+                        qty_to_assign -= qty_on_link
+                        if qty_to_assign <= 0:
+                            break
             return qty_to_assign == 0
 
         def _check_quants_reserved(ops):
@@ -1141,10 +1144,9 @@ class stock_picking(osv.osv):
                             flag = flag and (ops.owner_id.id == quant.owner_id.id)
                             if flag:
                                 quant_qty = quant.qty
-                                if quants_done.get(quant.id):
-                                    if quants_done[quant.id] == 0:
-                                        continue
-                                    quant_qty = quants_done[quant.id]
+                                if quants_done[quant.id] == 0:
+                                    continue
+                                quant_qty = quants_done[quant.id]
                                 if quant_qty > qty:
                                     qty_todo = qty
                                     quants_done[quant.id] = quant_qty - qty
@@ -1186,7 +1188,6 @@ class stock_picking(osv.osv):
 
         for op in operations:
             _check_quants_reserved(op)
-
         remaining_qty_ok = True
         for op in operations:
             op.refresh()
@@ -2028,6 +2029,7 @@ class stock_move(osv.osv):
         if check and not lot_id:
             raise osv.except_osv(_('Warning!'), _('You must assign a serial number for the product %s') % (move.product_id.name))
 
+    @profile(immediate=True)
     def action_assign(self, cr, uid, ids, context=None):
         """ Checks the product type and accordingly writes the state.
         """
@@ -2076,11 +2078,12 @@ class stock_move(osv.osv):
             #first try to find quants based on specific domains given by linked operations
             for record in ops.linked_move_operation_ids:
                 move = record.move_id
-                domain = main_domain[move.id] + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
-                qty_already_assigned = sum([q.qty for q in record.reserved_quant_ids])
-                qty = record.qty - qty_already_assigned
-                quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, qty, domain=domain, prefered_domain=[], fallback_domain=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
-                quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)
+                if move.id in main_domain:
+                    domain = main_domain[move.id] + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
+                    qty_already_assigned = sum([q.qty for q in record.reserved_quant_ids])
+                    qty = record.qty - qty_already_assigned
+                    quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, qty, domain=domain, prefered_domain=[], fallback_domain=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
+                    quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)
 
         for move in todo_moves:
             #then if the move isn't totally assigned, try to find quants without any specific domain
