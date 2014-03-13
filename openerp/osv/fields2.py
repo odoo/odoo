@@ -665,6 +665,8 @@ class Datetime(Field):
         elif value:
             # check the datetime format
             value = value[:DATETIME_LENGTH]
+            if len(value) == DATE_LENGTH:
+                value += " 00:00:00"
             datetime.strptime(value, DATETIME_FORMAT)
         return value or False
 
