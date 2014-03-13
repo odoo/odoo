@@ -385,6 +385,7 @@ $sheet-padding: 16px
     .oe_left
         float: left
         margin-right: 8px
+        width: 305px
     .oe_right
         float: right
         margin-left: 8px
@@ -429,25 +430,30 @@ $sheet-padding: 16px
             &:hover
                 background: #ED6F6A
     .oe_button_box
-        width: 270px
-        text-align: right
-        button
-            margin: 4px
+        width: 400px
+        text-align: left
         .oe_stat_button
             font-weight: normal
             display: inline-table
-            width: 48% !important
+            width: 33% !important
             height: 45px
-            margin: 0px
+            margin: 0px -1px -1px 0px
             color: #666
+            border-color: #ddd
             > div
                 display: table-cell
                 vertical-align: middle
-                padding: 0
+                text-align: left
+                padding: 0 
             .stat_button_icon
                 color: #7C7BAD
                 font-size: 24px
-                padding: 4px
+                padding: 0px
+                text-align: center
+                width: 40px
+            svg
+                width: 38px
+                height: 38px
     .oe_avatar
         > img
             max-height: 90px
