@@ -2857,6 +2857,7 @@ instance.web.form.FieldPercentPie = instance.web.form.AbstractField.extend({
                 .donut(true) 
                 .showLegend(false)
                 .showLabels(false)
+                .color(['#DDD','#7C7BAD'])
                 .donutRatio(0.62);
    
             d3.select(svg)
