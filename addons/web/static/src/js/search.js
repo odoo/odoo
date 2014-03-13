@@ -677,6 +677,11 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      * @returns instance.web.search.Field
      */
     make_field: function (item, field, parent) {
+        // M2O combined with selection widget is pointless and broken in search views,
+        // but has been used in the past for unsupported hacks -> ignore it
+        if (field.type === "many2one" && item.attrs.widget === "selection"){
+            item.attrs.widget = undefined;
+        }
         var obj = instance.web.search.fields.get_any( [item.attrs.widget, field.type]);
         if(obj) {
             return new (obj) (item, field, parent || this);
