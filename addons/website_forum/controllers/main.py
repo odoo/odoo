@@ -334,3 +334,52 @@ class website_forum(http.Controller):
         cr, uid, context, post_id = request.cr, request.uid, request.context, int(post.get('post_id'))
         Vote = request.registry['website.forum.post.vote']
         return Vote.vote(cr, uid, post_id, post.get('vote'), context)
+
+    @http.route('/forum/post_delete/', type='json', auth="user", multilang=True, methods=['POST'], website=True)
+    def delete_answer(self, **kwarg):
+        request.registry['website.forum.post'].unlink(request.cr, request.uid, [int(kwarg.get('post_id'))], context=request.context)
+        return True
+    
+    @http.route('/forum/<model("website.forum"):forum>/delete/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
+    def delete_question(self, forum, post, **kwarg):
+        request.registry['website.forum.post'].unlink(request.cr, request.uid, [post.id], context=request.context)
+        return werkzeug.utils.redirect("/forum/%s/" % (slug(forum)))
+
+    @http.route('/forum/<model("website.forum"):forum>/edit/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
+    def edit_question(self, forum, post, **kwarg):
+        values = {
+            'post': post,
+            'forum': forum,
+            'searches': kwarg
+        }
+        return request.website.render("website_forum.edit_question", values)
+
+    @http.route('/forum/<model("website.forum"):forum>/question/savequestion/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    def save_edited_question(self, forum, **post):
+        request.registry['website.forum.post'].write( request.cr, request.uid, [int(post.get('post_id'))], {
+            'content': post.get('answer_content'),
+            'name': post.get('question_name'),
+        }, context=request.context)
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('post_id')))
+
+    @http.route('/forum/<model("website.forum"):forum>/answer/<model("website.forum.post"):post>/edit/<model("website.forum.post"):answer>', type='http', auth="user", multilang=True, website=True)
+    def edit_ans(self, forum, post, answer, **kwarg):
+        values = {
+            'post': post,
+            'post_answer': answer,
+            'forum': forum,
+            'searches': kwarg
+        }
+        return request.website.render("website_forum.edit_answer", values)
+
+    @http.route('/forum/correct_answer/', type='json', auth="user", multilang=True, methods=['POST'], website=True)
+    def correct_answer(self, **kwarg):
+        cr, uid, context = request.cr, request.uid, request.context
+        Post = request.registry['website.forum.post']
+        post = Post.browse(cr, uid, int(kwarg.get('post_id')), context=context)
+        if post.create_uid.id == uid:
+            correct = False if post.correct else True
+            Post.write( cr, uid, [int(kwarg.get('post_id'))], {
+                'correct': correct,
+            }, context=context)
+        return correct

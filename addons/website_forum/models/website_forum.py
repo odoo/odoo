@@ -118,7 +118,7 @@ class Post(osv.Model):
         'active': fields.boolean('Active'),
         'views': fields.integer('Page Views'),
 
-        'parent_id': fields.many2one('website.forum.post', 'Question'),
+        'parent_id': fields.many2one('website.forum.post', 'Question', ondelete='cascade'),
         'child_ids': fields.one2many('website.forum.post', 'parent_id', 'Answers'),
         'child_count':fields.function(_get_child_count, string="Answers", type='integer',
             store={
@@ -150,6 +150,7 @@ class Post(osv.Model):
                 'website.forum.post.vote': (_get_vote, [], 10),
             }
         ),
+        'correct': fields.boolean('Correct Answer'),
     }
     _defaults = {
         'state': 'active',
@@ -173,10 +174,13 @@ class Post(osv.Model):
         if context is None:
             context = {}
         create_context = dict(context, mail_create_nolog=True)
-        post_id = super(Post, self).create(cr, uid, vals, context=create_context)
         body, subtype = "Asked a question", "website_forum.mt_question_create"
         if vals.get("parent_id"):
             body, subtype = "Answered a question", "website_forum.mt_answer_create"
+            #Note: because of no name it gives error on slug so set name of question in answer
+            question = self.browse(cr, uid, vals.get("parent_id"), context=context)
+            vals['name'] = question.name
+        post_id = super(Post, self).create(cr, uid, vals, context=create_context)
         #Note: just have to pass subtype in message post: gives error on installation time
         self.message_post(cr, uid, [post_id], body=_(body), context=context)
         return post_id

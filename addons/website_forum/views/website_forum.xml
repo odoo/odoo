@@ -285,6 +285,26 @@
             </t>
         </template>
 
+        <template id="edit_question">
+            <t t-call="website_forum.header">
+                <h3>Edit question</h3>
+                <form t-attf-action="/forum/#{ slug(forum) }/question/savequestion/" method="post" role="form">
+                    <input type="text" name="question_name" required="True" t-attf-value="#{post.name or ''}"
+                        class="form-control" placeholder="Edit your Question"/>
+                    <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
+                    <textarea name="answer_content" required="True" value="content" class="form-control" id="textarea_ckeditor">
+                        <t t-esc="post.content"/>
+                    </textarea>
+                    <input type="text" name="question_tag" class="form-control" style="margin-top: 10px" placeholder="Tags"/>
+                    <input name="post_id" t-att-value="post.id" type="hidden"/>
+                    <button class="btn btn-primary btn-lg">Save</button>
+                </form>
+                <script type="text/javascript">
+                    CKEDITOR.replace("answer_content");
+                </script>
+            </t>
+        </template>
+
         <template id="post_description_full" name="Question Navigation">
             <t t-call="website_forum.header">
 
@@ -324,8 +344,8 @@
                                             comment
                                         </a>
                                     </li>
-                                    <li><a class="text-muted" href="">edit</a></li>
-                                    <li><a class="text-muted" href="">delete</a></li>
+                                    <li><a class="text-muted" t-attf-href="/forum/#{ slug(forum) }/edit/question/#{ question.id }">edit</a></li>
+                                    <li><a class="text-muted" t-attf-href="/forum/#{ slug(forum) }/delete/question/#{ question.id }">delete</a></li>
                                     <li><a class="text-muted" href="">share</a></li>
                                 </ul>
                             </div>
@@ -341,7 +361,7 @@
                 </div>
                 <hr/>
 
-                <div t-foreach="question.child_ids" t-as="answer" class="mt16 mb32">
+                <div t-foreach="question.child_ids" t-as="answer" class="mt16 mb32" id="answer">
                     <div class="text-center pull-left">
                         <div t-attf-class="box oe_grey">
                             <a t-attf-class="fa fa-thumbs-up #{answer.user_vote == 1 and 'text-success' or ''}" 
@@ -354,7 +374,8 @@
                             </div>
                         </div>
                         <div class="text-muted">
-                            <a href="#" class="fa fa-2x fa-check"/>
+                            <a t-attf-id="#{answer.id}" t-if="answer.correct" class="fa fa-2x fa-check oe_answer_true"/>
+                            <a t-attf-id="#{answer.id}" t-if="not answer.correct" class="fa fa-2x fa-check oe_answer_false"/>
                         </div>
                     </div>
                     <div style="margin-left: 95px;" class="clearfix">
@@ -367,8 +388,8 @@
                                         comment
                                     </a>
                                 </li>
-                                <li><a class="text-muted" href="">edit</a></li>
-                                <li><a class="text-muted" href="">delete</a></li>
+                                <li><a class="text-muted" t-attf-href="/forum/#{ slug(forum) }/answer/#{ question.id }/edit/#{ answer.id }">edit</a></li>
+                                <li><a class="text-muted delete" href="" t-attf-id="#{answer.id}">delete</a></li>
                                 <li><a class="text-muted" href="">share</a></li>
                             </ul>
                             <t t-set="user" t-value="answer.create_uid"/>
