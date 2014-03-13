@@ -31,7 +31,7 @@ $(document).ready(function() {
 
     //check custome options inline discussion and select to tweet(share) are checked.
     openerp.jsonRpc("/blogpsot/get_custom_options", 'call', {}).then(function(res){
-        discussion = res['Inline Discussion'];
+        discussion = res['Allow comment in text'];
         share = res['Select to Tweet'];
         var content = $("#blog_content p");
         if(content.length && discussion){

@@ -91,6 +91,14 @@ class BlogPost(osv.Model):
         'website_published_datetime': fields.datetime(
             'Publish Date'
         ),
+        'website_message_ids': fields.one2many(
+            'mail.message', 'res_id',
+            domain=lambda self: [
+                '&', '&', ('model', '=', self._name), ('type', '=', 'comment') , ('discussion', '=', False)
+            ],
+            string='Website Messages',
+            help="Website communication history",
+        ),
         'history_ids': fields.one2many(
             'blog.post.history', 'post_id',
             'History', help='Last post modifications',

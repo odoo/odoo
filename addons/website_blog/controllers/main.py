@@ -309,7 +309,7 @@ class WebsiteBlog(http.Controller):
         new_blog_post_id = request.registry['blog.post'].copy(cr, uid, blog_post_id, {}, context=create_context)
         return werkzeug.utils.redirect("/blogpost/%s/?enable_editor=1" % new_blog_post_id)
 
-    @http.route('/blogpost/get_discussion', type='json', auth="public", website=True)
+    @http.route('/blogpost/get_discussion/', type='json', auth="public", website=True)
     def discussion(self, post_id=0, discussion=None, **post):
         mail_obj = request.registry.get('mail.message')
         values = []
@@ -334,7 +334,7 @@ class WebsiteBlog(http.Controller):
     @http.route('/blogpsot/get_custom_options', type='json', auth="public", website=True)
     def get_custom_options(self, post_id=0,image=None, **post):
         values = {}
-        inherit_options = request.registry.get('ir.ui.view').search_read(request.cr, SUPERUSER_ID, [('name','in',['Inline Discussion','Select to Tweet'])], ['inherit_id','name'])
+        inherit_options = request.registry.get('ir.ui.view').search_read(request.cr, SUPERUSER_ID, [('name','in',['Allow comment in text','Select to Tweet'])], ['inherit_id','name'])
         for options in inherit_options:
             values[options.get('name')] = options.get('inherit_id')
         return values
