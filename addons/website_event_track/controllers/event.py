@@ -42,7 +42,10 @@ class website_event(http.Controller):
     # TODO: not implemented
     @http.route(['/event/<model("event.event"):event>/agenda/'], type='http', auth="public", website=True, multilang=True)
     def event_agenda(self, event, tag=None, **post):
+        #To make timeslot according to given track time
         def algo_for_timetable(new_start_date, new_end_date, new_schedule):
+            #If new time in range of start and end time, it make two slot
+            #and remove old element.
             def insert_time(time, new_schedule):
                 for index,ct in enumerate(time):
                     for index2,dt in enumerate(new_schedule):
@@ -119,21 +122,22 @@ class website_event(http.Controller):
         location_object = request.registry.get('event.track.location')
         event_track_obj = request.registry.get('event.track')
         
+        #Make all possible timeslot for each day.
         for track in fetch_tracks:
             room_list.append(track[1])
-            # make schedule for future
             if not new_schedule.has_key(track[2][:8]):
                 new_schedule[track[2][:8]] = []
             start_time = datetime.datetime.strptime(track[5], '%Y-%m-%d %H:%M:%S')
             end_time = start_time + datetime.timedelta(minutes = int(track[3]))
             new_schedule[track[2][:8]] = algo_for_timetable(start_time, end_time, new_schedule[track[2][:8]])
             
-        
+        #Add timeslot as key to track
         for key in new_schedule.keys():
             unsort_tracks[key] = OrderedDict()
             for value in new_schedule[key]:
                 unsort_tracks[key][value[0].strftime('%H:%M')+" - "+value[1].strftime('%H:%M')] = []
-                
+        
+        #Add track to its related time slot and day.
         for track in fetch_tracks:
             start_time = datetime.datetime.strptime(track[5], '%Y-%m-%d %H:%M:%S')
             end_time = start_time + datetime.timedelta(minutes = int(track[3]))
@@ -162,15 +166,16 @@ class website_event(http.Controller):
                              'color': color
                        })
                 
-        #Get All Locations
+        #Get All Locations and make room_list contain unique value.
         room_list = list(set(room_list))
         room_list.sort()
         rooms = []
         for room in room_list:
             if room:rooms.append([room, location_object.browse(request.cr, openerp.SUPERUSER_ID, room).name])
         
+        #For rowspan calculate all td which will not display in future.
+        #Sort track according to location(to display under related location). 
         skip_td = {}
-        
         for track in unsort_tracks.keys():
             skip_td[track] = {}
             key1 = unsort_tracks[track].keys()
@@ -184,9 +189,11 @@ class website_event(http.Controller):
                             skip_td[track] [i['location_id']] = []
                         skip_td[track] [i['location_id']] = skip_td[track] [i['location_id']] + skip_time
 
+        #Remove repeated element in list if any.
         for skip in skip_td.keys():
             for loc in skip_td[skip].keys():
                 skip_td[skip][loc] = list(set(skip_td[skip][loc]))
+
         values = {
             'event': event,
             'main_object': event,
