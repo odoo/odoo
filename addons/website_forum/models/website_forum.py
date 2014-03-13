@@ -81,10 +81,7 @@ class Post(osv.Model):
         for post in self.browse(cr, uid, ids, context=context):
             if post.vote_ids:
                 for vote in post.vote_ids:
-                    if vote.vote == '1':
-                        res[post.id] += 1
-                    else:
-                        res[post.id] -= 1
+                    res[post.id] += int(vote.vote)
         return res
 
     def _get_vote(self, cr, uid, ids, context=None):
@@ -177,21 +174,23 @@ class Post(osv.Model):
             context = {}
         create_context = dict(context, mail_create_nolog=True)
         post_id = super(Post, self).create(cr, uid, vals, context=create_context)
-        body = "asked a question"
+        body, subtype = "Asked a question", "website_forum.mt_question_create"
         if vals.get("parent_id"):
-            body = "answered a question"
-        self.message_post(cr, uid, [post_id], body=body, context=context)
+            body, subtype = "Answered a question", "website_forum.mt_answer_create"
+        #Note: just have to pass subtype in message post: gives error on installation time
+        self.message_post(cr, uid, [post_id], body=_(body), context=context)
         return post_id
 
     def write(self, cr, uid, ids, vals, context=None):
         self.create_history(cr, uid, ids, vals, context=context)
-        result = super(Post, self).write(cr, uid, ids, vals, context=context)
-        for post in self.browse(cr, uid, ids, context=context):
-            body = "edited question"
-            if post.parent_id:
-                body = "edited answer"
-            self.message_post(cr, uid, ids, body=body, context=context)
-        return result
+        #NOTE: to avoid message post on write of last comment time
+        if not vals.get('message_last_post'):
+            for post in self.browse(cr, uid, ids, context=context):
+                body, subtype = "Edited question", "website_forum.mt_question_edit"
+                if post.parent_id:
+                    body, subtype = "Edited answer", "website_forum.mt_answer_edit"
+                self.message_post(cr, uid, [post.id], body=_(body), subtype=subtype, context=context)
+        return super(Post, self).write(cr, uid, ids, vals, context=context)
 
 class Users(osv.Model):
     _inherit = 'res.users'
@@ -248,33 +247,32 @@ class Vote(osv.Model):
         'user_id': lambda self, cr, uid, ctx: uid,
         'vote': lambda *args: 1
     }
-    # TODO: improve this: translate strings _()
-    # no need to have different text for question/answer
-    # need different text for upvote, downvote
+
     def create(self, cr, uid, vals, context=None):
         vote_id = super(Vote, self).create(cr, uid, vals, context=context)
         Post = self.pool["website.forum.post"]
         record = Post.browse(cr, uid, vals.get('post_id'), context=context)
-        body = "voted question"
-        if record.parent_id:
-            body = "voted answer"
-        Post.message_post(cr, uid, [record.id], body=body, context=context)
+        body = "voted %s %s" % ('answer' if record.parent_id else 'question','up' if vals.get('vote')==1 else 'down')
+        Post.message_post(cr, uid, [record.id], body=_(body), context=context)
         return vote_id
 
     def vote(self, cr, uid, post_id, vote, context=None):
         assert int(vote) in (1, -1, 0), "vote can be -1 or 1, nothing else"
-        post_obj = self.pool.get('website.forum.post')
+        Post = self.pool.get('website.forum.post')
         vote_ids = self.search(cr, uid, [('post_id', '=', post_id), ('user_id','=',uid)], context=context)
         if vote_ids:
-            self.write(cr, uid, vote_uid, {
-                'vote': vote
+            #when user will click again on vote it should set it 0.
+            record = self.browse(cr,uid, vote_ids[0], context=context)
+            new_vote = '0' if record.vote in ['1','-1'] else vote
+            self.write(cr, uid, vote_ids, {
+                'vote': new_vote
             }, context=context)
         else:
             self.create(cr, uid, {
                 'post_id': post_id,
                 'vote': vote,
             }, context=context)
-        return post_obj.browse(cr, uid, post_id, context=context).vote_count
+        return Post.browse(cr, uid, post_id, context=context).vote_count
 
 class Badge(osv.Model):
     _inherit = 'gamification.badge'

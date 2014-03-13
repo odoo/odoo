@@ -23,5 +23,34 @@
             <field name="state">open</field>
         </record-->
 
+        <!-- related subtypes -->
+        <record id="mt_question_create" model="mail.message.subtype">
+            <field name="name">Asked a question</field>
+            <field name="res_model">website.forum.post</field>
+            <field name="default" eval="False"/>
+            <field name="description">Asked a question</field>
+        </record>
+
+        <record id="mt_answer_create" model="mail.message.subtype">
+            <field name="name">Answered a question</field>
+            <field name="res_model">website.forum.post</field>
+            <field name="default" eval="False"/>
+            <field name="description">Answered a question</field>
+        </record>
+
+        <record id="mt_question_edit" model="mail.message.subtype">
+            <field name="name">Question edited</field>
+            <field name="res_model">website.forum.post</field>
+            <field name="default" eval="False"/>
+            <field name="description">Question edited</field>
+        </record>
+
+        <record id="mt_answer_edit" model="mail.message.subtype">
+            <field name="name">Answer edited</field>
+            <field name="res_model">website.forum.post</field>
+            <field name="default" eval="False"/>
+            <field name="description">Answer edited</field>
+        </record>
+
     </data>
 </openerp>

@@ -157,6 +157,7 @@ class website_forum(http.Controller):
         Post = request.registry['website.forum.post']
         Vote = request.registry['website.forum.post.vote']
         Activity = request.registry['mail.message']
+        Data = request.registry["ir.model.data"]
 
         question_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('create_uid', '=', user.id), ('parent_id', '=', False)], context=context)
         user_questions = Post.browse(cr, uid, question_ids, context=context)
@@ -170,8 +171,9 @@ class website_forum(http.Controller):
         up_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.create_uid', '=', user.id), ('vote', '=', '1')], count=True, context=context)
         down_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.create_uid', '=', user.id), ('vote', '=', '-1')], count=True, context=context)
 
-        user_post_ids = user_questions + obj_ids
-        activity_ids = Activity.search(cr, uid, [('res_id', 'in', user_post_ids), ('model', '=', 'website.forum.post')], context=context)
+        user_post_ids = question_ids + obj_ids
+        model, comment = Data.get_object_reference(cr, uid, 'mail', 'mt_comment')
+        activity_ids = Activity.search(cr, uid, [('res_id', 'in', user_post_ids), ('model', '=', 'website.forum.post'), '|', ('subtype_id', '!=', comment), ('subtype_id', '=', False)], context=context)
         activities = Activity.browse(cr, uid, activity_ids, context=context)
         posts = {}
         for rec in user_answers + user_questions:
