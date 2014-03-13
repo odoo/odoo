@@ -45,6 +45,9 @@ class MailGroup(http.Controller):
     def subscription(self, group_id=0, action=False ,**post):
         cr, uid, context = request.cr, request.uid, request.context
         group_obj = request.registry.get('mail.group')
+        public_uid = request.registry['website'].get_public_user(cr , uid, context)
+        if uid == public_uid:
+            return ['is_public']
         if action:
             group_obj.message_subscribe_users(cr, uid, [group_id], context=context)
         else:

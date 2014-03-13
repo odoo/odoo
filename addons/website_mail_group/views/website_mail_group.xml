@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+    <template id="footer_mailing_list" inherit_id="website.layout" name="Footer Mailing List Link">
+        <xpath expr="//footer//div[@name='info']/ul" position="inside">
+            <li><a t-attf-href="/groups">Mailing List</a></li>
+        </xpath>
+    </template>
     <template id="mail_groups" name="My Groups">
         <t t-call="website.layout">
             <t t-set="head">
@@ -16,8 +21,8 @@
                         <div>
                             <a t-attf-href="/groups/#{group.id}" t-esc="group.name"/>
                             <div t-esc="group.description" class="text-muted"/>
-                            <a groups="base.group_user" t-attf-class="btn btn-default js_group #{group.message_is_follower and 'hidden' or 'visible'} follow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=follow" t-attf-id="#{group.id}">Join Group</a>
-                            <a groups="base.group_user" t-attf-class="btn btn-primary js_group #{group.message_is_follower and 'visible' or 'hidden'} unfollow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=unfollow" t-attf-id="#{group.id}">UnFollow</a>
+                            <a t-attf-class="btn btn-primary js_group #{group.message_is_follower and 'hidden' or 'visible'} follow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=subscribe" t-attf-id="#{group.id}">Join Group</a>
+                            <a t-attf-class="btn btn-default js_group #{group.message_is_follower and 'visible' or 'hidden'} unfollow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=unsubscribe" t-attf-id="#{group.id}">Unsubscribe</a>
                         </div>
                     </div>
                 </div>
@@ -41,7 +46,7 @@
                         <ul class="nav nav-pills nav-stacked" id="group_follows">
                             <t t-foreach="groups" t-as="group">
                                 <li t-attf-class="#{group.message_is_follower and 'visible' or 'hidden'}" t-att-id="group.id">
-                                    <a t-attf-href="/groups/#{group.id}" t-esc="group.name"/>
+                                    <a t-attf-href="/groups/#{ slug(group) }" t-esc="group.name"/>
                                 </li>
                             </t>
                         </ul>
@@ -49,13 +54,13 @@
                     <div class="col-md-9">
                         <ul class="media-list">
                             <li t-foreach="thread_list" t-as="thread" class="media">
-                                <a t-attf-href="/groups/#{active_group.id}/message/#{thread.id}" class="pull-left">
+                                <a t-attf-href="/groups/#{active_group.id}/message/#{ slug(thread) }" class="pull-left">
                                     <img class="img-rounded pull-right mt0" style="height: 40px"
                                         t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(thread.id)"/>
                                 </a>
                                 <div class="media-body">
                                     <h4 class="media-heading">
-                                        <a t-attf-href="/groups/#{active_group.id}/message/#{thread.id}" t-esc="thread.subject"/>
+                                        <a t-attf-href="/groups/#{ slug(active_group) }/message/#{ slug(thread) }" t-esc="thread.subject"/>
                                         <br/>
                                         <small>by <t t-esc="thread.author_id.name and thread.author_id.name or thread.email_from"/> on <t t-esc="thread.date"/></small>
                                     </h4>
