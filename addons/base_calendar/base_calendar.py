@@ -1015,15 +1015,20 @@ class calendar_event(osv.osv):
                 result[event] = ""
         return result
 
+    # hook method to fix the wrong signature
+    def _set_rulestring(self, cr, uid, ids, field_name, field_value, args, context=None):
+        return self._rrule_write(self, cr, uid, ids, field_name, field_value, args, context=context)
+
     def _rrule_write(self, obj, cr, uid, ids, field_name, field_value, args, context=None):
+        if not isinstance(ids, list):
+            ids = [ids]
         data = self._get_empty_rrule_data()
         if field_value:
             data['recurrency'] = True
             for event in self.browse(cr, uid, ids, context=context):
-                rdate = rule_date or event.date
-                update_data = self._parse_rrule(field_value, dict(data), rdate)
+                update_data = self._parse_rrule(field_value, dict(data), event.date)
                 data.update(update_data)
-                super(calendar_event, obj).write(cr, uid, ids, data, context=context)
+                super(calendar_event, self).write(cr, uid, ids, data, context=context)
         return True
 
     _columns = {
@@ -1051,7 +1056,7 @@ defines the list of date/time exceptions for a recurring calendar component."),
         'exrule': fields.char('Exception Rule', size=352, help="Defines a \
 rule or repeating pattern of time to exclude from the recurring rule."),
         'rrule': fields.function(_get_rulestring, type='char', size=124, \
-                    fnct_inv=_rrule_write, store=True, string='Recurrent Rule'),
+                    fnct_inv=_set_rulestring, store=True, string='Recurrent Rule'),
         'rrule_type': fields.selection([
             ('daily', 'Day(s)'),
             ('weekly', 'Week(s)'),
@@ -1375,7 +1380,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         #repeat monthly by nweekday ((weekday, weeknumber), )
         if r._bynweekday:
             data['week_list'] = day_list[r._bynweekday[0][0]].upper()
-            data['byday'] = r._bynweekday[0][1]
+            data['byday'] = str(r._bynweekday[0][1])
             data['select1'] = 'day'
             data['rrule_type'] = 'monthly'
 
