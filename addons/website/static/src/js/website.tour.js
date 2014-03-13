@@ -205,7 +205,7 @@ website.Tour = openerp.Class.extend({
 
             if (!step.element) step.orphan = true;
             if (step.snippet) {
-                step.element = '#oe_snippets div.oe_snippet[data-snippet-id="'+step.snippet+'"] .oe_snippet_thumbnail';
+                step.element = '#oe_snippets '+step.snippet+' .oe_snippet_thumbnail';
             }
 
         }
@@ -377,7 +377,7 @@ website.Tour = openerp.Class.extend({
 
             if (step.snippet) {
             
-                var selector = '#oe_snippets div.oe_snippet[data-snippet-id="'+step.snippet+'"] .oe_snippet_thumbnail';
+                var selector = '#oe_snippets '+step.snippet+' .oe_snippet_thumbnail';
                 self.autoDragAndDropSnippet(selector);
             
             } else if (step.element.match(/#oe_snippets .* \.oe_snippet_thumbnail/)) {

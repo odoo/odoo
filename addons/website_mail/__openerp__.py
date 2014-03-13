@@ -34,12 +34,6 @@
         'views/email_template_view.xml',
         'security/website_mail.xml',
     ],
-    'css': [
-        'static/src/css/website_mail.css',
-    ],
-    'js': [
-        'static/src/js/website_mail.js',
-    ],
     'qweb': [
         'static/src/xml/website_mail.xml'
     ],
