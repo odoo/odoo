@@ -774,7 +774,11 @@ class calendar_event(osv.Model):
                 result[event] = ""
         return result
 
+    # retro compatibility function
     def _rrule_write(self, cr, uid, ids, field_name, field_value, args, context=None):
+        return self._set_rulestring(self, cr, uid, ids, field_name, field_value, args, context=context)
+
+    def _set_rulestring(self, cr, uid, ids, field_name, field_value, args, context=None):
         if not isinstance(ids, list):
             ids = [ids]
         data = self._get_empty_rrule_data()
@@ -812,7 +816,7 @@ class calendar_event(osv.Model):
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), ('confidential', 'Public for Employees')], 'Privacy', states={'done': [('readonly', True)]}),
         'location': fields.char('Location', help="Location of Event", track_visibility='onchange', states={'done': [('readonly', True)]}),
         'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}),
-        'rrule': fields.function(_get_rulestring, type='char', fnct_inv=_rrule_write, store=True, string='Recurrent Rule'),
+        'rrule': fields.function(_get_rulestring, type='char', fnct_inv=_set_rulestring, store=True, string='Recurrent Rule'),
         'rrule_type': fields.selection([('daily', 'Day(s)'), ('weekly', 'Week(s)'), ('monthly', 'Month(s)'), ('yearly', 'Year(s)')], 'Recurrency', states={'done': [('readonly', True)]}, help="Let the event automatically repeat at that interval"),
         'recurrency': fields.boolean('Recurrent', help="Recurrent Meeting"),
         'recurrent_id': fields.integer('Recurrent ID'),
@@ -1169,7 +1173,7 @@ class calendar_event(osv.Model):
         #repeat monthly by nweekday ((weekday, weeknumber), )
         if r._bynweekday:
             data['week_list'] = day_list[r._bynweekday[0][0]].upper()
-            data['byday'] = r._bynweekday[0][1]
+            data['byday'] = str(r._bynweekday[0][1])
             data['month_by'] = 'day'
             data['rrule_type'] = 'monthly'
 
