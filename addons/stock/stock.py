@@ -1948,8 +1948,8 @@ class stock_move(osv.osv):
                 if move.propagate:
                     self.action_cancel(cr, uid, [move.move_dest_id.id], context=context)
                 elif move.move_dest_id.state == 'waiting':
-                    self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'})
-        return self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False})
+                    self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'}, context=context)
+        return self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False}, context=context)
 
     def _check_package_from_moves(self, cr, uid, ids, context=None):
         pack_obj = self.pool.get("stock.quant.package")
