@@ -41,27 +41,27 @@ class stock_history(osv.osv):
     _auto = False
     _order = 'date asc'
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
-        res = super(stock_history, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
-        if 'inventory_value' in fields:
-            for line in res:
-                if '__domain' in line:
-                    lines = self.search(cr, uid, line['__domain'], context=context)
-                    inv_value = 0.0
-                    for line2 in self.browse(cr, uid, lines, context=context):
-                        inv_value += line2.inventory_value
-                    line['inventory_value'] = inv_value
-        return res
-
-    def _get_inventory_value(self, cr, uid, ids, name, attr, context=None):
-        product_obj = self.pool.get("product.product")
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            if line.product_id.cost_method == 'real':
-                res[line.id] = line.quantity * line.price_unit_on_quant
-            else:
-                res[line.id] = line.quantity * product_obj.get_history_price(cr, uid, line.product_id.id, line.company_id.id, context=context)
-        return res
+#     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+#         res = super(stock_history, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+#         if 'inventory_value' in fields:
+#             for line in res:
+#                 if '__domain' in line:
+#                     lines = self.search(cr, uid, line['__domain'], context=context)
+#                     inv_value = 0.0
+#                     for line2 in self.browse(cr, uid, lines, context=context):
+#                         inv_value += line2.inventory_value
+#                     line['inventory_value'] = inv_value
+#         return res
+# 
+#     def _get_inventory_value(self, cr, uid, ids, name, attr, context=None):
+#         product_obj = self.pool.get("product.product")
+#         res = {}
+#         for line in self.browse(cr, uid, ids, context=context):
+#             if line.product_id.cost_method == 'real':
+#                 res[line.id] = line.quantity * line.price_unit_on_quant
+#             else:
+#                 res[line.id] = line.quantity * product_obj.get_history_price(cr, uid, line.product_id.id, line.company_id.id, context=context)
+#         return res
 
     _columns = {
         'move_id': fields.many2one('stock.move', 'Stock Move', required=True),
