@@ -107,6 +107,7 @@ class event_track(osv.osv):
             ids_to_compare = self.search(cr, uid, [("id","!=",track.id),('event_id', '=', track.event_id.id),('location_id', '=', track.location_id.id)])
             start_time = datetime.datetime.strptime(track.date, '%Y-%m-%d %H:%M:%S')
             end_time = start_time + datetime.timedelta(minutes = track.duration)
+            if end_time <= start_time:return False
             for com_track in self.browse(cr, uid, ids_to_compare, context=context):
                 com_start_time = datetime.datetime.strptime(com_track.date, '%Y-%m-%d %H:%M:%S')
                 com_end_time = com_start_time + datetime.timedelta(minutes = com_track.duration)

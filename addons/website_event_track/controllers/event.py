@@ -148,7 +148,7 @@ class website_event(http.Controller):
                     keys = unsort_tracks[track[2][:8]].keys()
                     secret_key = keys[index]
                     row_span = index
-                if value[1] == end_time:
+                if value[1] == end_time and secret_key:
                     if not index == row_span:
                         index = index + 1  
                     event_tracks = event_track_obj.browse(request.cr, request.uid, track[0], context=request.context)
