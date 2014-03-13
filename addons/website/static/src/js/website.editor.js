@@ -106,6 +106,7 @@
                     },
                     canUndo: false,
                     editorFocus: true,
+                    context: 'a',
                 });
                 //noinspection JSValidateTypes
                 editor.addCommand('image', {
@@ -115,6 +116,7 @@
                     },
                     canUndo: false,
                     editorFocus: true,
+                    context: 'img',
                 });
 
                 editor.ui.addButton('Link', {
@@ -205,6 +207,7 @@
                     icon: '/website/static/src/img/bglink.png',
                     modes: { wysiwyg: true },
                     editorFocus: true,
+                    context: 'a',
                     panel: {
                         css: '/website/static/lib/bootstrap/css/bootstrap.css',
                         attributes: { 'role': 'listbox', 'aria-label': label },
