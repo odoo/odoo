@@ -115,23 +115,41 @@ class website_event(http.Controller):
         fetch_tracks = request.cr.fetchall()
         unsort_tracks = {}
         room_list = []
-        new_schedule = []
+        new_schedule = {}
         location_object = request.registry.get('event.track.location')
         event_track_obj = request.registry.get('event.track')
+        
         for track in fetch_tracks:
             room_list.append(track[1])
-            if not unsort_tracks.has_key(track[2][:8]):
-                unsort_tracks[track[2][:8]] = {}
-            if not unsort_tracks[track[2][:8]].has_key(track[5]):
-                unsort_tracks[track[2][:8]][track[5]] = []
-
+            # make schedule for future
+            if not new_schedule.has_key(track[2][:8]):
+                new_schedule[track[2][:8]] = []
             start_time = datetime.datetime.strptime(track[5], '%Y-%m-%d %H:%M:%S')
             end_time = start_time + datetime.timedelta(minutes = int(track[3]))
-            new_schedule = algo_for_timetable(start_time, end_time, new_schedule)
-            event_track = event_track_obj.browse(request.cr, request.uid, track[0], context=request.context)
-            if event_track.color > 9 : color = 0;
-            else: color = event_track.color
-            unsort_tracks[track[2][:8]][track[5]].append({
+            new_schedule[track[2][:8]] = algo_for_timetable(start_time, end_time, new_schedule[track[2][:8]])
+            
+        
+        for key in new_schedule.keys():
+            unsort_tracks[key] = OrderedDict()
+            for value in new_schedule[key]:
+                unsort_tracks[key][value[0].strftime('%H:%M')+" - "+value[1].strftime('%H:%M')] = []
+                
+        for track in fetch_tracks:
+            start_time = datetime.datetime.strptime(track[5], '%Y-%m-%d %H:%M:%S')
+            end_time = start_time + datetime.timedelta(minutes = int(track[3]))
+            secret_key = None
+            row_span = 0
+            for index, value in enumerate(new_schedule[track[2][:8]]):
+                if value[0] <= start_time and value[1] > start_time:
+                    keys = unsort_tracks[track[2][:8]].keys()
+                    secret_key = keys[index]
+                    row_span = index
+                if value[1] == end_time:
+                    if not index == row_span:
+                        index = index + 1  
+                    event_tracks = event_track_obj.browse(request.cr, request.uid, track[0], context=request.context)
+                    color =  0 if event_tracks.color > 9 else event_tracks.color
+                    unsort_tracks[track[2][:8]][secret_key].append({
                              'id': track[0],
                              'title': track[4],
                              'time': track[5],
@@ -139,9 +157,11 @@ class website_event(http.Controller):
                              'duration':track[3],
                              'location_id': track[1],
                              'end_time': end_time,
-                             'speaker_ids': [s.name for s in event_track.speaker_ids],
-                             'color': color,
+                             'speaker_ids': [s.name for s in event_tracks.speaker_ids],
+                             'row_span': index - row_span,
+                             'color': color
                        })
+                
         #Get All Locations
         room_list = list(set(room_list))
         room_list.sort()
@@ -149,19 +169,30 @@ class website_event(http.Controller):
         for room in room_list:
             if room:rooms.append([room, location_object.browse(request.cr, openerp.SUPERUSER_ID, room).name])
         
-        sort_track = {}
+        skip_td = {}
         
         for track in unsort_tracks.keys():
-            sorted_key = sorted(unsort_tracks[track].keys() ,key=lambda x: (dparser.parse(x)).strftime('%a, %d %b %Y %H:%M:%S'))
-            sort_track[track] = OrderedDict()
-            for tra in sorted_key:
-                sort_track[track][tra] = sorted(unsort_tracks[track][tra], key=lambda x: x['location_id'])
-        
+            skip_td[track] = {}
+            key1 = unsort_tracks[track].keys()
+            for tra in unsort_tracks[track].keys():
+                list1 = unsort_tracks[track][tra]
+                unsort_tracks[track][tra] = sorted(list1, key=lambda x: x['location_id'])
+                for i in unsort_tracks[track][tra]:
+                    if i['row_span']:
+                        skip_time = key1[key1.index(tra)+1: key1.index(tra)+i['row_span']]
+                        if not skip_td[track].has_key(i['location_id']):
+                            skip_td[track] [i['location_id']] = []
+                        skip_td[track] [i['location_id']] = skip_td[track] [i['location_id']] + skip_time
+
+        for skip in skip_td.keys():
+            for loc in skip_td[skip].keys():
+                skip_td[skip][loc] = list(set(skip_td[skip][loc]))
         values = {
             'event': event,
             'main_object': event,
             'room_list': rooms,
-            'days': sort_track,
+            'days': unsort_tracks,
+            'skip_td': skip_td
         }
         return request.website.render("website_event_track.agenda", values)
 
