@@ -66,12 +66,12 @@
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <statbutton type="action" 
                         name="%(account.action_invoice_tree)d" 
-                        icon="fa-pencil-square-o"
                         context="{'search_default_partner_id': active_id,'default_partner_id': active_id}" groups="account.group_account_invoice">
+                        <field string="TestPercent" name="testpercent" widget="percentpie" attrs="{'readonly':1}"/>
                         <field string="Invoices" name="invoices_stat_button" attrs="{'readonly':1}"/>
                     </statbutton>
                     <statbutton type="action" name="%(account.action_account_moves_all_tree)d" groups="account.group_account_user" icon="fa-book">
-                        <field string="Journal Items" name="journal_items_stat_button" attrs="{'readonly':1}"/>                        
+                        <field string="Journal Items" name="journal_items_ids" widget="x2many" attrs="{'readonly':1}"/>                        
                     </statbutton>
                     <button type="action" string="Contracts" name="%(account.action_open_partner_analytic_accounts)d"
                             groups="analytic.group_analytic_accounting"/>

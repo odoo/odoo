@@ -21,6 +21,7 @@
 
 from operator import itemgetter
 import time
+import random
 
 from openerp.osv import fields, osv
 
@@ -168,17 +169,15 @@ class res_partner(osv.osv):
         for partner in self.browse(cr, uid, ids, context):
             domain = [('id', 'in', map(int, partner.invoice_ids))]
             group_obj = obj.read_group(cr, uid, domain, ['amount_total'], [''], context=context)
-            total = group_obj[0]['amount_total']
+            total = group_obj[0]['amount_total'] or 0
             res[partner.id] = """
-                    <div><strong>%s</strong> invoices</div>
+                    <div><strong>%s</strong> Invoices</div>
                     <div>Total: %s</div>
             """ % (len(partner.invoice_ids), total)
         return res
 
-    def _journal_items_stat_button(self, cr, uid, ids, field_name, arg, context=None):
-        html = "<div><strong>%s</strong> Journal Items</div>"
-        return {partner.id: html % len(partner.journal_items_ids) for partner in self.browse(cr, uid, ids, context)}
-        res = {}
+    def _test_percent(self, cr, uid, ids, field_name, arg, context=None):
+        return {partner.id: random.random()*100 for partner in self.browse(cr, uid, ids, context)}
 
     def has_something_to_reconcile(self, cr, uid, partner_id, context=None):
         '''
@@ -209,8 +208,8 @@ class res_partner(osv.osv):
         'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, string='Total Payable', multi='dc', help="Total amount you have to pay to this supplier."),
         'debit_limit': fields.float('Payable Limit'),
         'invoices_stat_button': fields.function(_invoices_stat_button, string="Invoices", type='html'),
+        'testpercent': fields.function(_test_percent, string="TestPercent", type='float'),
         'journal_items_ids': fields.one2many('account.move.line', 'partner_id', 'Journal Items'),
-        'journal_items_stat_button': fields.function(_journal_items_stat_button, string='Journal Items', type='html'),
         'property_account_payable': fields.property(
             type='many2one',
             relation='account.account',
