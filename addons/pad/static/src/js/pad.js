@@ -50,9 +50,7 @@ openerp.pad = function(instance) {
                     this._dirty_flag = true;
                 } else {
                     this.content = '<div class="oe_pad_loading">... Loading pad ...</div>';
-                    this.pad_loading_request = $.get(value + '/export/html').done(function(data) {
-                        groups = /\<\s*body\s*\>(.*?)\<\s*\/body\s*\>/.exec(data);
-                        data = (groups || []).length >= 2 ? groups[1] : '';
+                    this.pad_loading_request = self.view.dataset.call('pad_get_content', {url: value}).done(function(data) {
                         self.$('.oe_pad_content').html('<div class="oe_pad_readonly"><div>');
                         self.$('.oe_pad_readonly').html(data);
                     }).fail(function() {
