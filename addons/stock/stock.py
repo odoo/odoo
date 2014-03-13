@@ -866,6 +866,8 @@ class stock_picking(osv.osv):
                 if all([x.state != 'waiting' for x in pick.move_lines]):
                     return True
             for move in pick.move_lines:
+                if (move.state) == 'waiting':
+                    move.check_assign()
                 if (move.state in ('confirmed', 'draft')) and (mt == 'one'):
                     return False
                 if (mt == 'direct') and (move.state == 'assigned') and (move.product_qty):
