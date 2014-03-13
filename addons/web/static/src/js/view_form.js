@@ -276,6 +276,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             filter: 'alpha(opacity = 0)'
         });
         this.$el.add(this.$buttons).removeClass('oe_form_dirty');
+        this.$pager.toggle(this.dataset.ids.length > 1);
 
         var shown = this.has_been_loaded;
         if (options.reload !== false) {
@@ -420,7 +421,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.do_update_pager();
     },
     do_update_pager: function(hide_index) {
-        this.$pager.toggle(this.dataset.ids.length > 1);
         if (hide_index) {
             $(".oe_form_pager_state", this.$pager).html("");
         } else {
