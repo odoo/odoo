@@ -95,19 +95,19 @@
                             name="%(crm.crm_case_category_act_oppor11)d"
                             icon="fa-star"
                             context="{'search_default_partner_id': active_id}">
-                            <field string="Opportunities" name="opportunities_stat_button"/>
+                            <field string="Opportunities" name="opportunity_ids" widget="x2many"/>
                         </statbutton>
                         <statbutton class="oe_inline" type="action"
                             name="%(calendar.action_calendar_event)d"
                             icon="fa-calendar"
                             context="{'search_default_partner_ids': active_id, 'default_partner_ids' : [active_id]}">
-                            <field string="Meetings" name="meetings_stat_button"/>
+                            <field string="Meetings" name="meeting_ids" widget="x2many"/>
                         </statbutton>
                         <statbutton class="oe_inline" type="action"
                             name="%(crm.crm_case_categ_phone_incoming0)d" 
                             icon="fa-phone"
                             context="{'search_default_partner_id': active_id, 'default_duration': 1.0}">
-                            <field string="Calls" name="calls_stat_button"/>
+                            <field string="Calls" name="phonecall_ids" widget="x2many"/>
                         </statbutton>
                     </xpath>
                 </data>

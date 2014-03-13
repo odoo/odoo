@@ -38,30 +38,14 @@ class res_partner(osv.osv):
             pass
         return res
 
-    def _opportunities_stat_button(self, cr, uid, ids, field_name, arg, context=None):
-        html = "<div><strong>%s</strong> opportunities</div>"
-        return {partner.id: html % len(partner.opportunity_ids) for partner in self.browse(cr, uid, ids, context)}
-        res = {}
-
-    def _meetings_stat_button(self, cr, uid, ids, field_name, arg, context=None):
-        html = "<div><strong>%s</strong> meetings</div>"
-        return {partner.id: html % len(partner.meeting_ids) for partner in self.browse(cr, uid, ids, context)}
-
-    def _calls_stat_button(self, cr, uid, ids, field_name, arg, context=None):
-        html = "<div><strong>%s</strong> calls</div>"
-        return {partner.id: html % len(partner.phonecall_ids) for partner in self.browse(cr, uid, ids, context)}
-
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'opportunity_ids': fields.one2many('crm.lead', 'partner_id',\
             'Leads and Opportunities', domain=[('probability', 'not in', ['0', '100'])]),
-        'opportunities_stat_button': fields.function(_opportunities_stat_button, string="Opportunities", type='html'),
         'meeting_ids': fields.many2many('calendar.event', 'calendar_event_res_partner_rel','res_partner_id', 'calendar_event_id',
             'Meetings'),
-        'meetings_stat_button': fields.function(_meetings_stat_button, string="Meetings", type='html'),
         'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id',\
             'Phonecalls'),
-        'calls_stat_button': fields.function(_calls_stat_button, string="Calls", type='html'),
         'opportunity_count': fields.function(_opportunity_meeting_count, string="Opportunity", type='integer', multi='opp_meet'),
         'meeting_count': fields.function(_opportunity_meeting_count, string="# Meetings", type='integer', multi='opp_meet'),
     }
