@@ -41,19 +41,19 @@ import signal
 import os
 from distutils.version import LooseVersion
 
-
 from werkzeug import exceptions
 from werkzeug.test import Client
 from werkzeug.wrappers import BaseResponse
 from werkzeug.datastructures import Headers
 from reportlab.graphics.barcode import createBarcodeDrawing
-
-
-_logger = logging.getLogger(__name__)
 try:
     from pyPdf import PdfFileWriter, PdfFileReader
 except ImportError:
     PdfFileWriter = PdfFileReader = None
+
+
+_logger = logging.getLogger(__name__)
+
 
 class Report(http.Controller):
 
@@ -303,7 +303,7 @@ class Report(http.Controller):
             # Directly load the document if we have it
             if save_in_attachment and save_in_attachment['loaded_documents'].get(reporthtml[0]):
                 pdfreport.write(save_in_attachment['loaded_documents'].get(reporthtml[0]))
-                pdfreport.seek(0)
+                pdfreport.flush()
                 pdfdocuments.append(pdfreport)
                 continue
 
@@ -312,7 +312,7 @@ class Report(http.Controller):
                 head_file = tempfile.NamedTemporaryFile(suffix='.html', prefix='report.header.tmp.',
                                                         dir=tmp_dir, mode='w+')
                 head_file.write(headers[index])
-                head_file.seek(0)
+                head_file.flush()
                 command_arg_local.extend(['--header-html', head_file.name])
 
             # Footer stuff
@@ -320,14 +320,14 @@ class Report(http.Controller):
                 foot_file = tempfile.NamedTemporaryFile(suffix='.html', prefix='report.footer.tmp.',
                                                         dir=tmp_dir, mode='w+')
                 foot_file.write(footers[index])
-                foot_file.seek(0)
+                foot_file.flush()
                 command_arg_local.extend(['--footer-html', foot_file.name])
 
             # Body stuff
             content_file = tempfile.NamedTemporaryFile(suffix='.html', prefix='report.body.tmp.',
                                                        dir=tmp_dir, mode='w+')
             content_file.write(reporthtml[1])
-            content_file.seek(0)
+            content_file.flush()
 
             try:
                 # If the server is running with only one worker, increase it to two to be able
@@ -364,7 +364,7 @@ class Report(http.Controller):
                     _logger.info('The PDF document %s is now saved in the '
                                  'database' % attachment['name'])
 
-                pdfreport.seek(0)
+                pdfreport.flush()
                 pdfdocuments.append(pdfreport)
 
                 if headers:
@@ -461,7 +461,7 @@ class Report(http.Controller):
             document.close()
         merged = StringIO.StringIO()
         writer.write(merged)
-        merged.seek(0)
+        merged.flush()
         content = merged.read()
         merged.close()
         return content
