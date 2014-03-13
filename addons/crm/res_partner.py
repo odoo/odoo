@@ -24,6 +24,16 @@ from openerp.osv import fields,osv
 class res_partner(osv.osv):
     """ Inherits partner and adds CRM information in the partner form """
     _inherit = 'res.partner'
+    
+    def schedule_meeting(self, cr, uid, id, context=None):
+        user_id = context.get('user_id')
+        if user_id:
+            partner_id = self.pool.get('res.users').browse(cr, uid, user_id).partner_id.id
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
+        res['context'] = {
+            'default_partner_ids': user_id and [partner_id],
+           }
+        return res
 
     def _opportunity_meeting_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict(map(lambda x: (x,{'opportunity_count': 0, 'meeting_count': 0}), ids))

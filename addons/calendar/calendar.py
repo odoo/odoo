@@ -786,18 +786,6 @@ class calendar_event(osv.Model):
                 data.update(update_data)
                 self.write(cr, uid, ids, data, context=context)
         return True
-    
-    def default_get(self, cr, uid, fields, context=None):
-        res = super(calendar_event, self).default_get(cr, uid, fields, context=context)
-        if context.get('active_model') == 'res.partner':
-            if context.get('user_id'):
-                res.update({'partner_ids' : [self.pool['res.users'].browse(cr, uid, context.get('user_id'), context=context).partner_id.id]})
-        
-        if context.get('active_model') == 'crm.lead':
-            if context.get('partner_id'):
-                res.update({'partner_ids' : [context.get('partner_id')]})
-        return res
-        
 
     def _tz_get(self, cr, uid, context=None):
         return [(x.lower(), x) for x in pytz.all_timezones]

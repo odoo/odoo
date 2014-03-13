@@ -69,8 +69,8 @@ class crm_configuration(osv.TransientModel):
             help="""Allows you to use Sales Teams to manage your leads and opportunities."""),
         'alias_prefix': fields.char('Default Alias Name for Leads'),
         'alias_domain' : fields.char('Alias Domain'),
-        'group_scheduled_calls_menu': fields.boolean("Schedule calls to manage call center",
-            implied_group='crm.group_scheduled_calls_menu',
+        'group_scheduled_calls': fields.boolean("Schedule calls to manage call center",
+            implied_group='crm.group_scheduled_calls',
             help="""This adds menu 'Scheduled Calls' under 'Sales / Phone Calls'""")
     }
 

@@ -395,7 +395,7 @@
                                 context="{'default_opportunity_id': active_id, 'search_default_opportunity_id': active_id, 'default_partner_id': partner_id, 'default_duration': 1.0}" />
                             <button string="Schedule a Meeting" type="action"
                                 name="%(calendar.action_calendar_event)d"
-                                context="{'partner_id': partner_id}"/>
+                                context="{'default_partner_ids': partner_id and [partner_id]}"/>
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
