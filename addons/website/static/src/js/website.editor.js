@@ -209,7 +209,7 @@
                     editorFocus: true,
                     context: 'a',
                     panel: {
-                        css: '/website/static/lib/bootstrap/css/bootstrap.css',
+                        css: '/web/static/lib/bootstrap/css/bootstrap.css',
                         attributes: { 'role': 'listbox', 'aria-label': label },
                     },
 
