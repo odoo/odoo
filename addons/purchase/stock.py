@@ -35,7 +35,7 @@ class stock_move(osv.osv):
             ids = [ids]
         res = super(stock_move, self).write(cr, uid, ids, vals, context=context)
         from openerp import workflow
-        if 'state' in vals:
+        if 'state' in vals and vals['state'] in ['done', 'cancel']:
             for move in self.browse(cr, uid, ids, context=context):
                 if move.purchase_line_id and move.purchase_line_id.order_id:
                     order_id = move.purchase_line_id.order_id.id
@@ -71,7 +71,7 @@ class stock_picking(osv.osv):
     def _get_picking_to_recompute(self, cr, uid, ids, context=None):
         picking_ids = set()
         for move in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
-            if move.picking_id:
+            if move.picking_id and move.purchase_line_id:
                 picking_ids.add(move.picking_id.id)
         return list(picking_ids)
 
@@ -79,7 +79,6 @@ class stock_picking(osv.osv):
         'reception_to_invoice': fields.function(_get_to_invoice, type='boolean', string='Invoiceable on incoming shipment?',
                help='Does the picking contains some moves related to a purchase order invoiceable on the reception?',
                store={
-                   'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 10),
                    'stock.move': (_get_picking_to_recompute, ['purchase_line_id', 'picking_id'], 10),
                }),
     }

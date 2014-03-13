@@ -30,9 +30,9 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FO
 from openerp import SUPERUSER_ID
 import openerp.addons.decimal_precision as dp
 import logging
+
+
 _logger = logging.getLogger(__name__)
-
-
 #----------------------------------------------------------
 # Incoterms
 #----------------------------------------------------------
@@ -306,6 +306,7 @@ class stock_quant(osv.osv):
         :param link: browse record (stock.move.operation.link)
         '''
         toreserve = []
+        reserved_availability = move.reserved_availability
         #split quants if needed
         for quant, qty in quants:
             if qty <= 0.0 or (quant and quant.qty <= 0.0):
@@ -314,17 +315,19 @@ class stock_quant(osv.osv):
                 continue
             self._quant_split(cr, uid, quant, qty, context=context)
             toreserve.append(quant.id)
+            reserved_availability += quant.qty
         #reserve quants
         if toreserve:
             self.write(cr, SUPERUSER_ID, toreserve, {'reservation_id': move.id, 'link_move_operation_id': link and link.id or False}, context=context)
         #check if move'state needs to be set as 'assigned'
-        move.refresh()
-        if move.reserved_availability == move.product_qty and move.state in ('confirmed', 'waiting'):
+        if reserved_availability == move.product_qty and move.state in ('confirmed', 'waiting'):
             self.pool.get('stock.move').write(cr, uid, [move.id], {'state': 'assigned'}, context=context)
+        elif reserved_availability > 0 and not move.partially_available:
+            self.pool.get('stock.move').write(cr, uid, [move.id], {'partially_available': True}, context=context)
+
 
     def quants_move(self, cr, uid, quants, move, location_to, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, context=None):
         """Moves all given stock.quant in the given destination location.
-
         :param quants: list of tuple(browse record(stock.quant) or None, quantity to move)
         :param move: browse record (stock.move)
         :param location_to: browse record (stock.location) depicting where the quants have to be moved
@@ -333,39 +336,41 @@ class stock_quant(osv.osv):
         :param src_package_id: ID of the package that contains the quants to move
         :param dest_package_id: ID of the package that must be set on the moved quant
         """
+        quants_reconcile = []
+        quants_move = []
+        self._check_location(cr, uid, location_to, context=context)
         for quant, qty in quants:
             if not quant:
                 #If quant is None, we will create a quant to move (and potentially a negative counterpart too)
-                quant = self._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location=location_to, context=context)
-            self.move_single_quant(cr, uid, quant, location_to, qty, move, context=context)
-            self._quant_reconcile_negative(cr, uid, quant, move, context=context)
+                quant = self._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location = location_to, context=context)
+            else:
+                quants_move += [(quant, qty)]
+            quants_reconcile.append(quant)
+        if quants_move:
+            self.move_single_quant_tuples(cr, uid, quants_move, move, location_to, dest_package_id, context=context)
+        self._quants_reconcile_negative(cr, uid, quants_reconcile, move, context=context)
 
-    def move_single_quant(self, cr, uid, quant, location_to, qty, move, context=None):
-        '''Moves the given 'quant' in 'location_to' for the given 'qty', and logs the stock.move that triggered this move in the quant history.
-        If needed, the quant may be split if it's not totally moved.
 
-        :param quant: browse record (stock.quant)
-        :param location_to: browse record (stock.location)
-        :param qty: float
-        :param move: browse record (stock.move)
-        '''
-        new_quant = self._quant_split(cr, uid, quant, qty, context=context)
-        vals = {
-            'location_id': location_to.id,
-            'history_ids': [(4, move.id)],
-        }
-        #if the quant we are moving had been split and was inside a package, it means we unpacked it
-        if new_quant and new_quant.package_id:
-            vals['package_id'] = False
-        self.write(cr, SUPERUSER_ID, [quant.id], vals, context=context)
-        quant.refresh()
-        return new_quant
+    def move_single_quant_tuples(self, cr, uid, quants, move, location_dest_id, dest_package_id, context=None):
+        whole_quants = []
+        for quant, qty in quants:
+            new_quant = self._quant_split(cr, uid, quant, qty, context=context)
+            quant.refresh()
+            whole_quants.append(quant.id)
+        if whole_quants:
+            vals = {'location_id': location_dest_id.id, 
+                    'history_ids': [(4, move.id)], 
+                    'package_id': dest_package_id}
+            self.write(cr, SUPERUSER_ID, whole_quants, vals, context=context)
+
 
     def quants_get_prefered_domain(self, cr, uid, location, product, qty, domain=None, prefered_domain=False, fallback_domain=False, restrict_lot_id=False, restrict_partner_id=False, context=None):
         ''' This function tries to find quants in the given location for the given domain, by trying to first limit
             the choice on the quants that match the prefered_domain as well. But if the qty requested is not reached
             it tries to find the remaining quantity by using the fallback_domain.
         '''
+        if location.usage in ['inventory', 'production', 'supplier']:
+            return [(None, qty)]
         if prefered_domain and fallback_domain:
             if domain is None:
                 domain = []
@@ -470,14 +475,22 @@ class stock_quant(osv.osv):
             path.append((4, move.id))
         self.write(cr, SUPERUSER_ID, solved_quant_ids, {'history_ids': path}, context=context)
 
+
+    def _quants_reconcile_negative(self, cr, uid, quants, move, context=None):
+        if quants[0].location_id.usage != 'internal':
+            return False
+        quants_rec = self.search(cr, uid, [('product_id', '=', move.product_id.id), ('qty','<', 0)], limit=1, context=context)
+        if quants_rec:
+            for quant in quants:
+                quant.refresh()
+                self._quant_reconcile_negative(cr, uid, quant, move, context=context)
+
     def _quant_reconcile_negative(self, cr, uid, quant, move, context=None):
         """
             When new quant arrive in a location, try to reconcile it with
             negative quants. If it's possible, apply the cost of the new
             quant to the conter-part of the negative quant.
         """
-        if quant.location_id.usage != 'internal':
-            return False
         solving_quant = quant
         dom = [('qty', '<', 0)]
         if quant.lot_id:
@@ -522,6 +535,8 @@ class stock_quant(osv.osv):
 
     def quants_unreserve(self, cr, uid, move, context=None):
         related_quants = [x.id for x in move.reserved_quant_ids]
+        if related_quants and move.partially_available:
+            self.pool.get("stock.move").write(cr, uid, [move.id], {'partially_available': False}, context=context)
         return self.write(cr, SUPERUSER_ID, related_quants, {'reservation_id': False, 'link_move_operation_id': False}, context=context)
 
     def _quants_get_order(self, cr, uid, location, product, quantity, domain=[], orderby='in_date', context=None):
@@ -537,8 +552,6 @@ class stock_quant(osv.osv):
         else:
             domain += [('company_id', '=', self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id)]
         #don't take into account location that are production, supplier or inventory
-        ignore_location_ids = self.pool.get('stock.location').search(cr, uid, [('usage', 'in', ('production', 'supplier', 'inventory'))], context=context)
-        domain.append(('location_id','not in',ignore_location_ids))
         res = []
         offset = 0
         while quantity > 0:
@@ -569,15 +582,10 @@ class stock_quant(osv.osv):
         ''' Return the company owning the location if any '''
         return location and (location.usage == 'internal') and location.company_id or False
 
-    def _check_location(self, cr, uid, ids, context=None):
-        for record in self.browse(cr, uid, ids, context=context):
-            if record.location_id.usage == 'view':
-                raise osv.except_osv(_('Error'), _('You cannot move product %s to a location of type view %s.') % (record.product_id.name, record.location_id.name))
+    def _check_location(self, cr, uid, location, context=None):
+        if location.usage == 'view':
+            raise osv.except_osv(_('Error'), _('You cannot move to a location of type view %s.') % (location.name))
         return True
-
-    _constraints = [
-        (_check_location, 'You cannot move products to a location of the type view.', ['location_id'])
-    ]
 
 
 #----------------------------------------------------------
@@ -636,19 +644,21 @@ class stock_picking(osv.osv):
         '''
         res = {}
         for pick in self.browse(cr, uid, ids, context=context):
-            if (not pick.move_lines) or any([x.state == 'draft' for x in pick.move_lines]):
+            cr.execute("select state, partially_available from stock_move where picking_id = %s", (pick.id,))
+            move_lines = cr.fetchall() #x[0] = state, x[1] partially available 
+            if (not move_lines) or any([x[0] == 'draft' for x in move_lines]):
                 res[pick.id] = 'draft'
                 continue
-            if all([x.state == 'cancel' for x in pick.move_lines]):
+            if all([x[0] == 'cancel' for x in move_lines]):
                 res[pick.id] = 'cancel'
                 continue
-            if all([x.state in ('cancel', 'done') for x in pick.move_lines]):
+            if all([x[0] in ('cancel', 'done') for x in move_lines]):
                 res[pick.id] = 'done'
                 continue
 
             order = {'confirmed': 0, 'waiting': 1, 'assigned': 2}
             order_inv = {0: 'confirmed', 1: 'waiting', 2: 'assigned'}
-            lst = [order[x.state] for x in pick.move_lines if x.state not in ('cancel', 'done')]
+            lst = [order[x[0]] for x in move_lines if x[0] not in ('cancel', 'done')]
             if pick.move_type == 'one':
                 res[pick.id] = order_inv[min(lst)]
             else:
@@ -658,8 +668,8 @@ class stock_picking(osv.osv):
                 res[pick.id] = order_inv[max(lst)]
                 if not all(x == 2 for x in lst):
                     #if all moves aren't assigned, check if we have one product partially available
-                    for move in pick.move_lines:
-                        if move.reserved_quant_ids:
+                    for move in move_lines:
+                        if move[1]:
                             res[pick.id] = 'partially_available'
                             break
         return res
@@ -669,13 +679,6 @@ class stock_picking(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             if move.picking_id:
                 res.add(move.picking_id.id)
-        return list(res)
-
-    def _get_pickings_from_quant(self, cr, uid, ids, context=None):
-        res = set()
-        for quant in self.browse(cr, uid, ids, context=context):
-            if quant.reservation_id and quant.reservation_id.picking_id:
-                res.add(quant.reservation_id.picking_id.id)
         return list(res)
 
     def _get_pack_operation_exist(self, cr, uid, ids, field_name, arg, context=None):
@@ -708,9 +711,8 @@ class stock_picking(osv.osv):
         'note': fields.text('Notes', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'move_type': fields.selection([('direct', 'Partial'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, help="It specifies goods to be deliver partially or all at once"),
         'state': fields.function(_state_get, type="selection", store={
-            'stock.picking': (lambda self, cr, uid, ids, ctx: ids, ['move_type', 'move_lines'], 20),
-            'stock.move': (_get_pickings, ['state', 'picking_id'], 20),
-            'stock.quant': (_get_pickings_from_quant, ['reservation_id'], 20)}, selection=[
+            'stock.picking': (lambda self, cr, uid, ids, ctx: ids, ['move_type'], 20),
+            'stock.move': (_get_pickings, ['state', 'picking_id', 'partially_available'], 20)}, selection=[
                 ('draft', 'Draft'),
                 ('cancel', 'Cancelled'),
                 ('waiting', 'Waiting Another Operation'),
@@ -729,9 +731,9 @@ class stock_picking(osv.osv):
         ),
         'priority': fields.selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, string='Priority', required=True),
         'min_date': fields.function(get_min_max_date, multi="min_max_date", fnct_inv=_set_min_date,
-                 store={'stock.move': (_get_pickings, ['state', 'date_expected'], 20)}, type='datetime', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.", track_visibility='onchange'),
+                 store={'stock.move': (_get_pickings, ['date_expected'], 20)}, type='datetime', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.", track_visibility='onchange'),
         'max_date': fields.function(get_min_max_date, multi="min_max_date",
-                 store={'stock.move': (_get_pickings, ['state', 'date_expected'], 20)}, type='datetime', string='Max. Expected Date', select=2, help="Scheduled time for the last part of the shipment to be processed"),
+                 store={'stock.move': (_get_pickings, ['date_expected'], 20)}, type='datetime', string='Max. Expected Date', select=2, help="Scheduled time for the last part of the shipment to be processed"),
         'date': fields.datetime('Commitment Date', help="Date promised for the completion of the transfer order, usually set the time of the order and revised later on.", select=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, track_visibility='onchange'),
         'date_done': fields.datetime('Date of Transfer', help="Date of Completion", states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
@@ -838,8 +840,6 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             move_ids = [x.id for x in pick.move_lines if x.state in ['confirmed', 'waiting']]
             self.pool.get('stock.move').force_assign(cr, uid, move_ids, context=context)
-            if pick.pack_operation_exist:
-                self.do_prepare_partial(cr, uid, [pick.id], context=None)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -912,10 +912,12 @@ class stock_picking(osv.osv):
         self.action_assign(cr, uid, picking_ids, context=context)
         self.do_prepare_partial(cr, uid, picking_ids, context=context)
 
+
     def _picking_putaway_resolution(self, cr, uid, picking, product, putaway, context=None):
         if putaway.method == 'fixed' and putaway.location_spec_id:
             return putaway.location_spec_id.id
         return False
+
 
     def _get_top_level_packages(self, cr, uid, quants_suggested_locations, context=None):
         """This method searches for the higher level packages that can be moved as a single operation, given a list of quants
@@ -923,7 +925,6 @@ class stock_picking(osv.osv):
         """
         # Try to find as much as possible top-level packages that can be moved
         pack_obj = self.pool.get("stock.quant.package")
-        quant_obj = self.pool.get("stock.quant")
         top_lvl_packages = set()
         quants_to_compare = quants_suggested_locations.keys()
         for pack in list(set([x.package_id for x in quants_suggested_locations.keys() if x and x.package_id])):
@@ -932,9 +933,9 @@ class stock_picking(osv.osv):
             good_pack = False
             pack_destination = False
             while loop:
-                pack_quants = pack_obj.get_content(cr, uid, [test_pack.id], context=context)
+                pack_quants = pack_obj.get_contents(cr, uid, test_pack, context=context)
                 all_in = True
-                for quant in quant_obj.browse(cr, uid, pack_quants, context=context):
+                for quant in pack_quants:
                     # If the quant is not in the quants to compare and not in the common location
                     if not quant in quants_to_compare:
                         all_in = False
@@ -947,7 +948,7 @@ class stock_picking(osv.osv):
                             all_in = False
                             break
                 if all_in:
-                    good_pack = test_pack.id
+                    good_pack = test_pack
                     if test_pack.parent_id:
                         test_pack = test_pack.parent_id
                     else:
@@ -996,17 +997,17 @@ class stock_picking(osv.osv):
         #find the packages we can movei as a whole
         top_lvl_packages = self._get_top_level_packages(cr, uid, quants_suggested_locations, context=context)
         # and then create pack operations for the top-level packages found
-        for pack in pack_obj.browse(cr, uid, top_lvl_packages, context=context):
-            pack_quants = pack_obj.get_content(cr, uid, [pack.id], context=context)
+        for pack in top_lvl_packages:
+            pack_quants = pack_obj.get_contents(cr, uid, pack, context=context)
             vals.append({
                     'picking_id': picking.id,
                     'package_id': pack.id,
                     'product_qty': 1.0,
                     'location_id': pack.location_id.id,
-                    'location_dest_id': quants_suggested_locations[quant_obj.browse(cr, uid, pack_quants[0], context=context)],
+                    'location_dest_id': quants_suggested_locations[pack_quants[0]],
                 })
             #remove the quants inside the package so that they are excluded from the rest of the computation
-            for quant in quant_obj.browse(cr, uid, pack_quants, context=context):
+            for quant in pack_quants:
                 del quants_suggested_locations[quant]
 
         # Go through all remaining reserved quants and group by product, package, lot, owner, source location and dest location
@@ -1043,34 +1044,37 @@ class stock_picking(osv.osv):
             })
         return vals
 
+
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
         context = context or {}
+        ctx = context.copy()
+        ctx['no_recompute'] = True
         pack_operation_obj = self.pool.get('stock.pack.operation')
 
         #get list of existing operations and delete them
         existing_package_ids = pack_operation_obj.search(cr, uid, [('picking_id', 'in', picking_ids)], context=context)
         if existing_package_ids:
             pack_operation_obj.unlink(cr, uid, existing_package_ids, context)
-
         for picking in self.browse(cr, uid, picking_ids, context=context):
             forced_qties = {}  # Quantity remaining after calculating reserved quants
             picking_quants = []
-
             #Calculate packages, reserved quants, qtys of this picking's moves
             for move in picking.move_lines:
                 if move.state not in ('assigned', 'confirmed'):
                     continue
                 move_quants = move.reserved_quant_ids
                 picking_quants += move_quants
-                forced_qty = (move.state == 'assigned') and move.product_qty - move.reserved_availability or 0
+                forced_qty = (move.state == 'assigned') and move.product_qty - sum([x.qty for x in move_quants]) or 0
                 #if we used force_assign() on the move, or if the move is incomming, forced_qty > 0
                 if forced_qty:
                     if forced_qties.get(move.product_id):
                         forced_qties[move.product_id] += forced_qty
                     else:
+
                         forced_qties[move.product_id] = forced_qty
             for vals in self._prepare_pack_ops(cr, uid, picking, picking_quants, forced_qties, context=context):
                 pack_operation_obj.create(cr, uid, vals, context=context)
+
 
     def do_unreserve(self, cr, uid, picking_ids, context=None):
         """
@@ -1086,12 +1090,127 @@ class stock_picking(osv.osv):
                 self.pool.get('stock.pack.operation').unlink(cr, uid, pack_line_to_unreserve, context=context)
             self.pool.get('stock.move').do_unreserve(cr, uid, moves_to_unreserve, context=context)
 
+    def recompute_remaining_qty(self, cr, uid, picking, context=None):
+        def _create_link_for_product(product_id, qty):
+            qty_to_assign = qty
+            if prod_move.get(product_id):
+                for move in prod_move[product_id]:
+                    qty_on_link = min(qty_move_rem[move.id], qty_to_assign)
+                    if qty_on_link > 0:
+                        cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
+                        (%s, %s, %s)""", (move.id, op.id, qty_on_link,))
+                        qty_move_rem[move.id] -= qty_on_link
+                        qty_to_assign -= qty_on_link
+                        if qty_to_assign <= 0:
+                            break
+            return qty_to_assign == 0
+
+        def _check_quants_reserved(ops):
+            if ops.package_id and not ops.product_id:
+                qty_op_rem[ops.id] = {}
+                package_obj.get_contents(cr, uid, ops.package_id)
+                for quant in package_obj.get_contents(cr, uid, ops.package_id):
+                    if quant.id in quants_done.keys() and (quants_done[quant.id] == quant.qty):
+                        #Entire packages means entire quants from those packages
+                        if not quants_done.get(quant.id):
+                            quants_done[quant.id] = 0
+                        cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
+                    (%s, %s, %s)""", (quant.reservation_id.id, ops.id, quant.qty,))
+                        qty_move_rem[quant.reservation_id.id] -= quant.qty
+                    else:
+                        if qty_op_rem[ops.id].get(quant.product_id.id):
+                            qty_op_rem[ops.id][quant.product_id.id] += quant.qty
+                        else:
+                            qty_op_rem[ops.id][quant.product_id.id] = quant.qty
+            else:
+                qty = uom_obj._compute_qty_obj(cr, uid, ops.product_uom_id, ops.product_qty, ops.product_id.uom_id, context=context)
+                #Check moves with same product
+                if prod_move.get(ops.product_id.id):
+                    for move in prod_move[ops.product_id.id]:
+                        for quant in move.reserved_quant_ids:
+                            if not qty > 0:
+                                break
+                            if ops.package_id:
+                                flag = quant.package_id and bool(package_obj.search(cr, uid, [('id', 'child_of', [ops.package_id.id]), ('id', '=', quant.package_id.id)], context=context)) or False
+                            else:
+                                flag = not quant.package_id.id
+                            flag = flag and ((ops.lot_id and ops.lot_id.id == quant.lot_id.id) or not ops.lot_id)
+                            flag = flag and (ops.owner_id.id == quant.owner_id.id)
+                            if flag:
+                                quant_qty = quant.qty
+                                if quants_done[quant.id] == 0:
+                                    continue
+                                quant_qty = quants_done[quant.id]
+                                if quant_qty > qty:
+                                    qty_todo = qty
+                                    quants_done[quant.id] = quant_qty - qty
+                                else:
+                                    qty_todo = quant_qty
+                                    quants_done[quant.id] = 0
+                                qty -= qty_todo
+                                cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
+                        (%s, %s, %s)""", (move.id, ops.id, qty_todo,))
+                                qty_move_rem[move.id] -= qty_todo
+                qty_op_rem[ops.id] = qty
+
+        uom_obj = self.pool.get('product.uom')
+        package_obj = self.pool.get('stock.quant.package')
+        quants_done = {}
+        prod_move = {}
+        qty_rem = {}
+        qty_move_rem = {}
+        qty_op_rem = {}
+        operations = picking.pack_operation_ids
+        operations.sort(key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
+        cr.execute("""DELETE FROM stock_move_operation_link WHERE 
+            operation_id in %s
+            """, (tuple([x.id for x in operations]),))
+        for move in picking.move_lines:
+            prod_qty = move.product_qty
+            qty_rem[move.id] = prod_qty
+            qty_move_rem[move.id] = prod_qty
+            #Fill moves by product dict
+            if not prod_move.get(move.product_id.id):
+                prod_move[move.product_id.id] = [move]
+            else:
+                prod_move[move.product_id.id].append(move)
+            # Fill qty remaining dict
+            for quant in move.reserved_quant_ids:
+                quants_done[quant.id] = quant.qty
+        sorted_moves = [x for x in picking.move_lines if x.state not in ['done', 'cancel']]
+        sorted_moves.sort(key=lambda x: qty_rem[x.id])
+
+        for op in operations:
+            _check_quants_reserved(op)
+        remaining_qty_ok = True
+        for op in operations:
+            op.refresh()
+            if op.product_id:
+                #TODO: Remaining qty: UoM conversions are done twice
+                normalized_qty = qty_op_rem[op.id]
+                if normalized_qty > 0:
+                    remaining_qty_ok = remaining_qty_ok and _create_link_for_product(op.product_id.id, normalized_qty)
+            elif op.package_id:
+                for product_id, qty in qty_op_rem[op.id].items():
+                    if qty > 0:
+                        remaining_qty_ok = remaining_qty_ok and _create_link_for_product(product_id, qty)
+                        
+        quants_reserve_ok = all([quants_done[x] == 0 for x in quants_done.keys()])
+        return (quants_reserve_ok, remaining_qty_ok)
+
+
     def do_recompute_remaining_quantities(self, cr, uid, picking_ids, context=None):
-        pack_op_obj = self.pool.get('stock.pack.operation')
+        quants_res = True
+        remaining_res = True
         for picking in self.browse(cr, uid, picking_ids, context=context):
-            op_ids = [op.id for op in picking.pack_operation_ids]
-            if op_ids:
-                pack_op_obj.recompute_rem_qty_from_operation(cr, uid, op_ids, context=context)
+            if picking.pack_operation_ids:
+                (quants_ok, remaining_ok) = self.recompute_remaining_qty(cr, uid, picking, context=context)
+                quants_res = quants_res and quants_ok
+                remaining_res = remaining_res and remaining_ok
+        return (quants_res, remaining_res)
+
+
+
 
     def _create_extra_moves(self, cr, uid, picking, context=None):
         '''This function creates move lines on a picking, at the time of do_transfer, based on
@@ -1126,6 +1245,7 @@ class stock_picking(osv.osv):
             stock_move_obj.do_unreserve(cr, uid, move_ids, context=context)
             stock_move_obj.action_assign(cr, uid, move_ids, context=context)
 
+
     def do_transfer(self, cr, uid, picking_ids, context=None):
         """
             If no pack operation, we do simple action_done of the picking
@@ -1139,30 +1259,31 @@ class stock_picking(osv.osv):
                 self.action_done(cr, uid, [picking.id], context=context)
                 continue
             else:
-                self.do_recompute_remaining_quantities(cr, uid, [picking.id], context=context)
+                (quants_ok, remaining_ok) = self.do_recompute_remaining_quantities(cr, uid, [picking.id], context=context)
                 #create extra moves in the picking (unexpected product moves coming from pack operations)
-                self._create_extra_moves(cr, uid, picking, context=context)
+                if not remaining_ok:
+                    self._create_extra_moves(cr, uid, picking, context=context)
                 picking.refresh()
                 #split move lines eventually
                 todo_move_ids = []
                 toassign_move_ids = []
                 for move in picking.move_lines:
+                    remaining_qty = move.remaining_qty
                     if move.state in ('done', 'cancel'):
                         #ignore stock moves cancelled or already done
                         continue
                     elif move.state == 'draft':
                         toassign_move_ids.append(move.id)
-                    if move.remaining_qty == 0:
+                    if remaining_qty == 0:
                         if move.state in ('draft', 'assigned', 'confirmed'):
                             todo_move_ids.append(move.id)
-                    elif move.remaining_qty > 0 and move.remaining_qty < move.product_qty:
-                        new_move = stock_move_obj.split(cr, uid, move, move.remaining_qty, context=context)
+                    elif remaining_qty > 0 and remaining_qty < move.product_qty:
+                        new_move = stock_move_obj.split(cr, uid, move, remaining_qty, context=context)
                         todo_move_ids.append(move.id)
                         #Assign move as it was assigned before
                         toassign_move_ids.append(new_move)
-                    else:
-                        todo_move_ids.append(move.id)
-                self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
+                if (not quants_ok or not remaining_ok) and not picking.location_id.usage in ("supplier", "production", "inventory"):
+                    self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
                 if todo_move_ids and not context.get('do_only_split'):
                     self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=context)
                 elif context.get('do_only_split'):
@@ -1319,7 +1440,7 @@ class stock_move(osv.osv):
         uom_obj = self.pool.get('product.uom')
         res = {}
         for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = uom_obj._compute_qty_obj(cr, uid, m.product_uom, m.product_uom_qty, m.product_id.uom_id, round=False)
+            res[m.id] = uom_obj._compute_qty_obj(cr, uid, m.product_uom, m.product_uom_qty, m.product_id.uom_id, round=False, context=context)
         return res
 
     def _get_remaining_qty(self, cr, uid, ids, field_name, args, context=None):
@@ -1330,7 +1451,7 @@ class stock_move(osv.osv):
             for record in move.linked_move_operation_ids:
                 qty -= record.qty
             #converting the remaining quantity in the move UoM
-            res[move.id] = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, qty, move.product_uom.id)
+            res[move.id] = uom_obj._compute_qty_obj(cr, uid, move.product_id.uom_id, qty, move.product_uom, round=False, context=context)
         return res
 
     def _get_lot_ids(self, cr, uid, ids, field_name, args, context=None):
@@ -1366,7 +1487,7 @@ class stock_move(osv.osv):
                 res[move.id] = ''  # 'not applicable' or 'n/a' could work too
                 continue
             total_available = min(move.product_qty, move.reserved_availability + move.availability)
-            total_available = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, total_available, move.product_uom.id)
+            total_available = uom_obj._compute_qty_obj(cr, uid, move.product_id.uom_id, total_available, move.product_uom, context=context)
             info = str(total_available)
             #look in the settings if we need to display the UoM name or not
             config_ids = settings_obj.search(cr, uid, [], limit=1, order='id DESC', context=context)
@@ -1377,7 +1498,7 @@ class stock_move(osv.osv):
             if move.reserved_availability:
                 if move.reserved_availability != total_available:
                     #some of the available quantity is assigned and some are available but not reserved
-                    reserved_available = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, move.reserved_availability, move.product_uom.id)
+                    reserved_available = uom_obj._compute_qty_obj(cr, uid, move.product_id.uom_id, move.reserved_availability, move.product_uom, context=context)
                     info += _(' (%s reserved)') % str(reserved_available)
                 else:
                     #all available quantity is assigned
@@ -1404,6 +1525,7 @@ class stock_move(osv.osv):
             res += [x.id for x in picking.move_lines]
         return res
 
+
     _columns = {
         'name': fields.char('Description', required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
@@ -1412,7 +1534,7 @@ class stock_move(osv.osv):
         'date_expected': fields.datetime('Expected Date', states={'done': [('readonly', True)]}, required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type', '<>', 'service')], states={'done': [('readonly', True)]}),
         # TODO: improve store to add dependency on product UoM
-        'product_qty': fields.function(_quantity_normalize, type='float', store=True, string='Quantity',
+        'product_qty': fields.function(_quantity_normalize, type='float', store={'stock.move': (lambda self, cr, uid, ids, ctx: ids, ['product_uom_qty', 'product_uom'], 20)}, string='Quantity',
             digits_compute=dp.get_precision('Product Unit of Measure'),
             help='Quantity in the default UoM of the product'),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
@@ -1456,7 +1578,7 @@ class stock_move(osv.osv):
                        "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"\
                        "* Available: When products are reserved, it is set to \'Available\'.\n"\
                        "* Done: When the shipment is processed, the state is \'Done\'."),
-
+        'partially_available': fields.boolean('Partially Available', readonly = True, help = "Checks if the move has some stock reserved"),
         'price_unit': fields.float('Unit Price', help="Technical field used to record the product cost set by the user during a picking confirmation (when costing method used is 'average price' or 'real'). Value given in company currency and in product uom."),  # as it's a technical field, we intentionally don't provide the digits attribute
 
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
@@ -1526,16 +1648,6 @@ class stock_move(osv.osv):
         'propagate': True,
     }
 
-    def _check_uom(self, cr, uid, ids, context=None):
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.product_id.uom_id.category_id.id != move.product_uom.category_id.id:
-                return False
-        return True
-
-    _constraints = [
-        (_check_uom,
-            'You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.',
-            ['product_uom'])]
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -1606,6 +1718,7 @@ class stock_move(osv.osv):
                     push_obj._apply(cr, uid, rule, move, context=context)
         return True
 
+
     def _create_procurement(self, cr, uid, move, context=None):
         """ This will create a procurement order """
         return self.pool.get("procurement.order").create(cr, uid, self._prepare_procurement_from_move(cr, uid, move, context=context))
@@ -1618,6 +1731,17 @@ class stock_move(osv.osv):
         # Check that we do not modify a stock.move which is done
         frozen_fields = set(['product_qty', 'product_uom', 'product_uos_qty', 'product_uos', 'location_id', 'location_dest_id', 'product_id'])
         for move in self.browse(cr, uid, ids, context=context):
+            #Check UoM in meantime
+            if vals.get('product_uom') or vals.get('product_id'):
+                product_uom = move.product_id.uom_id
+                move_uom = move.product_uom
+                if vals.get('product_uom'):
+                    move_uom = self.pool.get('product.uom').browse(cr, uid, vals['product_uom'], context=context)
+                if vals.get('product_id'):
+                    product_uom = self.pool.get('product.product').browse(cr, uid, vals['product_id'], context=context).uom_id
+                if move_uom.category_id.id != product_uom.category_id.id:
+                    raise osv.except_osv(_('Operation Forbidden'), 
+                                         _('Category of Product UoM must be the same as the category of the UoM of the move'))
             if move.state == 'done':
                 if frozen_fields.intersection(vals):
                     raise osv.except_osv(_('Operation Forbidden!'),
@@ -1767,6 +1891,10 @@ class stock_move(osv.osv):
         return {'value': result}
 
     def _picking_assign(self, cr, uid, move, context=None):
+        if not context:
+            context = {}
+        if context.get("no_picking_assign") and context['no_picking_assign']:
+            return False
         if move.picking_id or not move.picking_type_id:
             return False
         context = context or {}
@@ -1791,6 +1919,40 @@ class stock_move(osv.osv):
             pick = pick_obj.create(cr, uid, values, context=context)
         move.write({'picking_id': pick})
         return True
+
+    def _group_picking_assign(self, cr, uid, moves, context=None):
+        if not context:
+            context = {}
+        if context.get("no_picking_assign"):
+            return False
+        move_dict = {}
+        for move in moves:
+            group_by = (move.location_id, move.location_dest_id, move.group_id)
+            if not move_dict.get(group_by, False):
+                move_dict[group_by] = [move]
+            else:
+                move_dict[group_by].append(move)
+        pick_obj = self.pool.get("stock.picking")
+        for to_compare in move_dict.keys():
+            picks = pick_obj.search(cr, uid, [
+                ('group_id', '=', to_compare[2].id),
+                ('location_id', '=', to_compare[0].id),
+                ('location_dest_id', '=', to_compare[1].id),
+                ('state', 'in', ['draft', 'confirmed', 'waiting']),
+                ], context=context)
+            if picks:
+                pick = picks[0]
+            else:
+                move = move_dict[to_compare][0]
+                values = {
+                          'origin': move.origin,
+                          'company_id': move.company_id and move.company_id.id or False,
+                          'move_type': move.group_id and move.group_id.move_type or 'one',
+                          'partner_id': move.group_id and move.group_id.partner_id and move.group_id.partner_id.id or False,
+                          'picking_type_id': move.picking_type_id and move.picking_type_id.id or False,
+                }
+                pick = pick_obj.create(cr, uid, values, context=context)
+            self.write(cr, uid, [x.id for x in move_dict[to_compare]], {'picking_id': pick}, context=context)
 
     def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
         """ On change of Scheduled Date gives a Move date.
@@ -1909,11 +2071,12 @@ class stock_move(osv.osv):
             #first try to find quants based on specific domains given by linked operations
             for record in ops.linked_move_operation_ids:
                 move = record.move_id
-                domain = main_domain[move.id] + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
-                qty_already_assigned = sum([q.qty for q in record.reserved_quant_ids])
-                qty = record.qty - qty_already_assigned
-                quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, qty, domain=domain, prefered_domain=[], fallback_domain=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
-                quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)
+                if move.id in main_domain:
+                    domain = main_domain[move.id] + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
+                    qty_already_assigned = sum([q.qty for q in record.reserved_quant_ids])
+                    qty = record.qty - qty_already_assigned
+                    quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, qty, domain=domain, prefered_domain=[], fallback_domain=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
+                    quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)
 
         for move in todo_moves:
             #then if the move isn't totally assigned, try to find quants without any specific domain
@@ -1951,11 +2114,11 @@ class stock_move(osv.osv):
                     self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'})
         return self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False})
 
-    def _check_package_from_moves(self, cr, uid, ids, context=None):
+    def _check_package_from_moves(self, cr, uid, moves, context=None):
         pack_obj = self.pool.get("stock.quant.package")
         packs = set()
-        for move in self.browse(cr, uid, ids, context=context):
-            packs |= set([q.package_id.id for q in move.quant_ids if q.package_id and q.qty > 0])
+        for move in moves:
+            packs |= set([q.package_id for q in move.quant_ids if q.package_id and q.qty > 0])
         return pack_obj._check_location_constraint(cr, uid, list(packs), context=context)
 
     def action_done(self, cr, uid, ids, context=None):
@@ -1978,6 +2141,7 @@ class stock_move(osv.osv):
             for link in move.linked_move_operation_ids:
                 operations.add(link.operation_id)
         
+        
         #Sort operations according to entire packages first, then package + lot, package only, lot only
         operations = list(operations)
         operations.sort(key = lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
@@ -1995,13 +2159,15 @@ class stock_move(osv.osv):
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, record.qty, domain=dom, prefered_domain=prefered_domain, 
                                                               fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 package_id = False
-                if not record.operation_id.package_id:
-                    #if a package and a result_package is given, we don't enter here because it will be processed by process_packaging() later
+                if not ops.product_id and ops.package_id:
+                    #if a package and a result_package is given, we will put package_id, otherwise it will be result_pakege
                     #but for operations having only result_package_id, we will create new quants in the final package directly
-                    package_id = record.operation_id.result_package_id.id or False
+                    package_id = ops.package_id.id
+                else:
+                    package_id = ops.result_package_id.id
                 quant_obj.quants_move(cr, uid, quants, move, ops.location_dest_id, lot_id=ops.lot_id.id, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id, dest_package_id=package_id, context=context)
-                #packaging process
-                pack_op_obj.process_packaging(cr, uid, ops, [x[0].id for x in quants if x[0]], context=context)
+                # Handle pack in pack
+                pack_op_obj.process_packaging(cr, uid, ops, context=context)
                 move_qty[move.id] -= record.qty
         #Check for remaining qtys and unreserve/check move_dest_id in 
         for move in self.browse(cr, uid, ids, context=context):
@@ -2027,7 +2193,7 @@ class stock_move(osv.osv):
                 procurement_ids.append(move.procurement_id.id)
         
         # Check the packages have been placed in the correct locations
-        self._check_package_from_moves(cr, uid, ids, context=context)
+        self._check_package_from_moves(cr, uid, self.browse(cr, uid, ids, context=context), context=context)
         # Apply on picking
         self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         self.pool.get('procurement.order').check(cr, uid, procurement_ids, context=context)
@@ -2115,7 +2281,7 @@ class stock_move(osv.osv):
         uom_obj = self.pool.get('product.uom')
         context = context or {}
 
-        uom_qty = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, qty, move.product_uom.id)
+        uom_qty = uom_obj._compute_qty_obj(cr, uid, move.product_id.uom_id, qty, move.product_uom)
         uos_qty = uom_qty * move.product_uos_qty / move.product_uom_qty
 
         defaults = {
@@ -3191,7 +3357,6 @@ class stock_location_path(osv.osv):
             move_obj.action_confirm(cr, uid, [move_id], context=None)
 
 
-
 # -------------------------
 # Packaging related stuff
 # -------------------------
@@ -3288,18 +3453,16 @@ class stock_package(osv.osv):
         'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').get(cr, uid, 'stock.quant.package') or _('Unknown Pack')
     }
 
-    def _check_location_constraint(self, cr, uid, ids, context=None):
+    def _check_location_constraint(self, cr, uid, packs, context=None):
         '''checks that all quants in a package are stored in the same location. This function cannot be used
            as a constraint because it needs to be checked on pack operations (they may not call write on the
            package)
         '''
-        quant_obj = self.pool.get('stock.quant')
-        for pack in self.browse(cr, uid, ids, context=context):
+        for pack in packs:
             parent = pack
             while parent.parent_id:
                 parent = parent.parent_id
-            quant_ids = self.get_content(cr, uid, [parent.id], context=context)
-            quants = quant_obj.browse(cr, uid, quant_ids, context=context)
+            quants = self.get_contents(cr, uid, parent, context=context)
             location_id = quants and quants[0].location_id.id or False
             if not all([quant.location_id.id == location_id for quant in quants if quant.qty > 0]):
                 raise osv.except_osv(_('Error'), _('Everything inside a package should be in the same location'))
@@ -3333,6 +3496,17 @@ class stock_package(osv.osv):
     def get_content(self, cr, uid, ids, context=None):
         child_package_ids = self.search(cr, uid, [('id', 'child_of', ids)], context=context)
         return self.pool.get('stock.quant').search(cr, uid, [('package_id', 'in', child_package_ids)], context=context)
+
+    def get_contents(self, cr, uid, pack, context=None):
+        quants = pack.quant_ids
+        children_ids = pack.children_ids
+        while children_ids:
+            children2_ids = []
+            for child in children_ids:
+                quants += child.quant_ids
+                children2_ids += child.children_ids
+            children_ids = children2_ids
+        return quants
 
     def get_content_package(self, cr, uid, ids, context=None):
         quants_ids = self.get_content(cr, uid, ids, context=context)
@@ -3397,6 +3571,7 @@ class stock_pack_operation(osv.osv):
             res[record.move_id.product_id.id] -= record.qty
         return res
 
+
     def _get_remaining_qty(self, cr, uid, ids, name, args, context=None):
         uom_obj = self.pool.get('product.uom')
         res = {}
@@ -3409,12 +3584,12 @@ class stock_pack_operation(osv.osv):
             else:
                 qty = ops.product_qty
                 if ops.product_uom_id:
-                    qty = uom_obj._compute_qty(cr, uid, ops.product_uom_id.id, ops.product_qty, ops.product_id.uom_id.id)
+                    qty = uom_obj._compute_qty_obj(cr, uid, ops.product_uom_id, ops.product_qty, ops.product_id.uom_id, context=context)
                 for record in ops.linked_move_operation_ids:
                     qty -= record.qty
                 #converting the remaining quantity in the pack operation UoM
                 if ops.product_uom_id:
-                    qty = uom_obj._compute_qty(cr, uid, ops.product_id.uom_id.id, qty, ops.product_uom_id.id)
+                    qty = uom_obj._compute_qty_obj(cr, uid, ops.product_id.uom_id, qty, ops.product_uom_id, context=context)
                 res[ops.id] = qty
         return res
 
@@ -3470,112 +3645,34 @@ class stock_pack_operation(osv.osv):
     }
 
     def write(self, cr, uid, ids, vals, context=None):
+        context = context or {}
         res = super(stock_pack_operation, self).write(cr, uid, ids, vals, context=context)
         if isinstance(ids, (int, long)):
             ids = [ids]
-        self.recompute_rem_qty_from_operation(cr, uid, ids, context=context)
+        if not context.get("no_recompute"):
+            if vals.get('picking_id'):
+                self.pool.get("stock.picking").do_recompute_remaining_quantities(cr, uid, [vals['picking_id']], context=context)
+            else:
+                moves = self.browse(cr, uid, ids, context=context)
+                pickings = list(set([x.picking_id.id for x in moves]))
+                self.pool.get("stock.picking").do_recompute_remaining_quantities(cr, uid, pickings, context=context)
         return res
 
     def create(self, cr, uid, vals, context=None):
+        context = context or {}
         res_id = super(stock_pack_operation, self).create(cr, uid, vals, context=context)
-        self.recompute_rem_qty_from_operation(cr, uid, [res_id], context=context)
+        if vals.get("picking_id") and not context.get("no_recompute"):
+            self.pool.get("stock.picking").do_recompute_remaining_quantities(cr, uid, [vals['picking_id']], context=context)
         return res_id
+    
 
-    def recompute_rem_qty_from_operation(self, cr, uid, op_ids, context=None):
-        def _create_link_for_product(product_id, qty):
-            qty_to_assign = qty
-            for move in sorted_moves:
-                if move.product_id.id == product_id and move.state not in ['done', 'cancel']:
-                    qty_on_link = min(move.remaining_qty, qty_to_assign)
-                    link_obj.create(cr, uid, {'move_id': move.id, 'operation_id': op.id, 'qty': qty_on_link}, context=context)
-                    qty_to_assign -= qty_on_link
-                    move.refresh()
-                    if qty_to_assign <= 0:
-                        break
 
-        def _check_quants_reserved(ops):
-            if ops.package_id and not ops.product_id:
-                for quant in quant_obj.browse(cr, uid, package_obj.get_content(cr, uid, [ops.package_id.id]), context=context):
-                    if quant.reservation_id and quant.reservation_id.id in [x.id for x in ops.picking_id.move_lines] and (not quants_done.get(quant.id)):
-                        #Entire packages means entire quants from those packages
-                        if not quants_done.get(quant.id):
-                            quants_done[quant.id] = 0
-                        link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': quant.qty}, context=context)
-            else:
-                qty = uom_obj._compute_qty(cr, uid, ops.product_uom_id.id, ops.product_qty, ops.product_id.uom_id.id)
-                #Check moves with same product
-                for move in [x for x in ops.picking_id.move_lines if ops.product_id.id == x.product_id.id]:
-                    for quant in move.reserved_quant_ids:
-                        if not qty > 0:
-                            break
-                        if ops.package_id:
-                            flag = quant.package_id and bool(package_obj.search(cr, uid, [('id', 'child_of', [ops.package_id.id]), ('id', '=', quant.package_id.id)], context=context)) or False
-                        else:
-                            flag = not quant.package_id.id
-                        flag = flag and ((ops.lot_id and ops.lot_id.id == quant.lot_id.id) or not ops.lot_id)
-                        flag = flag and (ops.owner_id.id == quant.owner_id.id)
-                        if flag:
-                            quant_qty = quant.qty
-                            if quants_done.get(quant.id):
-                                if quants_done[quant.id] == 0:
-                                    continue
-                                quant_qty = quants_done[quant.id]
-                            if quant_qty > qty:
-                                qty_todo = qty
-                                quants_done[quant.id] = quant_qty - qty
-                            else:
-                                qty_todo = quant_qty
-                                quants_done[quant.id] = 0
-                            qty -= qty_todo
-                            link_obj.create(cr, uid, {'move_id': quant.reservation_id.id, 'operation_id': ops.id, 'qty': qty_todo}, context=context)
-
-        link_obj = self.pool.get('stock.move.operation.link')
-        uom_obj = self.pool.get('product.uom')
-        package_obj = self.pool.get('stock.quant.package')
-        quant_obj = self.pool.get('stock.quant')
-        quants_done = {}
-
-        operations = self.browse(cr, uid, op_ids, context=context)
-        operations.sort(key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
-        sorted_moves = []
-        for op in operations:
-            if not sorted_moves:
-                #sort moves in order to process first the ones that have already reserved quants
-                sorted_moves = op.picking_id.move_lines
-                sorted_moves.sort(key=lambda x: x.product_qty - x.reserved_availability)
-
-            to_unlink_ids = [x.id for x in op.linked_move_operation_ids]
-            if to_unlink_ids:
-                link_obj.unlink(cr, uid, to_unlink_ids, context=context)
-            _check_quants_reserved(op)
-
-        for op in operations:
-            op.refresh()
-            if op.product_id:
-                #TODO: Remaining qty: UoM conversions are done twice
-                normalized_qty = uom_obj._compute_qty(cr, uid, op.product_uom_id.id, op.remaining_qty, op.product_id.uom_id.id)
-                if normalized_qty > 0:
-                    _create_link_for_product(op.product_id.id, normalized_qty)
-            elif op.package_id:
-                prod_quants = self._get_remaining_prod_quantities(cr, uid, op, context=context)
-                for product_id, qty in prod_quants.items():
-                    if qty > 0:
-                        _create_link_for_product(product_id, qty)
-
-    def process_packaging(self, cr, uid, operation, quants, context=None):
+    def process_packaging(self, cr, uid, operation, context=None):
         ''' Process the packaging of a given operation, after the quants have been moved. If there was not enough quants found
         a quant already has been with the good package information so we don't consider that case in this method'''
-        quant_obj = self.pool.get("stock.quant")
         pack_obj = self.pool.get("stock.quant.package")
-        for quant in quants:
-            if quant:
-                if operation.product_id:
-                    #if a product + a package information is given, we consider that we took a part of an existing package (unpacking)
-                    quant_obj.write(cr, SUPERUSER_ID, quant, {'package_id': operation.result_package_id.id}, context=context)
-                elif operation.package_id and operation.result_package_id:
-                    #move the whole pack into the final package if any
-                    pack_obj.write(cr, uid, [operation.package_id.id], {'parent_id': operation.result_package_id.id}, context=context)
-
+        if not operation.product_id and operation.package_id and operation.result_package_id.id != operation.package_id.parent_id.id:
+            pack_obj.write(cr, SUPERUSER_ID, [operation.package_id.id], {'result_package_id': operation.result_package_id.id}, context=context)
 
 
 
