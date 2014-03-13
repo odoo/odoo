@@ -1188,6 +1188,11 @@
         <span></span>
     </span>
 </t>
+<t t-name="FieldPercentPie">
+    <span id="prout" class="oe_form_field oe_form_field_percent_pie" t-att-style="widget.node.attrs.style">
+        <svg></svg>
+    </span>
+</t>
 <t t-name="FieldStatus">
     <ul t-att-class="'oe_form_field_status ' + (widget.options.clickable ? 'oe_form_status_clickable' : 'oe_form_status')" t-att-style="widget.node.attrs.style"/>
 </t>
@@ -1939,5 +1944,8 @@
 </t>
 <t t-name="X2ManyCounter">
     <a href="javascript:void(0)"><t t-esc="text"/></a>
+</t>
+<t t-name="X2Many">
+    <div><t t-esc="text"/></div>
 </t>
 </templates>

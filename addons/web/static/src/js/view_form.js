@@ -1329,7 +1329,6 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     },
     process_statbutton: function ($button) {
         var self = this;
-        console.log('yenrst');
         if ($button.children().length) {
             $button.children().each(function() {
                 self.process($(this));
@@ -2836,6 +2835,52 @@ instance.web.form.FieldProgressBar = instance.web.form.AbstractField.extend({
         this.$('span').html(formatted_value + '%');
     }
 });
+
+/**
+    The PercentPie field expect a float from 0 to 100.
+*/
+instance.web.form.FieldPercentPie = instance.web.form.AbstractField.extend({
+    template: 'FieldPercentPie',
+
+    render_value: function() {
+        var value = this.get('value'),
+            formatted_value = Math.round(value || 0) + '%',
+            svg = this.$('svg')[0];
+
+        svg.innerHTML = "";
+        nv.addGraph(function() {
+            var size=43;
+            var chart = nv.models.pieChart()
+                .width(size)
+                .height(size)
+                .margin({top: 0, right: 0, bottom: 0, left: 0})
+                .donut(true) 
+                .showLegend(false)
+                .showLabels(false)
+                .donutRatio(0.62);
+   
+            d3.select(svg)
+                .datum([{'x': 'value', 'y': value}, {'x': 'complement', 'y': 100 - value}])
+                .transition()
+                .call(chart)
+                .attr('width', size)
+                .attr('height',size);
+
+            d3.select(svg)
+                .append("text")
+                .attr("x", size/2)
+                .attr("y", size/2 + 3)
+                .style("font-size", "10px")
+                .style("font-weight", "bold")
+                .attr("text-anchor", "middle")  
+                .text(formatted_value);
+
+            return chart;
+        });
+   
+    }
+});
+
 
 
 instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
@@ -5885,6 +5930,29 @@ instance.web.form.X2ManyCounter = instance.web.form.AbstractField.extend(instanc
 });
 
 /**
+    This field can be applied on many2many and one2many. It is a read-only field that will 
+    display a simple string "<number of linked records> <label of the field>" (obviously inspired by X2ManyCounter)
+*/
+instance.web.form.X2Many = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
+    init: function() {
+        this._super.apply(this, arguments);
+        this.set("value", []);
+    },
+    render_value: function() {
+        var text = _.str.sprintf("%d %s", this.val().length, this.string);
+        this.$().html(QWeb.render("X2Many", {text: text}));
+    },
+    val: function() {
+        var value = this.get("value") || [];
+        if (value.length >= 1 && value[0] instanceof Array) {
+            value = value[0][2];
+        }
+        return value;
+    },
+});
+
+
+/**
  * Registry of form fields, called by :js:`instance.web.FormView`.
  *
  * All referenced classes must implement FieldInterface. Those represent the classes whose instances
@@ -5911,6 +5979,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'reference' : 'instance.web.form.FieldReference',
     'boolean' : 'instance.web.form.FieldBoolean',
     'float' : 'instance.web.form.FieldFloat',
+    'percentpie': 'instance.web.form.FieldPercentPie',
     'integer': 'instance.web.form.FieldFloat',
     'float_time': 'instance.web.form.FieldFloat',
     'progressbar': 'instance.web.form.FieldProgressBar',
@@ -5921,6 +5990,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'monetary': 'instance.web.form.FieldMonetary',
     'many2many_checkboxes': 'instance.web.form.FieldMany2ManyCheckBoxes',
     'x2many_counter': 'instance.web.form.X2ManyCounter',
+    'x2many': 'instance.web.form.X2Many',
 });
 
 /**
