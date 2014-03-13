@@ -116,6 +116,12 @@ class website_event(http.Controller):
             ''',(event.id,))
         
         fetch_tracks = request.cr.fetchall()
+        
+        request.cr.execute('''
+        select count(*), date_trunc('day',date) from event_track where event_id = %s group by date_trunc('day',date) order by  date_trunc('day',date)
+        ''',(event.id,))
+        talks = request.cr.fetchall()
+        
         unsort_tracks = {}
         room_list = []
         new_schedule = {}
@@ -130,7 +136,7 @@ class website_event(http.Controller):
             start_time = datetime.datetime.strptime(track[5], '%Y-%m-%d %H:%M:%S')
             end_time = start_time + datetime.timedelta(minutes = int(track[3]))
             new_schedule[track[2][:8]] = algo_for_timetable(start_time, end_time, new_schedule[track[2][:8]])
-            
+
         #Add timeslot as key to track
         for key in new_schedule.keys():
             unsort_tracks[key] = OrderedDict()
@@ -193,13 +199,13 @@ class website_event(http.Controller):
         for skip in skip_td.keys():
             for loc in skip_td[skip].keys():
                 skip_td[skip][loc] = list(set(skip_td[skip][loc]))
-
         values = {
             'event': event,
             'main_object': event,
             'room_list': rooms,
             'days': unsort_tracks,
-            'skip_td': skip_td
+            'skip_td': skip_td,
+            'talks':talks
         }
         return request.website.render("website_event_track.agenda", values)
 

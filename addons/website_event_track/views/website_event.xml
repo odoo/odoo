@@ -59,7 +59,7 @@
                 <t t-foreach="days" t-as="day">
                     <h3 class="page-header mt0">
                         <t t-esc="day"/>
-                        <small>23 talks</small>
+                        <small><t t-esc="(talks[(days.keys()).index(day)])[0]"/> talks</small>
                         <div class="form-group col-md-3 pull-right">
                             <input type="text" class="form-control" placeholder="Search..." id="start_search"/>
                         </div>
