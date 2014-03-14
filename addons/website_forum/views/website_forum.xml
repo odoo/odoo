@@ -606,13 +606,13 @@
                         </tr><tr>
                             <td>up votes</td>
                             <td>
-                                <span class="glyphicon glyphicon-thumbs-up"/>
+                                <span class="fa fa-thumbs-up"/>
                                 <span t-esc="up_votes"/>
                             </td>
                         </tr><tr>
                             <td>down votes</td>
                             <td>
-                                <span class="glyphicon glyphicon-thumbs-down"/>
+                                <span class="fa fa-thumbs-down "/>
                                 <span t-esc="down_votes"/>
                             </td>
                         </tr>
@@ -680,7 +680,7 @@
                     <t t-if="post.parent_id">
                         <a t-esc="post.parent_id.name"
                             t-attf-href="/forum/#{ slug(forum) }/question/#{ post.parent_id.id }"/>
-                        <span class="glyphicon glyphicon-play"/>
+                        <span class="fa fa-play"/>
                         <t t-esc="post.content[0:100]"/>
                         <strong> ... </strong>
                     </t>
