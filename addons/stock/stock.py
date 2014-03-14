@@ -787,7 +787,8 @@ class stock_picking(osv.osv):
             'model': 'stock.picking',
             'ids': ids,
         }
-        return {'type': 'ir.actions.report.xml', 'report_name': 'stock.picking.list', 'datas': datas, 'nodestroy': True}
+        return self.get_action(cr, uid, ids, context=context)
+    #{'type': 'ir.actions.report.xml', 'report_name': 'stock.picking.list', 'datas': datas, 'nodestroy': True}
 
     def do_print_picking(self, cr, uid, ids, context=None):
         '''This function prints the picking list'''
