@@ -574,6 +574,8 @@ class product_product(osv.osv):
             return _('Products: ') + self.pool.get('product.category').browse(cr, uid, context['categ_id'], context=context).name
         return res
 
+
+
     def get_history_price(self, cr, uid, product_id, company_id, context=None):
         if context is None:
             context = {}

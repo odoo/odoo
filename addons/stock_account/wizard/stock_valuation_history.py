@@ -36,6 +36,7 @@ class wizard_valuation_history(osv.osv_memory):
         }
 
 
+
 class stock_history(osv.osv):
     _name = 'stock.history'
     _auto = False
@@ -43,22 +44,26 @@ class stock_history(osv.osv):
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         res = super(stock_history, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
-        import time
+        prod_dict= {}
         if 'inventory_value' in fields:
             for line in res:
                 if '__domain' in line:
                     lines = self.search(cr, uid, line['__domain'], context=context)
                     inv_value = 0.0
                     product_obj = self.pool.get("product.product")
-                    print time.time()
-                    for line_rec in self.browse(cr, uid, lines, context=context):
-                        inv_value += line_rec.quantity * product_obj.get_history_price(cr, uid, line_rec.product_id.id, line_rec.company_id.id, context=context)
+                    lines_rec = self.browse(cr, uid, lines, context=context)
+                    for line_rec in lines_rec:
+                        if not line_rec.product_id.id in prod_dict:
+                            if line_rec.product_id.cost_method == 'real':
+                                prod_dict[line_rec.product_id.id] = line_rec.price_unit_on_quant
+                            else:
+                                prod_dict[line_rec.product_id.id] = product_obj.get_history_price(cr, uid, line_rec.product_id.id, line_rec.company_id.id, context=context)
+                        inv_value += prod_dict[line_rec.product_id.id]
                     line['inventory_value'] = inv_value
-                    print "end", time.time()
         return res
  
+
     def _get_inventory_value(self, cr, uid, ids, name, attr, context=None):
-        print "pass"
         product_obj = self.pool.get("product.product")
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
