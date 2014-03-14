@@ -179,6 +179,9 @@ class res_partner(osv.osv):
     def _test_percent(self, cr, uid, ids, field_name, arg, context=None):
         return {partner.id: random.random()*100 for partner in self.browse(cr, uid, ids, context)}
 
+    def _journal_item_count(self, cr, uid, ids, field_name, arg, context=None):
+        return {partner.id: len(partner.journal_items_ids) for partner in self.browse(cr, uid, ids, context)}
+
     def has_something_to_reconcile(self, cr, uid, partner_id, context=None):
         '''
         at least a debit, a credit and a line older than the last reconciliation date of the partner
@@ -210,6 +213,7 @@ class res_partner(osv.osv):
         'invoices_stat_button': fields.function(_invoices_stat_button, string="Invoices", type='html'),
         'testpercent': fields.function(_test_percent, string="TestPercent", type='float'),
         'journal_items_ids': fields.one2many('account.move.line', 'partner_id', 'Journal Items'),
+        'journal_item_count': fields.function(_journal_item_count, string="Journal Items", type="integer"),
         'property_account_payable': fields.property(
             type='many2one',
             relation='account.account',
