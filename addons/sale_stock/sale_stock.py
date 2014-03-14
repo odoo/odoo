@@ -341,7 +341,7 @@ class sale_order(osv.osv):
         return {
             'name': pick_name,
             'origin': order.name,
-            'date': self.date_to_datetime(cr, uid, order.date_order, context),
+            'date': self.date_to_datetime(cr, uid, order.date_confirm, context),
             'type': 'out',
             'state': 'auto',
             'move_type': order.picking_policy,
@@ -416,7 +416,7 @@ class sale_order(osv.osv):
             if line.state == 'done':
                 continue
 
-            date_planned = self._get_date_planned(cr, uid, order, line, order.date_order, context=context)
+            date_planned = self._get_date_planned(cr, uid, order, line, order.date_confirm, context=context)
 
             if line.product_id:
                 if line.product_id.type in ('product', 'consu'):
