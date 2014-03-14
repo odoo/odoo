@@ -1218,9 +1218,6 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         $('button', doc).each(function() {
             $(this).attr('data-button-type', $(this).attr('type')).attr('type', 'button');
         });
-        $('statbutton', doc).each(function() {
-            $(this).attr('data-button-type', $(this).attr('type')).attr('type', 'button');
-        });
         // IE's html parser is also a css parser. How convenient...
         $('board', doc).each(function() {
             $(this).attr('layout', $(this).attr('style'));
@@ -1310,7 +1307,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         var tagname = $tag[0].nodeName.toLowerCase();
         if (this.tags_registry.contains(tagname)) {
             this.tags_to_init.push($tag);
-            return (tagname === 'statbutton') ? this.process_statbutton($tag) : $tag;
+            return (tagname === 'button') ? this.process_button($tag) : $tag;
         }
         var fn = self['process_' + tagname];
         if (fn) {
@@ -1327,16 +1324,13 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             return $tag;
         }
     },
-    process_statbutton: function ($button) {
+    process_button: function ($button) {
         var self = this;
-        if ($button.children().length) {
-            $button.children().each(function() {
-                self.process($(this));
-            });
-        } 
+        $button.children().each(function() {
+            self.process($(this));
+        });
         return $button;
     },
-
     process_widget: function($widget) {
         this.widgets_to_init.push($widget);
         return $widget;
@@ -1922,6 +1916,8 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     template: 'WidgetButton',
     init: function(field_manager, node) {
         node.attrs.type = node.attrs['data-button-type'];
+        this.is_stat_button = node.attrs.class ? _.include(node.attrs.class.split(' '), 'oe_stat_button') : false;
+        this.icon = "<span class=\"fa " + node.attrs.icon + "\"></span>";
         this._super(field_manager, node);
         this.force_disabled = false;
         this.string = (this.node.attrs.string || '').replace(/_/g, '');
@@ -2003,22 +1999,6 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
         this.$el.prop('disabled', disabled);
         this.$el.css('color', disabled ? 'grey' : '');
     }
-});
-
-instance.web.form.StatButton = instance.web.form.WidgetButton.extend({
-    template: 'StatButton',
-
-    init: function(field_manager, node) {
-        var icon = node.attrs.icon;
-        this._super(field_manager, node);
-
-        // debugger;
-        if (icon) {
-            this.icon = "<span class=\"fa " + icon + "\"></span>";
-        }
-
-    },
-
 });
 
 /**
@@ -2857,7 +2837,7 @@ instance.web.form.FieldPercentPie = instance.web.form.AbstractField.extend({
                 .donut(true) 
                 .showLegend(false)
                 .showLabels(false)
-                .color(['#DDD','#7C7BAD'])
+                .color(['#7C7BAD','#DDD'])
                 .donutRatio(0.62);
    
             d3.select(svg)
@@ -5931,27 +5911,21 @@ instance.web.form.X2ManyCounter = instance.web.form.AbstractField.extend(instanc
 });
 
 /**
-    This field can be applied on many2many and one2many. It is a read-only field that will 
-    display a simple string "<number of linked records> <label of the field>" (obviously inspired by X2ManyCounter)
+    This widget is intended to be used on stat button numeric fields.  It will display
+    the value   many2many and one2many. It is a read-only field that will 
+    display a simple string "<value of field> <label of the field>"
 */
-instance.web.form.X2Many = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
+instance.web.form.StatInfo = instance.web.form.AbstractField.extend({
     init: function() {
         this._super.apply(this, arguments);
-        this.set("value", []);
+        this.set("value", 0);
     },
     render_value: function() {
-        var text = _.str.sprintf("%d %s", this.val().length, this.string);
-        this.$().html(QWeb.render("X2Many", {text: text}));
+        var text = _.str.sprintf("%d %s", this.get("value") || 0, this.string);
+        this.$().html(QWeb.render("StatInfo", {text: text}));
     },
-    val: function() {
-        var value = this.get("value") || [];
-        if (value.length >= 1 && value[0] instanceof Array) {
-            value = value[0][2];
-        }
-        return value;
-    },
-});
 
+});
 
 /**
  * Registry of form fields, called by :js:`instance.web.FormView`.
@@ -5991,7 +5965,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'monetary': 'instance.web.form.FieldMonetary',
     'many2many_checkboxes': 'instance.web.form.FieldMany2ManyCheckBoxes',
     'x2many_counter': 'instance.web.form.X2ManyCounter',
-    'x2many': 'instance.web.form.X2Many',
+    'statinfo': 'instance.web.form.StatInfo',
 });
 
 /**
@@ -6002,7 +5976,6 @@ instance.web.form.widgets = new instance.web.Registry({
  */
 instance.web.form.tags = new instance.web.Registry({
     'button' : 'instance.web.form.WidgetButton',
-    'statbutton' : 'instance.web.form.StatButton',
 });
 
 instance.web.form.custom_widgets = new instance.web.Registry({
