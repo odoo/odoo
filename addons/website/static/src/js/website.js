@@ -69,6 +69,8 @@
         website.is_editable = website.is_editable || $('html').data('editable');
         website.is_editable_button= website.is_editable_button || $('html').data('editable');
         dom_ready.resolve();
+        // fix for ie
+        if($.fn.placeholder) $('input, textarea').placeholder();
     });
 
     website.init_kanban = function ($kanban) {
@@ -229,11 +231,13 @@
             dialog.on('click', '.btn-primary', function () {
                 def.resolve(field.val(), field, dialog);
                 dialog.remove();
+                $('.modal-backdrop').remove();
             });
         });
         dialog.on('hidden.bs.modal', function () {
             def.reject();
             dialog.remove();
+            $('.modal-backdrop').remove();
         });
         if (field.is('input[type="text"], select')) {
             field.keypress(function (e) {

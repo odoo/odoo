@@ -80,8 +80,8 @@
 
             <script type="text/javascript" src="/website/static/src/js/website.js"></script>
             
-            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
             <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
+            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
 
             <t t-raw="head or ''" name='layout_head'/>
         </head>
@@ -113,7 +113,7 @@
                                             </b>
                                         </a>
                                         <ul class="dropdown-menu js_usermenu" role="menu">
-                                            <li><a href="/web" role="menuitem">Administration</a></li>
+                                            <li><a href="/web" role="menuitem">My Account</a></li>
                                             <li class="divider"/>
                                             <li><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
                                         </ul>
@@ -271,6 +271,8 @@
         <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
         <script type="text/javascript" src='/website/static/lib/nearest/jquery.nearest.js'></script>
         <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
+
+        <script type="text/javascript" src="/website/static/lib/jquery.placeholder/jquery.placeholder.js"></script>
 
         <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
         <script type="text/javascript" src="/website/static/src/js/website.editor.newpage.js" groups="base.group_website_designer"></script>
@@ -763,15 +765,15 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         <div t-att-class="'name' not in fields and 'css_non_editable_mode_hidden'"><span itemprop="name" t-esc="name"/></div>
         <div itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
             <div t-if="address and 'address' in fields" class='css_editable_mode_hidden'>
-                <i class='fa fa-map-marker'/> <span itemprop="streetAddress" t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or '&lt;br/&gt; &amp;nbsp; &amp;nbsp; ')"/>
+                <i t-if="not options.get('no_marker')" class='fa fa-map-marker'/> <span itemprop="streetAddress" t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or ('&lt;br/&gt;%s' % ('' if options.get('no_marker') else '&amp;nbsp; &amp;nbsp; ')))"/>
             </div>
             <div t-if="city and 'city' in fields" class='css_editable_mode_hidden'>
-                <i class='fa fa-map-marker'/> <span itemprop="addressLocality" t-raw="city"/>, <span itemprop="addressCountry" t-raw="country_id"/>
+                <i t-if="not options.get('no_marker')" class='fa fa-map-marker'/> <span itemprop="addressLocality" t-raw="city"/>, <span itemprop="addressCountry" t-raw="country_id"/>
             </div>
-            <div t-if="phone and 'phone' in fields" class='css_editable_mode_hidden'><i class='fa fa-phone'/> <span itemprop="telephone" t-esc="phone"/></div>
-            <div t-if="mobile and 'mobile' in fields" class='css_editable_mode_hidden'><i class='fa fa-mobile-phone'/> <span itemprop="telephone" t-esc="mobile"/></div>
-            <div t-if="fax and 'fax' in fields" class='css_editable_mode_hidden'><i class='fa fa-file-text-o'/> <span itemprop="faxNumber" t-esc="fax"/></div>
-            <div t-if="email and 'email' in fields" class='css_editable_mode_hidden'><i class='fa fa-envelope'/> <span itemprop="email" t-esc="email"/></div>
+            <div t-if="phone and 'phone' in fields" class='css_editable_mode_hidden'><i t-if="not options.get('no_marker')" class='fa fa-phone'/> <span itemprop="telephone" t-esc="phone"/></div>
+            <div t-if="mobile and 'mobile' in fields" class='css_editable_mode_hidden'><i t-if="not options.get('no_marker')" class='fa fa-mobile-phone'/> <span itemprop="telephone" t-esc="mobile"/></div>
+            <div t-if="fax and 'fax' in fields" class='css_editable_mode_hidden'><i t-if="not options.get('no_marker')" class='fa fa-file-text-o'/> <span itemprop="faxNumber" t-esc="fax"/></div>
+            <div t-if="email and 'email' in fields" class='css_editable_mode_hidden'><i t-if="not options.get('no_marker')" class='fa fa-envelope'/> <span itemprop="email" t-esc="email"/></div>
         </div>
     </address>
 </template>
