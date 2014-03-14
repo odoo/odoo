@@ -9,7 +9,7 @@
             var self = this;
 
             // set value and display button
-            openerp.jsonRpc('/website_mail/is_follower/', 'call', {
+            openerp.jsonRpc('/website_mail/is_follower', 'call', {
                 model: this.$target.data('object'),
                 id: +this.$target.data('id'),
             }).always(function (data) {

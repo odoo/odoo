@@ -39,7 +39,7 @@ class WebsiteMail(http.Controller):
             partner_ids = [user_obj.browse(request.cr, request.uid, request.uid, request.context).partner_id.id]
         return partner_ids
 
-    @http.route(['/website_mail/follow/'], type='json', auth="public", website=True)
+    @http.route(['/website_mail/follow'], type='json', auth="public", website=True)
     def website_message_subscribe(self, id=0, object=None, message_is_follower="on", email=False, **post):
         _id = int(id)
         _message_is_follower = message_is_follower == 'on'
@@ -57,7 +57,7 @@ class WebsiteMail(http.Controller):
 
         return partner_ids[0] in follower_ids and 1 or 0
 
-    @http.route(['/website_mail/is_follower/'], type='json', auth="public", website=True)
+    @http.route(['/website_mail/is_follower'], type='json', auth="public", website=True)
     def call(self, model, id, **post):
         email = request.registry['res.users'].browse(request.cr, request.uid, request.uid, request.context).partner_id.email
         value = request.registry.get(model).read(request.cr, request.uid, [id], ['message_is_follower'], request.context)

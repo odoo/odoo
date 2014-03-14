@@ -8,7 +8,7 @@ $(document).ready(function () {
             return;
         }
         var order_id = order_node.data('orderId');
-        return openerp.jsonRpc('/shop/payment/get_status/' + order_id, 'call', {
+        return openerp.jsonRpc('/shop/payment/get_status' + order_id, 'call', {
         }).then(function (result) {
             var tx_node = $('div.oe_website_sale_tx_status');
             _poll_nbr += 1;
