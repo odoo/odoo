@@ -383,3 +383,33 @@ class website_forum(http.Controller):
                 'correct': correct,
             }, context=context)
         return correct
+
+    @http.route('/forum/<model("website.forum"):forum>/edit/profile/<model("res.users"):user>', type='http', auth="user", multilang=True, website=True)
+    def edit_profile(self, forum, user, **kwarg):
+        cr,context = request.cr, request.context
+        country = request.registry['res.country']
+        country_ids = country.search(cr, SUPERUSER_ID, [], context=context)
+        countries = country.browse(cr, SUPERUSER_ID, country_ids, context)
+        values = {
+            'user': user,
+            'forum': forum,
+            'searches': kwarg,
+            'countries': countries,
+        }
+        return request.website.render("website_forum.edit_profile", values)
+
+    @http.route('/forum/<model("website.forum"):forum>/save/profile/', type='http', auth="user", multilang=True, website=True)
+    def save_edited_profile(self, forum, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        request.registry['res.users'].write( cr, uid, [int(post.get('user_id'))], {
+            'name': post.get('name'),
+        }, context=context)
+        record_id = request.registry['res.users'].browse(cr, uid, int(post.get('user_id')),context=context).partner_id.id
+        request.registry['res.partner'].write( cr, uid, [record_id], {
+            'website': post.get('website'),
+            'city': post.get('city'),
+            'country_id':post.get('country'),
+            'birthdate':post.get('dob'),
+            'comment': post.get('comment'), 
+        }, context=context)
+        return werkzeug.utils.redirect("/forum/%s/user/%s" % (slug(forum),post.get('user_id')))
