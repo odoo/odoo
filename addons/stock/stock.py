@@ -236,8 +236,8 @@ class stock_quant(osv.osv):
 
     _columns = {
         'name': fields.function(_get_quant_name, type='char', string='Identifier'),
-        'product_id': fields.many2one('product.product', 'Product', required=True),
-        'location_id': fields.many2one('stock.location', 'Location', required=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete="restrict"),
+        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="restrict"),
         'qty': fields.float('Quantity', required=True, help="Quantity of products in this quant, in the default unit of measure of the product"),
         'package_id': fields.many2one('stock.quant.package', string='Package', help="The package containing this quant"),
         'packaging_type_id': fields.related('package_id', 'packaging_id', type='many2one', relation='product.packaging', string='Type of packaging', store=True),
@@ -575,9 +575,39 @@ class stock_quant(osv.osv):
                 raise osv.except_osv(_('Error'), _('You cannot move product %s to a location of type view %s.') % (record.product_id.name, record.location_id.name))
         return True
 
+    def _check_open_inventory_location(self, cr, uid, ids, context=None):
+        """ Check if there is an inventory running for the locations implied
+        """
+        inventory_obj = self.pool.get('stock.inventory')
+        for quant in self.browse(cr, uid, ids, context=context):
+            loc = quant.location_id
+            parent_location_ids = []
+            while loc:
+                parent_location_ids.append(loc.id)
+                loc = loc.location_id
+            domain = [('state', '=', 'confirm'), ('location_id', 'in', parent_location_ids), '|', ('product_id', '=', False), ('product_id', '=', quant.product_id.id)]
+            domain += ['|', ('lot_id', '=', False), ('lot_id', '=', quant.lot_id.id)]
+            domain += ['|', ('partner_id', '=', False), ('partner_id', '=', quant.owner_id.id)]
+            domain += ['|', ('package_id', '=', False), ('package_id', '=', quant.package_id.id)]
+            inventory_ids = inventory_obj.search(cr, uid, domain, context=context)
+            if inventory_ids:
+                inventory = inventory_obj.browse(cr, uid, inventory_ids[0], context=context)
+                raise osv.except_osv(_('Error! Location on inventory'),
+                                 _('There exists an inventory conflicting with your operation :\n%s') % inventory.name)
+        return True
+
     _constraints = [
-        (_check_location, 'You cannot move products to a location of the type view.', ['location_id'])
+        (_check_location, 'You cannot move products to a location of the type view.', ['location_id']),
+        (_check_open_inventory_location,
+            "A Physical Inventory is being conducted at this location", ['location_id']),
     ]
+
+    def write(self, cr, uid, ids, vals, context=None):
+        #check the inventory constraint before the write
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        self._check_open_inventory_location(cr, uid, ids, context=context)
+        return super(stock_quant, self).write(cr, uid, ids, vals, context=context)
 
 
 #----------------------------------------------------------
@@ -1535,7 +1565,8 @@ class stock_move(osv.osv):
     _constraints = [
         (_check_uom,
             'You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.',
-            ['product_uom'])]
+            ['product_uom']),
+    ]
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -2029,7 +2060,8 @@ class stock_move(osv.osv):
         # Check the packages have been placed in the correct locations
         self._check_package_from_moves(cr, uid, ids, context=context)
         # Apply on picking
-        self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+        done_date = context.get('force_date', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+        self.write(cr, uid, ids, {'state': 'done', 'date': done_date}, context=context)
         self.pool.get('procurement.order').check(cr, uid, procurement_ids, context=context)
         #check picking state to set the date_done is needed
         done_picking = []
@@ -2186,7 +2218,6 @@ class stock_inventory(osv.osv):
     _columns = {
         'name': fields.char('Inventory Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Name."),
         'date': fields.datetime('Inventory Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Create Date."),
-        'date_done': fields.datetime('Date done', help="Inventory Validation Date."),
         'line_ids': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=False, states={'done': [('readonly', True)]}, help="Inventory Lines."),
         'move_ids': fields.one2many('stock.move', 'inventory_id', 'Created Moves', help="Inventory Moves.", states={'done': [('readonly', True)]}),
         'state': fields.selection([('draft', 'Draft'), ('cancel', 'Cancelled'), ('confirm', 'In Progress'), ('done', 'Validated')], 'Status', readonly=True, select=True),
@@ -2224,7 +2255,7 @@ class stock_inventory(osv.osv):
         if default is None:
             default = {}
         default = default.copy()
-        default.update({'move_ids': [], 'date_done': False})
+        default.update({'move_ids': []})
         return super(stock_inventory, self).copy(cr, uid, id, default, context=context)
 
     def _inventory_line_hook(self, cr, uid, inventory_line, move_vals):
@@ -2249,11 +2280,13 @@ class stock_inventory(osv.osv):
             if not inv.move_ids:
                 self.action_check(cr, uid, [inv.id], context=context)
             inv.refresh()
+            self.write(cr, uid, [inv.id], {'state': 'done'}, context=context)
             #The inventory is posted as a single step which means quants cannot be moved from an internal location to another using an inventory
             #as they will be moved to inventory loss, and other quants will be created to the encoded quant location. This is a normal behavior
             #as quants cannot be reuse from inventory location (users can still manually move the products before/after the inventory if they want).
-            move_obj.action_done(cr, uid, [x.id for x in inv.move_ids], context=context)
-            self.write(cr, uid, [inv.id], {'state': 'done', 'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+            ctx = context.copy()
+            ctx['force_date'] = inv.date
+            move_obj.action_done(cr, uid, [x.id for x in inv.move_ids], context=ctx)
         return True
 
     def _create_stock_move(self, cr, uid, inventory, todo_line, context=None):
@@ -2316,9 +2349,22 @@ class stock_inventory(osv.osv):
     def action_cancel_inventory(self, cr, uid, ids, context=None):
         self.action_cancel_draft(cr, uid, ids, context=context)
 
+    def check_inventory_date(self, cr, uid, inventory, context=None):
+        domain = ['|', ('location_id', 'child_of', [inventory.location_id.id]), ('location_dest_id', 'child_of', [inventory.location_id.id]), ('date', '>', inventory.date), ('state', '!=', 'cancel')]
+        if inventory.product_id:
+            domain += [('product_id', '=', inventory.product_id.id)]
+        return self.pool.get('stock.move').search(cr, uid, domain, context=context)
+
     def prepare_inventory(self, cr, uid, ids, context=None):
         inventory_line_obj = self.pool.get('stock.inventory.line')
         for inventory in self.browse(cr, uid, ids, context=context):
+            #check inventory start date is allowed
+            conflicting_move_ids = self.check_inventory_date(cr, uid, inventory, context=context)
+            error_message = ""
+            for move in self.pool.get('stock.move').browse(cr, uid, conflicting_move_ids, context=context):
+                error_message += _("\n * Date: %s - %s %s - From: %s To: %s") % (move.date, move.product_uom_qty, move.product_uom.name, move.location_id.name, move.location_dest_id.name)
+            if conflicting_move_ids:
+                raise osv.except_osv(_('Error!'), _('There exists stock moves made/scheduled after the inventory date which are conflicting with its settings. Please cancel them or change the inventory date to proceed further.\n\n%s') % (error_message))
             #clean the existing inventory lines before redoing an inventory proposal
             line_ids = [line.id for line in inventory.line_ids]
             inventory_line_obj.unlink(cr, uid, line_ids, context=context)
