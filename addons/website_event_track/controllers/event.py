@@ -105,17 +105,19 @@ class website_event(http.Controller):
 
         request.cr.execute('''
             Select id, location_id, groupby_datetime, duration, name, date from (
-                Select id, location_id, to_char(date_trunc('hour',date),'mm-dd-yy hh AM') as
+               Select id, location_id, to_char(date_trunc('hour',date),'mm-dd-yy hh AM') as
                 groupby_datetime, duration, name, event_id, date, count(*) as tot from event_track
+                where date IS NOT NULL AND duration IS NOT NULL AND duration != 0
                 group by event_id, duration, id, location_id, date, date_trunc('hour',date)
                 order by date, date_trunc('hour',date)
             ) 
-            event_query where event_query.event_id = %s 
+            event_query where event_query.event_id = %s
                 group by  event_query.location_id, event_query.id, 
                   event_query.groupby_datetime, event_query.duration,event_query.name, event_query.date;
             ''',(event.id,))
         
         fetch_tracks = request.cr.fetchall()
+        print "vvvv",fetch_tracks
         
         request.cr.execute('''
         select count(*), date_trunc('day',date) from event_track where event_id = %s group by date_trunc('day',date) order by  date_trunc('day',date)
