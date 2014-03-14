@@ -71,7 +71,7 @@
                         <tr>
                             <th t-attf-style="width: #{td_width}px;"> </th>
                             <t t-foreach="room_list" t-as="room">
-                                <th t-attf-style="width: #{td_width}px;" class="active"><a href="#"><t t-esc="room[1]"/></a></th>
+                                <th t-attf-style="width: #{td_width}px;" class="active"><bold><t t-esc="room[1]"/></bold></th>
                             </t>
                         </tr>
                         <t t-foreach="days[day]" t-as="slot">
@@ -89,7 +89,7 @@
                                             <t t-if="not days[day][slot][index]['location_id'] and for_all" >
                                                 <t t-set="for_all" t-value="False"/>
                                                 <td t-if="sid" id="seach_enable" t-att-colspan="len(room_list)" class="success text-center">
-                                                    <t t-esc="days[day][slot][index]['title']" />
+                                                    <a t-attf-href="/event/#{ slug(event) }/track/#{ slug([ days[day][slot][index]['id'], days[day][slot][index]['title']]) }"> <t t-esc="days[day][slot][index]['title']" /> </a>
                                                     <t t-foreach="days[day][slot][index]['speaker_ids']" t-as="speaker">
                                                          <t t-if="speaker == days[day][slot][index]['speaker_ids'][:1][0]">By </t>
                                                          <t t-esc="speaker"/>
@@ -104,7 +104,7 @@
                                             <t  t-if="days[day][slot][index]['location_id'] == room[0]" >
                                                 <td t-att-rowspan="days[day][slot][index]['row_span']"  t-attf-style="width: #{td_width}px;"
                                                 t-attf-class="event_color_#{days[day][slot][index]['color']}" id="seach_enable">
-                                                    <t t-esc="days[day][slot][index]['title']" />
+                                                <a t-attf-href="/event/#{ slug(event) }/track/#{ slug([ days[day][slot][index]['id'], days[day][slot][index]['title']]) }"> <t t-esc="days[day][slot][index]['title']" /> </a>
                                                     <t t-foreach="days[day][slot][index]['speaker_ids']" t-as="speaker">
                                                          <t t-if="speaker == days[day][slot][index]['speaker_ids'][:1][0]">By </t>
                                                          <t t-esc="speaker"/>
