@@ -157,7 +157,7 @@ class website_event(http.Controller):
                 if value[1] == end_time and secret_key:
                     if not index == row_span:
                         index = index + 1  
-                    event_tracks = event_track_obj.browse(request.cr, request.uid, track[0], context=request.context)
+                    event_tracks = event_track_obj.browse(request.cr, openerp.SUPERUSER_ID, track[0], context=request.context)
                     color =  0 if event_tracks.color > 9 else event_tracks.color
                     unsort_tracks[track[2][:8]][secret_key].append({
                              'id': track[0],
