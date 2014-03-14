@@ -680,19 +680,23 @@ class calendar_event(osv.Model):
         return [d.astimezone(pytz.UTC) for d in rset1]
 
     def _get_recurrency_end_date(self, data, context=None):
-        if data.get('recurrency') and data.get('end_type') in ('count', unicode('count')):
-            data_date_deadline = datetime.strptime(data.get('date_deadline'), '%Y-%m-%d %H:%M:%S')
-            if data.get('rrule_type') in ('daily', unicode('count')):
-                rel_date = relativedelta(days=data.get('count') + 1)
-            elif data.get('rrule_type') in ('weekly', unicode('weekly')):
-                rel_date = relativedelta(days=(data.get('count') + 1) * 7)
-            elif data.get('rrule_type') in ('monthly', unicode('monthly')):
-                rel_date = relativedelta(months=data.get('count') + 1)
-            elif data.get('rrule_type') in ('yearly', unicode('yearly')):
-                rel_date = relativedelta(years=data.get('count') + 1)
-            end_date = data_date_deadline + rel_date
-        else:
-            end_date = data.get('end_date')
+        if not data.get('recurrency'):
+            return False
+
+        end_type = data.get('end_type')
+        end_date = data.get('end_date')
+
+        if end_type == 'count' and all(data.get(key) for key in ['count', 'rrule_type', 'date_deadline']):
+            count = data['count'] + 1
+            delay, mult = {
+                'daily': ('days', 1),
+                'weekly': ('days', 7),
+                'monthly': ('months', 1),
+                'yearly': ('years', 1),
+            }[data['rrule_type']]
+
+            deadline = datetime.strptime(data['date_deadline'], tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            return deadline + relativedelta(**{delay: count * mult})
         return end_date
 
     def _find_my_attendee(self, cr, uid, meeting_ids, context=None):
@@ -774,7 +778,11 @@ class calendar_event(osv.Model):
                 result[event] = ""
         return result
 
+    # retro compatibility function
     def _rrule_write(self, cr, uid, ids, field_name, field_value, args, context=None):
+        return self._set_rulestring(self, cr, uid, ids, field_name, field_value, args, context=context)
+
+    def _set_rulestring(self, cr, uid, ids, field_name, field_value, args, context=None):
         if not isinstance(ids, list):
             ids = [ids]
         data = self._get_empty_rrule_data()
@@ -812,7 +820,7 @@ class calendar_event(osv.Model):
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), ('confidential', 'Public for Employees')], 'Privacy', states={'done': [('readonly', True)]}),
         'location': fields.char('Location', help="Location of Event", track_visibility='onchange', states={'done': [('readonly', True)]}),
         'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}),
-        'rrule': fields.function(_get_rulestring, type='char', fnct_inv=_rrule_write, store=True, string='Recurrent Rule'),
+        'rrule': fields.function(_get_rulestring, type='char', fnct_inv=_set_rulestring, store=True, string='Recurrent Rule'),
         'rrule_type': fields.selection([('daily', 'Day(s)'), ('weekly', 'Week(s)'), ('monthly', 'Month(s)'), ('yearly', 'Year(s)')], 'Recurrency', states={'done': [('readonly', True)]}, help="Let the event automatically repeat at that interval"),
         'recurrency': fields.boolean('Recurrent', help="Recurrent Meeting"),
         'recurrent_id': fields.integer('Recurrent ID'),
@@ -1169,7 +1177,7 @@ class calendar_event(osv.Model):
         #repeat monthly by nweekday ((weekday, weeknumber), )
         if r._bynweekday:
             data['week_list'] = day_list[r._bynweekday[0][0]].upper()
-            data['byday'] = r._bynweekday[0][1]
+            data['byday'] = str(r._bynweekday[0][1])
             data['month_by'] = 'day'
             data['rrule_type'] = 'monthly'
 
@@ -1423,7 +1431,7 @@ class calendar_event(osv.Model):
         # set end_date for calendar searching
         if values.get('recurrency', True) and values.get('end_type', 'count') in ('count', unicode('count')) and \
                 (values.get('rrule_type') or values.get('count') or values.get('date') or values.get('date_deadline')):
-            for data in self.read(cr, uid, ids, ['date', 'date_deadline', 'recurrency', 'rrule_type', 'count', 'end_type'], context=context):
+            for data in self.read(cr, uid, ids, ['end_date', 'date_deadline', 'recurrency', 'rrule_type', 'count', 'end_type'], context=context):
                 end_date = self._get_recurrency_end_date(data, context=context)
                 super(calendar_event, self).write(cr, uid, [data['id']], {'end_date': end_date}, context=context)
 
@@ -1454,11 +1462,12 @@ class calendar_event(osv.Model):
         if not 'user_id' in vals:  # Else bug with quick_create when we are filter on an other user
             vals['user_id'] = uid
 
-        if vals.get('recurrency', True) and vals.get('end_type', 'count') in ('count', unicode('count')) and \
-                (vals.get('rrule_type') or vals.get('count') or vals.get('date') or vals.get('date_deadline')):
-            vals['end_date'] = self._get_recurrency_end_date(vals, context=context)
-
         res = super(calendar_event, self).create(cr, uid, vals, context=context)
+
+        data = self.read(cr, uid, [res], ['end_date', 'date_deadline', 'recurrency', 'rrule_type', 'count', 'end_type'], context=context)[0]
+        end_date = self._get_recurrency_end_date(data, context=context)
+        self.write(cr, uid, [res], {'end_date': end_date}, context=context)
+
         self.create_attendees(cr, uid, [res], context=context)
         return res
 
