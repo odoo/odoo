@@ -67,7 +67,7 @@
                         <t t-set="td_width" t-value="90/len(room_list)"/>
                         <t t-set="index" t-value="0"/>
                         <t t-set="for_all" t-value="True"/>
-                        <tr>
+                        <tr id="agenda_th">
                             <th t-attf-style="width:#{10}%;"> </th>
                             <t t-foreach="room_list" t-as="room">
                                 <th t-attf-style="width: #{td_width}px;" class="active"><bold><t t-esc="room[1]"/></bold></th>
@@ -75,7 +75,7 @@
                         </tr>
                         <t t-foreach="days[day]" t-as="slot">
                             <t t-set="skip_it" t-value="skip_td[day].keys()"/>
-                            <tr>
+                            <tr id="agenda_tr">
                                 <td t-attf-style="width:#{10}%;"><t t-esc= "slot"/></td>
                                 <t t-foreach="room_list" t-as="room">
                                     <t t-set="sid" t-value="not (room[0] in skip_it and slot in skip_td[day][room[0]])" />
