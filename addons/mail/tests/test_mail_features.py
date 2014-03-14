@@ -210,24 +210,6 @@ class test_mail(TestMail):
         self.assertTrue(subtype_data['mt_mg_nodef']['followed'], 'Admin should follow mt_mg_nodef in pigs')
         self.assertTrue(subtype_data['mt_all_nodef']['followed'], 'Admin should follow mt_all_nodef in pigs')
 
-    def test_10_message_quote_context(self):
-        """ Tests designed for message_post. """
-        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
-
-        msg1_id = self.mail_message.create(cr, uid, {'body': 'Thread header about Zap Brannigan', 'subject': 'My subject'})
-        msg2_id = self.mail_message.create(cr, uid, {'body': 'First answer, should not be displayed', 'subject': 'Re: My subject', 'parent_id': msg1_id})
-        msg3_id = self.mail_message.create(cr, uid, {'body': 'Second answer', 'subject': 'Re: My subject', 'parent_id': msg1_id})
-        msg4_id = self.mail_message.create(cr, uid, {'body': 'Third answer', 'subject': 'Re: My subject', 'parent_id': msg1_id})
-        msg_new_id = self.mail_message.create(cr, uid, {'body': 'My answer I am propagating', 'subject': 'Re: My subject', 'parent_id': msg1_id})
-
-        result = self.mail_message.message_quote_context(cr, uid, msg_new_id, limit=3)
-        self.assertIn('Thread header about Zap Brannigan', result, 'Thread header content should be in quote.')
-        self.assertIn('Second answer', result, 'Answer should be in quote.')
-        self.assertIn('Third answer', result, 'Answer should be in quote.')
-        self.assertIn('expandable', result, 'Expandable should be present.')
-        self.assertNotIn('First answer, should not be displayed', result, 'Old answer should not be in quote.')
-        self.assertNotIn('My answer I am propagating', result, 'Thread header content should be in quote.')
-
     def test_11_notification_url(self):
         """ Tests designed to test the URL added in notification emails. """
         cr, uid, group_pigs = self.cr, self.uid, self.group_pigs
