@@ -202,4 +202,4 @@ class website_event(http.Controller):
             'date_end': (date_begin + timedelta(days=(1))).strftime('%Y-%m-%d'),
         }
         event_id = Event.create(request.cr, request.uid, vals, context=context)
-        return request.redirect("/event/%s/?enable_editor=1" % event_id)
+        return request.redirect("/event/%s?enable_editor=1" % event_id)

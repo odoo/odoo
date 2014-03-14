@@ -245,7 +245,7 @@ class WebsiteBlog(http.Controller):
                 'content': '',
                 'website_published': False,
             }, context=create_context)
-        return werkzeug.utils.redirect("/blogpost/%s/?enable_editor=1" % new_blog_post_id)
+        return werkzeug.utils.redirect("/blogpost/%s?enable_editor=1" % new_blog_post_id)
 
     @http.route('/blogpost/duplicate', type='http', auth="public", website=True)
     def blog_post_copy(self, blog_post_id, **post):
@@ -258,4 +258,4 @@ class WebsiteBlog(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)
         new_blog_post_id = request.registry['blog.post'].copy(cr, uid, blog_post_id, {}, context=create_context)
-        return werkzeug.utils.redirect("/blogpost/%s/?enable_editor=1" % new_blog_post_id)
+        return werkzeug.utils.redirect("/blogpost/%s?enable_editor=1" % new_blog_post_id)

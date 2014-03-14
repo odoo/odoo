@@ -331,7 +331,7 @@ class Ecommerce(http.Controller):
         }, context=request.context)
         product = Product.browse(request.cr, request.uid, product_id, context=request.context)
 
-        return request.redirect("/shop/product/%s/?enable_editor=1" % product.product_tmpl_id.id)
+        return request.redirect("/shop/product/%s?enable_editor=1" % slug(product.product_tmpl_id))
 
     @http.route(['/shop/mycart'], type='http', auth="public", website=True, multilang=True)
     def mycart(self, **post):
