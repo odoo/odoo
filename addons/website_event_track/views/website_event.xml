@@ -55,9 +55,10 @@
             </div>
             <div class="col-md-12" id="right_column">
                 <t t-foreach="days" t-as="day">
+                    <t t-set="index_of_day" t-value="(days.keys()).index(day)" />
                     <h3 class="page-header mt0">
-                        <t t-esc="day"/>
-                        <small><t t-esc="(talks[(days.keys()).index(day)])[0]"/> talks</small>
+                        <t t-esc="format_date[index_of_day]" />
+                        <small><t t-esc="(talks[index_of_day])[0]"/> talks</small>
                         <div class="form-group col-md-3 pull-right">
                             <input type="text" class="form-control" placeholder="Filter..." id="start_search"/>
                         </div>

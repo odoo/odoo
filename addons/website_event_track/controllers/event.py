@@ -197,7 +197,9 @@ class website_event(http.Controller):
                         skip_td[track] [i['location_id']] = skip_td[track] [i['location_id']] + skip_time
 
         #Remove repeated element in list if any.
+        format_date = []
         for skip in skip_td.keys():
+            format_date.append((datetime.datetime.strptime(skip, '%m-%d-%y')).strftime("%d %B, %Y"))
             for loc in skip_td[skip].keys():
                 skip_td[skip][loc] = list(set(skip_td[skip][loc]))
         values = {
@@ -206,7 +208,8 @@ class website_event(http.Controller):
             'room_list': rooms,
             'days': unsort_tracks,
             'skip_td': skip_td,
-            'talks':talks
+            'talks':talks,
+            'format_date':format_date
         }
         return request.website.render("website_event_track.agenda", values)
 
