@@ -317,9 +317,6 @@ class mail_compose_message(osv.TransientModel):
                     new_attach_id = self.pool.get('ir.attachment').copy(cr, uid, attach_id, {'res_model': self._name, 'res_id': wizard.id}, context=context)
                     attachment_ids.append(new_attach_id)
                 mail_values['attachment_ids'] = attachment_ids
-                # email_from: mass mailing only can specify another email_from
-                if email_dict.get('email_from'):
-                    mail_values['email_from'] = email_dict.pop('email_from')
                 # replies redirection: mass mailing only
                 if wizard.same_thread:
                     email_dict.pop('reply_to', None)
