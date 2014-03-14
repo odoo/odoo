@@ -2245,15 +2245,15 @@ class stock_move(osv.osv):
                 if move.picking_id:
                     pickings.add(move.picking_id.id)
             if move.move_dest_id and move.move_dest_id.state == 'waiting':
-                self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'})
+                self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'}, context=context)
                 if context.get('call_unlink',False) and move.move_dest_id.picking_id:
                     wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
-        self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False})
+        self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False}, context=context)
         if not context.get('call_unlink',False):
             for pick in self.pool.get('stock.picking').browse(cr, uid, list(pickings), context=context):
                 if all(move.state == 'cancel' for move in pick.move_lines):
-                    self.pool.get('stock.picking').write(cr, uid, [pick.id], {'state': 'cancel'})
+                    self.pool.get('stock.picking').write(cr, uid, [pick.id], {'state': 'cancel'}, context=context)
 
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
