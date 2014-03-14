@@ -33,14 +33,18 @@ professional emails and reuse templates in a few clicks.
     'depends': [
         'mail',
         'email_template',
+        'marketing',
         'web_kanban_gauge',
         'web_kanban_sparkline',
     ],
     'data': [
         'mail_data.xml',
+        'mass_mailing_data.xml',
         'wizard/mail_compose_message_view.xml',
         'wizard/mail_mass_mailing_create_segment.xml',
         'mass_mailing_view.xml',
+        'res_config_view.xml',
+        'email_template.xml',
         'security/ir.model.access.csv',
     ],
     'js': [
@@ -48,7 +52,8 @@ professional emails and reuse templates in a few clicks.
     ],
     'qweb': [],
     'css': [
-        'static/src/css/mass_mailing.css'
+        'static/src/css/mass_mailing.css',
+        'static/src/css/email_template.css'
     ],
     'demo': [
         'mass_mailing_demo.xml',

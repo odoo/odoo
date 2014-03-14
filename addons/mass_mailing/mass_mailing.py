@@ -23,8 +23,149 @@ from datetime import datetime
 from dateutil import relativedelta
 
 from openerp import tools
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp.osv import osv, fields
+
+
+class MassMailingCategory(osv.Model):
+    """Model of categories of mass mailing, i.e. marketing, newsletter, ... """
+    _name = 'mail.mass_mailing.category'
+    _description = 'Mass Mailing Category'
+
+    _columns = {
+        'name': fields.char('Name', required=True),
+    }
+
+
+class MassMailingContact(osv.Model):
+    """Model of a contact. This model is different from the partner model
+    because it holds only some basic information: name, email. The purpose is to
+    be able to deal with large contact list to email without bloating the partner
+    database. """
+    _name = 'mail.mass_mailing.contact'
+    _description = 'Mass Mailing Contact'
+
+    _columns = {
+        'name': fields.char('Name', required=True),
+        'email': fields.char('Email', required=True),
+        'list_id': fields.many2one(
+            'mail.mass_mailing.list', string='Mailing List',
+            required=True, ondelete='cascade',
+        ),
+        'opt_out': fields.boolean('Opt Out', help='The contact has chosen not to receive news anymore from this mailing list'),
+    }
+
+
+class MassMailingList(osv.Model):
+    """Model of a contact list. """
+    _name = 'mail.mass_mailing.list'
+    _description = 'Contact List'
+
+    def default_get(self, cr, uid, fields, context=None):
+        """Override default_get to handle active_domain coming from the list view. """
+        res = super(MassMailingList, self).default_get(cr, uid, fields, context=context)
+        if 'domain' in fields and 'active_domain' in context:
+            res['domain'] = '%s' % context['active_domain']
+            res['model'] = context.get('active_model', 'res.partner')
+        return res
+
+    def _get_contact_nbr(self, cr, uid, ids, name, arg, context=None):
+        """Compute the number of contacts linked to the mailing list. """
+        results = dict.fromkeys(ids, 0)
+        for contact_list in self.browse(cr, uid, ids, context=context):
+            if contact_list.model == 'mail.mass_mailing.contact':
+                results[contact_list.id] = len(contact_list.contact_ids)
+            else:
+                domain = self.compute_domain(cr, uid, [contact_list.id], context=context)
+                results[contact_list.id] = self.pool[contact_list.model].search(cr, uid, domain, count=True, context=context)
+        return results
+
+    def _get_model_list(self, cr, uid, context=None):
+        return [
+            ('res.partner', 'Customers'),
+            ('mail.mass_mailing.contact', 'Mailing Contacts')
+        ]
+
+    # indirections for inheritance
+    _model_list = lambda self, *args, **kwargs: self._get_model_list(*args, **kwargs)
+
+    _columns = {
+        'name': fields.char('Name', required=True),
+        'contact_nbr': fields.function(
+            _get_contact_nbr, type='integer',
+            string='Contact Number',
+        ),
+        # contact-based list
+        'contact_ids': fields.one2many(
+            'mail.mass_mailing.contact', 'list_id', string='Contacts',
+            domain=[('opt_out', '=', False)],
+        ),
+        # filter-based list
+        'model': fields.selection(
+            _model_list, type='char', required=True,
+            string='Applies To'
+        ),
+        # 'model_id': fields.many2one(
+        #     'ir.model', string='Related Model',
+        #     domain="[('model', '=', model')]",
+        # ),
+        'filter_id': fields.many2one(
+            'ir.filters', string='Custom Filter',
+            # domain="[('model_id', '=', model_id)]",
+        ),
+        'domain': fields.text('Domain'),
+    }
+
+    def on_change_model(self, cr, uid, ids, model, context=None):
+        values = {}
+        if model == 'mail.mass_mailing.contact':
+            values.update(domain=False, filter_id=False)
+        else:
+            values.update(filter_id=False)
+        return {'value': values}
+
+    def on_change_filter_id(self, cr, uid, ids, filter_id, context=None):
+        values = {}
+        if filter_id:
+            ir_filter = self.pool['ir.filters'].browse(cr, uid, filter_id, context=context)
+            values['domain'] = ir_filter.domain
+        else:
+            values['domain'] = False
+        return {'value': values}
+
+    def action_see_records(self, cr, uid, ids, context=None):
+        contact_list = self.browse(cr, uid, ids[0], context=context)
+        ctx = dict(context)
+        ctx['search_default_not_opt_out'] = True
+        return {
+            'name': _('See Contact List'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': contact_list.model,
+            'views': [(False, 'tree'), (False, 'form')],
+            'view_id': False,
+            'target': 'current',
+            'context': ctx,
+            'domain': contact_list.domain,
+        }
+
+    def compute_domain(self, cr, uid, ids, context=None):
+        domains = []
+        for contact_list in self.browse(cr, uid, ids, context=context):
+            domain = eval(contact_list.domain)
+            if domain:
+                domain = ['&', ('opt_out', '=', False)] + domain
+            else:
+                domain = [('opt_out', '=', False)]
+            if domain is not False:
+                domains.append(domain)
+        if domains:
+            final_domain = ['|'] * (len(domains) - 1) + [leaf for dom in domains for leaf in dom]
+        else:
+            final_domain = domains
+        return final_domain
 
 
 class MassMailingCampaign(osv.Model):
@@ -63,6 +204,12 @@ class MassMailingCampaign(osv.Model):
             results[campaign.id] = mass_mailing_results
         return results
 
+    def _get_state_list(self, cr, uid, context=None):
+        return [('draft', 'Schedule'), ('design', 'Design'), ('done', 'Sent')]
+
+    # indirections for inheritance
+    _state = lambda self, *args, **kwargs: self._get_state_list(*args, **kwargs)
+
     _columns = {
         'name': fields.char(
             'Campaign Name', required=True,
@@ -71,6 +218,12 @@ class MassMailingCampaign(osv.Model):
             'res.users', 'Responsible',
             required=True,
         ),
+        'state': fields.selection(
+            _state, string='Status', required=True,
+        ),
+        'category_id': fields.many2one(
+            'mail.mass_mailing.category', 'Category',
+            help='Category'),
         'mass_mailing_ids': fields.one2many(
             'mail.mass_mailing', 'mass_mailing_campaign_id',
             'Mass Mailings',
@@ -117,7 +270,41 @@ class MassMailingCampaign(osv.Model):
 
     _defaults = {
         'user_id': lambda self, cr, uid, ctx=None: uid,
+        'state': 'draft',
     }
+
+    #------------------------------------------------------
+    # Technical stuff
+    #------------------------------------------------------
+
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        """ Override read_group to always display all states. """
+        if groupby and groupby[0] == "state":
+            # Default result structure
+            states = self._get_state_list(cr, uid, context=context)
+            read_group_all_states = [{
+                '__context': {'group_by': groupby[1:]},
+                '__domain': domain + [('state', '=', state_value)],
+                'state': state_value,
+                'state_count': 0,
+            } for state_value, state_name in states]
+            # Get standard results
+            read_group_res = super(MassMailingCampaign, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+            # Update standard results with default results
+            result = []
+            for state_value, state_name in states:
+                res = filter(lambda x: x['state'] == state_value, read_group_res)
+                if not res:
+                    res = filter(lambda x: x['state'] == state_value, read_group_all_states)
+                res[0]['state'] = [state_value, state_name]
+                result.append(res[0])
+            return result
+        else:
+            return super(MassMailingCampaign, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+
+    #------------------------------------------------------
+    # Actions
+    #------------------------------------------------------
 
     def launch_mass_mailing_create_wizard(self, cr, uid, ids, context=None):
         ctx = dict(context)
@@ -142,7 +329,7 @@ class MassMailing(osv.Model):
     A mass mailing is an occurence of sending emails. """
 
     _name = 'mail.mass_mailing'
-    _description = 'Wave of sending emails'
+    _description = 'Mass Mailing'
     # number of periods for tracking mail_mail statistics
     _period_number = 6
     _order = 'date DESC'
@@ -189,9 +376,9 @@ class MassMailing(osv.Model):
             date_begin_str = date_begin.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
             date_end_str = date_end.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
             domain = [('mass_mailing_id', '=', id), ('opened', '>=', date_begin_str), ('opened', '<=', date_end_str)]
-            res[id]['opened_monthly'] = self.__get_bar_values(cr, uid, id, obj, domain, ['opened'], 'opened_count', 'opened:day', context=context)
+            res[id]['opened_dayly'] = self.__get_bar_values(cr, uid, id, obj, domain, ['opened'], 'opened_count', 'opened:day', context=context)
             domain = [('mass_mailing_id', '=', id), ('replied', '>=', date_begin_str), ('replied', '<=', date_end_str)]
-            res[id]['replied_monthly'] = self.__get_bar_values(cr, uid, id, obj, domain, ['replied'], 'replied_count', 'replied:day', context=context)
+            res[id]['replied_dayly'] = self.__get_bar_values(cr, uid, id, obj, domain, ['replied'], 'replied_count', 'replied:day', context=context)
         return res
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
@@ -207,22 +394,54 @@ class MassMailing(osv.Model):
             }
         return results
 
+    def _get_mailing_type(self, cr, uid, context=None):
+        return [
+            ('res.partner', 'Customers'),
+            ('mail.mass_mailing.contact', 'Contacts')
+        ]
+
+    def _get_state_list(self, cr, uid, context=None):
+        return [('draft', 'Schedule'), ('test', 'Tested'), ('done', 'Sent')]
+
+    # indirections for inheritance
+    _mailing_type = lambda self, *args, **kwargs: self._get_mailing_type(*args, **kwargs)
+    _state = lambda self, *args, **kwargs: self._get_state_list(*args, **kwargs)
+
     _columns = {
-        'name': fields.char('Name', required=True),
-        'mass_mailing_campaign_id': fields.many2one(
-            'mail.mass_mailing.campaign', 'Mass Mailing Campaign',
-            ondelete='cascade', required=True,
+        'name': fields.char('Subject', required=True),
+        'date': fields.datetime('Date'),
+        'state': fields.selection(
+            _state, string='Status', required=True,
         ),
         'template_id': fields.many2one(
             'email.template', 'Email Template',
+            domain=[('use_in_mass_mailing', '=', True)],
             ondelete='set null',
         ),
-        'domain': fields.char('Domain'),
-        'date': fields.datetime('Date'),
+        'body_html': fields.related(
+            'template_id', 'body_html', type='html',
+            string='Body', readonly='True',
+            help='Technical field: used only to display a view of the template in the form view',
+        ),
+        'mass_mailing_campaign_id': fields.many2one(
+            'mail.mass_mailing.campaign', 'Mass Mailing Campaign',
+            ondelete='set null',
+        ),
         'color': fields.related(
             'mass_mailing_campaign_id', 'color',
             type='integer', string='Color Index',
         ),
+        # mailing options
+        'email_from': fields.char('From'),
+        'email_to': fields.char('Send to Emails'),
+        'reply_to': fields.char('Reply To'),
+        'mailing_type': fields.selection(_mailing_type, string='Type', required=True),
+        'contact_list_ids': fields.many2many(
+            'mail.mass_mailing.list', 'mail_mass_mailing_list_rel',
+            string='Mailing Lists',
+            domain="[('model', '=', mailing_type)]",
+        ),
+        'contact_nbr': fields.integer('Contact Number'),
         # statistics data
         'statistics_ids': fields.one2many(
             'mail.mail.statistics', 'mass_mailing_id',
@@ -254,21 +473,158 @@ class MassMailing(osv.Model):
             type='integer', multi='_get_statistics'
         ),
         # monthly ratio
-        'opened_monthly': fields.function(
+        'opened_dayly': fields.function(
             _get_daily_statistics,
             string='Opened',
             type='char', multi='_get_daily_statistics',
+            oldname='opened_monthly',
         ),
-        'replied_monthly': fields.function(
+        'replied_dayly': fields.function(
             _get_daily_statistics,
             string='Replied',
             type='char', multi='_get_daily_statistics',
+            oldname='replied_monthly',
         ),
     }
 
     _defaults = {
+        'state': 'draft',
         'date': fields.datetime.now,
+        'email_from': lambda self, cr, uid, ctx=None: self.pool['mail.message']._get_default_from(cr, uid, context=ctx),
+        'mailing_type': 'res.partner',
     }
+
+    #------------------------------------------------------
+    # Technical stuff
+    #------------------------------------------------------
+
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        """ Override read_group to always display all states. """
+        if groupby and groupby[0] == "state":
+            # Default result structure
+            states = self._get_state_list(cr, uid, context=context)
+            read_group_all_states = [{
+                '__context': {'group_by': groupby[1:]},
+                '__domain': domain + [('state', '=', state_value)],
+                'state': state_value,
+                'state_count': 0,
+            } for state_value, state_name in states]
+            # Get standard results
+            read_group_res = super(MassMailing, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+            # Update standard results with default results
+            result = []
+            for state_value, state_name in states:
+                res = filter(lambda x: x['state'] == state_value, read_group_res)
+                if not res:
+                    res = filter(lambda x: x['state'] == state_value, read_group_all_states)
+                res[0]['state'] = [state_value, state_name]
+                result.append(res[0])
+            return result
+        else:
+            return super(MassMailing, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+
+    #------------------------------------------------------
+    # Views & Actions
+    #------------------------------------------------------
+
+    def on_change_mailing_type(self, cr, uid, ids, mailing_type, context=None):
+        return {'value': {'contact_list_ids': []}}
+
+    def on_change_template_id(self, cr, uid, ids, template_id, context=None):
+        values = {}
+        if template_id:
+            template = self.pool['email.template'].browse(cr, uid, template_id, context=context)
+            if template.email_from:
+                values['email_from'] = template.email_from
+            if template.reply_to:
+                values['reply_to'] = template.reply_to
+            values['body_html'] = template.body_html
+        else:
+            values['email_from'] = self.pool['mail.message']._get_default_from(cr, uid, context=context)
+            values['reply_to'] = False
+            values['body_html'] = False
+        return {'value': values}
+
+    def send_mail(self, cr, uid, ids, context=None):
+        Mail = self.pool['mail.mail']
+        for mailing in self.browse(cr, uid, ids, context=context):
+            contact_list_ids = [contact_list.id for contact_list in mailing.contact_list_ids]
+
+            # contact-based list: aggregate all contacts
+            if mailing.mailing_type == 'mail.mass_mailing.list':
+                res_ids = [contact.id for contact in contact_list.contact_ids for contact_list in mailing.contact_list_ids]
+            elif mailing.mailing_type == 'res.partner':
+                domain = self.pool['mail.mass_mailing.list'].compute_domain(cr, uid, contact_list_ids, context=context)
+                print domain
+                res_ids = self.pool[contact_list.model].search(cr, uid, domain, context=context)
+
+            all_mail_values = self.pool['mail.compose.message'].generate_email_for_composer_batch(
+                cr, uid, mailing.template_id.id, res_ids,
+                context=context,
+                fields=['body_html', 'attachment_ids', 'mail_server_id']
+            )
+            for res_id, mail_values in all_mail_values.iteritems():
+                mail_values.update({
+                    'email_from': mailing.email_from,
+                    'reply_to': mailing.reply_to,
+                    'subject': mailing.name,
+                    'body_html': mail_values.get('body'),
+                    'auto_delete': True,
+                    'statistics_ids': [(0, 0, {
+                        'model': mailing.mailing_type,
+                        'res_id': res_id,
+                        'mass_mailing_id': mailing.id,
+                    })]
+                })
+                m2m_attachment_ids = self.pool['mail.thread']._message_preprocess_attachments(
+                    cr, uid, mail_values.pop('attachments', []),
+                    mail_values.pop('attachment_ids', []),
+                    'mail.message', 0,
+                    context=context)
+                mail_values['attachment_ids'] = m2m_attachment_ids
+                if mailing.mailing_type == 'mail.mass_mailing.list':
+                    contact = self.pool['mail.mass_mailing.contact'].browse(cr, uid, res_id, context=context)
+                    mail_values['email_to'] = '"%s" <%s>' % (contact.name, contact.email)
+                elif mailing.mailing_type == 'res.partner':
+                    mail_values['recipient_ids'] = [(4, res_id)]
+                Mail.create(cr, uid, mail_values, context=context)
+            # todo: handle email_to
+        return True
+
+    def send_mail_to_myself(self, cr, uid, ids, context=None):
+        Mail = self.pool['mail.mail']
+        for mailing in self.browse(cr, uid, ids, context=context):
+            mail_values = {
+                'email_from': mailing.email_from,
+                'reply_to': mailing.reply_to,
+                'email_to': self.pool['res.users'].browse(cr, uid, uid, context=context).email,
+                'subject': mailing.name,
+                'body_html': mailing.template_id.body_html,
+                'auto_delete': True,
+            }
+            mail_id = Mail.create(cr, uid, mail_values, context=context)
+            Mail.send(cr, uid, [mail_id], context=context)
+        return True
+
+    def select_customers(self, cr, uid, ids, context=None):
+        sid = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'base.view_res_partner_filter')
+
+        aid = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_partner_to_mailing_list')
+        print sid, aid
+        ctx = dict(context)
+        ctx['view_manager_highlight'] = [aid]
+        return {
+            'name': _('Choose Customers'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'res.partner',
+            # 'views': [(False, 'tree'), (False, 'form')],
+            'view_id': False,
+            'search_view_id': sid,
+            # 'target': 'new',
+            'context': ctx,
+        }
 
 
 class MailMailStats(osv.Model):

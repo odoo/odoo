@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-today OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -22,5 +22,7 @@
 import mass_mailing
 import mail_mail
 import mail_thread
+import email_template
+import res_config
 import wizard
 import controllers

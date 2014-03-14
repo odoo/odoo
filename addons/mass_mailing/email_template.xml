@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Email Templates -->
+        <record id="view_marketing_settings_mass_mailing" model="ir.ui.view">
+            <field name="name">email.template.form.mass.mailing</field>
+            <field name="model">email.template</field>
+            <field name="inherit_id" ref="email_template.email_template_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='model_id']" position="after">
+                    <br /><label for="use_in_mass_mailing"/><field name="use_in_mass_mailing"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_email_template_search_mass_mailing" model="ir.ui.view">
+           <field name="name">email.template.search.mass.mailing</field>
+           <field name="model">email.template</field>
+           <field name="inherit_id" ref="email_template.view_email_template_search"/>
+           <field name="arch" type="xml">
+                <xpath expr="//field[@name='model_id']" position="after">
+                    <separator/>
+                    <filter string="Available for Mass Mailing" name="use_in_mass_mailing" domain="[('use_in_mass_mailing', '=', 1)]"
+                        help="Available for use in mass mailing campaigns"/>
+                </xpath>
+           </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_email_template_kanban">
+            <field name="name">email.template.kanban</field>
+            <field name="model">email.template</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="body_html"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click oe_kanban_email_template">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                    <span class="oe_e">i</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <t>
+                                            <li><a name="action_new_mailing" type="object">New Mailing</a></li>
+                                        </t>
+                                        <t t-if="widget.view.is_action_enabled('edit')">
+                                            <li><a type="edit">Edit</a></li>
+                                        </t>
+                                        <t t-if="widget.view.is_action_enabled('delete')">
+                                            <li><a type="delete">Delete</a></li>
+                                        </t>
+                                    </ul>
+                                </div>
+                                 <div class="oe_kanban_content">
+                                    <h3>
+                                        <field name="name"/>
+                                    </h3>
+                                    <div class="html_preview">
+                                        <t t-raw="record.body_html.raw_value"/>
+                                    </div>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_email_template">
+            <field name="name">Templates</field>
+            <field name="res_model">email.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_use_in_mass_mailing': 1}</field>
+        </record>
+
+        <!-- Add Templates in Marketing / Mass mailing menu -->
+        <menuitem name="Mail Templates" id="menu_email_template"
+            parent="mass_mailing_campaign" sequence="3"
+            action="action_email_template"/>
+
+    </data>
+</openerp>
