@@ -271,12 +271,14 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         if (this.$buttons) {
             this.$buttons.show();
         }
+        if (this.$pager) {
+            this.$pager.toggle(this.dataset.ids.length > 1);
+        }
         this.$el.show().css({
             opacity: '0',
             filter: 'alpha(opacity = 0)'
         });
         this.$el.add(this.$buttons).removeClass('oe_form_dirty');
-        this.$pager.toggle(this.dataset.ids.length > 1);
 
         var shown = this.has_been_loaded;
         if (options.reload !== false) {
