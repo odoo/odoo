@@ -89,9 +89,11 @@
                                                 <td t-if="sid" id="seach_enable" t-att-colspan="len(room_list)" class="success text-center">
                                                     <a t-attf-href="/event/#{ slug(event) }/track/#{ slug([ days[day][slot][index]['id'], days[day][slot][index]['title']]) }"> <t t-esc="days[day][slot][index]['title']" /> </a>
                                                     <t t-foreach="days[day][slot][index]['speaker_ids']" t-as="speaker">
-                                                         <t t-if="speaker == days[day][slot][index]['speaker_ids'][:1][0]">By </t>
-                                                         <t t-esc="speaker"/>
-                                                         <t t-if=" speaker != days[day][slot][index]['speaker_ids'][-1:][0]">,</t>
+                                                        <small class="text-muted">
+                                                            <t t-if="speaker == days[day][slot][index]['speaker_ids'][:1][0]"><br/>By </t>
+                                                            <t t-esc="speaker"/>
+                                                            <t t-if=" speaker != days[day][slot][index]['speaker_ids'][-1:][0]">,</t>
+                                                        </small>
                                                     </t>
                                                 </td>
                                             </t>
@@ -104,9 +106,11 @@
                                                 t-attf-class="event_color_#{days[day][slot][index]['color']}" id="seach_enable">
                                                 <a t-attf-href="/event/#{ slug(event) }/track/#{ slug([ days[day][slot][index]['id'], days[day][slot][index]['title']]) }"> <t t-esc="days[day][slot][index]['title']" /> </a>
                                                     <t t-foreach="days[day][slot][index]['speaker_ids']" t-as="speaker">
-                                                         <t t-if="speaker == days[day][slot][index]['speaker_ids'][:1][0]">By </t>
-                                                         <t t-esc="speaker"/>
-                                                         <t t-if=" speaker != days[day][slot][index]['speaker_ids'][-1:][0]">,</t>
+                                                        <small class="text-muted">
+                                                            <t t-if="speaker == days[day][slot][index]['speaker_ids'][:1][0]"><br/>By </t>
+                                                            <t t-esc="speaker"/>
+                                                            <t t-if=" speaker != days[day][slot][index]['speaker_ids'][-1:][0]">,</t>
+                                                        </small>
                                                     </t>
                                                 </td>
                                                 <t  t-if="days[day][slot][index]['id'] != days[day][slot][-1]['id']" >
