@@ -7,11 +7,11 @@ inject = [
 
 class TestUi(openerp.tests.HttpCase):
     def test_admin(self):
-        self.phantom_js("/", "openerp.website.Tour.run_test('banner')", "openerp.website.Tour")
+        self.phantom_js("/", "openerp.website.Tour.run_test('event_buy_tickets')", "openerp.website.Tour", inject=inject)
 
     def test_demo(self):
-        self.phantom_js("/", "openerp.website.Tour.run_test('login_edit')", "openerp.website.Tour", login="demo", password="demo", inject=inject);
+        self.phantom_js("/", "openerp.website.Tour.run_test('event_buy_tickets')", "openerp.website.Tour", login="demo", password="demo", inject=inject);
 
     def test_public(self):
-        self.phantom_js("/", "openerp.website.Tour.run_test('login_edit')", "openerp.website.Tour", login=None, inject=inject);
+        self.phantom_js("/", "openerp.website.Tour.run_test('event_buy_tickets')", "openerp.website.Tour", login=None, inject=inject);
 
