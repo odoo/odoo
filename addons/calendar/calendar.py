@@ -456,7 +456,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                 bFound = False
                 LastFound = False
                 for one_date in self.pool.get('calendar.event').get_recurrent_date_by_event(cr, uid, curEvent, context=context):
-                    in_date_format = datetime.strptime(one_date, '%Y-%m-%d %H:%M:%S')
+                    in_date_format = one_date.replace(tzinfo=None)
                     LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, cron_interval, notif=False, context=context)
                     if LastFound:
                         for alert in LastFound:
@@ -490,7 +490,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                 bFound = False
                 LastFound = False
                 for one_date in self.pool.get("calendar.event").get_recurrent_date_by_event(cr, uid, curEvent, context=context):
-                    in_date_format = datetime.strptime(one_date, '%Y-%m-%d %H:%M:%S')
+                    in_date_format = one_date.replace(tzinfo=None)
                     LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, after=partner.calendar_last_notif_ack, mail=False, context=context)
                     if LastFound:
                         for alert in LastFound:
