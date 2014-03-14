@@ -169,7 +169,8 @@ class website_event(http.Controller):
                              'end_time': end_time,
                              'speaker_ids': [s.name for s in event_tracks.speaker_ids],
                              'row_span': index - row_span,
-                             'color': color
+                             'color': color,
+                             'publish': not event_tracks.website_published
                        })
                 
         #Get All Locations and make room_list contain unique value.
