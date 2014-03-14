@@ -2837,6 +2837,7 @@ instance.web.form.FieldPercentPie = instance.web.form.AbstractField.extend({
                 .donut(true) 
                 .showLegend(false)
                 .showLabels(false)
+                .tooltips(false)
                 .color(['#7C7BAD','#DDD'])
                 .donutRatio(0.62);
    
