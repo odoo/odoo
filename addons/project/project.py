@@ -575,6 +575,15 @@ def Project():
             model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', vals.get('alias_model', 'project.task'))])
             vals.update(alias_model_id=model_ids[0])
         return super(project, self).write(cr, uid, ids, vals, context=context)
+    
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        if context is None:
+            context = {}
+        ids = self.search(cr, uid, [('state', '!=', 'close'), ('name', operator, name)] + args, limit=limit, context=context)
+        return self.name_get(cr, uid, ids, context or {})
+
 
 class task(base_stage, osv.osv):
     _name = "project.task"
@@ -1125,6 +1134,10 @@ class task(base_stage, osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
+        if vals.get('project_id'):
+            project_record = self.pool.get('project.project').browse(cr, uid, vals.get('project_id'), context=context)
+            if project_record.state == 'close':
+                raise osv.except_osv(_('Warning !'), _('You can not create tasks on closed project.'))
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
 
