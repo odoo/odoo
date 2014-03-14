@@ -1507,7 +1507,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         # set end_date for calendar searching
         if vals.get('recurrency', True) and vals.get('end_type', 'count') in ('count', unicode('count')) and \
                 (vals.get('rrule_type') or vals.get('count') or vals.get('date') or vals.get('date_deadline')):
-            for data in self.read(cr, uid, ids, ['date', 'date_deadline', 'recurrency', 'rrule_type', 'count', 'end_type'], context=context):
+            for data in self.read(cr, uid, ids, ['end_date', 'date_deadline', 'recurrency', 'rrule_type', 'count', 'end_type'], context=context):
                 end_date = self._set_recurrency_end_date(data, context=context)
                 super(calendar_event, self).write(cr, uid, [data['id']], {'end_date': end_date}, context=context)
 
@@ -1630,21 +1630,23 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         return res
 
     def _set_recurrency_end_date(self, data, context=None):
+        if not data.get('recurrency'):
+            return False
+
+        end_type = data.get('end_type')
         end_date = data.get('end_date')
-        rel_date = False
-        if data.get('recurrency') and data.get('end_type') in ('count', unicode('count')):
-            data_date_deadline = datetime.strptime(data.get('date_deadline'), '%Y-%m-%d %H:%M:%S')
-            if data.get('rrule_type') in ('daily', unicode('count')):
-                rel_date = relativedelta(days=data.get('count')+1)
-            elif data.get('rrule_type') in ('weekly', unicode('weekly')):
-                rel_date = relativedelta(days=(data.get('count')+1)*7)
-            elif data.get('rrule_type') in ('monthly', unicode('monthly')):
-                rel_date = relativedelta(months=data.get('count')+1)
-            elif data.get('rrule_type') in ('yearly', unicode('yearly')):
-                rel_date = relativedelta(years=data.get('count')+1)
-            end_date = data_date_deadline
-            if rel_date:
-                end_date += rel_date
+
+        if end_type == 'count' and all(data.get(key) for key in ['count', 'rrule_type', 'date_deadline']):
+            count = data['count'] + 1
+            delay, mult = {
+                'daily': ('days', 1),
+                'weekly': ('days', 7),
+                'monthly': ('months', 1),
+                'yearly': ('years', 1),
+            }[data['rrule_type']]
+
+            deadline = datetime.strptime(data['date_deadline'], tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            return deadline + relativedelta(**{delay: count * mult})
         return end_date
 
     def create(self, cr, uid, vals, context=None):
@@ -1654,8 +1656,11 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         if vals.get('vtimezone', '') and vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
             vals['vtimezone'] = vals['vtimezone'][40:]
 
-        vals['end_date'] = self._set_recurrency_end_date(vals, context=context)
         res = super(calendar_event, self).create(cr, uid, vals, context)
+
+        data = self.read(cr, uid, [res], ['end_date', 'date_deadline', 'recurrency', 'rrule_type', 'count', 'end_type'], context=context)[0]
+        end_date = self._set_recurrency_end_date(data, context=context)
+        self.write(cr, uid, [res], {'end_date': end_date}, context=context)
 
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)

@@ -111,6 +111,7 @@ class mail_thread(osv.AbstractModel):
             if res[id]['message_unread_count']:
                 title = res[id]['message_unread_count'] > 1 and _("You have %d unread messages") % res[id]['message_unread_count'] or _("You have one unread message")
                 res[id]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><span class='oe_e'>9</span> %d %s</span>" % (title, res[id].pop('message_unread_count'), _("New"))
+            res[id].pop('message_unread_count')     # remove internal value
         return res
 
     def _get_subscription_data(self, cr, uid, ids, name, args, context=None):
