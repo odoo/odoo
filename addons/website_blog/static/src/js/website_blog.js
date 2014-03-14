@@ -30,15 +30,18 @@ $(document).ready(function() {
     }
 
     //check custome options inline discussion and select to tweet(share) are checked.
-    openerp.jsonRpc("/blogpsot/get_custom_options", 'call', {}).then(function(res){
+    openerp.jsonRpc("/blogpsot/get_custom_options", 'call', {
+        'post_id': $('#blog_post_name').attr('data-oe-id')
+    }).then(function(res){
         discussion = res['Allow comment in text'];
         share = res['Select to Tweet'];
+        var author_name = res['author_name']
         var content = $("#blog_content p");
         if(content.length && discussion){
             $('#discussions_wrapper').empty();
             new openerp.website.blog_discussion({'content' : content});
         }
-        if (share) $("p").share();
+        if (share) $("p,h3,h4,ul").share({'author_name':author_name});
     });
     $('.cover_footer').on('click',page_transist);
     $('a[href^="#blog_content"]').on('click', animate);
@@ -67,9 +70,10 @@ $(document).ready(function() {
             $('main').append($(data).find('main').html());
             page_upwards();
             //bind again it takes control from now on, until page relaod.
+            var author_name = $(data).find('#blog_author:first').text()
             $(document).find('.cover_footer').on('click',page_transist);
             $(document).find('a[href^="#blog_content"]').on('click', animate);
-            if (share) $("p").share();
+            if (share) $("p,h3,h4,ul").share({'author_name':author_name});
             if (newLocation != window.location)
                 history.pushState(null, null, newLocation);
         });
