@@ -531,6 +531,49 @@
                 </div>
             </t>
         </template>
+        <template id="edit_profile">
+            <t t-call="website_forum.header">
+                <h3>Edit Profile </h3>
+                    <div class="col-md-2">
+                        <span t-field="user.image" t-field-options='{"widget": "image", "class": "img img-responsive img-circle"}'/>
+                    </div>
+                    <form t-attf-action="/forum/#{ slug(forum) }/save/profile/" method="post" role="form" class="form-horizontal">
+                        <input name="user_id" t-att-value="user.id" type="hidden"/>
+                        <label class="col-md-2 control-label mb16" for="user.name">Real name</label>
+                        <div class="col-md-7 mb16">
+                            <input type="text" class="col-md-7 mb16 form-control" name="name" required="True" t-attf-value="#{user.name or ''}"/>
+                        </div> 
+                        <label class="col-md-2 control-label mb16" for="user.partner_id.website">Website</label>
+                        <div class="col-md-7 mb16">
+                            <input type="text" class="form-control" name="website" t-attf-value="#{user.partner_id.website or ''}"/>
+                        </div>
+                        <label class="col-md-4 control-label mb16" for="user.partner_id.city">City</label>
+                        <div class="col-md-7  mb16">
+                            <input type="text" class="form-control" name="city" t-attf-value="#{user.partner_id.city or ''}"/>
+                        </div>
+                        <label class="col-md-4 control-label mb16" for="contact_name">Country</label>
+                        <div class="col-md-7 mb16">
+                            <select class="form-control" name="country">
+                                <option value="">Country...</option>
+                                <t t-foreach="countries or []" t-as="country"><option t-att-value="country.id"><t t-esc="country.name"/></option></t>
+                             </select>
+                        </div>
+                        <label class="col-md-4 control-label mb16" for="user.partner_id.birthdate">Date of birth</label>
+                        <div class="col-md-7 mb16">
+                            <input type="text" class="form-control" name="dob" t-attf-value="#{user.partner_id.birthdate or ''}"/>
+                        </div>
+                        <label class="col-md-4 control-label mb16" for="user.partner_id.comment">Profile</label>
+                        <div class="col-md-7 mb16">
+                            <textarea name="comment" style="min-height: 120px" required="True" value="comment" id="textarea_ckeditor"  class="form-control">
+                                <t t-esc="user.partner_id.comment"/>
+                            </textarea>
+                        </div>
+                        <div class="col-sm-offset-4 col-md-4 mb16">
+                            <button class="btn btn-primary btn-lg">Update</button>
+                        </div>
+                    </form>
+            </t>
+        </template>
 
         <template id="user_detail_full">
             <t t-call="website_forum.header">
@@ -578,7 +621,7 @@
                     <div class="col-sm-10">
                         <div class="well well-sm">
                             <!-- add website description here -->
-                            <a href="#" class="fa fa-arrow-right"> Edit Your Bio</a>
+                            <a class="fa fa-arrow-right"  t-attf-href="/forum/#{ slug(forum) }/edit/profile/#{ user.id }"> Edit Your Bio</a>
                         </div>
                     </div>
                 </div>
