@@ -1,7 +1,6 @@
 $(document).ready(function() {
     function set_value(td_contain){
         var search_object = {};
-        var self = this;
         $.each(td_contain, function(key, element2){
             var value_td = ($(element2).find("a").text()).trim();
             if(value_td)search_object[key] = [value_td.toLowerCase(), element2];
