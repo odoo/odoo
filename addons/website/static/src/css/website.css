@@ -119,6 +119,7 @@ header a.navbar-brand img {
 .container .container {
   padding-left: 0;
   padding-right: 0;
+  width: auto;
 }
 
 /* ----- BOOTSTRAP HACK FOR HEADER NAV BAR ----- */
@@ -280,12 +281,15 @@ ul.nav-stacked > li > a {
   background-size: 100%;
 }
 
-[data-snippet-id], .colmd, .hr, .blockquote {
+section, .carousel, .parallax, .row, .hr, .blockquote {
+  min-height: 30px;
+}
+.carousel, .parallax, .blockquote {
   overflow: hidden;
 }
 
 @media (max-width: 400px) {
-  [data-snippet-id]:not([data-snippet-id="carousel"]) {
+  section, .parallax, .row, .hr, .blockquote {
     height: auto !important;
   }
 }
@@ -380,10 +384,10 @@ ul.nav-stacked > li > a {
 }
 
 /* Parallax Theme */
-div.carousel[data-snippet-id="slider"] .carousel-indicators li {
+div.carousel .carousel-indicators li {
   border: 1px solid grey;
 }
-div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
+div.carousel .carousel-indicators .active {
   background-color: grey;
 }
 

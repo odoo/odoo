@@ -57,7 +57,7 @@
                 },
                 {
                     title:     'add snippets',
-                    snippet:   'carousel',
+                    snippet:   '#snippet_structure .oe_snippet:first',
                 },
                 {
                     title:     'try to save',
