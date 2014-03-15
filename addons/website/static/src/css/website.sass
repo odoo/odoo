@@ -89,6 +89,7 @@ header
     .container
         padding-left: 0
         padding-right: 0
+        width: auto
 
 /* ----- BOOTSTRAP HACK FOR HEADER NAV BAR ----- */
 
@@ -230,11 +231,13 @@ ul.nav-stacked > li > a
 .oe_img_bg
     background-size: 100%
 
-[data-snippet-id],.colmd,.hr,.blockquote
+section, .carousel, .parallax, .row, .hr, .blockquote
+    min-height: 30px
+.carousel, .parallax, .blockquote
     overflow: hidden
 
 @media (max-width: 400px)
-    [data-snippet-id]:not([data-snippet-id="carousel"])
+    section, .parallax, .row, .hr, .blockquote
         height: auto !important
 
 .carousel-inner
@@ -312,7 +315,7 @@ ul.nav-stacked > li > a
 
 /* Parallax Theme */
 
-div.carousel[data-snippet-id="slider"]
+div.carousel
     .carousel-indicators
         li
             border: 1px solid grey
@@ -320,21 +323,16 @@ div.carousel[data-snippet-id="slider"]
             background-color: grey
 
 .parallax
-    position: relative
     background-size: cover
-    display: table
-    width: 100%
-    min-height: 100px
-    &.oe_small
-        min-height: 200px
-    &.oe_medium
-        min-height: 300px
-    &.oe_big
-        min-height: 450px
     > div
-        display: table-cell
-        vertical-align: middle
-        padding: 32px 0
+        position: relative
+        display: table
+        width: 100%
+        min-height: 200px
+        > div
+            display: table-cell
+            vertical-align: middle
+            padding: 32px 0
 
 /* Background */
 

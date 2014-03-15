@@ -42,7 +42,6 @@ import os
 from distutils.version import LooseVersion
 
 
-from pyPdf import PdfFileWriter, PdfFileReader
 from werkzeug import exceptions
 from werkzeug.test import Client
 from werkzeug.wrappers import BaseResponse
@@ -51,7 +50,10 @@ from reportlab.graphics.barcode import createBarcodeDrawing
 
 
 _logger = logging.getLogger(__name__)
-
+try:
+    from pyPdf import PdfFileWriter, PdfFileReader
+except ImportError:
+    PdfFileWriter = PdfFileReader = None
 
 class Report(http.Controller):
 
@@ -486,7 +488,7 @@ class Report(http.Controller):
 
         return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
 
-    @http.route('/report/download/', type='http', auth="user")
+    @http.route('/report/download', type='http', auth="user")
     def report_attachment(self, data, token):
         """This function is used by 'qwebactionmanager.js' in order to trigger the download of
         a report of any type.
@@ -513,7 +515,7 @@ class Report(http.Controller):
         response.set_cookie('fileToken', token)
         return response
 
-    @http.route('/report/check_wkhtmltopdf/', type='json', auth="user")
+    @http.route('/report/check_wkhtmltopdf', type='json', auth="user")
     def check_wkhtmltopdf(self):
         """Check the presence of wkhtmltopdf and return its version. If wkhtmltopdf
         cannot be found, return False.

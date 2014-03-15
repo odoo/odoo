@@ -109,7 +109,7 @@
                     template:  self.popover({ fixed: true }),
                 },
                 {
-                    snippet:   'big-picture',
+                    snippet:   '#snippet_structure .oe_snippet:eq(7)',
                     placement: 'bottom',
                     title:     "Drag & Drop a block",
                     content:   "Drag the 'Big Picture' block and drop it in your page.",
