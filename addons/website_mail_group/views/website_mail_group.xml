@@ -8,21 +8,32 @@
     </template>
     <template id="mail_groups" name="Mailing Lists">
         <t t-call="website.layout">
-            <t t-set="head">
-                <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.js"></script>
-            </t>
             <div class="container">
                 <h1>
                     Our Mailing Lists
                 </h1>
                 <div class="row">
-                    <div class="col-md-3 mt32 mb64" t-foreach="groups" t-as="group">
+                    <div class="col-sm-4" style="height: 140px" t-foreach="groups" t-as="group">
                         <img t-att-src="'/website/image?model=mail.group&amp;field=image_small&amp;id='+str(group['id'])" class="pull-left"/>
                         <div>
-                            <a t-attf-href="/groups/#{ slug(group) }/thread" t-esc="group.name"/>
+                            <strong><a t-attf-href="/groups/#{ slug(group) }/thread" t-esc="group.name"/></strong>
                             <div t-esc="group.description" class="text-muted"/>
-                            <a t-attf-class="btn btn-primary js_group #{group.message_is_follower and 'hidden' or 'visible'} follow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=subscribe" t-attf-id="#{group.id}">Join Group</a>
-                            <a t-attf-class="btn btn-default js_group #{group.message_is_follower and 'visible' or 'hidden'} unfollow_#{group.id}" t-attf-href="/groups/subscription/#{ group.id }/?action=unsubscribe" t-attf-id="#{group.id}">Unsubscribe</a>
+
+                            <div class="input-group js_follow"
+                                      t-att-data-id="group.id"
+                                      data-object="mail.group"
+                                      data-follow="off">
+                                <input
+                                      type="email"
+                                      name="email"
+                                      class="js_follow_email form-control"
+                                      placeholder="your email..."/>
+                                <span class="input-group-btn">
+                                    <a href="#" class="btn btn-default js_unfollow_btn">unsubscribe</a>
+                                    <a href="#" class="btn btn-primary js_follow_btn">subscribe</a>
+                                </span>
+                                <div class="alert alert-success hidden">You have been subscribed!</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -69,9 +80,6 @@
 
     <template id="group_message">
         <t t-call="website.layout">
-            <t t-set="head">
-                <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.js"></script>
-            </t>
             <div class="container">
                 <div class="row mt8">
                     <div class="col-md-5">
@@ -128,16 +136,24 @@
                         Join this mailing list to follow or participate to this discussion.<br/>
                         <span t-field="group.name"/>: <i t-field="group.description"/>
                     </p>
-                    <p>
-                        <span t-if="group.message_is_follower" t-attf-class="btn btn-default disabled">
-                            Already subscribed
-                        </span>
-                        <a t-if="not group.message_is_follower"
-                          t-attf-class="btn btn-primary btn-lg js_group follow_#{group.id}"
-                          t-attf-href="/groups/subscription/#{ group.id }/?action=subscribe" t-attf-id="#{group.id}">
-                            Join The List
-                        </a> or <a t-attf-href="/groups/#{ slug(group) }/#{mode}/page/#{str(page)}">view archives</a>
-                    </p>
+
+                    <div style="max-width: 400px">
+                        <div class="input-group js_follow"
+                                  t-att-data-id="group.id"
+                                  data-object="mail.group"
+                                  data-follow="off">
+                            <input
+                                  type="email"
+                                  name="email"
+                                  class="js_follow_email form-control"
+                                  placeholder="your email..."/>
+                            <span class="input-group-btn">
+                                <a href="#" class="btn btn-default js_unfollow_btn">unsubscribe</a>
+                                <a href="#" class="btn btn-primary js_follow_btn">subscribe</a>
+                            </span>
+                            <div class="alert alert-success hidden">You have been subscribed!</div>
+                        </div>
+                    </div>
 
                 </div>
             </div>

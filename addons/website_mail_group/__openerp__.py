@@ -13,11 +13,10 @@ OpenERP Mail Group : Mailing List Archives
     'data': [
         'views/website_mail_group.xml',
         'data/website_mail_group_data.xml',
-        'security/website_mail_group.xml',
     ],
     'demo': [
         'data/website_mail_group_demo.xml'
     ],
-    'qweb': ['static/src/xml/*.xml'],
+    'qweb': [],
     'installable': True,
 }
