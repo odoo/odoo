@@ -19,19 +19,31 @@
 #
 ##############################################################################
 
-
+import contextlib
 import logging
 import logging.handlers
 import os
+import platform
 import release
 import sys
 import threading
+from pprint import pformat
+
+import psycopg2
 
 import tools
 import openerp
-import openerp.loggers
+import sql_db
+
 
 _logger = logging.getLogger(__name__)
+
+def log(logger, level, prefix, msg, depth=None):
+    indent=''
+    indent_after=' '*len(prefix)
+    for line in (prefix+pformat(msg, depth=depth)).split('\n'):
+        logger.log(level, indent+line)
+        indent=indent_after
 
 def LocalService(name):
     """
@@ -58,6 +70,38 @@ def LocalService(name):
                 registry = openerp.modules.registry.RegistryManager.get(dbname)
                 with registry.cursor() as cr:
                     return registry['ir.actions.report.xml']._lookup_report(cr, name[len('report.'):])
+
+class PostgreSQLHandler(logging.Handler):
+    """ PostgreSQL Loggin Handler will store logs in the database, by default
+    the current database, can be set using --log-db=DBNAME
+    """
+    def emit(self, record):
+        print "Emit PG", record
+        ct = threading.current_thread()
+        ct_db = getattr(ct, 'dbname')
+        ct_uid = getattr(ct, 'uid')
+        dbname = tools.config['log_db'] or ct_db
+        if dbname:
+            cr = None
+            try:
+                cr = sql_db.db_connect(dbname).cursor()
+                exception = False
+                if record.exc_info:
+                    exception = record.exc_text
+                level = logging.getLevelName(record.levelno)
+                val = (uid, uid, 'server', dbname, record.name, level, record.msg, exception, record.filename, record.funcName, record.lineno)
+                cr.execute("""
+                    INSERT INTO ir_logging(create_date, write_date, create_uid, write_uid, type, dbname, name, level, message, exception, path, func, line)
+                    VALUES (NOW() at time zone 'UTC', NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, val )
+                cr.commit()
+            except Exception, e:
+                print "Exception",e
+                print repr(e)
+                pass
+            finally:
+                if cr:
+                    cr.close()
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
 #The background is set with 40 plus the number of the color, and the foreground with 30
@@ -86,19 +130,6 @@ class ColoredFormatter(DBFormatter):
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
         return DBFormatter.format(self, record)
 
-import platform
-def is_posix_operating_system():
-    return os.name == 'posix'
-
-def is_windows_operating_system():
-    return os.name == 'nt'
-
-def is_linux_operating_system():
-    return is_posix_operating_system() and platform.system() == 'Linux'
-
-def is_macosx_operating_system():
-    return is_posix_operating_system() and platform.system() == 'Darwin'
-
 def init_logger():
     from tools.translate import resetlocale
     resetlocale()
@@ -108,15 +139,10 @@ def init_logger():
 
     if tools.config['syslog']:
         # SysLog Handler
-        if is_windows_operating_system():
+        if os.name == 'nt':
             handler = logging.handlers.NTEventLogHandler("%s %s" % (release.description, release.version))
-        elif is_linux_operating_system():
-            handler = logging.handlers.SysLogHandler('/dev/log')
-        elif is_macosx_operating_system():  # There is no /dev/log on OSX
-            handler = logging.handlers.SysLogHandler('/var/run/log')
         else:
-            raise Exception("There is no syslog handler for this Operating System: %s", platform.system())
-
+            handler = logging.handlers.SysLogHandler()
         format = '%s %s' % (release.description, release.version) + ':%(dbname)s:%(levelname)s:%(name)s:%(message)s'
 
     elif tools.config['logfile']:
@@ -130,12 +156,11 @@ def init_logger():
 
             if tools.config['logrotate'] is not False:
                 handler = logging.handlers.TimedRotatingFileHandler(filename=logf, when='D', interval=1, backupCount=30)
-
-            elif is_posix_operating_system():
+            elif os.name == 'posix':
                 handler = logging.handlers.WatchedFileHandler(logf)
-
             else:
                 handler = logging.handlers.FileHandler(logf)
+
         except Exception:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
             handler = logging.StreamHandler(sys.stdout)
@@ -147,10 +172,10 @@ def init_logger():
     # behind Apache with mod_wsgi, handler.stream will have type mod_wsgi.Log,
     # which has no fileno() method. (mod_wsgi.Log is what is being bound to
     # sys.stderr when the logging.StreamHandler is being constructed above.)
-    def has_fileno(stream):
+    def is_a_tty(stream):
         return hasattr(stream, 'fileno') and os.isatty(stream.fileno())
 
-    if isinstance(handler, logging.StreamHandler) and has_fileno(handler.stream):
+    if isinstance(handler, logging.StreamHandler) and is_a_tty(handler.stream):
         formatter = ColoredFormatter(format)
     else:
         formatter = DBFormatter(format)
@@ -165,9 +190,7 @@ def init_logger():
     logging_configurations = DEFAULT_LOG_CONFIGURATION + pseudo_config + logconfig
     for logconfig_item in logging_configurations:
         loggername, level = logconfig_item.split(':')
-
         level = getattr(logging, level, logging.INFO)
-        
         logger = logging.getLogger(loggername)
         logger.handlers = []
         logger.setLevel(level)
@@ -175,9 +198,8 @@ def init_logger():
         if loggername != '':
             logger.propagate = False
 
-    # magic ;-)
     # we manage the connection in the postgresqlhandler
-    postgresqlHandler = openerp.loggers.handlers.PostgreSQLHandler()
+    postgresqlHandler = PostgreSQLHandler()
     postgresqlHandler.setLevel(logging.WARNING)
     logger = logging.getLogger()
     logger.addHandler(postgresqlHandler)
@@ -203,18 +225,5 @@ PSEUDOCONFIG_MAPPER = {
     'error': ['openerp:ERROR'],
     'critical': ['openerp:CRITICAL'],
 }
-
-# A alternative logging scheme for automated runs of the
-# server intended to test it.
-def init_alternative_logger():
-    class H(logging.Handler):
-        def emit(self, record):
-            if record.levelno > 20:
-                print record.levelno, record.pathname, record.msg
-    handler = H()
-    # Add the handler to the 'openerp' logger.
-    logger = logging.getLogger('openerp')
-    logger.addHandler(handler)
-    logger.setLevel(logging.ERROR)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
