@@ -9,10 +9,9 @@ OpenERP Mail Group : Mailing List Archives
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website','mail'],
+    'depends': ['website_mail'],
     'data': [
-        'views/website_mail_group.xml',
-        'data/website_mail_group_data.xml',
+        'views/website_mail_group.xml'
     ],
     'demo': [
         'data/website_mail_group_demo.xml'
