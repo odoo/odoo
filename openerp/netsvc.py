@@ -19,11 +19,9 @@
 #
 ##############################################################################
 
-import contextlib
 import logging
 import logging.handlers
 import os
-import platform
 import release
 import sys
 import threading
@@ -34,7 +32,6 @@ import psycopg2
 import tools
 import openerp
 import sql_db
-
 
 _logger = logging.getLogger(__name__)
 
@@ -141,7 +138,8 @@ def init_logger():
             handler = logging.handlers.NTEventLogHandler("%s %s" % (release.description, release.version))
         else:
             handler = logging.handlers.SysLogHandler()
-        format = '%s %s' % (release.description, release.version) + ':%(dbname)s:%(levelname)s:%(name)s:%(message)s'
+        format = '%s %s' % (release.description, release.version) \
+                + ':%(dbname)s:%(levelname)s:%(name)s:%(message)s'
 
     elif tools.config['logfile']:
         # LogFile Handler
@@ -151,14 +149,12 @@ def init_logger():
             dirname = os.path.dirname(logf)
             if dirname and not os.path.isdir(dirname):
                 os.makedirs(dirname)
-
             if tools.config['logrotate'] is not False:
                 handler = logging.handlers.TimedRotatingFileHandler(filename=logf, when='D', interval=1, backupCount=30)
             elif os.name == 'posix':
                 handler = logging.handlers.WatchedFileHandler(logf)
             else:
                 handler = logging.handlers.FileHandler(logf)
-
         except Exception:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
             handler = logging.StreamHandler(sys.stdout)
@@ -177,7 +173,6 @@ def init_logger():
         formatter = ColoredFormatter(format)
     else:
         formatter = DBFormatter(format)
-
     handler.setFormatter(formatter)
 
     # Configure handlers
@@ -202,8 +197,6 @@ def init_logger():
 
     for logconfig_item in logging_configurations:
         _logger.debug('logger level set: "%s"', logconfig_item)
-
-
 
 DEFAULT_LOG_CONFIGURATION = [
     'openerp.workflow.workitem:WARNING',
