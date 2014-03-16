@@ -88,7 +88,7 @@ def slug(value):
     else:
         # assume name_search result tuple
         id, name = value
-    slugname = slugify(name)
+    slugname = slugify(name or '')
     if not slugname:
         return str(id)
     return "%s-%d" % (slugname, id)

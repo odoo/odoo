@@ -94,6 +94,23 @@
                     on <span t-field="message.date"/>
                 </h4>
                 <div t-raw="message.body"/>
+
+                <div class="row" t-if="message.attachment_ids">
+                    <h3 class="col-sm-12">Attachment(s):</h3>
+                    <div class="col-md-2 col-sm-3 text-center" t-foreach='message.attachment_ids' t-as='attachment'>
+                        <a t-att-href="'/mail/download_attachment?model=mail.message&amp;id='+str(message.id)+'&amp;method=download_attachment&amp;attachment_id='+str(attachment.id)" target="_blank">
+                            <t t-if="attachment.file_type == 'webimage'">
+                                <img t-att-src="'/web/binary/image?model=ir.attachment&amp;field=datas&amp;id=' + str(attachment.id) + '&amp;resize=100,80'"
+                                    class='oe_attachment_embedded'></img>
+                            </t>
+                            <t t-if="attachment.file_type != 'webimage'">
+                                <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type + '.png'"
+                                    class='oe_attachment_webimage'></img>
+                            </t>
+                            <div class='oe_attachment_name'><t t-raw='attachment.name' /></div>
+                        </a>
+                    </div>
+                </div>
                 <div t-if="message.child_ids">
                     <h2 class="page-header">Follow ups</h2>
                     <t t-set="messages" t-value="message.child_ids"/>

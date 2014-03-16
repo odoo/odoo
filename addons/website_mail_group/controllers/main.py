@@ -66,8 +66,11 @@ class MailGroup(http.Controller):
         )
         thread_ids = thread_obj.search(cr, uid, domain, limit=self._thread_per_page, offset=pager['offset'])
 
+        messages = thread_obj.browse(cr, uid, thread_ids, context)
+        for m in messages:
+            print m.subject
         values = {
-            'messages': thread_obj.browse(cr, uid, thread_ids, context),
+            'messages': messages,
             'group': group,
             'pager': pager,
             'mode': mode
