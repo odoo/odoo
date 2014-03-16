@@ -69,6 +69,9 @@
 
     <template id="group_message">
         <t t-call="website.layout">
+            <t t-set="head">
+                <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.js"></script>
+            </t>
             <div class="container">
                 <div class="row mt8">
                     <div class="col-md-5">
@@ -101,10 +104,24 @@
                     <t t-set="messages" t-value="[message.parent_id]"/>
                     <t t-call="website_mail_group.messages_short"/>
                 </div>
-                <div class="text-center mb32 mt32">
-                    <a t-attf-href="/groups/#{ slug(group) }/#{mode}/page/#{str(page)}" class="btn btn-lg btn-info">
-                        Back To List: <span t-field="group.name"/>
-                    </a>
+
+                <div class="jumbotron mt64">
+                    <h1>Join the discussion</h1>
+                    <p>
+                        Join this mailing list to follow or participate to this discussion.<br/>
+                        <span t-field="group.name"/>: <i t-field="group.description"/>
+                    </p>
+                    <p>
+                        <span t-if="group.message_is_follower" t-attf-class="btn btn-default disabled">
+                            Already subscribed
+                        </span>
+                        <a t-if="not group.message_is_follower"
+                          t-attf-class="btn btn-primary btn-lg js_group follow_#{group.id}"
+                          t-attf-href="/groups/subscription/#{ group.id }/?action=subscribe" t-attf-id="#{group.id}">
+                            Join The List
+                        </a> or <a t-attf-href="/groups/#{ slug(group) }/#{mode}/page/#{str(page)}">view archives</a>
+                    </p>
+
                 </div>
             </div>
         </t>
