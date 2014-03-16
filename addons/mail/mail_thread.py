@@ -209,7 +209,7 @@ class mail_thread(osv.AbstractModel):
         ], context=context)
         for fol in fol_obj.browse(cr, uid, fol_ids, context=context):
             thread_subtype_dict = res[fol.res_id]['message_subtype_data']
-            for subtype in fol.subtype_ids:
+            for subtype in [st for st in fol.subtype_ids if st.name in thread_subtype_dict]:
                 thread_subtype_dict[subtype.name]['followed'] = True
             res[fol.res_id]['message_subtype_data'] = thread_subtype_dict
 

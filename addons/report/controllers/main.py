@@ -488,7 +488,7 @@ class Report(http.Controller):
 
         return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
 
-    @http.route('/report/download/', type='http', auth="user")
+    @http.route('/report/download', type='http', auth="user")
     def report_attachment(self, data, token):
         """This function is used by 'qwebactionmanager.js' in order to trigger the download of
         a report of any type.
@@ -515,7 +515,7 @@ class Report(http.Controller):
         response.set_cookie('fileToken', token)
         return response
 
-    @http.route('/report/check_wkhtmltopdf/', type='json', auth="user")
+    @http.route('/report/check_wkhtmltopdf', type='json', auth="user")
     def check_wkhtmltopdf(self):
         """Check the presence of wkhtmltopdf and return its version. If wkhtmltopdf
         cannot be found, return False.

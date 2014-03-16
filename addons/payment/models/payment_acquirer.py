@@ -275,9 +275,12 @@ class PaymentAcquirer(osv.Model):
                      </div>""" % (amount, payment_header)
         return result % html_block.decode("utf-8")
 
-    def render_payment_block(self, cr, uid, reference, amount, currency_id, tx_id=None, partner_id=False, partner_values=None, tx_values=None, context=None):
+    def render_payment_block(self, cr, uid, reference, amount, currency_id, tx_id=None, partner_id=False, partner_values=None, tx_values=None, company_id=None, context=None):
         html_forms = []
-        acquirer_ids = self.search(cr, uid, [('website_published', '=', True), ('validation', '=', 'automatic')], context=context)
+        domain = [('website_published', '=', True), ('validation', '=', 'automatic')]
+        if company_id:
+            domain.append(('company_id', '=', company_id))
+        acquirer_ids = self.search(cr, uid, domain, context=context)
         for acquirer_id in acquirer_ids:
             button = self.render(
                 cr, uid, acquirer_id,
