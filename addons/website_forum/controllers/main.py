@@ -175,9 +175,14 @@ class website_forum(http.Controller):
         model, comment = Data.get_object_reference(cr, uid, 'mail', 'mt_comment')
         activity_ids = Activity.search(cr, uid, [('res_id', 'in', user_post_ids), ('model', '=', 'website.forum.post'), '|', ('subtype_id', '!=', comment), ('subtype_id', '=', False)], context=context)
         activities = Activity.browse(cr, uid, activity_ids, context=context)
+
+
         posts = {}
-        for rec in user_answers + user_questions:
-            posts[rec.id] = rec
+        for act in activities:
+            posts[act.res_id] = True
+        posts_ids = Post.browse(cr, uid, posts.keys(), context=context)
+        posts = dict(map(lambda x: (x.id, (x.parent_id or x, x.parent_id and x or False)), posts_ids))
+
         post['users'] = 'True'
 
         values = {

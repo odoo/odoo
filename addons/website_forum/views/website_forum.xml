@@ -362,6 +362,7 @@
                 <hr/>
 
                 <div t-foreach="question.child_ids" t-as="answer" class="mt16 mb32" id="answer">
+                    <a t-attf-id="answer-#{str(answer.id)}"/>
                     <div class="text-center pull-left">
                         <div t-attf-class="box oe_grey">
                             <a t-attf-class="fa fa-thumbs-up #{answer.user_vote == 1 and 'text-success' or ''}" 
@@ -390,7 +391,7 @@
                                 </li>
                                 <li><a class="text-muted" t-attf-href="/forum/#{ slug(forum) }/answer/#{ question.id }/edit/#{ answer.id }">edit</a></li>
                                 <li><a class="text-muted delete" href="" t-attf-id="#{answer.id}">delete</a></li>
-                                <li><a class="text-muted" href="">share</a></li>
+                                <li><a class="text-muted" t-attf-href="/forum/#{ slug(forum) }/question/#{ question.id }/#answer-#{ answer.id }">share</a></li>
                             </ul>
                             <t t-set="user" t-value="answer.create_uid"/>
                             <t t-call="website_forum.user_detail">
@@ -459,7 +460,7 @@
         <template id="badge">
             <t t-call="website_forum.header">
                 <h1 class="mt0">
-                    Users with Badges
+                    Badges
                 </h1>
                 <p>
                     Besides gaining reputation with your questions and answers,
@@ -559,14 +560,10 @@
                                 <t t-foreach="countries or []" t-as="country"><option t-att-value="country.id"><t t-esc="country.name"/></option></t>
                              </select>
                         </div>
-                        <label class="col-md-4 control-label mb16" for="user.partner_id.birthdate">Date of birth</label>
-                        <div class="col-md-7 mb16">
-                            <input type="text" class="form-control" name="dob" t-attf-value="#{user.partner_id.birthdate or ''}"/>
-                        </div>
-                        <label class="col-md-4 control-label mb16" for="user.partner_id.comment">Profile</label>
+                        <label class="col-md-4 control-label mb16" for="user.partner_id.comment">Biography</label>
                         <div class="col-md-7 mb16">
                             <textarea name="comment" style="min-height: 120px" required="True" value="comment" id="textarea_ckeditor"  class="form-control">
-                                <t t-esc="user.partner_id.comment"/>
+                                <t t-esc="user.partner_id.website_description"/>
                             </textarea>
                         </div>
                         <div class="col-sm-offset-4 col-md-4 mb16">
@@ -587,7 +584,7 @@
                         <span t-field="user.image"
                             t-field-options='{"widget": "image", "class": "img img-responsive img-circle"}'/>
                     </div>
-                    <div class="col-sm-5">
+                    <div class="col-sm-10">
                         <table class="table table-condensed">
                         <tr>
                             <td rowspan="2" valign="top"><span class="text-muted">contributions</span></td>
@@ -597,31 +594,40 @@
                             <td>last connection</td>
                             <td><span t-field="user.login_date" t-field-options='{"format": "short"}'/></td>
                         </tr>
-                        </table>
-                    </div><div class="col-sm-5">
-                        <table class="table table-condensed">
                         <tr>
-                            <td rowspan="3" valign="top"><span class="text-muted">stats</span></td>
+                            <td rowspan="2" valign="top"><span class="text-muted">bio</span></td>
+                            <td>website</td>
+                            <td>
+                                <a t-att-href="user.website" t-if="user.website">
+                                    <span t-field="user.website"/>
+                                </a>
+                            </td>
+                        </tr><tr>
+                            <td>location</td>
+                            <td>
+                                <span t-field="user.city"/>
+                                <t t-if="user.country_id">, 
+                                    <span t-field="user.country_id"/>
+                                </t>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2" valign="top"><span class="text-muted">stats</span></td>
                             <td>karma</td>
                             <td><span t-field="user.karma"/></td>
                         </tr><tr>
-                            <td>up votes</td>
+                            <td>votes</td>
                             <td>
                                 <span class="fa fa-thumbs-up"/>
                                 <span t-esc="up_votes"/>
-                            </td>
-                        </tr><tr>
-                            <td>down votes</td>
-                            <td>
+
                                 <span class="fa fa-thumbs-down "/>
                                 <span t-esc="down_votes"/>
                             </td>
                         </tr>
                         </table>
-                    </div>
-                    <div class="col-sm-10">
                         <div class="well well-sm">
-                            <!-- add website description here -->
+                            <span t-field="user.partner_id.website_description"/>
                             <a class="fa fa-arrow-right"  t-attf-href="/forum/#{ slug(forum) }/edit/profile/#{ user.id }"> Edit Your Bio</a>
                         </div>
                     </div>
@@ -664,29 +670,24 @@
                         <h1>Followed Questions</h1>
                     </div>
                     <div class="tab-pane" id="activity">
-                        <t t-call="website_forum.user_activity" />
+                        <ul class="list-unstyled">
+                            <li t-foreach="activities" t-as="activity">
+                                <span t-esc="activity.date"/>
+                                <span t-esc="activity.subtype_id.name" class="label label-info"/>
+                                <t t-set="post" t-value="posts[activity.res_id]"/>
+                                <span t-if="post[1]"> 
+                                    <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post[0]) }#answer-#{ str(post[1].id) }">
+                                        Gave an answer
+                                    </a> on
+                                </span>
+                                <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post[0]) }">
+                                    <span t-esc="post[0].name"/>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </t>
-        </template>
-
-        <template id="user_activity">
-            <ul class="media-list">
-                <li t-foreach="activities" t-as="activity" class="media">
-                    <t t-set="post" t-value="posts.get(activity.res_id)"/>
-                    <small t-esc="activity.date" class="pull-left"/>
-                    <span t-field="activity.body" class="label label-info pull-left"/>
-                    <a t-esc="post.name" t-if="not post.parent_id"
-                        t-attf-href="/forum/#{ slug(forum) }/question/#{ activity.res_id }"/>
-                    <t t-if="post.parent_id">
-                        <a t-esc="post.parent_id.name"
-                            t-attf-href="/forum/#{ slug(forum) }/question/#{ post.parent_id.id }"/>
-                        <span class="fa fa-play"/>
-                        <t t-esc="post.content[0:100]"/>
-                        <strong> ... </strong>
-                    </t>
-                </li>
-            </ul>
         </template>
 
         <template id="user_badges">
