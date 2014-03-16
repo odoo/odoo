@@ -24,6 +24,7 @@ from openerp.tools.translate import _
 
 class ir_logging(osv.Model):
     _name = 'ir.logging'
+    _order = 'id DESC'
 
     EXCEPTIONS_TYPE = [
         ('client', 'Client'),
@@ -31,22 +32,14 @@ class ir_logging(osv.Model):
     ]
 
     _columns = {
+        'create_date': fields.datetime('Create Date', readonly=True),
         'name': fields.char('Name', required=True),
         'type': fields.selection(EXCEPTIONS_TYPE, string='Type', required=True, select=True),
         'dbname': fields.char('Database Name'),
         'level': fields.char('Level'),
         'message': fields.text('Message', required=True),
-        'exception': fields.text('Exception'),
         'path': fields.char('Path', required=True),
         'func': fields.char('Function', required=True),
         'line': fields.char('Line', required=True),
     }
 
-    def call_function(self, cr, uid, ids, context=None):
-        logger = logging.getLogger()
-        logger.error("I think there is an error")
-        try:
-            raise Exception("I want to kill your process...")
-        except Exception, ex:
-            logger.exception("Please log me into the database")
-        return True

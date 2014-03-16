@@ -76,28 +76,26 @@ class PostgreSQLHandler(logging.Handler):
     the current database, can be set using --log-db=DBNAME
     """
     def emit(self, record):
-        print "Emit PG", record
         ct = threading.current_thread()
-        ct_db = getattr(ct, 'dbname')
-        ct_uid = getattr(ct, 'uid')
+        ct_db = getattr(ct, 'dbname', None)
+        ct_uid = getattr(ct, 'uid', None)
         dbname = tools.config['log_db'] or ct_db
         if dbname:
             cr = None
             try:
                 cr = sql_db.db_connect(dbname).cursor()
-                exception = False
-                if record.exc_info:
-                    exception = record.exc_text
+                msg = record.msg
+                traceback = getattr(record, 'exc_text', '')
+                if traceback:
+                    msg = "%s\n%s" % (msg, traceback)
                 level = logging.getLevelName(record.levelno)
-                val = (uid, uid, 'server', dbname, record.name, level, record.msg, exception, record.filename, record.funcName, record.lineno)
+                val = (ct_uid, ct_uid, 'server', dbname, record.name, level, msg, record.pathname, record.lineno, record.funcName)
                 cr.execute("""
-                    INSERT INTO ir_logging(create_date, write_date, create_uid, write_uid, type, dbname, name, level, message, exception, path, func, line)
-                    VALUES (NOW() at time zone 'UTC', NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    INSERT INTO ir_logging(create_date, write_date, create_uid, write_uid, type, dbname, name, level, message, path, line, func)
+                    VALUES (NOW() at time zone 'UTC', NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """, val )
                 cr.commit()
             except Exception, e:
-                print "Exception",e
-                print repr(e)
                 pass
             finally:
                 if cr:
@@ -187,6 +185,9 @@ def init_logger():
 
     logconfig = tools.config['log_handler']
 
+    postgresqlHandler = PostgreSQLHandler()
+    postgresqlHandler.setLevel(logging.WARNING)
+
     logging_configurations = DEFAULT_LOG_CONFIGURATION + pseudo_config + logconfig
     for logconfig_item in logging_configurations:
         loggername, level = logconfig_item.split(':')
@@ -195,17 +196,14 @@ def init_logger():
         logger.handlers = []
         logger.setLevel(level)
         logger.addHandler(handler)
+        logger.addHandler(postgresqlHandler)
         if loggername != '':
             logger.propagate = False
 
-    # we manage the connection in the postgresqlhandler
-    postgresqlHandler = PostgreSQLHandler()
-    postgresqlHandler.setLevel(logging.WARNING)
-    logger = logging.getLogger()
-    logger.addHandler(postgresqlHandler)
-
     for logconfig_item in logging_configurations:
         _logger.debug('logger level set: "%s"', logconfig_item)
+
+
 
 DEFAULT_LOG_CONFIGURATION = [
     'openerp.workflow.workitem:WARNING',
