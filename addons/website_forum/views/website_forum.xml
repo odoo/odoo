@@ -156,12 +156,12 @@
                     <span>Questions</span>
                     <small class="dropdown" t-if="filters in ('all', 'unanswered','followed')">
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                          <t t-if="filters == 'all'">No filter</t>
-                          <t t-if="filters == 'unanswered'">filter: Unanswered</t>
-                          <t t-if="filters == 'followed'">filter: Followed</t>
-                          <t t-if="sorting == 'date'"> sorted by last activity date</t>
-                          <t t-if="sorting == 'answered'"> sorted by most answered</t>
-                          <t t-if="sorting == 'vote'"> sorted by most voted</t>
+                          <t t-if="filters == 'all'">All</t>
+                          <t t-if="filters == 'unanswered'">Unanswered</t>
+                          <t t-if="filters == 'followed'">Followed</t>
+                          <t t-if="sorting == 'date'"> by activity date</t>
+                          <t t-if="sorting == 'answered'"> by most answered</t>
+                          <t t-if="sorting == 'vote'"> by most voted</t>
                           <b class="caret"/>
                       </a>
                       <ul class="dropdown-menu">
