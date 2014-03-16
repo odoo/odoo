@@ -32,22 +32,14 @@ class MailGroup(http.Controller):
     def view(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
         group_obj = request.registry.get('mail.group')
-        
         group_ids = group_obj.search(cr, uid, [], context=context)
-        values = {
-            'groups': group_obj.browse(cr, uid, group_ids, context),
-        }
+        values = {'groups': group_obj.browse(cr, uid, group_ids, context)}
         return request.website.render('website_mail_group.mail_groups', values)
 
-    @http.route([
-        "/groups/subscription/",
-    ], type='json', auth="public", website=True)
+    @http.route(["/groups/subscription/"], type='json', auth="user")
     def subscription(self, group_id=0, action=False ,**post):
         cr, uid, context = request.cr, request.uid, request.context
         group_obj = request.registry.get('mail.group')
-        public_uid = request.registry['website'].get_public_user(cr , uid, context)
-        if uid == public_uid:
-            return ['is_public']
         if action:
             group_obj.message_subscribe_users(cr, uid, [group_id], context=context)
         else:
@@ -55,41 +47,42 @@ class MailGroup(http.Controller):
         return []
 
     @http.route([
-        "/groups/<model('mail.group'):group>/",
-        "/groups/<model('mail.group'):group>/page/<int:page>/"
+        "/groups/<model('mail.group'):group>/<any(thread,list):mode>",
+        "/groups/<model('mail.group'):group>/<any(thread,list):mode>/page/<int:page>"
     ], type='http', auth="public", website=True)
-    def thread(self, group, page=1, **post):
+    def thread(self, group, mode='thread', page=1, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        group_obj = request.registry.get('mail.group')
+
         thread_obj = request.registry.get('mail.message')
-        thread_ids = thread_obj.search(cr, uid, [('model','=','mail.group'), ('res_id','=',group.id), ('parent_id','=',False)])
-        group_ids = group_obj.search(cr, uid, [])
+        domain = [('model','=','mail.group'), ('res_id','=',group.id)]
+        if mode=='thread':
+            domain.append(('parent_id','=',False))
+        thread_count = thread_obj.search_count(cr, uid, domain, context=context)
         pager = request.website.pager(
-            url='/groups/%s/' % group.id,
-            total=len(thread_ids),
+            url='/groups/%s/%s' % (group.id, mode),
+            total=thread_count,
             page=page,
             step=self._thread_per_page,
         )
-        pager_begin = (page - 1) * self._thread_per_page
-        pager_end = page * self._thread_per_page
-        thread_ids = thread_ids[pager_begin:pager_end]
+        thread_ids = thread_obj.search(cr, uid, domain, limit=self._thread_per_page, offset=pager['offset'])
+
         values = {
-            'groups': group_obj.browse(cr, uid, group_ids, context),
-            'thread_list': thread_obj.browse(cr, uid, thread_ids, context),
-            'active_group': group,
+            'messages': thread_obj.browse(cr, uid, thread_ids, context),
+            'group': group,
             'pager': pager,
+            'mode': mode
         }
-        return request.website.render('website_mail_group.group_thread_list', values)
+        return request.website.render('website_mail_group.group_messages', values)
 
     @http.route([
         "/groups/<model('mail.group'):group>/message/<model('mail.message'):message>",
     ], type='http', auth="public", website=True)
-    def get_thread(self, group, message, **post):
+    def get_thread(self, group, message, mode='thread', page=1, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        thread_obj = request.registry.get('mail.message')
-        child_ids = thread_obj.search(cr, uid, [('parent_id','=',message.id)], order='date')
         values = {
-            'main_thread': message,
-            'child_thread': thread_obj.browse(cr, uid, child_ids, context),
+            'message': message,
+            'group': group,
+            'mode': mode,
+            'page': page,
         }
-        return request.website.render('website_mail_group.group_thread', values)
+        return request.website.render('website_mail_group.group_message', values)
