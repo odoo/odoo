@@ -233,7 +233,7 @@ class HttpCase(TransactionCase):
                 if line == "ok":
                     break
                 if line.startswith("error"):
-                    line_ = ine[6:]
+                    line_ = line[6:]
                     # when error occurs the execution stack may be sent as as JSON
                     try:
                         line_ = json.loads(line_)
