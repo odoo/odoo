@@ -13,9 +13,6 @@ OpenERP Mail Group : Mailing List Archives
     'data': [
         'views/website_mail_group.xml'
     ],
-    'demo': [
-        'data/website_mail_group_demo.xml'
-    ],
     'qweb': [],
     'installable': True,
 }
