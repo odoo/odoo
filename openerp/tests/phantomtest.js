@@ -113,20 +113,22 @@ function PhantomTest() {
                 console.log('loaded', url, status);
                 // process ready
                 waitFor(function() {
-                    console.log("waiting for: calling page evaluate");
+                    console.log("PhantomTest.run: wait for condition: " + ready);
                     return self.page.evaluate(function (ready) {
-                        console.log("waiting for", ready);
                         var r = false;
                         try {
-                            console.log("waiting for: page evaluating ", ready);
+                            console.log("page.evaluate eval expr:", ready);
                             r = !!eval(ready);
-                        } catch(ex) { }
-                        console.log("waiting for: returning from page evaluate");
+                        } catch(ex) { 
+                        }
+                        console.log("page.evaluate eval result:", r);
                         return r;
                     }, ready);
                 // run test
                 }, function() {
+                    console.log("PhantomTest.run: condition statified, executing: " + code);
                     self.page.evaluate(function (code) { return eval(code); }, code);
+                    console.log("PhantomTest.run: execution launched, waiting for console.log('ok')...");
                 });
             }
         });

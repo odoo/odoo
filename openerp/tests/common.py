@@ -212,7 +212,8 @@ class HttpCase(TransactionCase):
                 # OSError, and no errno/strerror/filename, only a pair of
                 # unnamed arguments (matching errno and strerror)
                 err, _ = e.args
-                if err == errno.EINTR: continue
+                if err == errno.EINTR:
+                    continue
                 raise
 
             if ready:
@@ -224,24 +225,24 @@ class HttpCase(TransactionCase):
             # process lines
             if '\n' in buf:
                 line, buf = buf.split('\n', 1)
-
                 line = str(line)
-                if 'CoreText' in line:
-                    continue
+
+                # relay everything from console.log, even 'ok' or 'error...' lines
+                _logger.debug("phantomjs: %s", line)
+
                 if line == "ok":
                     break
                 if line.startswith("error"):
-                    line_ = line[6:]
-                    try: line_ = json.loads(line_)
-                    except ValueError: pass
+                    line_ = self.line[6:]
+                    # when error occurs the execution stack may be sent as as JSON
+                    try:
+                        line_ = json.loads(line_)
+                    except ValueError: 
+                        pass
                     self.fail(line_ or "phantomjs test failed")
 
-                try: line = json.loads(line)
-                except ValueError: pass
-                _logger.info("phantomjs: %s", line)
-
     def phantom_run(self, cmd, timeout):
-        _logger.debug('executing `%s`', ' '.join(cmd))
+        _logger.debug('phantom_run executing %s', ' '.join(cmd))
         try:
             phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         except OSError:
@@ -252,6 +253,7 @@ class HttpCase(TransactionCase):
             # kill phantomjs if phantom.exit() wasn't called in the test
             if phantom.poll() is None:
                 phantom.terminate()
+            _logger.debug("phantom_run execution finished")
 
     def phantom_jsfile(self, jsfile, timeout=30, **kw):
         options = {
