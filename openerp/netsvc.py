@@ -81,7 +81,7 @@ class PostgreSQLHandler(logging.Handler):
             cr = None
             try:
                 cr = sql_db.db_connect(dbname).cursor()
-                msg = record.msg
+                msg = unicode(record.msg)
                 traceback = getattr(record, 'exc_text', '')
                 if traceback:
                     msg = "%s\n%s" % (msg, traceback)

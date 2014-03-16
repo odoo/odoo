@@ -24,6 +24,7 @@
             <field name="arch" type="xml">
                 <tree string="Logs" version="7.0">
                     <field name="create_date" />
+                    <field name="create_uid" />
                     <field name="dbname" />
                     <field name="type" />
                     <field name="name" />
@@ -61,6 +62,5 @@
             <field name="search_view_id" ref="ir_logging_search_view" />
         </record>
         <menuitem parent="base.menu_custom" id="ir_logging_all_menu" action="ir_logging_all_act" />
-
     </data>
 </openerp>
