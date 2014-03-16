@@ -228,7 +228,7 @@ class HttpCase(TransactionCase):
                 line = str(line)
 
                 # relay everything from console.log, even 'ok' or 'error...' lines
-                _logger.debug("phantomjs: %s", line)
+                _logger.info("phantomjs: %s", line)
 
                 if line == "ok":
                     break
@@ -242,7 +242,7 @@ class HttpCase(TransactionCase):
                     self.fail(line_ or "phantomjs test failed")
 
     def phantom_run(self, cmd, timeout):
-        _logger.debug('phantom_run executing %s', ' '.join(cmd))
+        _logger.info('phantom_run executing %s', ' '.join(cmd))
         try:
             phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         except OSError:
@@ -253,7 +253,7 @@ class HttpCase(TransactionCase):
             # kill phantomjs if phantom.exit() wasn't called in the test
             if phantom.poll() is None:
                 phantom.terminate()
-            _logger.debug("phantom_run execution finished")
+            _logger.info("phantom_run execution finished")
 
     def phantom_jsfile(self, jsfile, timeout=30, **kw):
         options = {
