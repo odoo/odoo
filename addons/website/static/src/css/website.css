@@ -102,6 +102,10 @@ header a.navbar-brand img {
   max-height: 50px;
 }
 
+div:before, p:before {
+  content: "\2060";
+}
+
 /* ----- Snippets Styles ----- */
 .readable {
   font-size: 120%;
@@ -217,7 +221,6 @@ footer {
 /* -- Hack for removing double scrollbar from mobile preview -- */
 div#mobile-preview.modal {
   overflow: hidden;
-  overflow-y: hidden;
 }
 
 ul.nav-stacked > li > a {
@@ -284,6 +287,7 @@ ul.nav-stacked > li > a {
 section, .carousel, .parallax, .row, .hr, .blockquote {
   min-height: 30px;
 }
+
 .carousel, .parallax, .blockquote {
   overflow: hidden;
 }
