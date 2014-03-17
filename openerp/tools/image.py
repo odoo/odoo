@@ -32,7 +32,7 @@ from random import randint
 # Image resizing
 # ----------------------------------------
 
-def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', filetype='PNG', avoid_if_small=False):
+def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', filetype=None, avoid_if_small=False):
     """ Function to resize an image. The image will be resized to the given
         size, while keeping the aspect ratios, and holes in the image will be
         filled with transparent background. The image will not be stretched if
@@ -58,7 +58,8 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
             height mean an automatically computed value based respectivelly
             on height or width of the source image.
         :param encoding: the output encoding
-        :param filetype: the output filetype
+        :param filetype: the output filetype, by default the source image's
+        :type filetype: str, any PIL image format (supported for creation)
         :param avoid_if_small: do not resize if image height and width
             are smaller than the expected size.
     """
@@ -68,6 +69,8 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
         return base64_source
     image_stream = StringIO.StringIO(base64_source.decode(encoding))
     image = Image.open(image_stream)
+    # store filetype here, as Image.new below will lose image.format
+    filetype = filetype or image.format
 
     asked_width, asked_height = size
     if asked_width is None:
