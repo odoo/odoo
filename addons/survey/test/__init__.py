@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-#from openerp.osv.orm import except_orm
-#from openerp.tools import mute_logger
 
+from . import test_survey
 
-class test_survey():
-    pass
+checks = [
+    test_survey
+]
