@@ -118,6 +118,8 @@ class EscposDriver(Thread):
                         self.open_cashbox(printer)
                 elif task == 'printstatus':
                     self.print_status(printer)
+                elif task == 'testprint':
+                    printer.receipt(testreceipt)
                 elif task == 'status':
                     pass
 
@@ -280,7 +282,7 @@ driver = EscposDriver()
 
 hw_proxy.drivers['escpos'] = driver
 
-driver.push_task('printstatus')
+driver.push_task('testprint')
         
 class EscposProxy(hw_proxy.Proxy):
     
@@ -293,4 +295,9 @@ class EscposProxy(hw_proxy.Proxy):
     def print_receipt(self, receipt):
         _logger.info('ESC/POS: PRINT RECEIPT') 
         driver.push_task('receipt',receipt)
+
+    @http.route('/hw_proxy/print_xml_receipt', type='json', auth='none', cors='*')
+    def print_receipt(self, receipt):
+        _logger.info('ESC/POS: PRINT XML RECEIPT') 
+        driver.push_task('xml_receipt',receipt)
     

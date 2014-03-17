@@ -17,6 +17,8 @@ import io
 import base64
 import math
 import md5
+import re
+import xml.etree.ElementTree as ET
 
 from PIL import Image
 
@@ -30,12 +32,19 @@ except ImportError:
 from constants import *
 from exceptions import *
 
+# class RBuffer:
+#     def __init__(self,width=40,margin=10,tabwidth=2,indent=0):
+#         self.width = width 
+#         self.margin = margin
+#         self.tabwidth = tabwidth
+#         self.indent = indent
+#         self.lines  = []
+
 class Escpos:
     """ ESC/POS Printer object """
     device    = None
     encoding  = None
     img_cache = {}
-
 
     def _check_image_size(self, size):
         """ Check and fix the size of the image to 32 bits """
@@ -47,7 +56,6 @@ class Escpos:
                 return (image_border / 2, image_border / 2)
             else:
                 return (image_border / 2, (image_border / 2) + 1)
-
 
     def _print_image(self, line, size):
         """ Print formatted image """
@@ -100,7 +108,6 @@ class Escpos:
                 cont = 0
 
         return raw
-
 
     def _convert_image(self, im):
         """ Parse image and prepare it to a printable format """
@@ -197,8 +204,7 @@ class Escpos:
         # Convert the RGB image in printable image
         self._convert_image(im)
 
-
-    def barcode(self, code, bc, width, height, pos, font):
+    def barcode(self, code, bc, width=255, height=2, pos='below', font='a'):
         """ Print Barcode """
         # Align Bar Code()
         self._raw(TXT_ALIGN_CT)
@@ -248,6 +254,168 @@ class Escpos:
             self._raw(code)
         else:
             raise exception.BarcodeCodeError()
+
+    def receipt(self,xml):
+        root = ET.fromstring(xml)
+        open_cashdrawer = False
+        cut_receipt  = True
+
+        width  = 48
+        ratio  = 0.5
+        indent = 0
+        tabwidth = 2
+
+        if root.tag != 'receipt':
+            print 'Error: expecting receipt xml and not '+str(root.tag)
+            return
+        if 'open-cashdrawer' in root.attrib:
+            open_cashdrawer = root.attrib['open-cashdrawer'] == 'true'
+        if 'cut' in root.attrib:
+            cut_receipt = root.attrib['cut'] == 'true'
+
+#        def justify(string,width):
+#            words = string.split()
+#            lines = []
+#            line  = ''
+#            linew = 0
+#            for w in words:
+#                if len(w) <= width - len(line):
+#                    if len(line) > 0:
+#                        line += ' '
+#                    line += w
+#                else:
+#                    if len(line) > 0:
+#                        lines.append(line.ljust(width))
+#                        line = ''
+#                    line += w
+#            if len(line) > 0:
+#                lines.append(line.ljust(width))
+#            return lines
+#
+#        def strindent(indent,string):
+#            ind = tabwidth * indent
+#            rem = width - ind
+#            lines = justify(string,rem)
+#            txt = ''
+#            for l in lines:
+#                txt += ' '*ind + '\n'
+#
+#            return txt
+
+        def strclean(string):
+            if not string:
+                string = ''
+            string = string.strip()
+            string = re.sub('\s+',' ',string)
+            return string
+
+
+        def print_ul(elem, indent=0):
+            bullets = ['-','-']
+            bullet  = ' '+bullets[indent % 2]+' '
+            if elem.tag == 'ul':
+                for lelem in elem:
+                    if lelem.tag == 'li':
+                        self.text(' ' * indent * tabwidth + bullet + strclean(lelem.text)+'\n')
+                    elif lelem.tag == 'ul':
+                        print_ul(lelem,indent+1)
+                    elif lelem.tag == 'ol':
+                        print_old(lelem,indent+1)
+
+        def print_ol(elem, indent=0):
+            cwidth = len(str(len(elem))) + 2
+            i = 1
+            for lelem in elem:
+                if lelem.tag == 'li':
+                    self.text(' ' * indent * tabwidth + ' ' + (str(i)+'.').ljust(cwidth)+strclean(lelem.text)+'\n')
+                    i += 1
+                elif lelem.tag == 'ul':
+                    print_ul(lelem,indent+1)
+                elif lelem.tag == 'ol':
+                    print_ol(lelem,indent+1)
+        
+        
+        for elem in root:
+            if elem.tag == 'line':
+                left = strclean(elem.text)
+                right = ''
+                for lelem in elem:
+                    if lelem.tag == 'left':
+                        left = strclean(lelem.text)
+                        print 'left:'+left
+                    elif lelem.tag == 'right':
+                        right = strclean(lelem.text)
+                        print 'right:'+right
+                lwidth = int(width * ratio)
+                rwidth = width - lwidth
+                lwidth = lwidth - indent
+
+                left = left[:lwidth]
+                if len(left) != lwidth:
+                    left = left + ' ' * (lwidth - len(left))
+
+                right = right[-rwidth:]
+                if len(right) != rwidth:
+                    right = ' ' * (rwidth - len(right)) + right
+                line = ' ' * indent + left + right + '\n'
+                print line
+                self.text(line)
+            elif elem.tag == 'img':
+                if src in elem.attrib and 'data:' in elem.attrib['src']:
+                    self.print_base64_image(elem.attrib['src'])
+            elif elem.tag == 'p':
+                self.text(strclean(elem.text)+'\n')
+            elif elem.tag == 'h1':
+                self.set(align='left', font='a', type='b', width=2, height=2)
+                self._raw('\x1b\x21\x30')
+                self._raw('\x1b\x45\x01')
+                self.text(strclean(elem.text)+'\n')
+                self.set()
+            elif elem.tag == 'h2':
+                self.set(align='left', font='a', type='bu', width=1, height=2)
+                self._raw('\x1b\x21\x30')
+                self.text(strclean(elem.text)+'\n')
+                self.set()
+            elif elem.tag == 'h3':
+                self.set(align='left', font='a', type='u', width=1, height=2)
+                self._raw('\x1b\x45\x01')
+                self.text(strclean(elem.text)+'\n')
+                self.set()
+            elif elem.tag == 'h4':
+                self.set(align='left', font='a', type='bu', width=1, height=2)
+                self.text(strclean(elem.text)+'\n')
+                self.set()
+            elif elem.tag == 'h5':
+                self.set(align='left', font='a', type='u', width=1, height=1)
+                self._raw('\x1b\x45\x01')
+                self.text(strclean(elem.text)+'\n')
+                self.set()
+            elif elem.tag == 'pre':
+                self.text(elem.text)
+            elif elem.tag == 'cut':
+                self.cut()
+            elif elem.tag == 'ul':
+                print_ul(elem)
+            elif elem.tag == 'ol':
+                print_ol(elem)
+            elif elem.tag == 'hr':
+                self.text('-'*width+'\n')
+            elif elem.tag == 'br':
+                self.text('\n')
+            elif elem.tag == 'barcode' and 'encoding' in elem.attrib:
+                self.barcode(strclean(elem.text),elem.attrib['encoding'])
+            elif elem.tag == 'partialcut':
+                self.cut(mode='part')
+            elif elem.tag == 'cashdraw':
+                self.cashdraw(2)
+                self.cashdraw(5)
+
+        if cut_receipt:
+            self.cut()
+        if open_cashdrawer:
+            self.cashdraw(2)
+            self.cashdraw(5)
+
 
     def text(self,txt):
         """ Print Utf8 encoded alpha-numeric text """
