@@ -41,7 +41,6 @@ professional emails and reuse templates in a few clicks.
         'data/mail_data.xml',
         'data/mass_mailing_data.xml',
         'wizard/mail_compose_message_view.xml',
-        'wizard/mail_mass_mailing_create_segment.xml',
         'views/mass_mailing.xml',
         'views/res_config.xml',
         'views/email_template.xml',
