@@ -178,30 +178,17 @@ class MassMailingCampaign(osv.Model):
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
         """ Compute statistics of the mass mailing campaign """
+        Statistics = self.pool['mail.mail.statistics']
         results = dict.fromkeys(ids, False)
-        for campaign in self.browse(cr, uid, ids, context=context):
-            results[campaign.id] = {
-                'sent': len(campaign.statistics_ids),
-                # delivered: shouldn't be: all mails - (failed + bounced) ?
-                'delivered': len([stat for stat in campaign.statistics_ids if not stat.bounced]),  # stat.state == 'sent' and
-                'opened': len([stat for stat in campaign.statistics_ids if stat.opened]),
-                'replied': len([stat for stat in campaign.statistics_ids if stat.replied]),
-                'bounced': len([stat for stat in campaign.statistics_ids if stat.bounced]),
+        for cid in ids:
+            results[cid] = {
+                'total': Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid)], count=True, context=context),
+                'sent': Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid), ('sent', '!=', False)], count=True, context=context),
+                'opened': Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid), ('opened', '!=', False)], count=True, context=context),
+                'replied': Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid), ('replied', '!=', False)], count=True, context=context),
+                'bounced': Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid), ('bounced', '!=', False)], count=True, context=context),
             }
-        return results
-
-    def _get_mass_mailing_kanban_ids(self, cr, uid, ids, name, arg, context=None):
-        """ Gather data about mass mailings to display them in kanban view as
-        nested kanban views is not possible currently. """
-        results = dict.fromkeys(ids, '')
-        for campaign in self.browse(cr, uid, ids, context=context):
-            mass_mailing_results = []
-            for mass_mailing in campaign.mass_mailing_ids[:self._kanban_mailing_nbr]:
-                mass_mailing_object = {}
-                for attr in ['name', 'sent', 'delivered', 'opened', 'replied', 'bounced']:
-                    mass_mailing_object[attr] = getattr(mass_mailing, attr)
-                mass_mailing_results.append(mass_mailing_object)
-            results[campaign.id] = mass_mailing_results
+            results[cid]['delivered'] = results[cid]['sent'] - results[cid]['bounced']
         return results
 
     def _get_state_list(self, cr, uid, context=None):
@@ -211,15 +198,11 @@ class MassMailingCampaign(osv.Model):
     _state = lambda self, *args, **kwargs: self._get_state_list(*args, **kwargs)
 
     _columns = {
-        'name': fields.char(
-            'Campaign Name', required=True,
-        ),
+        'name': fields.char('Name', required=True),
+        'state': fields.selection(_state, string='Status', required=True),
         'user_id': fields.many2one(
             'res.users', 'Responsible',
             required=True,
-        ),
-        'state': fields.selection(
-            _state, string='Status', required=True,
         ),
         'category_id': fields.many2one(
             'mail.mass_mailing.category', 'Category',
@@ -228,42 +211,34 @@ class MassMailingCampaign(osv.Model):
             'mail.mass_mailing', 'mass_mailing_campaign_id',
             'Mass Mailings',
         ),
-        'mass_mailing_kanban_ids': fields.function(
-            _get_mass_mailing_kanban_ids,
-            type='text', string='Mass Mailings (kanban data)',
-            help='This field has for purpose to gather data about mass mailings '
-                 'to display them in kanban view as nested kanban views is not '
-                 'possible currently',
-        ),
         'statistics_ids': fields.one2many(
             'mail.mail.statistics', 'mass_mailing_campaign_id',
             'Sent Emails',
         ),
         'color': fields.integer('Color Index'),
         # stat fields
+        'total': fields.function(
+            _get_statistics, string='Scheduled',
+            type='integer', multi='_get_statistics'
+        ),
         'sent': fields.function(
-            _get_statistics,
-            string='Sent Emails',
+            _get_statistics, string='Sent Emails',
             type='integer', multi='_get_statistics'
         ),
         'delivered': fields.function(
-            _get_statistics,
-            string='Delivered',
+            _get_statistics, string='Delivered',
             type='integer', multi='_get_statistics',
         ),
         'opened': fields.function(
-            _get_statistics,
-            string='Opened',
+            _get_statistics, string='Opened',
             type='integer', multi='_get_statistics',
         ),
         'replied': fields.function(
-            _get_statistics,
-            string='Replied',
+            _get_statistics, string='Replied',
             type='integer', multi='_get_statistics'
         ),
         'bounced': fields.function(
-            _get_statistics,
-            string='Bounced',
+            _get_statistics, string='Bounced',
             type='integer', multi='_get_statistics'
         ),
     }
@@ -306,21 +281,15 @@ class MassMailingCampaign(osv.Model):
     # Actions
     #------------------------------------------------------
 
-    def launch_mass_mailing_create_wizard(self, cr, uid, ids, context=None):
-        ctx = dict(context)
-        ctx.update({
-            'default_mass_mailing_campaign_id': ids[0],
-        })
+    def action_new_mailing(self, cr, uid, ids, context=None):
         return {
             'name': _('Create a Mass Mailing for the Campaign'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'mail.mass_mailing.create',
+            'res_model': 'mail.mass_mailing',
             'views': [(False, 'form')],
-            'view_id': False,
-            'target': 'new',
-            'context': ctx,
+            'context': dict(context, default_mass_mailing_campaign_id=ids[0]),
         }
 
 
@@ -383,15 +352,17 @@ class MassMailing(osv.Model):
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
         """ Compute statistics of the mass mailing campaign """
+        Statistics = self.pool['mail.mail.statistics']
         results = dict.fromkeys(ids, False)
-        for mass_mailing in self.browse(cr, uid, ids, context=context):
-            results[mass_mailing.id] = {
-                'sent': len(mass_mailing.statistics_ids),
-                'delivered': len([stat for stat in mass_mailing.statistics_ids if not stat.bounced]),  # mail.state == 'sent' and
-                'opened': len([stat for stat in mass_mailing.statistics_ids if stat.opened]),
-                'replied': len([stat for stat in mass_mailing.statistics_ids if stat.replied]),
-                'bounced': len([stat for stat in mass_mailing.statistics_ids if stat.bounced]),
+        for mid in ids:
+            results[mid] = {
+                'total': Statistics.search(cr, uid, [('mass_mailing_id', '=', mid)], count=True, context=context),
+                'sent': Statistics.search(cr, uid, [('mass_mailing_id', '=', mid), ('sent', '!=', False)], count=True, context=context),
+                'opened': Statistics.search(cr, uid, [('mass_mailing_id', '=', mid), ('opened', '!=', False)], count=True, context=context),
+                'replied': Statistics.search(cr, uid, [('mass_mailing_id', '=', mid), ('replied', '!=', False)], count=True, context=context),
+                'bounced': Statistics.search(cr, uid, [('mass_mailing_id', '=', mid), ('bounced', '!=', False)], count=True, context=context),
             }
+            results[mid]['delivered'] = results[mid]['sent'] - results[mid]['bounced']
         return results
 
     def _get_mailing_type(self, cr, uid, context=None):
@@ -447,41 +418,38 @@ class MassMailing(osv.Model):
             'mail.mail.statistics', 'mass_mailing_id',
             'Emails Statistics',
         ),
+        'total': fields.function(
+            _get_statistics, string='Scheduled',
+            type='integer', multi='_get_statistics'
+        ),
         'sent': fields.function(
-            _get_statistics,
-            string='Sent Emails',
+            _get_statistics, string='Sent',
             type='integer', multi='_get_statistics'
         ),
         'delivered': fields.function(
-            _get_statistics,
-            string='Delivered',
+            _get_statistics, string='Delivered',
             type='integer', multi='_get_statistics',
         ),
         'opened': fields.function(
-            _get_statistics,
-            string='Opened',
+            _get_statistics, string='Opened',
             type='integer', multi='_get_statistics',
         ),
         'replied': fields.function(
-            _get_statistics,
-            string='Replied',
+            _get_statistics, string='Replied',
             type='integer', multi='_get_statistics'
         ),
         'bounced': fields.function(
-            _get_statistics,
-            string='Bounce',
+            _get_statistics, string='Bounced',
             type='integer', multi='_get_statistics'
         ),
         # monthly ratio
         'opened_dayly': fields.function(
-            _get_daily_statistics,
-            string='Opened',
+            _get_daily_statistics, string='Opened',
             type='char', multi='_get_daily_statistics',
             oldname='opened_monthly',
         ),
         'replied_dayly': fields.function(
-            _get_daily_statistics,
-            string='Replied',
+            _get_daily_statistics, string='Replied',
             type='char', multi='_get_daily_statistics',
             oldname='replied_monthly',
         ),
@@ -673,6 +641,9 @@ class MailMailStats(osv.Model):
             store=True, readonly=True,
         ),
         # Bounce and tracking
+        'sent': fields.datetime(
+            'Sent',
+            help='Date the related email was sent'),
         'opened': fields.datetime(
             'Opened',
             help='Date when this email has been opened for the first time.'),
@@ -688,38 +659,29 @@ class MailMailStats(osv.Model):
     def set_opened(self, cr, uid, ids=None, mail_mail_ids=None, mail_message_ids=None, context=None):
         """ Set as opened """
         if not ids and mail_mail_ids:
-            ids = self.search(cr, uid, [('mail_mail_id', 'in', mail_mail_ids)], context=context)
+            ids = self.search(cr, uid, [('mail_mail_id', 'in', mail_mail_ids), ('opened', '=', False)], context=context)
         elif not ids and mail_message_ids:
-            ids = self.search(cr, uid, [('message_id', 'in', mail_message_ids)], context=context)
+            ids = self.search(cr, uid, [('message_id', 'in', mail_message_ids), ('opened', '=', False)], context=context)
         else:
-            ids = []
-        for stat in self.browse(cr, uid, ids, context=context):
-            if not stat.opened:
-                self.write(cr, uid, [stat.id], {'opened': fields.datetime.now()}, context=context)
-        return ids
+            ids = self.search(cr, uid, [('id', 'in', ids or []), ('opened', '=', False)], context=context)
+        return self.write(cr, uid, ids, {'opened': fields.datetime.now()}, context=context)
 
     def set_replied(self, cr, uid, ids=None, mail_mail_ids=None, mail_message_ids=None, context=None):
         """ Set as replied """
         if not ids and mail_mail_ids:
-            ids = self.search(cr, uid, [('mail_mail_id', 'in', mail_mail_ids)], context=context)
+            ids = self.search(cr, uid, [('mail_mail_id', 'in', mail_mail_ids), ('replied', '=', False)], context=context)
         elif not ids and mail_message_ids:
-            ids = self.search(cr, uid, [('message_id', 'in', mail_message_ids)], context=context)
+            ids = self.search(cr, uid, [('message_id', 'in', mail_message_ids), ('replied', '=', False)], context=context)
         else:
-            ids = []
-        for stat in self.browse(cr, uid, ids, context=context):
-            if not stat.replied:
-                self.write(cr, uid, [stat.id], {'replied': fields.datetime.now()}, context=context)
-        return ids
+            ids = self.search(cr, uid, [('id', 'in', ids or []), ('replied', '=', False)], context=context)
+        return self.write(cr, uid, ids, {'replied': fields.datetime.now()}, context=context)
 
     def set_bounced(self, cr, uid, ids=None, mail_mail_ids=None, mail_message_ids=None, context=None):
         """ Set as bounced """
         if not ids and mail_mail_ids:
-            ids = self.search(cr, uid, [('mail_mail_id', 'in', mail_mail_ids)], context=context)
+            ids = self.search(cr, uid, [('mail_mail_id', 'in', mail_mail_ids), ('bounced', '=', False)], context=context)
         elif not ids and mail_message_ids:
-            ids = self.search(cr, uid, [('message_id', 'in', mail_message_ids)], context=context)
+            ids = self.search(cr, uid, [('message_id', 'in', mail_message_ids), ('bounced', '=', False)], context=context)
         else:
-            ids = []
-        for stat in self.browse(cr, uid, ids, context=context):
-            if not stat.bounced:
-                self.write(cr, uid, [stat.id], {'bounced': fields.datetime.now()}, context=context)
-        return ids
+            ids = self.search(cr, uid, [('id', 'in', ids or []), ('bounced', '=', False)], context=context)
+        return self.write(cr, uid, ids, {'bounced': fields.datetime.now()}, context=context)
