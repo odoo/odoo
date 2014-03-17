@@ -48,10 +48,9 @@ def acquire_test_cursor(session_id):
             cr._test_lock.acquire()
             return cr
 
-def release_test_cursor(session_id):
+def release_test_cursor(cr):
     if openerp.tools.config['test_enable']:
-        cr = HTTP_SESSION.get(session_id)
-        if cr:
+        if hasattr(cr, '_test_lock'):
             cr._test_lock.release()
             return True
     return False

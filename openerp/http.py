@@ -181,7 +181,7 @@ class WebRequest(object):
 
         if self._cr:
             # Dont commit test cursors
-            if not openerp.tests.common.release_test_cursor(self.session_id):
+            if not openerp.tests.common.release_test_cursor(self._cr):
                 if exc_type is None:
                     self._cr.commit()
                 self._cr.close()
