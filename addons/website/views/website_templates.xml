@@ -364,7 +364,7 @@
                 </li>
                 <t t-raw="0"/>
                 <li t-if="publish_edit">
-                    <a t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s' % (object._name, object.id)"
+                    <a t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}"
                     title='Edit in backend'>Edit</a>
                 </li>
             </ul>

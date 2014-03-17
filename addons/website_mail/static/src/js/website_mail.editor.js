@@ -9,7 +9,7 @@
             var self = this;
             return website.prompt({
                 id: "editor_new_subscribe_button",
-                window_title: _t("New Subscribe Button"),
+                window_title: _t("Add a Subscribe Button"),
                 select: _t("Mailing List"),
                 init: function (field) {
                     return website.session.model('mail.group')
