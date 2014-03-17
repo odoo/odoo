@@ -47,8 +47,6 @@ def acquire_test_cursor(session_id):
         cr = HTTP_SESSION.get(session_id)
         if cr:
             cr._test_lock.acquire()
-            if cr._closed:
-                werkzeug.exceptions.abort(500)
             return cr
 
 def release_test_cursor(cr):
