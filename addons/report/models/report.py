@@ -239,7 +239,6 @@ class report(osv.Model):
 
         action = {
             'type': 'ir.actions.report.xml',
-            'ids': ids,
             'report_name': report.report_name,
             'report_type': report.report_type,
             'report_file': report.report_file,

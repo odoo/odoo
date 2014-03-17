@@ -480,7 +480,7 @@ class Report(http.Controller):
         try:
             width, height = int(width), int(height)
             barcode = createBarcodeDrawing(
-                type, value=value, format='png', width=width, height=height
+                type, value=value, format='png', width=width, height=height, humanReadable=True
             )
             barcode = barcode.asString('png')
         except (ValueError, AttributeError):
