@@ -512,13 +512,11 @@ openerp.mail = function (session) {
                     'default_body': mail.ChatterUtils.get_text2html(self.$el ? (self.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
                     'default_attachment_ids': _.map(self.attachment_ids, function (file) {return file.id;}),
                     'default_partner_ids': partner_ids,
+                    'default_is_log': self.is_log,
                     'mail_post_autofollow': true,
                     'mail_post_autofollow_partner_ids': partner_ids,
                     'is_private': self.is_private
                 };
-                if (self.is_log) {
-                    _.extend(context, {'mail_compose_log': true});
-                }
                 if (default_composition_mode != 'reply' && self.context.default_model && self.context.default_res_id) {
                     context.default_model = self.context.default_model;
                     context.default_res_id = self.context.default_res_id;

@@ -119,6 +119,8 @@ class mail_compose_message(osv.TransientModel):
         'attachment_ids': fields.many2many('ir.attachment',
             'mail_compose_message_ir_attachments_rel',
             'wizard_id', 'attachment_id', 'Attachments'),
+        'is_log': fields.boolean('Log an Internal Note',
+                                 help='Whether the message is an internal note (comment mode only)'),
         # mass mode options
         'notify': fields.boolean('Notify followers',
             help='Notify followers of the document (mass post only)'),

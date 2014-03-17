@@ -11,6 +11,7 @@
                         <field name="composition_mode" invisible="1"/>
                         <field name="model" invisible="1"/>
                         <field name="res_id" invisible="1"/>
+                        <field name="is_log" invisible="1"/>
                         <field name="parent_id" invisible="1"/>
                         <field name="mail_server_id" invisible="1"/>
                         <!-- Various warnings -->
@@ -29,8 +30,8 @@
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
                         <field name="subject" placeholder="Subject..." required="True"/>
                         <!-- recipients -->
-                        <label for="partner_ids" string="Recipients" groups="base.group_user"/>
-                        <div groups="base.group_user">
+                        <label for="partner_ids" string="Recipients"  attrs="{'invisible': [('is_log', '=', True)]}" groups="base.group_user"/>
+                        <div groups="base.group_user" attrs="{'invisible': [('is_log', '=', True)]}">
                             <span attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}">
                                 <strong>Email mass mailing</strong> on
                                 <span attrs="{'invisible': [('use_active_domain', '=', True)]}">the selected records</span>
@@ -48,12 +49,7 @@
                         <field name="notify"
                             attrs="{'invisible':['|', ('composition_mode', '!=', 'mass_post')]}"/>
                         <!-- mass mailing -->
-                        <label for="same_thread"/>
-                            <div>
-                                <field name="same_thread"
-                                    attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
-                                (a copy of the message will be added in the Chatter of each document)
-                            </div>
+                        <field name="same_thread" attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
                         <field name="reply_to" placeholder="Email address to redirect replies..."
                             attrs="{'invisible':['|', ('same_thread', '=', True), ('composition_mode', '!=', 'mass_mail')],
                                     'required':[('same_thread', '!=', True), ('composition_mode', '=', 'mass_mail')]}"/>
