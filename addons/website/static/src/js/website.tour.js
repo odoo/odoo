@@ -309,6 +309,7 @@ website.Tour = openerp.Class.extend({
             } else {
                 self.reset();
                 throw new Error("Time overlaps to arrive to step " + step.stepId + ": '" + step._title + "'"
+                    + '\nhref: ' + window.location.href
                     + '\nelement: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden")))
                     + '\nwaitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size())
                     + '\nwaitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size())
