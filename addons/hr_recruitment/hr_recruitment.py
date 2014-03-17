@@ -401,9 +401,9 @@ class hr_applicant(osv.Model):
             ids = [ids]
         res = True
 
-        # user_id change: update date_start
+        # user_id change: update date_open
         if vals.get('user_id'):
-            vals['date_start'] = fields.datetime.now()
+            vals['date_open'] = fields.datetime.now()
         # stage_id: track last stage before update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
