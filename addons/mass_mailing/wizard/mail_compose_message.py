@@ -31,10 +31,7 @@ class MailComposeMessage(osv.TransientModel):
         'mass_mailing_campaign_id': fields.many2one(
             'mail.mass_mailing.campaign', 'Mass mailing campaign',
         ),
-        'mass_mailing_id': fields.many2one(
-            'mail.mass_mailing', 'Mass mailing',
-            domain="[('mass_mailing_campaign_id', '=', mass_mailing_campaign_id)]",
-        ),
+        'mass_mailing_name': fields.char('Mass Mailing'),
     }
 
     def get_mail_values(self, cr, uid, wizard, res_ids, context=None):
@@ -42,19 +39,25 @@ class MailComposeMessage(osv.TransientModel):
         mail.mail.statistics values in the o2m of mail_mail, when doing pure
         email mass mailing. """
         res = super(MailComposeMessage, self).get_mail_values(cr, uid, wizard, res_ids, context=context)
-        if wizard.composition_mode == 'mass_mail' and wizard.mass_mailing_campaign_id:  # TODO: which kind of mass mailing ?
-            if wizard.mass_mailing_id:
-                mass_mailing_id = wizard.mass_mailing_id.id
-            else:
-                current_date = fields.datetime.now()
-                mass_mailing_id = self.pool['mail.mass_mailing'].create(
-                    cr, uid, {
-                        'mass_mailing_campaign_id': wizard.mass_mailing_campaign_id.id,
-                        'name': '%s-%s' % (wizard.mass_mailing_campaign_id.name, current_date),
-                        'date': current_date,
-                        'domain': wizard.active_domain,
-                        'template_id': wizard.template_id and wizard.template_id.id or False,
-                    }, context=context)
+        # use only for allowed models in mass mailing
+        if wizard.model not in [t[0] for t in self.pool['mail.mass_mailing']._get_mailing_type()]:
+            return res
+        if wizard.composition_mode == 'mass_mail' and wizard.mass_mailing_name:
+            list_id = self.pool['mail.mass_mailing.list'].create(
+                cr, uid, {
+                    'name': wizard.mass_mailing_name,
+                    'model': wizard.model,
+                    'domain': wizard.active_domain,
+                }, context=context)
+            mass_mailing_id = self.pool['mail.mass_mailing'].create(
+                cr, uid, {
+                    'mass_mailing_campaign_id': wizard.mass_mailing_campaign_id and wizard.mass_mailing_campaign_id.id or False,
+                    'name': wizard.mass_mailing_name,
+                    'template_id': wizard.template_id and wizard.template_id.id or False,
+                    'state': 'done',
+                    'mailing_type': wizard.model,
+                    'contact_list_ids': [(4, list_id)],
+                }, context=context)
             for res_id in res_ids:
                 res[res_id]['statistics_ids'] = [(0, 0, {
                     'model': wizard.model,
