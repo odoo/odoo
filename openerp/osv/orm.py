@@ -5083,7 +5083,7 @@ class BaseModel(object):
             ids = tuple(arg)
         else:
             ids = (arg,) if arg else ()
-        assert all(isinstance(id, IdType) for id in ids)
+        assert all(isinstance(id, IdType) for id in ids), "Browsing invalid ids: %s" % ids
         return self._browse(scope_proxy.current, ids)
 
     @browse.old
@@ -5092,7 +5092,7 @@ class BaseModel(object):
             ids = tuple(arg)
         else:
             ids = (arg,) if arg else ()
-        assert all(isinstance(id, IdType) for id in ids)
+        assert all(isinstance(id, IdType) for id in ids), "Browsing invalid ids: %s" % ids
         return self._browse(scope_proxy(cr, uid, context), ids)
 
     #
