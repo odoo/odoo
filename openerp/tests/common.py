@@ -15,8 +15,9 @@ import time
 import unittest2
 import urllib2
 import xmlrpclib
-
 from datetime import datetime, timedelta
+
+import werkzeug
 
 import openerp
 
@@ -48,10 +49,9 @@ def acquire_test_cursor(session_id):
             cr._test_lock.acquire()
             return cr
 
-def release_test_cursor(session_id):
+def release_test_cursor(cr):
     if openerp.tools.config['test_enable']:
-        cr = HTTP_SESSION.get(session_id)
-        if cr:
+        if hasattr(cr, '_test_lock'):
             cr._test_lock.release()
             return True
     return False
@@ -228,12 +228,12 @@ class HttpCase(TransactionCase):
                 line = str(line)
 
                 # relay everything from console.log, even 'ok' or 'error...' lines
-                _logger.debug("phantomjs: %s", line)
+                _logger.info("phantomjs: %s", line)
 
                 if line == "ok":
                     break
                 if line.startswith("error"):
-                    line_ = self.line[6:]
+                    line_ = line[6:]
                     # when error occurs the execution stack may be sent as as JSON
                     try:
                         line_ = json.loads(line_)
@@ -242,7 +242,7 @@ class HttpCase(TransactionCase):
                     self.fail(line_ or "phantomjs test failed")
 
     def phantom_run(self, cmd, timeout):
-        _logger.debug('phantom_run executing %s', ' '.join(cmd))
+        _logger.info('phantom_run executing %s', ' '.join(cmd))
         try:
             phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         except OSError:
@@ -253,7 +253,7 @@ class HttpCase(TransactionCase):
             # kill phantomjs if phantom.exit() wasn't called in the test
             if phantom.poll() is None:
                 phantom.terminate()
-            _logger.debug("phantom_run execution finished")
+            _logger.info("phantom_run execution finished")
 
     def phantom_jsfile(self, jsfile, timeout=30, **kw):
         options = {

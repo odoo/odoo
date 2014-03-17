@@ -245,7 +245,7 @@ class WebRequest(object):
 
         if self._cr:
             # Dont commit test cursors
-            if not openerp.tests.common.release_test_cursor(self.session_id):
+            if not openerp.tests.common.release_test_cursor(self._cr):
                 if exc_type is None:
                     self._cr.commit()
                 self._cr.close()
@@ -425,7 +425,7 @@ class JsonRequest(WebRequest):
             response['id'] = self.jsonrequest.get('id')
             response["result"] = self._call_function(**self.params)
         except AuthenticationError, e:
-            _logger.exception("Exception during JSON request handling.")
+            _logger.exception("JSON-RPC AuthenticationError in %s.", self.httprequest.path)
             se = serialize_exception(e)
             error = {
                 'code': 100,
@@ -433,7 +433,9 @@ class JsonRequest(WebRequest):
                 'data': se
             }
         except Exception, e:
-            _logger.exception("Exception during JSON request handling.")
+            # Mute test cursor error for runbot
+            if not (openerp.tools.config['test_enable'] and isinstance(e, psycopg2.OperationalError)):
+                _logger.exception("JSON-RPC Exception in %s.", self.httprequest.path)
             se = serialize_exception(e)
             error = {
                 'code': 200,

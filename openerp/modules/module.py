@@ -38,7 +38,6 @@ import openerp.release as release
 from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
-_test_logger = logging.getLogger('openerp.tests')
 
 # addons path as a list
 ad_paths = []
@@ -340,7 +339,8 @@ def get_test_modules(module):
 
 # Use a custom stream object to log the test executions.
 class TestStream(object):
-    def __init__(self):
+    def __init__(self, logger_name='openerp.tests'):
+        self.logger = logging.getLogger(logger_name)
         self.r = re.compile(r'^-*$|^ *... *$|^ok$')
     def flush(self):
         pass
@@ -352,7 +352,7 @@ class TestStream(object):
             if not first:
                 c = '` ' + c
             first = False
-            _test_logger.info(c)
+            self.logger.info(c)
 
 current_test = None
 
@@ -369,9 +369,9 @@ def run_unit_tests(module_name, dbname):
     for m in mods:
         tests = unwrap_suite(unittest2.TestLoader().loadTestsFromModule(m))
         suite = unittest2.TestSuite(itertools.ifilter(runs_at_install, tests))
-        _logger.info('module %s: running test %s.', module_name, m.__name__)
+        _logger.info('running %s tests.', m.__name__)
 
-        result = unittest2.TextTestRunner(verbosity=2, stream=TestStream()).run(suite)
+        result = unittest2.TextTestRunner(verbosity=2, stream=TestStream(m.__name__)).run(suite)
 
         if not result.wasSuccessful():
             r = False
