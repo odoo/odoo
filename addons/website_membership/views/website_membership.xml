@@ -34,7 +34,7 @@
                     <li t-att-class="'' if membership else 'active'"><a href="/members">All</a></li>
                     <t t-foreach="memberships" t-as="membership_id">
                         <li t-att-class="membership and membership_id.id == membership.id and 'active' or ''">
-                            <a t-attf-href="/members/association/#{ membership_id.id }/#{current_country and 'country/%s' % slug(current_country) or ''}#{ search }"><t t-esc="membership_id.name"/></a>
+                            <a t-attf-href="/members/association/#{ membership_id.id }#{current_country and '/country/%s' % slug(current_country) or ''}#{ search }"><t t-esc="membership_id.name"/></a>
                         </li>
                     </t>
                 </ul>
@@ -87,7 +87,7 @@
             <li class="nav-header"><h3>Location</h3></li>
             <t t-foreach="countries">
                 <li t-if="country_id" t-att-class="country_id[0] == current_country_id and 'active' or ''">
-                    <a t-attf-href="/members/#{ membership and 'association/%s' % membership.id or '' }#{ country_id[0] and 'country/%s' % slug(country_id) or '' }#{ search }"><t t-esc="country_id[1]"/>
+                    <a t-attf-href="/members#{ membership and '/association/%s' % membership.id or '' }#{ country_id[0] and '/country/%s' % slug(country_id) or '' }#{ search }"><t t-esc="country_id[1]"/>
                         <span class="badge pull-right"><t t-esc="country_id_count or '0'"/></span>
                     </a>
                 </li>
