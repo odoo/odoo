@@ -106,10 +106,6 @@ class MassMailingList(osv.Model):
             _model_list, type='char', required=True,
             string='Applies To'
         ),
-        # 'model_id': fields.many2one(
-        #     'ir.model', string='Related Model',
-        #     domain="[('model', '=', model')]",
-        # ),
         'filter_id': fields.many2one(
             'ir.filters', string='Custom Filter',
             # domain="[('model_id', '=', model_id)]",
