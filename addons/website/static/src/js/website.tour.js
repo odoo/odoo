@@ -3,8 +3,21 @@
 
 var website = openerp.website;
 
+// don't need template to use bootstrap Tour in automatic mode
 if (typeof QWeb2 !== "undefined")
 website.add_template_file('/website/static/src/xml/website.tour.xml');
+
+// don't need to use bootstrap Tour to launch an automatic tour
+function bootstrap_tour_stub () {
+    if (typeof Tour === "undefined") {
+        window.Tour = function Tour() {};
+        Tour.prototype.addSteps = function () {};
+        Tour.prototype.end = function () {};
+        Tour.prototype.goto = function () {};
+    }
+}
+
+
 
 if (website.EditorBar)
 website.EditorBar.include({
@@ -175,6 +188,9 @@ website.Tour = openerp.Class.extend({
     },
 
     registerTour: function () {
+        if (this.automatic) {
+            bootstrap_tour_stub();
+        }
         this.tour = new Tour({
             name: this.id,
             storage: this.tourStorage,
