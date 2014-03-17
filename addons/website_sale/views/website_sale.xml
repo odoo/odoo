@@ -62,12 +62,12 @@
     <div class="ribbon btn btn-danger">Sale</div>
   </div>
   <div class="oe_product_image">
-      <a itemprop="url" t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('search', 'filters', category=(category and int(category)), page=(pager['page']['num'] if pager['page']['num']>1 else None)) }}">
+      <a itemprop="url" t-attf-href="/shop/product/{{ slug(product) }}?{{ keep_query('search', 'filters', category=(category and int(category)), page=(pager['page']['num'] if pager['page']['num']>1 else None)) }}">
           <img itemprop="image" class="img img-responsive" t-attf-src="/website/image/product.template/#{product.id}/image#{'' if product_image_big else '?max_width=300&amp;max_height=300'}"/>
       </a>
   </div>
   <section>
-      <h5><strong><a itemprop="name" t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('search', 'filters', category=(category and int(category)), page=(pager['page']['num'] if pager['page']['num']>1 else None)) }}" t-field="product.name"/></strong></h5>
+      <h5><strong><a itemprop="name" t-attf-href="/shop/product/{{ slug(product) }}?{{ keep_query('search', 'filters', category=(category and int(category)), page=(pager['page']['num'] if pager['page']['num']>1 else None)) }}" t-field="product.name"/></strong></h5>
       <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
           <b>
               <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
@@ -281,7 +281,7 @@
             <div class="col-sm-4">
                 <ol class="breadcrumb">
                     <li><a t-attf-href="/shop?{{ keep_query('search', 'filters', 'page') if not category else keep_query('search', 'filters') }}">Products</a></li>
-                    <li t-if="category"><a t-attf-href="/shop/category/{{ slug(category) }}/?{{ keep_query('search', 'filters', 'page') }}" t-field="category.name"/></li>
+                    <li t-if="category"><a t-attf-href="/shop/category/{{ slug(category) }}?{{ keep_query('search', 'filters', 'page') }}" t-field="category.name"/></li>
                     <li class="active"><span t-field="product.name"/></li>
                 </ol>
             </div>
@@ -589,7 +589,7 @@
 
 <template id="products_attributes" inherit_id="website_sale.products" inherit_option_id="website_sale.products" name="Product attribute's Filters" groups="product.group_product_attributes">
   <xpath expr="//div[@id='products_grid_before']" position="inside">
-      <form t-attf-action="/shop/filters/?{{ keep_query('search', category=(category and int(category))) }}" class="attributes" method="post">
+      <form t-attf-action="/shop/filters?{{ keep_query('search', category=(category and int(category))) }}" class="attributes" method="post">
           <ul class="nav nav-pills nav-stacked mt16">
               <t t-set="attribute_ids" t-value="Ecommerce.get_attribute_ids()"/>
               <t t-foreach="attribute_ids" t-as="attribute_id">
