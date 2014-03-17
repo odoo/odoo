@@ -98,6 +98,7 @@ class email_template(osv.osv):
         """
         if context is None:
             context = {}
+        res_ids = filter(None, res_ids)         # to avoid browsing [None] below
         results = dict.fromkeys(res_ids, u"")
 
         # try to load the template
