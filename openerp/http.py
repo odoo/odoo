@@ -135,6 +135,10 @@ class WebRequest(object):
         self._cr_cm = None
         self._cr = None
         self.func_request_type = None
+
+        # prevents transaction commit, use when you catch an exception during handling
+        self._failed = None
+
         # set db/uid trackers - they're cleaned up at the WSGI
         # dispatching phase in openerp.service.wsgi_server.application
         if self.db:
@@ -178,8 +182,11 @@ class WebRequest(object):
     def __exit__(self, exc_type, exc_value, traceback):
         _request_stack.pop()
         if self._cr:
-            if exc_type is None:
+            if exc_type is None and not self._failed:
                 self._cr.commit()
+            else:
+                # just to be explicit - happens at close() anyway
+                self._cr.rollback()
             self._cr.close()
         # just to be sure no one tries to re-use the request
         self.disable_db = True
@@ -350,6 +357,7 @@ class JsonRequest(WebRequest):
                 'message': "OpenERP Session Invalid",
                 'data': se
             }
+            self._failed = e # prevent tx commit
         except Exception, e:
             _logger.exception("Exception during JSON request handling.")
             se = serialize_exception(e)
@@ -358,6 +366,7 @@ class JsonRequest(WebRequest):
                 'message': "OpenERP Server Error",
                 'data': se
             }
+            self._failed = e # prevent tx commit
         if error:
             response["error"] = error
 
