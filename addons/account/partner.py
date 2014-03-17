@@ -162,11 +162,18 @@ class res_partner(osv.osv):
     def _debit_search(self, cr, uid, obj, name, args, context=None):
         return self._asset_difference_search(cr, uid, obj, name, 'payable', args, context=context)
 
-    def _invoice_count(self, cr, uid, ids, field_name, arg, context=None):
-        return {partner.id: len(partner.invoice_ids) for partner in self.browse(cr, uid, ids, context)}
-
-    def _journal_item_count(self, cr, uid, ids, field_name, arg, context=None):
-        return {partner.id: len(partner.journal_items_ids) for partner in self.browse(cr, uid, ids, context)}
+    def _invoice_journal_item_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,{'invoice_count': 0, 'journal_item_count': 0}), ids))
+        # the user may not have access rights 
+        try:
+            for partner in self.browse(cr, uid, ids, context):
+                res[partner.id] = {
+                    'invoice_count': len(partner.invoice_ids),
+                    'journam_item_count': len(partner.journal_item_ids),
+                }
+        except:
+            pass
+        return res
 
     def has_something_to_reconcile(self, cr, uid, partner_id, context=None):
         '''
@@ -196,9 +203,9 @@ class res_partner(osv.osv):
             fnct_search=_credit_search, string='Total Receivable', multi='dc', help="Total amount this customer owes you."),
         'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, string='Total Payable', multi='dc', help="Total amount you have to pay to this supplier."),
         'debit_limit': fields.float('Payable Limit'),
-        'invoice_count': fields.function(_invoice_count, string="Invoices", type='html'),
+        'invoice_count': fields.function(_invoice_journal_item_count, string="Invoices", type='html', multi="invoice_journal"),
         'journal_items_ids': fields.one2many('account.move.line', 'partner_id', 'Journal Items'),
-        'journal_item_count': fields.function(_journal_item_count, string="Journal Items", type="integer"),
+        'journal_item_count': fields.function(_invoice_journal_item_count, string="Journal Items", type="integer", multi="invoice_journal"),
         'property_account_payable': fields.property(
             type='many2one',
             relation='account.account',
