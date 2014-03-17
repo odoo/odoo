@@ -204,15 +204,14 @@ class mail_compose_message(osv.TransientModel):
             partner_ids += [partner.id for partner in message_data.partner_ids]
             if context.get('is_private') and message_data.author_id:  # check message is private then add author also in partner list.
                 partner_ids += [message_data.author_id.id]
+            # create subject
+            re_prefix = _('Re:')
+            if not (subject.startswith('Re:') or subject.startswith(re_prefix)):
+                subject = "%s %s" % (re_prefix, subject)
         elif model and res_id:
             doc_name_get = self.pool[model].name_get(cr, uid, [res_id], context=context)
             record_name = doc_name_get and doc_name_get[0][1] or ''
             subject = tools.ustr(record_name)
-
-        # create subject
-        re_prefix = _('Re:')
-        if not (subject.startswith('Re:') or subject.startswith(re_prefix)):
-            subject = "%s %s" % (re_prefix, subject)
 
         return {
             'record_name': record_name,
