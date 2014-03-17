@@ -365,6 +365,8 @@ class NewId(object):
     def __nonzero__(self):
         return False
 
+IdType = (int, long, basestring, NewId)
+
 
 # special columns automatically created by the ORM
 MAGIC_COLUMNS = ['id', 'create_uid', 'create_date', 'write_uid', 'write_date']
@@ -3990,6 +3992,11 @@ class BaseModel(object):
 
             record_id = tocreate[table].pop('id', None)
 
+            if isinstance(record_id, dict):
+                # Shit happens: this possibly comes from a new record
+                tocreate[table] = dict(record_id, **tocreate[table])
+                record_id = None
+
             # When linking/creating parent records, force context without 'no_store_function' key that
             # defers stored functions computing, as these won't be computed in batch at the end of create().
             parent_context = dict(context)
@@ -5076,6 +5083,7 @@ class BaseModel(object):
             ids = tuple(arg)
         else:
             ids = (arg,) if arg else ()
+        assert all(isinstance(id, IdType) for id in ids)
         return self._browse(scope_proxy.current, ids)
 
     @browse.old
@@ -5084,6 +5092,7 @@ class BaseModel(object):
             ids = tuple(arg)
         else:
             ids = (arg,) if arg else ()
+        assert all(isinstance(id, IdType) for id in ids)
         return self._browse(scope_proxy(cr, uid, context), ids)
 
     #
