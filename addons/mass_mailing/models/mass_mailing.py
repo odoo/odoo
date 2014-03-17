@@ -82,10 +82,7 @@ class MassMailingList(osv.Model):
         return results
 
     def _get_model_list(self, cr, uid, context=None):
-        return [
-            ('res.partner', 'Customers'),
-            ('mail.mass_mailing.contact', 'Mailing Contacts')
-        ]
+        return self.pool['mail.mass_mailing']._get_mailing_model(cr, uid, context=context)
 
     # indirections for inheritance
     _model_list = lambda self, *args, **kwargs: self._get_model_list(*args, **kwargs)
@@ -361,7 +358,7 @@ class MassMailing(osv.Model):
             results[mid]['delivered'] = results[mid]['sent'] - results[mid]['bounced']
         return results
 
-    def _get_mailing_type(self, cr, uid, context=None):
+    def _get_mailing_model(self, cr, uid, context=None):
         return [
             ('res.partner', 'Customers'),
             ('mail.mass_mailing.contact', 'Contacts')
@@ -371,7 +368,7 @@ class MassMailing(osv.Model):
         return [('draft', 'Schedule'), ('test', 'Tested'), ('done', 'Sent')]
 
     # indirections for inheritance
-    _mailing_type = lambda self, *args, **kwargs: self._get_mailing_type(*args, **kwargs)
+    _mailing_model = lambda self, *args, **kwargs: self._get_mailing_model(*args, **kwargs)
     _state = lambda self, *args, **kwargs: self._get_state_list(*args, **kwargs)
 
     _columns = {
@@ -402,11 +399,11 @@ class MassMailing(osv.Model):
         'email_from': fields.char('From'),
         'email_to': fields.char('Send to Emails'),
         'reply_to': fields.char('Reply To'),
-        'mailing_type': fields.selection(_mailing_type, string='Type', required=True),
+        'mailing_model': fields.selection(_mailing_model, string='Type', required=True),
         'contact_list_ids': fields.many2many(
             'mail.mass_mailing.list', 'mail_mass_mailing_list_rel',
             string='Mailing Lists',
-            domain="[('model', '=', mailing_type)]",
+            domain="[('model', '=', mailing_model)]",
         ),
         'contact_nbr': fields.integer('Contact Number'),
         # statistics data
@@ -455,7 +452,7 @@ class MassMailing(osv.Model):
         'state': 'draft',
         'date': fields.datetime.now,
         'email_from': lambda self, cr, uid, ctx=None: self.pool['mail.message']._get_default_from(cr, uid, context=ctx),
-        'mailing_type': 'res.partner',
+        'mailing_model': 'res.partner',
     }
 
     #------------------------------------------------------
@@ -491,7 +488,7 @@ class MassMailing(osv.Model):
     # Views & Actions
     #------------------------------------------------------
 
-    def on_change_mailing_type(self, cr, uid, ids, mailing_type, context=None):
+    def on_change_mailing_model(self, cr, uid, ids, mailing_model, context=None):
         return {'value': {'contact_list_ids': []}}
 
     def on_change_template_id(self, cr, uid, ids, template_id, context=None):
@@ -509,19 +506,41 @@ class MassMailing(osv.Model):
             values['body_html'] = False
         return {'value': values}
 
+    def select_customers(self, cr, uid, ids, context=None):
+        wizard = self.browse(cr, uid, ids[0], context=context)
+        aid = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_partner_to_mailing_list')
+        ctx = dict(context, view_manager_highlight=[aid])
+        return {
+            'name': _('Choose Recipients'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': wizard.mailing_model,
+            'context': ctx,
+        }
+
+    #------------------------------------------------------
+    # Email Sending
+    #------------------------------------------------------
+
+    def send_get_recipients(self, cr, uid, ids, context=None):
+        recipients = dict.fromkeys(ids, list())
+        for mailing in self.browse(cr, uid, ids, context=context):
+            list_ids = [contact_list.id for contact_list in mailing.contact_list_ids]
+            # contact-based list: aggregate all contacts
+            if mailing.mailing_model == 'mail.mass_mailing.list':
+                res_ids = [contact.id for contact in contact_list.contact_ids for contact_list in mailing.contact_list_ids]
+            else:
+                domain = self.pool['mail.mass_mailing.list'].compute_domain(cr, uid, list_ids, context=context)
+                res_ids = self.pool[contact_list.model].search(cr, uid, domain, context=context)
+            recipients[mailing.id] = res_ids
+        return recipients
+
     def send_mail(self, cr, uid, ids, context=None):
         Mail = self.pool['mail.mail']
+        recipients = self.send_get_recipients(cr, uid, ids, context=context)
         for mailing in self.browse(cr, uid, ids, context=context):
-            contact_list_ids = [contact_list.id for contact_list in mailing.contact_list_ids]
-
-            # contact-based list: aggregate all contacts
-            if mailing.mailing_type == 'mail.mass_mailing.list':
-                res_ids = [contact.id for contact in contact_list.contact_ids for contact_list in mailing.contact_list_ids]
-            elif mailing.mailing_type == 'res.partner':
-                domain = self.pool['mail.mass_mailing.list'].compute_domain(cr, uid, contact_list_ids, context=context)
-                print domain
-                res_ids = self.pool[contact_list.model].search(cr, uid, domain, context=context)
-
+            res_ids = recipients.get(mailing.id, list())
             all_mail_values = self.pool['mail.compose.message'].generate_email_for_composer_batch(
                 cr, uid, mailing.template_id.id, res_ids,
                 context=context,
@@ -535,7 +554,7 @@ class MassMailing(osv.Model):
                     'body_html': mail_values.get('body'),
                     'auto_delete': True,
                     'statistics_ids': [(0, 0, {
-                        'model': mailing.mailing_type,
+                        'model': mailing.mailing_model,
                         'res_id': res_id,
                         'mass_mailing_id': mailing.id,
                     })]
@@ -546,10 +565,10 @@ class MassMailing(osv.Model):
                     'mail.message', 0,
                     context=context)
                 mail_values['attachment_ids'] = m2m_attachment_ids
-                if mailing.mailing_type == 'mail.mass_mailing.list':
+                if mailing.mailing_model == 'mail.mass_mailing.list':
                     contact = self.pool['mail.mass_mailing.contact'].browse(cr, uid, res_id, context=context)
                     mail_values['email_to'] = '"%s" <%s>' % (contact.name, contact.email)
-                elif mailing.mailing_type == 'res.partner':
+                elif mailing.mailing_model == 'res.partner':
                     mail_values['recipient_ids'] = [(4, res_id)]
                 Mail.create(cr, uid, mail_values, context=context)
             # todo: handle email_to
@@ -569,26 +588,6 @@ class MassMailing(osv.Model):
             mail_id = Mail.create(cr, uid, mail_values, context=context)
             Mail.send(cr, uid, [mail_id], context=context)
         return True
-
-    def select_customers(self, cr, uid, ids, context=None):
-        sid = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'base.view_res_partner_filter')
-
-        aid = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_partner_to_mailing_list')
-        print sid, aid
-        ctx = dict(context)
-        ctx['view_manager_highlight'] = [aid]
-        return {
-            'name': _('Choose Customers'),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'res.partner',
-            # 'views': [(False, 'tree'), (False, 'form')],
-            'view_id': False,
-            'search_view_id': sid,
-            # 'target': 'new',
-            'context': ctx,
-        }
 
 
 class MailMailStats(osv.Model):
