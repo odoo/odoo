@@ -103,7 +103,7 @@
                 var page = +$a.attr("href").split(",").pop().split('-')[1];
                 data['page'] = page;
 
-                $.post('/website/kanban/', data, function (col) {
+                $.post('/website/kanban', data, function (col) {
                     $col.find("> .thumbnail").remove();
                     $pagination.last().before(col);
                 });

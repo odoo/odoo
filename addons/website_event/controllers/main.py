@@ -33,7 +33,7 @@ from openerp import tools
 import werkzeug.urls
 
 class website_event(http.Controller):
-    @http.route(['/event/', '/event/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/event', '/event/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
     def events(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         event_obj = request.registry['event.event']
@@ -134,7 +134,7 @@ class website_event(http.Controller):
         event_count = event_obj.search(
             request.cr, request.uid, dom_without("none"), count=True,
             context=request.context)
-        pager = request.website.pager(url="/event/", total=event_count, page=page, step=step, scope=5)
+        pager = request.website.pager(url="/event", total=event_count, page=page, step=step, scope=5)
 
         order = 'website_published desc, date_begin'
         if searches.get('date','all') == 'old':
@@ -202,4 +202,4 @@ class website_event(http.Controller):
             'date_end': (date_begin + timedelta(days=(1))).strftime('%Y-%m-%d'),
         }
         event_id = Event.create(request.cr, request.uid, vals, context=context)
-        return request.redirect("/event/%s/?enable_editor=1" % event_id)
+        return request.redirect("/event/%s?enable_editor=1" % event_id)
