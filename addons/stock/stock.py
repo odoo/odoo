@@ -2184,6 +2184,12 @@ class stock_inventory(osv.osv):
             res_filter.append(('pack', _('A Pack')))
         return res_filter
 
+    def _get_total_qty(self, cr, uid, ids, field_name, args, context=None):
+        res = {}
+        for inv in self.browse(cr, uid, ids, context=context):
+            res[inv.id] = sum([x.product_qty for x in inv.line_ids])
+        return res
+
     _columns = {
         'name': fields.char('Inventory Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Name."),
         'date': fields.datetime('Inventory Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Create Date."),
@@ -2199,6 +2205,7 @@ class stock_inventory(osv.osv):
         'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number', readonly=True, states={'draft': [('readonly', False)]}, help="Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial Number."),
         'move_ids_exist': fields.function(_get_move_ids_exist, type='boolean', string=' Stock Move Exists?', help='technical field for attrs in view'),
         'filter': fields.selection(_get_available_filters, 'Selection Filter'),
+        'total_qty': fields.function(_get_total_qty, type="float"),
     }
 
     def _default_stock_location(self, cr, uid, context=None):

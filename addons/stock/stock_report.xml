@@ -10,11 +10,16 @@
             name="stock.report_picking" 
             file="stock.report_picking" 
         />
+        <report 
+            string="Inventory" 
+            id="action_report_inventory" 
+            model="stock.inventory" 
+            report_type="qweb-pdf"
+            name="stock.report_inventory" 
+            file="stock.report_inventory" 
+        />
         <report auto="False" id="report_product_history" model="product.product" name="stock.product.history" string="Stock Level Forecast"/>
         <report id="report_quant_package_barcode" model="stock.quant.package" name="stock.quant.package.barcode" string="Package BarCode" rml="stock/report/package_barcode.rml"/>
         <report id="report_move_labels" model="stock.move" name="stock.move.label" string="Item Labels" xml="stock/report/lot_move_label.xml" xsl="stock/report/lot_move_label.xsl"/>
-        <report auto="False"  id="report_location_overview" model="stock.location" name="lot.stock.overview" string="Location Inventory Overview" rml="stock/report/lot_overview.rml"/>
-        <report id="report_location_overview_all" model="stock.location" name="lot.stock.overview_all" string="Location Content" rml="stock/report/lot_overview_all.rml"/>
-        <report id="report_stock_inventory_move" model="stock.inventory" name="stock.inventory.move" string="Stock Inventory" rml="stock/report/stock_inventory_move.rml"/>
     </data>
 </openerp>

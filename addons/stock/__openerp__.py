@@ -74,7 +74,6 @@ Dashboard / Reports for Warehouse Management will include:
         'stock_data.yml',
         'wizard/stock_move_view.xml',
         'wizard/stock_change_product_qty_view.xml',
-        'wizard/stock_location_product_view.xml',
         'wizard/stock_return_picking_view.xml',
         'wizard/make_procurement_view.xml',
         'wizard/mrp_procurement_view.xml',
@@ -89,6 +88,7 @@ Dashboard / Reports for Warehouse Management will include:
         'board_warehouse_view.xml',
         'res_config_view.xml',
         'views/report_stockpicking.xml',
+        'views/report_stockinventory.xml',
     ],
     'test': [
         'test/inventory.yml',

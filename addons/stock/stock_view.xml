@@ -1361,29 +1361,6 @@
 
         <menuitem action="action_incoterms_tree" id="menu_action_incoterm_open" parent="menu_warehouse_config" sequence="1"/>
 
-        <act_window
-            context="{'location': active_id}"
-            domain="[('type','&lt;&gt;','service')]"
-            id="act_product_location_open"
-            name="Products"
-            res_model="product.product"
-            src_model="stock.location"/>
-
-        <record id="ir_act_product_location_open" model="ir.values">
-            <field name="key2">tree_but_open</field>
-            <field name="model">stock.location</field>
-            <field name="name">Products</field>
-            <field eval="'ir.actions.act_window,%d'%act_product_location_open" name="value"/>
-        </record>
-
-
-        <record id="ir_act_product_location_open" model="ir.values">
-            <field name="key2">tree_but_open</field>
-            <field name="model">stock.location</field>
-            <field name="name">Open Products</field>
-            <field eval="'ir.actions.act_window,%d'%action_view_stock_location_product" name="value"/>
-        </record>
-
 
          <record id="view_pickingtype_filter" model="ir.ui.view">
             <field name="name">stock.picking.type.filter</field>
