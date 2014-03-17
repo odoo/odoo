@@ -197,7 +197,7 @@ class stock_quant(osv.osv):
                     'quantity': qty,
                     'product_uom_id': move.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
-                    'date': time.strftime('%Y-%m-%d'),
+                    'date': move.date,
                     'partner_id': partner_id,
                     'debit': valuation_amount > 0 and valuation_amount or 0,
                     'credit': valuation_amount < 0 and -valuation_amount or 0,
@@ -209,7 +209,7 @@ class stock_quant(osv.osv):
                     'quantity': qty,
                     'product_uom_id': move.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
-                    'date': time.strftime('%Y-%m-%d'),
+                    'date': move.date,
                     'partner_id': partner_id,
                     'credit': valuation_amount > 0 and valuation_amount or 0,
                     'debit': valuation_amount < 0 and -valuation_amount or 0,
@@ -232,6 +232,8 @@ class stock_quant(osv.osv):
             move_lines = self._prepare_account_move_line(cr, uid, move, quant_cost_qty[cost], cost, credit_account_id, debit_account_id, context=context)
             return move_obj.create(cr, uid, {'journal_id': journal_id,
                                       'line_id': move_lines,
+                                      'perdiod_id': self.pool.get('account.period').find(cr, uid, move.date, context=context)[0],
+                                      'date': move.date,
                                       'ref': move.picking_id and move.picking_id.name}, context=context)
 
     #def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
