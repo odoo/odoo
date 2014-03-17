@@ -38,13 +38,13 @@ professional emails and reuse templates in a few clicks.
         'web_kanban_sparkline',
     ],
     'data': [
-        'mail_data.xml',
-        'mass_mailing_data.xml',
+        'data/mail_data.xml',
+        'data/mass_mailing_data.xml',
         'wizard/mail_compose_message_view.xml',
         'wizard/mail_mass_mailing_create_segment.xml',
-        'mass_mailing_view.xml',
-        'res_config_view.xml',
-        'email_template.xml',
+        'views/mass_mailing.xml',
+        'views/res_config.xml',
+        'views/email_template.xml',
         'security/ir.model.access.csv',
     ],
     'js': [
@@ -56,7 +56,7 @@ professional emails and reuse templates in a few clicks.
         'static/src/css/email_template.css'
     ],
     'demo': [
-        'mass_mailing_demo.xml',
+        'data/mass_mailing_demo.xml',
     ],
     'installable': True,
     'auto_install': False,
