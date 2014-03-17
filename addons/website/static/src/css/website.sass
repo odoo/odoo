@@ -69,9 +69,9 @@ header
             max-height: 50px
 
 // add {WORD JOINER} (equivalent to deprecated ZERO WIDTH NO-BREAK SPACE) at
-// the beginning of paragraphs (and divs) so they don't "disappear" after
-// saving when used solely for spacing.
-div:before, p:before
+// the beginning of paragraphs so they don't "disappear" after saving when
+// used solely for spacing.
+#wrapwrap p:empty:after
     content: '\2060'
 
 /* ----- Snippets Styles ----- */
