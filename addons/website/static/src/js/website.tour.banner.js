@@ -107,7 +107,7 @@
                 {
                     waitNot:   '.modal',
                     element:   '#content-menu-button',
-                    placement: 'bottom',
+                    placement: 'left',
                     title:     _t("Add new pages and menus"),
                     content:   _t("The 'Content' menu allows you to add pages or add the top menu."),
                     popover:   { next: _t("Close Tutorial") },
