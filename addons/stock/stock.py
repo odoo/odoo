@@ -780,24 +780,11 @@ class stock_picking(osv.osv):
         default['date_done'] = False
         return super(stock_picking, self).copy(cr, uid, id, default, context)
 
-    def do_print_delivery(self, cr, uid, ids, context=None):
-        '''This function prints the delivery order'''
-        assert len(ids) == 1, 'This option should only be used for a single id at a time'
-        datas = {
-            'model': 'stock.picking',
-            'ids': ids,
-        }
-        return self.get_action(cr, uid, ids, context=context)
-    #{'type': 'ir.actions.report.xml', 'report_name': 'stock.picking.list', 'datas': datas, 'nodestroy': True}
 
     def do_print_picking(self, cr, uid, ids, context=None):
         '''This function prints the picking list'''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
-        datas = {
-            'model': 'stock.picking',
-            'ids': ids,
-        }
-        return {'type': 'ir.actions.report.xml', 'report_name': 'stock.picking.list.internal', 'datas': datas, 'nodestroy': True}
+        return self.pool.get("report").get_action(cr, uid, [], 'stock.report_picking', context=context)
 
     def action_confirm(self, cr, uid, ids, context=None):
         todo = []

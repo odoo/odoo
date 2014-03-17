@@ -541,18 +541,10 @@ function openerp_picking_widgets(instance){
             var self = this;
             new instance.web.Model('stock.picking.type').call('read', [[self.picking_type_id], ['code'], new instance.web.CompoundContext()])
                 .then(function(pick_type){
-                    if (pick_type[0]['code'] == 'outgoing'){
-                        new instance.web.Model('stock.picking').call('do_print_delivery',[[self.picking.id]])
+                    new instance.web.Model('stock.picking').call('do_print_picking',[[self.picking.id]])
                            .then(function(action){
                                 return self.do_action(action);
                            });
-                    }
-                    else {
-                        new instance.web.Model('stock.picking').call('do_print_picking',[[self.picking.id]])
-                           .then(function(action){
-                                return self.do_action(action);
-                           });
-                    }
                 });
         },
         picking_next: function(){
