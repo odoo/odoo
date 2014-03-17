@@ -2359,6 +2359,8 @@ class stock_inventory(osv.osv):
         inventory_line_obj = self.pool.get('stock.inventory.line')
         for inventory in self.browse(cr, uid, ids, context=context):
             #check inventory start date is allowed
+            if inventory.date > time.strftime(DEFAULT_SERVER_DATETIME_FORMAT):
+                raise osv.except_osv(_('Error!'), _('It\'s impossible to confirm an inventory in the future. Please change the inventory date to proceed further.'))
             conflicting_move_ids = self.check_inventory_date(cr, uid, inventory, context=context)
             error_message = ""
             for move in self.pool.get('stock.move').browse(cr, uid, conflicting_move_ids, context=context):
