@@ -1916,8 +1916,8 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     template: 'WidgetButton',
     init: function(field_manager, node) {
         node.attrs.type = node.attrs['data-button-type'];
-        this.is_stat_button = node.attrs.class ? _.include(node.attrs.class.split(' '), 'oe_stat_button') : false;
-        this.icon = "<span class=\"fa " + node.attrs.icon + "\"></span>";
+        this.is_stat_button = /\boe_stat_button\b/.test(node.attrs['class']);
+        this.icon = node.attrs.icon && "<span class=\"fa " + node.attrs.icon + "\"></span>";
         this._super(field_manager, node);
         this.force_disabled = false;
         this.string = (this.node.attrs.string || '').replace(/_/g, '');
@@ -2845,16 +2845,12 @@ instance.web.form.FieldPercentPie = instance.web.form.AbstractField.extend({
                 .datum([{'x': 'value', 'y': value}, {'x': 'complement', 'y': 100 - value}])
                 .transition()
                 .call(chart)
-                .attr('width', size)
-                .attr('height',size);
+                .attr({width:size, height:size});
 
             d3.select(svg)
                 .append("text")
-                .attr("x", size/2)
-                .attr("y", size/2 + 3)
-                .style("font-size", "10px")
-                .style("font-weight", "bold")
-                .attr("text-anchor", "middle")  
+                .attr({x: size/2, y: size/2 + 3, 'text-anchor': 'middle'})
+                .style({"font-size": "10px", "font-weight": "bold"})
                 .text(formatted_value);
 
             return chart;
@@ -5923,7 +5919,7 @@ instance.web.form.StatInfo = instance.web.form.AbstractField.extend({
     },
     render_value: function() {
         var text = _.str.sprintf("%d %s", this.get("value") || 0, this.string);
-        this.$().html(QWeb.render("StatInfo", {text: text}));
+        this.$el.html(QWeb.render("StatInfo", {text: text}));
     },
 
 });
