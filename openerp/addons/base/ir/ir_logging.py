@@ -33,6 +33,7 @@ class ir_logging(osv.Model):
 
     _columns = {
         'create_date': fields.datetime('Create Date', readonly=True),
+        'create_uid': fields.integer('Uid', readonly=True),  # Integer not m2o is intentionnal
         'name': fields.char('Name', required=True),
         'type': fields.selection(EXCEPTIONS_TYPE, string='Type', required=True, select=True),
         'dbname': fields.char('Database Name'),
