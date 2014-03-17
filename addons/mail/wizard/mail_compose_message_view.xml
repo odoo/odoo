@@ -39,7 +39,7 @@
                                 <br />
                                 <span>The following contacts will be mailed: </span>
                             </span>
-                            <field name="recipients_data" class="oe_inline oe_compose_recipients" readonly="1"/>
+                            <field name="recipients_data" class="oe_inline oe_compose_recipients" readonly="1" attrs="{'invisible':[('recipients_data', '=', False)]}"/>
                             <span attrs="{'invisible':['|', ('composition_mode', '!=', 'comment'), ('recipients_data', '=', False)]}">and</span>
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
                                 context="{'force_email':True, 'show_email':True}"
