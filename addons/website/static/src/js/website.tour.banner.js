@@ -35,7 +35,7 @@
                     element:   'button[data-action=snippet]',
                     placement: 'bottom',
                     title:     _t("Insert building blocks"),
-                    content:   _t("To add content in a page, you can insert building blocks."),
+                    content:   _t("Click here to insert blocks of centent in the page."),
                     popover:   { fixed: true },
                 },
                 {
