@@ -1021,7 +1021,7 @@
             if (resize_values.w) this.$overlay.find(".oe_handle.w").removeClass("readonly");
             if (resize_values.size) this.$overlay.find(".oe_handle.size").removeClass("readonly");
 
-            this.$overlay.find(".oe_handle:not(:has(.oe_handle_button)), .oe_handle .oe_handle_button").on('mousedown', function (event){
+            this.$overlay.find(".oe_handle:not(.size), .oe_handle.size .size").on('mousedown', function (event){
                 event.preventDefault();
 
                 var $handle = $(this);
@@ -1122,6 +1122,11 @@
                 };
                 $body.mousemove(body_mousemove);
                 $body.mouseup(body_mouseup);
+            });
+            this.$overlay.find(".oe_handle.size .auto_size").on('click', function (event){
+                self.$target.css("height", "");
+                self.BuildingBlock.cover_target(self.$overlay, self.$target);
+                return false;
             });
         },
         getSize: function () {
@@ -1285,15 +1290,6 @@
             this.grid = this._super();
             this.grid.size = 8;
             return this.grid;
-        },
-        start: function () {
-            var self = this;
-            this._super();
-            this.$el.find(".js_size_auto").on('click', function (event){
-                self.$target.css("height", "");
-                self.BuildingBlock.cover_target(self.$overlay, self.$target);
-                return false;
-            });
         },
     });
 
