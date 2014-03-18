@@ -189,6 +189,7 @@ class website_forum(http.Controller):
         post['users'] = 'True'
 
         values = {
+            'uid': uid,
             'user': user,
             'main_object': user,
             'searches': post,
@@ -429,6 +430,6 @@ class website_forum(http.Controller):
             'city': post.get('city'),
             'country_id':post.get('country'),
             'birthdate':post.get('dob'),
-            'comment': post.get('comment'), 
+            'website_description': post.get('description'), 
         }, context=context)
         return werkzeug.utils.redirect("/forum/%s/user/%s" % (slug(forum),post.get('user_id')))

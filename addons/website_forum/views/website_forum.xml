@@ -560,13 +560,16 @@
                         <div class="col-md-7 mb16">
                             <select class="form-control" name="country">
                                 <option value="">Country...</option>
-                                <t t-foreach="countries or []" t-as="country"><option t-att-value="country.id"><t t-esc="country.name"/></option></t>
+                                <t t-foreach="countries or []" t-as="country">
+                                    <option t-att-value="country.id" t-att-selected="country.id == user.partner_id.country.id"><t t-esc="country.name"/></option>
+                                </t>
                              </select>
                         </div>
-                        <label class="col-md-4 control-label mb16" for="user.partner_id.comment">Biography</label>
+                        <!--Note: using website_description fiels instead of using commnt firld of partner-->
+                        <label class="col-md-4 control-label mb16" for="user.partner_id.website_description">Biography</label>
                         <div class="col-md-7 mb16">
-                            <textarea name="comment" style="min-height: 120px" required="True" value="comment" id="textarea_ckeditor"  class="form-control">
-                                <t t-esc="user.partner_id.website_description"/>
+                            <textarea name="description" style="min-height: 120px" required="True" class="form-control">
+                                <span t-esc="user.partner_id.website_description"/>
                             </textarea>
                         </div>
                         <div class="col-sm-offset-4 col-md-4 mb16">
@@ -579,7 +582,7 @@
         <template id="user_detail_full">
             <t t-call="website_forum.header">
                 <h1 class="mt0 page-header">
-                    <span t-field="user.name" />
+                    <span t-field="user.name"/>
                     <small>profile</small>
                 </h1>
                 <div class="row">
@@ -609,9 +612,8 @@
                             <td>location</td>
                             <td>
                                 <span t-field="user.city"/>
-                                <t t-if="user.country_id">, 
-                                    <span t-field="user.country_id"/>
-                                </t>
+                                <span t-if="user.city and user.country_id">, </span>
+                                <span t-field="user.country_id"/>
                             </td>
                         </tr>
                         <tr>
@@ -631,7 +633,9 @@
                         </table>
                         <div class="well well-sm">
                             <span t-field="user.partner_id.website_description"/>
-                            <a class="fa fa-arrow-right"  t-attf-href="/forum/#{ slug(forum) }/edit/profile/#{ user.id }"> Edit Your Bio</a>
+                            <t t-if="uid == user.id">
+                                <a class="fa fa-arrow-right"  t-attf-href="/forum/#{ slug(forum) }/edit/profile/#{ user.id }"> Edit Your Bio</a>
+                            </t>
                         </div>
                     </div>
                 </div>

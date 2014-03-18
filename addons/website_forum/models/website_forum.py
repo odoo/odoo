@@ -223,7 +223,7 @@ class Users(osv.Model):
     }
     _defaults = {
         'forum': False,
-        'karma': 0
+        'karma': 1,
     }
 
 class PostHistory(osv.Model):
