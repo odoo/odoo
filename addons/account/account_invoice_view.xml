@@ -168,7 +168,7 @@
                               on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                               domain="[('supplier', '=', True)]"/>
-                            <field name="fiscal_position" widget="selection"/>
+                            <field name="fiscal_position" options="{'no_create': True}"/>
                             <field name="origin"/>
                             <field name="supplier_invoice_number"/>
                             <label for="reference_type"/>
@@ -183,7 +183,7 @@
                             <field domain="[('company_id', '=', company_id), ('type', '=', 'payable')]"
                                 name="account_id" groups="account.group_account_user"/>
                             <field name="journal_id" groups="account.group_account_user"
-                                on_change="onchange_journal_id(journal_id, context)" widget="selection"/>
+                                on_change="onchange_journal_id(journal_id, context)" options="{'no_create': True}"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="check_total" groups="account.group_supplier_inv_check_total"/>
                         </group>
@@ -253,7 +253,7 @@
                                     <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)"/>
                                     <field name="user_id" string="Responsible" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}"/>
                                     <field name="name" invisible="1"/>
-                                    <field name="payment_term" widget="selection"/>
+                                    <field name="payment_term" options="{'no_create': True}"/>
                                 </group>
                                 <group>
                                     <field name="move_id" groups="account.group_account_user"/>
@@ -324,12 +324,12 @@
                                 context="{'search_default_customer':1, 'show_address': 1}"
                                 options='{"always_reload": True}'
                                 domain="[('customer', '=', True)]"/>
-                            <field name="fiscal_position" widget="selection" />
+                            <field name="fiscal_position" options="{'no_create': True}" />
                         </group>
                         <group>
                             <field name="date_invoice"/>
                             <field name="journal_id" groups="account.group_account_user"
-                                on_change="onchange_journal_id(journal_id, context)" widget="selection"/>
+                                on_change="onchange_journal_id(journal_id, context)" options="{'no_create': True}"/>
                             <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]"
                                 name="account_id" groups="account.group_account_user"/>
 

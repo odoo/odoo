@@ -8,7 +8,7 @@ import random
 
 from openerp import http
 from openerp.http import request
-from openerp.addons.web.controllers.main import manifest_list, module_boot, html_template
+from openerp.addons.web.controllers.main import manifest_list, module_boot, html_template, login_redirect
 
 _logger = logging.getLogger(__name__)
 
@@ -59,7 +59,7 @@ class PosController(http.Controller):
     def a(self, debug=False, **k):
 
         if not request.session.uid:
-            return http.local_redirect('/web/login?redirect=/pos/web')
+            return login_redirect()
 
         js_list = manifest_list('js',db=request.db, debug=debug)
         css_list =   manifest_list('css',db=request.db, debug=debug)

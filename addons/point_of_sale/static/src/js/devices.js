@@ -672,7 +672,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // returns true if the ean is a valid EAN codebar number by checking the control digit.
         // ean must be a string
         check_ean: function(ean){
-            return this.ean_checksum(ean) === Number(ean[ean.length-1]);
+            return /^\d+$/.test(ean) && this.ean_checksum(ean) === Number(ean[ean.length-1]);
         },
         // returns a valid zero padded ean13 from an ean prefix. the ean prefix must be a string.
         sanitize_ean:function(ean){
@@ -757,8 +757,13 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         scan: function(code){
             if(code.length < 3){
                 return;
-            }else if(code.length === 13 && /^\d+$/.test(code)){
+            }else if(code.length === 13 && this.check_ean(code)){
                 var parse_result = this.parse_ean(code);
+            }else if(code.length === 12 && this.check_ean('0'+code)){
+                // many barcode scanners strip the leading zero of ean13 barcodes.
+                // This is because ean-13 are UCP-A with an additional zero at the beginning,
+                // so by stripping zeros you get retrocompatibility with UCP-A systems.
+                var parse_result = this.parse_ean('0'+code);
             }else if(this.pos.db.get_product_by_reference(code)){
                 var parse_result = {
                     encoding: 'reference',
@@ -767,12 +772,16 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                     prefix: '',
                 };
             }else{
+                var parse_result = {
+                    encoding: 'error',
+                    type: 'error',
+                    code: code,
+                    prefix: '',
+                };
                 return;
             }
 
-            if (parse_result.type === 'error') {    //most likely a checksum error, raise warning
-                console.warn('WARNING: barcode checksum error:',parse_result);
-            }else if(parse_result.type in {'unit':'', 'weight':'', 'price':''}){    //ean is associated to a product
+            if(parse_result.type in {'unit':'', 'weight':'', 'price':''}){    //ean is associated to a product
                 if(this.action_callback['product']){
                     this.action_callback['product'](parse_result);
                 }

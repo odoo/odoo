@@ -102,6 +102,10 @@ header a.navbar-brand img {
   max-height: 50px;
 }
 
+#wrapwrap p:empty:after {
+  content: "\2060";
+}
+
 /* ----- Snippets Styles ----- */
 .readable {
   font-size: 120%;
@@ -116,9 +120,10 @@ header a.navbar-brand img {
 }
 
 /* ----- BOOTSTRAP FIX ----- */
-.container .container {
+.container .container, .readable .container {
   padding-left: 0;
   padding-right: 0;
+  width: auto;
 }
 
 /* ----- BOOTSTRAP HACK FOR HEADER NAV BAR ----- */
@@ -216,7 +221,6 @@ footer {
 /* -- Hack for removing double scrollbar from mobile preview -- */
 div#mobile-preview.modal {
   overflow: hidden;
-  overflow-y: hidden;
 }
 
 ul.nav-stacked > li > a {
@@ -280,12 +284,16 @@ ul.nav-stacked > li > a {
   background-size: 100%;
 }
 
-[data-snippet-id], .colmd, .hr, .blockquote {
+section, .carousel, .parallax, .row, .hr, .blockquote {
+  min-height: 30px;
+}
+
+.carousel, .parallax, .blockquote {
   overflow: hidden;
 }
 
 @media (max-width: 400px) {
-  [data-snippet-id]:not([data-snippet-id="carousel"]) {
+  section, .parallax, .row, .hr, .blockquote {
     height: auto !important;
   }
 }
@@ -380,30 +388,23 @@ ul.nav-stacked > li > a {
 }
 
 /* Parallax Theme */
-div.carousel[data-snippet-id="slider"] .carousel-indicators li {
+div.carousel .carousel-indicators li {
   border: 1px solid grey;
 }
-div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
+div.carousel .carousel-indicators .active {
   background-color: grey;
 }
 
 .parallax {
-  position: relative;
   background-size: cover;
-  display: table;
-  width: 100%;
-  min-height: 100px;
-}
-.parallax.oe_small {
-  min-height: 200px;
-}
-.parallax.oe_medium {
-  min-height: 300px;
-}
-.parallax.oe_big {
-  min-height: 450px;
 }
 .parallax > div {
+  position: relative;
+  display: table;
+  width: 100%;
+  min-height: 200px;
+}
+.parallax > div > div {
   display: table-cell;
   vertical-align: middle;
   padding: 32px 0;

@@ -39,7 +39,7 @@ class sale_order(osv.Model):
             if this.state not in ('draft', 'cancel') and not this.invoiced:
                 result[this.id] = payment_acquirer.render_payment_block(
                     cr, uid, this.name, this.amount_total, this.pricelist_id.currency_id.id,
-                    partner_id=this.partner_id.id, context=context)
+                    partner_id=this.partner_id.id, company_id=this.company_id.id, context=context)
         return result
 
     def action_quotation_send(self, cr, uid, ids, context=None):
@@ -90,7 +90,7 @@ class account_invoice(osv.Model):
             if this.type == 'out_invoice' and this.state not in ('draft', 'done') and not this.reconciled:
                 result[this.id] = payment_acquirer.render_payment_block(
                     cr, uid, this.number, this.residual, this.currency_id.id,
-                    partner_id=this.partner_id.id, context=context)
+                    partner_id=this.partner_id.id, company_id=this.company_id.id, context=context)
         return result
 
     def action_invoice_sent(self, cr, uid, ids, context=None):

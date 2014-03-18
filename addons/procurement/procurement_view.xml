@@ -222,7 +222,7 @@
                                 <field name="product_id" on_change="onchange_product_id(product_id)"/>
                             </group>
                             <group>
-                                <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" groups="stock.group_locations"/>
+                                <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" options="{'no_create': True}" groups="stock.group_locations"/>
                                 <field name="product_uom" groups="product.group_uom"/>
                                 <field name="location_id" groups="stock.group_locations"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
