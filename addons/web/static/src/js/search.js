@@ -355,7 +355,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             }
         },
         'autocompleteopen': function () {
-            this.$el.autocomplete('widget').css('z-index', 1004);
+            this.$el.autocomplete('widget').css('z-index', 9999);
         },
     },
     /**
