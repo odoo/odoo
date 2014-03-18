@@ -1011,9 +1011,9 @@
 <t t-name="DropdownSelection">
     <span class="btn-group">
         <t t-foreach="states" t-as="rec">
-            <a t-att-class="'btn btn-xs '+ rec.state_class" t-if="widget.get('value') === rec.name"  t-att-title="rec.state_name" >
-                <t t-raw="rec.state_name"/>
-                <a t-att-class="'oe_legend btn btn-xs dropdown-toggle '+rec.state_class" data-toggle="dropdown">
+            <a t-att-class="'btn btn-default btn-xs'" t-if="widget.get('value') === rec.name" t-att-title="rec.state_name" >
+                <t t-raw="rec.state_icon"/>
+                <a t-att-class="'oe_legend btn btn-default btn-xs dropdown-toggle'" data-toggle="dropdown">
                 <span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span> </a>
             </a>
@@ -1021,7 +1021,10 @@
         <ul class="dropdown-menu state" role="menu">
             <t t-foreach="states" t-as="rec">
                 <t t-if="widget.get('value') !== rec.name">
-                    <li class="oe_legend" t-att-data-value="rec.name" ><a href="#"><t t-raw="rec.state_name" /></a></li>
+                    <li class="oe_legend" t-att-data-value="rec.name" ><a href="#">
+                        <t t-raw="rec.state_icon" />
+                        <t t-raw="rec.state_name" /></a>
+                    </li>
                 </t>
             </t>
         </ul>

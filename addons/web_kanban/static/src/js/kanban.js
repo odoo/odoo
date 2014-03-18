@@ -1319,9 +1319,9 @@ instance.web_kanban.DropdownSelection = instance.web_kanban.AbstractField.extend
         this.parent = parent;
     },
     prepare_dropdown_selection: function() {
-        return [{ 'name': 'normal', 'state_name': ' In Progress', 'state_class': 'btn-default' },
-                { 'name': 'blocked', 'state_name': ' Blocked', 'state_class': 'btn-danger' },
-                { 'name': 'done', 'state_name': ' Ready', 'state_class': 'btn-success' }]
+        return [{ 'name': 'normal', 'state_name': ' In Progress', 'state_icon': '<img src="/web/static/src/img/icons/gtk-normal.png"/>' },
+                { 'name': 'blocked', 'state_name': ' Blocked', 'state_icon': '<img src="/web/static/src/img/icons/gtk-no.png"/>' },
+                { 'name': 'done', 'state_name': ' Ready', 'state_icon': '<img src="/web/static/src/img/icons/gtk-yes.png"/>' }]
     },
     renderElement: function() {
         var self = this;
