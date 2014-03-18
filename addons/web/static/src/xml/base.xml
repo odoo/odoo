@@ -599,10 +599,16 @@
     <div class="oe_sidebar">
         <t t-foreach="widget.sections" t-as="section">
             <div class="oe_form_dropdown_section">
-                <button class="oe_dropdown_toggle oe_dropdown_arrow">
+                <button class="oe_dropdown_toggle oe_dropdown_arrow" t-if="section.name != 'buttons'">
                     <t t-if="section.name == 'files'" t-raw="widget.items[section.name].length || ''"/>
                     <t t-esc="section.label"/>
                 </button>
+                <t t-if="section.name == 'buttons'" t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
+                    <button t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url"
+                        target="_blank" class="oe_sidebar_button oe_highlight">
+                        <t t-raw="item.label"/>
+                    </button>
+                </t>
                 <ul class="oe_dropdown_menu">
                     <li t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
                         <t t-if="section.name == 'files'">

@@ -1117,10 +1117,12 @@ instance.web.Sidebar = instance.web.Widget.extend({
         this._super(parent);
         var view = this.getParent();
         this.sections = [
+            { 'name': 'buttons', 'label': _t('Button'), },
             { 'name' : 'print', 'label' : _t('Print'), },
             { 'name' : 'other', 'label' : _t('More'), }
         ];
         this.items = {
+            'buttons': [],
             'print' : [],
             'other' : []
         };
@@ -1132,22 +1134,24 @@ instance.web.Sidebar = instance.web.Widget.extend({
         });
     },
     start: function() {
-        var self = this;
         this._super(this);
         this.redraw();
-        this.$el.on('click','.oe_dropdown_menu li a', function(event) {
-            var section = $(this).data('section');
-            var index = $(this).data('index');
-            var item = self.items[section][index];
-            if (item.callback) {
-                item.callback.apply(self, [item]);
-            } else if (item.action) {
-                self.on_item_action_clicked(item);
-            } else if (item.url) {
-                return true;
-            }
-            event.preventDefault();
-        });
+        this.$el.on('click', 'button.oe_sidebar_button', this.on_item_click);
+        this.$el.on('click','.oe_dropdown_menu li a', this.on_item_click);
+    },
+    on_item_click: function (event) {
+        var self = this;
+        var section = $(event.currentTarget).data('section');
+        var index = $(event.currentTarget).data('index');
+        var item = self.items[section][index];
+        if (item.callback) {
+            item.callback.apply(self, [item]);
+        } else if (item.action) {
+            self.on_item_action_clicked(item);
+        } else if (item.url) {
+            return true;
+        }
+        event.preventDefault();
     },
     redraw: function() {
         var self = this;
@@ -1197,17 +1201,26 @@ instance.web.Sidebar = instance.web.Widget.extend({
     },
     add_toolbar: function(toolbar) {
         var self = this;
+        var context = self.getParent().dataset.context; // not sure this is the correct way to find the context
+        var highlighted_act_ids = context['view_manager_highlight'] || [];
         _.each(['print','action','relate'], function(type) {
             var items = toolbar[type];
             if (items) {
                 for (var i = 0; i < items.length; i++) {
+                    var section_code = 'other';
+                    if (highlighted_act_ids && _.indexOf(highlighted_act_ids, items[i]['id']) != -1) {
+                        section_code = 'buttons';
+                    }
+                    else if (type == 'print') {
+                        section_code = 'print';
+                    }
                     items[i] = {
                         label: items[i]['name'],
                         action: items[i],
                         classname: 'oe_sidebar_' + type
                     };
+                    self.add_items(section_code, [items[i]]);
                 }
-                self.add_items(type=='print' ? 'print' : 'other', items);
             }
         });
     },
