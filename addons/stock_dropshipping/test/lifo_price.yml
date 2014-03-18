@@ -74,12 +74,6 @@
 - 
   !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_lifo2}
 -
-  The behavior of fifo/lifo is not garantee if the quants are created at the same second, so i just wait one second
--
-  !python {model: stock.picking}: |
-    import time
-    time.sleep(1)
-- 
   Process the reception of purchase order 2
 - 
   !python {model: stock.picking}: |

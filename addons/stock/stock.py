@@ -571,11 +571,11 @@ class stock_quant(osv.osv):
         return res
 
     def _quants_get_fifo(self, cr, uid, location, product, quantity, domain=[], context=None):
-        order = 'in_date'
+        order = 'in_date, id'
         return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
 
     def _quants_get_lifo(self, cr, uid, location, product, quantity, domain=[], context=None):
-        order = 'in_date desc'
+        order = 'in_date desc, id desc'
         return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
 
     def _location_owner(self, cr, uid, quant, location, context=None):
