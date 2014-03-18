@@ -161,6 +161,9 @@ class website_forum(http.Controller):
 
         question_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('create_uid', '=', user.id), ('parent_id', '=', False)], context=context)
         user_questions = Post.browse(cr, uid, question_ids, context=context)
+        
+        post_votes = Vote.search(cr, uid, [('user_id', '=', uid)], context=context)
+        vote_ids = Vote.browse(cr, uid, post_votes, context=context)
 
         #showing questions in which user answered
         obj_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('create_uid', '=', user.id), ('parent_id', '!=', False)], context=context)
@@ -196,7 +199,8 @@ class website_forum(http.Controller):
             'up_votes': up_votes,
             'down_votes': down_votes,
             'activities': activities,
-            'posts': posts
+            'posts': posts,
+            'vote_post':vote_ids,
         }
         return request.website.render("website_forum.user_detail_full", values)
 

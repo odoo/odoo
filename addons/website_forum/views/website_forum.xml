@@ -649,6 +649,9 @@
                     <li>
                         <a href="#followed_question" data-toggle="tab">Followed Question</a>
                     </li>
+                    <li>
+                        <a href="#votes" data-toggle="tab">Votes</a>
+                    </li>
                 </ul>
                 <div class="tab-content mt16">
                     <div class="tab-pane active" id="questions">
@@ -668,6 +671,9 @@
                     </div>
                     <div class="tab-pane" id="followed_question">
                         <h1>Followed Questions</h1>
+                    </div>
+                    <div class="tab-pane" id="votes">
+                        <t t-call="website_forum.user_votes" />
                     </div>
                     <div class="tab-pane" id="activity">
                         <ul class="list-unstyled">
@@ -707,5 +713,18 @@
             </div>
         </template>
 
+        <template id="user_votes">
+            <div t-foreach="vote_post" t-as="vote">
+                <t t-esc="vote.post_id.create_date"/>
+                <span t-if="vote.vote == '1'" class="fa fa-thumbs-up text-success" style="margin-left:30px"/>
+                <span t-if="vote.vote == '-1'" class="fa fa-thumbs-down text-warning" style="margin-left:30px"/>
+                <t t-if="vote.post_id.parent_id">
+                    <a t-attf-href="/forum/#{ slug(forum) }/question/#{ vote.post_id.parent_id.id }/#answer-#{ vote.post_id.id }" t-esc="vote.post_id.parent_id.name" style="margin-left:10px"/>
+                </t>
+                <t t-if="not vote.post_id.parent_id">
+                    <a t-attf-href="/forum/#{ slug(forum) }/question/#{ vote.post_id.id }" style=" color:black;margin-left:10px" t-esc="vote.post_id.name"/>
+                </t>
+            </div>
+        </template>
     </data>
 </openerp>
