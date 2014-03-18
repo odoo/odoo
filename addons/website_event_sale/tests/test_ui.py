@@ -5,6 +5,7 @@ inject = [
     "./../../../website_event_sale/static/src/js/website.tour.event_sale.js",
 ]
 
+@openerp.tests.common.at_install(False)
 @openerp.tests.common.post_install(True)
 class TestUi(openerp.tests.HttpCase):
     def test_admin(self):
