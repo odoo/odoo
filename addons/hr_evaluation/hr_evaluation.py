@@ -19,13 +19,14 @@
 #
 ##############################################################################
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from dateutil import parser
 import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DF
 
 
 class hr_evaluation_plan(osv.Model):
@@ -115,9 +116,7 @@ class hr_employee(osv.Model):
             first_date = (now + relativedelta(months=emp.evaluation_plan_id.month_first)).strftime('%Y-%m-%d')
             self.write(cr, uid, [emp.id], {'evaluation_date': first_date}, context=context)
 
-        emp_ids = self.search(cr, uid, [
-            ('evaluation_plan_id', '<>', False), ('evaluation_date', '<=', time.strftime("%Y-%m-%d")),
-            ], context=context)
+        emp_ids = self.search(cr, uid, [('evaluation_plan_id', '<>', False), ('evaluation_date', '<=', time.strftime("%Y-%m-%d"))], context=context)
         for emp in self.browse(cr, uid, emp_ids, context=context):
             next_date = (now + relativedelta(months=emp.evaluation_plan_id.month_next)).strftime('%Y-%m-%d')
             self.write(cr, uid, [emp.id], {'evaluation_date': next_date}, context=context)
@@ -130,7 +129,6 @@ class hr_evaluation(osv.Model):
     _name = "hr_evaluation.evaluation"
     _inherit = "mail.thread"
     _description = "Employee Appraisal"
-    _rec_name = 'employee_id'
     _columns = {
         'date': fields.date("Appraisal Deadline", required=True, select=True),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
@@ -155,7 +153,7 @@ class hr_evaluation(osv.Model):
         'date_close': fields.date('Ending Date', select=True),
     }
     _defaults = {
-        'date': lambda *a: (parser.parse(datetime.now().strftime('%Y-%m-%d')) + relativedelta(months =+ 1)).strftime('%Y-%m-%d'),
+        'date': lambda *a: (parser.parse(datetime.now().strftime('%Y-%m-%d')) + relativedelta(months=+1)).strftime('%Y-%m-%d'),
         'state': lambda *a: 'draft',
     }
 
@@ -166,7 +164,8 @@ class hr_evaluation(osv.Model):
         res = []
         for record in reads:
             name = record.plan_id.name
-            res.append((record['id'], name))
+            employee = record.employee_id.name_related
+            res.append((record['id'], name + ' / ' + employee))
         return res
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
@@ -198,10 +197,9 @@ class hr_evaluation(osv.Model):
 
                     int_id = hr_eval_inter_obj.create(cr, uid, {
                         'evaluation_id': evaluation.id,
-                        'survey_id': phase.survey_id.id,
-                        'deadline': (parser.parse(datetime.now().strftime('%Y-%m-%d')) + relativedelta(months =+ 1)).strftime('%Y-%m-%d'),
+                        'phase_id': phase.id,
+                        'deadline': (parser.parse(datetime.now().strftime('%Y-%m-%d')) + relativedelta(months=+1)).strftime('%Y-%m-%d'),
                         'user_id': child.user_id.id,
-                        'user_to_review_id': evaluation.employee_id.id
                     }, context=context)
                     if phase.wait:
                         wait = True
@@ -230,7 +228,7 @@ class hr_evaluation(osv.Model):
             if evaluation.employee_id and evaluation.employee_id.parent_id and evaluation.employee_id.parent_id.user_id:
                 self.message_subscribe_users(cr, uid, [evaluation.id], user_ids=[evaluation.employee_id.parent_id.user_id.id], context=context)
             if len(evaluation.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', evaluation.id), ('state', 'in', ['done', 'cancel'])], context=context)):
-                raise osv.except_osv(_('Warning!'), _("You cannot change state, because some appraisal(s) are in waiting answer or draft state."))
+                raise osv.except_osv(_('Warning!'), _("You cannot change state, because some appraisal forms have not been completed."))
         return True
 
     def button_done(self, cr, uid, ids, context=None):
@@ -265,8 +263,8 @@ class hr_evaluation(osv.Model):
         if 'date' in vals:
             new_vals = {'deadline': vals.get('date')}
             obj_hr_eval_iterview = self.pool.get('hr.evaluation.interview')
-            for evalutation in self.browse(cr, uid, ids, context=context):
-                for survey_req in evalutation.survey_request_ids:
+            for evaluation in self.browse(cr, uid, ids, context=context):
+                for survey_req in evaluation.survey_request_ids:
                     obj_hr_eval_iterview.write(cr, uid, [survey_req.id], new_vals, context=context)
         return super(hr_evaluation, self).write(cr, uid, ids, vals, context=context)
 
@@ -274,25 +272,43 @@ class hr_evaluation(osv.Model):
 class hr_evaluation_interview(osv.Model):
     _name = 'hr.evaluation.interview'
     _inherit = 'mail.thread'
-    _rec_name = 'request_id'
+    _rec_name = 'user_to_review_id'
     _description = 'Appraisal Interview'
     _columns = {
-        'request_id': fields.many2one('survey.user_input', 'Survey Request', ondelete='cascade', required=True),
-        'user_to_review_id': fields.many2one('hr.employee', 'Employee to Interview'),
-        'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Appraisal Form'),
-        'user_id': fields.many2one('res.users', 'Interviewer'),
+        'request_id': fields.many2one('survey.user_input', 'Survey Request', ondelete='restrict', readonly=True),
+        'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Appraisal Plan', required=True),
+        'phase_id': fields.many2one('hr_evaluation.plan.phase', 'Appraisal Phase', required=True),
+        'user_to_review_id': fields.related('evaluation_id', 'employee_id', type="many2one", relation="hr.employee", string="Employee to evaluate"),
+        'user_id': fields.many2one('res.users', 'Interviewer', required=True),
         'state': fields.selection([('draft', "Draft"),
                                    ('waiting_answer', "In progress"),
                                    ('done', "Done"),
                                    ('cancel', "Cancelled")],
                                   string="State", required=True),
         # fields from request_id
-        'survey_id': fields.related('request_id', 'survey_id', string="Appraisal Form", type="many2one", relation="survey.survey"),
-        'deadline': fields.related('request_id', 'deadline', string="Deadline"),
+        'survey_id': fields.related('phase_id', 'survey_id', string="Appraisal Form", type="many2one", relation="survey.survey"),
+        'deadline': fields.related('request_id', 'deadline', type="datetime", string="Deadline"),
     }
     _defaults = {
         'state': 'draft'
     }
+
+    def create(self, cr, uid, vals, context=None):
+        phase_obj = self.pool.get('hr_evaluation.plan.phase')
+        survey_id = phase_obj.read(cr, uid, vals.get('phase_id'), fields=['survey_id'], context=context)['survey_id'][0]
+        user_obj = self.pool.get('res.users')
+        partner_id = user_obj.read(cr, uid, vals.get('user_id'), fields=['partner_id'], context=context)['partner_id'][0]
+        user_input_obj = self.pool.get('survey.user_input')
+
+        if not vals.get('deadline'):
+            vals['deadline'] = (datetime.now() + timedelta(days=28)).strftime(DF)
+
+        ret = user_input_obj.create(cr, uid, {'survey_id': survey_id,
+                                              'deadline': vals.get('deadline'),
+                                              'type': 'link',
+                                              'partner_id': partner_id}, context=context)
+        vals['request_id'] = ret
+        return super(hr_evaluation_interview, self).create(cr, uid, vals, context=context)
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
@@ -300,7 +316,7 @@ class hr_evaluation_interview(osv.Model):
         reads = self.browse(cr, uid, ids, context=context)
         res = []
         for record in reads:
-            name = record.request_id.survey_id.title
+            name = record.survey_id.title
             res.append((record['id'], name))
         return res
 
@@ -309,13 +325,12 @@ class hr_evaluation_interview(osv.Model):
         return True
 
     def survey_req_done(self, cr, uid, ids, context=None):
-        hr_eval_obj = self.pool.get('hr_evaluation.evaluation')
         for id in self.browse(cr, uid, ids, context=context):
             flag = False
             wating_id = 0
             if not id.evaluation_id.id:
                 raise osv.except_osv(_('Warning!'), _("You cannot start evaluation without Appraisal."))
-            records = hr_eval_obj.browse(cr, uid, [id.evaluation_id.id], context=context)[0].survey_request_ids
+            records = id.evaluation_id.survey_request_ids
             for child in records:
                 if child.state == "draft":
                     wating_id = child.id
@@ -353,6 +368,3 @@ class hr_evaluation_interview(osv.Model):
         context.update({'survey_id': record.survey_id.id, 'response_id': [record.response.id], 'response_no': 0})
         value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
         return value
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:1
