@@ -68,6 +68,12 @@ header
         img
             max-height: 50px
 
+// add {WORD JOINER} (equivalent to deprecated ZERO WIDTH NO-BREAK SPACE) at
+// the beginning of paragraphs so they don't "disappear" after saving when
+// used solely for spacing.
+#wrapwrap p:empty:after
+    content: '\2060'
+
 /* ----- Snippets Styles ----- */
 
 .readable
@@ -78,14 +84,12 @@ header
 
 /* ----- EDITOR ----- */
 
-
 .css_non_editable_mode_hidden
     display: none
 
-
 /* ----- BOOTSTRAP FIX ----- */
 
-.container
+.container, .readable
     .container
         padding-left: 0
         padding-right: 0
@@ -180,7 +184,6 @@ footer
 /* -- Hack for removing double scrollbar from mobile preview -- */
 div#mobile-preview.modal
     overflow: hidden
-    overflow-y: hidden
 
 ul.nav-stacked > li > a
     padding: 2px 15px

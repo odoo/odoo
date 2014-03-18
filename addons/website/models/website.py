@@ -89,7 +89,7 @@ def slug(value):
     else:
         # assume name_search result tuple
         id, name = value
-    slugname = slugify(name)
+    slugname = slugify(name or '')
     if not slugname:
         return str(id)
     return "%s-%d" % (slugname, id)
@@ -580,10 +580,26 @@ class ir_attachment(osv.osv):
             return hashlib.new('sha1', attachment_dict['datas']).hexdigest()
         return None
 
+    def _datas_big(self, cr, uid, ids, name, arg, context=None):
+        result = dict.fromkeys(ids, False)
+        if context and context.get('bin_size'):
+            return result
+
+        for record in self.browse(cr, uid, ids, context=context):
+            if not record.datas: continue
+            try:
+                result[record.id] = openerp.tools.image_resize_image_big(record.datas)
+            except IOError: # apparently the error PIL.Image.open raises
+                pass
+
+        return result
+
     _columns = {
         'datas_checksum': fields.function(_datas_checksum, size=40,
               string="Datas checksum", type='char', store=True, select=True),
-        'website_url': fields.function(_website_url_get, string="Attachment URL", type='char')
+        'website_url': fields.function(_website_url_get, string="Attachment URL", type='char'),
+        'datas_big': fields.function (_datas_big, type='binary', store=True,
+                                      string="Resized file content"),
     }
 
     def create(self, cr, uid, values, context=None):
