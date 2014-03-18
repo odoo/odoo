@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-06 15:56+0000\n"
-"PO-Revision-Date: 2014-03-11 08:04+0000\n"
+"PO-Revision-Date: 2014-03-17 08:03+0000\n"
 "Last-Translator: Andy Cheng <andy@dobtor.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-12 05:26+0000\n"
+"X-Launchpad-Export-Date: 2014-03-18 06:21+0000\n"
 "X-Generator: Launchpad (build 16963)\n"
 
 #. module: stock
@@ -3506,6 +3506,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                點擊開始進行盤點。 \n"
+"              </p><p>\n"
+"                定期盤點是使用在計算每個倉位的可用產品數量。\n"
+"                您可每年執行年度盤點時使用或在您需要調整某 一\n"
+"               產品的庫存水平的時候。\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: view:stock.return.picking:0
@@ -3649,6 +3657,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                點擊新增倉位。\n"
+"              </p><p>\n"
+"                依您的倉庫架構及公司組織定義您的倉位。 OpenERP 能夠管理實\n"
+"                際倉位 (倉庫、貨架、箱等等)、業務夥伴倉位(客戶、供應商。)及\n"
+"                作為庫存作業對應的虛擬庫位，例如生產製造消耗、盤點作業等\n"
+"                等。\n"
+"              </p><p>  \n"
+"                在 OpenERP 中的每一個庫存作業都是將產品從一個倉位移動到另\n"
+"                外一個。舉例來說，假如您由供應商收到產品， OpenERP 會將產\n"
+"                品由供應商倉位移動到庫存倉位。每張報表都能在實際、夥伴或虛\n"
+"                擬倉位完成。\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: field:stock.fill.inventory,recursive:0
@@ -3722,6 +3744,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                點擊以開立收貨單。 \n"
+"              </p><p>\n"
+"                收貨單是您從供應商收到的所有訂單的清單。\n"
+"                收貨單包含了依原始採購訂單收貨的產品列表。\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: view:stock.move:0
@@ -3839,7 +3868,7 @@ msgstr "產品度量單位"
 #. module: stock
 #: view:stock.move:0
 msgid "Put in current pack"
-msgstr ""
+msgstr "放入目前的包裹"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -3870,12 +3899,12 @@ msgstr "批次存貨"
 #: field:stock.report.prodlots,prodlot_id:0
 #: field:stock.return.picking.memory,prodlot_id:0
 msgid "Serial Number"
-msgstr ""
+msgstr "序號"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_picking
 msgid "Partial Picking Processing Wizard"
-msgstr ""
+msgstr "分批提貨處理精靈"
 
 #. module: stock
 #: field:stock.location,icon:0
@@ -3894,7 +3923,7 @@ msgstr "公司間轉移的中途倉位"
 #: field:stock.partial.picking,hide_tracking:0
 #: field:stock.partial.picking.line,tracking:0
 msgid "Tracking"
-msgstr ""
+msgstr "追蹤"
 
 #. module: stock
 #: view:stock.inventory.line.split:0
@@ -3902,7 +3931,7 @@ msgstr ""
 #: view:stock.move.scrap:0
 #: view:stock.split.into:0
 msgid "Ok"
-msgstr ""
+msgstr "確定"
 
 #. module: stock
 #: help:product.category,property_stock_account_output_categ:0
@@ -3920,7 +3949,7 @@ msgstr ""
 #: field:stock.picking.in,message_ids:0
 #: field:stock.picking.out,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "訊息"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_8
@@ -3963,6 +3992,10 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                點擊定義一個新的倉庫。\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -3978,7 +4011,7 @@ msgstr "取消"
 #. module: stock
 #: view:stock.picking:0
 msgid "Confirmed Delivery Orders"
-msgstr ""
+msgstr "確認出貨單"
 
 #. module: stock
 #: view:stock.move:0
@@ -4004,7 +4037,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop0
 msgid "Your Company, Chicago shop"
-msgstr ""
+msgstr "您的公司，芝加哥分店"
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -4014,7 +4047,7 @@ msgstr ""
 #: selection:stock.picking.in,type:0
 #: selection:stock.picking.out,type:0
 msgid "Getting Goods"
-msgstr ""
+msgstr "收貨"
 
 #. module: stock
 #: help:stock.location,chained_location_type:0
@@ -4037,23 +4070,23 @@ msgstr ""
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
 "OpenERP will not automatically generate a back order."
-msgstr ""
+msgstr "通過修改此處的數量，視新的數量為已完成： OpenERP 不會自動建立延期交貨單。"
 
 #. module: stock
 #: view:stock.production.lot.revision:0
 msgid "Serial Number Revisions"
-msgstr ""
+msgstr "序號版本"
 
 #. module: stock
 #: code:addons/stock/stock.py:1134
 #, python-format
 msgid "Error, no partner!"
-msgstr ""
+msgstr "錯誤，沒有業務夥伴！"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Delivery orders already processed"
-msgstr ""
+msgstr "出貨單已處理"
 
 #. module: stock
 #: field:product.template,loc_case:0
@@ -4076,12 +4109,12 @@ msgstr "確認"
 #. module: stock
 #: help:stock.location,icon:0
 msgid "Icon show in  hierarchical tree view"
-msgstr ""
+msgstr "以階層樹狀檢視時顯示圖示"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_merge_inventories
 msgid "Merge inventories"
-msgstr ""
+msgstr "合併實地盤點"
 
 #. module: stock
 #: view:stock.location:0
