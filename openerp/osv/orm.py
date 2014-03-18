@@ -5457,12 +5457,12 @@ class BaseModel(object):
                 this for secondary fields that are not keys of `values`
         """
         scope = scope_proxy.current
-        field_value = values.pop(field_name)
 
         with scope.draft():
             # create a new record with the values, except field_name
             record = self.new(values)
             record_values = dict(record._cache)
+            field_value = record._cache.pop(field_name)
 
             # prefetch all surrounding records: this avoids encountering dirty
             # records later because of the evaluation of related fields, etc.
@@ -5491,9 +5491,6 @@ class BaseModel(object):
             # compute function fields on secondary records (one2many, many2many)
             for field_seq in (tocheck or ()):
                 record.map(field_seq)
-
-            # consider field_name below, in case the value is dirty
-            record_values[field_name] = record[field_name]
 
             # map fields to the corresponding set of subfields to consider
             subfields = defaultdict(set)
