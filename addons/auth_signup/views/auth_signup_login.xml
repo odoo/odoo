@@ -13,15 +13,15 @@
         <template id="auth_signup.fields" name="Auth Signup/ResetPassword form fields">
             <t t-call="web.database_select"/>
 
+            <div class="form-group field-login">
+                <label for="login" class="control-label">Your Email</label>
+                <input type="text" name="login" t-att-value="login" id="login" class="form-control" autofocus="autofocus"
+                    required="required" t-att-readonly="'readonly' if only_passwords else None"/>
+            </div>
+
             <div class="form-group field-name">
                 <label for="name" class="control-label">Your Name</label>
                 <input type="text" name="name" t-att-value="name" id="name" class="form-control" placeholder="e.g. John Doe"
-                    required="required" t-att-autofocus="'autofocus' if not only_passwords else None" t-att-readonly="'readonly' if only_passwords else None"/>
-            </div>
-
-            <div class="form-group field-login">
-                <label for="login" class="control-label">Your Email</label>
-                <input type="text" name="login" t-att-value="login" id="login" class="form-control"
                     required="required" t-att-readonly="'readonly' if only_passwords else None"/>
             </div>
 

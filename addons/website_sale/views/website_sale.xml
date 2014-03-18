@@ -50,27 +50,27 @@
     <div class="input-group">
       <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
       <span class="input-group-btn">
-        <button class="btn btn-default" type="submit"><i class="fa fa-search"/></button>
+        <a class="btn btn-default a-submit"><i class="fa fa-search"/></a>
       </span>
     </div>
   </form>
 </template>
 
-<template id="products_cart" name="Shopping cart">
+<template id="products_cart" name="Product Cell">
   <div itemscope="itemscope" itemtype="http://schema.org/Product">
   <div class="ribbon-wrapper">
     <div class="ribbon btn btn-danger">Sale</div>
   </div>
   <div class="oe_product_image">
       <a itemprop="url" t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('search', 'filters', category=(category and int(category)), page=(pager['page']['num'] if pager['page']['num']>1 else None)) }}">
-          <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image"}'/>
+          <img itemprop="image" class="img img-responsive" t-attf-src="/website/image/product.template/#{product.id}/image#{'' if product_image_big else '?max_width=300&amp;max_height=300'}"/>
       </a>
   </div>
   <section>
       <h5><strong><a itemprop="name" t-attf-href="/shop/product/{{ slug(product) }}/?{{ keep_query('search', 'filters', category=(category and int(category)), page=(pager['page']['num'] if pager['page']['num']>1 else None)) }}" t-field="product.name"/></strong></h5>
       <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
           <b>
-              <t t-if="abs(product.product_variant_ids[0].lst_price - product.product_variant_ids[0].price) &gt; 0.2">
+              <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
                 <del class="text-danger"
                   t-field="product.product_variant_ids[0].lst_price" t-field-options='{
                        "widget": "monetary",
@@ -130,7 +130,7 @@
 
                             <div class="css_options" t-ignore="true" groups="base.group_website_publisher">
                               <div t-attf-class="dropdown js_options" t-att-data-id="product.id">
-                                <a class="btn btn-default" t-att-id="'dopprod-%s' % product.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
+                                <button class="btn btn-default" t-att-id="'dopprod-%s' % product.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></button>
                                 <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % product.id">
                                   <li class='dropdown-submenu'>
                                     <a tabindex="-1" href="#">Size</a>
@@ -187,20 +187,21 @@
                               </div>
                             </div>
 
+                            <t t-set="product_image_big" t-value="td_product['x']+td_product['y'] > 2"/>
                             <t t-call="website_sale.products_cart"/>
                           </div>
 
                       </td>
                       </t>
-                      <td t-if="td_product == None"/>
+                      <td t-if="not td_product"/>
                     </t>
                   </tr>
                 </tbody>
               </table>
               <t t-if="not bins">
                 <div class="text-center text-muted">
-                  <h3 class="css_editable_display">No product defined.</h3>
-                  <t groups="base.group_website_publisher">
+                  <h3>No product found.</h3>
+                  <t groups="base.group_website_publisher" t-ignore="true">
                     <p groups="base.group_sale_manager">Use the <i>'Content'</i> top menu to create a new product.</p>
                   </t>
                 </div>
@@ -220,8 +221,9 @@
 
 <template id="product_description" inherit_option_id="website_sale.products_cart" name="Product Description">
   <xpath expr="//div[@class='product_price']" position="before">
-      <div class="text-info oe_subdescription oe_shadow" t-field="product.description_sale"/>
-      <div itemprop="description" class="text-info oe_subdescription" t-field="product.description_sale"/>
+      <div class="text-info oe_subdescription" contenteditable="false">
+        <div itemprop="description" t-field="product.description_sale"></div>
+      </div>
   </xpath>
 </template>
 
@@ -231,7 +233,7 @@
   <xpath expr="//div[@class='product_price']" position="inside">
       <form action="/shop/add_cart/" method="post" style="display: inline-block;">
           <input name="product_id" t-att-value="product.product_variant_ids[0].id" type="hidden"/>
-          <button type="submit" class="fa fa-shopping-cart"/>
+          <a class="btn btn-default btn-xs fa fa-shopping-cart a-submit"/>
       </form>
   </xpath>
 </template>
@@ -291,6 +293,7 @@
                 <t t-call="website.publish_management">
                   <t t-set="object" t-value="product"/>
                   <t t-set="publish_edit" t-value="True"/>
+                  <t t-set="action" t-value="'product.product_template_action'"/>
                 </t>
             </div>
           </div>
@@ -338,7 +341,7 @@
                             <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
                         </h4>
                     </div>
-                    <button class="btn btn-primary btn-lg mt8">Add to Cart</button>
+                    <a class="btn btn-primary btn-lg mt8 a-submit">Add to Cart</a>
                     <hr t-if="product.description_sale"/>
                     <div><p t-field="product.description_sale" class="text-muted"/></div>
                     <hr/>
@@ -421,11 +424,11 @@
                                 <div>
                                     <div class="oe_msg_attachment" t-foreach='message.attachment_ids' t-as='attachment'>
                                         <a t-att-href="'/mail/download_attachment?model=mail.message&amp;id='+str(message.id)+'&amp;method=download_attachment&amp;attachment_id='+str(attachment.id)" target="_blank">
-                                            <t t-if="attachment.file_type == 'webimage'">
+                                            <t t-if="attachment.file_type_icon == 'webimage'">
                                                 <img t-att-src="'/web/binary/image?model=ir.attachment&amp;field=datas&amp;id=' + str(attachment.id) + '&amp;resize=100,80'"
                                                     class='oe_attachment_embedded'></img>
                                             </t>
-                                            <t t-if="attachment.file_type != 'webimage'">
+                                            <t t-if="attachment.file_type_icon != 'webimage'">
                                                 <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type + '.png'"
                                                     class='oe_attachment_webimage'></img>
                                             </t>
@@ -443,7 +446,7 @@
                         <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
                         <div class="pull-left mb32" style="width: 75%%">
                             <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
-                            <button type="submit" class="btn btn-primary mt8">Post</button>
+                            <a class="btn btn-primary mt8 a-submit">Post</a>
                         </div>
                     </form>
                 </div>
@@ -610,9 +613,9 @@
                       <t t-set="attribute" t-value="Ecommerce.has_search_filter(attribute_id.id)"/>
                       <div style="margin: 0 20px;" class="js_slider"
                         t-att-data-id="attribute_id.id"
-                        t-att-data-value-min="attribute and attribute[1][0] or attribute_id.float_min"
+                        t-att-data-value-min="attribute and attribute[1][0] or attribute_id.float_min or '0'"
                         t-att-data-value-max="attribute and attribute[1][1] or attribute_id.float_max"
-                        t-att-data-min="attribute_id.float_min"
+                        t-att-data-min="attribute_id.float_min or '0'"
                         t-att-data-max="attribute_id.float_max"></div>
                   </li>
                 </t>
@@ -675,7 +678,7 @@
                   <td class="text-center">
                       <form action="/shop/add_cart/" method="post">
                           <input name="product_id" t-att-value="product.product_variant_ids[0].id" type="hidden"/>
-                          <button type="submit" class="btn btn-link"><strong>Add to Cart</strong></button>
+                          <a class="btn btn-link a-submit"><strong>Add to Cart</strong></a>
                       </form>
                   </td>
               </tr>
@@ -694,7 +697,7 @@
           <div class="input-group">
               <input name="promo" class='form-control' type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or ''"/>
               <div class="input-group-btn">
-                  <button class="btn btn-default">Apply</button>
+                  <a class="btn btn-default a-submit">Apply</a>
               </div>
           </div>
       </form>
@@ -786,7 +789,7 @@
                   <div class="form-group col-lg-6" groups="sale.group_delivery_invoice_address">
                       <label>
                           <input type="checkbox" name="shipping_different" t-att-checked="shipping"/>
-                          Ship to a different address
+                          <span>Ship to a different address</span>
                       </label>
                   </div>
               </div>
@@ -833,13 +836,13 @@
                       </select>
                   </div>
               </div>
-              <button type="submit" class="btn btn-default btn-primary pull-right mb32">Confirm <span class="fa fa-long-arrow-right"/></button>
+              <a class="btn btn-default btn-primary pull-right mb32 a-submit">Confirm <span class="fa fa-long-arrow-right"/></a>
           </div>
           <div class="col-lg-offset-1 col-lg-3 col-md-3 text-muted">
               <h3 class="page-header mt16">Your Order <small><a href="/shop/mycart"><span class="fa fa-arrow-right"/> change</a></small></h3>
               <div class="row">
                   <div class="col-sm-6 text-right">Subtotal:</div>
-                  <div class="col-sm-6"><span t-esc="website_sale_order.amount_untaxed" t-field-options='{
+                  <div class="col-sm-6"><span t-field="website_sale_order.amount_untaxed" t-field-options='{
                       "widget": "monetary",
                       "display_currency": "website.pricelist_id.currency_id"
                   }'/></div>
@@ -971,9 +974,9 @@
           <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
             <div class="col-lg-8 col-sm-8">
               <form target="_self" action="/shop/payment/validate/" method="post" class="pull-right">
-                  <button width="100px" class="btn btn-primary" name="submit">
+                  <a style="width:100px;" class="btn btn-primary a-submit">
                     <span>Pay Now <span class="fa fa-long-arrow-right"></span></span>
-                  </button>
+                  </a>
               </form>
             </div>
           </div>

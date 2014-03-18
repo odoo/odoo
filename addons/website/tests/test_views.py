@@ -13,8 +13,8 @@ class TestViewSaving(common.TransactionCase):
     def eq(self, a, b):
         self.assertEqual(a.tag, b.tag)
         self.assertEqual(a.attrib, b.attrib)
-        self.assertEqual(a.text, b.text)
-        self.assertEqual(a.tail, b.tail)
+        self.assertEqual((a.text or '').strip(), (b.text or '').strip())
+        self.assertEqual((a.tail or '').strip(), (b.tail or '').strip())
         for ca, cb in itertools.izip_longest(a, b):
             self.eq(ca, cb)
 

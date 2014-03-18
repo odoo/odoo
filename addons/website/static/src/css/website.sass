@@ -68,6 +68,12 @@ header
         img
             max-height: 50px
 
+// add {WORD JOINER} (equivalent to deprecated ZERO WIDTH NO-BREAK SPACE) at
+// the beginning of paragraphs so they don't "disappear" after saving when
+// used solely for spacing.
+#wrapwrap p:empty:after
+    content: '\2060'
+
 /* ----- Snippets Styles ----- */
 
 .readable
@@ -78,17 +84,16 @@ header
 
 /* ----- EDITOR ----- */
 
-
 .css_non_editable_mode_hidden
     display: none
 
-
 /* ----- BOOTSTRAP FIX ----- */
 
-.container
+.container, .readable
     .container
         padding-left: 0
         padding-right: 0
+        width: auto
 
 /* ----- BOOTSTRAP HACK FOR HEADER NAV BAR ----- */
 
@@ -179,7 +184,6 @@ footer
 /* -- Hack for removing double scrollbar from mobile preview -- */
 div#mobile-preview.modal
     overflow: hidden
-    overflow-y: hidden
 
 ul.nav-stacked > li > a
     padding: 2px 15px
@@ -230,11 +234,13 @@ ul.nav-stacked > li > a
 .oe_img_bg
     background-size: 100%
 
-[data-snippet-id],.colmd,.hr,.blockquote
+section, .carousel, .parallax, .row, .hr, .blockquote
+    min-height: 30px
+.carousel, .parallax, .blockquote
     overflow: hidden
 
 @media (max-width: 400px)
-    [data-snippet-id]:not([data-snippet-id="carousel"])
+    section, .parallax, .row, .hr, .blockquote
         height: auto !important
 
 .carousel-inner
@@ -312,7 +318,7 @@ ul.nav-stacked > li > a
 
 /* Parallax Theme */
 
-div.carousel[data-snippet-id="slider"]
+div.carousel
     .carousel-indicators
         li
             border: 1px solid grey
@@ -320,21 +326,16 @@ div.carousel[data-snippet-id="slider"]
             background-color: grey
 
 .parallax
-    position: relative
     background-size: cover
-    display: table
-    width: 100%
-    min-height: 100px
-    &.oe_small
-        min-height: 200px
-    &.oe_medium
-        min-height: 300px
-    &.oe_big
-        min-height: 450px
     > div
-        display: table-cell
-        vertical-align: middle
-        padding: 32px 0
+        position: relative
+        display: table
+        width: 100%
+        min-height: 200px
+        > div
+            display: table-cell
+            vertical-align: middle
+            padding: 32px 0
 
 /* Background */
 
