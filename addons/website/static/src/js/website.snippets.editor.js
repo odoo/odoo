@@ -419,7 +419,7 @@
                                 $target.data("overlay").remove();
                                 $target.removeData("overlay");
                             }
-                            $target.find("[data-snippet-id]").each(function () {
+                            $target.find(website.snippet.globalSelector).each(function () {
                                 var $snippet = $(this);
                                 $snippet.removeData("snippet-editor");
                                 if ($snippet.data("overlay")) {
@@ -623,7 +623,7 @@
             this.required = this.$el.data("required");
 
             this.set_active();
-            this.$el.find('li[data-class] a').on('mouseover mouseout click', _.bind(this._mouse, this));
+            this.$el.find('li[data-value] a').on('mouseover mouseout click', _.bind(this._mouse, this));
             this.$target.on('snippet-style-reset', _.bind(this.set_active, this));
 
             this.start();
@@ -643,9 +643,9 @@
             var $prev, $next;
             if (event.type === 'mouseout') {
                 $prev = $(event.currentTarget).parent();
-                $next = this.$el.find("li[data-class].active");
+                $next = this.$el.find("li[data-value].active");
             } else {
-                $prev = this.$el.find("li[data-class].active");
+                $prev = this.$el.find("li[data-value].active");
                 $next = $(event.currentTarget).parent();
             }
             if (!$prev.length) {
@@ -676,6 +676,30 @@
         // start is call just after the init
         start: function () {
         },
+        /* onFocus
+        *  This method is called when the user click inside the snippet in the dom
+        */
+        onFocus : function () {
+        },
+
+        /* onFocus
+        *  This method is called when the user click outside the snippet in the dom, after a focus
+        */
+        onBlur : function () {
+        },
+
+        /* on_clone
+        *  This method is called when the snippet is cloned ($clone is allready inserted)
+        */
+        on_clone: function ($clone) {
+        },
+
+        /* on_remove
+        *  This method is called when the snippet is removed (dom is removing after this call)
+        */
+        on_remove: function () {
+        },
+
         /*
         *  drop_and_build_snippet
         *  This method is called just after that a thumbnail is drag and dropped into a drop zone
@@ -685,6 +709,7 @@
         },
         /* select
         *  called when a user select an item
+        *  li must have data-value attribute
         *  variables: np = {$next, $prev}
         *       $next is false if they are no next item selected
         *       $prev is false if they are no previous item selected
@@ -693,10 +718,10 @@
             var self = this;
             // add or remove html class
             if (np.$prev) {
-                this.$target.removeClass(np.$prev.data('class' || ""));
+                this.$target.removeClass(np.$prev.data('value' || ""));
             }
             if (np.$next) {
-                this.$target.addClass(np.$next.data('class') || "");
+                this.$target.addClass(np.$next.data('value') || "");
             }
         },
         /* preview
@@ -710,10 +735,10 @@
 
             // add or remove html class
             if (np.$prev) {
-                this.$target.removeClass(np.$prev.data('class') || "");
+                this.$target.removeClass(np.$prev.data('value') || "");
             }
             if (np.$next) {
-                this.$target.addClass(np.$next.data('class') || "");
+                this.$target.addClass(np.$next.data('value') || "");
             }
         },
         /* set_active
@@ -723,14 +748,14 @@
         set_active: function () {
             var self = this;
             this.$el.find('li').removeClass("active");
-            var $active = this.$el.find('li[data-class]')
+            var $active = this.$el.find('li[data-value]')
                 .filter(function () {
                     var $li = $(this);
-                    return  ($li.data('class') && self.$target.hasClass($li.data('class')));
+                    return  ($li.data('value') && self.$target.hasClass($li.data('value')));
                 })
                 .first()
                 .addClass("active");
-            this.$el.find('li:has(li[data-class].active)').addClass("active");
+            this.$el.find('li:has(li[data-value].active)').addClass("active");
         },
         /* clean_for_save
         *  function called just before save vue
@@ -749,7 +774,7 @@
         start: function () {
             this._super();
             var src = this._get_bg();
-            this.$el.find("li[data-class].active.oe_custom_bg").data("src", src);
+            this.$el.find("li[data-value].active.oe_custom_bg").data("src", src);
         },
         select: function(event, np) {
             var self = this;
@@ -765,7 +790,7 @@
                     });
                     editor.on('cancel', self, function () {
                         if (!np.$prev || np.$prev.data("src") === "") {
-                            self.$target.removeClass(np.$next.data("class"));
+                            self.$target.removeClass(np.$next.data("value"));
                             self.$target.trigger("snippet-style-change", [self, np]);
                         }
                     });
@@ -775,7 +800,7 @@
                 }
             } else {
                 this._set_bg(false);
-                this.$target.removeClass(np.$prev.data("class"));
+                this.$target.removeClass(np.$prev.data("value"));
             }
         },
         preview: function (event, np) {
@@ -788,41 +813,54 @@
             var self = this;
             var bg = self.$target.css("background-image");
             this.$el.find('li').removeClass("active");
-            var $active = this.$el.find('li[data-class]')
+            var $active = this.$el.find('li[data-value]')
                 .filter(function () {
                     var $li = $(this);
                     return  ($li.data('src') && bg.indexOf($li.data('src')) >= 0) ||
-                            (!$li.data('src') && self.$target.hasClass($li.data('class')));
+                            (!$li.data('src') && self.$target.hasClass($li.data('value')));
                 })
                 .first();
             if (!$active.length) {
                 $active = this.$target.css("background-image") !== 'none' ?
-                    this.$el.find('li[data-class].oe_custom_bg') :
-                    this.$el.find('li[data-class=""]');
+                    this.$el.find('li[data-value].oe_custom_bg') :
+                    this.$el.find('li[data-value=""]');
             }
             $active.addClass("active");
-            this.$el.find('li:has(li[data-class].active)').addClass("active");
+            this.$el.find('li:has(li[data-value].active)').addClass("active");
         }
     });
 
     website.snippet.options.slider = website.snippet.Option.extend({
+        unique_id: function () {
+            var id = 0;
+            $(".carousel").each(function () {
+                var cid = 1 + parseInt($(this).attr("id").replace(/[^0123456789]/g, ''),10);
+                if (id < cid) id = cid;
+            });
+            return "myCarousel" + id;
+        },
         drop_and_build_snippet: function() {
-            var id = $(".carousel").length;
-            this.id = "myCarousel" + id;
+            this.id = this.unique_id();
             this.$target.attr("id", this.id);
-            this.$target.find(".carousel-control").attr("href", "#myCarousel" + id);
-            this.$target.find("[data-target]").attr("data-target", "#myCarousel" + id);
+            this.$target.find("[data-slide]").attr("href", "#" + this.id);
+            this.$target.find("[data-slide-to]").attr("data-target", "#" + this.id);
 
             this.rebind_event();
+        },
+        on_clone: function ($clone) {
+            var id = this.unique_id();
+            $clone.attr("id", id);
+            $clone.find("[data-slide]").attr("href", "#" + id);
+            $clone.find("[data-slide-to]").attr("data-target", "#" + id);
         },
         // rebind event to active carousel on edit mode
         rebind_event: function () {
             var self = this;
-            this.$target.find('.carousel-indicators [data-target]').off('click').on('click', function () {
+            this.$target.find('.carousel-indicators [data-slide-to]').off('click').on('click', function () {
                 self.$target.carousel(+$(this).data('slide-to')); });
 
             this.$target.attr('contentEditable', 'false');
-            this.$target.find('.oe_structure, .content>.row').attr('contentEditable', 'true');
+            this.$target.find('.oe_structure, .content>.row, [data-slide]').attr('contentEditable', 'true');
         },
         clean_for_save: function () {
             this._super();
@@ -905,7 +943,7 @@
         },
         load_style_options : function () {
             this._super();
-            $(".snippet-style-size li[data-class='']").remove();
+            $(".snippet-style-size li[data-value='']").remove();
         },
         start : function () {
             var self = this;
@@ -923,11 +961,11 @@
                     $active.css("background-image", self.$target.css("background-image"));
                 }
                 if (np.$prev) {
-                    $active.removeClass(np.$prev.data("class"));
+                    $active.removeClass(np.$prev.data("value"));
                 }
                 if (np.$next) {
-                    $active.addClass(np.$next.data("class"));
-                    add_class(np.$next.data("class"));
+                    $active.addClass(np.$next.data("value"));
+                    add_class(np.$next.data("value"));
                 }
             });
             this.$target.on('slid', function () { // slide.bs.carousel
@@ -949,11 +987,13 @@
             var bg = this.$target.data("snippet-option-ids").background;
             if (!bg) return $clone;
 
-            var $styles = bg.$el.find("li[data-class]:not(.oe_custom_bg)");
+            var $styles = bg.$el.find("li[data-value]:not(.oe_custom_bg)");
             var styles_index = $styles.index($styles.filter(".active")[0]);
+            $styles.removeClass("active");
             var $select = $($styles[styles_index >= $styles.length-1 ? 0 : styles_index+1]);
+            $select.addClass("active");
             $clone.css("background-image", $select.data("src") ? "url('"+ $select.data("src") +"')" : "");
-            $clone.addClass($select.data("class") || "");
+            $clone.addClass($select.data("value") || "");
 
             return $clone;
         },
@@ -1187,25 +1227,22 @@
             this._super();
         },
         hide_remove_button: function() {
-            this.$overlay.find('.oe_snippet_remove').toggleClass("hidden",
-                !this.$target.siblings().length && this.$target.parents("[data-snippet-id]:first").find("[data-snippet-id='colmd']").length > 1);
+            this.$overlay.find('.oe_snippet_remove').toggleClass("hidden", !this.$target.siblings().length);
         },
         onFocus : function () {
             this._super();
             this.hide_remove_button();
         },
-        on_clone: function () {
-            var $clone = this.$target.clone(false);
+        on_clone: function ($clone) {
             var _class = $clone.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, '');
             $clone.attr("class", _class);
-            this.$target.after($clone);
             this.hide_remove_button();
             return false;
         },
         on_remove: function () {
             if (!this.$target.siblings().length) {
-                var $parent = this.$target.parents("[data-snippet-id]:first");
-                if($parent.find("[data-snippet-id='colmd']").length > 1) {
+                var $parent = this.$target.parents(".row:first");
+                if($parent.find("[class*='col-md']").length > 1) {
                     return false;
                 } else {
                     if (!$parent.data("snippet-editor")) {
@@ -1455,7 +1492,7 @@
         get_parent_block: function () {
             var self = this;
             var $button = this.$overlay.find('.oe_snippet_parent');
-            var $parent = this.$target.parents("[data-snippet-id]:first");
+            var $parent = this.$target.parents(website.snippet.globalSelector).first();
             if ($parent.length) {
                 $button.removeClass("hidden");
                 $button.off("click").on('click', function (event) {
@@ -1483,12 +1520,18 @@
         on_clone: function () {
             var $clone = this.$target.clone(false);
             this.$target.after($clone);
+            for (var i in this.styles){
+                this.styles[i].on_clone($clone);
+            }
             return false;
         },
 
         on_remove: function () {
             this.onBlur();
             var index = _.indexOf(this.BuildingBlock.snippets, this.$target.get(0));
+            for (var i in this.styles){
+                this.styles[i].on_remove();
+            }
             delete this.BuildingBlock.snippets[index];
             this.$target.remove();
             this.$overlay.remove();
@@ -1511,12 +1554,18 @@
         */
         onFocus : function () {
             this.$overlay.addClass('oe_active');
+            for (var i in this.styles){
+                this.styles[i].onFocus();
+            }
         },
 
         /* onFocus
         *  This method is called when the user click outside the snippet in the dom, after a focus
         */
         onBlur : function () {
+            for (var i in this.styles){
+                this.styles[i].onBlur();
+            }
             this.$overlay.removeClass('oe_active');
         },
 
