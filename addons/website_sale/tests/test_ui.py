@@ -1,7 +1,9 @@
+import os
+
 import openerp.tests
 
 inject = [
-    "./../../../website_sale/static/src/js/website.tour.sale.js",
+    ("openerp.website.Tour.ShopTest", os.path.join(os.path.dirname(__file__), "../static/src/js/website.tour.sale.js")),
 ]
 
 class TestUi(openerp.tests.HttpCase):
