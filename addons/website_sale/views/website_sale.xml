@@ -200,8 +200,8 @@
               </table>
               <t t-if="not bins">
                 <div class="text-center text-muted">
-                  <h3 class="css_editable_display">No product defined.</h3>
-                  <t groups="base.group_website_publisher">
+                  <h3>No product found.</h3>
+                  <t groups="base.group_website_publisher" t-ignore="true">
                     <p groups="base.group_sale_manager">Use the <i>'Content'</i> top menu to create a new product.</p>
                   </t>
                 </div>
