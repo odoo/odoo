@@ -108,10 +108,14 @@ function openerp_picking_widgets(instance){
             this.$('#js_select').change(function(){
                 var selection = $(this)[0].value
                 if (selection === "ToDo"){
+                    self.getParent().$('.js_pick_pack').removeClass('hidden')
+                    self.getParent().$('.js_drop_down').removeClass('hidden')
                     self.$('.js_pack_op_line.processed').addClass('hidden')
                     self.$('.js_pack_op_line:not(.processed)').removeClass('hidden')
                 }
                 else{
+                    self.getParent().$('.js_pick_pack').addClass('hidden')
+                    self.getParent().$('.js_drop_down').addClass('hidden')
                     self.$('.js_pack_op_line.processed').removeClass('hidden')
                     self.$('.js_pack_op_line:not(.processed)').addClass('hidden')
                 }
@@ -375,6 +379,10 @@ function openerp_picking_widgets(instance){
     module.PickingMainWidget = module.MobileWidget.extend({
         template: 'PickingMainWidget',
         init: function(parent,params){
+            $(window).bind('hashchange', function(){
+                console.log($.bbq.getState());
+                console.log('test');
+            });
             this._super(parent,params);
             var self = this;
 
@@ -682,12 +690,17 @@ function openerp_picking_widgets(instance){
                     }
                 });
         },
+        do_load_state: function(){
+            debugger;
+        },
         picking_next: function(){
             for(var i = 0; i < this.pickings.length; i++){
                 if(this.pickings[i] === this.picking.id){
                     if(i < this.pickings.length -1){
-                        this.refresh_ui(this.pickings[i+1]);
+                        window.location = '/barcode/web/?picking_type_id='+this.picking_type_id+'&picking_id='+this.pickings[i+1];
                         return;
+                        // this.refresh_ui(this.pickings[i+1]);
+                        // return;
                     }
                 }
             }
@@ -696,7 +709,8 @@ function openerp_picking_widgets(instance){
             for(var i = 0; i < this.pickings.length; i++){
                 if(this.pickings[i] === this.picking.id){
                     if(i > 0){
-                        this.refresh_ui(this.pickings[i-1]);
+                        window.location = '/barcode/web/?picking_type_id='+this.picking_type_id+'&picking_id='+this.pickings[i-1];
+                        // this.refresh_ui(this.pickings[i-1]);
                         return;
                     }
                 }
