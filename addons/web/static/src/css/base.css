@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -3431,33 +3431,58 @@ body.oe_single_form .oe_single_form_container {
     overflow: hidden !important;
   }
 }
-.dropdown-menu.state {
+.openerp .dropdown-menu.state {
   background: white;
   background: white !important;
   min-width: 100%;
-  padding-right: 9px !important;
+  padding-right: 10px !important;
 }
-
-.dropdown-menu.state li a, .dropdown-menu.state li a:hover, .dropdown-menu.state li a:focus {
+.openerp .dropdown-menu.state li a, .openerp .dropdown-menu.state li a:hover, .openerp .dropdown-menu.state li a:focus {
   text-decoration: none;
   color: #333333;
   padding-left: 5px;
   padding-right: 0px;
+  font-size: 13px;
 }
-
-.btn.btn-xs.btn-danger {
-  color: white;
-  text-decoration: none !important;
-}
-
-.btn.btn-xs.btn-default {
+.openerp .btn.btn-xs.btn-default {
   color: #333333;
   text-decoration: none !important;
+  float: none;
 }
-
-.btn.btn-xs.btn-success {
-  color: white;
-  text-decoration: none !important;
+.openerp .btn-group:focus, .openerp .btn-group:hover {
+  padding: 1px 5px;
+  border: 1px solid #98999b;
+  display: inline;
+}
+.openerp .status {
+  display: inline-block;
+  position: relative;
+  height: 12px;
+  width: 12px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  -box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  background-position: center center;
+  background-image: radial-gradient(#dddddd 0%, #aaaaaa 40%, #999999 100%);
+  background-image: -moz-radial-gradient(#dddddd 0%, #aaaaaa 40%, #999999 100%);
+  background-image: -webkit-radial-gradient(circle, #dddddd 0%, #aaaaaa 40%, #999999 100%);
+}
+.openerp .status.error {
+  background: #cc3333;
+  background-position: center center;
+  background-image: radial-gradient(#ee7777 0%, #cc3333 40%, #bb0808 100%);
+  background-image: -moz-radial-gradient(#ee7777 0%, #cc3333 40%, #bb0808 100%);
+  background-image: -webkit-radial-gradient(circle, #ee7777 0%, #cc3333 40%, #bb0808 100%);
+}
+.openerp .status.ok {
+  background: #44dd44;
+  background-position: center center;
+  background-image: radial-gradient(#55dd55 0%, #44cc44 40%, #33bb33 100%);
+  background-image: -moz-radial-gradient(#55dd55 0%, #44cc44 40%, #33bb33 100%);
+  background-image: -webkit-radial-gradient(circle, #55dd55 0%, #44cc44 40%, #33bb33 100%);
 }
 
 .ui-icon {
