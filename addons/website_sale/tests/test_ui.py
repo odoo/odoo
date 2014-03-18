@@ -7,6 +7,7 @@ inject = [
     ("openerp.website.Tour.ShopTest", os.path.join(os.path.dirname(__file__), "../static/src/js/website.tour.sale.js")),
 ]
 
+@openerp.tests.common.post_install(True)
 class TestUi(openerp.tests.HttpCase):
     def test_01_admin_shop_tour(self):
         self.phantom_js("/", "openerp.website.Tour.run_test('shop')", "openerp.website.Tour.Shop", login="admin")
