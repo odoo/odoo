@@ -361,14 +361,14 @@
 
 <template id="country_events" name="Country Events" inherit_id="website.snippets">
     <xpath expr="//div[@id='snippet_content']" position="inside">
-        <div data-snippet-id="country_events" data-selector-siblings="p, h2, h3, blockquote" data-selector-children=".content">
+        <div>
             <div class="oe_snippet_thumbnail">
                 <div style="background: white;box-shadow:none;-webkit-box-shadow:none;" class="oe_snippet_thumbnail_img" >
                     <i class="fa fa-flag fa-5x text-muted"></i>
                 </div>
                 <span class="oe_snippet_thumbnail_title">Country Events</span>
             </div>
-            <div class="oe_snippet_body country_events mb16 mt16">
+            <div class="oe_snippet_body oe_country_events mb16 mt16">
                 <div class="country_events_list">
                     <div class="text-muted text-center">
                         <div>
@@ -380,13 +380,21 @@
             </div>
         </div>
     </xpath>
+    <xpath expr="//div[@id='snippet_options']" position="inside">
+        <div data-snippet-option-id='content'
+            data-selector=".oe_country_events"
+            data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
+            data-selector-children=".content"
+           >
+        </div>
+    </xpath>
 </template>
 
 <template id="country_events_list" name="Country">
     <t t-ignore="true">
         <t t-if="events">
             <div class="country_events_list">
-                <div class="css_editable_mode_hidden">
+                <div>
                     <t t-if="country">
                         <img style="max-height:10em;" class="img-rounded img-responsive" t-att-src="'/website/image?model=res.country&amp;field=image&amp;id='+str(country.id)"></img>
                         <h4><b>Events In <span t-esc="country.name"></span></b></h4>
@@ -415,14 +423,6 @@
                             <b><a href="/event/"> See All Upcoming events </a></b>
                         </div>
                     </t>
-                </div>
-                <div class="css_non_editable_mode_hidden">
-                    <div class="text-muted text-center">
-                       <div>
-                            <i class="fa fa-flag fa-5x"></i>
-                        </div>
-                        <div>Events of to visitor's country</div>
-                    </div>
                 </div>
             </div>
         </t>
