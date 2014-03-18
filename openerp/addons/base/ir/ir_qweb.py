@@ -488,7 +488,6 @@ class FieldConverter(osv.AbstractModel):
         A default configuration key is ``widget`` which can override the
         field's own ``_type``.
         """
-        content = None
         try:
             content = self.record_to_html(
                 cr, uid, field_name, record,
@@ -503,12 +502,14 @@ class FieldConverter(osv.AbstractModel):
                             field_name, record._model._name, exc_info=True)
             content = None
 
-        g_att += ''.join(
-            ' %s="%s"' % (name, werkzeug.utils.escape(value))
-            for name, value in self.attributes(
-                cr, uid, field_name, record, options,
-                source_element, g_att, t_att, qweb_context)
-        )
+        if context and context.get('inherit_branding'):
+            # add branding attributes
+            g_att += ''.join(
+                ' %s="%s"' % (name, werkzeug.utils.escape(value))
+                for name, value in self.attributes(
+                    cr, uid, field_name, record, options,
+                    source_element, g_att, t_att, qweb_context)
+            )
 
         return self.render_element(cr, uid, source_element, t_att, g_att,
                                    qweb_context, content)

@@ -148,7 +148,7 @@ class Cursor(object):
     def check(f):
         @wraps(f)
         def wrapper(self, *args, **kwargs):
-            if self.__closed:
+            if self._closed:
                 msg = 'Unable to use a closed cursor.'
                 if self.__closer:
                     msg += ' It was closed at %s, line %s' % self.__closer
@@ -165,7 +165,7 @@ class Cursor(object):
         self.sql_log = _logger.isEnabledFor(logging.DEBUG)
 
         self.sql_log_count = 0
-        self.__closed = True    # avoid the call of close() (by __del__) if an exception
+        self._closed = True    # avoid the call of close() (by __del__) if an exception
                                 # is raised by any of the following initialisations
         self._pool = pool
         self.dbname = dbname
@@ -180,7 +180,7 @@ class Cursor(object):
             self.__caller = frame_codeinfo(currentframe(),2)
         else:
             self.__caller = False
-        self.__closed = False   # real initialisation value
+        self._closed = False   # real initialisation value
         self.autocommit(False)
         self.__closer = False
 
@@ -189,7 +189,7 @@ class Cursor(object):
         self.cache = {}
 
     def __del__(self):
-        if not self.__closed and not self._cnx.closed:
+        if not self._closed and not self._cnx.closed:
             # Oops. 'self' has not been closed explicitly.
             # The cursor will be deleted by the garbage collector,
             # but the database connection is not put back into the connection
@@ -302,7 +302,7 @@ class Cursor(object):
         # collected as fast as they should). The problem is probably due in
         # part because browse records keep a reference to the cursor.
         del self._obj
-        self.__closed = True
+        self._closed = True
 
         # Clean the underlying connection.
         self._cnx.rollback()
