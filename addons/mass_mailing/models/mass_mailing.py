@@ -65,20 +65,28 @@ class MassMailingList(osv.Model):
     def default_get(self, cr, uid, fields, context=None):
         """Override default_get to handle active_domain coming from the list view. """
         res = super(MassMailingList, self).default_get(cr, uid, fields, context=context)
-        if 'domain' in fields and 'active_domain' in context:
-            res['domain'] = '%s' % context['active_domain']
+        if 'domain' in fields:
             res['model'] = context.get('active_model', 'res.partner')
+            if 'active_domain' in context:
+                res['domain'] = '%s' % context['active_domain']
+            elif 'active_ids' in context:
+                res['domain'] = '%s' % [('id', 'in', context['active_ids'])]
+            else:
+                res['domain'] = '%s' % [('id', 'in', context.get('active_id', 0))]
         return res
 
     def _get_contact_nbr(self, cr, uid, ids, name, arg, context=None):
         """Compute the number of contacts linked to the mailing list. """
         results = dict.fromkeys(ids, 0)
         for contact_list in self.browse(cr, uid, ids, context=context):
-            if contact_list.model == 'mail.mass_mailing.contact':
-                results[contact_list.id] = len(contact_list.contact_ids)
-            else:
-                domain = self.compute_domain(cr, uid, [contact_list.id], context=context)
-                results[contact_list.id] = self.pool[contact_list.model].search(cr, uid, domain, count=True, context=context)
+            print contact_list, contact_list.model, contact_list.domain
+            domain = self._get_domain(cr, uid, [contact_list.id], context=context)[contact_list.id]
+            print domain
+            results[contact_list.id] = self.pool[contact_list.model].search(
+                cr, uid,
+                domain,
+                count=True, context=context
+            )
         return results
 
     def _get_model_list(self, cr, uid, context=None):
@@ -105,7 +113,7 @@ class MassMailingList(osv.Model):
         ),
         'filter_id': fields.many2one(
             'ir.filters', string='Custom Filter',
-            # domain="[('model_id', '=', model_id)]",
+            domain="[('model_id.model', '=', model)]",
         ),
         'domain': fields.text('Domain'),
     }
@@ -144,26 +152,56 @@ class MassMailingList(osv.Model):
             'domain': contact_list.domain,
         }
 
-    def compute_domain(self, cr, uid, ids, context=None):
-        domains = []
+    def action_add_to_mailing(self, cr, uid, ids, context=None):
+        mass_mailing_id = context.get('default_mass_mailing_id')
+        if not mass_mailing_id:
+            return False
+        self.pool['mail.mass_mailing'].write(cr, uid, [mass_mailing_id], {'contact_list_ids': [(4, list_id) for list_id in ids]}, context=context)
+        return {
+            'name': _('New Mass Mailing'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.mass_mailing',
+            'res_id': mass_mailing_id,
+            'context': context,
+        }
+
+    def _get_domain(self, cr, uid, ids, context=None):
+        domains = {}
         for contact_list in self.browse(cr, uid, ids, context=context):
-            domain = eval(contact_list.domain)
+            if contact_list.model == 'mail.mass_mailing.contact':
+                domain = [('list_id', '=', contact_list.id)]
+            elif not contact_list.domain:  # domain is a string like False or None -> void list
+                domain = [('id', '=', '0')]
+            else:
+                domain = eval(contact_list.domain)
+            # force the addition of opt_out filter
             if domain:
                 domain = ['&', ('opt_out', '=', False)] + domain
             else:
                 domain = [('opt_out', '=', False)]
+            domains[contact_list.id] = domain
+        return domains
+
+    def get_global_domain(self, cr, uid, ids, context=None):
+        model_to_domains = dict((mailing_model[0], list())
+                                for mailing_model in self.pool['mail.mass_mailing']._get_mailing_model(cr, uid, context=context))
+        for contact_list in self.browse(cr, uid, ids, context=context):
+            domain = self._get_domain(cr, uid, [contact_list.id], context=context)[contact_list.id]
             if domain is not False:
-                domains.append(domain)
-        if domains:
-            final_domain = ['|'] * (len(domains) - 1) + [leaf for dom in domains for leaf in dom]
-        else:
-            final_domain = domains
-        return final_domain
+                model_to_domains[contact_list.model].append(domain)
+        for model, domains in model_to_domains.iteritems():
+            if domains:
+                final_domain = ['|'] * (len(domains) - 1) + [leaf for dom in domains for leaf in dom]
+            else:
+                final_domain = [('id', '=', '0')]
+            model_to_domains[model] = final_domain
+        return model_to_domains
 
 
 class MassMailingCampaign(osv.Model):
-    """Model of mass mailing campaigns.
-    """
+    """Model of mass mailing campaigns. """
     _name = "mail.mass_mailing.campaign"
     _description = 'Mass Mailing Campaign'
     # number of embedded mailings in kanban view
@@ -358,6 +396,16 @@ class MassMailing(osv.Model):
             results[mid]['delivered'] = results[mid]['sent'] - results[mid]['bounced']
         return results
 
+    def _get_contact_nbr(self, cr, uid, ids, name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        for mailing in self.browse(cr, uid, ids, context=context):
+            res[mailing.id] = self.pool[mailing.mailing_model].search(
+                cr, uid,
+                self.pool['mail.mass_mailing.list'].get_global_domain(cr, uid, [c.id for c in mailing.contact_list_ids], context=context)[mailing.mailing_model],
+                count=True, context=context
+            )
+        return res
+
     def _get_mailing_model(self, cr, uid, context=None):
         return [
             ('res.partner', 'Customers'),
@@ -405,7 +453,7 @@ class MassMailing(osv.Model):
             string='Mailing Lists',
             domain="[('model', '=', mailing_model)]",
         ),
-        'contact_nbr': fields.integer('Contact Number'),
+        'contact_nbr': fields.function(_get_contact_nbr, type='integer', string='Contact Number'),
         # statistics data
         'statistics_ids': fields.one2many(
             'mail.mail.statistics', 'mass_mailing_id',
@@ -506,10 +554,10 @@ class MassMailing(osv.Model):
             values['body_html'] = False
         return {'value': values}
 
-    def select_customers(self, cr, uid, ids, context=None):
+    def action_new_list(self, cr, uid, ids, context=None):
         wizard = self.browse(cr, uid, ids[0], context=context)
-        aid = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_partner_to_mailing_list')
-        ctx = dict(context, view_manager_highlight=[aid])
+        action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_partner_to_mailing_list')
+        ctx = dict(context, view_manager_highlight=[action_id], default_mass_mailing_id=ids[0])
         return {
             'name': _('Choose Recipients'),
             'type': 'ir.actions.act_window',
@@ -519,28 +567,28 @@ class MassMailing(osv.Model):
             'context': ctx,
         }
 
+    def action_see_recipients(self, cr, uid, ids, context=None):
+        mailing = self.browse(cr, uid, ids[0], context=context)
+        domain = self.pool['mail.mass_mailing.list'].get_global_domain(cr, uid, [c.id for c in mailing.contact_list_ids], context=context)[mailing.mailing_model]
+        return {
+            'name': _('Mailing Recipients'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': mailing.mailing_model,
+            'domain': domain,
+            'context': context,
+        }
+
     #------------------------------------------------------
     # Email Sending
     #------------------------------------------------------
 
-    def send_get_recipients(self, cr, uid, ids, context=None):
-        recipients = dict.fromkeys(ids, list())
-        for mailing in self.browse(cr, uid, ids, context=context):
-            list_ids = [contact_list.id for contact_list in mailing.contact_list_ids]
-            # contact-based list: aggregate all contacts
-            if mailing.mailing_model == 'mail.mass_mailing.list':
-                res_ids = [contact.id for contact in contact_list.contact_ids for contact_list in mailing.contact_list_ids]
-            else:
-                domain = self.pool['mail.mass_mailing.list'].compute_domain(cr, uid, list_ids, context=context)
-                res_ids = self.pool[contact_list.model].search(cr, uid, domain, context=context)
-            recipients[mailing.id] = res_ids
-        return recipients
-
     def send_mail(self, cr, uid, ids, context=None):
         Mail = self.pool['mail.mail']
-        recipients = self.send_get_recipients(cr, uid, ids, context=context)
         for mailing in self.browse(cr, uid, ids, context=context):
-            res_ids = recipients.get(mailing.id, list())
+            domain = self.pool['mail.mass_mailing.list'].get_global_domain(cr, uid, [l.id for l in mailing.contact_list_ids], context=context)[mailing.mailing_model]
+            res_ids = self.pool[mailing.mailing_model].search(cr, uid, domain, context=context)
             all_mail_values = self.pool['mail.compose.message'].generate_email_for_composer_batch(
                 cr, uid, mailing.template_id.id, res_ids,
                 context=context,

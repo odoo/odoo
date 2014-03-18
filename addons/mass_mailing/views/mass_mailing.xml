@@ -103,15 +103,17 @@
             <field name="arch" type="xml">
                 <form string="Contact List" version="7.0">
                     <header>
-                        <button name="action_see_records" type="object"
-                            class="oe_highlight" string="See Contacts"/>
+                        <button name="action_add_to_mailing" type="object"
+                            class="oe_highlight" string="Add to Mailing"
+                            invisible="not context.get('default_mass_mailing_id')"/>
                     </header>
                     <sheet>
                         <group>
                             <field name="name"/>
                             <label for="contact_nbr"/>
                             <div>
-                                <field name="contact_nbr" nolabel="1" class="oe_inline"/><span>contacts</span>
+                                <field name="contact_nbr" nolabel="1" class="oe_inline"/>
+                                <button name="action_see_records" type="object" class="oe_link" string="contacts"/>
                             </div>
                             <field name="model" on_change="on_change_model(model, context)"/>
                             <field name="contact_ids"
@@ -221,11 +223,12 @@
                                 <field name="mailing_model" class="oe_inline"
                                     on_change='on_change_mailing_model(mailing_model, context)'/>
                                 <span>selected</span>
+                                <button name="action_see_recipients" type="object" string="See Recipients" class="oe_link"/>
                                 <group>
                                     <label for="contact_list_ids" string="Selected Lists"/>
                                     <div>
                                         <field name="contact_list_ids" widget="many2many_tags" nolabel="1"/>
-                                        <button string='Create a New List' class="oe_inline oe_link" type='object' name='select_customers'/>
+                                        <button string='Create a New List' class="oe_inline oe_link" type='object' name='action_new_list'/>
                                     </div>
                                 </group>
                             </div>
@@ -520,10 +523,8 @@
             parent="base.menu_email" sequence="50"
             action="action_view_mail_mail_statistics"/>
 
-
-
         <!--  Replace the default mass-mailing wizard in base with the composition wizard -->
-        <act_window name="Partner to Mailing List"
+        <act_window name="Create a Mailing List"
                 res_model="mail.mass_mailing.list"
                 src_model="res.partner"
                 view_mode="form"
@@ -531,9 +532,7 @@
                 target="current"
                 key2="client_action_multi"
                 id="action_partner_to_mailing_list"
-                context="{
-                            'caca': 'prout',
-                        }"/>
+                context="{'default_mass_mailing_id': context.get('default_mass_mailing_id')}"/>
 
     </data>
 </openerp>
