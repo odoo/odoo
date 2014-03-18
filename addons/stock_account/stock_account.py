@@ -186,7 +186,7 @@ class stock_quant(osv.osv):
                     'quantity': quant.qty,
                     'product_uom_id': quant.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
-                    'date': time.strftime('%Y-%m-%d'),
+                    'date': move.date,
                     'partner_id': partner_id,
                     'debit': valuation_amount > 0 and valuation_amount or 0,
                     'credit': valuation_amount < 0 and -valuation_amount or 0,
@@ -198,7 +198,7 @@ class stock_quant(osv.osv):
                     'quantity': quant.qty,
                     'product_uom_id': quant.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
-                    'date': time.strftime('%Y-%m-%d'),
+                    'date': move.date,
                     'partner_id': partner_id,
                     'credit': valuation_amount > 0 and valuation_amount or 0,
                     'debit': valuation_amount < 0 and -valuation_amount or 0,
@@ -209,7 +209,8 @@ class stock_quant(osv.osv):
     def _create_account_move_line(self, cr, uid, quant, move, credit_account_id, debit_account_id, journal_id, context=None):
         move_obj = self.pool.get('account.move')
         move_lines = self._prepare_account_move_line(cr, uid, quant, move, credit_account_id, debit_account_id, context=context)
-        return move_obj.create(cr, uid, {'journal_id': journal_id,
+        return move_obj.create(cr, uid, {'journal_id': journal_id, 'period_id': self.pool.get('account.period').find(cr, uid, move.date, context=context)[0],
+                                  'date': move.date,
                                   'line_id': move_lines,
                                   'ref': move.picking_id and move.picking_id.name}, context=context)
 
