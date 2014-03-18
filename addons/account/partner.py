@@ -169,7 +169,7 @@ class res_partner(osv.osv):
             for partner in self.browse(cr, uid, ids, context):
                 res[partner.id] = {
                     'invoice_count': len(partner.invoice_ids),
-                    'journam_item_count': len(partner.journal_item_ids),
+                    'journal_item_count': len(partner.journal_item_ids),
                 }
         except:
             pass
@@ -203,7 +203,7 @@ class res_partner(osv.osv):
             fnct_search=_credit_search, string='Total Receivable', multi='dc', help="Total amount this customer owes you."),
         'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, string='Total Payable', multi='dc', help="Total amount you have to pay to this supplier."),
         'debit_limit': fields.float('Payable Limit'),
-        'invoice_count': fields.function(_invoice_journal_item_count, string="Invoices", type='html', multi="invoice_journal"),
+        'invoice_count': fields.function(_invoice_journal_item_count, string="Invoices", type='integer', multi="invoice_journal"),
         'journal_items_ids': fields.one2many('account.move.line', 'partner_id', 'Journal Items'),
         'journal_item_count': fields.function(_invoice_journal_item_count, string="Journal Items", type="integer", multi="invoice_journal"),
         'property_account_payable': fields.property(
