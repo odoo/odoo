@@ -513,7 +513,7 @@ class pos_order(osv.osv):
     _description = "Point of Sale"
     _order = "id desc"
 
-    def create_from_ui(self, cr, uid, orders, context=None):
+    def create_from_ui(self, cr, uid, orders, context=None):      
         
         # Keep only new orders
         submitted_references = [o['data']['name'] for o in orders]
