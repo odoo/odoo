@@ -187,7 +187,7 @@ class website_event(http.Controller):
         }
         return request.website.render("website_event.event_description_full", values)
 
-    @http.route('/event/add_event/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    @http.route('/event/add_event', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def add_event(self, event_name="New Event", **kwargs):
         return self._add_event(event_name, request.context, **kwargs)
 

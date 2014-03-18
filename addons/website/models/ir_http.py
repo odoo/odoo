@@ -79,6 +79,9 @@ class ir_http(orm.AbstractModel):
         return self._dispatch()
 
     def _postprocess_args(self, arguments, rule):
+        if not getattr(request, 'website_enabled', False):
+            return super(ir_http, self)._postprocess_args(arguments, rule)
+
         for arg, val in arguments.items():
             # Replace uid placeholder by the current request.uid
             if isinstance(val, orm.browse_record) and isinstance(val._uid, RequestUID):

@@ -344,6 +344,12 @@
   -moz-box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.7);
   box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.7);
 }
+.oe_overlay .oe_handle.readonly {
+  cursor: auto !important;
+}
+.oe_overlay .oe_handle.readonly:before, .oe_overlay .oe_handle.readonly.size {
+  display: none !important;
+}
 .oe_overlay .icon.btn {
   display: inline-block;
 }
@@ -351,7 +357,7 @@
   position: absolute;
   left: 50% !important;
   text-align: center;
-  top: -11px;
+  top: -20px;
   z-index: 1002;
 }
 .oe_overlay .oe_overlay_options > .btn-group {
@@ -617,9 +623,4 @@
   width: 16px;
   height: 16px;
   display: inline-block;
-}
-
-[data-snippet-id] {
-  min-height: 10px;
-  min-width: 10px;
 }
