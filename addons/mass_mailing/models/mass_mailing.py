@@ -51,10 +51,19 @@ class MassMailingContact(osv.Model):
         'email': fields.char('Email', required=True),
         'list_id': fields.many2one(
             'mail.mass_mailing.list', string='Mailing List',
-            required=True, ondelete='cascade',
+            ondelete='cascade',
         ),
         'opt_out': fields.boolean('Opt Out', help='The contact has chosen not to receive news anymore from this mailing list'),
     }
+
+    def name_create(self, cr, uid, name, context=None):
+        name, email = self.pool['res.partner']._parse_partner_name(name, context=context)
+        if name and not email:
+            email = name
+        if email and not name:
+            name = email
+        rec_id = self.create(cr, uid, {'name': name, 'email': email}, context=context)
+        return self.name_get(cr, uid, [rec_id], context)[0]
 
 
 class MassMailingList(osv.Model):
@@ -72,19 +81,16 @@ class MassMailingList(osv.Model):
             elif 'active_ids' in context:
                 res['domain'] = '%s' % [('id', 'in', context['active_ids'])]
             else:
-                res['domain'] = '%s' % [('id', 'in', context.get('active_id', 0))]
+                res['domain'] = False
         return res
 
     def _get_contact_nbr(self, cr, uid, ids, name, arg, context=None):
         """Compute the number of contacts linked to the mailing list. """
         results = dict.fromkeys(ids, 0)
         for contact_list in self.browse(cr, uid, ids, context=context):
-            print contact_list, contact_list.model, contact_list.domain
-            domain = self._get_domain(cr, uid, [contact_list.id], context=context)[contact_list.id]
-            print domain
             results[contact_list.id] = self.pool[contact_list.model].search(
                 cr, uid,
-                domain,
+                self._get_domain(cr, uid, [contact_list.id], context=context)[contact_list.id],
                 count=True, context=context
             )
         return results
@@ -428,7 +434,7 @@ class MassMailing(osv.Model):
         'template_id': fields.many2one(
             'email.template', 'Email Template',
             domain=[('use_in_mass_mailing', '=', True)],
-            ondelete='set null',
+            required=True,
         ),
         'body_html': fields.related(
             'template_id', 'body_html', type='html',
@@ -445,7 +451,10 @@ class MassMailing(osv.Model):
         ),
         # mailing options
         'email_from': fields.char('From'),
-        'email_to': fields.char('Send to Emails'),
+        'email_to': fields.many2many(
+            'mail.mass_mailing.contact', 'mail_mass_mailing_contact_rel',
+            string='Test Emails'
+        ),
         'reply_to': fields.char('Reply To'),
         'mailing_model': fields.selection(_mailing_model, string='Type', required=True),
         'contact_list_ids': fields.many2many(
@@ -554,6 +563,12 @@ class MassMailing(osv.Model):
             values['body_html'] = False
         return {'value': values}
 
+    def _get_model_to_list_action_id(self, cr, uid, model, context=None):
+        if model == 'res.partner':
+            return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_partner_to_mailing_list')
+        else:
+            return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_contact_to_mailing_list')
+
     def action_new_list(self, cr, uid, ids, context=None):
         wizard = self.browse(cr, uid, ids[0], context=context)
         action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_partner_to_mailing_list')
@@ -584,16 +599,24 @@ class MassMailing(osv.Model):
     # Email Sending
     #------------------------------------------------------
 
+    def _get_mail_recipients(self, cr, uid, mailing, res_ids, context=None):
+        if mailing.mailing_model == 'mail.mass_mailing.contact':
+            contacts = self.pool['mail.mass_mailing.contact'].browse(cr, uid, res_ids, context=context)
+            return dict((contact.id, {'email_to': '"%s" <%s>' % (contact.name, contact.email)}) for contact in contacts)
+        else:
+            return dict((res_id, {'recipient_ids': [(4, res_id)]}) for res_id in res_ids)
+
     def send_mail(self, cr, uid, ids, context=None):
         Mail = self.pool['mail.mail']
         for mailing in self.browse(cr, uid, ids, context=context):
-            domain = self.pool['mail.mass_mailing.list'].get_global_domain(cr, uid, [l.id for l in mailing.contact_list_ids], context=context)[mailing.mailing_model]
+            domain = self.pool['mail.mass_mailing.list'].get_global_domain(
+                cr, uid, [l.id for l in mailing.contact_list_ids], context=context
+            )[mailing.mailing_model]
             res_ids = self.pool[mailing.mailing_model].search(cr, uid, domain, context=context)
+            recipients = self._get_mail_recipients(cr, uid, mailing, res_ids, context=context)
             all_mail_values = self.pool['mail.compose.message'].generate_email_for_composer_batch(
                 cr, uid, mailing.template_id.id, res_ids,
-                context=context,
-                fields=['body_html', 'attachment_ids', 'mail_server_id']
-            )
+                context=context, fields=['body_html', 'attachment_ids', 'mail_server_id'])
             for res_id, mail_values in all_mail_values.iteritems():
                 mail_values.update({
                     'email_from': mailing.email_from,
@@ -601,40 +624,48 @@ class MassMailing(osv.Model):
                     'subject': mailing.name,
                     'body_html': mail_values.get('body'),
                     'auto_delete': True,
-                    'statistics_ids': [(0, 0, {
+                    'notification': True,
+                })
+                mail_values['statistics_ids'] = [
+                    (0, 0, {
                         'model': mailing.mailing_model,
                         'res_id': res_id,
                         'mass_mailing_id': mailing.id,
                     })]
-                })
                 m2m_attachment_ids = self.pool['mail.thread']._message_preprocess_attachments(
                     cr, uid, mail_values.pop('attachments', []),
                     mail_values.pop('attachment_ids', []),
                     'mail.message', 0,
                     context=context)
                 mail_values['attachment_ids'] = m2m_attachment_ids
-                if mailing.mailing_model == 'mail.mass_mailing.list':
-                    contact = self.pool['mail.mass_mailing.contact'].browse(cr, uid, res_id, context=context)
-                    mail_values['email_to'] = '"%s" <%s>' % (contact.name, contact.email)
-                elif mailing.mailing_model == 'res.partner':
-                    mail_values['recipient_ids'] = [(4, res_id)]
+
+                mail_values.update(recipients[res_id])
+
                 Mail.create(cr, uid, mail_values, context=context)
-            # todo: handle email_to
         return True
 
-    def send_mail_to_myself(self, cr, uid, ids, context=None):
+    def send_mail_test(self, cr, uid, ids, context=None):
         Mail = self.pool['mail.mail']
         for mailing in self.browse(cr, uid, ids, context=context):
-            mail_values = {
-                'email_from': mailing.email_from,
-                'reply_to': mailing.reply_to,
-                'email_to': self.pool['res.users'].browse(cr, uid, uid, context=context).email,
-                'subject': mailing.name,
-                'body_html': mailing.template_id.body_html,
-                'auto_delete': True,
-            }
-            mail_id = Mail.create(cr, uid, mail_values, context=context)
-            Mail.send(cr, uid, [mail_id], context=context)
+            # res_ids = self._set_up_test_mailing(cr, uid, mailing.mailing_model, context=context)
+            res_ids = [c.id for c in mailing.email_to]
+            all_mail_values = self.pool['mail.compose.message'].generate_email_for_composer_batch(
+                cr, uid, mailing.template_id.id, res_ids,
+                context=context,
+                fields=['body_html', 'attachment_ids', 'mail_server_id']
+            )
+            mail_ids = []
+            for res_id, mail_values in all_mail_values.iteritems():
+                mail_values = {
+                    'email_from': mailing.email_from,
+                    'reply_to': mailing.reply_to,
+                    'email_to': self.pool['mail.mass_mailing.contact'].browse(cr, uid, res_id, context=context).email,
+                    'subject': mailing.name,
+                    'body_html': mail_values.get('body'),
+                    'auto_delete': True,
+                }
+                mail_ids.append(Mail.create(cr, uid, mail_values, context=context))
+            Mail.send(cr, uid, mail_ids, context=context)
         return True
 
 

@@ -10,7 +10,9 @@
 Bridge module between Mass Mailing and CRM
     """,
     'website': 'http://www.openerp.com',
-    'data': [],
+    'data': [
+        'views/crm_lead.xml',
+    ],
     'demo': [],
     'installable': True,
     'auto_install': True,

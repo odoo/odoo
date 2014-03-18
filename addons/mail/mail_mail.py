@@ -126,7 +126,7 @@ class mail_mail(osv.Model):
             _logger.exception("Failed processing mail queue")
         return res
 
-    def _postprocess_sent_message(self, cr, uid, mail, context=None):
+    def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
         """Perform any post-processing necessary after sending ``mail``
         successfully, including deleting it completely along with its
         attachment if the ``auto_delete`` flag of the mail was set.
@@ -295,7 +295,7 @@ class mail_mail(osv.Model):
                 # /!\ can't use mail.state here, as mail.refresh() will cause an error
                 # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
                 if mail_sent:
-                    self._postprocess_sent_message(cr, uid, mail, context=context)
+                    self._postprocess_sent_message(cr, uid, mail, context=context, mail_sent=mail_sent)
             except Exception as e:
                 _logger.exception('failed sending mail.mail %s', mail.id)
                 mail.write({'state': 'exception'})

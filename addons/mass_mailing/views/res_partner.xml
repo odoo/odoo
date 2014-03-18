@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Create a Mailing List from Partners-->
+        <act_window name="Create Mailing List"
+            res_model="mail.mass_mailing.list"
+            src_model="res.partner"
+            view_mode="form"
+            multi="True"
+            target="current"
+            key2="client_action_multi"
+            id="action_partner_to_mailing_list"
+            context="{'default_mass_mailing_id': context.get('default_mass_mailing_id')}"/>
+
+    </data>
+</openerp>

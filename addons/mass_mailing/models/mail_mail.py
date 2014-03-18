@@ -64,7 +64,7 @@ class MailMail(osv.Model):
                 body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')
         return body
 
-    def _postprocess_sent_message(self, cr, uid, mail, context=None):
-        if mail.state == 'sent' and mail.statistics_ids:
+    def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
+        if mail_sent is True and mail.statistics_ids:
             self.pool['mail.mail.statistics'].write(cr, uid, [s.id for s in mail.statistics_ids], {'sent': fields.datetime.now()}, context=context)
-        return super(MailMail, self)._postprocess_sent_message(cr, uid, mail, context=context)
+        return super(MailMail, self)._postprocess_sent_message(cr, uid, mail, context=context, mail_sent=mail_sent)
