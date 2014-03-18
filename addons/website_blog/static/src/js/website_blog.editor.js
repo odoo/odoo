@@ -31,8 +31,10 @@
         }),
         edit: function () {
             this._super();
-            $('body').on('click', '#change_cover',_.bind(this.change_bg));
-            $('body').on('click', '#clear_cover',_.bind(this.clean_bg));
+            var top_nav = _.isNull($('#website-top-navbar').height()) ? 0 : $('#website-top-navbar').height();
+            var vHeight = $(window).height() - ($('header').height() + top_nav);
+            $('body').on('click','#change_cover',_.bind(this.change_bg,{},vHeight));
+            $('body').on('click', '#clear_cover',_.bind(this.clean_bg,{},vHeight));
         },
         save : function() {
             openerp.jsonRpc("/blogpsot/change_background", 'call', {
@@ -41,18 +43,17 @@
             });
             return this._super();
         },
-        clean_bg : function() {
-            $('.cover').css("background-image","");
+        clean_bg : function(vHeight) {
+            $('.cover_header').css({"background-image":"", 'min-height': vHeight});
         },
-        change_bg : function() {
+        change_bg : function(vHeight) {
             var self  = this;
             var editor  = new  website.editor.ImageDialog();
             editor.on('start', self, function (o) {
-                o.url = $('.cover')[0].style.background.replace('url(','').replace(')','');
+                o.url = $('.cover_header')[0].style.background.replace('url(','').replace(')','');
             });
             editor.on('save', self, function (o) {
-                $('.cover').css("background-image", o.url && o.url !== "" ? 'url(' + o.url + ')' : "" )
-                .addClass('cover_header');
+                $('.cover').css({"background-image": o.url && o.url !== "" ? 'url(' + o.url + ')' : "", 'min-height': vHeight})
             });
             editor.appendTo('body');
         },

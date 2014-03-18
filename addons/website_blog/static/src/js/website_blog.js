@@ -1,6 +1,9 @@
 $(document).ready(function() {
     var discussion = false;
     var share = false;
+    var top_nav = _.isNull($('#website-top-navbar-placeholder').height()) ? 0 : $('#website-top-navbar-placeholder').height();
+    var vHeight = $(window).height() - ($('header').height() + top_nav);
+    $('.cover_header').css('min-height', vHeight);
     function page_transist(event) {
         event.preventDefault();
         newLocation = $('.js_next')[0].href;
@@ -56,9 +59,9 @@ $(document).ready(function() {
             page_upwards();
             //bind again it takes control from now on, until page relaod.
             $(document).find('.cover_footer').on('click',page_transist);
-            console.log($(data).find('#blog_author'))
+            $(document).find('.cover_header').css('min-height', vHeight);
             $(document).find('a[href^="#blog_content"]').on('click', animate);
-            if (share) $("p,h1,h2,h3,h4,ul").share({'author_name':$(data).find('#blog_author:first').text()});
+            if (share) $("p,h1,h2,h3,h4,ul").share({'author_name':$(data).find('#blog_author').text()});
             if (newLocation != window.location)
                 history.pushState(null, null, newLocation);
         });
