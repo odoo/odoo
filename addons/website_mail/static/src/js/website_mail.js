@@ -39,8 +39,7 @@
                 return false;
             }
             this.$target.removeClass('has-error');
-
-            openerp.jsonRpc('/website_mail/follow', 'call', {
+            openerp.jsonRpc('/website_mail/follow/', 'call', {
                 'id': +this.$target.data('id'),
                 'object': this.$target.data('object'),
                 'message_is_follower': this.$target.attr("data-follow") || "off",
