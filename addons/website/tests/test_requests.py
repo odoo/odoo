@@ -121,6 +121,6 @@ class URL(object):
 
 def load_tests(loader, base, _):
     base.addTest(CrawlSuite())
-    base.addTest(CrawlSuite('admin', tools.config['admin_passwd']))
+    base.addTest(CrawlSuite('admin', 'admin'))
     base.addTest(CrawlSuite('demo', 'demo'))
     return base

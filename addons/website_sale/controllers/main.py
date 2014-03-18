@@ -321,7 +321,7 @@ class Ecommerce(http.Controller):
                 context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
-    @http.route(['/shop/add_product/'], type='http', auth="user", methods=['POST'], website=True, multilang=True)
+    @http.route(['/shop/add_product'], type='http', auth="user", methods=['POST'], website=True, multilang=True)
     def add_product(self, name=None, category=0, **post):
         if not name:
             name = _("New Product")

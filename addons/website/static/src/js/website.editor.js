@@ -106,6 +106,7 @@
                     },
                     canUndo: false,
                     editorFocus: true,
+                    context: 'a',
                 });
                 //noinspection JSValidateTypes
                 editor.addCommand('image', {
@@ -115,6 +116,7 @@
                     },
                     canUndo: false,
                     editorFocus: true,
+                    context: 'img',
                 });
 
                 editor.ui.addButton('Link', {
@@ -205,8 +207,9 @@
                     icon: '/website/static/src/img/bglink.png',
                     modes: { wysiwyg: true },
                     editorFocus: true,
+                    context: 'a',
                     panel: {
-                        css: '/website/static/lib/bootstrap/css/bootstrap.css',
+                        css: '/web/static/lib/bootstrap/css/bootstrap.css',
                         attributes: { 'role': 'listbox', 'aria-label': label },
                     },
 
@@ -346,14 +349,40 @@
             requires: 'widget',
 
             init: function (editor) {
+                var specials = {
+                    // Can't find the correct ACL rule to only allow img tags
+                    image: { content: '*' },
+                    html: { text: '*' },
+                    monetary: {
+                        text: {
+                            selector: 'span.oe_currency_value',
+                            allowedContent: { }
+                        }
+                    }
+                };
+                _(specials).each(function (editable, type) {
+                    editor.widgets.add(type, {
+                        draggable: false,
+                        editables: editable,
+                        upcast: function (el) {
+                            return  el.attributes['data-oe-type'] === type;
+
+                        }
+                    });
+                });
                 editor.widgets.add('oeref', {
-                    editables: { text: '*' },
                     draggable: false,
-
+                    editables: {
+                        text: {
+                            selector: '*',
+                            allowedContent: { }
+                        },
+                    },
                     upcast: function (el) {
-                        var matches = el.attributes['data-oe-type'] && el.attributes['data-oe-type'] !== 'monetary';
-                        if (!matches) { return false; }
-
+                        var type = el.attributes['data-oe-type'];
+                        if (!type || (type in specials)) {
+                            return false;
+                        }
                         if (el.attributes['data-oe-original']) {
                             while (el.children.length) {
                                 el.children[0].remove();
@@ -363,16 +392,9 @@
                             ));
                         }
                         return true;
-                    },
-                });
-                editor.widgets.add('monetary', {
-                    editables: { text: 'span.oe_currency_value' },
-                    draggable: false,
-
-                    upcast: function (el) {
-                        return el.attributes['data-oe-type'] === 'monetary';
                     }
                 });
+
                 editor.widgets.add('icons', {
                     draggable: false,
 
@@ -383,7 +405,11 @@
                         });
                     },
                     upcast: function (el) {
-                        return el.hasClass('fa');
+                        return el.hasClass('fa')
+                            // ignore ir.ui.view (other data-oe-model should
+                            // already have been matched by oeref and
+                            // monetary?
+                            && !el.attributes['data-oe-model'];
                     }
                 });
             }
@@ -645,6 +671,11 @@
                 previous = null;
             }, 'btn-sm');
 
+            function is_icons_widget(element) {
+                var w = editor.widgets.getByElement(element);
+                return w && w.name === 'icons';
+            }
+
             // previous is the state of the button-trigger: it's the
             // currently-ish hovered element which can trigger a button showing.
             // -ish, because when moving to the button itself ``previous`` is
@@ -654,9 +685,15 @@
                 // Back from edit button -> ignore
                 if (previous && previous === this) { return; }
 
+                // hover button should appear for "editable" links and images
+                // (img and a nodes whose *attributes* are editable, they
+                // can not be "editing hosts") *or* for non-editing-host
+                // elements bearing an ``fa`` class. These should have been
+                // made into CKE widgets which are editing hosts by
+                // definition, so instead check if the element has been
+                // converted/upcasted to an fa widget
                 var selected = new CKEDITOR.dom.element(this);
-                // FIXME: fa nodes may not be editable widgets (?)
-                if (!is_editable_node(selected) && !selected.hasClass('fa')) {
+                if (!(is_editable_node(selected) || is_icons_widget(selected))) {
                     return;
                 }
 
