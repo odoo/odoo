@@ -216,6 +216,9 @@ class WebRequest(object):
             # The decorator can call us more than once if there is an database error. In this
             # case, the request cursor is unusable. Rollback transaction to create a new one.
             if self._cr:
+                print ""
+                print "rollback http.py checked_call"
+                print ""
                 self._cr.rollback()
             return self.endpoint(*a, **kw)
 
