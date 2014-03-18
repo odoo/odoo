@@ -38,6 +38,37 @@
             <field name="forum_id" ref="website_forum.forum_help"/>
         </record>
 
+        <record id="tags_7" model="website.forum.tag">
+            <field name="name">one2many</field>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+
+        <record id="tags_8" model="website.forum.tag">
+            <field name="name">offline</field>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+
+        <record id="tags_9" model="website.forum.tag">
+            <field name="name">ecommerce</field>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+
+        <record id="tags_10" model="website.forum.tag">
+            <field name="name">xmlRPC</field>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+
+        <record id="tags_11" model="website.forum.tag">
+            <field name="name">Stock</field>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+
+        <record id="tags_12" model="website.forum.tag">
+            <field name="name">update</field>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+
+
         <record id="question_0" model="website.forum.post">
             <field name="name">How to configure alerts for employee contract expiration.</field>
             <field name="forum_id" ref="website_forum.forum_help"/>
@@ -52,6 +83,7 @@
 
 I use a XML-RPC to access to invoices, I want to get the states of invoices, but always I get paid instead of Payé (French)</field>
             <field name="views">4</field>
+            <field name="tags" eval="[(4,ref('website_forum.tags_10'))]"/>
         </record>
         
         <record id="question_2" model="website.forum.post">
@@ -72,6 +104,7 @@ P.S.
 
 AFAIK current version (7.x) supports web interface while the desktop clients became deprecated.
 BTW, I left OpenERP since ver. 6.x to use PostBooks instead but I recently decided to use OpenERP once again after recent new features.</field>
+        <field name="tags" eval="[(4,ref('website_forum.tags_8'))]"/>
         </record>
         
         <record id="question_5" model="website.forum.post">
@@ -83,6 +116,7 @@ BTW, I left OpenERP since ver. 6.x to use PostBooks instead but I recently decid
 Can I use OpenERP as a replacement CMS of Wordpress + eCommerce plugin?
 
 In simple words does OpenERP became CMS+ERP platform?</field>
+            <field name="tags" eval="[(4,ref('website_forum.tags_9'))]"/>
         </record>
         
         <record id="question_6" model="website.forum.post">
@@ -94,6 +128,7 @@ In simple words does OpenERP became CMS+ERP platform?</field>
 I have been trying to register an invoice payment through OpenERP. I have been able to manually create and approve the invoice, the voucher and its line
 
 I'm currently creating the voucher using this information:</field>
+            <field name="tags" eval="[(4,ref('website_forum.tags_10'))]"/>
         </record>
         
         <record id="question_7" model="website.forum.post">
@@ -105,6 +140,7 @@ I'm currently creating the voucher using this information:</field>
 I shall like creating a field "x" on an order form ( stock.picking.form ) and to reveal it also on the delivery slip ( stock.picking.form ).
 
 Thank you in advance</field>
+            <field name="tags" eval="[(4,ref('website_forum.tags_3'))]"/>
         </record>
         
         <record id="question_8" model="website.forum.post">
@@ -112,6 +148,7 @@ Thank you in advance</field>
             <field name="views">1</field>
             <field name="content">Now i create new group , assign user and access right as READ &amp; CREATE to object stock.picking.ads but nothing is reflected , iam able to delete and write which should not happen. Very Strange!!!</field>
             <field name="forum_id" ref="website_forum.forum_help"/>
+            <field name="tags" eval="[(4,ref('website_forum.tags_7'))]"/>
         </record>
         
         <record id="question_9" model="website.forum.post">
@@ -137,12 +174,14 @@ Thank you in advance</field>
             <field name="name">How to refresh weight of stock move lines after product weight update?</field>
             <field name="views">56</field>
             <field name="forum_id" ref="website_forum.forum_help"/>
+            <field name="tags" eval="[(4,ref('website_forum.tags_11'))]"/>
         </record>
 
         <record id="question_12" model="website.forum.post">
             <field name="name">Update new module v7.0 Ubuntu 12.04</field>
             <field name="views">87</field>
             <field name="forum_id" ref="website_forum.forum_help"/>
+            <field name="tags" eval="[(4,ref('website_forum.tags_12'))]"/>
         </record>
         
         <record id="question_13" model="website.forum.post">
@@ -193,6 +232,7 @@ Thank you in advance</field>
                  
             </field>
             <field name="parent_id" ref="question_1" />
+            <field name="correct">True</field>
         </record>
         
         <record id="answer_4" model="website.forum.post">
@@ -202,6 +242,7 @@ Thank you in advance</field>
                     Then you have to activate the module, see the tutorial on acespritechblog.wordpress.com (sorry I cannot post the full link)
             </field>
             <field name="parent_id" ref="question_4" />
+            <field name="correct">True</field>
         </record>
 
         <record id="answer_5" model="website.forum.post">
@@ -223,6 +264,7 @@ Thank you in advance</field>
                 voucher_id should be the ID of the created voucher.
             </field>
             <field name="parent_id" ref="question_6" />
+            <field name="correct">True</field>
         </record>
         
         <record id="answer_6_1" model="website.forum.post">
@@ -291,6 +333,7 @@ Thank you in advance</field>
                 Give your admin user the technical features right and you will be able to see more options in the settings menu. (use a refresh)
             </field>
             <field name="parent_id" ref="question_13" />
+            <field name="correct">True</field>
         </record>
 
     </data>
