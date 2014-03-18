@@ -969,7 +969,7 @@ class _RelationalMulti(_Relational):
 
         if fnames is None:
             # take all fields in cache, except the inverse of self
-            fnames = set(self.model._fields)
+            fnames = set(self.comodel._fields) - set(MAGIC_COLUMNS)
             if self.inverse_field:
                 fnames.discard(self.inverse_field.name)
 
@@ -1074,5 +1074,5 @@ class Id(Field):
 from openerp import SUPERUSER_ID
 from openerp.exceptions import Warning, MissingError
 from openerp.osv import fields
-from openerp.osv.orm import BaseModel
+from openerp.osv.orm import BaseModel, MAGIC_COLUMNS
 from openerp.osv.scope import proxy as scope
