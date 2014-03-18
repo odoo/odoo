@@ -66,7 +66,7 @@
         <template id="header" name="Forum Index">
             <t t-call="website.layout">
                 <t t-set="head">
-                    <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css' />
+                    <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
                 </t>
                 <div class="container mt16">
                     <div class="navbar navbar-default">
@@ -100,7 +100,7 @@
                                 <div class="form-group">
                                     <input type="search" class="form-control"
                                         name="search" placeholder="Search a question..."
-                                        t-att-value="searches.get('search') or ''" />
+                                        t-att-value="searches.get('search') or ''"/>
                                     <button type="submit" class="btn btn-default">Search</button>
                                 </div>
                             </form>
@@ -189,9 +189,9 @@
                     </small>
                 </h1>
                 <div t-foreach="question_ids" t-as="question" class="mb16">
-                    <t t-call="website_forum.post_list" />
+                    <t t-call="website_forum.post_list"/>
                 </div>
-                <t t-call="website.pager" />
+                <t t-call="website.pager"/>
             </t>
         </template>
 
@@ -380,7 +380,7 @@
                         </div>
                     </div>
                     <div style="margin-left: 95px;" class="clearfix">
-                        <t t-raw="answer.content" />
+                        <t t-raw="answer.content"/>
                         <div class="mt16">
                             <ul class="list-inline pull-right">
                                 <li>
@@ -450,7 +450,7 @@
                 <div class="row">
                     <div class="col-sm-3 mt16" t-foreach="tags" t-as="tag">
                         <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }" class="badge">
-                            <span t-field="tag.name" />
+                            <span t-field="tag.name"/>
                         </a>
                         <span> 
                             X <t t-esc="tag.posts_count"/>
@@ -477,7 +477,7 @@
                                 <span t-if="badge.level == 'gold'" class="fa fa-circle badge-gold"/>
                                 <span t-if="badge.level == 'silver'" class="fa fa-circle badge-silver"/>
                                 <span t-if="badge.level == 'bronze'" class="fa fa-circle badge-bronze"/>
-                                <span t-field="badge.name" />
+                                <span t-field="badge.name"/>
                             </a>
                         </td><td>
                             <b t-esc="badge.stat_count_distinct"/>
@@ -531,7 +531,7 @@
                     </div>
                 </div>
                 <div class="pull-left">
-                    <t t-call="website.pager" />
+                    <t t-call="website.pager"/>
                 </div>
             </t>
         </template>
@@ -656,25 +656,31 @@
                     <li>
                         <a href="#followed_question" data-toggle="tab">Followed Question</a>
                     </li>
+                    <li>
+                        <a href="#votes" data-toggle="tab">Votes</a>
+                    </li>
                 </ul>
                 <div class="tab-content mt16">
                     <div class="tab-pane active" id="questions">
                         <div t-foreach="questions" t-as="question">
-                            <t t-call="website_forum.post_list" />
+                            <t t-call="website_forum.post_list"/>
                         </div>
                     </div><div class="tab-pane" id="answers">
                         <div t-foreach="answers" t-as="question">
-                            <t t-call="website_forum.post_list" />
+                            <t t-call="website_forum.post_list"/>
                         </div>
                     </div>
                     <div class="tab-pane" id="karma">
                         <h1>Karma</h1>
                     </div>
                     <div class="tab-pane" id="badges">
-                        <t t-call="website_forum.user_badges" />
+                        <t t-call="website_forum.user_badges"/>
                     </div>
                     <div class="tab-pane" id="followed_question">
                         <h1>Followed Questions</h1>
+                    </div>
+                    <div class="tab-pane" id="votes">
+                        <t t-call="website_forum.user_votes"/>
                     </div>
                     <div class="tab-pane" id="activity">
                         <ul class="list-unstyled">
@@ -701,7 +707,7 @@
             <div class="row mb16">
                 <div class="col-sm-3 mt16" t-foreach="user.badges" t-as="badge">
                     <a t-attf-href="/forum/#{ slug(forum) }/badge/#{ slug(badge.badge_id) }" class="badge">
-                        <span t-field="badge.badge_id.name" />
+                        <span t-field="badge.badge_id.name"/>
                     </a>
                     <span>
                         X <t t-esc="badge.badge_id.stat_count_distinct"/>
@@ -714,5 +720,21 @@
             </div>
         </template>
 
+        <template id="user_votes">
+            <div t-foreach="vote_post" t-as="vote">
+                <t t-esc="vote.post_id.create_date"/>
+                <span t-if="vote.vote == '1'" class="fa fa-thumbs-up text-success" style="margin-left:30px"/>
+                <span t-if="vote.vote == '-1'" class="fa fa-thumbs-down text-warning" style="margin-left:30px"/>
+                <t t-if="vote.post_id.parent_id">
+                    <a t-attf-href="/forum/#{ slug(forum) }/question/#{ vote.post_id.parent_id.id }/#answer-#{ vote.post_id.id }" t-esc="vote.post_id.parent_id.name" style="margin-left:10px"/>
+                </t>
+                <t t-if="not vote.post_id.parent_id">
+                    <a t-attf-href="/forum/#{ slug(forum) }/question/#{ vote.post_id.id }" style=" color:black;margin-left:10px" t-esc="vote.post_id.name"/>
+                </t>
+            </div>
+            <div class="mb16" t-if="not vote_post">
+                <b>No vote given by you yet!</b>
+            </div>
+        </template>
     </data>
 </openerp>
