@@ -1257,8 +1257,8 @@ class stock_picking(osv.osv):
                 stock_operation_obj.write(cr, uid, pack_operation_ids, {'result_package_id': package_id}, context=context)
         return True
 
-    def process_product_id_from_ui(self, cr, uid, picking_id, product_id, context=None):
-        return self.pool.get('stock.pack.operation')._search_and_increment(cr, uid, picking_id, [('product_id', '=', product_id)], context=context)
+    def process_product_id_from_ui(self, cr, uid, picking_id, product_id, increment=True, context=None):
+        return self.pool.get('stock.pack.operation')._search_and_increment(cr, uid, picking_id, [('product_id', '=', product_id)], increment=increment, context=context)
 
     def process_barcode_from_ui(self, cr, uid, picking_id, barcode_str, context=None):
         '''This function is called each time there barcode scanner reads an input'''
@@ -1286,16 +1286,17 @@ class stock_picking(osv.osv):
         matching_lot_ids = lot_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
         if matching_lot_ids:
             lot = lot_obj.browse(cr, uid, matching_lot_ids[0], context=context)
-            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', lot.product_id.id), ('lot_id', '=', lot.id)], context=context)
+            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', lot.product_id.id), ('lot_id', '=', lot.id)], increment=True, context=context)
             answer['operation_id'] = op_id
             return answer
         #check if the barcode correspond to a package
         matching_package_ids = package_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
         if matching_package_ids:
-            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('package_id', '=', matching_package_ids[0])], context=context)
+            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('package_id', '=', matching_package_ids[0])], increment=True, context=context)
             answer['operation_id'] = op_id
             return answer
         return answer
+
 
 class stock_production_lot(osv.osv):
     _name = 'stock.production.lot'
@@ -3640,6 +3641,15 @@ class stock_pack_operation(osv.osv):
             processed_ids.append(op)      
         self.write(cr, uid, processed_ids, {'processed': 'true'}, context=context)
 
+    def create_and_assign_lot(self, cr, uid, id, context=None):
+        ''' Used by barcode interface to create a new lot and assign it to the operation
+        '''
+        obj = self.browse(cr,uid,id,context)
+        product_id = obj.product_id.id
+        if not obj.lot_id:
+            new_lot_id = self.pool.get('stock.production.lot').create(cr, uid, {'product_id': product_id}, context=context)
+            self.write(cr, uid, id, {'lot_id': new_lot_id}, context=context)
+
     def process_packaging(self, cr, uid, operation, quants, context=None):
         ''' Process the packaging of a given operation, after the quants have been moved. If there was not enough quants found
         a quant already has been with the good package information so we don't consider that case in this method'''
@@ -3658,7 +3668,7 @@ class stock_pack_operation(osv.osv):
 
 
     #TODO: this function can be refactored
-    def _search_and_increment(self, cr, uid, picking_id, domain, context=None):
+    def _search_and_increment(self, cr, uid, picking_id, domain, increment=True, context=None):
         '''Search for an operation with given 'domain' in a picking, if it exists increment the qty (+1) otherwise create it
 
         :param domain: list of tuple directly reusable as a domain
@@ -3679,7 +3689,11 @@ class stock_pack_operation(osv.osv):
         if existing_operation_ids:
             #existing operation found for the given domain and picking => increment its quantity
             operation_id = existing_operation_ids[0]
-            qty = self.browse(cr, uid, operation_id, context=context).qty_done + 1
+            qty = self.browse(cr, uid, operation_id, context=context).qty_done
+            if increment:
+                qty += 1
+            else:
+                qty -= 1 if qty >= 1 else 0
             self.write(cr, uid, [operation_id], {'qty_done': qty}, context=context)
         else:
             #no existing operation found for the given domain and picking => create a new one

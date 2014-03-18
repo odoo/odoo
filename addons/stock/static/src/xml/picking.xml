@@ -47,15 +47,23 @@
     </t> -->
 
     <t t-name='PickingEditorWidget'>
-        <div class='oe_pick_list'>
-            <h2><strong><div class='oe_pick_list_header'>
-                Operations Informations
-            </div></strong></h2>
+        
+            <div>
+                <h3><strong>Operations
+                <select id="js_select" class="form-control-group">
+                    <option id="js_select_todo">ToDo</option>
+                    <option id="js_select_processed">Processed</option>
+                </select> 
+                </strong></h3>
+            </div>
+            
+        <div>
+            
             <table class='table table-condensed js_op_table_todo'>
                 <thead>
                     <tr>
-                        <th class="text-center">Product</th> 
-                        <th class='text-center'>Quantity</th> 
+                        <th class="text-left">Product</th> 
+                        <th class='text-center' width="200">Quantity</th> 
                         <th>From</th>
                         <th>To</th>
                     </tr>
@@ -63,21 +71,57 @@
 
                 <tbody>
                     <t t-foreach="widget.get_rows()" t-as="row">
-                        <tr t-att-class="row.classes + ' js_pack_op_line'" t-att-data-id="row.cols.id" t-att-container-id="row.cols.container_id">
-                            <td t-att-class="!row.cols.head_container &amp;&amp; row.cols.container ? 'text-right' : 'text-center'"> 
-                                <t t-if="row.cols.can_scan == true"><span class='btn btn-default pull-left fa fa-arrow-right js_pack_scan' t-att-op-id='row.cols.product_id'></span> </t>
-                                <t t-if="row.cols.head_container == true"><span class='btn btn-default pull-left js_unfold fa fa-folder-open' t-att-container-id='row.cols.id'></span> </t>
-                                <t t-esc="row.cols.product" /> </td>
-                            <td class='text-center js_row_qty'><t t-esc="row.cols.rem" /> / <t t-esc="row.cols.qty" /> <t t-esc="row.cols.uom" /></td>
-                            <td class="js_loc"> <t t-esc="row.cols.loc" />
-                            <t t-if="row.cols.pack" ><span> : <t t-esc="row.cols.pack" /></span></t>
-                            <t t-if="row.cols.lot" ><span> : <t t-esc="row.cols.lot" /></span></t>
-                             </td>
-                            <td class="js_loc"> <t t-esc="row.cols.dest" /> </td>
+                        <tr t-att-class="row.classes + 'js_pack_op_line'" t-att-data-id="row.cols.id" t-att-container-id="row.cols.container_id">
+                            <td t-att-class="!row.cols.head_container &amp;&amp; row.cols.container ? 'text-center' : 'text-left' + row.cols.head_container ? ' js_unfold' : ''"> 
+                                <t t-if="!row.cols.head_container &amp;&amp; row.cols.container"><span class="fa fa-level-up fa-rotate-90"></span></t>
+                                <t t-esc="row.cols.product" /> 
+                            </td>
+                            <td class='text-center js_row_qty'>
+                                <t t-if="row.cols.qty &amp;&amp; row.cols.processed == 'false' &amp;&amp; !row.cols.container">
+                                <div class="input-group">
+                                <span class="input-group-addon"><a class="js_minus" t-att-op-id='row.cols.product_id' href="#"><i class="fa fa-minus"></i></a></span>
+                                <form class="js_submit_value" t-att-data-id="row.cols.id">
+                                <input type="text" class="form-control text-center js_qty" t-att-placeholder="row.cols.rem + '/' + row.cols.qty" t-att-data-id="row.cols.id"></input>
+                                <input type="submit" class="hidden"></input>
+                                </form>
+                                <!-- <div class="form-control"> 
+                                    <t t-esc="row.cols.rem"/> / <t t-esc="row.cols.qty" />
+                                </div> -->
+                                <span class="input-group-addon"><a class="js_plus" t-att-op-id='row.cols.product_id' href="#"><i class="fa fa-plus"></i></a></span>
+                                </div>
+                                <div>
+                                    <t t-esc="row.cols.uom" />
+                                </div>
+                                </t>
+                                <t t-if="row.cols.qty &amp;&amp; (row.cols.processed == 'true' || row.cols.container)">
+                                    <t t-esc="row.cols.rem" /> / <t t-esc="row.cols.qty" /> <t t-esc="row.cols.uom" />
+                                </t>
+                            
+                            </td>
+                            <td class="js_loc">
+                                <t t-esc="row.cols.loc" />
+                                <t t-if="row.cols.pack" ><span> : <t t-esc="row.cols.pack" /></span></t>
+                                <t t-if="row.cols.lot" ><span> : <t t-esc="row.cols.lot" /></span></t>
+                            </td>
+                            <td class="js_loc"> <t t-esc="row.cols.dest" /> 
+                                    <div class="pull-right btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle fa fa-bars" data-toggle="dropdown">
+                                     <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <t t-if="!row.cols.lot &amp;&amp; row.cols.product_id">
+                                            <li><a class="js_create_lot" t-att-product_id="row.cols.id" href="#">Create Lot</a></li>
+                                        </t>
+                                        <t t-if="row.cols.head_container">
+                                            <li><a class="js_delete_pack" t-att-pack_id="row.cols.id" href="#">Remove from package</a></li>
+                                            <li><a class="js_print_pack" t-att-pack_id="row.cols.id" href="#">Print package label</a></li>
+                                        </t>
+                                    </ul>
+                                    </div>
+                            </td>
                         </tr>
                     </t>
                 </tbody>
-
             </table>
         </div>
     </t>
@@ -178,7 +222,7 @@
                         </span>
                     </div>
                     <button type="button" class='btn btn-default js_pick_pack pull-right'> Put in Pack </button>
-                    <button type="button" class="btn btn-default js_pick_drop_down pull-right"> Drop Down </button>
+                    <button type="button" class='btn btn-default js_drop_down pull-right'> Mark all as processed </button>
                     <div class='oe_placeholder_picking_editor'/>
                 </div>
             </div>
