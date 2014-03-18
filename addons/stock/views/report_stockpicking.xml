@@ -18,7 +18,7 @@
                              <div t-if="o.picking_type_id.code=='outgoing'">
                                  <span><strong>Customer Address:</strong></span>
                              </div>
-                             <div t-if="o.partner_id">
+                             <div t-if="o.partner_id" name="partner_header">
                                  <div t-field="o.partner_id" 
                                     t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
                                 <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
@@ -34,7 +34,7 @@
                                     <th><strong>Order (Origin)</strong></th>
                                     <th><strong>State</strong></th>
                                     <th><strong>Commitment Date</strong></th>
-                                    <th><strong>Scheduled Date</strong></th>
+                                    <th name="td_sched_date_h"><strong>Scheduled Date</strong></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -48,7 +48,7 @@
                                     <td>
                                         <span t-field="o.date"/>
                                     </td>
-                                    <td>
+                                    <td name="td_sched_date">
                                         <span t-field="o.min_date"/>
                                     </td>
                                 </tr>
@@ -71,7 +71,8 @@
                             </table>
                             <table class="table table-condensed" t-if="o.pack_operation_ids">
                                 <tr t-foreach="o.pack_operation_ids" t-as="pack_operation">
-                                    <td><span t-field="pack_operation.product_id"/></td>
+                                    <td><span t-field="pack_operation.product_id"/>
+                                        <t t-if="not pack_operation.product_id and pack_operation.package_id"><span  t-field="pack_operation.package_id"/></t></td>
                                     <td><span t-field="pack_operation.product_qty"/> <span t-field="pack_operation.product_uom_id" groups="product.group_uom"/></td>
                                     <td><span t-field="pack_operation.location_id"/>
                                         <span t-if="pack_operation.package_id">:</span>
@@ -87,7 +88,6 @@
                                             <img t-att-src="'/report/barcode/EAN13/%s' % pack_operation.product_id.ean13"/>
                                         </span>
                                         <span t-if="pack_operation.package_id and not pack_operation.product_id">
-                                            <span t-field = "pack_operation.package_id.name"/>
                                             <img t-att-src="'/report/barcode/Standard39/%s' % pack_operation.package_id.name"/>
                                         </span>
                                     </td>
