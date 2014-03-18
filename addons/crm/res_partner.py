@@ -26,6 +26,8 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     
     def schedule_meeting(self, cr, uid, id, context=None):
+        if context is None:
+            context = {}
         user_id = context.get('user_id')
         if user_id:
             partner_id = self.pool.get('res.users').browse(cr, uid, user_id).partner_id.id
