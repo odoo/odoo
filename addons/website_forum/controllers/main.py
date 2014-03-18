@@ -46,7 +46,7 @@ class website_forum(http.Controller):
         values = { 'forums': forums }
         return request.website.render("website_forum.forum_index", values)
 
-    @http.route('/forum/add_forum/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    @http.route('/forum/add_forum/', type='http', auth="user", multilang=True, website=True)
     def add_forum(self, forum_name="New Forum", **kwargs):
         forum_id = request.registry['website.forum'].create(request.cr, request.uid, {
             'name': forum_name,
@@ -74,7 +74,9 @@ class website_forum(http.Controller):
         if filters == 'followed':
             domain += [ ('create_uid', '=', uid) ]
 
-        if sorting == 'date':
+        # Note: default sorting should be based on last activity
+        if not sorting or sorting == 'date':
+            sorting = 'date'
             order = 'write_date desc'
         if sorting == 'answered':
             order = 'child_count desc'
@@ -89,6 +91,7 @@ class website_forum(http.Controller):
         question_ids = Forum.browse(cr, uid, obj_ids, context=context)
 
         values = {
+            'uid': uid,
             'total_questions': question_count,
             'question_ids': question_ids,
             'forum': forum,
@@ -344,11 +347,16 @@ class website_forum(http.Controller):
     def delete_answer(self, **kwarg):
         request.registry['website.forum.post'].unlink(request.cr, request.uid, [int(kwarg.get('post_id'))], context=request.context)
         return True
-    
+
     @http.route('/forum/<model("website.forum"):forum>/delete/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
     def delete_question(self, forum, post, **kwarg):
         request.registry['website.forum.post'].unlink(request.cr, request.uid, [post.id], context=request.context)
         return werkzeug.utils.redirect("/forum/%s/" % (slug(forum)))
+
+    @http.route('/forum/message_delete/', type='json', auth="user", multilang=True, methods=['POST'], website=True)
+    def delete_comment(self, **kwarg):
+        request.registry['mail.message'].unlink(request.cr, request.uid, [int(kwarg.get('message_id'))], context=request.context)
+        return True
 
     @http.route('/forum/<model("website.forum"):forum>/edit/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
     def edit_question(self, forum, post, **kwarg):
@@ -384,6 +392,12 @@ class website_forum(http.Controller):
         post = Post.browse(cr, uid, int(kwarg.get('post_id')), context=context)
         if post.create_uid.id == uid:
             correct = False if post.correct else True
+            #Note: only one answer can be right.
+            for child in post.parent_id.child_ids:
+                if child.correct:
+                    Post.write( cr, uid, [child.id], {
+                        'correct': False,
+                    }, context=context)
             Post.write( cr, uid, [int(kwarg.get('post_id'))], {
                 'correct': correct,
             }, context=context)

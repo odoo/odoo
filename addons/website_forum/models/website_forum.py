@@ -284,6 +284,13 @@ class Badge(osv.Model):
         'level': fields.selection([('bronze', 'bronze'), ('silver', 'silver'), ('gold', 'gold')], 'Forum Badge Level'),
     }
 
+class MailMessage(osv.Model):
+    _inherit = 'mail.message'
+    _columns = {
+        'create_uid': fields.many2one('res.users', 'Created by', readonly=True ),
+    }
+
+
 class Tags(osv.Model):
     _name = "website.forum.tag"
     _description = "Tag"

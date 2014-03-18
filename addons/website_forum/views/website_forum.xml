@@ -416,10 +416,13 @@
         <template id="comments">
             <div class="row clearfix">
                 <div class="col-sm-10 col-sm-offset-2">
-                    <div t-foreach="reversed(object.website_message_ids)" t-as="message" class="oe_grey" style="padding: 4px;">
+                    <div t-foreach="reversed(object.website_message_ids)" t-as="message" id="comment" class="oe_grey" style="padding: 4px;">
                         <small class="text-muted">
+                            <t t-if="uid == message.create_uid.id">
+                                <button type="button" t-att-id="message.id" class="close comment_delete">&amp;times;</button>
+                            </t>
                             <div t-field="message.body"/>
-                                <a t-attf-href="/forum/#{ slug(forum) }/user/#{ message.author_id.id }" t-field="message.author_id"/>
+                                <a t-attf-href="/forum/#{ slug(forum) }/user/#{ message.create_uid.id }" t-field="message.create_uid"/>
                                 on <span t-field="message.date" t-field-options='{"format":"short"}'/>
                         </small>
                     </div>

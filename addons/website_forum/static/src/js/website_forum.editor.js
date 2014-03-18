@@ -73,13 +73,23 @@ $(document).ready(function () {
         openerp.jsonRpc("/forum/correct_answer/", 'call', {
               'post_id': $link.attr("id")})
               .then(function (data) {
+                  par = $link.parents().find(".oe_answer_true")
+                  $link.parents().find(".oe_answer_true").removeClass("oe_answer_true").addClass('oe_answer_false')
                   if (data) {
                     $link.removeClass("oe_answer_false").addClass('oe_answer_true');
                   }
-                  else {
-                    $link.removeClass("oe_answer_true").addClass('oe_answer_false');
-                  }
              });
+        return false;
+    });
+
+    $('.comment_delete').on('click', function (ev) {
+        ev.preventDefault();
+        var $link = $(ev.currentTarget);
+        openerp.jsonRpc("/forum/message_delete/", 'call', {
+            'message_id': $link.attr("id")})
+            .then(function (data) {
+                $link.parents('#comment').remove();
+            });
         return false;
     });
 
