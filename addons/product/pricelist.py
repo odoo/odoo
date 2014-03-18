@@ -115,11 +115,29 @@ class product_pricelist(osv.osv):
         if name and operator == '=' and not args:
             # search on the name of the pricelist and its currency, opposite of name_get(),
             # Used by the magic context filter in the product search view.
-            query_args = {'name': name, 'limit': limit}
+            query_args = {'name': name, 'limit': limit, 'lang': (context or {}).get('lang') or 'en_US'}
             query = """SELECT p.id
-                       FROM product_pricelist p JOIN
-                            res_currency c ON (p.currency_id = c.id)
-                       WHERE p.name || ' (' || c.name || ')' = %(name)s
+                       FROM ((
+                                SELECT pr.id, pr.name
+                                FROM product_pricelist pr JOIN
+                                     res_currency cur ON 
+                                         (pr.currency_id = cur.id)
+                                WHERE pr.name || ' (' || cur.name || ')' = %(name)s
+                            )
+                            UNION (
+                                SELECT tr.res_id as id, tr.value as name
+                                FROM ir_translation tr JOIN
+                                     product_pricelist pr ON (
+                                        pr.id = tr.res_id AND
+                                        tr.type = 'model' AND
+                                        tr.name = 'product.pricelist,name' AND
+                                        tr.lang = %(lang)s
+                                     ) JOIN
+                                     res_currency cur ON 
+                                         (pr.currency_id = cur.id)
+                                WHERE tr.value || ' (' || cur.name || ')' = %(name)s
+                            )
+                        ) p
                        ORDER BY p.name"""
             if limit:
                 query += " LIMIT %(limit)s"
