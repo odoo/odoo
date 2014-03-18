@@ -190,6 +190,17 @@ $sheet-padding: 16px
         vertical-align: middle
     td
         vertical-align: top
+    .oe_title
+        width: 50%
+        float: left    
+    .oe_title:after
+        content: "."
+        display: block
+        height: 0
+        clear: both
+        visibility: hidden    
+    .oe_form_group
+        clear: both
     .zebra tbody tr:nth-child(odd) td
         background-color: #f0f0fa
         @include vertical-gradient(#f0f0fa, #eeeef6)
@@ -277,14 +288,15 @@ $sheet-padding: 16px
         .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane
             padding: 16px
         .ui-dialog-titlebar
+            border-top: none
+            border-left: none
+            border-right: none
             border-bottom: 1px solid #cacaca
             @include radius(2px 2px 0 0)
             @include vertical-gradient(#FCFCFC, #DEDEDE)
             .ui-dialog-title
                 margin: 0
                 padding: 0
-        .ui-widget-header
-            border: none
         .ui-dialog-content
             background: white
         .ui-dialog-buttonpane
@@ -412,15 +424,6 @@ $sheet-padding: 16px
             @include box-shadow(none)
             &:hover
                 background: #ED6F6A
-    .oe_title
-        width: 50%
-        float: left
-    .oe_title:after
-        content: "."
-        display: block
-        height: 0
-        clear: both
-        visibility: hidden
     .oe_button_box
         width: 270px
         text-align: right
@@ -1426,7 +1429,6 @@ $sheet-padding: 16px
                     background: $tag-bg-light
                     @include radius(0 3px 3px 0)
                 .oe_facet_category, .oe_facet_value
-                    height: 18px
                     padding: 0 4px
                 .oe_facet_category
                     color: white
@@ -1746,6 +1748,7 @@ $sheet-padding: 16px
     // FormView.header {{{
     .oe_form header
         position: relative
+        overflow: hidden
         border-bottom: 1px solid #cacaca
         padding-left: 2px
         @include vertical-gradient(#fcfcfc, #dedede)
@@ -2508,6 +2511,7 @@ $sheet-padding: 16px
         float: left
     .oe_debug_view_log
         font-size: 95%
+        line-height: 1.2em
     .oe_debug_view_log label
         display: block
         width: 49%

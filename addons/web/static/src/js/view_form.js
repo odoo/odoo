@@ -3085,7 +3085,8 @@ instance.web.form.CompletionFieldMixin = {
         if (self.options.quick_create === undefined || self.options.quick_create) {
             new instance.web.DataSet(this, this.field.relation, self.build_context())
                 .name_create(name).done(function(data) {
-                    self.add_id(data[0]);
+                    if (!self.get('effective_readonly'))
+                        self.add_id(data[0]);
                 }).fail(function(error, event) {
                     event.preventDefault();
                     slow_create();
@@ -3389,7 +3390,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             // disabled to solve a bug, but may cause others
             //close: anyoneLoosesFocus,
             minLength: 0,
-            delay: 0
+            delay: 250
         });
         this.$input.autocomplete("widget").openerpClass();
         // used to correct a bug when selecting an element by pushing 'enter' in an editable list
@@ -4926,7 +4927,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
             if (self.initial_ids) {
                 self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
-                    contexts, groupbys);
+                    contexts.concat(self.context), groupbys);
                 self.initial_ids = undefined;
             } else {
                 self.do_search(domains.concat([self.domain]), contexts.concat(self.context), groupbys);
@@ -5051,7 +5052,7 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
             .on('blurred', null, function () {self.trigger('blurred');});
 
         this.m2o = new instance.web.form.FieldMany2One(fm, { attrs: {
-            name: 'm2o',
+            name: 'Referenced Document',
             modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
         }});
         this.m2o.on("change:value", this, this.data_changed);
@@ -5486,9 +5487,6 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         this.get_selection();
         if (this.options.clickable) {
             this.$el.on('click','li[data-id]',this.on_click_stage);
-        }
-        if (this.$el.parent().is('header')) {
-            this.$el.after('<div class="oe_clear"/>');
         }
         this._super();
     },

@@ -1052,7 +1052,10 @@ class DataSet(http.Controller):
             }
 
         records = Model.read(ids, fields or False, request.context)
-        records.sort(key=lambda obj: ids.index(obj['id']))
+
+        index = dict((r['id'], r) for r in records)
+        records = [index[x] for x in ids if x in index]
+
         return {
             'length': length,
             'records': records
@@ -1529,7 +1532,7 @@ class Export(http.Controller):
                     fields[base]['relation'], base, fields[base]['string'],
                     subfields
                 ))
-            else:
+            elif base in fields:
                 info[base] = fields[base]['string']
 
         return info

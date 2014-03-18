@@ -79,6 +79,20 @@
 .openerp td {
   vertical-align: top;
 }
+.openerp .oe_title {
+  width: 50%;
+  float: left;
+}
+.openerp .oe_title:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+.openerp .oe_form_group {
+  clear: both;
+}
 .openerp .zebra tbody tr:nth-child(odd) td {
   background-color: #f0f0fa;
   background-color: #efeff8;
@@ -220,6 +234,9 @@
   padding: 16px;
 }
 .openerp.ui-dialog .ui-dialog-titlebar {
+  border-top: none;
+  border-left: none;
+  border-right: none;
   border-bottom: 1px solid #cacaca;
   -moz-border-radius: 2px 2px 0 0;
   -webkit-border-radius: 2px 2px 0 0;
@@ -235,9 +252,6 @@
 .openerp.ui-dialog .ui-dialog-titlebar .ui-dialog-title {
   margin: 0;
   padding: 0;
-}
-.openerp.ui-dialog .ui-widget-header {
-  border: none;
 }
 .openerp.ui-dialog .ui-dialog-content {
   background: white;
@@ -437,17 +451,6 @@
 .openerp .oe_form_dirty button.oe_highlight_on_dirty:hover {
   background: #ed6f6a;
 }
-.openerp .oe_title {
-  width: 50%;
-  float: left;
-}
-.openerp .oe_title:after {
-  content: ".";
-  display: block;
-  height: 0;
-  clear: both;
-  visibility: hidden;
-}
 .openerp .oe_button_box {
   width: 270px;
   text-align: right;
@@ -646,10 +649,6 @@
   display: block;
   color: gray;
 }
-.openerp .ui-tabs .oe_notebook.ui-tabs-nav li.ui-tabs-active { 
-  border-bottom: none;
-  padding-bottom: 1px;
-}
 .openerp .oe_notebook > li.ui-tabs-active > a {
   color: #4c4c4c;
 }
@@ -674,6 +673,10 @@
   text-decoration: none;
   background-color: #eeeeee;
   border-color: #eeeeee #eeeeee #dddddd;
+}
+.openerp .ui-tabs .oe_notebook.ui-tabs-nav li.ui-tabs-active {
+  border-bottom: none;
+  padding-bottom: 1px;
 }
 .openerp .oe_notebook > li.ui-state-active > a, .openerp .oe_notebook > li.ui-state-active > a:hover {
   background-color: white;
@@ -1047,7 +1050,7 @@
   background-image: -moz-linear-gradient(top, #fc8787, maroon);
   background-image: -ms-linear-gradient(top, #fc8787, maroon);
   background-image: -o-linear-gradient(top, #fc8787, maroon);
-  background-image: linear-gradient(to bottom, #fc8787, maroon);
+  background-image: linear-gradient(to bottom, #fc8787, #800000);
 }
 .openerp .oe_topbar .oe_topbar_anonymous_login a {
   display: block;
@@ -1293,7 +1296,7 @@
   color: white;
   padding: 2px 4px;
   margin: 1px 6px 0 0;
-  border: 1px solid lightgrey;
+  border: 1px solid lightGray;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -1325,7 +1328,7 @@
   transform: scale(1.1);
 }
 .openerp .oe_secondary_submenu .oe_active {
-  border-top: 1px solid lightgrey;
+  border-top: 1px solid lightGray;
   border-bottom: 1px solid #dedede;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
@@ -1794,7 +1797,6 @@
   border-radius: 0 3px 3px 0;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_category, .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_value {
-  height: 18px;
   padding: 0 4px;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_category {
@@ -2203,6 +2205,7 @@
 }
 .openerp .oe_form header {
   position: relative;
+  overflow: hidden;
   border-bottom: 1px solid #cacaca;
   padding-left: 2px;
   background-color: #ededed;
@@ -2328,7 +2331,7 @@
 }
 .openerp .oe_form .oe_form_label_help[for] span, .openerp .oe_form .oe_form_label[for] span {
   font-size: 80%;
-  color: darkgreen;
+  color: darkGreen;
   vertical-align: top;
   position: relative;
   top: -4px;
@@ -3185,6 +3188,7 @@
 }
 .openerp .oe_debug_view_log {
   font-size: 95%;
+  line-height: 1.2em;
 }
 .openerp .oe_debug_view_log label {
   display: block;

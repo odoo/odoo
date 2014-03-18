@@ -1227,7 +1227,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         this.dataset = dataset;
         this.model_id = model_id;
         if (args && args[0].error) {
-            this.do_warn( instance.web.qweb.render('message_error_uploading'), args[0].error);
+            this.do_warn(_t('Uploading Error'), args[0].error);
         }
         if (!model_id) {
             this.on_attachments_loaded([]);
@@ -1311,7 +1311,7 @@ instance.web.View = instance.web.Widget.extend({
                 "context": this.dataset.get_context(),
             });
         }
-        return view_loaded_def.then(function(r) {
+        return this.alive(view_loaded_def).then(function(r) {
             self.fields_view = r;
             // add css classes that reflect the (absence of) access rights
             self.$el.addClass('oe_view')
