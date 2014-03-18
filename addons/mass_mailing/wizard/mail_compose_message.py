@@ -40,9 +40,8 @@ class MailComposeMessage(osv.TransientModel):
         email mass mailing. """
         res = super(MailComposeMessage, self).get_mail_values(cr, uid, wizard, res_ids, context=context)
         # use only for allowed models in mass mailing
-        if wizard.model not in [t[0] for t in self.pool['mail.mass_mailing']._get_mailing_type()]:
-            return res
-        if wizard.composition_mode == 'mass_mail' and wizard.mass_mailing_name:
+        if wizard.composition_mode == 'mass_mail' and wizard.mass_mailing_name and \
+                wizard.model in [item[0] for item in self.pool['mail.mass_mailing']._get_mailing_model()]:
             list_id = self.pool['mail.mass_mailing.list'].create(
                 cr, uid, {
                     'name': wizard.mass_mailing_name,
