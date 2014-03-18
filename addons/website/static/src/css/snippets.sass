@@ -252,6 +252,10 @@
                     background: rgba(30, 30, 30, .8)
                     color: #fff
                     +box-shadow(0 0 5px 3px rgba(255,255,255,.7))
+        &.readonly
+            cursor: auto !important
+            &:before, &.size
+                display: none !important
 
     .icon.btn
         display: inline-block
@@ -260,7 +264,7 @@
         position: absolute
         left: 50% !important
         text-align: center
-        top: -11px
+        top: -20px
         z-index: 1002
         > .btn-group
             left: -50%
@@ -484,10 +488,6 @@
             width: 16px
             height: 16px
             display: inline-block
-
-[data-snippet-id] 
-    min-height: 10px
-    min-width: 10px
 
 
 

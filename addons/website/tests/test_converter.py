@@ -135,7 +135,7 @@ class TestConvertBack(common.TransactionCase):
         rendered = self.registry('website.qweb').render_tag_field(
             e, {'field': field_value}, '', ir_qweb.QWebContext(self.cr, self.uid, {
                 'record': record,
-            }))
+            }, context={'inherit_branding': True}))
         element = html.fromstring(
             rendered, parser=html.HTMLParser(encoding='utf-8'))
 
@@ -216,7 +216,7 @@ class TestConvertBack(common.TransactionCase):
         rendered = self.registry('website.qweb').render_tag_field(
             e, {'field': field_value}, '', ir_qweb.QWebContext(self.cr, self.uid, {
                 'record': record,
-            }))
+            }, context={'inherit_branding': True}))
 
         element = html.fromstring(rendered, parser=html.HTMLParser(encoding='utf-8'))
         # emulate edition
