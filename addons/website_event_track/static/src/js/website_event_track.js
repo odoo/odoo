@@ -8,7 +8,7 @@ $(document).ready(function() {
         return search_object;
     };
     $.each($("table#table_search"), function(key, element){
-        $.each($("tr#agenda_tr"),function(key, element1){
+        $.each($(element).find("tr#agenda_tr"),function(key, element1){
             var th_child = $(element1).siblings("#agenda_th").children().length;
             var tr_child = $(element1).children();
             var td_contain = $(tr_child).filter("td#seach_enable");
