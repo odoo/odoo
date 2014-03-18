@@ -453,18 +453,3 @@ class stock_picking(osv.osv):
                     created_lines = sale_line_obj.invoice_line_create(cr, uid, sale_line_ids, context=context)
                     invoice_line_obj.write(cr, uid, created_lines, {'invoice_id': invoice_id}, context=context)
         return invoice_id
-    
-    
-class procurement_order(osv.osv):
-    _inherit = 'procurement.order'
-    
-    def group_picking_assign(self, cr, uid, proc_ids, context=None):
-        moves = []
-        procurements = proc_ids
-        while procurements:
-            related_moves = []
-            for proc in self.browse(cr, uid, procurements, context=context):
-                related_moves += proc.move_ids
-            procurements = self.search(cr, uid, [('move_dest_id', 'in', [x.id for x in related_moves])], context=context)
-            moves += related_moves
-        self.pool.get("stock.move")._group_picking_assign(cr, uid, moves, context=context)

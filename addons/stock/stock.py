@@ -946,12 +946,10 @@ class stock_picking(osv.osv):
         self.action_assign(cr, uid, picking_ids, context=context)
         self.do_prepare_partial(cr, uid, picking_ids, context=context)
 
-
     def _picking_putaway_resolution(self, cr, uid, picking, product, putaway, context=None):
         if putaway.method == 'fixed' and putaway.location_spec_id:
             return putaway.location_spec_id.id
         return False
-
 
     def _get_top_level_packages(self, cr, uid, quants_suggested_locations, context=None):
         """This method searches for the higher level packages that can be moved as a single operation, given a list of quants
@@ -1559,7 +1557,6 @@ class stock_move(osv.osv):
             res += [x.id for x in picking.move_lines]
         return res
 
-
     _columns = {
         'name': fields.char('Description', required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
@@ -1923,25 +1920,20 @@ class stock_move(osv.osv):
             result['location_dest_id'] = loc_dest_id
         return {'value': result}
 
-    def _picking_assign(self, cr, uid, move, context=None):
-        if not context:
-            context = {}
-        if context.get("no_picking_assign") and context['no_picking_assign']:
-            return False
-        if move.picking_id or not move.picking_type_id:
-            return False
-        context = context or {}
+    def _picking_assign(self, cr, uid, move_ids, procurement_group, location_from, location_to, context=None):
+        """Assign a picking on the given move_ids, which is a list of move supposed to share the same procurement_group, location_from and location_to
+        (and company). Those attributes are also given as parameters.
+        """
         pick_obj = self.pool.get("stock.picking")
-        picks = []
-        group = move.group_id and move.group_id.id or False
         picks = pick_obj.search(cr, uid, [
-                ('group_id', '=', group),
-                ('location_id', '=', move.location_id.id),
-                ('location_dest_id', '=', move.location_dest_id.id),
+                ('group_id', '=', procurement_group),
+                ('location_id', '=', location_from),
+                ('location_dest_id', '=', location_to),
                 ('state', 'in', ['draft', 'confirmed', 'waiting'])], context=context)
         if picks:
             pick = picks[0]
         else:
+            move = self.browse(cr, uid, move_ids, context=context)[0]
             values = {
                 'origin': move.origin,
                 'company_id': move.company_id and move.company_id.id or False,
@@ -1950,42 +1942,7 @@ class stock_move(osv.osv):
                 'picking_type_id': move.picking_type_id and move.picking_type_id.id or False,
             }
             pick = pick_obj.create(cr, uid, values, context=context)
-        move.write({'picking_id': pick})
-        return True
-
-    def _group_picking_assign(self, cr, uid, moves, context=None):
-        if not context:
-            context = {}
-        if context.get("no_picking_assign"):
-            return False
-        move_dict = {}
-        for move in moves:
-            group_by = (move.location_id, move.location_dest_id, move.group_id)
-            if not move_dict.get(group_by, False):
-                move_dict[group_by] = [move]
-            else:
-                move_dict[group_by].append(move)
-        pick_obj = self.pool.get("stock.picking")
-        for to_compare in move_dict.keys():
-            picks = pick_obj.search(cr, uid, [
-                ('group_id', '=', to_compare[2].id),
-                ('location_id', '=', to_compare[0].id),
-                ('location_dest_id', '=', to_compare[1].id),
-                ('state', 'in', ['draft', 'confirmed', 'waiting']),
-                ], context=context)
-            if picks:
-                pick = picks[0]
-            else:
-                move = move_dict[to_compare][0]
-                values = {
-                          'origin': move.origin,
-                          'company_id': move.company_id and move.company_id.id or False,
-                          'move_type': move.group_id and move.group_id.move_type or 'one',
-                          'partner_id': move.group_id and move.group_id.partner_id and move.group_id.partner_id.id or False,
-                          'picking_type_id': move.picking_type_id and move.picking_type_id.id or False,
-                }
-                pick = pick_obj.create(cr, uid, values, context=context)
-            self.write(cr, uid, [x.id for x in move_dict[to_compare]], {'picking_id': pick}, context=context)
+        return self.write(cr, uid, move_ids, {'picking_id': pick}, context=context)
 
     def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
         """ On change of Scheduled Date gives a Move date.
@@ -2007,6 +1964,7 @@ class stock_move(osv.osv):
             'confirmed': [],
             'waiting': []
         }
+        to_assign = {}
         for move in self.browse(cr, uid, ids, context=context):
             state = 'confirmed'
             #if the move is preceeded, then it's waiting (if preceeding move is done, then action_assign has been called already and its state is already available)
@@ -2019,9 +1977,13 @@ class stock_move(osv.osv):
                     if move2.move_orig_ids:
                         state = 'waiting'
                     move2 = move2.split_from
-
             states[state].append(move.id)
-            self._picking_assign(cr, uid, move, context=context)
+
+            if not move.picking_id and move.picking_type_id:
+                key = (move.group_id.id, move.location_id.id, move.location_dest_id.id)
+                if key not in to_assign:
+                    to_assign[key] = []
+                to_assign[key].append(move.id)
 
         for move in self.browse(cr, uid, states['confirmed'], context=context):
             if move.procure_method == 'make_to_order':
@@ -2032,6 +1994,10 @@ class stock_move(osv.osv):
         for state, write_ids in states.items():
             if len(write_ids):
                 self.write(cr, uid, write_ids, {'state': state})
+        #assign picking in batch for all confirmed move that share the same details
+        for key, move_ids in to_assign.items():
+            procurement_group, location_from, location_to = key
+            self._picking_assign(cr, uid, move_ids, procurement_group, location_from, location_to, context=context)
         moves = self.browse(cr, uid, ids, context=context)
         self._push_apply(cr, uid, moves, context=context)
         return ids

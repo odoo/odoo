@@ -215,11 +215,23 @@ class procurement_order(osv.osv):
                 return False
             move_obj = self.pool.get('stock.move')
             move_dict = self._run_move_create(cr, uid, procurement, context=context)
-            move_id = move_obj.create(cr, uid, move_dict, context=context)
+            move_obj.create(cr, uid, move_dict, context=context)
             self.message_post(cr, uid, [procurement.id], body=_("Supply Move created"), context=context)
-            move_obj.action_confirm(cr, uid, [move_id], context=context)
             return True
-        return super(procurement_order, self)._run(cr, uid, procurement, context)
+        return super(procurement_order, self)._run(cr, uid, procurement, context=context)
+
+    def run(self, cr, uid, ids, context=None):
+        move_obj = self.pool.get('stock.move')
+        res = super(procurement_order, self).run(cr, uid, ids, context=context)
+        #after all the procurements are run, check if some created a draft stock move that needs to be confirmed
+        #(we do that in batch because it fasten the picking assignation and the picking state computation)
+        move_to_confirm_ids = []
+        for procurement in self.browse(cr, uid, ids, context=context):
+            if procurement.state == "running" and procurement.rule_id and procurement.rule_id.action == "move":
+                move_to_confirm_ids += [m.id for m in procurement.move_ids if m.state == 'draft']
+        if move_to_confirm_ids:
+            move_obj.action_confirm(cr, uid, move_to_confirm_ids, context=context)
+        return res
 
     def _check(self, cr, uid, procurement, context=None):
         ''' Implement the procurement checking for rules of type 'move'. The procurement will be satisfied only if all related

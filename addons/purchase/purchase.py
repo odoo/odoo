@@ -31,7 +31,6 @@ import openerp.addons.decimal_precision as dp
 from openerp.osv.orm import browse_record, browse_null
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 
-
 class purchase_order(osv.osv):
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
@@ -164,11 +163,11 @@ class purchase_order(osv.osv):
         """
         cr.execute(query, (tuple(ids), ))
         picks = cr.fetchall()
-        for pick in picks:
-            if not res.get(pick[1]):
-                res[pick[1]] = [pick[0]]
+        for pick_id, po_id in picks:
+            if not res.get(po_id):
+                res[po_id] = [pick_id]
             else:
-                res[pick[1]].append(pick[0])
+                res[po_id].append(pick_id)
         return res
 
     STATE_SELECTION = [
