@@ -892,7 +892,7 @@ class Many2one(_Relational):
             return value.id
 
     def convert_to_write(self, value, target=None, fnames=None):
-        return bool(value) and (value.id or dict(value._cache))
+        return bool(value) and (value.id or value._convert_to_write(value._cache))
 
     def convert_to_export(self, value):
         return bool(value) and value.name_get()[0][1]
