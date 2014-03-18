@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="website.ButtonGengoTranslator">
+    <a class="btn btn-danger gengo_translate" data-action="translation_gengo" href="#">Buy Translation</a>
+    <a class="btn btn-danger hidden gengo_post" data-action="translation_gengo_post" href="#">Post to Gengo</a>
+</t>
+<t t-name="website.GengoTranslatorDialog">
+    <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
+                    <h2 class="modal-title">Translate this page using gengo</h2>
+                </div>
+                <div class="modal-body">
+                    <section>
+                        <p>
+                            Here are the visuals used to help you translate efficiently:
+                            <ul class="oe_translate_examples">
+                                <li class="oe_translatable_todo">
+                                    Content will be posted to <b><a href="http://gengo.com/" >Gengo</a></b> for translation. 
+                                </li>
+                                <li class="oe_translatable_text">
+                                    Already Translated content
+                                </li>
+                            </ul>
+                        </p>
+                        <p>
+                            In this mode, highligted text will be posted to Gengo for translation.
+                            To change the structure of the page, you must edit the
+                            master page.
+                        </p>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-action="activate" class="btn btn-primary">Ok</button>
+                    or
+                    <a data-action="discard" data-dismiss="modal" href="#">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="website.GengoTranslatorPostDialog">
+    <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
+                    <h2 class="modal-title">Select Gengo Translation Service Level</h2>
+                </div>
+                <div class="modal-body">
+                    <section>
+                    <select class="form-control" required="required" autofocus="autofocus">
+                        <option value="machine">Translation By Machine</option>
+                        <option value="standard">Standard</option>
+                        <option value="pro">Pro</option>
+                        <option value="ultra">Ultra</option>
+                    </select>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-action="service_level" class="btn btn-primary">Post</button>
+                    or
+                    <a data-action="discard" data-dismiss="modal" href="#">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

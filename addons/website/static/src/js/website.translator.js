@@ -120,7 +120,9 @@
             } else {
                 node.className += ' oe_translatable_todo';
             }
-            node.contentEditable = true;
+            if(!this.gengo_translate){
+                node.contentEditable = true;
+            }
             var nid = _.uniqueId();
             $(node).attr('data-oe-nodeid', nid);
             this.initial_content[nid] = content;
