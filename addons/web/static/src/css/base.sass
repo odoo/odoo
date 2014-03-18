@@ -1037,10 +1037,12 @@ $sheet-padding: 16px
         height: inherit
         width: 100%
         .oe_view_manager_body
-            display: table-row
             height: inherit
         .oe_view_manager_view_kanban:not(:empty)
             height: inherit
+        &[data-view-type=kanban]
+            .oe_view_manager_body
+                display: table-row
 
         table.oe_view_manager_header
             border-collapse: separate

@@ -644,7 +644,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.$el
             .find('.oe_view_manager_switch a').filter('[data-view-type="' + view_type + '"]')
             .parent().addClass('active');
-
+        this.$el.attr("data-view-type", view_type);
         return $.when(view_promise).done(function () {
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
