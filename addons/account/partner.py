@@ -204,7 +204,7 @@ class res_partner(osv.osv):
         'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, string='Total Payable', multi='dc', help="Total amount you have to pay to this supplier."),
         'debit_limit': fields.float('Payable Limit'),
         'invoice_count': fields.function(_invoice_journal_item_count, string="Invoices", type='integer', multi="invoice_journal"),
-        'journal_items_ids': fields.one2many('account.move.line', 'partner_id', 'Journal Items'),
+        'journal_item_ids': fields.one2many('account.move.line', 'partner_id', 'Journal Items'),
         'journal_item_count': fields.function(_invoice_journal_item_count, string="Journal Items", type="integer", multi="invoice_journal"),
         'property_account_payable': fields.property(
             type='many2one',
