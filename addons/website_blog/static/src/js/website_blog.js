@@ -19,33 +19,19 @@ $(document).ready(function() {
         });
     }
 
-    function arrow_scroll(){
-        var node = $('#blog_angle_down');
-        var stickyTop = node.offset().top - 50;
-        $(window).scroll(function(event){
-            var scrolltop = $(window).scrollTop();
-            if (stickyTop > scrolltop)
-                node.stop().animate({"marginTop": ($(window).scrollTop() - 50) + "px"}, "slow" );
-        });
-    }
-
     //check custome options inline discussion and select to tweet(share) are checked.
-    openerp.jsonRpc("/blogpsot/get_custom_options", 'call', {
-        'post_id': $('#blog_post_name').attr('data-oe-id')
-    }).then(function(res){
+    openerp.jsonRpc("/blogpsot/get_custom_options", 'call', {}).then(function(res){
         discussion = res['Allow comment in text'];
         share = res['Select to Tweet'];
-        var author_name = res['author_name']
         var content = $("#blog_content p");
         if(content.length && discussion){
             $('#discussions_wrapper').empty();
             new openerp.website.blog_discussion({'content' : content});
         }
-        if (share) $("p,h3,h4,ul").share({'author_name':author_name});
+        if (share) $("p,h1,h2,h3,h4,ul").share({'author_name':$('#blog_author').text()});
     });
     $('.cover_footer').on('click',page_transist);
     $('a[href^="#blog_content"]').on('click', animate);
-    arrow_scroll();
 
     function page_upwards() {
         var translationValue = $("#wrap:last-child").get(0).getBoundingClientRect().top;
@@ -59,7 +45,6 @@ $(document).ready(function() {
             if (content && discussion){
                new openerp.website.blog_discussion({'content' : content});
             }
-           arrow_scroll();
         }, 500 );
     }
 
@@ -70,10 +55,10 @@ $(document).ready(function() {
             $('main').append($(data).find('main').html());
             page_upwards();
             //bind again it takes control from now on, until page relaod.
-            var author_name = $(data).find('#blog_author:first').text()
             $(document).find('.cover_footer').on('click',page_transist);
+            console.log($(data).find('#blog_author'))
             $(document).find('a[href^="#blog_content"]').on('click', animate);
-            if (share) $("p,h3,h4,ul").share({'author_name':author_name});
+            if (share) $("p,h1,h2,h3,h4,ul").share({'author_name':$(data).find('#blog_author:first').text()});
             if (newLocation != window.location)
                 history.pushState(null, null, newLocation);
         });

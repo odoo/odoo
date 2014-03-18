@@ -14,7 +14,7 @@
             },
             getContent : function() {
                 var current_url = window.location.href
-                var selected_text = this.getSelection('string').substring(0,option.maxLength-(current_url.length+3)-(option.author_name.length+4));
+                var selected_text = this.getSelection('string').substring(0,option.maxLength-(current_url.length+option.author_name.length+7));
                 var text = encodeURIComponent('\"'+selected_text+'\" '+'--@'+option.author_name+' '+current_url)
                 return '<a onclick="window.open(\''+option.shareLink+text+'\',\'_'+option.target+'\',\'location=yes,height=570,width=520,scrollbars=yes,status=yes\')"><i class="fa fa-twitter fa-lg"/></a>';
             },
