@@ -1027,7 +1027,7 @@ class Root(object):
         return self.dispatch(environ, start_response)
 
     def load_addons(self):
-        """ Load all addons from addons patch containg static files and
+        """ Load all addons from addons path containing static files and
         controllers and configure them.  """
         statics = {}
 
