@@ -71,12 +71,12 @@ def compute_related(field, records):
     sudo_scope = scope.sudo()
     for record in records:
         # bypass access rights check when traversing the related path
-        value = record.scoped(sudo_scope) if record.id else record
+        value = record.attach_scope(sudo_scope) if record.id else record
         for name in field.related:
             value = value[name]
         # re-scope the resulting value
         if isinstance(value, BaseModel):
-            value = value.scoped(scope)
+            value = value.attach_scope(scope)
         record[field.name] = value
 
 def inverse_related(field, records):
@@ -773,7 +773,7 @@ class Reference(Selection):
     def convert_to_cache(self, value):
         if isinstance(value, BaseModel):
             if value._name in self.get_values() and len(value) <= 1:
-                return value.scoped() or False
+                return value.attach_scope(scope.current) or False
         elif isinstance(value, basestring):
             res_model, res_id = value.split(',')
             return scope[res_model].browse(int(res_id))
@@ -872,7 +872,7 @@ class Many2one(_Relational):
     def convert_to_cache(self, value):
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name and len(value) <= 1:
-                return value.scoped()
+                return value.attach_scope(scope.current)
             raise ValueError("Wrong value for %s: %r" % (self, value))
         elif isinstance(value, tuple):
             return self.comodel.browse(value[0])
@@ -921,7 +921,7 @@ class _RelationalMulti(_Relational):
     def convert_to_cache(self, value):
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name:
-                return value.scoped()
+                return value.attach_scope(scope.current)
         elif isinstance(value, list):
             # value is a list of record ids or commands
             result = self.comodel.browse()

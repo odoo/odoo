@@ -211,7 +211,7 @@ class TestNewFields(common.TransactionCase):
             self.assertEqual(message.discussion._scope, outer_scope)
 
             # migrate message into the current scope, and check again
-            inner_message = message.scoped()
+            inner_message = message.attach_scope(scope.current)
             self.assertEqual(inner_message._scope, inner_scope)
             self.assertEqual(inner_message.discussion._scope, inner_scope)
 

@@ -1752,7 +1752,7 @@ class BaseModel(object):
             :return: list of pairs ``(id, text_repr)`` for all records
         """
         result = []
-        for record in self.scoped():
+        for record in self.attach_scope(scope_proxy.current):
             try:
                 result.append((record.id, record.display_name))
             except MissingError:
@@ -5122,17 +5122,11 @@ class BaseModel(object):
             return self
         raise except_orm("ValueError", "Expected singleton: %s" % self)
 
-    def scoped(self, scope=None):
+    def attach_scope(self, scope):
         """ Return an instance equivalent to `self` attached to `scope` or the
             current scope.
         """
-        scope = scope or scope_proxy.current
-        if self._scope is scope:
-            return self
-        if all(self._ids):
-            with scope:
-                return self.browse(self._ids)
-        raise except_orm("ValueError", "Cannot scope %s" % self)
+        return self._browse(scope, self._ids)
 
     def unbrowse(self):
         """ Return the list of record ids of this instance. """

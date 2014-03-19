@@ -161,8 +161,7 @@ class rml_parse(object):
         self.localcontext['lang'] = lang
         self.lang_dict_called = False
         # change the scope of self.objects
-        with scope(self.cr, self.uid, self.localcontext):
-            self.objects = self.objects.scoped()
+        self.objects = self.objects.attach_scope(scope(self.cr, self.uid, self.localcontext))
 
     def _get_lang_dict(self):
         pool_lang = self.pool['res.lang']
