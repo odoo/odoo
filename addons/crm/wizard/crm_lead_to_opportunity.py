@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.tools import email_split
 import re
 
 class crm_lead2opportunity_partner(osv.osv_memory):
@@ -42,20 +43,21 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         return {'value': {'partner_id': False if action != 'exist' else self._find_matching_partner(cr, uid, context=context)}}
 
     def _get_duplicated_leads(self, cr, uid, partner_id, email, context=None):
+        """
+        Search for opportunities that have the same partner and that arent done or cancelled
+        """
         lead_obj = self.pool.get('crm.lead')
-        results = []
+        emails = set(email_split(email) + [email])
+        final_stage_domain = [('stage_id.probability', '<', 100), '|', ('stage_id.probability', '>', 0), ('stage_id.sequence', '<=', 1)]
+        partner_match_domain = []
+        for email in emails:
+            partner_match_domain.append(('email_from', '=ilike', email))
         if partner_id:
-            # Search for opportunities that have the same partner and that arent done or cancelled
-            ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), '|', ('stage_id.probability', '=', False), ('stage_id.probability', '<', '100')])
-            for id in ids:
-                results.append(id)
-        email = re.findall(r'([^ ,<@]+@[^> ,]+)', email or '')
-        if email:
-            ids = lead_obj.search(cr, uid, [('email_from', '=ilike', email[0]), '|', ('stage_id.probability', '=', False), ('stage_id.probability', '<', '100')])
-            for id in ids:
-                results.append(id)
-        return list(set(results))
-
+            partner_match_domain.append(('partner_id', '=', partner_id))
+        partner_match_domain = ['|'] * (len(partner_match_domain) - 1) + partner_match_domain
+        if not partner_match_domain:
+            return []        
+        return lead_obj.search(cr, uid, partner_match_domain + final_stage_domain)
 
     def default_get(self, cr, uid, fields, context=None):
         """
@@ -126,7 +128,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         leads = lead.browse(cr, uid, lead_ids, context=context)
         for lead_id in leads:
             partner_id = self._create_partner(cr, uid, lead_id.id, data.action, lead_id.partner_id.id, context=context)
-            res = lead.convert_opportunity(cr, uid, [lead_id.id], partner_id, [], team_id, context=context)
+            res = lead.convert_opportunity(cr, uid, [lead_id.id], partner_id, [], False, context=context)
         user_ids = vals.get('user_ids', False)
         if context.get('no_force_assignation'):
             leads_to_allocate = [lead_id.id for lead_id in leads if not lead_id.user_id]

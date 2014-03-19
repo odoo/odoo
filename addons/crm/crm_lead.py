@@ -313,7 +313,10 @@ class crm_lead(format_address, osv.osv):
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context=context)
         if not stage.on_change:
             return {'value': {}}
-        return {'value': {'probability': stage.probability}}
+        vals = {'probability': stage.probability}
+        if stage.probability >= 100 or (stage.probability == 0 and stage.sequence > 1):
+                vals['date_closed'] = fields.datetime.now()
+        return {'value': vals}
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
         values = {}
@@ -407,7 +410,7 @@ class crm_lead(format_address, osv.osv):
                         'probability = 0 %, select "Change Probability Automatically".\n'
                         'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
         for stage_id, lead_ids in stages_leads.items():
-            self.write(cr, uid, lead_ids, {'stage_id': stage_id, 'date_closed': fields.datetime.now()}, context=context)
+            self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
         return True
 
     def case_mark_won(self, cr, uid, ids, context=None):
@@ -428,7 +431,7 @@ class crm_lead(format_address, osv.osv):
                         'probability = 100 % and select "Change Probability Automatically".\n'
                         'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
         for stage_id, lead_ids in stages_leads.items():
-            self.write(cr, uid, lead_ids, {'stage_id': stage_id, 'date_closed': fields.datetime.now()}, context=context)
+            self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
         return True
 
     def case_escalate(self, cr, uid, ids, context=None):
