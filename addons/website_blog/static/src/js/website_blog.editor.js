@@ -33,8 +33,7 @@
             $('.popover').remove();
             $('mark').contents().unwrap();
             this._super();
-            var top_nav = _.isNull($('#website-top-navbar').height()) ? 0 : $('#website-top-navbar').height();
-            var vHeight = $(window).height() - ($('header').height() + top_nav);
+            var vHeight = $(window).height();
             $('body').on('click','#change_cover',_.bind(this.change_bg,{},vHeight));
             $('body').on('click', '#clear_cover',_.bind(this.clean_bg,{},vHeight));
         },
@@ -55,7 +54,7 @@
                 o.url = $('.cover_header')[0].style.background.replace('url(','').replace(')','');
             });
             editor.on('save', self, function (o) {
-                $('.cover').css({"background-image": o.url && o.url !== "" ? 'url(' + o.url + ')' : "", 'min-height': vHeight})
+                $('.cover_header').css({"background-image": o.url && o.url !== "" ? 'url(' + o.url + ')' : "", 'min-height': vHeight})
             });
             editor.appendTo('body');
         },

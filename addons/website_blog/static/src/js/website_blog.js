@@ -3,16 +3,22 @@ $(document).ready(function() {
     var share = false;
 
     function updateMinHeight(event) {
-        var top_nav = _.isNull($('#website-top-navbar-placeholder').height()) ? 0 : $('#website-top-navbar-placeholder').height();
-        var vHeight = $(window).height() - ($('header').height() + top_nav);
+        var vHeight = $(window).height();
         $(document).find('.cover_header').css('min-height', vHeight);
     }
 
     function page_transist(event) {
         event.preventDefault();
         newLocation = $('.js_next')[0].href;
-        $('.cover_footer')
-        .fadeIn(900, newpage);
+        var top = $('.cover_footer').offset().top;
+        $('.cover_footer').animate({
+            height: $(window).height()+'px'
+        }, 500);
+        $('html, body').animate({
+            scrollTop: top
+        }, 500, 'swing', function() {
+           window.location.href = newLocation;
+        });
     }
 
     function animate(event) {
@@ -42,35 +48,4 @@ $(document).ready(function() {
     $('.cover_footer').on('click',page_transist);
     $('a[href^="#blog_content"]').on('click', animate);
     updateMinHeight();
-
-    function page_upwards() {
-        var translationValue = $("#wrap:last-child").get(0).getBoundingClientRect().top;
-        $("#wrap:last-child").addClass('easing_upward');
-        setTimeout(function(){
-            $html = $(document.documentElement);
-            $("#wrap:first-child").add($html).scrollTop(0);
-            $("#wrap:last-child").removeClass('easing_upward');
-            $("#wrap:first").remove();
-            var content = $(document).find("#blog_content p");
-            if (content && discussion){
-               new openerp.website.blog_discussion({'content' : content});
-            }
-        }, 300 );
-    }
-
-    function newpage() {
-        $.ajax({
-            url: newLocation
-        }).done(function(data) {
-            $('main').append($(data).find('main').html());
-            page_upwards();
-            updateMinHeight();
-            //bind again it takes control from now on, until page relaod.
-            $(document).find('.cover_footer').on('click',page_transist);
-            $(document).find('a[href^="#blog_content"]').on('click', animate);
-            if (share) $("p,h1,h2,h3,h4,ul").share({'author_name':$(data).find('#blog_author').text()});
-            if (newLocation != window.location)
-                history.pushState(null, null, newLocation);
-        });
-    }
 });

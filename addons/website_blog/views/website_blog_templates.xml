@@ -165,7 +165,7 @@
 
     <div t-attf-class="cover #{blog_post.content_image and 'cover_header' or ''} text-center" id="title" t-attf-style="background-image : url(#{blog_post.content_image})" t-ignore="True">
         <div class="container">
-          <div style="position: absolute" class="container text-right mt16">
+          <div class="container text-right mt16">
             <div class="btn-group css_non_editable_mode_hidden">
                 <a id="change_cover" class="btn btn-primary">
                     Change Cover
@@ -224,7 +224,7 @@
     <t t-if="next_post">
         <div class="cover cover_footer mb0 text-center" t-attf-style="background-image: url(#{next_post.content_image})" t-ignore="True">
             <p>Read Next</p>
-            <a class="hidden js_next" t-attf-href="/blogpost/#{ slug(next_post) }#wrap"/>
+            <a class="hidden js_next" t-attf-href="/blogpost/#{ slug(next_post) }/#wrap"/>
             <h1 t-field="next_post.name"/>
             <h2 t-field="next_post.sub_title"/>
             <div>
