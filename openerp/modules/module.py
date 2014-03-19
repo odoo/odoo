@@ -169,13 +169,15 @@ def get_module_icon(module):
         return ('/' + module + '/') + '/'.join(iconpath)
     return '/base/'  + '/'.join(iconpath)
 
-def load_information_from_description_file(module):
+def load_information_from_description_file(module, mod_path=None):
     """
     :param module: The name of the module (sale, purchase, ...)
+    :param mod_path: Physical path of module, if not providedThe name of the module (sale, purchase, ...)
     """
 
-    terp_file = get_module_resource(module, '__openerp__.py')
-    mod_path = get_module_path(module)
+    if not mod_path:
+        mod_path = get_module_path(module)
+    terp_file = opj(mod_path, '__openerp__.py')
     if terp_file:
         info = {}
         if os.path.isfile(terp_file):
