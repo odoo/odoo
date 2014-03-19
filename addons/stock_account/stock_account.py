@@ -77,32 +77,34 @@ class stock_quant(osv.osv):
             if quant.product_id.cost_method == 'real' and quant.location_id.usage != 'internal':
                 self.pool.get('stock.move')._store_average_cost_price(cr, uid, move, context=context)
 
-    """
-    Accounting Valuation Entries
-
-    quants: Quants to create accounting valuation entries for
-    move: Move to use
-    """
     def _account_entry_move(self, cr, uid, quants, move, context=None):
-        location_from = move.location_id
-        location_to = quants[0].location_id
+        """
+        Accounting Valuation Entries
+
+        quants: browse record list of Quants to create accounting valuation entries for. Unempty and all quants are supposed to have the same location id (thay already moved in)
+        move: Move to use. browse record
+        """
         if context is None:
             context = {}
-        if quants[0].product_id.valuation != 'real_time':
-            return False
-        if quants[0].owner_id:
-            #if the quant isn't owned by the company, we don't make any valuation entry
-            return False
-        if quants[0].qty <= 0:
-            #we don't make any stock valuation for negative quants because the valuation is already made for the counterpart.
-            #At that time the valuation will be made at the product cost price and afterward there will be new accounting entries
-            #to make the adjustments when we know the real cost price.
-            return False
-        
-        company_from = self._location_owner(cr, uid, quants[0], location_from, context=context)
-        company_to = self._location_owner(cr, uid, quants[0], location_to, context=context)
+        location_obj = self.pool.get('stock.location')
+        location_from = move.location_id
+        location_to = quants[0].location_id 
+        company_from = location_obj._location_owner(cr, uid, location_from, context=context)
+        company_to = location_obj._location_owner(cr, uid, location_to, context=context)
         if company_from == company_to:
             return False
+
+        if move.product_id.valuation != 'real_time':
+            return False
+        for q in quants:
+            if q.owner_id:
+                #if the quant isn't owned by the company, we don't make any valuation entry
+                return False
+            if q.qty <= 0:
+                #we don't make any stock valuation for negative quants because the valuation is already made for the counterpart.
+                #At that time the valuation will be made at the product cost price and afterward there will be new accounting entries
+                #to make the adjustments when we know the real cost price.
+                return False
 
         # Create Journal Entry for products arriving in the company
         if company_to:
@@ -126,19 +128,17 @@ class stock_quant(osv.osv):
             else:
                 self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_dest, journal_id, context=ctx)
 
-
     def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location=False, context=None):
         quant = super(stock_quant, self)._quant_create(cr, uid, qty, move, lot_id, owner_id, src_package_id, dest_package_id, force_location, context=context)
         if move.product_id.valuation == 'real_time':
             self._account_entry_move(cr, uid, [quant], move, context)
         return quant
 
-    def move_single_quant_tuples(self, cr, uid, quants, move, location_dest_id,  dest_package_id, context=None):
-        quant_record = super(stock_quant, self).move_single_quant_tuples(cr, uid, quants, move, location_dest_id,  dest_package_id, context=context)
+    def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, context=None):
+        res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id,  dest_package_id, context=context)
         if move.product_id.valuation == 'real_time':
-            quants_filt = [x[0] for x in quants]
-            self._account_entry_move(cr, uid, quants_filt, move, context=context)
-        return quant_record
+            self._account_entry_move(cr, uid, quants, move, context=context)
+        return res
 
 
     def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
@@ -190,7 +190,6 @@ class stock_quant(osv.osv):
         #the company currency... so we need to use round() before creating the accounting entries.
         valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
-
         debit_line_vals = {
                     'name': move.name,
                     'product_id': move.product_id.id,
@@ -219,20 +218,18 @@ class stock_quant(osv.osv):
 
     def _create_account_move_line(self, cr, uid, quants, move, credit_account_id, debit_account_id, journal_id, context=None):
         #group quants by cost
-        quant_cost = {}
         quant_cost_qty = {}
         for quant in quants:
-            if quant_cost.get(quant.cost):
+            if quant_cost_qty.get(quant.cost):
                 quant_cost_qty[quant.cost] += quant.qty
             else:
-                quant_cost[quant.cost] = quant
                 quant_cost_qty[quant.cost] = quant.qty
         move_obj = self.pool.get('account.move')
-        for cost in quant_cost_qty.keys():
-            move_lines = self._prepare_account_move_line(cr, uid, move, quant_cost_qty[cost], cost, credit_account_id, debit_account_id, context=context)
+        for cost, qty in quant_cost_qty.items():
+            move_lines = self._prepare_account_move_line(cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=context)
             return move_obj.create(cr, uid, {'journal_id': journal_id,
                                       'line_id': move_lines,
-                                      'perdiod_id': self.pool.get('account.period').find(cr, uid, move.date, context=context)[0],
+                                      'period_id': self.pool.get('account.period').find(cr, uid, move.date, context=context)[0],
                                       'date': move.date,
                                       'ref': move.picking_id and move.picking_id.name}, context=context)
 

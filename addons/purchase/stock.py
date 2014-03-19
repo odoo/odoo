@@ -35,7 +35,7 @@ class stock_move(osv.osv):
             ids = [ids]
         res = super(stock_move, self).write(cr, uid, ids, vals, context=context)
         from openerp import workflow
-        if 'state' in vals and vals['state'] in ['done', 'cancel']:
+        if vals.get('state') in ['done', 'cancel']:
             for move in self.browse(cr, uid, ids, context=context):
                 if move.purchase_line_id and move.purchase_line_id.order_id:
                     order_id = move.purchase_line_id.order_id.id

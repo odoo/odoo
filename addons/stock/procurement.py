@@ -221,16 +221,15 @@ class procurement_order(osv.osv):
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
 
     def run(self, cr, uid, ids, context=None):
-        move_obj = self.pool.get('stock.move')
         res = super(procurement_order, self).run(cr, uid, ids, context=context)
         #after all the procurements are run, check if some created a draft stock move that needs to be confirmed
-        #(we do that in batch because it fasten the picking assignation and the picking state computation)
+        #(we do that in batch because it fasts the picking assignation and the picking state computation)
         move_to_confirm_ids = []
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.state == "running" and procurement.rule_id and procurement.rule_id.action == "move":
                 move_to_confirm_ids += [m.id for m in procurement.move_ids if m.state == 'draft']
         if move_to_confirm_ids:
-            move_obj.action_confirm(cr, uid, move_to_confirm_ids, context=context)
+            self.pool.get('stock.move').action_confirm(cr, uid, move_to_confirm_ids, context=context)
         return res
 
     def _check(self, cr, uid, procurement, context=None):

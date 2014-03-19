@@ -807,10 +807,9 @@ class product_product(osv.osv):
 
         result = []
         for product in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            sellers = []
             if partner_id:
                 sellers = filter(lambda x: x.name.id == partner_id, product.seller_ids)
-            else:
-                sellers = False
             if sellers:
                 for s in sellers:
                     mydict = {
