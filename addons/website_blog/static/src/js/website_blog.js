@@ -1,9 +1,13 @@
 $(document).ready(function() {
     var discussion = false;
     var share = false;
-    var top_nav = _.isNull($('#website-top-navbar-placeholder').height()) ? 0 : $('#website-top-navbar-placeholder').height();
-    var vHeight = $(window).height() - ($('header').height() + top_nav);
-    $('.cover_header').css('min-height', vHeight);
+
+    function updateMinHeight(event) {
+        var top_nav = _.isNull($('#website-top-navbar-placeholder').height()) ? 0 : $('#website-top-navbar-placeholder').height();
+        var vHeight = $(window).height() - ($('header').height() + top_nav);
+        $(document).find('.cover_header').css('min-height', vHeight);
+    }
+
     function page_transist(event) {
         event.preventDefault();
         newLocation = $('.js_next')[0].href;
@@ -21,7 +25,9 @@ $(document).ready(function() {
             window.location.hash = target;
         });
     }
-
+    $( window ).on('resize', function() {
+        updateMinHeight();
+    });
     //check custome options inline discussion and select to tweet(share) are checked.
     openerp.jsonRpc("/blogpsot/get_custom_options", 'call', {}).then(function(res){
         discussion = res['Allow comment in text'];
@@ -35,6 +41,7 @@ $(document).ready(function() {
     });
     $('.cover_footer').on('click',page_transist);
     $('a[href^="#blog_content"]').on('click', animate);
+    updateMinHeight();
 
     function page_upwards() {
         var translationValue = $("#wrap:last-child").get(0).getBoundingClientRect().top;
@@ -57,9 +64,9 @@ $(document).ready(function() {
         }).done(function(data) {
             $('main').append($(data).find('main').html());
             page_upwards();
+            updateMinHeight();
             //bind again it takes control from now on, until page relaod.
             $(document).find('.cover_footer').on('click',page_transist);
-            $(document).find('.cover_header').css('min-height', vHeight);
             $(document).find('a[href^="#blog_content"]').on('click', animate);
             if (share) $("p,h1,h2,h3,h4,ul").share({'author_name':$(data).find('#blog_author').text()});
             if (newLocation != window.location)
