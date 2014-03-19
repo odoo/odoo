@@ -240,18 +240,28 @@
             bottom: -6px
             .oe_handle_button
                 z-index: 3
-                content: "Resize"
-                width: 64px
                 text-align: center
                 margin-left: -32px
                 margin-top: -10px
-                cursor: row-resize
                 left: 0px
-                top: 9px
                 &:hover
                     background: rgba(30, 30, 30, .8)
                     color: #fff
                     +box-shadow(0 0 5px 3px rgba(255,255,255,.7))
+            .size
+                width: 64px
+                cursor: row-resize
+                top: 9px
+            .auto_size
+                width: 20px
+                padding: 0 5px
+                top: 1px
+                margin-left: 36px
+                cursor: pointer
+        &.readonly
+            cursor: auto !important
+            &:before, &.size
+                display: none !important
 
     .icon.btn
         display: inline-block
@@ -260,7 +270,7 @@
         position: absolute
         left: 50% !important
         text-align: center
-        top: -11px
+        top: -20px
         z-index: 1002
         > .btn-group
             left: -50%
@@ -484,10 +494,6 @@
             width: 16px
             height: 16px
             display: inline-block
-
-[data-snippet-id] 
-    min-height: 10px
-    min-width: 10px
 
 
 
