@@ -53,6 +53,15 @@ class website_forum(http.Controller):
         }, context=request.context)
         return request.redirect("/forum/%s" % forum_id)
 
+    def _get_notifications(self, **kwargs):
+        cr, uid, context = request.cr, request.uid, request.context
+        Message = request.registry['mail.message']
+        BadgeUser = request.registry['gamification.badge.user']
+        #notification to user.
+        badgeuser_ids = BadgeUser.search(cr, uid, [('user_id', '=', uid)], context=context)
+        notification_ids = Message.search(cr, uid, [('res_id', 'in', badgeuser_ids), ('model', '=', 'gamification.badge.user'), ('to_read', '=', True)], context=context)
+        return Message.browse(cr, uid, notification_ids, context=context)
+
     @http.route(['/forum/<model("website.forum"):forum>', '/forum/<model("website.forum"):forum>/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
     def questions(self, forum, page=1, filters='', sorting='', **searches):
         cr, uid, context = request.cr, request.uid, request.context
@@ -94,6 +103,7 @@ class website_forum(http.Controller):
             'uid': uid,
             'total_questions': question_count,
             'question_ids': question_ids,
+            'notifications': self._get_notifications(),
             'forum': forum,
             'pager': pager,
             'filters': filters,
@@ -103,14 +113,27 @@ class website_forum(http.Controller):
 
         return request.website.render("website_forum.index", values)
 
+    @http.route('/forum/notification_read/', type='json', auth="user", multilang=True, methods=['POST'], website=True)
+    def notification_read(self, **kwarg):
+        request.registry['mail.message'].set_message_read(request.cr, request.uid, [int(kwarg.get('notification_id'))], read=True, context=request.context)
+        return True
+
     @http.route(['/forum/<model("website.forum"):forum>/faq'], type='http', auth="public", website=True, multilang=True)
     def faq(self, forum, **post):
-        values = { 'searches': {}, 'forum':forum }
+        values = { 
+            'searches': {},
+            'forum':forum,
+            'notifications': self._get_notifications(),
+        }
         return request.website.render("website_forum.faq", values)
 
     @http.route(['/forum/<model("website.forum"):forum>/ask'], type='http', auth="public", website=True, multilang=True)
     def question_ask(self, forum, **post):
-        values = { 'searches': {}, 'forum': forum }
+        values = {
+            'searches': {},
+            'forum': forum,
+            'notifications': self._get_notifications(),
+        }
         return request.website.render("website_forum.ask_question", values)
 
     @http.route(['/forum/<model("website.forum"):forum>/question/<model("website.forum.post"):question>'], type='http', auth="public", website=True, multilang=True)
@@ -122,6 +145,7 @@ class website_forum(http.Controller):
         filters = 'question'
         values = {
             'question': question,
+            'notifications': self._get_notifications(),
             'searches': post,
             'filters': filters,
             'answer_done': answer_done,
@@ -162,6 +186,7 @@ class website_forum(http.Controller):
         Activity = request.registry['mail.message']
         Data = request.registry["ir.model.data"]
 
+        #questions asked by user.
         question_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('user_id', '=', user.id), ('parent_id', '=', False)], context=context)
         user_questions = Post.browse(cr, uid, question_ids, context=context)
 
@@ -170,15 +195,20 @@ class website_forum(http.Controller):
         user_answers = Post.browse(cr, uid, obj_ids, context=context)
         answers = [answer.parent_id for answer in user_answers]
 
+        #votes which given on users questions and answers.
         total_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.user_id', '=', user.id)], count=True, context=context)
         up_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.user_id', '=', user.id), ('vote', '=', '1')], count=True, context=context)
         down_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.user_id', '=', user.id), ('vote', '=', '-1')], count=True, context=context)
 
+        #Votes which given by users on others questions and answers.
+        post_votes = Vote.search(cr, uid, [('user_id', '=', uid)], context=context)
+        vote_ids = Vote.browse(cr, uid, post_votes, context=context)
+
+        #activity by user.
         user_post_ids = question_ids + obj_ids
         model, comment = Data.get_object_reference(cr, uid, 'mail', 'mt_comment')
         activity_ids = Activity.search(cr, uid, [('res_id', 'in', user_post_ids), ('model', '=', 'website.forum.post'), '|', ('subtype_id', '!=', comment), ('subtype_id', '=', False)], context=context)
         activities = Activity.browse(cr, uid, activity_ids, context=context)
-
 
         posts = {}
         for act in activities:
@@ -200,7 +230,9 @@ class website_forum(http.Controller):
             'up_votes': up_votes,
             'down_votes': down_votes,
             'activities': activities,
-            'posts': posts
+            'posts': posts,
+            'vote_post':vote_ids,
+            'notifications': self._get_notifications(),
         }
         return request.website.render("website_forum.user_detail_full", values)
 
@@ -245,6 +277,7 @@ class website_forum(http.Controller):
         values = {
             'post': post,
             'post_answer': post_answer,
+            'notifications': self._get_notifications(),
             'forum': forum,
             'searches': kwargs
         }
@@ -271,6 +304,7 @@ class website_forum(http.Controller):
 
         values = {
             'question_ids': question_ids,
+            'notifications': self._get_notifications(),
             'pager': pager,
             'forum': forum,
             'searches': kwargs
@@ -285,6 +319,7 @@ class website_forum(http.Controller):
         tags = Tag.browse(cr, uid, obj_ids, context=context)
         values = {
             'tags': tags,
+            'notifications': self._get_notifications(),
             'forum': forum,
             'searches': {'tags': True}
         }
@@ -298,6 +333,7 @@ class website_forum(http.Controller):
         badges = Badge.browse(cr, uid, badge_ids, context=context)
         values = {
             'badges': badges,
+            'notifications': [],
             'forum': forum,
             'searches': {'badges': True}
         }
@@ -310,6 +346,7 @@ class website_forum(http.Controller):
 
         values = {
             'badge': badge,
+            'notifications': [],
             'users': users,
             'forum': forum,
             'searches': kwargs
@@ -331,6 +368,7 @@ class website_forum(http.Controller):
 
         values = {
             'users': users,
+            'notifications': self._get_notifications(),
             'pager': pager,
             'forum': forum,
             'searches': searches,
@@ -364,7 +402,8 @@ class website_forum(http.Controller):
         values = {
             'post': post,
             'forum': forum,
-            'searches': kwarg
+            'searches': kwarg,
+            'notifications': self._get_notifications(),
         }
         return request.website.render("website_forum.edit_question", values)
 
@@ -382,7 +421,8 @@ class website_forum(http.Controller):
             'post': post,
             'post_answer': answer,
             'forum': forum,
-            'searches': kwarg
+            'searches': kwarg,
+            'notifications': self._get_notifications(),
         }
         return request.website.render("website_forum.edit_answer", values)
 
@@ -415,6 +455,7 @@ class website_forum(http.Controller):
             'forum': forum,
             'searches': kwarg,
             'countries': countries,
+            'notifications': self._get_notifications(),
         }
         return request.website.render("website_forum.edit_profile", values)
 
