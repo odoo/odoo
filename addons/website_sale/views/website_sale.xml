@@ -33,12 +33,14 @@
 
 <template id="categories_recursive" name="Category list">
   <li t-att-class="int(categ) == int(category or 0) and 'active' or ''">
+    <t t-if="categ in all_categories">
       <a t-attf-href="/shop/category/#{ slug(categ) }/" t-field="categ.name"></a>
       <ul t-if="categ.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
           <t t-foreach="categ.child_id" t-as="categ">
               <t t-call="website_sale.categories_recursive"/>
           </t>
       </ul>
+    </t>
   </li>
 </template>
 
