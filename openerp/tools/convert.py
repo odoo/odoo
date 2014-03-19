@@ -952,8 +952,9 @@ form: module.record_id""" % (xml_id,)
             'url': self._tag_url
         }
 
-def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, report=None):
-    pathname = os.path.join(module, filename)
+def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, report=None, pathname=None):
+    if pathname is None:
+        pathname = os.path.join(module, filename)
     fp = misc.file_open(pathname)
     ext = os.path.splitext(filename)[1].lower()
     try:
