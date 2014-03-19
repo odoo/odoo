@@ -37,13 +37,14 @@ You can define the different phases of interviews and easily rate the applicant 
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'images': ['images/hr_recruitment_analysis.jpeg','images/hr_recruitment_applicants.jpeg'],
+    'images': ['images/hr_recruitment_analysis.jpeg','images/hr_recruitment_applicants.jpeg','static/src/img/down1.png'],
     'depends': [
         'decimal_precision',
         'hr',
         'survey',
         'calendar',
         'fetchmail',
+        'web_kanban_gauge',
     ],
     'data': [
         'wizard/hr_recruitment_create_partner_job_view.xml',
@@ -58,7 +59,11 @@ You can define the different phases of interviews and easily rate the applicant 
         'hr_recruitment_data.xml',
     ],
     'demo': ['hr_recruitment_demo.xml'],
+    'js': [
+        'static/src/js/job_position.js',
+    ],
     'test': ['test/recruitment_process.yml'],
+    'css':['static/src/css/job_position.css'],
     'installable': True,
     'auto_install': False,
     'application': True,

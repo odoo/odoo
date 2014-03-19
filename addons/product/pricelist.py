@@ -21,8 +21,7 @@
 
 import time
 
-from _common import rounding
-
+from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -116,11 +115,29 @@ class product_pricelist(osv.osv):
         if name and operator == '=' and not args:
             # search on the name of the pricelist and its currency, opposite of name_get(),
             # Used by the magic context filter in the product search view.
-            query_args = {'name': name, 'limit': limit}
+            query_args = {'name': name, 'limit': limit, 'lang': (context or {}).get('lang') or 'en_US'}
             query = """SELECT p.id
-                       FROM product_pricelist p JOIN
-                            res_currency c ON (p.currency_id = c.id)
-                       WHERE p.name || ' (' || c.name || ')' = %(name)s
+                       FROM ((
+                                SELECT pr.id, pr.name
+                                FROM product_pricelist pr JOIN
+                                     res_currency cur ON 
+                                         (pr.currency_id = cur.id)
+                                WHERE pr.name || ' (' || cur.name || ')' = %(name)s
+                            )
+                            UNION (
+                                SELECT tr.res_id as id, tr.value as name
+                                FROM ir_translation tr JOIN
+                                     product_pricelist pr ON (
+                                        pr.id = tr.res_id AND
+                                        tr.type = 'model' AND
+                                        tr.name = 'product.pricelist,name' AND
+                                        tr.lang = %(lang)s
+                                     ) JOIN
+                                     res_currency cur ON 
+                                         (pr.currency_id = cur.id)
+                                WHERE tr.value || ' (' || cur.name || ')' = %(name)s
+                            )
+                        ) p
                        ORDER BY p.name"""
             if limit:
                 query += " LIMIT %(limit)s"
@@ -180,7 +197,8 @@ class product_pricelist(osv.osv):
             if ((v.date_start is False) or (v.date_start <= date)) and ((v.date_end is False) or (v.date_end >= date)):
                 version = v
                 break
-
+        if not version:
+            raise osv.except_osv(_('Warning!'), _("At least one pricelist has no active version !\nPlease create or activate one."))
         categ_ids = {}
         for p in products:
             categ = p.categ_id
@@ -244,13 +262,15 @@ class product_pricelist(osv.osv):
                     for seller in product.seller_ids:
                         if (not partner) or (seller.name.id<>partner):
                             continue
-                        product_default_uom = product.uom_id.id
+                        qty_in_seller_uom = qty
+                        from_uom = context.get('uom') or product.uom_id.id
                         seller_uom = seller.product_uom and seller.product_uom.id or False
-                        if seller_uom and product_default_uom and product_default_uom != seller_uom:
+                        if seller_uom and from_uom and from_uom != seller_uom:
+                            qty_in_seller_uom = product_uom_obj._compute_qty(cr, uid, from_uom, qty, to_uom_id=seller_uom)
+                        else:
                             uom_price_already_computed = True
-                            qty = product_uom_obj._compute_qty(cr, uid, product_default_uom, qty, to_uom_id=seller_uom)
                         for line in seller.pricelist_ids:
-                            if line.min_quantity <= qty:
+                            if line.min_quantity <= qty_in_seller_uom:
                                 price = line.price
 
                 else:
@@ -267,7 +287,8 @@ class product_pricelist(osv.osv):
                 if price is not False:
                     price_limit = price
                     price = price * (1.0+(rule.price_discount or 0.0))
-                    price = rounding(price, rule.price_round) #TOFIX: rounding with tools.float_rouding
+                    if rule.price_round:
+                        price = tools.float_round(price, precision_rounding=rule.price_round)
                     price += (rule.price_surcharge or 0.0)
                     if rule.price_min_margin:
                         price = max(price, price_limit+rule.price_min_margin)
@@ -277,7 +298,6 @@ class product_pricelist(osv.osv):
 
             if price:
                 if 'uom' in context and not uom_price_already_computed:
-                    product = products_dict[product.id]
                     uom = product.uos_id or product.uom_id
                     price = product_uom_obj._compute_price(cr, uid, uom.id, price, context['uom'])
 

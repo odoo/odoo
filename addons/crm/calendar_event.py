@@ -23,15 +23,13 @@ from openerp.osv import fields, osv
 import logging
 _logger = logging.getLogger(__name__)
 
-#
-# calendar.event is defined in module calendar
-#
+
 class calendar_event(osv.Model):
     """ Model for Calendar Event """
     _inherit = 'calendar.event'
     _columns = {
-        'phonecall_id': fields.many2one ('crm.phonecall', 'Phonecall'),
-        'opportunity_id': fields.many2one ('crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]"),
+        'phonecall_id': fields.many2one('crm.phonecall', 'Phonecall'),
+        'opportunity_id': fields.many2one('crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]"),
     }
 
     def create(self, cr, uid, vals, context=None):
@@ -48,31 +46,11 @@ class calendar_attendee(osv.osv):
     _inherit = 'calendar.attendee'
     _description = 'Calendar Attendee'
 
-    def _compute_data(self, cr, uid, ids, name, arg, context=None):
-       """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of compute data’s IDs
-        @param context: A standard dictionary for contextual values
-        """
-       name = name[0]
-       result = super(calendar_attendee, self)._compute_data(cr, uid, ids, name, arg, context=context)
-
-       for attdata in self.browse(cr, uid, ids, context=context):
-            id = attdata.id
-            result[id] = {}
-            if name == 'categ_id':
-                if attdata.ref and 'categ_id' in attdata.ref._columns:
-                    result[id][name] = (attdata.ref.categ_id.id, attdata.ref.categ_id.name,)
-                else:
-                    result[id][name] = False
-       return result
+    def _noop(self, cr, uid, ids, name, arg, context=None):
+        return dict.fromkeys(ids, False)
 
     _columns = {
-        'categ_id': fields.function(_compute_data, \
-                        string='Event Type', type="many2one", \
-                        relation="crm.case.categ", multi='categ_id'),
+        'categ_id': fields.function(_noop, string='Event Type', deprecated="Unused Field - TODO : Remove it in trunk", type="many2one", relation="crm.case.categ"),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

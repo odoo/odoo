@@ -313,7 +313,10 @@ class crm_lead(format_address, osv.osv):
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context=context)
         if not stage.on_change:
             return {'value': {}}
-        return {'value': {'probability': stage.probability}}
+        vals = {'probability': stage.probability}
+        if stage.probability >= 100 or (stage.probability == 0 and stage.sequence > 1):
+                vals['date_closed'] = fields.datetime.now()
+        return {'value': vals}
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
         values = {}
@@ -330,6 +333,7 @@ class crm_lead(format_address, osv.osv):
                 'phone': partner.phone,
                 'mobile': partner.mobile,
                 'fax': partner.fax,
+                'zip': partner.zip,
             }
         return {'value': values}
 
@@ -949,6 +953,14 @@ class crm_lead(format_address, osv.osv):
         default['date_closed'] = False
         default['stage_id'] = self._get_default_stage_id(cr, uid, local_context)
         return super(crm_lead, self).copy(cr, uid, id, default, context=context)
+
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        context['empty_list_help_model'] = 'crm.case.section'
+        context['empty_list_help_id'] = context.get('default_section_id', None)
+        context['empty_list_help_document_name'] = _("opportunity")
+        if context.get('default_type') == 'lead':
+            context['empty_list_help_document_name'] = _("lead")
+        return super(crm_lead, self).get_empty_list_help(cr, uid, help, context=context)
 
     # ----------------------------------------
     # Mail Gateway

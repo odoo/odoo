@@ -27,7 +27,7 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
-                    <field name="section_id" widget="selection" groups="base.group_multi_salesteams"/>
+                    <field name="section_id" options="{'no_create': True}" groups="base.group_multi_salesteams"/>
                     <field name="categ_ids" widget="many2many_tags"/>
                 </field>
             </field>
@@ -214,8 +214,7 @@
         <record id="action_order_report_quotation_salesteam" model="ir.actions.act_window">
             <field name="name">Quotations Analysis</field>
             <field name="res_model">sale.report</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
+            <field name="view_mode">graph</field>
             <field name="domain">[('state','=','draft'),('section_id', '=', active_id)]</field>
             <field name="context">{'search_default_order_month':1}</field>
             <field name="help">This report performs analysis on your quotations. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
@@ -224,8 +223,7 @@
         <record id="action_order_report_so_salesteam" model="ir.actions.act_window">
             <field name="name">Sales Analysis</field>
             <field name="res_model">sale.report</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
+            <field name="view_mode">graph</field>
             <field name="domain">[('state','not in',('draft','sent','cancel')),('section_id', '=', active_id)]</field>
             <field name="context">{'search_default_order_month':1}</field>
             <field name="help">This report performs analysis on your sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
@@ -234,8 +232,7 @@
         <record id="action_account_invoice_report_salesteam" model="ir.actions.act_window">
             <field name="name">Invoices Analysis</field>
             <field name="res_model">account.invoice.report</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
+            <field name="view_mode">graph</field>
             <field name="domain">[('section_id', '=', active_id),('state', 'not in', ['draft', 'cancel'])]</field>
             <field name="context">{'search_default_month':1}</field>
             <field name="help">From this report, you can have an overview of the amount invoiced to your customer. The tool search can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
@@ -301,7 +298,7 @@
                         <field name="monthly_invoiced" widget="gauge" style="width:160px; height: 120px; cursor: pointer;"
                             options="{'max_field': 'invoiced_target'}">Invoiced</field>
                         <field name="invoiced_forecast" widget="gauge" style="width:160px; height: 120px; cursor: pointer;"
-                            options="{'max_field': 'invoiced_target', 'action_change': 'action_forecast'}">Forecast</field>
+                            options="{'max_field': 'invoiced_target', 'on_change': 'action_forecast'}">Forecast</field>
                     </div>
                     <div class="oe_center oe_salesteams_help" style="color:#bbbbbb;" t-if="!record.invoiced_target.raw_value">
                         <br/>Define an invoicing target in the sales team settings to see the period's achievement and forecast at a glance.

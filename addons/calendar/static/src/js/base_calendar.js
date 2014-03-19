@@ -1,18 +1,21 @@
 openerp.calendar = function(instance) {
     var _t = instance.web._t;
     var QWeb = instance.web.qweb;
-    instance.calendar = {}
+
+    instance.calendar = {};
     
 
     instance.web.WebClient = instance.web.WebClient.extend({
+        
+
         get_notif_box: function(me) {
             return $(me).closest(".ui-notify-message-style");
         },
         get_next_notif: function() {
             var self= this;
             this.rpc("/calendar/notify")
-            .then( 
-                function(result) { 
+            .done(
+                function(result) {
                     _.each(result,  function(res) {
                         setTimeout(function() {
                             //If notification not already displayed, we add button and action on it
@@ -21,44 +24,56 @@ openerp.calendar = function(instance) {
                                 res.message += QWeb.render("notify_footer");
                                 a = self.do_notify(res.title,res.message,true);
                                 
-                                $(".link2event").on('click', function() { 
+                                $(".link2event").on('click', function() {
                                     self.rpc("/web/action/load", {
                                         action_id: "calendar.action_calendar_event_notify",
-                                    }).then( function(r) { 
+                                    }).then( function(r) {
                                         r.res_id = res.event_id;
-                                        return self.action_manager.do_action(r);                                         
-                                    });                                    
+                                        return self.action_manager.do_action(r);
+                                    });
                                 });
-                                a.element.find(".link2recall").on('click',function() { 
+                                a.element.find(".link2recall").on('click',function() {
                                     self.get_notif_box(this).find('.ui-notify-close').trigger("click");
-                                });                                
-                                a.element.find(".link2showed").on('click',function() { 
+                                });
+                                a.element.find(".link2showed").on('click',function() {
                                     self.get_notif_box(this).find('.ui-notify-close').trigger("click");
                                     self.rpc("/calendar/notify_ack");
                                 });
                             }
                             //If notification already displayed in the past, we remove the css attribute which hide this notification
                             else if (self.get_notif_box($.find(".eid_"+res.event_id)).attr("style") !== ""){
-                                self.get_notif_box($.find(".eid_"+res.event_id)).attr("style","");                                
+                                self.get_notif_box($.find(".eid_"+res.event_id)).attr("style","");
                             }
                         },res.timer * 1000);
                     });
                 }
-            );
+            )
+            .fail(function (err, ev) {
+                if (err.code === -32098) {
+                    // Prevent the CrashManager to display an error
+                    // in case of an xhr error not due to a server error
+                    ev.preventDefault();
+                }
+            });
         },
         check_notifications: function() {
             var self= this;
-            self.get_next_notif();                        
-            setInterval(function(){
+            self.get_next_notif();
+            self.intervalNotif = setInterval(function(){
                 self.get_next_notif();
-            }, 5 * 60  * 1000 );
+            }, 5 * 60 * 1000 );
         },
         
         //Override the show_application of addons/web/static/src/js/chrome.js       
         show_application: function() {
             this._super();
             this.check_notifications();
-        }
+        },
+        //Override addons/web/static/src/js/chrome.js       
+        on_logout: function() {
+            this._super();
+            clearInterval(self.intervalNotif);
+        },
     });
     
 
@@ -77,7 +92,6 @@ openerp.calendar = function(instance) {
             if(instance.session.session_is_valid(self.db) && instance.session.username != "anonymous") {
                 self.redirect_meeting_view(self.db,self.action,self.id,self.view);
             } else {
-                alert('in anonymous or null ');
                 self.open_invitation_form(self.attendee_data);
             }
         },
@@ -92,9 +106,8 @@ openerp.calendar = function(instance) {
             
             var reload_page = function(){
                 return location.replace(action_url);
-            }
+            };
             reload_page();
-
         },
     });
 
@@ -108,7 +121,7 @@ openerp.calendar = function(instance) {
             });
         },
         map_tag: function(value){
-            return _.map(value, function(el) {return {name: el[1], id:el[0], state: el[2]};})
+            return _.map(value, function(el) {return {name: el[1], id:el[0], state: el[2]};});
         },
         get_render_data: function(ids){
             var self = this;
@@ -121,7 +134,7 @@ openerp.calendar = function(instance) {
             if (! self.get("effective_readonly")) {
                 var tag_element = self.tags.tagElements();
                 _.each(data,function(value, key){
-                    $(tag_element[key]).find(".custom-edit").addClass(data[key][2])
+                    $(tag_element[key]).find(".custom-edit").addClass(data[key][2]);
                 });
             }
         }
@@ -134,7 +147,7 @@ openerp.calendar = function(instance) {
         instance.session.session_bind(instance.session.origin).done(function () {
             new instance.calendar.invitation(null,db,action,id,view,attendee_data).appendTo($("body").addClass('openerp'));
         });
-    }
+    };
     
     
     

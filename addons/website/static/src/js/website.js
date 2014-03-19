@@ -2,9 +2,11 @@
     "use strict";
 
     var website = {};
-    // The following line can be removed in 2017
     openerp.website = website;
 
+    /* ----------------------------------------------------
+       Helpers
+       ---------------------------------------------------- */ 
     website.get_context = function (dict) {
         var html = document.documentElement;
         return _.extend({
@@ -34,26 +36,11 @@
         }
         return parsedSearch;
     };
+
     website.parseHash = function () {
         return website.parseQS(window.location.hash.substring(1));
     };
 
-    /* ----- TEMPLATE LOADING ---- */
-    var templates_def = $.Deferred().resolve();
-    website.add_template_file = function(template) {
-        templates_def = templates_def.then(function() {
-            var def = $.Deferred();
-            openerp.qweb.add_template(template, function(err) {
-                if (err) {
-                    def.reject(err);
-                } else {
-                    def.resolve();
-                }
-            });
-            return def;
-        });
-    };
-    website.add_template_file('/website/static/src/xml/website.xml');
     website.reload = function () {
         location.hash = "scrollTop=" + window.document.body.scrollTop;
         if (location.search.indexOf("enable_editor") > -1) {
@@ -63,13 +50,123 @@
         }
     };
 
-    var all_ready = null;
-    var dom_ready = website.dom_ready = $.Deferred();
-    $(document).ready(function () {
-        website.is_editable = website.is_editable || $('html').data('editable');
-        website.is_editable_button= website.is_editable_button || $('html').data('editable');
-        dom_ready.resolve();
-    });
+    /* ----------------------------------------------------
+       Widgets
+       ---------------------------------------------------- */ 
+    website.prompt = function (options) {
+        /**
+         * A bootstrapped version of prompt() albeit asynchronous
+         * This was built to quickly prompt the user with a single field.
+         * For anything more complex, please use editor.Dialog class
+         *
+         * Usage Ex:
+         *
+         * website.prompt("What... is your quest ?").then(function (answer) {
+         *     arthur.reply(answer || "To seek the Holy Grail.");
+         * });
+         *
+         * website.prompt({
+         *     select: "Please choose your destiny",
+         *     init: function() {
+         *         return [ [0, "Sub-Zero"], [1, "Robo-Ky"] ];
+         *     }
+         * }).then(function (answer) {
+         *     mame_station.loadCharacter(answer);
+         * });
+         *
+         * @param {Object|String} options A set of options used to configure the prompt or the text field name if string
+         * @param {String} [options.window_title=''] title of the prompt modal
+         * @param {String} [options.input] tell the modal to use an input text field, the given value will be the field title
+         * @param {String} [options.textarea] tell the modal to use a textarea field, the given value will be the field title
+         * @param {String} [options.select] tell the modal to use a select box, the given value will be the field title
+         * @param {Object} [options.default=''] default value of the field
+         * @param {Function} [options.init] optional function that takes the `field` (enhanced with a fillWith() method) and the `dialog` as parameters [can return a deferred]
+         */
+        if (typeof options === 'string') {
+            options = {
+                text: options
+            };
+        }
+        options = _.extend({
+            window_title: '',
+            field_name: '',
+            default: '',
+            init: function() {}
+        }, options || {});
+
+        var type = _.intersection(Object.keys(options), ['input', 'textarea', 'select']);
+        type = type.length ? type[0] : 'text';
+        options.field_type = type;
+        options.field_name = options.field_name || options[type];
+
+        var def = $.Deferred();
+        var dialog = $(openerp.qweb.render('website.prompt', options)).appendTo("body");
+        options.$dialog = dialog;
+        var field = dialog.find(options.field_type).first();
+        field.val(options.default);
+        field.fillWith = function (data) {
+            if (field.is('select')) {
+                var select = field[0];
+                data.forEach(function (item) {
+                    select.options[select.options.length] = new Option(item[1], item[0]);
+                });
+            } else {
+                field.val(data);
+            }
+        };
+        var init = options.init(field, dialog);
+        $.when(init).then(function (fill) {
+            if (fill) {
+                field.fillWith(fill);
+            }
+            dialog.modal('show');
+            field.focus();
+            dialog.on('click', '.btn-primary', function () {
+                def.resolve(field.val(), field, dialog);
+                dialog.remove();
+                $('.modal-backdrop').remove();
+            });
+        });
+        dialog.on('hidden.bs.modal', function () {
+            def.reject();
+            dialog.remove();
+            $('.modal-backdrop').remove();
+        });
+        if (field.is('input[type="text"], select')) {
+            field.keypress(function (e) {
+                if (e.which == 13) {
+                    e.preventDefault();
+                    dialog.find('.btn-primary').trigger('click');
+                }
+            });
+        }
+        return def;
+    };
+
+    website.error = function(data, url) {
+        var $error = $(openerp.qweb.render('website.error_dialog', {
+            'title': data.data ? data.data.arguments[0] : "",
+            'message': data.data ? data.data.arguments[1] : data.statusText,
+            'backend_url': url
+        }));
+        $error.appendTo("body");
+        $error.modal('show');
+    };
+
+    website.form = function (url, method, params) {
+        var form = document.createElement('form');
+        form.setAttribute('action', url);
+        form.setAttribute('method', method);
+        _.each(params, function (v, k) {
+            var param = document.createElement('input');
+            param.setAttribute('type', 'hidden');
+            param.setAttribute('name', k);
+            param.setAttribute('value', v);
+            form.appendChild(param);
+        });
+        document.body.appendChild(form);
+        form.submit();
+    };
 
     website.init_kanban = function ($kanban) {
         $('.js_kanban_col', $kanban).each(function () {
@@ -128,13 +225,42 @@
         });
     };
 
+    /* ----------------------------------------------------
+       Async Ready and Template loading
+       ---------------------------------------------------- */ 
+    var templates_def = $.Deferred().resolve();
+    website.add_template_file = function(template) {
+        templates_def = templates_def.then(function() {
+            var def = $.Deferred();
+            openerp.qweb.add_template(template, function(err) {
+                if (err) {
+                    def.reject(err);
+                } else {
+                    def.resolve();
+                }
+            });
+            return def;
+        });
+    };
+    website.add_template_file('/website/static/src/xml/website.xml');
+
+    website.dom_ready = $.Deferred();
+    $(document).ready(function () {
+        website.is_editable = website.is_editable || $('html').data('editable');
+        website.is_editable_button= website.is_editable_button || $('html').data('editable');
+        website.dom_ready.resolve();
+        // fix for ie
+        if($.fn.placeholder) $('input, textarea').placeholder();
+    });
+
+    var all_ready = null;
     /**
      * Returns a deferred resolved when the templates are loaded
      * and the Widgets can be instanciated.
      */
     website.ready = function() {
         if (!all_ready) {
-            all_ready = dom_ready.then(function () {
+            all_ready = website.dom_ready.then(function () {
                 return templates_def;
             }).then(function () {
                 if (website.is_editable) {
@@ -148,123 +274,11 @@
         return all_ready;
     };
 
-    website.error = function(data, url) {
-        var $error = $(openerp.qweb.render('website.error_dialog', {
-            'title': data.data ? data.data.arguments[0] : "",
-            'message': data.data ? data.data.arguments[1] : data.statusText,
-            'backend_url': url
-        }));
-        $error.appendTo("body");
-        $error.modal('show');
-    };
+    website.inject_tour = function() {
+        // if a tour is active inject tour js
+    }
 
-    website.prompt = function (options) {
-        /**
-         * A bootstrapped version of prompt() albeit asynchronous
-         * This was built to quickly prompt the user with a single field.
-         * For anything more complex, please use editor.Dialog class
-         *
-         * Usage Ex:
-         *
-         * website.prompt("What... is your quest ?").then(function (answer) {
-         *     arthur.reply(answer || "To seek the Holy Grail.");
-         * });
-         *
-         * website.prompt({
-         *     select: "Please choose your destiny",
-         *     init: function() {
-         *         return [ [0, "Sub-Zero"], [1, "Robo-Ky"] ];
-         *     }
-         * }).then(function (answer) {
-         *     mame_station.loadCharacter(answer);
-         * });
-         *
-         * @param {Object|String} options A set of options used to configure the prompt or the text field name if string
-         * @param {String} [options.window_title=''] title of the prompt modal
-         * @param {String} [options.input] tell the modal to use an input text field, the given value will be the field title
-         * @param {String} [options.textarea] tell the modal to use a textarea field, the given value will be the field title
-         * @param {String} [options.select] tell the modal to use a select box, the given value will be the field title
-         * @param {Object} [options.default=''] default value of the field
-         * @param {Function} [options.init] optional function that takes the `field` (enhanced with a fillWith() method) and the `dialog` as parameters [can return a deferred]
-         */
-        if (typeof options === 'string') {
-            options = {
-                text: options
-            };
-        }
-        options = _.extend({
-            window_title: '',
-            field_name: '',
-            default: '',
-            init: function() {}
-        }, options || {});
-
-        var type = _.intersection(Object.keys(options), ['input', 'textarea', 'select']);
-        type = type.length ? type[0] : 'text';
-        options.field_type = type;
-        options.field_name = options.field_name || options[type];
-
-        var def = $.Deferred();
-        var dialog = $(openerp.qweb.render('website.prompt', options)).appendTo("body");
-        var field = dialog.find(options.field_type).first();
-        field.val(options.default);
-        field.fillWith = function (data) {
-            if (field.is('select')) {
-                var select = field[0];
-                data.forEach(function (item) {
-                    select.options[select.options.length] = new Option(item[1], item[0]);
-                });
-            } else {
-                field.val(data);
-            }
-        };
-        var init = options.init(field, dialog);
-        $.when(init).then(function (fill) {
-            if (fill) {
-                field.fillWith(fill);
-            }
-            dialog.modal('show');
-            field.focus();
-            dialog.on('click', '.btn-primary', function () {
-                def.resolve(field.val(), field);
-                dialog.remove();
-            });
-        });
-        dialog.on('hidden.bs.modal', function () {
-            def.reject();
-            dialog.remove();
-        });
-        if (field.is('input[type="text"], select')) {
-            field.keypress(function (e) {
-                if (e.which == 13) {
-                    e.preventDefault();
-                    dialog.find('.btn-primary').trigger('click');
-                }
-            });
-        }
-        return def;
-    };
-
-    website.form = function (url, method, params) {
-        var form = document.createElement('form');
-        form.action = url;
-        form.method = method;
-        _.each(params, function (v, k) {
-            var param = document.createElement('input');
-            param.type = 'hidden';
-            param.name = k;
-            param.value = v;
-            form.appendChild(param);
-        });
-        document.body.appendChild(form);
-        form.submit();
-    };
-
-    dom_ready.then(function () {
-
-        /* ----- BOOTSTRAP  STUFF ---- */
-        // $('.js_tooltip').bstooltip();
-
+    website.dom_ready.then(function () {
         /* ----- PUBLISHING STUFF ---- */
         $(document).on('click', '.js_publish_management .js_publish_btn', function () {
             var $data = $(this).parents(".js_publish_management:first");
