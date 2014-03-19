@@ -47,13 +47,13 @@ openerp.report = function(instance) {
                     });
                     report_url += "?" + $.param(action.datas.form);
                 }
-                if (action.report_type == 'qweb-html') {
+                if (action.report_type == 'qweb-html' || action.report_type == 'controller') {
                     // Open the html report in a popup
                     window.open(report_url, '_blank', 'height=768,width=1024');
                     instance.web.unblockUI();
                     return;
                 } else {
-                    // Trigger the download of the pdf/custom controller report
+                    // Trigger the download of the pdf report
                     var c = openerp.webclient.crashmanager;
                     var response = new Array()
                     response[0] = report_url

@@ -31,7 +31,7 @@ import xlwt
 
 class tax_report(http.Controller, common_report_header):
 
-    @http.route(['/report/account.report_vat'], type='http', auth='user', website=True, multilang=True)
+    @http.route(['/report/account.report_vat', '/report/pdf/report/account.report_vat'], type='http', auth='user', website=True, multilang=True)
     def report_account_tax(self, **data):
         report_obj = request.registry['report']
         self.cr, self.uid, self.pool = request.cr, request.uid, request.registry
@@ -56,6 +56,11 @@ class tax_report(http.Controller, common_report_header):
             'period_to': self.get_end_period(data),
             'taxlines': self._get_lines(self._get_basedon(data), company_id=data['form']['company_id']),
         }
+        if request.httprequest.path.startswith('/report/pdf/'):
+            html = request.registry['report'].render(self.cr, self.uid, [], 'account.report_vat', docargs)
+            pdf = request.registry['report'].get_pdf(self.cr, self.uid, [], 'account.report_vat', html=html)
+            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
+            return request.make_response(pdf, headers=pdfhttpheaders)
         return request.registry['report'].render(self.cr, self.uid, [], 'account.report_vat', docargs)
 
     def _get_basedon(self, form):
