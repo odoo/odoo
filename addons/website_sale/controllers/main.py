@@ -293,28 +293,8 @@ class Ecommerce(http.Controller):
         if category:
             category_obj = request.registry.get('product.public.category')
             category = category_obj.browse(request.cr, request.uid, int(category), context=request.context)
-        
-        print ""
-        print "############################"
-        print "############################"
-        print "############################"
-        print "############################"
-        print product.id
-        
-        request.cr.execute("select id from product_product where product_tmpl_id = %s", (product.id,))
-        print "FETCH ",request.cr.fetchall()
-        request.cr.execute("select id from note_note where id = 99")
-        print "FETCH ",request.cr.fetchall()
-        print "TEST cr => IDDDDDDDDDD" ,id(request.cr)
-        print product.name
-        
-        print product.product_variant_ids
-
 
         request.context['pricelist'] = self.get_pricelist()
-        print product.product_variant_ids
-        import time
-        time.sleep(5)
 
         values = {
             'Ecommerce': self,
@@ -327,12 +307,6 @@ class Ecommerce(http.Controller):
                 'filters': filters,
             }
         }
-        print product.product_variant_ids
-        print ""
-        print ""
-        print ""
-        print ""
-        print ""
         return request.website.render("website_sale.product", values)
 
     @http.route(['/shop/product/<int:product_template_id>/comment'], type='http', auth="public", methods=['POST'], website=True)
@@ -356,21 +330,6 @@ class Ecommerce(http.Controller):
             'name': name, 'public_categ_id': category
         }, context=request.context)
         product = Product.browse(request.cr, request.uid, product_id, context=request.context)
-        print ""
-        print ""
-        print ""
-        print ""
-        print ""
-        print "############################"
-        print "Product",product.id
-        print "Product",product.product_tmpl_id
-        print "Prodyuct",product.product_tmpl_id.product_variant_ids
-        request.cr.execute("select id from product_product where product_tmpl_id = %s", (product.product_tmpl_id.id,))
-        print "FETCH ",request.cr.fetchall()
-        request.cr.execute("insert INTO note_note (id, name) VALUES  (99, '999')")
-        request.cr.execute("select id from note_note where id = 99")
-        print "FETCH ",request.cr.fetchall()
-        print "TEST cr => IDDDDDDDDDD" ,id(request.cr)
         
         return request.redirect("/shop/product/%s?enable_editor=1" % slug(product.product_tmpl_id))
 
