@@ -72,7 +72,7 @@ class website_forum(http.Controller):
             domain += [ ('child_ids', '=', False) ]
         #TODO: update domain to show followed questions of user
         if filters == 'followed':
-            domain += [ ('create_uid', '=', uid) ]
+            domain += [ ('user_id', '=', uid) ]
 
         # Note: default sorting should be based on last activity
         if not sorting or sorting == 'date':
@@ -117,7 +117,7 @@ class website_forum(http.Controller):
     def question(self, forum, question, **post):
         answer_done = False
         for answer in question.child_ids:
-            if answer.create_uid.id == request.uid:
+            if answer.user_id.id == request.uid:
                 answer_done = True
         filters = 'question'
         values = {
@@ -162,17 +162,17 @@ class website_forum(http.Controller):
         Activity = request.registry['mail.message']
         Data = request.registry["ir.model.data"]
 
-        question_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('create_uid', '=', user.id), ('parent_id', '=', False)], context=context)
+        question_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('user_id', '=', user.id), ('parent_id', '=', False)], context=context)
         user_questions = Post.browse(cr, uid, question_ids, context=context)
 
         #showing questions in which user answered
-        obj_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('create_uid', '=', user.id), ('parent_id', '!=', False)], context=context)
+        obj_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('user_id', '=', user.id), ('parent_id', '!=', False)], context=context)
         user_answers = Post.browse(cr, uid, obj_ids, context=context)
         answers = [answer.parent_id for answer in user_answers]
 
-        total_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.create_uid', '=', user.id)], count=True, context=context)
-        up_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.create_uid', '=', user.id), ('vote', '=', '1')], count=True, context=context)
-        down_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.create_uid', '=', user.id), ('vote', '=', '-1')], count=True, context=context)
+        total_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.user_id', '=', user.id)], count=True, context=context)
+        up_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.user_id', '=', user.id), ('vote', '=', '1')], count=True, context=context)
+        down_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.user_id', '=', user.id), ('vote', '=', '-1')], count=True, context=context)
 
         user_post_ids = question_ids + obj_ids
         model, comment = Data.get_object_reference(cr, uid, 'mail', 'mt_comment')
@@ -240,7 +240,7 @@ class website_forum(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         request.registry['res.users'].write(cr, uid, uid, {'forum': True}, context=context)
         for answer in post.child_ids:
-            if answer.create_uid.id == request.uid:
+            if answer.user_id.id == request.uid:
                 post_answer = answer
         values = {
             'post': post,
@@ -391,7 +391,7 @@ class website_forum(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         Post = request.registry['website.forum.post']
         post = Post.browse(cr, uid, int(kwarg.get('post_id')), context=context)
-        if post.create_uid.id == uid:
+        if post.user_id.id == uid:
             correct = False if post.correct else True
             #Note: only one answer can be right.
             for child in post.parent_id.child_ids:

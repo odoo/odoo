@@ -105,7 +105,7 @@ class Post(osv.Model):
         'forum_id': fields.many2one('website.forum', 'Forum', required=True),
         'content': fields.text('Content'),
         'create_date': fields.datetime('Asked on', select=True, readonly=True),
-        'create_uid': fields.many2one('res.users', 'Asked by', select=True, readonly=True ),
+        'user_id': fields.many2one('res.users', 'Asked by', select=True, readonly=True ),
         'write_date': fields.datetime('Update on', select=True, readonly=True ),
         'write_uid': fields.many2one('res.users', 'Update by', select=True, readonly=True),
 
@@ -167,7 +167,7 @@ class Post(osv.Model):
                 'name': post.name,
                 'tags': [(6,0, [x.id for x in post.tags])],
                 'date': post.write_date or post.create_date,
-                'user_id': post.write_uid and post.write_uid.id or post.create_uid.id
+                'user_id': post.write_uid and post.write_uid.id or post.user_id.id
             }, context=context)
 
     def create(self, cr, uid, vals, context=None):

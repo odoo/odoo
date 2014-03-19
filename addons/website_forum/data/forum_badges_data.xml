@@ -155,7 +155,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('create_uid','=',user.id), ('vote_count', '>=', 3)]</field>
+            <field name="domain">[('user_id','=',user.id), ('vote_count', '>=', 3)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -221,7 +221,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('create_uid','=',user.id), ('vote_count', '>=', 3), ('correct', '=', True)]</field>
+            <field name="domain">[('user_id','=',user.id), ('vote_count', '>=', 3), ('correct', '=', True)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -289,7 +289,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <!--field name="domain">[('create_uid','=',user.id), ('vote_count', '>=', 3)]</field-->
+            <!--field name="domain">[('user_id','=',user.id), ('vote_count', '>=', 3)]</field-->
             <field name="condition">higher</field>
         </record>
 
@@ -322,7 +322,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('create_uid','=',user.id), ('views', '>=', 500)]</field>
+            <field name="domain">[('user_id','=',user.id), ('views', '>=', 500)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -357,7 +357,7 @@
             <field name="compute_code">def count_favorites(cr, uid, context=None):
     res = 1
     Post = self.pool['website.forum.post']
-    user_posts = Post.search(cr, uid, [('create_uid','=',uid), ('parent_id', '=', False)], context=context)
+    user_posts = Post.search(cr, uid, [('user_id','=',uid), ('parent_id', '=', False)], context=context)
     for post in  Post.browse(cr, uid, user_posts, context=context):
         if len(post.favourite_ids) >= 5:
             res += 1
@@ -397,7 +397,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('create_uid','=',user.id), ('parent_id', '!=', False), ('vote_count', '>=', 6)]</field>
+            <field name="domain">[('user_id','=',user.id), ('parent_id', '!=', False), ('vote_count', '>=', 6)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -430,7 +430,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('create_uid','=',user.id), ('parent_id', '=', False), ('vote_count', '>=', 6)]</field>
+            <field name="domain">[('user_id','=',user.id), ('parent_id', '=', False), ('vote_count', '>=', 6)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -463,7 +463,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('create_uid','=',user.id), ('parent_id', '!=', False), ('vote_count', '>=', 15)]</field>
+            <field name="domain">[('user_id','=',user.id), ('parent_id', '!=', False), ('vote_count', '>=', 15)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -496,7 +496,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('create_uid','=',user.id), ('parent_id', '=', False), ('vote_count', '>=', 15)]</field>
+            <field name="domain">[('user_id','=',user.id), ('parent_id', '=', False), ('vote_count', '>=', 15)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -529,7 +529,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('create_uid','=',user.id), ('parent_id', '!=', False), ('vote_count', '>=', 15), ('correct', '=', True)]</field>
+            <field name="domain">[('user_id','=',user.id), ('parent_id', '!=', False), ('vote_count', '>=', 15), ('correct', '=', True)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -563,7 +563,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="compute_code">def get_posts(cr, uid, context=None):
     res = 1
     Post = self.pool['website.forum.post']
-    user_posts = Post.search(cr, uid, [('create_uid','=',uid), ('parent_id', '!=', False), ('vote_count', '>=', 2)], context=context)
+    user_posts = Post.search(cr, uid, [('user_id','=',uid), ('parent_id', '!=', False), ('vote_count', '>=', 2)], context=context)
     for post in  Post.browse(cr, uid, user_posts, context=context):
         print post.parent_id.create_date
         question_date = datetime.strptime(post.parent_id.create_date, "%Y-%m-%d %H:%M:%S")
@@ -606,7 +606,7 @@ result = get_posts(cr, uid, context=context)
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('create_uid','=',user.id), ('parent_id', '!=', False), ('vote_count', '>=', 4)]</field>
+            <field name="domain">[('user_id','=',user.id), ('parent_id', '!=', False), ('vote_count', '>=', 4)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -639,7 +639,7 @@ result = get_posts(cr, uid, context=context)
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('create_uid','=',user.id), ('parent_id', '=', False), ('vote_count', '>=', 6)]</field>
+            <field name="domain">[('user_id','=',user.id), ('parent_id', '=', False), ('vote_count', '>=', 6)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -672,7 +672,7 @@ result = get_posts(cr, uid, context=context)
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('create_uid','=',user.id), ('parent_id', '=', False), ('views', '>=', 250)]</field>
+            <field name="domain">[('user_id','=',user.id), ('parent_id', '=', False), ('views', '>=', 250)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -741,7 +741,7 @@ result = get_posts(cr, uid, context=context)
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('create_uid','=',user.id), ('vote_count', '>=', -3)]</field>
+            <field name="domain">[('user_id','=',user.id), ('vote_count', '>=', -3)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -774,7 +774,7 @@ result = get_posts(cr, uid, context=context)
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('create_uid','=',user.id), ('parent_id', '=', False), ('views', '>=', 150)]</field>
+            <field name="domain">[('user_id','=',user.id), ('parent_id', '=', False), ('views', '>=', 150)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -853,7 +853,7 @@ result = get_count(cr, uid, context=context)
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('create_uid','=',user.id), ('parent_id', '=', False), ('correct', '=', True)]</field>
+            <field name="domain">[('user_id','=',user.id), ('parent_id', '=', False), ('correct', '=', True)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -886,9 +886,9 @@ result = get_count(cr, uid, context=context)
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('create_uid','=',user.id),
+            <field name="domain">[('user_id','=',user.id),
                 ('parent_id', '!=', False),
-                ('parent_id.create_uid', '!=', user.id),
+                ('parent_id.user_id', '!=', user.id),
                 ('vote_count', '>=', 4)]
             </field>
             <field name="condition">higher</field>
@@ -925,7 +925,7 @@ result = get_count(cr, uid, context=context)
             <field name="compute_code">def count_favorites(cr, uid, context=None):
     res = 1
     Post = self.pool['website.forum.post']
-    user_posts = Post.search(cr, uid, [('create_uid','=',uid), ('parent_id', '=', False)], context=context)
+    user_posts = Post.search(cr, uid, [('user_id','=',uid), ('parent_id', '=', False)], context=context)
     for post in  Post.browse(cr, uid, user_posts, context=context):
         if len(post.favourite_ids) >= 25:
             res += 1
@@ -998,7 +998,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('create_uid','=',user.id), ('parent_id', '=', False), ('vote_count', '>=', 1)]</field>
+            <field name="domain">[('user_id','=',user.id), ('parent_id', '=', False), ('vote_count', '>=', 1)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -1097,7 +1097,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('create_uid','=',user.id), ('parent_id', '!=', False), ('vote_count', '>=', 3)]</field>
+            <field name="domain">[('user_id','=',user.id), ('parent_id', '!=', False), ('vote_count', '>=', 3)]</field>
             <field name="condition">higher</field>
         </record>
 
