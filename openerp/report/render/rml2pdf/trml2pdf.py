@@ -982,7 +982,7 @@ class _rml_template(object):
                     }
         pageSize = A4
         if self.localcontext.get('company'):
-            pageSize = pagesize_map.get(self.localcontext.get('company').paper_format, A4)
+            pageSize = pagesize_map.get(self.localcontext.get('company').rml_paper_format, A4)
         if node.get('pageSize'):
             ps = map(lambda x:x.strip(), node.get('pageSize').replace(')', '').replace('(', '').split(','))
             pageSize = ( utils.unit_get(ps[0]),utils.unit_get(ps[1]) )

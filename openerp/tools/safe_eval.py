@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    Copyright (C) 2004-2012 OpenERP s.a. (<http://www.openerp.com>).
+#    Copyright (C) 2004-2014 OpenERP s.a. (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -225,9 +225,14 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
             'False': False,
             'None': None,
             'str': str,
+            'unicode': unicode,
             'globals': locals,
             'locals': locals,
             'bool': bool,
+            'int': int,
+            'float': float,
+            'long': long,
+            'enumerate': enumerate,
             'dict': dict,
             'list': list,
             'tuple': tuple,
@@ -235,15 +240,23 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
             'abs': abs,
             'min': min,
             'max': max,
+            'sum': sum,
             'reduce': reduce,
             'filter': filter,
             'round': round,
             'len': len,
-            'set': set,
             'repr': repr,
-            'int': int,
-            'float': float,
+            'set': set,
+            'all': all,
+            'any': any,
+            'ord': ord,
+            'chr': chr,
+            'cmp': cmp,
+            'divmod': divmod,
+            'isinstance': isinstance,
             'range': range,
+            'xrange': xrange,
+            'zip': zip,
         }
     )
     if locals_builtins:

@@ -778,49 +778,32 @@ def trans_generate(lang, modules, cr):
         if model_obj._sql_constraints:
             push_local_constraints(module, model_obj, 'sql_constraints')
 
-    def get_module_from_path(path, mod_paths=None):
-        if not mod_paths:
-            # First, construct a list of possible paths
-            def_path = os.path.abspath(os.path.join(config.config['root_path'], 'addons'))     # default addons path (base)
-            ad_paths= map(lambda m: os.path.abspath(m.strip()),config.config['addons_path'].split(','))
-            mod_paths=[def_path]
-            for adp in ad_paths:
-                mod_paths.append(adp)
-                if not os.path.isabs(adp):
-                    mod_paths.append(adp)
-                elif adp.startswith(def_path):
-                    mod_paths.append(adp[len(def_path)+1:])
-        for mp in mod_paths:
-            if path.startswith(mp) and (os.path.dirname(path) != mp):
-                path = path[len(mp)+1:]
-                return path.split(os.path.sep)[0]
-        return 'base'   # files that are not in a module are considered as being in 'base' module
 
     modobj = registry['ir.module.module']
     installed_modids = modobj.search(cr, uid, [('state', '=', 'installed')])
     installed_modules = map(lambda m: m['name'], modobj.read(cr, uid, installed_modids, ['name']))
 
-    root_path = os.path.join(config.config['root_path'], 'addons')
-
-    apaths = map(os.path.abspath, map(str.strip, config.config['addons_path'].split(',')))
-    if root_path in apaths:
-        path_list = apaths
-    else :
-        path_list = [root_path,] + apaths
-
+    path_list = list(openerp.modules.module.ad_paths)
     # Also scan these non-addon paths
     for bin_path in ['osv', 'report' ]:
         path_list.append(os.path.join(config.config['root_path'], bin_path))
 
     _logger.debug("Scanning modules at paths: ", path_list)
 
-    mod_paths = []
+    mod_paths = list(path_list)
+
+    def get_module_from_path(path):
+        for mp in mod_paths:
+            if path.startswith(mp) and (os.path.dirname(path) != mp):
+                path = path[len(mp)+1:]
+                return path.split(os.path.sep)[0]
+        return 'base'   # files that are not in a module are considered as being in 'base' module
 
     def verified_module_filepaths(fname, path, root):
         fabsolutepath = join(root, fname)
         frelativepath = fabsolutepath[len(path):]
         display_path = "addons%s" % frelativepath
-        module = get_module_from_path(fabsolutepath, mod_paths=mod_paths)
+        module = get_module_from_path(fabsolutepath)
         if ('all' in modules or module in modules) and module in installed_modules:
             return module, fabsolutepath, frelativepath, display_path
         return None, None, None, None

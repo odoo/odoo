@@ -20,15 +20,19 @@
 ##############################################################################
 import collections
 import copy
+import fnmatch
 import logging
 from lxml import etree
 from operator import itemgetter
 import os
+import simplejson
+import werkzeug
 
 import HTMLParser
 
 import openerp
 from openerp import tools
+from openerp.http import request
 from openerp.osv import fields, osv, orm
 from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
 from openerp.tools.safe_eval import safe_eval as eval
@@ -39,6 +43,17 @@ from openerp.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath']
+
+def keep_query(*args, **kw):
+    if not args and not kw:
+        args = ('*',)
+    params = kw.copy()
+    query_params = frozenset(werkzeug.url_decode(request.httprequest.query_string).keys())
+    for keep_param in args:
+        for param in fnmatch.filter(query_params, keep_param):
+            if param not in params and param in request.params:
+                params[param] = request.params[param]
+    return werkzeug.urls.url_encode(params)
 
 class view_custom(osv.osv):
     _name = 'ir.ui.view.custom'
@@ -301,14 +316,14 @@ class view(osv.osv):
                 return node
         return None
 
-    def inherit_branding(self, specs_tree, view_id, source_id):
+    def inherit_branding(self, specs_tree, view_id, root_id):
         for node in specs_tree.iterchildren(tag=etree.Element):
             xpath = node.getroottree().getpath(node)
             if node.tag == 'data' or node.tag == 'xpath':
-                self.inherit_branding(node, view_id, source_id)
+                self.inherit_branding(node, view_id, root_id)
             else:
                 node.set('data-oe-id', str(view_id))
-                node.set('data-oe-source-id', str(source_id))
+                node.set('data-oe-source-id', str(root_id))
                 node.set('data-oe-xpath', xpath)
                 node.set('data-oe-model', 'ir.ui.view')
                 node.set('data-oe-field', 'arch')
@@ -382,7 +397,7 @@ class view(osv.osv):
 
         return source
 
-    def apply_view_inheritance(self, cr, uid, source, source_id, model, context=None):
+    def apply_view_inheritance(self, cr, uid, source, source_id, model, root_id=None, context=None):
         """ Apply all the (directly and indirectly) inheriting views.
 
         :param source: a parent architecture to modify (with parent modifications already applied)
@@ -393,13 +408,15 @@ class view(osv.osv):
         :return: a modified source where all the modifying architecture are applied
         """
         if context is None: context = {}
+        if root_id is None:
+            root_id = source_id
         sql_inherit = self.pool.get('ir.ui.view').get_inheriting_views_arch(cr, uid, source_id, model, context=context)
         for (specs, view_id) in sql_inherit:
             specs_tree = etree.fromstring(specs.encode('utf-8'))
             if context.get('inherit_branding'):
-                self.inherit_branding(specs_tree, view_id, source_id)
+                self.inherit_branding(specs_tree, view_id, root_id)
             source = self.apply_inheritance_specs(cr, uid, source, specs_tree, view_id, context=context)
-            source = self.apply_view_inheritance(cr, uid, source, view_id, model, context=context)
+            source = self.apply_view_inheritance(cr, uid, source, view_id, model, root_id=root_id, context=context)
         return source
 
     def read_combined(self, cr, uid, view_id, fields=None, context=None):
@@ -542,7 +559,7 @@ class view(osv.osv):
                         if f.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
                             node.remove(f)
                             ctx = context.copy()
-                            ctx['base_model_name'] = Model
+                            ctx['base_model_name'] = model
                             xarch, xfields = self.postprocess_and_fields(cr, user, column._obj or None, f, view_id, ctx)
                             views[str(f.tag)] = {
                                 'arch': xarch,
@@ -711,9 +728,26 @@ class view(osv.osv):
     def clear_cache(self):
         self.read_template.clear_cache(self)
 
+    def _contains_branded(self, node):
+        return node.tag == 't'\
+            or 't-raw' in node.attrib\
+            or any(self.is_node_branded(child) for child in node.iterdescendants())
+
+    def _pop_view_branding(self, element):
+        distributed_branding = dict(
+            (attribute, element.attrib.pop(attribute))
+            for attribute in MOVABLE_BRANDING
+            if element.get(attribute))
+        return distributed_branding
+
     def distribute_branding(self, e, branding=None, parent_xpath='',
                             index_map=misc.ConstantMapping(1)):
         if e.get('t-ignore') or e.tag == 'head':
+            # remove any view branding possibly injected by inheritance
+            attrs = set(MOVABLE_BRANDING)
+            for descendant in e.iterdescendants(tag=etree.Element):
+                if not attrs.intersection(descendant.attrib): continue
+                self._pop_view_branding(descendant)
             # TODO: find a better name and check if we have a string to boolean helper
             return
 
@@ -725,25 +759,30 @@ class view(osv.osv):
             e.set('data-oe-xpath', node_path)
         if not e.get('data-oe-model'): return
 
-        # if a branded element contains branded elements distribute own
-        # branding to children unless it's t-raw, then just remove branding
-        # on current element
-        if e.tag == 't' or 't-raw' in e.attrib or \
-                any(self.is_node_branded(child) for child in e.iterdescendants()):
-            distributed_branding = dict(
-                (attribute, e.attrib.pop(attribute))
-                for attribute in MOVABLE_BRANDING
-                if e.get(attribute))
+        if set(('t-esc', 't-escf', 't-raw', 't-rawf')).intersection(e.attrib):
+            # nodes which fully generate their content and have no reason to
+            # be branded because they can not sensibly be edited
+            self._pop_view_branding(e)
+        elif self._contains_branded(e):
+            # if a branded element contains branded elements distribute own
+            # branding to children unless it's t-raw, then just remove branding
+            # on current element
+            distributed_branding = self._pop_view_branding(e)
 
             if 't-raw' not in e.attrib:
                 # TODO: collections.Counter if remove p2.6 compat
                 # running index by tag type, for XPath query generation
                 indexes = collections.defaultdict(lambda: 0)
                 for child in e.iterchildren(tag=etree.Element):
-                    indexes[child.tag] += 1
-                    self.distribute_branding(child, distributed_branding,
-                                             parent_xpath=node_path,
-                                             index_map=indexes)
+                    if child.get('data-oe-xpath'):
+                        # injected by view inheritance, skip otherwise
+                        # generated xpath is incorrect
+                        self.distribute_branding(child)
+                    else:
+                        indexes[child.tag] += 1
+                        self.distribute_branding(
+                            child, distributed_branding,
+                            parent_xpath=node_path, index_map=indexes)
 
     def is_node_branded(self, node):
         """ Finds out whether a node is branded or qweb-active (bears a
@@ -805,10 +844,20 @@ class view(osv.osv):
         if not context:
             context = {}
 
+        if values is None:
+            values = dict()
+        qcontext = dict(
+            keep_query=keep_query,
+            request=request,
+            json=simplejson,
+            quote_plus=werkzeug.url_quote_plus,
+        )
+        qcontext.update(values)
+
         def loader(name):
             return self.read_template(cr, uid, name, context=context)
 
-        return self.pool[engine].render(cr, uid, tname, values, loader=loader, context=context)
+        return self.pool[engine].render(cr, uid, tname, qcontext, loader=loader, context=context)
 
     #------------------------------------------------------
     # Misc

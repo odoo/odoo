@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -29,6 +29,7 @@ import openerp.conf
 import openerp.loglevels as loglevels
 import logging
 import openerp.release as release
+import appdirs
 
 class MyOption (optparse.Option, object):
     """ optparse Option with two additional attributes.
@@ -58,6 +59,9 @@ def check_ssl():
         return False
 
 DEFAULT_LOG_HANDLER = [':INFO']
+
+def _get_default_datadir():
+    return appdirs.user_data_dir(appname='OpenERP', appauthor=release.author)
 
 class configmanager(object):
     def __init__(self, fname=None):
@@ -106,6 +110,9 @@ class configmanager(object):
                          help="specify additional addons paths (separated by commas).",
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
         group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules default=web")
+
+        group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
+                         help="Directory where to store OpenERP data")
         parser.add_option_group(group)
 
         # XML-RPC / HTTP
@@ -245,7 +252,8 @@ class configmanager(object):
 
         # Advanced options
         group = optparse.OptionGroup(parser, "Advanced options")
-        group.add_option('--auto-reload', dest='auto_reload', action='store_true', my_default=False, help='enable auto reload')
+        if os.name == 'posix':
+            group.add_option('--auto-reload', dest='auto_reload', action='store_true', my_default=False, help='enable auto reload')
         group.add_option('--debug', dest='debug_mode', action='store_true', my_default=False, help='enable debug mode')
         group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
                           help="stop the server after its initialization")
@@ -267,27 +275,28 @@ class configmanager(object):
                          help="Use the unaccent function provided by the database when available.")
         parser.add_option_group(group)
 
-        group = optparse.OptionGroup(parser, "Multiprocessing options")
-        # TODO sensible default for the three following limits.
-        group.add_option("--workers", dest="workers", my_default=0,
-                         help="Specify the number of workers, 0 disable prefork mode.",
-                         type="int")
-        group.add_option("--limit-memory-soft", dest="limit_memory_soft", my_default=640 * 1024 * 1024,
-                         help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 671088640 aka 640MB).",
-                         type="int")
-        group.add_option("--limit-memory-hard", dest="limit_memory_hard", my_default=768 * 1024 * 1024,
-                         help="Maximum allowed virtual memory per worker, when reached, any memory allocation will fail (default 805306368 aka 768MB).",
-                         type="int")
-        group.add_option("--limit-time-cpu", dest="limit_time_cpu", my_default=60,
-                         help="Maximum allowed CPU time per request (default 60).",
-                         type="int")
-        group.add_option("--limit-time-real", dest="limit_time_real", my_default=120,
-                         help="Maximum allowed Real time per request (default 120).",
-                         type="int")
-        group.add_option("--limit-request", dest="limit_request", my_default=8192,
-                         help="Maximum number of request to be processed per worker (default 8192).",
-                         type="int")
-        parser.add_option_group(group)
+        if os.name == 'posix':
+            group = optparse.OptionGroup(parser, "Multiprocessing options")
+            # TODO sensible default for the three following limits.
+            group.add_option("--workers", dest="workers", my_default=0,
+                             help="Specify the number of workers, 0 disable prefork mode.",
+                             type="int")
+            group.add_option("--limit-memory-soft", dest="limit_memory_soft", my_default=2048 * 1024 * 1024,
+                             help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 671088640 aka 640MB).",
+                             type="int")
+            group.add_option("--limit-memory-hard", dest="limit_memory_hard", my_default=2560 * 1024 * 1024,
+                             help="Maximum allowed virtual memory per worker, when reached, any memory allocation will fail (default 805306368 aka 768MB).",
+                             type="int")
+            group.add_option("--limit-time-cpu", dest="limit_time_cpu", my_default=60,
+                             help="Maximum allowed CPU time per request (default 60).",
+                             type="int")
+            group.add_option("--limit-time-real", dest="limit_time_real", my_default=120,
+                             help="Maximum allowed Real time per request (default 120).",
+                             type="int")
+            group.add_option("--limit-request", dest="limit_request", my_default=8192,
+                             help="Maximum number of request to be processed per worker (default 8192).",
+                             type="int")
+            parser.add_option_group(group)
 
         # Copy all optparse options (i.e. MyOption) into self.options.
         for group in parser.option_groups:
@@ -348,6 +357,7 @@ class configmanager(object):
         # (../etc from the server)
         # if the server is run by an unprivileged user, he has to specify location of a config file where he has the rights to write,
         # else he won't be able to save the configurations, or even to start the server...
+        # TODO use appdirs
         if os.name == 'nt':
             rcfilepath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'openerp-server.conf')
         else:
@@ -357,7 +367,6 @@ class configmanager(object):
             self.config_file or opt.config \
                 or os.environ.get('OPENERP_SERVER') or rcfilepath)
         self.load()
-
 
         # Verify that we want to log or not, if not the output will go to stdout
         if self.options['logfile'] in ('None', 'False'):
@@ -387,7 +396,6 @@ class configmanager(object):
             elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
-
         if isinstance(self.options['log_handler'], basestring):
             self.options['log_handler'] = self.options['log_handler'].split(',')
 
@@ -399,11 +407,22 @@ class configmanager(object):
             'list_db', 'xmlrpcs', 'proxy_mode',
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
-            'workers', 'limit_memory_hard', 'limit_memory_soft', 'limit_time_cpu', 'limit_time_real', 'limit_request', 'auto_reload'
+            'data_dir',
         ]
 
+        posix_keys = [
+            'auto_reload', 'workers',
+            'limit_memory_hard', 'limit_memory_soft',
+            'limit_time_cpu', 'limit_time_real', 'limit_request',
+        ]
+
+        if os.name == 'posix':
+            keys += posix_keys
+        else:
+            self.options.update(dict.fromkeys(posix_keys, None))
+
+        # Copy the command-line arguments...
         for arg in keys:
-            # Copy the command-line argument...
             if getattr(opt, arg) is not None:
                 self.options[arg] = getattr(opt, arg)
             # ... or keep, but cast, the config file value.
@@ -616,6 +635,24 @@ class configmanager(object):
 
     def __getitem__(self, key):
         return self.options[key]
+
+    @property
+    def addons_data_dir(self):
+        d = os.path.join(self['data_dir'], 'addons', release.series)
+        if not os.path.exists(d):
+            os.makedirs(d, 0700)
+        else:
+            os.chmod(d, 0700)
+        return d
+
+    @property
+    def session_dir(self):
+        d = os.path.join(self['data_dir'], 'sessions', release.series)
+        if not os.path.exists(d):
+            os.makedirs(d, 0700)
+        else:
+            os.chmod(d, 0700)
+        return d
 
 config = configmanager()
 
