@@ -12,10 +12,10 @@ class TestNewFields(common.TransactionCase):
 
     def setUp(self):
         super(TestNewFields, self).setUp()
-        self.Category = self.registry('test_new_api.category')
-        self.Discussion = self.registry('test_new_api.discussion')
-        self.Message = self.registry('test_new_api.message')
-        self.Mixed = self.registry('test_new_api.mixed')
+        self.Category = scope['test_new_api.category']
+        self.Discussion = scope['test_new_api.discussion']
+        self.Message = scope['test_new_api.message']
+        self.Mixed = scope['test_new_api.mixed']
 
     def test_00_basics(self):
         """ test accessing new fields """
@@ -187,7 +187,7 @@ class TestNewFields(common.TransactionCase):
         self.assertFalse(record.lang)
 
         # one may assign a value, and it must be checked
-        for language in self.registry('res.lang').search([]):
+        for language in scope['res.lang'].search([]):
             record.lang = language.code
         with self.assertRaises(ValueError):
             record.lang = 'zz_ZZ'
@@ -273,7 +273,7 @@ class TestNewFields(common.TransactionCase):
     def test_26_inherited(self):
         """ test inherited fields. """
         # a bunch of fields are inherited from res_partner
-        for user in self.registry('res.users').search([]):
+        for user in scope['res.users'].search([]):
             partner = user.partner_id
             for field in ('is_company', 'name', 'email', 'country_id'):
                 self.assertEqual(getattr(user, field), getattr(partner, field))
@@ -327,7 +327,7 @@ class TestMagicFields(common.TransactionCase):
 
     def setUp(self):
         super(TestMagicFields, self).setUp()
-        self.Discussion = self.registry('test_new_api.discussion')
+        self.Discussion = scope['test_new_api.discussion']
 
     def test_write_date(self):
         record = self.Discussion.create({'name': 'Booba'})
@@ -339,7 +339,7 @@ class TestInherits(common.TransactionCase):
 
     def setUp(self):
         super(TestInherits, self).setUp()
-        self.Talk = self.registry('test_new_api.talk')
+        self.Talk = scope['test_new_api.talk']
 
     def test_inherits(self):
         """ Check that a many2one field with delegate=True adds an entry in _inherits """

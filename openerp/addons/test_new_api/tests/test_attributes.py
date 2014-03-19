@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest2
+
+from openerp import scope
 from openerp.tests import common
 
 ANSWER_TO_ULTIMATE_QUESTION = 42
@@ -7,7 +9,7 @@ ANSWER_TO_ULTIMATE_QUESTION = 42
 class TestAttributes(common.TransactionCase):
 
     def test_we_can_add_attributes(self):
-        Model = self.registry('test_new_api.category')
+        Model = scope['test_new_api.category']
         instance = Model.create({'name': 'Foo'})
 
         # assign an unknown attribute

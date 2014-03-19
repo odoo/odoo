@@ -186,7 +186,7 @@ class Scope(object):
 
     def __getitem__(self, model_name):
         """ return a given model """
-        return self.registry[model_name]
+        return self.registry[model_name]._browse(self, ())
 
     def __call__(self, cr=None, user=None, context=(), **kwargs):
         """ Return a scope based on `self` with modified parameters.
@@ -221,13 +221,13 @@ class Scope(object):
     def ref(self, xml_id):
         """ return the record corresponding to the given `xml_id` """
         module, name = xml_id.split('.')
-        return self.registry['ir.model.data'].get_object(module, name)
+        return self['ir.model.data'].get_object(module, name)
 
     @property
     def user(self):
         """ return the current user (as an instance) """
         with proxy.sudo():
-            return self.registry['res.users'].browse(self.uid)
+            return self['res.users'].browse(self.uid)
 
     @property
     def lang(self):

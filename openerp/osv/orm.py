@@ -752,9 +752,9 @@ class BaseModel(object):
         # Note: we have to insert an instance into the registry now, because it
         # can trigger some stuff on other models which expect this new instance
         # (like method _inherits_reload_src())
-        instance = cls._browse(scope_proxy.current, ())
-        cls._model = instance           # backward compatibility
-        pool.add(name, instance)
+        model = object.__new__(cls)
+        cls._model = model              # backward compatibility
+        pool.add(name, model)
 
         # determine description, table, sequence and log_access
         if not cls._description:
@@ -816,9 +816,9 @@ class BaseModel(object):
         # prepare ormcache, which must be shared by all instances of the model
         cls._ormcache = {}
 
-        # complete the initialization of instance
-        instance.__init__(pool, cr)
-        return instance
+        # complete the initialization of model
+        model.__init__(pool, cr)
+        return model
 
     @classmethod
     def _init_function_fields(cls, pool, cr):
@@ -934,8 +934,8 @@ class BaseModel(object):
 
     def __export_xml_id(self):
         """ Return a valid xml_id for the record `self`. """
-        ir_model_data = self.pool['ir.model.data']
-        with scope_proxy.sudo():
+        with scope_proxy.sudo() as scope:
+            ir_model_data = scope['ir.model.data']
             data = ir_model_data.search([('model', '=', self._name), ('res_id', '=', self.id)])
             if data:
                 if data.module:
@@ -1332,7 +1332,7 @@ class BaseModel(object):
         for fun, msg, names in self._constraints:
             try:
                 # validation must be context-independent; call `fun` without context
-                valid = not (set(names) & field_names) or fun(self, cr, uid, ids)
+                valid = not (set(names) & field_names) or fun(self._model, cr, uid, ids)
                 extra_error = None
             except Exception, e:
                 _logger.debug('Exception while validating constraint', exc_info=True)
@@ -1340,7 +1340,7 @@ class BaseModel(object):
                 extra_error = tools.ustr(e)
             if not valid:
                 if callable(msg):
-                    res_msg = msg(self, cr, uid, ids, context=context)
+                    res_msg = msg(self._model, cr, uid, ids, context=context)
                     if isinstance(res_msg, tuple):
                         template, params = res_msg
                         res_msg = template % params
@@ -1378,13 +1378,14 @@ class BaseModel(object):
         self.view_init(cr, uid, fields_list, context)
 
         # use a new record to determine default values
-        record = self.new()
+        record = self.new(cr, uid, {}, context=context)
         for name in fields_list:
             record[name]                # force evaluation of defaults
 
         # retrieve defaults from record's cache
         return self._convert_to_write(record._cache)
 
+    @api.new
     def add_default_value(self, name):
         """ Set the default value of field `name` to the new record `self`.
             The value must be assigned to `self` as ``self.field = value`` or
@@ -1402,7 +1403,7 @@ class BaseModel(object):
 
         # 2. look up ir_values
         #    Note: performance is good, because get_defaults_dict is cached!
-        ir_values_dict = self.pool['ir.values'].get_defaults_dict(self._name)
+        ir_values_dict = scope_proxy['ir.values'].get_defaults_dict(self._name)
         if name in ir_values_dict:
             self[name] = ir_values_dict[name]
             return
@@ -1411,14 +1412,14 @@ class BaseModel(object):
         #    TODO: get rid of this one
         column = self._columns.get(name)
         if isinstance(column, fields.property):
-            self[name] = self.pool['ir.property'].get(name, self._name)
+            self[name] = scope_proxy['ir.property'].get(name, self._name)
             return
 
         # 4. look up _defaults
         if name in self._defaults:
             value = self._defaults[name]
             if callable(value):
-                value = value(self, cr, uid, context)
+                value = value(self._model, cr, uid, context)
             self[name] = value
             return
 
@@ -2448,7 +2449,7 @@ class BaseModel(object):
 
         # get new_style default if no old-style
         if default is None:
-            record = self.new()
+            record = self.new(cr, SUPERUSER_ID, context=context)
             field = self._fields[column_name]
             field.determine_default(record)
             defaults = dict(record._cache)
@@ -2728,8 +2729,8 @@ class BaseModel(object):
             def func(cr):
                 _logger.info("Storing computed values of %s fields %s",
                     self._name, ', '.join(f.name for f in stored_fields))
-                with scope_proxy(cr, SUPERUSER_ID, {'active_test': False}):
-                    recs = self.search([])
+                ids = self.browse(cr, SUPERUSER_ID, [], context={'active_test': False})
+                recs = self.browse(cr, SUPERUSER_ID, ids)
                 for f in stored_fields:
                     scope_proxy.recomputation[f] |= recs
                 self.recompute()
@@ -3204,7 +3205,7 @@ class BaseModel(object):
         # Construct a clause for the security rules.
         # 'tables' holds the list of tables necessary for the SELECT, including
         # the ir.rule clauses, and contains at least self._table.
-        rule_clause, rule_params, tables = self.pool['ir.rule'].domain_get(self._name, 'read')
+        rule_clause, rule_params, tables = self._scope['ir.rule'].domain_get(self._name, 'read')
 
         # determine the fields that are stored as columns in self._table
         fields_pre = [f for f in field_names if self._columns[f]._classic_write]
@@ -3238,7 +3239,7 @@ class BaseModel(object):
         if ids:
             # translate the fields if necessary
             if context.get('lang'):
-                ir_translation = self.pool['ir.translation']
+                ir_translation = self._scope['ir.translation']
                 for f in fields_pre:
                     if self._columns[f].translate:
                         #TODO: optimize out of this loop
@@ -3269,7 +3270,7 @@ class BaseModel(object):
 
             for multi, fs in by_multi.iteritems():
                 if multi:
-                    res2 = self._columns[fs[0]].get(cr, self, ids, fs, user, context=context, values=result)
+                    res2 = self._columns[fs[0]].get(cr, self._model, ids, fs, user, context=context, values=result)
                     assert res2 is not None, \
                         'The function field "%s" on the "%s" model returned None\n' \
                         '(a dictionary was expected).' % (fs[0], self._name)
@@ -3282,7 +3283,7 @@ class BaseModel(object):
                                 vals[f] = multi_fields.get(f, [])
                 else:
                     for f in fs:
-                        res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=result)
+                        res2 = self._columns[f].get(cr, self._model, ids, f, user, context=context, values=result)
                         for vals in result:
                             if res2:
                                 vals[f] = res2[vals['id']]
@@ -3524,7 +3525,7 @@ class BaseModel(object):
         result_store = self._store_get_values(cr, uid, ids, self._all_columns.keys(), context)
 
         # for recomputing new-style fields
-        recs = self.browse(ids)
+        recs = self.browse(cr, uid, ids, context)
         recs.modified(self._fields)
 
         self._check_concurrency(cr, ids, context)
@@ -3637,8 +3638,8 @@ class BaseModel(object):
             return True
 
         cr, uid, context = scope_proxy.args
-        self._check_concurrency(cr, self._ids, context)
-        self.check_access_rights(cr, uid, 'write')
+        self._check_concurrency(self._ids)
+        self.check_access_rights('write')
 
         # No user-driven update of these columns
         for field in itertools.chain(MAGIC_COLUMNS, ('parent_left', 'parent_right')):
@@ -3704,7 +3705,7 @@ class BaseModel(object):
         result = self._store_get_values(cr, user, ids, vals.keys(), context) or []
 
         # for recomputing new-style fields
-        recs = self.browse(ids)
+        recs = self.browse(cr, user, ids, context)
         modified_fields = list(vals)
         if self._log_access:
             modified_fields += ['write_date', 'write_uid']
@@ -4127,7 +4128,7 @@ class BaseModel(object):
             result += self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context) or []
 
         # check Python constraints
-        recs = self.browse(id_new)
+        recs = self.browse(cr, user, id_new, context)
         recs._validate_fields(vals)
 
         if not context.get('no_store_function', False):
@@ -4294,7 +4295,7 @@ class BaseModel(object):
                             '"'+f+'"='+self._columns[f]._symbol_set[0] + ' where id = %s', (self._columns[f]._symbol_set[1](value), id))
 
         # invalidate the cache for the modified fields
-        self.browse(ids).modified(fields)
+        self.browse(cr, uid, ids, context).modified(fields)
 
         return True
 
@@ -5192,6 +5193,7 @@ class BaseModel(object):
     # they are used to compute default values and perform onchanges.
     #
 
+    @api.model
     def new(self, values={}):
         """ Return a new record instance attached to the current scope, and
             initialized with the `values` dictionary. Such a record does not
@@ -5237,7 +5239,7 @@ class BaseModel(object):
 
     def __nonzero__(self):
         """ Test whether `self` is nonempty. """
-        return bool(self._ids)
+        return bool(getattr(self, '_ids', True))
 
     def __len__(self):
         """ Return the size of `self`. """
@@ -5317,7 +5319,7 @@ class BaseModel(object):
         return self._id
 
     def __str__(self):
-        return "%s%s" % (self._name, self._ids)
+        return "%s%s" % (self._name, getattr(self, '_ids', ""))
 
     def __unicode__(self):
         return unicode(str(self))
@@ -5325,7 +5327,10 @@ class BaseModel(object):
     __repr__ = __str__
 
     def __hash__(self):
-        return hash((self._name, frozenset(self._ids)))
+        if hasattr(self, '_ids'):
+            return hash((self._name, frozenset(self._ids)))
+        else:
+            return hash(self._name)
 
     def __getitem__(self, key):
         """ If `key` is an integer or a slice, return the corresponding record

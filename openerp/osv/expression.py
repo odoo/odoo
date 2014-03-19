@@ -762,7 +762,7 @@ class expression(object):
             model = leaf.model
             field = model._fields.get(path[0])
             column = model._columns.get(path[0])
-            comodel = getattr(field, 'comodel', None)
+            comodel = model.pool.get(getattr(field, 'comodel_name', None))
 
             # ----------------------------------------
             # SIMPLE CASE

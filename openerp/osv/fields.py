@@ -653,10 +653,10 @@ class one2many(_column):
             context = dict(context or {})
             context.update(self._context)
 
-        with Scope(cr, user, context):
+        with Scope(cr, user, context) as scope:
             res = dict((id, []) for id in ids)
 
-            comodel = obj.pool[self._obj]
+            comodel = scope[self._obj]
             inverse = self._fields_id
             domain = self._domain
             if callable(domain):

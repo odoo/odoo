@@ -11,8 +11,10 @@ class TestAPI(common.TransactionCase):
 
     def setUp(self):
         super(TestAPI, self).setUp()
-        self.Partner = self.registry('res.partner')
-        self.Users = self.registry('res.users')
+        self.res_partner = self.registry('res.partner')
+        self.res_users = self.registry('res.users')
+        self.Partner = scope['res.partner']
+        self.Users = scope['res.users']
 
     def assertIsRecordset(self, value, model):
         self.assertIsInstance(value, BaseModel)
@@ -30,7 +32,7 @@ class TestAPI(common.TransactionCase):
     def test_00_query(self):
         """ Build a recordset, and check its contents. """
         domain = [('name', 'ilike', 'j')]
-        ids = self.Partner.search(self.cr, self.uid, domain)
+        ids = self.res_partner.search(self.cr, self.uid, domain)
         partners = self.Partner.search(domain)
 
         # partners is a collection of browse records corresponding to ids
@@ -83,7 +85,7 @@ class TestAPI(common.TransactionCase):
         ids = map(int, partners)
 
         # modify those partners, and check that partners has not changed
-        self.Partner.write(self.cr, self.uid, ids, {'active': False})
+        self.res_partner.write(self.cr, self.uid, ids, {'active': False})
         self.assertEqual(ids, map(int, partners))
 
         # redo the search, and check that the result is now empty
@@ -93,7 +95,7 @@ class TestAPI(common.TransactionCase):
     @mute_logger('openerp.osv.orm')
     def test_06_fields(self):
         """ Check that relation fields return records, recordsets or nulls. """
-        user = self.Users.browse(self.cr, self.uid, self.uid)
+        user = self.res_users.browse(self.cr, self.uid, self.uid)
         self.assertIsRecord(user, 'res.users')
         self.assertIsRecord(user.partner_id, 'res.partner')
         self.assertIsRecordset(user.groups_id, 'res.groups')
@@ -141,8 +143,8 @@ class TestAPI(common.TransactionCase):
         self.assertTrue(partners)
         ids = map(int, partners)
 
-        # call method name_get on partners itself, and check its effect
-        res = partners.name_get(self.cr, self.uid, ids)
+        # call method name_get on partners' model, and check its effect
+        res = partners._model.name_get(self.cr, self.uid, ids)
         self.assertEqual(len(res), len(ids))
         self.assertEqual(set(val[0] for val in res), set(ids))
 
@@ -177,8 +179,8 @@ class TestAPI(common.TransactionCase):
         self.assertTrue(partners)
         ids = map(int, partners)
 
-        # call method write on partners itself, and check its effect
-        partners.write(self.cr, self.uid, ids, {'active': False})
+        # call method write on partners' model, and check its effect
+        partners._model.write(self.cr, self.uid, ids, {'active': False})
         for p in partners:
             self.assertFalse(p.active)
 
@@ -370,7 +372,7 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(set(partners.unbrowse()), set(partner_ids))
 
         # countries have not been fetched yet; their cache must be empty
-        countries = self.registry('res.country').browse()
+        countries = scope['res.country'].browse()
         self.assertFalse(scope.cache_ids['res.country'])
 
         # reading ONE partner should fetch them ALL
@@ -439,7 +441,7 @@ class TestAPI(common.TransactionCase):
 
         # one cannot mix different models with set operations
         ps = pa
-        ms = self.registry('ir.ui.menu').search([])
+        ms = scope['ir.ui.menu'].search([])
         self.assertNotEqual(ps._name, ms._name)
         self.assertNotEqual(ps, ms)
 

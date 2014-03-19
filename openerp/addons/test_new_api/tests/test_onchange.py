@@ -7,8 +7,8 @@ class TestOnChange(common.TransactionCase):
 
     def setUp(self):
         super(TestOnChange, self).setUp()
-        self.Discussion = self.registry('test_new_api.discussion')
-        self.Message = self.registry('test_new_api.message')
+        self.Discussion = scope['test_new_api.discussion']
+        self.Message = scope['test_new_api.message']
 
     def test_default_get(self):
         """ checking values returned by default_get() """

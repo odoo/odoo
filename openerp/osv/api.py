@@ -220,7 +220,7 @@ def _converter_to_new(method):
         if model == 'self':
             return _CONVERT_BROWSE
         else:
-            return lambda self, value: self.pool[model].browse(value)
+            return lambda self, value: self._scope[model].browse(value)
     else:
         return _CONVERT_PASS
 
@@ -236,7 +236,7 @@ def _aggregator_one(method):
         if model == 'self':
             return lambda self, value: sum(value, self.browse())
         else:
-            return lambda self, value: sum(value, self.pool[model].browse())
+            return lambda self, value: sum(value, self._scope[model].browse())
     else:
         return _CONVERT_PASS
 
@@ -254,12 +254,6 @@ def wraps(method):
         return wrapper
 
     return decorate
-
-
-def _has_cursor(args, kwargs):
-    """ test whether `args` or `kwargs` contain a cursor argument """
-    cr = args[0] if args else kwargs.get('cr')
-    return isinstance(cr, Cursor)
 
 
 def _cr_uid_context_splitter(method):
@@ -370,11 +364,12 @@ def model(method):
 
     @wraps(method)
     def model_wrapper(self, *args, **kwargs):
-        if _has_cursor(args, kwargs):
+        if not hasattr(self, '_ids'):
             cr, uid, context, args, kwargs = split_args(args, kwargs)
-            with Scope(cr, uid, context):
-                value = method(self, *args, **kwargs)
-                return new_to_old(self, value)
+            recs = self.browse(cr, uid, [], context)
+            with recs._scope:
+                value = method(recs, *args, **kwargs)
+                return new_to_old(recs, value)
         else:
             return method(self, *args, **kwargs)
 
@@ -403,11 +398,12 @@ def multi(method):
 
     @wraps(method)
     def multi_wrapper(self, *args, **kwargs):
-        if _has_cursor(args, kwargs):
+        if not hasattr(self, '_ids'):
             cr, uid, ids, context, args, kwargs = split_args(args, kwargs)
-            with Scope(cr, uid, context):
-                value = method(self.browse(ids), *args, **kwargs)
-                return new_to_old(self, value)
+            recs = self.browse(cr, uid, ids, context)
+            with recs._scope:
+                value = method(recs, *args, **kwargs)
+                return new_to_old(recs, value)
         else:
             return method(self, *args, **kwargs)
 
@@ -439,11 +435,12 @@ def one(method):
 
     @wraps(method)
     def one_wrapper(self, *args, **kwargs):
-        if _has_cursor(args, kwargs):
+        if not hasattr(self, '_ids'):
             cr, uid, ids, context, args, kwargs = split_args(args, kwargs)
-            with Scope(cr, uid, context):
-                value = [method(rec, *args, **kwargs) for rec in self.browse(ids)]
-                return new_to_old(self, aggregate(self, value))
+            recs = self.browse(cr, uid, ids, context)
+            with recs._scope:
+                value = [method(rec, *args, **kwargs) for rec in recs]
+                return new_to_old(recs, aggregate(recs, value))
         else:
             value = [method(rec, *args, **kwargs) for rec in self]
             return aggregate(self, value)
@@ -464,11 +461,11 @@ def cr(method):
 
     @wraps(method)
     def cr_wrapper(self, *args, **kwargs):
-        if _has_cursor(args, kwargs):
+        if not hasattr(self, '_ids'):
             with get_scope(args, kwargs):
                 return method(self, *args, **kwargs)
         else:
-            value = method(self, scope.cr, *args, **kwargs)
+            value = method(self._model, scope.cr, *args, **kwargs)
             return old_to_new(self, value)
 
     return cr_wrapper
@@ -482,13 +479,13 @@ def cr_context(method):
 
     @wraps(method)
     def cr_context_wrapper(self, *args, **kwargs):
-        if _has_cursor(args, kwargs):
+        if not hasattr(self, '_ids'):
             with get_scope(args, kwargs):
                 return method(self, *args, **kwargs)
         else:
             cr, _, context = scope.args
             kwargs['context'] = context
-            value = method(self, cr, *args, **kwargs)
+            value = method(self._model, cr, *args, **kwargs)
             return old_to_new(self, value)
 
     return cr_context_wrapper
@@ -502,12 +499,12 @@ def cr_uid(method):
 
     @wraps(method)
     def cr_uid_wrapper(self, *args, **kwargs):
-        if _has_cursor(args, kwargs):
+        if not hasattr(self, '_ids'):
             with get_scope(args, kwargs):
                 return method(self, *args, **kwargs)
         else:
             cr, uid, _ = scope.args
-            value = method(self, cr, uid, *args, **kwargs)
+            value = method(self._model, cr, uid, *args, **kwargs)
             return old_to_new(self, value)
 
     return cr_uid_wrapper
@@ -527,13 +524,13 @@ def cr_uid_context(method):
 
     @wraps(method)
     def cr_uid_context_wrapper(self, *args, **kwargs):
-        if _has_cursor(args, kwargs):
+        if not hasattr(self, '_ids'):
             with get_scope(args, kwargs):
                 return method(self, *args, **kwargs)
         else:
             cr, uid, context = scope.args
             kwargs['context'] = context
-            value = method(self, cr, uid, *args, **kwargs)
+            value = method(self._model, cr, uid, *args, **kwargs)
             return old_to_new(self, value)
 
     return cr_uid_context_wrapper
@@ -550,12 +547,12 @@ def cr_uid_id(method):
 
     @wraps(method)
     def cr_uid_id_wrapper(self, *args, **kwargs):
-        if _has_cursor(args, kwargs):
+        if not hasattr(self, '_ids'):
             with get_scope(args, kwargs):
                 return method(self, *args, **kwargs)
         else:
             cr, uid, _ = scope.args
-            value = [method(self, cr, uid, id, *args, **kwargs) for id in self.unbrowse()]
+            value = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.unbrowse()]
             return old_to_new(self, value)
 
     return cr_uid_id_wrapper
@@ -583,13 +580,13 @@ def cr_uid_id_context(method):
 
     @wraps(method)
     def cr_uid_id_context_wrapper(self, *args, **kwargs):
-        if _has_cursor(args, kwargs):
+        if not hasattr(self, '_ids'):
             with get_scope(args, kwargs):
                 return method(self, *args, **kwargs)
         else:
             cr, uid, context = scope.args
             kwargs['context'] = context
-            value = [method(self, cr, uid, id, *args, **kwargs) for id in self.unbrowse()]
+            value = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.unbrowse()]
             return old_to_new(self, value)
 
     return cr_uid_id_context_wrapper
@@ -606,12 +603,12 @@ def cr_uid_ids(method):
 
     @wraps(method)
     def cr_uid_ids_wrapper(self, *args, **kwargs):
-        if _has_cursor(args, kwargs):
+        if not hasattr(self, '_ids'):
             with get_scope(args, kwargs):
                 return method(self, *args, **kwargs)
         else:
             cr, uid, _ = scope.args
-            value = method(self, cr, uid, self.unbrowse(), *args, **kwargs)
+            value = method(self._model, cr, uid, self.unbrowse(), *args, **kwargs)
             return old_to_new(self, value)
 
     return cr_uid_ids_wrapper
@@ -641,13 +638,13 @@ def cr_uid_ids_context(method):
 
     @wraps(method)
     def cr_uid_ids_context_wrapper(self, *args, **kwargs):
-        if _has_cursor(args, kwargs):
+        if not hasattr(self, '_ids'):
             with get_scope(args, kwargs):
                 return method(self, *args, **kwargs)
         else:
             cr, uid, context = scope.args
             kwargs['context'] = context
-            value = method(self, cr, uid, self.unbrowse(), *args, **kwargs)
+            value = method(self._model, cr, uid, self.unbrowse(), *args, **kwargs)
             return old_to_new(self, value)
 
     return cr_uid_ids_context_wrapper
@@ -656,7 +653,7 @@ def cr_uid_ids_context(method):
 def _make_wrapper(method, old_api, new_api):
     @wraps(method)
     def wrapper(self, *args, **kwargs):
-        if _has_cursor(args, kwargs):
+        if not hasattr(self, '_ids'):
             return old_api(self, *args, **kwargs)
         else:
             return new_api(self, *args, **kwargs)

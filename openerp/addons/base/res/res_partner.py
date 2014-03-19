@@ -518,7 +518,7 @@ class res_partner(osv.Model, format_address):
         # if setting the company_id to False (this is compatible with any user
         # company)
         if vals.get('company_id'):
-            company = self.pool['res.company'].browse(vals['company_id'])
+            company = scope['res.company'].browse(vals['company_id'])
             for partner in self:
                 if partner.user_ids:
                     companies = set(user.company_id for user in partner.user_ids)

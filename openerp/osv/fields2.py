@@ -413,10 +413,10 @@ class Field(object):
     def related_field(self):
         """ return the related field corresponding to `self` """
         if self.related:
-            model = self.model
+            recs = self.model
             for name in self.related[:-1]:
-                model = model[name]
-            return model._fields[self.related[-1]]
+                recs = recs[name]
+            return recs._fields[self.related[-1]]
         return None
 
     def setup_related(self):
