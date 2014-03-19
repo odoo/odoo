@@ -372,12 +372,13 @@ website.Tour = openerp.Class.extend({
         }
     },
     endTour: function () {
-        if (parseInt(this.localStorage.getItem("tour-"+this.id+"-test"),10) >= this.steps.length-1) {
+        var test = parseInt(this.localStorage.getItem("tour-"+this.id+"-test"),10) >= this.steps.length-1;
+        this.reset();
+        if (test) {
             console.log('ok');
         } else {
             console.log('error');
         }
-        this.reset();
     },
     autoNextStep: function () {
         var self = this;
