@@ -90,7 +90,15 @@ $(document).ready(function () {
             .then(function (data) {
                 $link.parents('#comment').remove();
             });
-        return false;
+        return true;
+    });
+
+    $('.notification_close').on('click', function (ev) {
+        ev.preventDefault();
+        var $link = $(ev.currentTarget);
+        openerp.jsonRpc("/forum/notification_read/", 'call', {
+            'notification_id': $link.attr("id")})
+        return true;
     });
 
 });

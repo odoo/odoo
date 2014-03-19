@@ -111,13 +111,14 @@
                 <div id="wrap" class="container">
                     <div class="row">
                         <div class="col-sm-9">
-                            <div class="alert alert-success alert-dismissable">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-                                <strong>Congratulation!</strong> You received the <em>New Author</em> badge!<br/>
+                            <div t-foreach="notifications" t-as="notification" class="alert alert-success alert-dismissable">
+                                <button type="button" class="close notification_close" t-att-id="notification.id" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                                <div t-field="notification.body"/>
                                 <a t-attf-href="/forum/#{ slug(forum) }/badge" class="fa fa-arrow-right">View Your Badges</a>
                             </div>
                             <t t-raw="0"/>
-                        </div><div class="col-sm-3" id="right-column">
+                        </div>
+                        <div class="col-sm-3" id="right-column">
                             <a class="btn btn-primary btn-lg btn-block mb16" t-attf-href="/forum/#{ slug(forum) }/ask">Ask a Question</a>
                             <div t-field="forum.right_column"/>
                         </div>
@@ -418,11 +419,9 @@
                 <div class="col-sm-10 col-sm-offset-2">
                     <div t-foreach="reversed(object.website_message_ids)" t-as="message" id="comment" class="oe_grey" style="padding: 4px;">
                         <small class="text-muted">
-                            <t t-if="uid == message.create_uid.id">
-                                <button type="button" t-att-id="message.id" class="close comment_delete">&amp;times;</button>
-                            </t>
-                            <div t-field="message.body"/>
-                                <a t-attf-href="/forum/#{ slug(forum) }/user/#{ message.create_uid.id }" t-field="message.create_uid"/>
+                            <button type="button" t-if="uid == message.create_uid.id" t-att-id="message.id" class="close comment_delete">&amp;times;</button>
+                            <span t-field="message.body"/>
+                            <a t-attf-href="/forum/#{ slug(forum) }/user/#{ message.create_uid.id }" t-field="message.create_uid"/>
                                 on <span t-field="message.date" t-field-options='{"format":"short"}'/>
                         </small>
                     </div>
