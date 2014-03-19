@@ -347,10 +347,6 @@ class hr_evaluation_interview(osv.Model):
         self.write(cr, uid, ids, {'state': 'done'}, context=context)
         return True
 
-    def survey_req_draft(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'draft'}, context=context)
-        return True
-
     def survey_req_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
         return True
