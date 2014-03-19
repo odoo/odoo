@@ -1917,7 +1917,7 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     init: function(field_manager, node) {
         node.attrs.type = node.attrs['data-button-type'];
         this.is_stat_button = /\boe_stat_button\b/.test(node.attrs['class']);
-        this.icon = node.attrs.icon && "<span class=\"fa " + node.attrs.icon + "\"></span>";
+        this.icon = node.attrs.icon && "<span class=\"fa " + node.attrs.icon + " fa-fw\"></span>";
         this._super(field_manager, node);
         this.force_disabled = false;
         this.string = (this.node.attrs.string || '').replace(/_/g, '');
@@ -5918,8 +5918,11 @@ instance.web.form.StatInfo = instance.web.form.AbstractField.extend({
         this.set("value", 0);
     },
     render_value: function() {
-        var text = _.str.sprintf("%d %s", this.get("value") || 0, this.string);
-        this.$el.html(QWeb.render("StatInfo", {text: text}));
+        var options = {
+            value: this.get("value") || 0,
+            text: this.string,
+        };
+        this.$el.html(QWeb.render("StatInfo", options));
     },
 
 });

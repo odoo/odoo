@@ -461,16 +461,22 @@
   text-align: left;
 }
 .openerp .oe_button_box .oe_stat_button:hover {
-  background: #dddddd;
+  background: #7c7bad;
+  color: white;
+}
+.openerp .oe_button_box .oe_stat_button:hover .fa {
+  color: white;
 }
 .openerp .oe_button_box .oe_stat_button {
   font-weight: normal;
   display: inline-table;
   width: 33% !important;
-  height: 45px;
+  height: 42px;
   margin: 0px -1px -1px 0px;
+  padding: 0;
   color: #666666;
-  border: 1px solid #666666;
+  border: 1px solid #dddddd;
+  border-radius: 0;
   background: white;
 }
 .openerp .oe_button_box .oe_stat_button > div {
@@ -478,11 +484,13 @@
   vertical-align: middle;
   text-align: left;
   padding: 0;
+  line-height: 120%;
 }
 .openerp .oe_button_box .oe_stat_button .stat_button_icon {
   color: #7c7bad;
   font-size: 24px;
   padding: 0px 3px;
+  width: 37px;
   text-align: center;
 }
 .openerp .oe_button_box .oe_stat_button svg {
