@@ -48,7 +48,7 @@ $(document).ready(function() {
             if (content && discussion){
                new openerp.website.blog_discussion({'content' : content});
             }
-        }, 500 );
+        }, 300 );
     }
 
     function newpage() {

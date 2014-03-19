@@ -30,6 +30,7 @@
             },
         }),
         edit: function () {
+            $('.popover').remove();
             this._super();
             var top_nav = _.isNull($('#website-top-navbar').height()) ? 0 : $('#website-top-navbar').height();
             var vHeight = $(window).height() - ($('header').height() + top_nav);
