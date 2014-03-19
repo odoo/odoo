@@ -141,7 +141,12 @@ def ensure_db(redirect='/web/database/selector'):
         # Thus, we redirect the user to the same page but with the session cookie set.
         # This will force using the database route dispatcher...
         r = request.httprequest
-        response = werkzeug.utils.redirect(r.url, 302)
+        url_redirect = r.base_url
+        if r.query_string:
+            # Can't use werkzeug.wrappers.BaseRequest.url with encoded hashes:
+            # https://github.com/amigrave/werkzeug/commit/b4a62433f2f7678c234cdcac6247a869f90a7eb7
+            url_redirect += '?' + r.query_string
+        response = werkzeug.utils.redirect(url_redirect, 302)
         request.session.db = db
         response = r.app.get_response(r, response, explicit_session=False)
         werkzeug.exceptions.abort(response)
@@ -657,6 +662,9 @@ class Home(http.Controller):
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
         ensure_db()
+
+        if request.httprequest.method == 'GET' and redirect and request.session.uid:
+            return http.redirect_with_hash(redirect)
 
         values = request.params.copy()
         if not redirect:
