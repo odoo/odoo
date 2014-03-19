@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-28 06:01+0000\n"
-"X-Generator: Launchpad (build 16681)\n"
+"X-Launchpad-Export-Date: 2014-01-14 06:10+0000\n"
+"X-Generator: Launchpad (build 16890)\n"
 
 #. module: base
 #: field:ir.filters,domain:0
@@ -46,7 +46,7 @@ msgstr "日期時間"
 msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
 "%s, which is not a valid SQL table name."
-msgstr "「多對多(many2many)」欄位 %s 之第二個引數須為 SQL 表格！您用了並非有效 SQL 表格名稱之 %s。"
+msgstr "「多對多(many2many)」欄位 %s 之第二個引數須為 SQL 表格！您輸入的 %s 並非有效 SQL 表格名稱。"
 
 #. module: base
 #: view:ir.values:0
@@ -798,6 +798,8 @@ msgid ""
 "Language with code \"%s\" is not defined in your system !\n"
 "Define it through the Administration menu."
 msgstr ""
+"您的系統中尚未定義語言代碼為「 %s 」的語言！ \n"
+"請於管理者介面中定義。"
 
 #. module: base
 #: model:res.country,name:base.gu
@@ -1900,7 +1902,7 @@ msgstr "紐西蘭"
 msgid ""
 "One of the records you are trying to modify has already been deleted "
 "(Document type: %s)."
-msgstr ""
+msgstr "您要修改的紀錄已被刪除（文件類型： %s）。"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country
@@ -4641,7 +4643,7 @@ msgstr "已讀"
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The name of the country must be unique !"
-msgstr ""
+msgstr "國家名稱必須為獨一無二的！"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country_state
