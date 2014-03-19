@@ -179,3 +179,51 @@ class TestPropertyField(common.TransactionCase):
         self.partner.write(cr, alice, [partner_id], {'property_country': country_be})
         self.assertEqual(self.partner.browse(cr, alice, partner_id).property_country.id, country_be, "Alice does not see the value he has set on the property field")
         self.assertEqual(self.partner.browse(cr, bob, partner_id).property_country.id, country_fr, "Changes made by Alice have overwritten Bob's value")
+
+
+class TestHtmlField(common.TransactionCase):
+
+    def setUp(self):
+        super(TestHtmlField, self).setUp()
+        self.partner = self.registry('res.partner')
+
+    def test_00_sanitize(self):
+        cr, uid, context = self.cr, self.uid, {}
+        old_columns = self.partner._columns
+        self.partner._columns = dict(old_columns)
+        self.partner._columns.update({
+            'comment': fields.html('Secure Html', sanitize=False),
+        })
+        some_ugly_html = """<p>Oops this should maybe be sanitized
+% if object.some_field and not object.oriented:
+<table>
+    % if object.other_field:
+    <tr>
+        ${object.mako_thing}
+        <td>
+    </tr>
+    % endif
+    <tr>
+%if object.dummy_field:
+        <p>Youpie</p>
+%endif"""
+
+        pid = self.partner.create(cr, uid, {
+            'name': 'Raoul Poilvache',
+            'comment': some_ugly_html,
+        }, context=context)
+        partner = self.partner.browse(cr, uid, pid, context=context)
+        self.assertEqual(partner.comment, some_ugly_html, 'Error in HTML field: content was sanitized but field has sanitize=False')
+
+        self.partner._columns.update({
+            'comment': fields.html('Unsecure Html', sanitize=True),
+        })
+        self.partner.write(cr, uid, [pid], {
+            'comment': some_ugly_html,
+        }, context=context)
+        partner = self.partner.browse(cr, uid, pid, context=context)
+        # sanitize should have closed tags left open in the original html
+        self.assertIn('</table>', partner.comment, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
+        self.assertIn('</td>', partner.comment, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
+
+        self.partner._columns = old_columns

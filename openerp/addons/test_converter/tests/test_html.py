@@ -112,11 +112,14 @@ class TestCurrencyExport(TestExport):
             'widget': 'monetary',
             'display_currency': 'c2'
         }
+        context = dict(inherit_branding=True)
         converted = converter.to_html(
             self.cr, self.uid, 'value', obj, options,
             doc.createElement('span'),
             {'field': 'obj.value', 'field-options': json.dumps(options)},
-            '', ir_qweb.QWebContext(self.cr, self.uid, {'obj': obj, 'c2': dest, }))
+            '', ir_qweb.QWebContext(self.cr, self.uid, {'obj': obj, 'c2': dest, }),
+            context=context,
+        )
         return converted
 
     def test_currency_post(self):

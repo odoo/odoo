@@ -133,6 +133,10 @@ class WebRequest(object):
         self.auth_method = None
         self._cr_cm = None
         self._cr = None
+
+        # prevents transaction commit, use when you catch an exception during handling
+        self._failed = None
+
         # set db/uid trackers - they're cleaned up at the WSGI
         # dispatching phase in openerp.service.wsgi_server.application
         if self.db:
@@ -180,10 +184,13 @@ class WebRequest(object):
         _request_stack.pop()
 
         if self._cr:
-            # Dont commit test cursors
-            if not openerp.tests.common.release_test_cursor(self.session_id):
-                if exc_type is None:
+            # Dont close test cursors
+            if not openerp.tests.common.release_test_cursor(self._cr):
+                if exc_type is None and not self._failed:
                     self._cr.commit()
+                else:
+                    # just to be explicit - happens at close() anyway
+                    self._cr.rollback()
                 self._cr.close()
         # just to be sure no one tries to re-use the request
         self.disable_db = True
@@ -209,20 +216,19 @@ class WebRequest(object):
         # Backward for 7.0
         if self.endpoint.first_arg_is_req:
             args = (request,) + args
+
         # Correct exception handling and concurency retry
         @service_model.check
         def checked_call(___dbname, *a, **kw):
-            return self.endpoint(*a, **kw)
-
-        # FIXME: code and rollback management could be cleaned
-        try:
-            if self.db:
-                return checked_call(self.db, *args, **kwargs)
-            return self.endpoint(*args, **kwargs)
-        except Exception:
+            # The decorator can call us more than once if there is an database error. In this
+            # case, the request cursor is unusable. Rollback transaction to create a new one.
             if self._cr:
                 self._cr.rollback()
-            raise
+            return self.endpoint(*a, **kw)
+
+        if self.db:
+            return checked_call(self.db, *args, **kwargs)
+        return self.endpoint(*args, **kwargs)
 
     @property
     def debug(self):
@@ -362,21 +368,25 @@ class JsonRequest(WebRequest):
             response['id'] = self.jsonrequest.get('id')
             response["result"] = self._call_function(**self.params)
         except AuthenticationError, e:
-            _logger.exception("Exception during JSON request handling.")
+            _logger.exception("JSON-RPC AuthenticationError in %s.", self.httprequest.path)
             se = serialize_exception(e)
             error = {
                 'code': 100,
                 'message': "OpenERP Session Invalid",
                 'data': se
             }
+            self._failed = e # prevent tx commit
         except Exception, e:
-            _logger.exception("Exception during JSON request handling.")
+            # Mute test cursor error for runbot
+            if not (openerp.tools.config['test_enable'] and isinstance(e, psycopg2.OperationalError)):
+                _logger.exception("JSON-RPC Exception in %s.", self.httprequest.path)
             se = serialize_exception(e)
             error = {
                 'code': 200,
                 'message': "OpenERP Server Error",
                 'data': se
             }
+            self._failed = e # prevent tx commit
         if error:
             response["error"] = error
 
@@ -733,7 +743,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.setdefault("uid", None)
         self.setdefault("login", None)
         self.setdefault("password", None)
-        self.setdefault("context", {'tz': "UTC", "uid": None})
+        self.setdefault("context", {})
 
     def get_context(self):
         """
@@ -1209,11 +1219,6 @@ class CommonController(Controller):
     def jsonrpc(self, service, method, args):
         """ Method used by client APIs to contact OpenERP. """
         return openerp.netsvc.dispatch_rpc(service, method, args)
-
-    @route('/gen_session_id', type='json', auth="none")
-    def gen_session_id(self):
-        nsession = root.session_store.new()
-        return nsession.sid
 
 root = None
 
