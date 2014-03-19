@@ -272,8 +272,8 @@ class WebsiteSurvey(http.Controller):
         return json.dumps(ret)
 
     # Printing routes
-    @http.route(['/survey/print/<model("survey.survey"):survey>/',
-                 '/survey/print/<model("survey.survey"):survey>/<string:token>/'],
+    @http.route(['/survey/print/<model("survey.survey"):survey>',
+                 '/survey/print/<model("survey.survey"):survey>/<string:token>'],
                 type='http', auth='user', multilang=True, website=True)
     def print_survey(self, survey, token=None, **post):
         '''Display an survey in printable view; if <token> is set, it will

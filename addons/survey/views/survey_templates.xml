@@ -31,7 +31,7 @@
                         <h1>Thank you!</h1>
                         <div t-field="survey.thank_you_message" />
                         <div t-if='survey.quizz_mode'>You scored <t t-esc="user_input.quizz_score" /> points.</div>
-                        <div>If you wish, you can <a t-att-href="'/survey/print/%s/%s' % (survey.id, token)">print your answers</a>.</div>
+                        <div>If you wish, you can <a t-att-href="'/survey/print/%s/%s' % (slug(survey), token)">print your answers</a>.</div>
                     </div>
                 </div>
             </div>
@@ -61,7 +61,7 @@
                     <div class='jumbotron mt32'>
                         <h1 t-field='survey.title' />
                         <div t-field='survey.description' />
-                        <a class="btn btn-primary btn-lg" t-att-href="'/survey/fill/%s/%s' % (survey.id, token)">
+                        <a class="btn btn-primary btn-lg" t-att-href="'/survey/fill/%s/%s' % (slug(survey), token)">
                             Start Survey
                         </a>
                     </div>
@@ -95,7 +95,7 @@
             <div t-field='page.description'/>
         </div>
 
-        <form role="form" method="post" class="js_surveyform" t-att-name="'%s_%s' % (survey.id, page.id)" t-att-action="'/survey/fill/%s/%s' % (survey.id, token)" t-att-data-prefill="'/survey/prefill/%s/%s/%s' % (survey.id, token, page.id)" t-att-data-validate="'/survey/validate/%s' % (survey.id)" t-att-data-submit="'/survey/submit/%s' % (survey.id)">
+        <form role="form" method="post" class="js_surveyform" t-att-name="'%s_%s' % (survey.id, page.id)" t-att-action="'/survey/fill/%s/%s' % (slug(survey), token)" t-att-data-prefill="'/survey/prefill/%s/%s/%s' % (slug(survey), token, slug(page))" t-att-data-validate="'/survey/validate/%s' % (slug(survey))" t-att-data-submit="'/survey/submit/%s' % (slug(survey))">
             <input type="hidden" name="page_id" t-att-value="page.id" />
             <input type="hidden" name="token" t-att-value="token" />
             <t t-foreach='page.question_ids' t-as='question'>
@@ -257,7 +257,7 @@
                             <h1><span t-field='survey.title'/></h1>
                             <t t-if="survey.description is not False"><div t-field='survey.description'/></t>
                         </div>
-                        <form role="form" method="post" class="js_surveyform" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (survey.id, token)">
+                        <form role="form" method="post" class="js_surveyform" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (slug(survey), token)">
                             <t t-foreach="survey.page_ids" t-as="page">
                                 <div class="page-header">
                                     <h1 t-field='page.title' />

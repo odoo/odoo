@@ -138,7 +138,7 @@ class survey_mail_compose_message(osv.TransientModel):
             #set url
             url = wizard.survey_id.public_url
             if token:
-                url = url + token
+                url = url + '/' + token
             # post the message
             values = {
                 'model': None,

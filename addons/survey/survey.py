@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DF
+from openerp.addons.website.models.website import slug
 from urlparse import urljoin
 
 import datetime
@@ -92,19 +93,28 @@ class survey_survey(osv.Model):
         """ Computes a public URL for the survey """
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
             'web.base.url')
-        return {id: urljoin(base_url, "survey/start/%s/" % id) for id in ids}
+        res = {}
+        for survey in self.browse(cr, uid, ids, context=context):
+            res[survey.id] = urljoin(base_url, "survey/start/%s" % slug(survey))
+        return res
 
     def _get_print_url(self, cr, uid, ids, name, arg, context=None):
         """ Computes a printing URL for the survey """
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
             'web.base.url')
-        return {id: urljoin(base_url, "survey/print/%s/" % id) for id in ids}
+        res = {}
+        for survey in self.browse(cr, uid, ids, context=context):
+            res[survey.id] = urljoin(base_url, "survey/print/%s" % slug(survey))
+        return res
 
     def _get_result_url(self, cr, uid, ids, name, arg, context=None):
         """ Computes an URL for the survey results """
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
             'web.base.url')
-        return {id: urljoin(base_url, "survey/results/%s/" % id) for id in ids}
+        res = {}
+        for survey in self.browse(cr, uid, ids, context=context):
+            res[survey.id] = urljoin(base_url, "survey/results/%s" % slug(survey))
+        return res
 
     # Model fields #
 
@@ -254,7 +264,7 @@ class survey_survey(osv.Model):
         ''' Open the website page with the survey form '''
         trail = ""
         if context and 'survey_token' in context:
-            trail = context['survey_token'] + "/"
+            trail = "/" + context['survey_token']
         return {
             'type': 'ir.actions.act_url',
             'name': "Start Survey",
@@ -303,7 +313,7 @@ class survey_survey(osv.Model):
         ''' Open the website page with the survey printable view '''
         trail = ""
         if context and 'survey_token' in context:
-            trail = context['survey_token'] + "/"
+            trail = "/" + context['survey_token']
         return {
             'type': 'ir.actions.act_url',
             'name': "Print Survey",
@@ -326,7 +336,7 @@ class survey_survey(osv.Model):
             'type': 'ir.actions.act_url',
             'name': "Results of the Survey",
             'target': 'self',
-            'url': self.read(cr, uid, ids, ['public_url'], context=context)[0]['public_url'] + "phantom/"
+            'url': self.read(cr, uid, ids, ['public_url'], context=context)[0]['public_url'] + "/phantom"
         }
 
 
@@ -797,7 +807,7 @@ class survey_user_input(osv.Model):
             'type': 'ir.actions.act_url',
             'name': "View Answers",
             'target': 'self',
-            'url': '%s%s/' % (user_input['print_url'], user_input['token'])
+            'url': '%s/%s' % (user_input['print_url'], user_input['token'])
         }
 
     def action_survey_results(self, cr, uid, ids, context=None):
