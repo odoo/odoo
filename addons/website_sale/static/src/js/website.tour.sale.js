@@ -7,7 +7,6 @@
         id: 'shop_buy_product',
         name: "Try to buy products",
         path: '/shop',
-        testPath: '/shop',
         init: function () {
             var self = this;
             self.steps = [

@@ -7,7 +7,6 @@
         id: 'event_buy_tickets',
         name: "Try to buy tickets for event",
         path: '/event',
-        testPath: '/(event|shop)',
         init: function () {
             var self = this;
             self.steps = [
