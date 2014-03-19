@@ -16,6 +16,7 @@
                         <group name="acquirer_base">
                             <group>
                                 <field name="name"/>
+                                <field name="provider"/>
                                 <field name="company_id"/>
                                 <field name="website_published"/>
                                 <field name="env"/>
@@ -66,6 +67,7 @@
             <field name="arch" type="xml">
                 <tree string="Payment Acquirers">
                     <field name="name"/>
+                    <field name="provider"/>
                     <field name="website_published"/>
                     <field name="env"/>
                 </tree>
@@ -77,6 +79,10 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="name"/>
+                    <field name="provider"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Provider" name="provider" domain="[]" context="{'group_by': 'provider'}"/>
+                    </group>
                 </search>
             </field>
         </record>
