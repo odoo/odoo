@@ -41,7 +41,8 @@ Ask questions, get answers, no distractions
          'static/src/xml/*.xml'
     ],
     'demo': [
-        'data/forum_demo.xml'
+        'data/forum_demo.xml',
+        'data/question_improvement.yml',
     ],
     'css': ['static/src/css/website_forum.css'],
     'installable': True,

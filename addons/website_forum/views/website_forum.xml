@@ -49,7 +49,7 @@
                         <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" t-field="question.name"/>
                     </div>
                     <div class="text-muted">
-                        by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.create_uid.id }" t-field="question.create_uid"/>, 
+                        by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.user_id.id }" t-field="question.user_id"/>, 
                         on <span t-field="question.write_date"/>
                         <div t-if="question.vote_count">
                             <strong>with <span t-esc="question.vote_count"/> votes</strong>
@@ -350,7 +350,7 @@
                                     <li><a class="text-muted" href="">share</a></li>
                                 </ul>
                             </div>
-                            <t t-set="user" t-value="question.create_uid"/>
+                            <t t-set="user" t-value="question.user_id"/>
                             <t t-call="website_forum.user_detail">
                                 <span class="text-muted">Asked on <span t-field="question.write_date"/></span>
                             </t>
@@ -394,7 +394,7 @@
                                 <li><a class="text-muted delete" href="" t-attf-id="#{answer.id}">delete</a></li>
                                 <li><a class="text-muted" t-attf-href="/forum/#{ slug(forum) }/question/#{ question.id }/#answer-#{ answer.id }">share</a></li>
                             </ul>
-                            <t t-set="user" t-value="answer.create_uid"/>
+                            <t t-set="user" t-value="answer.user_id"/>
                             <t t-call="website_forum.user_detail">
                                 <span class="text-muted">Answered on <span t-field="answer.create_date"/></span>
                             </t>
