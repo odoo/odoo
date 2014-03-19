@@ -295,6 +295,7 @@ class Tags(osv.Model):
     _name = "website.forum.tag"
     _description = "Tag"
     _inherit = ['website.seo.metadata']
+
     def _get_posts_count(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         Post = self.pool['website.forum.post']
@@ -302,8 +303,19 @@ class Tags(osv.Model):
             result[tag] = Post.search_count(cr, uid , [('tags', '=', tag)], context=context)
         return result
 
+    def _get_post(self, cr, uid, ids, context=None):
+        result = {}
+        for post in self.pool['website.forum.post'].browse(cr, uid, ids, context=context):
+            for tag in post.tags:
+                result[tag.id] = True
+        return result.keys()
+
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'forum_id': fields.many2one('website.forum', 'Forum', required=True),
-        'posts_count': fields.function(_get_posts_count, type='integer', string="# of Posts"),
+        'posts_count': fields.function(_get_posts_count, type='integer', string="# of Posts",
+            store={
+                'website.forum.post': (_get_post, ['tags'], 10),
+            }
+        ),
    }
