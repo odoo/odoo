@@ -6,7 +6,8 @@ function waitFor (ready, callback, timeout, timeoutMessageCallback) {
 
     (function waitLoop() {
         if(new Date - start > timeout) {
-            error(timeoutMessageCallback ? timeoutMessageCallback() : "Timeout after "+timeout+" ms");
+            console.log('error', timeoutMessageCallback ? timeoutMessageCallback() : "Timeout after "+timeout+" ms");
+            phantom.exit(1);
         } else if (ready()) {
             callback();
         } else {
@@ -15,10 +16,6 @@ function waitFor (ready, callback, timeout, timeoutMessageCallback) {
     }());
 }
 
-function error(message) {
-    console.log('error', message);
-    phantom.exit(1);
-}
 function PhantomTest() {
     var self = this;
     this.options = JSON.parse(phantom.args[phantom.args.length-1]);
@@ -49,10 +46,12 @@ function PhantomTest() {
             }));
             msg.push('(leaf frame on top)')
         }
-        error(JSON.stringify(msg.join('\n')));
+        console.log('error', JSON.stringify(msg.join('\n')));
+        phantom.exit(1);
     };
     this.page.onAlert = function(message) {
-        error(message);
+        console.log('error', message);
+        phantom.exit(1);
     };
     this.page.onConsoleMessage = function(message) {
         console.log(message);
@@ -78,7 +77,8 @@ function PhantomTest() {
                 if(!found) {
                     console.log('Injecting', src, 'needed for', need);
                     if(!self.page.injectJs(src)) {
-                        error("Cannot inject " + src);
+                        console.log('error', "Cannot inject " + src);
+                        phantom.exit(1);
                     }
                 }
             }
@@ -89,7 +89,8 @@ function PhantomTest() {
             var message = ("Timeout\nhref: " + window.location.href
                 + "\nreferrer: " + document.referrer
                 + "\n\n" + document.body.innerHTML).replace(/[^a-z0-9\s~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "*");
-            error(message);
+            console.log('error', message);
+            phantom.exit(1);
         });
     }, self.timeout);
 
@@ -108,7 +109,8 @@ function PhantomTest() {
         var url = self.origin + url_path;
         self.page.open(url, function(status) {
             if (status !== 'success') {
-                error("failed to load " + url)
+                console.log('error', "failed to load " + url);
+                phantom.exit(1);
             } else {
                 console.log('loaded', url, status);
                 // process ready
@@ -119,7 +121,7 @@ function PhantomTest() {
                         try {
                             console.log("page.evaluate eval expr:", ready);
                             r = !!eval(ready);
-                        } catch(ex) { 
+                        } catch(ex) {
                         }
                         console.log("page.evaluate eval result:", r);
                         return r;
