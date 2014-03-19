@@ -66,11 +66,12 @@ class res_partner(osv.Model):
                 self.signup_prepare(cr, uid, [partner.id], context=context)
                 partner.refresh()
 
+            route = 'login'
             # the parameters to encode for the query
             query = dict(db=cr.dbname)
             signup_type = context.get('signup_force_type_in_url', partner.signup_type or '')
             if signup_type:
-                query['mode'] = signup_type
+                route = 'reset_password' if signup_type == 'reset' else signup_type
 
             if partner.signup_token and signup_type:
                 query['token'] = partner.signup_token
@@ -89,7 +90,7 @@ class res_partner(osv.Model):
             if res_id:
                 fragment['id'] = res_id
 
-            res[partner.id] = urljoin(base_url, "/web/login?%s#%s" % (urlencode(query), urlencode(fragment)))
+            res[partner.id] = urljoin(base_url, "/web/%s?%s#%s" % (route, urlencode(query), urlencode(fragment)))
 
         return res
 

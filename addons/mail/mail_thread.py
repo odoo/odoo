@@ -161,6 +161,7 @@ class mail_thread(osv.AbstractModel):
             if res[id]['message_unread_count']:
                 title = res[id]['message_unread_count'] > 1 and _("You have %d unread messages") % res[id]['message_unread_count'] or _("You have one unread message")
                 res[id]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><span class='oe_e'>9</span> %d %s</span>" % (title, res[id].pop('message_unread_count'), _("New"))
+            res[id].pop('message_unread_count', None)
         return res
 
     def read_followers_data(self, cr, uid, follower_ids, context=None):
@@ -209,7 +210,7 @@ class mail_thread(osv.AbstractModel):
         ], context=context)
         for fol in fol_obj.browse(cr, uid, fol_ids, context=context):
             thread_subtype_dict = res[fol.res_id]['message_subtype_data']
-            for subtype in fol.subtype_ids:
+            for subtype in [st for st in fol.subtype_ids if st.name in thread_subtype_dict]:
                 thread_subtype_dict[subtype.name]['followed'] = True
             res[fol.res_id]['message_subtype_data'] = thread_subtype_dict
 
@@ -306,6 +307,8 @@ class mail_thread(osv.AbstractModel):
             auto_join=True,
             string='Messages',
             help="Messages and communication history"),
+        'message_last_post': fields.datetime('Last Message Date',
+            help='Date of the last message posted on the record.'),
         'message_unread': fields.function(_get_message_data,
             fnct_search=_search_message_unread, multi="_get_message_data",
             type='boolean', string='Unread Messages',
@@ -1552,8 +1555,13 @@ class mail_thread(osv.AbstractModel):
         for x in ('from', 'to', 'cc'):
             values.pop(x, None)
 
-        # Create and auto subscribe the author
+        # Post the message
         msg_id = mail_message.create(cr, uid, values, context=context)
+
+        # Post-process: subscribe author, update message_last_post
+        if model and model != 'mail.thread' and thread_id and subtype_id:
+            # done with SUPERUSER_ID, because on some models users can post only with read access, not necessarily write access
+            self.write(cr, SUPERUSER_ID, [thread_id], {'message_last_post': fields.datetime.now()}, context=context)
         message = mail_message.browse(cr, uid, msg_id, context=context)
         if message.author_id and thread_id and type != 'notification' and not context.get('mail_create_nosubscribe'):
             self.message_subscribe(cr, uid, [thread_id], [message.author_id.id], context=context)
@@ -1828,3 +1836,35 @@ class mail_thread(osv.AbstractModel):
             }
             threads.append(data)
         return sorted(threads, key=lambda x: (x['popularity'], x['id']), reverse=True)[:3]
+
+    def message_change_thread(self, cr, uid, id, new_res_id, new_model, context=None):
+        """
+        Transfert the list of the mail thread messages from an model to another
+
+        :param id : the old res_id of the mail.message
+        :param new_res_id : the new res_id of the mail.message
+        :param new_model : the name of the new model of the mail.message
+
+        Example :   self.pool.get("crm.lead").message_change_thread(self, cr, uid, 2, 4, "project.issue", context) 
+                    will transfert thread of the lead (id=2) to the issue (id=4)
+        """
+
+        # get the sbtype id of the comment Message
+        subtype_res_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'mail.mt_comment', raise_if_not_found=True)
+        
+        # get the ids of the comment and none-comment of the thread
+        message_obj = self.pool.get('mail.message')
+        msg_ids_comment = message_obj.search(cr, uid, [
+                    ('model', '=', self._name),
+                    ('res_id', '=', id),
+                    ('subtype_id', '=', subtype_res_id)], context=context)
+        msg_ids_not_comment = message_obj.search(cr, uid, [
+                    ('model', '=', self._name),
+                    ('res_id', '=', id),
+                    ('subtype_id', '!=', subtype_res_id)], context=context)
+        
+        # update the messages
+        message_obj.write(cr, uid, msg_ids_comment, {"res_id" : new_res_id, "model" : new_model}, context=context)
+        message_obj.write(cr, uid, msg_ids_not_comment, {"res_id" : new_res_id, "model" : new_model, "subtype_id" : None}, context=context)
+        
+        return True
