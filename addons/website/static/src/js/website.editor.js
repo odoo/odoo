@@ -10,11 +10,18 @@
 
         if (!is_smartphone) {
             website.ready().then(website.init_editor);
+        } else {
+            // remove padding of fake editor bar
+            document.body.style.padding = 0;
         }
 
         $(document).on('click', 'a.js_link2post', function (ev) {
             ev.preventDefault();
             website.form(this.pathname, 'POST');
+        });
+
+        $(document).on('click', '.cke_editable label', function (ev) {
+            ev.preventDefault();
         });
 
         $(document).on('submit', '.cke_editable form', function (ev) {
@@ -63,8 +70,10 @@
     // only enable editors manually
     CKEDITOR.disableAutoInline = true;
     // EDIT ALL THE THINGS
-    CKEDITOR.dtd.$editable = $.extend(
-        {}, CKEDITOR.dtd.$block, CKEDITOR.dtd.$inline);
+    CKEDITOR.dtd.$editable = _.omit(
+        $.extend({}, CKEDITOR.dtd.$block, CKEDITOR.dtd.$inline),
+        // well maybe not *all* the things
+        'ul', 'ol', 'li', 'table', 'tr', 'th', 'td');
     // Disable removal of empty elements on CKEDITOR activation. Empty
     // elements are used for e.g. support of FontAwesome icons
     CKEDITOR.dtd.$removeEmpty = {};
@@ -97,6 +106,7 @@
                     },
                     canUndo: false,
                     editorFocus: true,
+                    context: 'a',
                 });
                 //noinspection JSValidateTypes
                 editor.addCommand('image', {
@@ -106,6 +116,7 @@
                     },
                     canUndo: false,
                     editorFocus: true,
+                    context: 'img',
                 });
 
                 editor.ui.addButton('Link', {
@@ -196,8 +207,9 @@
                     icon: '/website/static/src/img/bglink.png',
                     modes: { wysiwyg: true },
                     editorFocus: true,
+                    context: 'a',
                     panel: {
-                        css: '/website/static/lib/bootstrap/css/bootstrap.css',
+                        css: '/web/static/lib/bootstrap/css/bootstrap.css',
                         attributes: { 'role': 'listbox', 'aria-label': label },
                     },
 
@@ -337,14 +349,40 @@
             requires: 'widget',
 
             init: function (editor) {
+                var specials = {
+                    // Can't find the correct ACL rule to only allow img tags
+                    image: { content: '*' },
+                    html: { text: '*' },
+                    monetary: {
+                        text: {
+                            selector: 'span.oe_currency_value',
+                            allowedContent: { }
+                        }
+                    }
+                };
+                _(specials).each(function (editable, type) {
+                    editor.widgets.add(type, {
+                        draggable: false,
+                        editables: editable,
+                        upcast: function (el) {
+                            return  el.attributes['data-oe-type'] === type;
+
+                        }
+                    });
+                });
                 editor.widgets.add('oeref', {
-                    editables: { text: '*' },
                     draggable: false,
-
+                    editables: {
+                        text: {
+                            selector: '*',
+                            allowedContent: { }
+                        },
+                    },
                     upcast: function (el) {
-                        var matches = el.attributes['data-oe-type'] && el.attributes['data-oe-type'] !== 'monetary';
-                        if (!matches) { return false; }
-
+                        var type = el.attributes['data-oe-type'];
+                        if (!type || (type in specials)) {
+                            return false;
+                        }
                         if (el.attributes['data-oe-original']) {
                             while (el.children.length) {
                                 el.children[0].remove();
@@ -354,16 +392,9 @@
                             ));
                         }
                         return true;
-                    },
-                });
-                editor.widgets.add('monetary', {
-                    editables: { text: 'span.oe_currency_value' },
-                    draggable: false,
-
-                    upcast: function (el) {
-                        return el.attributes['data-oe-type'] === 'monetary';
                     }
                 });
+
                 editor.widgets.add('icons', {
                     draggable: false,
 
@@ -374,8 +405,11 @@
                         });
                     },
                     upcast: function (el) {
-                        return el.attributes['class']
-                            && (/\bfa\b/.test(el.attributes['class']));
+                        return el.hasClass('fa')
+                            // ignore ir.ui.view (other data-oe-model should
+                            // already have been matched by oeref and
+                            // monetary?
+                            && !el.attributes['data-oe-model'];
                     }
                 });
             }
@@ -411,6 +445,7 @@
                 openerp.jsonRpc('/website/customize_template_get', 'call', { 'xml_id': view_name }).then(
                     function(result) {
                         _.each(result, function (item) {
+                            if (item.xml_id === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
                             if (item.header) {
                                 menu.append('<li class="dropdown-header">' + item.name + '</li>');
                             } else {
@@ -437,6 +472,12 @@
             });
         },
         start: function() {
+            // remove placeholder editor bar
+            var fakebar = document.getElementById('website-top-navbar-placeholder');
+            if (fakebar) {
+                fakebar.parentNode.removeChild(fakebar);
+            }
+
             var self = this;
             this.saving_mutex = new openerp.Mutex();
 
@@ -615,11 +656,11 @@
             var $link_button = this.make_hover_button(_t("Change"), function () {
                 var sel = new CKEDITOR.dom.element(previous);
                 editor.getSelection().selectElement(sel);
-                if (previous.tagName.toUpperCase() === 'A') {
-                    link_dialog(editor);
-                } else if(sel.hasClass('fa')) {
+                if(sel.hasClass('fa')) {
                     new website.editor.FontIconsDialog(editor, previous)
                         .appendTo(document.body);
+                } else if (previous.tagName.toUpperCase() === 'A') {
+                    link_dialog(editor);
                 }
                 $link_button.hide();
                 previous = null;
@@ -628,7 +669,12 @@
                 image_dialog(editor, new CKEDITOR.dom.element(previous));
                 $image_button.hide();
                 previous = null;
-            });
+            }, 'btn-sm');
+
+            function is_icons_widget(element) {
+                var w = editor.widgets.getByElement(element);
+                return w && w.name === 'icons';
+            }
 
             // previous is the state of the button-trigger: it's the
             // currently-ish hovered element which can trigger a button showing.
@@ -639,8 +685,15 @@
                 // Back from edit button -> ignore
                 if (previous && previous === this) { return; }
 
+                // hover button should appear for "editable" links and images
+                // (img and a nodes whose *attributes* are editable, they
+                // can not be "editing hosts") *or* for non-editing-host
+                // elements bearing an ``fa`` class. These should have been
+                // made into CKE widgets which are editing hosts by
+                // definition, so instead check if the element has been
+                // converted/upcasted to an fa widget
                 var selected = new CKEDITOR.dom.element(this);
-                if (!is_editable_node(selected) && !selected.hasClass('fa')) {
+                if (!(is_editable_node(selected) || is_icons_widget(selected))) {
                     return;
                 }
 
@@ -827,7 +880,6 @@
                     document.execCommand("enableInlineTableEditing", false, "false");
                 } catch (e) {}
 
-
                 // detect & setup any CKEDITOR widget within a newly dropped
                 // snippet. There does not seem to be a simple way to do it for
                 // HTML not inserted via ckeditor APIs:
@@ -984,6 +1036,7 @@
         start: function () {
             var sup = this._super();
             this.$el.modal({backdrop: 'static'});
+            this.$('input:first').focus();
             return sup;
         },
         save: function () {
@@ -1023,10 +1076,13 @@
         },
         start: function () {
             var self = this;
+            var last;
             this.$('#link-page').select2({
                 minimumInputLength: 1,
                 placeholder: _t("New or existing page"),
                 query: function (q) {
+                    if (q.term == last) return;
+                    last = q.term;
                     $.when(
                         self.page_exists(q.term),
                         self.fetch_pages(q.term)
@@ -1073,7 +1129,7 @@
                 } else {
                     // Create the page, get the URL back
                     done = $.get(_.str.sprintf(
-                            '/pagenew/%s?noredirect=1', encodeURI(data.id)))
+                            '/website/add/%s?noredirect=1', encodeURI(data.id)))
                         .then(function (response) {
                             self.make_link(response, false, data.id);
                         });
@@ -1265,7 +1321,7 @@
         }),
 
         start: function () {
-            this.$('.modal-footer [disabled]').text("Uploading…");
+            this.$('button.wait').text("Uploading…");
             var $options = this.$('.image-style').children();
             this.image_styles = $options.map(function () { return this.value; }).get();
 
@@ -1298,13 +1354,16 @@
          * Sets the provided image url as the dialog's value-to-save and
          * refreshes the preview element to use it.
          */
-        set_image: function (url) {
+        set_image: function (url, error) {
+            this.$('input.url').val(
+                error ? '' : url);
             this.$('input.url').val(url);
             this.preview_image();
         },
 
         file_selection: function () {
             this.$el.addClass('nosave');
+            this.$('form').removeClass('has-error').find('.help-block').empty();
             this.$('button.filepicker').removeClass('btn-danger btn-success');
 
             var self = this;
@@ -1319,25 +1378,38 @@
         },
         file_selected: function(url, error) {
             var $button = this.$('button.filepicker');
-            if (error) {
+            if (!error) {
+                $button.addClass('btn-success');
+            } else {
+                url = null;
+                this.$('form').addClass('has-error')
+                    .find('.help-block').text(error);
                 $button.addClass('btn-danger');
-                return;
             }
-            $button.addClass('btn-success');
-            this.set_image(url);
+            this.set_image(url, error);
         },
         preview_image: function () {
-            this.$el.removeClass('nosave');
+            var loaded = function () {
+                this.$el.removeClass('nosave');
+            }.bind(this);
             var image = this.$('input.url').val();
-            if (!image) { return; }
+            if (!image) { loaded(); return; }
 
-            this.$('img.image-preview')
+            var $img = this.$('img.image-preview')
                 .attr('src', image)
                 .removeClass(this.image_styles.join(' '))
                 .addClass(this.$('select.image-style').val());
+
+            if ($img.prop('complete')) {
+                loaded();
+            } else {
+                $img.load(loaded)
+            }
         },
         browse_existing: function (e) {
             e.preventDefault();
+            this.$('form').removeClass('has-error').find('.help-block').empty();
+            this.$('button.filepicker').removeClass('btn-danger btn-success');
             new website.editor.ExistingImageDialog(this).appendTo(document.body);
         },
     });
@@ -1406,6 +1478,7 @@
                 this.page += $target.hasClass('previous') ? -1 : 1;
                 this.display_attachments();
             },
+            'click .existing-attachment-remove': 'try_remove',
         }),
         init: function (parent) {
             this.image = null;
@@ -1428,7 +1501,7 @@
                 kwargs: {
                     fields: ['name', 'website_url'],
                     domain: [['res_model', '=', 'ir.ui.view']],
-                    order: 'name',
+                    order: 'id desc',
                     context: website.get_context(),
                 }
             });
@@ -1438,6 +1511,7 @@
             this.display_attachments();
         },
         display_attachments: function () {
+            this.$('.help-block').empty();
             var per_screen = IMAGES_PER_ROW * IMAGES_ROWS;
 
             var from = this.page * per_screen;
@@ -1464,6 +1538,34 @@
                 this.parent.set_image(link);
             }
             this.close()
+        },
+
+        try_remove: function (e) {
+            var $help_block = this.$('.help-block').empty();
+            var self = this;
+            var id = parseInt($(e.target).data('id'), 10);
+            var attachment = _.findWhere(this.records, {id: id});
+
+            return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                model: 'ir.attachment',
+                method: 'try_remove',
+                args: [],
+                kwargs: {
+                    ids: [id],
+                    context: website.get_context()
+                }
+            }).then(function (prevented) {
+                if (_.isEmpty(prevented)) {
+                    self.records = _.without(self.records, attachment);
+                    self.display_attachments();
+                    return;
+                }
+                $help_block.replaceWith(openerp.qweb.render(
+                    'website.editor.dialog.image.existing.error', {
+                        views: prevented[id]
+                    }
+                ));
+            });
         },
     });
 
@@ -1641,6 +1743,8 @@
                 }
                 switch(m.type) {
                 case 'attributes': // ignore .cke_focus being added or removed
+                    // ignore id modification
+                    if (m.attributeName === 'id') { return false; }
                     // if attribute is not a class, can't be .cke_focus change
                     if (m.attributeName !== 'class') { return true; }
 
@@ -1652,6 +1756,9 @@
                     // ignore mutation if the *only* change is .cke_focus
                     return change.length !== 1 || change[0] === 'cke_focus';
                 case 'childList':
+                    setTimeout(function () {
+                        fixup_browser_crap(m.addedNodes);
+                    }, 0);
                     // Remove ignorable nodes from addedNodes or removedNodes,
                     // if either set remains non-empty it's considered to be an
                     // impactful change. Otherwise it's ignored.
@@ -1688,5 +1795,70 @@
             output.push(node);
         }
         return output;
+    }
+
+    var programmatic_styles = {
+        float: 1,
+        display: 1,
+        position: 1,
+        top: 1,
+        left: 1,
+        right: 1,
+        bottom: 1,
+    };
+    function fixup_browser_crap(nodes) {
+        if (!nodes || !nodes.length) { return; }
+        /**
+         * Checks that the node only has a @style, not e.g. @class or whatever
+         */
+        function has_only_style(node) {
+            for (var i = 0; i < node.attributes.length; i++) {
+                var attr = node.attributes[i];
+                if (attr.attributeName !== 'style') {
+                    return false;
+                }
+            }
+            return true;
+        }
+        function has_programmatic_style(node) {
+            for (var i = 0; i < node.style.length; i++) {
+              var style = node.style[i];
+              if (programmatic_styles[style]) {
+                  return true;
+              }
+            }
+            return false;
+        }
+
+        for (var i=0; i<nodes.length; ++i) {
+            var node = nodes[i];
+            if (node.nodeType !== document.ELEMENT_NODE) { continue; }
+
+            if (node.nodeName === 'SPAN'
+                    && has_only_style(node)
+                    && !has_programmatic_style(node)) {
+                // On backspace, webkit browsers create a <span> with a bunch of
+                // inline styles "remembering" where they come from. Refs:
+                //    http://www.neotericdesign.com/blog/2013/3/working-around-chrome-s-contenteditable-span-bug
+                //    https://code.google.com/p/chromium/issues/detail?id=226941
+                //    https://bugs.webkit.org/show_bug.cgi?id=114791
+                //    http://dev.ckeditor.com/ticket/9998
+                var child, parent = node.parentNode;
+                while (child = node.firstChild) {
+                    parent.insertBefore(child, node);
+                }
+                parent.removeChild(node);
+                // chances are we had e.g.
+                //  <p>foo</p>
+                //  <p>bar</p>
+                // merged the lines getting this in webkit
+                //  <p>foo<span>bar</span></p>
+                // after unwrapping the span, we have 2 text nodes
+                //  <p>[foo][bar]</p>
+                // where we probably want only one. Normalize will merge
+                // adjacent text nodes. However, does not merge text and cdata
+                parent.normalize();
+            }
+        }
     }
 })();

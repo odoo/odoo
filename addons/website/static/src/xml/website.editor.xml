@@ -6,7 +6,7 @@
                     <button type="button" data-action="save"
                             class="btn btn-primary">Save</button>
                     or
-                    <a href="#" data-action="cancel">Discard</a>
+                    <a href="#" data-action="cancel" class="btn btn-link">Discard</a>
                 </form>
                 <ul class="nav navbar-nav pull-right">
                 </ul>
@@ -97,10 +97,11 @@
                       target="fileframe"
                       class="col-sm-8">
                     <div class="text-center">
-                        <input type="file" name="upload" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
+                        <input type="file" name="upload" accept="image/*" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
                         <button type="button" class="btn btn-primary btn-lg filepicker">
                             Upload an image from your computer
                         </button>
+                        <button type="button" class="btn btn-lg hidden wait" disabled="disabled"/>
                         <p class="text-muted mt16">— or —</p>
                     </div>
                     <div class="well">
@@ -110,10 +111,14 @@
                                placeholder="http://openerp.com"/>
                     </div>
                     <input type="hidden" name="func"/>
+                    <div class="help-block"/>
                 </form>
                 <div class="col-sm-4 image-preview-container">
                     <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAC0lEQVQIHWP4zwAAAgEBAMVfG14AAAAASUVORK5CYII%3D"
                          class="pull-right img-rounded image-preview"
+                         width="100%"/>
+                    <img src="/web/static/src/img/throbber-large.gif"
+                         class="pull-right img-rounded wait hidden"
                          width="100%"/>
                     <select class="form-control image-style">
                         <option value="">No styling</option>
@@ -135,8 +140,9 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h3 class="modal-title">Select a Picture</h3>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body has-error">
                         <div class="existing-attachments"/>
+                        <div class="help-block"/>
                     </div>
                     <div class="modal-footer">
                         <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>
@@ -152,10 +158,25 @@
                 <li class="next disabled"><a href="#">Next →</a></li>
             </ul>
             <div class="row mt16" t-foreach="rows" t-as="row">
-                <div class="col-sm-2" t-foreach="row" t-as="attachment">
+                <div class="col-sm-2 existing-attachment-cell"
+                     t-foreach="row" t-as="attachment">
+                    <i class="fa fa-times existing-attachment-remove" t-att-data-id="attachment.id"/>
                     <img t-att-src="attachment.website_url" t-att-alt="attachment.name" class="img img-responsive"/>
                 </div>
             </div>
+        </div>
+    </t>
+    <t t-name="website.editor.dialog.image.existing.error">
+        <div class="help-block">
+            <p>The image could not be deleted because it is used in the
+               following pages or views:</p>
+            <ul t-foreach="views" t-as="view">
+                <li>
+                    <a t-attf-href="/web#model=ir.ui.view&amp;id=#{view.id}">
+                        <t t-esc="view.name"/>
+                    </a> (id <t t-esc="view.id"/>)
+                </li>
+            </ul>
         </div>
     </t>
     <t t-name="website.editor.table.panel">

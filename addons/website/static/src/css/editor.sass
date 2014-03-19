@@ -23,6 +23,7 @@
     background: transparent
     border: none
     +box-shadow(none)
+    -ms-filter: "alpha(opacity=50)"
 
 // }}}
  
@@ -162,12 +163,17 @@ ul.oe_menu_editor
 .modal-footer
     text-align: left
 
-.modal.nosave .modal-footer
-    button.save
-        display: none
-    button.wait
+.modal.nosave
+    .wait
         display: inline-block !important
         visibility: visible !important
+    .modal-body
+        .filepicker, .image-preview
+            display: none
+        .wait
+            width: 100%
+    .modal-footer .save
+        display: none
 
 // fontawesome modal
 .modal
@@ -205,9 +211,27 @@ ul.oe_menu_editor
         .font-icons-selected
             background-color: #ddd
 
+$attachment-border-color: #848490
+.existing-attachments
+    .pager .disabled
+        display: none
 
-.existing-attachments .pager .disabled
-    display: none
+    .existing-attachment-cell
+        position: relative
+        .img
+            border: 1px solid $attachment-border-color
+        .existing-attachment-remove
+            position: absolute
+            top: 0
+            left: 15px // padding-left on col-*
+
+            cursor: pointer
+            background: white
+            padding: 2px
+            border: 1px solid $attachment-border-color
+            border-top: none
+            border-left: none
+            +border-bottom-right-radius(8px)
 
 // wrapper positioned relatively for drag&drop widget which is disabled below.
 // Breaks completely horribly crazy products listing page, so take it out.

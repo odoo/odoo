@@ -78,21 +78,21 @@ class ir_http(orm.AbstractModel):
 
         return self._dispatch()
 
-    def _postprocess_args(self, arguments):
-        url = request.httprequest.url
-        for arg in arguments.itervalues():
-            if isinstance(arg, orm.browse_record) and isinstance(arg._uid, RequestUID):
-                placeholder = arg._uid
-                arg._uid = request.uid
-                try:
-                    good_slug = slug(arg)
-                    if str(arg.id) != placeholder.value and placeholder.value != good_slug:
-                        # TODO: properly recompose the url instead of using replace()
-                        url = url.replace(placeholder.value, good_slug)
-                except KeyError:
-                    return self._handle_exception(werkzeug.exceptions.NotFound())
-        if url != request.httprequest.url:
-            werkzeug.exceptions.abort(werkzeug.utils.redirect(url))
+    def _postprocess_args(self, arguments, rule):
+        if not getattr(request, 'website_enabled', False):
+            return super(ir_http, self)._postprocess_args(arguments, rule)
+
+        for arg, val in arguments.items():
+            # Replace uid placeholder by the current request.uid
+            if isinstance(val, orm.browse_record) and isinstance(val._uid, RequestUID):
+                val._uid = request.uid
+        try:
+            _, path = rule.build(arguments)
+            assert path is not None
+        except Exception:
+            return self._handle_exception(werkzeug.exceptions.NotFound())
+        if path != request.httprequest.path:
+            return werkzeug.utils.redirect(path)
 
     def _handle_exception(self, exception=None, code=500):
         if isinstance(exception, werkzeug.exceptions.HTTPException) and hasattr(exception, 'response') and exception.response:
@@ -103,20 +103,16 @@ class ir_http(orm.AbstractModel):
                 traceback=traceback.format_exc(exception),
             )
             if exception:
-                current_exception = exception
+                code = getattr(exception, 'code', code)
                 if isinstance(exception, ir_qweb.QWebException):
                     values.update(qweb_exception=exception)
-                    if exception.inner:
-                        current_exception = exception.inner
-                if isinstance(current_exception, openerp.exceptions.AccessError):
-                    code = 403
-                else:
-                    code = getattr(exception, 'code', code)
+                    if isinstance(exception.qweb.get('cause'), openerp.exceptions.AccessError):
+                        code = 403
             if code == 500:
                 logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
-                if values.get('qweb_exception'):
+                if 'qweb_exception' in values:
                     view = request.registry.get("ir.ui.view")
-                    views = view._views_get(request.cr, request.uid, values['qweb_exception'].template, request.context)
+                    views = view._views_get(request.cr, request.uid, exception.qweb['template'], request.context)
                     to_reset = [v for v in views if v.model_data_id.noupdate is True]
                     values['views'] = to_reset
             elif code == 403:
@@ -132,7 +128,7 @@ class ir_http(orm.AbstractModel):
 
             try:
                 html = request.website._render('website.%s' % code, values)
-            except:
+            except Exception:
                 html = request.website._render('website.http_error', values)
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
@@ -171,5 +167,5 @@ class PageConverter(werkzeug.routing.PathConverter):
 
         for view in views:
             xid = xids[view['id']]
-            if xid and (not query or query in xid):
+            if xid and (not query or query.lower() in xid.lower()):
                 yield xid

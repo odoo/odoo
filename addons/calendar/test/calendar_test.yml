@@ -33,12 +33,14 @@
     !python {model: calendar.event}: |
      ids = self.search(cr, uid, [('date', '>=', '2011-04-30 16:00:00'), ('date', '<=', '2011-05-31 00:00:00')], context={'virtual_id': True} )
      before = self.search(cr, uid, [('date', '>=', '2011-04-30 16:00:00'), ('date', '<=', '2011-05-31 00:00:00')], context={'virtual_id': False})
-     self.write(cr, uid,[ids[1]], {'name':'New Name','recurrency' : True}, context={'virtual_id': True})     
+     # We start by detach the event
+     newid = self._detach_one_event(cr, uid,ids[1])
+     self.write(cr, uid,[newid], {'name':'New Name','recurrency' : True}, context={'virtual_id': True})
      after = self.search(cr, uid, [('date', '>=', '2011-04-30 16:00:00'), ('date', '<=', '2011-05-31 00:00:00')], context={'virtual_id': False})
      assert len(after) == len(before)+1, 'Wrong number of events found, after to have moved a virtual event'
-     new_id = list(set(after)-set(before))[0]    
+     new_id = list(set(after)-set(before))[0]
      new_event = self.browse(cr,uid,new_id,context=context)
-     assert new_event.recurrent_id == before[0], 'Recurrent_id not correctly passed to the new event'          
+     assert new_event.recurrent_id == before[0], 'Recurrent_id not correctly passed to the new event'
 -
   Now I will make All day event and test it
 -
@@ -58,9 +60,25 @@
     duration: 1
     interval: days
     type: notification
-        
 -
   Now I will assign this reminder to all day event
 -
     !python {model: calendar.event}: |
      self.write(cr, uid, [ref("calendar_event_alldaytestevent0")], {'alarm_ids': [(6,0,[ref("res_alarm_daybeforeeventstarts0")])]})
+-
+  I create a recuring rule for my event
+-
+  !record {model: calendar.event, id: calendar.event_sprintreview1}:
+    name: Begin of month meeting
+    date: !eval time.strftime('%Y-%m-%d 12:00:00')
+    recurrency: true
+    rrule: FREQ=MONTHLY;INTERVAL=1;COUNT=12;BYDAY=1MO
+-
+  I check that the attributes are set correctly
+-
+  !assert {model: calendar.event, id: calendar.event_sprintreview1}:
+    - rrule_type == 'monthly'
+    - count == 12
+    - month_by == 'day'
+    - byday == '1'
+    - week_list == 'MO'

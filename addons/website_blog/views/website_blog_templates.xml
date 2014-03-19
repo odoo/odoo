@@ -97,17 +97,15 @@
 <!-- Blog Post Summary -->
 <template id="blog_post_short" name="Blog Post Summary">
     <t t-call="website_blog.index">
-    <div t-if="not blog_posts">
-        <div class="text-center text-muted">
-          <h3 class="css_editable_display">No blog post found</h3>
-          <h3 class="css_editable_hidden">Nothing published yet click <a t-attf-href="/page/website.contactus">here</a> to contact us</h3>
-          <t groups="base.group_website_publisher">
-            <t groups="base.group_document_user">
-                <p>Click on "Content" to define a new blog post or "Help" for more informations.</p>
-                <img src="/website/static/src/img/content_here.png"/>
-              </t>
-          </t>
-        </div>
+    <div t-if="not blog_posts" class="container mb64">
+      <p class="css_editable_hidden">
+        <h1>No blog post yet.</h1>
+      </p>
+      <t groups="base.group_website_publisher">
+        <t groups="base.group_document_user">
+          <p>Click on "Content" on the top menu to write your first blog post.</p>
+        </t>
+      </t>
     </div>
     <t t-foreach="blog_posts" t-as="blog_post">
       <div t-att-data-publish="blog_post.website_published and 'on' or 'off'">
@@ -157,7 +155,19 @@
 <template id="blog_post_complete" name="Blog Post">
     <t t-call="website_blog.index">
 
-    <div class="container" id="title">
+    <t t-call="website.publish_management">
+        <t t-set="object" t-value="blog_post"/>
+        <t t-set="publish_edit" t-value="True"/>
+        <t t-set="action" t-value="'website_blog.action_blog_post'"/>
+        <li>
+            <form class="duplicate hidden" action="/blogpost/duplicate">
+                <input name="blog_post_id" t-att-value="blog_post.id"/>
+            </form>
+            <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
+        </li>
+    </t>
+
+    <div id="title">
         <h1 class="text-center" t-field="blog_post.name"/>
         <p class="post-meta text-muted text-center" name="blog_post_data">
             <span class="fa fa-calendar oe_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
@@ -168,18 +178,6 @@
                 </a>
             </span>
         </p>
-    </div>
-    <div class="container">
-        <t t-call="website.publish_management">
-            <t t-set="object" t-value="blog_post"/>
-            <t t-set="publish_edit" t-value="True"/>
-            <li>
-                <form class="duplicate hidden" action="/blogpost/duplicate">
-                    <input name="blog_post_id" t-att-value="blog_post.id"/>
-                </form>
-                <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
-            </li>
-        </t>
     </div>
 
     <div t-field="blog_post.content"/>

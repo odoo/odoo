@@ -68,6 +68,12 @@ header
         img
             max-height: 50px
 
+// add {WORD JOINER} (equivalent to deprecated ZERO WIDTH NO-BREAK SPACE) at
+// the beginning of paragraphs so they don't "disappear" after saving when
+// used solely for spacing.
+#wrapwrap p:empty:after
+    content: '\2060'
+
 /* ----- Snippets Styles ----- */
 
 .readable
@@ -78,17 +84,16 @@ header
 
 /* ----- EDITOR ----- */
 
-
 .css_non_editable_mode_hidden
     display: none
 
-
 /* ----- BOOTSTRAP FIX ----- */
 
-.container
+.container, .readable
     .container
         padding-left: 0
         padding-right: 0
+        width: auto
 
 /* ----- BOOTSTRAP HACK FOR HEADER NAV BAR ----- */
 
@@ -126,10 +131,6 @@ footer
 
 .col-md-12
     float: left
-    width: 100%
-
-.row
-    min-height: 32px
     width: 100%
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
@@ -183,7 +184,6 @@ footer
 /* -- Hack for removing double scrollbar from mobile preview -- */
 div#mobile-preview.modal
     overflow: hidden
-    overflow-y: hidden
 
 ul.nav-stacked > li > a
     padding: 2px 15px
@@ -199,7 +199,7 @@ ul.nav-stacked > li > a
     .btn-success, .css_unpublish
         display: none
 
-[data-publish='off']
+[data-publish='off']>*:not(.css_options)
     +opacity(0.5)
 
 /* ---- END of PUBLISH ---- */
@@ -228,33 +228,42 @@ ul.nav-stacked > li > a
         a
             color: white
 
+
 /* ---- SNIPPETS --- */
-[data-snippet-id],.colmd,.hr,.blockquote
+
+.oe_img_bg
+    background-size: 100%
+
+section, .carousel, .parallax, .row, .hr, .blockquote
+    min-height: 30px
+.carousel, .parallax, .blockquote
     overflow: hidden
 
 @media (max-width: 400px)
-    [data-snippet-id]
+    section, .parallax, .row, .hr, .blockquote
         height: auto !important
 
 .carousel-inner
     height: 100%
     .item
         height: 100%
-        background-size: 100%
+        background-size: cover
 .carousel
     .carousel-caption
-        left: auto
-        right: auto
-        bottom: 10%
-        text-align: left
-        padding: 20px
-        background: rgba(0, 0, 0, 0.4)
+        position: absolute
+        right: 50%
+        left: 50%
+        bottom: 20px
+        > div
+            position: absolute
+            text-align: left
+            padding: 20px
+            background: rgba(0, 0, 0, 0.4)
+            bottom: 20px
         h1, h2, h3
             margin-top: 10px
             margin-bottom: 10px
     .carousel-image
-        right: 50%
-        left: 50%
         top: 5%
         bottom: 5%
         position: absolute
@@ -268,12 +277,30 @@ ul.nav-stacked > li > a
             right: 10%
             top: 10%
             bottom: auto
-            text-align: center
-            background: transparent
+            > div
+                text-align: center
+                background: transparent
+                bottom: auto
+                width: 100%
+    .item.text_image
+        .carousel-caption
+            left: 10%
+            > div
+                right: 50%
+                margin-right: -20%
+                max-width: 550px
+        .carousel-image
+            right: 10%
+            left: 50%
     .item.image_text
         .carousel-caption
             right: 10%
+            > div
+                left: 50%
+                margin-left: -20%
+                max-width: 550px
         .carousel-image
+            right: 50%
             left: 10%
     .carousel-control
         cursor: pointer
@@ -291,7 +318,7 @@ ul.nav-stacked > li > a
 
 /* Parallax Theme */
 
-div.carousel[data-snippet-id="slider"]
+div.carousel
     .carousel-indicators
         li
             border: 1px solid grey
@@ -299,21 +326,16 @@ div.carousel[data-snippet-id="slider"]
             background-color: grey
 
 .parallax
-    position: relative
-    background-size: 100%
-    display: table
-    width: 100%
-    min-height: 100px
-    &.oe_small
-        min-height: 200px
-    &.oe_medium
-        min-height: 300px
-    &.oe_big
-        min-height: 450px
+    background-size: cover
     > div
-        display: table-cell
-        vertical-align: middle
-        padding: 32px 0
+        position: relative
+        display: table
+        width: 100%
+        min-height: 200px
+        > div
+            display: table-cell
+            vertical-align: middle
+            padding: 32px 0
 
 /* Background */
 
@@ -327,13 +349,13 @@ div.carousel[data-snippet-id="slider"]
     color: white
 
 .oe_green
-    background-color: #51d466
+    background-color: #169C78
     color: white
     .text-muted
         color: #ddd
 
 .oe_blue_light
-    background-color: #4791d2
+    background-color: #41b6ab
     color: white
     .text-muted
         color: #ddd
@@ -343,7 +365,7 @@ div.carousel[data-snippet-id="slider"]
     color: white
 
 .oe_orange
-    background-color: #e67e22
+    background-color: #f05442
     color: white
     .text-muted
         color: #ddd
@@ -355,15 +377,12 @@ div.carousel[data-snippet-id="slider"]
         color: #ddd
 
 .oe_red
-    background-color: #f75353
+    background-color: #9C1b31
     color: white
     .text-muted
         color: #ddd
 
 /* Misc */
-
-.oe_img_bg
-    background-size: 100%
 
 .texttop
     vertical-align: top

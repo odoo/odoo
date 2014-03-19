@@ -1,8 +1,23 @@
-import openerp.addons.website.tests.test_ui as test_ui
+import os
 
-def load_tests(loader, base, _):
-    base.addTest(test_ui.WebsiteUiSuite(test_ui.full_path(__file__,'website_sale-sale_process-test.js'),
-        { 'action': 'website.action_website_homepage' }))
-    base.addTest(test_ui.WebsiteUiSuite(test_ui.full_path(__file__,'website_sale-sale_process-test-2.js'),
-        { 'action': 'website.action_website_homepage' }))
-    return base
+import unittest2
+
+import openerp.tests
+
+
+class TestUi(openerp.tests.HttpCase):
+    def test_01_admin_shop_tour(self):
+        return
+        self.phantom_js("/", "openerp.website.Tour.run_test('shop')", "openerp.website.Tour.Shop", login="admin")
+
+    def test_02_admin_checkout(self):
+        return
+        self.phantom_js("/", "openerp.website.Tour.run_test('shop_buy_product')", "openerp.website.Tour.ShopTest", login="admin")
+
+    def test_03_demo_checkout(self):
+        return
+        self.phantom_js("/", "openerp.website.Tour.run_test('shop_buy_product')", "openerp.website.Tour.ShopTest", login="demo")
+
+    def test_04_public_checkout(self):
+        return
+        self.phantom_js("/", "openerp.website.Tour.run_test('shop_buy_product')", "openerp.website.Tour.ShopTest")

@@ -167,10 +167,12 @@
             <search string="Search Phonecalls">
                <field name="name" string="Phonecalls"/>
                <field name="date"/>
+               <field name="state"/>
                <separator/>
                <filter icon="terp-gtk-go-back-rtl" string="To Do" name="current" domain="[('state','=','open')]"/>
                <separator/>
                <filter string="Unassigned Phonecalls" icon="terp-personal-" domain="[('user_id','=',False)]" help="Unassigned Phonecalls"/>
+               <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                <separator/>
                <filter string="Phone Calls Assigned to Me or My Team(s)" icon="terp-personal+" domain="['|', ('section_id.user_id','=',uid), ('user_id', '=', uid)]"
                        help="Phone Calls Assigned to the current user or with a team having the current user as team leader"/>

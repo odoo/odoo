@@ -40,24 +40,17 @@
             </div>
             <div class="row mt32 mb32">
                 <div class="col-md-9" id="middle_column">
-                    <t t-if="not event_ids">
-                        <div class="text-center text-muted">
-                          <h3 class="css_editable_display">No event found</h3>
-                          <h3 class="css_editable_hidden">There isn't available events right now, <t t-if="current_date or current_country or current_type">click <a t-attf-href="/event">here</a> to check all events or</t> click <a t-attf-href="/page/website.contactus">here</a> to contact us</h3>
-                          <t groups="base.group_website_publisher">
-                            <t groups="event.group_event_manager">
-                                <p>Click on "Content" to define a new event or "Help" for more informations.</p>
-                                <img src="/website/static/src/img/content_here.png"/>
-                                <p>In the backend's event form contains information to customize your events: location, oranizer, tikets, registrations, etc.</p>
-                              </t>
-                          </t>
-                        </div>
-                    </t>
+                    <div class="text-center text-muted" t-if="not event_ids">
+                      <h1>No event found</h1>
+                      <t groups="base.group_website_publisher">
+                          <p groups="event.group_event_manager">Use the top menu <i>'Content'</i> to create your first event.</p>
+                      </t>
+                    </div>
                     <ul class="media-list">
                         <li t-foreach="event_ids" t-as="event" class="media">
-                            <div class="media-body">
+                            <div itemscope="itemscope" itemtype="http://schema.org/Event" class="media-body">
                                 <h4 class="media-heading">
-                                    <a t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register/' or ''}"><span t-field="event.name"> </span></a>
+                                    <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register/' or ''}"><span itemprop="name" t-field="event.name"> </span></a>
                                     <small t-if="not event.website_published" class="label label-danger">not published</small>
                                 </h4>
                                 <div>
@@ -66,9 +59,9 @@
                                     </t>
                                 </div>
                                 <div>
-                                    <i class="fa fa-clock-o"></i> <span t-field="event.date_begin"> </span> <i>to</i> <span t-field="event.date_end"> </span>
+                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin" t-field-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.date_end" t-field-options='{"hide_seconds":"True"}'> </span>
                                 </div>
-                                <div t-field="event.address_id" t-field-options='{
+                                <div itemprop="location" t-field="event.address_id" t-field-options='{
                                     "widget": "contact",
                                     "fields": ["city"]
                                     }'/>
@@ -197,9 +190,9 @@
                 </div>
                 <div class="col-sm-5" groups="event.group_event_manager">
                     <t t-call="website.publish_management">
-                        <t t-set="object" t-value="event"/>
-                        <t t-set="publish_edit" t-value="True"/>
-                        <t t-set="publish_controller">/event/publish</t>
+                      <t t-set="object" t-value="event"/>
+                      <t t-set="publish_edit" t-value="True"/>
+                      <t t-set="action" t-value="'event.action_event_view'"/>
                     </t>
                 </div>
             </div>
@@ -230,11 +223,11 @@
 
 <template id="event_details">
     <t t-call="website_event.layout">
-        <div class="container">
-            <h1 class="text-center" t-field="event.name"></h1>
+        <div itemscope="itemscope" itemtype="http://schema.org/Event" class="container">
+            <h1 itemprop="name" class="text-center" t-field="event.name"></h1>
             <h4 class="text-center text-muted">
-                <i class="fa fa-clock-o"></i> <span t-field="event.date_begin"/> to
-                <span t-field="event.date_end"/>
+                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin" t-field-options='{"hide_seconds":"True"}'/> to
+                <span itemprop="endDate" t-field="event.date_end" t-field-options='{"hide_seconds":"True"}'/>
             </h4>
             <h4 class="text-center text-muted"
                 t-field="event.address_id" t-field-options='{
@@ -265,7 +258,7 @@
 <template id="event_description_full">
     <t t-call="website_event.event_details">
         <div class="col-md-8">
-            <div t-field="event.description"></div>
+            <div itemprop="description" t-field="event.description"></div>
             <div class="clearfix"/>
             <ul class="media-list" id="comment">
                 <li t-foreach="event.website_message_ids" t-as="comment" class="media">
@@ -273,12 +266,11 @@
                         <t t-call="website.publish_management">
                             <t t-set="object" t-value="comment"/>
                             <t t-set="publish_edit" t-value="True"/>
-                            <t t-set="publish_controller">/event/publish</t>
                         </t>
                         <t t-raw="comment.body"/>
                         <small class="pull-right muted text-right">
                             <div t-field="comment.author_id"/>
-                            <div t-field="comment.date"/>
+                            <div t-field="comment.date" t-field-options='{"hide_seconds":"True"}'/>
                         </small>
                     </div>
                 </li>
@@ -295,7 +287,7 @@
                     <a t-att-href="event.google_map_link()" target="_BLANK">
                         <img t-att-src="event.google_map_img()" width="100%%"/>
                     </a>
-                    <div class="mt16 mb8" t-field="event.address_id" t-field-options='{
+                    <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-field-options='{
                         "widget": "contact",
                         "fields": ["address", "phone", "mobile", "fax", "email"]
                         }'/>
@@ -307,8 +299,8 @@
                     <h4>When</h4>
                 </div>
                 <div class="panel-body">
-                    <i class="fa fa-clock-o"></i> from <span t-field="event.date_begin"> </span><br/>
-                    <i class="fa fa-clock-o"></i> to <span t-field="event.date_end"> </span>
+                    <i class="fa fa-clock-o"></i> From <span t-field="event.date_begin" t-field-options='{"hide_seconds":"True"}'> </span><br/>
+                    <i class="fa fa-clock-o"></i> To <span t-field="event.date_end" t-field-options='{"hide_seconds":"True"}'> </span>
                 </div>
             </div>
 

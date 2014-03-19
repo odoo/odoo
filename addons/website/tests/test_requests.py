@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import collections
 import urlparse
 import unittest2
 import urllib2
@@ -9,7 +8,7 @@ import lxml.html
 
 from openerp import tools
 
-from . import cases
+import cases
 
 __all__ = ['load_tests', 'CrawlSuite']
 
@@ -65,12 +64,12 @@ class CrawlSuite(unittest2.TestSuite):
         # blow up in multidb situations
         self.opener.open('http://localhost:{port}/web/?db={db}'.format(
             port=tools.config['xmlrpc_port'],
-            db=werkzeug.url_quote_plus(tools.config['db_name']),
+            db=werkzeug.urls.url_quote_plus(tools.config['db_name']),
         ))
         if user is not None:
             url = 'http://localhost:{port}/login?{query}'.format(
                 port=tools.config['xmlrpc_port'],
-                query=werkzeug.url_encode({
+                query=werkzeug.urls.url_encode({
                     'db': tools.config['db_name'],
                     'login': user,
                     'key': password,
@@ -122,7 +121,6 @@ class URL(object):
 
 def load_tests(loader, base, _):
     base.addTest(CrawlSuite())
-    # blog duplicate (&al?) are on links
-    base.addTest(CrawlSuite('admin', tools.config['admin_passwd']))
+    base.addTest(CrawlSuite('admin', 'admin'))
     base.addTest(CrawlSuite('demo', 'demo'))
     return base

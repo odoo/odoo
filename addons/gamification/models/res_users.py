@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import osv
 from challenge import MAX_VISIBILITY_RANKING
 
@@ -39,9 +40,10 @@ class res_users_gamification_group(osv.Model):
             user_group_ids += [id for command in vals['groups_id'] if command[0] == 6 for id in command[2]]
 
             challenge_obj = self.pool.get('gamification.challenge')
-            challenge_ids = challenge_obj.search(cr, uid, [('autojoin_group_id', 'in', user_group_ids)], context=context)
+            challenge_ids = challenge_obj.search(cr, SUPERUSER_ID, [('autojoin_group_id', 'in', user_group_ids)], context=context)
             if challenge_ids:
-                challenge_obj.write(cr, uid, challenge_ids, {'user_ids': [(4, user_id) for user_id in ids]}, context=context)
+                challenge_obj.write(cr, SUPERUSER_ID, challenge_ids, {'user_ids': [(4, user_id) for user_id in ids]}, context=context)
+                challenge_obj.generate_goals_from_challenge(cr, SUPERUSER_ID, challenge_ids, context=context)
         return write_res
 
     def create(self, cr, uid, vals, context=None):
@@ -53,9 +55,10 @@ class res_users_gamification_group(osv.Model):
             user_group_ids += [id for command in vals['groups_id'] if command[0] == 6 for id in command[2]]
 
             challenge_obj = self.pool.get('gamification.challenge')
-            challenge_ids = challenge_obj.search(cr, uid, [('autojoin_group_id', 'in', user_group_ids)], context=context)
+            challenge_ids = challenge_obj.search(cr, SUPERUSER_ID, [('autojoin_group_id', 'in', user_group_ids)], context=context)
             if challenge_ids:
-                challenge_obj.write(cr, uid, challenge_ids, {'user_ids': [(4, write_res)]}, context=context)
+                challenge_obj.write(cr, SUPERUSER_ID, challenge_ids, {'user_ids': [(4, write_res)]}, context=context)
+                challenge_obj.generate_goals_from_challenge(cr, SUPERUSER_ID, challenge_ids, context=context)
         return write_res
 
     # def get_goals_todo_info(self, cr, uid, context=None):
@@ -83,13 +86,15 @@ class res_users_gamification_group(osv.Model):
         challenge_ids = challenge_obj.search(cr, uid, [('user_ids', 'in', uid), ('state', '=', 'inprogress')], context=context)
         for challenge in challenge_obj.browse(cr, uid, challenge_ids, context=context):
             # serialize goals info to be able to use it in javascript
-            all_goals_info.append({
-                'id': challenge.id,
-                'name': challenge.name,
-                'visibility_mode': challenge.visibility_mode,
-                'currency': user.company_id.currency_id.id,
-                'lines': challenge_obj._get_serialized_challenge_lines(cr, uid, challenge, user_id, restrict_top=MAX_VISIBILITY_RANKING, context=context),
-            })
+            lines = challenge_obj._get_serialized_challenge_lines(cr, uid, challenge, user_id, restrict_top=MAX_VISIBILITY_RANKING, context=context)
+            if lines:
+                all_goals_info.append({
+                    'id': challenge.id,
+                    'name': challenge.name,
+                    'visibility_mode': challenge.visibility_mode,
+                    'currency': user.company_id.currency_id.id,
+                    'lines': lines,
+                })
 
         return all_goals_info
 
@@ -126,7 +131,8 @@ class res_groups_gamification_group(osv.Model):
             user_ids += [id for command in vals['users'] if command[0] == 6 for id in command[2]]
 
             challenge_obj = self.pool.get('gamification.challenge')
-            challenge_ids = challenge_obj.search(cr, uid, [('autojoin_group_id', 'in', ids)], context=context)
+            challenge_ids = challenge_obj.search(cr, SUPERUSER_ID, [('autojoin_group_id', 'in', ids)], context=context)
             if challenge_ids:
-                challenge_obj.write(cr, uid, challenge_ids, {'user_ids': [(4, user_id) for user_id in user_ids]}, context=context)
+                challenge_obj.write(cr, SUPERUSER_ID, challenge_ids, {'user_ids': [(4, user_id) for user_id in user_ids]}, context=context)
+                challenge_obj.generate_goals_from_challenge(cr, SUPERUSER_ID, challenge_ids, context=context)
         return write_res
