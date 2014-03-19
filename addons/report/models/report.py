@@ -224,8 +224,13 @@ class Report(osv.Model):
         if context is None:
             context = {}
 
-        ids = [int(i) for i in ids.split(',')]
-        ids = list(set(ids))
+        if isinstance(ids, str):
+            ids = [int(i) for i in ids.split(',')]
+        if isinstance(ids, list):
+            ids = list(set(ids))
+        if isinstance(ids, int):
+            ids = [ids]
+
         report = self._get_report_from_name(cr, uid, report_name)
         report_obj = self.pool[report.model]
         docs = report_obj.browse(cr, uid, ids, context=context)
