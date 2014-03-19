@@ -191,7 +191,8 @@ def init_logger():
         logger.handlers = []
         logger.setLevel(level)
         logger.addHandler(handler)
-        logger.addHandler(postgresqlHandler)
+        if tools.config['log_db']:
+            logger.addHandler(postgresqlHandler)
         if loggername != '':
             logger.propagate = False
 
