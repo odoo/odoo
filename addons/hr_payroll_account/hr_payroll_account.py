@@ -23,7 +23,7 @@ import time
 from datetime import date, datetime, timedelta
 
 from openerp.osv import fields, osv
-from openerp.tools import config
+from openerp.tools import config, float_compare
 from openerp.tools.translate import _
 
 class hr_payslip(osv.osv):
@@ -86,6 +86,7 @@ class hr_payslip(osv.osv):
     def process_sheet(self, cr, uid, ids, context=None):
         move_pool = self.pool.get('account.move')
         period_pool = self.pool.get('account.period')
+        precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Payroll')
         timenow = time.strftime('%Y-%m-%d')
 
         for slip in self.browse(cr, uid, ids, context=context):
@@ -149,7 +150,7 @@ class hr_payslip(osv.osv):
                     line_ids.append(credit_line)
                     credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
 
-            if debit_sum > credit_sum:
+            if float_compare(credit_sum, debit_sum, precision_digits=precision) == -1:
                 acc_id = slip.journal_id.default_credit_account_id.id
                 if not acc_id:
                     raise osv.except_osv(_('Configuration Error!'),_('The Expense Journal "%s" has not properly configured the Credit Account!')%(slip.journal_id.name))
@@ -165,7 +166,7 @@ class hr_payslip(osv.osv):
                 })
                 line_ids.append(adjust_credit)
 
-            elif debit_sum < credit_sum:
+            elif float_compare(debit_sum, credit_sum, precision_digits=precision) == -1:
                 acc_id = slip.journal_id.default_debit_account_id.id
                 if not acc_id:
                     raise osv.except_osv(_('Configuration Error!'),_('The Expense Journal "%s" has not properly configured the Debit Account!')%(slip.journal_id.name))
