@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="website.ButtonGengoTranslator">
-    <a class="btn btn-danger gengo_translate" data-action="translation_gengo" href="#">Buy Translation</a>
-    <a class="btn btn-danger hidden gengo_post" data-action="translation_gengo_post" href="#">Post to Gengo</a>
+    <a class="btn btn-danger gengo_translate" data-action="translation_gengo" href="#">Buy Translation</a><a class="btn btn-danger hidden gengo_post" data-action="translation_gengo_post" href="#">Post to Gengo</a><a class="btn btn-danger hidden gengo_inprogress disabled"  href="#"> <i class="fa fa-clock-o"></i> Translation in Progress</a><a class="btn btn-danger" data-action="translation_gengo_info"><i class="fa fa-info-circle"></i></a>
 </t>
 <t t-name="website.GengoTranslatorDialog">
     <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
@@ -17,8 +16,11 @@
                         <p>
                             Here are the visuals used to help you translate efficiently:
                             <ul class="oe_translate_examples">
-                                <li class="oe_translatable_todo">
+                                <li style="background:#ffffb6;">
                                     Content will be posted to <b><a href="http://gengo.com/" >Gengo</a></b> for translation. 
+                                </li>
+                                <li class="oe_translatable_inprogress">
+                                    Translation in Process
                                 </li>
                                 <li class="oe_translatable_text">
                                     Already Translated content
@@ -64,6 +66,30 @@
                     <button type="button" data-action="service_level" class="btn btn-primary">Post</button>
                     or
                     <a data-action="discard" data-dismiss="modal" href="#">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="website.GengoTranslatorStatisticDialog">
+    <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
+                    <h2 class="modal-title">Gengo translator statistic for this page</h2>
+                </div>
+                <div class="modal-body">
+                    <b><h3>
+                        <div class="text-info mb8"> <i class="fa fa-align-left"></i> Words to translate <t t-esc="widget.total"></t></div>
+                        <div class="text-warning mb8"> <i class="fa fa-cogs"></i> Words in progress <t t-esc="widget.inprogess"></t></div>
+                        <div class="text-success mb8"> <i class="fa fa-check"></i> Translated words <t t-esc="widget.done"></t></div>
+                        
+                    </h3></b>
+                </div>
+                <div class="modal-footer">
+                    <a data-action="discard" data-dismiss="modal" href="#">Close</a>
                 </div>
             </div>
         </div>

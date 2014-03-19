@@ -206,7 +206,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         views_ids = [view.get('id') for view in views if view.get('active')]
         domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
         irt = request.registry.get('ir.translation')
-        return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value'], context=request.context)
+        return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value','state'], context=request.context)
 
     @http.route('/website/set_translations', type='json', auth='public', website=True)
     def set_translations(self, data, lang):
