@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2012 OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2004-2014 OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -125,7 +125,13 @@ class ColoredFormatter(DBFormatter):
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
         return DBFormatter.format(self, record)
 
+_logger_init = False
 def init_logger():
+    global _logger_init
+    if _logger_init:
+        return
+    _logger_init = True
+
     from tools.translate import resetlocale
     resetlocale()
 
@@ -175,26 +181,24 @@ def init_logger():
         formatter = DBFormatter(format)
     handler.setFormatter(formatter)
 
-    # Configure handlers
+    logging.getLogger().addHandler(handler)
+
+    if tools.config['log_db']:
+        postgresqlHandler = PostgreSQLHandler()
+        postgresqlHandler.setLevel(logging.WARNING)
+        logging.getLogger().addHandler(postgresqlHandler)
+
+    # Configure loggers levels
     pseudo_config = PSEUDOCONFIG_MAPPER.get(tools.config['log_level'], [])
 
     logconfig = tools.config['log_handler']
-
-    postgresqlHandler = PostgreSQLHandler()
-    postgresqlHandler.setLevel(logging.WARNING)
 
     logging_configurations = DEFAULT_LOG_CONFIGURATION + pseudo_config + logconfig
     for logconfig_item in logging_configurations:
         loggername, level = logconfig_item.split(':')
         level = getattr(logging, level, logging.INFO)
         logger = logging.getLogger(loggername)
-        logger.handlers = []
         logger.setLevel(level)
-        logger.addHandler(handler)
-        if tools.config['log_db']:
-            logger.addHandler(postgresqlHandler)
-        if loggername != '':
-            logger.propagate = False
 
     for logconfig_item in logging_configurations:
         _logger.debug('logger level set: "%s"', logconfig_item)
