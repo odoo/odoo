@@ -78,20 +78,17 @@
                             </td>
                             <td class='text-center js_row_qty'>
                                 <t t-if="row.cols.qty &amp;&amp; row.cols.processed == 'false' &amp;&amp; !row.cols.container">
-                                <div class="input-group">
-                                <span class="input-group-addon"><a class="js_minus" t-att-op-id='row.cols.product_id' href="#"><i class="fa fa-minus"></i></a></span>
-                                <form class="js_submit_value" t-att-data-id="row.cols.id">
-                                <input type="text" class="form-control text-center js_qty" t-att-placeholder="row.cols.rem + '/' + row.cols.qty" t-att-data-id="row.cols.id"></input>
-                                <input type="submit" class="hidden"></input>
-                                </form>
-                                <!-- <div class="form-control"> 
-                                    <t t-esc="row.cols.rem"/> / <t t-esc="row.cols.qty" />
-                                </div> -->
-                                <span class="input-group-addon"><a class="js_plus" t-att-op-id='row.cols.product_id' href="#"><i class="fa fa-plus"></i></a></span>
-                                </div>
-                                <div>
-                                    <t t-esc="row.cols.uom" />
-                                </div>
+                                    <div class="input-group">
+                                        <span class="input-group-addon js_minus" t-att-op-id='row.cols.product_id'><a href="#"><i class="fa fa-minus"></i></a></span>
+                                        <form class="js_submit_value" t-att-data-id="row.cols.id">
+                                            <input type="text" class="form-control text-center js_qty" t-att-placeholder="row.cols.rem + '/' + row.cols.qty" t-att-data-id="row.cols.id"></input>
+                                            <input type="submit" class="hidden"></input>
+                                        </form>
+                                        <span class="input-group-addon js_plus" t-att-op-id='row.cols.product_id'><a href="#"><i class="fa fa-plus"></i></a></span>
+                                    </div>
+                                    <div>
+                                        <t t-esc="row.cols.uom" />
+                                    </div>
                                 </t>
                                 <t t-if="row.cols.qty &amp;&amp; (row.cols.processed == 'true' || row.cols.container)">
                                     <t t-esc="row.cols.rem" /> / <t t-esc="row.cols.qty" /> <t t-esc="row.cols.uom" />
@@ -104,7 +101,7 @@
                                 <t t-if="row.cols.lot" ><span> : <t t-esc="row.cols.lot" /></span></t>
                             </td>
                             <td class="js_loc"> <t t-esc="row.cols.dest" /> 
-                                    <div class="pull-right btn-group">
+                                <div class="pull-right btn-group">
                                     <button type="button" class="btn btn-default dropdown-toggle fa fa-bars" data-toggle="dropdown">
                                      <span class="caret"></span>
                                     </button>
@@ -112,12 +109,16 @@
                                         <t t-if="!row.cols.lot &amp;&amp; row.cols.product_id">
                                             <li><a class="js_create_lot" t-att-product_id="row.cols.id" href="#">Create Lot</a></li>
                                         </t>
+                                        <t t-if="!row.cols.head_container">
+                                            <li><a class="js_change_src" t-att-pack_id="row.cols.id" href="#">Change source location</a></li>
+                                            <li><a class="js_change_dst" t-att-pack_id="row.cols.id" href="#">Change destination location</a></li>
+                                        </t>
                                         <t t-if="row.cols.head_container">
                                             <li><a class="js_delete_pack" t-att-pack_id="row.cols.id" href="#">Remove from package</a></li>
                                             <li><a class="js_print_pack" t-att-pack_id="row.cols.id" href="#">Print package label</a></li>
                                         </t>
                                     </ul>
-                                    </div>
+                                </div>
                             </td>
                         </tr>
                     </t>

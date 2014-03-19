@@ -1,4 +1,3 @@
-
 function openerp_picking_widgets(instance){
 
     var module = instance.stock;
@@ -28,6 +27,11 @@ function openerp_picking_widgets(instance){
             this._super(parent,options);
             this.rows = [];
             this.search_filter = "";
+            jQuery.expr[":"].Contains = jQuery.expr.createPseudo(function(arg) {
+                return function( elem ) {
+                    return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+                };
+            });
         },
         get_rows: function(){
             var model = this.getParent();
@@ -160,21 +164,6 @@ function openerp_picking_widgets(instance){
                 var pack_id = parseInt(this.attributes.getNamedItem('pack_id').value);
                 self.getParent().print_package(pack_id);
             });
-            this.$('.js_pick_drop_down').click(function(){
-                //check if parent is a container, if yes find all operation inside package
-                var op_id = parseInt($(this).parent().parent().parent().parent().parent().attr('data-id'));
-                if ($(this).parent().parent().parent().parent().parent()[0].classList.contains('container_head')){
-                    op_ids = []
-                    _.each(self.$('.js_pack_op_line[container-id='+op_id+']'),function(element){
-                        op_ids.push(parseInt(element.attributes.getNamedItem('data-id').value));
-                    });
-                    self.getParent().drop_down(op_ids);
-                }
-                else{
-                    self.getParent().drop_down([op_id]);
-                }
-                
-            });
             this.$('.js_submit_value').submit(function(event){
                 var op_id = parseInt(this.attributes.getNamedItem('data-id').value);
                 var value = parseInt(event.srcElement[0].value);
@@ -197,10 +186,10 @@ function openerp_picking_widgets(instance){
                 processed = ":not(.processed)";
             }
             if (query !== '') {
-                this.$('.js_loc:not(.js_loc:contains('+query+'))').removeClass('info');
-                this.$('.js_loc:contains('+query+')').addClass('info');
-                this.$('.js_pack_op_line'+processed+':not(.js_pack_op_line:has(.js_loc:contains('+query+')))').addClass('hidden');
-                this.$('.js_pack_op_line'+processed+':has(.js_loc:contains('+query+'))').removeClass('hidden');
+                this.$('.js_loc:not(.js_loc:Contains('+query+'))').removeClass('info');
+                this.$('.js_loc:Contains('+query+')').addClass('info');
+                this.$('.js_pack_op_line'+processed+':not(.js_pack_op_line:has(.js_loc:Contains('+query+')))').addClass('hidden');
+                this.$('.js_pack_op_line'+processed+':has(.js_loc:Contains('+query+'))').removeClass('hidden');
             }
             //if no query specified, then show everything
             if (query === '') {
@@ -225,11 +214,21 @@ function openerp_picking_widgets(instance){
             //return only those visible with rem qty > 0 and container empty
             return _.intersection(pack_op_ids, list);
         },
+        remove_blink: function(){
+            this.$('.js_pack_op_line.blink_me').removeClass('blink_me');
+        },
+        blink: function(op_id){
+            console.log('blink: '+op_id);
+            this.$('.js_pack_op_line[data-id="'+op_id+'"]').addClass('blink_me');
+        },
     });
 
     module.PickingMenuWidget = module.MobileWidget.extend({
         template: 'PickingMenuWidget',
         init: function(parent, params){
+            $(window).bind('hashchange', function(){
+                console.log($.bbq.getState());
+            });
             this._super(parent,params);
             var self = this;
 
@@ -381,7 +380,6 @@ function openerp_picking_widgets(instance){
         init: function(parent,params){
             $(window).bind('hashchange', function(){
                 console.log($.bbq.getState());
-                console.log('test');
             });
             this._super(parent,params);
             var self = this;
@@ -541,7 +539,7 @@ function openerp_picking_widgets(instance){
         },
         on_searchbox: function(query){
             var self = this;
-            self.picking_editor.on_searchbox(query);
+            self.picking_editor.on_searchbox(query.toUpperCase());
         },
         // reloads the data from the provided picking and refresh the ui. 
         // (if no picking_id is provided, gets the first picking in the db)
@@ -553,6 +551,7 @@ function openerp_picking_widgets(instance){
             }
             return this.load(picking_id)
                 .then(function(){
+                    self.picking_editor.remove_blink();
                     self.picking_editor.renderElement();
                     // self.$('#js_select')[0].value = "ToDo";
 
@@ -608,7 +607,9 @@ function openerp_picking_widgets(instance){
                     }
                     console.log(result.operation_id);
                     if (result.operation_id !== false){
-                        return self.refresh_ui(self.picking.id);
+                        self.refresh_ui(self.picking.id).then(function(){
+                            return self.picking_editor.blink(result.operation_id);
+                        });
                     }
                 });
         },
@@ -697,10 +698,10 @@ function openerp_picking_widgets(instance){
             for(var i = 0; i < this.pickings.length; i++){
                 if(this.pickings[i] === this.picking.id){
                     if(i < this.pickings.length -1){
-                        window.location = '/barcode/web/?picking_type_id='+this.picking_type_id+'&picking_id='+this.pickings[i+1];
-                        return;
-                        // this.refresh_ui(this.pickings[i+1]);
+                        // window.location = '/barcode/web/?picking_type_id='+this.picking_type_id+'&picking_id='+this.pickings[i+1];
                         // return;
+                        this.refresh_ui(this.pickings[i+1]);
+                        return;
                     }
                 }
             }
@@ -709,8 +710,8 @@ function openerp_picking_widgets(instance){
             for(var i = 0; i < this.pickings.length; i++){
                 if(this.pickings[i] === this.picking.id){
                     if(i > 0){
-                        window.location = '/barcode/web/?picking_type_id='+this.picking_type_id+'&picking_id='+this.pickings[i-1];
-                        // this.refresh_ui(this.pickings[i-1]);
+                        // window.location = '/barcode/web/?picking_type_id='+this.picking_type_id+'&picking_id='+this.pickings[i-1];
+                        this.refresh_ui(this.pickings[i-1]);
                         return;
                     }
                 }

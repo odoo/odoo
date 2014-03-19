@@ -78,8 +78,8 @@ class BarcodeController(http.Controller):
                      wc.show_application = function(){
                          wc.action_manager.do_action("%s", {additional_context: %s});
                      };
-                     wc.do_push_state = function(){};
                      wc.appendTo($(document.body));
                      """ % (action, additional_context)
+                     # wc.do_push_state = function(){};
         }
         return r
