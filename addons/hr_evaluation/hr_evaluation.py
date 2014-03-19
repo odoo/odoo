@@ -285,7 +285,6 @@ class hr_evaluation_interview(osv.Model):
                                    ('done', "Done"),
                                    ('cancel', "Cancelled")],
                                   string="State", required=True),
-        # fields from request_id
         'survey_id': fields.related('phase_id', 'survey_id', string="Appraisal Form", type="many2one", relation="survey.survey"),
         'deadline': fields.related('request_id', 'deadline', type="datetime", string="Deadline"),
     }
@@ -326,7 +325,10 @@ class hr_evaluation_interview(osv.Model):
         return res
 
     def survey_req_waiting_answer(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'waiting_answer'}, context=context)
+        request_obj = self.pool.get('survey.user_input')
+        for interview in self.browse(cr, uid, ids, context=context):
+            request_obj.action_survey_resent(cr, uid, [interview.id], context=context)
+            self.write(cr, uid, interview.id, {'state': 'waiting_answer'}, context=context)
         return True
 
     def survey_req_done(self, cr, uid, ids, context=None):
@@ -352,20 +354,21 @@ class hr_evaluation_interview(osv.Model):
         return True
 
     def action_print_survey(self, cr, uid, ids, context=None):
-        """
-        If response is available then print this response otherwise print survey form(print template of the survey).
+        """ If response is available then print this response otherwise print survey form (print template of the survey) """
+        context = context if context else {}
+        interview = self.browse(cr, uid, ids, context=context)[0]
+        survey_obj = self.pool.get('survey.survey')
+        response_obj = self.pool.get('survey.user_input')
+        response = response_obj.browse(cr, uid, interview.request_id.id, context=context)
+        context.update({'survey_token': response.token})
+        return survey_obj.action_print_survey(cr, uid, [interview.survey_id.id], context=context)
 
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Survey IDs
-        @param context: A standard dictionary for contextual values
-        @return: Dictionary value for print survey form.
-        """
-        if context is None:
-            context = {}
-        record = self.browse(cr, uid, ids, context=context)
-        record = record and record[0]
-        context.update({'survey_id': record.survey_id.id, 'response_id': [record.response.id], 'response_no': 0})
-        value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
-        return value
+    def action_start_survey(self, cr, uid, ids, context=None):
+        context = context if context else {}
+        interview = self.browse(cr, uid, ids, context=context)[0]
+        survey_obj = self.pool.get('survey.survey')
+        response_obj = self.pool.get('survey.user_input')
+        # grab the token of the response and start surveying
+        response = response_obj.browse(cr, uid, interview.request_id.id, context=context)
+        context.update({'survey_token': response.token})
+        return survey_obj.action_start_survey(cr, uid, [interview.survey_id.id], context=context)

@@ -93,7 +93,7 @@
                         <field name="partner_name" class="oe_inline"/>
                         <button string="Create Employee" name="create_employee_from_applicant" type="object"
                                     class="oe_link oe_inline" style="margin-left: 8px;"
-                                    attrs="{'invisible': [('emp_id', '!=', False)]}"/> 
+                                    attrs="{'invisible': [('emp_id', '!=', False)]}"/>
                     </h2>
                 </div>
                 <group>
@@ -318,7 +318,7 @@
                 process and follow up all operations: meetings, interviews, etc.
               </p><p>
                 Applicants and their attached CV are created automatically when an email is sent.
-                If you install the document management modules, all resumes are indexed automatically, 
+                If you install the document management modules, all resumes are indexed automatically,
                 so that you can easily search through their content.
               </p>
          </field>
@@ -425,7 +425,7 @@
                                         <div class="oe_job_alias oe_kanban_ellipsis" t-if=" record.alias_id.value and record.state.raw_value == 'recruit'">
                                             <span class="oe_e">%%</span><small><field name="alias_id"/></small>
                                         </div>
-                                        
+
                                     </div>
                                     <t t-if="record.state.raw_value == 'recruit'">
                                         <div class="oe_applications">
@@ -483,7 +483,7 @@
             <field name="context">{'search_default_in_recruitment': 1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                 Click here to create a new job or remove the filter on "In Recruitment" to recruit for an on hold job. 
+                 Click here to create a new job or remove the filter on "In Recruitment" to recruit for an on hold job.
               </p>
               <p>
                 Define job position profile and manage recruitment in a context of a particular job: print interview survey, define number of expected new employees, and manage its recruitment pipe
