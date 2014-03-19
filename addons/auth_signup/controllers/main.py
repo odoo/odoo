@@ -37,6 +37,9 @@ class AuthSignup(openerp.addons.web.controllers.main.Home):
         mode = request.params.get('mode')
         qcontext = request.params.copy()
         super_response = None
+        if request.httprequest.method == 'GET' and request.session.uid and request.params.get('redirect'):
+            # Redirect if already logged in and redirect param is present
+            return http.redirect_with_hash(request.params.get('redirect'))
         if request.httprequest.method != 'POST' or mode not in ('reset', 'signup'):
             # Default behavior is to try to login,  which in reset or signup mode in a non-sense.
             super_response = super(AuthSignup, self).web_login(*args, **kw)
