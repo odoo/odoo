@@ -3,9 +3,16 @@
 
 var website = openerp.website;
 
+// don't rewrite website.Tour in test mode
+if (typeof website.Tour !== "undefined") {
+    return;
+}
+
 // don't need template to use bootstrap Tour in automatic mode
-if (typeof QWeb2 !== "undefined")
-website.add_template_file('/website/static/src/xml/website.tour.xml');
+if (typeof QWeb2 !== "undefined") {
+    website.add_template_file('/website/static/src/xml/website.tour.xml');
+
+}
 
 // don't need to use bootstrap Tour to launch an automatic tour
 function bootstrap_tour_stub () {
@@ -19,27 +26,28 @@ function bootstrap_tour_stub () {
 
 
 
-if (website.EditorBar)
-website.EditorBar.include({
-    tours: [],
-    start: function () {
-        var self = this;
-        var menu = $('#help-menu');
-        _.each(this.tours, function (tour) {
-            var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
-            $menuItem.click(function () {
-                tour.reset();
-                tour.run();
+if (website.EditorBar) {
+    website.EditorBar.include({
+        tours: [],
+        start: function () {
+            var self = this;
+            var menu = $('#help-menu');
+            _.each(this.tours, function (tour) {
+                var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
+                $menuItem.click(function () {
+                    tour.reset();
+                    tour.run();
+                });
+                menu.append($menuItem);
             });
-            menu.append($menuItem);
-        });
-        return this._super();
-    },
-    registerTour: function (tour) {
-        website.Tour.add(tour);
-        this.tours.push(tour);
-    }
-});
+            return this._super();
+        },
+        registerTour: function (tour) {
+            website.Tour.add(tour);
+            this.tours.push(tour);
+        }
+    });
+}
 
 
 /////////////////////////////////////////////////
