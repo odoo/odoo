@@ -1,7 +1,19 @@
 (function () {
     'use strict';
 
-var website = openerp.website;
+// raise an error in test mode if openerp don't exist
+if (typeof openerp === "undefined") {
+    var error = "openerp is undefined"
+                + "\nhref: " + window.location.href
+                + "\nreferrer: " + document.referrer
+                + "\nlocalStorage: " + JSON.stringify(window.localStorage);
+    if (typeof $ !== "undefined") {
+        error += '\n\n' + $("body").html();
+    }
+    throw new Error(error);
+}
+
+var website = window.openerp.website;
 
 // don't rewrite website.Tour in test mode
 if (typeof website.Tour !== "undefined") {
@@ -316,7 +328,7 @@ website.Tour = openerp.Class.extend({
                 self.timer = setTimeout(checkNext, self.defaultDelay);
             } else {
                 self.reset();
-                throw new Error("Time overlaps to arrive to step " + step.stepId + ": '" + step._title + "'"
+                throw new Error("Can't arrive to step " + step.stepId + ": '" + step._title + "'"
                     + '\nhref: ' + window.location.href
                     + '\nelement: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden")))
                     + '\nwaitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size())
