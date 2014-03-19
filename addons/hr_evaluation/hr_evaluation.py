@@ -275,11 +275,11 @@ class hr_evaluation_interview(osv.Model):
     _rec_name = 'user_to_review_id'
     _description = 'Appraisal Interview'
     _columns = {
-        'request_id': fields.many2one('survey.user_input', 'Survey Request', ondelete='restrict', readonly=True),
+        'request_id': fields.many2one('survey.user_input', 'Survey Request', ondelete='cascade', readonly=True),
         'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Appraisal Plan', required=True),
         'phase_id': fields.many2one('hr_evaluation.plan.phase', 'Appraisal Phase', required=True),
         'user_to_review_id': fields.related('evaluation_id', 'employee_id', type="many2one", relation="hr.employee", string="Employee to evaluate"),
-        'user_id': fields.many2one('res.users', 'Interviewer', required=True),
+        'user_id': fields.many2one('res.users', 'Interviewer'),
         'state': fields.selection([('draft', "Draft"),
                                    ('waiting_answer', "In progress"),
                                    ('done', "Done"),
@@ -296,8 +296,13 @@ class hr_evaluation_interview(osv.Model):
     def create(self, cr, uid, vals, context=None):
         phase_obj = self.pool.get('hr_evaluation.plan.phase')
         survey_id = phase_obj.read(cr, uid, vals.get('phase_id'), fields=['survey_id'], context=context)['survey_id'][0]
-        user_obj = self.pool.get('res.users')
-        partner_id = user_obj.read(cr, uid, vals.get('user_id'), fields=['partner_id'], context=context)['partner_id'][0]
+
+        if vals.get('user_id'):
+            user_obj = self.pool.get('res.users')
+            partner_id = user_obj.read(cr, uid, vals.get('user_id'), fields=['partner_id'], context=context)['partner_id'][0]
+        else:
+            partner_id = None
+
         user_input_obj = self.pool.get('survey.user_input')
 
         if not vals.get('deadline'):
