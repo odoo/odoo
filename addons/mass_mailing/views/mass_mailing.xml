@@ -108,6 +108,35 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_mail_mass_mailing_list_form_minimal">
+            <field name="name">mail.mass_mailing.list.form.minimal</field>
+            <field name="model">mail.mass_mailing.list</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="Contact List" version="7.0">
+                    <header>
+                        <button name="action_add_to_mailing" type="object"
+                            class="oe_highlight" string="Add to Mailing"
+                            invisible="not context.get('default_mass_mailing_id')"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <label for="contact_nbr"/>
+                            <div>
+                                <field name="contact_nbr" nolabel="1" class="oe_inline"/>
+                                <button name="action_see_records" type="object" class="oe_link" string="contacts"/>
+                            </div>
+                            <field name="model" on_change="on_change_model(model, context)" readonly="1"/>
+                            <field name="contact_ids" invisible="1"/>
+                            <field name="filter_id" invisible="1"/>
+                            <field name="domain" on_change="on_change_domain(domain, model, context)" invisible="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_mail_mass_mailing_list_form">
             <field name="name">mail.mass_mailing.list.form</field>
             <field name="model">mail.mass_mailing.list</field>
@@ -137,8 +166,7 @@
                             <field name="filter_id"
                                 on_change="on_change_filter_id(filter_id, context)"
                                 attrs="{'invisible': [('model', '=', 'mail.mass_mailing.contact')]}"/>
-                            <field name="domain"/>
-                                <!-- attrs="{'invisible': ['|', ('model', '=', 'mail.mass_mailing.contact'), ('filter_id', '!=', False)]}"/> -->
+                            <field name="domain" on_change="on_change_domain(domain, model, context)"/>
                         </group>
                     </sheet>
                 </form>
@@ -221,7 +249,11 @@
                                 </div>
                                 <field name="email_from"/>
                                 <field name="reply_to"/>
-                                <field name="email_to" widget="many2many_tags"/>
+                                <label for="email_to"/>
+                                <div>
+                                    <field name="email_to" widget="many2many_tags" nolabel="1"/>
+                                    Those addresses will be used when testing the mailing.
+                                </div>
                             </group>
                             <group>
                                 <p>Here be some graphs</p>
@@ -238,7 +270,7 @@
                                 <group>
                                     <label for="contact_list_ids" string="Selected Lists"/>
                                     <div>
-                                        <field name="contact_list_ids" widget="many2many_tags" nolabel="1"/>
+                                        <field name="contact_list_ids" widget="many2many_tags" nolabel="1" options="{'no_create': True}"/>
                                         <button string='Create a New List' class="oe_inline oe_link" type='object' name='action_new_list'/>
                                     </div>
                                 </group>
@@ -421,13 +453,11 @@
                                     <div>
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)"
                                             t-att-title="record.user_id.value" width="48" height="48o" class="oe_kanban_avatar oe_kanban_header_right"/>
-                                        <h3>
-                                            <field name="name"/>
-                                        </h3>
+                                        <h3 style="margin-bottom: 8px;"><field name="name"/></h3>
                                         <span class="oe_tag"><field name="category_id"/></span>
                                         <a name="%(action_view_mass_mailings_from_campaign)d" type="action"
                                             class="oe_mailings">
-                                            <h4><t t-raw="record.mass_mailing_ids.raw_value.length"/> Mailings</h4>
+                                            <h4 style="margin-top: 8px;"><t t-raw="record.mass_mailing_ids.raw_value.length"/> Mailings</h4>
                                         </a>
                                     </div>
                                     <div class="oe_clear"></div>

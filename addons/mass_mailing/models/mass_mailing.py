@@ -127,9 +127,9 @@ class MassMailingList(osv.Model):
     def on_change_model(self, cr, uid, ids, model, context=None):
         values = {}
         if model == 'mail.mass_mailing.contact':
-            values.update(domain=False, filter_id=False)
+            values.update(domain=False, filter_id=False, template_id=False)
         else:
-            values.update(filter_id=False)
+            values.update(filter_id=False, template_id=False)
         return {'value': values}
 
     def on_change_filter_id(self, cr, uid, ids, filter_id, context=None):
@@ -140,6 +140,13 @@ class MassMailingList(osv.Model):
         else:
             values['domain'] = False
         return {'value': values}
+
+    def on_change_domain(self, cr, uid, ids, domain, model, context=None):
+        if domain is False:
+            return {'value': {'contact_nbr': 0}}
+        else:
+            domain = eval(domain)
+            return {'value': {'contact_nbr': self.pool[model].search(cr, uid, domain, context=context, count=True)}}
 
     def action_see_records(self, cr, uid, ids, context=None):
         contact_list = self.browse(cr, uid, ids[0], context=context)
@@ -546,7 +553,7 @@ class MassMailing(osv.Model):
     #------------------------------------------------------
 
     def on_change_mailing_model(self, cr, uid, ids, mailing_model, context=None):
-        return {'value': {'contact_list_ids': []}}
+        return {'value': {'contact_list_ids': [], 'template_id': False, 'contact_nbr': 0}}
 
     def on_change_template_id(self, cr, uid, ids, template_id, context=None):
         values = {}
@@ -591,6 +598,7 @@ class MassMailing(osv.Model):
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': mailing.mailing_model,
+            'target': 'new',
             'domain': domain,
             'context': context,
         }
