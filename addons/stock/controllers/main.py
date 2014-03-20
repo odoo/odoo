@@ -28,6 +28,7 @@ html_template = """<!DOCTYPE html>
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
         <link rel="stylesheet" href="/stock/static/src/css/barcode.css" />
         <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css" /> 
+        <link rel="stylesheet" href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css" />
         <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css" />
         %(js)s
         <script type="text/javascript">

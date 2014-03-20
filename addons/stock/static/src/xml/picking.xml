@@ -48,14 +48,40 @@
 
     <t t-name='PickingEditorWidget'>
         
-            <div>
-                <h3><strong>Operations
-                <select id="js_select" class="form-control-group">
-                    <option id="js_select_todo">ToDo</option>
-                    <option id="js_select_processed">Processed</option>
-                </select> 
-                </strong></h3>
+        <div class="modal fade" id="js_LocationChooseModal" tabindex="-1" role="dialog" aria-labelledby="LocationChooseModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="myModalLabel">Choose a location</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Scan a location or select it in the list below</p>
+                        <select id="js_loc_select" class="form-control">
+                            <option class="js_loc_option" loc_id="false"></option>
+                            <t t-foreach="widget.get_location()" t-as="loc">
+                                <option class="js_loc_option" t-att-loc_id="loc.id"><t t-esc="loc.name"/></option>
+                            </t>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary js_validate_location">Ok</button>
+                    </div>
+                </div>
             </div>
+        </div>
+
+
+
+        <div>
+            <h3><strong>Operations
+            <select id="js_select">
+                <option id="js_select_todo">ToDo</option>
+                <option id="js_select_processed">Processed</option>
+            </select> 
+            </strong></h3>
+        </div>
             
         <div>
             
@@ -102,7 +128,7 @@
                             </td>
                             <td class="js_loc"> <t t-esc="row.cols.dest" /> 
                                 <div class="pull-right btn-group">
-                                    <button type="button" class="btn btn-default dropdown-toggle fa fa-bars" data-toggle="dropdown">
+                                    <button type="button" class="btn btn-default dropdown-toggle fa fa-cog" data-toggle="dropdown">
                                      <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
@@ -110,8 +136,8 @@
                                             <li><a class="js_create_lot" t-att-product_id="row.cols.id" href="#">Create Lot</a></li>
                                         </t>
                                         <t t-if="!row.cols.head_container">
-                                            <li><a class="js_change_src" t-att-pack_id="row.cols.id" href="#">Change source location</a></li>
-                                            <li><a class="js_change_dst" t-att-pack_id="row.cols.id" href="#">Change destination location</a></li>
+                                            <li><a class="js_change_src" t-att-op_id="row.cols.id" href="#">Change source location</a></li>
+                                            <li><a class="js_change_dst" t-att-op_id="row.cols.id" href="#">Change destination location</a></li>
                                         </t>
                                         <t t-if="row.cols.head_container">
                                             <li><a class="js_delete_pack" t-att-pack_id="row.cols.id" href="#">Remove from package</a></li>

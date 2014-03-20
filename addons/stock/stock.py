@@ -1274,8 +1274,8 @@ class stock_picking(osv.osv):
             #if we have a location, return immediatly with the location name
             location = stock_location_obj.browse(cr, uid, matching_location_ids[0], context=None)
             answer['filter_loc'] = stock_location_obj._name_get(cr, uid, location, context=None)
+            answer['filter_loc_id'] = matching_location_ids[0]
             return answer
-            # return {'filter_loc': stock_location_obj._name_get(cr, uid, location, context=None)}
         #check if the barcode correspond to a product
         matching_product_ids = product_obj.search(cr, uid, ['|', ('ean13', '=', barcode_str), ('default_code', '=', barcode_str)], context=context)
         if matching_product_ids:

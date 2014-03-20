@@ -33,6 +33,15 @@ function openerp_picking_widgets(instance){
                 };
             });
         },
+        get_location: function(){
+            var model = this.getParent();
+            var locations = [];
+            var self = this;
+            _.each(model.locations, function(loc){
+                locations.push({name: loc.complete_name, id: loc.id,});
+            });
+            return locations;
+        },
         get_rows: function(){
             var model = this.getParent();
             this.rows = [];
@@ -174,7 +183,39 @@ function openerp_picking_widgets(instance){
             });
             this.$('.js_qty').blur(function(){
                 this.value = "";
-            })
+            });
+            this.$('.js_change_src').click(function(){
+                var op_id = $(this)[0].attributes.getNamedItem('op_id').value;
+                self.$('#js_loc_select').addClass('source');
+                self.$('#js_loc_select').attr('op_id',op_id);
+                self.$el.siblings('#js_LocationChooseModal').modal();
+            });
+            this.$('.js_change_dst').click(function(){
+                var op_id = $(this)[0].attributes.getNamedItem('op_id').value;
+                self.$('#js_loc_select').attr('op_id',op_id);
+                self.$el.siblings('#js_LocationChooseModal').modal();
+            });
+            this.$('.js_validate_location').click(function(){
+                //get current selection
+                var select_dom_element = self.$('#js_loc_select');
+                var selected = self.$('#js_loc_select option:selected')[0].attributes.getNamedItem('loc_id').value;
+                var src_dst = false;
+                var op_id = parseInt(select_dom_element[0].attributes.getNamedItem('op_id').value);
+                if (select_dom_element[0].classList.contains('source')){
+                    src_dst = true;
+                    select_dom_element.removeClass('source');
+                }
+                if (selected === "false"){
+                    //close window
+                    self.$el.siblings('#js_LocationChooseModal').modal('hide');
+                }
+                else{
+                    loc_id = parseInt(selected);
+                    self.$el.siblings('#js_LocationChooseModal').modal('hide');
+                    self.getParent().change_location(op_id, loc_id, src_dst);
+
+                }
+            });
             //remove navigtion bar from default openerp GUI
             $('td.navbar').html('<div></div>');
         },
@@ -218,7 +259,6 @@ function openerp_picking_widgets(instance){
             this.$('.js_pack_op_line.blink_me').removeClass('blink_me');
         },
         blink: function(op_id){
-            console.log('blink: '+op_id);
             this.$('.js_pack_op_line[data-id="'+op_id+'"]').addClass('blink_me');
         },
     });
@@ -226,9 +266,6 @@ function openerp_picking_widgets(instance){
     module.PickingMenuWidget = module.MobileWidget.extend({
         template: 'PickingMenuWidget',
         init: function(parent, params){
-            $(window).bind('hashchange', function(){
-                console.log($.bbq.getState());
-            });
             this._super(parent,params);
             var self = this;
 
@@ -392,6 +429,7 @@ function openerp_picking_widgets(instance){
             this.packages = null;
             this.barcode_scanner = new module.BarcodeScanner();
             this.picking_type_id = params.context.active_id || 0;
+            this.locations = [];
 
             if(params.context.picking_id){
                 this.loaded =  this.load(params.context.picking_id);
@@ -458,6 +496,12 @@ function openerp_picking_widgets(instance){
             }
 
             return loaded_picking.then(function(){
+                    new instance.web.Model('stock.location').call('search',[[['usage','=','internal']]]).then(function(locations_ids){
+                        return new instance.web.Model('stock.location').call('read',[locations_ids, []]).then(function(locations){
+                            self.locations = locations;
+                        });
+                    });
+                }).then(function(){
 
                     return new instance.web.Model('stock.pack.operation').call('read',[self.picking.pack_operation_ids, [], new instance.web.CompoundContext()]);
                 }).then(function(packoplines){
@@ -479,7 +523,6 @@ function openerp_picking_widgets(instance){
                 }).then(function(packages){
                     self.packages = packages;
                 });
-
         },
         start: function(){
             this._super();
@@ -601,11 +644,16 @@ function openerp_picking_widgets(instance){
                     if (result.filter_loc !== false){
                         //check if we have receive a location as answer
                         if (result.filter_loc !== undefined){
-                            self.$('.oe_searchbox').val(result.filter_loc);
-                            self.on_searchbox(result.filter_loc);
+                            var modal_loc_hidden = self.$('#js_LocationChooseModal')[0].attributes.getNamedItem('aria-hidden').value;
+                            if (modal_loc_hidden === "false"){
+                                var line = self.$('#js_LocationChooseModal .js_loc_option[loc_id='+result.filter_loc_id+']').attr('selected','selected');
+                            }
+                            else{
+                                self.$('.oe_searchbox').val(result.filter_loc);
+                                self.on_searchbox(result.filter_loc);
+                            }
                         }
                     }
-                    console.log(result.operation_id);
                     if (result.operation_id !== false){
                         self.refresh_ui(self.picking.id).then(function(){
                             return self.picking_editor.blink(result.operation_id);
@@ -665,6 +713,18 @@ function openerp_picking_widgets(instance){
                     return self.refresh_ui(self.picking.id);
                 });
         },
+        change_location: function(op_id, loc_id, is_src_dst){
+            var self = this;
+            var vals = {'location_dest_id': loc_id};
+            if (is_src_dst){
+                vals = {'location_id': loc_id};
+            }
+            new instance.web.Model('stock.pack.operation')
+                .call('write',[op_id, vals])
+                .then(function(){
+                    return self.refresh_ui(self.picking.id);
+                });
+        },
         print_package: function(package_id){
             var self = this;
             new instance.web.Model('stock.quant.package')
@@ -690,9 +750,6 @@ function openerp_picking_widgets(instance){
                            });
                     }
                 });
-        },
-        do_load_state: function(){
-            debugger;
         },
         picking_next: function(){
             for(var i = 0; i < this.pickings.length; i++){
