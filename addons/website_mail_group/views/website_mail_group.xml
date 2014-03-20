@@ -18,22 +18,7 @@
                         <div>
                             <strong><a t-attf-href="/groups/#{ slug(group) }/thread" t-esc="group.name"/></strong>
                             <div t-esc="group.description" class="text-muted"/>
-
-                            <div class="input-group js_follow"
-                                      t-att-data-id="group.id"
-                                      data-object="mail.group"
-                                      data-follow="off">
-                                <input
-                                      type="email"
-                                      name="email"
-                                      class="js_follow_email form-control"
-                                      placeholder="your email..."/>
-                                <span class="input-group-btn">
-                                    <a href="#" class="btn btn-default js_unfollow_btn">unsubscribe</a>
-                                    <a href="#" class="btn btn-primary js_follow_btn">subscribe</a>
-                                </span>
-                                <div class="alert alert-success hidden">You have been subscribed!</div>
-                            </div>
+                            <t t-call="website_mail.follow"><t t-set="object" t-value="group"/></t>
                         </div>
                     </div>
                 </div>
@@ -136,25 +121,7 @@
                         Join this mailing list to follow or participate to this discussion.<br/>
                         <span t-field="group.name"/>: <i t-field="group.description"/>
                     </p>
-
-                    <div style="max-width: 400px">
-                        <div class="input-group js_follow"
-                                  t-att-data-id="group.id"
-                                  data-object="mail.group"
-                                  data-follow="off">
-                            <input
-                                  type="email"
-                                  name="email"
-                                  class="js_follow_email form-control"
-                                  placeholder="your email..."/>
-                            <span class="input-group-btn">
-                                <a href="#" class="btn btn-default js_unfollow_btn">unsubscribe</a>
-                                <a href="#" class="btn btn-primary js_follow_btn">subscribe</a>
-                            </span>
-                            <div class="alert alert-success hidden">You have been subscribed!</div>
-                        </div>
-                    </div>
-
+                    <t t-call="website_mail.follow"><t t-set="object" t-value="group"/></t>
                 </div>
             </div>
         </t>
