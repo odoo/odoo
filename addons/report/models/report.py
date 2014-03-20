@@ -236,7 +236,7 @@ class Report(osv.Model):
             except:
                 pass
 
-        if isinstance(ids, str):
+        if isinstance(ids, (str, unicode)):
             ids = [int(i) for i in ids.split(',')]
         if isinstance(ids, list):
             ids = list(set(ids))
@@ -254,7 +254,7 @@ class Report(osv.Model):
         }
         return self.render(cr, uid, [], report.report_name, docargs, context=context)
 
-    def get_pdf(self, cr, uid, ids, report_name, html=None, context=None):
+    def get_pdf(self, cr, uid, ids, report_name, html=None, data=None, context=None):
         """This method generates and returns pdf version of generic report.
         """
         if context is None:
@@ -268,7 +268,7 @@ class Report(osv.Model):
             ids = [ids]
 
         if html is None:
-            html = self.get_html(cr, uid, ids, report_name, context=context)
+            html = self.get_html(cr, uid, ids, report_name, data=data, context=context)
 
         html = html.decode('utf-8')
 
@@ -644,7 +644,7 @@ class Report(osv.Model):
             document.close()
         merged = cStringIO.StringIO()
         writer.write(merged)
-        merged.flush()
+        merged.seek(0)
         content = merged.read()
         merged.close()
         return content

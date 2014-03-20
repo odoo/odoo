@@ -35,11 +35,13 @@ class ReportController(Controller):
 
     @route(['/report/<reportname>/<docids>'], type='http', auth='user', website=True, multilang=True)
     def report_html(self, reportname, docids):
-        return request.registry['report'].get_html(request.cr, request.uid, docids, reportname, context=request.context)
+        cr, uid, context = request.cr, request.uid, request.context
+        return request.registry['report'].get_html(cr, uid, docids, reportname, context=context)
 
     @route(['/report/pdf/report/<reportname>/<docids>'], type='http', auth="user", website=True)
     def report_pdf(self, reportname, docids):
-        pdf = request.registry['report'].get_pdf(request.cr, request.uid, docids, reportname)
+        cr, uid, context = request.cr, request.uid, request.context
+        pdf = request.registry['report'].get_pdf(cr, uid, docids, reportname, context=context)
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
 
@@ -49,17 +51,17 @@ class ReportController(Controller):
 
     @route(['/report/<reportname>'], type='http', auth='user', website=True, multilang=True)
     def report_html_particular(self, reportname, **data):
+        cr, uid, context = request.cr, request.uid, request.context
         report_obj = request.registry['report']
-        data = report_obj.eval_params(data)
-        return report_obj.get_html(request.cr, request.uid, [], reportname, data=data, context=request.context)
+        data = report_obj.eval_params(data)  # Sanitizing
+        return report_obj.get_html(cr, uid, [], reportname, data=data, context=context)
 
     @route(['/report/pdf/report/<reportname>'], type='http', auth='user', website=True, multilang=True)
     def report_pdf_particular(self, reportname, **data):
         cr, uid, context = request.cr, request.uid, request.context
         report_obj = request.registry['report']
-        data = report_obj.eval_params(data)
-        html = report_obj.get_html(cr, uid, [], reportname, data=data, context=context)
-        pdf = report_obj.get_pdf(cr, uid, [], reportname, html=html, context=context)
+        data = report_obj.eval_params(data)  # Sanitizing
+        pdf = report_obj.get_pdf(cr, uid, [], reportname, data=data, context=context)
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
 
