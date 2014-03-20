@@ -576,6 +576,26 @@ class MassMailing(osv.Model):
         else:
             return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_contact_to_mailing_list')
 
+    def action_duplicate(self, cr, uid, ids, context=None):
+        copy_id = None
+        for mailing in self.browse(cr, uid, ids, context=context):
+            copy_id = self.copy(
+                cr, uid, mailing.id, default={
+                    'statistics_ids': [],
+                    'state': 'draft',
+                    'name': _('%s (duplicate)') % mailing.name,
+                }, context=context)
+        if copy_id:
+            return {
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'mail.mass_mailing',
+                'res_id': copy_id,
+                'context': context,
+            }
+        return False
+
     def action_new_list(self, cr, uid, ids, context=None):
         wizard = self.browse(cr, uid, ids[0], context=context)
         action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_partner_to_mailing_list')
