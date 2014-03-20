@@ -342,7 +342,7 @@ class Recomputation(MutableMapping):
 
     def __getitem__(self, field):
         """ Return the records to recompute for `field` (may be empty). """
-        return self._todo.get(field) or field.model.browse()
+        return self._todo.get(field) or proxy[field.model_name]
 
     def __setitem__(self, field, records):
         """ Set the records to recompute for `field`. It automatically discards

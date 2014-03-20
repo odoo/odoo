@@ -110,9 +110,10 @@ class Field(object):
     interface_for = None        # the column or field interfaced by self, if any
 
     name = None                 # name of the field
-    model_name = None           # name of the model of this field
     type = None                 # type of the field (string)
     relational = False          # whether the field is a relational one
+    model_name = None           # name of the model of this field
+    comodel_name = None         # name of the model of values (if relational)
     inverse_field = None        # inverse field (object), if it exists
 
     store = True                # whether the field is stored in database
@@ -153,11 +154,6 @@ class Field(object):
         self.name = name
         if not self.string:
             self.string = name.replace('_', ' ').capitalize()
-
-    @property
-    def model(self):
-        """ return the model instance of `self` """
-        return scope[self.model_name]
 
     def __str__(self):
         return "%s.%s" % (self.model_name, self.name)
@@ -330,7 +326,7 @@ class Field(object):
     def _compute_function(self):
         """ Return a function to call with records to compute this field. """
         if isinstance(self.compute, basestring):
-            return getattr(type(self.model), self.compute)
+            return getattr(type(scope[self.model_name]), self.compute)
         elif callable(self.compute):
             return partial(self.compute, self)
         else:
@@ -405,7 +401,7 @@ class Field(object):
     def determine_domain(self, operator, value):
         """ Return a domain representing a condition on `self`. """
         if isinstance(self.search, basestring):
-            return getattr(self.model.browse(), self.search)(operator, value)
+            return getattr(scope[self.model_name], self.search)(operator, value)
         elif callable(self.search):
             return self.search(self, operator, value)
         else:
@@ -419,7 +415,7 @@ class Field(object):
     def related_field(self):
         """ return the related field corresponding to `self` """
         if self.related:
-            recs = self.model
+            recs = scope[self.model_name]
             for name in self.related[:-1]:
                 recs = recs[name]
             return recs._fields[self.related[-1]]
@@ -486,22 +482,24 @@ class Field(object):
         # trick: calling self.setup() again will do nothing
         self.setup = lambda: None
 
+        model = scope[self.model_name]
+
         if self.related:
             # setup all attributes of related field
             self.setup_related()
         else:
             # retrieve dependencies from compute method
             if isinstance(self.compute, basestring):
-                method = getattr(type(self.model), self.compute)
+                method = getattr(type(model), self.compute)
             else:
                 method = self.compute
 
             depends = getattr(method, '_depends', ())
-            self.depends = depends(self.model) if callable(depends) else depends
+            self.depends = depends(model) if callable(depends) else depends
 
         # put invalidation/recomputation triggers on dependencies
         for path in self.depends:
-            self._depends_on_model(self.model, [], path.split('.'))
+            self._depends_on_model(model, [], path.split('.'))
 
     def _depends_on_model(self, model, path0, path1):
         """ Make `self` depend on `model`; `path0 + path1` is a dependency of
@@ -541,15 +539,15 @@ class Field(object):
         spec = [(self, records._ids)]
 
         # invalidate the fields that depend on self, and prepare recomputation
-        for field, path in self._triggers:
-            if field.store:
-                with scope(user=SUPERUSER_ID, context={'active_test': False}):
-                    target = field.model.search([(path, 'in', records._ids)])
-                if target:
-                    spec.append((field, target._ids))
-                    scope.recomputation[field] |= target
-            else:
-                spec.append((field, None))
+        with scope(user=SUPERUSER_ID, context={'active_test': False}):
+            for field, path in self._triggers:
+                if field.store:
+                    target = scope[field.model_name].search([(path, 'in', records._ids)])
+                    if target:
+                        spec.append((field, target._ids))
+                        scope.recomputation[field] |= target
+                else:
+                    spec.append((field, None))
 
         return spec
 
@@ -562,8 +560,8 @@ class Field(object):
             if path == 'id':
                 target = records
             else:
-                target = field.model.browse()
-                for record in field.model.browse(scope.cache[field]):
+                target = scope[field.model_name]
+                for record in target.browse(scope.cache[field]):
                     if record._map_cache(path) & records:
                         target += record
             if target:
@@ -712,9 +710,9 @@ class Selection(Field):
         """
         selection = self.selection
         if isinstance(selection, basestring):
-            return getattr(self.model, selection)()
+            return getattr(scope[self.model_name], selection)()
         if callable(selection):
-            return selection(self.model)
+            return selection(scope[self.model_name])
 
         # translate selection labels
         if scope.lang:
@@ -744,9 +742,9 @@ class Selection(Field):
         """ return a list of the possible values """
         selection = self.selection
         if isinstance(selection, basestring):
-            selection = getattr(self.model, selection)()
+            selection = getattr(scope[self.model_name], selection)()
         elif callable(selection):
-            selection = selection(self.model)
+            selection = selection(scope[self.model_name])
         return [value for value, label in selection]
 
     def convert_to_cache(self, value):
@@ -807,7 +805,6 @@ class Reference(Selection):
 class _Relational(Field):
     """ Abstract class for relational fields. """
     relational = True
-    comodel_name = None                 # name of model of values
     domain = None                       # domain for searching values
     context = None                      # context for searching values
 
@@ -817,19 +814,14 @@ class _Relational(Field):
 
     _description_relation = property(attrgetter('comodel_name'))
     _description_domain = property(lambda self: \
-        self.domain(self.model) if callable(self.domain) else self.domain)
+        self.domain(scope[self.model_name]) if callable(self.domain) else self.domain)
     _description_context = property(attrgetter('context'))
 
     def __init__(self, **kwargs):
         super(_Relational, self).__init__(**kwargs)
 
-    @property
-    def comodel(self):
-        """ return the comodel instance of `self` """
-        return scope[self.comodel_name]
-
     def null(self):
-        return self.comodel.browse()
+        return scope[self.comodel_name].browse()
 
     def _add_trigger_for(self, field, path0, path1):
         # overridden to traverse relations and manage inverse fields
@@ -841,7 +833,7 @@ class _Relational(Field):
 
         if path1:
             # recursively traverse the dependency
-            field._depends_on_model(self.comodel, path0 + [self.name], path1)
+            field._depends_on_model(scope[self.comodel_name], path0 + [self.name], path1)
 
     def modified(self, records):
         # Invalidate cache for self.inverse_field, too. Note that recomputation
@@ -868,7 +860,7 @@ class Many2one(_Relational):
 
     @lazy_property
     def inverse_field(self):
-        for field in self.comodel._fields.itervalues():
+        for field in scope[self.comodel_name]._fields.itervalues():
             if isinstance(field, One2many) and field.inverse_field == self:
                 return field
         return None
@@ -876,7 +868,7 @@ class Many2one(_Relational):
     @lazy_property
     def inherits(self):
         """ Whether `self` implements inheritance between model and comodel. """
-        return self.name in self.model._inherits.itervalues()
+        return self.name in scope[self.model_name]._inherits.itervalues()
 
     def _update(self, records, value):
         """ Update the cached value of `self` for `records` with `value`. """
@@ -888,11 +880,11 @@ class Many2one(_Relational):
                 return value.attach_scope(scope.current)
             raise ValueError("Wrong value for %s: %r" % (self, value))
         elif isinstance(value, tuple):
-            return self.comodel.browse(value[0])
+            return scope[self.comodel_name].browse(value[0])
         elif isinstance(value, dict):
-            return self.comodel.new(value)
+            return scope[self.comodel_name].new(value)
         else:
-            return self.comodel.browse(value)
+            return scope[self.comodel_name].browse(value)
 
     def convert_to_read(self, value, use_name_get=True):
         if use_name_get and value:
@@ -920,7 +912,7 @@ class Many2one(_Relational):
             value = record[self.name]
             if not value:
                 # the default value cannot be null, use a new record instead
-                record[self.name] = self.comodel.new()
+                record[self.name] = scope[self.comodel_name].new()
 
 
 class _RelationalMulti(_Relational):
@@ -937,13 +929,13 @@ class _RelationalMulti(_Relational):
                 return value.attach_scope(scope.current)
         elif isinstance(value, list):
             # value is a list of record ids or commands
-            result = self.comodel.browse()
+            result = scope[self.comodel_name]
             for command in value:
                 if isinstance(command, (tuple, list)):
                     if command[0] == 0:
-                        result += self.comodel.new(command[2])
+                        result += result.new(command[2])
                     elif command[0] == 1:
-                        record = self.comodel.browse(command[1])
+                        record = result.browse(command[1])
                         record.update(command[2])
                         result += record
                     elif command[0] == 2:
@@ -951,15 +943,15 @@ class _RelationalMulti(_Relational):
                     elif command[0] == 3:
                         pass
                     elif command[0] == 4:
-                        result += self.comodel.browse(command[1])
+                        result += result.browse(command[1])
                     elif command[0] == 5:
-                        result = self.comodel.browse()
+                        result = result.browse()
                     elif command[0] == 6:
-                        result = self.comodel.browse(command[2])
+                        result = result.browse(command[2])
                 elif isinstance(command, dict):
-                    result += self.comodel.new(command)
+                    result += result.new(command)
                 else:
-                    result += self.comodel.browse(command)
+                    result += result.browse(command)
             return result
         elif not value:
             return self.null()
@@ -972,7 +964,7 @@ class _RelationalMulti(_Relational):
         result = []
 
         # remove/delete former records
-        target = target or self.model.browse()
+        target = target or scope[self.model_name].browse()
         if len(target) <= 1:
             tag = 2 if self.type == 'one2many' else 3
             for record in target[self.name] - value:
@@ -982,7 +974,7 @@ class _RelationalMulti(_Relational):
 
         if fnames is None:
             # take all fields in cache, except the inverse of self
-            fnames = set(self.comodel._fields) - set(MAGIC_COLUMNS)
+            fnames = set(scope[self.comodel_name]._fields) - set(MAGIC_COLUMNS)
             if self.inverse_field:
                 fnames.discard(self.inverse_field.name)
 
@@ -1026,7 +1018,7 @@ class One2many(_RelationalMulti):
 
     @lazy_property
     def inverse_field(self):
-        return self.inverse_name and self.comodel._fields[self.inverse_name]
+        return self.inverse_name and scope[self.comodel_name]._fields[self.inverse_name]
 
 
 class Many2many(_RelationalMulti):
@@ -1050,7 +1042,7 @@ class Many2many(_RelationalMulti):
     def setup(self):
         super(Many2many, self).setup()
         if self.store and not self.relation:
-            model = self.model
+            model = scope[self.model_name]
             column = model._columns[self.name]
             if not isinstance(column, fields.function):
                 self.relation, self.column1, self.column2 = column._sql_names(model)
@@ -1059,7 +1051,7 @@ class Many2many(_RelationalMulti):
     def inverse_field(self):
         if self.relation:
             expected = (self.relation, self.column2, self.column1)
-            for field in self.comodel._fields.itervalues():
+            for field in scope[self.comodel_name]._fields.itervalues():
                 if isinstance(field, Many2many) and \
                         (field.relation, field.column1, field.column2) == expected:
                     return field

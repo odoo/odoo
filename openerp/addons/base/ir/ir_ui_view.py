@@ -641,7 +641,7 @@ class view(osv.osv):
                 if field:
                     field_nodes[field].append(node)
                     if field.relational:
-                        model = field.comodel
+                        model = self.pool.get(field.comodel_name)
             for child in node:
                 collect(child, model)
 
