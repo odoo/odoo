@@ -656,9 +656,8 @@ class Escpos:
                 serializer.linebreak()
 
             elif elem.tag == 'img':
-                pass
-                #if 'src' in elem.attrib and 'data:' in elem.attrib['src']:
-                #    self.print_base64_image(elem.attrib['src'])
+                if 'src' in elem.attrib and 'data:' in elem.attrib['src']:
+                    self.print_base64_image(elem.attrib['src'])
 
             elif elem.tag == 'barcode' and 'encoding' in elem.attrib:
                 serializer.start_block(stylestack)
