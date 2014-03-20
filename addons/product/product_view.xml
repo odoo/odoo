@@ -180,15 +180,11 @@
                                             <newline/>
                                             <field name="qty"/>
                                             <field name="ul"/>
-                                            <field name="weight_ul"/>
                                             <separator colspan="4" string="Palletization"/>
+                                            <field name="ul_container"/>
                                             <field name="ul_qty"/>
                                             <field name="rows"/>
                                             <field name="weight"/>
-                                            <separator colspan="4" string="Pallet Dimension"/>
-                                            <field name="height"/>
-                                            <field name="width"/>
-                                            <field name="length"/>
                                         </group>
                                         <separator colspan="4" string="Description"/>
                                         <field name="name"/>
@@ -585,6 +581,12 @@
                         <field name="name"/>
                         <field name="type"/>
                     </group>
+                    <group>
+                        <field name="height"/>
+                        <field name="width"/>
+                        <field name="length"/>
+                        <field name="weight"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -626,6 +628,7 @@
                     <field name="ean"/>
                     <field name="qty"/>
                     <field name="ul"/>
+                    <field name="ul_container"/>
                 </tree>
             </field>
         </record>
@@ -643,15 +646,11 @@
                         <newline/>
                         <field name="qty"/>
                         <field name="ul"/>
-                        <field name="weight_ul"/>
                         <separator colspan="4" string="Palletization"/>
+                        <field name="ul_container"/>
                         <field name="ul_qty"/>
                         <field name="rows"/>
                         <field name="weight"/>
-                        <separator colspan="4" string="Pallet Dimension"/>
-                        <field name="height"/>
-                        <field name="width"/>
-                        <field name="length"/>
                         <separator colspan="4" string="Other Info"/>
                         <field colspan="4" name="name"/>
                     </group>

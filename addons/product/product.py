@@ -219,6 +219,10 @@ class product_ul(osv.osv):
     _columns = {
         'name' : fields.char('Name', select=True, required=True, translate=True),
         'type' : fields.selection([('unit','Unit'),('pack','Pack'),('box', 'Box'), ('pallet', 'Pallet')], 'Type', required=True),
+        'height': fields.float('Height', help='The height of the package'),
+        'width': fields.float('Width', help='The width of the package'),
+        'length': fields.float('Length', help='The length of the package'),
+        'weight': fields.float('Empty Package Weight'),
     }
 
 
@@ -937,6 +941,7 @@ class product_packaging(osv.osv):
             help="The total number of products you can put by pallet or box."),
         'ul' : fields.many2one('product.ul', 'Type of Package', required=True),
         'ul_qty' : fields.integer('Package by layer', help='The number of packages by layer'),
+        'ul_container': fields.many2one('product.ul', 'Container Type of Package'),
         'rows' : fields.integer('Number of Layers', required=True,
             help='The number of layers on a pallet or box'),
         'product_id' : fields.many2one('product.product', 'Product', select=1, ondelete='cascade', required=True),
@@ -944,10 +949,6 @@ class product_packaging(osv.osv):
         'code' : fields.char('Code', help="The code of the transport unit."),
         'weight': fields.float('Total Package Weight',
             help='The weight of a full package, pallet or box.'),
-        'weight_ul': fields.float('Empty Package Weight'),
-        'height': fields.float('Height', help='The height of the package'),
-        'width': fields.float('Width', help='The width of the package'),
-        'length': fields.float('Length', help='The length of the package'),
     }
 
 
