@@ -569,5 +569,20 @@ class project_project(osv.Model):
         self._check_create_write_values(cr, uid, vals, context=context)
         return super(project_project, self).write(cr, uid, ids, vals, context=context)
 
-
+class res_partner(osv.osv):
+    def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        try:
+            for partner in self.browse(cr, uid, ids, context):
+                res[partner.id] = len(partner.issue_ids)
+        except:
+            pass
+        return res
+    
+    """ Inherits partner and adds Tasks information in the partner form """
+    _inherit = 'res.partner'
+    _columns = {
+        'issue_ids': fields.one2many('project.issue', 'partner_id', 'Issues'),
+        'issue_count': fields.function(_issue_count, string='# Issues', type='integer'),
+    }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
