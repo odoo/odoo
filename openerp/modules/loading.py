@@ -186,11 +186,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 if tools.config.options['test_enable']:
                     # Yamel test
                     report.record_result(load_test(module_name, idref, mode))
+                    # Force routing map to be rebuilt between each test suite on modules
+                    registry['ir.http'].refresh_routing_map()
                     # Python tests
-                    ir_http = registry['ir.http']
-                    if hasattr(ir_http, '_routing_map'):
-                        # Force routing map to be rebuilt between each module test suite
-                        del(ir_http._routing_map)
                     report.record_result(openerp.modules.module.run_unit_tests(module_name, cr.dbname))
 
             processed_modules.append(package.name)
