@@ -127,17 +127,10 @@ Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'we
             for use in exist_user:
                 new_user.append(use.id)
         for id in survey_ref.browse(cr, uid, survey_ids):
-            report = self.create_report(cr, uid, [id.id], 'report.survey.form', id.title)
-            file = open(addons.get_module_resource('survey', 'report') + id.title +".pdf")
-            file_data = ""
-            while 1:
-                line = file.readline()
-                file_data += line
-                if not line:
-                    break
-            file.close()
-            attachments[id.title +".pdf"] = file_data
-            os.remove(addons.get_module_resource('survey', 'report') + id.title +".pdf")
+            service = netsvc.LocalService('report.survey.form');
+            (result, format) = service.create(cr, uid, [id.id], {}, {})
+            
+            attachments[id.title +".pdf"] = result
 
         for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids):
             if not partner.email:
