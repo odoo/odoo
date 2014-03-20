@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#openerp.loggers.handlers. -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -76,9 +76,10 @@ class configmanager(object):
         }
 
         # Not exposed in the configuration file.
-        self.blacklist_for_save = set(
-            ['publisher_warranty_url', 'load_language', 'root_path',
-            'init', 'save', 'config', 'update', 'stop_after_init'])
+        self.blacklist_for_save = set([
+            'publisher_warranty_url', 'load_language', 'root_path',
+            'init', 'save', 'config', 'update', 'stop_after_init'
+        ])
 
         # dictionary mapping option destination (keys in self.options) to MyOptions.
         self.casts = {}
@@ -87,7 +88,10 @@ class configmanager(object):
         self.config_file = fname
         self.has_ssl = check_ssl()
 
-        self._LOGLEVELS = dict([(getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET')])
+        self._LOGLEVELS = dict([
+            (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) 
+            for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET')
+        ])
 
         version = "%s %s" % (release.description, release.version)
         self.parser = parser = optparse.OptionParser(version=version, option_class=MyOption)
@@ -179,16 +183,20 @@ class configmanager(object):
         group.add_option("--logrotate", dest="logrotate", action="store_true", my_default=False, help="enable logfile rotation")
         group.add_option("--syslog", action="store_true", dest="syslog", my_default=False, help="Send the log to the syslog server")
         group.add_option('--log-handler', action="append", default=DEFAULT_LOG_HANDLER, my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
-        group.add_option('--log-request', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.request:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.request:DEBUG')
-        group.add_option('--log-response', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.response:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.response:DEBUG')
-        group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.addons.web.http:DEBUG", help='shortcut for --log-handler=openerp.addons.web.http:DEBUG')
+        group.add_option('--log-request', action="append_const", dest="log_handler", const="openerp.http.rpc.request:DEBUG", help='shortcut for --log-handler=openerp.http.rpc.request:DEBUG')
+        group.add_option('--log-response', action="append_const", dest="log_handler", const="openerp.http.rpc.response:DEBUG", help='shortcut for --log-handler=openerp.http.rpc.response:DEBUG')
+        group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.http:DEBUG", help='shortcut for --log-handler=openerp.http:DEBUG')
         group.add_option('--log-sql', action="append_const", dest="log_handler", const="openerp.sql_db:DEBUG", help='shortcut for --log-handler=openerp.sql_db:DEBUG')
+        group.add_option('--log-db', dest='log_db', help="Logging database", my_default=False)
         # For backward-compatibility, map the old log levels to something
         # quite close.
-        levels = ['info', 'debug_rpc', 'warn', 'test', 'critical',
-            'debug_sql', 'error', 'debug', 'debug_rpc_answer', 'notset']
-        group.add_option('--log-level', dest='log_level', type='choice', choices=levels,
-            my_default='info', help='specify the level of the logging. Accepted values: ' + str(levels) + ' (deprecated option).')
+        levels = [
+            'info', 'debug_rpc', 'warn', 'test', 'critical',
+            'debug_sql', 'error', 'debug', 'debug_rpc_answer', 'notset'
+        ]
+        group.add_option('--log-level', dest='log_level', type='choice',
+                         choices=levels, my_default='info',
+                         help='specify the level of the logging. Accepted values: %s (deprecated option).' % (levels,))
 
         parser.add_option_group(group)
 
@@ -384,7 +392,7 @@ class configmanager(object):
                 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
                 'static_http_enable', 'static_http_document_root', 'static_http_url_prefix',
-                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level'
+                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level', 'log_db'
                 ]
 
         for arg in keys:
