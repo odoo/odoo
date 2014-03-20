@@ -22,23 +22,23 @@
 import logging
 import logging.handlers
 import os
+import pprint
 import release
 import sys
 import threading
-from pprint import pformat
 
 import psycopg2
 
-import tools
 import openerp
 import sql_db
+import tools
 
 _logger = logging.getLogger(__name__)
 
 def log(logger, level, prefix, msg, depth=None):
     indent=''
     indent_after=' '*len(prefix)
-    for line in (prefix+pformat(msg, depth=depth)).split('\n'):
+    for line in (prefix + pprint.pformat(msg, depth=depth)).split('\n'):
         logger.log(level, indent+line)
         indent=indent_after
 

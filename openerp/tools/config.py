@@ -187,7 +187,7 @@ class configmanager(object):
         group.add_option('--log-response', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.response:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.response:DEBUG')
         group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.addons.web.http:DEBUG", help='shortcut for --log-handler=openerp.addons.web.http:DEBUG')
         group.add_option('--log-sql', action="append_const", dest="log_handler", const="openerp.sql_db:DEBUG", help='shortcut for --log-handler=openerp.sql_db:DEBUG')
-        group.add_option('--log-db', dest='log_db', help="database where OpenERP will store the exceptions", my_default=False)
+        group.add_option('--log-db', dest='log_db', help="Logging database", my_default=False)
         # For backward-compatibility, map the old log levels to something
         # quite close.
         levels = [
@@ -392,7 +392,7 @@ class configmanager(object):
                 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
                 'static_http_enable', 'static_http_document_root', 'static_http_url_prefix',
-                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level'
+                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level', 'log_db'
                 ]
 
         for arg in keys:
