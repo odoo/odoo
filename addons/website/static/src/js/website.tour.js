@@ -23,17 +23,6 @@ if (typeof website.Tour !== "undefined") {
 // don't need template to use bootstrap Tour in automatic mode
 if (typeof QWeb2 !== "undefined") {
     website.add_template_file('/website/static/src/xml/website.tour.xml');
-
-}
-
-// don't need to use bootstrap Tour to launch an automatic tour
-function bootstrap_tour_stub () {
-    if (typeof Tour === "undefined") {
-        window.Tour = function Tour() {};
-        Tour.prototype.addSteps = function () {};
-        Tour.prototype.end = function () {};
-        Tour.prototype.goto = function () {};
-    }
 }
 
 if (website.EditorBar) {
@@ -150,7 +139,7 @@ website.Tour.registerSteps = function (tour) {
     }
 
     // rendering bootstrap tour and popover
-    if (tour.mode != "test") {
+    if (tour.mode != "test" || typeof Tour !== "undefined") {
         tour.tour = new Tour({
             name: this.id,
             storage: localStorage,
@@ -206,6 +195,7 @@ website.Tour.error = function (tour, step, message) {
         + '\nelement: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden")))
         + '\nwaitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size())
         + '\nwaitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size())
+        + "\nlocalStorage: " + localStorage.getItem("tour")
         + '\n\n' + $("body").html()
     );
 };
@@ -302,7 +292,9 @@ website.Tour.nextStep = function (tour, step, overlaps) {
     // clear popover (fix for boostrap tour if the element is removed before destroy popover)
     $(".popover.tour").remove();
     // go to step in bootstrap tour
-    tour.tour.goto(step.id);
+    if (tour.tour) {
+        tour.tour.goto(step.id);
+    }
     step.onload();
     var next = tour.steps[step.id+1];
 
@@ -349,7 +341,7 @@ website.Tour.autoNextStep = function (tour, step) {
         if (!$element.size()) return;
 
         if (step.snippet) {
-            
+
             website.Tour.autoDragAndDropSnippet($element);
         
         } else if (step.sampleText) {
