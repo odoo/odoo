@@ -490,16 +490,7 @@ class project(osv.Model):
     def _get_alias_models(self, cr, uid, context=None):
         return [('project.task', "Tasks"), ("project.issue", "Issues")]
 
-#     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
-#         """ :deprecated: this method will be removed with OpenERP v8. Use issue_ids
-#                          fields instead. """
-#         res = dict.fromkeys(ids, 0)
-#         issue_ids = self.pool.get('project.issue').search(cr, uid, [('project_id', 'in', ids)])
-#         for issue in self.pool.get('project.issue').browse(cr, uid, issue_ids, context):
-#             if issue.stage_id and not issue.stage_id.fold:
-#                 res[issue.project_id.id] += 1
-#         return res
-    def _total_issue_count(self, cr, uid, ids, field_name, arg, context=None):
+    def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         res={}
         for issues in self.browse(cr, uid, ids, context):
             res[issues.id] = len(issues.issue_ids)
@@ -508,9 +499,7 @@ class project(osv.Model):
         'project_escalation_id': fields.many2one('project.project', 'Project Escalation',
             help='If any issue is escalated from the current Project, it will be listed under the project selected here.',
             states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
-#         'issue_count': fields.function(_issue_count, type='integer', string="Unclosed Issues",
-#                                        deprecated="This field will be removed in OpenERP v8. Use issue_ids one2many field instead."),
-        'total_issue_count': fields.function(_total_issue_count, string="Issue", type='integer'),
+        'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
         'issue_ids': fields.one2many('project.issue', 'project_id',
                                      domain=[('stage_id.fold', '=', False)])
     }
