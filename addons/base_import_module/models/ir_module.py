@@ -1,20 +1,16 @@
 import logging
+import os
+import sys
 from os.path import join as opj
 
 import openerp
-from openerp.osv import osv, fields
+from openerp.osv import osv
 from openerp.tools import convert_file
 
 _logger = logging.getLogger(__name__)
 
 class view(osv.osv):
     _inherit = "ir.module.module"
-    _columns = {
-        'is_theme': fields.boolean('Theme'),
-    }
-    _defaults = {
-        'is_theme': False,
-    }
 
     def import_module(self, cr, uid, module, path, context=None):
         known_mods = self.browse(cr, uid, self.search(cr, uid, []))
@@ -46,4 +42,25 @@ class view(osv.osv):
                 idref = {}
                 convert_file(cr, module, filename, idref, mode=mode, noupdate=noupdate, kind=kind, pathname=pathname)
 
+        path_static = opj(path, 'static')
+        if os.path.isdir(path_static):
+            for root, _, files in os.walk(path_static):
+                for static_file in files:
+                    full_path = opj(root, static_file)
+                    with open(full_path, 'r') as fp:
+                        data = fp.read().encode('base64')
+                    url_path = full_path.split(path)[1].replace(os.path.sep, '/')
+                    url_path = url_path.decode(sys.getfilesystemencoding())
+                    filename = os.path.split(url_path)[1]
+                    values = dict(
+                        name=filename,
+                        datas_fname=filename,
+                        url=url_path,
+                        res_model='ir.ui.view',
+                        type='binary',
+                        datas=data,
+                    )
+                    self.pool['ir.attachment'].create(cr, uid, values, context=context)
+
         return True
+
