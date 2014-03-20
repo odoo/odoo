@@ -785,11 +785,17 @@
         </span>
     </t>
 </t>
+<button t-name="ListView.row.text_button" type="button"
+        t-att-title="widget.string" t-att-disabled="disabled || undefined"
+        t-att-class="disabled ? 'oe_list_button_disabled btn' : 'btn'">
+    <t t-esc="widget.string"/>
+</button>
 <button t-name="ListView.row.button" type="button"
         t-att-title="widget.string" t-att-disabled="disabled || undefined"
-        t-att-class="disabled ? 'oe_list_button_disabled' : undefined"
-    ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
-         t-att-alt="widget.string"/></button>
+        t-att-class="disabled ? 'oe_list_button_disabled btn_img' : 'btn_img'">
+    <img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
+        t-att-alt="widget.string"/>
+</button>
 <t t-extend="ListView.row">
     <!-- adds back padding to row being rendered after edition, if necessary
          (if not deletable add back padding), otherwise the row being added is

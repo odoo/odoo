@@ -2260,8 +2260,8 @@ instance.web.list.Button = instance.web.list.Column.extend({
             attrs = this.modifiers_for(row_data);
         }
         if (attrs.invisible) { return ''; }
-
-        return QWeb.render('ListView.row.button', {
+        var template = this.icon && 'ListView.row.button' || 'ListView.row.text_button';
+        return QWeb.render(template, {
             widget: this,
             prefix: instance.session.prefix,
             disabled: attrs.readonly
