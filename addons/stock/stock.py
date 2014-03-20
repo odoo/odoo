@@ -1023,7 +1023,7 @@ class stock_picking(osv.osv):
                     'package_id': pack.id,
                     'product_qty': 1.0,
                     'location_id': pack.location_id.id,
-                    'location_dest_id': quants_suggested_locations[pack_quants[0]], context=context)],
+                    'location_dest_id': quants_suggested_locations[pack_quants[0]],
                 })
             #remove the quants inside the package so that they are excluded from the rest of the computation
             for quant in pack_quants:
@@ -1129,7 +1129,7 @@ class stock_picking(osv.osv):
                 qty_op_rem[ops.id] = {}
                 quant_ids = package_obj.get_content(cr, uid, [ops.package_id.id], context=context)
                 for quant in quant_obj.browse(cr, uid, quant_ids, context=context):
-                    if quant.id in quants_done.keys() and (quants_done[quant.id] == quant.qty):
+                    if quant.id in quants_done and (quants_done[quant.id] == quant.qty):
                         #Entire packages means entire quants from those packages
                         if not quants_done.get(quant.id):
                             quants_done[quant.id] = 0
@@ -1167,8 +1167,7 @@ class stock_picking(osv.osv):
                                     qty_todo = quant_qty
                                     quants_done[quant.id] = 0
                                 qty -= qty_todo
-                                cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values 
-                        (%s, %s, %s)""", (move.id, ops.id, qty_todo,))
+                                cr.execute("""insert into stock_move_operation_link (move_id, operation_id, qty) values (%s, %s, %s)""", (move.id, ops.id, qty_todo,))
                                 qty_move_rem[move.id] -= qty_todo
                 qty_op_rem[ops.id] = qty
 
@@ -1181,13 +1180,10 @@ class stock_picking(osv.osv):
         qty_op_rem = {}
         operations = picking.pack_operation_ids
         operations.sort(key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
-        cr.execute("""DELETE FROM stock_move_operation_link WHERE 
-            operation_id in %s
-            """, (tuple([x.id for x in operations]),))
+        cr.execute("DELETE FROM stock_move_operation_link WHERE operation_id in %s", (tuple([x.id for x in operations]),))
         for move in picking.move_lines:
-            prod_qty = move.product_qty
-            qty_rem[move.id] = prod_qty
-            qty_move_rem[move.id] = prod_qty
+            qty_rem[move.id] = move.product_qty
+            qty_move_rem[move.id] = move.product_qty
             #Fill moves by product dict
             if not prod_move.get(move.product_id.id):
                 prod_move[move.product_id.id] = [move]
@@ -3641,7 +3637,7 @@ class stock_pack_operation(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         if not context.get("no_recompute"):
-            pickings = vals.get('picking_id') and [vals['picking_id]] or list(set([x.picking_id.id for x in self.browse(cr, uid, ids, context=context)]))
+            pickings = vals.get('picking_id') and [vals['picking_id']] or list(set([x.picking_id.id for x in self.browse(cr, uid, ids, context=context)]))
             self.pool.get("stock.picking").do_recompute_remaining_quantities(cr, uid, pickings, context=context)
         return res
 
