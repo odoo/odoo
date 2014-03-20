@@ -177,7 +177,6 @@ class XmlSerializer:
 
     def start_inline(self,stylestack=None):
         """ starts an inline entity with an optional style definition """
-        print 'start_inline'
         self.stack.append('inline')
         if self.dirty:
             self.escpos._raw(' ')
@@ -186,9 +185,7 @@ class XmlSerializer:
 
     def start_block(self,stylestack=None):
         """ starts a block entity with an optional style definition """
-        print 'start_block'
         if self.dirty:
-            print 'cleanup before block'
             self.escpos._raw('\n')
             self.dirty = False
         self.stack.append('block')
@@ -197,9 +194,7 @@ class XmlSerializer:
 
     def end_entity(self):
         """ ends the entity definition. (but does not cancel the active style!) """
-        print 'end_entity'
         if self.stack[-1] == 'block' and self.dirty:
-            print 'cleanup after block'
             self.escpos._raw('\n')
             self.dirty = False
         if len(self.stack) > 1:
@@ -218,7 +213,6 @@ class XmlSerializer:
             text = text.strip()
             text = re.sub('\s+',' ',text)
             if text:
-                print 'printing text:'+text
                 self.dirty = True
                 self.escpos.text(text)
 
@@ -254,7 +248,6 @@ class XmlLineSerializer:
         self.left    = True
 
     def _txt(self,txt):
-        print '_txt: ',txt
         if self.left:
             if self.clwidth < self.lwidth:
                 txt = txt[:max(0, self.lwidth - self.clwidth)]
@@ -267,7 +260,6 @@ class XmlLineSerializer:
                 self.crwidth  += len(txt)
 
     def start_inline(self,stylestack=None):
-        print 'LINE:start_entity'
         if (self.left and self.clwidth) or (not self.left and self.crwidth):
             self._txt(' ')
 
@@ -286,7 +278,6 @@ class XmlLineSerializer:
             text = text.strip()
             text = re.sub('\s+',' ',text)
             if text:
-                print 'LINE:printing text:'+text
                 self._txt(text)
 
     def linebreak(self):
@@ -300,11 +291,6 @@ class XmlLineSerializer:
         self.left = False
 
     def get_line(self):
-        print 'LBUFFER: '+self.lbuffer
-        print self.clwidth
-        print 'RBUFFER: '+self.rbuffer
-        print self.crwidth
-
         return ' ' * self.indent * self.tabwidth + self.lbuffer + ' ' * (self.width - self.clwidth - self.crwidth) + self.rbuffer
     
 
@@ -551,15 +537,11 @@ class Escpos:
                 formatstr = "{:"+str(width)+"."+str(decimals)+"f}"
 
 
-            print formatstr
-            print value
             ret = formatstr.format(value)
-            print ret
             ret = ret.replace(',','COMMA')
             ret = ret.replace('.','DOT')
             ret = ret.replace('COMMA',thousands_separator)
             ret = ret.replace('DOT',decimals_separator)
-            print 'RET '+ret
 
             if symbol:
                 if position == 'after':
@@ -674,8 +656,9 @@ class Escpos:
                 serializer.linebreak()
 
             elif elem.tag == 'img':
-                if src in elem.attrib and 'data:' in elem.attrib['src']:
-                    self.print_base64_image(elem.attrib['src'])
+                pass
+                #if 'src' in elem.attrib and 'data:' in elem.attrib['src']:
+                #    self.print_base64_image(elem.attrib['src'])
 
             elif elem.tag == 'barcode' and 'encoding' in elem.attrib:
                 serializer.start_block(stylestack)
