@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import copy
+import re
 import simplejson
 import werkzeug
 
@@ -158,6 +159,29 @@ class view(osv.osv):
 
         return super(view, self).render(cr, uid, id_or_xml_id, values=values, engine=engine, context=context)
 
+    def _pretty_arch(self, arch):
+        # remove_blank_string does not seem to work on HTMLParser, and
+        # pretty-printing with lxml more or less requires stripping
+        # whitespace: http://lxml.de/FAQ.html#why-doesn-t-the-pretty-print-option-reformat-my-xml-output
+        # so serialize to XML, parse as XML (remove whitespace) then serialize
+        # as XML (pretty print)
+        arch_no_whitespace = etree.fromstring(
+            etree.tostring(arch, encoding='utf-8'),
+            parser=etree.XMLParser(encoding='utf-8', remove_blank_text=True))
+        arch_pretty_indent_2 = etree.tostring(
+            arch_no_whitespace, encoding='unicode', pretty_print=True)
+
+        # pretty_print uses a fixed indent level of 2, we want an indent of 4,
+        # double up leading spaces.
+        def repl(m):
+            indent = len(m.group(0)) / 2
+            return u' ' * 4 * indent
+        # FIXME: If py2.7 only, can use re.M in sub and don't have to do replacement line by line
+        return u'\n'.join(
+            re.sub(ur'^((?:  )+)', repl, line)
+            for line in arch_pretty_indent_2.split(u'\n')
+        )
+
     def save(self, cr, uid, res_id, value, xpath=None, context=None):
         """ Update a view section. The view section may embed fields to write
 
@@ -183,5 +207,5 @@ class view(osv.osv):
 
         arch = self.replace_arch_section(cr, uid, res_id, xpath, arch_section, context=context)
         self.write(cr, uid, res_id, {
-            'arch': etree.tostring(arch, encoding='utf-8').decode('utf-8')
+            'arch': self._pretty_arch(arch)
         }, context=context)

@@ -84,13 +84,3 @@
   !python {model: purchase.requisition}: |
     requisition = self.browse(cr, uid, ref('requisition1'), context=context)
     requisition.state == 'done', "Requisition should be closed."
--
-  I print a Requisition report
-- 
-  !python {model: purchase.requisition}: |
-    import os
-    import openerp.report
-    from openerp import tools
-    data, format = openerp.report.render_report(cr, uid, [ref('purchase_requisition.requisition1')], 'purchase.requisition', {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'purchase_requisition-purchase_requisition_report.'+format), 'wb+').write(data)

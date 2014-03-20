@@ -42,6 +42,6 @@ Allow users to sign up and reset their password
         'res_users_view.xml',
         'views/auth_signup_login.xml',
     ],
-    'js': ['static/src/js/auth_signup.js'],
+    'js': [],
     'bootstrap': True,
 }
