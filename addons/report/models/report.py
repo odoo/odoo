@@ -228,13 +228,12 @@ class Report(osv.Model):
 
         # If the report is using a custom model to render its html, we must use it.
         # Otherwise, fallback on the generic html rendering.
-        if data is not None:
-            try:
-                report_model_name = 'report.%s' % report_name
-                particularreport_obj = self.pool[report_model_name]
-                return particularreport_obj.render_html(cr, uid, [], data=data, context=context)
-            except:
-                pass
+        try:
+            report_model_name = 'report.%s' % report_name
+            particularreport_obj = self.pool[report_model_name]
+            return particularreport_obj.render_html(cr, uid, ids, data=data, context=context)
+        except:
+            pass
 
         if isinstance(ids, (str, unicode)):
             ids = [int(i) for i in ids.split(',')]

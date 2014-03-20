@@ -19,24 +19,22 @@
 #
 ##############################################################################
 
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+from openerp.osv import osv
 
 
-class bom_structure(http.Controller):
+class bom_structure(osv.Model):
+    _name = 'report.mrp.report_mrpbomstructure'
 
-    @http.route(['/report/mrp.report_mrpbomstructure/<docids>'], type='http', auth='user', website=True, multilang=True)
-    def report_mrpbomstructure(self, docids):
-        ids = [int(i) for i in docids.split(',')]
-        ids = list(set(ids))
-        report_obj = request.registry['mrp.bom']
-        docs = report_obj.browse(request.cr, request.uid, ids, context=request.context)
+    def render_html(self, cr, uid, ids, data=None, context=None):
+        mrpbom_obj = self.pool['mrp.bom']
+        report_obj = self.pool['report']
+        docs = mrpbom_obj.browse(cr, uid, ids, context=context)
 
         docargs = {
             'docs': docs,
             'get_children': self.get_children,
         }
-        return request.registry['report'].render(request.cr, request.uid, [], 'mrp.report_mrpbomstructure', docargs)
+        return report_obj.render(cr, uid, [], 'mrp.report_mrpbomstructure', docargs)
 
     def get_children(self, object, level=0):
         result = []
