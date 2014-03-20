@@ -66,7 +66,7 @@ class ReportController(Controller):
         return request.make_response(pdf, headers=pdfhttpheaders)
 
     #------------------------------------------------------
-    # Misc utils
+    # Misc. utils
     #------------------------------------------------------
 
     @route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="user")

@@ -85,7 +85,7 @@ class Report(osv.Model):
         self.default_lang[lang] = self.lang_dict.copy()
         return True
 
-    def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False, dp=False, currency_obj=False):
+    def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False, dp=False, currency_obj=False, cr=None, uid=None):
         """
             Assuming 'Account' decimal.precision=3:
                 formatLang(value) -> digits=2 (default)
@@ -98,15 +98,15 @@ class Report(osv.Model):
 
         if digits is None:
             if dp:
-                digits = self.get_digits(self.cr, self.uid, dp=dp)
+                digits = self.get_digits(cr, uid, dp=dp)
             else:
-                digits = self.get_digits(self.cr, self.uid, value)
+                digits = self.get_digits(cr, uid, value)
 
         if isinstance(value, (str, unicode)) and not value:
             return ''
 
         if not self.lang_dict_called:
-            self._get_lang_dict(self.cr, self.uid)
+            self._get_lang_dict(cr, uid)
             self.lang_dict_called = True
 
         if date or date_time:
@@ -153,8 +153,6 @@ class Report(osv.Model):
         if context is None:
             context = {}
 
-        self.cr, self.uid = cr, uid
-
         self.lang_dict = self.default_lang = {}
         self.lang_dict_called = False
         self.localcontext = {
@@ -162,7 +160,7 @@ class Report(osv.Model):
             'tz': context.get('tz'),
             'uid': context.get('uid'),
         }
-        self._get_lang_dict(self.cr, self.uid)
+        self._get_lang_dict(cr, uid)
 
         view_obj = self.pool['ir.ui.view']
 
@@ -207,7 +205,7 @@ class Report(osv.Model):
             'time': time,
             'user': current_user,
             'user_id': current_user.id,
-            'formatLang': self.formatLang,
+            'formatLang': lambda *args, **kwargs: self.formatLang(*args, cr=cr, uid=uid, **kwargs),
             'get_digits': self.get_digits,
             'render_doc': render_doc,
             'website': website,
@@ -217,14 +215,21 @@ class Report(osv.Model):
         return view_obj.render(cr, uid, template, values, context=context)
 
     #--------------------------------------------------------------------------
-    # Public report API
+    # Main reports methods
     #--------------------------------------------------------------------------
 
     def get_html(self, cr, uid, ids, report_name, data=None, context=None):
-        """This method generates and returns html version of generic report.
+        """This method generates and returns html version of a report.
         """
         if context is None:
             context = {}
+
+        if isinstance(ids, (str, unicode)):
+            ids = [int(i) for i in ids.split(',')]
+        if isinstance(ids, list):
+            ids = list(set(ids))
+        if isinstance(ids, int):
+            ids = [ids]
 
         # If the report is using a custom model to render its html, we must use it.
         # Otherwise, fallback on the generic html rendering.
@@ -234,13 +239,6 @@ class Report(osv.Model):
             return particularreport_obj.render_html(cr, uid, ids, data=data, context=context)
         except:
             pass
-
-        if isinstance(ids, (str, unicode)):
-            ids = [int(i) for i in ids.split(',')]
-        if isinstance(ids, list):
-            ids = list(set(ids))
-        if isinstance(ids, int):
-            ids = [ids]
 
         report = self._get_report_from_name(cr, uid, report_name)
         report_obj = self.pool[report.model]
@@ -254,7 +252,7 @@ class Report(osv.Model):
         return self.render(cr, uid, [], report.report_name, docargs, context=context)
 
     def get_pdf(self, cr, uid, ids, report_name, html=None, data=None, context=None):
-        """This method generates and returns pdf version of generic report.
+        """This method generates and returns pdf version of a report.
         """
         if context is None:
             context = {}
@@ -271,8 +269,7 @@ class Report(osv.Model):
 
         html = html.decode('utf-8')
 
-        # Get the report we are working on.
-        # Pattern is /report/module.reportname(?a=1)
+        # Get the ir.actions.report.xml record we are working on.
         report = self._get_report_from_name(cr, uid, report_name)
 
         # Check attachment_use field. If set to true and an existing pdf is already saved, load
@@ -305,18 +302,17 @@ class Report(osv.Model):
                         # Mark current document to be saved
                         save_in_attachment[id] = filename
 
-        # Get the paperformat associated to the report. If there is not, get the one associated to
-        # the company.
+        # Get the paperformat associated to the report, otherwise fallback on the company one.
         if not report.paperformat_id:
             user = self.pool['res.users'].browse(cr, uid, uid)
             paperformat = user.company_id.paperformat_id
         else:
             paperformat = report.paperformat_id
 
-        # Get the html report.
+        # Preparing the minimal html pages
         #subst = self._get_url_content('/report/static/src/js/subst.js')[0]  # Used in age numbering
-        subst = ''
-        css = ''  # Local css
+        subst = "<script src='/report/static/src/js/subst.js'></script> "
+        css = ''  # Will contain local css
 
         headerhtml = []
         contenthtml = []
@@ -332,10 +328,8 @@ class Report(osv.Model):
         <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
         <link href="/website/static/src/css/website.css" rel="stylesheet"/>
         <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
-
         <style type='text/css'>{0}</style>
-
-        <script type='text/javascript'>{1}</script>
+        {1}
     </head>
     <body class="container" onload='subst()'>
         {2}
@@ -389,9 +383,11 @@ class Report(osv.Model):
             if attribute[0].startswith('data-report-'):
                 specific_paperformat_args[attribute[0]] = attribute[1]
 
-        # Execute wkhtmltopdf process.
-        pdf = self._generate_wkhtml_pdf(headerhtml, footerhtml, contenthtml, context.get('landscape'), paperformat, specific_paperformat_args, save_in_attachment)
-
+        # Run wkhtmltopdf process
+        pdf = self._generate_wkhtml_pdf(
+            cr, uid, headerhtml, footerhtml, contenthtml, context.get('landscape'),
+            paperformat, specific_paperformat_args, save_in_attachment
+        )
         return pdf
 
     def get_action(self, cr, uid, ids, report_name, datas=None, context=None):
@@ -453,7 +449,7 @@ class Report(osv.Model):
             _logger.error('You need WKHTMLTOPDF to print a pdf version of this report.')
             return False
 
-    def _generate_wkhtml_pdf(self, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None):
+    def _generate_wkhtml_pdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None):
         """Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
 
@@ -470,7 +466,7 @@ class Report(osv.Model):
         tmp_dir = tempfile.gettempdir()
 
         command_args = []
-        # Passing the cookie in order to resolve URL.
+        # Passing the cookie to wkhtmltopdf in order to resolve URL.
         try:
             from openerp.addons.web.http import request
             command_args.extend(['--cookie', 'session_id', request.httprequest.cookies['session_id']])
@@ -557,7 +553,7 @@ class Report(osv.Model):
                         'res_model': save_in_attachment.get('model'),
                         'res_id': reporthtml[0],
                     }
-                    request.registry['ir.attachment'].create(request.cr, request.uid, attachment)
+                    self.pool['ir.attachment'].create(cr, uid, attachment)
                     _logger.info('The PDF document %s is now saved in the '
                                  'database' % attachment['name'])
 
@@ -591,12 +587,11 @@ class Report(osv.Model):
         return report_obj.browse(cr, uid, idreport)
 
     def _build_wkhtmltopdf_args(self, paperformat, specific_paperformat_args=None):
-        """Build arguments understandable by wkhtmltopdf from an ir.actions.report.paperformat
-        record.
+        """Build arguments understandable by wkhtmltopdf from a report.paperformat record.
 
-        :paperformat: ir.actions.report.paperformat record associated to a document
+        :paperformat: report.paperformat record
         :specific_paperformat_args: a dict containing prioritized wkhtmltopdf arguments
-        :returns: list of string containing the wkhtmltopdf arguments
+        :returns: list of string representing the wkhtmltopdf arguments
         """
         command_args = []
         if paperformat.format and paperformat.format != 'custom':
@@ -649,8 +644,7 @@ class Report(osv.Model):
         return content
 
     def eval_params(self, dict_param):
-        """Parse a dict generated by the webclient (javascript) into a dictionary
-        understandable by a wizard controller (python).
+        """Parse a dict generated by the webclient (javascript) into a python dict.
         """
         for key, value in dict_param.iteritems():
             if value.lower() == 'false':
