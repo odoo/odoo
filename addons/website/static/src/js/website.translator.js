@@ -115,8 +115,6 @@
             var trans = this.translations.filter(function (t) {
                 return t.res_id === view_id && t.value === content;
             });
-            console.log(trans);
-            console.log(this.translations);
             if (trans.length) {
                 node.setAttribute('data-oe-translation-id', trans[0].id);
                 if(trans[0].state && (trans[0].state == 'inprogress' || trans[0].state == 'to_translate')){
