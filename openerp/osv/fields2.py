@@ -161,12 +161,14 @@ class Field(object):
     def __repr__(self):
         return "%s.%s" % (self.model_name, self.name)
 
-    def get_description(self):
+    def get_description(self, scope):
         """ Return a dictionary that describes the field `self`. """
         desc = {'type': self.type, 'store': self.store}
         for attr in dir(self):
             if attr.startswith('_description_'):
                 value = getattr(self, attr)
+                if callable(value):
+                    value = value(scope)
                 if value:
                     desc[attr[13:]] = value
         return desc
@@ -179,16 +181,14 @@ class Field(object):
     _description_states = property(attrgetter('states'))
     _description_groups = property(attrgetter('groups'))
 
-    @property
-    def _description_string(self):
+    def _description_string(self, scope):
         if self.string and scope.lang:
             name = "%s,%s" % (self.model_name, self.name)
             trans = scope['ir.translation']._get_source(name, 'field', scope.lang)
             return trans or self.string
         return self.string
 
-    @property
-    def _description_help(self):
+    def _description_help(self, scope):
         if self.help and scope.lang:
             name = "%s,%s" % (self.model_name, self.name)
             trans = scope['ir.translation']._get_source(name, 'help', scope.lang)
@@ -704,7 +704,7 @@ class Selection(Field):
             selection = api.expected(api.model, selection)
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
 
-    def get_selection(self):
+    def _description_selection(self, scope):
         """ return the selection list (pairs (value, label)); labels are
             translated according to context language
         """
@@ -731,12 +731,11 @@ class Selection(Field):
         else:
             return self.selection
 
-    _description_selection = property(get_selection)
-
     def setup_related(self):
         super(Selection, self).setup_related()
         # selection must be computed on related field
-        self.selection = lambda model: self.related_field.get_selection()
+        field = self.related_field
+        self.selection = lambda model: field._description_selection(model._scope)
 
     def get_values(self):
         """ return a list of the possible values """
@@ -758,7 +757,7 @@ class Selection(Field):
         if not isinstance(self.selection, list):
             # FIXME: this reproduces an existing buggy behavior!
             return value
-        for item in self.get_selection():
+        for item in self._description_selection(scope.current):
             if item[0] == value:
                 return item[1]
         return False
@@ -813,9 +812,10 @@ class _Relational(Field):
     _column_context = property(attrgetter('context'))
 
     _description_relation = property(attrgetter('comodel_name'))
-    _description_domain = property(lambda self: \
-        self.domain(scope[self.model_name]) if callable(self.domain) else self.domain)
     _description_context = property(attrgetter('context'))
+
+    def _description_domain(self, scope):
+        return self.domain(scope[self.model_name]) if callable(self.domain) else self.domain
 
     def __init__(self, **kwargs):
         super(_Relational, self).__init__(**kwargs)

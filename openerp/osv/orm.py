@@ -3022,7 +3022,7 @@ class BaseModel(object):
                 continue
             if field.groups and not self.user_has_groups(cr, user, field.groups, context=context):
                 continue
-            res[fname] = field.get_description()
+            res[fname] = field.get_description(scope_proxy.current)
 
         # if user cannot create or modify records, make all fields readonly
         has_access = functools.partial(self.check_access_rights, cr, user, raise_exception=False)
