@@ -15,7 +15,6 @@
                 popover:   { next:  _t("Start Tutorial"), end:   _t("Skip It") },
             },
             {
-                waitNot:   '.popover.tour',
                 element:   'button[data-action=edit]',
                 placement: 'bottom',
                 title:     _t("Edit this page"),
@@ -52,7 +51,6 @@
                 popover:   { next: _t("Continue") },
             },
             {
-                waitNot:   '.popover.tour',
                 element:   'button[data-action=snippet]',
                 placement: 'bottom',
                 title:     _t("Add Another Block"),
@@ -81,7 +79,6 @@
                 popover:   { next: _t("Continue") },
             },
             {
-                waitNot:   '.popover.tour',
                 element:   'a[data-action=show-mobile-preview]',
                 placement: 'bottom',
                 title:     _t("Test Your Mobile Version"),

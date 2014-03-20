@@ -32,7 +32,7 @@ if (website.EditorBar) {
             var self = this;
             var menu = $('#help-menu');
             _.each(website.Tour.tours, function (tour) {
-                if (tour.mode != "tutorial") {
+                if (tour.mode === "test") {
                     return;
                 }
                 var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
@@ -90,16 +90,19 @@ website.Tour = {};
 website.Tour.tours = {};
 website.Tour.state = null;
 website.Tour.register = function (tour) {
+    if (tour.mode !== "test") tour.mode = "tutorial";
     website.Tour.tours[tour.id] = tour;
 };
 website.Tour.run = function (tour_id, mode) {
-    if (localStorage.getItem("tour")) { // only one test running
+    if (localStorage.getItem("tour") && mode === "test") { // only one test running
         return;
     }
     var tour = website.Tour.tours[tour_id];
-    website.Tour.save_state(tour.id, mode || tour.mode, 0);
-    if (tour.path) {
+    website.Tour.saveState(tour.id, mode || tour.mode, 0);
+    if (tour.path && !window.location.href.match(new RegExp("("+website.Tour.getLang()+")?"+tour.path+"#?$", "i"))) {
         window.location.href = "/"+website.Tour.getLang()+tour.path;
+    } else {
+        website.Tour.running();
     }
 };
 website.Tour.registerSteps = function (tour) {
@@ -114,48 +117,82 @@ website.Tour.registerSteps = function (tour) {
 
         if (!step.waitNot && index > 0 && tour.steps[index-1] &&
             tour.steps[index-1].popover && tour.steps[index-1].popover.next) {
-            step.waitNot = '.popover.tour:visible';
+            step.waitNot = '.popover.tour.fade.in:visible';
         }
         if (!step.waitFor && index > 0 && tour.steps[index-1].snippet) {
             step.waitFor = '.oe_overlay_options .oe_options:visible';
         }
 
-        if (!step.element) step.orphan = true;
-
-        var snippet = step.element.match(/#oe_snippets (.*) \.oe_snippet_thumbnail/);
+        var snippet = step.element && step.element.match(/#oe_snippets (.*) \.oe_snippet_thumbnail/);
         if (snippet) {
             step.snippet = snippet[1];
         } else if (step.snippet) {
             step.element = '#oe_snippets '+step.snippet+' .oe_snippet_thumbnail';
         }
+
+        if (!step.element) step.orphan = true;
     }
     if (tour.steps[index-1] &&
         tour.steps[index-1].popover && tour.steps[index-1].popover.next) {
         var step = {
-            step_id:    index,
-            waitNot:   '.popover.tour:visible'
+            id: index,
+            waitNot: '.popover.tour.fade.in:visible'
         };
         tour.steps.push(step);
     }
 
     // rendering bootstrap tour and popover
-    if (tour.mode != "test" || typeof Tour !== "undefined") {
+    if (tour.mode !== "test" || typeof Tour !== "undefined") {
         tour.tour = new Tour({
-            name: this.id,
+            debug: true,
+            name: tour.id,
             storage: localStorage,
             keyboard: false,
-            template: this.popover(),
+            template: website.Tour.popover(),
             onHide: function () {
                 window.scrollTo(0, 0);
             }
         });
+
         for (var index=0, len=tour.steps.length; index<len; index++) {
             var step = tour.steps[index];
             step._title = step._title || step.title;
-            step.title = tour.popoverTitle(tour, { title: step._title });
-            step.template = step.template || tour.popover( step.popover );
+            step.title = website.Tour.popoverTitle(tour, { title: step._title });
+            step.template = step.template || website.Tour.popover( step.popover );
         }
         tour.tour.addSteps(tour.steps);
+        tour.tour.init();
+        tour.tour.end();
+    }
+};
+website.Tour.autoToggleBootstrapTour = function () {
+    var state = website.Tour.getState();
+    if (!state || !state.tour.tour || state.step.busy) return;
+    var tour = state.tour.tour;
+    var step = state.step;
+
+    if (!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden"))) {
+        if (!tour.ended()) {
+            return;
+        }
+        tour._removeState("current_step");
+        tour._removeState("end");
+        tour._showPopover(state.step, state.step.id);
+
+        $(".popover.tour button")
+            .off()
+            .on("click", function () {
+                $(this).off();
+                step.busy = true;
+                if (!$(this).is("[data-role='next']")) {
+                    clearTimeout(website.Tour.timer);
+                    website.Tour.endTour(tour);
+                }
+                $(".popover.tour").removeClass('in');
+                tour.end();
+            });
+    } else {
+        tour.end();
     }
 };
 website.Tour.popoverTitle = function (tour, options) {
@@ -167,35 +204,34 @@ website.Tour.popover = function (options) {
 website.Tour.getLang = function () {
     return $("html").attr("lang").replace(/-/, '_');
 };
-website.Tour.get_state = function () {
-    var tour_id;
-    var tour_running = eval(localStorage.getItem("tour") || 'false');
-    if (tour_running) {
-        tour_id = tour_running[0];
-        mode = tour_running[1];
-        step_id = tour_running[2];
-    } else if (window.location.href.indexOf("#tutorial.") > -1) {
-        tour_id = window.location.href.match(/#tutorial\.(.*)=true/)[1];
-        mode = "tutorial";
-        step_id = 0;
+website.Tour.getState = function () {
+    var state = JSON.parse(localStorage.getItem("tour") || 'false') || {};
+    var tour_id,mode,step_id;
+    if (!state.id && window.location.href.indexOf("#tutorial.") > -1) {
+        state = {
+            "id": window.location.href.match(/#tutorial\.(.*)=true/)[1],
+            "mode": "tutorial",
+            "step_id": 0
+        };
     }
-    if (!tour_id) {
+    if (!state.id) {
         return;
     }
-    var tour = website.Tour.tours[tour_id];
-    return {'tour': tour, 'tour_id': tour_id, 'mode': mode, 'step_id': step_id};
+    state.tour = website.Tour.tours[state.id];
+    state.step = state.tour.steps[state.step_id];
+    return state;
 };
 website.Tour.error = function (tour, step, message) {
     website.Tour.reset();
     throw new Error(message +
-        + "\ntour:" + tour.id +
-        + "\nstep:" + step.id + ": '" + (step._title || step.title) + "'"
+        + "\ntour: " + tour.id +
+        + "\nstep: " + step.id + ": '" + (step._title || step.title) + "'"
         + '\nhref: ' + window.location.href
         + '\nreferrer: ' + document.referrer
         + '\nelement: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden")))
         + '\nwaitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size())
         + '\nwaitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size())
-        + "\nlocalStorage: " + localStorage.getItem("tour")
+        + "\nlocalStorage: " + JSON.stringify(localStorage)
         + '\n\n' + $("body").html()
     );
 };
@@ -206,24 +242,39 @@ website.Tour.lists = function () {
     }
     return tour_ids;
 };
-website.Tour.save_state = function (tour_id, mode, step_id) {
-    localStorage.setItem("tour", '{tour_id:'+tour_id+',  mode:'+mode+',  step_id:'+step_id+'}');
+website.Tour.saveState = function (tour_id, mode, step_id) {
+    localStorage.setItem("tour", JSON.stringify({"id":tour_id, "mode":mode, "step_id":step_id}));
 };
 website.Tour.reset = function () {
-    var running = website.Tour.get_state();
-    for (var k in running.tour.steps) {
-        running.tour.steps[k].busy = false;
+    var state = website.Tour.getState();
+    if (state) {
+        for (var k in state.tour.steps) {
+            state.tour.steps[k].busy = false;
+        }
+        if (state.tour.tour) {
+            state.tour.tour.end();
+        }
     }
     localStorage.removeItem("tour");
     clearTimeout(website.Tour.timer);
     clearTimeout(website.Tour.testtimer);
 
-    $('.popover.tour').remove();
+    $(".popover.tour").remove();
 };
 website.Tour.running = function () {
-    var running = website.Tour.get_state();
-    website.Tour.registerSteps(running.tour);
-    website.Tour.nextStep( running.tour, running.step_id );
+    var state = website.Tour.getState();
+    if (state) {
+        website.Tour.registerSteps(state.tour);
+        if ($.ajaxBusy) {
+            $(document).ajaxStop(function() {
+                setTimeout(function () {
+                    website.Tour.nextStep( state.tour, state.step, state.mode === "test" ? 5000 : 0 );
+                },0);
+            });
+        } else {
+            website.Tour.nextStep( state.tour, state.step, state.mode === "test" ? 5000 : 0 );
+        }
+    }
 };
 
 website.Tour.timer =  null;
@@ -238,83 +289,62 @@ website.Tour.check = function (step) {
 website.Tour.waitNextStep = function (tour, step, overlaps) {
     var time = new Date().getTime();
     var timer;
+    var next = tour.steps[step.id+1];
 
     window.onbeforeunload = function () {
         clearTimeout(website.Tour.timer);
         clearTimeout(website.Tour.testtimer);
     };
 
-    // check popover activity
-    $(".popover.tour button")
-        .off()
-        .on("click", function () {
-            $(".popover.tour").remove();
-            if (step.busy) return;
-            if (!$(this).is("[data-role='next']")) {
-                clearTimeout(website.Tour.timer);
-                step.busy = true;
-                if (tour.tour) {
-                    tour.tour.end();
-                }
-                tour.endTour(tour);
-            }
-        });
-
     function checkNext () {
+        website.Tour.autoToggleBootstrapTour();
+
         clearTimeout(website.Tour.timer);
-        if (step.busy) return;
-        if (website.Tour.check(step)) {
-            step.busy = true;
+        if (next.busy) return;
+        if (website.Tour.check(next)) {
+            next.busy = true;
+            clearTimeout(website.Tour.currentTimer);
             // use an other timeout for cke dom loading
             setTimeout(function () {
-                website.Tour.nextStep(tour, step, overlaps);
+                website.Tour.nextStep(tour, next, overlaps);
             }, website.Tour.defaultDelay);
         } else if (!overlaps || new Date().getTime() - time < overlaps) {
-            if (self.current.element) {
-                var $popover = $(".popover.tour");
-                if(!$(self.current.element).is(":visible")) {
-                    $popover.data("hide", true).fadeOut(300);
-                } else if($popover.data("hide")) {
-                    $popover.data("hide", false).fadeIn(150);
-                }
-            }
             website.Tour.timer = setTimeout(checkNext, website.Tour.defaultDelay);
         } else {
-            website.Tour.error(tour, step, "Can't arrive to the next step");
+            website.Tour.error(tour, next, "Can't arrive to the next step");
         }
     }
     checkNext();
 };
+website.Tour.currentTimer = null;
 website.Tour.nextStep = function (tour, step, overlaps) {
-    var state = website.Tour.get_state();
-    website.Tour.save_state(tour.id, state.mode, step.id);
+    var state = website.Tour.getState();
+    website.Tour.saveState(state.id, state.mode, step.id);
 
-    // clear popover (fix for boostrap tour if the element is removed before destroy popover)
-    $(".popover.tour").remove();
-    // go to step in bootstrap tour
-    if (tour.tour) {
-        tour.tour.goto(step.id);
+    website.Tour.autoToggleBootstrapTour();
+
+    if (step.onload) {
+        step.onload();
     }
-    step.onload();
     var next = tour.steps[step.id+1];
 
     if (next) {
         setTimeout(function () {
-                website.Tour.waitNextStep(tour, next, overlaps);
+                website.Tour.waitNextStep(tour, step, overlaps);
                 if (state.mode === "test") {
                     setTimeout(function(){
                         website.Tour.autoNextStep(tour, step);
                     }, website.Tour.defaultDelay);
                 }
-        }, next && next.wait || 0);
+        }, next.wait || 0);
     } else {
         website.Tour.endTour(tour);
     }
 };
 website.Tour.endTour = function (tour) {
-    var state = website.Tour.get_state();
-    var test = state.step_id >= tour.steps.length-1;
-    this.reset();
+    var state = website.Tour.getState();
+    var test = state.step.id >= state.tour.steps.length-1;
+    website.Tour.reset();
     if (test) {
         console.log('ok');
     } else {
@@ -388,7 +418,8 @@ website.Tour.autoDragAndDropSnippet = function (selector) {
     $dropZone.trigger($.Event("mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
 };
 
-website.ready(website.Tour.running);
+//$(document).ready(website.Tour.running);
+website.ready().then(website.Tour.running);
 
 
 }());
