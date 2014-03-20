@@ -265,7 +265,7 @@
                 <div class="container">
                     <h1 class="mt32">Event not found!</h1>
                     <p>Sorry, the requested event is not available anymore.</p>
-                    <p><a t-attf-href="/event/">Return to the event list.</a></p>
+                    <p><a t-attf-href="/event">Return to the event list.</a></p>
                 </div>
             </div>
         </div>
@@ -420,7 +420,7 @@
                             <b><a t-att-href="'/event/?country='+str(country.id)">See All events from <span t-esc="country.name"></span></a></b>
                         </div>
                         <div t-if="not country">
-                            <b><a href="/event/"> See All Upcoming events </a></b>
+                            <b><a href="/event"> See All Upcoming events </a></b>
                         </div>
                     </t>
                 </div>
