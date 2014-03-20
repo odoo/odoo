@@ -12,6 +12,7 @@ import math
 import md5
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
 import subprocess
+import traceback
 from threading import Thread, Lock
 from Queue import Queue, Empty
 
@@ -113,19 +114,21 @@ class EscposDriver(Thread):
                     if timestamp >= time.time() - 1 * 60 * 60:
                         self.print_receipt_body(printer,data)
                         printer.cut()
+                elif task == 'xml_receipt':
+                    if timestamp >= time.time() - 1 * 60 * 60:
+                        printer.receipt(data)
                 elif task == 'cashbox':
                     if timestamp >= time.time() - 12:
                         self.open_cashbox(printer)
                 elif task == 'printstatus':
                     self.print_status(printer)
-                elif task == 'testprint':
-                    printer.receipt(testreceipt)
                 elif task == 'status':
                     pass
 
             except Exception as e:
                 self.set_status('error', str(e))
-                _logger.error(e);
+                errmsg = str(e) + '\n' + '-'*60+'\n' + traceback.format_exc() + '-'*60 + '\n'
+                _logger.error(errmsg);
 
     def push_task(self,task, data = None):
         self.lockedstart()
@@ -282,8 +285,6 @@ driver = EscposDriver()
 
 hw_proxy.drivers['escpos'] = driver
 
-driver.push_task('testprint')
-        
 class EscposProxy(hw_proxy.Proxy):
     
     @http.route('/hw_proxy/open_cashbox', type='json', auth='none', cors='*')

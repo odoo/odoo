@@ -1,4 +1,4 @@
-#!/usr/bin/python
+# -*- coding: utf-8 -*-
 '''
 @author: Manuel F Martinez <manpaz@bashlinux.com>
 @organization: Bashlinux
@@ -18,7 +18,9 @@ import base64
 import math
 import md5
 import re
+import traceback
 import xml.etree.ElementTree as ET
+import xml.dom.minidom as minidom
 
 from PIL import Image
 
@@ -32,13 +34,279 @@ except ImportError:
 from constants import *
 from exceptions import *
 
-# class RBuffer:
-#     def __init__(self,width=40,margin=10,tabwidth=2,indent=0):
-#         self.width = width 
-#         self.margin = margin
-#         self.tabwidth = tabwidth
-#         self.indent = indent
-#         self.lines  = []
+def utfstr(stuff):
+    """ converts stuff to string and does without failing if stuff is a utf8 string """
+    if isinstance(stuff,basestring):
+        return stuff
+    else:
+        return str(stuff)
+
+class StyleStack:
+    """ 
+    The stylestack is used by the xml receipt serializer to compute the active styles along the xml
+    document. Styles are just xml attributes, there is no css mechanism. But the style applied by
+    the attributes are inherited by deeper nodes.
+    """
+    def __init__(self):
+        self.stack = []
+        self.defaults = {   # default style values
+            'align':     'left',
+            'underline': 'off',
+            'bold':      'off',
+            'size':      'normal',
+            'font'  :    'a',
+            'width':     48,
+            'indent':    0,
+            'tabwidth':  2,
+            'bullet':    ' - ',
+            'line-ratio':0.5,
+
+            'value-decimals':           2,
+            'value-symbol':             '',
+            'value-symbol-position':    'after',
+            'value-autoint':            'off',
+            'value-decimals-separator':  '.',
+            'value-thousands-separator': ',',
+            'value-width':               0,
+            
+        }
+
+        self.types = { # attribute types, default is string and can be ommitted
+            'width':    'int',
+            'indent':   'int',
+            'tabwidth': 'int',
+            'line-ratio':       'float',
+            'value-decimals':   'int',
+            'value-width':      'int',
+        }
+
+        self.cmds = { 
+            # translation from styles to escpos commands
+            # some style do not correspond to escpos command are used by
+            # the serializer instead
+            'align': {
+                'left':     TXT_ALIGN_LT,
+                'right':    TXT_ALIGN_RT,
+                'center':   TXT_ALIGN_CT,
+            },
+            'underline': {
+                'off':      TXT_UNDERL_OFF,
+                'on':       TXT_UNDERL_ON,
+                'double':   TXT_UNDERL2_ON,
+            },
+            'bold': {
+                'off':      TXT_BOLD_OFF,
+                'on':       TXT_BOLD_ON,
+            },
+            'font': {
+                'a':        TXT_FONT_A,
+                'b':        TXT_FONT_B,
+            },
+            'size': {
+                'normal':           TXT_NORMAL,
+                'double-height':    TXT_2HEIGHT,
+                'double-width':     TXT_2WIDTH,
+                'double':           TXT_DOUBLE,
+            }
+        }
+
+        self.push(self.defaults) 
+
+    def get(self,style):
+        """ what's the value of a style at the current stack level"""
+        level = len(self.stack) -1
+        while level >= 0:
+            if style in self.stack[level]:
+                return self.stack[level][style]
+            else:
+                level = level - 1
+        return None
+
+    def enforce_type(self, attr, val):
+        """converts a value to the attribute's type"""
+        if not attr in self.types:
+            return utfstr(val)
+        elif self.types[attr] == 'int':
+            return int(float(val))
+        elif self.types[attr] == 'float':
+            return float(val)
+        else:
+            return utfstr(val)
+
+    def push(self, style={}):
+        """push a new level on the stack with a style dictionnary containing style:value pairs"""
+        _style = {}
+        for attr in style:
+            if attr in self.cmds and not style[attr] in self.cmds[attr]:
+                print 'WARNING: ESC/POS PRINTING: ignoring invalid value: '+utfstr(style[attr])+' for style: '+utfstr(attr)
+            else:
+                _style[attr] = self.enforce_type(attr, style[attr])
+        self.stack.append(_style)
+
+    def set(self, style={}):
+        """overrides style values at the current stack level"""
+        _style = {}
+        for attr in style:
+            if attr in self.cmds and not style[attr] in self.cmds[attr]:
+                print 'WARNING: ESC/POS PRINTING: ignoring invalid value: '+utfstr(style[attr])+' for style: '+utfstr(attr)
+            else:
+                self.stack[-1][attr] = self.enforce_type(attr, style[attr])
+
+    def pop(self):
+        """ pop a style stack level """
+        if len(self.stack) > 1 :
+            self.stack = self.stack[:-1]
+
+    def to_escpos(self):
+        """ converts the current style to an escpos command string """
+        cmd = ''
+        for style in self.cmds:
+            cmd += self.cmds[style][self.get(style)]
+        return cmd
+
+class XmlSerializer:
+    """ 
+    Converts the xml inline / block tree structure to a string,
+    keeping track of newlines and spacings.
+    The string is outputted asap to the provided escpos driver.
+    """
+    def __init__(self,escpos):
+        self.escpos = escpos
+        self.stack = ['block']
+        self.dirty = False
+
+    def start_inline(self,stylestack=None):
+        """ starts an inline entity with an optional style definition """
+        print 'start_inline'
+        self.stack.append('inline')
+        if self.dirty:
+            self.escpos._raw(' ')
+        if stylestack:
+            self.style(stylestack)
+
+    def start_block(self,stylestack=None):
+        """ starts a block entity with an optional style definition """
+        print 'start_block'
+        if self.dirty:
+            print 'cleanup before block'
+            self.escpos._raw('\n')
+            self.dirty = False
+        self.stack.append('block')
+        if stylestack:
+            self.style(stylestack)
+
+    def end_entity(self):
+        """ ends the entity definition. (but does not cancel the active style!) """
+        print 'end_entity'
+        if self.stack[-1] == 'block' and self.dirty:
+            print 'cleanup after block'
+            self.escpos._raw('\n')
+            self.dirty = False
+        if len(self.stack) > 1:
+            self.stack = self.stack[:-1]
+
+    def pre(self,text):
+        """ puts a string of text in the entity keeping the whitespace intact """
+        if text:
+            self.escpos.text(text)
+            self.dirty = True
+
+    def text(self,text):
+        """ puts text in the entity. Whitespace and newlines are stripped to single spaces. """
+        if text:
+            text = utfstr(text)
+            text = text.strip()
+            text = re.sub('\s+',' ',text)
+            if text:
+                print 'printing text:'+text
+                self.dirty = True
+                self.escpos.text(text)
+
+    def linebreak(self):
+        """ inserts a linebreak in the entity """
+        self.dirty = False
+        self.escpos._raw('\n')
+
+    def style(self,stylestack):
+        """ apply a style to the entity (only applies to content added after the definition) """
+        self.raw(stylestack.to_escpos())
+
+    def raw(self,raw):
+        """ puts raw text or escpos command in the entity without affecting the state of the serializer """
+        self.escpos._raw(raw)
+
+class XmlLineSerializer:
+    """ 
+    This is used to convert a xml tree into a single line, with a left and a right part.
+    The content is not output to escpos directly, and is intended to be fedback to the
+    XmlSerializer as the content of a block entity.
+    """
+    def __init__(self, indent=0, tabwidth=2, width=48, ratio=0.5):
+        self.tabwidth = tabwidth
+        self.indent = indent
+        self.width  = max(0, width - int(tabwidth*indent))
+        self.lwidth = int(self.width*ratio)
+        self.rwidth = max(0, self.width - self.lwidth)
+        self.clwidth = 0
+        self.crwidth = 0
+        self.lbuffer  = ''
+        self.rbuffer  = ''
+        self.left    = True
+
+    def _txt(self,txt):
+        print '_txt: ',txt
+        if self.left:
+            if self.clwidth < self.lwidth:
+                txt = txt[:max(0, self.lwidth - self.clwidth)]
+                self.lbuffer += txt
+                self.clwidth += len(txt)
+        else:
+            if self.crwidth < self.rwidth:
+                txt = txt[:max(0, self.rwidth - self.crwidth)]
+                self.rbuffer += txt
+                self.crwidth  += len(txt)
+
+    def start_inline(self,stylestack=None):
+        print 'LINE:start_entity'
+        if (self.left and self.clwidth) or (not self.left and self.crwidth):
+            self._txt(' ')
+
+    def start_block(self,stylestack=None):
+        self.start_inline(stylestack)
+
+    def end_entity(self):
+        pass
+
+    def pre(self,text):
+        if text:
+            self._txt(text)
+    def text(self,text):
+        if text:
+            text = utfstr(text)
+            text = text.strip()
+            text = re.sub('\s+',' ',text)
+            if text:
+                print 'LINE:printing text:'+text
+                self._txt(text)
+
+    def linebreak(self):
+        pass
+    def style(self,stylestack):
+        pass
+    def raw(self,raw):
+        pass
+
+    def start_right(self):
+        self.left = False
+
+    def get_line(self):
+        print 'LBUFFER: '+self.lbuffer
+        print self.clwidth
+        print 'RBUFFER: '+self.rbuffer
+        print self.crwidth
+
+        return ' ' * self.indent * self.tabwidth + self.lbuffer + ' ' * (self.width - self.clwidth - self.crwidth) + self.rbuffer
+    
 
 class Escpos:
     """ ESC/POS Printer object """
@@ -256,51 +524,9 @@ class Escpos:
             raise exception.BarcodeCodeError()
 
     def receipt(self,xml):
-        root = ET.fromstring(xml)
-        open_cashdrawer = False
-        cut_receipt  = True
-
-        width  = 48
-        ratio  = 0.5
-        indent = 0
-        tabwidth = 2
-
-        if root.tag != 'receipt':
-            print 'Error: expecting receipt xml and not '+str(root.tag)
-            return
-        if 'open-cashdrawer' in root.attrib:
-            open_cashdrawer = root.attrib['open-cashdrawer'] == 'true'
-        if 'cut' in root.attrib:
-            cut_receipt = root.attrib['cut'] == 'true'
-
-#        def justify(string,width):
-#            words = string.split()
-#            lines = []
-#            line  = ''
-#            linew = 0
-#            for w in words:
-#                if len(w) <= width - len(line):
-#                    if len(line) > 0:
-#                        line += ' '
-#                    line += w
-#                else:
-#                    if len(line) > 0:
-#                        lines.append(line.ljust(width))
-#                        line = ''
-#                    line += w
-#            if len(line) > 0:
-#                lines.append(line.ljust(width))
-#            return lines
-#
-#        def strindent(indent,string):
-#            ind = tabwidth * indent
-#            rem = width - ind
-#            lines = justify(string,rem)
-#            txt = ''
-#            for l in lines:
-#                txt += ' '*ind + '\n'
-#
-#            return txt
+        """
+        Prints an xml based receipt definition
+        """
 
         def strclean(string):
             if not string:
@@ -309,113 +535,184 @@ class Escpos:
             string = re.sub('\s+',' ',string)
             return string
 
+        def format_value(value, decimals=3, width=0, decimals_separator='.', thousands_separator=',', autoint=False, symbol='', position='after'):
+            decimals = max(0,int(decimals))
+            width    = max(0,int(width))
+            value    = float(value)
 
-        def print_ul(elem, indent=0):
-            bullets = ['-','-']
-            bullet  = ' '+bullets[indent % 2]+' '
-            if elem.tag == 'ul':
-                for lelem in elem:
-                    if lelem.tag == 'li':
-                        self.text(' ' * indent * tabwidth + bullet + strclean(lelem.text)+'\n')
-                    elif lelem.tag == 'ul':
-                        print_ul(lelem,indent+1)
-                    elif lelem.tag == 'ol':
-                        print_old(lelem,indent+1)
+            if autoint and math.floor(value) == value:
+                decimals = 0
+            if width == 0:
+                width = ''
 
-        def print_ol(elem, indent=0):
-            cwidth = len(str(len(elem))) + 2
-            i = 1
-            for lelem in elem:
-                if lelem.tag == 'li':
-                    self.text(' ' * indent * tabwidth + ' ' + (str(i)+'.').ljust(cwidth)+strclean(lelem.text)+'\n')
-                    i += 1
-                elif lelem.tag == 'ul':
-                    print_ul(lelem,indent+1)
-                elif lelem.tag == 'ol':
-                    print_ol(lelem,indent+1)
-        
-        
-        for elem in root:
-            if elem.tag == 'line':
-                left = strclean(elem.text)
-                right = ''
-                for lelem in elem:
-                    if lelem.tag == 'left':
-                        left = strclean(lelem.text)
-                        print 'left:'+left
-                    elif lelem.tag == 'right':
-                        right = strclean(lelem.text)
-                        print 'right:'+right
-                lwidth = int(width * ratio)
-                rwidth = width - lwidth
-                lwidth = lwidth - indent
+            if thousands_separator:
+                formatstr = "{:"+str(width)+",."+str(decimals)+"f}"
+            else:
+                formatstr = "{:"+str(width)+"."+str(decimals)+"f}"
 
-                left = left[:lwidth]
-                if len(left) != lwidth:
-                    left = left + ' ' * (lwidth - len(left))
 
-                right = right[-rwidth:]
-                if len(right) != rwidth:
-                    right = ' ' * (rwidth - len(right)) + right
-                line = ' ' * indent + left + right + '\n'
-                print line
-                self.text(line)
+            print formatstr
+            print value
+            ret = formatstr.format(value)
+            print ret
+            ret = ret.replace(',','COMMA')
+            ret = ret.replace('.','DOT')
+            ret = ret.replace('COMMA',thousands_separator)
+            ret = ret.replace('DOT',decimals_separator)
+            print 'RET '+ret
+
+            if symbol:
+                if position == 'after':
+                    ret = ret + symbol
+                else:
+                    ret = symbol + ret
+            return ret
+
+        def print_elem(stylestack, serializer, elem, indent=0):
+
+            elem_styles = {
+                'h1': {'bold': 'on', 'size':'double'},
+                'h2': {'size':'double'},
+                'h3': {'bold': 'on', 'size':'double-height'},
+                'h4': {'size': 'double-height'},
+                'h5': {'bold': 'on'},
+                'em': {'font': 'b'},
+                'b':  {'bold': 'on'},
+            }
+
+            stylestack.push()
+            if elem.tag in elem_styles:
+                stylestack.set(elem_styles[elem.tag])
+            stylestack.set(elem.attrib)
+
+            if elem.tag in ('p','div','section','article','receipt','header','footer','li','h1','h2','h3','h4','h5'):
+                serializer.start_block(stylestack)
+                serializer.text(elem.text)
+                for child in elem:
+                    print_elem(stylestack,serializer,child)
+                    serializer.start_inline(stylestack)
+                    serializer.text(child.tail)
+                    serializer.end_entity()
+                serializer.end_entity()
+
+            elif elem.tag in ('span','em','b','left','right'):
+                serializer.start_inline(stylestack)
+                serializer.text(elem.text)
+                for child in elem:
+                    print_elem(stylestack,serializer,child)
+                    serializer.start_inline(stylestack)
+                    serializer.text(child.tail)
+                    serializer.end_entity()
+                serializer.end_entity()
+
+            elif elem.tag == 'value':
+                serializer.start_inline(stylestack)
+                serializer.pre(format_value( 
+                                              elem.text,
+                                              decimals=stylestack.get('value-decimals'),
+                                              width=stylestack.get('value-width'),
+                                              decimals_separator=stylestack.get('value-decimals-separator'),
+                                              thousands_separator=stylestack.get('value-thousands-separator'),
+                                              autoint=(stylestack.get('autoint') == 'on'),
+                                              symbol=stylestack.get('value-symbol'),
+                                              position=stylestack.get('value-symbol-position') 
+                                            ))
+                serializer.end_entity()
+
+            elif elem.tag == 'line':
+                width = stylestack.get('width')
+                if stylestack.get('size') in ('double', 'double-width'):
+                    width = width / 2
+
+                lineserializer = XmlLineSerializer(stylestack.get('indent')+indent,stylestack.get('tabwidth'),width,stylestack.get('line-ratio'))
+                serializer.start_block(stylestack)
+                for child in elem:
+                    if child.tag == 'left':
+                        print_elem(stylestack,lineserializer,child,indent=indent)
+                    elif child.tag == 'right':
+                        lineserializer.start_right()
+                        print_elem(stylestack,lineserializer,child,indent=indent)
+                serializer.pre(lineserializer.get_line())
+                serializer.end_entity()
+
+            elif elem.tag == 'ul':
+                serializer.start_block(stylestack)
+                bullet = stylestack.get('bullet')
+                for child in elem:
+                    if child.tag == 'li':
+                        serializer.style(stylestack)
+                        serializer.raw(' ' * indent * stylestack.get('tabwidth') + bullet)
+                    print_elem(stylestack,serializer,child,indent=indent+1)
+                serializer.end_entity()
+
+            elif elem.tag == 'ol':
+                cwidth = len(str(len(elem))) + 2
+                i = 1
+                serializer.start_block(stylestack)
+                for child in elem:
+                    if child.tag == 'li':
+                        serializer.style(stylestack)
+                        serializer.raw(' ' * indent * stylestack.get('tabwidth') + ' ' + (str(i)+')').ljust(cwidth))
+                        i = i + 1
+                    print_elem(stylestack,serializer,child,indent=indent+1)
+                serializer.end_entity()
+
+            elif elem.tag == 'pre':
+                serializer.start_block(stylestack)
+                serializer.pre(elem.text)
+                serializer.end_entity()
+
+            elif elem.tag == 'hr':
+                width = stylestack.get('width')
+                if stylestack.get('size') in ('double', 'double-width'):
+                    width = width / 2
+                serializer.start_block(stylestack)
+                serializer.text('-'*width)
+                serializer.end_entity()
+
+            elif elem.tag == 'br':
+                serializer.linebreak()
+
             elif elem.tag == 'img':
                 if src in elem.attrib and 'data:' in elem.attrib['src']:
                     self.print_base64_image(elem.attrib['src'])
-            elif elem.tag == 'p':
-                self.text(strclean(elem.text)+'\n')
-            elif elem.tag == 'h1':
-                self.set(align='left', font='a', type='b', width=2, height=2)
-                self._raw('\x1b\x21\x30')
-                self._raw('\x1b\x45\x01')
-                self.text(strclean(elem.text)+'\n')
-                self.set()
-            elif elem.tag == 'h2':
-                self.set(align='left', font='a', type='bu', width=1, height=2)
-                self._raw('\x1b\x21\x30')
-                self.text(strclean(elem.text)+'\n')
-                self.set()
-            elif elem.tag == 'h3':
-                self.set(align='left', font='a', type='u', width=1, height=2)
-                self._raw('\x1b\x45\x01')
-                self.text(strclean(elem.text)+'\n')
-                self.set()
-            elif elem.tag == 'h4':
-                self.set(align='left', font='a', type='bu', width=1, height=2)
-                self.text(strclean(elem.text)+'\n')
-                self.set()
-            elif elem.tag == 'h5':
-                self.set(align='left', font='a', type='u', width=1, height=1)
-                self._raw('\x1b\x45\x01')
-                self.text(strclean(elem.text)+'\n')
-                self.set()
-            elif elem.tag == 'pre':
-                self.text(elem.text)
+
+            elif elem.tag == 'barcode' and 'encoding' in elem.attrib:
+                serializer.start_block(stylestack)
+                self.barcode(strclean(elem.text),elem.attrib['encoding'])
+                serializer.end_entity()
+
             elif elem.tag == 'cut':
                 self.cut()
-            elif elem.tag == 'ul':
-                print_ul(elem)
-            elif elem.tag == 'ol':
-                print_ol(elem)
-            elif elem.tag == 'hr':
-                self.text('-'*width+'\n')
-            elif elem.tag == 'br':
-                self.text('\n')
-            elif elem.tag == 'barcode' and 'encoding' in elem.attrib:
-                self.barcode(strclean(elem.text),elem.attrib['encoding'])
             elif elem.tag == 'partialcut':
                 self.cut(mode='part')
             elif elem.tag == 'cashdraw':
                 self.cashdraw(2)
                 self.cashdraw(5)
 
-        if cut_receipt:
-            self.cut()
-        if open_cashdrawer:
-            self.cashdraw(2)
-            self.cashdraw(5)
+            stylestack.pop()
 
+        try:
+            stylestack      = StyleStack() 
+            serializer      = XmlSerializer(self)
+            root            = ET.fromstring(xml)
+
+            self._raw(stylestack.to_escpos())
+
+            print_elem(stylestack,serializer,root)
+
+            if 'open-cashdrawer' in root.attrib and root.attrib['open-cashdrawer'] == 'true':
+                self.cashdraw(2)
+                self.cashdraw(5)
+            if not 'cut' in root.attrib or root.attrib['cut'] == 'true' :
+                self.cut()
+
+        except Exception as e:
+            errmsg = str(e)+'\n'+'-'*48+'\n'+traceback.format_exc() + '-'*48+'\n'
+            self.text(errmsg)
+            self.cut()
+
+            raise e
 
     def text(self,txt):
         """ Print Utf8 encoded alpha-numeric text """
