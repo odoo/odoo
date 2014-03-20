@@ -292,6 +292,7 @@ class module(osv.osv):
         'reports_by_module': fields.function(_get_views, string='Reports', type='text', multi="meta", store=True),
         'views_by_module': fields.function(_get_views, string='Views', type='text', multi="meta", store=True),
         'application': fields.boolean('Application', readonly=True),
+        'virtual': fields.boolean('Virtual module', readonly=True),
         'icon': fields.char('Icon URL', size=128),
         'icon_image': fields.function(_get_icon_image, string='Icon', type="binary"),
     }
@@ -301,6 +302,7 @@ class module(osv.osv):
         'sequence': 100,
         'demo': False,
         'license': 'AGPL-3',
+        'virtual': False,
     }
     _order = 'sequence,name'
 
