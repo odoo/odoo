@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp.tools import html2plaintext
 from openerp.tools.translate import _
 from openerp.osv import osv, fields
 
@@ -26,7 +27,21 @@ from openerp.osv import osv, fields
 class MailMessage(osv.Model):
     _inherit = 'mail.message'
 
+    def _get_description_short(self, cr, uid, ids, name, arg, context=None):
+        res = dict.fromkeys(ids, False)
+        for message in self.browse(cr, uid, ids, context=context):
+            if message.subject:
+                res[message.id] = message.subject
+            else:
+                plaintext_ct = html2plaintext(message.body)
+                res[message.id] = plaintext_ct + '%s' % (' [...]' if len(plaintext_ct) >= 20 else '')
+        return res
+
     _columns = {
+        'description': fields.function(
+            _get_description_short, type='char',
+            help='Message description: either the subject, or the beginning of the body'
+        ),
         'website_published': fields.boolean(
             'Published', help="Visible on the website as a comment"
         ),
