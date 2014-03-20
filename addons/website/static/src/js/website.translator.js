@@ -117,7 +117,7 @@
             });
             if (trans.length) {
                 node.setAttribute('data-oe-translation-id', trans[0].id);
-                if(trans[0].state && (trans[0].state == 'inprogress' || trans[0].state == 'to_translate')){
+                if(trans[0].gengo_translation && (trans[0].state == 'inprogress' || trans[0].state == 'to_translate')){
                     if(this.gengo_translate){
                         node.className += ' oe_translatable_inprogress';
                         }

@@ -135,7 +135,7 @@
             this.done =  res.done;
             this.new_words =  0;
             $('.oe_translatable_todo').each(function () {
-                self.new_words += $(this).text().split(" ").length;
+                self.new_words += $(this).text().trim().replace(/ +/g," ").split(" ").length;
             });
             return this._super.apply(this, arguments);
         },
