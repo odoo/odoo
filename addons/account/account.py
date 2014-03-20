@@ -30,7 +30,7 @@ from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import fields, osv, expression
 from openerp.tools.translate import _
-from openerp.tools.float_utils import float_round
+from openerp.tools.float_utils import float_round as round
 
 import openerp.addons.decimal_precision as dp
 
@@ -1937,15 +1937,15 @@ class account_tax(osv.osv):
         #
         'base_code_id': fields.many2one('account.tax.code', 'Account Base Code', help="Use this code for the tax declaration."),
         'tax_code_id': fields.many2one('account.tax.code', 'Account Tax Code', help="Use this code for the tax declaration."),
-        'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
-        'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
+        'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
+        'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
 
         # Same fields for refund invoices
 
         'ref_base_code_id': fields.many2one('account.tax.code', 'Refund Base Code', help="Use this code for the tax declaration."),
         'ref_tax_code_id': fields.many2one('account.tax.code', 'Refund Tax Code', help="Use this code for the tax declaration."),
-        'ref_base_sign': fields.float('Refund Base Code Sign', help="Usually 1 or -1."),
-        'ref_tax_sign': fields.float('Refund Tax Code Sign', help="Usually 1 or -1."),
+        'ref_base_sign': fields.float('Refund Base Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
+        'ref_tax_sign': fields.float('Refund Tax Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
         'include_base_amount': fields.boolean('Included in base amount', help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'description': fields.char('Tax Code'),
@@ -2143,7 +2143,7 @@ class account_tax(osv.osv):
         tax_compute_precision = precision
         if taxes and taxes[0].company_id.tax_calculation_rounding_method == 'round_globally':
             tax_compute_precision += 5
-        totalin = totalex = float_round(price_unit * quantity, precision)
+        totalin = totalex = round(price_unit * quantity, precision)
         tin = []
         tex = []
         for tax in taxes:
