@@ -119,7 +119,7 @@
             console.log(this.translations);
             if (trans.length) {
                 node.setAttribute('data-oe-translation-id', trans[0].id);
-                if(trans[0].state && trans[0].state == 'inprogress'){
+                if(trans[0].state && (trans[0].state == 'inprogress' || trans[0].state == 'to_translate')){
                         node.className += ' oe_translatable_inprogress';
                     }
             } else {

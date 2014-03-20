@@ -30,6 +30,7 @@ class res_company(osv.Model):
            "gengo_public_key": fields.text("Gengo Public Key"),
            "gengo_comment": fields.text("Comments", help="This comment will be automatically be enclosed in each an every request sent to Gengo"),
            "gengo_auto_approve": fields.boolean("Auto Approve Translation ?", help="Jobs are Automatically Approved by Gengo."),
+           "gengo_sandbox": fields.boolean("Sandbox", help="Enable if you using testing account"),
     }
 
     _defaults = {

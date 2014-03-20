@@ -74,7 +74,7 @@ class base_gengo_translations(osv.osv_memory):
             gengo = MyGengo(
                 public_key=user.company_id.gengo_public_key.encode('ascii'),
                 private_key=user.company_id.gengo_private_key.encode('ascii'),
-                sandbox = True,
+                sandbox = user.company_id.gengo_sandbox,
             )
             gengo.getAccountStats()
             return (True, gengo)

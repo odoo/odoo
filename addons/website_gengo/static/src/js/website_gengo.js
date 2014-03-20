@@ -9,6 +9,7 @@
             'click a[data-action=translation_gengo]': 'translation_gengo',
             'click a[data-action=translation_gengo_post]': 'translation_gengo_post',
             'click a[data-action=translation_gengo_info]': 'translation_gengo_info',
+            'click a[data-action=reload]': 'reload',
         }),
         start: function () {
             this.gengo_translate = false;
@@ -32,12 +33,12 @@
                 self.translate().then(function () {
                     self.gengo_translate = false;
                     if($('.oe_translatable_todo').length > 0){
-                        self.$el.find('.gengo_translate').addClass("hidden");
-                        self.$el.find('.gengo_post').removeClass("hidden");
+                        self.$el.find('form.navbar-form.navbar-left > *').addClass("hidden");
+                        self.$el.find('.gengo_post,.gengo_info,.gengo_discard').removeClass("hidden");
                     }
                     else{
-                        self.$el.find('.gengo_translate').addClass("hidden");
-                        self.$el.find('.gengo_inprogress').removeClass("hidden");
+                        self.$el.find('form.navbar-form.navbar-left > *').addClass("hidden");
+                        self.$el.find('.gengo_inprogress,.gengo_info,.gengo_discard').removeClass("hidden");
                         
                     }
                 });
@@ -71,6 +72,8 @@
                 openerp.jsonRpc('/website/set_translations', 'call', {
                     'data': trans,
                     'lang': website.get_context()['lang'],
+                }).done(function(){
+                    $('.oe_translatable_todo').addClass('oe_translatable_inprogress').removeClass('oe_translatable_todo');
                 });
             });
             
@@ -86,6 +89,9 @@
                 dialog.appendTo($(document.body));
                 
             });
+        },
+        reload: function () {
+            website.reload();
         },
     });
     
@@ -121,9 +127,14 @@
         }),
         template: 'website.GengoTranslatorStatisticDialog',
         init:function(res){
+            var self = this;
             this.total =  res.total;
             this.inprogess =  res.inprogess;
             this.done =  res.done;
+            this.new_words =  0;
+            $('.oe_translatable_todo').each(function () {
+                self.new_words += $(this).text().split(" ").length;
+            });
             return this._super.apply(this, arguments);
         },
         start: function (res) {

@@ -14,6 +14,6 @@ class website_gengo(http.Controller):
             result['total'] += len(trans.source.split())
             if trans.state == 'translated':
                 result['done'] += len(trans.source.split())
-            elif trans.state == 'inprogress':
+            elif trans.state in ['inprogress','to_translate']:
                 result['inprogess'] += len(trans.source.split())
         return result
