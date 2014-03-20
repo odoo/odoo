@@ -205,15 +205,15 @@ def init_logger():
 
 DEFAULT_LOG_CONFIGURATION = [
     'openerp.workflow.workitem:WARNING',
-    'openerp.netsvc.rpc.request:INFO',
-    'openerp.netsvc.rpc.response:INFO',
+    'openerp.http.rpc.request:INFO',
+    'openerp.http.rpc.response:INFO',
     'openerp.addons.web.http:INFO',
     'openerp.sql_db:INFO',
     ':INFO',
 ]
 PSEUDOCONFIG_MAPPER = {
-    'debug_rpc_answer': ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG', 'openerp.netsvc.rpc.response:DEBUG'],
-    'debug_rpc': ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG'],
+    'debug_rpc_answer': ['openerp:DEBUG','openerp.http.rpc.request:DEBUG', 'openerp.http.rpc.response:DEBUG'],
+    'debug_rpc': ['openerp:DEBUG','openerp.http.rpc.request:DEBUG'],
     'debug': ['openerp:DEBUG'],
     'debug_sql': ['openerp.sql_db:DEBUG'],
     'info': [],

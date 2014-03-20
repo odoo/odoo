@@ -183,9 +183,9 @@ class configmanager(object):
         group.add_option("--logrotate", dest="logrotate", action="store_true", my_default=False, help="enable logfile rotation")
         group.add_option("--syslog", action="store_true", dest="syslog", my_default=False, help="Send the log to the syslog server")
         group.add_option('--log-handler', action="append", default=DEFAULT_LOG_HANDLER, my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
-        group.add_option('--log-request', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.request:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.request:DEBUG')
-        group.add_option('--log-response', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.response:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.response:DEBUG')
-        group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.addons.web.http:DEBUG", help='shortcut for --log-handler=openerp.addons.web.http:DEBUG')
+        group.add_option('--log-request', action="append_const", dest="log_handler", const="openerp.http.rpc.request:DEBUG", help='shortcut for --log-handler=openerp.http.rpc.request:DEBUG')
+        group.add_option('--log-response', action="append_const", dest="log_handler", const="openerp.http.rpc.response:DEBUG", help='shortcut for --log-handler=openerp.http.rpc.response:DEBUG')
+        group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.http:DEBUG", help='shortcut for --log-handler=openerp.http:DEBUG')
         group.add_option('--log-sql', action="append_const", dest="log_handler", const="openerp.sql_db:DEBUG", help='shortcut for --log-handler=openerp.sql_db:DEBUG')
         group.add_option('--log-db', dest='log_db', help="Logging database", my_default=False)
         # For backward-compatibility, map the old log levels to something
