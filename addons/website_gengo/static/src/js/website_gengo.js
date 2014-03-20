@@ -53,8 +53,8 @@
             dialog.on('service_level', this, function () {
                 var gengo_service_level = dialog.$el.find(".form-control").val();
                 dialog.$el.modal('hide');
-                self.$el.find('.gengo_post').addClass("hidden");
-                self.$el.find('.gengo_inprogress').removeClass("hidden");
+                self.$el.find('.gengo_post,.gengo_discard').addClass("hidden");
+                self.$el.find('.gengo_wait').removeClass("hidden");
                 var trans ={}
                 $('.oe_translatable_todo').each(function () {
                     var $node = $(this);
@@ -74,6 +74,8 @@
                     'lang': website.get_context()['lang'],
                 }).done(function(){
                     $('.oe_translatable_todo').addClass('oe_translatable_inprogress').removeClass('oe_translatable_todo');
+                    self.$el.find('.gengo_wait').addClass("hidden");
+                    self.$el.find('.gengo_inprogress,.gengo_discard').removeClass("hidden");
                 });
             });
             

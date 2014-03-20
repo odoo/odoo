@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 <t t-name="website.ButtonGengoTranslator">
     <a class="btn btn-danger gengo_translate" data-action="translation_gengo" href="#">Gengo Translation</a>
-    <a class="btn btn-danger hidden gengo_post" data-action="translation_gengo_post" href="#">Post to Gengo</a><a class="btn btn-danger hidden gengo_inprogress disabled"  href="#"> <i class="fa fa-clock-o"></i> Translation in Progress</a><a class="btn btn-danger gengo_info hidden" data-action="translation_gengo_info"><i class="fa fa-info-circle"></i></a>
-    <span class="gengo_discard hidden"> or <a href="#" data-action="reload">Discard</a></span>
+    <a class="btn btn-danger hidden gengo_post" data-action="translation_gengo_post" href="#">Post to Gengo</a><a class="btn btn-danger hidden gengo_wait disabled"  href="#"> <i class="fa fa-spinner fa-spin"></i> Wait</a><a class="btn btn-danger hidden gengo_inprogress disabled"  href="#"> <i class="fa fa-clock-o"></i> Translation in Progress</a><a class="btn btn-danger gengo_info hidden" data-action="translation_gengo_info"><i class="fa fa-info-circle"></i></a>
+    <span class="gengo_discard hidden"> or <a href="#" data-action="reload">Return</a></span>
 </t>
 <t t-name="website.GengoTranslatorDialog">
     <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
