@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp.osv import osv
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from common_report_header import common_report_header
@@ -29,14 +30,12 @@ except ImportError:
 import xlwt
 
 
-class tax_report(http.Controller, common_report_header):
+class tax_report(osv.Model, common_report_header):
+    _name = 'report.account.report_vat'
 
-    @http.route(['/report/account.report_vat', '/report/pdf/report/account.report_vat'], type='http', auth='user', website=True, multilang=True)
-    def report_account_tax(self, **data):
+    def render_html(self, cr, uid, ids, data=None, context=None):
         report_obj = request.registry['report']
-        self.cr, self.uid, self.pool = request.cr, request.uid, request.registry
-
-        data = report_obj.eval_params(data)
+        self.cr, self.uid = cr, uid
 
         res = {}
         self.period_ids = []
@@ -56,12 +55,7 @@ class tax_report(http.Controller, common_report_header):
             'period_to': self.get_end_period(data),
             'taxlines': self._get_lines(self._get_basedon(data), company_id=data['form']['company_id']),
         }
-        if request.httprequest.path.startswith('/report/pdf/'):
-            html = request.registry['report'].render(self.cr, self.uid, [], 'account.report_vat', docargs)
-            pdf = request.registry['report'].get_pdf(self.cr, self.uid, [], 'account.report_vat', html=html)
-            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
-            return request.make_response(pdf, headers=pdfhttpheaders)
-        return request.registry['report'].render(self.cr, self.uid, [], 'account.report_vat', docargs)
+        return report_obj.render(self.cr, self.uid, [], 'account.report_vat', docargs)
 
     def _get_basedon(self, form):
         return form['form']['based_on']

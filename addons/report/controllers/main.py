@@ -22,21 +22,50 @@
 from openerp.addons.web.http import Controller, route, request
 
 import simplejson
+import urlparse
 from werkzeug import exceptions
 from reportlab.graphics.barcode import createBarcodeDrawing
 
 
 class ReportController(Controller):
 
+    #------------------------------------------------------
+    # Generic reports controller
+    #------------------------------------------------------
+
     @route(['/report/<reportname>/<docids>'], type='http', auth='user', website=True, multilang=True)
     def report_html(self, reportname, docids):
-        return request.registry['report'].get_html(request.cr, request.uid, docids, reportname)
+        return request.registry['report'].get_html(request.cr, request.uid, docids, reportname, context=request.context)
 
     @route(['/report/pdf/report/<reportname>/<docids>'], type='http', auth="user", website=True)
     def report_pdf(self, reportname, docids):
         pdf = request.registry['report'].get_pdf(request.cr, request.uid, docids, reportname)
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
+
+    #------------------------------------------------------
+    # Particular reports controller
+    #------------------------------------------------------
+
+    @route(['/report/<reportname>'], type='http', auth='user', website=True, multilang=True)
+    def report_html_particular(self, reportname, **data):
+        report_obj = request.registry['report']
+        data = report_obj.eval_params(data)
+        return report_obj.get_html(request.cr, request.uid, [], reportname, data=data, context=request.context)
+
+    @route(['/report/pdf/report/<reportname>'], type='http', auth='user', website=True, multilang=True)
+    def report_pdf_particular(self, reportname, **data):
+        cr, uid, context = request.cr, request.uid, request.context
+        report_obj = request.registry['report']
+        data = report_obj.eval_params(data)
+        html = report_obj.get_html(cr, uid, [], reportname, data=data, context=context)
+        pdf = report_obj.get_pdf(cr, uid, [], reportname, html=html, context=context)
+        pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
+        return request.make_response(pdf, headers=pdfhttpheaders)
+
+    #------------------------------------------------------
+    # Misc utils
+    #------------------------------------------------------
 
     @route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="user")
     def report_barcode(self, type, value, width=300, height=50):
@@ -72,9 +101,20 @@ class ReportController(Controller):
         requestcontent = simplejson.loads(data)
         url, type = requestcontent[0], requestcontent[1]
         if type == 'qweb-pdf':
-            reportname, docids = url.split('/')[-2:]
-            response = self.report_pdf(reportname, docids)
-            response.headers.add('Content-Disposition', 'attachment; filename=report.pdf;')
+            reportname = url.split('/report/pdf/report/')[1].split('?')[0].split('/')[0]
+
+            if '?' not in url:
+                # Generic report:
+                docids = url.split('/')[-1]
+                response = self.report_pdf(reportname, docids)
+            else:
+                # Particular report:
+                querystring = url.split('?')[1]
+                querystring = urlparse.parse_qsl(querystring)
+                dict_querystring = dict(querystring)
+                response = self.report_pdf_particular(reportname, **dict_querystring)
+
+            response.headers.add('Content-Disposition', 'attachment; filename=%s.pdf;' % reportname)
             response.set_cookie('fileToken', token)
             return response
         else:
