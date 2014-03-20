@@ -3016,41 +3016,20 @@ class BaseModel(object):
         if context is None:
             context = {}
 
-        has_access = functools.partial(self.check_access_rights, cr, user, raise_exception=False)
-
-        write_access = has_access('write') or has_access('create')
-
-        translation_obj = self.pool.get('ir.translation')
-
         res = {}
-
-        def get_translation(fname, types, source=None):
-            return translation_obj._get_source(
-                cr, user, name='%s,%s' % (self._name, fname),
-                types=types, lang=context['lang'], source=source
-            )
-
         for fname, field in self._fields.iteritems():
             if allfields and fname not in allfields:
                 continue
-
             if field.groups and not self.user_has_groups(cr, user, field.groups, context=context):
                 continue
+            res[fname] = field.get_description()
 
-            res[fname] = description = field.get_description()
-
-            if not write_access:
-                description.update(readonly=True, states=dict())
-
-            if 'lang' in context:
-                if 'string' in description:
-                    translation = get_translation(fname, 'field')
-                    if translation:
-                        description['string'] = translation
-                if 'help' in description:
-                    translaton = get_translation(fname, 'help')
-                    if translaton:
-                        description['help'] = translaton
+        # if user cannot create or modify records, make all fields readonly
+        has_access = functools.partial(self.check_access_rights, cr, user, raise_exception=False)
+        if not (has_access('write') or has_access('create')):
+            for description in res.itervalues():
+                description['readonly'] = True
+                description['states'] = {}
 
         return res
 

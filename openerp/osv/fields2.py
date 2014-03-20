@@ -129,32 +129,6 @@ class Field(object):
     states = None
     groups = False              # csv list of group xml ids
 
-    # arguments passed to column class by to_column()
-    _column_string = attrgetter('string')
-    _column_help = attrgetter('help')
-    _column_readonly = attrgetter('readonly')
-    _column_required = attrgetter('required')
-    _column_states = attrgetter('states')
-    _column_groups = attrgetter('groups')
-
-    # attributes copied from related field by setup_related()
-    _related_string = attrgetter('string')
-    _related_help = attrgetter('help')
-    _related_readonly = attrgetter('readonly')
-    _related_required = attrgetter('required')
-    _related_states = attrgetter('states')
-    _related_groups = attrgetter('groups')
-
-    # attributes exported by get_description()
-    _description_depends = attrgetter('depends')
-    _description_related = attrgetter('related')
-    _description_string = attrgetter('string')
-    _description_help = attrgetter('help')
-    _description_readonly = attrgetter('readonly')
-    _description_required = attrgetter('required')
-    _description_states = attrgetter('states')
-    _description_groups = attrgetter('groups')
-
     def __init__(self, string=None, **kwargs):
         kwargs['string'] = string
         for attr, value in kwargs.iteritems():
@@ -196,10 +170,34 @@ class Field(object):
         desc = {'type': self.type, 'store': self.store}
         for attr in dir(self):
             if attr.startswith('_description_'):
-                value = getattr(self, attr)(self)
+                value = getattr(self, attr)
                 if value:
                     desc[attr[13:]] = value
         return desc
+
+    # properties used by get_description()
+    _description_depends = property(attrgetter('depends'))
+    _description_related = property(attrgetter('related'))
+    _description_readonly = property(attrgetter('readonly'))
+    _description_required = property(attrgetter('required'))
+    _description_states = property(attrgetter('states'))
+    _description_groups = property(attrgetter('groups'))
+
+    @property
+    def _description_string(self):
+        if self.string and scope.lang:
+            name = "%s,%s" % (self.model_name, self.name)
+            trans = scope['ir.translation']._get_source(name, 'field', scope.lang)
+            return trans or self.string
+        return self.string
+
+    @property
+    def _description_help(self):
+        if self.help and scope.lang:
+            name = "%s,%s" % (self.model_name, self.name)
+            trans = scope['ir.translation']._get_source(name, 'help', scope.lang)
+            return trans or self.help
+        return self.help
 
     def to_column(self):
         """ return a low-level field object corresponding to `self` """
@@ -212,8 +210,16 @@ class Field(object):
         args = {}
         for attr in dir(self):
             if attr.startswith('_column_'):
-                args[attr[8:]] = getattr(self, attr)(self)
+                args[attr[8:]] = getattr(self, attr)
         return getattr(fields, self.type)(**args)
+
+    # properties used by to_column() to create a column instance
+    _column_string = property(attrgetter('string'))
+    _column_help = property(attrgetter('help'))
+    _column_readonly = property(attrgetter('readonly'))
+    _column_required = property(attrgetter('required'))
+    _column_states = property(attrgetter('states'))
+    _column_groups = property(attrgetter('groups'))
 
     #
     # Conversion of values
@@ -442,10 +448,18 @@ class Field(object):
         for attr in dir(self):
             if attr.startswith('_related_'):
                 if not getattr(self, attr[9:]):
-                    setattr(self, attr[9:], getattr(self, attr)(field))
+                    setattr(self, attr[9:], getattr(field, attr))
 
         # special case: related fields never have an inverse field!
         self.inverse_field = None
+
+    # properties used by setup_related() to copy values from related field
+    _related_string = property(attrgetter('string'))
+    _related_help = property(attrgetter('help'))
+    _related_readonly = property(attrgetter('readonly'))
+    _related_required = property(attrgetter('required'))
+    _related_states = property(attrgetter('states'))
+    _related_groups = property(attrgetter('groups'))
 
     #
     # Field setup.
@@ -581,11 +595,10 @@ class Float(Field):
     type = 'float'
     _digits = None
 
-    _column_digits = staticmethod(lambda self: not callable(self._digits) and self._digits)
-    _column_digits_compute = staticmethod(lambda self: callable(self._digits) and self._digits)
-
-    _related_digits = attrgetter('digits')
-    _description_digits = attrgetter('digits')
+    _column_digits = property(lambda self: not callable(self._digits) and self._digits)
+    _column_digits_compute = property(lambda self: callable(self._digits) and self._digits)
+    _related_digits = property(attrgetter('digits'))
+    _description_digits = property(attrgetter('digits'))
 
     def __init__(self, string=None, digits=None, **kwargs):
         self._digits = digits
@@ -607,9 +620,9 @@ class _String(Field):
     """ Abstract class for string fields. """
     translate = False
 
-    _column_translate = attrgetter('translate')
-    _related_translate = attrgetter('translate')
-    _description_translate = attrgetter('translate')
+    _column_translate = property(attrgetter('translate'))
+    _related_translate = property(attrgetter('translate'))
+    _description_translate = property(attrgetter('translate'))
 
 
 class Char(_String):
@@ -617,9 +630,9 @@ class Char(_String):
     type = 'char'
     size = None
 
-    _column_size = attrgetter('size')
-    _related_size = attrgetter('size')
-    _description_size = attrgetter('size')
+    _column_size = property(attrgetter('size'))
+    _related_size = property(attrgetter('size'))
+    _description_size = property(attrgetter('size'))
 
     def convert_to_cache(self, value):
         return bool(value) and ustr(value)[:self.size]
@@ -712,7 +725,7 @@ class Selection(Field):
         else:
             return selection
 
-    @staticmethod
+    @property
     def _column_selection(self):
         if isinstance(self.selection, basestring):
             method = self.selection
@@ -720,7 +733,7 @@ class Selection(Field):
         else:
             return self.selection
 
-    _description_selection = staticmethod(get_selection)
+    _description_selection = property(get_selection)
 
     def setup_related(self):
         super(Selection, self).setup_related()
@@ -758,8 +771,8 @@ class Reference(Selection):
     type = 'reference'
     size = 128
 
-    _column_size = attrgetter('size')
-    _related_size = attrgetter('size')
+    _column_size = property(attrgetter('size'))
+    _related_size = property(attrgetter('size'))
 
     def __init__(self, selection, string=None, **kwargs):
         """ Reference field.
@@ -798,14 +811,14 @@ class _Relational(Field):
     domain = None                       # domain for searching values
     context = None                      # context for searching values
 
-    _column_obj = attrgetter('comodel_name')
-    _column_domain = attrgetter('domain')
-    _column_context = attrgetter('context')
+    _column_obj = property(attrgetter('comodel_name'))
+    _column_domain = property(attrgetter('domain'))
+    _column_context = property(attrgetter('context'))
 
-    _description_relation = attrgetter('comodel_name')
-    _description_domain = staticmethod(lambda self: \
+    _description_relation = property(attrgetter('comodel_name'))
+    _description_domain = property(lambda self: \
         self.domain(self.model) if callable(self.domain) else self.domain)
-    _description_context = attrgetter('context')
+    _description_context = property(attrgetter('context'))
 
     def __init__(self, **kwargs):
         super(_Relational, self).__init__(**kwargs)
@@ -847,8 +860,8 @@ class Many2one(_Relational):
     auto_join = False                   # whether joins are generated upon search
     delegate = False                    # whether self implements delegation
 
-    _column_ondelete = attrgetter('ondelete')
-    _column_auto_join = attrgetter('auto_join')
+    _column_ondelete = property(attrgetter('ondelete'))
+    _column_auto_join = property(attrgetter('auto_join'))
 
     def __init__(self, comodel_name, string=None, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
@@ -1001,11 +1014,11 @@ class One2many(_RelationalMulti):
     auto_join = False                   # whether joins are generated upon search
     limit = None                        # optional limit to use upon read
 
-    _column_fields_id = attrgetter('inverse_name')
-    _column_auto_join = attrgetter('auto_join')
-    _column_limit = attrgetter('limit')
+    _column_fields_id = property(attrgetter('inverse_name'))
+    _column_auto_join = property(attrgetter('auto_join'))
+    _column_limit = property(attrgetter('limit'))
 
-    _description_relation_field = attrgetter('inverse_name')
+    _description_relation_field = property(attrgetter('inverse_name'))
 
     def __init__(self, comodel_name, inverse_name=None, string=None, **kwargs):
         super(One2many, self).__init__(
@@ -1024,10 +1037,10 @@ class Many2many(_RelationalMulti):
     column2 = None                      # column of table referring to comodel
     limit = None                        # optional limit to use upon read
 
-    _column_rel = attrgetter('relation')
-    _column_id1 = attrgetter('column1')
-    _column_id2 = attrgetter('column2')
-    _column_limit = attrgetter('limit')
+    _column_rel = property(attrgetter('relation'))
+    _column_id1 = property(attrgetter('column1'))
+    _column_id2 = property(attrgetter('column2'))
+    _column_limit = property(attrgetter('limit'))
 
     def __init__(self, comodel_name, relation=None, column1=None, column2=None,
                 string=None, **kwargs):
