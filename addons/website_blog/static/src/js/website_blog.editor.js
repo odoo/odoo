@@ -45,13 +45,13 @@
             return this._super();
         },
         clean_bg : function(vHeight) {
-            $('.cover_header').css({"background-image":"", 'min-height': vHeight});
+            $('.cover_header').css({"background-image":'none', 'min-height': vHeight});
         },
         change_bg : function(vHeight) {
             var self  = this;
             var editor  = new  website.editor.ImageDialog();
             editor.on('start', self, function (o) {
-                o.url = $('.cover_header')[0].style.background.replace('url(','').replace(')','');
+                o.url = $('.cover_header')[0] ? $('.cover_header')[0].style.background.replace('url(','').replace(')','') : ''; 
             });
             editor.on('save', self, function (o) {
                 $('.cover_header').css({"background-image": o.url && o.url !== "" ? 'url(' + o.url + ')' : "", 'min-height': vHeight})
