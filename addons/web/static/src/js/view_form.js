@@ -2348,6 +2348,10 @@ instance.web.form.DropdownSelection = instance.web.form.FieldChar.extend({
         data['states'] = self.prepare_dropdown_selection();
         this.$el.html(QWeb.render("DropdownSelection", data));
         this.$el.find('.oe_legend').click(self.do_action.bind(self));
+        this.$el.on('mouseenter mouseleave', function(e) {
+            self.$el.find('.caret').toggleClass('hidden', e.type == 'mouseleave');
+        });
+        
     },
     do_action: function(e) {
         var self = this;

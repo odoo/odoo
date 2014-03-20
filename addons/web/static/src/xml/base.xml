@@ -1009,11 +1009,11 @@
 </t>
 
 <t t-name="DropdownSelection">
-    <span class="btn-group">
+    <span class="btn-group state">
         <t t-foreach="states" t-as="rec">
             <a t-att-class="rec.state_icon" t-if="widget.get('value') === rec.name" t-att-title="rec.state_name" >
-                <a t-att-class="'oe_legend dropdown-toggle'" data-toggle="dropdown">
-                <span class="caret"></span>
+                <a class="oe_legend dropdown-toggle" data-toggle="dropdown">
+                <span class="caret hidden"></span>
                 <span class="sr-only">Toggle Dropdown</span> </a>
             </a>
         </t>

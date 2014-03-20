@@ -1330,6 +1330,9 @@ instance.web_kanban.DropdownSelection = instance.web_kanban.AbstractField.extend
         data['states'] = self.prepare_dropdown_selection();
         this.$el = $(QWeb.render("DropdownSelection", data));
         this.$el.find('.oe_legend').click(self.do_action.bind(self));
+        this.$el.on('mouseenter mouseleave', function(e) {
+            self.$el.find('.caret').toggleClass('hidden', e.type == 'mouseleave');
+        });
     },
     do_action: function(e) {
         var self = this;
