@@ -246,6 +246,7 @@ class Vote(osv.Model):
         'post_id': fields.many2one('website.forum.post', 'Post', required=True),
         'user_id': fields.many2one('res.users', 'User'),
         'vote': fields.selection([('1', '1'),('-1', '-1'),('0','0')], 'Vote'),
+        'create_date': fields.datetime('Create Date', select=True, readonly=True),
     }
     _defaults = {
         'user_id': lambda self, cr, uid, ctx: uid,

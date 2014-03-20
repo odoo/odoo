@@ -248,14 +248,22 @@
             <field name="level">silver</field>
         </record>
 
-        <!-- TODO : Create pythone code-->
         <record model="gamification.goal.definition" id="definition_enthusiast">
             <field name="name">Enthusiast</field>
             <field name="description">Vote on questions/answers for 15 days in a row</field>
-            <field name="computation_mode">count</field>
+            <field name="computation_mode">python</field>
+            <field name="compute_code">def get_counter(cr, uid, context=None):
+    res = 1
+    start_date = date.today() - timedelta(days=16)
+    end_date = date.today() - timedelta(days=1)
+    cr.execute('SELECT COUNT(id), create_date from website_forum_post_vote where create_date &gt;= %s and create_date &lt;= %s and user_id = %s GROUP BY create_date',(start_date,end_date, object.user_id.id,))
+    data = cr.dictfetchall()
+    if len(data) == 15:
+        res += 1
+    return res
+result = get_counter(cr, uid, context=context)
+            </field>
             <field name="display_mode">boolean</field>
-            <field name="model_id" eval="ref('website_forum.model_website_forum_post_vote')" />
-            <field name="domain">[('user_id','=',user.id)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -272,7 +280,7 @@
 
         <record model="gamification.challenge.line" id="line_enthusiast">
             <field name="definition_id" eval="ref('definition_enthusiast')" />
-            <field name="target_goal">1</field>
+            <field name="target_goal">2</field>
             <field name="challenge_id" eval="ref('challenge_enthusiast')" />
         </record>
 
@@ -282,14 +290,22 @@
             <field name="level">silver</field>
         </record>
 
-        <!-- TODO :Create python code-->
         <record model="gamification.goal.definition" id="definition_expert">
             <field name="name">Expert</field>
-            <field name="description">Post more than 10 questions or answers in one tag</field>
-            <field name="computation_mode">count</field>
+            <field name="description">Post more than 10 questions in one tag</field>
+            <field name="computation_mode">python</field>
+            <field name="compute_code">def get_counter(cr, uid, context=None):
+    res = 1
+    Post = self.pool['website.forum.post']
+    Tag = self.pool['website.forum.tag']
+    for tag in Tag.search(cr, uid, [], context=context):
+        post_count = Post.search_count(cr, uid , [('tags', '=', tag), ('user_id', '=', object.user_id.id)], context=context)
+        if post_count >= 10:
+             res += 1
+    return res
+result = get_counter(cr, uid, context=context)
+            </field>
             <field name="display_mode">boolean</field>
-            <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <!--field name="domain">[('user_id','=',user.id), ('vote_count', '>=', 3)]</field-->
             <field name="condition">higher</field>
         </record>
 
@@ -306,7 +322,7 @@
 
         <record model="gamification.challenge.line" id="line_expert">
             <field name="definition_id" eval="ref('definition_expert')" />
-            <field name="target_goal">11</field>
+            <field name="target_goal">2</field>
             <field name="challenge_id" eval="ref('challenge_expert')" />
         </record>
 
@@ -357,7 +373,7 @@
             <field name="compute_code">def count_favorites(cr, uid, context=None):
     res = 1
     Post = self.pool['website.forum.post']
-    user_posts = Post.search(cr, uid, [('user_id','=',uid), ('parent_id', '=', False)], context=context)
+    user_posts = Post.search(cr, uid, [('user_id','=',object.user_id.id), ('parent_id', '=', False)], context=context)
     for post in  Post.browse(cr, uid, user_posts, context=context):
         if len(post.favourite_ids) >= 5:
             res += 1
@@ -563,8 +579,8 @@ result = count_favorites(cr, uid, context=context)
             <field name="compute_code">def get_posts(cr, uid, context=None):
     res = 1
     Post = self.pool['website.forum.post']
-    user_posts = Post.search(cr, uid, [('user_id','=',uid), ('parent_id', '!=', False), ('vote_count', '>=', 2)], context=context)
-    for post in  Post.browse(cr, uid, user_posts, context=context):
+    user_posts = Post.search(cr, uid, [('user_id','=',object.user_id.id), ('parent_id', '!=', False), ('vote_count', '>=', 2)], context=context)
+    for post in Post.browse(cr, uid, user_posts, context=context):
         print post.parent_id.create_date
         question_date = datetime.strptime(post.parent_id.create_date, "%Y-%m-%d %H:%M:%S")
         answer_date = datetime.strptime(post.create_date, "%Y-%m-%d %H:%M:%S")
@@ -810,7 +826,7 @@ result = get_posts(cr, uid, context=context)
     res = 1
     Message = self.pool['mail.message']
     Post = self.pool['website.forum.post']
-    user_message = Message.read_group(cr, uid,[('create_uid','=',uid), ('type', '=', 'comment'), ('model', '=', 'website.forum.post')], ['res_id'], groupby=['res_id'], context=context)
+    user_message = Message.read_group(cr, uid,[('create_uid','=',object.user_id.id), ('type', '=', 'comment'), ('model', '=', 'website.forum.post')], ['res_id'], groupby=['res_id'], context=context)
     for rec in user_message:
         if rec.get('res_id_count') >= 10:
             post = Post.browse(cr, uid, rec.get('res_id'), context=context)
@@ -925,7 +941,7 @@ result = get_count(cr, uid, context=context)
             <field name="compute_code">def count_favorites(cr, uid, context=None):
     res = 1
     Post = self.pool['website.forum.post']
-    user_posts = Post.search(cr, uid, [('user_id','=',uid), ('parent_id', '=', False)], context=context)
+    user_posts = Post.search(cr, uid, [('user_id','=',object.user_id), ('parent_id', '=', False)], context=context)
     for post in  Post.browse(cr, uid, user_posts, context=context):
         if len(post.favourite_ids) >= 25:
             res += 1
