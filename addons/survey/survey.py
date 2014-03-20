@@ -130,6 +130,7 @@ class survey_survey(osv.Model):
         'state': fields.selection(
             [('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'),
             ('cancel', 'Cancelled')], 'Status', required=1, translate=1),
+        'stage_id': fields.many2one('survey.stage', string="Stage"),
         'visible_to_user': fields.boolean('Public in website',
             help="If unchecked, only invited users will be able to open the survey."),
         'auth_required': fields.boolean('Login required',
@@ -338,6 +339,27 @@ class survey_survey(osv.Model):
             'target': 'self',
             'url': self.read(cr, uid, ids, ['public_url'], context=context)[0]['public_url'] + "/phantom"
         }
+
+
+class survey_stage(osv.Model):
+    """Stages for Kanban view of surveys"""
+
+    _name = 'survey.stage'
+    _description = 'Survey Stage'
+    _order = 'sequence'
+
+    _columns = {
+        'name': fields.text(string="Name", required=True, translate=True),
+        'sequence': fields.integer(string="Sequence"),
+        'open': fields.boolean(string="Display these surveys?")
+    }
+    _defaults = {
+        'sequence': 1,
+        'open': True
+    }
+    _sql_constraints = [
+        ('positive_sequence', 'CHECK(sequence >= 0)', 'Sequence number MUST be a natural')
+    ]
 
 
 class survey_page(osv.Model):

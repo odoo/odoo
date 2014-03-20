@@ -100,7 +100,7 @@ $(document).ready(function () {
         console.log(current_filters);
         $.ajax({
             url: '/survey/results/graph/'+question_id,
-            type: 'POST', // TODO check that something is posted
+            type: 'POST',
             dataType: 'json',
             data:{'current_filters': current_filters},
             success: function(response, status, xhr, wfe){

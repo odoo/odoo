@@ -213,7 +213,7 @@
             <field name="name">survey.kanban</field>
             <field name="model">survey.survey</field>
             <field name="arch" type="xml">
-                <kanban>
+                <kanban default_group_by="stage_id">
                     <field name="title" />
                     <field name="date_open" />
                     <field name="tot_sent_survey" />
