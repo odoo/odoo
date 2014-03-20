@@ -165,7 +165,7 @@ class Post(osv.Model):
                 'post_id': post.id,
                 'content': post.content,
                 'name': post.name,
-                'tags': [(6,0, [x.id for x in post.tags])],
+                #'tags': [(6,0, [x.id for x in post.tags])],
                 'date': post.write_date or post.create_date,
                 'user_id': post.write_uid and post.write_uid.id or post.user_id.id
             }, context=context)
@@ -180,6 +180,8 @@ class Post(osv.Model):
             #Note: because of no name it gives error on slug so set name of question in answer
             question = self.browse(cr, uid, vals.get("parent_id"), context=context)
             vals['name'] = question.name
+            #add 2 karma to user when asks question.
+            self.pool.get('res.users').write(cr, uid, [vals.get('user_id')], {'karma': 2}, context=context)
         post_id = super(Post, self).create(cr, uid, vals, context=create_context)
         #Note: just have to pass subtype in message post: gives error on installation time
         self.message_post(cr, uid, [post_id], body=_(body), context=context)
@@ -194,6 +196,14 @@ class Post(osv.Model):
                 if post.parent_id:
                     body, subtype = "Edited answer", "website_forum.mt_answer_edit"
                 self.message_post(cr, uid, [post.id], body=_(body), subtype=subtype, context=context)
+        #update karma of related user when any answer accepted.
+        for post in self.browse(cr, uid, ids, context=context):
+            value = 0
+            if vals.get('correct'):
+                value = 15
+            elif vals.get('correct') == False:
+                value = -15 
+            self.pool['res.users'].write(cr, uid, [post.user_id.id], {'karma': value}, context=context)
         return super(Post, self).write(cr, uid, ids, vals, context=context)
 
 class Users(osv.Model):
@@ -211,10 +221,24 @@ class Users(osv.Model):
             }
         return result
 
+    def _set_user_karma(self, cr, uid, ids, name, value, arg, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for rec in self.browse(cr, uid, ids, context=context):
+            karma = rec.karma + value
+            cr.execute('UPDATE res_users SET karma=%s WHERE id=%s;',(karma, rec.id))
+        return True
+
+    def _get_user_karma(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        for user in self.browse(cr, uid, ids, context=context):
+            result[user.id] = user.karma
+        return result
+
     _columns = {
         'create_date': fields.datetime('Create Date', select=True, readonly=True),
-        'karma': fields.integer('Karma'), # Use a function field for this
         'forum': fields.boolean('Is Forum Member'),
+        'karma': fields.function(_get_user_karma, fnct_inv=_set_user_karma, type='integer', string="Karma", store=True),
 
         'badges': fields.one2many('gamification.badge.user', 'user_id', 'Badges'),
         'gold_badge':fields.function(_get_user_badge_level, string="Number of gold badges", type='integer', multi='badge_level'),
@@ -257,6 +281,9 @@ class Vote(osv.Model):
         vote_id = super(Vote, self).create(cr, uid, vals, context=context)
         Post = self.pool["website.forum.post"]
         record = Post.browse(cr, uid, vals.get('post_id'), context=context)
+        #Add 10 karma when user get up vote and subtract 10 karma when gets down vote.
+        value = 10 if vals.get('vote') == '1' else -10
+        self.pool['res.users'].write(cr, uid, [record.user_id.id], {'karma': value}, context=context)
         body = "voted %s %s" % ('answer' if record.parent_id else 'question','up' if vals.get('vote')==1 else 'down')
         Post.message_post(cr, uid, [record.id], body=_(body), context=context)
         return vote_id
@@ -269,6 +296,12 @@ class Vote(osv.Model):
             #when user will click again on vote it should set it 0.
             record = self.browse(cr,uid, vote_ids[0], context=context)
             new_vote = '0' if record.vote in ['1','-1'] else vote
+            #update karma when user changed vote.
+            if record.vote == '1' or new_vote == '-1':
+                value = -10
+            elif record.vote == '-1' or new_vote == '1':
+                value = 10 
+            self.pool['res.users'].write(cr, uid, [record.user_id.id], {'karma': value}, context=context)
             self.write(cr, uid, vote_ids, {
                 'vote': new_vote
             }, context=context)

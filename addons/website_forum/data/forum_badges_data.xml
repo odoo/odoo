@@ -941,7 +941,7 @@ result = get_count(cr, uid, context=context)
             <field name="compute_code">def count_favorites(cr, uid, context=None):
     res = 1
     Post = self.pool['website.forum.post']
-    user_posts = Post.search(cr, uid, [('user_id','=',object.user_id), ('parent_id', '=', False)], context=context)
+    user_posts = Post.search(cr, uid, [('user_id','=',object.user_id.id), ('parent_id', '=', False)], context=context)
     for post in  Post.browse(cr, uid, user_posts, context=context):
         if len(post.favourite_ids) >= 25:
             res += 1

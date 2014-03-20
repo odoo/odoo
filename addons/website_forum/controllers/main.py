@@ -259,8 +259,9 @@ class website_forum(http.Controller):
 
         create_context = dict(context)
         new_question_id = request.registry['website.forum.post'].create(
-            request.cr, request.uid, {
+            cr, uid, {
                 'forum_id': forum.id,
+                'user_id': uid,
                 'parent_id': post_id,
                 'content': question.get('answer_content'),
                 'state': 'active',
@@ -436,7 +437,7 @@ class website_forum(http.Controller):
             correct = False if post.correct else True
             #Note: only one answer can be right.
             for child in post.parent_id.child_ids:
-                if child.correct:
+                if child.correct and child.id != post.id:
                     Post.write( cr, uid, [child.id], {
                         'correct': False,
                     }, context=context)
