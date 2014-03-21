@@ -74,7 +74,7 @@ class ir_translation(osv.Model):
 
     def _check_lang_support(self, cr, uid, ids, context=None):
         for term in self.browse(cr, uid, ids, context=context):
-            if term.gengo_translation:
+            if term.gengo_translation and term.name != 'website':
                 supported_langs = self._get_all_supported_languages(cr, uid, context=context)
                 if supported_langs:
                     tier = "nonprofit" if term.gengo_translation == 'machine' else term.gengo_translation
