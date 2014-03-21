@@ -4391,8 +4391,12 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
 });
 
 instance.web.form.One2ManyDataSet = instance.web.BufferedDataSet.extend({
-    get_context: function() {
+    get_context: function(extra_context) {
         this.context = this.o2m.build_context();
+        if(extra_context)
+        {
+            this.context.add(extra_context);
+        }
         return this.context;
     }
 });
