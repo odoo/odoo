@@ -286,10 +286,10 @@ var T = website.Tour = {
         }
     },
     popoverTitle: function (tour, options) {
-        return openerp.qweb.render('website.tour_popover_title', options);
+        return openerp.qweb ? openerp.qweb.render('website.tour_popover_title', options) : options.title;
     },
     popover: function (options) {
-        return openerp.qweb.render('website.tour_popover', options);
+        return openerp.qweb ? openerp.qweb.render('website.tour_popover', options) : options.title;
     },
     getLang: function () {
         return $("html").attr("lang").replace(/-/, '_');
