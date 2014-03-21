@@ -744,7 +744,6 @@ class test_mail(TestMail):
             {
                 'subject': _subject,
                 'body': '${object.description}',
-                'post': True,
                 'partner_ids': [(4, p_c_id), (4, p_d_id)],
             }, context={
                 'default_composition_mode': 'mass_mail',
