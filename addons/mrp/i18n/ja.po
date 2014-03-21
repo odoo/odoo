@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-03-20 05:56+0000\n"
+"PO-Revision-Date: 2014-03-20 16:41+0000\n"
 "Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-20 06:19+0000\n"
+"X-Launchpad-Export-Date: 2014-03-21 06:51+0000\n"
 "X-Generator: Launchpad (build 16967)\n"
 
 #. module: mrp
@@ -86,7 +86,7 @@ msgstr "スクラップ製品"
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Mrp Workcenter"
-msgstr ""
+msgstr "MRPワークセンター"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
@@ -190,7 +190,7 @@ msgstr "製品数量"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "単位"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_purchaseprocure0
@@ -205,7 +205,7 @@ msgstr "生産計画"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
 msgid "Allow detailed planning of work order"
-msgstr ""
+msgstr "作業指示の詳細な計画を許可"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:633
@@ -298,7 +298,7 @@ msgid ""
 "When processing a sales order for this product, the delivery order\n"
 "                                will contain the raw materials, instead of "
 "the finished product."
-msgstr "この製品の受注を処理した時、配送は完成品ではなく原材料を含みます。"
+msgstr "この製品の受注を処理した場合、配送には完成品ではなく原材料が含まれます。"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -1355,7 +1355,7 @@ msgstr "集荷リスト"
 msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
-msgstr ""
+msgstr "部品表には完成品の製造に必要な原材料のリストを定義することができます。"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:375
@@ -1873,7 +1873,7 @@ msgstr "データ計算"
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "エラー！"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:139
@@ -1917,7 +1917,7 @@ msgstr "製造リードタイム"
 #: code:addons/mrp/mrp.py:285
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "警告"
 
 #. module: mrp
 #: field:mrp.bom,product_uos_qty:0
@@ -1927,7 +1927,7 @@ msgstr "製品販売単位数量"
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
 msgid "Product Move"
-msgstr ""
+msgstr "製品移動"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
@@ -2080,8 +2080,9 @@ msgid ""
 "                With this module: A + B + C -> D + E.\n"
 "                This installs the module mrp_byproduct."
 msgstr ""
-"部品表の中に副製品を構成できます。このモジュールを使用しない場合は A + B + C -> D ですが、使用する場合は A + B + C -> D "
-"+ E にできます。mrp_byproductモジュールがインストールされます。"
+"部品表の中に副製品を構成できます。\n"
+"このモジュールを使用しない場合は A + B + C -> D ですが、使用する場合は A + B + C -> D + E にできます。\n"
+"mrp_byproductモジュールがインストールされます。"
 
 #. module: mrp
 #: field:procurement.order,bom_id:0
@@ -2312,7 +2313,7 @@ msgid ""
 "being produced."
 msgstr ""
 "副製品がいくつかの製品で使用される場合、それ自身のBOMを作成するためにも有用です。この副製品の製造オーダーを望まない場合、BOMタイプとしてセット/仮想"
-"部品を選択します。架空BOMがルート製品で使用される場合、生産の代わりに構成要素のセットとして販売と出荷をします。"
+"部品を選択します。仮想BOMがルート製品で使用される場合、生産の代わりに構成要素のセットとして販売と出荷を行います。"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -2330,7 +2331,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_properties:0
 msgid "Allow several bill of materials per products using properties"
-msgstr ""
+msgstr "属性を使用して製品ごとにいくつかの部品表を許可"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
