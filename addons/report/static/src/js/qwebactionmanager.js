@@ -49,7 +49,7 @@ openerp.report = function(instance) {
                 }
                 if (action.report_type == 'qweb-html' || action.report_type == 'controller') {
                     // Open the html report in a popup
-                    window.open(report_url, '_blank', 'height=768,width=1024');
+                    window.open(report_url, '_blank', 'height=900,width=1280');
                     instance.web.unblockUI();
                     return;
                 } else {
@@ -63,7 +63,7 @@ openerp.report = function(instance) {
                         // Fallback of qweb-pdf if wkhtmltopdf is not installed
                         if (!presence && action.report_type == 'qweb-pdf') {
                             self.do_notify(_t('Report'), _t('Unable to find Wkhtmltopdf on this \
-system. The report will be shown in html.<br><br><a href="http://wkhtmltopdf.org/" _target="blank">\
+system. The report will be shown in html.<br><br><a href="http://wkhtmltopdf.org/" target="_blank">\
 wkhtmltopdf.org</a>'), true);
                             window.open(report_url.substring(12), '_blank', 'height=768,width=1024');
                             instance.web.unblockUI();

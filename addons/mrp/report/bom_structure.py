@@ -22,7 +22,7 @@
 from openerp.osv import osv
 
 
-class bom_structure(osv.Model):
+class bom_structure(osv.AbstractModel):
     _name = 'report.mrp.report_mrpbomstructure'
 
     def render_html(self, cr, uid, ids, data=None, context=None):

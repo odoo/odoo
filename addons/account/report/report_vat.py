@@ -30,12 +30,12 @@ except ImportError:
 import xlwt
 
 
-class tax_report(osv.Model, common_report_header):
+class tax_report(osv.AbstractModel, common_report_header):
     _name = 'report.account.report_vat'
 
     def render_html(self, cr, uid, ids, data=None, context=None):
         report_obj = request.registry['report']
-        self.cr, self.uid = cr, uid
+        self.cr, self.uid, self.context = cr, uid, context
 
         res = {}
         self.period_ids = []
@@ -55,7 +55,7 @@ class tax_report(osv.Model, common_report_header):
             'period_to': self.get_end_period(data),
             'taxlines': self._get_lines(self._get_basedon(data), company_id=data['form']['company_id']),
         }
-        return report_obj.render(self.cr, self.uid, [], 'account.report_vat', docargs)
+        return report_obj.render(self.cr, self.uid, [], 'account.report_vat', docargs, context=context)
 
     def _get_basedon(self, form):
         return form['form']['based_on']

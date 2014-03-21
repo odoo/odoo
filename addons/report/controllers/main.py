@@ -32,13 +32,12 @@ class ReportController(Controller):
     #------------------------------------------------------
     # Generic reports controller
     #------------------------------------------------------
-
-    @route(['/report/<reportname>/<docids>'], type='http', auth='user', website=True, multilang=True)
+    @route('/report/<reportname>/<docids>', type='http', auth='user', website=True, multilang=True)
     def report_html(self, reportname, docids):
         cr, uid, context = request.cr, request.uid, request.context
         return request.registry['report'].get_html(cr, uid, docids, reportname, context=context)
 
-    @route(['/report/pdf/report/<reportname>/<docids>'], type='http', auth="user", website=True)
+    @route('/report/pdf/report/<reportname>/<docids>', type='http', auth="user", website=True)
     def report_pdf(self, reportname, docids):
         cr, uid, context = request.cr, request.uid, request.context
         pdf = request.registry['report'].get_pdf(cr, uid, docids, reportname, context=context)
@@ -48,15 +47,14 @@ class ReportController(Controller):
     #------------------------------------------------------
     # Particular reports controller
     #------------------------------------------------------
-
-    @route(['/report/<reportname>'], type='http', auth='user', website=True, multilang=True)
+    @route('/report/<reportname>', type='http', auth='user', website=True, multilang=True)
     def report_html_particular(self, reportname, **data):
         cr, uid, context = request.cr, request.uid, request.context
         report_obj = request.registry['report']
         data = report_obj.eval_params(data)  # Sanitizing
         return report_obj.get_html(cr, uid, [], reportname, data=data, context=context)
 
-    @route(['/report/pdf/report/<reportname>'], type='http', auth='user', website=True, multilang=True)
+    @route('/report/pdf/report/<reportname>', type='http', auth='user', website=True, multilang=True)
     def report_pdf_particular(self, reportname, **data):
         cr, uid, context = request.cr, request.uid, request.context
         report_obj = request.registry['report']
@@ -66,15 +64,15 @@ class ReportController(Controller):
         return request.make_response(pdf, headers=pdfhttpheaders)
 
     #------------------------------------------------------
-    # Misc. utils
+    # Misc. route utils
     #------------------------------------------------------
-
     @route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="user")
     def report_barcode(self, type, value, width=300, height=50):
         """Contoller able to render barcode images thanks to reportlab.
         Samples: 
             <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
-            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', o.name, 200, 200)"/>
+            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % 
+                ('QR', o.name, 200, 200)"/>
 
         :param type: Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
         'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'Standard39', 'Standard93',
@@ -112,9 +110,8 @@ class ReportController(Controller):
             else:
                 # Particular report:
                 querystring = url.split('?')[1]
-                querystring = urlparse.parse_qsl(querystring)
-                dict_querystring = dict(querystring)
-                response = self.report_pdf_particular(reportname, **dict_querystring)
+                querystring = dict(urlparse.parse_qsl(querystring))
+                response = self.report_pdf_particular(reportname, **querystring)
 
             response.headers.add('Content-Disposition', 'attachment; filename=%s.pdf;' % reportname)
             response.set_cookie('fileToken', token)

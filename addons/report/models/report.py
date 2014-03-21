@@ -187,29 +187,12 @@ class Report(osv.Model):
                 qcontext['o'] = self.pool[model].browse(cr, uid, doc_id, context=ctx)
             return view_obj.render(cr, uid, template, qcontext, context=ctx)
 
-        current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-
-        # Website independance code
-        website = False
-        res_company = current_user.company_id
-
-        try:
-            from openerp.addons.web.http import request
-            if request.website:
-                website = request.website
-                res_company = request.website.company_id
-        except:
-            pass
-
         values.update({
             'time': time,
-            'user': current_user,
-            'user_id': current_user.id,
             'formatLang': lambda *args, **kwargs: self.formatLang(*args, cr=cr, uid=uid, **kwargs),
             'get_digits': self.get_digits,
             'render_doc': render_doc,
-            'website': website,
-            'res_company': res_company,
+            'editable': True,  # Will active inherit_branding
         })
 
         return view_obj.render(cr, uid, template, values, context=context)
