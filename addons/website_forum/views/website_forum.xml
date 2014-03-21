@@ -699,8 +699,8 @@
                             <t t-call="website_forum.post_list"/>
                         </div>
                     </div><div class="tab-pane" id="answers">
-                        <div t-foreach="answers" t-as="question">
-                            <t t-call="website_forum.post_list"/>
+                        <div t-foreach="answers" t-as="answer">
+                            <t t-call="website_forum.post_list_answer"/>
                         </div>
                     </div>
                     <div class="tab-pane" id="karma">
@@ -769,5 +769,22 @@
                 <b>No vote given by you yet!</b>
             </div>
         </template>
+
+        <template id="post_list_answer">
+            <div class="clearfix">
+                <div t-attf-class="pull-left text-center mb16 box #{len(answer.vote_ids) and 'oe_green' or 'oe_grey'}">
+                    <div t-esc="len(answer.vote_ids)"/>
+                </div>
+                <div class="question-name" style="margin-left: 32px;">
+                    <a style="font-size: 15px;" t-attf-href="/forum/#{ slug(forum) }/question/#{ answer.parent_id.id }/#answer-#{ answer.id }" t-esc="answer.name"/>
+                    <t t-if="len(answer.website_message_ids)&gt;0">
+                        (<t t-esc="len(answer.website_message_ids)"/>
+                        <t t-if="len(answer.website_message_ids)&gt;1">Comments</t>
+                        <t t-if="len(answer.website_message_ids)&lt;=1">Comment</t>)
+                    </t>
+                </div>
+            </div>
+        </template>
+
     </data>
 </openerp>

@@ -225,7 +225,7 @@ class website_forum(http.Controller):
             'searches': post,
             'forum': forum,
             'questions': user_questions,
-            'answers': answers,
+            'answers': user_answers,
             'total_votes': total_votes,
             'up_votes': up_votes,
             'down_votes': down_votes,
