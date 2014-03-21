@@ -136,7 +136,7 @@ Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'we
             if not partner.email:
                 skipped+= 1
                 continue
-            user = user_ref.search(cr, uid, [('login', "=", partner.email)])
+            user = user_ref.search(cr, uid, [('partner_id', "=", partner.id)])
             if user:
                 if user[0] not in new_user:
                     new_user.append(user[0])
@@ -177,6 +177,8 @@ Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'we
                 if ans:
                     res_data = {'name': partner.name or _('Unknown'),
                                 'login': partner.email,
+                                'email': partner.email,
+                                'partner_id': partner.id,
                                 'password': passwd,
                                 'address_id': partner.id,
                                 'groups_id': [[6, 0, [group_id]]],
