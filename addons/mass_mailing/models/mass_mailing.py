@@ -21,6 +21,8 @@
 
 from datetime import datetime
 from dateutil import relativedelta
+import urllib
+import urlparse
 
 from openerp import tools
 from openerp.tools.safe_eval import safe_eval as eval
@@ -627,30 +629,51 @@ class MassMailing(osv.Model):
     # Email Sending
     #------------------------------------------------------
 
-    def _get_mail_recipients(self, cr, uid, mailing, res_ids, context=None):
+    def _get_recipients_data(self, cr, uid, mailing, res_ids, context=None):
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         if mailing.mailing_model == 'mail.mass_mailing.contact':
             contacts = self.pool['mail.mass_mailing.contact'].browse(cr, uid, res_ids, context=context)
-            return dict((contact.id, {'email_to': '"%s" <%s>' % (contact.name, contact.email)}) for contact in contacts)
+            return dict((contact.id, {
+                'email_to': '"%s" <%s>' % (contact.name, contact.email),
+                'unsubscribe_url': '<a href="%s">Click to unsubscribe</a>' % urlparse.urljoin(
+                    base_url, 'mail/mailing/%d/unsubscribe?%s' %
+                    (mailing.id, urllib.urlencode({'model': mailing.mailing_model, 'res_id': contact.id, 'email': contact.email}))),
+            }) for contact in contacts)
         else:
-            return dict((res_id, {'recipient_ids': [(4, res_id)]}) for res_id in res_ids)
+            partners = self.pool['res.partner'].browse(cr, uid, res_ids, context=context)
+            return dict((partner.id, {
+                'email_to': '"%s" <%s>' % (partner.name, partner.email),
+                'unsubscribe_url': '<a href="%s">Click to unsubscribe</a>' % urlparse.urljoin(
+                    base_url, 'mail/mailing/%d/unsubscribe?%s' %
+                    (mailing.id, urllib.urlencode({'model': mailing.mailing_model, 'res_id': partner.id, 'email': partner.email}))),
+                # 'access_link': self.pool['mail.mail']._get_partner_access_link(cr, uid, mail, partner, context=context),
+            }) for partner in partners)
 
     def send_mail(self, cr, uid, ids, context=None):
+        author_id = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id.id
         Mail = self.pool['mail.mail']
         for mailing in self.browse(cr, uid, ids, context=context):
             domain = self.pool['mail.mass_mailing.list'].get_global_domain(
                 cr, uid, [l.id for l in mailing.contact_list_ids], context=context
             )[mailing.mailing_model]
             res_ids = self.pool[mailing.mailing_model].search(cr, uid, domain, context=context)
-            recipients = self._get_mail_recipients(cr, uid, mailing, res_ids, context=context)
+            recipients = self._get_recipients_data(cr, uid, mailing, res_ids, context=context)
             all_mail_values = self.pool['mail.compose.message'].generate_email_for_composer_batch(
                 cr, uid, mailing.template_id.id, res_ids,
                 context=context, fields=['body_html', 'attachment_ids', 'mail_server_id'])
             for res_id, mail_values in all_mail_values.iteritems():
+                body = mail_values.get('body')
+                recipient_data = recipients[res_id]
+                if recipient_data['unsubscribe_url']:
+                    body = tools.append_content_to_html(body, recipient_data.pop('unsubscribe_url'), plaintext=False, container_tag='p')
+
                 mail_values.update({
                     'email_from': mailing.email_from,
                     'reply_to': mailing.reply_to,
                     'subject': mailing.name,
-                    'body_html': mail_values.get('body'),
+                    'record_name': False,
+                    'author_id': author_id,
+                    'body_html': body,
                     'auto_delete': True,
                     'notification': True,
                 })
@@ -667,7 +690,7 @@ class MassMailing(osv.Model):
                     context=context)
                 mail_values['attachment_ids'] = m2m_attachment_ids
 
-                mail_values.update(recipients[res_id])
+                mail_values.update(recipient_data)
 
                 Mail.create(cr, uid, mail_values, context=context)
         return True
