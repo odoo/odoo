@@ -661,6 +661,21 @@ class mail_thread(osv.AbstractModel):
     # Email specific
     #------------------------------------------------------
 
+    def message_get_default_recipients(self, cr, uid, ids, context=None):
+        res = dict.fromkeys(ids, False)
+        for record in self.browse(cr, uid, ids, context=context):
+            recipient_ids, email_to = list(), ''
+            if self._name == 'res.partner':
+                recipient_ids.append(record.id)
+            elif 'partner_id' in self._all_columns and record.partner_id:
+                recipient_ids.append(record.parent_id.id)
+            elif 'email_from' in self._all_columns and record.email_from:
+                email_to = record.email_from
+            elif 'email' in self._all_columns:
+                email_to = record.email
+            res[record.id] = {'recipient_ids': recipient_ids, 'email_to': email_to}
+        return res
+
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Returns the preferred reply-to email address that is basically
             the alias of the document, if it exists. """
