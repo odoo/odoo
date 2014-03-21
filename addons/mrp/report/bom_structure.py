@@ -34,7 +34,7 @@ class bom_structure(osv.AbstractModel):
             'docs': docs,
             'get_children': self.get_children,
         }
-        return report_obj.render(cr, uid, [], 'mrp.report_mrpbomstructure', docargs)
+        return report_obj.render(cr, uid, [], 'mrp.report_mrpbomstructure', docargs, context=context)
 
     def get_children(self, object, level=0):
         result = []

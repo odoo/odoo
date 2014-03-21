@@ -36,7 +36,10 @@ import cStringIO
 import subprocess
 from datetime import datetime
 from distutils.version import LooseVersion
-from pyPdf import PdfFileWriter, PdfFileReader
+try:
+    from pyPdf import PdfFileWriter, PdfFileReader
+except ImportError:
+    PdfFileWriter = PdfFileReader = None
 
 
 _logger = logging.getLogger(__name__)
