@@ -3,8 +3,21 @@
 
 var website = openerp.website;
 
+// don't need template to use bootstrap Tour in automatic mode
 if (typeof QWeb2 !== "undefined")
 website.add_template_file('/website/static/src/xml/website.tour.xml');
+
+// don't need to use bootstrap Tour to launch an automatic tour
+function bootstrap_tour_stub () {
+    if (typeof Tour === "undefined") {
+        window.Tour = function Tour() {};
+        Tour.prototype.addSteps = function () {};
+        Tour.prototype.end = function () {};
+        Tour.prototype.goto = function () {};
+    }
+}
+
+
 
 if (website.EditorBar)
 website.EditorBar.include({
@@ -175,6 +188,9 @@ website.Tour = openerp.Class.extend({
     },
 
     registerTour: function () {
+        if (this.automatic) {
+            bootstrap_tour_stub();
+        }
         this.tour = new Tour({
             name: this.id,
             storage: this.tourStorage,
@@ -205,7 +221,7 @@ website.Tour = openerp.Class.extend({
 
             if (!step.element) step.orphan = true;
             if (step.snippet) {
-                step.element = '#oe_snippets div.oe_snippet[data-snippet-id="'+step.snippet+'"] .oe_snippet_thumbnail';
+                step.element = '#oe_snippets '+step.snippet+' .oe_snippet_thumbnail';
             }
 
         }
@@ -281,6 +297,14 @@ website.Tour = openerp.Class.extend({
                     self.nextStep(step.stepId, callback, overlaps);
                 }, self.defaultDelay);
             } else if (!overlaps || new Date().getTime() - time < overlaps) {
+                if (self.current.element) {
+                    var $popover = $(".popover.tour");
+                    if(!$(self.current.element).is(":visible")) {
+                        $popover.data("hide", true).fadeOut(300);
+                    } else if($popover.data("hide")) {
+                        $popover.data("hide", false).fadeIn(150);
+                    }
+                }
                 self.timer = setTimeout(checkNext, self.defaultDelay);
             } else {
                 self.reset();
@@ -369,7 +393,7 @@ website.Tour = openerp.Class.extend({
 
             if (step.snippet) {
             
-                var selector = '#oe_snippets div.oe_snippet[data-snippet-id="'+step.snippet+'"] .oe_snippet_thumbnail';
+                var selector = '#oe_snippets '+step.snippet+' .oe_snippet_thumbnail';
                 self.autoDragAndDropSnippet(selector);
             
             } else if (step.element.match(/#oe_snippets .* \.oe_snippet_thumbnail/)) {

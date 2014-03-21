@@ -313,7 +313,10 @@ class crm_lead(format_address, osv.osv):
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context=context)
         if not stage.on_change:
             return {'value': {}}
-        return {'value': {'probability': stage.probability}}
+        vals = {'probability': stage.probability}
+        if stage.probability >= 100 or (stage.probability == 0 and stage.sequence > 1):
+                vals['date_closed'] = fields.datetime.now()
+        return {'value': vals}
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
         values = {}
@@ -330,6 +333,7 @@ class crm_lead(format_address, osv.osv):
                 'phone': partner.phone,
                 'mobile': partner.mobile,
                 'fax': partner.fax,
+                'zip': partner.zip,
             }
         return {'value': values}
 

@@ -14,6 +14,10 @@ _logger = logging.getLogger(__name__)
 class pad_common(osv.osv_memory):
     _name = 'pad.common'
 
+    def pad_is_configured(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return bool(user.company_id.pad_server)
+
     def pad_generate_url(self, cr, uid, context=None):
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id;
 

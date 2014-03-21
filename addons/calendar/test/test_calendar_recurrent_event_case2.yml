@@ -84,9 +84,12 @@
      idval = '%d-%s' % (ref('calendar_event_sprintreview0'), '20110425124700')
      self.write(cr, uid, [idval], {'description': 'Review code of the module: sync_google_calendar.'})
 -
-  I check whether the record is edited perfectly or not.
+  I check whether that all the records of this recurrence has been edited.
 -
   !python {model: calendar.event}: |
-     meeting_ids = self.search(cr, uid, [('recurrent_id', '=', ref('calendar_event_sprintreview0')), ('recurrent_id_date','=','2011-04-25 12:47:00')], context)
-     assert meeting_ids, 'Meeting is not edited !'
+     meeting_ids = self.search(cr, uid, [('recurrent_id', '=', ref('calendar_event_sprintreview0'))], context)
+     meetings = self.browse(cr, uid, meeting_ids, context)
+     for meeting in meetings:
+        assert meeting.description == 'Review code of the module: sync_google_calendar.', 'Description not changed for id: %s' %meeting.id
+        
 
