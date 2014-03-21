@@ -313,18 +313,17 @@ T.getState = function () {
 };
 T.error = function (message) {
     var state = T.getState();
+    message += '\n tour: ' + state.id
+        + '\n step: ' + state.step_id + ": '" + (state.step._title || state.step.title) + "'"
+        + '\n href: ' + window.location.href
+        + '\n referrer: ' + document.referrer
+        + '\n element: ' + Boolean(!state.step.element || ($(state.step.element).size() && $(state.step.element).is(":visible") && !$(state.step.element).is(":hidden")))
+        + '\n waitNot: ' + Boolean(!state.step.waitNot || !$(state.step.waitNot).size())
+        + '\n waitFor: ' + Boolean(!state.step.waitFor || $(state.step.waitFor).size())
+        + "\n localStorage: " + JSON.stringify(localStorage)
+        + '\n\n' + $("body").html();
     T.reset();
-    throw new Error(message +
-        + "\ntour: " + state.tour.id +
-        + "\nstep: " + state.step.id + ": '" + (state.step._title || state.step.title) + "'"
-        + '\nhref: ' + window.location.href
-        + '\nreferrer: ' + document.referrer
-        + '\nelement: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden")))
-        + '\nwaitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size())
-        + '\nwaitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size())
-        + "\nlocalStorage: " + JSON.stringify(localStorage)
-        + '\n\n' + $("body").html()
-    );
+    throw new Error(message);
 };
 T.lists = function () {
     var tour_ids = [];
@@ -421,7 +420,7 @@ T.nextStep = function (step) {
                 T.waitNextStep();
                 if (state.mode === "test") {
                     setTimeout(function(){
-                        T.autoNextStep();
+                        T.autoNextStep(state.tour, step);
                     }, T.defaultDelay);
                 }
         }, next.wait || 0);
@@ -449,7 +448,7 @@ T.autoNextStep = function (tour, step) {
             step.autoComplete(tour);
         }
 
-        T.closePopover();
+        $(".popover.tour [data-role='next']").click();
 
         var $element = $(step.element);
         if (!$element.size()) return;
