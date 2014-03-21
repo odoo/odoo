@@ -16,7 +16,7 @@
             {
                 title:     "go to register page",
                 waitNot:   'a[href*="/event"]:contains("Functional Webinar")',
-                onload:   function () {
+                autoComplete:   function () {
                     // use onload if website_event_track is installed
                     if (!$('form:contains("Ticket Type")').size()) {
                         window.location.href = $('a[href*="/event"][href*="/register"]').attr("href");
@@ -43,7 +43,7 @@
                 title:     "Complete checkout",
                 waitFor:   '#top_menu .my_cart_quantity:contains(5)',
                 element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
-                onload: function (tour) {
+                autoComplete: function (tour) {
                     if ($("input[name='name']").val() === "")
                         $("input[name='name']").val("website_sale-test-shoptest");
                     if ($("input[name='email']").val() === "")

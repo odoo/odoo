@@ -16,7 +16,7 @@ if (typeof openerp === "undefined") {
 var website = window.openerp.website;
 
 // don't rewrite T in test mode
-if (typeof T !== "undefined") {
+if (typeof website.Tour !== "undefined") {
     return;
 }
 
@@ -393,7 +393,7 @@ T.waitNextStep = function () {
         } else if (!overlaps || new Date().getTime() - time < overlaps) {
             T.timer = setTimeout(checkNext, T.defaultDelay);
         } else {
-            T.error("Can't arrive to the next step");
+            T.error("Can't reach the next step");
         }
     }
     checkNext();
