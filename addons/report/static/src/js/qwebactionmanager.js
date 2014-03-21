@@ -12,7 +12,6 @@ openerp.report = function(instance) {
 
             // QWeb reports
             if ('report_type' in action && (action.report_type == 'qweb-html' || action.report_type == 'qweb-pdf' || action.report_type == 'controller')) {
-                debugger
                 var report_url = '';
                 switch (action.report_type) {
                     case 'qweb-html':
