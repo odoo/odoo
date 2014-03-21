@@ -1,4 +1,5 @@
 openerp.report = function(instance) {
+    var wkhtmltopdf_state;
 
     instance.web.ActionManager = instance.web.ActionManager.extend({
         ir_actions_report_xml: function(action, options) {
@@ -12,7 +13,7 @@ openerp.report = function(instance) {
             // QWeb reports
             if ('report_type' in action && (action.report_type == 'qweb-html' || action.report_type == 'qweb-pdf' || action.report_type == 'controller')) {
                 
-                var report_url = ''
+                var report_url = '';
                 switch (action.report_type) {
                     case 'qweb-html':
                         report_url = '/report/' + action.report_name;
@@ -55,20 +56,19 @@ openerp.report = function(instance) {
                 } else {
                     // Trigger the download of the pdf report
                     var c = openerp.webclient.crashmanager;
-                    var response = new Array()
-                    response[0] = report_url
-                    response[1] = action.report_type
+                    var response = new Array();
+                    response[0] = report_url;
+                    response[1] = action.report_type;
 
-                    openerp.session.rpc('/report/check_wkhtmltopdf').then(function (presence) {
+                    (wkhtmltopdf_state = wkhtmltopdf_state || openerp.session.rpc('/report/check_wkhtmltopdf')).then(function (presence) {
                         // Fallback of qweb-pdf if wkhtmltopdf is not installed
-                        if (!presence && action.report_type == 'qweb-pdf') {
+                        if (presence == 'install' && action.report_type == 'qweb-pdf') {
                             self.do_notify(_t('Report'), _t('Unable to find Wkhtmltopdf on this \
 system. The report will be shown in html.<br><br><a href="http://wkhtmltopdf.org/" target="_blank">\
 wkhtmltopdf.org</a>'), true);
                             window.open(report_url.substring(12), '_blank', 'height=768,width=1024');
                             instance.web.unblockUI();
-                        }
-                        else {
+                        } else {
                             if (presence == 'upgrade') {
                                 self.do_notify(_t('Report'), _t('You should upgrade your version of\
  Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\

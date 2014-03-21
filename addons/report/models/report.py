@@ -35,6 +35,7 @@ import lxml.html
 import cStringIO
 import subprocess
 from datetime import datetime
+from functools import partial
 from distutils.version import LooseVersion
 try:
     from pyPdf import PdfFileWriter, PdfFileReader
@@ -43,6 +44,24 @@ except ImportError:
 
 
 _logger = logging.getLogger(__name__)
+
+
+"""Check the presence of wkhtmltopdf and return its version."""
+wkhtmltopdf_state = 'install'
+try:
+    process = subprocess.Popen(
+        ['wkhtmltopdf', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+except OSError:
+    _logger.error('You need wkhtmltopdf to print a pdf version of the reports.')
+else:
+    out, err = process.communicate()
+    version = out.splitlines()[1].strip()
+    version = version.split(' ')[1]
+    if LooseVersion(version) < LooseVersion('0.12.0'):
+        _logger.warning('Upgrade wkhtmltopdf to (at least) 0.12.0')
+        wkhtmltopdf_state = 'upgrade'
+    wkhtmltopdf_state = 'ok'
 
 
 class Report(osv.Model):
@@ -55,7 +74,7 @@ class Report(osv.Model):
     # Extension of ir_ui_view.render with arguments frequently used in reports
     #--------------------------------------------------------------------------
 
-    def get_digits(self, cr, uid, obj=None, f=None, dp=None):
+    def _get_digits(self, cr, uid, obj=None, f=None, dp=None):
         d = DEFAULT_DIGITS = 2
         if dp:
             decimal_precision_obj = self.pool['decimal.precision']
@@ -101,9 +120,9 @@ class Report(osv.Model):
 
         if digits is None:
             if dp:
-                digits = self.get_digits(cr, uid, dp=dp)
+                digits = self._get_digits(cr, uid, dp=dp)
             else:
-                digits = self.get_digits(cr, uid, value)
+                digits = self._get_digits(cr, uid, value)
 
         if isinstance(value, (str, unicode)) and not value:
             return ''
@@ -192,8 +211,8 @@ class Report(osv.Model):
 
         values.update({
             'time': time,
-            'formatLang': lambda *args, **kwargs: self.formatLang(*args, cr=cr, uid=uid, **kwargs),
-            'get_digits': self.get_digits,
+            'formatLang': partial(self.formatLang, cr=cr, uid=uid),
+            'get_digits': self._get_digits,
             'render_doc': render_doc,
             'editable': True,  # Will active inherit_branding
             'res_company': self.pool['res.users'].browse(cr, uid, uid).company_id
@@ -208,48 +227,28 @@ class Report(osv.Model):
     def get_html(self, cr, uid, ids, report_name, data=None, context=None):
         """This method generates and returns html version of a report.
         """
-        if context is None:
-            context = {}
-
-        if isinstance(ids, (str, unicode)):
-            ids = [int(i) for i in ids.split(',')]
-        if isinstance(ids, list):
-            ids = list(set(ids))
-        if isinstance(ids, int):
-            ids = [ids]
-
         # If the report is using a custom model to render its html, we must use it.
         # Otherwise, fallback on the generic html rendering.
         try:
             report_model_name = 'report.%s' % report_name
             particularreport_obj = self.pool[report_model_name]
-            return particularreport_obj.render_html(cr, uid, ids, data=data, context=context)
-        except:
-            pass
-
-        report = self._get_report_from_name(cr, uid, report_name)
-        report_obj = self.pool[report.model]
-        docs = report_obj.browse(cr, uid, ids, context=context)
-
-        docargs = {
-            'doc_ids': ids,
-            'doc_model': report.model,
-            'docs': docs,
-        }
-        return self.render(cr, uid, [], report.report_name, docargs, context=context)
+            return particularreport_obj.render_html(cr, uid, ids, data={'form': data}, context=context)
+        except KeyError:
+            report = self._get_report_from_name(cr, uid, report_name)
+            report_obj = self.pool[report.model]
+            docs = report_obj.browse(cr, uid, ids, context=context)
+            docargs = {
+                'doc_ids': ids,
+                'doc_model': report.model,
+                'docs': docs,
+            }
+            return self.render(cr, uid, [], report.report_name, docargs, context=context)
 
     def get_pdf(self, cr, uid, ids, report_name, html=None, data=None, context=None):
         """This method generates and returns pdf version of a report.
         """
         if context is None:
             context = {}
-
-        if isinstance(ids, (str, unicode)):
-            ids = [int(i) for i in ids.split(',')]
-        if isinstance(ids, list):
-            ids = list(set(ids))
-        if isinstance(ids, int):
-            ids = [ids]
 
         if html is None:
             html = self.get_html(cr, uid, ids, report_name, data=data, context=context)
@@ -260,7 +259,7 @@ class Report(osv.Model):
         report = self._get_report_from_name(cr, uid, report_name)
 
         # Check attachment_use field. If set to true and an existing pdf is already saved, load
-        # this one now. If not, mark save it.
+        # this one now. Else, mark save it.
         save_in_attachment = {}
 
         if report.attachment_use is True:
@@ -307,7 +306,7 @@ class Report(osv.Model):
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
 
         minimalhtml = """
-<base href="{3}">
+<base href="{base_url}">
 <!DOCTYPE html>
 <html style="height: 0;">
     <head>
@@ -315,11 +314,11 @@ class Report(osv.Model):
         <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
         <link href="/website/static/src/css/website.css" rel="stylesheet"/>
         <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
-        <style type='text/css'>{0}</style>
-        {1}
+        <style type='text/css'>{css}</style>
+        {subst}
     </head>
     <body class="container" onload='subst()'>
-        {2}
+        {body}
     </body>
 </html>"""
 
@@ -333,12 +332,12 @@ class Report(osv.Model):
 
             for node in root.xpath("//div[@class='header']"):
                 body = lxml.html.tostring(node)
-                header = minimalhtml.format(css, subst, body, base_url)
+                header = minimalhtml.format(css=css, subst=subst, body=body, base_url=base_url)
                 headerhtml.append(header)
 
             for node in root.xpath("//div[@class='footer']"):
                 body = lxml.html.tostring(node)
-                footer = minimalhtml.format(css, subst, body, base_url)
+                footer = minimalhtml.format(css=css, subst=subst, body=body, base_url=base_url)
                 footerhtml.append(footer)
 
             for node in root.xpath("//div[@class='page']"):
@@ -346,16 +345,16 @@ class Report(osv.Model):
                 # must set a relation between report ids and report's content. We use the QWeb
                 # branding in order to do so: searching after a node having a data-oe-model
                 # attribute with the value of the current report model and read its oe-id attribute
-                oemodelnode = node.find(".//*[@data-oe-model='" + report.model + "']")
+                oemodelnode = node.find(".//*[@data-oe-model='%s']" % report.model)
                 if oemodelnode is not None:
-                    reportid = oemodelnode.get('data-oe-id', False)
-                    if reportid is not False:
+                    reportid = oemodelnode.get('data-oe-id')
+                    if reportid:
                         reportid = int(reportid)
                 else:
                     reportid = False
 
                 body = lxml.html.tostring(node)
-                reportcontent = minimalhtml.format(css, '', body, base_url)
+                reportcontent = minimalhtml.format(css=css, subst='', body=body, base_url=base_url)
                 contenthtml.append(tuple([reportid, reportcontent]))
 
         except lxml.etree.XMLSyntaxError:
@@ -414,27 +413,8 @@ class Report(osv.Model):
     # Report generation helpers
     #--------------------------------------------------------------------------
 
-    def check_wkhtmltopdf(self):
-        """Check the presence of wkhtmltopdf and return its version. If wkhtmltopdf
-        cannot be found, return False.
-        """
-        try:
-            process = subprocess.Popen(['wkhtmltopdf', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            out, err = process.communicate()
-            if err:
-                raise
-
-            version = out.splitlines()[1].strip()
-            version = version.split(' ')[1]
-
-            if LooseVersion(version) < LooseVersion('0.12.0'):
-                _logger.warning('Upgrade WKHTMLTOPDF to (at least) 0.12.0')
-                return 'upgrade'
-
-            return True
-        except:
-            _logger.error('You need WKHTMLTOPDF to print a pdf version of this report.')
-            return False
+    def _check_wkhtmltopdf(self):
+        return wkhtmltopdf_state
 
     def _generate_wkhtml_pdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None):
         """Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
@@ -450,14 +430,14 @@ class Report(osv.Model):
         :returns: Content of the pdf as a string
         """
         command = ['wkhtmltopdf']
+        command_args = []
         tmp_dir = tempfile.gettempdir()
 
-        command_args = []
         # Passing the cookie to wkhtmltopdf in order to resolve URL.
         try:
             from openerp.addons.web.http import request
-            command_args.extend(['--cookie', 'session_id', request.httprequest.cookies['session_id']])
-        except:
+            command_args.extend(['--cookie', 'session_id', request.session.sid])
+        except AttributeError:
             pass
 
         # Display arguments
@@ -510,8 +490,8 @@ class Report(osv.Model):
             content_file.flush()
 
             try:
-                # If the server is running with only one worker, increase it to two to be able
-                # to serve the http request from wkhtmltopdf.
+                # If the server is running with only one worker, ask to create a secund to be able
+                # to serve the http request of wkhtmltopdf subprocess.
                 if config['workers'] == 1:
                     ppid = psutil.Process(os.getpid()).ppid
                     os.kill(ppid, signal.SIGTTIN)
@@ -629,26 +609,3 @@ class Report(osv.Model):
         content = merged.read()
         merged.close()
         return content
-
-    def eval_params(self, dict_param):
-        """Parse a dict generated by the webclient (javascript) into a python dict.
-        """
-        for key, value in dict_param.iteritems():
-            if value.lower() == 'false':
-                dict_param[key] = False
-            elif value.lower() == 'true':
-                dict_param[key] = True
-            elif ',' in value:
-                dict_param[key] = [int(i) for i in value.split(',')]
-            elif '%2C' in value:
-                dict_param[key] = [int(i) for i in value.split('%2C')]
-            else:
-                try:
-                    i = int(value)
-                    dict_param[key] = i
-                except (ValueError, TypeError):
-                    pass
-
-        data = {}
-        data['form'] = dict_param
-        return data
