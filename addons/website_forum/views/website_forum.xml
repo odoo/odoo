@@ -213,7 +213,8 @@
                 <div>
                     <a t-attf-href="/forum/#{ slug(forum) }/user/#{ slug(user) }" t-field="user.name"/>
                     <t t-raw="separator or ', '"/>
-                    <b><t t-esc="len(user.badges)"/> badges:</b>
+                    <t t-esc="user.karma"/>
+                    <b> badges:</b>
                     <span class="fa fa-circle badge-gold"/>
                     <t t-esc="user.gold_badge"/>
                     <span class="fa fa-circle badge-silver"/>
