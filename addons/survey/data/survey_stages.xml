@@ -6,25 +6,25 @@
             <field name="name">Draft</field>
             <field name="sequence" eval="1" />
             <field name="survey_open" eval="True" />
-            <field name="folded" eval="False" />
+            <field name="fold" eval="False" />
         </record>
         <record id="stage_in_progress" model="survey.stage">
             <field name="name">In progress</field>
             <field name="sequence" eval="2" />
             <field name="survey_open" eval="True" />
-            <field name="folded" eval="False" />
+            <field name="fold" eval="False" />
         </record>
         <record id="stage_closed" model="survey.stage">
             <field name="name">Closed</field>
             <field name="sequence" eval="3" />
             <field name="survey_open" eval="False" />
-            <field name="folded" eval="True" />
+            <field name="fold" eval="True" />
         </record>
         <record id="stage_permanent" model="survey.stage">
             <field name="name">Permanent</field>
             <field name="sequence" eval="4" />
             <field name="survey_open" eval="True" />
-            <field name="folded" eval="False" />
+            <field name="fold" eval="True" />
         </record>
     </data>
 </openerp>

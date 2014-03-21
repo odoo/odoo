@@ -119,7 +119,8 @@
                         <button name="action_send_survey" string="Invite people" states="open" type="object" class="oe_highlight" />
                         <button name="action_print_survey" string="Print Survey" type="object"/>
                         <button name="action_result_survey" string="View results" states="open,close,cancel" type="object" class="oe_highlight"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,open,close,cancel" clickable="True"/>
+                        <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}" />
+                        <field name="state" invisible="True" />
                     </header>
                     <sheet class="oe_survey">
                         <div class="oe_title">
@@ -214,6 +215,7 @@
             <field name="model">survey.survey</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id">
+                    <field name="stage_id" invisible="1"/>
                     <field name="title" />
                     <field name="date_open" />
                     <field name="tot_sent_survey" />
@@ -226,53 +228,35 @@
                     <field name="auth_required" />
                     <field name="public_url" />
                     <templates>
-                        <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_survey oe_kanban_global_click">
+                        <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card">
                             <div class="oe_dropdown_toggle oe_dropdown_kanban" t-if="widget.view.is_action_enabled('edit')">
-                                <span class="oe_e">i</span> <!-- icon for dropdown menu -->
+                                <span class="oe_e">í</span> <!-- icon for dropdown menu -->
                                 <ul class="oe_dropdown_menu">
-                                    <li><a type="edit" >Edit...</a></li>
-                                    <li t-if="record.state.raw_value === 'open' &amp;&amp; record.visible_to_user.raw_value === true"><a name="action_start_survey" type="object">Start Survey...</a></li>
-                                    <li t-if="record.state.raw_value === 'open'"><a name="action_send_survey" type="object">Invite People...</a></li>
-                                    <li><a name="action_print_survey" type="object">Print Survey...</a></li>
-                                    <li><a name="%(action_selected_survey_user_input)d" type="action">View Answers...</a></li>
-                                    <li t-if="record.tot_comp_survey.raw_value"><a name="action_result_survey" type="object">View Results...</a></li>
+                                    <!-- <li t-if="record.state.raw_value === 'open' &amp;&amp; record.visible_to_user.raw_value === true"><a name="action_start_survey" type="object">Start Survey...</a></li> -->
+                                    <!-- <li><a name="action_print_survey" type="object">Print Survey...</a></li> -->
+                                    <!-- <li><a name="%(action_selected_survey_user_input)d" type="action">View Answers...</a></li> -->
+                                    <li><a type="edit">Survey Options</a></li>
                                     <li t-if="widget.view.is_action_enabled('delete')"><a type="delete">Delete!</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                             </div>
                             <div class="oe_kanban_content">
-                                <span class="oe_kanban_right" t-if="widget.view.is_action_enabled('edit')">
-                                    <a t-if="record.state.raw_value === 'draft'" title="Draft" class="oe_kanban_status" name="action_kanban_update_state" type="object"> </a>
-                                    <a t-if="record.state.raw_value === 'open'" title="Open" class="oe_kanban_status_green" name="action_kanban_update_state" type="object"> </a>
-                                    <a t-if="record.state.raw_value === 'close'" title="Closed" class="oe_kanban_status_red" name="action_kanban_update_state" type="object"> </a>
-                                    <a t-if="record.state.raw_value === 'cancel'" title="Cancelled" class="oe_kanban_status_salmon" name="action_kanban_update_state" type="object"> </a>
-                                </span>
-                                <h3 class="oe_kanban_ellipsis"><t t-esc="record.title.raw_value.toString()"></t></h3>
-                                <div t-if="record.visible_to_user.raw_value === false">
-                                    <center>
-                                        <field name="tot_start_survey" widget="gauge" style="width:160px; height: 120px;"
-                                            options="{'max_field': 'tot_sent_survey'}"/>
-                                        <field name="tot_comp_survey" widget="gauge" style="width:160px; height: 120px;"
-                                            options="{'max_field': 'tot_sent_survey'}"/>
-                                    </center>
-                                </div>
-                                <div t-if="record.visible_to_user.raw_value === true">
-                                    <center>
-                                        <field name="tot_comp_survey" widget="gauge" style="width:160px; height: 120px;"
-                                            options="{'max_field': 'tot_start_survey'}"/>
-                                    </center>
-                                </div>
+                                <h4 class="oe_center"><field name="title" /></h4>
                                 <div>
+                                    <ul>
+                                    <li><a type="edit">Design</a></li>
+                                    <li><a>Test</a></li>
+                                    <li><a name="action_send_survey" type="object">Send Invitations</a></li>
+                                    <li><a name="action_result_survey" type="object">Analyse Answers</a> <span t-if="record.tot_start_survey.raw_value > 0">(<field name="tot_start_survey" />)</span></li>
+                                    </ul>
+                                </div>
+<!--                                 <div>
                                     <center><b>
                                         <a t-if="record.visible_to_user.raw_value === true" name="action_start_survey" type="object"><t t-esc="record.public_url.raw_value"/></a>
                                         <t t-if="record.visible_to_user.raw_value === false">Survey only on invitation</t>
                                     </b></center>
                                 </div>
-                                <div style="margin-top:15px">
-                                    Opening date: <field name="date_open" /><br />
-                                    Closing date: <field name="date_close" />
-                                </div>
-                            </div>
+ -->                            </div>
                         </div>
                     </templates>
                 </kanban>
@@ -296,9 +280,9 @@
             <field name="view_mode">kanban,tree,calendar,form</field>
             <field name="search_view_id" ref="survey_search"/>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">Click to create a new survey.</p>
-                <p>You can create survey for different purposes: recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.</p>
-                <p>A survey is made of pages containing questions of several types: text, multiple choices, etc.</p>
+                <p class="oe_view_nocontent_create">Click to add a survey.</p>
+                <p>You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.</p>
+                <p>Design easily your survey, send invitations to answer by email and analyse answers.</p>
             </field>
         </record>
         <act_window context="{'search_default_survey_id': [active_id], 'default_survey_id': active_id}" id="act_survey_pages" name="Pages" res_model="survey.page" src_model="survey.survey"/>
@@ -616,24 +600,19 @@
 
         <!-- MENU ELEMENTS -->
 
-        <!-- Top menubar item -->
-        <menuitem name="Surveys" id="survey_main" sequence="120"/>
-
         <!-- Left menu categories-->
-        <menuitem name="Surveys" id="menu_surveys" parent="survey_main" sequence="10" groups="base.group_survey_user"/>
-        <menuitem name="Results" id="menu_statistics" parent="survey_main" sequence="20" groups="base.group_survey_manager"/>
-        <menuitem name="Technical Settings" id="menu_surveys_configuration" parent="survey_main" sequence="30" groups="base.group_no_one"/>
+        <menuitem name="Surveys" id="menu_surveys" parent="base.marketing_menu" sequence="30" groups="base.group_survey_user"/>
+        <menuitem name="Configuration" id="marketing_config" parent="base.marketing_menu" sequence="100" groups="base.group_no_one"/>
 
         <!-- Left menu elements: Survey -->
         <menuitem name="Surveys" id="menu_survey_form" action="action_survey_form" parent="menu_surveys" sequence="1"/>
-
-        <!-- Left menu elements: Statistics -->
-        <menuitem name="Survey User inputs" id="menu_survey_type_form1" action="action_survey_user_input" parent="menu_statistics" sequence="1"/>
+        <menuitem name="Answers" id="menu_survey_type_form1" action="action_survey_user_input" parent="menu_surveys" sequence="1"/>
 
         <!-- Left menu elements: Technical Configuration -->
-        <menuitem name="Survey Pages" id="menu_survey_page_form1" action="action_survey_page_form" parent="menu_surveys_configuration" sequence="1"/>
-        <menuitem name="Survey Questions" id="menu_survey_question_form1" action="action_survey_question_form" parent="menu_surveys_configuration" sequence="2"/>
-        <menuitem name="Survey Labels" id="menu_survey_label_form1" action="action_survey_label_form" parent="menu_surveys_configuration" sequence="3"/>
-        <menuitem name="Survey User Input Lines" id="menu_survey_response_line_form" action="action_survey_user_input_line" parent="menu_surveys_configuration" sequence="4"/>
+        <menuitem name="Surveys" id="menu_surveys_configuration" parent="marketing_config" groups="base.group_no_one"/>
+        <menuitem name="Pages" id="menu_survey_page_form1" action="action_survey_page_form" parent="menu_surveys_configuration" sequence="1"/>
+        <menuitem name="Questions" id="menu_survey_question_form1" action="action_survey_question_form" parent="menu_surveys_configuration" sequence="2"/>
+        <menuitem name="Labels" id="menu_survey_label_form1" action="action_survey_label_form" parent="menu_surveys_configuration" sequence="3"/>
+        <menuitem name="User Input Lines" id="menu_survey_response_line_form" action="action_survey_user_input_line" parent="menu_surveys_configuration" sequence="4"/>
     </data>
 </openerp>

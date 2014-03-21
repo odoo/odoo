@@ -175,6 +175,31 @@ class survey_survey(osv.Model):
         ('positive_user_input_limit', 'CHECK (user_input_limit >= 0)', 'Automatic closing limit must be positive')
     }
 
+    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+        """ Read group customization in order to display all the stages in the
+        kanban view, even if they are empty """
+        stage_obj = self.pool.get('survey.stage')
+        order = stage_obj._order
+        access_rights_uid = access_rights_uid or uid
+
+        if read_group_order == 'stage_id desc':
+            order = '%s desc' % order
+
+        stage_ids = stage_obj._search(cr, uid, [], order=order, access_rights_uid=access_rights_uid, context=context)
+        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
+
+        # restore order of the search
+        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+
+        fold = {}
+        for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
+            fold[stage.id] = stage.fold or False
+        return result, fold
+
+    _group_by_full = {
+        'stage_id': _read_group_stage_ids
+    }
+
     # Public methods #
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -352,7 +377,7 @@ class survey_stage(osv.Model):
         'name': fields.text(string="Name", required=True, translate=True),
         'sequence': fields.integer(string="Sequence"),
         'survey_open': fields.boolean(string="Display these surveys?"),
-        'folded': fields.boolean(string="Folded column by default")
+        'fold': fields.boolean(string="Folded column by default")
     }
     _defaults = {
         'sequence': 1,
