@@ -9,13 +9,14 @@
             var self = this;
 
             // set value and display button
-            openerp.jsonRpc('/website_mail/is_follower/', 'call', {
+            self.$target.find("input").removeClass("hidden");
+            openerp.jsonRpc('/website_mail/is_follower', 'call', {
                 model: this.$target.data('object'),
                 id: +this.$target.data('id'),
             }).always(function (data) {
                 self.$target.find('input.js_follow_email')
                     .val(data.email ? data.email : "")
-                    .attr("disabled", data.email.length ? "disabled" : false);
+                    .attr("disabled", data.is_follower && data.email.length ? "disabled" : false);
                 self.$target.attr("data-follow", data.is_follower ? 'on' : 'off');
                 self.$target.removeClass("hidden");
             });
@@ -47,8 +48,10 @@
                 'email': $email.length ? $email.val() : false,
             }).then(function (follow) {
                 if (follow) {
-                    self.$target.find(" > *").toggleClass("hidden");
+                    self.$target.find(".js_follow_email, .input-group-btn").addClass("hidden");
+                    self.$target.find(".alert").removeClass("hidden");
                 }
+                self.$target.find('input.js_follow_email').attr("disabled", follow ? "disabled" : false);
                 self.$target.attr("data-follow", follow ? 'on' : 'off');
             });
         },
