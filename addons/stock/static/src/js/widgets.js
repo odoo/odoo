@@ -25,6 +25,7 @@ function openerp_picking_widgets(instance){
         template: 'PickingEditorWidget',
         init: function(parent,options){
             this._super(parent,options);
+            var self = this;
             this.rows = [];
             this.search_filter = "";
             jQuery.expr[":"].Contains = jQuery.expr.createPseudo(function(arg) {
@@ -32,6 +33,9 @@ function openerp_picking_widgets(instance){
                     return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
                 };
             });
+        },
+        get_header: function(){
+            return this.getParent().get_header();
         },
         get_location: function(){
             var model = this.getParent();
@@ -69,7 +73,7 @@ function openerp_picking_widgets(instance){
                                     head_container: true,
                                     processed: packopline.processed,
                             },
-                            classes: ('active container_head ') + (packopline.processed === "true" ? 'processed hidden ':''),
+                            classes: ('success container_head ') + (packopline.processed === "true" ? 'processed hidden ':''),
                         });
                         pack_created.push(packopline.result_package_id[0]);
                     }
@@ -90,7 +94,7 @@ function openerp_picking_widgets(instance){
                                 head_container: false,
                                 processed: packopline.processed,
                         },
-                        classes: ((packopline.product_qty <= packopline.qty_done) ? 'active ' : '') + (packopline.result_package_id[1] !== undefined ? 'in_container_hidden ' : '') + (packopline.processed === "true" ? 'processed hidden ':''),
+                        classes: ((packopline.product_qty <= packopline.qty_done) ? 'success ' : '') + (packopline.result_package_id[1] !== undefined ? 'in_container_hidden ' : '') + (packopline.processed === "true" ? 'processed hidden ':''),
                     });
             });
             //sort element by things to do, then things done, then grouped by packages
@@ -118,8 +122,20 @@ function openerp_picking_widgets(instance){
         renderElement: function(){
             var self = this;
             this._super();
+            this.$('.js_pick_done').click(function(){ self.getParent().done(); });
+            this.$('.js_pick_print').click(function(){ self.getParent().print_picking(); });
+            this.$('.oe_pick_app_header').text(self.get_header());
+            this.$('.oe_searchbox').keyup(function(event){
+                self.on_searchbox($(this).val());
+            });
+            this.$('.js_pick_pack').click(function(){ self.getParent().pack(); });
+            this.$('.js_drop_down').click(function(){ self.getParent().drop_down();});
+            this.$('.js_clear_search').click(function(){ 
+                self.on_searchbox(''); 
+                self.$('.oe_searchbox').val('');
+            });
             this.$('#js_select').change(function(){
-                var selection = $(this)[0].value
+                var selection = self.$('#js_select option:selected').attr('value');
                 if (selection === "ToDo"){
                     self.getParent().$('.js_pick_pack').removeClass('hidden')
                     self.getParent().$('.js_drop_down').removeClass('hidden')
@@ -135,18 +151,18 @@ function openerp_picking_widgets(instance){
                 self.on_searchbox(self.search_filter);
             });
             this.$('.js_plus').click(function(){
-                var id = parseInt($(this).attr('op-id'));
+                var id = $(this).data('product-id');
                 self.getParent().scan_product_id(id,true);
             });
             this.$('.js_minus').click(function(){
-                var id = parseInt($(this).attr('op-id'));
+                var id = $(this).data('product-id');
                 self.getParent().scan_product_id(id,false);
             });
             this.$('.js_unfold').click(function(){
-                var op_id = $(this).parent()[0].attributes.getNamedItem('data-id').value;
+                var op_id = $(this).parent().data('id');
                 var line = $(this).parent();
                 //select all js_pack_op_line with class in_container_hidden and correct container-id
-                select = self.$('.js_pack_op_line.in_container_hidden[container-id='+op_id+']')
+                select = self.$('.js_pack_op_line.in_container_hidden[data-container-id='+op_id+']')
                 if (select.length > 0){
                     //we unfold
                     line.addClass('warning');
@@ -156,63 +172,77 @@ function openerp_picking_widgets(instance){
                 else{
                     //we fold
                     line.removeClass('warning');
-                    select = self.$('.js_pack_op_line.in_container[container-id='+op_id+']')
+                    select = self.$('.js_pack_op_line.in_container[data-container-id='+op_id+']')
                     select.removeClass('in_container');
                     select.addClass('in_container_hidden'); 
                 }
             });
             this.$('.js_create_lot').click(function(){
-                var op_id = this.attributes.getNamedItem('product_id').value;
+                var op_id = $(this).parents("[data-id]:first").data('id');
                 self.getParent().create_lot(op_id);
             });
             this.$('.js_delete_pack').click(function(){
-                var pack_id = parseInt(this.attributes.getNamedItem('pack_id').value);
+                var pack_id = $(this).parents("[data-id]:first").data('id');
                 self.getParent().delete_package_op(pack_id);
             });
             this.$('.js_print_pack').click(function(){
-                var pack_id = parseInt(this.attributes.getNamedItem('pack_id').value);
+                var pack_id = $(this).parents("[data-id]:first").data('id');
+                // $(this).parents("[data-id]:first").data('id')
                 self.getParent().print_package(pack_id);
             });
             this.$('.js_submit_value').submit(function(event){
-                var op_id = parseInt(this.attributes.getNamedItem('data-id').value);
-                var value = parseInt(event.srcElement[0].value);
+                var op_id = $(this).parents("[data-id]:first").data('id');
+                var value = parseInt($("input", this).val());
                 if (value>=0){
                     self.getParent().set_operation_quantity(value, op_id);
                 }
-                self.$('.js_qty[data-id='+op_id+']')[0].value = "";
+                $("input", this).val("");
             });
             this.$('.js_qty').blur(function(){
                 this.value = "";
             });
             this.$('.js_change_src').click(function(){
-                var op_id = $(this)[0].attributes.getNamedItem('op_id').value;
+                var op_id = $(this).parents("[data-id]:first").data('id');//data('op_id');
                 self.$('#js_loc_select').addClass('source');
-                self.$('#js_loc_select').attr('op_id',op_id);
+                self.$('#js_loc_select').data('op-id',op_id);
                 self.$el.siblings('#js_LocationChooseModal').modal();
             });
             this.$('.js_change_dst').click(function(){
-                var op_id = $(this)[0].attributes.getNamedItem('op_id').value;
-                self.$('#js_loc_select').attr('op_id',op_id);
+                var op_id = $(this).parents("[data-id]:first").data('id');
+                self.$('#js_loc_select').data('op-id',op_id);
+                self.$el.siblings('#js_LocationChooseModal').modal();
+            });
+            this.$('.js_pack_change_dst').click(function(){
+                var op_id = $(this).parents("[data-id]:first").data('id');
+                self.$('#js_loc_select').addClass('pack');
+                self.$('#js_loc_select').data('op-id',op_id);
                 self.$el.siblings('#js_LocationChooseModal').modal();
             });
             this.$('.js_validate_location').click(function(){
                 //get current selection
                 var select_dom_element = self.$('#js_loc_select');
-                var selected = self.$('#js_loc_select option:selected')[0].attributes.getNamedItem('loc_id').value;
+                var loc_id = self.$('#js_loc_select option:selected').data('loc-id');
                 var src_dst = false;
-                var op_id = parseInt(select_dom_element[0].attributes.getNamedItem('op_id').value);
-                if (select_dom_element[0].classList.contains('source')){
+                var op_id = select_dom_element.data('op-id');
+                if (select_dom_element.hasClass('pack')){
+                    select_dom_element.removeClass('source');
+                    op_ids = [];
+                    self.$('.js_pack_op_line[data-container-id='+op_id+']').each(function(){
+                        op_ids.push($(this).data('id'));
+                    });
+                    op_id = op_ids;
+                }
+                else if (select_dom_element.hasClass('source')){
                     src_dst = true;
                     select_dom_element.removeClass('source');
                 }
-                if (selected === "false"){
+                if (loc_id === false){
                     //close window
                     self.$el.siblings('#js_LocationChooseModal').modal('hide');
                 }
                 else{
-                    loc_id = parseInt(selected);
                     self.$el.siblings('#js_LocationChooseModal').modal('hide');
-                    self.getParent().change_location(op_id, loc_id, src_dst);
+                    self.getParent().change_location(op_id, parseInt(loc_id), src_dst);
 
                 }
             });
@@ -223,7 +253,7 @@ function openerp_picking_widgets(instance){
             //hide line that has no location matching the query and highlight location that match the query
             this.search_filter = query;
             var processed = ".processed";
-            if (this.$('#js_select')[0].value == "ToDo"){
+            if (this.$('#js_select option:selected').attr('value') == "ToDo"){
                 processed = ":not(.processed)";
             }
             if (query !== '') {
@@ -242,7 +272,7 @@ function openerp_picking_widgets(instance){
             //get ids of visible on the screen
             pack_op_ids = []
             this.$('.js_pack_op_line:not(.processed):not(.js_pack_op_line.hidden):not(.container_head)').each(function(){
-                cur_id = this.attributes.getNamedItem('data-id').value;
+                cur_id = $(this).data('id');
                 pack_op_ids.push(parseInt(cur_id));
             });
             //get list of element in this.rows where rem > 0 and container is empty is specified
@@ -261,6 +291,18 @@ function openerp_picking_widgets(instance){
         blink: function(op_id){
             this.$('.js_pack_op_line[data-id="'+op_id+'"]').addClass('blink_me');
         },
+        check_done: function(){
+            var model = this.getParent();
+            var self = this;
+            var done = true;
+            _.each( model.packoplines, function(packopline){
+                if (packopline.processed === "false"){
+                    done = false;
+                    return done;
+                }
+            });
+            return done;
+        }
     });
 
     module.PickingMenuWidget = module.MobileWidget.extend({
@@ -532,22 +574,10 @@ function openerp_picking_widgets(instance){
                 self.scan(ean);
             });
             
-
             this.$('.js_pick_quit').click(function(){ self.quit(); });
-            this.$('.js_pick_pack').click(function(){ self.pack(); });
-            this.$('.js_drop_down').click(function(){ self.drop_down();});
-            this.$('.js_pick_done').click(function(){ self.done(); });
-            this.$('.js_pick_print').click(function(){ self.print_picking(); });
             this.$('.js_pick_prev').click(function(){ self.picking_prev(); });
             this.$('.js_pick_next').click(function(){ self.picking_next(); });
             this.$('.js_pick_menu').click(function(){ self.menu(); });
-            this.$('.oe_searchbox').keyup(function(event){
-                self.on_searchbox($(this).val());
-            });
-            this.$('.js_clear_search').click(function(){ 
-                self.on_searchbox(''); 
-                self.$('.oe_searchbox').val('');
-            });
 
             this.hotkey_handler = function(event){
                 if(event.keyCode === 37 ){  // Left Arrow
@@ -575,8 +605,6 @@ function openerp_picking_widgets(instance){
                     self.$('.js_pick_next').removeClass('disabled');
                 }
 
-                self.$('.oe_pick_app_header').text(self.get_header());
-
             }).fail(function(error) {console.log(error);});
 
         },
@@ -596,7 +624,6 @@ function openerp_picking_widgets(instance){
                 .then(function(){
                     self.picking_editor.remove_blink();
                     self.picking_editor.renderElement();
-                    // self.$('#js_select')[0].value = "ToDo";
 
                     if( self.picking.id === self.pickings[0]){
                         self.$('.js_pick_prev').addClass('disabled');
@@ -609,7 +636,6 @@ function openerp_picking_widgets(instance){
                     }else{
                         self.$('.js_pick_next').removeClass('disabled');
                     }
-                    self.$('.oe_pick_app_header').text(self.get_header());
                     if (remove_search_filter){
                         self.$('.oe_searchbox').val('');
                         self.on_searchbox('');
@@ -644,9 +670,9 @@ function openerp_picking_widgets(instance){
                     if (result.filter_loc !== false){
                         //check if we have receive a location as answer
                         if (result.filter_loc !== undefined){
-                            var modal_loc_hidden = self.$('#js_LocationChooseModal')[0].attributes.getNamedItem('aria-hidden').value;
+                            var modal_loc_hidden = self.$('#js_LocationChooseModal').attr('aria-hidden');
                             if (modal_loc_hidden === "false"){
-                                var line = self.$('#js_LocationChooseModal .js_loc_option[loc_id='+result.filter_loc_id+']').attr('selected','selected');
+                                var line = self.$('#js_LocationChooseModal .js_loc_option[data-loc-id='+result.filter_loc_id+']').attr('selected','selected');
                             }
                             else{
                                 self.$('.oe_searchbox').val(result.filter_loc);
@@ -688,7 +714,11 @@ function openerp_picking_widgets(instance){
                 new instance.web.Model('stock.pack.operation')
                     .call('action_drop_down', [pack_op_ids])
                     .then(function(){
-                        return self.refresh_ui(self.picking.id);
+                            return self.refresh_ui(self.picking.id).then(function(){
+                                if (self.picking_editor.check_done()){
+                                    return self.done();
+                                }
+                            });
                     });
             }
         },
