@@ -397,7 +397,7 @@
                 <div>
                     <t t-if="country">
                         <img style="max-height:10em;" class="img-rounded img-responsive" t-att-src="'/website/image?model=res.country&amp;field=image&amp;id='+str(country.id)"></img>
-                        <h4><b>Events In <span t-esc="country.name"></span></b></h4>
+                        <h4><b>Events in <span t-esc="country.name"></span></b></h4>
                     </t>
                     <t t-if="not country">
                         <img style="max-height:10em;" class="img-rounded img-responsive" src="/website_event/static/src/img/world_map.jpg"></img>
@@ -417,10 +417,10 @@
                     </div>
                     <t t-if="len(events) > 5">
                         <div t-if="country">
-                            <b><a t-att-href="'/event/?country='+str(country.id)">See All events from <span t-esc="country.name"></span></a></b>
+                            <b><a t-att-href="'/event/?country='+str(country.id)">See all events from <span t-esc="country.name"></span></a></b>
                         </div>
                         <div t-if="not country">
-                            <b><a href="/event"> See All Upcoming events </a></b>
+                            <b><a href="/event"> See all upcoming events </a></b>
                         </div>
                     </t>
                 </div>
