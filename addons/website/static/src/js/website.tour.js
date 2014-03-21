@@ -137,6 +137,7 @@ T.registerSteps = function (tour) {
         if (!step.element) {
             step.element = "body";
             step.orphan = true;
+            step.backdrop = true;
         }
     }
     if (tour.steps[index-1] &&
