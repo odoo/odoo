@@ -42,7 +42,8 @@ class mail_compose_message(osv.TransientModel):
     _inherit = 'mail.compose.message'
 
     def default_get(self, cr, uid, fields, context=None):
-        """ Override to pre-fill the data when having a template in single-email mode """
+        """ Override to pre-fill the data when having a template in single-email mode
+        and not going through the view: the on_change is not called in that case. """
         if context is None:
             context = {}
         res = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
@@ -50,7 +51,7 @@ class mail_compose_message(osv.TransientModel):
             res.update(
                 self.onchange_template_id(
                     cr, uid, [], context['default_template_id'], res.get('composition_mode'),
-                    res.get('model'), res.get('res_id', context.get('active_id')), context=context
+                    res.get('model'), res.get('res_id'), context=context
                 )['value']
             )
         return res
@@ -108,7 +109,6 @@ class mail_compose_message(osv.TransientModel):
             values = self.generate_email_for_composer_batch(cr, uid, template_id, [res_id], context=context)[res_id]
             # transform attachments into attachment_ids; not attached to the document because this will
             # be done further in the posting process, allowing to clean database if email not send
-            values['attachment_ids'] = values.pop('attachment_ids', [])
             ir_attach_obj = self.pool.get('ir.attachment')
             for attach_fname, attach_datas in values.pop('attachments', []):
                 data_attach = {
@@ -119,7 +119,7 @@ class mail_compose_message(osv.TransientModel):
                     'res_id': 0,
                     'type': 'binary',  # override default_type from context, possibly meant for another model!
                 }
-                values['attachment_ids'].append(ir_attach_obj.create(cr, uid, data_attach, context=context))
+                values.setdefault('attachment_ids', list()).append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:
             values = self.default_get(cr, uid, ['subject', 'body', 'email_from', 'email_to', 'email_cc', 'partner_to', 'reply_to', 'attachment_ids', 'mail_server_id'], context=context)
 
@@ -212,10 +212,6 @@ class mail_compose_message(osv.TransientModel):
         for res_id in res_ids:
             # remove attachments from template values as they should not be rendered
             template_values[res_id].pop('attachment_ids', None)
-            # remove some keys from composer that are readonly
-            composer_values[res_id].pop('email_to', None)
-            composer_values[res_id].pop('email_cc', None)
-            composer_values[res_id].pop('partner_to', None)
             # update template values by composer values
             template_values[res_id].update(composer_values[res_id])
         return template_values
