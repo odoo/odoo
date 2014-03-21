@@ -43,7 +43,7 @@ $(document).ready(function() {
             $('#discussions_wrapper').empty();
             new openerp.website.blog_discussion({'content' : content});
         }
-        if (share) $("p,h1,h2,h3,h4,ul").share({'author_name':$('#blog_author').text()});
+        if (share) $("h1, h2, h3, h4, ul, p","#blog_content ,.blog_title").share({'author_name':$('#blog_author').text()});
     });
     $('.cover_footer').on('click',page_transist);
     $('a[href^="#blog_content"]').on('click', animate);
