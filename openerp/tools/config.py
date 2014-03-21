@@ -662,6 +662,9 @@ class configmanager(object):
             os.chmod(d, 0700)
         return d
 
+    def filestore(self, dbname):
+        return os.path.join(self['data_dir'], 'filestore', dbname)
+
 config = configmanager()
 
 
