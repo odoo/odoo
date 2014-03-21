@@ -61,8 +61,10 @@ class pos_config(osv.osv):
         'journal_ids' : fields.many2many('account.journal', 'pos_config_journal_rel', 
              'pos_config_id', 'journal_id', 'Available Payment Methods',
              domain="[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash'])]",),
-        'warehouse_id' : fields.many2one('stock.warehouse', 'Warehouse',
-             required=True),
+#         'warehouse_id' : fields.many2one('stock.warehouse', 'Warehouse',
+#              required=True),
+        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type'),
+        'stock_location_id': fields.many2one('stock.location', 'Stock Location to take from', required=True),
         'journal_id' : fields.many2one('account.journal', 'Sale Journal',
              domain=[('type', '=', 'sale')],
              help="Accounting journal used to post sales entries."),
@@ -87,7 +89,7 @@ class pos_config(osv.osv):
                 "to customize the reference numbers of your orders."),
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
         'group_by' : fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
-        'pricelist_id': fields.many2one('product.pricelist','Pricelist', required=True)
+        'pricelist_id': fields.many2one('product.pricelist','Pricelist', required=True),
     }
 
     def _check_cash_control(self, cr, uid, ids, context=None):
@@ -131,18 +133,12 @@ class pos_config(osv.osv):
         res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', company_id)], limit=1, context=context)
         return res and res[0] or False
 
-    def _default_warehouse(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context)
-        res = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', user.company_id.id)], limit=1, context=context)
-        return res and res[0] or False
-
     def _default_pricelist(self, cr, uid, context=None):
         res = self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')], limit=1, context=context)
         return res and res[0] or False
 
     _defaults = {
         'state' : POS_CONFIG_STATE[0][0],
-        'warehouse_id': _default_warehouse,
         'journal_id': _default_sale_journal,
         'group_by' : True,
         'pricelist_id': _default_pricelist,
@@ -664,7 +660,9 @@ class pos_order(osv.osv):
         'invoice_id': fields.many2one('account.invoice', 'Invoice'),
         'account_move': fields.many2one('account.move', 'Journal Entry', readonly=True),
         'picking_id': fields.many2one('stock.picking', 'Picking', readonly=True),
-        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True),
+#         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True),
+        'picking_type_id': fields.related('session_id', 'config_id', 'picking_type_id', type='many2one', relation='stock.picking.type'),
+        'location_id': fields.related('session_id', 'config_id', 'stock_location_id', type='many2one', relation='stock.location'),
         'note': fields.text('Internal Notes'),
         'nb_print': fields.integer('Number of Print', readonly=True),
         'pos_reference': fields.char('Receipt Ref', size=64, readonly=True),
@@ -699,7 +697,6 @@ class pos_order(osv.osv):
         'session_id': _default_session,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
         'pricelist_id': _default_pricelist,
-        'picking_type_id': _get_out_picking_type,
     }
 
     def create(self, cr, uid, values, context=None):
