@@ -240,23 +240,18 @@ The purchase to resupply is a procurement rule added to the buy route, which wil
 Quants, reservations and removal strategies
 ===========================================
 
-// When you check availability or you do action_done on an original stock move or the scheduler sees your confirmed move, the system will try to reserve stock .  In v8, an extra model has been added to represent this stock, namely the 
-// quant.  So, reserving stock means choosing the right quants and tagging them as reserved for your move.  
+When the state of a move needs to pass from confirmed/waiting to assigned and the move is not an incoming shipment, the necessary stock (=quants) needs to be reserved.  
 
-When the state of a move needs to pass from confirmed/waiting to assigned and the move is not an incoming shipment, it needs to reserve the necessary stock (=quants).  
-
-In order to do so: we need to consider the following: 
+We need to consider the following when reserving stock:
 
 * If there are original moves, the stock has to come from these moves
-* If there are no original moves, it can take from the source location, but only if this stock has not been reserved on other moves
-* Also in case of returned moves, the system needs to check it
-* When choosing the stock, we need to take into account the removal strategy
+* If there are no original moves, it can take from the source location, but only if this stock has not been reserved on other moves.  If the user would want to take from other moves, he can unreserve those.  
+* Also in case of returned moves, the system will check if the stock was moved by the move it was returned from. 
+* When choosing the stock, we need to take into account the removal strategy.  
 
-By default the removal strategy is fifo.  This means the quant chosen is the stock that came in first into the system.    
+The removal strategy determines the order in which the stock gets reserved.  By default the removal strategy is FIFO (First In First Out).  
 
-A removal strategy can be put on a product category and location.  For example, for certain products lifo could be chosen in stock.  This mechanism can be used when you want to add other methods.  
-
-In case of incoming shipments, we do not need to reserve stock or to apply removal strategies.  
+A different removal strategy can be defined by product category and location.  For example, for a certain category of products LIFO (Last In First Out) could be chosen when taking products from its stock location.  
 
 
 
@@ -264,7 +259,8 @@ In case of incoming shipments, we do not need to reserve stock or to apply remov
 Packages and lots
 ==================
 
-Quants (stock) can be put in packages, but also packages in packages as we gave the packages a hierarchical structure similar to the locations.  
+Quants (stock) can be put in a package and a package can be put in another package.  The same hierarchical structure can be used as for locations.  When pack A is put in pack B, its full name becomes PACK B / PACK A.  
+
 
 Lots are always linked to a certain product and can be put as being required depending on the incoming/outgoing/full traceability selected on the product. If in a picking you do not select a lot, it can take any lot (or even without lot).  If you select a lot, it has to take it. 
 
@@ -274,7 +270,7 @@ Lots are always linked to a certain product and can be put as being required dep
 Pack operations
 =======================
 
-Behind the bar code scanner interface, we have an extra model pack operations.  The stock moves itself will tell nothing about which packages to take, in which packages to put, which lots to take, from which location we need to take and in which location to put it.  That is the job of the pack operations.  
+In order to define the operations that can be proposed / executed by the bar code interface, we create / process pack operations.  The stock moves itself will tell nothing about (from) which package / location/lot to take, in which location / package to put the goods.  That is the job of the pack operations.  
 
 There are actually 2 types of pack operation: 
 
@@ -286,21 +282,23 @@ There are actually 2 types of pack operation:
 Preparing pack operations
 =========================
 
-Before a picking is handled by a bar code scanner, it is necessary to propose the pack operations based on the moves and the quants reserved.  It will start with the quants reserved and add until everything is chosen for the moves.  
+If a picking will be processed by the bar code scanner, OpenERP will propose the pack operations that need to be executed.  If it is an incoming shipment, it will be based on the moves, otherwise it will use the stock that has been reserved already.  
 
-This is done by checking the quants reserved and grouping those with the same:
+The moves or reserved stock (quants) will be grouped by:
 
 * Lot: lot of the quant or empty if from stock move
 * Product: product of the quant or stock move
 * Package: the package from the quant or empty if from stock move
-* Location source: the location of the quant or the source location of the move
-* Location destination: For that we need to apply the putaway strategies
+* Source location: the location of the quant or the source location of the move
+* Destination location: For that we need to apply the putaway strategies
 
-OpenERP will try to move entire packages as much as possible instead of parts of a package.  (based on these groupings)
+The putway strategies are similar to the removal strategies, but determine for the original destination location a child location where the goods should be deposited (instead as for the source location).  By default, there is no putaway strategy defined on the destination location.  In that case, the goods will be deposited in the destination location of the move.  In the stock module, there is one putaway strategy: fixed location.  For each such strategy you can also specify the related location.  Of course, based on this, custom developments make it possible to implement the putaway strategy you want (as it is applied on all of the stock being moved at once).
 
-The putway strategies are also defined on product category and location as is the case for the removal strategies.  
+For the reserved stock, OpenERP will try to find as many packages (and as high-level) as possible for which the stock is entirely reserved and the destination location is the same for every piece of stock.  That way, the operator knows he can simply move the package to the destination location, instead of having to open the box and split the quantities.  
 
-There is one putaway strategy defined in the system.  This can be used to define a fixed location for certain products.  
+An example might illustrate this further:
+
+Some pallets with product A and some mixed pallets with product A en B are placed at the gates and need to be moved to stock.  A picking proposes to move all products A and B to stock.  Product A has loc A as fixed location putaway strategy and product B has loc B as fixed location.  In the pack operations, OpenERP will make an operation by pack for all pallets with only product A all to the loc A.  For the mixed pallets, it won't be able to make one pack operation.  It will say: move the product A from the mixed pallet to loc A and move the product B from the mixed pallet to loc B.  
 
 
 ============
@@ -308,7 +306,7 @@ Unreserving
 ============
 If we want to use a certain piece of stock on another picking instead of the picking selected, we can unreserve this piece of stock by clicking on the Unreserve button of the picking.  
 
-It is however possible that during the pack operations, the guy has chosen the stock from another location.  In that case, other quants need to be reserved also.  When processing this picking further on, the system will unreserve the stock and do the reserve process again taking into account the created pack operations from the bar code scanner interface.  
+It is however possible that during the pack operations, the guy has chosen the stock from another location.  In that case, other quants need to be reserved also.  When processing this picking further on, the system will unreserve the stock and do the reserve process again, taking into account the created pack operations from the bar code scanner interface.  
 
 
 
@@ -319,6 +317,7 @@ It is however possible that during the pack operations, the guy has chosen the s
 ========================================================
 Recomputation of links between moves and pack operations
 ========================================================
+
 
 We need to check if the pack operations cover all moves and opposite.  If there is more of a product transferred in a pack operation than in the moves, an extra move needs to be created in the picking and set to done.  When there is less product in the pack operation than in the move, a backorder needs to be created with those moves and the original move might be split with a part going into the backorder.  
 
@@ -346,8 +345,7 @@ If not, it will find the quants based on the moves only.
 Negative stocks
 ======================
 
-It is still possible that upon transferring for an internal shipment or delivery, the necessary quants or stock can not be found.  In that case, it will create negative stock (negative quants).  
-
+It is still possible that upon transferring for an internal shipment or delivery, the necessary quants or stock can not be found.  In that case, it will create negative stock (negative quants).    
 
 When later on, a move brings in some goods that correspond to this negative stock, the quant can be reconciled with it.  This will however not happen if this incoming quant has a chained move to another location.  It is only when you force assign a move with original moves that it can also take from the regular stock (so not coming from its original moves).  It will however not assign this stock before actually doing the transfer.  
 
@@ -359,18 +357,25 @@ When later on, a move brings in some goods that correspond to this negative stoc
 Returns
 ========================
 
-It is possible to create a return on a done picking.  This wizard will propose to return everything that is still in the destination location. 
+It is possible to create a return on a done picking.  This wizard will propose to return everything that is still in the destination location.   
 
 
 ======================
 Cancellation
 ======================
 
+When you cancel a procurement, it will cancel everything in the backwards direction. When you cancel a move itself, it will cancel in the forward direction. 
 
+This will happen only if the move has the attribute 'Propagate Cancel and Split' set to true.  Also, when a procurement rule (or a push rule) is applied to create another move, it will copy its 'Propagate Cancel and Split' on the move.  
 
 
 8 Inventory
 ***********
+
+When you start using OpenERP, you might have an inventory to start from.  (Starting Inventory)  You will enter all the products that are in the warehouse and OpenERP will put them in this position.  When you validate this inventory, OpenERP will create the necessary stock moves.  
+
+It is possible that operations in the warehouse are not well registered and the stock in OpenERP does not correspond exactly to the physical stock in the warehouse.  In order to manage this, we 
+
 
 
 9 Examples pick pack ship
