@@ -2,6 +2,12 @@
 <openerp>
 <data>
 <template id="editor_head" inherit_id="report.html_container" name="Editor" groups="base.group_website_publisher">
+    <xpath expr="//html" position="attributes">
+        <attribute name="style">padding-top: 51px;</attribute>
+        <attribute name="t-att-data-website-id">website.id if editable else None</attribute>
+        <attribute name="t-att-data-translatable">'1' if translatable else None</attribute>
+    </xpath>
+
     <xpath expr="//body" position="attributes">
         <attribute name="style">padding-top: 51px;</attribute>
     </xpath>
