@@ -19,23 +19,11 @@
         edit: function () {
             var self = this;
             $("body").off('click');
-            website.snippet.stop_animation();
             window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
             this.snippets.appendTo(this.$el);
             this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
-                website.snippet.start_animation();
-                $(website.snippet.readyAnimation).each(function() {
-                    var animation = $(this).data("snippet-view");
-                    if (animation) {
-                        animation.$target.on('focus', '*', function(){
-                            animation.stop();
-                        });
-                        animation.$target.on('blur', '*', function(){
-                            animation.start();
-                        });
-                    }
-                });
+                  website.snippet.stop_animation();
             });
 
             return this._super.apply(this, arguments);
@@ -391,8 +379,6 @@
                         var $target = false;
                         if(action === 'insert'){
                             $target = $toInsert;
-
-                            website.snippet.start_animation();
 
                             self.create_overlay($target);
                             if ($target.data("snippet-editor")) {
@@ -1315,6 +1301,7 @@
         start : function () {
             var self = this;
             this._super();
+            this.$target.carousel({interval: false});
             this.id = this.$target.attr("id");
             this.$inner = this.$target.find('.carousel-inner');
             this.$indicators = this.$target.find('.carousel-indicators');
