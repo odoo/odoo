@@ -316,12 +316,6 @@ class Vote(osv.Model):
         post.refresh()
         return {'vote_count': post.vote_count}
 
-class Badge(osv.Model):
-    _inherit = 'gamification.badge'
-    _columns = {
-        'level': fields.selection([('bronze', 'bronze'), ('silver', 'silver'), ('gold', 'gold')], 'Forum Badge Level'),
-    }
-
 class MailMessage(osv.Model):
     _inherit = 'mail.message'
     _columns = {

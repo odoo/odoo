@@ -19,4 +19,5 @@
 #
 ##############################################################################
 
-import website_forum
+import gamification
+import forum

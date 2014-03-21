@@ -2,7 +2,6 @@
 <openerp>
     <data>
 
-        <!--NOTE: Will have to test all-->
         <!--NOTE: if we have to get no of votes on any post than we are using vote_count at this time-->
         <record id="badge_1" model="gamification.badge">
             <field name="name">Autobiographer</field>
@@ -32,7 +31,7 @@
             <field name="reward_id" eval="ref('badge_1')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_configure_profile">
@@ -65,7 +64,7 @@
             <field name="reward_id" eval="ref('badge_3')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_cleanup">
@@ -98,7 +97,7 @@
             <field name="reward_id" eval="ref('badge_4')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_commentator">
@@ -131,7 +130,7 @@
             <field name="reward_id" eval="ref('badge_5')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_critic">
@@ -167,7 +166,7 @@
             <field name="reward_id" eval="ref('badge_6')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_disciplined">
@@ -200,7 +199,7 @@
             <field name="reward_id" eval="ref('badge_7')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_editor">
@@ -233,7 +232,7 @@
             <field name="reward_id" eval="ref('badge_8')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_enlightened">
@@ -275,7 +274,7 @@ result = get_counter(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_9')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_enthusiast">
@@ -317,7 +316,7 @@ result = get_counter(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_10')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_expert">
@@ -350,7 +349,7 @@ result = get_counter(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_11')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_famous_question">
@@ -365,7 +364,7 @@ result = get_counter(cr, uid, context=context)
             <field name="level">silver</field>
         </record>
 
-        <!--NOTE: passing default value 1 for res otherwise it gives error in gamification, will improve in gamification -->
+        <!--NOTE: passing default value 1 for res forumwise it gives error in gamification, will improve in gamification -->
         <record model="gamification.goal.definition" id="definition_favorite_question">
             <field name="name">Favorite Question</field>
             <field name="description">Ask a question which can be favorited by minimum 5 users</field>
@@ -392,7 +391,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_12')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_favorite_question">
@@ -425,7 +424,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_13')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_good_answer">
@@ -458,7 +457,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_14')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_good_question">
@@ -491,7 +490,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_15')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_great_answer">
@@ -524,7 +523,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_16')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_great_question">
@@ -557,7 +556,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_17')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_guru">
@@ -601,12 +600,12 @@ result = get_posts(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_18')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_necromancer">
             <field name="definition_id" eval="ref('definition_necromancer')" />
-            <field name="target_goal">1</field>
+            <field name="target_goal">2</field>
             <field name="challenge_id" eval="ref('challenge_necromancer')" />
         </record>
 
@@ -634,7 +633,7 @@ result = get_posts(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_19')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_nice_answer">
@@ -667,7 +666,7 @@ result = get_posts(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_20')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_nice_question">
@@ -700,7 +699,7 @@ result = get_posts(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_21')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_notable_question">
@@ -733,7 +732,7 @@ result = get_posts(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_22')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_notable_question">
@@ -752,24 +751,24 @@ result = get_posts(cr, uid, context=context)
          it should shange boolean field?. at this time we are showing post with 3 down vote(not deleted)
         -->
         <record model="gamification.goal.definition" id="definition_peer_pressure">
-            <field name="name">Discipline</field>
-            <field name="description">Delete own post with 3 or more upvotes</field>
+            <field name="name">Peer Pressure</field>
+            <field name="description">Delete own post with 3 or more down votes</field>
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('user_id','=',user.id), ('vote_count', '>=', -3)]</field>
+            <field name="domain">[('user_id','=',user.id), ('vote_count', '&lt;=', -3)]</field>
             <field name="condition">higher</field>
         </record>
 
         <record model="gamification.challenge" id="challenge_peer_pressure">
-            <field name="name">Disciplined</field>
+            <field name="name">Peer Pressure</field>
             <field name="period">once</field>
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_23')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_peer_pressure">
@@ -802,7 +801,7 @@ result = get_posts(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_24')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_popular_question">
@@ -847,7 +846,7 @@ result = get_count(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_25')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_pundit">
@@ -881,7 +880,7 @@ result = get_count(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_26')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_scholar">
@@ -918,7 +917,7 @@ result = get_count(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_27')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_self_learner">
@@ -933,7 +932,7 @@ result = get_count(cr, uid, context=context)
             <field name="level">bronze</field>
         </record>
 
-        <!--NOTE: passing default value 1 for res otherwise it gives error in gamification, will improve in gamification -->
+        <!--NOTE: passing default value 1 for res forumwise it gives error in gamification, will improve in gamification -->
         <record model="gamification.goal.definition" id="definition_stellar_question">
             <field name="name">Stellar Question</field>
             <field name="description">Ask a question which can be favorited by minimum 25 users</field>
@@ -960,7 +959,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_28')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_stellar_question">
@@ -993,7 +992,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_29')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_associate_editor">
@@ -1026,7 +1025,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_30')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_student">
@@ -1059,7 +1058,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_31')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_supporter">
@@ -1092,7 +1091,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_32')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_taxonomist">
@@ -1125,7 +1124,7 @@ result = count_favorites(cr, uid, context=context)
             <field name="reward_id" eval="ref('badge_33')" />
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="category">forum</field>
         </record>
 
         <record model="gamification.challenge.line" id="line_teacher">
