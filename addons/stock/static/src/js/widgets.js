@@ -122,6 +122,7 @@ function openerp_picking_widgets(instance){
         renderElement: function(){
             var self = this;
             this._super();
+            this.check_content_screen();
             this.$('.js_pick_done').click(function(){ self.getParent().done(); });
             this.$('.js_pick_print').click(function(){ self.getParent().print_picking(); });
             this.$('.oe_pick_app_header').text(self.get_header());
@@ -266,6 +267,28 @@ function openerp_picking_widgets(instance){
             if (query === '') {
                 this.$('.js_loc').removeClass('info');
                 this.$('.js_pack_op_line'+processed+'.hidden').removeClass('hidden');
+            }
+            this.check_content_screen();
+        },
+        check_content_screen: function(){
+            //get all visible element and if none has positive qty, disable put in pack and process button
+
+            //TODO process should be clickable if we have a container visible at screen and not processed
+            var self = this;
+            var qties = this.$('.js_pack_op_line:not(.processed):not(.hidden) .js_qty').map(function(){return $(this).attr('placeholder')});
+            var disabled = true;
+            $.each(qties,function(index, value){
+                if (parseInt(value)>0){
+                    disabled = false;
+                }
+            });
+            if (disabled){
+                self.$('.js_drop_down').addClass('disabled');
+                self.$('.js_pick_pack').addClass('disabled');
+            }
+            else{
+                self.$('.js_drop_down').removeClass('disabled');
+                self.$('.js_pick_pack').removeClass('disabled');
             }
         },
         get_current_op_selection: function(ignore_container){
