@@ -303,8 +303,8 @@ class Vote(osv.Model):
             if record.vote == '1' or new_vote == '-1':
                 value = -10
             elif record.vote == '-1' or new_vote == '1':
-                value = 10 
-            self.pool['res.users'].write(cr, uid, [record.user_id.id], {'karma': value}, context=context)
+                value = 10
+            self.pool['res.users'].write(cr, uid, [record.post_id.user_id.id], {'karma': value}, context=context)
             self.write(cr, uid, vote_ids, {
                 'vote': new_vote
             }, context=context)
