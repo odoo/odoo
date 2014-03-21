@@ -197,8 +197,7 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
                 ('each_exist_or_create', 'Use existing partner or create'),
                 ('nothing', 'Do not link to a customer')
             ], 'Related Customer', required=True),
-        # Uncomment me in trunk
-        # 'force_assignation': fields.boolean('Force assignation', help='If unchecked, this will leave the salesman of duplicated opportunities'),
+        'force_assignation': fields.boolean('Force assignation', help='If unchecked, this will leave the salesman of duplicated opportunities'),
     }
 
     _defaults = {
@@ -274,10 +273,7 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
             active_ids = active_ids.difference(merged_lead_ids)
             active_ids = active_ids.union(remaining_lead_ids)
             ctx['active_ids'] = list(active_ids)
-        # Remove me in trunk
-        ctx['no_force_assignation'] = ctx.get('no_force_assignation', True) 
-        # Uncomment me in trunk
-        # ctx['no_force_assignation'] = not data.force_assignation
+        ctx['no_force_assignation'] = not data.force_assignation
         return self.action_apply(cr, uid, ids, context=ctx)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
