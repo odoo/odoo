@@ -307,6 +307,31 @@
             </t>
         </template>
 
+        <template id="close_question">
+            <t t-call="website_forum.header">
+                <h3 class=""><b>Close question</b></h3><br/>
+                <form t-attf-action="/forum/#{ slug(forum) }/question/close/" method="post" role="form">
+                    <input name="post_id" t-att-value="post.id" type="hidden"/>
+                    <span class="pull-left">Close the question:</span>
+                    <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }" t-field="post.name"/>
+                    <div class="mt16">
+                        <label class="col-md-2 control-label mb16" for="reason">Reasons:</label>
+                        <div class="col-md-9 mb16">
+                            <select class="form-control" name="reason">
+                                <t t-foreach="reasons" t-as="reason">
+                                    <option t-att-value="reason.get('name')" t-att-selected="reason.get('name') == post.reason"><t t-esc="reason.get('value')"/></option>
+                                </t>
+                                <!--div t-field="post.reason" t-field-options='{"widget":"selection"}'/-->
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary btn-lg">Close</button>
+                    </div>
+                </form>
+            </t>
+        </template>
+
         <template id="post_description_full" name="Question Navigation">
             <t t-call="website_forum.header">
 
@@ -341,20 +366,28 @@
                                 </div>
                                 <ul class="list-inline">
                                     <li>
-                                        <a style="cursor: pointer" data-toggle="collapse" class="text-muted"
+                                        <a style="cursor: pointer" data-toggle="collapse" class="text-muted fa fa-comment-o"
                                               t-attf-data-target="#comment#{ question._name.replace('.','') + '-' + str(question.id) }">
                                             comment
                                         </a>
                                     </li>
-                                    <li><a class="text-muted" t-attf-href="/forum/#{ slug(forum) }/edit/question/#{ question.id }">edit</a></li>
-                                    <li><a class="text-muted" t-attf-href="/forum/#{ slug(forum) }/delete/question/#{ question.id }">delete</a></li>
-                                    <li><a class="text-muted" href="">share</a></li>
+                                    <li><a class="text-muted fa fa-times" t-attf-href="/forum/#{ slug(forum) }/close/question/#{ question.id }">close</a></li>
+                                    <li><a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/edit/question/#{ question.id }">edit</a></li>
+                                    <li><a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/delete/question/#{ question.id }">delete</a></li>
+                                    <li><a class="text-muted fa fa-share" href="">share</a></li>
                                 </ul>
                             </div>
                             <t t-set="user" t-value="question.user_id"/>
                             <t t-call="website_forum.user_detail">
                                 <span class="text-muted">Asked on <span t-field="question.write_date"/></span>
                             </t>
+                            <div class="alert alert-info" t-if="question.state == 'close'">
+                                <p class="mt32 mb32" style="text-align: center;">
+                                    <b>The question has been closed for the following reason "<span t-field="question.reason"/>"
+                                    <i>by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ slug(question.closed_by) }" t-field="question.closed_by.name"/> </i>
+                                     <br/>close date <span t-field="question.closed_date"/></b>
+                                </p>
+                            </div>
                         </div>
                         <t t-call="website_forum.comments">
                             <t t-set="object" t-value="question"/>
@@ -386,14 +419,14 @@
                         <div class="mt16">
                             <ul class="list-inline pull-right">
                                 <li>
-                                    <a style="cursor: pointer" data-toggle="collapse" class="text-muted"
+                                    <a style="cursor: pointer" data-toggle="collapse" class="text-muted fa fa-comment-o"
                                           t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }">
                                         comment
                                     </a>
                                 </li>
-                                <li><a class="text-muted" t-attf-href="/forum/#{ slug(forum) }/answer/#{ question.id }/edit/#{ answer.id }">edit</a></li>
-                                <li><a class="text-muted delete" href="" t-attf-id="#{answer.id}">delete</a></li>
-                                <li><a class="text-muted" t-attf-href="/forum/#{ slug(forum) }/question/#{ question.id }/#answer-#{ answer.id }">share</a></li>
+                                <li><a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/answer/#{ question.id }/edit/#{ answer.id }">edit</a></li>
+                                <li><a class="text-muted delete fa fa-trash-o" href="" t-attf-id="#{answer.id}">delete</a></li>
+                                <li><a class="text-muted fa fa-share" t-attf-href="/forum/#{ slug(forum) }/question/#{ question.id }/#answer-#{ answer.id }">share</a></li>
                             </ul>
                             <t t-set="user" t-value="answer.user_id"/>
                             <t t-call="website_forum.user_detail">

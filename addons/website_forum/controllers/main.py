@@ -446,6 +446,39 @@ class website_forum(http.Controller):
             }, context=context)
         return correct
 
+    @http.route('/forum/<model("website.forum"):forum>/close/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
+    def close_question(self, forum, post, **kwarg):
+        #have to remove by applying selection widget
+        reasons = [{'name': 'duplicate', 'value': 'duplicate question'},
+            {'name': 'off_topic', 'value': 'question is off-topic or not relevant'},
+            {'name': 'argumentative', 'value': 'too subjective and argumentative'},
+            {'name': 'not_question', 'value': 'not a real question'},
+            {'name': 'answer_accepted', 'value': 'the question is answered, right answer was accepted'},
+            {'name': 'out_dated', 'value': 'question is not relevant or out dated'},
+            {'name': 'offensive', 'value': 'question contains offensive or malicious remarks'},
+            {'name': 'advertising', 'value': 'spam or advertising'},
+            {'name': 'localized', 'value': 'too localized'}
+        ]
+
+        values = {
+            'post': post,
+            'forum': forum,
+            'searches': kwarg,
+            'reasons': reasons,
+            'notifications': self._get_notifications(),
+        }
+        return request.website.render("website_forum.close_question", values)
+
+    @http.route('/forum/<model("website.forum"):forum>/question/close/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    def save_edited_question(self, forum, **post):
+        request.registry['website.forum.post'].write( request.cr, request.uid, [int(post.get('post_id'))], {
+            'state': 'close',
+            'closed_by': request.uid,
+            'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
+            'reason': post.get('reason'),
+        }, context=request.context)
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('post_id')))
+
     @http.route('/forum/<model("website.forum"):forum>/edit/profile/<model("res.users"):user>', type='http', auth="user", multilang=True, website=True)
     def edit_profile(self, forum, user, **kwarg):
         cr,context = request.cr, request.context

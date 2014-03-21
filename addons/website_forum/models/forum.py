@@ -150,7 +150,21 @@ class Post(osv.Model):
                 'website.forum.post.vote': (_get_vote, [], 10),
             }
         ),
+
         'correct': fields.boolean('Correct Answer'),
+        'reason': fields.selection([
+            ('duplicate', 'duplicate question'),
+            ('off_topic', 'question is off-topic or not relevant'),
+            ('argumentative','too subjective and argumentative'),
+            ('not_question', 'not a real question'),
+            ('answer_accepted', 'the question is answered, right answer was accepted'),
+            ('out_dated', 'question is not relevant or out dated'),
+            ('offensive', 'question contains offensive or malicious remarks'),
+            ('advertising', 'spam or advertising'),
+            ('localized', 'too localized'),
+            ], 'Reason'),
+        'closed_by': fields.many2one('res.users', 'Closed by'),
+        'closed_date': fields.datetime('Closed on', readonly=True),
     }
     _defaults = {
         'state': 'active',
