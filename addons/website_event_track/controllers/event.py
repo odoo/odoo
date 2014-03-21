@@ -30,8 +30,21 @@ import re
 import werkzeug.utils
 
 controllers = controllers()
-
+import pytz
+from pytz import timezone
 class website_event(http.Controller):
+    
+    @http.route(['/website_event/change_time/'], type='json', auth="user", website=True)
+    def change_time(self, datum):
+        time_collection = eval(datum.get('time_collection'))
+        local_tz = pytz.timezone (datum.get('time_zone'))
+        new_list = []
+        for time in time_collection:
+            start_time = (time[0].replace(tzinfo=pytz.utc).astimezone(local_tz)).strftime('%H:%M')
+            end_time = (time[1].replace(tzinfo=pytz.utc).astimezone(local_tz)).strftime('%H:%M')
+            new_list.append(start_time +" - "+ end_time)
+        return new_list
+        
     @http.route(['/event/<model("event.event"):event>/track/<model("event.track"):track>'], type='http', auth="public", website=True, multilang=True)
     def event_track_view(self, event, track, **post):
         track_obj = request.registry.get('event.track')
@@ -129,7 +142,7 @@ class website_event(http.Controller):
         new_schedule = {}
         location_object = request.registry.get('event.track.location')
         event_track_obj = request.registry.get('event.track')
-        
+        time_collection = []
         #Make all possible timeslot for each day.
         for track in fetch_tracks:
             room_list.append(track[1])
@@ -144,6 +157,7 @@ class website_event(http.Controller):
             unsort_tracks[key] = OrderedDict()
             for value in new_schedule[key]:
                 unsort_tracks[key][value[0].strftime('%H:%M')+" - "+value[1].strftime('%H:%M')] = []
+                time_collection.append([value[0],value[1]])
         
         #Add track to its related time slot and day.
         for track in fetch_tracks:
@@ -174,7 +188,6 @@ class website_event(http.Controller):
                              'color': color,
                              'publish': not event_tracks.website_published
                        })
-                
         #Get All Locations and make room_list contain unique value.
         room_list = list(set(room_list))
         room_list.sort()
@@ -204,6 +217,12 @@ class website_event(http.Controller):
             format_date.append((datetime.datetime.strptime(skip, '%m-%d-%y')).strftime("%d %B, %Y"))
             for loc in skip_td[skip].keys():
                 skip_td[skip][loc] = list(set(skip_td[skip][loc]))
+                
+        timezone = []
+        for tt in pytz.common_timezones:
+            melbourne = pytz.timezone(tt)
+            timezone.append([melbourne.utcoffset(datetime.datetime.now()).total_seconds()/60, tt])
+        
         values = {
             'event': event,
             'main_object': event,
@@ -211,7 +230,9 @@ class website_event(http.Controller):
             'days': unsort_tracks,
             'skip_td': skip_td,
             'talks':talks,
-            'format_date':format_date
+            'format_date':format_date,
+            'timezone':timezone,
+            'time_collection':time_collection
         }
         return request.website.render("website_event_track.agenda", values)
 

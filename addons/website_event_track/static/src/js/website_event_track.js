@@ -1,4 +1,22 @@
 $(document).ready(function() {
+    console.log(openerp);
+    var offset = -(new Date().getTimezoneOffset());
+    var time_collection = $("select#timezone").attr('data');
+    $("select#timezone").bind('change keyup', function(e){
+          openerp.jsonRpc('/website_event/change_time/', 'call', {
+                'datum': {'time_collection':time_collection,'time_zone':$(this).find("option:selected").text()},
+            }).done(function (msg) {
+                var change_time = $("td#change_time");
+                $.each(change_time, function(key, element){
+                    $(element).text(msg[key]);
+                });
+           });
+    });
+    var select = $("select#timezone option").filter(function(){return this.value==offset}).first();
+    if(select){
+        select.attr("selected","selected");
+        $("select#timezone").trigger('change');
+    }
     function set_value(td_contain){
         var search_object = {};
         $.each(td_contain, function(key, element2){
