@@ -15,8 +15,8 @@ if (typeof openerp === "undefined") {
 
 var website = window.openerp.website;
 
-// don't rewrite website.Tour in test mode
-if (typeof website.Tour !== "undefined") {
+// don't rewrite T in test mode
+if (typeof T !== "undefined") {
     return;
 }
 
@@ -31,14 +31,14 @@ if (website.EditorBar) {
         start: function () {
             var self = this;
             var menu = $('#help-menu');
-            _.each(website.Tour.tours, function (tour) {
+            _.each(T.tours, function (tour) {
                 if (tour.mode === "test") {
                     return;
                 }
                 var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
                 $menuItem.click(function () {
-                    website.Tour.reset();
-                    website.Tour.run(tour.id);
+                    T.reset();
+                    T.run(tour.id);
                 });
                 menu.append($menuItem);
             });
@@ -80,32 +80,36 @@ $.ajaxSetup({
     }
 });
 
-
 /////////////////////////////////////////////////
-
 
 var localStorage = window.localStorage;
 
-website.Tour = {};
-website.Tour.tours = {};
-website.Tour.state = null;
-website.Tour.register = function (tour) {
+var T = website.Tour = {};
+T.tours = {};
+T.defaultDelay = 50;
+T.errorDelay = 5000;
+T.state = null;
+T.$element = null;
+T.timer =  null;
+T.testtimer = null;
+T.currentTimer = null;
+T.register = function (tour) {
     if (tour.mode !== "test") tour.mode = "tutorial";
-    website.Tour.tours[tour.id] = tour;
+    T.tours[tour.id] = tour;
 };
-website.Tour.run = function (tour_id, mode) {
+T.run = function (tour_id, mode) {
     if (localStorage.getItem("tour") && mode === "test") { // only one test running
         return;
     }
-    var tour = website.Tour.tours[tour_id];
-    website.Tour.saveState(tour.id, mode || tour.mode, 0);
-    if (tour.path && !window.location.href.match(new RegExp("("+website.Tour.getLang()+")?"+tour.path+"#?$", "i"))) {
-        window.location.href = "/"+website.Tour.getLang()+tour.path;
+    var tour = T.tours[tour_id];
+    T.saveState(tour.id, mode || tour.mode, 0);
+    if (tour.path && !window.location.href.match(new RegExp("("+T.getLang()+")?"+tour.path+"#?$", "i"))) {
+        window.location.href = "/"+T.getLang()+tour.path;
     } else {
-        website.Tour.running();
+        T.running();
     }
 };
-website.Tour.registerSteps = function (tour) {
+T.registerSteps = function (tour) {
     if (tour.register) {
         return;
     }
@@ -130,7 +134,10 @@ website.Tour.registerSteps = function (tour) {
             step.element = '#oe_snippets '+step.snippet+' .oe_snippet_thumbnail';
         }
 
-        if (!step.element) step.orphan = true;
+        if (!step.element) {
+            step.element = "body";
+            step.orphan = true;
+        }
     }
     if (tour.steps[index-1] &&
         tour.steps[index-1].popover && tour.steps[index-1].popover.next) {
@@ -142,69 +149,151 @@ website.Tour.registerSteps = function (tour) {
     }
 
     // rendering bootstrap tour and popover
-    if (tour.mode !== "test" || typeof Tour !== "undefined") {
-        tour.tour = new Tour({
-            debug: true,
-            name: tour.id,
-            storage: localStorage,
-            keyboard: false,
-            template: website.Tour.popover(),
-            onHide: function () {
-                window.scrollTo(0, 0);
-            }
-        });
-
+    if (tour.mode !== "test") {
         for (var index=0, len=tour.steps.length; index<len; index++) {
             var step = tour.steps[index];
             step._title = step._title || step.title;
-            step.title = website.Tour.popoverTitle(tour, { title: step._title });
-            step.template = step.template || website.Tour.popover( step.popover );
+            step.title = T.popoverTitle(tour, { title: step._title });
+            step.template = step.template || T.popover( step.popover );
         }
-        tour.tour.addSteps(tour.steps);
-        tour.tour.init();
-        tour.tour.end();
     }
 };
-website.Tour.autoToggleBootstrapTour = function () {
-    var state = website.Tour.getState();
-    if (!state || !state.tour.tour || state.step.busy) return;
-    var tour = state.tour.tour;
+T.closePopover = function () {
+    if (T.$element) {
+        T.$element.popover('destroy');
+        T.$element.removeData("tour");
+        T.$element.removeData("tour-step");
+        $(".tour-backdrop").remove();
+        $(".popover.tour").remove();
+        T.$element = null;
+    }
+};
+T.autoTogglePopover = function () {
+    var state = T.getState();
     var step = state.step;
 
-    if (!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden"))) {
-        if (!tour.ended()) {
-            return;
-        }
-        tour._removeState("current_step");
-        tour._removeState("end");
-        tour._showPopover(state.step, state.step.id);
+    if (T.$element &&
+        T.$element.is(":visible") &&
+        T.$element.data("tour") === state.id &&
+        T.$element.data("tour-step") === step.id) {
+        T.repositionPopover();
+        return;
+    }
 
-        $(".popover.tour button")
-            .off()
-            .on("click", function () {
-                $(this).off();
-                step.busy = true;
-                if (!$(this).is("[data-role='next']")) {
-                    clearTimeout(website.Tour.timer);
-                    website.Tour.endTour(tour);
-                }
-                $(".popover.tour").removeClass('in');
-                tour.end();
-            });
+    if (step.busy) {
+        return;
+    }
+
+    T.closePopover();
+
+    var $element = $(step.element).first();
+    if (!step.element || !$element.size() || !$element.is(":visible")) {
+        return;
+    }
+
+
+    T.$element = $element;
+    $element.data("tour", state.id);
+    $element.data("tour-step", step.id);
+    $element.popover({
+        placement: step.placement || "auto",
+        animation: true,
+        trigger: "manual",
+        title: step.title,
+        content: step.content,
+        html: true,
+        container: "body",
+        template: step.template,
+        orphan: step.orphan
+    }).popover("show");
+
+
+    var $tip = $element.data("bs.popover").tip();
+
+
+    // add popover style (orphan, static, backdrop)
+    if (step.orphan) {
+        $tip.addClass("orphan");
+    }
+
+    var node = $element[0];
+    var css;
+    do {
+        css = window.getComputedStyle(node);
+        if (!css || css.position == "fixed") {
+            $tip.addClass("fixed");
+            break;
+        }
+    } while ((node = node.parentNode) && node !== document);
+
+    if (step.backdrop) {
+        $("body").append('<div class="tour-backdrop"></div>');
+    }
+
+    if (step.backdrop || $element.parents("#website-top-navbar, .modal").size()) {
+        $tip.css("z-index", 2010);
+    }
+
+    // button click event
+    $tip.find("button")
+        .one("click", function () {
+            step.busy = true;
+            if (!$(this).is("[data-role='next']")) {
+                clearTimeout(T.timer);
+                T.endTour();
+            }
+            T.closePopover();
+        });
+
+    T.repositionPopover();
+};
+T.repositionPopover = function() {
+    var popover = T.$element.data("bs.popover");
+    var $tip = T.$element.data("bs.popover").tip();
+
+    if (popover.options.orphan) {
+        return $tip.css("top", $(window).outerHeight() / 2 - $tip.outerHeight() / 2);
+    }
+
+    var offsetBottom, offsetHeight, offsetRight, offsetWidth, originalLeft, originalTop, tipOffset;
+    offsetWidth = $tip[0].offsetWidth;
+    offsetHeight = $tip[0].offsetHeight;
+    tipOffset = $tip.offset();
+    originalLeft = tipOffset.left;
+    originalTop = tipOffset.top;
+    offsetBottom = $(document).outerHeight() - tipOffset.top - $tip.outerHeight();
+    if (offsetBottom < 0) {
+        tipOffset.top = tipOffset.top + offsetBottom;
+    }
+    offsetRight = $("html").outerWidth() - tipOffset.left - $tip.outerWidth();
+    if (offsetRight < 0) {
+        tipOffset.left = tipOffset.left + offsetRight;
+    }
+    if (tipOffset.top < 0) {
+        tipOffset.top = 0;
+    }
+    if (tipOffset.left < 0) {
+        tipOffset.left = 0;
+    }
+    $tip.offset(tipOffset);
+    if (popover.options.placement === "bottom" || popover.options.placement === "top") {
+            var left = T.$element.offset().left + T.$element.outerWidth()/2 - tipOffset.left;
+            $tip.find(".arrow").css("left", left ? left + "px" : "");
     } else {
-        tour.end();
+            var top = T.$element.offset().top + T.$element.outerHeight()/2 - tipOffset.top;
+            $tip.find(".arrow").css("top", top ? top + "px" : "");
     }
 };
-website.Tour.popoverTitle = function (tour, options) {
+T.popoverTitle = function (tour, options) {
     return openerp.qweb.render('website.tour_popover_title', options);
 };
-website.Tour.popover = function (options) {
+T.popover = function (options) {
     return openerp.qweb.render('website.tour_popover', options);
 };
-website.Tour.getLang = function () {
+T.getLang = function () {
     return $("html").attr("lang").replace(/-/, '_');
 };
-website.Tour.getState = function () {
+T.getState = function () {
     var state = JSON.parse(localStorage.getItem("tour") || 'false') || {};
     var tour_id,mode,step_id;
     if (!state.id && window.location.href.indexOf("#tutorial.") > -1) {
@@ -217,15 +306,16 @@ website.Tour.getState = function () {
     if (!state.id) {
         return;
     }
-    state.tour = website.Tour.tours[state.id];
+    state.tour = T.tours[state.id];
     state.step = state.tour.steps[state.step_id];
     return state;
 };
-website.Tour.error = function (tour, step, message) {
-    website.Tour.reset();
+T.error = function (message) {
+    var state = T.getState();
+    T.reset();
     throw new Error(message +
-        + "\ntour: " + tour.id +
-        + "\nstep: " + step.id + ": '" + (step._title || step.title) + "'"
+        + "\ntour: " + state.tour.id +
+        + "\nstep: " + state.step.id + ": '" + (state.step._title || state.step.title) + "'"
         + '\nhref: ' + window.location.href
         + '\nreferrer: ' + document.referrer
         + '\nelement: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden")))
@@ -235,124 +325,121 @@ website.Tour.error = function (tour, step, message) {
         + '\n\n' + $("body").html()
     );
 };
-website.Tour.lists = function () {
+T.lists = function () {
     var tour_ids = [];
-    for (var k in website.Tour.tours) {
+    for (var k in T.tours) {
         tour_ids.push(k);
     }
     return tour_ids;
 };
-website.Tour.saveState = function (tour_id, mode, step_id) {
-    localStorage.setItem("tour", JSON.stringify({"id":tour_id, "mode":mode, "step_id":step_id}));
+T.saveState = function (tour_id, mode, step_id) {
+    localStorage.setItem("tour", JSON.stringify({"id":tour_id, "mode":mode, "step_id":step_id || 0}));
 };
-website.Tour.reset = function () {
-    var state = website.Tour.getState();
+T.reset = function () {
+    var state = T.getState();
     if (state) {
         for (var k in state.tour.steps) {
             state.tour.steps[k].busy = false;
         }
-        if (state.tour.tour) {
-            state.tour.tour.end();
-        }
     }
     localStorage.removeItem("tour");
-    clearTimeout(website.Tour.timer);
-    clearTimeout(website.Tour.testtimer);
-
-    $(".popover.tour").remove();
+    clearTimeout(T.timer);
+    clearTimeout(T.testtimer);
+    T.closePopover();
 };
-website.Tour.running = function () {
-    var state = website.Tour.getState();
+T.running = function () {
+    var state = T.getState();
     if (state) {
-        website.Tour.registerSteps(state.tour);
+        T.registerSteps(state.tour);
         if ($.ajaxBusy) {
             $(document).ajaxStop(function() {
                 setTimeout(function () {
-                    website.Tour.nextStep( state.tour, state.step, state.mode === "test" ? 5000 : 0 );
+                    T.nextStep();
                 },0);
             });
         } else {
-            website.Tour.nextStep( state.tour, state.step, state.mode === "test" ? 5000 : 0 );
+            T.nextStep();
         }
     }
 };
-
-website.Tour.timer =  null;
-website.Tour.testtimer = null;
-website.Tour.defaultDelay = 50;
-website.Tour.check = function (step) {
+T.check = function (step) {
     return (step &&
         (!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden"))) &&
         (!step.waitNot || !$(step.waitNot).size()) &&
         (!step.waitFor || $(step.waitFor).size()));
 };
-website.Tour.waitNextStep = function (tour, step, overlaps) {
+T.waitNextStep = function () {
+    var state = T.getState();
     var time = new Date().getTime();
     var timer;
-    var next = tour.steps[step.id+1];
+    var next = state.tour.steps[state.step.id+1];
+    var overlaps = state.mode === "test" ? T.errorDelay : 0;
 
     window.onbeforeunload = function () {
-        clearTimeout(website.Tour.timer);
-        clearTimeout(website.Tour.testtimer);
+        clearTimeout(T.timer);
+        clearTimeout(T.testtimer);
     };
 
     function checkNext () {
-        website.Tour.autoToggleBootstrapTour();
+        T.autoTogglePopover();
 
-        clearTimeout(website.Tour.timer);
-        if (next.busy) return;
-        if (website.Tour.check(next)) {
-            next.busy = true;
-            clearTimeout(website.Tour.currentTimer);
+        clearTimeout(T.timer);
+        if (T.check(next)) {
+            clearTimeout(T.currentTimer);
             // use an other timeout for cke dom loading
             setTimeout(function () {
-                website.Tour.nextStep(tour, next, overlaps);
-            }, website.Tour.defaultDelay);
+                T.nextStep(next);
+            }, T.defaultDelay);
         } else if (!overlaps || new Date().getTime() - time < overlaps) {
-            website.Tour.timer = setTimeout(checkNext, website.Tour.defaultDelay);
+            T.timer = setTimeout(checkNext, T.defaultDelay);
         } else {
-            website.Tour.error(tour, next, "Can't arrive to the next step");
+            T.error("Can't arrive to the next step");
         }
     }
     checkNext();
 };
-website.Tour.currentTimer = null;
-website.Tour.nextStep = function (tour, step, overlaps) {
-    var state = website.Tour.getState();
-    website.Tour.saveState(state.id, state.mode, step.id);
+T.nextStep = function (step) {
+    var state = T.getState();
 
-    website.Tour.autoToggleBootstrapTour();
+    if (!state) {
+        return;
+    }
+
+    step = step || state.step;
+    T.saveState(state.id, state.mode, step.id);
+
+    T.autoTogglePopover(true);
 
     if (step.onload) {
         step.onload();
     }
-    var next = tour.steps[step.id+1];
 
+    var next = state.tour.steps[step.id+1];
     if (next) {
         setTimeout(function () {
-                website.Tour.waitNextStep(tour, step, overlaps);
+                T.waitNextStep();
                 if (state.mode === "test") {
                     setTimeout(function(){
-                        website.Tour.autoNextStep(tour, step);
-                    }, website.Tour.defaultDelay);
+                        T.autoNextStep();
+                    }, T.defaultDelay);
                 }
         }, next.wait || 0);
     } else {
-        website.Tour.endTour(tour);
+        T.endTour();
     }
 };
-website.Tour.endTour = function (tour) {
-    var state = website.Tour.getState();
+T.endTour = function () {
+    var state = T.getState();
     var test = state.step.id >= state.tour.steps.length-1;
-    website.Tour.reset();
+    T.reset();
     if (test) {
         console.log('ok');
     } else {
         console.log('error');
     }
 };
-website.Tour.autoNextStep = function (tour, step) {
-    clearTimeout(website.Tour.testtimer);
+T.autoNextStep = function (tour, step) {
+    clearTimeout(T.testtimer);
 
     function autoStep () {
         if (!step) return;
@@ -361,18 +448,14 @@ website.Tour.autoNextStep = function (tour, step) {
             step.autoComplete(tour);
         }
 
-        var $popover = $(".popover.tour");
-        if ($popover.find("button[data-role='next']:visible").size()) {
-            $popover.find("button[data-role='next']:visible").click();
-            $popover.remove();
-        }
+        T.closePopover();
 
         var $element = $(step.element);
         if (!$element.size()) return;
 
         if (step.snippet) {
 
-            website.Tour.autoDragAndDropSnippet($element);
+            T.autoDragAndDropSnippet($element);
         
         } else if (step.sampleText) {
         
@@ -388,7 +471,7 @@ website.Tour.autoNextStep = function (tour, step) {
             setTimeout(function () {
                 $element.trigger($.Event("keyup", { srcElement: $element }));
                 $element.trigger($.Event("change", { srcElement: $element }));
-            }, website.Tour.defaultDelay<<1);
+            }, T.defaultDelay<<1);
         
         } else if ($element.is(":visible")) {
 
@@ -406,9 +489,9 @@ website.Tour.autoNextStep = function (tour, step) {
             }, 1000);
         }
     }
-    website.Tour.testtimer = setTimeout(autoStep, 100);
+    T.testtimer = setTimeout(autoStep, 100);
 };
-website.Tour.autoDragAndDropSnippet = function (selector) {
+T.autoDragAndDropSnippet = function (selector) {
     var $thumbnail = $(selector).first();
     var thumbnailPosition = $thumbnail.position();
     $thumbnail.trigger($.Event("mousedown", { which: 1, pageX: thumbnailPosition.left, pageY: thumbnailPosition.top }));
@@ -418,8 +501,8 @@ website.Tour.autoDragAndDropSnippet = function (selector) {
     $dropZone.trigger($.Event("mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
 };
 
-//$(document).ready(website.Tour.running);
-website.ready().then(website.Tour.running);
+//$(document).ready(T.running);
+website.ready().then(T.running);
 
 
 }());

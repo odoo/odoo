@@ -13,6 +13,7 @@
                 title:     _t("Welcome to your website!"),
                 content:   _t("This tutorial will guide you to build your home page. We will start by adding a banner."),
                 popover:   { next:  _t("Start Tutorial"), end:   _t("Skip It") },
+                backdrop:  true,
             },
             {
                 element:   'button[data-action=edit]',
@@ -77,6 +78,7 @@
                 title:     _t("Good Job!"),
                 content:   _t("Well done, you created your homepage."),
                 popover:   { next: _t("Continue") },
+                backdrop:  true,
             },
             {
                 element:   'a[data-action=show-mobile-preview]',
