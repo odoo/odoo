@@ -145,9 +145,8 @@ class mail_mail(osv.Model):
     #------------------------------------------------------
 
     def _get_partner_access_link(self, cr, uid, mail, partner=None, context=None):
-        """ Generate URLs for links in mails:
-            - partner is an user and has read access to the document: direct link to document with model, res_id
-        """
+        """ Generate URLs for links in mails: partner has access (is user):
+        link to action_mail_redirect action that will redirect to doc or Inbox """
         if partner and partner.user_ids:
             base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
             # the parameters to encode for the query and fragment part of url
