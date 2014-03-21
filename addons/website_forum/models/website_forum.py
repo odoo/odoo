@@ -290,7 +290,10 @@ class Vote(osv.Model):
 
     def vote(self, cr, uid, post_id, vote, context=None):
         assert int(vote) in (1, -1, 0), "vote can be -1 or 1, nothing else"
-        Post = self.pool.get('website.forum.post')
+        #user can not vote on own post.
+        post = self.pool['website.forum.post'].browse(cr, uid, post_id, context=context)
+        if post.user_id.id == uid:
+            return False
         vote_ids = self.search(cr, uid, [('post_id', '=', post_id), ('user_id','=',uid)], context=context)
         if vote_ids:
             #when user will click again on vote it should set it 0.
@@ -310,7 +313,8 @@ class Vote(osv.Model):
                 'post_id': post_id,
                 'vote': vote,
             }, context=context)
-        return Post.browse(cr, uid, post_id, context=context).vote_count
+        post.refresh()
+        return {'vote_count': post.vote_count}
 
 class Badge(osv.Model):
     _inherit = 'gamification.badge'

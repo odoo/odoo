@@ -30,7 +30,6 @@
     });
 })();
 
-
 $(document).ready(function () {
 
     $('.fa-thumbs-up ,.fa-thumbs-down').on('click', function (ev) {
@@ -41,19 +40,30 @@ $(document).ready(function () {
                 'post_id': $link.attr("id"),
                 'vote': value})
             .then(function (data) {
-                $link.parent().find("#vote_count").html(data);
-                if (data == 0) {
-                    $link.parent().find(".text-success").removeClass("text-success");
-                    $link.parent().find(".text-warning").removeClass("text-warning");
+                if (data == false){
+                    vote_alert = $link.parents().find("#vote_alert");
+                    if (vote_alert.length <= 1) {
+                        var $warning = $('<div class="alert alert-danger alert-dismissable" id="vote_alert" style="position: fixed; margin-top: -75px;">'+
+                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+                            'Sorry, you cannot vote for your own posts'+
+                            '</div>');
+                        $link.parents().find("#post_vote").append($warning);
+                    }
                 } else {
-                    if (value == 1) {
-                        $link.addClass("text-success");
+                    $link.parent().find("#vote_count").html(data['vote_count']);
+                    if (data == 0) {
+                        $link.parent().find(".text-success").removeClass("text-success");
+                        $link.parent().find(".text-warning").removeClass("text-warning");
                     } else {
-                        $link.addClass("text-warning");
+                        if (value == 1) {
+                            $link.addClass("text-success");
+                        } else {
+                            $link.addClass("text-warning");
+                        }
                     }
                 }
             });
-        return false;
+        return true;
     });
 
     $('.delete').on('click', function (ev) {
