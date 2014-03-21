@@ -145,7 +145,7 @@ class mail_mail(osv.Model):
     #------------------------------------------------------
 
     def _get_partner_access_link(self, cr, uid, mail, partner=None, context=None):
-        """ Generate URLs for links in mails: partner has access (is user):
+        """Generate URLs for links in mails: partner has access (is user):
         link to action_mail_redirect action that will redirect to doc or Inbox """
         if partner and partner.user_ids:
             base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
@@ -166,11 +166,10 @@ class mail_mail(osv.Model):
             return None
 
     def send_get_mail_subject(self, cr, uid, mail, force=False, partner=None, context=None):
-        """ If subject is void and record_name defined: '<Author> posted on <Resource>'
+        """If subject is void, set the subject as 'Re: <Resource>' or
+        'Re: <mail.parent_id.subject>'
 
             :param boolean force: force the subject replacement
-            :param browse_record mail: mail.mail browse_record
-            :param browse_record partner: specific recipient partner
         """
         if (force or not mail.subject) and mail.record_name:
             return 'Re: %s' % (mail.record_name)
@@ -179,12 +178,8 @@ class mail_mail(osv.Model):
         return mail.subject
 
     def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
-        """ Return a specific ir_email body. The main purpose of this method
-            is to be inherited to add custom content depending on some module.
-
-            :param browse_record mail: mail.mail browse_record
-            :param browse_record partner: specific recipient partner
-        """
+        """Return a specific ir_email body. The main purpose of this method
+        is to be inherited to add custom content depending on some module."""
         body = mail.body_html
 
         # generate footer
@@ -193,34 +188,34 @@ class mail_mail(osv.Model):
             body = tools.append_content_to_html(body, link, plaintext=False, container_tag='div')
         return body
 
-    def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
-        """ Return a dictionary for specific email values, depending on a
-            partner, or generic to the whole recipients given by mail.email_to.
-
-            :param browse_record mail: mail.mail browse_record
-            :param browse_record partner: specific recipient partner
-        """
-        body = self.send_get_mail_body(cr, uid, mail, partner=partner, context=context)
-        subject = self.send_get_mail_subject(cr, uid, mail, partner=partner, context=context)
-        body_alternative = tools.html2plaintext(body)
-
-        # generate email_to, heuristic:
-        # 1. if 'partner' is specified and there is a related document: Followers of 'Doc' <email>
-        # 2. if 'partner' is specified, but no related document: Partner Name <email>
-        # 3; fallback on mail.email_to that we split to have an email addresses list
-        if partner and mail.record_name:
+    def send_get_mail_to(self, cr, uid, mail, partner=None, context=None):
+        """Forge the email_to with the following heuristic:
+          - if 'partner' and mail is a notification on a document: followers (Followers of 'Doc' <email>)
+          - elif 'partner', no notificatoin or no doc: recipient specific (Partner Name <email>)
+          - else fallback on mail.email_to splitting """
+        if partner and mail.notification and mail.record_name:
             sanitized_record_name = re.sub(r'[^\w+.]+', '-', mail.record_name)
             email_to = [_('"Followers of %s" <%s>') % (sanitized_record_name, partner.email)]
         elif partner:
             email_to = ['%s <%s>' % (partner.name, partner.email)]
         else:
             email_to = tools.email_split(mail.email_to)
+        return email_to
 
+    def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
+        """Return a dictionary for specific email values, depending on a
+        partner, or generic to the whole recipients given by mail.email_to.
+
+            :param browse_record mail: mail.mail browse_record
+            :param browse_record partner: specific recipient partner
+        """
+        body = self.send_get_mail_body(cr, uid, mail, partner=partner, context=context)
+        body_alternative = tools.html2plaintext(body)
         return {
             'body': body,
             'body_alternative': body_alternative,
-            'subject': subject,
-            'email_to': email_to,
+            'subject': self.send_get_mail_subject(cr, uid, mail, partner=partner, context=context),
+            'email_to': self.send_get_mail_to(cr, uid, mail, partner=partner, context=context),
         }
 
     def send(self, cr, uid, ids, auto_commit=False, raise_exception=False, context=None):
