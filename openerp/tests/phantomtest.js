@@ -2,22 +2,17 @@
 
 function waitFor (ready, callback, timeout, timeoutMessageCallback) {
     timeout = timeout || 10000;
-    var start = new Date().getTime();
-    var condition = ready();
-    var interval = setInterval(function() {
-        if ((new Date().getTime() - start < timeout) && !condition ) {
-            condition = ready();
+    var start = new Date;
+
+    (function waitLoop() {
+        if(new Date - start > timeout) {
+            error(timeoutMessageCallback ? timeoutMessageCallback() : "Timeout after "+timeout+" ms");
+        } else if (ready()) {
+            callback();
         } else {
-            if(!condition) {
-                var message = timeoutMessageCallback ? timeoutMessageCallback() : "Timeout after "+timeout+" ms";
-                console.log("Waiting for " + ready);
-                error(message);
-            } else {
-                clearInterval(interval);
-                callback();
-            }
+            setTimeout(waitLoop, 250);
         }
-    }, 250);
+    }());
 }
 
 function error(message) {
@@ -103,12 +98,12 @@ function PhantomTest() {
     // ----------------------------------------------------
     this.run = function(url_path, code, ready) {
         if(self.options.login) {
-            qp = [];
+            var qp = [];
             qp.push('db=' + self.options.db);
             qp.push('login=' + self.options.login);
             qp.push('key=' + self.options.password);
             qp.push('redirect=' + encodeURIComponent(url_path));
-            var url_path = "/login?" + qp.join('&');
+            url_path = "/login?" + qp.join('&');
         }
         var url = self.origin + url_path;
         self.page.open(url, function(status) {
@@ -118,18 +113,22 @@ function PhantomTest() {
                 console.log('loaded', url, status);
                 // process ready
                 waitFor(function() {
-                    return self.page.evaluate(function (ready) { 
+                    console.log("PhantomTest.run: wait for condition: " + ready);
+                    return self.page.evaluate(function (ready) {
                         var r = false;
                         try {
+                            console.log("page.evaluate eval expr:", ready);
                             r = !!eval(ready);
-                        } catch(ex) {
-                            console.log("waiting for " + ready);
+                        } catch(ex) { 
                         }
+                        console.log("page.evaluate eval result:", r);
                         return r;
                     }, ready);
                 // run test
                 }, function() {
+                    console.log("PhantomTest.run: condition statified, executing: " + code);
                     self.page.evaluate(function (code) { return eval(code); }, code);
+                    console.log("PhantomTest.run: execution launched, waiting for console.log('ok')...");
                 });
             }
         });

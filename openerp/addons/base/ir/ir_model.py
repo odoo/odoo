@@ -33,7 +33,7 @@ from openerp.osv.orm import Model, browse_null
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import config
 from openerp.tools.translate import _
-from openerp.osv.orm import except_orm, browse_record
+from openerp.osv.orm import except_orm, browse_record, MAGIC_COLUMNS
 
 _logger = logging.getLogger(__name__)
 
@@ -302,6 +302,8 @@ class ir_model_fields(osv.osv):
 
     def _drop_column(self, cr, uid, ids, context=None):
         for field in self.browse(cr, uid, ids, context):
+            if field.name in MAGIC_COLUMNS:
+                continue
             model = self.pool[field.model]
             cr.execute('select relkind from pg_class where relname=%s', (model._table,))
             result = cr.fetchone()
@@ -1117,6 +1119,10 @@ class ir_model_data(osv.osv):
                     # Don't remove the LOG_ACCESS_COLUMNS unless _log_access
                     # has been turned off on the model.
                     field = self.pool[model].browse(cr, uid, [res_id], context=context)[0]
+                    if not field.exists():
+                        _logger.info('Deleting orphan external_ids %s', external_ids)
+                        self.unlink(cr, uid, external_ids)
+                        continue
                     if field.name in openerp.osv.orm.LOG_ACCESS_COLUMNS and self.pool[field.model]._log_access:
                         continue
                     if field.name == 'id':

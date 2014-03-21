@@ -135,35 +135,42 @@ class ir_actions_report_xml(osv.osv):
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
-        'model': fields.char('Object', size=64, required=True),
         'type': fields.char('Action Type', size=32, required=True),
-        'report_name': fields.char('Service Name', size=64, required=True),
-        'usage': fields.char('Action Usage', size=32),
-        'report_type': fields.char('Report Type', size=32, required=True, help="Report Type, e.g. pdf, html, raw, sxw, odt, html2html, mako2html, ..."),
+        'name': fields.char('Name', size=64, required=True, translate=True),
+
+        'model': fields.char('Model', required=True),
+        'report_type': fields.selection([('qweb-pdf', 'PDF'),
+                    ('qweb-html', 'HTML'),
+                    ('other', 'Other'),
+                    ('pdf', 'RML pdf (deprecated)'),
+                    ('sxw', 'RML sxw (deprecated)'),
+                    ('webkit', 'Webkit (deprecated)'),
+                    ], 'Report Type', required=True, help="PDF will use wkhtmltopdf to render html to pdf, HTML will directly show html, Other will force download the controller output keeping the MIME type."),
+        'report_name': fields.char('Controller Name', required=True, help="URL of the report will be /report/<controller name>/<ids>, the default controller also use this field to get the name of the qweb ir.ui.view to render. For RML reports, this is the LocalService name."),
         'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
+
+        # options
         'multi': fields.boolean('On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view."),
-        'attachment': fields.char('Save as Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
         'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.'),
+        'attachment': fields.char('Save as Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
+
+        # Deprecated rml stuff
+        'usage': fields.char('Action Usage', size=32),
+        'header': fields.boolean('Add RML Header', help="Add or not the corporate RML header"),
+        'parser': fields.char('Parser Class'),
         'auto': fields.boolean('Custom Python Parser'),
 
-        'header': fields.boolean('Add RML Header', help="Add or not the corporate RML header"),
+        'report_xsl': fields.char('XSL Path'),
+        'report_xml': fields.char('XML Path'),
 
-        'report_xsl': fields.char('XSL Path', size=256),
-        'report_xml': fields.char('XML Path', size=256, help=''),
-
-        # Pending deprecation... to be replaced by report_file as this object will become the default report object (not so specific to RML anymore)
-        'report_rml': fields.char('Main Report File Path', size=256, help="The path to the main report file (depending on Report Type) or NULL if the content is in another data field"),
-        # temporary related field as report_rml is pending deprecation - this field will replace report_rml after v6.0
-        'report_file': fields.related('report_rml', type="char", size=256, required=False, readonly=False, string='Report File', help="The path to the main report file (depending on Report Type) or NULL if the content is in another field", store=True),
+        'report_rml': fields.char('Main Report File Path', help="The path to the main report file (depending on Report Type) or NULL if the content is in another data field"),
+        'report_file': fields.related('report_rml', type="char", required=False, readonly=False, string='Report File', help="The path to the main report file (depending on Report Type) or NULL if the content is in another field", store=True),
 
         'report_sxw': fields.function(_report_sxw, type='char', string='SXW Path'),
         'report_sxw_content_data': fields.binary('SXW Content'),
         'report_rml_content_data': fields.binary('RML Content'),
         'report_sxw_content': fields.function(_report_content, fnct_inv=_report_content_inv, type='binary', string='SXW Content',),
         'report_rml_content': fields.function(_report_content, fnct_inv=_report_content_inv, type='binary', string='RML Content'),
-
-        'parser': fields.char('Parser Class'),
     }
     _defaults = {
         'type': 'ir.actions.report.xml',
@@ -552,6 +559,7 @@ class ir_actions_server(osv.osv):
 #  - uid: current user id
 #  - context: current context
 #  - time: Python time module
+#  - workflow: Workflow engine
 # If you plan to return an action, assign: action = {...}""",
         'use_relational_model': 'base',
         'use_create': 'new',
@@ -936,6 +944,7 @@ class ir_actions_server(osv.osv):
             'uid': uid,
             'user': user,
             'context': context,
+            'workflow': workflow
         }
 
     def run(self, cr, uid, ids, context=None):

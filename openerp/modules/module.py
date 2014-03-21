@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -38,10 +38,6 @@ import openerp.release as release
 from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
-_test_logger = logging.getLogger('openerp.tests')
-
-# addons path ','.joined
-_ad = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons') # default addons path (base)
 
 # addons path as a list
 ad_paths = []
@@ -90,8 +86,13 @@ def initialize_sys_path():
     if ad_paths:
         return
 
-    ad_paths = map(lambda m: os.path.abspath(tools.ustr(m.strip())), tools.config['addons_path'].split(','))
-    ad_paths.append(os.path.abspath(_ad)) # for get_module_path
+    ad_paths = [tools.config.addons_data_dir]
+    ad_paths += map(lambda m: os.path.abspath(tools.ustr(m.strip())), tools.config['addons_path'].split(','))
+
+    # add base module path
+    base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons'))
+    ad_paths += [base_path]
+
     sys.meta_path.append(AddonsImportHook())
 
 def get_module_path(module, downloaded=False, display_warning=True):
@@ -108,7 +109,7 @@ def get_module_path(module, downloaded=False, display_warning=True):
             return opj(adp, module)
 
     if downloaded:
-        return opj(_ad, module)
+        return opj(tools.config.addons_data_dir, module)
     if display_warning:
         _logger.warning('module %s: module not found', module)
     return False
@@ -338,7 +339,8 @@ def get_test_modules(module):
 
 # Use a custom stream object to log the test executions.
 class TestStream(object):
-    def __init__(self):
+    def __init__(self, logger_name='openerp.tests'):
+        self.logger = logging.getLogger(logger_name)
         self.r = re.compile(r'^-*$|^ *... *$|^ok$')
     def flush(self):
         pass
@@ -350,7 +352,7 @@ class TestStream(object):
             if not first:
                 c = '` ' + c
             first = False
-            _test_logger.info(c)
+            self.logger.info(c)
 
 current_test = None
 
@@ -367,9 +369,9 @@ def run_unit_tests(module_name, dbname):
     for m in mods:
         tests = unwrap_suite(unittest2.TestLoader().loadTestsFromModule(m))
         suite = unittest2.TestSuite(itertools.ifilter(runs_at_install, tests))
-        _logger.info('module %s: running test %s.', module_name, m.__name__)
+        _logger.info('running %s tests.', m.__name__)
 
-        result = unittest2.TextTestRunner(verbosity=2, stream=TestStream()).run(suite)
+        result = unittest2.TextTestRunner(verbosity=2, stream=TestStream(m.__name__)).run(suite)
 
         if not result.wasSuccessful():
             r = False
