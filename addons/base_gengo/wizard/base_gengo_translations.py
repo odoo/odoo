@@ -53,9 +53,12 @@ class base_gengo_translations(osv.osv_memory):
     _name = 'base.gengo.translations'
     _columns = {
         'restart_send_job': fields.boolean("Restart Sending Job"),
+        'sync_type': fields.selection([('send', 'Send New Terms'),
+                                       ('receive', 'Receive Translation'),
+                                       ('both', 'Both')], "Sync Type"),
         'lang_id': fields.many2one('res.lang', 'Language', required=True),
     }
-
+    _defaults = {'sync_type' : 'both'}
     def gengo_authentication(self, cr, uid, context=None):
         ''' 
         This method tries to open a connection with Gengo. For that, it uses the Public and Private
@@ -117,8 +120,10 @@ class base_gengo_translations(osv.osv_memory):
             #send immediately a new request for the selected language (if any)
             ctx = context.copy()
             ctx['gengo_language'] = wizard.lang_id.id
-            self._sync_request(cr, uid, limit=GENGO_DEFAULT_LIMIT, context=ctx)
-            self._sync_response( cr, uid, limit=GENGO_DEFAULT_LIMIT, context=ctx)
+            if wizard.sync_type in ['send','both']:
+                self._sync_request(cr, uid, limit=GENGO_DEFAULT_LIMIT, context=ctx)
+            if wizard.sync_type in ['receive','both']:
+                self._sync_response( cr, uid, limit=GENGO_DEFAULT_LIMIT, context=ctx)
             #check the cron jobs and eventually restart/recreate them
             if wizard.restart_send_job:
                 self.do_check_schedular(cr, uid, 'gengo_sync_send_request_scheduler', _('Gengo Sync Translation (Request)'), '_sync_request', context=context)

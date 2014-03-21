@@ -37,6 +37,10 @@
                     </section>
                 </div>
                 <div class="modal-footer">
+                    <div class="pull-left">
+                        <input type="checkbox" name="do_not_show"/>
+                        Do not show this dialog later.
+                    </div>
                     <button type="button" data-action="activate" class="btn btn-primary">Ok</button>
                     or
                     <a data-action="discard" data-dismiss="modal" href="#">Cancel</a>
@@ -57,10 +61,10 @@
                 <div class="modal-body">
                     <section>
                     <select class="form-control" required="required" autofocus="autofocus">
-                        <option value="machine">Translation By Machine</option>
-                        <option value="standard">Standard</option>
-                        <option value="pro">Pro</option>
-                        <option value="ultra">Ultra</option>
+                        <option value="machine">Translation By Machine (Free)</option>
+                        <option value="standard">Standard - $0.05 per word</option>
+                        <option value="pro">Pro - $0.10 per word</option>
+                        <option value="ultra">Ultra - $0.15 per word</option>
                     </select>
                     </section>
                 </div>

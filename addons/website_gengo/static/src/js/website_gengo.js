@@ -25,25 +25,34 @@
         },
         translation_gengo: function () {
             var self = this;
-            var dialog = new website.GengoTranslatorDialog();
-            dialog.appendTo($(document.body));
-            self.gengo_translate = true;
-            dialog.on('activate', this, function () {
-                dialog.$el.modal('hide');
-                self.translate().then(function () {
-                    self.gengo_translate = false;
-                    if($('.oe_translatable_todo').length > 0){
-                        self.$el.find('form.navbar-form.navbar-left > *').addClass("hidden");
-                        self.$el.find('.gengo_post,.gengo_info,.gengo_discard').removeClass("hidden");
-                    }
-                    else{
-                        self.$el.find('form.navbar-form.navbar-left > *').addClass("hidden");
-                        self.$el.find('.gengo_inprogress,.gengo_info,.gengo_discard').removeClass("hidden");
-                        
-                    }
+            if(!localStorage['website_gengo_nodialog']){
+                var dialog = new website.GengoTranslatorDialog();
+                dialog.appendTo($(document.body));
+                self.gengo_translate = true;
+                dialog.on('activate', this, function () {
+                    localStorage['website_gengo_nodialog'] = dialog.$('input[name=do_not_show]').prop('checked') || '';
+                    dialog.$el.modal('hide');
+                    self.translation_gengo_display()
                 });
+            }
+            else{
+                self.gengo_translate = true;
+                self.translation_gengo_display()
+            }
+        },
+        translation_gengo_display:function(){
+            var self = this;
+            self.translate().then(function () {
+                self.gengo_translate = false;
+                if($('.oe_translatable_todo').length > 0){
+                    self.$el.find('form.navbar-form.navbar-left > *').addClass("hidden");
+                    self.$el.find('.gengo_post,.gengo_info,.gengo_discard').removeClass("hidden");
+                }
+                else{
+                    self.$el.find('form.navbar-form.navbar-left > *').addClass("hidden");
+                    self.$el.find('.gengo_inprogress,.gengo_info,.gengo_discard').removeClass("hidden");
+                }
             });
-            
         },
         translation_gengo_post: function () {
             var self = this;
@@ -72,10 +81,12 @@
                 openerp.jsonRpc('/website/set_translations', 'call', {
                     'data': trans,
                     'lang': website.get_context()['lang'],
-                }).done(function(){
+                }).then(function () {
                     $('.oe_translatable_todo').addClass('oe_translatable_inprogress').removeClass('oe_translatable_todo');
                     self.$el.find('.gengo_wait').addClass("hidden");
                     self.$el.find('.gengo_inprogress,.gengo_discard').removeClass("hidden");
+                }).fail(function () {
+                    alert("Could not Post translation");
                 });
             });
             
