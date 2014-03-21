@@ -183,43 +183,35 @@ class mail_compose_message(osv.TransientModel):
 
     def get_record_data(self, cr, uid, values, context=None):
         """ Returns a defaults-like dict with initial values for the composition
-            wizard when sending an email related to the document record
-            identified by ``model`` and ``res_id``.
-
-            :param values: dictionary of default and already computed values for the mail_compose_message_res_partner_re
-            :type values: dict"""
+        wizard when sending an email related a previous email (parent_id) or
+        a document (model, res_id). This is based on previously computed default
+        values. """
         if context is None:
             context = {}
-        model, res_id, parent_id = values.get('model'), values.get('res_id'), values.get('parent_id')
-        record_name, subject, partner_ids = values.get('record_name'), values.get('subject'), values.get('partner_ids', list())
-        if parent_id:
-            message_data = self.pool.get('mail.message').browse(cr, uid, parent_id, context=context)
-            record_name = message_data.record_name,
-            subject = tools.ustr(message_data.subject or message_data.record_name or '')
-            if not model:
-                model = message_data.model
-            if not res_id:
-                res_id = message_data.res_id
-            # get partner_ids from original message
-            partner_ids += [partner.id for partner in message_data.partner_ids]
-            if context.get('is_private') and message_data.author_id:  # check message is private then add author also in partner list.
-                partner_ids += [message_data.author_id.id]
-            # create subject
-            re_prefix = _('Re:')
-            if not (subject.startswith('Re:') or subject.startswith(re_prefix)):
-                subject = "%s %s" % (re_prefix, subject)
-        elif model and res_id:
-            doc_name_get = self.pool[model].name_get(cr, uid, [res_id], context=context)
-            record_name = doc_name_get and doc_name_get[0][1] or ''
-            subject = tools.ustr(record_name)
+        result, subject = {}, False
+        if values.get('parent_id'):
+            parent = self.pool.get('mail.message').browse(cr, uid, values.get('parent_id'), context=context)
+            result['record_name'] = parent.record_name,
+            subject = tools.ustr(parent.subject or parent.record_name or '')
+            if not values.get('model'):
+                result['model'] = parent.model
+            if not values.get('res_id'):
+                result['res_id'] = parent.res_id
+            partner_ids = values.get('partner_ids', list()) + [partner.id for partner in parent.partner_ids]
+            if context.get('is_private') and parent.author_id:  # check message is private then add author also in partner list.
+                partner_ids += [parent.author_id.id]
+            result['partner_ids'] = partner_ids
+        elif values.get('model') and values.get('res_id'):
+            doc_name_get = self.pool[values.get('model')].name_get(cr, uid, [values.get('res_id')], context=context)
+            result['record_name'] = doc_name_get and doc_name_get[0][1] or ''
+            subject = tools.ustr(result['record_name'])
 
-        return {
-            'record_name': record_name,
-            'subject': subject,
-            'partner_ids': list(set(partner_ids)),
-            'model': model,
-            'res_id': res_id,
-        }
+        re_prefix = _('Re:')
+        if subject and not (subject.startswith('Re:') or subject.startswith(re_prefix)):
+            subject = "%s %s" % (re_prefix, subject)
+        result['subject'] = subject
+
+        return result
 
     #------------------------------------------------------
     # Wizard validation and send
@@ -278,11 +270,16 @@ class mail_compose_message(osv.TransientModel):
         """Generate the values that will be used by send_mail to create mail_messages
         or mail_mails. """
         results = dict.fromkeys(res_ids, False)
+        rendered_values, default_recipients = {}, {}
         mass_mail_mode = wizard.composition_mode == 'mass_mail'
 
         # render all template-based value at once
         if mass_mail_mode and wizard.model:
             rendered_values = self.render_message_batch(cr, uid, wizard, res_ids, context=context)
+
+        # # get default recipients for mass mailing
+        # if mass_mail_mode and hasattr(self.pool[wizard.model], 'message_get_default_recipients'):
+        #     default_recipients = self.pool[wizard.model].message_get_default_recipients(cr, uid, res_ids, context=context)
 
         for res_id in res_ids:
             # static wizard (mail.message) values
@@ -305,14 +302,20 @@ class mail_compose_message(osv.TransientModel):
                     mail_values['auto_delete'] = context.get('mail_auto_delete')
                 # rendered values using template
                 email_dict = rendered_values[res_id]
+                print email_dict
                 mail_values['partner_ids'] += email_dict.pop('partner_ids', [])
-                if wizard.same_thread:
-                    email_dict.pop('reply_to', None)
-                else:
-                    mail_values['reply_to'] = email_dict.pop('reply_to', None)
-                # if not mail_values.get('reply_to'):
-                #     mail_values['reply_to'] = mail_values['email_from']
                 mail_values.update(email_dict)
+                if wizard.same_thread:
+                    mail_values.pop('reply_to')
+                elif not mail_values.get('reply_to'):
+                    mail_values['reply_to'] = mail_values['email_from']
+                # mail_mail values: body -> body_html, partner_ids -> recipient_ids
+                mail_values['body_html'] = mail_values.get('body', '')
+                mail_values['recipient_ids'] = [(4, id) for id in mail_values.pop('partner_ids', [])]
+                # add some specific recipients depending on the model, to be sure some are mailed
+                if default_recipients.get(res_id):
+                    mail_values['recipient_ids'] += [(4, id) for id in default_recipients[res_id]['recipient_ids']]
+                    mail_values['email_to'] = ','.join(filter(None, [mail_values.get('email_to', ''), default_recipients[res_id]['email_to']]))
 
                 # process attachments: should not be encoded before being processed by message_post / mail_mail create
                 mail_values['attachments'] = [(name, base64.b64decode(enc_cont)) for name, enc_cont in email_dict.pop('attachments', list())]
@@ -323,10 +326,7 @@ class mail_compose_message(osv.TransientModel):
                 mail_values['attachment_ids'] = self.pool['mail.thread']._message_preprocess_attachments(
                     cr, uid, mail_values.pop('attachments', []),
                     attachment_ids, 'mail.message', 0, context=context)
-                # mail_mail values: body -> body_html, partner_ids -> recipient_ids
-                mail_values['body_html'] = mail_values.get('body', '')
-                mail_values['recipient_ids'] = [(4, id) for id in mail_values.pop('partner_ids', [])]
-
+                print mail_values
             results[res_id] = mail_values
         return results
 
