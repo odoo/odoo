@@ -118,6 +118,14 @@ class ReportController(Controller):
             response.headers.add('Content-Disposition', 'attachment; filename=%s.pdf;' % reportname)
             response.set_cookie('fileToken', token)
             return response
+        elif type =='controller':
+            from werkzeug.test import Client
+            from werkzeug.wrappers import BaseResponse
+            from werkzeug.datastructures import Headers
+            reqheaders = Headers(request.httprequest.headers)
+            response = Client(request.httprequest.app, BaseResponse).get(url, headers=reqheaders, follow_redirects=True)
+            response.set_cookie('fileToken', token)
+            return response
         else:
             return
 

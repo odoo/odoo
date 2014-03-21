@@ -12,7 +12,7 @@ openerp.report = function(instance) {
 
             // QWeb reports
             if ('report_type' in action && (action.report_type == 'qweb-html' || action.report_type == 'qweb-pdf' || action.report_type == 'controller')) {
-                
+                debugger
                 var report_url = '';
                 switch (action.report_type) {
                     case 'qweb-html':
@@ -48,42 +48,51 @@ openerp.report = function(instance) {
                     });
                     report_url += "?" + $.param(action.datas.form);
                 }
-                if (action.report_type == 'qweb-html' || action.report_type == 'controller') {
+                if (action.report_type == 'qweb-html') {
                     // Open the html report in a popup
                     window.open(report_url, '_blank', 'height=900,width=1280');
                     instance.web.unblockUI();
                     return;
                 } else {
-                    // Trigger the download of the pdf report
+                    // Trigger the download of the pdf/controller report
                     var c = openerp.webclient.crashmanager;
                     var response = new Array();
                     response[0] = report_url;
                     response[1] = action.report_type;
 
-                    (wkhtmltopdf_state = wkhtmltopdf_state || openerp.session.rpc('/report/check_wkhtmltopdf')).then(function (presence) {
-                        // Fallback of qweb-pdf if wkhtmltopdf is not installed
-                        if (presence == 'install' && action.report_type == 'qweb-pdf') {
-                            self.do_notify(_t('Report'), _t('Unable to find Wkhtmltopdf on this \
-system. The report will be shown in html.<br><br><a href="http://wkhtmltopdf.org/" target="_blank">\
-wkhtmltopdf.org</a>'), true);
-                            window.open(report_url.substring(12), '_blank', 'height=768,width=1024');
-                            instance.web.unblockUI();
-                        } else {
-                            if (presence == 'upgrade') {
-                                self.do_notify(_t('Report'), _t('You should upgrade your version of\
- Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\
- support for table-breaking between pages.<br><br><a href="http://wkhtmltopdf.org/" \
- target="_blank">wkhtmltopdf.org</a>'), true);
+                    if (action.report_type == 'qweb-pdf') {
+                        (wkhtmltopdf_state = wkhtmltopdf_state || openerp.session.rpc('/report/check_wkhtmltopdf')).then(function (presence) {
+                            // Fallback of qweb-pdf if wkhtmltopdf is not installed
+                            if (presence == 'install' && action.report_type == 'qweb-pdf') {
+                                self.do_notify(_t('Report'), _t('Unable to find Wkhtmltopdf on this \
+    system. The report will be shown in html.<br><br><a href="http://wkhtmltopdf.org/" target="_blank">\
+    wkhtmltopdf.org</a>'), true);
+                                window.open(report_url.substring(12), '_blank', 'height=768,width=1024');
+                                instance.web.unblockUI();
+                            } else {
+                                if (presence == 'upgrade') {
+                                    self.do_notify(_t('Report'), _t('You should upgrade your version of\
+     Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\
+     support for table-breaking between pages.<br><br><a href="http://wkhtmltopdf.org/" \
+     target="_blank">wkhtmltopdf.org</a>'), true);
+                                }
+                                self.session.get_file({
+                                    url: '/report/download',
+                                    data: {data: JSON.stringify(response)},
+                                    complete: openerp.web.unblockUI,
+                                    error: c.rpc_error.bind(c)
+                                });
                             }
-                            self.session.get_file({
-                                url: '/report/download',
-                                data: {data: JSON.stringify(response)},
-                                complete: openerp.web.unblockUI,
-                                error: c.rpc_error.bind(c)
-                            });
-                        }
-                    });
-                }
+                        });
+                    } else {
+                        self.session.get_file({
+                            url: '/report/download',
+                            data: {data: JSON.stringify(response)},
+                            complete: openerp.web.unblockUI,
+                            error: c.rpc_error.bind(c)
+                        });          
+                    }   
+                }                     
             } else {
                 return self._super(action, options);
             }
