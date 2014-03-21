@@ -84,421 +84,424 @@ $.ajaxSetup({
 
 var localStorage = window.localStorage;
 
-var T = website.Tour = {};
-T.tours = {};
-T.defaultDelay = 50;
-T.errorDelay = 5000;
-T.state = null;
-T.$element = null;
-T.timer =  null;
-T.testtimer = null;
-T.currentTimer = null;
-T.register = function (tour) {
-    if (tour.mode !== "test") tour.mode = "tutorial";
-    T.tours[tour.id] = tour;
-};
-T.run = function (tour_id, mode) {
-    if (localStorage.getItem("tour") && mode === "test") { // only one test running
-        return;
-    }
-    var tour = T.tours[tour_id];
-    T.saveState(tour.id, mode || tour.mode, 0);
-    if (tour.path && !window.location.href.match(new RegExp("("+T.getLang()+")?"+tour.path+"#?$", "i"))) {
-        window.location.href = "/"+T.getLang()+tour.path;
-    } else {
-        T.running();
-    }
-};
-T.registerSteps = function (tour) {
-    if (tour.register) {
-        return;
-    }
-    tour.register = true;
-
-    for (var index=0, len=tour.steps.length; index<len; index++) {
-        var step = tour.steps[index];
-        step.id = index;
-
-        if (!step.waitNot && index > 0 && tour.steps[index-1] &&
-            tour.steps[index-1].popover && tour.steps[index-1].popover.next) {
-            step.waitNot = '.popover.tour.fade.in:visible';
+var T = website.Tour = {
+    tours: {},
+    defaultDelay: 50,
+    errorDelay: 5000,
+    state: null,
+    $element: null,
+    timer: null,
+    testtimer: null,
+    currentTimer: null,
+    register: function (tour) {
+        if (tour.mode !== "test") tour.mode = "tutorial";
+        T.tours[tour.id] = tour;
+    },
+    run: function (tour_id, mode) {
+        if (localStorage.getItem("tour") && mode === "test") { // only one test running
+            return;
         }
-        if (!step.waitFor && index > 0 && tour.steps[index-1].snippet) {
-            step.waitFor = '.oe_overlay_options .oe_options:visible';
+        var tour = T.tours[tour_id];
+        T.saveState(tour.id, mode || tour.mode, 0);
+        if (tour.path && !window.location.href.match(new RegExp("("+T.getLang()+")?"+tour.path+"#?$", "i"))) {
+            window.location.href = "/"+T.getLang()+tour.path;
+        } else {
+            T.running();
         }
-
-        var snippet = step.element && step.element.match(/#oe_snippets (.*) \.oe_snippet_thumbnail/);
-        if (snippet) {
-            step.snippet = snippet[1];
-        } else if (step.snippet) {
-            step.element = '#oe_snippets '+step.snippet+' .oe_snippet_thumbnail';
+    },
+    registerSteps: function (tour) {
+        if (tour.register) {
+            return;
         }
+        tour.register = true;
 
-        if (!step.element) {
-            step.element = "body";
-            step.orphan = true;
-            step.backdrop = true;
-        }
-    }
-    if (tour.steps[index-1] &&
-        tour.steps[index-1].popover && tour.steps[index-1].popover.next) {
-        var step = {
-            id: index,
-            waitNot: '.popover.tour.fade.in:visible'
-        };
-        tour.steps.push(step);
-    }
-
-    // rendering bootstrap tour and popover
-    if (tour.mode !== "test") {
         for (var index=0, len=tour.steps.length; index<len; index++) {
             var step = tour.steps[index];
-            step._title = step._title || step.title;
-            step.title = T.popoverTitle(tour, { title: step._title });
-            step.template = step.template || T.popover( step.popover );
-        }
-    }
-};
-T.closePopover = function () {
-    if (T.$element) {
-        T.$element.popover('destroy');
-        T.$element.removeData("tour");
-        T.$element.removeData("tour-step");
-        $(".tour-backdrop").remove();
-        $(".popover.tour").remove();
-        T.$element = null;
-    }
-};
-T.autoTogglePopover = function () {
-    var state = T.getState();
-    var step = state.step;
+            step.id = index;
 
-    if (T.$element &&
-        T.$element.is(":visible") &&
-        T.$element.data("tour") === state.id &&
-        T.$element.data("tour-step") === step.id) {
-        T.repositionPopover();
-        return;
-    }
-
-    if (step.busy) {
-        return;
-    }
-
-    T.closePopover();
-
-    var $element = $(step.element).first();
-    if (!step.element || !$element.size() || !$element.is(":visible")) {
-        return;
-    }
-
-
-    T.$element = $element;
-    $element.data("tour", state.id);
-    $element.data("tour-step", step.id);
-    $element.popover({
-        placement: step.placement || "auto",
-        animation: true,
-        trigger: "manual",
-        title: step.title,
-        content: step.content,
-        html: true,
-        container: "body",
-        template: step.template,
-        orphan: step.orphan
-    }).popover("show");
-
-
-    var $tip = $element.data("bs.popover").tip();
-
-
-    // add popover style (orphan, static, backdrop)
-    if (step.orphan) {
-        $tip.addClass("orphan");
-    }
-
-    var node = $element[0];
-    var css;
-    do {
-        css = window.getComputedStyle(node);
-        if (!css || css.position == "fixed") {
-            $tip.addClass("fixed");
-            break;
-        }
-    } while ((node = node.parentNode) && node !== document);
-
-    if (step.backdrop) {
-        $("body").append('<div class="tour-backdrop"></div>');
-    }
-
-    if (step.backdrop || $element.parents("#website-top-navbar, .modal").size()) {
-        $tip.css("z-index", 2010);
-    }
-
-    // button click event
-    $tip.find("button")
-        .one("click", function () {
-            step.busy = true;
-            if (!$(this).is("[data-role='next']")) {
-                clearTimeout(T.timer);
-                T.endTour();
+            if (!step.waitNot && index > 0 && tour.steps[index-1] &&
+                tour.steps[index-1].popover && tour.steps[index-1].popover.next) {
+                step.waitNot = '.popover.tour.fade.in:visible';
             }
-            T.closePopover();
-        });
+            if (!step.waitFor && index > 0 && tour.steps[index-1].snippet) {
+                step.waitFor = '.oe_overlay_options .oe_options:visible';
+            }
 
-    T.repositionPopover();
-};
-T.repositionPopover = function() {
-    var popover = T.$element.data("bs.popover");
-    var $tip = T.$element.data("bs.popover").tip();
+            var snippet = step.element && step.element.match(/#oe_snippets (.*) \.oe_snippet_thumbnail/);
+            if (snippet) {
+                step.snippet = snippet[1];
+            } else if (step.snippet) {
+                step.element = '#oe_snippets '+step.snippet+' .oe_snippet_thumbnail';
+            }
 
-    if (popover.options.orphan) {
-        return $tip.css("top", $(window).outerHeight() / 2 - $tip.outerHeight() / 2);
-    }
-
-    var offsetBottom, offsetHeight, offsetRight, offsetWidth, originalLeft, originalTop, tipOffset;
-    offsetWidth = $tip[0].offsetWidth;
-    offsetHeight = $tip[0].offsetHeight;
-    tipOffset = $tip.offset();
-    originalLeft = tipOffset.left;
-    originalTop = tipOffset.top;
-    offsetBottom = $(document).outerHeight() - tipOffset.top - $tip.outerHeight();
-    if (offsetBottom < 0) {
-        tipOffset.top = tipOffset.top + offsetBottom;
-    }
-    offsetRight = $("html").outerWidth() - tipOffset.left - $tip.outerWidth();
-    if (offsetRight < 0) {
-        tipOffset.left = tipOffset.left + offsetRight;
-    }
-    if (tipOffset.top < 0) {
-        tipOffset.top = 0;
-    }
-    if (tipOffset.left < 0) {
-        tipOffset.left = 0;
-    }
-    $tip.offset(tipOffset);
-    if (popover.options.placement === "bottom" || popover.options.placement === "top") {
-            var left = T.$element.offset().left + T.$element.outerWidth()/2 - tipOffset.left;
-            $tip.find(".arrow").css("left", left ? left + "px" : "");
-    } else {
-            var top = T.$element.offset().top + T.$element.outerHeight()/2 - tipOffset.top;
-            $tip.find(".arrow").css("top", top ? top + "px" : "");
-    }
-};
-T.popoverTitle = function (tour, options) {
-    return openerp.qweb.render('website.tour_popover_title', options);
-};
-T.popover = function (options) {
-    return openerp.qweb.render('website.tour_popover', options);
-};
-T.getLang = function () {
-    return $("html").attr("lang").replace(/-/, '_');
-};
-T.getState = function () {
-    var state = JSON.parse(localStorage.getItem("tour") || 'false') || {};
-    var tour_id,mode,step_id;
-    if (!state.id && window.location.href.indexOf("#tutorial.") > -1) {
-        state = {
-            "id": window.location.href.match(/#tutorial\.(.*)=true/)[1],
-            "mode": "tutorial",
-            "step_id": 0
-        };
-    }
-    if (!state.id) {
-        return;
-    }
-    state.tour = T.tours[state.id];
-    state.step = state.tour.steps[state.step_id];
-    return state;
-};
-T.error = function (message) {
-    var state = T.getState();
-    message += '\n tour: ' + state.id
-        + '\n step: ' + state.step_id + ": '" + (state.step._title || state.step.title) + "'"
-        + '\n href: ' + window.location.href
-        + '\n referrer: ' + document.referrer
-        + '\n element: ' + Boolean(!state.step.element || ($(state.step.element).size() && $(state.step.element).is(":visible") && !$(state.step.element).is(":hidden")))
-        + '\n waitNot: ' + Boolean(!state.step.waitNot || !$(state.step.waitNot).size())
-        + '\n waitFor: ' + Boolean(!state.step.waitFor || $(state.step.waitFor).size())
-        + "\n localStorage: " + JSON.stringify(localStorage)
-        + '\n\n' + $("body").html();
-    T.reset();
-    throw new Error(message);
-};
-T.lists = function () {
-    var tour_ids = [];
-    for (var k in T.tours) {
-        tour_ids.push(k);
-    }
-    return tour_ids;
-};
-T.saveState = function (tour_id, mode, step_id) {
-    localStorage.setItem("tour", JSON.stringify({"id":tour_id, "mode":mode, "step_id":step_id || 0}));
-};
-T.reset = function () {
-    var state = T.getState();
-    if (state) {
-        for (var k in state.tour.steps) {
-            state.tour.steps[k].busy = false;
+            if (!step.element) {
+                step.element = "body";
+                step.orphan = true;
+                step.backdrop = true;
+            }
         }
-    }
-    localStorage.removeItem("tour");
-    clearTimeout(T.timer);
-    clearTimeout(T.testtimer);
-    T.closePopover();
-};
-T.running = function () {
-    var state = T.getState();
-    if (state) {
-        T.registerSteps(state.tour);
-        if ($.ajaxBusy) {
-            $(document).ajaxStop(function() {
-                setTimeout(function () {
-                    T.nextStep();
-                },0);
+        if (tour.steps[index-1] &&
+            tour.steps[index-1].popover && tour.steps[index-1].popover.next) {
+            var step = {
+                id: index,
+                waitNot: '.popover.tour.fade.in:visible'
+            };
+            tour.steps.push(step);
+        }
+
+        // rendering bootstrap tour and popover
+        if (tour.mode !== "test") {
+            for (var index=0, len=tour.steps.length; index<len; index++) {
+                var step = tour.steps[index];
+                step._title = step._title || step.title;
+                step.title = T.popoverTitle(tour, { title: step._title });
+                step.template = step.template || T.popover( step.popover );
+            }
+        }
+    },
+    closePopover: function () {
+        if (T.$element) {
+            T.$element.popover('destroy');
+            T.$element.removeData("tour");
+            T.$element.removeData("tour-step");
+            $(".tour-backdrop").remove();
+            $(".popover.tour").remove();
+            T.$element = null;
+        }
+    },
+    autoTogglePopover: function () {
+        var state = T.getState();
+        var step = state.step;
+
+        if (T.$element &&
+            T.$element.is(":visible") &&
+            T.$element.data("tour") === state.id &&
+            T.$element.data("tour-step") === step.id) {
+            T.repositionPopover();
+            return;
+        }
+
+        if (step.busy) {
+            return;
+        }
+
+        T.closePopover();
+
+        var $element = $(step.element).first();
+        if (!step.element || !$element.size() || !$element.is(":visible")) {
+            return;
+        }
+
+
+        T.$element = $element;
+        $element.data("tour", state.id);
+        $element.data("tour-step", step.id);
+        $element.popover({
+            placement: step.placement || "auto",
+            animation: true,
+            trigger: "manual",
+            title: step.title,
+            content: step.content,
+            html: true,
+            container: "body",
+            template: step.template,
+            orphan: step.orphan
+        }).popover("show");
+
+
+        var $tip = $element.data("bs.popover").tip();
+
+
+        // add popover style (orphan, static, backdrop)
+        if (step.orphan) {
+            $tip.addClass("orphan");
+        }
+
+        var node = $element[0];
+        var css;
+        do {
+            css = window.getComputedStyle(node);
+            if (!css || css.position == "fixed") {
+                $tip.addClass("fixed");
+                break;
+            }
+        } while ((node = node.parentNode) && node !== document);
+
+        if (step.backdrop) {
+            $("body").append('<div class="tour-backdrop"></div>');
+        }
+
+        if (step.backdrop || $element.parents("#website-top-navbar, .modal").size()) {
+            $tip.css("z-index", 2010);
+        }
+
+        // button click event
+        $tip.find("button")
+            .one("click", function () {
+                step.busy = true;
+                if (!$(this).is("[data-role='next']")) {
+                    clearTimeout(T.timer);
+                    T.endTour();
+                }
+                T.closePopover();
             });
-        } else {
-            T.nextStep();
-        }
-    }
-};
-T.check = function (step) {
-    return (step &&
-        (!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden"))) &&
-        (!step.waitNot || !$(step.waitNot).size()) &&
-        (!step.waitFor || $(step.waitFor).size()));
-};
-T.waitNextStep = function () {
-    var state = T.getState();
-    var time = new Date().getTime();
-    var timer;
-    var next = state.tour.steps[state.step.id+1];
-    var overlaps = state.mode === "test" ? T.errorDelay : 0;
 
-    window.onbeforeunload = function () {
+        T.repositionPopover();
+    },
+    repositionPopover: function() {
+        var popover = T.$element.data("bs.popover");
+        var $tip = T.$element.data("bs.popover").tip();
+
+        if (popover.options.orphan) {
+            return $tip.css("top", $(window).outerHeight() / 2 - $tip.outerHeight() / 2);
+        }
+
+        var offsetBottom, offsetHeight, offsetRight, offsetWidth, originalLeft, originalTop, tipOffset;
+        offsetWidth = $tip[0].offsetWidth;
+        offsetHeight = $tip[0].offsetHeight;
+        tipOffset = $tip.offset();
+        originalLeft = tipOffset.left;
+        originalTop = tipOffset.top;
+        offsetBottom = $(document).outerHeight() - tipOffset.top - $tip.outerHeight();
+        if (offsetBottom < 0) {
+            tipOffset.top = tipOffset.top + offsetBottom;
+        }
+        offsetRight = $("html").outerWidth() - tipOffset.left - $tip.outerWidth();
+        if (offsetRight < 0) {
+            tipOffset.left = tipOffset.left + offsetRight;
+        }
+        if (tipOffset.top < 0) {
+            tipOffset.top = 0;
+        }
+        if (tipOffset.left < 0) {
+            tipOffset.left = 0;
+        }
+        $tip.offset(tipOffset);
+        if (popover.options.placement === "bottom" || popover.options.placement === "top") {
+                var left = T.$element.offset().left + T.$element.outerWidth()/2 - tipOffset.left;
+                $tip.find(".arrow").css("left", left ? left + "px" : "");
+        } else if (popover.options.placement !== "auto") {
+                var top = T.$element.offset().top + T.$element.outerHeight()/2 - tipOffset.top;
+                $tip.find(".arrow").css("top", top ? top + "px" : "");
+        }
+    },
+    popoverTitle: function (tour, options) {
+        return openerp.qweb.render('website.tour_popover_title', options);
+    },
+    popover: function (options) {
+        return openerp.qweb.render('website.tour_popover', options);
+    },
+    getLang: function () {
+        return $("html").attr("lang").replace(/-/, '_');
+    },
+    getState: function () {
+        var state = JSON.parse(localStorage.getItem("tour") || 'false') || {};
+        var tour_id,mode,step_id;
+        if (!state.id && window.location.href.indexOf("#tutorial.") > -1) {
+            state = {
+                "id": window.location.href.match(/#tutorial\.(.*)=true/)[1],
+                "mode": "tutorial",
+                "step_id": 0
+            };
+            window.location.hash = "";
+            T.saveState(state.id, state.mode, state.step_id);
+        }
+        if (!state.id) {
+            return;
+        }
+        state.tour = T.tours[state.id];
+        state.step = state.tour.steps[state.step_id];
+        return state;
+    },
+    error: function (message) {
+        var state = T.getState();
+        message += '\n tour: ' + state.id
+            + '\n step: ' + state.step_id + ": '" + (state.step._title || state.step.title) + "'"
+            + '\n href: ' + window.location.href
+            + '\n referrer: ' + document.referrer
+            + '\n element: ' + Boolean(!state.step.element || ($(state.step.element).size() && $(state.step.element).is(":visible") && !$(state.step.element).is(":hidden")))
+            + '\n waitNot: ' + Boolean(!state.step.waitNot || !$(state.step.waitNot).size())
+            + '\n waitFor: ' + Boolean(!state.step.waitFor || $(state.step.waitFor).size())
+            + "\n localStorage: " + JSON.stringify(localStorage)
+            + '\n\n' + $("body").html();
+        T.reset();
+        throw new Error(message);
+    },
+    lists: function () {
+        var tour_ids = [];
+        for (var k in T.tours) {
+            tour_ids.push(k);
+        }
+        return tour_ids;
+    },
+    saveState: function (tour_id, mode, step_id) {
+        localStorage.setItem("tour", JSON.stringify({"id":tour_id, "mode":mode, "step_id":step_id || 0}));
+    },
+    reset: function () {
+        var state = T.getState();
+        if (state) {
+            for (var k in state.tour.steps) {
+                state.tour.steps[k].busy = false;
+            }
+        }
+        localStorage.removeItem("tour");
         clearTimeout(T.timer);
         clearTimeout(T.testtimer);
-    };
-
-    function checkNext () {
-        T.autoTogglePopover();
-
-        clearTimeout(T.timer);
-        if (T.check(next)) {
-            clearTimeout(T.currentTimer);
-            // use an other timeout for cke dom loading
-            setTimeout(function () {
-                T.nextStep(next);
-            }, T.defaultDelay);
-        } else if (!overlaps || new Date().getTime() - time < overlaps) {
-            T.timer = setTimeout(checkNext, T.defaultDelay);
-        } else {
-            T.error("Can't reach the next step");
-        }
-    }
-    checkNext();
-};
-T.nextStep = function (step) {
-    var state = T.getState();
-
-    if (!state) {
-        return;
-    }
-
-    step = step || state.step;
-    T.saveState(state.id, state.mode, step.id);
-
-    T.autoTogglePopover(true);
-
-    if (step.onload) {
-        step.onload();
-    }
-
-    var next = state.tour.steps[step.id+1];
-    if (next) {
-        setTimeout(function () {
-                T.waitNextStep();
-                if (state.mode === "test") {
-                    setTimeout(function(){
-                        T.autoNextStep(state.tour, step);
-                    }, T.defaultDelay);
-                }
-        }, next.wait || 0);
-    } else {
-        T.endTour();
-    }
-};
-T.endTour = function () {
-    var state = T.getState();
-    var test = state.step.id >= state.tour.steps.length-1;
-    T.reset();
-    if (test) {
-        console.log('ok');
-    } else {
-        console.log('error');
-    }
-};
-T.autoNextStep = function (tour, step) {
-    clearTimeout(T.testtimer);
-
-    function autoStep () {
-        if (!step) return;
-
-        if (step.autoComplete) {
-            step.autoComplete(tour);
-        }
-
-        $(".popover.tour [data-role='next']").click();
-
-        var $element = $(step.element);
-        if (!$element.size()) return;
-
-        if (step.snippet) {
-
-            T.autoDragAndDropSnippet($element);
-        
-        } else if (step.sampleText) {
-        
-            $element.trigger($.Event("keydown", { srcElement: $element }));
-            if ($element.is("input") ) {
-                $element.val(step.sampleText);
-            } if ($element.is("select")) {
-                $element.find("[value='"+step.sampleText+"'], option:contains('"+step.sampleText+"')").attr("selected", true);
-                $element.val(step.sampleText);
+        T.closePopover();
+    },
+    running: function () {
+        var state = T.getState();
+        if (state) {
+            T.registerSteps(state.tour);
+            if ($.ajaxBusy) {
+                $(document).ajaxStop(function() {
+                    setTimeout(function () {
+                        T.nextStep();
+                    },0);
+                });
             } else {
-                $element.html(step.sampleText);
+                T.nextStep();
             }
-            setTimeout(function () {
-                $element.trigger($.Event("keyup", { srcElement: $element }));
-                $element.trigger($.Event("change", { srcElement: $element }));
-            }, T.defaultDelay<<1);
-        
-        } else if ($element.is(":visible")) {
-
-            $element.trigger($.Event("mouseenter", { srcElement: $element[0] }));
-            $element.trigger($.Event("mousedown", { srcElement: $element[0] }));
-    
-            var evt = document.createEvent("MouseEvents");
-            evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-            $element[0].dispatchEvent(evt);
-
-            // trigger after for step like: mouseenter, next step click on button display with mouseenter
-            setTimeout(function () {
-                $element.trigger($.Event("mouseup", { srcElement: $element[0] }));
-                $element.trigger($.Event("mouseleave", { srcElement: $element[0] }));
-            }, 1000);
         }
+    },
+    check: function (step) {
+        return (step &&
+            (!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden"))) &&
+            (!step.waitNot || !$(step.waitNot).size()) &&
+            (!step.waitFor || $(step.waitFor).size()));
+    },
+    waitNextStep: function () {
+        var state = T.getState();
+        var time = new Date().getTime();
+        var timer;
+        var next = state.tour.steps[state.step.id+1];
+        var overlaps = state.mode === "test" ? T.errorDelay : 0;
+
+        window.onbeforeunload = function () {
+            clearTimeout(T.timer);
+            clearTimeout(T.testtimer);
+        };
+
+        function checkNext () {
+            T.autoTogglePopover();
+
+            clearTimeout(T.timer);
+            if (T.check(next)) {
+                clearTimeout(T.currentTimer);
+                // use an other timeout for cke dom loading
+                setTimeout(function () {
+                    T.nextStep(next);
+                }, T.defaultDelay);
+            } else if (!overlaps || new Date().getTime() - time < overlaps) {
+                T.timer = setTimeout(checkNext, T.defaultDelay);
+            } else {
+                T.error("Can't reach the next step");
+            }
+        }
+        checkNext();
+    },
+    nextStep: function (step) {
+        var state = T.getState();
+
+        if (!state) {
+            return;
+        }
+
+        step = step || state.step;
+        T.saveState(state.id, state.mode, step.id);
+
+        T.autoTogglePopover(true);
+
+        if (step.onload) {
+            step.onload();
+        }
+
+        var next = state.tour.steps[step.id+1];
+        if (next) {
+            setTimeout(function () {
+                    T.waitNextStep();
+                    if (state.mode === "test") {
+                        setTimeout(function(){
+                            T.autoNextStep(state.tour, step);
+                        }, T.defaultDelay);
+                    }
+            }, next.wait || 0);
+        } else {
+            T.endTour();
+        }
+    },
+    endTour: function () {
+        var state = T.getState();
+        var test = state.step.id >= state.tour.steps.length-1;
+        T.reset();
+        if (test) {
+            console.log('ok');
+        } else {
+            console.log('error');
+        }
+    },
+    autoNextStep: function (tour, step) {
+        clearTimeout(T.testtimer);
+
+        function autoStep () {
+            if (!step) return;
+
+            if (step.autoComplete) {
+                step.autoComplete(tour);
+            }
+
+            $(".popover.tour [data-role='next']").click();
+
+            var $element = $(step.element);
+            if (!$element.size()) return;
+
+            if (step.snippet) {
+
+                T.autoDragAndDropSnippet($element);
+            
+            } else if (step.sampleText) {
+            
+                $element.trigger($.Event("keydown", { srcElement: $element }));
+                if ($element.is("input") ) {
+                    $element.val(step.sampleText);
+                } if ($element.is("select")) {
+                    $element.find("[value='"+step.sampleText+"'], option:contains('"+step.sampleText+"')").attr("selected", true);
+                    $element.val(step.sampleText);
+                } else {
+                    $element.html(step.sampleText);
+                }
+                setTimeout(function () {
+                    $element.trigger($.Event("keyup", { srcElement: $element }));
+                    $element.trigger($.Event("change", { srcElement: $element }));
+                }, T.defaultDelay<<1);
+            
+            } else if ($element.is(":visible")) {
+
+                $element.trigger($.Event("mouseenter", { srcElement: $element[0] }));
+                $element.trigger($.Event("mousedown", { srcElement: $element[0] }));
+        
+                var evt = document.createEvent("MouseEvents");
+                evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                $element[0].dispatchEvent(evt);
+
+                // trigger after for step like: mouseenter, next step click on button display with mouseenter
+                setTimeout(function () {
+                    $element.trigger($.Event("mouseup", { srcElement: $element[0] }));
+                    $element.trigger($.Event("mouseleave", { srcElement: $element[0] }));
+                }, 1000);
+            }
+        }
+        T.testtimer = setTimeout(autoStep, 100);
+    },
+    autoDragAndDropSnippet: function (selector) {
+        var $thumbnail = $(selector).first();
+        var thumbnailPosition = $thumbnail.position();
+        $thumbnail.trigger($.Event("mousedown", { which: 1, pageX: thumbnailPosition.left, pageY: thumbnailPosition.top }));
+        $thumbnail.trigger($.Event("mousemove", { which: 1, pageX: document.body.scrollWidth/2, pageY: document.body.scrollHeight/2 }));
+        var $dropZone = $(".oe_drop_zone").first();
+        var dropPosition = $dropZone.position();
+        $dropZone.trigger($.Event("mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
     }
-    T.testtimer = setTimeout(autoStep, 100);
-};
-T.autoDragAndDropSnippet = function (selector) {
-    var $thumbnail = $(selector).first();
-    var thumbnailPosition = $thumbnail.position();
-    $thumbnail.trigger($.Event("mousedown", { which: 1, pageX: thumbnailPosition.left, pageY: thumbnailPosition.top }));
-    $thumbnail.trigger($.Event("mousemove", { which: 1, pageX: document.body.scrollWidth/2, pageY: document.body.scrollHeight/2 }));
-    var $dropZone = $(".oe_drop_zone").first();
-    var dropPosition = $dropZone.position();
-    $dropZone.trigger($.Event("mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
 };
 
 //$(document).ready(T.running);
