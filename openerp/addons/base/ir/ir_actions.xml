@@ -59,7 +59,8 @@
                             <field name="name"/>
                             <field name="model"/>
                             <field name="report_type"/>
-                            <field name="report_name"/>
+                            <field name="report_name" attrs="{'invisible':[('report_type','=', 'controller')]}"/>
+                            <field name="report_rml" attrs="{'invisible':[('report_type','!=', 'controller')]}"/>
                         </group>
                         <group>
                             <field name="multi"/>
