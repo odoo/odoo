@@ -654,6 +654,9 @@ class Home(http.Controller):
         ensure_db()
 
         if request.session.uid:
+            if kw.get('redirect'):
+                return werkzeug.utils.redirect(kw.get('redirect'), 303)
+
             html = render_bootstrap_template(request.session.db, "web.webclient_bootstrap")
             return request.make_response(html, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
         else:
