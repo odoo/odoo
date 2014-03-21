@@ -147,11 +147,14 @@ class EscposDriver(Thread):
         if len(ips) == 0:
             eprint.text('ERROR: Could not connect to LAN\n\nPlease check that the PosBox is correc-\ntly connected with a network cable,\n that the LAN is setup with DHCP, and\nthat network addresses are available')
         elif len(ips) == 1:
-            eprint.text('IP Address\n'+ips[0]+'\n')
+            eprint.text('IP Address:\n'+ips[0]+'\n')
         else:
-            eprint.text('IP Addresses\n')
+            eprint.text('IP Addresses:\n')
             for ip in ips:
                 eprint.text(ip+'\n')
+
+        if len(ips) >= 1:
+            eprint.text('\nHomepage:\nhttp://'+ips[0]+':8069\n')
 
         eprint.text('\n\n')
         eprint.cut()
@@ -282,6 +285,8 @@ class EscposDriver(Thread):
                     +':'+ str(receipt['date']['minute']).zfill(2) )
 
 driver = EscposDriver()
+
+driver.push_task('printstatus')
 
 hw_proxy.drivers['escpos'] = driver
 
