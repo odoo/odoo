@@ -5,6 +5,7 @@
         <record model="survey.survey" id="feedback_form">
             <field name="title">User Feedback Form</field>
             <field name="state">open</field>
+            <field name="stage_id" ref="survey.stage_in_progress" />
             <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')" />
             <field name="visible_to_user" eval="True"/>
             <field name="auth_required" eval="False" />

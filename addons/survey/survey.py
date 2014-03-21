@@ -351,11 +351,12 @@ class survey_stage(osv.Model):
     _columns = {
         'name': fields.text(string="Name", required=True, translate=True),
         'sequence': fields.integer(string="Sequence"),
-        'open': fields.boolean(string="Display these surveys?")
+        'survey_open': fields.boolean(string="Display these surveys?"),
+        'folded': fields.boolean(string="Folded column by default")
     }
     _defaults = {
         'sequence': 1,
-        'open': True
+        'survey_open': True
     }
     _sql_constraints = [
         ('positive_sequence', 'CHECK(sequence >= 0)', 'Sequence number MUST be a natural')
