@@ -2305,13 +2305,9 @@ instance.web.list.Binary = instance.web.list.Column.extend({
         var text = _t("Download");
         var value = row_data[this.id].value;
         var download_url;
-        if (value && value.substr(0, 10).indexOf(' ') == -1) {
-            download_url = "data:application/octet-stream;base64," + value;
-        } else {
-            download_url = instance.session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
-            if (this.filename) {
-                download_url += '&filename_field=' + this.filename;
-            }
+        download_url = instance.session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
+        if (this.filename) {
+            download_url += '&filename_field=' + this.filename;
         }
         if (this.filename && row_data[this.filename]) {
             text = _.str.sprintf(_t("Download \"%s\""), instance.web.format_value(
