@@ -202,7 +202,7 @@ class WebsiteBlog(http.Controller):
         d = datetime.now() - datetime.strptime(blog_post.create_date, "%Y-%m-%d %H:%M:%S")
         blog_post_obj.write(cr, SUPERUSER_ID, [blog_post.id], {
             'visits': blog_post.visits+1,
-            'ranking': blog_post.visits * (0.5+random.random()) / max(1, d.days+10)
+            'ranking': blog_post.visits * (0.5+random.random()) / max(3, d.days)
         },context=context)
         return response
 
