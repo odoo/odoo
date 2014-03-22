@@ -27,12 +27,15 @@ from openerp import SUPERUSER_ID
 import werkzeug
 import random
 import json
+from datetime import datetime
+import random
+
 from openerp.tools import html2plaintext
 
 
 class WebsiteBlog(http.Controller):
-    _blog_post_per_page = 6
-    _post_comment_per_page = 6
+    _blog_post_per_page = 20
+    _post_comment_per_page = 10
 
     def nav_list(self):
         blog_post_obj = request.registry['blog.post']
@@ -44,7 +47,7 @@ class WebsiteBlog(http.Controller):
 
     @http.route([
         '/blog',
-        '/blog/page/<int:page>/',
+        '/blog/page/<int:page>',
     ], type='http', auth="public", website=True, multilang=True)
     def blogs(self, page=1):
         BYPAGE = 60
@@ -65,14 +68,14 @@ class WebsiteBlog(http.Controller):
         })
 
     @http.route([
-        '/blog/<model("blog.blog"):blog>/',
-        '/blog/<model("blog.blog"):blog>/page/<int:page>/',
-        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/',
-        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/page/<int:page>/',
-        '/blog/<model("blog.blog"):blog>/date/<string(length=21):date>/',
-        '/blog/<model("blog.blog"):blog>/date/<string(length=21):date>/page/<int:page>/',
-        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/',
-        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/page/<int:page>/',
+        '/blog/<model("blog.blog"):blog>',
+        '/blog/<model("blog.blog"):blog>/page/<int:page>',
+        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>',
+        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/page/<int:page>',
+        '/blog/<model("blog.blog"):blog>/date/<string(length=21):date>',
+        '/blog/<model("blog.blog"):blog>/date/<string(length=21):date>/page/<int:page>',
+        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>',
+        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/page/<int:page>',
     ], type='http', auth="public", website=True, multilang=True)
     def blog(self, blog=None, tag=None, date=None, page=1, **opt):
         """ Prepare all values to display the blog.
@@ -93,12 +96,8 @@ class WebsiteBlog(http.Controller):
          - 'tag': current tag, if tag_id
          - 'nav_list': a dict [year][month] for archives navigation
         """
-        BYPAGE = 10
-
         cr, uid, context = request.cr, request.uid, request.context
         blog_post_obj = request.registry['blog.post']
-
-        blog_posts = None
 
         blog_obj = request.registry['blog.blog']
         blog_ids = blog_obj.search(cr, uid, [], context=context)
@@ -106,7 +105,6 @@ class WebsiteBlog(http.Controller):
 
         path_filter = ""
         domain = []
-
         if blog:
             path_filter += "%s/" % blog.id
             domain += [("blog_id", "=", [blog.id])]
@@ -117,19 +115,15 @@ class WebsiteBlog(http.Controller):
             path_filter += "date/%s/" % date
             domain += [("create_date", ">=", date.split("_")[0]), ("create_date", "<=", date.split("_")[1])]
 
-        blog_post_ids = blog_post_obj.search(cr, uid, domain, context=context)
-        blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
-
+        blog_post_count = blog_post_obj.search(cr, uid, domain, count=True, context=context)
         pager = request.website.pager(
             url="/blog/%s" % path_filter,
-            total=len(blog_posts),
+            total=blog_post_count,
             page=page,
             step=self._blog_post_per_page,
-            scope=BYPAGE
+            scope=10
         )
-        pager_begin = (page - 1) * self._blog_post_per_page
-        pager_end = page * self._blog_post_per_page
-        blog_posts = blog_posts[pager_begin:pager_end]
+        blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context, limit=self._blog_post_per_page, offset=pager['offset'])
 
         tag_obj = request.registry['blog.tag']
         tag_ids = tag_obj.search(cr, uid, [], context=context)
@@ -147,13 +141,12 @@ class WebsiteBlog(http.Controller):
             'date': date,
         }
         response = request.website.render("website_blog.blog_post_short", values)
-        response.set_cookie('unvisited', json.dumps(blog_post_ids))
         return response
 
     @http.route([
-        '/blogpost/<model("blog.post"):blog_post>/',
+        '/blog/<model("blog.blog"):blog>/post/<model("blog.post"):blog_post>',
     ], type='http', auth="public", website=True, multilang=True)
-    def blog_post(self, blog_post, tag=None, date=None, page=1, enable_editor=None, **post):
+    def blog_post(self, blog, blog_post, enable_editor=None, **post):
         """ Prepare all values to display the blog.
 
         :param blog_post: blog post currently browsed. If not set, the user is
@@ -178,65 +171,38 @@ class WebsiteBlog(http.Controller):
          - 'nav_list': a dict [year][month] for archives navigation
          - 'next_blog': next blog post , display in footer
         """
-
-        pager_url = "/blogpost/%s" % blog_post.id
-
-        pager = request.website.pager(
-            url=pager_url,
-            total=len(blog_post.website_message_ids),
-            page=page,
-            step=self._post_comment_per_page,
-            scope=7
-        )
-        pager_begin = (page - 1) * self._post_comment_per_page
-        pager_end = page * self._post_comment_per_page
-        blog_post.website_message_ids = blog_post.website_message_ids[pager_begin:pager_end]
-
         cr, uid, context = request.cr, request.uid, request.context
-        blog_obj = request.registry['blog.blog']
-        blog_ids = blog_obj.search(cr, uid, [], context=context)
-        blogs = blog_obj.browse(cr, uid, blog_ids, context=context)
-
-        tag_obj = request.registry['blog.tag']
-        tag_ids = tag_obj.search(cr, uid, [], context=context)
-        tags = tag_obj.browse(cr, uid, tag_ids, context=context)
-
+        if not blog_post.blog_id.id==blog.id:
+            return request.redirect("/blog/%s/post/%s" % (blog_post.blog_id.id, blog_post.id))
         blog_post_obj = request.registry.get('blog.post')
-        if not request.httprequest.session.get(blog_post.id,False):
-                request.httprequest.session[blog_post.id] = True
-                counter = blog_post.visits + 1;
-                blog_post_obj.write(cr, SUPERUSER_ID, [blog_post.id], {'visits':counter},context=context)
-
-        MONTHS = [None, _('January'), _('February'), _('March'), _('April'),
-            _('May'), _('June'), _('July'), _('August'), _('September'),
-            _('October'), _('November'), _('December')]
 
         # Find next Post
         visited_blogs = request.httprequest.cookies.get('visited_blogs') or ''
-        visited_ids = map(lambda x: int(x or blog_post.id), visited_blogs.split(',')) + [blog_post.id]
+        visited_ids = filter(None, visited_blogs.split(','))
+        visited_ids = map(lambda x: int(x), visited_ids)
         if blog_post.id not in visited_ids:
             visited_ids.append(blog_post.id)
         next_post_id = blog_post_obj.search(cr, uid, [
             ('id', 'not in', visited_ids),
-            ], order='visits desc', limit=1, context=context)
+            ], order='ranking desc', limit=1, context=context)
         next_post = next_post_id and blog_post_obj.browse(cr, uid, next_post_id[0], context=context) or False
 
         values = {
-            'blog': blog_post.blog_id,
-            'blogs': blogs,
-            'tags': tags,
-            'tag': tag and request.registry['blog.tag'].browse(cr, uid, int(tag), context=context) or None,
+            'blog': blog,
             'blog_post': blog_post,
             'main_object': blog_post,
-            'pager': pager,
-            'nav_list': self.nav_list(),
             'enable_editor': enable_editor,
-            'date': date,
-            'date_name': date and "%s %s" % (MONTHS[int(date.split("-")[1])], date.split("-")[0]) or None,
             'next_post' : next_post,
         }
         response = request.website.render("website_blog.blog_post_complete", values)
         response.set_cookie('visited_blogs', ','.join(map(str, visited_ids)))
+
+        # Increase counter and ranking ratio for order
+        d = datetime.now() - datetime.strptime(blog_post.create_date, "%Y-%m-%d %H:%M:%S")
+        blog_post_obj.write(cr, SUPERUSER_ID, [blog_post.id], {
+            'visits': blog_post.visits+1,
+            'ranking': (blog_post.visits+1) * (1+random.random()) / max(1, 10+d.days)
+        },context=context)
         return response
 
     def _blog_post_message(self, user, blog_post_id=0, **post):

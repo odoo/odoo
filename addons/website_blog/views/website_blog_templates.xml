@@ -90,7 +90,7 @@
 <template id="blog_post_short" name="Blog Posts">
     <t t-call="website_blog.index">
         <div class="oe_structure">
-            <section class="mb0" data-snippet-id="title">
+            <section class="mb0">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12 mb32 mt16 text-center">
@@ -278,7 +278,7 @@
     <xpath expr="//div[@id='blog_content']" position="attributes">
         <attribute name="class">js_tweet</attribute>
     </xpath>
-    <xpath expr="//div[@id='blog_title']" position="attributes">
+    <xpath expr="//div[@id='title']//div[@class='blog_title']" position="attributes">
         <attribute name="class">blog_title js_tweet</attribute>
     </xpath>
 </template>

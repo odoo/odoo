@@ -100,11 +100,13 @@ class BlogPost(osv.Model):
             select=True, readonly=True,
         ),
         'visits': fields.integer('No of Views'),
+        'ranking': fields.float('Ranking'),
         'author_image': fields.related('create_uid','partner_id', 'image_small', string='Author Photo', type='binary')
     }
     _defaults = {
         'website_published': False,
-        'visits': 0
+        'visits': 0,
+        'ranking': 0
     }
 
     def create(self, cr, uid, vals, context=None):
