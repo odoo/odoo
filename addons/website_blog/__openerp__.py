@@ -41,9 +41,7 @@ OpenERP Blog
     'demo': [
         'data/website_blog_demo.xml'
     ],
-    'test': [
-        'tests/test_website_blog.yml'
-    ],
+    'test': [],
     'qweb': [
         'static/src/xml/*.xml'
     ],

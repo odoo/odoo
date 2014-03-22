@@ -60,7 +60,7 @@ class WebsiteBlog(http.Controller):
             page=page,
             step=BYPAGE,
         )
-        bids = blog_obj.search(cr, uid, [], offset=(page-1)*BYPAGE, limit=BYPAGE, context=context)
+        bids = blog_obj.search(cr, uid, [], offset=pager['offset'], limit=BYPAGE, context=context)
         blogs = blog_obj.browse(cr, uid, bids, context=context)
         return request.website.render("website_blog.latest_blogs", {
             'blogs': blogs,
@@ -202,7 +202,7 @@ class WebsiteBlog(http.Controller):
         d = datetime.now() - datetime.strptime(blog_post.create_date, "%Y-%m-%d %H:%M:%S")
         blog_post_obj.write(cr, SUPERUSER_ID, [blog_post.id], {
             'visits': blog_post.visits+1,
-            'ranking': (blog_post.visits+1) * (0.5+random.random()) / max(1, d.days+10)
+            'ranking': blog_post.visits * (0.5+random.random()) / max(1, d.days+10)
         },context=context)
         return response
 
@@ -223,13 +223,10 @@ class WebsiteBlog(http.Controller):
     def blog_post_comment(self, blog_post_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
         if post.get('comment'):
-            user = request.registry['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
-            group_ids = user.groups_id
-            group_id = request.registry["ir.model.data"].get_object_reference(cr, uid, 'website_mail', 'group_comment')[1]
-            if group_id in [group.id for group in group_ids]:
-                blog_post = request.registry['blog.post']
-                blog_post.check_access_rights(cr, uid, 'read')
-                self._blog_post_message(user, blog_post_id, **post)
+            user = request.registry['res.users'].browse(cr, uid, uid, context=context)
+            blog_post = request.registry['blog.post']
+            blog_post.check_access_rights(cr, uid, 'read')
+            self._blog_post_message(user, blog_post_id, **post)
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
     @http.route(['/blogpost/post_discussion'], type='json', auth="public", website=True)
@@ -237,10 +234,10 @@ class WebsiteBlog(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         values = []
         if post.get('comment'):
-            user = request.registry['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
+            user = request.registry['res.users'].browse(cr, uid, uid, context=context)
             id = self._blog_post_message(user, blog_post_id, **post)
             mail_obj = request.registry.get('mail.message')
-            post = mail_obj.browse(cr, SUPERUSER_ID, id)
+            post = mail_obj.browse(cr, uid, id)
             values = {
                 "author_name": post.author_id.name,
                 "date": post.date,
@@ -278,11 +275,12 @@ class WebsiteBlog(http.Controller):
 
     @http.route('/blogpost/get_discussion/', type='json', auth="public", website=True)
     def discussion(self, post_id=0, discussion=None, **post):
+        cr, uid, context = request.cr, request.uid, request.context
         mail_obj = request.registry.get('mail.message')
         values = []
-        ids = mail_obj.search(request.cr, SUPERUSER_ID, [('res_id', '=', int(post_id)) ,('model','=','blog.post'), ('discussion', '=', discussion)])
+        ids = mail_obj.search(cr, uid, [('res_id', '=', int(post_id)) ,('model','=','blog.post'), ('discussion', '=', discussion)])
         if ids:
-            for post in mail_obj.browse(request.cr, SUPERUSER_ID, ids):
+            for post in mail_obj.browse(cr, uid, ids, context=context):
                 values.append({
                     "author_name": post.author_id.name,
                     "date": post.date,
@@ -292,9 +290,9 @@ class WebsiteBlog(http.Controller):
         return values
 
     @http.route('/blogpsot/change_background', type='json', auth="public", website=True)
-    def change_bg(self, post_id=0,image=None, **post):
+    def change_bg(self, post_id=0, image=None, **post):
         post_obj = request.registry.get('blog.post')
         values = {'content_image' : image}
-        ids = post_obj.write(request.cr, SUPERUSER_ID, [int(post_id)], values)
+        ids = post_obj.write(request.cr, request.uid, [int(post_id)], values, request.context)
         return []
 

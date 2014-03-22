@@ -25,7 +25,7 @@
             <field name="website_meta_description">The Future of Emails</field>
             <field name="content_image">/website_blog/static/src/img/post1.jpg</field>
             <field name="content"><![CDATA[
-        <section class="mt16 mb16 readable" data-snippet-id='image-text'>
+        <section class="mt16 mb16 readable">
             <iframe width="361" height="200" src="http://www.youtube.com/embed/EkbBFmIWoTE" frameborder="0" allowfullscreen></iframe>
             <p>
                 Emails are broken.
@@ -45,7 +45,7 @@
                 my job in 10 minutes!
             </p>
         </section>
-        <section class="mt16 mb16 readable" data-snippet-id='text-image'>
+        <section class="mt16 mb16 readable">
             <p>
                 At OpenERP, we build tools to bring productivity to
                 enterprises. As emails and information flows are one of
@@ -127,23 +127,23 @@
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
             <field name="content_image">/website_blog/static/src/img/post2.jpg</field>
             <field name="content">
-<![CDATA[<section class="mt16 mb16 readable" data-snippet-id='image-text'>
-            <div class="col-md-12">
+<![CDATA[<section class="row readable">
+            <div class="col-md-12 mb32">
                 <img class="img-responsive" src="/website_blog/static/src/img/CMS_WMS_screens.jpg"/>
             </div>
             <div class="col-md-6 col-md-offset-3 mb16 mt16">
                 <p class="text-center">
                     New Features Launched
                 </p>
-                <h4 class="text-center">
+                <p class="text-center">
                     To add to an already comprehensive set of OpenERP
                     features, a website content management system (CMS
                     or WMS) has been developed and a beta release is
                     available from today, 31st January 2014.
-                </h4>
+                </p>
             </div>
         </section>
-        <section class="readable" data-snippet-id='text'>
+        <section class="readable">
             <p>
                 OpenERP claims to be 'the Open Source software that makes
                 building your company's website and selling your products
@@ -158,11 +158,13 @@
                 enterprise to compete at a level of functionality and
                 performance previously reserved for the big IT investors."
             </p>
-            <h4>
-                "Finally, the leading edge is being brought to the masses.
-                It will now be the turn of the big players to catch up to
-                the superior technologies of the SME."
-            </h4>
+            <blockquote>
+                <p>
+                    "Finally, the leading edge is being brought to the masses.
+                    It will now be the turn of the big players to catch up to
+                    the superior technologies of the SME."
+                </p>
+            </blockquote>
             <p>
                 "This is another clever and highly disruptive move by
                 OpenERP,which will force other technology providers to
@@ -252,8 +254,6 @@
                 years of industry experience across many platforms.
             </p>
         </section>
-
-
 ]]>
 </field>
         </record>
@@ -266,7 +266,7 @@
             <field name="website_meta_description">Sorry SAP Campaign - The Making Of</field>
             <field name="content_image">/website_blog/static/src/img/post3.jpg</field>
             <field name="content"><![CDATA[
-        <section class="readable" data-snippet-id="text">
+        <section class="readable">
             <p>I needed to change the world. I wanted to ... You know how
             it is when you are young; you have big dreams, a lot of energ
             and naïve stupidity. My dream was to lead the enterprise
@@ -275,7 +275,7 @@
             self-financed company but I failed this one by a few months).
             </p>
         </section>
-        <section class="readable" data-snippet-id="text-image">
+        <section class="readable">
             <p>
                 To fuel my motivation, I had to pick someone to fight
                 against. In business, it's like a playground. When you
@@ -330,8 +330,8 @@
                 We wanted to switch from a service company to a software
                 publisher company. This would allow to increase our efforts
                 in our research and development activities. As a result,
-                we <a href="http://v6.openerp.com/node/465">changed our
-                business model</a> and decided to stop our services to
+                we changed our
+                business model and decided to stop our services to
                 customers and focus on building a strong partner network
                 and maintenance offer. This would cost money, so I had to
                 raise a few million euros.
@@ -406,8 +406,7 @@
                 more lucid than I am. Every week I complained to her "it's
                 not good enough, we should grow faster, what am I missing?"
                 and she used to reply; "But you already are the
-                <a href="http://v6.openerp.com/node/1244/2012/10">
-                fastest growing company in Belgium!". </a>(Deloitte awarded
+                fastest growing company in Belgium!". (Deloitte awarded
                 us as the fastest growing company of Belgium with 1549%
                 growth of the turnover between 2007 and 2011)
             </p>
@@ -446,9 +445,6 @@
             </p><p>
                 It's time to pull out the Ace: the SorrySAP.com domain
                 name that I bought 6 years ago.
-            </p><p>
-                If you want to test the v7 version online, just go
-                <a href="https://www.openerp.com/"> the homepage.</a>
             </p>
         </section>
  ]]>

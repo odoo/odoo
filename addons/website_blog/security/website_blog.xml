@@ -9,13 +9,5 @@
             <field name="groups" eval="[(4, ref('base.group_public'))]"/>
         </record>
 
-        <record model="ir.rule" id="base.res_partner_portal_public_rule">
-            <field name="name">res_partner: portal/public: read access on my commercial partner</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="domain_force">[]</field>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-            <field name="perm_write" eval="False"/>
-        </record>
     </data>
 </openerp>
