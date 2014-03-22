@@ -21,31 +21,23 @@
     <t t-call="website.layout">
         <div id="wrap">
             <div class="oe_structure"/>
-            <section groups="base.group_website_publisher">
-                <div class="container text-center mt16">
-                    <div class="alert alert-warning alert-dismissable">
-                       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-                       <p>
-                       This page is great to improve your <strong>Search Engine Optimization</strong>;
-                       You can review titles, keywords and descriptions of all blogs at once.
-                       </p><p>
-                       You should <strong>add a banner on the top</strong> as it is a frequent landing page for new visitors.
-                       <span class="text-muted">This box will not be visible to your visitors.</span>
-                       </p>
-                    </div>
-                </div>
-            </section>
             <section class="container">
+                <div class="alert alert-warning alert-dismissable mt16" groups="base.group_website_publisher">
+                   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                   <p>
+                   This page is great to improve your <strong>Search Engine Optimization</strong>;
+                   You can review titles, keywords and descriptions of all blogs at once.
+                   </p><p>
+                   You should <strong>add a banner on the top</strong> as it is a frequent landing page for new visitors.
+                   <span class="text-muted">This box will not be visible to your visitors.</span>
+                   </p>
+                </div>
                 <t t-call="website.pager" >
                     <t t-set="classname">pull-right</t>
                 </t>
             </section>
-            <section data-snippet-id="title" class="container">
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <h1>Latest Blogs</h1>
-                    </div>
-                </div>
+            <section class="container">
+                <h1 class="text-center">Latest Blogs</h1>
             </section>
             <section class="container">
                 <div class="row">
