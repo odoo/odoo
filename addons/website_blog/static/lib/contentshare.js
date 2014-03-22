@@ -27,12 +27,13 @@
                 }
             },
             popOver : function() {
+                this.destroy();
                 if(this.getSelection('string').length < option.minLength)
                     return;
                 var data = this.getContent();
                 var range = this.getSelection();
                 var newNode = document.createElement("mark");
-                range.surroundContents(newNode);
+                range.insertNode(newNode);
                 $('mark').addClass(option.className);
                 $('.'+option.className).popover({trigger:'manual', placement: option.placement, html: true 
                 , content:function(){
