@@ -155,7 +155,7 @@
 <template id="blog_post_complete" name="Blog Post">
   <t t-call="website_blog.index">
 
-    <div class="cover cover_header text-center mb32" id="title" t-attf-style="background-image : url(#{blog_post.content_image})" t-ignore="True">
+    <div class="cover js_header" id="title" t-attf-style="background-image: url(#{blog_post.content_image})" t-ignore="True">
         <div class="container">
           <div class="container text-right mt16">
             <div class="btn-group css_non_editable_mode_hidden">
@@ -179,14 +179,14 @@
           </div>
         </div>
         <div class="blog_title">
-            <h1 t-field="blog_post.name" id="blog_post_name" class="mt32"/>
-            <h2 t-field="blog_post.sub_title" class="text-muted"/>
+            <h1 t-field="blog_post.name" id="blog_post_name"/>
+            <h2 t-field="blog_post.sub_title"/>
             <div>
                 <img class="img-circle" t-att-src="'/website/image?model=blog.post&amp;field=author_image&amp;id='+str(blog_post.id)" style="width: 30px; margin-right: 10px;"/>
                 <small id="blog_author" t-field="blog_post.create_uid.name"/><br/>
             </div>
             <div t-if="blog_post.content_image" id="blog_angle_down">
-                <a href="#blog_content" class="fa fa-angle-down fa-2x fa-inverse mt64"/>
+                <a href="#blog_content" class="fa fa-angle-down fa-2x fa-inverse mt32"/>
             </div>
         </div>
     </div>
@@ -217,13 +217,15 @@
 
     <t t-if="next_post">
         <div class="cover cover_footer mb0 text-center" t-attf-style="background-image: url(#{next_post.content_image})" t-ignore="True">
-            <p>Read Next</p>
-            <a class="hidden js_next" t-attf-href="/blogpost/#{ slug(next_post) }/#wrap"/>
-            <h1 t-field="next_post.name"/>
-            <h2 t-field="next_post.sub_title"/>
-            <div>
-                <img class="img-circle" t-att-src="'/website/image?model=blog.post&amp;field=author_image&amp;id='+str(next_post.id)" style="width: 30px; margin-right: 10px;"/>
-                <small id="blog_author" t-field="next_post.create_uid.name"/>
+            <div class="blog_title">
+                <a class="hidden js_next" t-attf-href="/blogpost/#{ slug(next_post) }/#wrap"/>
+                <h1 t-field="next_post.name"/>
+                <h2 t-field="next_post.sub_title"/>
+                <div>
+                    <img class="img-circle" t-att-src="'/website/image?model=blog.post&amp;field=author_image&amp;id='+str(next_post.id)" style="width: 30px; margin-right: 10px;"/>
+                    <small id="blog_author" t-field="next_post.create_uid.name"/>
+                </div>
+                <p class="mt32">Read Next <span class="fa fa-long-arrow-right"/></p>
             </div>
         </div>
     </t>
@@ -276,7 +278,7 @@
     <xpath expr="//div[@id='blog_content']" position="attributes">
         <attribute name="class">js_tweet</attribute>
     </xpath>
-    <xpath expr="//div[@class='blog_title']" position="attributes">
+    <xpath expr="//div[@id='blog_title']" position="attributes">
         <attribute name="class">blog_title js_tweet</attribute>
     </xpath>
 </template>

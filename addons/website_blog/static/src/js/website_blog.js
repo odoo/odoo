@@ -6,10 +6,10 @@ $(document).ready(function() {
         var top = $('.cover_footer').offset().top;
         $('.cover_footer').animate({
             height: $(window).height()+'px'
-        }, 500);
+        }, 300);
         $('html, body').animate({
             scrollTop: top
-        }, 500, 'swing', function() {
+        }, 300, 'swing', function() {
            window.location.href = newLocation;
         });
     }
@@ -17,9 +17,9 @@ $(document).ready(function() {
     function animate() {
         var target = $(this.hash);
         $('html, body').stop().animate({
-            'scrollTop': target.offset().top
-        }, 900, 'swing', function () {
-            window.location.hash = target;
+            'scrollTop': target.offset().top - 32
+        }, 500, 'swing', function () {
+            window.location.hash = 'blog_content';
         });
         return false;
     }
@@ -30,7 +30,7 @@ $(document).ready(function() {
         new openerp.website.blog_discussion({'content' : content});
     }
 
-    $('.cover_header').css('min-height', $(window).height());
+    $('.js_header').css('min-height', $(window).height());
     $("js_tweet").find("h1, h2, h3, h4, li, p").share({'author_name':$('#blog_author').text()});
     $('.cover_footer').on('click',page_transist);
     $('a[href^="#blog_content"]').on('click', animate);
