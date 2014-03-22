@@ -123,7 +123,8 @@ class WebsiteBlog(http.Controller):
             step=self._blog_post_per_page,
             scope=10
         )
-        blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context, limit=self._blog_post_per_page, offset=pager['offset'])
+        blog_post_ids = blog_post_obj.search(cr, uid, domain, context=context, limit=self._blog_post_per_page, offset=pager['offset'])
+        blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
 
         tag_obj = request.registry['blog.tag']
         tag_ids = tag_obj.search(cr, uid, [], context=context)
@@ -201,7 +202,7 @@ class WebsiteBlog(http.Controller):
         d = datetime.now() - datetime.strptime(blog_post.create_date, "%Y-%m-%d %H:%M:%S")
         blog_post_obj.write(cr, SUPERUSER_ID, [blog_post.id], {
             'visits': blog_post.visits+1,
-            'ranking': (blog_post.visits+1) * (1+random.random()) / max(1, 10+d.days)
+            'ranking': (blog_post.visits+1) * (0.5+random.random()) / max(1, d.days+10)
         },context=context)
         return response
 

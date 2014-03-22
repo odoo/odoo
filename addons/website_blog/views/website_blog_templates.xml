@@ -12,7 +12,7 @@
 <!-- Layout add nav and footer -->
 <template id="header_footer_custom" inherit_id="website.layout" name="Footer News Blog Link">
     <xpath expr="//footer//div[@name='info']/ul" position="inside">
-        <li><a t-attf-href="/blog/%(website_blog.blog_blog_1)d/">News</a></li>
+        <li><a t-attf-href="/blog/%(website_blog.blog_blog_1)d">News</a></li>
     </xpath>
 </template>
 
@@ -195,7 +195,6 @@
         <div id="blog_content" t-field="blog_post.content"/>
     </div>
 
-    <!-- FP Note: should we remove this or put it in options? -->
     <section id="comments" class="container">
         <ul class="media-list" id="comments-list">
             <li t-foreach="blog_post.website_message_ids" t-as="message" class="media">
