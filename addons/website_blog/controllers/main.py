@@ -109,10 +109,10 @@ class WebsiteBlog(http.Controller):
 
         if blog:
             path_filter += "%s/" % blog.id
-            domain += [("id", "in", [post.id for post in blog.blog_post_ids])]
+            domain += [("blog_id", "=", [blog.id])]
         if tag:
             path_filter += 'tag/%s/' % tag.id
-            domain += [("id", "in", [post.id for post in tag.blog_post_ids])]
+            domain += [("tag_ids", "in", [tag.id])]
         if date:
             path_filter += "date/%s/" % date
             domain += [("create_date", ">=", date.split("_")[0]), ("create_date", "<=", date.split("_")[1])]

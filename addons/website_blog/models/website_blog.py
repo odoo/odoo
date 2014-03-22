@@ -25,9 +25,6 @@ from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
-import difflib
-
-
 class Blog(osv.Model):
     _name = 'blog.blog'
     _description = 'Blogs'
@@ -38,10 +35,6 @@ class Blog(osv.Model):
         'subtitle': fields.char('Blog Subtitle'),
         'description': fields.text('Description'),
         'image': fields.binary('Image'),
-        'blog_post_ids': fields.one2many(
-            'blog.post', 'blog_id',
-            'Blogs',
-        ),
     }
 
 
@@ -50,12 +43,8 @@ class BlogTag(osv.Model):
     _description = 'Blog Tag'
     _inherit = ['website.seo.metadata']
     _order = 'name'
-
     _columns = {
         'name': fields.char('Name', required=True),
-        'blog_post_ids': fields.many2many(
-            'blog.post', string='Posts',
-        ),
     }
 
 class MailMessage(osv.Model):
@@ -68,10 +57,7 @@ class BlogPost(osv.Model):
     _name = "blog.post"
     _description = "Blog Post"
     _inherit = ['mail.thread', 'website.seo.metadata']
-    _order = 'write_date DESC'
-    # maximum number of characters to display in summary
-    _shorten_max_char = 250
-
+    _order = 'id DESC'
     _columns = {
         'name': fields.char('Title', required=True, translate=True),
         'sub_title' : fields.char('Sub Title', translate=True),
@@ -88,9 +74,6 @@ class BlogPost(osv.Model):
         'website_published': fields.boolean(
             'Publish', help="Publish on the website"
         ),
-        'website_published_datetime': fields.datetime(
-            'Publish Date'
-        ),
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [
@@ -98,11 +81,6 @@ class BlogPost(osv.Model):
             ],
             string='Website Messages',
             help="Website communication history",
-        ),
-        'history_ids': fields.one2many(
-            'blog.post.history', 'post_id',
-            'History', help='Last post modifications',
-            deprecated= 'Will be removed in v9.'
         ),
         # creation / update stuff
         'create_date': fields.datetime(
@@ -121,73 +99,24 @@ class BlogPost(osv.Model):
             'res.users', 'Last Contributor',
             select=True, readonly=True,
         ),
-        'visits': fields.integer('No of Visitors'),
+        'visits': fields.integer('No of Views'),
+        'author_image': fields.related('create_uid','partner_id', 'image_small', string='Author Photo', type='binary')
     }
     _defaults = {
         'website_published': False,
         'visits': 0
     }
 
-    def create_history(self, cr, uid, ids, vals, context=None):
-        for i in ids:
-            history = self.pool.get('blog.post.history')
-            if vals.get('content'):
-                res = {
-                    'content': vals.get('content', ''),
-                    'post_id': i,
-                }
-                history.create(cr, uid, res)
-
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
         create_context = dict(context, mail_create_nolog=True)
-        post_id = super(BlogPost, self).create(cr, uid, vals, context=create_context)
-        self.create_history(cr, uid, [post_id], vals, context)
-        return post_id
-
-    def write(self, cr, uid, ids, vals, context=None):
-        result = super(BlogPost, self).write(cr, uid, ids, vals, context)
-        self.create_history(cr, uid, ids, vals, context)
-        return result
+        return super(BlogPost, self).create(cr, uid, vals, context=create_context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
         default.update({
             'website_published': False,
-            'website_published_datetime': False,
         })
         return super(BlogPost, self).copy(cr, uid, id, default=default, context=context)
-
-    def img(self, cr, uid, ids, field='image_small', context=None):
-        post = self.browse(cr, SUPERUSER_ID, ids[0], context=context)
-        return "/website/image?model=%s&field=%s&id=%s" % ('res.users', field, post.create_uid.id)
-
-class BlogPostHistory(osv.Model):
-    _name = "blog.post.history"
-    _description = "Blog Post History"
-    _order = 'id DESC'
-    _rec_name = "create_date"
-
-    _columns = {
-        'post_id': fields.many2one('blog.post', 'Blog Post'),
-        'summary': fields.char('Summary', size=256, select=True),
-        'content': fields.text("Content"),
-        'create_date': fields.datetime("Date"),
-        'create_uid': fields.many2one('res.users', "Modified By"),
-    }
-
-    def getDiff(self, cr, uid, v1, v2, context=None):
-        history_pool = self.pool.get('blog.post.history')
-        text1 = history_pool.read(cr, uid, [v1], ['content'])[0]['content']
-        text2 = history_pool.read(cr, uid, [v2], ['content'])[0]['content']
-        line1 = line2 = ''
-        if text1:
-            line1 = text1.splitlines(1)
-        if text2:
-            line2 = text2.splitlines(1)
-        if (not line1 and not line2) or (line1 == line2):
-            raise osv.except_osv(_('Warning!'), _('There are no changes in revisions.'))
-        diff = difflib.HtmlDiff()
-        return diff.make_table(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=True)
 
