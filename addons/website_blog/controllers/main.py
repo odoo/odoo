@@ -331,10 +331,3 @@ class WebsiteBlog(http.Controller):
         ids = post_obj.write(request.cr, SUPERUSER_ID, [int(post_id)], values)
         return []
 
-    @http.route('/blogpsot/get_custom_options', type='json', auth="public", website=True)
-    def get_custom_options(self, image=None, **post):
-        values = {}
-        inherit_options = request.registry.get('ir.ui.view').search_read(request.cr, SUPERUSER_ID, [('name','in',['Allow comment in text','Select to Tweet'])], ['inherit_id','name'])
-        for options in inherit_options:
-            values[options.get('name')] = options.get('inherit_id')
-        return values
