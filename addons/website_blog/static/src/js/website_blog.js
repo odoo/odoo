@@ -14,14 +14,14 @@ $(document).ready(function() {
         });
     }
 
-    function animate() {
+    function animate(event) {
+        event.stopImmediatePropagation();
         var target = $(this.hash);
         $('html, body').stop().animate({
             'scrollTop': target.offset().top - 32
         }, 500, 'swing', function () {
             window.location.hash = 'blog_content';
         });
-        return false;
     }
 
     var content = $(".js_discuss #blog_content p");
@@ -31,7 +31,7 @@ $(document).ready(function() {
     }
 
     $('.js_header').css('min-height', $(window).height());
-    $(".js_tweet").find("h1, h2, h3, h4, li, p").share({'author_name':$('#blog_author').text()});
+    $(".js_tweet").share({'author_name':$('#blog_author').text()});
     $('.cover_footer').on('click',page_transist);
     $('a[href^="#blog_content"]').on('click', animate);
 

@@ -6,8 +6,8 @@
                 <img class="media-object img-circle" t-att-src="res.author_image" style="width: 30px;"/>
             </div>
             <div class="media-body">
-                <small t-field='res.author_name'/>
-                <div t-field='res.body'/>
+                <small t-esc='res.author_name'/>
+                <div t-esc='res.body'/>
             </div>
         </li>
     </t>
@@ -16,7 +16,7 @@
             <input name="discussion" t-att-value="identifier" type="hidden"/>
             <input name="blog_post_id" t-att-value="options.post_id" type="hidden"/>
             <textarea class="mb8 form-control" rows="2" id="comment" placeholder="Write a comment..."/>
-            <button id='comment_post' class="btn btn-primary btn-xs mb8 mt4">Post</button>
+            <button id='comment_post' class="btn btn-primary btn-xs mb4">Post</button>
             <div class="discussion_history"/>
         </div>
     </t>
