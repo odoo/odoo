@@ -210,11 +210,11 @@ class WebsiteBlog(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         blog_post = request.registry['blog.post']
         message_id = blog_post.message_post(
-            cr, uid, int(blog_post_id),
+            cr, SUPERUSER_ID, int(blog_post_id),
             body=post.get('comment'),
             type='comment',
             subtype='mt_comment',
-            author_id= user.partner_id.id,
+            author_id=False,
             discussion=post.get('discussion'),
             context=dict(context, mail_create_nosubcribe=True))
         return message_id
@@ -237,12 +237,14 @@ class WebsiteBlog(http.Controller):
             user = request.registry['res.users'].browse(cr, uid, uid, context=context)
             id = self._blog_post_message(user, blog_post_id, **post)
             mail_obj = request.registry.get('mail.message')
-            post = mail_obj.browse(cr, uid, id)
+            post = mail_obj.browse(cr, SUPERUSER_ID, id)
             values = {
-                "author_name": post.author_id.name,
+                "author_name": post.author_id and post.author_id.name or _('Anonymous'),
                 "date": post.date,
                 "body": html2plaintext(post.body),
-                "author_image": "data:image/png;base64,%s" % post.author_id.image,
+                "author_image": post.author_id and \
+                    ("data:image/png;base64,%s" % post.author_id.image) or \
+                    '/website_blog/static/src/img/anonymous.png',
                 }
         return values
     
@@ -278,14 +280,16 @@ class WebsiteBlog(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         mail_obj = request.registry.get('mail.message')
         values = []
-        ids = mail_obj.search(cr, uid, [('res_id', '=', int(post_id)) ,('model','=','blog.post'), ('discussion', '=', discussion)])
+        ids = mail_obj.search(cr, SUPERUSER_ID, [('res_id', '=', int(post_id)) ,('model','=','blog.post'), ('discussion', '=', discussion)])
         if ids:
-            for post in mail_obj.browse(cr, uid, ids, context=context):
+            for post in mail_obj.browse(cr, SUPERUSER_ID, ids, context=context):
                 values.append({
-                    "author_name": post.author_id.name,
+                    "author_name": post.author_id and post.author_id.name or _('Anonymous'),
+                    "author_image": post.author_id and \
+                        ("data:image/png;base64,%s" % post.author_id.image) or \
+                        '/website_blog/static/src/img/anonymous.png',
                     "date": post.date,
                     'body': html2plaintext(post.body),
-                    'author_image': "data:image/png;base64,%s" % post.author_id.image,
                 })
         return values
 

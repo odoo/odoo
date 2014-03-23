@@ -13,7 +13,7 @@
             var defaults = {
                 identifier: 'name',
                 position: 'right',
-                post_id: $('#blog_post_name').attr('data-oe-id'),
+                post_id: $('#blog_post_name').attr('data-blog-id'),
                 content : false,
             };
             self.settings = $.extend({}, defaults, options);
