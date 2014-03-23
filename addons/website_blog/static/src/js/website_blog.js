@@ -31,7 +31,7 @@ $(document).ready(function() {
     }
 
     $('.js_header').css('min-height', $(window).height());
-    $("js_tweet").find("h1, h2, h3, h4, li, p").share({'author_name':$('#blog_author').text()});
+    $(".js_tweet").find("h1, h2, h3, h4, li, p").share({'author_name':$('#blog_author').text()});
     $('.cover_footer').on('click',page_transist);
     $('a[href^="#blog_content"]').on('click', animate);
 
