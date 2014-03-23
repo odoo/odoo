@@ -24,7 +24,7 @@ $(document).ready(function() {
         return false;
     }
 
-    var content = $(".js_discuss");
+    var content = $(".js_discuss #blog_content p");
     if(content){
         $('#discussions_wrapper').empty();
         new openerp.website.blog_discussion({'content' : content});

@@ -196,19 +196,17 @@
     </div>
 
     <section id="comments" class="container">
-        <ul class="media-list" id="comments-list">
+        <ul class="media-list read_width" id="comments-list">
             <li t-foreach="blog_post.website_message_ids" t-as="message" class="media">
+                <span class="pull-left">
+                    <img class="media-object img img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)"/>
+                </span>
                 <div class="media-body">
-                    <img class="media-object pull-left" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
-                    <div class="media-body">
-                        <t t-call="website.publish_short">
-                            <t t-set="object" t-value="message"/>
-                        </t>
-                        <h5 class="media-heading">
-                            <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
-                        </h5>
-                        <div t-field="message.body"/>
-                    </div>
+                    <t t-call="website.publish_short">
+                        <t t-set="object" t-value="message"/>
+                    </t>
+                    <strong t-field="message.author_id"/> <span class="text-muted">on <span t-field="message.date"/></span>
+                    <div t-field="message.body"/>
                 </div>
             </li>
         </ul>
@@ -257,17 +255,21 @@
         inherit_option_id="website_blog.blog_post_complete"
         groups="website_mail.group_comment">
     <xpath expr="//ul[@id='comments-list']" position="before">
-        <section class="mb32 css_editable_mode_hidden">
+        <section class="mb32 read_width css_editable_mode_hidden">
+            <hr/>
             <form id="comment" t-attf-action="/blogpost/comment" method="POST">
-                <input name="blog_post_id" t-att-value="blog_post.id" type="hidden"/>
-                <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
-                <div class="pull-left mb32" style="width: 75%%">
-                    <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
-                    <button type="submit" class="btn btn-primary mt8">Post</button>
+                <div class="media">
+                    <span class="pull-left">
+                        <img class="img img-circle media-object" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)"/>
+                    </span>
+                    <div class="media-body">
+                        <input name="blog_post_id" t-att-value="blog_post.id" type="hidden"/>
+                        <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
+                        <button type="submit" class="btn btn-primary mt8">Post</button>
+                    </div>
                 </div>
             </form>
         </section>
-        <div class="clearfix"/>
     </xpath>
 </template>
 

@@ -2,19 +2,14 @@
 <templates id="template" xml:space="preserve">
     <t t-name="website.blog_discussion.comment">
         <li class="media">
+            <div class="pull-left">
+                <img class="media-object img-circle" t-att-src="res.author_image" style="width: 30px;"/>
+            </div>
             <div class="media-body">
-                <img class="media-object pull-left img-circle" t-att-src="res.author_image" style="width: 30px; margin-right: 5px;"/>
-                <div class="media-body">
-                    <h5 class="media-heading">
-                        <small><span t-esc='res.author_name'/> on <span t-esc='res.date'/></small>
-                    </h5>
-                </div>
+                <small t-field='res.author_name'/>
+                <div t-field='res.body'/>
             </div>
         </li>
-        <li>
-            <h6 t-esc='res.body'/>
-        </li>
-        <hr class="mb0 mt0"/>
     </t>
     <t t-name="website.blog_discussion.popover">
         <div class="mycontent hidden">
