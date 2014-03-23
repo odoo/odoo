@@ -459,6 +459,7 @@ ALL_LANGUAGES = {
         'fa_IR': u'Persian / فارس',
         'fi_FI': u'Finnish / Suomi',
         'fr_BE': u'French (BE) / Français (BE)',
+        'fr_CA': u'French (CA) / Français (CA)',
         'fr_CH': u'French (CH) / Français (CH)',
         'fr_FR': u'French / Français',
         'gl_ES': u'Galician / Galego',
