@@ -88,7 +88,7 @@ def inverse_related(field, records):
         if other:
             other[field.related[-1]] = record[field.name]
 
-def search_related(field, operator, value):
+def search_related(field, records, operator, value):
     """ Determine the domain to search on `field`. """
     return [('.'.join(field.related), operator, value)]
 
@@ -322,22 +322,6 @@ class Field(object):
     # Management of the computation of field values.
     #
 
-    @lazy_property
-    def _compute_function(self):
-        """ Return a function to call with records to compute this field. """
-        if isinstance(self.compute, basestring):
-            return getattr(type(scope[self.model_name]), self.compute)
-        elif callable(self.compute):
-            return partial(self.compute, self)
-        else:
-            raise Warning("No way to compute field %s" % self)
-
-    @lazy_property
-    def _compute_one(self):
-        """ Test whether the compute function has the decorator ``@one``. """
-        from openerp import one
-        return getattr(self._compute_function, '_api', None) is one
-
     def compute_value(self, records, check_exists=False):
         """ Invoke the compute method on `records`. If `check` is ``True``, the
             method filters out non-existing records before computing them.
@@ -357,33 +341,32 @@ class Field(object):
         exc = Warning("Field %s is accessed before being computed." % self)
         records._cache[self] = FailedValue(exc)
 
-        self._compute_function(records)
+        if isinstance(self.compute, basestring):
+            return getattr(records, self.compute)()
+        elif callable(self.compute):
+            return self.compute(self, records)
+        else:
+            raise Warning("No way to compute field %s" % self)
 
     def determine_value(self, record):
         """ Determine the value of `self` for `record`. """
+        scope = record._scope
         if self.store and not (self.compute and scope.draft):
             # recompute field on record if required
             recs_todo = scope.recomputation[self]
             if record in recs_todo:
                 # execute the compute method in NON-DRAFT mode, so that assigned
                 # fields are written to the database
-                if self._compute_one:
-                    self.compute_value(record, check_exists=True)
-                else:
-                    self.compute_value(recs_todo, check_exists=True)
+                self.compute_value(recs_todo, check_exists=True)
             else:
                 record._prefetch_field(self.name)
-
         else:
             # execute the compute method in DRAFT mode, so that assigned fields
             # are not written to the database
-            with record._scope.draft():
-                if self._compute_one:
-                    self.compute_value(record)
-                else:
-                    record._in_cache()
-                    recs = record._in_cache_without(self.name)
-                    self.compute_value(recs, check_exists=True)
+            with scope.draft():
+                record._in_cache()
+                recs = record._in_cache_without(self.name)
+                self.compute_value(recs, check_exists=True)
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
@@ -398,12 +381,12 @@ class Field(object):
         elif callable(self.inverse):
             self.inverse(self, records)
 
-    def determine_domain(self, operator, value):
+    def determine_domain(self, records, operator, value):
         """ Return a domain representing a condition on `self`. """
         if isinstance(self.search, basestring):
-            return getattr(scope[self.model_name], self.search)(operator, value)
+            return getattr(records, self.search)(operator, value)
         elif callable(self.search):
-            return self.search(self, operator, value)
+            return self.search(self, records, operator, value)
         else:
             return [(self.name, operator, value)]
 
@@ -535,27 +518,28 @@ class Field(object):
             fields/records to recompute, and return a spec indicating what to
             invalidate.
         """
-        # invalidate cache for self
-        spec = [(self, records._ids)]
+        scope = records._scope(user=SUPERUSER_ID, context={'active_test': False})
 
         # invalidate the fields that depend on self, and prepare recomputation
-        with scope(user=SUPERUSER_ID, context={'active_test': False}):
-            for field, path in self._triggers:
-                if field.store:
+        spec = [(self, records._ids)]
+        for field, path in self._triggers:
+            if field.store:
+                with scope:
                     target = scope[field.model_name].search([(path, 'in', records._ids)])
-                    if target:
-                        spec.append((field, target._ids))
-                        scope.recomputation[field] |= target
-                else:
-                    spec.append((field, None))
+                if target:
+                    spec.append((field, target._ids))
+                    scope.recomputation[field] |= target
+            else:
+                spec.append((field, None))
 
         return spec
 
     def modified_draft(self, records):
         """ Same as :meth:`modified`, but in draft mode. """
-        spec = []
+        scope = records._scope
 
         # invalidate the fields on the records in cache that depend on `records`
+        spec = []
         for field, path in self._triggers:
             if path == 'id':
                 target = records
@@ -912,7 +896,7 @@ class Many2one(_Relational):
             value = record[self.name]
             if not value:
                 # the default value cannot be null, use a new record instead
-                record[self.name] = scope[self.comodel_name].new()
+                record[self.name] = record._scope[self.comodel_name].new()
 
 
 class _RelationalMulti(_Relational):

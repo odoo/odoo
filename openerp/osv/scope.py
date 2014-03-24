@@ -163,6 +163,7 @@ class Scope(object):
         scope.cache_ids = defaultdict(set)  # cache_ids[model_name] = set(ids)
         scope.dirty = set()                 # set of dirty records
         scope.draft = proxy.draft
+        scope.recomputation = proxy.recomputation
         scope_list.append(scope)
         return scope
 

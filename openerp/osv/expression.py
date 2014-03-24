@@ -861,7 +861,8 @@ class expression(object):
                     domain = []
                 else:
                     # Let the field generate a domain.
-                    domain = field.determine_domain(operator, right)
+                    recs = model.browse(cr, uid, [], context)
+                    domain = field.determine_domain(recs, operator, right)
 
                 if not domain:
                     leaf.leaf = TRUE_LEAF
