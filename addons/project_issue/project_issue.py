@@ -229,7 +229,6 @@ class project_issue(osv.Model):
             if work.task_id:
                 issues += issue_pool.search(cr, uid, [('task_id','=',work.task_id.id)])
         return issues
-
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Issue', size=128, required=True),
@@ -573,13 +572,13 @@ class res_partner(osv.osv):
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict(map(lambda x: (x,0), ids))
         try:
-            for partner in self.browse(cr, uid, ids, context):
+            for partner in self.browse(cr, uid, ids, context=context):
                 res[partner.id] = len(partner.issue_ids)
         except:
             pass
         return res
     
-    """ Inherits partner and adds Tasks information in the partner form """
+    """ Inherits partner and adds Issue information in the partner form """
     _inherit = 'res.partner'
     _columns = {
         'issue_ids': fields.one2many('project.issue', 'partner_id', 'Issues'),
