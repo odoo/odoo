@@ -5,7 +5,7 @@
  
     The building blocks appear in the edit bar website. These prebuilt html block
     allowing the designer to easily generate content on a page (drag and drop).
-    Options allow snippets to add customizations party html code according to their
+    Options allow snippets to add customizations part html code according to their
     selector (jQuery) and javascript object.
     
     How to create content?
@@ -35,8 +35,10 @@
         <div data-snippet-option-id='...'           <!-- Required: javascript object id (but javascript
                                                         for this option object is not required) -->
             data-selector="..."                     <!-- Required: jQuery selector.
-                                                        Apply options on all The part of block who 
-                                                        match with this jQuery selector -->
+                                                        Apply options on all The part of html who 
+                                                        match with this jQuery selector.
+                                                        E.g.: If the selector is div, all div will be selected
+                                                        and can be highlighted and assigned an editor.  -->
             data-selector-siblings="..."            <!-- Optional: jQuery selector.
                                                         The html part can be insert or move beside
                                                         the selected html block -->
@@ -49,7 +51,7 @@
                                                         displayed vertically -->
                 ...
                 <li><a href="#">...</a></li>        <!-- Optional: html li list.
-                                                        List of item menu displayed in customize
+                                                        List of menu items displayed in customize
                                                         menu. If the li tag have 'data-class', the
                                                         class is automaticcally added or removed to
                                                         the html content when the user select this item. -->
