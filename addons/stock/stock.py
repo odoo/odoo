@@ -1328,7 +1328,7 @@ class stock_picking(osv.osv):
                             'product_uos_qty': product_qty, #TODO: put correct uos_qty
                             'picking_id' : new_picking,
                             'state': 'assigned',
-                            'move_dest_id': False,
+                            'move_dest_id': move.move_dest_id.id,
                             'price_unit': move.price_unit,
                             'product_uom': product_uoms[move.id]
                     }
@@ -2753,7 +2753,7 @@ class stock_move(osv.osv):
                             'product_uos_qty': product_qty,
                             'picking_id' : move.picking_id.id,
                             'state': 'assigned',
-                            'move_dest_id': False,
+                            'move_dest_id': move.move_dest_id.id,
                             'price_unit': move.price_unit,
                             }
                 prodlot_id = prodlot_ids[move.id]
