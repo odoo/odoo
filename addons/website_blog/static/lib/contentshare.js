@@ -33,7 +33,7 @@
                 var data = this.getContent();
                 var range = this.getSelection();
                 var newNode = document.createElement("mark");
-                range.insertNode(newNode);
+                range.surroundContents(newNode);
                 $('mark').addClass(option.className);
                 $('.'+option.className).popover({trigger:'manual', placement: option.placement, html: true 
                 , content:function(){

@@ -37,25 +37,26 @@
             $('body').on('click', '#clear_cover',_.bind(this.clean_bg,{},vHeight));
         },
         save : function() {
+            var res = this._super();
             if ($('.cover').length){
                 openerp.jsonRpc("/blogpsot/change_background", 'call', {
                     'post_id' : $('#blog_post_name').attr('data-oe-id'),
-                    'image' : $('.cover').css('background-image').replace('url(','').replace(')',''),
+                    'image' : $('.cover').css('background-image').replace(/url\(|\)|"|'/g,''),
                 });
             }
-            this._super();
+            return res;
         },
         clean_bg : function(vHeight) {
-            $('.cover_header').css({"background-image":'none', 'min-height': vHeight});
+            $('.js_header').css({"background-image":'none', 'min-height': vHeight});
         },
         change_bg : function(vHeight) {
             var self  = this;
             var editor  = new  website.editor.ImageDialog();
             editor.on('start', self, function (o) {
-                o.url = $('.cover_header').length ? $('.cover_header').css('background-image').replace('url(','').replace(')','') : ''; 
+                o.url = $('.js_header').length ? $('.js_header').css('background-image').replace(/url\(|\)|"|'/g,'') : ''; 
             });
             editor.on('save', self, function (o) {
-                $('.cover_header').css({"background-image": o.url && o.url !== "" ? 'url(' + o.url + ')' : "", 'min-height': vHeight})
+                $('.js_header').css({"background-image": o.url && o.url !== "" ? 'url(' + o.url + ')' : "", 'min-height': vHeight})
             });
             editor.appendTo('body');
         },
