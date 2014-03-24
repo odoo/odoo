@@ -64,7 +64,7 @@ class pos_config(osv.osv):
 #         'warehouse_id' : fields.many2one('stock.warehouse', 'Warehouse',
 #              required=True),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type'),
-        'stock_location_id': fields.many2one('stock.location', 'Stock Location to take from', required=True),
+        'stock_location_id': fields.many2one('stock.location', 'Stock Location to take from', domain=[('usage', '=', 'internal')], required=True),
         'journal_id' : fields.many2one('account.journal', 'Sale Journal',
              domain=[('type', '=', 'sale')],
              help="Accounting journal used to post sales entries."),
@@ -90,6 +90,7 @@ class pos_config(osv.osv):
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
         'group_by' : fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
         'pricelist_id': fields.many2one('product.pricelist','Pricelist', required=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True), 
     }
 
     def _check_cash_control(self, cr, uid, ids, context=None):
@@ -137,12 +138,18 @@ class pos_config(osv.osv):
         res = self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')], limit=1, context=context)
         return res and res[0] or False
 
+    def _get_default_company(self, cr, uid, context=None):
+        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
+        return company_id
+
+
     _defaults = {
         'state' : POS_CONFIG_STATE[0][0],
         'journal_id': _default_sale_journal,
         'group_by' : True,
         'pricelist_id': _default_pricelist,
         'iface_invoicing': True,
+        'company_id': _get_default_company,
     }
 
     def set_active(self, cr, uid, ids, context=None):
@@ -330,7 +337,7 @@ class pos_session(osv.osv):
         # the .xml files as the CoA is not yet installed.
         jobj = self.pool.get('pos.config')
         pos_config = jobj.browse(cr, uid, config_id, context=context)
-        context.update({'company_id': pos_config.warehouse_id.company_id.id})
+        context.update({'company_id': pos_config.company_id.id})
         if not pos_config.journal_id:
             jid = jobj.default_get(cr, uid, ['journal_id'], context=context)['journal_id']
             if jid:
@@ -357,7 +364,7 @@ class pos_session(osv.osv):
             bank_values = {
                 'journal_id' : journal.id,
                 'user_id' : uid,
-                'company_id' : pos_config.warehouse_id.company_id.id
+                'company_id' : pos_config.company_id.id
             }
             statement_id = self.pool.get('account.bank.statement').create(cr, uid, bank_values, context=context)
             bank_statement_ids.append(statement_id)
@@ -631,7 +638,6 @@ class pos_order(osv.osv):
     _columns = {
         'name': fields.char('Order Ref', size=64, required=True, readonly=True),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True),
-        'warehouse_id': fields.related('session_id', 'config_id', 'warehouse_id', relation='stock.warehouse', type='many2one', string='Warehouse', store=True, readonly=True),
         'date_order': fields.datetime('Order Date', readonly=True, select=True),
         'user_id': fields.many2one('res.users', 'Salesman', help="Person who uses the the cash register. It can be a reliever, a student or an interim employee."),
         'amount_tax': fields.function(_amount_all, string='Taxes', digits_compute=dp.get_precision('Account'), multi='all'),
@@ -661,8 +667,8 @@ class pos_order(osv.osv):
         'account_move': fields.many2one('account.move', 'Journal Entry', readonly=True),
         'picking_id': fields.many2one('stock.picking', 'Picking', readonly=True),
 #         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True),
-        'picking_type_id': fields.related('session_id', 'config_id', 'picking_type_id', type='many2one', relation='stock.picking.type'),
-        'location_id': fields.related('session_id', 'config_id', 'stock_location_id', type='many2one', relation='stock.location'),
+        'picking_type_id': fields.related('session_id', 'config_id', 'picking_type_id', string="Picking Type", type='many2one', relation='stock.picking.type'),
+        'location_id': fields.related('session_id', 'config_id', 'stock_location_id', string="Location", type='many2one', relation='stock.location'),
         'note': fields.text('Internal Notes'),
         'nb_print': fields.integer('Number of Print', readonly=True),
         'pos_reference': fields.char('Receipt Ref', size=64, readonly=True),
@@ -726,43 +732,55 @@ class pos_order(osv.osv):
                 continue
             addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             picking_type = order.picking_type_id
-            picking_id = picking_obj.create(cr, uid, {
-                'origin': order.name,
-                'partner_id': addr.get('delivery',False),
-                'picking_type_id': picking_type.id,
-                'company_id': order.company_id.id,
-                'move_type': 'direct',
-                'note': order.note or "",
-                'invoice_state': 'none',
-            }, context=context)
-            self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
-            location_id = picking_type.default_location_src_id.id
+            picking_id = False
+            if picking_type:
+                picking_id = picking_obj.create(cr, uid, {
+                    'origin': order.name,
+                    'partner_id': addr.get('delivery',False),
+                    'picking_type_id': picking_type.id,
+                    'company_id': order.company_id.id,
+                    'move_type': 'direct',
+                    'note': order.note or "",
+                    'invoice_state': 'none',
+                }, context=context)
+                self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
+            location_id = order.location_id.id
             if order.partner_id:
                 destination_id = order.partner_id.property_stock_customer.id
-            else:
+            elif picking_type:
+                if not picking_type.default_location_dest_id:
+                    raise osv.except_osv(_('Error!'), _('Missing source or destination location for picking type %s. Please configure those fields and try again.' % (picking_type.name,)))
                 destination_id = picking_type.default_location_dest_id.id
-            if not location_id or not destination_id:
-                raise osv.except_osv(_('Error!'), _('Missing source or destination location for picking type %s. Please configure those fields and try again.' % (picking_type.name,)))
+            else:
+                destination_id = partner_obj.default_get(cr, uid, ['property_stock_customer'], context=context)['property_stock_customer']
 
+            move_list = []
             for line in order.lines:
                 if line.product_id and line.product_id.type == 'service':
                     continue
 
-                move_obj.create(cr, uid, {
+                move_list.append(move_obj.create(cr, uid, {
                     'name': line.name,
                     'product_uom': line.product_id.uom_id.id,
                     'product_uos': line.product_id.uom_id.id,
                     'picking_id': picking_id,
+                    'picking_type_id': picking_type.id, 
                     'product_id': line.product_id.id,
                     'product_uos_qty': abs(line.qty),
                     'product_uom_qty': abs(line.qty),
                     'state': 'draft',
                     'location_id': location_id if line.qty >= 0 else destination_id,
                     'location_dest_id': destination_id if line.qty >= 0 else location_id,
-                }, context=context)
-            picking_obj.action_confirm(cr, uid, [picking_id], context=context)
-            picking_obj.force_assign(cr, uid, [picking_id], context=context)
-            picking_obj.action_done(cr, uid, [picking_id], context=context)
+                }, context=context))
+                
+            if picking_id:
+                picking_obj.action_confirm(cr, uid, [picking_id], context=context)
+                picking_obj.force_assign(cr, uid, [picking_id], context=context)
+                picking_obj.action_done(cr, uid, [picking_id], context=context)
+            elif move_list:
+                move_obj.action_confirm(cr, uid, move_list, context=context)
+                move_obj.force_assign(cr, uid, move_list, context=context)
+                move_obj.action_done(cr, uid, move_list, context=context)
         return True
 
     def cancel_order(self, cr, uid, ids, context=None):
