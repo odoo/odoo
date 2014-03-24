@@ -197,8 +197,7 @@ class Post(osv.Model):
             #add 2 karma to user when asks question.
             self.pool.get('res.users').write(cr, uid, [vals.get('user_id')], {'karma': 2}, context=context)
         post_id = super(Post, self).create(cr, uid, vals, context=create_context)
-        #Note: just have to pass subtype in message post: gives error on installation time
-        self.message_post(cr, uid, [post_id], body=_(body), context=context)
+        self.message_post(cr, uid, [post_id], body=_(body), subtype=subtype, context=context)
         return post_id
 
     def write(self, cr, uid, ids, vals, context=None):
