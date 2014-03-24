@@ -47,7 +47,8 @@
                         initial_content: self.getInitialContent(this),
                         new_content:self.getInitialContent(this),
                         translation_id: data.oeTranslationId || null,
-                        gengo_translation: gengo_service_level
+                        gengo_translation: gengo_service_level,
+                        gengo_comment:"Original page:" + document.URL
                     });
                 });
                 openerp.jsonRpc('/website/set_translations', 'call', {
@@ -57,6 +58,7 @@
                     $('.oe_translatable_todo').addClass('oe_translatable_inprogress').removeClass('oe_translatable_todo');
                     self.$el.find('.gengo_wait').addClass("hidden");
                     self.$el.find('.gengo_inprogress,.gengo_discard').removeClass("hidden");
+                    self.save();
                 }).fail(function () {
                     alert("Could not Post translation");
                 });

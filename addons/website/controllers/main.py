@@ -242,6 +242,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                     }
                     if t.get('gengo_translation'):
                         new_trans['gengo_translation'] = t.get('gengo_translation')
+                        new_trans['gengo_comment'] = t.get('gengo_comment')
                     irt.create(request.cr, request.uid, new_trans)
         return True
 
