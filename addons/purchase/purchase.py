@@ -1263,8 +1263,19 @@ class mail_mail(osv.Model):
 class product_template(osv.Model):
     _name = 'product.template'
     _inherit = 'product.template'
+    
+    def _purchase_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        try:
+            for purchase in self.browse(cr, uid, ids, context=context):
+                res[purchase.id] = len(purchase.purchase_ids)
+        except:
+            pass
+        return res
     _columns = {
         'purchase_ok': fields.boolean('Can be Purchased', help="Specify if the product can be selected in a purchase order line."),
+        'purchase_ids': fields.one2many('purchase.order', 'product_id', 'Purchases'),
+        'purchase_count': fields.function(_purchase_count, string='# Purchases', type='integer'),
     }
     _defaults = {
         'purchase_ok': 1,

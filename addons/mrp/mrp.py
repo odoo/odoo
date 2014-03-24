@@ -1111,8 +1111,24 @@ class mrp_production_product_line(osv.osv):
 
 class product_product(osv.osv):
     _inherit = "product.product"
+    def _bom_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,{'bom_count': 0, 'mo_count': 0, 'bom_strct':0}), ids))
+        try:
+            for bom in self.browse(cr, uid, ids, context=context):
+                res[bom.id] = {
+                    'bom_count': len(bom.bom_ids),
+                    'mo_count': len(bom.mo_ids),
+                    'bom_strct':len(bom.bom_ids),
+                }
+        except:
+            pass
+        return res
     _columns = {
         'bom_ids': fields.one2many('mrp.bom', 'product_id', 'Bill of Materials'),
+        'mo_ids': fields.one2many('mrp.production', 'product_id', 'Manufacturing Orders'),
+        'bom_count': fields.function(_bom_count, string='# Bill of Material', type='integer', multi="bom_count"),
+        'bom_strct': fields.function(_bom_count, string='# Bill of Material Structure', type='integer', multi="bom_count"),
+        'mo_count': fields.function(_bom_count, string='# Manufacturing Orders', type='integer', multi="bom_count"),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
