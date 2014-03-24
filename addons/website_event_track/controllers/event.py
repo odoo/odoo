@@ -203,11 +203,6 @@ class website_event(http.Controller):
             for loc in skip_td[skip].keys():
                 skip_td[skip][loc] = list(set(skip_td[skip][loc]))
                 
-        timezone = []
-        for tt in pytz.common_timezones:
-            melbourne = pytz.timezone(tt)
-            timezone.append([melbourne.utcoffset(datetime.datetime.now()).total_seconds()/60, tt])
-        
         values = {
             'event': event,
             'main_object': event,
@@ -216,7 +211,6 @@ class website_event(http.Controller):
             'skip_td': skip_td,
             'talks':talks,
             'format_date':format_date,
-            'timezone':timezone,
         }
         return request.website.render("website_event_track.agenda", values)
 
