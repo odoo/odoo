@@ -136,7 +136,7 @@
                                 <t t-esc="row.cols.product" /> 
                             </td>
                             <td class='text-center js_row_qty'>
-                                <t t-if="row.cols.qty &amp;&amp; row.cols.processed == 'false' &amp;&amp; !row.cols.container">
+                                <t t-if="row.cols.processed == 'false' &amp;&amp; !row.cols.container">
                                     <div class="input-group">
                                         <span class="input-group-addon js_minus" t-att-data-product-id='row.cols.product_id'><a href="#"><i class="fa fa-minus"></i></a></span>
                                         <form class="js_submit_value">
@@ -146,7 +146,7 @@
                                         <span class="input-group-addon js_plus" t-att-data-product-id='row.cols.product_id'><a href="#"><i class="fa fa-plus"></i></a></span>
                                     </div>
                                 </t>
-                                <t t-if="row.cols.qty &amp;&amp; (row.cols.processed == 'true' || row.cols.container)">
+                                <t t-if="(row.cols.processed == 'true' || row.cols.container)">
                                     <t t-esc="row.cols.rem" />
                                 </t>
                             </td>

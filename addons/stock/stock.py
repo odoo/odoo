@@ -1257,10 +1257,10 @@ class stock_picking(osv.osv):
                 stock_operation_obj.write(cr, uid, pack_operation_ids, {'result_package_id': package_id}, context=context)
         return True
 
-    def process_product_id_from_ui(self, cr, uid, picking_id, product_id, increment=True, context=None):
-        return self.pool.get('stock.pack.operation')._search_and_increment(cr, uid, picking_id, [('product_id', '=', product_id)], increment=increment, context=context)
+    def process_product_id_from_ui(self, cr, uid, picking_id, product_id, op_id, increment=True, context=None):
+        return self.pool.get('stock.pack.operation')._search_and_increment(cr, uid, picking_id, [('product_id', '=', product_id),('id', '=', op_id)], increment=increment, context=context)
 
-    def process_barcode_from_ui(self, cr, uid, picking_id, barcode_str, context=None):
+    def process_barcode_from_ui(self, cr, uid, picking_id, barcode_str, visible_op_ids, context=None):
         '''This function is called each time there barcode scanner reads an input'''
         lot_obj = self.pool.get('stock.production.lot')
         package_obj = self.pool.get('stock.quant.package')
@@ -1279,20 +1279,20 @@ class stock_picking(osv.osv):
         #check if the barcode correspond to a product
         matching_product_ids = product_obj.search(cr, uid, ['|', ('ean13', '=', barcode_str), ('default_code', '=', barcode_str)], context=context)
         if matching_product_ids:
-            op_id = self.process_product_id_from_ui(cr, uid, picking_id, matching_product_ids[0], context=context)
+            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', matching_product_ids[0])], filter_visible=True, visible_op_ids=visible_op_ids, increment=True, context=context)
             answer['operation_id'] = op_id
             return answer
         #check if the barcode correspond to a lot
         matching_lot_ids = lot_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
         if matching_lot_ids:
             lot = lot_obj.browse(cr, uid, matching_lot_ids[0], context=context)
-            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', lot.product_id.id), ('lot_id', '=', lot.id)], increment=True, context=context)
+            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', lot.product_id.id), ('lot_id', '=', lot.id)], filter_visible=True, visible_op_ids=visible_op_ids, increment=True, context=context)
             answer['operation_id'] = op_id
             return answer
         #check if the barcode correspond to a package
         matching_package_ids = package_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
         if matching_package_ids:
-            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('package_id', '=', matching_package_ids[0])], increment=True, context=context)
+            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('package_id', '=', matching_package_ids[0])], filter_visible=True, visible_op_ids=visible_op_ids, increment=True, context=context)
             answer['operation_id'] = op_id
             return answer
         return answer
@@ -3668,7 +3668,7 @@ class stock_pack_operation(osv.osv):
 
 
     #TODO: this function can be refactored
-    def _search_and_increment(self, cr, uid, picking_id, domain, increment=True, context=None):
+    def _search_and_increment(self, cr, uid, picking_id, domain, filter_visible=False ,visible_op_ids=False, increment=True, context=None):
         '''Search for an operation with given 'domain' in a picking, if it exists increment the qty (+1) otherwise create it
 
         :param domain: list of tuple directly reusable as a domain
@@ -3686,20 +3686,31 @@ class stock_pack_operation(osv.osv):
         #if current_package_id is given in the context, we increase the number of items in this package
         package_clause = [('result_package_id', '=', context.get('current_package_id', False))]
         existing_operation_ids = self.search(cr, uid, [('picking_id', '=', picking_id)] + domain + package_clause, context=context)
+        todo_operation_ids = []
         if existing_operation_ids:
+            if filter_visible:
+                todo_operation_ids = [val for val in existing_operation_ids if val in visible_op_ids]
+            else:
+                todo_operation_ids = existing_operation_ids
+        if todo_operation_ids:
             #existing operation found for the given domain and picking => increment its quantity
-            operation_id = existing_operation_ids[0]
-            qty = self.browse(cr, uid, operation_id, context=context).qty_done
+            operation_id = todo_operation_ids[0]
+            op_obj = self.browse(cr, uid, operation_id, context=context)
+            qty = op_obj.qty_done
             if increment:
                 qty += 1
             else:
                 qty -= 1 if qty >= 1 else 0
+                if qty == 0 and op_obj.product_qty == 0:
+                    #we have a line with 0 qty set, so delete it
+                    self.unlink(cr, uid, [operation_id], context=context)
+                    return False
             self.write(cr, uid, [operation_id], {'qty_done': qty}, context=context)
         else:
             #no existing operation found for the given domain and picking => create a new one
             values = {
                 'picking_id': picking_id,
-                'product_qty': 1,
+                'product_qty': 0,
                 'qty_done': 1,
             }
             for key in domain:

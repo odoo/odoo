@@ -53,7 +53,10 @@ function openerp_picking_widgets(instance){
             var pack_created = [];
             _.each( model.packoplines, function(packopline){
                     var pack = undefined;
+                    var color = "";
                     if (packopline.product_id[1] !== undefined){ pack = packopline.package_id[1];}
+                    if (packopline.product_qty == packopline.qty_done){ color = "success "; }
+                    if (packopline.product_qty < packopline.qty_done){ color = "danger "; }
                     //also check that we don't have a line already existing for that package
                     if (packopline.result_package_id[1] !== undefined && $.inArray(packopline.result_package_id[0], pack_created) === -1){
                         self.rows.push({
@@ -94,7 +97,7 @@ function openerp_picking_widgets(instance){
                                 head_container: false,
                                 processed: packopline.processed,
                         },
-                        classes: ((packopline.product_qty <= packopline.qty_done) ? 'success ' : '') + (packopline.result_package_id[1] !== undefined ? 'in_container_hidden ' : '') + (packopline.processed === "true" ? 'processed hidden ':''),
+                        classes: color + (packopline.result_package_id[1] !== undefined ? 'in_container_hidden ' : '') + (packopline.processed === "true" ? 'processed hidden ':''),
                     });
             });
             //sort element by things to do, then things done, then grouped by packages
@@ -153,11 +156,13 @@ function openerp_picking_widgets(instance){
             });
             this.$('.js_plus').click(function(){
                 var id = $(this).data('product-id');
-                self.getParent().scan_product_id(id,true);
+                var op_id = $(this).parents("[data-id]:first").data('id');
+                self.getParent().scan_product_id(id,true,op_id);
             });
             this.$('.js_minus').click(function(){
                 var id = $(this).data('product-id');
-                self.getParent().scan_product_id(id,false);
+                var op_id = $(this).parents("[data-id]:first").data('id');
+                self.getParent().scan_product_id(id,false,op_id);
             });
             this.$('.js_unfold').click(function(){
                 var op_id = $(this).parent().data('id');
@@ -329,7 +334,18 @@ function openerp_picking_widgets(instance){
                 }
             });
             return done;
-        }
+        },
+        get_visible_ids: function(){
+            var self = this;
+            var visible_op_ids = []
+            var op_ids = this.$('.js_pack_op_line:not(.processed):not(.hidden):not(.container_head):not(.in_container):not(.in_container_hidden)').map(function(){
+                return $(this).data('id');
+            });
+            $.each(op_ids, function(key, op_id){
+                visible_op_ids.push(parseInt(op_id));
+            });
+            return visible_op_ids;
+        },
     });
 
     module.PickingMenuWidget = module.MobileWidget.extend({
@@ -643,9 +659,9 @@ function openerp_picking_widgets(instance){
         // (if no picking_id is provided, gets the first picking in the db)
         refresh_ui: function(picking_id){
             var self = this;
-            var remove_search_filter = true;
+            var remove_search_filter = "";
             if (self.picking.id === picking_id){
-                remove_search_filter = false;
+                remove_search_filter = self.$('.oe_searchbox').val();
             }
             return this.load(picking_id)
                 .then(function(){
@@ -663,12 +679,13 @@ function openerp_picking_widgets(instance){
                     }else{
                         self.$('.js_pick_next').removeClass('disabled');
                     }
-                    if (remove_search_filter){
+                    if (remove_search_filter === ""){
                         self.$('.oe_searchbox').val('');
                         self.on_searchbox('');
                     }
                     else{
-                        self.on_searchbox(self.$('.oe_searchbox').val());
+                        self.$('.oe_searchbox').val(remove_search_filter);
+                        self.on_searchbox(remove_search_filter);
                     }
                 });
         },
@@ -691,8 +708,9 @@ function openerp_picking_widgets(instance){
         },
         scan: function(ean){ //scans a barcode, sends it to the server, then reload the ui
             var self = this;
+            var product_visible_ids = this.picking_editor.get_visible_ids();
             new instance.web.Model('stock.picking')
-                .call('process_barcode_from_ui', [self.picking.id, ean])
+                .call('process_barcode_from_ui', [self.picking.id, ean, product_visible_ids])
                 .then(function(result){
                     if (result.filter_loc !== false){
                         //check if we have receive a location as answer
@@ -714,10 +732,10 @@ function openerp_picking_widgets(instance){
                     }
                 });
         },
-        scan_product_id: function(product_id,increment){ //performs the same operation as a scan, but with product id instead
+        scan_product_id: function(product_id,increment,op_id){ //performs the same operation as a scan, but with product id instead
             var self = this;
             new instance.web.Model('stock.picking')
-                .call('process_product_id_from_ui', [self.picking.id, product_id, increment])
+                .call('process_product_id_from_ui', [self.picking.id, product_id, op_id, increment])
                 .then(function(result){
                     return self.refresh_ui(self.picking.id);
                 });

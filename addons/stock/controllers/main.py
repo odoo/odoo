@@ -50,7 +50,7 @@ html_template = """<!DOCTYPE html>
 class BarcodeController(http.Controller):
 
     @http.route(['/barcode/web/','/barcode/web/<int:picking_type_id>','/barcode/web/<int:picking_type_id>/<int:picking_id>'], type='http', auth='user')
-    def a(self, debug=False, **k):
+    def a(self, debug=True, **k):
         if not request.session.uid:
             return http.local_redirect('/web/login?redirect=/barcode/web')
 
