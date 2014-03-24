@@ -76,7 +76,7 @@
                         <t t-foreach="days[day]" t-as="slot">
                             <t t-set="skip_it" t-value="skip_td[day].keys()"/>
                             <tr id="agenda_tr">
-                                <td t-attf-style="width:#{10}%;" id = "change_time"><t t-esc= "slot"/></td>
+                                <td t-attf-style="width:#{10}%;"><t t-esc= "slot"/></td>
                                 <t t-foreach="room_list" t-as="room">
                                     <t t-set="sid" t-value="not (room[0] in skip_it and slot in skip_td[day][room[0]])" />
                                     <t t-if="sid">
