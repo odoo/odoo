@@ -446,12 +446,7 @@ class purchase_order(osv.osv):
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
         self.signal_send_rfq(cr, uid, ids)
-        datas = {
-                 'model': 'purchase.order',
-                 'ids': ids,
-                 'form': self.read(cr, uid, ids[0], context=context),
-        }
-        return {'type': 'ir.actions.report.xml', 'report_name': 'purchase.quotation', 'datas': datas, 'nodestroy': True}
+        return self.pool['report'].get_action(cr, uid, ids, 'purchase.report_purchasequotation', context=context)
 
     #TODO: implement messages system
     def wkf_confirm_order(self, cr, uid, ids, context=None):
