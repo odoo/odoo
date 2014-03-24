@@ -40,14 +40,6 @@ except ImportError:
 
 GENGO_DEFAULT_LIMIT = 20
 
-DEFAULT_CRON_VALS = {
-    'active': True,
-    'interval_number': 20,
-    'interval_type': 'minutes',
-    'model': "'base.gengo.translations'",
-    'args': "'(%s,)'" % (str(GENGO_DEFAULT_LIMIT)),
-}
-
 class base_gengo_translations(osv.osv_memory):
 
     _name = 'base.gengo.translations'
@@ -84,22 +76,6 @@ class base_gengo_translations(osv.osv_memory):
             _logger.exception('Gengo connection failed')
             return (False, _("Gengo connection failed with this message:\n``%s``") % e)
 
-    def do_check_schedular(self, cr, uid, xml_id, name, fn, context=None):
-        """
-        This function is used to reset a cron to its default values, or to recreate it if it was deleted.
-        """
-        cron_pool = self.pool.get('ir.cron')
-        cron_vals = DEFAULT_CRON_VALS.copy()
-        cron_vals.update({'name': name, "function": fn})
-        try:
-            res = []
-            _, res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base_gengo', xml_id)
-            cron_pool.write(cr, uid, [res], cron_vals, context=context)
-        except:
-            #the cron job was not found, probably deleted previously, so we create it again using default values
-            cron_vals.update({'numbercall': -1})
-            return cron_pool.create(cr, uid, cron_vals, context=context)
-
     def act_update(self, cr, uid, ids, context=None):
         '''
         Function called by the wizard.
@@ -116,14 +92,12 @@ class base_gengo_translations(osv.osv_memory):
             if language not in supported_langs:
                 raise osv.except_osv(_("Warning"), _('This language is not supported by the Gengo translation services.'))
 
-            #send immediately a new request for the selected language (if any)
             ctx = context.copy()
             ctx['gengo_language'] = wizard.lang_id.id
             if wizard.sync_type in ['send','both']:
                 self._sync_request(cr, uid, limit=GENGO_DEFAULT_LIMIT, context=ctx)
             if wizard.sync_type in ['receive','both']:
                 self._sync_response( cr, uid, limit=GENGO_DEFAULT_LIMIT, context=ctx)
-            #check the cron jobs and eventually restart/recreate them
         return {'type': 'ir.actions.act_window_close'}
 
     def _sync_response(self, cr, uid, limit=GENGO_DEFAULT_LIMIT, context=None):
