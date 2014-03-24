@@ -957,6 +957,7 @@
         start : function () {
             var self = this;
             this._super();
+            this.$target.carousel({interval: false});
             this.id = this.$target.attr("id");
             this.$inner = this.$target.find('.carousel-inner');
             this.$indicators = this.$target.find('.carousel-indicators');
@@ -1376,7 +1377,6 @@
             this.grid.size = 8;
             return this.grid;
         },
-            this.$target.carousel({interval: false});
     });
 
     website.snippet.options.parallax = website.snippet.Option.extend({
