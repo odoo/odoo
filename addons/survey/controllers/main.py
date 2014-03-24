@@ -266,9 +266,7 @@ class WebsiteSurvey(http.Controller):
             else:
                 vals.update({'state': 'skip'})
             user_input_obj.write(cr, uid, user_input_id, vals, context=context)
-            ret['redirect'] = '/survey/fill/%s/%s' % (survey.id, post['token'])
-            if go_back:
-                ret['redirect'] += '/prev'
+            ret['redirect'] = '/survey/fill/%s/%s%s' % (survey.id, post['token'],'/prev' if go_back else '')
         return json.dumps(ret)
 
     # Printing routes

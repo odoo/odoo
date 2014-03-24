@@ -290,7 +290,7 @@ class survey_survey(osv.Model):
         ''' Open the website page with the survey form '''
         trail = ""
         if context and 'survey_token' in context:
-            trail = "/" + context['survey_token']
+            trail = "/%s" % (context['survey_token'])
         return {
             'type': 'ir.actions.act_url',
             'name': "Start Survey",
@@ -339,7 +339,7 @@ class survey_survey(osv.Model):
         ''' Open the website page with the survey printable view '''
         trail = ""
         if context and 'survey_token' in context:
-            trail = "/" + context['survey_token']
+            trail = "/%s" % (context['survey_token'])
         return {
             'type': 'ir.actions.act_url',
             'name': "Print Survey",
