@@ -60,7 +60,7 @@
     <!-- Result for free_text,textbox and datetime -->
     <template id="result_text" name="Text Result">
         <t t-if="input_summary['answered'] != 0">
-            <table class="table table-hover" t-att-id="'table_question_'+str(question.id)">
+            <table class="table table-hover table-condensed" t-att-id="'table_question_'+str(question.id)">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -113,9 +113,14 @@
         <div>
             <!-- Tabs -->
             <ul class="nav nav-tabs">
-                <li class="active">
+                <li class="active" t-if="question.type != 'simple_choice'">
                     <a t-att-href="'#graph_question_'+str(question.id)" data-toggle="tab">
                         <i class="fa fa-bar-chart-o"></i> Graph
+                    </a>
+                </li>
+                <li class="active" t-if="question.type == 'simple_choice'">
+                    <a t-att-href="'#graph_question_'+str(question.id)" data-toggle="tab">
+                        <i class="fa fa-dot-circle-o"></i> Pie Chart
                     </a>
                 </li>
                 <li>
@@ -125,12 +130,16 @@
                 </li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane active survey_graph" t-att-id="'graph_question_'+str(question.id)" t-att-data-question_id="question.id" data-graph_type="bar" t-att-data-current_filters="current_filters">
+                <div class="tab-pane active survey_graph" t-if="question.type != 'simple_choice'" t-att-id="'graph_question_'+str(question.id)" t-att-data-question_id="question.id" data-graph_type="bar" t-att-data-current_filters="current_filters">
                     <!-- svg element for drawing bar chart -->
                     <svg style="height:20em"></svg>
                 </div>
+                <div class="tab-pane active survey_graph" t-if="question.type == 'simple_choice'" t-att-id="'graph_question_'+str(question.id)" t-att-data-question_id="question.id" data-graph_type="pie" t-att-data-current_filters="current_filters">
+                    <!-- svg element for drawing pie chart -->
+                    <svg style="height:20em"></svg>
+                </div>
                 <div class="tab-pane" t-att-id="'data_question_'+str(question.id)">
-                    <table class="table table-hover">
+                    <table class="table table-hover table-condensed">
                         <thead>
                             <tr>
                                 <th>Answer Choices</th>
@@ -179,7 +188,7 @@
                 <svg style="height:20em"></svg>
             </div>
             <div class="tab-pane" t-att-id="'data_question_'+str(question.id)">
-                <table class="table table-hover text-right">
+                <table class="table table-hover table-condensed text-right">
                     <thead>
                         <tr>
                             <th></th>
@@ -229,7 +238,7 @@
         </ul>
         <div class="tab-content">
             <div class="tab-pane active with-3d-shadow with-transitions" t-att-id="'most_common_'+str(question.id)">
-                <table class="table table-hover">
+                <table class="table table-hover table-condensed">
                      <thead>
                          <tr>
                              <th>User Responce</th>
@@ -249,7 +258,7 @@
                 </table>
             </div>
             <div class="tab-pane" t-att-id="'data_question_'+str(question.id)">
-                <table class="table table-hover" t-att-id="'table_question_'+str(question.id)">
+                <table class="table table-hover table-condensed" t-att-id="'table_question_'+str(question.id)">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -287,7 +296,7 @@
     </template>
     <!-- Pagination Element -->
     <template id="pagination" name="Survey Result">
-        <t t-set="record_limit" t-value="5"/><!-- Change This record_limit to change number of record  per page-->
+        <t t-set="record_limit" t-value="10"/><!-- Change This record_limit to change number of record  per page-->
         <ul t-att-id="'pagination_%d' % question.id" class="pagination" t-att-data-question_id="question.id" t-att-data-record_limit="record_limit">
             <t t-if="len(text_result) > record_limit">
                 <li t-foreach="page_range(len(text_result), record_limit)" t-as="num">

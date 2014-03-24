@@ -69,8 +69,16 @@ $(document).ready(function () {
         .showValues(true);
     }
 
+    //initialize Pie Chart
+    function init_pie_chart(){
+        return nv.models.pieChart()
+        .x(function(d) { return d.text; })
+        .y(function(d) { return d.count; })
+        .showLabels(true);
+    }
+
     //load chart to svg element chart:initialized chart, response:AJAX response, quistion_id:if of survey question, tick_limit:text length limit
-    function load_chart(chart, response, question_id, tick_limit){
+    function load_chart(chart, response, question_id, tick_limit, graph_type){
         // Custom Tick fuction for replacing long text with '...'
         var customtick_function = function(d){
             if(! this || d.length <= tick_limit){
@@ -80,14 +88,20 @@ $(document).ready(function () {
                 return d.slice(0,tick_limit)+'...';
             }
         };
-        chart.xAxis
-            .tickFormat(customtick_function);
-        chart.yAxis
-            .tickFormat(d3.format('d'));
-
-        d3.select('#graph_question_' + question_id + ' svg')
-            .datum(response)
-            .transition().duration(500).call(chart);
+        if (graph_type == 'pie'){
+            d3.select('#graph_question_' + question_id + ' svg')
+                .datum(response[0].values)
+                .transition().duration(500).call(chart);
+        }
+        else{
+            chart.xAxis
+                .tickFormat(customtick_function);
+            chart.yAxis
+                .tickFormat(d3.format('d'));
+            d3.select('#graph_question_' + question_id + ' svg')
+                .datum(response)
+                .transition().duration(500).call(chart);
+        }
         nv.utils.windowResize(chart.update);
         return chart;
     }
@@ -114,6 +128,12 @@ $(document).ready(function () {
                     nv.addGraph(function() {
                         var chart = init_bar_chart();
                         return load_chart(chart,response,question_id,35);
+                    });
+                }
+                else if(graph_type == 'pie'){
+                    nv.addGraph(function() {
+                        var chart = init_pie_chart();
+                        return load_chart(chart,response,question_id,25,'pie');
                     });
                 }
             }
