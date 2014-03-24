@@ -126,6 +126,11 @@ def exp_duplicate_database(db_original_name, db_name):
     with closing(db.cursor()) as cr:
         cr.autocommit(True)     # avoid transaction block
         cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (db_name, db_original_name))
+
+    from_fs = openerp.tools.config.filestore(db_original_name)
+    to_fs = openerp.tools.config.filestore(db_name)
+    if os.path.exists(from_fs) and not os.path.exists(to_fs):
+        shutil.copy(from_fs, to_fs)
     return True
 
 def exp_get_progress(id):
@@ -178,6 +183,10 @@ def exp_drop(db_name):
             raise Exception("Couldn't drop database %s: %s" % (db_name, e))
         else:
             _logger.info('DROP DB: %s', db_name)
+
+    fs = openerp.tools.config.filestore(db_name)
+    if os.path.exists(fs):
+        shutil.rmtree(fs)
     return True
 
 def _set_pg_password_in_environment(func):
@@ -328,6 +337,11 @@ def exp_rename(old_name, new_name):
         except Exception, e:
             _logger.error('RENAME DB: %s -> %s failed:\n%s', old_name, new_name, e)
             raise Exception("Couldn't rename database %s to %s: %s" % (old_name, new_name, e))
+
+    old_fs = openerp.tools.config.filestore(old_name)
+    new_fs = openerp.tools.config.filestore(new_name)
+    if os.path.exists(old_fs) and not os.path.exists(new_fs):
+        shutil.move(old_fs, new_fs)
     return True
 
 @openerp.tools.mute_logger('openerp.sql_db')
