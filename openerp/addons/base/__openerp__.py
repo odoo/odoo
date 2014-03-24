@@ -58,6 +58,7 @@ The kernel of OpenERP, needed for all installation.
         'ir/osv_memory_autovacuum.xml',
         'ir/ir_model_report.xml',
         'ir/ir_logging_view.xml',
+        'ir/ir_qweb.xml',
         'workflow/workflow_view.xml',
         'module/module_view.xml',
         'module/module_data.xml',
