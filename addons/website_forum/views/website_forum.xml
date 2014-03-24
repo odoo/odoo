@@ -14,6 +14,7 @@
                 -->
                 <script type="text/javascript"
                     src="/website_forum/static/src/js/website_forum.editor.js"></script>
+                <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
                 <script type="text/javascript">
                     CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
                     ,['Outdent','Indent','Link','Unlink'],] ;
@@ -68,6 +69,7 @@
         <template id="header" name="Forum Index">
             <t t-call="website.layout">
                 <t t-set="head">
+                    <link rel='stylesheet' href="/web/static/lib/jquery.textext/jquery.textext.css"/>
                     <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
                 </t>
                 <div class="container mt16">
@@ -243,8 +245,10 @@
                     <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
                     <textarea name="question_content" required="True" class="form-control"
                         t-attf-value="#{question_content or ''}" id="textarea_ckeditor"/>
-                    <input type="text" name="question_tag" t-attf-value="#{question_tag or ''}"
-                        class="form-control" style="margin-top: 10px" placeholder="Tags"/>
+                    <br/>
+                    <input type="text" name="question_tags" t-attf-value="#{question_tag or ''}" 
+                        placeholder="Tags" id="question_tag" class="form-control"/>
+                    <br/>
                     <button class="btn btn-primary" id="btn_ask_your_question">Post Your Question</button>
                 </form>
                 <script type="text/javascript">
@@ -299,8 +303,10 @@
                     <textarea name="answer_content" required="True" value="content" class="form-control" id="textarea_ckeditor">
                         <t t-esc="post.content"/>
                     </textarea>
-                    <input type="text" name="question_tag" class="form-control" style="margin-top: 10px" placeholder="Tags"/>
+                    <br/>
+                    <input type="text" name="question_tag" id="question_tag" class="form-control" placeholder="Tags" t-attf-value="#{tags or ''}"/>
                     <input name="post_id" t-att-value="post.id" type="hidden"/>
+                    <br/>
                     <button class="btn btn-primary btn-lg">Save</button>
                 </form>
                 <script type="text/javascript">
@@ -378,9 +384,9 @@
                                     </li>
                                     <li><a class="text-muted fa fa-times" t-if="question.state != 'close'" 
                                         t-attf-href="/forum/#{ slug(forum) }/close/question/#{ question.id }">close</a></li>
-                                    <li><a class="text-muted fa fa-times" t-if="question.state == 'close'" 
+                                    <li><a class="text-muted fa fa-undo" t-if="question.state == 'close'" 
                                         t-attf-href="/forum/#{ slug(forum) }/reopen/question/#{ question.id }">reopen</a></li>
-                                    <li><a class="text-muted fa fa-undo" 
+                                    <li><a class="text-muted fa fa-edit" 
                                         t-attf-href="/forum/#{ slug(forum) }/edit/question/#{ question.id }">edit</a></li>
                                     <li><a class="text-muted fa fa-trash-o" t-if="question.active" 
                                         t-attf-href="/forum/#{ slug(forum) }/delete/question/#{ question.id }">delete</a></li>

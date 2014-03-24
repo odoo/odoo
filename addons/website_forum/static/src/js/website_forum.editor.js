@@ -111,4 +111,16 @@ $(document).ready(function () {
         return true;
     });
 
+    openerp.jsonRpc('/forum/get_tags/','call' ,{}).then(function(data){
+      var previous_tags = $("#question_tag").val();
+      $("#question_tag").val("");
+        var array_of_tags = previous_tags.split(",");
+        $('#question_tag').textext({
+            plugins : 'tags suggestions autocomplete',
+            tagsItems : array_of_tags,
+            suggestions :data,
+        });
+      return true;
+    });
+
 });

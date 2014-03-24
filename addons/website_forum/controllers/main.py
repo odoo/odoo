@@ -243,13 +243,20 @@ class website_forum(http.Controller):
     def register_question(self, forum, **question):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context)
+
+        tags = question.get('question_tags').strip('[]').replace('"','').split(",")
+        tag_ids = request.registry['website.forum.tag'].search(cr, uid, [('name', 'in', tags)], context=context)
+        question_tags = []
+        for tag in tag_ids:
+            question_tags.append((4,tag))
+
         new_question_id = request.registry['website.forum.post'].create(
             request.cr, request.uid, {
                 'user_id': uid,
                 'forum_id': forum.id,
                 'name': question.get('question_name'),
                 'content': question.get('question_content'),
-                #'tags' : question.get('question_tags'),
+                'tags' : question_tags,
                 'state': 'active',
                 'active': True,
             }, context=create_context)
@@ -414,8 +421,13 @@ class website_forum(http.Controller):
 
     @http.route('/forum/<model("website.forum"):forum>/edit/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
     def edit_question(self, forum, post, **kwarg):
+        tags = ""
+        for tag_name in post.tags:
+            tags += tag_name.name + ","
+
         values = {
             'post': post,
+            'tags': tags,
             'forum': forum,
             'searches': kwarg,
             'notifications': self._get_notifications(),
@@ -424,10 +436,16 @@ class website_forum(http.Controller):
 
     @http.route('/forum/<model("website.forum"):forum>/question/savequestion/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def save_edited_question(self, forum, **post):
-        request.registry['website.forum.post'].write( request.cr, request.uid, [int(post.get('post_id'))], {
+        cr, uid, context = request.cr, request.uid, request.context
+        tags = post.get('question_tag').strip('[]').replace('"','').split(",")
+        tag_ids = request.registry['website.forum.tag'].search(cr, uid, [('name', 'in', tags)], context=context)
+        question_tags = [(6, 0, tag_ids)]
+
+        request.registry['website.forum.post'].write(cr, uid, [int(post.get('post_id'))], {
             'content': post.get('answer_content'),
             'name': post.get('question_name'),
-        }, context=request.context)
+            'tags' : question_tags,
+        }, context=context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('post_id')))
 
     @http.route('/forum/<model("website.forum"):forum>/answer/<model("website.forum.post"):post>/edit/<model("website.forum.post"):answer>', type='http', auth="user", multilang=True, website=True)
@@ -539,3 +557,7 @@ class website_forum(http.Controller):
         request.registry['website.forum.post'].unlink(request.cr, request.uid, [post.id], context=request.context)
         return self.post_comment(forum, post.parent_id.id, **values)
 
+    @http.route('/forum/get_tags/', type='json', auth="public", multilang=True, methods=['POST'], website=True)
+    def tag_read(self, **kwarg):
+        tags = request.registry['website.forum.tag'].search_read(request.cr, request.uid, [],['name'], context=request.context)
+        return [ tag['name'] for tag in tags]
