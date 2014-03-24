@@ -118,23 +118,33 @@ class website_event(http.Controller):
             ''',(event.id,))
         
         fetch_tracks = request.cr.fetchall()
+        local_tz = pytz.timezone(event.timezone_of_event)
         
-        request.cr.execute('''
-        select count(*), date_trunc('day',date) from event_track where event_id = %s group by date_trunc('day',date) order by  date_trunc('day',date)
-        ''',(event.id,))
-        talks = request.cr.fetchall()
+        talks = {}
+        for index, track in enumerate(fetch_tracks):
+            lst = list(track)
+            date_s = datetime.datetime.strptime(lst[5], '%Y-%m-%d %H:%M:%S')
+            local_dt = date_s.replace(tzinfo=pytz.utc).astimezone(local_tz)
+            local_tz.normalize(local_dt)
+            lst[2] = local_dt.strftime('%m-%d-%y') 
+            lst[5] = local_dt
+            fetch_tracks[index] = tuple(lst)
+            if not talks.has_key(track[2][:8]):
+                talks[track[2][:8]] = 0
+            talks[track[2][:8]] = talks[track[2][:8]] + 1
         
         unsort_tracks = {}
         room_list = []
         new_schedule = {}
         location_object = request.registry.get('event.track.location')
         event_track_obj = request.registry.get('event.track')
+        
         #Make all possible timeslot for each day.
         for track in fetch_tracks:
             room_list.append(track[1])
             if not new_schedule.has_key(track[2][:8]):
                 new_schedule[track[2][:8]] = []
-            start_time = datetime.datetime.strptime(track[5], '%Y-%m-%d %H:%M:%S')
+            start_time = track[5]
             end_time = start_time + datetime.timedelta(minutes = int(track[3]))
             new_schedule[track[2][:8]] = algo_for_timetable(start_time, end_time, new_schedule[track[2][:8]])
 
@@ -146,7 +156,7 @@ class website_event(http.Controller):
         
         #Add track to its related time slot and day.
         for track in fetch_tracks:
-            start_time = datetime.datetime.strptime(track[5], '%Y-%m-%d %H:%M:%S')
+            start_time = track[5]
             end_time = start_time + datetime.timedelta(minutes = int(track[3]))
             secret_key = None
             row_span = 0
