@@ -64,8 +64,8 @@
                         </group>
                         <group>
                             <field name="multi"/>
-                            <field name="attachment_use"/>
-                            <field name="attachment"/>
+                            <field name="attachment_use" attrs="{'invisible':[('report_type','=', 'controller')]}"/>
+                            <field name="attachment" attrs="{'invisible':[('report_type','=', 'controller')]}"/>
                         </group>
                     </group>
                     <notebook>
