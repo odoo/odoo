@@ -215,7 +215,8 @@ class Report(osv.Model):
             'get_digits': self._get_digits,
             'render_doc': render_doc,
             'editable': True,  # Will active inherit_branding
-            'res_company': self.pool['res.users'].browse(cr, uid, uid).company_id
+            'res_company': self.pool['res.users'].browse(cr, uid, uid).company_id,
+            'website': False,  # Will be overidden by ir.ui.view if the request has website enabled
         })
 
         return view_obj.render(cr, uid, template, values, context=context)
