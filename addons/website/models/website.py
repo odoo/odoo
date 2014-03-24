@@ -574,7 +574,7 @@ class ir_attachment(osv.osv):
 
     def _compute_checksum(self, attachment_dict):
         if attachment_dict.get('res_model') == 'ir.ui.view'\
-                and not attachment_dict.get('res_id')\
+                and not attachment_dict.get('res_id') and not attachment_dict.get('url')\
                 and attachment_dict.get('type', 'binary') == 'binary'\
                 and attachment_dict.get('datas'):
             return hashlib.new('sha1', attachment_dict['datas']).hexdigest()
