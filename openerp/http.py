@@ -1089,17 +1089,14 @@ class Root(object):
         """ Handle a WSGI request
         """
         if not self._loaded:
-            self.load_addons()
             self._loaded = True
+            self.load_addons()
         return self.dispatch(environ, start_response)
 
     def load_addons(self):
         """ Load all addons from addons patch containg static files and
         controllers and configure them.  """
         # TODO should we move this to ir.http so that only configured modules are served ?
-        _logger.info("HTTP Configuring static files")
-
-        self.__dict__.pop('dispatch', None)
         statics = {}
 
         for addons_path in openerp.modules.module.ad_paths:
@@ -1113,12 +1110,16 @@ class Root(object):
                         _logger.debug("Loading %s", module)
                         if 'openerp.addons' in sys.modules:
                             m = __import__('openerp.addons.' + module)
+                        else:
+                            m = None
                         addons_module[module] = m
                         addons_manifest[module] = manifest
                         statics['/%s/static' % module] = path_static
 
-        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics)
-        self.dispatch = DisableCacheMiddleware(app)
+        if statics:
+            _logger.info("HTTP Configuring static files")
+            app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics)
+            self.dispatch = DisableCacheMiddleware(app)
 
     def setup_session(self, httprequest):
         # recover or create session
