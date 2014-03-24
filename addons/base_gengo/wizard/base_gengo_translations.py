@@ -52,7 +52,6 @@ class base_gengo_translations(osv.osv_memory):
 
     _name = 'base.gengo.translations'
     _columns = {
-        'restart_send_job': fields.boolean("Restart Sending Job"),
         'sync_type': fields.selection([('send', 'Send New Terms'),
                                        ('receive', 'Receive Translation'),
                                        ('both', 'Both')], "Sync Type"),
@@ -125,9 +124,6 @@ class base_gengo_translations(osv.osv_memory):
             if wizard.sync_type in ['receive','both']:
                 self._sync_response( cr, uid, limit=GENGO_DEFAULT_LIMIT, context=ctx)
             #check the cron jobs and eventually restart/recreate them
-            if wizard.restart_send_job:
-                self.do_check_schedular(cr, uid, 'gengo_sync_send_request_scheduler', _('Gengo Sync Translation (Request)'), '_sync_request', context=context)
-                self.do_check_schedular(cr, uid, 'gengo_sync_receive_request_scheduler', _('Gengo Sync Translation (Response)'), '_sync_response', context=context)
         return {'type': 'ir.actions.act_window_close'}
 
     def _sync_response(self, cr, uid, limit=GENGO_DEFAULT_LIMIT, context=None):

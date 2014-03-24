@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="website.ButtonGengoTranslator">
-    <a class="btn btn-danger gengo_translate" data-action="translation_gengo" href="#">Gengo Translation</a>
-    <a class="btn btn-danger hidden gengo_post" data-action="translation_gengo_post" href="#">Post to Gengo</a><a class="btn btn-danger hidden gengo_wait disabled"  href="#"> <i class="fa fa-spinner fa-spin"></i> Wait</a><a class="btn btn-danger hidden gengo_inprogress disabled"  href="#"> <i class="fa fa-clock-o"></i> Translation in Progress</a><a class="btn btn-danger gengo_info hidden" data-action="translation_gengo_info"><i class="fa fa-info-circle"></i></a>
-    <span class="gengo_discard hidden"> or <a href="#" data-action="reload">Return</a></span>
+    <a class="btn btn-danger gengo_post" data-action="translation_gengo_post" href="#">Post to Gengo</a><a class="btn btn-danger hidden gengo_wait disabled"  href="#"> <i class="fa fa-spinner fa-spin"></i> Wait</a><a class="btn btn-danger hidden gengo_inprogress disabled"  href="#"> <i class="fa fa-clock-o"></i> Translation in Progress</a><a class="btn btn-danger gengo_info" data-action="translation_gengo_info"><i class="fa fa-info-circle"></i></a>
 </t>
-<t t-name="website.GengoTranslatorDialog">
+<t t-name="website.TranslatorDialog">
     <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
-                    <h2 class="modal-title">Translate this page using gengo</h2>
+                    <h2 class="modal-title">Translate this page</h2>
                 </div>
                 <div class="modal-body">
                     <section>
+                        <p>You are about to enter the translation mode.</p>
                         <p>
                             Here are the visuals used to help you translate efficiently:
                             <ul class="oe_translate_examples">
                                 <li style="background:#ffffb6;">
-                                    Content will be posted to <b><a href="http://gengo.com/" >Gengo</a></b> for translation. 
+                                    Content to translate or you can post them to <b><a href="http://gengo.com/" >Gengo</a></b> for translation. 
                                 </li>
                                 <li class="oe_translatable_inprogress">
-                                    Translation in Process
+                                    Translation in Process (Gengo)
                                 </li>
                                 <li class="oe_translatable_text">
                                     Already Translated content
@@ -30,7 +29,7 @@
                             </ul>
                         </p>
                         <p>
-                            In this mode, highligted text will be posted to Gengo for translation.
+                            In this mode, you can translate texts or post texts to Gengo for translation.
                             To change the structure of the page, you must edit the
                             master page.
                         </p>

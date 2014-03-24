@@ -34,11 +34,17 @@
                     dialog.$el.modal('hide');
                     self.translate().then(function () {
                         mysuper.call(self);
+                        if(self.gengo_translate){
+                            self.translation_gengo_display()
+                        }
                     });
                 });
             } else {
                 this.translate().then(function () {
                     mysuper.call(self);
+                    if(self.gengo_translate){
+                        self.translation_gengo_display()
+                    }
                 });
             }
         },
@@ -90,7 +96,7 @@
                         self.sanitizeNode($node[0]);
                     }
                     if (self.getInitialContent($node[0]) !== $node.text()) {
-                        $node.addClass('oe_dirty').removeClass('oe_translatable_todo');
+                        $node.addClass('oe_dirty').removeClass('oe_translatable_todo oe_translatable_inprogress');
                     }
                 }, 0);
             });
@@ -118,19 +124,12 @@
             if (trans.length) {
                 node.setAttribute('data-oe-translation-id', trans[0].id);
                 if(trans[0].gengo_translation && (trans[0].state == 'inprogress' || trans[0].state == 'to_translate')){
-                    if(this.gengo_translate){
                         node.className += ' oe_translatable_inprogress';
-                        }
-                    else{
-                        node.className += ' oe_translatable_todo';
-                    }
                 }
             } else {
                 node.className += ' oe_translatable_todo';
             }
-            if(!this.gengo_translate){
-                node.contentEditable = true;
-            }
+            node.contentEditable = true;
             var nid = _.uniqueId();
             $(node).attr('data-oe-nodeid', nid);
             this.initial_content[nid] = content;
