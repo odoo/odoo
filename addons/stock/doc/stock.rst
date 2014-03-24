@@ -1,7 +1,9 @@
 Stock Module
 ++++++++++++
 
-This module can be applied for simple stock management, but also for complex warehouse(s) management.  That is why, after having explained the main principles briefly, we will dedicate one chapter on how to use the warehouse management in its simplest form.  From the third chapter on, we will explain every step in more detail, allowing you to discover the full potential of the module.  
+This module can be applied for the simplest case where you are only interested in knowing the quantity of each product in your stock as for a complex warehouse(s) management case, where for example each product gets a specific location in the stock and upon delivery it needs to be picked at a certain location and the products need to be packed in boxes and put on a pallet.  
+
+Because of this huge difference in application, the main principles briefly will be explained first, whereafter we will dedicate one chapter on how to use the warehouse management in its simplest form.  From the third chapter on, we will explain every step in more detail, allowing you to discover the full potential of the module.  
 
 
 1 Main principles explained briefly
@@ -13,7 +15,7 @@ Stock moves, locations, pickings and picking types
 
 A stock move is the elementary model in OpenERP that can move stock between 2 locations.  
 
-In order to make it easy to move multiple products at once and to give that as an assignment in a warehouse, we use pickings that group these stock moves.  
+In order to make it easy to move multiple products at once and pass that as an assignment to a warehouse operator, we use pickings that group these stock moves.  
 
 We want to categorize the pickings in picking types.  As a warehouse manager you want to follow up the progress of the operations between the same (kind of) locations.  E.g. by default, in the default warehouse, you will have 3 picking types: the incoming, internal and outgoing, but it is possible to create a picking type for all the packing operations that need to happen at the packing table.  The Warehouse > All Operations dashboard allows to see the progress of the pickings for each picking type.  
 
@@ -43,7 +45,7 @@ A warehouse represents the building where we stock our goods.  In case of multip
 
 A warehouse corresponds also to a location.  As the locations are hierarchical, OpenERP links a warehouse with one parent location that contains all the different sublocations in the warehouse.  
 
-When you create a warehouse, the system will create the necessary picking types and locations in the background.  
+When you create a warehouse, the system will create the necessary picking types and parent locations in the background.  
 
 
 ============
@@ -67,20 +69,29 @@ When we start to create a move, it will be in draft state.  This means, it will 
 
 In these states it is possible to do "Check Availability".  If it can find the necessary stock, the state goes to Assigned.  In this state it is possible to effectively execute the move and transfer the products.  Incoming shipments are automatically available.  Effectively executing the move, brings it to the done state and makes it adapt the stock available on hand.  (quantity on hand)
 
+Normally, the picking associated to the move, will have the same state as it moves, but the picking can also have a partially available state.  It is possible that some products in the picking are available and some are not.  On a sales order or delivery order picking, you can specify if you want your customer to be delivered as soon as possible when only a part of the products is  available (partial delivery) or only all at once when everything is available (in order to save on transport costs for example).  So, if you can do a partial delivery, the picking state will be partially available when only some of the products are available.  
+
 ==============================================
 Orderpoints, procurement and procurement group
 ==============================================
 
-Procurements represent needs.  
+Procurements represent needs that need to be solved.  For example, every sales order line will create a procurement in Customers.  This will be solved by a move for the delivery, which will, in case of a MTO product in buy configuration, create a new procurement (need) in Stock, which will be solved by a purchase order. 
 
-Procurement groups some procurements.  This can be in handy for example to 
+It is not required however, to have this need in stock created by a move.  In case of MTS, the move will not create a procurement (need), but the the procurement will originate from an orderpoint created for this product in stock.  
 
-Orderpoints determine
+An orderpoint applies the following rule: if the virtual stock for the given location is lower than the minimum stock indicated in the rule, the system will automatically propose a procurement to increase the level of virtual stock to the maximum level given in the rule.  We underline that the rule is based on virtual quantities and not just on real quantities. It takes into account the calculation of orders and receipts to come.
 
-<<Properties of moves: all at once, ...>>
+You can also set multiple quantities in the minimum stock rules. If you set a multiple quantity of 3 the system will propose procurement of 15 pieces, and not the 13 it really needs. In this case, it automatically rounds the quantity upwards.
 
+Pay attention to the fact that the maximum quantity is not the maximum you will have in stock. If we take the following situation: a company has 10 pieces of product with minimum stock rules defined for this product by Min quantity = 10, Max quantity = 30 and Qty multiple = 12. If an order of 2 pieces comes, a purchase of 24 pieces order will be executed. The first 12 pieces will be ordered to reach the minimum quantity and the other 12 to reach the maximum quantity. At the end, the stock of this product will be equal to 32 pieces.
 
-<<Scheduler>>
+Scheduler: 
+
+In order for the orderpoint to create the procurement, we need to launch the scheduler.  This can be done manually in Warehouse > ..., but will normally be automated by a scheduled action.  (by default it is automated on a daily basis)
+
+Procurement groups: 
+
+Suppose you have multiple lines in your sales order, then you want one delivery order with all the lines of the sales order.  In order to do that, we group the different procurements of this sale order into the same procurement group we create for the sales order.  
 
 
 2 Standard configuration
@@ -374,33 +385,14 @@ This will happen only if the move has the attribute 'Propagate Cancel and Split'
 
 When you start using OpenERP, you might have an inventory to start from.  (Starting Inventory)  You will enter all the products that are in the warehouse and OpenERP will put them in this position.  When you validate this inventory, OpenERP will create the necessary stock moves.  
 
-It is possible that operations in the warehouse are not well registered and the stock in OpenERP does not correspond exactly to the physical stock in the warehouse.  In order to manage this, we 
+It is possible that operations in the warehouse are not well registered and the stock in OpenERP does not correspond exactly to the physical stock in the warehouse.  Of course, you do not want this to happen, but errors do happen and a way to solve these mistakes, is to check the inventory once and a while.  
+
+You can decide to do a certain product or a certain location.  So, you are not required to do all the invento
 
 
 
 9 Examples pick pack ship
 **************************
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
