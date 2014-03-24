@@ -193,15 +193,15 @@
 
                       </td>
                       </t>
-                      <td t-if="not td_product"/>
+                      <td t-if="not td_product" class="oe-height-2"/>
                     </t>
                   </tr>
                 </tbody>
               </table>
               <t t-if="not bins">
                 <div class="text-center text-muted">
-                  <h3 class="css_editable_display">No product defined.</h3>
-                  <t groups="base.group_website_publisher">
+                  <h3>No product found.</h3>
+                  <t groups="base.group_website_publisher" t-ignore="true">
                     <p groups="base.group_sale_manager">Use the <i>'Content'</i> top menu to create a new product.</p>
                   </t>
                 </div>
@@ -293,6 +293,7 @@
                 <t t-call="website.publish_management">
                   <t t-set="object" t-value="product"/>
                   <t t-set="publish_edit" t-value="True"/>
+                  <t t-set="action" t-value="'product.product_template_action'"/>
                 </t>
             </div>
           </div>

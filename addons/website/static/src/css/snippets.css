@@ -328,14 +328,10 @@
 }
 .oe_overlay .oe_handle.size .oe_handle_button {
   z-index: 3;
-  content: "Resize";
-  width: 64px;
   text-align: center;
   margin-left: -32px;
   margin-top: -10px;
-  cursor: row-resize;
   left: 0px;
-  top: 9px;
 }
 .oe_overlay .oe_handle.size .oe_handle_button:hover {
   background: rgba(30, 30, 30, 0.8);
@@ -344,6 +340,24 @@
   -moz-box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.7);
   box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.7);
 }
+.oe_overlay .oe_handle.size .size {
+  width: 64px;
+  cursor: row-resize;
+  top: 9px;
+}
+.oe_overlay .oe_handle.size .auto_size {
+  width: 20px;
+  padding: 0 5px;
+  top: 1px;
+  margin-left: 36px;
+  cursor: pointer;
+}
+.oe_overlay .oe_handle.readonly {
+  cursor: auto !important;
+}
+.oe_overlay .oe_handle.readonly:before, .oe_overlay .oe_handle.readonly.size {
+  display: none !important;
+}
 .oe_overlay .icon.btn {
   display: inline-block;
 }
@@ -351,7 +365,7 @@
   position: absolute;
   left: 50% !important;
   text-align: center;
-  top: -11px;
+  top: -20px;
   z-index: 1002;
 }
 .oe_overlay .oe_overlay_options > .btn-group {
@@ -617,9 +631,4 @@
   width: 16px;
   height: 16px;
   display: inline-block;
-}
-
-[data-snippet-id] {
-  min-height: 10px;
-  min-width: 10px;
 }
