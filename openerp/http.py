@@ -1284,11 +1284,8 @@ class CommonController(Controller):
         """ Method used by client APIs to contact OpenERP. """
         return dispatch_rpc(service, method, args)
 
-root = None
-
-def wsgi_postload():
-    global root
-    root = Root()
-    openerp.service.wsgi_server.register_wsgi_handler(root)
+# register main wsgi handler
+root = Root()
+openerp.service.wsgi_server.register_wsgi_handler(root)
 
 # vim:et:ts=4:sw=4:
