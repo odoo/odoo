@@ -3918,7 +3918,7 @@ class stock_picking_type(osv.osv):
     _order = 'sequence'
 
     def open_barcode_interface(self, cr, uid, ids, context=None):
-        final_url="/barcode/web/"+str(ids[0]) if len(ids) else '0'
+        final_url="/barcode/web/#action=stock.ui&picking_type_id="+str(ids[0]) if len(ids) else '0'
         return {'type': 'ir.actions.act_url', 'url':final_url, 'target': 'self',}
 
 

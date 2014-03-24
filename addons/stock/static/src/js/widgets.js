@@ -138,6 +138,14 @@ function openerp_picking_widgets(instance){
                 self.on_searchbox(''); 
                 self.$('.oe_searchbox').val('');
             });
+            this.$('.oe_searchbox').focus(function(){
+                self.getParent().barcode_scanner.disconnect();
+            });
+            this.$('.oe_searchbox').blur(function(){
+                self.getParent().barcode_scanner.connect(function(ean){
+                    self.get_Parent().scan(ean);
+                });
+            })
             this.$('#js_select').change(function(){
                 var selection = self.$('#js_select option:selected').attr('value');
                 if (selection === "ToDo"){
@@ -204,8 +212,15 @@ function openerp_picking_widgets(instance){
                 }
                 $("input", this).val("");
             });
+            this.$('.js_qty').focus(function(){
+                self.getParent().barcode_scanner.disconnect();
+                console.log('focus in');
+            });
             this.$('.js_qty').blur(function(){
                 this.value = "";
+                self.getParent().barcode_scanner.connect(function(ean){
+                    self.getParent().scan(ean);
+                });
             });
             this.$('.js_change_src').click(function(){
                 var op_id = $(this).parents("[data-id]:first").data('id');//data('op_id');
@@ -353,7 +368,18 @@ function openerp_picking_widgets(instance){
         init: function(parent, params){
             this._super(parent,params);
             var self = this;
-
+            $(window).bind('hashchange', function(){
+                var states = $.bbq.getState();
+                if (states.action === "stock.ui"){
+                    self.do_action({
+                        type:   'ir.actions.client',
+                        tag:    'stock.ui',
+                        target: 'current',
+                    },{
+                        clear_breadcrumbs: true,
+                    });
+                }
+            });
             this.picking_types = [];
             this.loaded = this.load();
             this.scanning_type = 0;
@@ -409,24 +435,12 @@ function openerp_picking_widgets(instance){
             });
         },
         goto_picking: function(picking_id){
-            this.do_action({
-                type:   'ir.actions.client',
-                tag:    'stock.ui',
-                target: 'current',
-                context: { picking_id: picking_id },
-            },{
-                clear_breadcrumbs: true,
-            });
+            $.bbq.pushState('#action=stock.ui&picking_id='+picking_id);
+            $(window).trigger('hashchange');
         },
         goto_last_picking_of_type: function(type_id){
-            this.do_action({
-                type:   'ir.actions.client',
-                tag:    'stock.ui',
-                target: 'current',
-                context: { active_id: type_id },
-            },{
-                clear_breadcrumbs: true,
-            });
+            $.bbq.pushState('#action=stock.ui&picking_type_id='+type_id);
+            $(window).trigger('hashchange');
         },
         search_picking: function(barcode){
             //TODO don't crash if a not supported char is given
@@ -500,12 +514,23 @@ function openerp_picking_widgets(instance){
     module.PickingMainWidget = module.MobileWidget.extend({
         template: 'PickingMainWidget',
         init: function(parent,params){
-            $(window).bind('hashchange', function(){
-                console.log($.bbq.getState());
-            });
             this._super(parent,params);
             var self = this;
-
+            $(window).bind('hashchange', function(){
+                var states = $.bbq.getState();
+                if (states.action === "stock.menu"){
+                    self.do_action({
+                        type:   'ir.actions.client',
+                        tag:    'stock.menu',
+                        target: 'current',
+                    },{
+                        clear_breadcrumbs: true,
+                    });
+                }
+            });
+            init_hash = $.bbq.getState();
+            this.picking_type_id = init_hash.picking_type_id ? init_hash.picking_type_id:0;
+            this.picking_id = init_hash.picking_id ? init_hash.picking_id:undefined;
             this.picking = null;
             this.pickings = [];
             this.packoplines = null;
@@ -513,12 +538,11 @@ function openerp_picking_widgets(instance){
             this.selected_operation = { id: null, picking_id: null};
             this.packages = null;
             this.barcode_scanner = new module.BarcodeScanner();
-            this.picking_type_id = params.context.active_id || 0;
             this.locations = [];
-
-            if(params.context.picking_id){
-                this.loaded =  this.load(params.context.picking_id);
+            if(this.picking_id){
+                this.loaded =  this.load(this.picking_id);
             }else{
+                console.log('load latest from picking type');
                 this.loaded =  this.load();
             }
 
@@ -533,7 +557,7 @@ function openerp_picking_widgets(instance){
             function load_picking_list(type_id){
                 var pickings = new $.Deferred();
                 new instance.web.Model('stock.picking')
-                    .call('get_next_picking_for_ui',[{'default_picking_type_id':type_id}])
+                    .call('get_next_picking_for_ui',[{'default_picking_type_id':parseInt(type_id)}])
                     .then(function(picking_ids){
                         if(!picking_ids || picking_ids.length === 0){
                             (new instance.web.Dialog(self,{
@@ -697,14 +721,8 @@ function openerp_picking_widgets(instance){
             }
         },
         menu: function(){
-            this.do_action({
-                type:   'ir.actions.client',
-                tag:    'stock.menu',
-                target: 'current',
-            },{
-                clear_breadcrumbs: true,
-            });
-
+            $.bbq.pushState('#action=stock.menu');
+            $(window).trigger('hashchange');
         },
         scan: function(ean){ //scans a barcode, sends it to the server, then reload the ui
             var self = this;
@@ -830,8 +848,7 @@ function openerp_picking_widgets(instance){
             for(var i = 0; i < this.pickings.length; i++){
                 if(this.pickings[i] === this.picking.id){
                     if(i < this.pickings.length -1){
-                        // window.location = '/barcode/web/?picking_type_id='+this.picking_type_id+'&picking_id='+this.pickings[i+1];
-                        // return;
+                        $.bbq.pushState('picking_id='+this.pickings[i+1]);
                         this.refresh_ui(this.pickings[i+1]);
                         return;
                     }
@@ -842,7 +859,7 @@ function openerp_picking_widgets(instance){
             for(var i = 0; i < this.pickings.length; i++){
                 if(this.pickings[i] === this.picking.id){
                     if(i > 0){
-                        // window.location = '/barcode/web/?picking_type_id='+this.picking_type_id+'&picking_id='+this.pickings[i-1];
+                        $.bbq.pushState('picking_id='+this.pickings[i-1]);
                         this.refresh_ui(this.pickings[i-1]);
                         return;
                     }
