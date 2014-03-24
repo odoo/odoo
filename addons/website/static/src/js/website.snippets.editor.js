@@ -19,23 +19,11 @@
         edit: function () {
             var self = this;
             $("[data-oe-model] *, [data-oe-type=html] *").off('click');
-            website.snippet.stop_animation();
             window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
             this.snippets.appendTo(this.$el);
             this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
-                website.snippet.start_animation();
-                $(website.snippet.readyAnimation).each(function() {
-                    var animation = $(this).data("snippet-view");
-                    if (animation) {
-                        animation.$target.on('focus', '*', function(){
-                            animation.stop();
-                        });
-                        animation.$target.on('blur', '*', function(){
-                            animation.start();
-                        });
-                    }
-                });
+                  website.snippet.stop_animation();
             });
 
             return this._super.apply(this, arguments);
@@ -397,7 +385,6 @@
                             $("#oe_snippets").trigger('snippet-dropped', $target);
 
                             website.snippet.start_animation(true, $target);
-
                             // drop_and_build_snippet
                             self.create_overlay($target);
                             if ($target.data("snippet-editor")) {
@@ -1291,6 +1278,7 @@
             this.grid.size = 8;
             return this.grid;
         },
+            this.$target.carousel({interval: false});
     });
 
     website.snippet.options.parallax = website.snippet.Option.extend({

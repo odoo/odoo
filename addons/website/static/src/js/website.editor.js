@@ -1789,6 +1789,9 @@
                 if (node.nodeName === 'BR' && node.getAttribute('type') === '_moz') {
                     // <br type="_moz"> appears when focusing RTE in FF, ignore
                     continue;
+                } else if (node.nodeName === 'DIV' && $(node).hasClass('oe_drop_zone')) {
+                    // ignore dropzone inserted by snippets
+                    continue
                 }
             }
 
