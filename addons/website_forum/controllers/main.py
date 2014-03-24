@@ -32,6 +32,7 @@ from openerp.addons.web.http import request
 from dateutil.relativedelta import relativedelta
 from openerp.addons.website.controllers.main import Website as controllers
 from openerp.addons.website.models.website import slug
+from openerp.addons.web.controllers.main import login_redirect
 
 controllers = controllers()
 
@@ -131,6 +132,8 @@ class website_forum(http.Controller):
 
     @http.route(['/forum/<model("website.forum"):forum>/ask'], type='http', auth="public", website=True, multilang=True)
     def question_ask(self, forum, **post):
+        if not request.session.uid:
+            return login_redirect()
         values = {
             'searches': {},
             'forum': forum,
@@ -158,6 +161,8 @@ class website_forum(http.Controller):
 
     @http.route(['/forum/<model("website.forum"):forum>/comment'], type='http', auth="public", methods=['POST'], website=True)
     def post_comment(self, forum, post_id, **kwargs):
+        if not request.session.uid:
+            return login_redirect()
         cr, uid, context = request.cr, request.uid, request.context
         if kwargs.get('comment'):
             user = request.registry['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
@@ -242,6 +247,7 @@ class website_forum(http.Controller):
     @http.route('/forum/<model("website.forum"):forum>/question/ask/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def register_question(self, forum, **question):
         cr, uid, context = request.cr, request.uid, request.context
+        
         create_context = dict(context)
 
         tags = question.get('question_tags').strip('[]').replace('"','').split(",")
@@ -262,8 +268,10 @@ class website_forum(http.Controller):
             }, context=create_context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),new_question_id))
 
-    @http.route('/forum/<model("website.forum"):forum>/question/postanswer/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
-    def post_answer(self, forum, post_id, **question):
+    @http.route('/forum/<model("website.forum"):forum>/question/postanswer/', type='http', auth="public", multilang=True, methods=['POST'], website=True)
+    def post_answer(self, forum ,post_id, **question):
+        if not request.session.uid:
+            return login_redirect()
         cr, uid, context = request.cr, request.uid, request.context
         request.registry['res.users'].write(cr, uid, uid, {'forum': True}, context=context)
 
@@ -399,8 +407,10 @@ class website_forum(http.Controller):
         request.registry['website.forum.post'].unlink(request.cr, request.uid, [int(kwarg.get('post_id'))], context=request.context)
         return True
 
-    @http.route('/forum/<model("website.forum"):forum>/delete/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
+    @http.route('/forum/<model("website.forum"):forum>/delete/question/<model("website.forum.post"):post>', type='http', auth="public", multilang=True, website=True)
     def delete_question(self, forum, post, **kwarg):
+        if not request.session.uid:
+            return login_redirect()
         #instead of unlink record just change 'active' to false so user can undelete it.
         request.registry['website.forum.post'].write( request.cr, request.uid, [post.id], {
             'active': False,
@@ -419,8 +429,11 @@ class website_forum(http.Controller):
         request.registry['mail.message'].unlink(request.cr, request.uid, [int(kwarg.get('message_id'))], context=request.context)
         return True
 
-    @http.route('/forum/<model("website.forum"):forum>/edit/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
+    @http.route('/forum/<model("website.forum"):forum>/edit/question/<model("website.forum.post"):post>', type='http', auth="public", multilang=True, website=True)
     def edit_question(self, forum, post, **kwarg):
+        if not request.session.uid:
+            return login_redirect()
+
         tags = ""
         for tag_name in post.tags:
             tags += tag_name.name + ","
@@ -477,8 +490,10 @@ class website_forum(http.Controller):
             }, context=context)
         return correct
 
-    @http.route('/forum/<model("website.forum"):forum>/close/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
+    @http.route('/forum/<model("website.forum"):forum>/close/question/<model("website.forum.post"):post>', type='http', auth="public", multilang=True, website=True)
     def close_question(self, forum, post, **kwarg):
+        if not request.session.uid:
+            return login_redirect()
         cr, uid, context = request.cr, request.uid, request.context
         Reason = request.registry['website.forum.post.reason']
         reason_ids = Reason.search(cr, uid, [], context=context)
@@ -505,6 +520,8 @@ class website_forum(http.Controller):
 
     @http.route('/forum/<model("website.forum"):forum>/reopen/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
     def reopen(self, forum, post, **kwarg):
+        if not request.session.uid:
+            return login_redirect()
         request.registry['website.forum.post'].write( request.cr, request.uid, [post.id], {
             'state': 'active',
         }, context=request.context)
