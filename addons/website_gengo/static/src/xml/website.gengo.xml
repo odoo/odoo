@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="website.ButtonGengoTranslator">
-    <a class="btn btn-danger gengo_post" data-action="translation_gengo_post" href="#">Post to Gengo</a><a class="btn btn-danger hidden gengo_wait disabled"  href="#"> <i class="fa fa-spinner fa-spin"></i> Wait</a><a class="btn btn-danger hidden gengo_inprogress disabled"  href="#"> <i class="fa fa-clock-o"></i> Translation in Progress</a><a class="btn btn-danger gengo_info" data-action="translation_gengo_info"><i class="fa fa-info-circle"></i></a>
+    <a class="btn btn-danger gengo_post" data-action="translation_gengo_post" href="#">Auto Translate</a>
+    <a class="btn btn-danger hidden gengo_wait disabled"  href="#"><i class="fa fa-spinner fa-spin"></i> Wait</a>
+    <a class="btn btn-danger hidden gengo_inprogress disabled"  href="#"> <i class="fa fa-clock-o"></i> Translation in Progress</a>
+    <a class="btn btn-link gengo_info" data-action="translation_gengo_info">Count Words</a>
 </t>
 <t t-name="website.TranslatorDialog">
     <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
@@ -60,7 +63,7 @@
                 <div class="modal-body">
                     <section>
                     <select class="form-control" required="required" autofocus="autofocus">
-                        <option value="machine">Translation By Machine (Free)</option>
+                        <option value="machine">Machine (Free)</option>
                         <option value="standard">Standard - $0.05 per word</option>
                         <option value="pro">Pro - $0.10 per word</option>
                         <option value="ultra">Ultra - $0.15 per word</option>
@@ -93,7 +96,6 @@
                         <div class="text-info mb8"> <i class="fa fa-align-left"></i> Words posted for translate <t t-esc="widget.total"></t></div>
                         <div class="text-warning mb8"> <i class="fa fa-cogs"></i> Words in progress <t t-esc="widget.inprogess"></t></div>
                         <div class="text-success mb8"> <i class="fa fa-check"></i> Translated words <t t-esc="widget.done"></t></div>
-                        
                     </b>
                 </div>
                 <div class="modal-footer">
