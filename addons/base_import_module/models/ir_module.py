@@ -43,13 +43,14 @@ class view(osv.osv):
                 convert_file(cr, module, filename, idref, mode=mode, noupdate=noupdate, kind=kind, pathname=pathname)
 
         path_static = opj(path, 'static')
+        ir_attach = self.pool['ir.attachment']
         if os.path.isdir(path_static):
             for root, _, files in os.walk(path_static):
                 for static_file in files:
                     full_path = opj(root, static_file)
                     with open(full_path, 'r') as fp:
                         data = fp.read().encode('base64')
-                    url_path = full_path.split(path)[1].replace(os.path.sep, '/')
+                    url_path = '/%s%s' % (module, full_path.split(path)[1].replace(os.path.sep, '/'))
                     url_path = url_path.decode(sys.getfilesystemencoding())
                     filename = os.path.split(url_path)[1]
                     values = dict(
@@ -60,7 +61,11 @@ class view(osv.osv):
                         type='binary',
                         datas=data,
                     )
-                    self.pool['ir.attachment'].create(cr, uid, values, context=context)
+                    att_id = ir_attach.search(cr, uid, [('url', '=', url_path), ('type', '=', 'binary'), ('res_model', '=', 'ir.ui.view')], context=context)
+                    if att_id:
+                        ir_attach.write(cr, uid, att_id, values, context=context)
+                    else:
+                        ir_attach.create(cr, uid, values, context=context)
 
         return True
 
