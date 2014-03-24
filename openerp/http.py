@@ -36,6 +36,7 @@ import werkzeug.wsgi
 
 import openerp
 from openerp.service import security, model as service_model
+from openerp.tools.func import lazy_property
 
 _logger = logging.getLogger(__name__)
 
@@ -1077,22 +1078,28 @@ class Root(object):
         path = openerp.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
         self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
+        self._loaded = False
 
-        # TODO should we move this to ir.http so that only configured modules are served ?
-        _logger.info("HTTP Configuring static files")
-        self.load_addons()
-
+    @lazy_property
+    def nodb_routing_map(self):
         _logger.info("Generating nondb routing")
-        self.nodb_routing_map = routing_map([''] + openerp.conf.server_wide_modules, True)
+        return routing_map([''] + openerp.conf.server_wide_modules, True)
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
         """
+        if not self._loaded:
+            self.load_addons()
+            self._loaded = True
         return self.dispatch(environ, start_response)
 
     def load_addons(self):
         """ Load all addons from addons patch containg static files and
         controllers and configure them.  """
+        # TODO should we move this to ir.http so that only configured modules are served ?
+        _logger.info("HTTP Configuring static files")
+
+        self.__dict__.pop('dispatch', None)
         statics = {}
 
         for addons_path in openerp.modules.module.ad_paths:
