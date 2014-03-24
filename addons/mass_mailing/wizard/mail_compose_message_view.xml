@@ -11,7 +11,8 @@
                 <xpath expr="//field[@name='notify']" position="after">
                     <field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"
                         attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}"/>
-                    <field name="mass_mailing_name"/>
+                    <field name="mass_mailing_name"
+                        attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}"/>
                 </xpath>
             </field>
         </record>
