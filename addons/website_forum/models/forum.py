@@ -152,17 +152,7 @@ class Post(osv.Model):
         ),
 
         'correct': fields.boolean('Correct Answer/ Answer on this question accepted.'),
-        'reason': fields.selection([
-            ('duplicate', 'duplicate question'),
-            ('off_topic', 'question is off-topic or not relevant'),
-            ('argumentative','too subjective and argumentative'),
-            ('not_question', 'not a real question'),
-            ('answer_accepted', 'the question is answered, right answer was accepted'),
-            ('out_dated', 'question is not relevant or out dated'),
-            ('offensive', 'question contains offensive or malicious remarks'),
-            ('advertising', 'spam or advertising'),
-            ('localized', 'too localized'),
-            ], 'Reason'),
+        'reason_id': fields.many2one('website.forum.post.reason', 'Reason'),
         'closed_by': fields.many2one('res.users', 'Closed by'),
         'closed_date': fields.datetime('Closed on', readonly=True),
     }
@@ -218,6 +208,13 @@ class Post(osv.Model):
                 value = -15 
             self.pool['res.users'].write(cr, uid, [post.user_id.id], {'karma': value}, context=context)
         return super(Post, self).write(cr, uid, ids, vals, context=context)
+
+class PostReason(osv.Model):
+    _name = "website.forum.post.reason"
+    _description = "Post Reason"
+    _columns = {
+        'name': fields.char('Post Reason'),
+    }
 
 class Users(osv.Model):
     _inherit = 'res.users'

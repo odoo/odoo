@@ -320,10 +320,9 @@
                         <label class="col-md-2 control-label mb16" for="reason">Reasons:</label>
                         <div class="col-md-9 mb16">
                             <select class="form-control" name="reason">
-                                <t t-foreach="reasons" t-as="reason">
-                                    <option t-att-value="reason.get('name')" t-att-selected="reason.get('name') == post.reason"><t t-esc="reason.get('value')"/></option>
+                                <t t-foreach="reasons or []" t-as="reason">
+                                    <option t-att-value="reason.id" t-att-selected="reason.id == post.reason_id.id"><t t-esc="reason.name"/></option>
                                 </t>
-                                <!--div t-field="post.reason" t-field-options='{"widget":"selection"}'/-->
                             </select>
                         </div>
                     </div>
@@ -396,7 +395,7 @@
                             </t>
                             <div class="alert alert-info" t-if="question.state == 'close'">
                                 <p class="mt32 mb32 text-center">
-                                    <b>The question has been closed for the following reason "<span t-field="question.reason"/>"
+                                    <b>The question has been closed for the following reason "<span t-field="question.reason_id.name"/>"
                                     <i>by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ slug(question.closed_by) }" t-field="question.closed_by.name"/> </i>
                                      <br/>close date <span t-field="question.closed_date"/></b>
                                 </p>

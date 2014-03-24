@@ -459,17 +459,10 @@ class website_forum(http.Controller):
 
     @http.route('/forum/<model("website.forum"):forum>/close/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
     def close_question(self, forum, post, **kwarg):
-        #have to remove by applying selection widget
-        reasons = [{'name': 'duplicate', 'value': 'duplicate question'},
-            {'name': 'off_topic', 'value': 'question is off-topic or not relevant'},
-            {'name': 'argumentative', 'value': 'too subjective and argumentative'},
-            {'name': 'not_question', 'value': 'not a real question'},
-            {'name': 'answer_accepted', 'value': 'the question is answered, right answer was accepted'},
-            {'name': 'out_dated', 'value': 'question is not relevant or out dated'},
-            {'name': 'offensive', 'value': 'question contains offensive or malicious remarks'},
-            {'name': 'advertising', 'value': 'spam or advertising'},
-            {'name': 'localized', 'value': 'too localized'}
-        ]
+        cr, uid, context = request.cr, request.uid, request.context
+        Reason = request.registry['website.forum.post.reason']
+        reason_ids = Reason.search(cr, uid, [], context=context)
+        reasons = Reason.browse(cr, uid, reason_ids, context)
 
         values = {
             'post': post,
@@ -486,7 +479,7 @@ class website_forum(http.Controller):
             'state': 'close',
             'closed_by': request.uid,
             'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
-            'reason': post.get('reason'),
+            'reason_id': post.get('reason'),
         }, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('post_id')))
 
