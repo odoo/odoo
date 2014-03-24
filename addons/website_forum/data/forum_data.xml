@@ -2,15 +2,15 @@
 <openerp>
     <data noupdate="1">
 
-        <record id="menu_questions" model="website.menu">
-            <field name="name">Forum</field>
-            <field name="url">/forum</field>
-            <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">40</field>
-        </record>
-
         <record id="forum_help" model="website.forum">
             <field name="name">Help</field>
+        </record>
+
+        <record id="menu_questions" model="website.menu">
+            <field name="name">Forum</field>
+            <field name="url" eval="'/forum/'+str(ref('website_forum.forum_help'))"/>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">40</field>
         </record>
 
         <!--record id="action_open_website" model="ir.actions.act_url">
@@ -50,6 +50,11 @@
             <field name="res_model">website.forum.post</field>
             <field name="default" eval="False"/>
             <field name="description">Answer edited</field>
+        </record>
+
+        <!--At this time create_date is not stores in db for administrator only so for that forcefully updating date. -->
+        <record id="base.user_root" model="res.users">
+            <field name="create_date" eval="DateTime.today()"/>
         </record>
 
         <!-- Reasons for closing Post -->

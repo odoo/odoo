@@ -60,7 +60,9 @@ class website_forum(http.Controller):
         #notification to user.
         badgeuser_ids = BadgeUser.search(cr, uid, [('user_id', '=', uid)], context=context)
         notification_ids = Message.search(cr, uid, [('res_id', 'in', badgeuser_ids), ('model', '=', 'gamification.badge.user'), ('to_read', '=', True)], context=context)
-        return Message.browse(cr, uid, notification_ids, context=context)
+        notifications = Message.browse(cr, uid, notification_ids, context=context)
+        user = request.registry['res.users'].browse(cr, uid, uid, context=context)
+        return {"user": user, "notifications": notifications}
 
     @http.route(['/forum/<model("website.forum"):forum>', '/forum/<model("website.forum"):forum>/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
     def questions(self, forum, page=1, filters='', sorting='', **searches):
@@ -254,7 +256,7 @@ class website_forum(http.Controller):
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),new_question_id))
 
     @http.route('/forum/<model("website.forum"):forum>/question/postanswer/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
-    def post_answer(self, forum ,post_id, **question):
+    def post_answer(self, forum, post_id, **question):
         cr, uid, context = request.cr, request.uid, request.context
         request.registry['res.users'].write(cr, uid, uid, {'forum': True}, context=context)
 
@@ -336,7 +338,7 @@ class website_forum(http.Controller):
         badges = Badge.browse(cr, uid, badge_ids, context=context)
         values = {
             'badges': badges,
-            'notifications': [],
+            'notifications': {},
             'forum': forum,
             'searches': {'badges': True}
         }
@@ -349,7 +351,7 @@ class website_forum(http.Controller):
 
         values = {
             'badge': badge,
-            'notifications': [],
+            'notifications': {},
             'users': users,
             'forum': forum,
             'searches': kwargs
@@ -520,3 +522,20 @@ class website_forum(http.Controller):
             'website_description': post.get('description'), 
         }, context=context)
         return werkzeug.utils.redirect("/forum/%s/user/%s" % (slug(forum),post.get('user_id')))
+
+    @http.route('/forum/<model("website.forum"):forum>/post/<model("website.forum.post"):post>/commet/<model("mail.message"):comment>/converttoanswer', type='http', auth="user", multilang=True, website=True)
+    def convert_to_answer(self, forum, post, comment, **kwarg):
+        values = {
+            'answer_content': comment.body,
+        }
+        request.registry['mail.message'].unlink(request.cr, request.uid, [comment.id], context=request.context)
+        return self.post_answer(forum, post.parent_id and post.parent_id.id or post.id, **values)
+
+    @http.route('/forum/<model("website.forum"):forum>/post/<model("website.forum.post"):post>/converttocomment', type='http', auth="user", multilang=True, website=True)
+    def convert_to_comment(self, forum, post, **kwarg):
+        values = {
+            'comment': post.content,
+        }
+        request.registry['website.forum.post'].unlink(request.cr, request.uid, [post.id], context=request.context)
+        return self.post_comment(forum, post.parent_id.id, **values)
+
