@@ -52,11 +52,6 @@
         <section class="container">
           <div class="row">
             <div id="left_column">
-                <select id="timezone" t-att-data="time_collection">
-                    <t t-foreach="timezone" t-as="time">
-                        <option t-att-value="time[0]"><t t-esc="time[1]" /></option>
-                    </t> 
-                </select>
             </div>
             <div class="col-md-12" id="right_column">
                 <t t-foreach="days" t-as="day">
