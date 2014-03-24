@@ -114,7 +114,7 @@ class Post(osv.Model):
 
         'favourite_ids': fields.many2many('res.users', 'forum_favourite_rel', 'forum_id', 'user_id', 'Favourite'),
 
-        'state': fields.selection([('active', 'Active'),('close', 'Close'),('offensive', 'Offensive')], 'Status'),
+        'state': fields.selection([('active', 'Active'), ('close', 'Close'),('offensive', 'Offensive')], 'Status'),
         'active': fields.boolean('Active'),
         'views': fields.integer('Page Views'),
 
@@ -151,7 +151,7 @@ class Post(osv.Model):
             }
         ),
 
-        'correct': fields.boolean('Correct Answer'),
+        'correct': fields.boolean('Correct Answer/ Answer on this question accepted.'),
         'reason': fields.selection([
             ('duplicate', 'duplicate question'),
             ('off_topic', 'question is off-topic or not relevant'),

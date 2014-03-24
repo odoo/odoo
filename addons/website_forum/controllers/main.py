@@ -187,7 +187,8 @@ class website_forum(http.Controller):
         Data = request.registry["ir.model.data"]
 
         #questions asked by user.
-        question_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('user_id', '=', user.id), ('parent_id', '=', False)], context=context)
+        question_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('user_id', '=', user.id), ('parent_id', '=', False),
+                                             '|', ('active', '=', False), ('active', '=', True)], context=context)
         user_questions = Post.browse(cr, uid, question_ids, context=context)
 
         #showing questions in which user answered
@@ -391,8 +392,18 @@ class website_forum(http.Controller):
 
     @http.route('/forum/<model("website.forum"):forum>/delete/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
     def delete_question(self, forum, post, **kwarg):
-        request.registry['website.forum.post'].unlink(request.cr, request.uid, [post.id], context=request.context)
-        return werkzeug.utils.redirect("/forum/%s/" % (slug(forum)))
+        #instead of unlink record just change 'active' to false so user can undelete it.
+        request.registry['website.forum.post'].write( request.cr, request.uid, [post.id], {
+            'active': False,
+        }, context=request.context)
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.id))
+
+    @http.route('/forum/<model("website.forum"):forum>/undelete/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
+    def undelete_question(self, forum, post, **kwarg):
+        request.registry['website.forum.post'].write( request.cr, request.uid, [post.id], {
+            'active': True,
+        }, context=request.context)
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.id))
 
     @http.route('/forum/message_delete/', type='json', auth="user", multilang=True, methods=['POST'], website=True)
     def delete_comment(self, **kwarg):
@@ -441,7 +452,7 @@ class website_forum(http.Controller):
                     Post.write( cr, uid, [child.id], {
                         'correct': False,
                     }, context=context)
-            Post.write( cr, uid, [int(kwarg.get('post_id'))], {
+            Post.write( cr, uid, [post.id, post.parent_id.id], {
                 'correct': correct,
             }, context=context)
         return correct
@@ -470,7 +481,7 @@ class website_forum(http.Controller):
         return request.website.render("website_forum.close_question", values)
 
     @http.route('/forum/<model("website.forum"):forum>/question/close/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
-    def save_edited_question(self, forum, **post):
+    def close(self, forum, **post):
         request.registry['website.forum.post'].write( request.cr, request.uid, [int(post.get('post_id'))], {
             'state': 'close',
             'closed_by': request.uid,
@@ -478,6 +489,13 @@ class website_forum(http.Controller):
             'reason': post.get('reason'),
         }, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('post_id')))
+
+    @http.route('/forum/<model("website.forum"):forum>/reopen/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
+    def reopen(self, forum, post, **kwarg):
+        request.registry['website.forum.post'].write( request.cr, request.uid, [post.id], {
+            'state': 'active',
+        }, context=request.context)
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.id))
 
     @http.route('/forum/<model("website.forum"):forum>/edit/profile/<model("res.users"):user>', type='http', auth="user", multilang=True, website=True)
     def edit_profile(self, forum, user, **kwarg):

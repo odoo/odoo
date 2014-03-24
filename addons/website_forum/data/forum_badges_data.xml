@@ -145,16 +145,13 @@
             <field name="level">gold</field>
         </record>
 
-        <!--TODO: need to some what on post that on delete it should not delete from db,
-         it should shange boolean field?. at this time we are showing post with 3 vote(not deleted)
-        -->
         <record model="gamification.goal.definition" id="definition_disciplined">
             <field name="name">Discipline</field>
             <field name="description">Delete own post with 3 or more upvotes</field>
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('user_id','=',user.id), ('vote_count', '>=', 3)]</field>
+            <field name="domain">[('user_id','=',user.id), ('vote_count', '>=', 3), ('active', '=', False)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -364,7 +361,6 @@ result = get_counter(cr, uid, context=context)
             <field name="level">silver</field>
         </record>
 
-        <!--NOTE: passing default value 1 for res forumwise it gives error in gamification, will improve in gamification -->
         <record model="gamification.goal.definition" id="definition_favorite_question">
             <field name="name">Favorite Question</field>
             <field name="description">Ask a question which can be favorited by minimum 5 users</field>
@@ -747,16 +743,13 @@ result = get_posts(cr, uid, context=context)
             <field name="level">gold</field>
         </record>
 
-        <!--TODO: need to some what on post that on delete it should not delete from db,
-         it should shange boolean field?. at this time we are showing post with 3 down vote(not deleted)
-        -->
         <record model="gamification.goal.definition" id="definition_peer_pressure">
             <field name="name">Peer Pressure</field>
             <field name="description">Delete own post with 3 or more down votes</field>
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post')" />
-            <field name="domain">[('user_id','=',user.id), ('vote_count', '&lt;=', -3)]</field>
+            <field name="domain">[('user_id','=',user.id), ('vote_count', '&lt;=', -3), ('active', '=', False)]</field>
             <field name="condition">higher</field>
         </record>
 
@@ -861,7 +854,6 @@ result = get_count(cr, uid, context=context)
             <field name="level">gold</field>
         </record>
 
-        <!--TODO: add field to show closed state of question or update correct on quetion when any answer accepted.-->
         <record model="gamification.goal.definition" id="definition_scholar">
             <field name="name">Scholar</field>
             <field name="description">Ask a question and accept an answer</field>
@@ -932,7 +924,6 @@ result = get_count(cr, uid, context=context)
             <field name="level">bronze</field>
         </record>
 
-        <!--NOTE: passing default value 1 for res forumwise it gives error in gamification, will improve in gamification -->
         <record model="gamification.goal.definition" id="definition_stellar_question">
             <field name="name">Stellar Question</field>
             <field name="description">Ask a question which can be favorited by minimum 25 users</field>

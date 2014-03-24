@@ -47,6 +47,8 @@
                 <div style="margin-left: 95px;">
                     <div class="question-name">
                         <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" t-field="question.name"/>
+                            <span t-if="not question.active"><b> [Deleted]</b></span>
+                            <span t-if="question.state == 'close'"><b> [Closed]</b></span>
                     </div>
                     <div class="text-muted">
                         by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.user_id.id }" t-field="question.user_id"/>, 
@@ -335,7 +337,7 @@
         <template id="post_description_full" name="Question Navigation">
             <t t-call="website_forum.header">
 
-                <div class="question">
+                <div t-attf-class="question #{not question.active and 'alert alert-danger' or ''}">
                     <div class="text-center pull-left" id="post_vote">
                         <div t-attf-class="box oe_grey">
                             <a t-attf-class="fa fa-thumbs-up #{question.user_vote == 1 and 'text-success' or ''}" 
@@ -354,7 +356,11 @@
                         </div>
                     </div>
                     <div style="margin-left: 95px;">
-                        <h1 t-field="question.name" class="mt0"/>
+                        <h1 class="mt0">
+                            <span t-field="question.name"/>
+                            <span t-if="not question.active"><b> [Deleted]</b></span>
+                            <span t-if="question.state == 'close'"><b> [Closed]</b></span>
+                        </h1>
                         <t t-raw="question.content"/>
 
                         <div class="mt16 clearfix">
@@ -371,9 +377,16 @@
                                             comment
                                         </a>
                                     </li>
-                                    <li><a class="text-muted fa fa-times" t-attf-href="/forum/#{ slug(forum) }/close/question/#{ question.id }">close</a></li>
-                                    <li><a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/edit/question/#{ question.id }">edit</a></li>
-                                    <li><a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/delete/question/#{ question.id }">delete</a></li>
+                                    <li><a class="text-muted fa fa-times" t-if="question.state != 'close'" 
+                                        t-attf-href="/forum/#{ slug(forum) }/close/question/#{ question.id }">close</a></li>
+                                    <li><a class="text-muted fa fa-times" t-if="question.state == 'close'" 
+                                        t-attf-href="/forum/#{ slug(forum) }/reopen/question/#{ question.id }">reopen</a></li>
+                                    <li><a class="text-muted fa fa-edit" 
+                                        t-attf-href="/forum/#{ slug(forum) }/edit/question/#{ question.id }">edit</a></li>
+                                    <li><a class="text-muted fa fa-trash-o" t-if="question.active" 
+                                        t-attf-href="/forum/#{ slug(forum) }/delete/question/#{ question.id }">delete</a></li>
+                                    <li><a class="text-muted fa fa-trash-o" t-if="not question.active" 
+                                        t-attf-href="/forum/#{ slug(forum) }/undelete/question/#{ question.id }">undelete</a></li>
                                     <li><a class="text-muted fa fa-share" href="">share</a></li>
                                 </ul>
                             </div>
@@ -382,7 +395,7 @@
                                 <span class="text-muted">Asked on <span t-field="question.write_date"/></span>
                             </t>
                             <div class="alert alert-info" t-if="question.state == 'close'">
-                                <p class="mt32 mb32" style="text-align: center;">
+                                <p class="mt32 mb32 text-center">
                                     <b>The question has been closed for the following reason "<span t-field="question.reason"/>"
                                     <i>by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ slug(question.closed_by) }" t-field="question.closed_by.name"/> </i>
                                      <br/>close date <span t-field="question.closed_date"/></b>
