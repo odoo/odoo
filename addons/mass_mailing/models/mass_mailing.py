@@ -25,6 +25,7 @@ import urllib
 import urlparse
 
 from openerp import tools
+from openerp.exceptions import Warning
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp.osv import osv, fields
@@ -442,7 +443,7 @@ class MassMailing(osv.Model):
         ),
         'template_id': fields.many2one(
             'email.template', 'Email Template',
-            domain=[('use_in_mass_mailing', '=', True)],
+            domain="[('use_in_mass_mailing', '=', True), ('model', '=', mailing_model)]",
             required=True,
         ),
         'body_html': fields.related(
@@ -625,6 +626,24 @@ class MassMailing(osv.Model):
             'context': context,
         }
 
+    def action_template_copy(self, cr, uid, ids, context=None):
+        mailing = self.browse(cr, uid, ids[0], context=context)
+        if not mailing.template_id:
+            return False
+        new_tpl_id = self.pool['email.template'].copy(cr, uid, mailing.template_id.id, context=context)
+        self.write(cr, uid, [mailing.id], {'template_id': new_tpl_id}, context=context)
+        view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'email_template.email_template_form_minimal')
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'email.template',
+            'res_id': new_tpl_id,
+            'view_id': view_id,
+            'target': 'new',
+            'context': context,
+        }
+
     #------------------------------------------------------
     # Email Sending
     #------------------------------------------------------
@@ -700,6 +719,8 @@ class MassMailing(osv.Model):
         for mailing in self.browse(cr, uid, ids, context=context):
             # res_ids = self._set_up_test_mailing(cr, uid, mailing.mailing_model, context=context)
             res_ids = [c.id for c in mailing.email_to]
+            if not res_ids:
+                raise Warning('Please specifiy test email adresses.')
             all_mail_values = self.pool['mail.compose.message'].generate_email_for_composer_batch(
                 cr, uid, mailing.template_id.id, res_ids,
                 context=context,

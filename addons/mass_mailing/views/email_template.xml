@@ -3,10 +3,21 @@
     <data>
 
         <!-- Email Templates -->
-        <record id="view_marketing_settings_mass_mailing" model="ir.ui.view">
+        <record id="email_template_form_mass_mailing" model="ir.ui.view">
             <field name="name">email.template.form.mass.mailing</field>
             <field name="model">email.template</field>
             <field name="inherit_id" ref="email_template.email_template_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='model_id']" position="after">
+                    <br /><label for="use_in_mass_mailing"/><field name="use_in_mass_mailing"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="email_template_form_minimal_mass_mailing" model="ir.ui.view">
+            <field name="name">email.template.form.minimal.mass.mailing</field>
+            <field name="model">email.template</field>
+            <field name="inherit_id" ref="email_template.email_template_form_minimal"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='model_id']" position="after">
                     <br /><label for="use_in_mass_mailing"/><field name="use_in_mass_mailing"/>
@@ -54,7 +65,7 @@
                                     <h3>
                                         <field name="name"/>
                                     </h3>
-                                    <div class="html_preview">
+                                    <div class="kanban_html_preview">
                                         <t t-raw="record.body_html.raw_value"/>
                                     </div>
                                 </div>
@@ -71,6 +82,7 @@
             <field name="res_model">email.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="email_template.email_template_form_minimal"/>
             <field name="context">{'search_default_use_in_mass_mailing': 1}</field>
         </record>
 

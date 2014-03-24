@@ -78,6 +78,35 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="email_template_form_minimal">
+            <field name="name">email.template.form.minimal</field>
+            <field name="model">email.template</field>
+            <field name="priority">32</field>
+            <field name="arch" type="xml">
+                <form string="Templates" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/><field name="name" required="1" class="oe_inline"/><br />
+                            <label for="model_id"/><field name="model_id" required="1" class="oe_inline"
+                                options="{'no_open': True, 'no_create': True}"
+                                on_change="onchange_model_id(model_id)"/>
+                        </div>
+                        <div class="oe_right oe_button_box" name="buttons">
+                            <button name="%(wizard_email_template_preview)d" string="Preview"
+                                    type="action" target="new"
+                                    context="{'template_id':active_id}"/>
+                        </div>
+                        <notebook>
+                            <page string="Body">
+                                <field name="body_html" nolabel="1"/>
+                                <field name="attachment_ids" widget="many2many_binary"/>
+                            </page>
+                        </notebook>
+                       </sheet>
+                </form>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="email_template_tree">
             <field name="name">email.template.tree</field>
             <field name="model">email.template</field>

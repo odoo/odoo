@@ -243,9 +243,18 @@
                                 <label for="template_id"/>
                                 <div style="max-height: 200px; overflow: hidden !important;">
                                     <field name="template_id" string="Select Template" nolabel="1"
+                                        options="{'no_create': True, 'no_open': True}"
                                         on_change="on_change_template_id(template_id, context)"/>
-                                    <field name="body_html" class="html_preview" nolabel="1"
+                                    <button string='Create a New Template' class='oe_inline oe_link oe_edit_only'
+                                        type='object' name='action_template_new'
+                                        attrs="{'invisible': [('template_id', '!=', False)]}"/>
+                                    <button string='Copy and Edit Template' class='oe_inline oe_link oe_edit_only'
+                                        type='object' name='action_template_copy'
                                         attrs="{'invisible': [('template_id', '=', False)]}"/>
+                                    <div style="max-width: 300px !important;"> 
+                                        <field name="body_html" class="form_html_preview" nolabel="1"
+                                            attrs="{'invisible': [('template_id', '=', False)]}"/>
+                                    </div>
                                 </div>
                                 <field name="email_from"/>
                                 <field name="reply_to"/>

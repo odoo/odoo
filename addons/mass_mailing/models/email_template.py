@@ -14,8 +14,10 @@ class EmailTemplate(osv.Model):
     }
 
     def action_new_mailing(self, cr, uid, ids, context=None):
+        template = self.browse(cr, uid, ids[0], context=context)
         ctx = dict(context)
         ctx.update({
+            'default_mailing_model': template.model,
             'default_template_id': ids[0],
         })
         return {
@@ -25,7 +27,5 @@ class EmailTemplate(osv.Model):
             'view_mode': 'form',
             'res_model': 'mail.mass_mailing',
             'views': [(False, 'form')],
-            'view_id': False,
-            # 'target': 'new',
             'context': ctx,
         }
