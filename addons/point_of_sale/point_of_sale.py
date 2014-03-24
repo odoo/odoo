@@ -64,7 +64,7 @@ class pos_config(osv.osv):
 #         'warehouse_id' : fields.many2one('stock.warehouse', 'Warehouse',
 #              required=True),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type'),
-        'stock_location_id': fields.many2one('stock.location', 'Stock Location to take from', domain=[('usage', '=', 'internal')], required=True),
+        'stock_location_id': fields.many2one('stock.location', 'Stock Location', domain=[('usage', '=', 'internal')], required=True),
         'journal_id' : fields.many2one('account.journal', 'Sale Journal',
              domain=[('type', '=', 'sale')],
              help="Accounting journal used to post sales entries."),
@@ -138,6 +138,15 @@ class pos_config(osv.osv):
         res = self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')], limit=1, context=context)
         return res and res[0] or False
 
+
+    def _get_default_location(self, cr, uid, context=None):
+        wh_obj = self.pool.get('stock.warehouse')
+        user = self.pool.get('res.users').browse(cr, uid, uid, context)
+        res = wh_obj.search(cr, uid, [('company_id', '=', user.company_id.id)], limit=1, context=context)
+        if res and res[0]:
+            return wh_obj.browse(cr, uid, res[0], context=context).lot_stock_id.id
+        return False
+
     def _get_default_company(self, cr, uid, context=None):
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
         return company_id
@@ -149,6 +158,7 @@ class pos_config(osv.osv):
         'group_by' : True,
         'pricelist_id': _default_pricelist,
         'iface_invoicing': True,
+        'stock_location_id': _get_default_location,
         'company_id': _get_default_company,
     }
 
