@@ -591,7 +591,8 @@
                             <field name="name"/>
                         </h1>
                         <group col="4">
-                            <field name="picking_type_id" widget="selection" groups="stock.group_locations" /><!-- TODO Group? -->
+                            <field name="picking_type_id" widget="selection" groups="stock.group_locations" 
+                                on_change="onchange_picking_type_id(picking_type_id)"/>
                             <field name="stock_location_id" groups="stock.group_locations"/>
                             <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                             <field name="currency_id" invisible="1"/>

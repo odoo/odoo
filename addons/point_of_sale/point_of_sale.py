@@ -162,6 +162,14 @@ class pos_config(osv.osv):
         'company_id': _get_default_company,
     }
 
+
+    def onchange_picking_type_id(self, cr, uid, ids, picking_type_id, context=None):
+        p_type_obj = self.pool.get("stock.picking.type")
+        p_type = p_type_obj.browse(cr, uid, picking_type_id, context=context)
+        if p_type.default_location_src_id and p_type.default_location_src_id.usage == 'internal' and p_type.default_location_dest_id and p_type.default_location_dest_id.usage == 'customer':
+            return {'value': {'stock_location_id': p_type.default_location_src_id.id}}
+        return False
+
     def set_active(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state' : 'active'}, context=context)
 
