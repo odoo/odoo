@@ -157,47 +157,29 @@ class mail_compose_message(osv.TransientModel):
     # Wizard validation and send
     #------------------------------------------------------
 
-    def _get_or_create_partners_from_values(self, cr, uid, rendered_values, context=None):
-        """ Check for email_to, email_cc, partner_to """
-        partner_ids = []
-        mails = tools.email_split(rendered_values.pop('email_to', '')) + tools.email_split(rendered_values.pop('email_cc', ''))
-        for mail in mails:
-            partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
-            partner_ids.append(partner_id)
-        partner_to = rendered_values.pop('partner_to', '')
-        if partner_to:
-            # placeholders could generate '', 3, 2 due to some empty field values
-            tpl_partner_ids = [pid for pid in partner_to.split(',') if pid]
-            partner_ids += self.pool['res.partner'].exists(cr, SUPERUSER_ID, tpl_partner_ids, context=context)
-        return partner_ids
-
     def generate_email_for_composer_batch(self, cr, uid, template_id, res_ids, context=None, fields=None):
         """ Call email_template.generate_email(), get fields relevant for
             mail.compose.message, transform email_cc and email_to into partner_ids """
-        # filter template values
+        if context is None:
+            context = {}
         if fields is None:
             fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachment_ids', 'mail_server_id']
-        returned_fields = fields + ['attachments']
+        returned_fields = fields + ['partner_ids', 'attachments']
         values = dict.fromkeys(res_ids, False)
 
-        template_values = self.pool.get('email.template').generate_email_batch(cr, uid, template_id, res_ids, fields=fields, context=context)
+        ctx = dict(context, tpl_partners_only=True)
+        template_values = self.pool.get('email.template').generate_email_batch(cr, uid, template_id, res_ids, fields=fields, context=ctx)
         for res_id in res_ids:
             res_id_values = dict((field, template_values[res_id][field]) for field in returned_fields if template_values[res_id].get(field))
             res_id_values['body'] = res_id_values.pop('body_html', '')
-
-            # transform email_to, email_cc into partner_ids
-            ctx = dict((k, v) for k, v in (context or {}).items() if not k.startswith('default_'))
-            partner_ids = self._get_or_create_partners_from_values(cr, uid, res_id_values, context=ctx)
-            # legacy template behavior: void values do not erase existing values and the
-            # related key is removed from the values dict
-            if partner_ids:
-                res_id_values['partner_ids'] = list(partner_ids)
-
             values[res_id] = res_id_values
         return values
 
     def render_message_batch(self, cr, uid, wizard, res_ids, context=None):
         """ Override to handle templates. """
+        # generate composer values
+        composer_values = super(mail_compose_message, self).render_message_batch(cr, uid, wizard, res_ids, context)
+
         # generate template-based values
         if wizard.template_id:
             template_values = self.generate_email_for_composer_batch(
@@ -206,10 +188,13 @@ class mail_compose_message(osv.TransientModel):
                 context=context)
         else:
             template_values = dict.fromkeys(res_ids, dict())
-        # generate composer values
-        composer_values = super(mail_compose_message, self).render_message_batch(cr, uid, wizard, res_ids, context)
 
         for res_id in res_ids:
+            if wizard.template_id:
+                # recipients are managed by the template
+                composer_values[res_id].pop('partner_ids')
+                composer_values[res_id].pop('email_to')
+                composer_values[res_id].pop('email_cc')
             # remove attachments from template values as they should not be rendered
             template_values[res_id].pop('attachment_ids', None)
             # update template values by composer values
