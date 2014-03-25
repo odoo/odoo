@@ -1532,7 +1532,9 @@
                     <field name="lines_id" widget="one2many_list"/>
                     <separator string="Legend"/>
                     <field name="legend"/>
-                    <button name="%(action_account_use_model_create_entry)d" string="Create entries" type="action" icon="gtk-execute"/>
+                    <div class="oe_button_box">
+                        <button class="oe_inline oe_button_box oe_stat_button" name="%(action_account_use_model_create_entry)d" string="Create entries" type="action" icon="fa-cogs" widget="statinfo"/>
+                    </div>
                 </form>
             </field>
         </record>
