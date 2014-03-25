@@ -484,7 +484,7 @@ class Field(object):
         else:
             # execute the compute method in DRAFT mode, so that assigned fields
             # are not written to the database
-            with scope.draft():
+            with scope.in_draft():
                 record._in_cache()
                 recs = record._in_cache_without(self.name)
                 self.compute_value(recs, check_exists=True)

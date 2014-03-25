@@ -98,22 +98,13 @@ class ScopeProxy(object):
             scope.check_cache()
 
     @property
-    def recomputation(self):
-        """ Return the recomputation manager object. """
+    def shared(self):
+        """ Return the shared object. """
         try:
-            return self._local.recomputation
+            return self._local.shared
         except AttributeError:
-            self._local.recomputation = recomputation = Recomputation()
-            return recomputation
-
-    @property
-    def draft(self):
-        """ Return the draft switch. """
-        try:
-            return self._local.draft
-        except AttributeError:
-            self._local.draft = draft = DraftSwitch()
-            return draft
+            self._local.shared = shared = Shared()
+            return shared
 
 proxy = ScopeProxy()
 
@@ -138,8 +129,6 @@ class Scope(object):
 
          - :attr:`registry`, the model registry of the current database,
          - :attr:`cache`, the records cache for this scope,
-         - :attr:`draft`, an object to manage the draft mode
-            (see :class:`DraftSwitch`).
 
         The records cache is a set of nested dictionaries, indexed by model
         name, record id, and field name (in that order).
@@ -162,8 +151,7 @@ class Scope(object):
         scope.cache = defaultdict(dict)     # cache[field] = {id: value}
         scope.cache_ids = defaultdict(set)  # cache_ids[model_name] = set(ids)
         scope.dirty = set()                 # set of dirty records
-        scope.draft = proxy.draft
-        scope.recomputation = proxy.recomputation
+        scope.shared = proxy.shared         # shared state object
         scope_list.append(scope)
         return scope
 
@@ -235,6 +223,41 @@ class Scope(object):
         """ return the current language code """
         return self.context.get('lang')
 
+    @property
+    def draft(self):
+        """ Return whether we are in draft mode. """
+        return self.shared.draft
+
+    @contextmanager
+    def in_draft(self):
+        """ Context-switch to draft mode. """
+        if self.shared.draft:
+            yield
+        else:
+            try:
+                self.shared.draft = True
+                yield
+            finally:
+                self.shared.draft = False
+                self.dirty.clear()
+
+    @property
+    def recomputation(self):
+        """ Return the recomputation object. """
+        return Recomputation(self)
+
+    @contextmanager
+    def in_recomputation(self):
+        """ Context-switch to recomputation mode. """
+        if self.shared.recomputing:
+            yield {}
+        else:
+            try:
+                self.shared.recomputing = True
+                yield self.recomputation
+            finally:
+                self.shared.recomputing = False
+
     def invalidate(self, spec):
         """ Invalidate some fields for some records in the cache of `self`.
 
@@ -284,66 +307,26 @@ class Scope(object):
             if invalids:
                 raise Warning('Invalid cache for fields\n' + pformat(invalids))
 
-#
-# DraftSwitch - manages the mode switching between draft and non-draft
-#
 
-class DraftSwitch(object):
-    """ An object that manages the draft mode associated to all the scopes of a
-        werkzeug session. In draft mode, field assignments only affect the
-        cache, and have thus no effect on the database::
+class Shared(object):
+    """ An object shared by all scopes in a thread/request. """
 
-            # calling returns a context manager that switches to draft mode
-            with scope.draft():
-                # here we are in draft mode, this only affects the cache
-                record.name = 'Foo'
-
-                # testing returns the state
-                assert scope.draft
-
-                # nesting is possible, and is idempotent
-                with scope.draft():
-                    assert scope.draft
-
-            # testing returns the state
-            assert not scope.draft
-    """
     def __init__(self):
-        self._state = False
+        self.draft = False
+        self.recomputing = False
+        self.todo = {}
 
-    def __nonzero__(self):
-        return self._state
-
-    @contextmanager
-    def __call__(self):
-        old_state = self._state
-        self._state = True
-        try:
-            yield
-        finally:
-            self._state = old_state
-            # if going back to clean state, clear the dirty set
-            if not old_state:
-                proxy.dirty.clear()
-
-
-#
-# Recomputation manager - stores the field/record to recompute
-#
 
 class Recomputation(MutableMapping):
-    """ Mapping `field` to `records` to recompute.
-        Use it as a context manager to handle all recomputations at one level
-        only, and clear the recomputation manager after an exception.
-    """
-    _level = 0                          # nesting level for recomputations
+    """ Proxy object mapping `field` to `records` to recompute. """
 
-    def __init__(self):
-        self._todo = {}                 # {field: records, ...}
+    def __init__(self, scope):
+        self._scope = scope
+        self._todo = scope.shared.todo
 
     def __getitem__(self, field):
         """ Return the records to recompute for `field` (may be empty). """
-        return self._todo.get(field) or proxy[field.model_name]
+        return self._todo.get(field) or self._scope[field.model_name]
 
     def __setitem__(self, field, records):
         """ Set the records to recompute for `field`. It automatically discards
@@ -363,15 +346,6 @@ class Recomputation(MutableMapping):
 
     def __len__(self):
         return len(self._todo)
-
-    def __enter__(self):
-        self._level += 1
-        # return an empty collection at higher levels to let the top-level
-        # recomputation handle all recomputations
-        return () if self._level > 1 else self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        self._level -= 1
 
 
 # keep those imports here in order to handle cyclic dependencies correctly

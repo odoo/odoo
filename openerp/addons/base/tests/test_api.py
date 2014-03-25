@@ -253,11 +253,11 @@ class TestAPI(common.TransactionCase):
     def test_55_draft(self):
         """ Test draft mode nesting. """
         self.assertFalse(scope.draft)
-        with scope.draft():
+        with scope.in_draft():
             self.assertTrue(scope.draft)
-            with scope.draft():
+            with scope.in_draft():
                 self.assertTrue(scope.draft)
-                with scope.draft():
+                with scope.in_draft():
                     self.assertTrue(scope.draft)
                 self.assertTrue(scope.draft)
             self.assertTrue(scope.draft)

@@ -5405,7 +5405,7 @@ class BaseModel(object):
         """ Recompute stored function fields. The fields and records to
             recompute have been determined by method :meth:`modified`.
         """
-        with scope_proxy.recomputation as recomputation:
+        with scope_proxy.in_recomputation() as recomputation:
             while recomputation:
                 field, recs = next(recomputation.iteritems())
                 # To recompute field, simply evaluate it on recs.
@@ -5439,7 +5439,7 @@ class BaseModel(object):
         """
         scope = scope_proxy.current
 
-        with scope.draft():
+        with scope.in_draft():
             # create a new record with the values, except field_name
             record = self.new(values)
             record_values = dict(record._cache)
@@ -5457,7 +5457,7 @@ class BaseModel(object):
         # at this point, the cache should be clean
         assert not scope.dirty
 
-        with scope.draft():
+        with scope.in_draft():
             # check for a field-specific onchange method
             method = getattr(record, 'onchange_' + field_name, None)
             if method is None:
