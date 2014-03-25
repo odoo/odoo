@@ -47,11 +47,12 @@
                 }
             });
         },
-        prepare_data : function(identifier) {
+        prepare_data : function(identifier,comment_count) {
             var self = this;
             return openerp.jsonRpc("/blogpost/get_discussion/", 'call', {
                 'post_id': self.settings.post_id,
                 'discussion':identifier,
+                'count' : comment_count, //if true only get length of total comment, display on discussion thread.
             })
         },
         discussion_handler : function(i, node) {
@@ -67,17 +68,17 @@
                 }
                 identifier = self.settings.identifier + '-' + i;
             }
-            self.prepare_data(identifier).then(function(data){
+            self.prepare_data(identifier,true).then(function(data){
                 self.prepare_discuss_link(data,identifier,node)
             });
         },
         prepare_discuss_link :  function(data, identifier, node) {
             var self = this;
-            var cls = data.length > 0 ? 'discussion-link has-comments' : 'discussion-link';
+            var cls = data > 0 ? 'discussion-link has-comments' : 'discussion-link';
             var a = $('<a class="'+ cls +' css_editable_mode_hidden" />')
                 .attr('data-discus-identifier', identifier)
                 .attr('data-discus-position', self.settings.position)
-                .text(data.length > 0 ? data.length : '+')
+                .text(data > 0 ? data : '+')
                 .attr('data-contentwrapper','.mycontent')
                 .wrap('<div class="discussion" />')
                 .parent()
@@ -120,7 +121,7 @@
             var elt = $('a[data-discus-identifier="'+identifier+'"]');
             elt.append(qweb.render("website.blog_discussion.popover", {'identifier': identifier , 'options': self.settings}));
             var comment = '';
-            self.prepare_data(identifier).then(function(data){
+            self.prepare_data(identifier,false).then(function(data){
                 _.each(data, function(res){
                     comment += qweb.render("website.blog_discussion.comment", {'res': res});
                 });
@@ -189,7 +190,7 @@
                 'name' : val[1],
                 'email': val[2],
             }).then(function(res){
-                $(".popover ul.media-list").prepend(qweb.render("website.blog_discussion.comment", {'res': res}))
+                $(".popover ul.media-list").prepend(qweb.render("website.blog_discussion.comment", {'res': res[0]}))
                 var ele = $('a[data-discus-identifier="'+ self.discus_identifier +'"]');
                 ele.text(_.isNaN(parseInt(ele.text())) ? 1 : parseInt(ele.text())+1)
                 ele.addClass('has-comments');

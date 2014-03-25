@@ -31,7 +31,7 @@ from datetime import datetime
 import random
 
 from openerp.tools import html2plaintext
-
+import email.utils
 
 class WebsiteBlog(http.Controller):
     _blog_post_per_page = 20
@@ -93,7 +93,7 @@ class WebsiteBlog(http.Controller):
          - 'blog': browse of the current blog, if blog_id
          - 'blogs': list of browse records of blogs
          - 'pager': the pager to display posts pager in a blog
-         - 'tag': current tag, if tag_id
+         - 'tag': current tag, if tag_idemail.utils.parseaddr
          - 'nav_list': a dict [year][month] for archives navigation
         """
         cr, uid, context = request.cr, request.uid, request.context
@@ -230,24 +230,31 @@ class WebsiteBlog(http.Controller):
             self._blog_post_message(user, blog_post_id, **post)
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
+    def _get_discussion_detail(self, ids, publish=False, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        values = []
+        mail_obj = request.registry.get('mail.message')
+        for message in mail_obj.browse(cr, SUPERUSER_ID, ids, context=context):
+            values.append({
+                "id": message.id,
+                "author_name": message.author_id and message.author_id.name or email.utils.parseaddr(message.email_from)[0],
+                "author_image": message.author_id and \
+                    ("data:image/png;base64,%s" % message.author_id.image) or \
+                    '/website_blog/static/src/img/anonymous.png',
+                "date": message.date,
+                'body': html2plaintext(message.body),
+                'website_published' : message.website_published,
+                'publish' : publish,
+            })
+        return values
+
     @http.route(['/blogpost/post_discussion'], type='json', auth="public", website=True)
     def post_discussion(self, blog_post_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        values = []
-        if post.get('comment'):
-            user = request.registry['res.users'].browse(cr, uid, uid, context=context)
-            id = self._blog_post_message(user, blog_post_id, **post)
-            mail_obj = request.registry.get('mail.message')
-            blog_post = mail_obj.browse(cr, SUPERUSER_ID, id)
-            values = {
-                "author_name": blog_post.author_id and blog_post.author_id.name or post.get('name'),
-                "date": blog_post.date,
-                "body": html2plaintext(blog_post.body),
-                "author_image": blog_post.author_id and \
-                    ("data:image/png;base64,%s" % blog_post.author_id.image) or \
-                    '/website_blog/static/src/img/anonymous.png',
-                }
-        return values
+        publish = request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher')
+        user = request.registry['res.users'].browse(cr, uid, uid, context=context)
+        id = self._blog_post_message(user, blog_post_id, **post)
+        return self._get_discussion_detail([id], publish, **post)
     
     @http.route('/blogpost/new', type='http', auth="public", website=True, multilang=True)
     def blog_post_create(self, blog_id, **post):
@@ -277,32 +284,18 @@ class WebsiteBlog(http.Controller):
         return werkzeug.utils.redirect("/blog/%s/post/%s/?enable_editor=1" % (post.blog_id.id, nid))
 
     @http.route('/blogpost/get_discussion/', type='json', auth="public", website=True)
-    def discussion(self, post_id=0, discussion=None, **post):
+    def discussion(self, post_id=0, discussion=None, count=False, **post):
         cr, uid, context = request.cr, request.uid, request.context
         mail_obj = request.registry.get('mail.message')
-        values = []
-        publish = False
         domain = [('res_id', '=', int(post_id)) ,('model','=','blog.post'), ('discussion', '=', discussion)]
         #check current user belongs to website publisher group
-        if request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher'):
-            publish = True
-        else:
+        publish = request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher')
+        if not publish:
             domain.append(('website_published', '=', True))
-        ids = mail_obj.search(cr, SUPERUSER_ID, domain)
-        if ids:
-            for post in mail_obj.browse(cr, SUPERUSER_ID, ids, context=context):
-                values.append({
-                    "id": post.id,
-                    "author_name": post.author_id and post.author_id.name or _('Anonymous'),
-                    "author_image": post.author_id and \
-                        ("data:image/png;base64,%s" % post.author_id.image) or \
-                        '/website_blog/static/src/img/anonymous.png',
-                    "date": post.date,
-                    'body': html2plaintext(post.body),
-                    'website_published' : post.website_published,
-                    'publish' : publish,
-                })
-        return values
+        ids = mail_obj.search(cr, SUPERUSER_ID, domain, count=count)
+        if count:
+            return ids
+        return self._get_discussion_detail(ids, publish, **post)
 
     @http.route('/blogpsot/change_background', type='json', auth="public", website=True)
     def change_bg(self, post_id=0, image=None, **post):
