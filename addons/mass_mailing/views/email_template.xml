@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="email_template.email_template_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='model_id']" position="after">
-                    <br /><label for="use_in_mass_mailing"/><field name="use_in_mass_mailing"/>
+                        <field name="use_in_mass_mailing"/>
                 </xpath>
             </field>
         </record>
@@ -20,7 +20,7 @@
             <field name="inherit_id" ref="email_template.email_template_form_minimal"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='model_id']" position="after">
-                    <br /><label for="use_in_mass_mailing"/><field name="use_in_mass_mailing"/>
+                    <field name="use_in_mass_mailing"/>
                 </xpath>
             </field>
         </record>
