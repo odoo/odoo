@@ -11,7 +11,6 @@ This module provides the core of the OpenERP Web Client.
         """,
     'depends': ['base'],
     'auto_install': True,
-    'post_load': 'wsgi_postload',
     'data': [
         'views/webclient_templates.xml',
     ],
