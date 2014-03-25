@@ -224,6 +224,7 @@ class mail_compose_message(osv.TransientModel):
             context = {}
         # import datetime
         # print '--> beginning sending email', datetime.datetime.now()
+
         # clean the context (hint: mass mailing sets some default values that
         # could be wrongly interpreted by mail_mail)
         context.pop('default_email_to', None)
@@ -277,10 +278,6 @@ class mail_compose_message(osv.TransientModel):
         if mass_mail_mode and wizard.model:
             rendered_values = self.render_message_batch(cr, uid, wizard, res_ids, context=context)
 
-        # # get default recipients for mass mailing
-        # if mass_mail_mode and hasattr(self.pool[wizard.model], 'message_get_default_recipients'):
-        #     default_recipients = self.pool[wizard.model].message_get_default_recipients(cr, uid, res_ids, context=context)
-
         for res_id in res_ids:
             # static wizard (mail.message) values
             mail_values = {
@@ -302,7 +299,6 @@ class mail_compose_message(osv.TransientModel):
                     mail_values['auto_delete'] = context.get('mail_auto_delete')
                 # rendered values using template
                 email_dict = rendered_values[res_id]
-                print email_dict
                 mail_values['partner_ids'] += email_dict.pop('partner_ids', [])
                 mail_values.update(email_dict)
                 if wizard.same_thread:
@@ -312,10 +308,6 @@ class mail_compose_message(osv.TransientModel):
                 # mail_mail values: body -> body_html, partner_ids -> recipient_ids
                 mail_values['body_html'] = mail_values.get('body', '')
                 mail_values['recipient_ids'] = [(4, id) for id in mail_values.pop('partner_ids', [])]
-                # add some specific recipients depending on the model, to be sure some are mailed
-                if default_recipients.get(res_id):
-                    mail_values['recipient_ids'] += [(4, id) for id in default_recipients[res_id]['recipient_ids']]
-                    mail_values['email_to'] = ','.join(filter(None, [mail_values.get('email_to', ''), default_recipients[res_id]['email_to']]))
 
                 # process attachments: should not be encoded before being processed by message_post / mail_mail create
                 mail_values['attachments'] = [(name, base64.b64decode(enc_cont)) for name, enc_cont in email_dict.pop('attachments', list())]
@@ -326,7 +318,7 @@ class mail_compose_message(osv.TransientModel):
                 mail_values['attachment_ids'] = self.pool['mail.thread']._message_preprocess_attachments(
                     cr, uid, mail_values.pop('attachments', []),
                     attachment_ids, 'mail.message', 0, context=context)
-                print mail_values
+
             results[res_id] = mail_values
         return results
 
@@ -343,6 +335,10 @@ class mail_compose_message(osv.TransientModel):
         once, and render it multiple times. This is useful for mass mailing where
         template rendering represent a significant part of the process.
 
+        Default recipients are also computed, based on mail_thread method
+        message_get_default_recipients. This allows to ensure a mass mailing has
+        always some recipients specified.
+
         :param browse wizard: current mail.compose.message browse record
         :param list res_ids: list of record ids
 
@@ -354,6 +350,14 @@ class mail_compose_message(osv.TransientModel):
         emails_from = self.render_template_batch(cr, uid, wizard.email_from, wizard.model, res_ids, context=context)
         replies_to = self.render_template_batch(cr, uid, wizard.reply_to, wizard.model, res_ids, context=context)
 
+        if wizard.model and hasattr(self.pool[wizard.model], 'message_get_default_recipients'):
+            default_recipients = self.pool[wizard.model].message_get_default_recipients(cr, uid, res_ids, context=context)
+        elif wizard.model:
+            ctx = dict(context, thread_model=wizard.model)
+            default_recipients = self.pool['mail.thread'].message_get_default_recipients(cr, uid, res_ids, context=ctx)
+        else:
+            default_recipients = {}
+
         results = dict.fromkeys(res_ids, False)
         for res_id in res_ids:
             results[res_id] = {
@@ -362,6 +366,7 @@ class mail_compose_message(osv.TransientModel):
                 'email_from': emails_from[res_id],
                 'reply_to': replies_to[res_id],
             }
+            results[res_id].update(default_recipients.get(res_id, dict()))
         return results
 
     def render_template_batch(self, cr, uid, template, model, res_ids, context=None, post_process=False):
