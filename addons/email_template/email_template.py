@@ -408,7 +408,7 @@ class email_template(osv.osv):
                 default_recipients = self.pool['mail.thread'].message_get_default_recipients(cr, uid, res_ids, context=ctx)
             else:
                 default_recipients = {}
-            for res_id, recipients in default_recipients:
+            for res_id, recipients in default_recipients.iteritems():
                 results[res_id].pop('partner_to')
                 results[res_id].update(default_recipients)
 
