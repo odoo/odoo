@@ -65,7 +65,7 @@ class ir_http(orm.AbstractModel):
 
     def reroute(self, path):
         if not hasattr(request, 'rerouting'):
-            request.rerouting = []
+            request.rerouting = [request.httprequest.path]
         if path in request.rerouting:
             raise Exception("Rerouting loop is forbidden")
         request.rerouting.append(path)
@@ -79,7 +79,11 @@ class ir_http(orm.AbstractModel):
         return self._dispatch()
 
     def _postprocess_args(self, arguments):
-        url = request.httprequest.url
+        if hasattr(request, 'rerouting'):
+            url = request.rerouting[0]
+        else:
+            url = request.httprequest.url
+        original_url = url
         for arg in arguments.itervalues():
             if isinstance(arg, orm.browse_record) and isinstance(arg._uid, RequestUID):
                 placeholder = arg._uid
@@ -91,7 +95,7 @@ class ir_http(orm.AbstractModel):
                         url = url.replace(placeholder.value, good_slug)
                 except KeyError:
                     return self._handle_exception(werkzeug.exceptions.NotFound())
-        if url != request.httprequest.url:
+        if url != original_url:
             werkzeug.exceptions.abort(werkzeug.utils.redirect(url))
 
     def _handle_exception(self, exception=None, code=500):
