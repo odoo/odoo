@@ -25,6 +25,7 @@ from openerp.addons.website.models.website import slug
 import datetime
 import pytz
 from pytz import timezone
+from collections import OrderedDict
 
 class event_track_tag(osv.osv):
     _name = "event.track.tag"
@@ -128,7 +129,139 @@ class event_track(osv.osv):
     _group_by_full = {
         'stage_id': _read_group_stage_ids,
     }
+    @staticmethod
+    def make_timetable(new_start_date, new_end_date, new_schedule):
+        def insert_time(time, new_schedule):
+            for index,ct in enumerate(time):
+                for index2,dt in enumerate(new_schedule):
+                    st, et = dt
+                    if st == ct or et == ct:break
+                    if st < ct and et > ct:
+                        new_schedule.pop(index2)
+                        new_schedule.insert(index2, [ct, et])
+                        new_schedule.insert(index2, [st, ct])
+                        break
+            return new_schedule
+        if not new_schedule:
+            new_schedule.append([new_start_date, new_end_date])
+            return new_schedule
+        first_start_date = new_schedule[0][0]
+        last_end_date = new_schedule[-1][1]
 
+        #totally outter
+        if first_start_date >= new_start_date and new_end_date >= last_end_date:
+            if not new_start_date == first_start_date:
+                new_schedule.insert(0, [new_start_date, first_start_date])
+            if not last_end_date ==  new_end_date:
+                new_schedule.append([last_end_date, new_end_date])
+            return new_schedule
+        
+        #lower outer
+        if first_start_date >= new_end_date:
+            new_schedule.insert(0, [new_start_date, new_end_date])
+            if not new_end_date == first_start_date:
+                new_schedule.insert(1, [new_end_date, first_start_date])
+            return new_schedule
+        
+        # upper outer
+        if new_start_date >= last_end_date:
+            if not last_end_date == new_start_date:
+                new_schedule.append([last_end_date, new_start_date])
+            new_schedule.append([new_start_date, new_end_date])
+            return new_schedule
+        
+        #When inner time
+        if first_start_date <= new_start_date and last_end_date >= new_end_date:
+            new_schedule = insert_time([new_start_date, new_end_date], new_schedule)
+            return new_schedule
+        
+        #when start date is more and end date in range
+        if first_start_date > new_start_date and last_end_date >= new_end_date:
+            new_schedule.insert(0, [new_start_date, first_start_date])
+            new_schedule = insert_time([new_end_date], new_schedule)
+            return new_schedule
+        
+        #when end date is more and start date in range
+        if new_end_date > last_end_date and new_start_date >= first_start_date:
+             new_schedule = insert_time([new_start_date], new_schedule)
+             new_schedule.append([last_end_date, new_end_date])
+             return new_schedule
+
+    @staticmethod
+    def convert_time(time, duration, local_tz):
+        local_dt = (datetime.datetime.strptime(time, '%Y-%m-%d %H:%M:%S')).replace(tzinfo=pytz.utc).astimezone(local_tz)
+        local_tz.normalize(local_dt)
+        return local_dt, local_dt + datetime.timedelta(minutes = duration), local_dt.strftime('%m-%d-%y') 
+        
+    def _fetch_record(self, cr, uid, event_id, context=None):
+        return self.search(cr, uid, [('event_id','=',event_id),('date','!=',False),('duration','!=',False),('duration','!=',0)], context=context)
+    
+    def _get_value(self, cr, uid, event, context=None):
+        keys_for_table = {}
+        format_date = []
+        sort_tracks = {}
+        room_list = []
+        rooms = []
+        talks = {}
+        skip_td = {}
+        
+        location_object = self.pool.get('event.track.location')
+        event_track_ids = self._fetch_record(cr, uid, event.id, context=context)
+        local_tz = pytz.timezone(event.timezone_of_event)
+        def set_value(key, val):
+            sort_tracks[key][val]=[]
+        for track in self.read(cr, uid, event_track_ids, ['date','duration'],context=context):
+            start_time, end_time, key = self.convert_time(track['date'], track['duration'], local_tz)
+            if not keys_for_table.has_key(key):
+                keys_for_table[key] = []
+                sort_tracks[key] = OrderedDict()
+                talks[key] = 0
+            talks[key] = talks[key] + 1 
+            keys_for_table[key] = self.make_timetable(start_time, end_time, keys_for_table[key])
+            
+        [set_value(key, value[0].strftime('%H:%M')+" - "+value[1].strftime('%H:%M')) for key in keys_for_table.keys() for value in keys_for_table[key]]
+
+        for track in self.browse(cr, uid, event_track_ids, context=context):
+            if(track.location_id):room_list.append(track.location_id.id)
+            start_time, end_time, key = self.convert_time(track.date, track.duration, local_tz)
+            secret_key = None
+            row_span = 0
+            for index, value in enumerate(keys_for_table[key]):
+                if value[0] <= start_time and value[1] > start_time:
+                    keys = sort_tracks[key].keys()
+                    secret_key = keys[index]
+                    row_span = index
+                if value[1] == end_time and secret_key:
+                    if not index == row_span:
+                        row_span = row_span - 1
+                    sort_tracks[key][secret_key].append({'object':track,'row_span': index - row_span, 'location':track.location_id.id})
+        
+        for room in list(set(room_list)):
+            if room:rooms.append([room, location_object.browse(cr, uid, room).name])
+
+        skip_td = {}
+        for track in sort_tracks.keys():
+            skip_td[track] = {}
+            format_date.append((datetime.datetime.strptime(track, '%m-%d-%y')).strftime("%d %B, %Y"))
+            key1 = sort_tracks[track].keys()
+            for tra in sort_tracks[track].keys():
+                sort_tracks[track][tra] = sorted(sort_tracks[track][tra], key=lambda x: x['location'])
+                for i in sort_tracks[track][tra]:
+                    if i['row_span']:
+                        skip_time = key1[key1.index(tra)+1: key1.index(tra)+i['row_span']]
+                        if not skip_td[track].has_key(i['location']):
+                            skip_td[track] [i['location']] = []
+                        skip_td[track][i['location']] = skip_td[track] [i['location']] + skip_time
+                         
+        return  {
+            'event': event,
+            'main_object': event,
+            'room_list': rooms,
+            'days': sort_tracks,
+            'skip_td': skip_td,
+            'talks':talks,
+            'format_date':format_date,
+        }
 #
 # Events
 #
