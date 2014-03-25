@@ -248,7 +248,6 @@ class website_forum(http.Controller):
     @http.route('/forum/<model("website.forum"):forum>/question/ask/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def register_question(self, forum, **question):
         cr, uid, context = request.cr, request.uid, request.context
-        
         create_context = dict(context)
 
         tags = question.get('question_tags').strip('[]').replace('"','').split(",")
@@ -273,6 +272,7 @@ class website_forum(http.Controller):
     def post_answer(self, forum ,post_id, **question):
         if not request.session.uid:
             return login_redirect()
+
         cr, uid, context = request.cr, request.uid, request.context
         request.registry['res.users'].write(cr, uid, uid, {'forum': True}, context=context)
 
@@ -408,10 +408,8 @@ class website_forum(http.Controller):
         request.registry['website.forum.post'].unlink(request.cr, request.uid, [int(kwarg.get('post_id'))], context=request.context)
         return True
 
-    @http.route('/forum/<model("website.forum"):forum>/delete/question/<model("website.forum.post"):post>', type='http', auth="public", multilang=True, website=True)
+    @http.route('/forum/<model("website.forum"):forum>/delete/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
     def delete_question(self, forum, post, **kwarg):
-        if not request.session.uid:
-            return login_redirect()
         #instead of unlink record just change 'active' to false so user can undelete it.
         request.registry['website.forum.post'].write( request.cr, request.uid, [post.id], {
             'active': False,
@@ -430,11 +428,8 @@ class website_forum(http.Controller):
         request.registry['mail.message'].unlink(request.cr, request.uid, [int(kwarg.get('message_id'))], context=request.context)
         return True
 
-    @http.route('/forum/<model("website.forum"):forum>/edit/question/<model("website.forum.post"):post>', type='http', auth="public", multilang=True, website=True)
+    @http.route('/forum/<model("website.forum"):forum>/edit/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
     def edit_question(self, forum, post, **kwarg):
-        if not request.session.uid:
-            return login_redirect()
-
         tags = ""
         for tag_name in post.tags:
             tags += tag_name.name + ","
@@ -491,10 +486,8 @@ class website_forum(http.Controller):
             }, context=context)
         return correct
 
-    @http.route('/forum/<model("website.forum"):forum>/close/question/<model("website.forum.post"):post>', type='http', auth="public", multilang=True, website=True)
+    @http.route('/forum/<model("website.forum"):forum>/close/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
     def close_question(self, forum, post, **kwarg):
-        if not request.session.uid:
-            return login_redirect()
         cr, uid, context = request.cr, request.uid, request.context
         Reason = request.registry['website.forum.post.reason']
         reason_ids = Reason.search(cr, uid, [], context=context)
@@ -521,8 +514,6 @@ class website_forum(http.Controller):
 
     @http.route('/forum/<model("website.forum"):forum>/reopen/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
     def reopen(self, forum, post, **kwarg):
-        if not request.session.uid:
-            return login_redirect()
         request.registry['website.forum.post'].write( request.cr, request.uid, [post.id], {
             'state': 'active',
         }, context=request.context)
@@ -561,20 +552,14 @@ class website_forum(http.Controller):
 
     @http.route('/forum/<model("website.forum"):forum>/post/<model("website.forum.post"):post>/commet/<model("mail.message"):comment>/converttoanswer', type='http', auth="public", multilang=True, website=True)
     def convert_to_answer(self, forum, post, comment, **kwarg):
-        if not request.session.uid:
-            return login_redirect()
-
         values = {
             'answer_content': comment.body,
         }
         request.registry['mail.message'].unlink(request.cr, request.uid, [comment.id], context=request.context)
         return self.post_answer(forum, post.parent_id and post.parent_id.id or post.id, **values)
 
-    @http.route('/forum/<model("website.forum"):forum>/post/<model("website.forum.post"):post>/converttocomment', type='http', auth="public", multilang=True, website=True)
+    @http.route('/forum/<model("website.forum"):forum>/post/<model("website.forum.post"):post>/converttocomment', type='http', auth="user", multilang=True, website=True)
     def convert_to_comment(self, forum, post, **kwarg):
-        if not request.session.uid:
-            return login_redirect()
-
         values = {
             'comment': html2plaintext(post.content),
         }
