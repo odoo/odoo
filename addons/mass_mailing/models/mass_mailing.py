@@ -691,6 +691,8 @@ class MassMailing(osv.Model):
         for mailing in self.browse(cr, uid, ids, context=context):
             if not mailing.template_id:
                 raise Warning('Please specifiy a template to use.')
+            if not mailing.contact_nbr:
+                raise Warning('Please select recipients.')
 
             # get mail and recipints data
             domain = self.pool['mail.mass_mailing.list'].get_global_domain(
