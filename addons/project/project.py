@@ -729,9 +729,10 @@ class task(osv.osv):
             context = {}
         if default is None:
             default = {}
-        stage = self._get_default_stage_id(cr, uid, context=context)
-        if stage:
-            default['stage_id'] = stage
+        if not context.get('copy', False):
+            stage = self._get_default_stage_id(cr, uid, context=context)
+            if stage:
+                default['stage_id'] = stage
         return super(task, self).copy(cr, uid, id, default, context)
 
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):

@@ -497,10 +497,14 @@ class pos_order(osv.osv):
     _description = "Point of Sale"
     _order = "id desc"
 
-    def create_from_ui(self, cr, uid, orders, context=None):
-        #_logger.info("orders: %r", orders)
+    def create_from_ui(self, cr, uid, orders, context=None):      
+        # Keep only new orders
+        submitted_references = [o['data']['name'] for o in orders]
+        existing_orders = self.search_read(cr, uid, domain=[('pos_reference', 'in', submitted_references)], fields=['pos_reference'], context=context)
+        existing_references = set([o['pos_reference'] for o in existing_orders])
+        orders_to_save = [o for o in orders if o['data']['name'] not in existing_references]
         order_ids = []
-        for tmp_order in orders:
+        for tmp_order in orders_to_save:
             to_invoice = tmp_order['to_invoice']
             order = tmp_order['data']
 
