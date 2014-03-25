@@ -57,6 +57,16 @@ class survey_survey(osv.Model):
 
     ## Function fields ##
 
+    def _is_designed(self, cr, uid, ids, name, arg, context=None):
+        res = dict()
+        for survey in self.browse(cr, uid, ids, context=context):
+            if not survey.page_ids or not [page.question_ids
+                            for page in survey.page_ids if page.question_ids]:
+                res[survey.id] = False
+            else:
+                res[survey.id] = True
+        return res
+
     def _get_tot_sent_survey(self, cr, uid, ids, name, arg, context=None):
         """ Returns the number of invitations sent for this survey, be they
         (partially) completed or not """
@@ -149,6 +159,8 @@ class survey_survey(osv.Model):
         'color': fields.integer('Color Index'),
         'user_input_ids': fields.one2many('survey.user_input', 'survey_id',
             'User responses', readonly=1),
+        'designed': fields.function(_is_designed, string="Is designed?",
+            type="boolean"),
         'public_url': fields.function(_get_public_url,
             string="Public link", type="char"),
         'print_url': fields.function(_get_print_url,
@@ -223,13 +235,13 @@ class survey_survey(osv.Model):
             self.message_post(cr, uid, ids, body="""<p>Survey cancelled</p>""", context=context)
         return super(survey_survey, self).write(cr, uid, ids, vals, context=context)
 
-    def copy(self, cr, uid, ids, default=None, context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
         vals = {}
-        current_rec = self.read(cr, uid, ids, context=context)
+        current_rec = self.read(cr, uid, id, context=context)
         title = _("%s (copy)") % (current_rec.get('title'))
         vals['title'] = title
         vals['user_input_ids'] = []
-        return super(survey_survey, self).copy(cr, uid, ids, vals,
+        return super(survey_survey, self).copy(cr, uid, id, vals,
             context=context)
 
     def next_page(self, cr, uid, user_input, page_id, go_back=False, context=None):
@@ -273,18 +285,22 @@ class survey_survey(osv.Model):
 
     # Web client actions
 
-    def action_kanban_update_state(self, cr, uid, ids, context=None):
-        ''' Change the state from the kanban ball '''
-        for survey in self.read(cr, uid, ids, ['state'], context=context):
-            if survey['state'] == 'draft':
-                self.write(cr, uid, [survey['id']], {'state': 'open'}, context=context)
-            elif survey['state'] == 'open':
-                self.write(cr, uid, [survey['id']], {'state': 'close'}, context=context)
-            elif survey['state'] == 'close':
-                self.write(cr, uid, [survey['id']], {'state': 'cancel'}, context=context)
-            elif survey['state'] == 'cancel':
-                self.write(cr, uid, [survey['id']], {'state': 'draft'}, context=context)
-        return {}
+    # def action_kanban_update_state(self, cr, uid, ids, context=None):
+    #     ''' Change the state from the kanban ball '''
+    #     for survey in self.read(cr, uid, ids, ['state'], context=context):
+    #         if survey['state'] == 'draft':
+    #             self.write(cr, uid, [survey['id']], {'state': 'open'}, context=context)
+    #         elif survey['state'] == 'open':
+    #             self.write(cr, uid, [survey['id']], {'state': 'close'}, context=context)
+    #         elif survey['state'] == 'close':
+    #             self.write(cr, uid, [survey['id']], {'state': 'cancel'}, context=context)
+    #         elif survey['state'] == 'cancel':
+    #             self.write(cr, uid, [survey['id']], {'state': 'draft'}, context=context)
+    #     return {}
+
+    def action_kanban_duplicate(self, cr, uid, ids, context=None):
+        ''' Hack in order to provide "duplicate" action to kanban view '''
+        return self.copy(cr, uid, ids[0], context=None)
 
     def action_start_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey form '''
@@ -565,6 +581,15 @@ class survey_question(osv.Model):
         ('validation_date', 'CHECK (validation_min_date <= validation_max_date)', 'Max date cannot be smaller than min date!'),
         ('constr_number', 'CHECK (constr_minimum_req_ans <= constr_maximum_req_ans)', 'Max number of answers cannot be smaller than min number!')
     ]
+
+    def copy(self, cr, uid, ids, default=None, context=None):
+        ''' This will prevent duplication of user input lines in case of question duplication
+        (in cascade, this will also allow to duplicate surveys without duplicating bad user input
+        lines) '''
+        vals = {}
+        vals.update({'user_input_line_ids': []})
+        return super(survey_question, self).copy(cr, uid, ids, vals,
+            context=context)
 
     def survey_save(self, cr, uid, ids, context=None):
         if context is None:

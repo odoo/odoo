@@ -85,7 +85,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_survey_user_input">
-            <field name="name">Survey Response</field>
+            <field name="name">Answers</field>
             <field name="res_model">survey.user_input</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="survey_user_input_tree"></field>
@@ -215,7 +215,8 @@
             <field name="model">survey.survey</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id">
-                    <field name="stage_id" invisible="1"/>
+                    <field name="stage_id" />
+                    <field name="designed" />
                     <field name="title" />
                     <field name="date_open" />
                     <field name="tot_sent_survey" />
@@ -236,20 +237,30 @@
                                     <!-- <li><a name="action_print_survey" type="object">Print Survey...</a></li> -->
                                     <!-- <li><a name="%(action_selected_survey_user_input)d" type="action">View Answers...</a></li> -->
                                     <li><a type="edit">Survey Options</a></li>
+                                    <li><a type="object" name="action_kanban_duplicate">Duplicate</a></li>
                                     <li t-if="widget.view.is_action_enabled('delete')"><a type="delete">Delete!</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                             </div>
                             <div class="oe_kanban_content">
                                 <h4 class="oe_center"><field name="title" /></h4>
-                                <div>
-                                    <ul>
-                                    <li><a type="edit">Design</a></li>
-                                    <li><a>Test</a></li>
-                                    <li><a name="action_send_survey" type="object">Send Invitations</a></li>
-                                    <li><a name="action_result_survey" type="object">Analyse Answers</a> <span t-if="record.tot_start_survey.raw_value > 0">(<field name="tot_start_survey" />)</span></li>
-                                    </ul>
-                                </div>
+                                <div><ul>
+                                    <li>
+                                        <a type="edit">Design</a>
+                                    </li>
+                                    <li>
+                                        <t t-if="record.designed.raw_value"><a type="object" name="action_test_survey">Test</a></t>
+                                        <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Test</a></t>
+                                    </li>
+                                    <li>
+                                        <t t-if="record.designed.raw_value"><a type="object" name="action_send_survey">Send Invitations</a></t>
+                                        <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Send Invitations</a></t>
+                                    </li>
+                                    <li>
+                                        <t t-if="record.tot_start_survey.raw_value &gt; 0"><a name="action_result_survey" type="object">Analyse Answers</a> <span t-if="record.tot_start_survey.raw_value &gt; 0">(<field name="tot_start_survey" />)</span></t>
+                                        <t t-if="record.tot_start_survey.raw_value &lt;= 0"><a style="color: #aaaaaa;">Analyse Answers</a></t>
+                                    </li>
+                                </ul></div>
 <!--                                 <div>
                                     <center><b>
                                         <a t-if="record.visible_to_user.raw_value === true" name="action_start_survey" type="object"><t t-esc="record.public_url.raw_value"/></a>
