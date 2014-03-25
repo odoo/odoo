@@ -119,7 +119,7 @@
                         <button name="action_send_survey" string="Invite people" states="open" type="object" class="oe_highlight" />
                         <button name="action_print_survey" string="Print Survey" type="object"/>
                         <button name="action_result_survey" string="View results" states="open,close,cancel" type="object" class="oe_highlight"/>
-                        <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}" />
+                        <field name="stage_id" widget="statusbar" clickable="True" /> <!-- options="{'fold_field': 'fold'}" -->
                         <field name="state" invisible="True" />
                     </header>
                     <sheet class="oe_survey">
