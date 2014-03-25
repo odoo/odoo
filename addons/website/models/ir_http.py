@@ -91,7 +91,7 @@ class ir_http(orm.AbstractModel):
             assert path is not None
         except Exception:
             return self._handle_exception(werkzeug.exceptions.NotFound())
-        if path != request.httprequest.path:
+        if path != werkzeug.url_quote(request.httprequest.path):
             return werkzeug.utils.redirect(path)
 
     def _handle_exception(self, exception=None, code=500):
