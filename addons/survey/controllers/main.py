@@ -291,14 +291,21 @@ class WebsiteSurvey(http.Controller):
         if post:
             current_filters, filter_display_data = self.filter_input_ids(post)
         return request.website.render(result_template,
-                                      {'survey': survey,
-                                       'prepare_result': self.prepare_result,
-                                       'get_input_summary': self.get_input_summary,
-                                       'get_graph_data': self.get_graph_data,
+                                      {'survey_dict': self.prepare_result_dict(survey, current_filters),
                                        'page_range': self.page_range,
                                        'current_filters': current_filters,
                                        'filter_display_data': filter_display_data
                                        })
+
+    def prepare_result_dict(self,survey, current_filters=[]):
+        result = {'survey':survey, 'page_ids': []}
+        for page in survey.page_ids:
+            page_dict = {'page': page, 'question_ids': []}
+            for question in page.question_ids:
+                question_dict = { 'question':question, 'input_summary':self.get_input_summary(question, current_filters),'prepare_result':self.prepare_result(question, current_filters)}
+                page_dict['question_ids'].append(question_dict)
+            result['page_ids'].append(page_dict)
+        return result
 
     def filter_input_ids(self, filters):
         '''If user applies any filters, then this function returns list of
@@ -386,9 +393,10 @@ class WebsiteSurvey(http.Controller):
 
         return result_summary
 
-    @http.route(['/survey/results/graph/<model("survey.question"):question>'],
+    @http.route(['/survey/results/graph/<int:question>'],
                 type='http', auth='user', multilang=True, website=True)
     def get_graph_data(self, question, **post):
+        question = request.registry.get('survey.question').browse(request.cr, request.uid, question)
         '''Returns appropriate formated data required by graph library on basis of filter'''
         current_filters = safe_eval(post.get('current_filters', '[]'))
         result = []
