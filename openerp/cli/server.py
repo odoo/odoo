@@ -127,7 +127,6 @@ def main(args):
     check_root_user()
     openerp.tools.config.parse_config(args)
     check_postgres_user()
-    openerp.netsvc.init_logger()
     report_configuration()
 
     config = openerp.tools.config

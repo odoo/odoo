@@ -313,9 +313,10 @@ class configmanager(object):
                     self.options[option.dest] = option.my_default
                     self.casts[option.dest] = option
 
-        self.parse_config(None, False)
+        # generate default config
+        self._parse_config()
 
-    def parse_config(self, args=None, complete=True):
+    def parse_config(self, args=None):
         """ Parse the configuration file (if any) and the command-line
         arguments.
 
@@ -329,10 +330,12 @@ class configmanager(object):
         Typical usage of this method:
 
             openerp.tools.config.parse_config(sys.argv[1:])
-
-        :param complete: this is a hack used in __init__(), leave it to True.
-
         """
+        self._parse_config(args)
+        openerp.netsvc.init_logger()
+        openerp.modules.module.initialize_sys_path()
+
+    def _parse_config(self, args=None):
         if args is None:
             args = []
         opt, args = self.parser.parse_args(args)
@@ -503,8 +506,6 @@ class configmanager(object):
             openerp.conf.server_wide_modules = map(lambda m: m.strip(), opt.server_wide_modules.split(','))
         else:
             openerp.conf.server_wide_modules = ['web','web_kanban']
-        if complete:
-            openerp.modules.module.initialize_sys_path()
 
     def _generate_pgpassfile(self):
         """
