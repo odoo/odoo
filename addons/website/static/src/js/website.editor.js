@@ -1500,7 +1500,8 @@
                 args: [],
                 kwargs: {
                     fields: ['name', 'website_url'],
-                    domain: [['res_model', '=', 'ir.ui.view']],
+                    domain: [['res_model', '=', 'ir.ui.view'], '|',
+                        ['mimetype', '=', false], ['mimetype', '=like', 'image/%']],
                     order: 'id desc',
                     context: website.get_context(),
                 }

@@ -2,7 +2,6 @@
 import datetime
 import hashlib
 import logging
-import mimetypes
 import re
 import traceback
 import werkzeug
@@ -98,11 +97,10 @@ class ir_http(orm.AbstractModel):
 
     def _serve_attachment(self):
         domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
-        attach = self.pool['ir.attachment'].search_read(request.cr, request.uid, domain, ['__last_update', 'datas', 'datas_fname'], context=request.context)
+        attach = self.pool['ir.attachment'].search_read(request.cr, request.uid, domain, ['__last_update', 'datas', 'mimetype'], context=request.context)
         if attach:
             wdate = attach[0]['__last_update']
             datas = attach[0]['datas']
-            fname = attach[0]['datas_fname']
             response = werkzeug.wrappers.Response()
             server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
             try:
@@ -117,8 +115,7 @@ class ir_http(orm.AbstractModel):
             if response.status_code == 304:
                 return response
 
-            guessed_mimetype = mimetypes.guess_type(fname)
-            response.mimetype = guessed_mimetype[0] or 'application/octet-stream'
+            response.mimetype = attach[0]['mimetype']
             response.set_data(datas.decode('base64'))
             return response
 
