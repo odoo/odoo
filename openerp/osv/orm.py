@@ -992,7 +992,7 @@ class BaseModel(object):
                     # this part could be simpler, but it has to be done this way
                     # in order to reproduce the former behavior
                     if not isinstance(value, BaseModel):
-                        current[i] = field.convert_to_export(value)
+                        current[i] = field.convert_to_export(value, self._scope)
                     else:
                         primary_done.append(name)
 
@@ -3169,7 +3169,7 @@ class BaseModel(object):
         if field not in self._cache:
             for values in result:
                 record = self.browse(values.pop('id'))
-                record._cache.update(self._convert_to_cache(values))
+                record._cache.update(record._convert_to_cache(values))
             if field not in self._cache:
                 e = AccessError("No value found for %s.%s" % (self, field_name))
                 self._cache[field] = FailedValue(e)
@@ -3237,7 +3237,7 @@ class BaseModel(object):
             # store result in cache for POST fields
             for vals in result:
                 record = self.browse(vals['id'])
-                record._cache.update(self._convert_to_cache(vals))
+                record._cache.update(record._convert_to_cache(vals))
 
             # determine the fields that must be processed now
             fields_post = [f for f in field_names if not self._columns[f]._classic_write]
@@ -3278,7 +3278,7 @@ class BaseModel(object):
         # store result in cache
         for vals in result:
             record = self.browse(vals.pop('id'))
-            record._cache.update(self._convert_to_cache(vals))
+            record._cache.update(record._convert_to_cache(vals))
 
         # store failed values in cache for the records that could not be read
         missing = self - self.browse(ids)
@@ -3920,7 +3920,7 @@ class BaseModel(object):
         record = self.browse(self._create(old_vals))
 
         # put the values of pure new-style fields into cache, and inverse them
-        record._cache.update(self._convert_to_cache(new_vals))
+        record._cache.update(record._convert_to_cache(new_vals))
         for key in new_vals:
             self._fields[key].determine_inverse(record)
 
@@ -5113,8 +5113,9 @@ class BaseModel(object):
 
     def _convert_to_cache(self, values):
         """ Convert the `values` dictionary into cached values. """
+        scope = self._scope
         return dict(
-            (name, self._fields[name].convert_to_cache(value))
+            (name, self._fields[name].convert_to_cache(value, scope))
             for name, value in values.iteritems()
         )
 
@@ -5134,24 +5135,24 @@ class BaseModel(object):
 
             :param field_name: a dot-separated sequence of field names
         """
-        recs = self
+        recs, scope = self, self._scope
         for name in field_name.split('.'):
             vals = [rec[name] for rec in recs]
             field = recs._fields[name]
             if field.relational:
-                recs = reduce(operator.or_, vals, field.null())
+                recs = reduce(operator.or_, vals, field.null(scope))
             else:
                 recs = set(filter(None, vals))
         return recs
 
     def _map_cache(self, field_name):
         """ Same as `~.map`, but use cached values only. """
-        recs = self
+        recs, scope = self, self._scope
         for name in field_name.split('.'):
             field = recs._fields[name]
             vals = filter(None, [rec._cache.get(field) for rec in recs])
             if field.relational:
-                recs = reduce(operator.or_, vals, field.null())
+                recs = reduce(operator.or_, vals, field.null(scope))
             else:
                 recs = set(vals)
         return recs

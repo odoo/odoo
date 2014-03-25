@@ -221,14 +221,14 @@ class Field(object):
     # Conversion of values
     #
 
-    def null(self):
-        """ return the null value for this field """
+    def null(self, scope):
+        """ return the null value for this field in the given scope """
         return False
 
-    def convert_to_cache(self, value):
-        """ convert `value` to the cache level; `value` may come from an
-            assignment, or have the format of methods :meth:`BaseModel.read` or
-            :meth:`BaseModel.write`
+    def convert_to_cache(self, value, scope):
+        """ convert `value` to the cache level in `scope`; `value` may come from
+            an assignment, or have the format of methods :meth:`BaseModel.read`
+            or :meth:`BaseModel.write`
         """
         return value
 
@@ -248,8 +248,10 @@ class Field(object):
         """
         return self.convert_to_read(value)
 
-    def convert_to_export(self, value):
-        """ convert `value` from the cache to a valid value for export. """
+    def convert_to_export(self, value, scope):
+        """ convert `value` from the cache to a valid value for export. The
+            parameter `scope` is given for managing translations.
+        """
         return bool(value) and ustr(value)
 
     def convert_to_display_name(self, value):
@@ -271,7 +273,7 @@ class Field(object):
             pass
 
         # cache miss, retrieve value
-        with record._scope:
+        with record._scope as scope:
             if record._id:
                 # normal record -> read or compute value for this field
                 self.determine_value(record[0])
@@ -280,7 +282,7 @@ class Field(object):
                 record.add_default_value(self.name)
             else:
                 # null record -> return the null value for this field
-                return self.null()
+                return self.null(scope)
 
         # the result should be in cache now
         return record._cache[self]
@@ -293,17 +295,17 @@ class Field(object):
         # only one record is updated
         record = record[0]
 
-        with record._scope as _scope:
+        with record._scope as scope:
             # adapt value to the cache level
-            value = self.convert_to_cache(value)
+            value = self.convert_to_cache(value, scope)
 
-            if _scope.draft or not record._id:
+            if scope.draft or not record._id:
                 # determine dependent fields
                 spec = self.modified_draft(record)
 
                 # set value in cache, inverse field, and mark record as dirty
                 record._cache[self] = value
-                if _scope.draft:
+                if scope.draft:
                     if self.inverse_field:
                         self.inverse_field._update(value, record)
                     record._dirty = True
@@ -311,7 +313,7 @@ class Field(object):
                 # determine more dependent fields, and invalidate them
                 if self.relational:
                     spec += self.modified_draft(record)
-                _scope.invalidate(spec)
+                scope.invalidate(spec)
 
             else:
                 # simply write to the database, and update cache
@@ -370,7 +372,7 @@ class Field(object):
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
-        record._cache[self] = SpecialValue(self.null())
+        record._cache[self] = SpecialValue(self.null(record._scope))
         if self.compute:
             self.compute_value(record)
 
@@ -557,10 +559,10 @@ class Boolean(Field):
     """ Boolean field. """
     type = 'boolean'
 
-    def convert_to_cache(self, value):
+    def convert_to_cache(self, value, scope):
         return bool(value)
 
-    def convert_to_export(self, value):
+    def convert_to_export(self, value, scope):
         return ustr(value)
 
 
@@ -568,7 +570,7 @@ class Integer(Field):
     """ Integer field. """
     type = 'integer'
 
-    def convert_to_cache(self, value):
+    def convert_to_cache(self, value, scope):
         return int(value or 0)
 
 
@@ -590,7 +592,7 @@ class Float(Field):
     def digits(self):
         return self._digits(scope.cr) if callable(self._digits) else self._digits
 
-    def convert_to_cache(self, value):
+    def convert_to_cache(self, value, scope):
         # apply rounding here, otherwise value in cache may be wrong!
         if self.digits:
             return float_round(float(value or 0.0), precision_digits=self.digits[1])
@@ -616,7 +618,7 @@ class Char(_String):
     _related_size = property(attrgetter('size'))
     _description_size = property(attrgetter('size'))
 
-    def convert_to_cache(self, value):
+    def convert_to_cache(self, value, scope):
         return bool(value) and ustr(value)[:self.size]
 
 
@@ -624,7 +626,7 @@ class Text(_String):
     """ Text field. """
     type = 'text'
 
-    def convert_to_cache(self, value):
+    def convert_to_cache(self, value, scope):
         return bool(value) and ustr(value)
 
 
@@ -632,7 +634,7 @@ class Html(_String):
     """ Html field. """
     type = 'html'
 
-    def convert_to_cache(self, value):
+    def convert_to_cache(self, value, scope):
         return bool(value) and html_sanitize(value)
 
 
@@ -640,7 +642,7 @@ class Date(Field):
     """ Date field. """
     type = 'date'
 
-    def convert_to_cache(self, value):
+    def convert_to_cache(self, value, scope):
         if isinstance(value, (date, datetime)):
             value = value.strftime(DATE_FORMAT)
         elif value:
@@ -654,7 +656,7 @@ class Datetime(Field):
     """ Datetime field. """
     type = 'datetime'
 
-    def convert_to_cache(self, value):
+    def convert_to_cache(self, value, scope):
         if isinstance(value, (date, datetime)):
             value = value.strftime(DATETIME_FORMAT)
         elif value:
@@ -721,7 +723,7 @@ class Selection(Field):
         field = self.related_field
         self.selection = lambda model: field._description_selection(model._scope)
 
-    def get_values(self):
+    def get_values(self, scope):
         """ return a list of the possible values """
         selection = self.selection
         if isinstance(selection, basestring):
@@ -730,18 +732,18 @@ class Selection(Field):
             selection = selection(scope[self.model_name])
         return [value for value, label in selection]
 
-    def convert_to_cache(self, value):
-        if value in self.get_values():
+    def convert_to_cache(self, value, scope):
+        if value in self.get_values(scope):
             return value
         elif not value:
             return False
         raise ValueError("Wrong value for %s: %r" % (self, value))
 
-    def convert_to_export(self, value):
+    def convert_to_export(self, value, scope):
         if not isinstance(self.selection, list):
             # FIXME: this reproduces an existing buggy behavior!
             return value
-        for item in self._description_selection(scope.current):
+        for item in self._description_selection(scope):
             if item[0] == value:
                 return item[1]
         return False
@@ -764,10 +766,10 @@ class Reference(Selection):
         """
         super(Reference, self).__init__(selection=selection, string=string, **kwargs)
 
-    def convert_to_cache(self, value):
+    def convert_to_cache(self, value, scope):
         if isinstance(value, BaseModel):
-            if value._name in self.get_values() and len(value) <= 1:
-                return value.attach_scope(scope.current) or False
+            if value._name in self.get_values(scope) and len(value) <= 1:
+                return value.attach_scope(scope) or False
         elif isinstance(value, basestring):
             res_model, res_id = value.split(',')
             return scope[res_model].browse(int(res_id))
@@ -778,7 +780,7 @@ class Reference(Selection):
     def convert_to_read(self, value, use_name_get=True):
         return "%s,%s" % (value._name, value.id) if value else False
 
-    def convert_to_export(self, value):
+    def convert_to_export(self, value, scope):
         return bool(value) and value.name_get()[0][1]
 
     def convert_to_display_name(self, value):
@@ -804,8 +806,8 @@ class _Relational(Field):
     def __init__(self, **kwargs):
         super(_Relational, self).__init__(**kwargs)
 
-    def null(self):
-        return scope[self.comodel_name].browse()
+    def null(self, scope):
+        return scope[self.comodel_name]
 
     def _add_trigger_for(self, field, path0, path1):
         # overridden to traverse relations and manage inverse fields
@@ -858,10 +860,10 @@ class Many2one(_Relational):
         """ Update the cached value of `self` for `records` with `value`. """
         records._cache[self] = value
 
-    def convert_to_cache(self, value):
+    def convert_to_cache(self, value, scope):
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name and len(value) <= 1:
-                return value.attach_scope(scope.current)
+                return value.attach_scope(scope)
             raise ValueError("Wrong value for %s: %r" % (self, value))
         elif isinstance(value, tuple):
             return scope[self.comodel_name].browse(value[0])
@@ -883,7 +885,7 @@ class Many2one(_Relational):
     def convert_to_write(self, value, target=None, fnames=None):
         return bool(value) and (value.id or value._convert_to_write(value._cache))
 
-    def convert_to_export(self, value):
+    def convert_to_export(self, value, scope):
         return bool(value) and value.name_get()[0][1]
 
     def convert_to_display_name(self, value):
@@ -907,10 +909,10 @@ class _RelationalMulti(_Relational):
         for record in records:
             record._cache[self] = record[self.name] | value
 
-    def convert_to_cache(self, value):
+    def convert_to_cache(self, value, scope):
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name:
-                return value.attach_scope(scope.current)
+                return value.attach_scope(scope)
         elif isinstance(value, list):
             # value is a list of record ids or commands
             result = scope[self.comodel_name]
@@ -938,27 +940,23 @@ class _RelationalMulti(_Relational):
                     result += result.browse(command)
             return result
         elif not value:
-            return self.null()
+            return self.null(scope)
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
     def convert_to_read(self, value, use_name_get=True):
         return value.unbrowse()
 
     def convert_to_write(self, value, target=None, fnames=None):
-        result = []
-
         # remove/delete former records
-        target = target or scope[self.model_name].browse()
-        if len(target) <= 1:
-            tag = 2 if self.type == 'one2many' else 3
-            for record in target[self.name] - value:
-                result.append((tag, record._id))
+        if target is None:
+            result = [(5,)]
         else:
-            result.append((5,))
+            tag = 2 if self.type == 'one2many' else 3
+            result = [(tag, record._id) for record in target[self.name] - value]
 
         if fnames is None:
             # take all fields in cache, except the inverse of self
-            fnames = set(scope[self.comodel_name]._fields) - set(MAGIC_COLUMNS)
+            fnames = set(value._fields) - set(MAGIC_COLUMNS)
             if self.inverse_field:
                 fnames.discard(self.inverse_field.name)
 
@@ -976,7 +974,7 @@ class _RelationalMulti(_Relational):
 
         return result
 
-    def convert_to_export(self, value):
+    def convert_to_export(self, value, scope):
         return bool(value) and ','.join(name for id, name in value.name_get())
 
     def convert_to_display_name(self, value):
