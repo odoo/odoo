@@ -88,7 +88,7 @@ function PhantomTest() {
         self.page.evaluate(function () {
             var message = ("Timeout\nhref: " + window.location.href
                 + "\nreferrer: " + document.referrer
-                + "\n\n" + document.body.innerHTML).replace(/[^a-z0-9\s~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "*");
+                + "\n\n" + (document.body && document.body.innerHTML)).replace(/[^a-z0-9\s~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "*");
             console.log('error', message);
             phantom.exit(1);
         });
