@@ -559,16 +559,22 @@ class website_forum(http.Controller):
         }, context=context)
         return werkzeug.utils.redirect("/forum/%s/user/%s" % (slug(forum),post.get('user_id')))
 
-    @http.route('/forum/<model("website.forum"):forum>/post/<model("website.forum.post"):post>/commet/<model("mail.message"):comment>/converttoanswer', type='http', auth="user", multilang=True, website=True)
+    @http.route('/forum/<model("website.forum"):forum>/post/<model("website.forum.post"):post>/commet/<model("mail.message"):comment>/converttoanswer', type='http', auth="public", multilang=True, website=True)
     def convert_to_answer(self, forum, post, comment, **kwarg):
+        if not request.session.uid:
+            return login_redirect()
+
         values = {
             'answer_content': comment.body,
         }
         request.registry['mail.message'].unlink(request.cr, request.uid, [comment.id], context=request.context)
         return self.post_answer(forum, post.parent_id and post.parent_id.id or post.id, **values)
 
-    @http.route('/forum/<model("website.forum"):forum>/post/<model("website.forum.post"):post>/converttocomment', type='http', auth="user", multilang=True, website=True)
+    @http.route('/forum/<model("website.forum"):forum>/post/<model("website.forum.post"):post>/converttocomment', type='http', auth="public", multilang=True, website=True)
     def convert_to_comment(self, forum, post, **kwarg):
+        if not request.session.uid:
+            return login_redirect()
+
         values = {
             'comment': html2plaintext(post.content),
         }
