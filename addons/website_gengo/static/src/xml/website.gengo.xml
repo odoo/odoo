@@ -63,10 +63,10 @@
                 <div class="modal-body">
                     <section>
                     <select class="form-control" required="required" autofocus="autofocus">
-                        <option value="machine">Machine (Free)</option>
-                        <option value="standard">Standard - $0.05 per word</option>
-                        <option value="pro">Pro - $0.10 per word</option>
-                        <option value="ultra">Ultra - $0.15 per word</option>
+                        <option value="machine">By Machine (Free)</option>
+                        <option value="standard">Standard - $ <t t-esc="(widget.new_words * 0.05).toFixed(2)"></t> </option>
+                        <option value="pro">Pro - $ <t t-esc="(widget.new_words * 0.10).toFixed(2)"></t></option>
+                        <option value="ultra">Ultra - $ <t t-esc="(widget.new_words * 0.15).toFixed(2)"></t></option>
                     </select>
                     </section>
                 </div>
@@ -96,6 +96,27 @@
                         <div class="text-info mb8"> <i class="fa fa-align-left"></i> Words posted for translate <t t-esc="widget.total"></t></div>
                         <div class="text-warning mb8"> <i class="fa fa-cogs"></i> Words in progress <t t-esc="widget.inprogess"></t></div>
                         <div class="text-success mb8"> <i class="fa fa-check"></i> Translated words <t t-esc="widget.done"></t></div>
+                    </b>
+                </div>
+                <div class="modal-footer">
+                    <a data-action="discard" data-dismiss="modal" href="#">Close</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+<t t-name="website.GengoApiConfigDialog">
+    <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
+                    <h2 class="modal-title">Gengo API key not set</h2>
+                </div>
+                <div class="modal-body">
+                    <b> <h3>Steps for configure a Gengo </h3>
+                        <div class="mb16"> 1. Go To your <b><a target="new" href="https://gengo.com/account/api_settings/">gengo account</a></b> and generate API Keys.</div>
+                        <div class="mb16"> 2. Then copy generate keys in <a href="/web#return_label=Website&amp;model=res.company&amp;id=1">Your company data</a></div>
                     </b>
                 </div>
                 <div class="modal-footer">
