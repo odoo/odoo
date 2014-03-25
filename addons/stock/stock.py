@@ -1015,7 +1015,7 @@ class stock_picking(osv.osv):
         top_lvl_packages = self._get_top_level_packages(cr, uid, quants_suggested_locations, context=context)
         # and then create pack operations for the top-level packages found
         for pack in top_lvl_packages:
-            pack_quants_ids = pack_obj.get_content(cr, uid, [pack.id], context=context)
+            pack_quant_ids = pack_obj.get_content(cr, uid, [pack.id], context=context)
             pack_quants = quant_obj.browse(cr, uid, pack_quant_ids, context=context)
             vals.append({
                     'picking_id': picking.id,
@@ -2152,7 +2152,7 @@ class stock_move(osv.osv):
                 quant_obj.quants_move(cr, uid, quants, move, ops.location_dest_id, lot_id=ops.lot_id.id, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id, dest_package_id=quant_dest_package_id, context=context)
                 # Handle pack in pack
                 if not ops.product_id and ops.package_id and ops.result_package_id.id != ops.package_id.parent_id.id:
-                    pack_obj.write(cr, SUPERUSER_ID, [ops.package_id.id], {'result_package_id': ops.result_package_id.id}, context=context)
+                    pack_obj.write(cr, SUPERUSER_ID, [ops.package_id.id], {'parent_id': ops.result_package_id.id}, context=context)
                 move_qty[move.id] -= record.qty
         #Check for remaining qtys and unreserve/check move_dest_id in 
         for move in self.browse(cr, uid, ids, context=context):
