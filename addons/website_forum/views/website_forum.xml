@@ -6,15 +6,17 @@
             name="Event Editor">
             <xpath expr="//script[@id='website_tour_js']" position="after">
                 <script type="text/javascript"
-                    src="/website_forum/static/src/js/website.tour.forum.js"></script>
-
+                    src="/website_forum/static/src/js/website.tour.forum.js"/>
                 <!--
                     FP Note: Why do we need this ? Can we remove this code?
                     The problem is that you add your script for every page, not only for the forum
                 -->
                 <script type="text/javascript"
-                    src="/website_forum/static/src/js/website_forum.editor.js"></script>
-                <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
+                    src="/website_forum/static/src/js/website_forum.editor.js"/>
+                <script type="text/javascript"
+                    src="/website_forum/static/src/js/website_forum.js"/>
+                <script type="text/javascript" 
+                    src="/web/static/lib/jquery.textext/jquery.textext.js"/>
                 <script type="text/javascript">
                     CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
                     ,['Outdent','Indent','Link','Unlink'],] ;
@@ -247,13 +249,59 @@
                         t-attf-value="#{question_content or ''}" id="textarea_ckeditor"/>
                     <br/>
                     <input type="text" name="question_tags" t-attf-value="#{question_tag or ''}" 
-                        placeholder="Tags" id="question_tag" class="form-control"/>
+                        placeholder="Tags" class="form-control load_tags"/>
                     <br/>
                     <button class="btn btn-primary" id="btn_ask_your_question">Post Your Question</button>
                 </form>
                 <script type="text/javascript">
                     CKEDITOR.replace("textarea_ckeditor");
                 </script>
+            </t>
+        </template>
+
+        <template id="edit_question">
+            <t t-call="website_forum.header">
+                <h3>Edit question</h3>
+                <form t-attf-action="/forum/#{ slug(forum) }/question/savequestion/" method="post" role="form">
+                    <input type="text" name="question_name" required="True" t-attf-value="#{post.name or ''}"
+                        class="form-control" placeholder="Edit your Question"/>
+                    <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
+                    <textarea name="answer_content" required="True" value="content" class="form-control" id="textarea_ckeditor">
+                        <t t-esc="post.content"/>
+                    </textarea>
+                    <br/>
+                    <input type="text" name="question_tag" class="form-control col-md-9 load_tags" placeholder="Tags" t-attf-value="#{tags or ''}"/>
+                    <br/>
+                    <input name="post_id" t-att-value="post.id" type="hidden"/>
+                    <button class="btn btn-primary btn-lg">Save</button>
+                </form>
+                <script type="text/javascript">
+                    CKEDITOR.replace("answer_content");
+                </script>
+            </t>
+        </template>
+
+        <template id="close_question">
+            <t t-call="website_forum.header">
+                <h3 class=""><b>Close question</b></h3><br/>
+                <form t-attf-action="/forum/#{ slug(forum) }/question/close/" method="post" role="form">
+                    <input name="post_id" t-att-value="post.id" type="hidden"/>
+                    <span class="pull-left">Close the question:</span>
+                    <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }" t-field="post.name"/>
+                    <div class="mt16">
+                        <label class="col-md-2 control-label mb16" for="reason">Reasons:</label>
+                        <div class="col-md-9 mb16">
+                            <select class="form-control" name="reason">
+                                <t t-foreach="reasons or []" t-as="reason">
+                                    <option t-att-value="reason.id" t-att-selected="reason.id == post.reason_id.id"><t t-esc="reason.name"/></option>
+                                </t>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary btn-lg">Close</button>
+                    </div>
+                </form>
             </t>
         </template>
 
@@ -290,52 +338,6 @@
                 <script type="text/javascript">
                     CKEDITOR.replace("answer_content");
                 </script>
-            </t>
-        </template>
-
-        <template id="edit_question">
-            <t t-call="website_forum.header">
-                <h3>Edit question</h3>
-                <form t-attf-action="/forum/#{ slug(forum) }/question/savequestion/" method="post" role="form">
-                    <input type="text" name="question_name" required="True" t-attf-value="#{post.name or ''}"
-                        class="form-control" placeholder="Edit your Question"/>
-                    <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
-                    <textarea name="answer_content" required="True" value="content" class="form-control" id="textarea_ckeditor">
-                        <t t-esc="post.content"/>
-                    </textarea>
-                    <br/>
-                    <input type="text" name="question_tag" id="question_tag" class="form-control" placeholder="Tags" t-attf-value="#{tags or ''}"/>
-                    <input name="post_id" t-att-value="post.id" type="hidden"/>
-                    <br/>
-                    <button class="btn btn-primary btn-lg">Save</button>
-                </form>
-                <script type="text/javascript">
-                    CKEDITOR.replace("answer_content");
-                </script>
-            </t>
-        </template>
-
-        <template id="close_question">
-            <t t-call="website_forum.header">
-                <h3 class=""><b>Close question</b></h3><br/>
-                <form t-attf-action="/forum/#{ slug(forum) }/question/close/" method="post" role="form">
-                    <input name="post_id" t-att-value="post.id" type="hidden"/>
-                    <span class="pull-left">Close the question:</span>
-                    <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }" t-field="post.name"/>
-                    <div class="mt16">
-                        <label class="col-md-2 control-label mb16" for="reason">Reasons:</label>
-                        <div class="col-md-9 mb16">
-                            <select class="form-control" name="reason">
-                                <t t-foreach="reasons or []" t-as="reason">
-                                    <option t-att-value="reason.id" t-att-selected="reason.id == post.reason_id.id"><t t-esc="reason.name"/></option>
-                                </t>
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <button class="btn btn-primary btn-lg">Close</button>
-                    </div>
-                </form>
             </t>
         </template>
 
@@ -386,7 +388,7 @@
                                         t-attf-href="/forum/#{ slug(forum) }/close/question/#{ question.id }">close</a></li>
                                     <li><a class="text-muted fa fa-undo" t-if="question.state == 'close'" 
                                         t-attf-href="/forum/#{ slug(forum) }/reopen/question/#{ question.id }">reopen</a></li>
-                                    <li><a class="text-muted fa fa-edit" 
+                                    <li><a class="text-muted fa fa-edit"
                                         t-attf-href="/forum/#{ slug(forum) }/edit/question/#{ question.id }">edit</a></li>
                                     <li><a class="text-muted fa fa-trash-o" t-if="question.active" 
                                         t-attf-href="/forum/#{ slug(forum) }/delete/question/#{ question.id }">delete</a></li>
