@@ -2986,17 +2986,19 @@ class BaseModel(object):
                     field.ondelete = 'cascade'
                 cls._inherits[field.comodel_name] = field.name
 
+    @api.model
     def _before_registry_update(self):
         """ method called on all models before updating the registry """
         # reset setup of all fields
         for field in self._fields.itervalues():
             field.reset()
 
+    @api.model
     def _after_registry_update(self):
         """ method called on all models after updating the registry """
         # complete the initialization of all fields
         for field in self._fields.itervalues():
-            field.setup()
+            field.setup(self._scope)
 
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
         """ Return the definition of each field.

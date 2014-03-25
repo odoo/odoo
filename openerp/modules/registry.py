@@ -138,7 +138,7 @@ class Registry(Mapping):
         with openerp.osv.scope.Scope(cr, SUPERUSER_ID, None):
             # call hook before adding stuff in the registry
             for model in self.models.itervalues():
-                model._before_registry_update()
+                model._before_registry_update(cr, SUPERUSER_ID)
 
             # Instantiate registered classes (via the MetaModel automatic discovery
             # or via explicit constructor call), and add them to the pool.
@@ -151,7 +151,7 @@ class Registry(Mapping):
 
             # call hook after models have been instantiated
             for model in self.models.itervalues():
-                model._after_registry_update()
+                model._after_registry_update(cr, SUPERUSER_ID)
 
         return [self.models[m] for m in models_to_load]
 

@@ -27,7 +27,7 @@ from functools import partial
 from operator import attrgetter
 import logging
 
-from openerp.tools import float_round, ustr, html_sanitize, lazy_property
+from openerp.tools import float_round, ustr, html_sanitize
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 
@@ -134,18 +134,19 @@ class Field(object):
         kwargs['string'] = string
         for attr, value in kwargs.iteritems():
             setattr(self, attr, value)
+        self.reset()
 
     def reset(self):
-        """ Prepare `self` for a new setup. This resets all lazy properties. """
-        lazy_property.reset_all(self)
-        self.__dict__.pop('setup', None)
+        """ Prepare `self` for a new setup. """
+        self._setup_done = False
+        self._triggers = []
 
     def copy(self, **kwargs):
         """ make a copy of `self`, possibly modified with parameters `kwargs` """
         field = copy(self)
         for attr, value in kwargs.iteritems():
             setattr(field, attr, value)
-        # Note: lazy properties will be recomputed later thanks to reset()
+        field.reset()
         return field
 
     def set_model_name(self, model_name, name):
@@ -393,28 +394,48 @@ class Field(object):
             return [(self.name, operator, value)]
 
     #
-    # Setup of related fields.
+    # Field setup.
+    #
+    # Recomputation of computed fields: each field stores a set of triggers
+    # (`field`, `path`); when the field is modified, it invalidates the cache of
+    # `field` and registers the records to recompute based on `path`. See method
+    # `modified` below for details.
     #
 
-    @lazy_property
-    def related_field(self):
-        """ return the related field corresponding to `self` """
-        if self.related:
-            recs = scope[self.model_name]
-            for name in self.related[:-1]:
-                recs = recs[name]
-            return recs._fields[self.related[-1]]
-        return None
+    def setup(self, scope):
+        """ Complete the setup of `self` (dependencies, recomputation triggers,
+            and other properties). This method is idempotent: it has no effect
+            if `self` has already been set up.
+        """
+        if not self._setup_done:
+            self._setup_done = True
+            self._setup(scope)
 
-    def setup_related(self):
-        """ Setup the attributes of the related field `self`. """
-        assert self.related
+    def _setup(self, scope):
+        """ Do the actual setup of `self`. """
+        if self.related:
+            self._setup_related(scope)
+        else:
+            self._setup_regular(scope)
+
+        # put invalidation/recomputation triggers on dependencies
+        for path in self.depends:
+            self._setup_dependency([], scope[self.model_name], path.split('.'))
+
+    def _setup_related(self, scope):
+        """ Setup the attributes of a related field. """
         # fix the type of self.related if necessary
         if isinstance(self.related, basestring):
             self.related = tuple(self.related.split('.'))
 
+        # determine the related field, and make sure it is set up
+        recs = scope[self.model_name]
+        for name in self.related[:-1]:
+            recs = recs[name]
+        field = self.related_field = recs._fields[self.related[-1]]
+        field.setup(scope)
+
         # check type consistency
-        field = self.related_field
         if self.type != field.type:
             raise Warning("Type of related field %s is inconsistent with %s" % (self, field))
 
@@ -425,7 +446,6 @@ class Field(object):
         self.search = search_related
 
         # copy attributes from field to self (readonly, required, etc.)
-        field.setup()
         for attr in dir(self):
             if attr.startswith('_related_'):
                 if not getattr(self, attr[9:]):
@@ -434,7 +454,7 @@ class Field(object):
         # special case: related fields never have an inverse field!
         self.inverse_field = None
 
-    # properties used by setup_related() to copy values from related field
+    # properties used by _setup_related() to copy values from related field
     _related_string = property(attrgetter('string'))
     _related_help = property(attrgetter('help'))
     _related_readonly = property(attrgetter('readonly'))
@@ -442,74 +462,46 @@ class Field(object):
     _related_states = property(attrgetter('states'))
     _related_groups = property(attrgetter('groups'))
 
-    #
-    # Field setup.
-    #
-    # Recomputation of computed fields: each field stores a set of triggers
-    # (`field`, `path`); when the field is modified, it invalidates the cache of
-    # `field` and registers the records to recompute based on `path`. See method
-    # `modified` below for details.
-    #
+    def _setup_regular(self, scope):
+        """ Setup the attributes of a non-related field. """
+        # retrieve dependencies from compute method
+        method = self.compute
+        if isinstance(method, basestring):
+            method = getattr(scope[self.model_name], method)
 
-    @lazy_property
-    def _triggers(self):
-        """ List of pairs (`field`, `path`), where `field` is a field to
-            recompute, and `path` is the dependency between `field` and `self`
-            (dot-separated sequence of field names between `field.model` and
-            `self.model`).
-        """
-        return []
+        self.depends = getattr(method, '_depends', ())
+        if callable(self.depends):
+            self.depends = self.depends(scope[self.model_name])
 
-    def setup(self):
-        """ Complete the setup of `self`: make it process its dependencies and
-            store triggers on other fields to be recomputed.
-        """
-        # trick: calling self.setup() again will do nothing
-        self.setup = lambda: None
-
-        model = scope[self.model_name]
-
-        if self.related:
-            # setup all attributes of related field
-            self.setup_related()
-        else:
-            # retrieve dependencies from compute method
-            if isinstance(self.compute, basestring):
-                method = getattr(type(model), self.compute)
-            else:
-                method = self.compute
-
-            depends = getattr(method, '_depends', ())
-            self.depends = depends(model) if callable(depends) else depends
-
-        # put invalidation/recomputation triggers on dependencies
-        for path in self.depends:
-            self._depends_on_model(model, [], path.split('.'))
-
-    def _depends_on_model(self, model, path0, path1):
+    def _setup_dependency(self, path0, model, path1):
         """ Make `self` depend on `model`; `path0 + path1` is a dependency of
             `self`, and `path0` is the sequence of field names from `self.model`
             to `model`.
         """
-        name, tail = path1[0], path1[1:]
-        if name == '*':
-            # special case: add triggers on all fields of model
-            fields = model._fields.values()
-            if not path0:
-                fields.remove(self)     # self cannot depend directly on itself
+        scope = model._scope
+        head, tail = path1[0], path1[1:]
+
+        if head == '*':
+            # special case: add triggers on all fields of model (except self)
+            fields = set(model._fields.itervalues()) - set([self])
         else:
-            fields = (model._fields[name],)
+            fields = [model._fields[head]]
 
         for field in fields:
-            field._add_trigger_for(self, path0, tail)
+            field.setup(scope)
 
-    def _add_trigger_for(self, field, path0, path1):
-        """ Add a trigger on `self` to recompute `field`; `path0` is the
-            sequence of field names from `field.model` to `self.model`; ``path0
-            + [self.name] + path1`` is a dependency of `field`.
-        """
-        self._triggers.append((field, '.'.join(path0) if path0 else 'id'))
-        _logger.debug("Add trigger on field %s to recompute field %s", self, field)
+            _logger.debug("Add trigger on %s to recompute %s", field, self)
+            field._triggers.append((self, '.'.join(path0 or ['id'])))
+
+            # add trigger on inverse field, too
+            if field.inverse_field:
+                _logger.debug("Add trigger on %s to recompute %s", field.inverse_field, self)
+                field.inverse_field._triggers.append((self, '.'.join(path0 + [head])))
+
+            # recursively traverse the dependency
+            if tail:
+                comodel = scope[field.comodel_name]
+                self._setup_dependency(path0 + [head], comodel, tail)
 
     #
     # Notification when fields are modified
@@ -577,7 +569,7 @@ class Integer(Field):
 class Float(Field):
     """ Float field. """
     type = 'float'
-    _digits = None
+    digits = None
 
     _column_digits = property(lambda self: not callable(self._digits) and self._digits)
     _column_digits_compute = property(lambda self: callable(self._digits) and self._digits)
@@ -588,9 +580,9 @@ class Float(Field):
         self._digits = digits
         super(Float, self).__init__(string=string, **kwargs)
 
-    @lazy_property
-    def digits(self):
-        return self._digits(scope.cr) if callable(self._digits) else self._digits
+    def _setup_regular(self, scope):
+        super(Float, self)._setup_regular(scope)
+        self.digits = self._digits(scope.cr) if callable(self._digits) else self._digits
 
     def convert_to_cache(self, value, scope):
         # apply rounding here, otherwise value in cache may be wrong!
@@ -717,8 +709,8 @@ class Selection(Field):
         else:
             return self.selection
 
-    def setup_related(self):
-        super(Selection, self).setup_related()
+    def _setup_related(self, scope):
+        super(Selection, self)._setup_related(scope)
         # selection must be computed on related field
         field = self.related_field
         self.selection = lambda model: field._description_selection(model._scope)
@@ -809,18 +801,6 @@ class _Relational(Field):
     def null(self, scope):
         return scope[self.comodel_name]
 
-    def _add_trigger_for(self, field, path0, path1):
-        # overridden to traverse relations and manage inverse fields
-        Field._add_trigger_for(self, field, path0, [])
-
-        if self.inverse_field:
-            # add trigger on inverse field, too
-            Field._add_trigger_for(self.inverse_field, field, path0 + [self.name], [])
-
-        if path1:
-            # recursively traverse the dependency
-            field._depends_on_model(scope[self.comodel_name], path0 + [self.name], path1)
-
     def modified(self, records):
         # Invalidate cache for self.inverse_field, too. Note that recomputation
         # of fields that depend on self.inverse_field is already covered by the
@@ -844,17 +824,18 @@ class Many2one(_Relational):
     def __init__(self, comodel_name, string=None, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
 
-    @lazy_property
-    def inverse_field(self):
-        for field in scope[self.comodel_name]._fields.itervalues():
-            if isinstance(field, One2many) and field.inverse_field == self:
-                return field
-        return None
+    def _setup_regular(self, scope):
+        super(Many2one, self)._setup_regular(scope)
 
-    @lazy_property
-    def inherits(self):
-        """ Whether `self` implements inheritance between model and comodel. """
-        return self.name in scope[self.model_name]._inherits.itervalues()
+        # determine self.inverse_field
+        for field in scope[self.comodel_name]._fields.itervalues():
+            field.setup(scope)
+            if isinstance(field, One2many) and field.inverse_field == self:
+                self.inverse_field = field
+                break
+
+        # determine self.delegate
+        self.delegate = self.name in scope[self.model_name]._inherits.values()
 
     def _update(self, records, value):
         """ Update the cached value of `self` for `records` with `value`. """
@@ -893,7 +874,7 @@ class Many2one(_Relational):
 
     def determine_default(self, record):
         super(Many2one, self).determine_default(record)
-        if self.inherits:
+        if self.delegate:
             # special case: fields that implement inheritance between models
             value = record[self.name]
             if not value:
@@ -998,9 +979,10 @@ class One2many(_RelationalMulti):
         super(One2many, self).__init__(
             comodel_name=comodel_name, inverse_name=inverse_name, string=string, **kwargs)
 
-    @lazy_property
-    def inverse_field(self):
-        return self.inverse_name and scope[self.comodel_name]._fields[self.inverse_name]
+    def _setup_regular(self, scope):
+        super(One2many, self)._setup_regular(scope)
+        if self.inverse_name:
+            self.inverse_field = scope[self.comodel_name]._fields[self.inverse_name]
 
 
 class Many2many(_RelationalMulti):
@@ -1021,23 +1003,23 @@ class Many2many(_RelationalMulti):
         super(Many2many, self).__init__(comodel_name=comodel_name, relation=relation,
             column1=column1, column2=column2, string=string, **kwargs)
 
-    def setup(self):
-        super(Many2many, self).setup()
+    def _setup_regular(self, scope):
+        super(Many2many, self)._setup_regular(scope)
+
         if self.store and not self.relation:
             model = scope[self.model_name]
             column = model._columns[self.name]
             if not isinstance(column, fields.function):
                 self.relation, self.column1, self.column2 = column._sql_names(model)
 
-    @lazy_property
-    def inverse_field(self):
         if self.relation:
             expected = (self.relation, self.column2, self.column1)
             for field in scope[self.comodel_name]._fields.itervalues():
+                field.setup(scope)
                 if isinstance(field, Many2many) and \
                         (field.relation, field.column1, field.column2) == expected:
-                    return field
-        return None
+                    self.inverse_field = field
+                    break
 
 
 class Id(Field):
@@ -1062,4 +1044,3 @@ from openerp import SUPERUSER_ID
 from openerp.exceptions import Warning, MissingError
 from openerp.osv import fields
 from openerp.osv.orm import BaseModel, MAGIC_COLUMNS
-from openerp.osv.scope import proxy as scope
