@@ -7,7 +7,7 @@ from datetime import datetime
 
 class google_map(http.Controller):
 
-    @http.route(['/google_map/'], type='http', auth="public", website=True)
+    @http.route(['/google_map'], type='http', auth="public", website=True)
     def google_map(self, *arg, **post):
         values = {
             'partner_ids': post.get('partner_ids', ""),
@@ -28,7 +28,7 @@ class google_map(http.Controller):
         return partner_obj.google_map_json(request.cr, openerp.SUPERUSER_ID,
                                            partner_ids, request.context)
 
-    @http.route(['/google_map/set_partner_position/'], type='http', auth="public", website=True)
+    @http.route(['/google_map/set_partner_position'], type='http', auth="public", website=True)
     def google_map_set_partner_position(self, *arg, **post):
         partner_obj = request.registry['res.partner']
 
