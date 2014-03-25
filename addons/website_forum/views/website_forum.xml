@@ -454,7 +454,7 @@
                                 <li t-if="uid == answer.user_id.id">
                                     <a class="text-muted delete fa fa-trash-o" href="" t-attf-id="#{answer.id}">delete</a>
                                 </li>
-                                <li t-if="uid == answer.user_id.id">
+                                <li t-if="uid">
                                     <a class="text-muted fa fa-magic" t-attf-href="/forum/#{ slug(forum) }/post/#{ answer.id }/converttocomment">Convert as a comment</a>
                                 </li>
                                 <li><a class="text-muted fa fa-share" t-attf-href="/forum/#{ slug(forum) }/question/#{ question.id }/#answer-#{ answer.id }">share</a></li>

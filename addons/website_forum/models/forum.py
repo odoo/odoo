@@ -100,6 +100,18 @@ class Post(osv.Model):
     def _get_child(self, cr, uid, ids, context=None):
         return ids
 
+    def _get_view_count(self, cr, uid, ids, field_name=False, arg={}, context=None):
+        res = dict.fromkeys(ids, 0)
+        for post in self.browse(cr, uid, ids, context=context):
+            res[post.id] = post.views + 1
+        return res
+
+    def _get_views(self, cr, uid, ids, context=None):
+        result = {}
+        for statistic in self.pool.get('website.forum.post.statistics').browse(cr, uid, ids, context=context):
+            result[statistic.post_id.id] = True
+        return result.keys()
+
     _columns = {
         'name': fields.char('Title', size=128),
         'forum_id': fields.many2one('website.forum', 'Forum', required=True),
@@ -116,7 +128,13 @@ class Post(osv.Model):
 
         'state': fields.selection([('active', 'Active'), ('close', 'Close'),('offensive', 'Offensive')], 'Status'),
         'active': fields.boolean('Active'),
-        'views': fields.integer('Page Views'),
+
+        'views_ids': fields.one2many('website.forum.post.statistics', 'post_id', 'Views'),
+        'views':fields.function(_get_view_count, string="Views", type='integer',
+            store={
+                'website.forum.post.statistics': (_get_views, [], 10),
+            }
+        ),
 
         'parent_id': fields.many2one('website.forum.post', 'Question', ondelete='cascade'),
         'child_ids': fields.one2many('website.forum.post', 'parent_id', 'Answers'),
@@ -208,6 +226,16 @@ class Post(osv.Model):
                 value = -15 
             self.pool['res.users'].write(cr, uid, [post.user_id.id], {'karma': value}, context=context)
         return super(Post, self).write(cr, uid, ids, vals, context=context)
+
+class PostStatistics(osv.Model):
+    _name = "website.forum.post.statistics"
+    _description = "Post Statistics"
+    _columns = {
+        'name': fields.char('Post Reason'),
+        'post_id': fields.many2one('website.forum.post', 'Post', ondelete='cascade'),
+        'user_id': fields.many2one('res.users', 'Created by'),
+        'session': fields.char('Session Id'),
+    }
 
 class PostReason(osv.Model):
     _name = "website.forum.post.reason"
@@ -331,7 +359,6 @@ class MailMessage(osv.Model):
     _columns = {
         'create_uid': fields.many2one('res.users', 'Created by', readonly=True ),
     }
-
 
 class Tags(osv.Model):
     _name = "website.forum.tag"

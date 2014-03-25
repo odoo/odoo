@@ -144,6 +144,21 @@ class website_forum(http.Controller):
 
     @http.route(['/forum/<model("website.forum"):forum>/question/<model("website.forum.post"):question>'], type='http', auth="public", website=True, multilang=True)
     def question(self, forum, question, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+
+        #maintain total views on post.
+        Statistics = request.registry['website.forum.post.statistics']
+        domain = [('session', '=', request.session_id), ('post_id', '=', question.id)]
+        if request.session.uid:
+            domain = ['|', ('session', '=', request.session_id), ('user_id', '=', request.session.uid), ('post_id', '=', question.id)]
+        view_ids = Statistics.search(cr, uid, domain, context=context)
+        if not view_ids:
+            Statistics.create(cr, SUPERUSER_ID, {
+                'session': request.session_id,
+                'user_id': request.session.uid or False,
+                'post_id': question.id,
+            }, context=context)
+
         answer_done = False
         for answer in question.child_ids:
             if answer.user_id.id == request.uid:
