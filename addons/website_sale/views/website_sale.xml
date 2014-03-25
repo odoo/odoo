@@ -33,12 +33,14 @@
 
 <template id="categories_recursive" name="Category list">
   <li t-att-class="int(categ) == int(category or 0) and 'active' or ''">
+    <t t-if="categ in all_categories">
       <a t-attf-href="/shop/category/#{ slug(categ) }" t-field="categ.name"></a>
       <ul t-if="categ.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
           <t t-foreach="categ.child_id" t-as="categ">
               <t t-call="website_sale.categories_recursive"/>
           </t>
       </ul>
+    </t>
   </li>
 </template>
 
@@ -730,7 +732,7 @@
           <div class="col-md-8 oe_mycart">
               <h3 class="page-header mt16">Billing Information
                   <small groups="base.group_public"> or
-                      <a class='btn btn-primary' t-if="not partner" t-attf-href="/web?redirect=#{ request.httprequest.url }">Sign in</a>
+                      <a class='btn btn-primary' t-if="not partner" t-attf-href="/web/login?redirect=#{ request.httprequest.url }">Sign in</a>
                   </small>
               </h3>
               <div class="row">

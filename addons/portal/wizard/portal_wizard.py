@@ -209,7 +209,6 @@ class wizard_user(osv.osv_memory):
             'login': extract_email(wizard_user.email),
             'partner_id': wizard_user.partner_id.id,
             'groups_id': [(6, 0, [])],
-            'share': True,
         }
         user_id = res_users.create(cr, uid, values, context=create_context)
         return res_users.browse(cr, uid, user_id, context)

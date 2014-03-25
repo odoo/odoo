@@ -59,7 +59,7 @@ class MailGroup(http.Controller):
             domain.append(('parent_id','=',False))
         thread_count = thread_obj.search_count(cr, uid, domain, context=context)
         pager = request.website.pager(
-            url='/groups/%s/%s' % (group.id, mode),
+            url='/groups/%s/%s/' % (group.id, mode),
             total=thread_count,
             page=page,
             step=self._thread_per_page,

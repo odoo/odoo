@@ -226,7 +226,8 @@ class Ecommerce(http.Controller):
     def shop(self, category=None, page=0, filters='', search='', **post):
         cr, uid, context = request.cr, request.uid, request.context
         product_obj = request.registry.get('product.template')
-        domain = request.registry.get('website').ecommerce_get_product_domain()
+        base_domain = request.registry.get('website').ecommerce_get_product_domain()
+        domain = list(base_domain)
         if search:
             domain += ['|',
                 ('name', 'ilike', search),
@@ -265,9 +266,15 @@ class Ecommerce(http.Controller):
             pass
 
         category_obj = request.registry.get('product.public.category')
-        category_ids = category_obj.search(cr, uid, [], context=context)
+        category_ids = [product['public_categ_id'][0] for product in product_obj.read_group(cr, uid, base_domain, ['public_categ_id'], ['public_categ_id'], context=context) if product['public_categ_id']]
         categories = category_obj.browse(cr, uid, category_ids, context=context)
-        categs = filter(lambda x: not x.parent_id, categories)
+        all_categories = set(categories)
+        for cat in categories:
+            parent = cat.parent_id
+            while parent:
+                all_categories.add(parent)
+                parent = parent.parent_id
+        categories = list(all_categories)
 
         values = {
             'products': products,
@@ -282,7 +289,8 @@ class Ecommerce(http.Controller):
             'pager': pager,
             'styles': styles,
             'category': category,
-            'categories': categs,
+            'categories': filter(lambda x: not x.parent_id, categories),
+            'all_categories': categories,
             'Ecommerce': self,   # TODO fp: Should be removed
             'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids],
         }
