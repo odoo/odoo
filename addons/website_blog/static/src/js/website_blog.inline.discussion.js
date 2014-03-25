@@ -15,6 +15,7 @@
                 position: 'right',
                 post_id: $('#blog_post_name').attr('data-blog-id'),
                 content : false,
+                public_user: false,
             };
             self.settings = $.extend({}, defaults, options);
             self.do_render(self);
@@ -32,6 +33,17 @@
             $('html').click(function(event) {
                 if($(event.target).parents('#discussions_wrapper, .main-discussion-link-wrp').length === 0) {
                     self.hide_discussion();
+                }
+                if(!$(event.target).hasClass('discussion-link') && !$(event.target).parents('.popover').length){
+                    if($('.move_discuss').length){
+                        $('.js_discuss').removeClass('move_discuss');
+                        $('.js_discuss').animate({
+                            'marginLeft': "+=40%"
+                        });
+                        $('#discussions_wrapper').animate({
+                            'marginLeft': "+=250px"
+                        });
+                    }
                 }
             });
         },
@@ -82,6 +94,15 @@
 
             a.delegate('a.discussion-link', "click", function(e) {
                 e.preventDefault();
+                if(!$('.move_discuss').length){
+                    $('.js_discuss').addClass('move_discuss');
+                    $('.js_discuss').animate({
+                        'marginLeft': "-=40%"
+                    });
+                    $('#discussions_wrapper').animate({
+                        'marginLeft': "-=250px"
+                    });
+                }
                 if ($(this).is('.active')) {
                     e.stopPropagation();
                     self.hide_discussion();
@@ -100,7 +121,6 @@
             elt.append(qweb.render("website.blog_discussion.popover", {'identifier': identifier , 'options': self.settings}));
             var comment = '';
             self.prepare_data(identifier).then(function(data){
-                console.log(identifier, data);
                 _.each(data, function(res){
                     comment += qweb.render("website.blog_discussion.comment", {'res': res});
                 });
@@ -125,23 +145,55 @@
                 self.post_discussion(identifier);
             });
         },
+        validate : function(public_user){
+            var comment = $(".popover textarea#inline_comment").val();
+            if (public_user){
+                var author_name = $('.popover input#author_name').val();
+                var author_email = $('.popover input#author_email').val();
+                if(!comment || !author_name || !author_email){
+                    if (!author_name) 
+                        $('div#author_name').addClass('has-error');
+                    else 
+                        $('div#author_name').removeClass('has-error');
+                    if (!author_email)
+                        $('div#author_email').addClass('has-error');
+                    else
+                        $('div#author_email').removeClass('has-error');
+                    if(!comment)
+                        $('div#inline_comment').addClass('has-error');
+                    else
+                        $('div#inline_comment').removeClass('has-error');
+                    return false
+                }
+            }
+            else if(!comment) {
+                $('div#inline_comment').addClass('has-error');
+                return false
+            }
+            $("div#inline_comment").removeClass('has-error');
+            $('div#author_name').removeClass('has-error');
+            $('div#author_email').removeClass('has-error');
+            $(".popover textarea#inline_comment").val('');
+            $('.popover input#author_name').val('');
+            $('.popover input#author_email').val('');
+            return [comment, author_name, author_email]
+        },
         post_discussion : function(identifier) {
             var self = this;
-            var val = $(".popover #comment").val()
-            if(val){
-                $(".popover #comment").removeClass('danger');
-                openerp.jsonRpc("/blogpost/post_discussion", 'call', {
-                    'blog_post_id': self.settings.post_id,
-                    'discussion': self.discus_identifier,
-                    'comment': val,
-                }).then(function(res){
-                    $(".popover ul.media-list").prepend(qweb.render("website.blog_discussion.comment", {'res': res}))
-                    $(".popover #comment").val('')
-                    var ele = $('a[data-discus-identifier="'+ self.discus_identifier +'"]');
-                    ele.text(_.isNaN(parseInt(ele.text())) ? 1 : parseInt(ele.text())+1)
-                    ele.addClass('has-comments');
-                });
-            }
+            var val = self.validate(self.settings.public_user)
+            if(!val) return
+            openerp.jsonRpc("/blogpost/post_discussion", 'call', {
+                'blog_post_id': self.settings.post_id,
+                'discussion': self.discus_identifier,
+                'comment': val[0],
+                'name' : val[1],
+                'email': val[2],
+            }).then(function(res){
+                $(".popover ul.media-list").prepend(qweb.render("website.blog_discussion.comment", {'res': res}))
+                var ele = $('a[data-discus-identifier="'+ self.discus_identifier +'"]');
+                ele.text(_.isNaN(parseInt(ele.text())) ? 1 : parseInt(ele.text())+1)
+                ele.addClass('has-comments');
+            });
         },
         hide_discussion : function() {
             var self =  this;

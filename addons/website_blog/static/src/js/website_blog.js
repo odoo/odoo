@@ -13,7 +13,6 @@ $(document).ready(function() {
            window.location.href = newLocation;
         });
     }
-
     function animate(event) {
         event.stopImmediatePropagation();
         var target = $(this.hash);
@@ -26,8 +25,10 @@ $(document).ready(function() {
 
     var content = $(".js_discuss #blog_content p");
     if(content){
-        $('#discussions_wrapper').empty();
-        new openerp.website.blog_discussion({'content' : content});
+        openerp.jsonRpc("/blog/get_user/", 'call', {}).then(function(data){
+            $('#discussions_wrapper').empty();
+            new openerp.website.blog_discussion({'content' : content, 'public_user':data[0]});
+        });
     }
 
     $('.js_header').css('min-height', $(window).height());

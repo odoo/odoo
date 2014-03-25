@@ -214,7 +214,8 @@ class WebsiteBlog(http.Controller):
             body=post.get('comment'),
             type='comment',
             subtype='mt_comment',
-            author_id=False,
+            email_from = "%s <%s>" % (post.get('name'), post.get('email')),
+            author_id=user.partner_id.id if request.session.uid else False,
             discussion=post.get('discussion'),
             context=dict(context, mail_create_nosubcribe=True))
         return message_id
@@ -237,13 +238,13 @@ class WebsiteBlog(http.Controller):
             user = request.registry['res.users'].browse(cr, uid, uid, context=context)
             id = self._blog_post_message(user, blog_post_id, **post)
             mail_obj = request.registry.get('mail.message')
-            post = mail_obj.browse(cr, SUPERUSER_ID, id)
+            blog_post = mail_obj.browse(cr, SUPERUSER_ID, id)
             values = {
-                "author_name": post.author_id and post.author_id.name or _('Anonymous'),
-                "date": post.date,
-                "body": html2plaintext(post.body),
-                "author_image": post.author_id and \
-                    ("data:image/png;base64,%s" % post.author_id.image) or \
+                "author_name": blog_post.author_id and blog_post.author_id.name or post.get('name'),
+                "date": blog_post.date,
+                "body": html2plaintext(blog_post.body),
+                "author_image": blog_post.author_id and \
+                    ("data:image/png;base64,%s" % blog_post.author_id.image) or \
                     '/website_blog/static/src/img/anonymous.png',
                 }
         return values
@@ -280,16 +281,26 @@ class WebsiteBlog(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         mail_obj = request.registry.get('mail.message')
         values = []
-        ids = mail_obj.search(cr, SUPERUSER_ID, [('res_id', '=', int(post_id)) ,('model','=','blog.post'), ('discussion', '=', discussion)])
+        publish = False
+        domain = [('res_id', '=', int(post_id)) ,('model','=','blog.post'), ('discussion', '=', discussion)]
+        #check current user belongs to website publisher group
+        if request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher'):
+            publish = True
+        else:
+            domain.append(('website_published', '=', True))
+        ids = mail_obj.search(cr, SUPERUSER_ID, domain)
         if ids:
             for post in mail_obj.browse(cr, SUPERUSER_ID, ids, context=context):
                 values.append({
+                    "id": post.id,
                     "author_name": post.author_id and post.author_id.name or _('Anonymous'),
                     "author_image": post.author_id and \
                         ("data:image/png;base64,%s" % post.author_id.image) or \
                         '/website_blog/static/src/img/anonymous.png',
                     "date": post.date,
                     'body': html2plaintext(post.body),
+                    'website_published' : post.website_published,
+                    'publish' : publish,
                 })
         return values
 
@@ -297,6 +308,11 @@ class WebsiteBlog(http.Controller):
     def change_bg(self, post_id=0, image=None, **post):
         post_obj = request.registry.get('blog.post')
         values = {'content_image' : image}
+
         ids = post_obj.write(request.cr, request.uid, [int(post_id)], values, request.context)
         return []
+
+    @http.route('/blog/get_user/', type='json', auth="public", website=True)
+    def get_user(self, **post):
+        return [False if request.session.uid else True]
 
