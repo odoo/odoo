@@ -277,7 +277,7 @@ class Vote(osv.Model):
     _name = 'website.forum.post.vote'
     _description = 'Vote'
     _columns = {
-        'post_id': fields.many2one('website.forum.post', 'Post', required=True),
+        'post_id': fields.many2one('website.forum.post', 'Post', ondelete='cascade', required=True),
         'user_id': fields.many2one('res.users', 'User'),
         'vote': fields.selection([('1', '1'),('-1', '-1'),('0','0')], 'Vote'),
         'create_date': fields.datetime('Create Date', select=True, readonly=True),

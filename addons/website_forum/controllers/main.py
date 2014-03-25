@@ -24,6 +24,7 @@ import werkzeug.urls
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
+from openerp.tools import html2plaintext
 
 from openerp.tools.translate import _
 from datetime import datetime, timedelta
@@ -569,10 +570,11 @@ class website_forum(http.Controller):
     @http.route('/forum/<model("website.forum"):forum>/post/<model("website.forum.post"):post>/converttocomment', type='http', auth="user", multilang=True, website=True)
     def convert_to_comment(self, forum, post, **kwarg):
         values = {
-            'comment': post.content,
+            'comment': html2plaintext(post.content),
         }
+        question = post.parent_id.id
         request.registry['website.forum.post'].unlink(request.cr, request.uid, [post.id], context=request.context)
-        return self.post_comment(forum, post.parent_id.id, **values)
+        return self.post_comment(forum, question, **values)
 
     @http.route('/forum/get_tags/', type='json', auth="public", multilang=True, methods=['POST'], website=True)
     def tag_read(self, **kwarg):
