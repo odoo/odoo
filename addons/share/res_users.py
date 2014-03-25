@@ -38,9 +38,25 @@ class res_groups(osv.osv):
 class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
+
+    def _is_share(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for user in self.browse(cr, uid, ids, context=context):
+            res[user.id] = not self.has_group(cr, user.id, 'base.group_user')
+        return res
+
+    def _get_users_from_group(self, cr, uid, ids, context=None):
+        result = set()
+        for group in self.pool['res.groups'].browse(cr, uid, ids, context=context):
+            result.update(user.id for user in group.users)
+        return list(result)
+
     _columns = {
-        'share': fields.boolean('Share User', readonly=True,
-                    help="External user with limited access, created only for the purpose of sharing data.")
+        'share': fields.function(_is_share, string='Share User', type='boolean',
+            store={
+                'res.users': (lambda self, cr, uid, ids, c={}: ids, None, 50),
+                'res.groups': (_get_users_from_group, None, 50),
+            }, help="External user with limited access, created only for the purpose of sharing data."),
      }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
