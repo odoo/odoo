@@ -82,11 +82,6 @@ class mail_message(osv.Model):
             context = dict(context, default_type=None)
         return super(mail_message, self).default_get(cr, uid, fields, context=context)
 
-    # def _shorten_name(self, name):
-    #     if len(name) <= (self._message_record_name_length + 3):
-    #         return name
-    #     return name[:self._message_record_name_length] + '...'
-
     def _get_to_read(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
         res = dict((id, False) for id in ids)
@@ -124,16 +119,6 @@ class mail_message(osv.Model):
         """ Search for messages to read by the current user. Condition is
             inversed because we search unread message on a read column. """
         return ['&', ('notification_ids.partner_id.user_ids', 'in', [uid]), ('notification_ids.starred', '=', domain[0][2])]
-
-    # def name_get(self, cr, uid, ids, context=None):
-    #     # name_get may receive int id instead of an id list
-    #     if isinstance(ids, (int, long)):
-    #         ids = [ids]
-    #     res = []
-    #     for message in self.browse(cr, uid, ids, context=context):
-    #         name = '%s: %s' % (message.subject or '', strip_tags(message.body or '') or '')
-    #         res.append((message.id, self._shorten_name(name.lstrip(' :'))))
-    #     return res
 
     _columns = {
         'type': fields.selection([
