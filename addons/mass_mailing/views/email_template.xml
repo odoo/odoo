@@ -82,8 +82,10 @@
             <field name="res_model">email.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="view_id" ref="email_template.email_template_form_minimal"/>
-            <field name="context">{'search_default_use_in_mass_mailing': 1}</field>
+            <field name="context">{
+    'search_default_use_in_mass_mailing': 1,
+    'form_view_ref': 'email_template.email_template_form_minimal',
+}</field>
         </record>
 
         <!-- Add Templates in Marketing / Mass mailing menu -->
