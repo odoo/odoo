@@ -68,6 +68,9 @@ class MassMailingContact(osv.Model):
         rec_id = self.create(cr, uid, {'name': name, 'email': email}, context=context)
         return self.name_get(cr, uid, [rec_id], context)[0]
 
+    def name_get(self, cr, uid, ids, context=None):
+        return [(contact.id, '%s <%s>' % (contact.name, contact.email)) for contact in self.browse(cr, uid, ids, context=context)]
+
 
 class MassMailingList(osv.Model):
     """Model of a contact list. """
@@ -460,10 +463,7 @@ class MassMailing(osv.Model):
         ),
         # mailing options
         'email_from': fields.char('From'),
-        'email_to': fields.many2many(
-            'mail.mass_mailing.contact', 'mail_mass_mailing_contact_rel',
-            string='Test Emails'
-        ),
+        'email_to': fields.char('Test Emails'),
         'reply_to': fields.char('Reply To'),
         'mailing_model': fields.selection(_mailing_model, string='Type', required=True),
         'contact_list_ids': fields.many2many(
@@ -675,11 +675,11 @@ class MassMailing(osv.Model):
             partners = self.pool['res.partner'].browse(cr, uid, res_ids, context=context)
             return dict((partner.id, {'partner_id': partner.id, 'name': partner.name, 'email': partner.email}) for partner in partners)
 
-    def get_unsubscribe_url(self, cr, uid, mailing, res_id, email, msg=None, context=None):
+    def get_unsubscribe_url(self, cr, uid, mailing_id, res_id, email, msg=None, context=None):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         url = urlparse.urljoin(
             base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
-                'mailing_id': mailing.id,
+                'mailing_id': mailing_id,
                 'params': urllib.urlencode({'res_id': res_id, 'email': email})
             }
         )
@@ -707,7 +707,7 @@ class MassMailing(osv.Model):
             for res_id, mail_values in template_values.iteritems():
                 body = mail_values.get('body')
                 recipient = recipient_values[res_id]
-                unsubscribe_url = self.get_unsubscribe_url(cr, uid, mailing, res_id, recipient['email'], context=context)
+                unsubscribe_url = self.get_unsubscribe_url(cr, uid, mailing.id, res_id, recipient['email'], context=context)
                 if unsubscribe_url:
                     body = tools.append_content_to_html(body, unsubscribe_url, plaintext=False, container_tag='p')
 
@@ -744,22 +744,20 @@ class MassMailing(osv.Model):
             if not mailing.template_id:
                 raise Warning('Please specifiy a template to use.')
             # res_ids = self._set_up_test_mailing(cr, uid, mailing.mailing_model, context=context)
-            res_ids = [c.id for c in mailing.email_to]
-            if not res_ids:
+            test_emails = tools.email_split(mailing.email_to)
+            if not test_emails:
                 raise Warning('Please specifiy test email adresses.')
-            all_mail_values = self.pool['mail.compose.message'].generate_email_for_composer_batch(
-                cr, uid, mailing.template_id.id, res_ids,
-                context=context,
-                fields=['body_html', 'attachment_ids', 'mail_server_id']
-            )
             mail_ids = []
-            for res_id, mail_values in all_mail_values.iteritems():
+            for test_mail in test_emails:
+                body = mailing.template_id.body_html
+                unsubscribe_url = self.get_unsubscribe_url(cr, uid, mailing.id, 0, email=test_mail, context=context)
+                body = tools.append_content_to_html(body, unsubscribe_url, plaintext=False, container_tag='p')
                 mail_values = {
                     'email_from': mailing.email_from,
                     'reply_to': mailing.reply_to,
-                    'email_to': self.pool['mail.mass_mailing.contact'].browse(cr, uid, res_id, context=context).email,
+                    'email_to': test_mail,
                     'subject': mailing.name,
-                    'body_html': mail_values.get('body'),
+                    'body_html': body,
                     'auto_delete': True,
                 }
                 mail_ids.append(Mail.create(cr, uid, mail_values, context=context))
