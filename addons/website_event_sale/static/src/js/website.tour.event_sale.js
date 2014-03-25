@@ -7,7 +7,6 @@
         id: 'event_buy_tickets',
         name: "Try to buy tickets for event",
         path: '/event',
-        testPath: '/(event|shop)',
         init: function () {
             var self = this;
             self.steps = [
@@ -44,7 +43,7 @@
                 {
                     title:     "Complete checkout",
                     waitFor:   '#top_menu .my_cart_quantity:contains(5)',
-                    element:   'form[action="/shop/confirm_order/"] .btn:contains("Confirm")',
+                    element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
                     onload: function (tour) {
                         if ($("input[name='name']").val() === "")
                             $("input[name='name']").val("website_sale-test-shoptest");

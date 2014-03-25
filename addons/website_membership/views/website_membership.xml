@@ -5,7 +5,7 @@
 <!-- Layout add nav and footer -->
 <template id="footer_custom" inherit_id="website.layout" name="Footer Associations Link">
     <xpath expr="//footer//div[@name='info']/ul" position="inside">
-        <li><a href="/members/">Members</a></li>
+        <li><a href="/members">Members</a></li>
     </xpath>
 </template>
 
@@ -31,10 +31,10 @@
             <div class="col-md-4 mb32" id="left_column">
                 <ul class="nav nav-pills nav-stacked mt16">
                     <li class="nav-header"><h3>Associations</h3></li>
-                    <li t-att-class="'' if membership else 'active'"><a href="/members/">All</a></li>
+                    <li t-att-class="'' if membership else 'active'"><a href="/members">All</a></li>
                     <t t-foreach="memberships" t-as="membership_id">
                         <li t-att-class="membership and membership_id.id == membership.id and 'active' or ''">
-                            <a t-attf-href="/members/association/#{ membership_id.id }/#{current_country and 'country/%s/' % slug(current_country) or ''}#{ search }"><t t-esc="membership_id.name"/></a>
+                            <a t-attf-href="/members/association/#{ membership_id.id }#{current_country and '/country/%s' % slug(current_country) or ''}#{ search }"><t t-esc="membership_id.name"/></a>
                         </li>
                     </t>
                 </ul>
@@ -61,11 +61,11 @@
                         </t>
                         <t t-set="partner_data" t-value="partners_data[membership_line_id.partner.id]"/>
                         <div class="media">
-                            <a class="pull-left" t-attf-href="/members/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
+                            <a class="pull-left" t-attf-href="/members/#{ slug([partner_data.get('id'), partner_data.get('name')]) }">
                                 <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data.get('image_small')}"/>
                             </a>
                             <div class="media-body" style="min-height: 64px;">
-                                <a class="media-heading" t-attf-href="/members/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/"><t t-if="partner_data.get('parent_id')"><span t-esc="partner_data.get('parent_id')[1]"/></t> <span t-esc="partner_data.get('name')"/></a>
+                                <a class="media-heading" t-attf-href="/members/#{ slug([partner_data.get('id'), partner_data.get('name')]) }"><t t-if="partner_data.get('parent_id')"><span t-esc="partner_data.get('parent_id')[1]"/></t> <span t-esc="partner_data.get('name')"/></a>
                                 <div t-raw="partner_data.get('website_short_description')"/>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
             <li class="nav-header"><h3>Location</h3></li>
             <t t-foreach="countries">
                 <li t-if="country_id" t-att-class="country_id[0] == current_country_id and 'active' or ''">
-                    <a t-attf-href="/members/#{ membership and 'association/%s/' % membership.id or '' }#{ country_id[0] and 'country/%s/' % slug(country_id) or '' }#{ search }"><t t-esc="country_id[1]"/>
+                    <a t-attf-href="/members#{ membership and '/association/%s' % membership.id or '' }#{ country_id[0] and '/country/%s' % slug(country_id) or '' }#{ search }"><t t-esc="country_id[1]"/>
                         <span class="badge pull-right"><t t-esc="country_id_count or '0'"/></span>
                     </a>
                 </li>
@@ -103,7 +103,7 @@
         <ul class="nav nav-pills nav-stacked mt16">
             <li class="nav-header"><h3>World Map</h3></li>
             <ul class="nav">
-                <iframe t-attf-src="/google_map/?width=320&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
+                <iframe t-attf-src="/google_map/?width=320&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members"
                     style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
             </ul>
         </ul>

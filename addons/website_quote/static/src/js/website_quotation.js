@@ -6,7 +6,7 @@ $(document).ready(function () {
         var order_id = href.match(/order_id=([0-9]+)/);
         var line_id = href.match(/update_line\/([0-9]+)/);
         var token = href.match(/token=(.*)/);
-        openerp.jsonRpc("/quote/update_line/", 'call', {
+        openerp.jsonRpc("/quote/update_line", 'call', {
                 'line_id': line_id[1],
                 'order_id': parseInt(order_id[1]),
                 'token': token[1],
@@ -52,7 +52,7 @@ $(document).ready(function () {
         if (is_empty || ! signer_name)
             return false;
 
-        openerp.jsonRpc("/quote/accept/", 'call', {
+        openerp.jsonRpc("/quote/accept", 'call', {
             'order_id': parseInt(order_id[1]),
             'token': token,
             'signer': signer_name,
