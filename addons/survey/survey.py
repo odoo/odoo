@@ -235,7 +235,7 @@ class survey_survey(osv.Model):
             self.message_post(cr, uid, ids, body="""<p>Survey cancelled</p>""", context=context)
         return super(survey_survey, self).write(cr, uid, ids, vals, context=context)
 
-;
+    def copy(self, cr, uid, id, default=None, context=None):
         vals = {}
         current_rec = self.read(cr, uid, id, context=context)
         title = _("%s (copy)") % (current_rec.get('title'))
@@ -587,7 +587,6 @@ class survey_question(osv.Model):
         (in cascade, this will also allow to duplicate surveys without duplicating bad user input
         lines) '''
         vals = {}
-        import pdb; pdb.set_trace()
         vals.update({'user_input_line_ids': []})
         return super(survey_question, self).copy(cr, uid, ids, vals,
             context=context)
