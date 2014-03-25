@@ -29,3 +29,8 @@ class EmailTemplate(osv.Model):
             'views': [(False, 'form')],
             'context': ctx,
         }
+
+
+class email_template_preview(osv.TransientModel):
+    _name = "email_template.preview"
+    _inherit = ['email.template', 'email_template.preview']
