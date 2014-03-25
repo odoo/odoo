@@ -92,6 +92,8 @@
                                 <field name="name" required="True"/>
                                 <field name="model_id" required="1" options="{'no_open': True, 'no_create': True}"
                                     on_change="onchange_model_id(model_id)"/>
+                                <field name="model" invisible="True"/>
+                                <field name="use_default_to" invisible="True"/>
                             </group>
                             <group>
                                 <div class="oe_right oe_button_box" name="buttons">
