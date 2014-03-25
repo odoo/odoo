@@ -155,12 +155,19 @@ class purchase_order(osv.osv):
 
     def _get_picking_ids(self, cr, uid, ids, field_names, args, context=None):
         res = {}
-        for purchase_id in ids:
-            picking_ids = set()
-            move_ids = self.pool.get('stock.move').search(cr, uid, [('purchase_line_id.order_id', '=', purchase_id)], context=context)
-            for move in self.pool.get('stock.move').browse(cr, uid, move_ids, context=context):
-                picking_ids.add(move.picking_id.id)
-            res[purchase_id] = list(picking_ids)
+        query = """
+        SELECT picking_id, po.id FROM stock_picking p, stock_move m, purchase_order_line pol, purchase_order po
+            WHERE po.id in %s and po.id = pol.order_id and pol.id = m.purchase_line_id and m.picking_id = p.id
+            GROUP BY picking_id, po.id
+             
+        """
+        cr.execute(query, (tuple(ids), ))
+        picks = cr.fetchall()
+        for pick_id, po_id in picks:
+            if not res.get(po_id):
+                res[po_id] = [pick_id]
+            else:
+                res[po_id].append(pick_id)
         return res
 
     STATE_SELECTION = [
