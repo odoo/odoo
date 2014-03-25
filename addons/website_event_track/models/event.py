@@ -26,6 +26,7 @@ import datetime
 import pytz
 from pytz import timezone
 from collections import OrderedDict
+from openerp import tools
 
 
 def get_schedule(new_start_date, new_end_date, new_schedule):
@@ -99,7 +100,7 @@ def convert_time(time, duration, local_tz):
         duration: integer
         rtype: start time, end time and date in string.
     '''
-    local_dt = (datetime.datetime.strptime(time, '%Y-%m-%d %H:%M:%S')).replace(tzinfo=pytz.utc).astimezone(local_tz)
+    local_dt = (datetime.datetime.strptime(time, tools.DEFAULT_SERVER_DATETIME_FORMAT)).replace(tzinfo=pytz.utc).astimezone(local_tz)
     local_tz.normalize(local_dt)
     return local_dt, local_dt + datetime.timedelta(minutes = duration), local_dt.strftime('%m-%d-%y') 
 
@@ -205,7 +206,7 @@ class event_track(osv.osv):
     _group_by_full = {
         'stage_id': _read_group_stage_ids,
     }
-    def _get_value(self, cr, uid, event, context=None):
+    def get_tracks_schedulre_details(self, cr, uid, event, context=None):
         keys_for_table = {}
         format_date = []
         sort_tracks = {}
@@ -219,6 +220,7 @@ class event_track(osv.osv):
         res_partner = self.pool.get('res.partner')
         local_tz = pytz.timezone(event.timezone_of_event)
         event_tracks = self.search_read(cr, uid, domain, fields, context=context)
+        
         def get_speaker_name(ids):
             speaker_names = res_partner.name_get(cr, uid, ids, context=context)
             string = "By "
@@ -280,8 +282,8 @@ class event_track(osv.osv):
             'room_list': rooms,
             'days': sort_tracks,
             'row_skip_td': row_skip_td,
-            'talks':talks,
-            'format_date':format_date,
+            'talks': talks,
+            'format_date': format_date,
         }
 #
 # Events
@@ -299,7 +301,6 @@ class event_event(osv.osv):
                 res[event.id] += [tag.id for tag in track.tag_ids]
             res[event.id] = list(set(res[event.id]))
         return res
-    
     _columns = {
         'tag_ids': fields.many2many('event.tag', string='Tags'),
         'track_ids': fields.one2many('event.track', 'event_id', 'Tracks'),
