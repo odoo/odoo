@@ -27,6 +27,81 @@ import pytz
 from pytz import timezone
 from collections import OrderedDict
 
+'''
+Function GET_SCHEDULE  creates timeslots according to given track.
+
+new_start_date, new_end_date : Date for creating new slots.
+new_schedule : Dictionary contain all value to compare
+rtype: new_schedule(new Dictionary with new time slot added)
+'''
+def GET_SCHEDULE(new_start_date, new_end_date, new_schedule):
+    def insert_time(time, new_schedule):
+        for index,ct in enumerate(time):
+            for index2,dt in enumerate(new_schedule):
+                st, et = dt
+                if st == ct or et == ct:break
+                if st < ct and et > ct:
+                    new_schedule.pop(index2)
+                    new_schedule.insert(index2, [ct, et])
+                    new_schedule.insert(index2, [st, ct])
+                    break
+        return new_schedule
+    if not new_schedule:
+        new_schedule.append([new_start_date, new_end_date])
+        return new_schedule
+    first_start_date = new_schedule[0][0]
+    last_end_date = new_schedule[-1][1]
+
+    #totally outter
+    if first_start_date >= new_start_date and new_end_date >= last_end_date:
+        if not new_start_date == first_start_date:
+            new_schedule.insert(0, [new_start_date, first_start_date])
+        if not last_end_date ==  new_end_date:
+            new_schedule.append([last_end_date, new_end_date])
+        return new_schedule
+    
+    #lower outer
+    if first_start_date >= new_end_date:
+        new_schedule.insert(0, [new_start_date, new_end_date])
+        if not new_end_date == first_start_date:
+            new_schedule.insert(1, [new_end_date, first_start_date])
+        return new_schedule
+    
+    # upper outer
+    if new_start_date >= last_end_date:
+        if not last_end_date == new_start_date:
+            new_schedule.append([last_end_date, new_start_date])
+        new_schedule.append([new_start_date, new_end_date])
+        return new_schedule
+    
+    #When inner time
+    if first_start_date <= new_start_date and last_end_date >= new_end_date:
+        new_schedule = insert_time([new_start_date, new_end_date], new_schedule)
+        return new_schedule
+    
+    #when start date is more and end date in range
+    if first_start_date > new_start_date and last_end_date >= new_end_date:
+        new_schedule.insert(0, [new_start_date, first_start_date])
+        new_schedule = insert_time([new_end_date], new_schedule)
+        return new_schedule
+    
+    #when end date is more and start date in range
+    if new_end_date > last_end_date and new_start_date >= first_start_date:
+         new_schedule = insert_time([new_start_date], new_schedule)
+         new_schedule.append([last_end_date, new_end_date])
+         return new_schedule
+ 
+'''
+Function CONVERT_TIME update value according to given timezone.
+time: Value in string
+duration: integer
+rtype: start time, end time and date in string.
+'''
+def CONVERT_TIME(time, duration, local_tz):
+    local_dt = (datetime.datetime.strptime(time, '%Y-%m-%d %H:%M:%S')).replace(tzinfo=pytz.utc).astimezone(local_tz)
+    local_tz.normalize(local_dt)
+    return local_dt, local_dt + datetime.timedelta(minutes = duration), local_dt.strftime('%m-%d-%y') 
+
 class event_track_tag(osv.osv):
     _name = "event.track.tag"
     _columns = {
@@ -129,69 +204,6 @@ class event_track(osv.osv):
     _group_by_full = {
         'stage_id': _read_group_stage_ids,
     }
-    @staticmethod
-    def make_timetable(new_start_date, new_end_date, new_schedule):
-        def insert_time(time, new_schedule):
-            for index,ct in enumerate(time):
-                for index2,dt in enumerate(new_schedule):
-                    st, et = dt
-                    if st == ct or et == ct:break
-                    if st < ct and et > ct:
-                        new_schedule.pop(index2)
-                        new_schedule.insert(index2, [ct, et])
-                        new_schedule.insert(index2, [st, ct])
-                        break
-            return new_schedule
-        if not new_schedule:
-            new_schedule.append([new_start_date, new_end_date])
-            return new_schedule
-        first_start_date = new_schedule[0][0]
-        last_end_date = new_schedule[-1][1]
-
-        #totally outter
-        if first_start_date >= new_start_date and new_end_date >= last_end_date:
-            if not new_start_date == first_start_date:
-                new_schedule.insert(0, [new_start_date, first_start_date])
-            if not last_end_date ==  new_end_date:
-                new_schedule.append([last_end_date, new_end_date])
-            return new_schedule
-        
-        #lower outer
-        if first_start_date >= new_end_date:
-            new_schedule.insert(0, [new_start_date, new_end_date])
-            if not new_end_date == first_start_date:
-                new_schedule.insert(1, [new_end_date, first_start_date])
-            return new_schedule
-        
-        # upper outer
-        if new_start_date >= last_end_date:
-            if not last_end_date == new_start_date:
-                new_schedule.append([last_end_date, new_start_date])
-            new_schedule.append([new_start_date, new_end_date])
-            return new_schedule
-        
-        #When inner time
-        if first_start_date <= new_start_date and last_end_date >= new_end_date:
-            new_schedule = insert_time([new_start_date, new_end_date], new_schedule)
-            return new_schedule
-        
-        #when start date is more and end date in range
-        if first_start_date > new_start_date and last_end_date >= new_end_date:
-            new_schedule.insert(0, [new_start_date, first_start_date])
-            new_schedule = insert_time([new_end_date], new_schedule)
-            return new_schedule
-        
-        #when end date is more and start date in range
-        if new_end_date > last_end_date and new_start_date >= first_start_date:
-             new_schedule = insert_time([new_start_date], new_schedule)
-             new_schedule.append([last_end_date, new_end_date])
-             return new_schedule
-
-    @staticmethod
-    def convert_time(time, duration, local_tz):
-        local_dt = (datetime.datetime.strptime(time, '%Y-%m-%d %H:%M:%S')).replace(tzinfo=pytz.utc).astimezone(local_tz)
-        local_tz.normalize(local_dt)
-        return local_dt, local_dt + datetime.timedelta(minutes = duration), local_dt.strftime('%m-%d-%y') 
         
     def _fetch_record(self, cr, uid, event_id, context=None):
         return self.search(cr, uid, [('event_id','=',event_id),('date','!=',False),('duration','!=',False),('duration','!=',0)], context=context)
@@ -211,19 +223,19 @@ class event_track(osv.osv):
         def set_value(key, val):
             sort_tracks[key][val]=[]
         for track in self.read(cr, uid, event_track_ids, ['date','duration'],context=context):
-            start_time, end_time, key = self.convert_time(track['date'], track['duration'], local_tz)
+            start_time, end_time, key = CONVERT_TIME(track['date'], track['duration'], local_tz)
             if not keys_for_table.has_key(key):
                 keys_for_table[key] = []
                 sort_tracks[key] = OrderedDict()
                 talks[key] = 0
             talks[key] = talks[key] + 1 
-            keys_for_table[key] = self.make_timetable(start_time, end_time, keys_for_table[key])
+            keys_for_table[key] = GET_SCHEDULE(start_time, end_time, keys_for_table[key])
             
         [set_value(key, value[0].strftime('%H:%M')+" - "+value[1].strftime('%H:%M')) for key in keys_for_table.keys() for value in keys_for_table[key]]
 
         for track in self.browse(cr, uid, event_track_ids, context=context):
             if(track.location_id):room_list.append(track.location_id.id)
-            start_time, end_time, key = self.convert_time(track.date, track.duration, local_tz)
+            start_time, end_time, key = CONVERT_TIME(track.date, track.duration, local_tz)
             secret_key = None
             row_span = 0
             for index, value in enumerate(keys_for_table[key]):
