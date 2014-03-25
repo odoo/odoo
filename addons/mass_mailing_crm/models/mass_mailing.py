@@ -19,13 +19,14 @@ class MassMailing(osv.Model):
         else:
             return super(MassMailing, self)._get_model_to_list_action_id(cr, uid, model, context=context)
 
-    def _get_mail_recipients(self, cr, uid, mailing, res_ids, context=None):
+    def get_recipients_data(self, cr, uid, mailing, res_ids, context=None):
         if mailing.mailing_model == 'crm.lead':
             res = {}
             for lead in self.pool['crm.lead'].browse(cr, uid, res_ids, context=context):
                 if lead.partner_id:
-                    res[lead.id] = {'recipient_ids': [(4, lead.partner_id.id)]}
+                    res[lead.id] = {'partner_id': lead.partner_id.id, 'name': lead.partner_id.name, 'email': lead.partner_id.email}
                 else:
-                    res[lead.id] = {'email_to': [(4, lead.email_from)]}
+                    name, email = self.pool['res.partner']._parse_partner_name(lead.email_from, context=context)
+                    res[lead.id] = {'partner_id': False, 'name': name or email, 'email': email}
             return res
-        return super(MassMailing, self)._get_mail_recipients(cr, uid, mailing, res_ids, context=context)
+        return super(MassMailing, self).get_recipients_data(cr, uid, mailing, res_ids, context=context)

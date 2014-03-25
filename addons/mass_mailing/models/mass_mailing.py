@@ -444,7 +444,6 @@ class MassMailing(osv.Model):
         'template_id': fields.many2one(
             'email.template', 'Email Template',
             domain="[('use_in_mass_mailing', '=', True), ('model', '=', mailing_model)]",
-            required=True,
         ),
         'body_html': fields.related(
             'template_id', 'body_html', type='html',
@@ -626,6 +625,25 @@ class MassMailing(osv.Model):
             'context': context,
         }
 
+    def action_template_new(self, cr, uid, ids, context=None):
+        mailing = self.browse(cr, uid, ids[0], context=context)
+        view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'email_template.email_template_form_minimal')
+        ctx = dict(
+            context,
+            default_model=mailing.mailing_model,
+            default_use_in_mass_mailing=True,
+            default_use_default_to=True,
+            default_name=mailing.name,
+        )
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'email.template',
+            'view_id': view_id,
+            'context': ctx,
+        }
+
     def action_template_copy(self, cr, uid, ids, context=None):
         mailing = self.browse(cr, uid, ids[0], context=context)
         if not mailing.template_id:
@@ -648,43 +666,48 @@ class MassMailing(osv.Model):
     # Email Sending
     #------------------------------------------------------
 
-    def _get_recipients_data(self, cr, uid, mailing, res_ids, context=None):
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+    def get_recipients_data(self, cr, uid, mailing, res_ids, context=None):
+        # tde todo: notification link ?
         if mailing.mailing_model == 'mail.mass_mailing.contact':
             contacts = self.pool['mail.mass_mailing.contact'].browse(cr, uid, res_ids, context=context)
-            return dict((contact.id, {
-                'email_to': '"%s" <%s>' % (contact.name, contact.email),
-                'unsubscribe_url': '<a href="%s">Click to unsubscribe</a>' % urlparse.urljoin(
-                    base_url, 'mail/mailing/%d/unsubscribe?%s' %
-                    (mailing.id, urllib.urlencode({'model': mailing.mailing_model, 'res_id': contact.id, 'email': contact.email}))),
-            }) for contact in contacts)
+            return dict((contact.id, {'partner_id': False, 'name': contact.name, 'email': contact.email}) for contact in contacts)
         else:
             partners = self.pool['res.partner'].browse(cr, uid, res_ids, context=context)
-            return dict((partner.id, {
-                'email_to': '"%s" <%s>' % (partner.name, partner.email),
-                'unsubscribe_url': '<a href="%s">Click to unsubscribe</a>' % urlparse.urljoin(
-                    base_url, 'mail/mailing/%d/unsubscribe?%s' %
-                    (mailing.id, urllib.urlencode({'model': mailing.mailing_model, 'res_id': partner.id, 'email': partner.email}))),
-                # 'access_link': self.pool['mail.mail']._get_partner_access_link(cr, uid, mail, partner, context=context),
-            }) for partner in partners)
+            return dict((partner.id, {'partner_id': partner.id, 'name': partner.name, 'email': partner.email}) for partner in partners)
+
+    def get_unsubscribe_url(self, cr, uid, mailing, res_id, email, msg=None, context=None):
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        url = urlparse.urljoin(
+            base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
+                'mailing_id': mailing.id,
+                'params': urllib.urlencode({'res_id': res_id, 'email': email})
+            }
+        )
+        return '<a href="%s">%s</a>' % (url, msg or 'Click to unsubscribe')
 
     def send_mail(self, cr, uid, ids, context=None):
         author_id = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id.id
         Mail = self.pool['mail.mail']
         for mailing in self.browse(cr, uid, ids, context=context):
+            if not mailing.template_id:
+                raise Warning('Please specifiy a template to use.')
+
+            # get mail and recipints data
             domain = self.pool['mail.mass_mailing.list'].get_global_domain(
                 cr, uid, [l.id for l in mailing.contact_list_ids], context=context
             )[mailing.mailing_model]
             res_ids = self.pool[mailing.mailing_model].search(cr, uid, domain, context=context)
-            recipients = self._get_recipients_data(cr, uid, mailing, res_ids, context=context)
-            all_mail_values = self.pool['mail.compose.message'].generate_email_for_composer_batch(
+            template_values = self.pool['mail.compose.message'].generate_email_for_composer_batch(
                 cr, uid, mailing.template_id.id, res_ids,
                 context=context, fields=['body_html', 'attachment_ids', 'mail_server_id'])
-            for res_id, mail_values in all_mail_values.iteritems():
+            recipient_values = self.get_recipients_data(cr, uid, mailing, res_ids, context=context)
+
+            for res_id, mail_values in template_values.iteritems():
                 body = mail_values.get('body')
-                recipient_data = recipients[res_id]
-                if recipient_data['unsubscribe_url']:
-                    body = tools.append_content_to_html(body, recipient_data.pop('unsubscribe_url'), plaintext=False, container_tag='p')
+                recipient = recipient_values[res_id]
+                unsubscribe_url = self.get_unsubscribe_url(cr, uid, mailing, res_id, recipient['email'], context=context)
+                if unsubscribe_url:
+                    body = tools.append_content_to_html(body, unsubscribe_url, plaintext=False, container_tag='p')
 
                 mail_values.update({
                     'email_from': mailing.email_from,
@@ -695,6 +718,7 @@ class MassMailing(osv.Model):
                     'body_html': body,
                     'auto_delete': True,
                     'notification': True,
+                    'email_to': '"%s" <%s>' % (recipient['name'], recipient['email'])
                 })
                 mail_values['statistics_ids'] = [
                     (0, 0, {
@@ -709,14 +733,14 @@ class MassMailing(osv.Model):
                     context=context)
                 mail_values['attachment_ids'] = m2m_attachment_ids
 
-                mail_values.update(recipient_data)
-
                 Mail.create(cr, uid, mail_values, context=context)
         return True
 
     def send_mail_test(self, cr, uid, ids, context=None):
         Mail = self.pool['mail.mail']
         for mailing in self.browse(cr, uid, ids, context=context):
+            if not mailing.template_id:
+                raise Warning('Please specifiy a template to use.')
             # res_ids = self._set_up_test_mailing(cr, uid, mailing.mailing_model, context=context)
             res_ids = [c.id for c in mailing.email_to]
             if not res_ids:
