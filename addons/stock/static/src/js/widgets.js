@@ -211,10 +211,10 @@ function openerp_picking_widgets(instance){
                     self.getParent().set_operation_quantity(value, op_id);
                 }
                 $("input", this).val("");
+                return false;
             });
             this.$('.js_qty').focus(function(){
                 self.getParent().barcode_scanner.disconnect();
-                console.log('focus in');
             });
             this.$('.js_qty').blur(function(){
                 this.value = "";
@@ -542,7 +542,6 @@ function openerp_picking_widgets(instance){
             if(this.picking_id){
                 this.loaded =  this.load(this.picking_id);
             }else{
-                console.log('load latest from picking type');
                 this.loaded =  this.load();
             }
 

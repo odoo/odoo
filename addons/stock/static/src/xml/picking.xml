@@ -109,8 +109,8 @@
                 </div>
                 <div class="col-md-6 col-sm-4 col-xs-12 text-right">
                     <h3>
-                        <button type="button" class='btn btn-danger js_drop_down'> Process </button>
                         <button type="button" class='btn btn-default js_pick_pack'> Put in Pack </button>
+                        <button type="button" class='btn btn-danger js_drop_down'> Process </button>
                     </h3>
                 </div>
             </div>
@@ -138,12 +138,12 @@
                             <td class='text-center js_row_qty'>
                                 <t t-if="row.cols.processed == 'false' &amp;&amp; !row.cols.container">
                                     <div class="input-group">
-                                        <span class="input-group-addon js_minus" t-att-data-product-id='row.cols.product_id'><a href="#"><i class="fa fa-minus"></i></a></span>
+                                        <span class="input-group-addon js_minus input-sm" t-att-data-product-id='row.cols.product_id'><a href="#"><i class="fa fa-minus"></i></a></span>
                                         <form class="js_submit_value">
                                             <input type="text" class="form-control text-center js_qty" t-att-placeholder="row.cols.rem"></input>
                                             <!-- <input type="submit" class="hidden"></input> -->
                                         </form>
-                                        <span class="input-group-addon js_plus" t-att-data-product-id='row.cols.product_id'><a href="#"><i class="fa fa-plus"></i></a></span>
+                                        <span class="input-group-addon js_plus input-sm" t-att-data-product-id='row.cols.product_id'><a href="#"><i class="fa fa-plus"></i></a></span>
                                     </div>
                                 </t>
                                 <t t-if="(row.cols.processed == 'true' || row.cols.container)">
@@ -164,9 +164,9 @@
                                      <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
-                                        <t t-if="!row.cols.lot &amp;&amp; row.cols.product_id">
+                                        <!-- <t t-if="!row.cols.lot &amp;&amp; row.cols.product_id">
                                             <li><a class="js_create_lot" href="#">Create Lot</a></li>
-                                        </t>
+                                        </t> -->
                                         <t t-if="!row.cols.head_container &amp;&amp; !row.cols.container">
                                             <li><a class="js_change_src" href="#">Change source location</a></li>
                                             <li><a class="js_change_dst" href="#">Change destination location</a></li>

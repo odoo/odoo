@@ -1079,6 +1079,14 @@ class stock_picking(osv.osv):
                 'product_uom_id': self.pool.get("product.product").browse(cr, uid, key[0], context=context).uom_id.id,
             })
         return vals
+    
+    def open_barcode_interface(self, cr, uid, picking_ids, context=None):
+        final_url="/barcode/web/#action=stock.ui&picking_id="+str(picking_ids[0])
+        return {'type': 'ir.actions.act_url', 'url':final_url, 'target': 'self',}
+
+    def do_partial_open_barcode(self, cr, uid, picking_ids, context=None):
+        self.do_prepare_partial(cr, uid, picking_ids, context=context)
+        return self.open_barcode_interface(cr, uid, picking_ids, context=context)
 
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
         context = context or {}
