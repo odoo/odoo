@@ -72,7 +72,7 @@ def xmlrpc_return(start_response, service, method, params, string_faultcode=Fals
     # This also mimics SimpleXMLRPCDispatcher._marshaled_dispatch() for
     # exception handling.
     try:
-        result = openerp.netsvc.dispatch_rpc(service, method, params)
+        result = openerp.http.dispatch_rpc(service, method, params)
         response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False, encoding=None)
     except Exception, e:
         if string_faultcode:

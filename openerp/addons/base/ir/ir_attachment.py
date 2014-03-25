@@ -69,7 +69,7 @@ class ir_attachment(osv.osv):
 
     @tools.ormcache()
     def _filestore(self, cr, uid, context=None):
-        return os.path.join(tools.config['data_dir'], 'filestore', cr.dbname)
+        return tools.config.filestore(cr.dbname)
 
     # 'data' field implementation
     def _full_path(self, cr, uid, location, path):
