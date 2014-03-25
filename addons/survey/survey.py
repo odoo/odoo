@@ -298,9 +298,9 @@ class survey_survey(osv.Model):
     #             self.write(cr, uid, [survey['id']], {'state': 'draft'}, context=context)
     #     return {}
 
-    def action_kanban_duplicate(self, cr, uid, ids, context=None):
-        ''' Hack in order to provide "duplicate" action to kanban view '''
-        return self.copy(cr, uid, ids[0], context=None)
+    # def action_kanban_duplicate(self, cr, uid, ids, context=None):
+    #     ''' Hack in order to provide "duplicate" action to kanban view '''
+    #     return self.copy(cr, uid, ids[0], context=None)
 
     def action_start_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey form '''
