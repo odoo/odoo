@@ -1042,7 +1042,7 @@ class mrp_production(osv.osv):
         #is 1 element long, so we can take the first.
         return stock_move.action_confirm(cr, uid, [move_id], context=context)[0]
 
-    def _make_production_consume_line(self, cr, uid, production_line, parent_move_id, source_location_id=False, context=None):
+    def _make_production_consume_line(self, cr, uid, production_line, parent_move_id, source_location_id=False, confirm_move=True, context=None):
         stock_move = self.pool.get('stock.move')
         production = production_line.production_id
         # Internal shipment is created for Stockable and Consumer Products
@@ -1064,9 +1064,12 @@ class mrp_production(osv.osv):
             'company_id': production.company_id.id,
             'procure_method': 'make_to_order',
             'raw_material_production_id': production.id,
+            #this saves us a browse in create()
+            'price_unit': production_line.product_id.standard_price,
         })
-        stock_move.action_confirm(cr, uid, [move_id], context=context)
-        return True
+        if confirm_move:
+            stock_move.action_confirm(cr, uid, [move_id], context=context)
+        return move_id
 
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms production order.
@@ -1082,8 +1085,15 @@ class mrp_production(osv.osv):
             if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
                 source_location_id = production.bom_id.routing_id.location_id.id
 
+            stock_moves = []
             for line in production.product_lines:
-                self._make_production_consume_line(cr, uid, line, produce_move_id, source_location_id=source_location_id, context=context)
+                stock_move_id = self._make_production_consume_line(
+                    cr, uid, line, produce_move_id,
+                    source_location_id=source_location_id,
+                    confirm_move=False, context=context)
+                if stock_move_id:
+                    stock_moves.append(stock_move_id)
+            self.pool.get('stock.move').action_confirm(cr, uid, stock_moves, context=context)
             production.write({'state': 'confirmed'}, context=context)
         return 0
 
