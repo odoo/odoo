@@ -207,6 +207,16 @@ class event_track(osv.osv):
         'stage_id': _read_group_stage_ids,
     }
     def get_tracks_schedulre_details(self, cr, uid, event, context=None):
+        '''
+            Method get_tracks_schedulre_details create object in well format to show tabular form.
+            event: Browse Object of evenet.event
+            rtype:
+                rooms: room list contain id and name of location.
+                sort_tracks: Well form object of track data.
+                row_skip_td: To skip td for rowspan
+                talks: talks on everyday
+                format_date: format title
+        '''
         keys_for_table = {}
         format_date = []
         sort_tracks = {}
@@ -263,11 +273,15 @@ class event_track(osv.osv):
             if room:rooms.append([room, location_object.browse(cr, uid, room).name])
 
         for track_day in sort_tracks.keys():
-            row_skip_td[track_day] = {}
+            #format date eg. 4 june,2014.
             format_date.append((datetime.datetime.strptime(track_day, '%m-%d-%y')).strftime("%d %B, %Y"))
+            
+            row_skip_td[track_day] = {}
             time_slots = sort_tracks[track_day].keys()
             for time_slot in time_slots:
+                #sort location id
                 sort_tracks[track_day][time_slot] = sorted(sort_tracks[track_day][time_slot], key=lambda x: x['location_id'])
+                #Getting td which will skip in future.
                 for track in sort_tracks[track_day][time_slot]:
                     if track['row_span']:
                         skip_time = time_slots[time_slots.index(time_slot)+1: time_slots.index(time_slot)+track['row_span']]
@@ -278,7 +292,6 @@ class event_track(osv.osv):
         
         return  {
             'event': event,
-            'main_object': event,
             'room_list': rooms,
             'days': sort_tracks,
             'row_skip_td': row_skip_td,
