@@ -204,10 +204,6 @@ class event_track(osv.osv):
     _group_by_full = {
         'stage_id': _read_group_stage_ids,
     }
-        
-    def _fetch_record(self, cr, uid, event_id, context=None):
-        return self.search(cr, uid, [('event_id','=',event_id),('date','!=',False),('duration','!=',False),('duration','!=',0)], context=context)
-    
     def _get_value(self, cr, uid, event, context=None):
         keys_for_table = {}
         format_date = []
@@ -216,13 +212,23 @@ class event_track(osv.osv):
         rooms = []
         talks = {}
         skip_td = {}
-        
+        domain = [('event_id','=',event.id),('date','!=',False),('duration','!=',False),('duration','!=',0)]
+        fields = ['id', 'duration', 'location_id', 'name', 'date', 'color', 'speaker_ids', 'website_published']
         location_object = self.pool.get('event.track.location')
-        event_track_ids = self._fetch_record(cr, uid, event.id, context=context)
+        res_partner = self.pool.get('res.partner')
         local_tz = pytz.timezone(event.timezone_of_event)
+        event_tracks = self.search_read(cr, uid, domain, fields, context=context)
+        def get_speaker_name(ids):
+            speaker_names = res_partner.name_get(cr, uid, ids, context=context)
+            string = "By "
+            for name in speaker_names:
+                string = string + name[1]
+                if(speaker_names[-1:][0][0] != name[0]):string = string + ", "
+            return string
         def set_value(key, val):
             sort_tracks[key][val]=[]
-        for track in self.read(cr, uid, event_track_ids, ['date','duration'],context=context):
+        
+        for track in event_tracks:
             start_time, end_time, key = CONVERT_TIME(track['date'], track['duration'], local_tz)
             if not keys_for_table.has_key(key):
                 keys_for_table[key] = []
@@ -233,9 +239,9 @@ class event_track(osv.osv):
             
         [set_value(key, value[0].strftime('%H:%M')+" - "+value[1].strftime('%H:%M')) for key in keys_for_table.keys() for value in keys_for_table[key]]
 
-        for track in self.browse(cr, uid, event_track_ids, context=context):
-            if(track.location_id):room_list.append(track.location_id.id)
-            start_time, end_time, key = CONVERT_TIME(track.date, track.duration, local_tz)
+        for track in event_tracks:
+            if(track['location_id']):room_list.append(track['location_id'][0])
+            start_time, end_time, key = CONVERT_TIME(track['date'], track['duration'], local_tz)
             secret_key = None
             row_span = 0
             for index, value in enumerate(keys_for_table[key]):
@@ -246,7 +252,9 @@ class event_track(osv.osv):
                 if value[1] == end_time and secret_key:
                     if not index == row_span:
                         row_span = row_span - 1
-                    sort_tracks[key][secret_key].append({'object':track,'row_span': index - row_span, 'location':track.location_id.id})
+                    track['row_span'] = index - row_span
+                    track['speaker_ids'] = get_speaker_name(track['speaker_ids']) if len(track['speaker_ids'])else ""
+                    sort_tracks[key][secret_key].append(track)
         
         for room in list(set(room_list)):
             if room:rooms.append([room, location_object.browse(cr, uid, room).name])
@@ -257,14 +265,14 @@ class event_track(osv.osv):
             format_date.append((datetime.datetime.strptime(track, '%m-%d-%y')).strftime("%d %B, %Y"))
             key1 = sort_tracks[track].keys()
             for tra in sort_tracks[track].keys():
-                sort_tracks[track][tra] = sorted(sort_tracks[track][tra], key=lambda x: x['location'])
+                sort_tracks[track][tra] = sorted(sort_tracks[track][tra], key=lambda x: x['location_id'])
                 for i in sort_tracks[track][tra]:
                     if i['row_span']:
                         skip_time = key1[key1.index(tra)+1: key1.index(tra)+i['row_span']]
-                        if not skip_td[track].has_key(i['location']):
-                            skip_td[track] [i['location']] = []
-                        skip_td[track][i['location']] = skip_td[track] [i['location']] + skip_time
-                         
+                        if not skip_td[track].has_key(i['location_id'][0]):
+                            skip_td[track] [i['location_id'][0]] = []
+                        skip_td[track][i['location_id'][0]] = skip_td[track] [i['location_id'][0]] + skip_time
+        
         return  {
             'event': event,
             'main_object': event,

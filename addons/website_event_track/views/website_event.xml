@@ -86,39 +86,28 @@
                                         </t>
                                         <t t-if="len(days[day][slot])">
                                             <t t-set="record" t-value="days[day][slot][index]" />
-                                            <t t-if="not record['object'].location_id and for_all" >
+                                            <t t-if="not record['location_id'] and for_all" >
                                                 <t t-set="for_all" t-value="False"/>
-                                                <td t-if="sid" id="seach_enable" t-att-colspan="len(room_list)" t-attf-class="event_color_#{record['object'].color} text-center">
-                                                    <img t-if="not record['object'].website_published" title="Not Published" style="width:10px; height:10px" src="/web/static/src/img/icons/gtk-no.png" />
-                                                    <a t-attf-href="/event/#{ slug(event) }/track/#{ slug([record['object'].id, record['object'].name]) }"> <t t-esc="record['object'].name" /> </a>
-                                                    <t t-foreach="record['object'].speaker_ids" t-as="speaker">
-                                                        <small class="text-muted">
-                                                            <t t-if="speaker == record['object'].speaker_ids[:1][0]"><br/>By </t>
-                                                            <t t-esc="speaker.name"/>
-                                                            <t t-if=" speaker.id !=record['object'].speaker_ids[:1][0].id">,</t>
-                                                        </small>
-                                                    </t>
+                                                <td t-if="sid" id="seach_enable" t-att-colspan="len(room_list)" t-attf-class="event_color_#{record['color']} text-center">
+                                                    <img t-if="not record['website_published']" title="Not Published" style="width:10px; height:10px" src="/web/static/src/img/icons/gtk-no.png" />
+                                                    <a t-attf-href="/event/#{ slug(event) }/track/#{ slug([record['id'], record['name']]) }"> <t t-esc="record['name']" /> </a>
+                                                    <br/><small class="text-muted"> <t t-esc="record['speaker_ids']" /></small>
                                                 </td>
                                             </t>
-                                            <t  t-if="record['object'].location_id.id != room[0] and for_all" >
-                                                <td t-attf-style="width: #{td_width}px;">
-                                                </td>
-                                            </t>
-                                            <t  t-if="record['object'].location_id.id == room[0]" >
-                                                <td t-att-rowspan="record['row_span']"  t-attf-style="width: #{td_width}px;"
-                                                t-attf-class="event_color_#{record['object'].color}" id="seach_enable">
-                                                    <img t-if="not record['object'].website_published" title="Not Published" style="width:10px; height:10px" src="/web/static/src/img/icons/gtk-no.png" />
-                                                    <a t-attf-href="/event/#{ slug(event) }/track/#{ slug([record['object'].id, record['object'].name]) }"> <t t-esc="record['object'].name" /> </a>
-                                                    <t t-foreach="record['object'].speaker_ids" t-as="speaker">
-                                                        <small class="text-muted">
-                                                            <t t-if="speaker == record['object'].speaker_ids[:1][0]"><br/>By </t>
-                                                            <t t-esc="speaker.name"/>
-                                                            <t t-if=" speaker.id !=record['object'].speaker_ids[:1][0].id">,</t>
-                                                        </small>
+                                            <t t-if="record['location_id']">
+                                                <t  t-if="record['location_id'][0] != room[0] and for_all" >
+                                                    <td t-attf-style="width: #{td_width}px;">
+                                                    </td>
+                                                </t>
+                                                <t  t-if="record['location_id'][0] == room[0]" >
+                                                    <td t-att-rowspan="record['row_span']"  t-attf-style="width: #{td_width}px;" t-attf-class="event_color_#{record['color']}" id="seach_enable">
+                                                        <img t-if="not record['website_published']" title="Not Published" style="width:10px; height:10px" src="/web/static/src/img/icons/gtk-no.png" />
+                                                        <a t-attf-href="/event/#{ slug(event) }/track/#{ slug([record['id'], record['name']]) }"> <t t-esc="record['name']" /> </a>
+                                                        <br/><small class="text-muted"> <t t-esc="record['speaker_ids']" /></small>
+                                                    </td>
+                                                    <t  t-if="record['id'] != days[day][slot][-1]['id']" >
+                                                        <t t-set="index" t-value="index + 1"/>
                                                     </t>
-                                                </td>
-                                                <t  t-if="record['object'].id != days[day][slot][-1]['object'].id" >
-                                                    <t t-set="index" t-value="index + 1"/>
                                                 </t>
                                             </t>
                                         </t>
