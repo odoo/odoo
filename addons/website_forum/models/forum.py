@@ -51,7 +51,7 @@ class Forum(osv.Model):
                     <h3 class="panel-title">About This Forum</h3>
                 </div>
                 <div class="panel-body">
-                    This community is for professional and enthusiast about our
+                    This community is for professionals and enthusiasts of our 
                     products and services.<br/>
                     <a t-attf-href="/forum/1/faq" class="fa fa-arrow-right"> Read Guidelines</a>
                 </div>
