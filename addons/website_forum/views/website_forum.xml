@@ -240,7 +240,7 @@
                     <li> provide enough details and, if possible, give an example </li>
                     <li> be clear and concise, avoid unnecessary introductions (Hi, ... Thanks...) </li>
                 </ul>
-                <form t-attf-action="/forum/#{ slug(forum) }/question/ask/" method="post" role="form">
+                <form t-attf-action="/forum/#{ slug(forum) }/question/ask/" method="post" role="form" class="tag_text">
                     <input type="text" name="question_name" required="True" t-attf-value="#{question_name or ''}"
                         class="form-control" placeholder="Enter your Question"/>
                     <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
@@ -261,7 +261,7 @@
         <template id="edit_question">
             <t t-call="website_forum.header">
                 <h3>Edit question</h3>
-                <form t-attf-action="/forum/#{ slug(forum) }/question/savequestion/" method="post" role="form">
+                <form t-attf-action="/forum/#{ slug(forum) }/question/savequestion/" method="post" role="form" class="tag_text">
                     <input type="text" name="question_name" required="True" t-attf-value="#{post.name or ''}"
                         class="form-control" placeholder="Edit your Question"/>
                     <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
