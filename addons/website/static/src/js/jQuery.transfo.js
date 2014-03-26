@@ -122,13 +122,17 @@ OTHER DEALINGS IN THE SOFTWARE.
             transfo.settings.scalex=     transform.indexOf('scaleX') != -1 ? parseFloat(transform.match(/scaleX\(([^)]+)\)/)[1]) : 1;
             transfo.settings.scaley=     transform.indexOf('scaleY') != -1 ? parseFloat(transform.match(/scaleY\(([^)]+)\)/)[1]) : 1;
 
-            transfo.settings.style = ($this.attr("style")||"").replace(/[^;]+transform[^;]+/g, '');
+            transfo.settings.style = ($this.attr("style")||"").replace(/[^;]*transform[^;]+/g, '');
             $this.attr("style", transfo.settings.style);
 
             transfo.settings.height = $this.innerHeight();
             transfo.settings.width = $this.innerWidth();
             transfo.settings.css = window.getComputedStyle($this[0], null);
             transfo.settings.pos = $this.offset();
+
+            transfo.settings.rotationStep = 5;
+
+            console.log(transfo.settings);
         }
 
         function _bind ($this, transfo) {
@@ -190,7 +194,11 @@ OTHER DEALINGS IN THE SOFTWARE.
                 else if (event.pageY >= center.top && event.pageX < center.left) ang += 180;
                 else if (event.pageY < center.top && event.pageX < center.left) ang += 360;
 
-                settings.angle = ang;
+                if (!event.ctrlKey) {
+                    settings.angle = Math.round(ang / transfo.settings.rotationStep) * transfo.settings.rotationStep;
+                } else {
+                    settings.angle = ang;
+                }
 
                 // reset position : don't move center
                 _targetCss($this, transfo);
@@ -198,7 +206,7 @@ OTHER DEALINGS IN THE SOFTWARE.
                 var x = center.left - new_center.left;
                 var y = center.top - new_center.top;
                 var angle = ang * rad;
-                settings.translatex +=   x*Math.cos(angle) - y*Math.sin(-angle);
+                settings.translatex += x*Math.cos(angle) - y*Math.sin(-angle);
                 settings.translatey += - x*Math.sin(angle) + y*Math.cos(-angle);
             }
             else if (transfo.active.type == "position") {
@@ -237,6 +245,12 @@ OTHER DEALINGS IN THE SOFTWARE.
                     settings.scaley = settings.scalex;
                 }
             }
+
+            settings.angle = Math.round(settings.angle);
+            settings.translatex = Math.round(settings.translatex);
+            settings.translatey = Math.round(settings.translatey);
+            settings.scalex = Math.round(settings.scalex*100)/100;
+            settings.scaley = Math.round(settings.scaley*100)/100;
 
             _targetCss($this, transfo);
             return false;
