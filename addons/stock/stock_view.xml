@@ -240,9 +240,16 @@
                             <field name="active"/>
                         </group>
                         <group groups="stock.group_tracking_lot" string="Traceability">
-                            <button name="action_traceability" string="Upstream Traceability" type="object"
-                                 colspan="2"/>
-                            <button name="action_traceability" string="Downstream Traceability" type="object"
+                            <button name="action_traceability" 
+                                string="Upstream Traceability"
+                                class="oe_stat_button"
+                                icon="fa-arrow-up" 
+                                type="object" colspan="2"/>
+                            <button name="action_traceability" 
+                                string="Downstream Traceability"
+                                class="oe_stat_button"
+                                icon="fa-arrow-down" 
+                                type="object"
                                 context="{'type': 'move_history_ids'}" colspan="2"/>
                         </group>
                     </group>
@@ -344,8 +351,10 @@
             <field name="arch" type="xml">
                 <form string="Serial Number" version="7.0">
                     <div class="oe_button_box oe_right">
-                        <button name="action_traceability" string="Upstream Traceability" type="object" context="{'type': 'move_history_ids2', 'field': 'prodlot_id'}"/>
-                        <button name="action_traceability" string="Downstream Traceability" type="object" context="{'type': 'move_history_ids', 'field': 'prodlot_id'}"/>
+                        <button name="action_traceability" string="Upstream Traceability" class="oe_stat_button"
+                            icon="fa-arrow-up" type="object" context="{'type': 'move_history_ids2', 'field': 'prodlot_id'}"/>
+                        <button name="action_traceability" string="Downstream Traceability" class="oe_stat_button"
+                            icon="fa-arrow-down" type="object" context="{'type': 'move_history_ids', 'field': 'prodlot_id'}"/
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -1236,14 +1245,16 @@
                         <group name="main_grp" string="Details">
                             <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
                             <label for="product_qty"/>
-                            <div>
+                            <div class="oe_button_box">
                                 <field name="product_qty"
                                     on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"
                                     class="oe_inline"/>
                                 <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
                                 <button name="%(stock.move_scrap)d"
                                         string="Scrap" type="action"
-                                        icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
+                                        class="oe_stat_button"
+                                        icon="fa-trash-o" context="{'scrap': True}"
+                                        context="{'scrap': True}"
                                         states="draft,waiting,confirmed,assigned" colspan="1"/>
                             </div>
                             <label for="product_uos_qty" groups="product.group_uos"/>
@@ -1277,18 +1288,20 @@
                                 <field name="tracking_id" class="oe_inline"/>
                                 <button name="%(split_into)d" string="New Pack" type="action"
                                       groups="product.group_stock_packaging"
-                                      icon="terp-accessories-archiver+"
+                                      class="oe_stat_button "
+                                      icon="fa-gift"
                                       states="draft,assigned,confirmed"/>
                             </div>
                             <label for="prodlot_id" groups="stock.group_production_lot"/>
-                            <div groups="stock.group_production_lot">
+                            <div groups="stock.group_production_lot" class="oe_button_box">
                                 <field name="prodlot_id"
                                     context="{'location_id':location_id, 'product_id':product_id}"
                                     domain="[('product_id','=?',product_id)]" class="oe_inline"
                                     on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id, product_uom)"/>
                                 <button name="%(track_line)d"
-                                    states="draft,waiting,confirmed,assigned"
-                                    string="Split" type="action" icon="gtk-justify-fill"/>
+                                    states="draft,waiting,confirmed,assigned" 
+                                    class="oe_stat_button"
+                                    string="Split" type="action" icon="fa-filter"/>
                             </div>
                         </group>
                     </group>

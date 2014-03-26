@@ -160,7 +160,12 @@
             <field name="model">event.event</field>
             <field name="arch" type="xml">
                 <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
-                    <button name="%(website_event_track.act_event_list_tracks)d" type="action" string="Tracks"/>
+                    <button name="%(website_event_track.act_event_list_tracks)d" 
+                        type="action" 
+                        class="oe_stat_button oe_inline" 
+                        icon="fa-inbox">
+                        <field name="count_tracks" widget="statinfo"/>
+                    </button>
                 </xpath>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <label for="tag_ids" class="oe_edit_only"/>

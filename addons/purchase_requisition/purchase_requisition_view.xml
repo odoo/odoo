@@ -77,7 +77,9 @@
                         </field>
                         <div class="oe_right oe_button_box" style="margin-top: 10px">
                             <button name="%(action_purchase_requisition_partner)d" type="action"
-                                string="Request a Quotation" icon="gtk-execute"
+                                string="Request a Quotation"
+                                class="oe_stat_button" 
+                                icon="fa-quote-left"
                                 attrs="{'invisible': [('line_ids','=',False),('state', 'not in', ('in_progress'))]}"/>
                         </div>
                         <separator string="Quotations"/>
