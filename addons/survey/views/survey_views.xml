@@ -119,7 +119,7 @@
                         <button name="action_send_survey" string="Invite people" states="open" type="object" class="oe_highlight" />
                         <button name="action_print_survey" string="Print Survey" type="object"/>
                         <button name="action_result_survey" string="View results" states="open,close,cancel" type="object" class="oe_highlight"/>
-                        <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}" />
+                        <field name="stage_id" widget="statusbar" clickable="True" /> <!-- options="{'fold_field': 'fold'}" -->
                         <field name="state" invisible="True" />
                     </header>
                     <sheet class="oe_survey">
@@ -237,7 +237,7 @@
                                     <!-- <li><a name="action_print_survey" type="object">Print Survey...</a></li> -->
                                     <!-- <li><a name="%(action_selected_survey_user_input)d" type="action">View Answers...</a></li> -->
                                     <li><a type="edit">Survey Options</a></li>
-                                    <li><a type="object" name="action_kanban_duplicate">Duplicate</a></li>
+<!--                                     <li><a type="object" name="action_kanban_duplicate">Duplicate</a></li> -->
                                     <li t-if="widget.view.is_action_enabled('delete')"><a type="delete">Delete!</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
@@ -273,7 +273,7 @@
                 </kanban>
             </field>
         </record>
-        <record model="ir.ui.view" id="survey_calendar">
+<!--         <record model="ir.ui.view" id="survey_calendar">
             <field name="name">survey.calendar</field>
             <field name="model">survey.survey</field>
             <field name="arch" type="xml">
@@ -282,13 +282,13 @@
                 </calendar>
             </field>
         </record>
-
+ -->
 
         <record model="ir.actions.act_window" id="action_survey_form">
             <field name="name">Surveys</field>
             <field name="res_model">survey.survey</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,calendar,form</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="survey_search"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">Click to add a survey.</p>
@@ -612,15 +612,15 @@
         <!-- MENU ELEMENTS -->
 
         <!-- Left menu categories-->
-        <menuitem name="Surveys" id="menu_surveys" parent="base.marketing_menu" sequence="30" groups="base.group_survey_user"/>
-        <menuitem name="Configuration" id="marketing_config" parent="base.marketing_menu" sequence="100" groups="base.group_no_one"/>
+        <menuitem name="Surveys" id="menu_surveys" parent="base.marketing_menu" sequence="25" groups="base.group_survey_user"/>
+        <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="base.marketing_menu" sequence="30" />
 
         <!-- Left menu elements: Survey -->
         <menuitem name="Surveys" id="menu_survey_form" action="action_survey_form" parent="menu_surveys" sequence="1"/>
         <menuitem name="Answers" id="menu_survey_type_form1" action="action_survey_user_input" parent="menu_surveys" sequence="1"/>
 
         <!-- Left menu elements: Technical Configuration -->
-        <menuitem name="Surveys" id="menu_surveys_configuration" parent="marketing_config" groups="base.group_no_one"/>
+        <menuitem name="Surveys" id="menu_surveys_configuration" parent="base.menu_marketing_config_root" groups="base.group_no_one" sequence="25" />
         <menuitem name="Pages" id="menu_survey_page_form1" action="action_survey_page_form" parent="menu_surveys_configuration" sequence="1"/>
         <menuitem name="Questions" id="menu_survey_question_form1" action="action_survey_question_form" parent="menu_surveys_configuration" sequence="2"/>
         <menuitem name="Labels" id="menu_survey_label_form1" action="action_survey_label_form" parent="menu_surveys_configuration" sequence="3"/>

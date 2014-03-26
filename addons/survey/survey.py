@@ -235,13 +235,13 @@ class survey_survey(osv.Model):
             self.message_post(cr, uid, ids, body="""<p>Survey cancelled</p>""", context=context)
         return super(survey_survey, self).write(cr, uid, ids, vals, context=context)
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        vals = {}
-        current_rec = self.read(cr, uid, id, context=context)
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        vals = dict()
+        current_rec = self.read(cr, uid, id, fields=['title'], context=context)
         title = _("%s (copy)") % (current_rec.get('title'))
         vals['title'] = title
         vals['user_input_ids'] = []
-        return super(survey_survey, self).copy(cr, uid, id, vals,
+        return super(survey_survey, self).copy_data(cr, uid, id, default=vals,
             context=context)
 
     def next_page(self, cr, uid, user_input, page_id, go_back=False, context=None):
@@ -298,9 +298,9 @@ class survey_survey(osv.Model):
     #             self.write(cr, uid, [survey['id']], {'state': 'draft'}, context=context)
     #     return {}
 
-    def action_kanban_duplicate(self, cr, uid, ids, context=None):
-        ''' Hack in order to provide "duplicate" action to kanban view '''
-        return self.copy(cr, uid, ids[0], context=None)
+    # def action_kanban_duplicate(self, cr, uid, ids, context=None):
+    #     ''' Hack in order to provide "duplicate" action to kanban view '''
+    #     return self.copy(cr, uid, ids[0], context=None)
 
     def action_start_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey form '''
@@ -438,12 +438,12 @@ class survey_page(osv.Model):
 
     # Public methods #
 
-    def copy(self, cr, uid, ids, default=None, context=None):
+    def copy_data(self, cr, uid, ids, default=None, context=None):
         vals = {}
-        current_rec = self.read(cr, uid, ids, context=context)
+        current_rec = self.read(cr, uid, ids, fields=['title'], context=context)
         title = _("%s (copy)") % (current_rec.get('title'))
         vals.update({'title': title})
-        return super(survey_page, self).copy(cr, uid, ids, vals,
+        return super(survey_page, self).copy_data(cr, uid, ids, default=vals,
             context=context)
 
 
@@ -582,13 +582,18 @@ class survey_question(osv.Model):
         ('constr_number', 'CHECK (constr_minimum_req_ans <= constr_maximum_req_ans)', 'Max number of answers cannot be smaller than min number!')
     ]
 
-    def copy(self, cr, uid, ids, default=None, context=None):
-        ''' This will prevent duplication of user input lines in case of question duplication
-        (in cascade, this will also allow to duplicate surveys without duplicating bad user input
-        lines) '''
-        vals = {}
-        vals.update({'user_input_line_ids': []})
-        return super(survey_question, self).copy(cr, uid, ids, vals,
+    def copy_data(self, cr, uid, ids, default=None, context=None):
+        # This will prevent duplication of user input lines in case of question duplication
+        # (in cascade, this will also allow to duplicate surveys without duplicating bad user input
+        # lines)
+        vals = {'user_input_line_ids': []}
+
+        # Updating question title
+        current_rec = self.read(cr, uid, ids, context=context)
+        question = _("%s (copy)") % (current_rec.get('question'))
+        vals['question'] = question
+
+        return super(survey_question, self).copy_data(cr, uid, ids, default=vals,
             context=context)
 
     def survey_save(self, cr, uid, ids, context=None):
@@ -842,7 +847,7 @@ class survey_user_input(osv.Model):
         ('unique_token', 'UNIQUE (token)', 'A token must be unique!')
     ]
 
-    def copy(self, cr, uid, id, default=None, context=None):
+    def copy_data(self, cr, uid, id, default=None, context=None):
         raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
             element!'))
 
@@ -943,6 +948,10 @@ class survey_user_input_line(osv.Model):
             mark = self.pool.get('survey.label').browse(cr, uid, int(value_suggested), context=context).quizz_mark
             vals.update({'quizz_mark': mark})
         return super(survey_user_input_line, self).write(cr, uid, ids, vals, context=context)
+
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
+            element!'))
 
     def save_lines(self, cr, uid, user_input_id, question, post, answer_tag,
                    context=None):
