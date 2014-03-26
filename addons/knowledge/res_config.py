@@ -26,15 +26,8 @@ class knowledge_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
     _columns = {
         'module_document': fields.boolean('Manage documents',
-            help='This is a complete document management system, with: user authentication, '
-                 'full document search (but pptx and docx are not supported), and a document dashboard.\n'
+            help='Document indexation, full text search of attachements.\n'
                  '-This installs the module document.'),
-        'module_document_ftp': fields.boolean('Share repositories (FTP)',
-            help='Access your documents in OpenERP through an FTP interface.\n'
-                 '-This installs the module document_ftp.'),
-        'module_document_webdav': fields.boolean('Share repositories (WebDAV)',
-            help='Access your documents in OpenERP through WebDAV.\n'
-                 '-This installs the module document_webdav.'),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
