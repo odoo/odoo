@@ -4,17 +4,25 @@ $(document).ready(function () {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         var value = $link.attr("value")
+        
         openerp.jsonRpc("/forum/post_vote/", 'call', {
                 'post_id': $link.attr("id"),
                 'vote': value})
             .then(function (data) {
-                if (data == false){
-                    vote_alert = $link.parent().find("#vote_alert");
-                    if (vote_alert.length == 0) {
+                if (data['error']){
+                    if (data['error'] == 'own_post'){
                         var $warning = $('<div class="alert alert-danger alert-dismissable" id="vote_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
                             '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
                             'Sorry, you cannot vote for your own posts'+
                             '</div>');
+                    } else if (data['error'] == 'anonymous_user'){
+                        var $warning = $('<div class="alert alert-danger alert-dismissable" id="vote_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
+                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+                            'Sorry, anonymous users cannot vote'+
+                            '</div>');
+                    }
+                    vote_alert = $link.parent().find("#vote_alert");
+                    if (vote_alert.length == 0) {
                         $link.parent().append($warning);
                     }
                 } else {

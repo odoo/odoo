@@ -338,7 +338,7 @@ class Vote(osv.Model):
         #user can not vote on own post.
         post = self.pool['website.forum.post'].browse(cr, uid, post_id, context=context)
         if post.user_id.id == uid:
-            return False
+            return {'error': 'own_post'}
         vote_ids = self.search(cr, uid, [('post_id', '=', post_id), ('user_id','=',uid)], context=context)
         if vote_ids:
             #when user will click again on vote it should set it 0.

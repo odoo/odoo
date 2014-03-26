@@ -411,8 +411,10 @@ class website_forum(http.Controller):
 
         return request.website.render("website_forum.users", values)
 
-    @http.route('/forum/post_vote/', type='json', auth="user", multilang=True, methods=['POST'], website=True)
+    @http.route('/forum/post_vote/', type='json', auth="public", multilang=True, methods=['POST'], website=True)
     def post_vote(self, **post):
+        if not request.session.uid:
+            return {'error': 'anonymous_user'}
         cr, uid, context, post_id = request.cr, request.uid, request.context, int(post.get('post_id'))
         Vote = request.registry['website.forum.post.vote']
         return Vote.vote(cr, uid, post_id, post.get('vote'), context)
