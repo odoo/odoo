@@ -67,6 +67,7 @@
                     -->
                     <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
                     <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
+                    <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"/>
                     <script type="text/javascript">
                         CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
                         ,['Outdent','Indent','Link','Unlink'],] ;
@@ -244,7 +245,7 @@
                         class="form-control" placeholder="Enter your Question"/>
                     <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
                     <textarea name="question_content" required="True" class="form-control"
-                        t-attf-value="#{question_content or ''}" id="textarea_ckeditor"/>
+                        t-attf-value="#{question_content or ''}"/>
                     <br/>
                     <input type="text" name="question_tags" t-attf-value="#{question_tag or ''}" 
                         placeholder="Tags" class="form-control load_tags"/>
@@ -252,7 +253,7 @@
                     <button class="btn btn-primary" id="btn_ask_your_question">Post Your Question</button>
                 </form>
                 <script type="text/javascript">
-                    CKEDITOR.replace("textarea_ckeditor");
+                    CKEDITOR.replace("question_content");
                 </script>
             </t>
         </template>
@@ -264,7 +265,7 @@
                     <input type="text" name="question_name" required="True" t-attf-value="#{post.name or ''}"
                         class="form-control" placeholder="Edit your Question"/>
                     <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
-                    <textarea name="answer_content" required="True" value="content" class="form-control" id="textarea_ckeditor">
+                    <textarea name="answer_content" required="True" value="content" class="form-control">
                         <t t-esc="post.content"/>
                     </textarea>
                     <br/>
@@ -313,12 +314,12 @@
             </p>
             <form t-attf-action="/forum/#{ slug(forum) }/question/postanswer/" method="post" role="form">
                 <textarea name="answer_content" t-attf-value="#{answer_content or ''}"
-                    class="form-control" id="textarea_ckeditor" required="True"/>
+                    class="form-control" required="True"/>
                 <input name="post_id" t-att-value="question.id" type="hidden"/>
                 <button class="btn btn-primary" id="btn_ask_your_question">Post Your Answer</button>
             </form>
             <script type="text/javascript">
-                CKEDITOR.replace("textarea_ckeditor");
+                CKEDITOR.replace("answer_content");
             </script>
         </template>
 
@@ -326,7 +327,7 @@
             <t t-call="website_forum.header">
                 <h3>Edit answer</h3>
                 <form t-attf-action="/forum/#{ slug(forum) }/question/saveanswer/" method="post" role="form">
-                    <textarea name="answer_content" required="True" value="content" class="form-control" id="textarea_ckeditor">
+                    <textarea name="answer_content" required="True" value="content" class="form-control">
                         <t t-esc="post_answer.content"/>
                     </textarea>
                     <input name="post_id" t-att-value="post.id" type="hidden"/>
