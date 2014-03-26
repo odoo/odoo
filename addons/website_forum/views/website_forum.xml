@@ -7,20 +7,8 @@
             <xpath expr="//script[@id='website_tour_js']" position="after">
                 <script type="text/javascript"
                     src="/website_forum/static/src/js/website.tour.forum.js"/>
-                <!--
-                    FP Note: Why do we need this ? Can we remove this code?
-                    The problem is that you add your script for every page, not only for the forum
-                -->
-                <script type="text/javascript"
-                    src="/website_forum/static/src/js/website_forum.editor.js"/>
-                <script type="text/javascript"
-                    src="/website_forum/static/src/js/website_forum.js"/>
                 <script type="text/javascript" 
-                    src="/web/static/lib/jquery.textext/jquery.textext.js"/>
-                <script type="text/javascript">
-                    CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
-                    ,['Outdent','Indent','Link','Unlink'],] ;
-                </script>
+                    src="/website_forum/static/src/js/website_forum.editor.js"/>
             </xpath>
         </template>
 
@@ -73,6 +61,16 @@
                 <t t-set="head">
                     <link rel='stylesheet' href="/web/static/lib/jquery.textext/jquery.textext.css"/>
                     <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
+                    <!--
+                    FP Note: Why do we need this ? Can we remove this code?
+                    The problem is that you add your script for every page, not only for the forum
+                    -->
+                    <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
+                    <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
+                    <script type="text/javascript">
+                        CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
+                        ,['Outdent','Indent','Link','Unlink'],] ;
+                    </script>
                 </t>
                 <div class="container mt16">
                     <div class="navbar navbar-default">
