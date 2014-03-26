@@ -64,7 +64,7 @@
         return new website.editor.RTELinkDialog(editor).appendTo(document.body);
     }
     function image_dialog(editor, image) {
-        return new website.editor.RTEImageDialog(editor, image).appendTo(document.body);
+        return new website.editor.MediaDialog(editor, image).appendTo(document.body);
     }
 
     // only enable editors manually
@@ -80,7 +80,7 @@
 
     website.init_editor = function () {
         CKEDITOR.plugins.add('customdialogs', {
-//            requires: 'link,image',
+            // requires: 'link,image',
             init: function (editor) {
                 editor.on('doubleclick', function (evt) {
                     var element = evt.data.element;
@@ -754,7 +754,11 @@
                     })
                 }
                 
-                $image_button.find("button.hover-style-button").addClass("btn-primary").removeClass("btn-default");
+                if ($selected.parents('[data-oe-field="image"]').length) {
+                    $image_button.find("button.hover-style-button").hide();
+                } else {
+                    $image_button.find("button.hover-style-button").show().addClass("btn-primary").removeClass("btn-default");
+                }
             }).on('mouseleave', 'a, img, .fa', function (e) {
                 var current = document.elementFromPoint(e.clientX, e.clientY);
                 if (current === $link_button[0] || $(current).parent()[0] === $link_button[0] ||
@@ -1324,6 +1328,31 @@
         },
     });
 
+    website.editor.Media = openerp.Widget.extend({
+        init: function (editor) {
+            this._super();
+            this.editor = editor;
+        },
+    });
+    website.editor.MediaDialog = website.editor.Dialog.extend({
+        template: 'website.editor.dialog.media',
+        init: function (editor, media) {
+            this.media = media;
+            this.editor = editor;
+            this._super(editor);
+        },
+        start: function (editor, media) {
+            this.imageDialog = new website.editor.RTEImageDialog(this.editor, this.media);
+            this.imageDialog.appendTo(this.$("#editor-media-image"));
+            console.log(this.imageDialog.$el[0]);
+            this.iconDialog = new website.editor.FontIconsDialog(this.editor, this.media);
+            this.iconDialog.appendTo(this.$("#editor-media-icon"));
+            this.videoDialog = null;
+            //this.videoDialog.appendTo(this.$("#editor-media-video"));
+            return this._super();
+        }
+    });
+
     /**
      * ImageDialog widget. Lets users change an image, including uploading a
      * new image in OpenERP or selecting the image style (if supported by
@@ -1341,7 +1370,7 @@
      *                           selected by the users (or possibly the ones
      *                           originally passed in)
      */
-    website.editor.ImageDialog = website.editor.Dialog.extend({
+    website.editor.ImageDialog = website.editor.Media.extend({
         template: 'website.editor.dialog.image',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
             'change .url-source': function (e) { this.changed($(e.target)); },
@@ -1447,6 +1476,7 @@
             new website.editor.ExistingImageDialog(this).appendTo(document.body);
         },
     });
+
     website.editor.RTEImageDialog = website.editor.ImageDialog.extend({
         init: function (editor, image) {
             this._super(editor);
@@ -1614,7 +1644,7 @@
         range.shrink(CKEDITOR.SHRINK_TEXT);
         var commonAncestor = range.getCommonAncestor();
         var viewRoot = editor.elementPath(commonAncestor).contains(function (element) {
-            return element.data('oe-model') === 'ir.ui.view'
+            return element.data('oe-model') === 'ir.ui.view';
         });
         if (!viewRoot) { return null; }
         // if viewRoot is the first link, don't edit it.
@@ -1622,7 +1652,7 @@
                 .contains('a', true);
     }
 
-    website.editor.FontIconsDialog = website.editor.Dialog.extend({
+    website.editor.FontIconsDialog = website.editor.Media.extend({
         template: 'website.editor.dialog.font-icons',
         events : _.extend({}, website.editor.Dialog.prototype.events, {
             change: 'update_preview',
@@ -1679,7 +1709,7 @@
          * all the new ones if necessary.
          */
         save: function () {
-            var classes = this.element.className.split(/\s+/);
+            var classes = (this.element.className||"").split(/\s+/);
             var non_fa_classes = _.reject(classes, function (cls) {
                 return cls === 'fa' || /^fa-/.test(cls);
             });
@@ -1695,7 +1725,7 @@
          * which may not match the visual look of the element.
          */
         load_data: function () {
-            var classes = this.element.className.split(/\s+/);
+            var classes = (this.element.className||"").split(/\s+/);
             for (var i = 0; i < classes.length; i++) {
                 var cls = classes[i];
                 switch(cls) {
