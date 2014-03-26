@@ -98,7 +98,7 @@ class website_forum(http.Controller):
 
         step = 10
         question_count = Forum.search(cr, uid, domain, count=True, context=context)
-        pager = request.website.pager(url="/forum/%s/" % slug(forum), total=question_count, page=page, step=step, scope=10)
+        pager = request.website.pager(url="/forum/%s" % slug(forum), total=question_count, page=page, step=step, scope=10)
 
         obj_ids = Forum.search(cr, uid, domain, limit=step, offset=pager['offset'], order=order, context=context)
         question_ids = Forum.browse(cr, uid, obj_ids, context=context)
@@ -395,7 +395,7 @@ class website_forum(http.Controller):
 
         step = 30
         tag_count = User.search(cr, uid, [('forum','=',True)], count=True, context=context)
-        pager = request.website.pager(url="/forum/users/", total=tag_count, page=page, step=step, scope=30)
+        pager = request.website.pager(url="/forum/users", total=tag_count, page=page, step=step, scope=30)
 
         obj_ids = User.search(cr, uid, [('forum','=',True)], limit=step, offset=pager['offset'], context=context)
         users = User.browse(cr, uid, obj_ids, context=context)
