@@ -15,10 +15,10 @@
                 <h2 class="text-center mb32">Our Sponsors</h2>
             </section>
             <div class="row">
-                <div t-attf-class="col-md-#{(len(event.sponsor_ids) > 6) and 2 or (12/ len(event.sponsor_ids))} text-center" t-foreach="event.sponsor_ids" t-as="sponsor">
+                <div t-attf-class="col-md-#{(len(event.sponsor_ids) > 6) and 2 or (12/ len(event.sponsor_ids))} text-center mb16" t-foreach="event.sponsor_ids" t-as="sponsor">
                     <t t-if="sponsor.url">
                         <a t-att-href="sponsor.url" style="position: relative; display: inline-block;">
-                            <span t-field="sponsor.partner_id.image"
+                            <span t-field="sponsor.image_medium"
                                 t-field-options='{"widget": "image", "class": "shadow"}'/>
                             <div class="ribbon-wrapper">
                                 <div t-field="sponsor.sponsor_type_id" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id.name}"/>
@@ -27,7 +27,7 @@
                     </t>
                     <t t-if="not sponsor.url">
                         <span style="position: relative; display: inline-block;">
-                            <span t-field="sponsor.partner_id.image"
+                            <span t-field="sponsor.image_medium"
                                 t-field-options='{"widget": "image", "class": "shadow"}'/>
                             <div class="ribbon-wrapper">
                                 <div t-field="sponsor.sponsor_type_id" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id.name}"/>
@@ -174,7 +174,7 @@
 <template id="tracks_filter" inherit_id="website_event_track.tracks" inherit_option_id="website_event_track.tracks" name="Filter on Tags">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked">
-            <li t-att-class="'' if searches.get('tag') else 'active'"><a t-attf-href="/event/#{ slug(event) }/track/">All Tags</a></li>
+            <li t-att-class="'' if searches.get('tag') else 'active'"><a t-attf-href="/event/#{ slug(event) }/track">All Tags</a></li>
             <t t-foreach="tags" t-as="tag">
                 <li t-att-class="searches.get('tag') == tag.id and 'active' or ''">
                     <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag) }">
