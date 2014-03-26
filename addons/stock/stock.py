@@ -2482,9 +2482,9 @@ class stock_inventory(osv.osv):
             conflicting_move_ids = self.check_inventory_date(cr, uid, inventory, context=context)
             error_message = ""
             for move in self.pool.get('stock.move').browse(cr, uid, conflicting_move_ids, context=context):
-                error_message += _("\n * Date: %s - %s %s - From: %s To: %s") % (move.date, move.product_uom_qty, move.product_uom.name, move.location_id.name, move.location_dest_id.name)
+                error_message += _("\n * Date: %s - %s %s - From: %s To: %s State: %s") % (move.date, move.product_uom_qty, move.product_uom.name, move.location_id.name, move.location_dest_id.name, move.state)
             if conflicting_move_ids:
-                raise osv.except_osv(_('Error!'), _('There exists stock moves made/scheduled after the inventory date which are conflicting with its settings. Please cancel them or change the inventory date to proceed further.\n\n%s') % (error_message))
+                raise osv.except_osv(_('Error!'), _('Stock moves exist made/scheduled after the inventory date which are conflicting with its settings. Please unreserve them or change the inventory date to proceed further.\n\n%s') % (error_message))
             #clean the existing inventory lines before redoing an inventory proposal
             line_ids = [line.id for line in inventory.line_ids]
             inventory_line_obj.unlink(cr, uid, line_ids, context=context)
