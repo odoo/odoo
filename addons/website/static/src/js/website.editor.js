@@ -1333,9 +1333,16 @@
             this._super();
             this.editor = editor;
         },
+        save: function () {
+        },
+        cancel: function () {
+        },
+        close: function () {
+        },
     });
     website.editor.MediaDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.media',
+
         init: function (editor, media) {
             this.media = media;
             this.editor = editor;
@@ -1344,13 +1351,18 @@
         start: function (editor, media) {
             this.imageDialog = new website.editor.RTEImageDialog(this.editor, this.media);
             this.imageDialog.appendTo(this.$("#editor-media-image"));
-            console.log(this.imageDialog.$el[0]);
             this.iconDialog = new website.editor.FontIconsDialog(this.editor, this.media);
             this.iconDialog.appendTo(this.$("#editor-media-icon"));
             this.videoDialog = null;
             //this.videoDialog.appendTo(this.$("#editor-media-video"));
             return this._super();
-        }
+        },
+        save: function () {
+            this.imageDialog.save();
+            this.iconDialog.save();
+            // this.videoDialog.save();
+            return this._super();
+        },
     });
 
     /**
