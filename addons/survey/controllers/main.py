@@ -400,9 +400,11 @@ class WebsiteSurvey(http.Controller):
         '''Returns appropriate formated data required by graph library on basis of filter'''
         current_filters = safe_eval(post.get('current_filters', '[]'))
         result = []
-        if question.type in ['simple_choice', 'multiple_choice']:
+        if question.type == 'multiple_choice':
             result.append({'key': str(question.question),
                            'values': self.prepare_result(question, current_filters)})
+        if question.type == 'simple_choice':
+            result = self.prepare_result(question, current_filters)
         if question.type == 'matrix':
             data = self.prepare_result(question, current_filters)
             for answer in data['answers']:

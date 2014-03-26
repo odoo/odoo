@@ -88,20 +88,15 @@ $(document).ready(function () {
                 return d.slice(0,tick_limit)+'...';
             }
         };
-        if (graph_type == 'pie'){
-            d3.select('#graph_question_' + question_id + ' svg')
-                .datum(response[0].values)
-                .transition().duration(500).call(chart);
-        }
-        else{
+        if (graph_type != 'pie'){
             chart.xAxis
                 .tickFormat(customtick_function);
             chart.yAxis
                 .tickFormat(d3.format('d'));
-            d3.select('#graph_question_' + question_id + ' svg')
-                .datum(response)
-                .transition().duration(500).call(chart);
         }
+        d3.select('#graph_question_' + question_id + ' svg')
+            .datum(response)
+            .transition().duration(500).call(chart);
         nv.utils.windowResize(chart.update);
         return chart;
     }
