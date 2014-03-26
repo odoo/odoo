@@ -28,9 +28,6 @@ class knowledge_config_settings(osv.osv_memory):
         'module_document': fields.boolean('Manage documents',
             help='Document indexation, full text search of attachements.\n'
                  '-This installs the module document.'),
-        'module_document_ftp': fields.boolean('Share repositories (FTP)',
-            help='Access your documents in OpenERP through an FTP interface.\n'
-                 '-This installs the module document_ftp.'),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
