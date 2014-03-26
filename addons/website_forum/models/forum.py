@@ -148,7 +148,7 @@ class Post(osv.Model):
         'child_ids': fields.one2many('website.forum.post', 'parent_id', 'Answers'),
         'child_count':fields.function(_get_child_count, string="Answers", type='integer',
             store={
-                'website.forum.post': (_get_child, ['child_ids','parent_id'], 10),
+                'website.forum.post': (_get_child, [], 10),
             }
         ),
 

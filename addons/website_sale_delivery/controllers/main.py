@@ -7,7 +7,7 @@ from openerp import SUPERUSER_ID
 
 class Ecommerce(Ecommerce):
 
-    @http.route(['/shop/payment/'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/shop/payment'], type='http', auth="public", website=True, multilang=True)
     def payment(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
         order = self.get_order()
@@ -16,7 +16,7 @@ class Ecommerce(Ecommerce):
         if order and carrier_id:
             # recompute delivery costs            
             request.registry['website']._check_carrier_quotation(cr,uid,order,carrier_id,context=context)
-            return request.redirect("/shop/payment/")
+            return request.redirect("/shop/payment")
 
         res = super(Ecommerce, self).payment(**post)
         return res
