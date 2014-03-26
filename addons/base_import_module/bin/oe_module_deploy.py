@@ -14,24 +14,14 @@ except ImportError:
 
 session = requests.session()
 
-def deploy_module(module_path, url, login, password, db=None):
-    if url.endswith('/'):
-        url = url[:-1]
+def deploy_module(module_path, url, login, password, db=''):
+    url = url.rstrip('/')
     authenticate(url, login, password, db)
-    check_import(url)
     module_file = zip_module(module_path)
     try:
         return upload_module(url, module_file)
     finally:
         os.remove(module_file)
-
-def check_import(server):
-    url = server +'/base_import_module/check' 
-    res = session.get(url)
-    if res.status_code == 404:
-        raise Exception("The server %r does not have the 'base_import_module' installed." % server)
-    elif res.status_code != 200:
-        raise Exception("Server %r returned %s http error.", (server, res.status_code))
 
 def upload_module(server, module_file):
     print("Uploading module file...")
@@ -39,27 +29,26 @@ def upload_module(server, module_file):
     files = dict(mod_file=open(module_file, 'rb'))
     res = session.post(url, files=files)
     if res.status_code != 200:
-        raise Exception("Could not authenticate on server %r" % server)
+        raise Exception("Could not authenticate on server '%s'" % server)
     return res.text
 
-def authenticate(server, login, password, db):
-    print("Connecting to server %r" % server)
-    print("Waiting for server authentication...")
-    if db:
-        url = server + '/login'
-        args = dict(db=db, login=login, key=password)
-        res = session.get(url, params=args)
-    else:
-        url = server + '/web/login'
-        args = dict(login=login, password=password)
-        res = session.post(url, args)
-    if res.status_code != 200:
-        raise Exception("Could not authenticate to OpenERP server %r" % server)
+def authenticate(server, login, password, db=''):
+    print("Authenticating on server '%s' ..." % server)
+
+    # Fixate session with a given db if any
+    session.get(server + '/web/login', params=dict(db=db))
+
+    args = dict(login=login, password=password, db=db)
+    res = session.post(server + '/base_import_module/login', args)
+    if res.status_code == 404:
+        raise Exception("The server '%s' does not have the 'base_import_module' installed." % server)
+    elif res.status_code != 200:
+        raise Exception(res.text)
 
 def zip_module(path):
     path = os.path.abspath(path)
     if not os.path.isdir(path):
-        raise Exception("Could not find module directory %r" % path)
+        raise Exception("Could not find module directory '%s'" % path)
     container, module_name = os.path.split(path)
     temp = tempfile.mktemp(suffix='.zip')
     try:
@@ -78,7 +67,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Deploy a module on an OpenERP server.')
     parser.add_argument('path', help="Path of the module to deploy")
     parser.add_argument('--url', dest='url', help='Url of the server (default=http://localhost:8069)', default="http://localhost:8069")
-    parser.add_argument('--database', dest='database', help='Database to use if server does not use db-filter.')
+    parser.add_argument('--db', dest='db', help='Database to use if server does not use db-filter.')
     parser.add_argument('--login', dest='login', default="admin", help='Login (default=admin)')
     parser.add_argument('--password', dest='password', default="admin", help='Password (default=admin)')
     parser.add_argument('--no-ssl-check', dest='no_ssl_check', action='store_true', help='Do not check ssl cert')
@@ -91,7 +80,7 @@ if __name__ == '__main__':
         session.verify = False
 
     try:
-        result = deploy_module(args.path, args.url, args.login, args.password, args.database)
+        result = deploy_module(args.path, args.url, args.login, args.password, args.db)
         print(result)
     except Exception, e:
         sys.exit("ERROR: %s" % e)
