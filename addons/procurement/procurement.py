@@ -195,7 +195,8 @@ class procurement_order(osv.osv):
         return self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
 
     def run(self, cr, uid, ids, context=None):
-        for procurement in self.browse(cr, uid, ids, context=context):
+        for procurement_id in ids:
+            procurement = self.browse(cr, uid, procurement_id, context=context)
             if procurement.state not in ("running", "done"):
                 if self._assign(cr, uid, procurement, context=context):
                     procurement.refresh()
