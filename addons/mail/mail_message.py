@@ -208,7 +208,7 @@ class mail_message(osv.Model):
         raise osv.except_osv(_('Invalid Action!'), _("Unable to send email, please configure the sender's email address or alias."))
 
     def _get_default_author(self, cr, uid, context=None):
-        return self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
+        return self.pool.get('res.users').read(cr, SUPERUSER_ID, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
 
     _defaults = {
         'type': 'email',
