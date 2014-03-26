@@ -86,7 +86,7 @@ class Post(osv.Model):
 
     def _get_vote(self, cr, uid, ids, context=None):
         result = {}
-        for vote in self.pool.get('website.forum.post.vote').browse(cr, uid, ids, context=context):
+        for vote in self.pool['website.forum.post.vote'].browse(cr, uid, ids, context=context):
             result[vote.post_id.id] = True
         return result.keys()
 
@@ -116,7 +116,7 @@ class Post(osv.Model):
 
     def _get_views(self, cr, uid, ids, context=None):
         result = {}
-        for statistic in self.pool.get('website.forum.post.statistics').browse(cr, uid, ids, context=context):
+        for statistic in self.pool['website.forum.post.statistics'].browse(cr, uid, ids, context=context):
             result[statistic.post_id.id] = True
         return result.keys()
 
@@ -211,7 +211,7 @@ class Post(osv.Model):
             question = self.browse(cr, uid, vals.get("parent_id"), context=context)
             vals['name'] = question.name
             #add 2 karma to user when asks question.
-            self.pool.get('res.users').write(cr, uid, [vals.get('user_id')], {'karma': 2}, context=context)
+            self.pool['res.users'].write(cr, SUPERUSER_ID, [vals.get('user_id')], {'karma': 2}, context=context)
         post_id = super(Post, self).create(cr, uid, vals, context=create_context)
         self.message_post(cr, uid, [post_id], body=_(body), subtype=subtype, context=context)
         return post_id
@@ -232,7 +232,7 @@ class Post(osv.Model):
                 value = 15
             elif vals.get('correct') == False:
                 value = -15 
-            self.pool['res.users'].write(cr, uid, [post.user_id.id], {'karma': value}, context=context)
+            self.pool['res.users'].write(cr, SUPERUSER_ID, [post.user_id.id], {'karma': value}, context=context)
         return super(Post, self).write(cr, uid, ids, vals, context=context)
 
 class PostStatistics(osv.Model):
@@ -257,7 +257,7 @@ class Users(osv.Model):
     def _get_user_badge_level(self, cr, uid, ids, name, args, context=None):
         """Return total badge per level of users"""
         result = dict.fromkeys(ids, False)
-        badge_user_obj = self.pool.get('gamification.badge.user')
+        badge_user_obj = self.pool['gamification.badge.user']
         for id in ids:
             result[id] = {
                 'gold_badge': badge_user_obj.search(cr, uid, [('badge_id.level', '=', 'gold'), ('user_id', '=', id)], context=context, count=True),
@@ -328,7 +328,7 @@ class Vote(osv.Model):
         record = Post.browse(cr, uid, vals.get('post_id'), context=context)
         #Add 10 karma when user get up vote and subtract 10 karma when gets down vote.
         value = 10 if vals.get('vote') == '1' else -10
-        self.pool['res.users'].write(cr, uid, [record.user_id.id], {'karma': value}, context=context)
+        self.pool['res.users'].write(cr, SUPERUSER_ID, [record.user_id.id], {'karma': value}, context=context)
         body = "voted %s %s" % ('answer' if record.parent_id else 'question','up' if vals.get('vote')==1 else 'down')
         Post.message_post(cr, uid, [record.id], body=_(body), context=context)
         return vote_id
@@ -349,7 +349,7 @@ class Vote(osv.Model):
                 value = -10
             elif record.vote == '-1' or new_vote == '1':
                 value = 10
-            self.pool['res.users'].write(cr, uid, [record.post_id.user_id.id], {'karma': value}, context=context)
+            self.pool['res.users'].write(cr, SUPERUSER_ID, [record.post_id.user_id.id], {'karma': value}, context=context)
             self.write(cr, uid, vote_ids, {
                 'vote': new_vote
             }, context=context)

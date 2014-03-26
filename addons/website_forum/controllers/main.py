@@ -152,7 +152,7 @@ class website_forum(http.Controller):
         if request.session.uid:
             view_ids = Statistics.search(cr, uid, [('user_id', '=', request.session.uid), ('post_id', '=', question.id)], context=context)
             if not view_ids:
-                Statistics.create(cr, uid, {'user_id': request.session.uid, 'post_id': question.id }, context=context)
+                Statistics.create(cr, SUPERUSER_ID, {'user_id': request.session.uid, 'post_id': question.id }, context=context)
         else:
             request.session[request.session_id] = request.session.get(request.session_id, [])
             if not (question.id in request.session[request.session_id]):
@@ -186,9 +186,8 @@ class website_forum(http.Controller):
             group_id = request.registry["ir.model.data"].get_object_reference(cr, uid, 'website_mail', 'group_comment')[1]
             if group_id in [group.id for group in group_ids]:
                 Post = request.registry['website.forum.post']
-                Post.check_access_rights(cr, uid, 'read')
                 Post.message_post(
-                    cr, SUPERUSER_ID, int(post_id),
+                    cr, uid, int(post_id),
                     body=kwargs.get('comment'),
                     type='comment',
                     subtype='mt_comment',
@@ -289,7 +288,7 @@ class website_forum(http.Controller):
             return login_redirect()
 
         cr, uid, context = request.cr, request.uid, request.context
-        request.registry['res.users'].write(cr, uid, uid, {'forum': True}, context=context)
+        request.registry['res.users'].write(cr, SUPERUSER_ID, uid, {'forum': True}, context=context)
 
         create_context = dict(context)
         new_question_id = request.registry['website.forum.post'].create(
@@ -306,7 +305,7 @@ class website_forum(http.Controller):
     @http.route(['/forum/<model("website.forum"):forum>/question/<model("website.forum.post"):post>/editanswer'], type='http', auth="user", website=True, multilang=True)
     def edit_answer(self, forum, post, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
-        request.registry['res.users'].write(cr, uid, uid, {'forum': True}, context=context)
+        request.registry['res.users'].write(cr, SUPERUSER_ID, uid, {'forum': True}, context=context)
         for answer in post.child_ids:
             if answer.user_id.id == request.uid:
                 post_answer = answer
@@ -322,7 +321,7 @@ class website_forum(http.Controller):
     @http.route('/forum/<model("website.forum"):forum>/question/saveanswer/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def save_edited_answer(self, forum, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        request.registry['res.users'].write(cr, uid, uid, {'forum': True}, context=context)
+        request.registry['res.users'].write(cr, SUPERUSER_ID, uid, {'forum': True}, context=context)
         answer_id = int(post.get('answer_id'))
         new_question_id = request.registry['website.forum.post'].write( cr, uid, [answer_id], {
                 'content': post.get('answer_content'),
@@ -440,7 +439,7 @@ class website_forum(http.Controller):
 
     @http.route('/forum/message_delete/', type='json', auth="user", multilang=True, methods=['POST'], website=True)
     def delete_comment(self, **kwarg):
-        request.registry['mail.message'].unlink(request.cr, request.uid, [int(kwarg.get('message_id'))], context=request.context)
+        request.registry['mail.message'].unlink(request.cr, SUPERUSER_ID, [int(kwarg.get('message_id'))], context=request.context)
         return True
 
     @http.route('/forum/<model("website.forum"):forum>/edit/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
@@ -552,10 +551,11 @@ class website_forum(http.Controller):
     @http.route('/forum/<model("website.forum"):forum>/save/profile/', type='http', auth="user", multilang=True, website=True)
     def save_edited_profile(self, forum, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        request.registry['res.users'].write( cr, uid, [int(post.get('user_id'))], {
+        User = request.registry['res.users']
+        User.write(cr, SUPERUSER_ID, [int(post.get('user_id'))], {
             'name': post.get('name'),
         }, context=context)
-        record_id = request.registry['res.users'].browse(cr, uid, int(post.get('user_id')),context=context).partner_id.id
+        record_id = User.browse(cr, uid, int(post.get('user_id')),context=context).partner_id.id
         request.registry['res.partner'].write( cr, uid, [record_id], {
             'website': post.get('website'),
             'city': post.get('city'),
@@ -579,7 +579,7 @@ class website_forum(http.Controller):
             'comment': html2plaintext(post.content),
         }
         question = post.parent_id.id
-        request.registry['website.forum.post'].unlink(request.cr, request.uid, [post.id], context=request.context)
+        request.registry['website.forum.post'].unlink(request.cr, SUPERUSER_ID, [post.id], context=request.context)
         return self.post_comment(forum, question, **values)
 
     @http.route('/forum/get_tags/', type='json', auth="public", multilang=True, methods=['POST'], website=True)

@@ -9,8 +9,8 @@ $(document).ready(function () {
                 'vote': value})
             .then(function (data) {
                 if (data == false){
-                    vote_alert = $link.parents().find("#vote_alert");
-                    if (vote_alert.length <= 1) {
+                    vote_alert = $link.parent().find("#vote_alert");
+                    if (vote_alert.length == 0) {
                         var $warning = $('<div class="alert alert-danger alert-dismissable" id="vote_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
                             '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
                             'Sorry, you cannot vote for your own posts'+
