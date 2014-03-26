@@ -55,7 +55,7 @@ class WebsiteBlog(http.Controller):
         blog_obj = request.registry['blog.post']
         total = blog_obj.search(cr, uid, [], count=True, context=context)
         pager = request.website.pager(
-            url='/blog/',
+            url='/blog',
             total=total,
             page=page,
             step=BYPAGE,
@@ -112,7 +112,7 @@ class WebsiteBlog(http.Controller):
             path_filter += 'tag/%s/' % tag.id
             domain += [("tag_ids", "in", [tag.id])]
         if date:
-            path_filter += "date/%s/" % date
+            path_filter += "date/%s" % date
             domain += [("create_date", ">=", date.split("_")[0]), ("create_date", "<=", date.split("_")[1])]
 
         blog_post_count = blog_post_obj.search(cr, uid, domain, count=True, context=context)
@@ -308,4 +308,3 @@ class WebsiteBlog(http.Controller):
     @http.route('/blog/get_user/', type='json', auth="public", website=True)
     def get_user(self, **post):
         return [False if request.session.uid else True]
-
