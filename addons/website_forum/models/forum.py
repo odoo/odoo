@@ -106,6 +106,14 @@ class Post(osv.Model):
             res[post.id] = post.views + 1
         return res
 
+    def _set_view_count(self, cr, uid, ids, name, value, arg, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for rec in self.browse(cr, uid, ids, context=context):
+            views = rec.views + value
+            cr.execute('UPDATE website_forum_post SET views=%s WHERE id=%s;',(views, rec.id))
+        return True
+
     def _get_views(self, cr, uid, ids, context=None):
         result = {}
         for statistic in self.pool.get('website.forum.post.statistics').browse(cr, uid, ids, context=context):
@@ -140,7 +148,7 @@ class Post(osv.Model):
         'child_ids': fields.one2many('website.forum.post', 'parent_id', 'Answers'),
         'child_count':fields.function(_get_child_count, string="Answers", type='integer',
             store={
-                'website.forum.post': (_get_child, [], 10),
+                'website.forum.post': (_get_child, ['child_ids','parent_id'], 10),
             }
         ),
 
@@ -234,7 +242,6 @@ class PostStatistics(osv.Model):
         'name': fields.char('Post Reason'),
         'post_id': fields.many2one('website.forum.post', 'Post', ondelete='cascade'),
         'user_id': fields.many2one('res.users', 'Created by'),
-        'session': fields.char('Session Id'),
     }
 
 class PostReason(osv.Model):

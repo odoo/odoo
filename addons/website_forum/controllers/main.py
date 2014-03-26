@@ -148,16 +148,16 @@ class website_forum(http.Controller):
 
         #maintain total views on post.
         Statistics = request.registry['website.forum.post.statistics']
-        domain = [('session', '=', request.session_id), ('post_id', '=', question.id)]
+        post_obj = request.registry['website.forum.post']
         if request.session.uid:
-            domain = ['|', ('session', '=', request.session_id), ('user_id', '=', request.session.uid), ('post_id', '=', question.id)]
-        view_ids = Statistics.search(cr, uid, domain, context=context)
-        if not view_ids:
-            Statistics.create(cr, SUPERUSER_ID, {
-                'session': request.session_id,
-                'user_id': request.session.uid or False,
-                'post_id': question.id,
-            }, context=context)
+            view_ids = Statistics.search(cr, uid, [('user_id', '=', request.session.uid), ('post_id', '=', question.id)], context=context)
+            if not view_ids:
+                Statistics.create(cr, uid, {'user_id': request.session.uid, 'post_id': question.id }, context=context)
+        else:
+            request.session[request.session_id] = request.session.get(request.session_id, [])
+            if not (question.id in request.session[request.session_id]):
+                request.session[request.session_id].append(question.id)
+                post_obj._set_view_count(cr, SUPERUSER_ID, [question.id], 'views', 1, {}, context=context)
 
         answer_done = False
         for answer in question.child_ids:
