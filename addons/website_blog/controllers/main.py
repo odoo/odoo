@@ -93,7 +93,7 @@ class WebsiteBlog(http.Controller):
          - 'blog': browse of the current blog, if blog_id
          - 'blogs': list of browse records of blogs
          - 'pager': the pager to display posts pager in a blog
-         - 'tag': current tag, if tag_idemail.utils.parseaddr
+         - 'tag': current tag, if tag_id
          - 'nav_list': a dict [year][month] for archives navigation
         """
         cr, uid, context = request.cr, request.uid, request.context
