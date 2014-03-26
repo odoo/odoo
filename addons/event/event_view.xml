@@ -66,7 +66,13 @@
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box" groups="base.group_user">
-                            <button name="%(event.act_event_list_register_event)d" type="action" string="Registrations" help="Register with this event"/>
+                            <button name="%(event.act_event_list_register_event)d" 
+                                type="action" 
+                                class="oe_stat_button oe_inline" 
+                                icon="fa-github" 
+                                help="Register with this event">
+                                <field name="count_regitrations" widget="statinfo" string="Registrations"/>
+                            </button>
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -363,11 +369,12 @@
                                 <field name="name"/>
                                 <field name="phone"/>
                                 <label for="email"/>
-                                <div>
+                                <div class="oe_button_box">
                                     <field name="email" class="oe_inline"/>
-                                    <button class="oe_inline oe_right" string="Send Email"
+                                    <button class="oe_inline oe_right oe_stat_button" 
+                                        string="Send Email"
                                         name="%(mail.action_email_compose_message_wizard)d"
-                                        icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
+                                        icon="fa-reply-all" context= '{"default_email_to":email}' type="action"/>
                                 </div>
                             </group>
                             <group>
