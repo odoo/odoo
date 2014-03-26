@@ -134,7 +134,8 @@ class test_portal(TestMail):
                             'invite: subject of invitation email is incorrect')
             self.assertIn('Administrator invited you to follow Discussion group document: Pigs', sent_email.get('body'),
                             'invite: body of invitation email is incorrect')
-            self.assertTrue(partner_carine.signup_url in sent_email.get('body'),
+            invite_url = partner_carine._get_signup_url_for_action(model='mail.group', res_id=self.group_pigs_id)[partner_carine.id]
+            self.assertTrue(invite_url in sent_email.get('body'),
                             'invite: body of invitation email does not contain signup url')
 
     def test_20_notification_url(self):
