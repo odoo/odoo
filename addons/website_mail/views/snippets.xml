@@ -13,7 +13,7 @@
 <div id="snippet_email_structure" class="tab-pane fade in active">
 
 
-    <div data-snippet-id="text-image" data-selector-children=".oe_structure, [data-oe-type=html]">
+    <div>
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_block.png"/>
             <span class="oe_snippet_thumbnail_title">Text Block</span>
@@ -63,7 +63,7 @@
     </div>
 
 
-    <div data-snippet-id="text-image" data-selector-children=".oe_structure, [data-oe-type=html]">
+    <div>
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_image.png"/>
             <span class="oe_snippet_thumbnail_title">Text-Image</span>
@@ -104,7 +104,7 @@
     </div>
 
 
-    <div data-snippet-id="image-text" data-selector-children=".oe_structure, [data-oe-type=html]">
+    <div>
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_image_text.png"/>
             <span class="oe_snippet_thumbnail_title">Image-Text</span>
@@ -145,7 +145,7 @@
     </div>
 
 
-    <div data-snippet-id="three-columns" data-selector-children=".oe_structure, [data-oe-type=html]">
+    <div>
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website_mail/static/src/img/blocks/block_two_columns.png"/>
             <span class="oe_snippet_thumbnail_title">Two Columns</span>            
@@ -185,7 +185,7 @@
     </div>
 
 
-    <div data-snippet-id="three-columns" data-selector-children=".oe_structure, [data-oe-type=html]">
+    <div>
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website_mail/static/src/img/blocks/block_three_columns.png"/>
             <span class="oe_snippet_thumbnail_title">Three Columns</span>            
@@ -236,7 +236,7 @@
     </div>
 
 
-    <div data-snippet-id="hr" data-selector-children=".oe_structure, [data-oe-type=html]">
+    <div>
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_separator.png"/>
             <span class="oe_snippet_thumbnail_title">Separator</span>        
@@ -262,7 +262,7 @@
 <div id="snippet_email_feature" class="tab-pane fade">
 
 
-    <div data-snippet-id="big-picture" data-selector-children=".oe_structure, [data-oe-type=html]">
+    <div>
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_big_picture.png"/>
             <span class="oe_snippet_thumbnail_title">Big Picture</span>          
@@ -298,7 +298,7 @@
     </div>
 
 
-    <div data-snippet-id="pricing" data-selector-children=".oe_structure, [data-oe-type=html]">
+    <div>
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_comparison.png"/>
             <span class="oe_snippet_thumbnail_title">Comparisons</span>         
@@ -389,7 +389,7 @@
     </div>
 
 
-    <div data-snippet-id="text-image" data-selector-children=".oe_structure, [data-oe-type=html]">
+    <div>
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_jumbotron.png"/>
             <span class="oe_snippet_thumbnail_title">Big Message</span>
@@ -413,7 +413,7 @@
     </div>
 
 
-    <div data-snippet-id="cta" data-selector-children=".oe_structure, [data-oe-type=html]">
+    <div>
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_button.png"/>
             <span class="oe_snippet_thumbnail_title">Button</span>   
@@ -478,18 +478,59 @@
             </table>
         </div>
     </div>
-
 </div>
 
-
-<div id="snippet_styles" class="hidden">
+<div id="snippet_options" class="hidden">
+    <t t-call="website.snippet_options"/>
 </div>
-
-
 
         </div>
     </div>
 
 </template>
+
+
+<template id="subscribe" inherit_id="website.snippets" name="Snippet Subscribe">
+
+    <xpath expr="//div[@id='snippet_content']" position="inside">
+        <div>
+            <div class="oe_snippet_thumbnail">
+                <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_button.png"/>
+                <span class="oe_snippet_thumbnail_title">Subscribe Button</span>
+            </div>
+
+            <div class="oe_snippet_body input-group js_follow"
+                      data-id="0"
+                      data-object="mail.group"
+                      data-follow="off">
+                <input
+                      type="email"
+                      name="email"
+                      class="js_follow_email form-control"
+                      placeholder="your email..."/>
+                <span class="input-group-btn">
+                    <a href="#" class="btn btn-default js_unfollow_btn">Unsubscribe</a>
+                    <a href="#" class="btn btn-primary js_follow_btn">Subscribe</a>
+                </span>
+                <div class="alert alert-success hidden">thanks for your subscription!</div>
+            </div>
+
+        </div>
+    </xpath>
+
+
+    <xpath expr="//div[@id='snippet_options']" position="inside">
+        <div data-snippet-option-id='subscribe'
+            data-selector=".js_follow"
+            data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
+           >
+            <li>
+                <a href="#" class="button js_mailing_list">Change mailing list</a>
+            </li>
+        </div>
+    </xpath>
+
+</template>
+
 </data>
 </openerp>

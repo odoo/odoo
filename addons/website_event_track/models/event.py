@@ -59,6 +59,7 @@ class event_track_location(osv.osv):
 
 class event_track(osv.osv):
     _name = "event.track"
+    _description = 'Event Tracks'
     _order = 'priority, date'
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'website.seo.metadata']
 
@@ -141,12 +142,12 @@ class event_event(osv.osv):
         context = context or {}
         result = super(event_event, self)._get_new_menu_pages(cr, uid, event, context=context)
         if event.show_tracks:
-            result.append( (_('Talks'), '/event/%s/track/' % slug(event)))
-            result.append( (_('Agenda'), '/event/%s/agenda/' % slug(event)))
+            result.append( (_('Talks'), '/event/%s/track' % slug(event)))
+            result.append( (_('Agenda'), '/event/%s/agenda' % slug(event)))
         if event.blog_id:
-            result.append( (_('News'), '/blogpost/'+slug(event.blog_ig)))
+            result.append( (_('News'), '/blogpost'+slug(event.blog_ig)))
         if event.show_track_proposal:
-            result.append( (_('Talk Proposals'), '/event/%s/track_proposal/' % slug(event)))
+            result.append( (_('Talk Proposals'), '/event/%s/track_proposal' % slug(event)))
         return result
 
 #
@@ -170,6 +171,7 @@ class event_sponsors(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Sponsor/Customer', required=True),
         'url': fields.text('Sponsor Website'),
         'sequence': fields.related('sponsor_type_id', 'sequence', string='Sequence', store=True),
+        'image_medium': fields.related('partner_id', 'image_medium', string='Logo')
     }
 
     def has_access_to_partner(self, cr, uid, ids, context=None):

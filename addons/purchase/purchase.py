@@ -334,7 +334,6 @@ class purchase_order(osv.osv):
             value.update({'related_location_id': picktype.default_location_dest_id and picktype.default_location_dest_id.id or False})
         return {'value': value}
 
-
     def onchange_partner_id(self, cr, uid, ids, partner_id):
         partner = self.pool.get('res.partner')
         if not partner_id:
@@ -480,12 +479,7 @@ class purchase_order(osv.osv):
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
         self.signal_send_rfq(cr, uid, ids)
-        datas = {
-                 'model': 'purchase.order',
-                 'ids': ids,
-                 'form': self.read(cr, uid, ids[0], context=context),
-        }
-        return {'type': 'ir.actions.report.xml', 'report_name': 'purchase.quotation', 'datas': datas, 'nodestroy': True}
+        return self.pool['report'].get_action(cr, uid, ids, 'purchase.report_purchasequotation', context=context)
 
     #TODO: implement messages system
     def wkf_confirm_order(self, cr, uid, ids, context=None):
@@ -832,7 +826,6 @@ class purchase_order(osv.osv):
          @return: new purchase order id
 
         """
-
         #TOFIX: merged order line should be unlink
         def make_key(br, fields):
             list_key = []

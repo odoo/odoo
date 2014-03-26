@@ -79,6 +79,9 @@ class ir_http(orm.AbstractModel):
         return self._dispatch()
 
     def _postprocess_args(self, arguments, rule):
+        if not getattr(request, 'website_enabled', False):
+            return super(ir_http, self)._postprocess_args(arguments, rule)
+
         for arg, val in arguments.items():
             # Replace uid placeholder by the current request.uid
             if isinstance(val, orm.browse_record) and isinstance(val._uid, RequestUID):
@@ -88,7 +91,12 @@ class ir_http(orm.AbstractModel):
             assert path is not None
         except Exception:
             return self._handle_exception(werkzeug.exceptions.NotFound())
-        if path != request.httprequest.path:
+
+        generated_path = werkzeug.url_unquote_plus(path)
+        current_path = werkzeug.url_unquote_plus(request.httprequest.path)
+        if generated_path != current_path:
+            if request.lang != request.website.default_lang_code:
+                path = '/' + request.lang + path
             return werkzeug.utils.redirect(path)
 
     def _handle_exception(self, exception=None, code=500):

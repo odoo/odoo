@@ -208,7 +208,7 @@ class mail_message(osv.Model):
         raise osv.except_osv(_('Invalid Action!'), _("Unable to send email, please configure the sender's email address or alias."))
 
     def _get_default_author(self, cr, uid, context=None):
-        return self.pool.get('res.users').read(cr, SUPERUSER_ID, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
+        return self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
 
     _defaults = {
         'type': 'email',
@@ -351,12 +351,12 @@ class mail_message(osv.Model):
         partner_tree = dict((partner[0], partner) for partner in partners)
 
         # 2. Attachments as SUPERUSER, because could receive msg and attachments for doc uid cannot see
-        attachments = ir_attachment_obj.read(cr, SUPERUSER_ID, list(attachment_ids), ['id', 'datas_fname', 'name', 'file_type'], context=context)
+        attachments = ir_attachment_obj.read(cr, SUPERUSER_ID, list(attachment_ids), ['id', 'datas_fname', 'name', 'file_type_icon'], context=context)
         attachments_tree = dict((attachment['id'], {
             'id': attachment['id'],
             'filename': attachment['datas_fname'],
             'name': attachment['name'],
-            'file_type': attachment['file_type'],
+            'file_type_icon': attachment['file_type_icon'],
         }) for attachment in attachments)
 
         # 3. Update message dictionaries

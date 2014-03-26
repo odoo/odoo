@@ -58,9 +58,9 @@ class product_product(osv.osv):
 
             #Cost price is calculated afterwards as it is a property
             sqlstr="""select
-                    sum(l.price_unit * l.quantity)/sum(l.quantity * pu.factor / pu2.factor) as avg_unit_price,
+                    sum(l.price_unit * l.quantity)/sum(nullif(l.quantity * pu.factor / pu2.factor),0) as avg_unit_price,
                     sum(l.quantity * pu.factor / pu2.factor) as num_qty,
-                    sum(l.quantity * (l.price_subtotal/l.quantity)) as total,
+                    sum(l.quantity * (l.price_subtotal/(nullif(l.quantity,0)))) as total,
                     sum(l.quantity * pu.factor * pt.list_price / pu2.factor) as sale_expected
                 from account_invoice_line l
                 left join account_invoice i on (l.invoice_id = i.id)
