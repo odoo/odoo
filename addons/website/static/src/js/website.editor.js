@@ -685,12 +685,20 @@
                 var prev = previous;
                 var sel = new CKEDITOR.dom.element(prev);
                 var $sel = $(sel.$);
+                var $button = $(this);
+
                 if ($sel.data('transfo')) {
                     $sel.transfo("destroy");
-                    $(this).addClass("btn-primary").removeClass("btn-default");
+                    $button.addClass("btn-primary").removeClass("btn-default");
                 } else {
                     $sel.transfo();
-                    $(this).removeClass("btn-primary").addClass("btn-default");
+                    $sel.data('transfo').$markup
+                        .on("mouseover", function () {
+                            $sel.trigger("mouseover");
+                            $button.removeClass("btn-primary").addClass("btn-default");
+                            $image_button.show();
+                        });
+                    $sel.data('transfo').$markup.mouseover();
                 }
             });
 
@@ -745,6 +753,8 @@
                                 - $link_button.outerWidth() / 2
                     })
                 }
+                
+                $image_button.find("button.hover-style-button").addClass("btn-primary").removeClass("btn-default");
             }).on('mouseleave', 'a, img, .fa', function (e) {
                 var current = document.elementFromPoint(e.clientX, e.clientY);
                 if (current === $link_button[0] || $(current).parent()[0] === $link_button[0] ||
