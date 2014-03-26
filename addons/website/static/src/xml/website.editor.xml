@@ -218,10 +218,10 @@
     </t>
 
     <t t-name="website.editor.hoverbutton">
-        <button type="button" contenteditable="false"
-                t-attf-class="btn btn-primary hover-edition-button #{classes or ''}">
-            <t t-esc="label"/>
-        </button>
+        <div contentEditable="false" class="hover-edition">
+            <button type="button" t-attf-class="btn btn-primary hover-edition-button #{classes or ''}"><t t-esc="label"/></button>
+            <button t-if="styleButton" type="button" t-attf-class="btn btn-primary hover-style-button #{classes or ''}">Style</button>
+        </div>
     </t>
 
     <t t-name="website.editor.dialog.font-icons">

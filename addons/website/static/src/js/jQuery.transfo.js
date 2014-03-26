@@ -56,7 +56,16 @@ OTHER DEALINGS IN THE SOFTWARE.
                             return $this.data('transfo') && $this.data('transfo').settings;
                         });
                     }
-                    return $this.data('transfo') && $this.data('transfo').settings;
+                    return this.data('transfo') && $this.data('transfo').settings;
+                },
+                center :  function() {
+                    if(this.length > 1) {
+                        this.map(function () {
+                            var $this = $(this);
+                            return $this.data('transfo') && $this.data('transfo').$center.offset();
+                        });
+                    }
+                    return this.data('transfo') && this.data('transfo').$center.offset();
                 }
         };
 
@@ -131,8 +140,7 @@ OTHER DEALINGS IN THE SOFTWARE.
             transfo.settings.pos = $this.offset();
 
             transfo.settings.rotationStep = 5;
-
-            console.log(transfo.settings);
+            transfo.settings.callback = function () {};
         }
 
         function _bind ($this, transfo) {
@@ -322,6 +330,8 @@ OTHER DEALINGS IN THE SOFTWARE.
                 "z-index: 1000;" +
                 "cursor: move;",
                 settings);
+
+            transfo.settings.callback.call($this[0], $this);
         }
 
         function _destroy ($this) {

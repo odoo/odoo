@@ -636,15 +636,26 @@
          * @param {String} [classes] additional classes to set on the button
          * @returns {jQuery}
          */
-        make_hover_button: function (label, editfn, classes) {
-            return $(openerp.qweb.render('website.editor.hoverbutton', {
+        make_hover_button: function (label, editfn, classes, styleButton) {
+            var $div = $(openerp.qweb.render('website.editor.hoverbutton', {
                 label: label,
                 classes: classes,
-            })).hide().appendTo(document.body).click(function (e) {
+                styleButton: styleButton
+            })).hide().appendTo(document.body);
+
+            $div.find("button.hover-edition-button").click(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 editfn.call(this, e);
             });
+            if (styleButton) {
+                $div.find("button.hover-style-button").click(function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    styleButton.call(this, e);
+                });
+            }
+            return $div;
         },
         /**
          * For UI clarity, during RTE edition when the user hovers links and
@@ -665,11 +676,23 @@
                 $link_button.hide();
                 previous = null;
             }, 'btn-xs');
+
             var $image_button = this.make_hover_button(_t("Change"), function () {
                 image_dialog(editor, new CKEDITOR.dom.element(previous));
                 $image_button.hide();
                 previous = null;
-            }, 'btn-sm');
+            }, 'btn-sm', function () {
+                var prev = previous;
+                var sel = new CKEDITOR.dom.element(prev);
+                var $sel = $(sel.$);
+                if ($sel.data('transfo')) {
+                    $sel.transfo("destroy");
+                    $(this).addClass("btn-primary").removeClass("btn-default");
+                } else {
+                    $sel.transfo();
+                    $(this).removeClass("btn-primary").addClass("btn-default");
+                }
+            });
 
             function is_icons_widget(element) {
                 var w = editor.widgets.getByElement(element);
@@ -724,7 +747,8 @@
                 }
             }).on('mouseleave', 'a, img, .fa', function (e) {
                 var current = document.elementFromPoint(e.clientX, e.clientY);
-                if (current === $link_button[0] || current === $image_button[0]) {
+                if (current === $link_button[0] || $(current).parent()[0] === $link_button[0] ||
+                    current === $image_button[0] || $(current).parent()[0] === $image_button[0]) {
                     return;
                 }
                 $image_button.add($link_button).hide();
