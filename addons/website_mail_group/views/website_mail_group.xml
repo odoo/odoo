@@ -93,7 +93,13 @@
                 <h1 t-field="message.subject"/>
                 <img class="img-rounded pull-left" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(message.id)" style="width : 30px"/>
                 <h4 class="mt0 mb32">
-                     <span t-field="message.author_id.name"/>
+                    <t t-if="message.author_id">
+                         <span t-field="message.author_id" style="display: inline-block;" t-field-options='{
+                                "widget": "contact",
+                                "fields": ["name"]
+                            }'/>
+                    </t>
+                    <t t-if="not message.author_id"><t t-esc="message.email_from"/></t>
                     on <span t-field="message.date"/>
                 </h4>
                 <div t-raw="message.body"/>
@@ -146,12 +152,19 @@
                     <h4 class="media-heading">
                         <a t-attf-href="/groups/#{slug(group)}/#{slug(thread)}?mode=#{mode}&amp;date_begin=#{date_begin}&amp;date_end=#{date_end}" t-esc="thread.description"/>
                     </h4>
-                    <p><small>
-                        by <t t-esc="thread.author_id.name and thread.author_id.name or thread.email_from"/> on <t t-esc="thread.date"/><br />
+                    <small>
+                        by
+                        <t t-if="thread.author_id">
+                            <span t-field="thread.author_id" style="display: inline-block;" t-field-options='{
+                                "widget": "contact",
+                                "fields": ["name"]
+                            }'/>
+                        </t>
+                        <t t-if="not thread.author_id"><t t-esc="thread.email_from"/></t>
                         <span class="fa fa-comment-o">
                             <t t-raw="len(thread.child_ids)"/> replies
                         </span>
-                    </small></p>
+                    </small>
                 </div>
             </li>
         </ul>

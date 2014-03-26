@@ -9,7 +9,7 @@ from openerp.addons.web.http import request
 
 
 class MailGroup(http.Controller):
-    _thread_per_page = 2
+    _thread_per_page = 10
 
     def _get_archives(self, group_id):
         MailMessage = request.registry['mail.message']
@@ -43,7 +43,7 @@ class MailGroup(http.Controller):
 
     @http.route([
         "/groups/<model('mail.group'):group>",
-        "/groups/<model('mail.group'):group>/page/<int:page>/"
+        "/groups/<model('mail.group'):group>/page/<int:page>"
     ], type='http', auth="public", website=True)
     def thread_headers(self, group, page=1, mode='thread', date_begin=None, date_end=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -57,7 +57,7 @@ class MailGroup(http.Controller):
 
         thread_count = thread_obj.search_count(cr, uid, domain, context=context)
         pager = request.website.pager(
-            url='/groups/%s/' % slug(group),
+            url='/groups/%s' % slug(group),
             total=thread_count,
             page=page,
             step=self._thread_per_page,
