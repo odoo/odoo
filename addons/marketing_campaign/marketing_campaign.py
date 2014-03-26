@@ -85,6 +85,15 @@ translate_selections = {
 class marketing_campaign(osv.osv):
     _name = "marketing.campaign"
     _description = "Marketing Campaign"
+    
+    def _count_segments(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        try:
+            for segments in self.browse(cr, uid, ids, context=context):
+                res[segments.id] = len(segments.segment_ids)
+        except: 
+            pass
+        return res
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
@@ -121,6 +130,8 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         'activity_ids': fields.one2many('marketing.campaign.activity',
                                        'campaign_id', 'Activities'),
         'fixed_cost': fields.float('Fixed Cost', help="Fixed cost for running this campaign. You may also specify variable cost and revenue on each campaign activity. Cost and Revenue statistics are included in Campaign Reporting.", digits_compute=dp.get_precision('Product Price')),
+        'segment_ids': fields.one2many('marketing.campaign.segment', 'campaign_id', 'Segments', readonly=False),
+        'segments_count': fields.function(_count_segments, type='integer', string='Segments')
     }
 
     _defaults = {

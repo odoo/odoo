@@ -92,6 +92,17 @@ class hr_job(osv.Model):
                 res.append(employee.job_id.id)
         return res
 
+    def _count_all(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,{'documents_count': 0, 'application_count': 0,}), ids))
+        try:
+            for data in self.browse(cr, uid, ids, context=context):
+                res[data.id] = {'documents_count': len(data.document_ids),
+                'application_count': len(data.applicant_ids),
+                }
+        except:
+            pass
+        return res
+
     _name = "hr.job"
     _description = "Job Position"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -122,6 +133,10 @@ class hr_job(osv.Model):
                                   track_visibility='always',
                                   help="By default 'Closed', set it to 'In Recruitment' if recruitment process is going on for this job position."),
         'write_date': fields.datetime('Update Date', readonly=True),
+        'applicant_ids':fields.one2many('hr.applicant', 'job_id', 'Applications'),
+        'application_count': fields.function(_count_all, type='integer', string='Applications', multi=True),
+        'document_ids': fields.one2many('ir.attachment', 'company_id', 'Documents'),
+        'documents_count': fields.function(_count_all, type='integer', string='Documents', multi=True),
     }
 
     _defaults = {
@@ -186,6 +201,20 @@ class hr_employee(osv.osv):
 
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
+    
+    def _count_all(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,{'appraisal_count': 0, 'leaves_count': 0, 'contracts_count': 0, 'timesheet_count': 0, 'payslip_count': 0,}), ids))
+        try:
+            for datas in self.browse(cr, uid, ids, context=context):
+                res[datas.id] = {'appraisal_count': len(datas.appraisal_ids),
+                'leaves_count': len(datas.leave_ids),
+                'contracts_count': len(datas.contract_ids),
+                'timesheet_count': len(datas.timsheet_ids),
+                'payslip_count': len(datas.payslip_ids)
+                }
+        except:
+            pass
+        return res
 
     _columns = {
         #we need a related field in order to be able to sort the employee by name
@@ -237,6 +266,16 @@ class hr_employee(osv.osv):
         'city': fields.related('address_id', 'city', type='char', string='City'),
         'login': fields.related('user_id', 'login', type='char', string='Login', readonly=1),
         'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1),
+        'appraisal_ids': fields.one2many('hr.evaluation.interview', 'user_to_review_id', 'Appraisal Interviews'),
+        'leave_ids': fields.one2many('hr.holidays', 'employee_id', 'Leaves'),
+        'contracts_ids': fields.one2many('hr.contract', 'employee_id', 'Contracts'),
+        'timsheet_ids': fields.one2many('hr_timesheet_sheet.sheet', 'employee_id', 'Timesheets'),
+        'payslip_ids': fields.one2many('hr.payslip', 'employee_id', 'Payslips'),
+        'appraisal_count': fields.function(_count_all, type='integer', string='Appraisal Interviews', multi=True),
+        'leaves_count': fields.function(_count_all, type='integer', string='Leaves', multi=True),
+        'contracts_count': fields.function(_count_all, type='integer', string='Contracts', multi=True),
+        'timesheet_count': fields.function(_count_all, type='integer', string='Timsheets', multi=True),
+        'payslip_count': fields.function(_count_all, type='integer', string='Payslips', multi=True),
     }
 
     def _get_default_image(self, cr, uid, context=None):
