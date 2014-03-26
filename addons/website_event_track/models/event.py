@@ -229,7 +229,7 @@ class event_track(osv.osv):
         fields = ['id', 'duration', 'location_id', 'name', 'date', 'color', 'speaker_ids', 'website_published']
         location_object = self.pool.get('event.track.location')
         res_partner = self.pool.get('res.partner')
-        local_tz = pytz.timezone(event.timezone_of_event)
+        local_tz = pytz.timezone(event.timezone_of_event or 'UTC')
         event_tracks = self.search_read(cr, uid, domain, fields, context=context)
         
         def get_speaker_name(ids):
