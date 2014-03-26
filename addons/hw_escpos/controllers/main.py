@@ -37,6 +37,7 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+
 class EscposDriver(Thread):
     def __init__(self):
         Thread.__init__(self)
@@ -46,6 +47,7 @@ class EscposDriver(Thread):
 
     def connected_usb_devices(self):
         connected = []
+        
         for device in supported_devices.device_list:
             if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) != None:
                 connected.append(device)
@@ -74,6 +76,8 @@ class EscposDriver(Thread):
     def get_status(self):
         self.push_task('status')
         return self.status
+
+
 
     def open_cashbox(self,printer):
         printer.cashdraw(2)
