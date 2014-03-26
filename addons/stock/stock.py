@@ -2468,7 +2468,7 @@ class stock_inventory(osv.osv):
         self.action_cancel_draft(cr, uid, ids, context=context)
 
     def check_inventory_date(self, cr, uid, inventory, context=None):
-        domain = ['|', ('location_id', 'child_of', [inventory.location_id.id]), ('location_dest_id', 'child_of', [inventory.location_id.id]), ('date', '>', inventory.date), ('state', '!=', 'cancel')]
+        domain = ['|', ('location_id', 'child_of', [inventory.location_id.id]), ('location_dest_id', 'child_of', [inventory.location_id.id]), ('date', '>', inventory.date), '|', ('state', 'in', ['assigned', 'done']), '&', ('state', 'in', ['confirmed', 'waiting']), ('partially_available', '=', True)]
         if inventory.product_id:
             domain += [('product_id', '=', inventory.product_id.id)]
         return self.pool.get('stock.move').search(cr, uid, domain, context=context)
