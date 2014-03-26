@@ -78,6 +78,9 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
     @http.route()
     def web_login(self, *args, **kw):
         ensure_db()
+        if request.httprequest.method == 'GET' and request.session.uid and request.params.get('redirect'):
+            # Redirect if already logged in and redirect param is present
+            return http.redirect_with_hash(request.params.get('redirect'))
         providers = self.list_providers()
 
         response = super(OAuthLogin, self).web_login(*args, **kw)
