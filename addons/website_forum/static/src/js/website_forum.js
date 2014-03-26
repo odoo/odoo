@@ -15,7 +15,7 @@ $(document).ready(function () {
                             '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
                             'Sorry, you cannot vote for your own posts'+
                             '</div>');
-                        $link.parents().find("#post_vote").append($warning);
+                        $link.parent().append($warning);
                     }
                 } else {
                     $link.parent().find("#vote_count").html(data['vote_count']);

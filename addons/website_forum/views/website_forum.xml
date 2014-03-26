@@ -345,7 +345,7 @@
             <t t-call="website_forum.header">
 
                 <div t-attf-class="question #{not question.active and 'alert alert-danger' or ''}">
-                    <div class="text-center pull-left" id="post_vote">
+                    <div class="text-center pull-left">
                         <div t-attf-class="box oe_grey">
                             <a t-attf-class="fa fa-thumbs-up #{question.user_vote == 1 and 'text-success' or ''}" 
                                 t-attf-id="#{question.id}" t-attf-value="1"/>
@@ -423,7 +423,7 @@
 
                 <div t-foreach="question.child_ids" t-as="answer" class="mt16 mb32" id="answer">
                     <a t-attf-id="answer-#{str(answer.id)}"/>
-                    <div class="text-center pull-left" id="post_vote">
+                    <div class="text-center pull-left">
                         <div t-attf-class="box oe_grey">
                             <a t-attf-class="fa fa-thumbs-up #{answer.user_vote == 1 and 'text-success' or ''}" 
                                 t-attf-id="#{answer.id}" t-attf-value="1"/>
