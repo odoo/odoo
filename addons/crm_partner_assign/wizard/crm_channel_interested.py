@@ -70,8 +70,5 @@ class crm_lead_forward_to_partner(osv.TransientModel):
             for lead in lead_obj.browse(cr, uid, context.get('active_ids', []), context=context):
                 lead_obj.convert_opportunity(cr, SUPERUSER_ID, [lead.id], lead.partner_id and lead.partner_id.id or None, context=None)
         return {
-            'type': 'ir.actions.client',
-            'tag': 'next_or_list',
-            'params': {
-            },
+            'type': 'ir.actions.act_window_close',
         }
