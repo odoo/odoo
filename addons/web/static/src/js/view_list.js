@@ -528,14 +528,13 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     },
     reload_record: function (record) {
         var self = this;
-        // Use of search_read instead of read to check if we can still read the record (security rules)
-        return this.dataset.call('search_read', [
-            [['id', '=', record.get('id')]],
+        return this.dataset.read_ids(
+            [record.get('id')],
             _.pluck(_(this.columns).filter(function (r) {
                     return r.tag === 'field';
-                }), 'name')]
+                }), 'name')
         ).done(function (records) {
-            var values = _.isEmpty(records) ? undefined : records[0];
+            var values = records[0];
             if (!values) {
                 self.records.remove(record);
                 return;
