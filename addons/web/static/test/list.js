@@ -18,8 +18,11 @@ openerp.testing.section('list.buttons', {
                 return [
                     {id: 1, a: 'foo'}, {id: 2, a: 'bar'}, {id: 3, a: 'baz'}
                 ];
-            } else if (_.isEqual(args[0], [2])) {
-                // button action virtually removed record
+            }
+            throw new Error(JSON.stringify(_.toArray(arguments)));
+        });
+        mock('demo:search_read', function (args, kwargs) {
+            if (_.isEqual(args[0], [['id', '=', 2]])) {
                 return [];
             }
             throw new Error(JSON.stringify(_.toArray(arguments)));

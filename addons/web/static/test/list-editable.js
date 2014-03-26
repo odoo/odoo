@@ -81,7 +81,7 @@ openerp.testing.section('editor', {
     test('toggle-edition-save', {
         asserts: 4,
         setup: function (instance, $s, mock) {
-            mock('test.model:read', function () {
+            mock('test.model:search_read', function () {
                 return [{id: 42, a: false, b: false, c: false}];
             });
         }
@@ -178,6 +178,15 @@ openerp.testing.section('list.edition', {
         });
         mock('demo:read', function (args) {
             var id = args[0][0];
+            if (id in records) {
+                return [records[id]];
+            }
+            return [];
+        });
+        mock('demo:search_read', function (args) {
+            // args[0][0] = ["id", "=", 42] 
+            // args[0][0] = 42
+            var id = args[0][0][2];
             if (id in records) {
                 return [records[id]];
             }
@@ -316,11 +325,13 @@ openerp.testing.section('list.edition.onwrite', {
         mock('demo:read', function (args, kwargs) {
             if (_.isEmpty(args[0])) {
                 return [];
-            } else if (_.isEqual(args[0], [1])) {
-                return [
-                    {id: 1, a: 'some value'}
-                ];
-            } else if (_.isEqual(args[0], [42])) {
+            }
+            throw new Error(JSON.stringify(_.toArray(arguments)));
+        });
+        mock('demo:search_read', function (args, kwargs) {
+            if (_.isEqual(args[0], [['id', '=', 1]])) {
+                return [{id: 1, a: 'some value'}];
+            } else if (_.isEqual(args[0], [['id', '=', 42]])) {
                 return [ {id: 42, a: 'foo'} ];
             }
             throw new Error(JSON.stringify(_.toArray(arguments)));
