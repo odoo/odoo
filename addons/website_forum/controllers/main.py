@@ -20,6 +20,7 @@
 ##############################################################################
 
 import werkzeug.urls
+import simplejson
 
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -264,11 +265,17 @@ class website_forum(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context)
 
+        Tag = request.registry['website.forum.tag']
         tags = question.get('question_tags').strip('[]').replace('"','').split(",")
-        tag_ids = request.registry['website.forum.tag'].search(cr, uid, [('name', 'in', tags)], context=context)
+
         question_tags = []
+        tag_ids = Tag.search(cr, uid, [('name', 'in', tags)], context=context)
         for tag in tag_ids:
             question_tags.append((4,tag))
+
+        for tag in tags:
+            if not Tag.search(cr, uid, [('name', 'like', tag)], count=True, context=context):
+                question_tags.append((0,0,{'name' : tag,'forum_id' : forum.id}))
 
         new_question_id = request.registry['website.forum.post'].create(
             request.cr, request.uid, {
@@ -462,9 +469,14 @@ class website_forum(http.Controller):
     @http.route('/forum/<model("website.forum"):forum>/question/savequestion/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def save_edited_question(self, forum, **post):
         cr, uid, context = request.cr, request.uid, request.context
+        Tag = request.registry['website.forum.tag']
         tags = post.get('question_tag').strip('[]').replace('"','').split(",")
-        tag_ids = request.registry['website.forum.tag'].search(cr, uid, [('name', 'in', tags)], context=context)
+        tag_ids = Tag.search(cr, uid, [('name', 'in', tags)], context=context)
         question_tags = [(6, 0, tag_ids)]
+
+        for tag in tags:
+            if not Tag.search(cr, uid, [('name', 'like', tag)], count=True, context=context):
+                question_tags.append((0,0,{'name' : tag,'forum_id' : forum.id}))
 
         request.registry['website.forum.post'].write(cr, uid, [int(post.get('post_id'))], {
             'content': post.get('answer_content'),
@@ -584,7 +596,8 @@ class website_forum(http.Controller):
         request.registry['website.forum.post'].unlink(request.cr, SUPERUSER_ID, [post.id], context=request.context)
         return self.post_comment(forum, question, **values)
 
-    @http.route('/forum/get_tags/', type='json', auth="public", multilang=True, methods=['POST'], website=True)
+    @http.route('/forum/get_tags', type='http', auth="public", multilang=True, methods=['GET'], website=True)
     def tag_read(self, **kwarg):
-        tags = request.registry['website.forum.tag'].search_read(request.cr, request.uid, [],['name'], context=request.context)
-        return [ tag['name'] for tag in tags]
+        tags = request.registry['website.forum.tag'].search_read(request.cr, request.uid, [], ['name'], context=request.context)
+        data = [tag['name'] for tag in tags]
+        return simplejson.dumps(data)

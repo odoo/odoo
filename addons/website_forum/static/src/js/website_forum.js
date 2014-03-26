@@ -88,16 +88,25 @@ $(document).ready(function () {
     });
 
     if($('input.load_tags').length){
-        openerp.jsonRpc('/forum/get_tags/','call' ,{}).then(function(data){
-            var previous_tags = $("input.load_tags").val();
+          var previous_tags = $("input.load_tags").val();
             $("input.load_tags").val("");
             $("input.load_tags").textext({
-                plugins : 'tags suggestions autocomplete',
-                tagsItems : previous_tags.split(","),
-                suggestions :data,
+                plugins: 'tags focus autocomplete ajax',
+                tagsItems: previous_tags.split(","),
+                //Note: The following list of keyboard keys is added. All entries are default except {32 : 'whitespace!'}.
+                keys: {8: 'backspace', 9: 'tab', 13: 'enter!', 27: 'escape!', 37: 'left', 38: 'up!', 39: 'right',
+                        40: 'down!', 46: 'delete', 108: 'numpadEnter', 32: 'whitespace!'},
+                ajax: {
+                    url: '/forum/get_tags',
+                    dataType: 'json',
+                    cacheResults: true
+                }
             });
-        return true;
-        })
+            // Note: Adding event handler of whitespaceKeyDown event.
+            $("input.load_tags").bind("whitespaceKeyDown",function () {
+                $(this).textext()[0].tags().addTags([ $(this).val() ]);
+                $(this).val("");
+        });
     };
 
 });
