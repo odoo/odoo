@@ -102,7 +102,7 @@ class ir_http(orm.AbstractModel):
 
     def _serve_attachment(self):
         domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
-        attach = self.pool['ir.attachment'].search_read(request.cr, request.uid, domain, ['__last_update', 'datas', 'mimetype'], context=request.context)
+        attach = self.pool['ir.attachment'].search_read(request.cr, openerp.SUPERUSER_ID, domain, ['__last_update', 'datas', 'mimetype'], context=request.context)
         if attach:
             wdate = attach[0]['__last_update']
             datas = attach[0]['datas']
