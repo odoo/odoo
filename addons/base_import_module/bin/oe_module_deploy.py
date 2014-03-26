@@ -3,34 +3,58 @@ import argparse
 import os
 import sys
 import tempfile
-import urllib
-import urllib2
 import zipfile
+
+
+try:
+    import requests
+except ImportError:
+    # no multipart encoding in stdlib and this script is temporary
+    sys.exit("This script requires the 'requests' module. ( pip install requests )")
+
+session = requests.session()
 
 def deploy_module(module_path, url, login, password, db=None):
     if url.endswith('/'):
         url = url[:-1]
+    authenticate(url, login, password, db)
+    check_import(url)
     module_file = zip_module(module_path)
-    cookie = authenticate(url, login, password, db)
-    upload_module(url, module_file, cookie)
+    try:
+        return upload_module(url, module_file)
+    finally:
+        os.remove(module_file)
 
-def upload_module(server, module_file, cookie):
-    pass
+def check_import(server):
+    url = server +'/base_import_module/check' 
+    res = session.get(url)
+    if res.status_code == 404:
+        raise Exception("The server %r does not have the 'base_import_module' installed." % server)
+    elif res.status_code != 200:
+        raise Exception("Server %r returned %s http error.", (server, res.status_code))
+
+def upload_module(server, module_file):
+    print("Uploading module file...")
+    url = server + '/base_import_module/upload'
+    files = dict(mod_file=open(module_file, 'rb'))
+    res = session.post(url, files=files)
+    if res.status_code != 200:
+        raise Exception("Could not authenticate on server %r" % server)
+    return res.text
 
 def authenticate(server, login, password, db):
+    print("Connecting to server %r" % server)
+    print("Waiting for server authentication...")
     if db:
+        url = server + '/login'
         args = dict(db=db, login=login, key=password)
-        url = server + '/login?' + urllib.urlencode(args)
-        req = urllib2.Request(url)
+        res = session.get(url, params=args)
     else:
         url = server + '/web/login'
         args = dict(login=login, password=password)
-        req = urllib2.Request(url, urllib.urlencode(args))
-    response = urllib2.urlopen(req)
-    if response.code != 200:
+        res = session.post(url, args)
+    if res.status_code != 200:
         raise Exception("Could not authenticate to OpenERP server %r" % server)
-    cookie = response.headers.get('Set-Cookie')
-    return cookie
 
 def zip_module(path):
     path = os.path.abspath(path)
@@ -38,13 +62,17 @@ def zip_module(path):
         raise Exception("Could not find module directory %r" % path)
     container, module_name = os.path.split(path)
     temp = tempfile.mktemp(suffix='.zip')
-    temp = '/tmp/1/test.zip'
-    with zipfile.ZipFile(temp, 'w') as zfile:
-        for root, dirs, files in os.walk(path):
-            for file in files:
-                file_path = os.path.join(root, file)
-                zfile.write(file_path, file_path.split(container).pop())
-        return temp
+    try:
+        print("Zipping module directory...")
+        with zipfile.ZipFile(temp, 'w') as zfile:
+            for root, dirs, files in os.walk(path):
+                for file in files:
+                    file_path = os.path.join(root, file)
+                    zfile.write(file_path, file_path.split(container).pop())
+            return temp
+    except Exception:
+        os.remove(temp)
+        raise
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Deploy a module on an OpenERP server.')
@@ -54,12 +82,10 @@ if __name__ == '__main__':
     parser.add_argument('--login', dest='login', default="admin", help='Login (default=admin)')
     parser.add_argument('--password', dest='password', default="admin", help='Password (default=admin)')
     if len(sys.argv) == 1:
-        parser.print_help()
-        sys.exit(1)
+        sys.exit(parser.print_help())
     args = parser.parse_args()
-    deploy_module(args.path, args.url, args.login, args.password, args.database)
-    # try:
-    #     deploy_module(args.path, args.url, args.login, args.password, args.database)
-    # except Exception, e:
-    #     print(e)
-    #     sys.exit(1)
+    try:
+        result = deploy_module(args.path, args.url, args.login, args.password, args.database)
+        print(result)
+    except Exception, e:
+        sys.exit("ERROR: %s" % e)
