@@ -58,7 +58,7 @@ class product_product(osv.osv):
 
             #Cost price is calculated afterwards as it is a property
             sqlstr="""select
-                    sum(l.price_unit * l.quantity)/sum(nullif(l.quantity * pu.factor / pu2.factor),0) as avg_unit_price,
+                    sum(l.price_unit * l.quantity)/sum(nullif(l.quantity * pu.factor / pu2.factor,0)) as avg_unit_price,
                     sum(l.quantity * pu.factor / pu2.factor) as num_qty,
                     sum(l.quantity * (l.price_subtotal/(nullif(l.quantity,0)))) as total,
                     sum(l.quantity * pu.factor * pt.list_price / pu2.factor) as sale_expected
@@ -79,7 +79,7 @@ class product_product(osv.osv):
             res[val.id]['sale_expected'] = result[3] and result[3] or 0.0
             res[val.id]['sales_gap'] = res[val.id]['sale_expected']-res[val.id]['turnover']
             prod_obj = self.pool.get("product.product")
-            ctx=context.copy()
+            ctx = context.copy()
             ctx['force_company'] = company_id
             prod = prod_obj.browse(cr, uid, val.id, context=ctx)
             invoice_types = ('in_invoice', 'out_refund')

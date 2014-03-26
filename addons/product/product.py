@@ -180,7 +180,7 @@ class product_uom(osv.osv):
         if to_unit:
             amount = amount * to_unit.factor
             if round:
-                amount = ceiling(amount * to_unit.factor, to_unit.rounding)
+                amount = ceiling(amount, to_unit.rounding)
         return amount
 
     def _compute_price(self, cr, uid, from_uom_id, price, to_uom_id=False):
