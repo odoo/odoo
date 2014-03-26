@@ -114,6 +114,15 @@ class gamification_challenge(osv.Model):
             return self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'simple_report_template')[1]
         except ValueError:
             return False
+    
+    def _count_goals(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        try:
+            for goals in self.browse(cr, uid, ids, context=context):
+                res[goals.id] = len(goals.goals_ids)
+        except:
+            pass
+        return res
 
     _order = 'end_date, start_date, name, id'
     _columns = {
@@ -191,6 +200,8 @@ class gamification_challenge(osv.Model):
 
         'category': fields.selection(lambda s, *a, **k: s._get_categories(*a, **k),
             string="Appears in", help="Define the visibility of the challenge through menus", required=True),
+        'goals_ids': fields.one2many('gamification.goal', 'challenge_id', 'Related Goals'),
+        'goals_count': fields.function(_count_goals, type='integer', string='Related Goals')
         }
 
     _defaults = {
