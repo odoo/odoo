@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from openerp import scope
 from openerp.tests import common
 
 class TestOnChange(common.TransactionCase):
 
     def setUp(self):
         super(TestOnChange, self).setUp()
-        self.Discussion = scope['test_new_api.discussion']
-        self.Message = scope['test_new_api.message']
+        self.Discussion = self.scope['test_new_api.discussion']
+        self.Message = self.scope['test_new_api.message']
 
     def test_default_get(self):
         """ checking values returned by default_get() """
@@ -23,11 +22,11 @@ class TestOnChange(common.TransactionCase):
 
     def test_new_onchange(self):
         """ test the effect of onchange() """
-        discussion = scope.ref('test_new_api.discussion_0')
+        discussion = self.scope.ref('test_new_api.discussion_0')
         BODY = "What a beautiful day!"
-        USER = scope.user
+        USER = self.scope.user
 
-        scope.invalidate_all()
+        self.scope.invalidate_all()
         result = self.Message.onchange({
             'discussion': discussion.id,
             'name': "[%s] %s" % ('', USER.name),
@@ -39,7 +38,7 @@ class TestOnChange(common.TransactionCase):
             'name': "[%s] %s" % (discussion.name, USER.name),
         })
 
-        scope.invalidate_all()
+        self.scope.invalidate_all()
         result = self.Message.onchange({
             'discussion': discussion.id,
             'name': "[%s] %s" % (discussion.name, USER.name),
@@ -55,14 +54,14 @@ class TestOnChange(common.TransactionCase):
         """ test the effect of onchange() on one2many fields """
         tocheck = ['messages.name', 'messages.body', 'messages.author', 'messages.size']
         BODY = "What a beautiful day!"
-        USER = scope.user
+        USER = self.scope.user
 
         # create an independent message
         message = self.Message.create({'body': BODY})
         self.assertEqual(message.name, "[%s] %s" % ('', USER.name))
 
         # modify messages
-        scope.invalidate_all()
+        self.scope.invalidate_all()
         result = self.Discussion.onchange({
             'name': "Foo",
             'categories': [],
@@ -99,7 +98,7 @@ class TestOnChange(common.TransactionCase):
         ])
 
         # modify discussion name
-        scope.invalidate_all()
+        self.scope.invalidate_all()
         result = self.Discussion.onchange({
             'name': "Foo",
             'categories': [],
