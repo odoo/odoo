@@ -81,9 +81,15 @@ if __name__ == '__main__':
     parser.add_argument('--database', dest='database', help='Database to use if server does not use db-filter.')
     parser.add_argument('--login', dest='login', default="admin", help='Login (default=admin)')
     parser.add_argument('--password', dest='password', default="admin", help='Password (default=admin)')
+    parser.add_argument('--no-ssl-check', dest='no_ssl_check', action='store_true', help='Do not check ssl cert')
     if len(sys.argv) == 1:
         sys.exit(parser.print_help())
+
     args = parser.parse_args()
+
+    if args.no_ssl_check:
+        session.verify = False
+
     try:
         result = deploy_module(args.path, args.url, args.login, args.password, args.database)
         print(result)
