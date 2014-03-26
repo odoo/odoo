@@ -67,16 +67,11 @@ def default(value):
 
 def compute_related(field, records):
     """ Compute the related `field` on `records`. """
-    scope = records._scope
-    sudo_scope = scope.sudo()
     for record in records:
         # bypass access rights check when traversing the related path
-        value = record.attach_scope(sudo_scope) if record.id else record
+        value = record.sudo() if record.id else record
         for name in field.related:
             value = value[name]
-        # re-scope the resulting value
-        if isinstance(value, BaseModel):
-            value = value.attach_scope(scope)
         record[field.name] = value
 
 def inverse_related(field, records):
@@ -867,7 +862,7 @@ class Many2one(_Relational):
             # evaluate name_get() in sudo scope, because the visibility of a
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
-            return value.attach_scope(value._scope.sudo()).name_get()[0]
+            return value.sudo().name_get()[0]
         else:
             return value.id
 

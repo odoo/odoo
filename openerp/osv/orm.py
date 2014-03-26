@@ -5102,10 +5102,21 @@ class BaseModel(object):
         raise except_orm("ValueError", "Expected singleton: %s" % self)
 
     def attach_scope(self, scope):
-        """ Return an instance equivalent to `self` attached to `scope` or the
-            current scope.
+        """ Return an instance equivalent to `self` attached to `scope`.
         """
         return self._browse(scope, self._ids)
+
+    @api.new
+    def sudo(self, cr=None, user=SUPERUSER_ID, context=(), **kwargs):
+        """ Return an instance equivalent to `self` attached to a scope based on
+            `self`'s scope and modified by parameters.
+
+            :param cr: an optional cursor object
+            :param user: a user record or id, by default the superuser
+            :param context: an optional context dictionary
+            :param kwargs: key-value pairs to modify the context
+        """
+        return self.attach_scope(self._scope(cr, user, context, **kwargs))
 
     def unbrowse(self):
         """ Return the list of record ids of this instance. """

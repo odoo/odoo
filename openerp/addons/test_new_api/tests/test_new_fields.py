@@ -203,7 +203,7 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(message.discussion._scope, self.scope)
 
         # migrate message into the current scope, and check again
-        demo_message = message.attach_scope(demo_scope)
+        demo_message = message.sudo(user=demo)
         self.assertEqual(demo_message._scope, demo_scope)
         self.assertEqual(demo_message.discussion._scope, demo_scope)
 

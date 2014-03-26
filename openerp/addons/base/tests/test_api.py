@@ -228,7 +228,7 @@ class TestAPI(common.TransactionCase):
             self.assertEqual(p._scope, self.scope)
 
         # create record instances attached to the inner scope
-        demo_partners = partners.attach_scope(demo_scope)
+        demo_partners = partners.sudo(user=demo)
         self.assertEqual(demo_partners._scope, demo_scope)
         for x in (demo_partners, demo_partners[0], demo_partners[0].company_id):
             self.assertEqual(x._scope, demo_scope)
