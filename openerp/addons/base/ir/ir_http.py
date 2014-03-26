@@ -145,11 +145,6 @@ class ir_http(osv.AbstractModel):
 
         return self._routing_map
 
-    def refresh_routing_map(self):
-        if hasattr(ir_http, '_routing_map'):
-            del(ir_http._routing_map)
-        return self.routing_map()
-
 def convert_exception_to(to_type, with_message=False):
     """ Should only be called from an exception handler. Fetches the current
     exception data from sys.exc_info() and creates a new exception of type
