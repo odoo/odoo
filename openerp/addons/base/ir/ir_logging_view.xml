@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="ir_logging_form_view">
+            <field name="model">ir.logging</field>
+            <field name="arch" type="xml">
+                <form string="Log" version="7.0">
+                    <group>
+                        <field name="create_date" />
+                        <field name="dbname" />
+                        <field name="type" />
+                        <field name="name" />
+                        <field name="level" />
+                        <field name="path" />
+                        <field name="line" />
+                        <field name="func" />
+                        <field name="message" />
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="ir_logging_tree_view">
+            <field name="model">ir.logging</field>
+            <field name="arch" type="xml">
+                <tree string="Logs" version="7.0">
+                    <field name="create_date" />
+                    <field name="create_uid" />
+                    <field name="dbname" />
+                    <field name="type" />
+                    <field name="name" />
+                    <field name="level" />
+                    <field name="path" />
+                    <field name="line" />
+                    <field name="func" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="ir_logging_search_view">
+            <field name="model">ir.logging</field>
+            <field name="arch" type="xml">
+                <search string="Logs">
+                    <field name="dbname" />
+                    <field name="type" />
+                    <field name="name" />
+                    <field name="level" />
+                    <field name="message" />
+                    <group expand="0" string="Group By...">
+                        <filter string="Database" domain="[]" context="{'group_by': 'dbname'}" />
+                        <filter string="Level" domain="[]" context="{'group_by': 'level'}" />
+                        <filter string="Type" domain="[]" context="{'group_by': 'type'}" />
+                        <filter string="Month" domain="[]" context="{'group_by': 'create_date'}" />
+                        <filter string="Day" domain="[]" context="{'group_by': 'create_date:day'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="ir_logging_all_act">
+            <field name="name">Logging</field>
+            <field name="res_model">ir.logging</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="ir_logging_search_view" />
+        </record>
+        <menuitem parent="base.menu_custom" id="ir_logging_all_menu" action="ir_logging_all_act" />
+    </data>
+</openerp>

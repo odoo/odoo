@@ -209,6 +209,7 @@ class res_partner(osv.osv, format_address):
         context = dict(context or {})
         context.pop('show_address', None)
         context.pop('show_address_only', None)
+        context.pop('show_email', None)
         return dict(self.name_get(cr, uid, ids, context=context))
 
     # indirections to avoid passing a copy of the overridable method when declaring the function field
@@ -349,6 +350,7 @@ class res_partner(osv.osv, format_address):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
+        default['user_ids'] = False
         name = self.read(cr, uid, [id], ['name'], context)[0]['name']
         default.update({'name': _('%s (copy)') % name})
         return super(res_partner, self).copy(cr, uid, id, default, context)

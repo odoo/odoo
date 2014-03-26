@@ -124,7 +124,8 @@ class res_company(osv.osv):
         'rml_footer': fields.text('Report Footer', help="Footer text displayed at the bottom of all reports."),
         'rml_footer_readonly': fields.related('rml_footer', type='text', string='Report Footer', readonly=True),
         'custom_footer': fields.boolean('Custom Footer', help="Check this to define the report footer manually.  Otherwise it will be filled in automatically."),
-        'font': fields.many2one('res.font', string="Font",help="Set the font into the report header, it will be used as default font in the RML reports of the user company"),
+        'font': fields.many2one('res.font', string="Font", domain=[('mode', 'in', ('Normal', 'Regular', 'all', 'Book'))],
+            help="Set the font into the report header, it will be used as default font in the RML reports of the user company"),
         'logo': fields.related('partner_id', 'image', string="Logo", type="binary"),
         'logo_web': fields.function(_get_logo_web, string="Logo Web", type="binary", store={
             'res.company': (lambda s, c, u, i, x: i, ['partner_id'], 10),
@@ -207,20 +208,19 @@ class res_company(osv.osv):
         res['value'] = {'currency_id': currency_id}
         return res
 
-    def _search(self, cr, uid, args, offset=0, limit=None, order=None,
-            context=None, count=False, access_rights_uid=None):
+    def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100):
         if context is None:
             context = {}
-        if context.get('user_preference'):
+        if context.pop('user_preference', None):
             # We browse as superuser. Otherwise, the user would be able to
             # select only the currently visible companies (according to rules,
             # which are probably to allow to see the child companies) even if
             # she belongs to some other companies.
             user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
             cmp_ids = list(set([user.company_id.id] + [cmp.id for cmp in user.company_ids]))
-            return cmp_ids
-        return super(res_company, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
-            context=context, count=count, access_rights_uid=access_rights_uid)
+            uid = SUPERUSER_ID
+            args = (args or []) + [('id', 'in', cmp_ids)]
+        return super(res_company, self).name_search(cr, uid, name=name, args=args, operator=operator, context=context, limit=limit)
 
     def _company_default_get(self, cr, uid, object=False, field=False, context=None):
         """

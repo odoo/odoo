@@ -13,7 +13,11 @@ import subprocess
 import threading
 import time
 import unittest2
+import urllib2
 import xmlrpclib
+from datetime import datetime, timedelta
+
+import werkzeug
 
 import openerp
 
@@ -45,10 +49,9 @@ def acquire_test_cursor(session_id):
             cr._test_lock.acquire()
             return cr
 
-def release_test_cursor(session_id):
+def release_test_cursor(cr):
     if openerp.tools.config['test_enable']:
-        cr = HTTP_SESSION.get(session_id)
-        if cr:
+        if hasattr(cr, '_test_lock'):
             cr._test_lock.release()
             return True
     return False
@@ -150,7 +153,7 @@ class SingleTransactionCase(BaseCase):
 
 
 class HttpCase(TransactionCase):
-    """ Transactionnal HTTP TestCase with a phantomjs helper.
+    """ Transactionnal HTTP TestCase with url_open and phantomjs helpers.
     """
 
     def __init__(self, methodName='runTest'):
@@ -171,10 +174,16 @@ class HttpCase(TransactionCase):
         self.cr._test_lock = threading.RLock()
         HTTP_SESSION[self.session_id] = self.cr
 
-
     def tearDown(self):
         del HTTP_SESSION[self.session_id]
         super(HttpCase, self).tearDown()
+
+    def url_open(self, url, data=None, timeout=10):
+        opener = urllib2.build_opener()
+        opener.addheaders.append(('Cookie', 'session_id=%s' % self.session_id))
+        if url.startswith('/'):
+            url = "http://localhost:%s%s" % (PORT, url)
+        return opener.open(url, data, timeout)
 
     def phantom_poll(self, phantom, timeout):
         """ Phantomjs Test protocol.
@@ -187,11 +196,12 @@ class HttpCase(TransactionCase):
         Other lines are relayed to the test log.
 
         """
-        t0 = time.time()
+        t0 = datetime.now()
+        td = timedelta(seconds=timeout)
         buf = bytearray()
         while True:
             # timeout
-            self.assertLess(time.time(), t0 + timeout,
+            self.assertLess(datetime.now() - t0, td,
                 "PhantomJS tests should take less than %s seconds" % timeout)
 
             # read a byte
@@ -202,7 +212,8 @@ class HttpCase(TransactionCase):
                 # OSError, and no errno/strerror/filename, only a pair of
                 # unnamed arguments (matching errno and strerror)
                 err, _ = e.args
-                if err == errno.EINTR: continue
+                if err == errno.EINTR:
+                    continue
                 raise
 
             if ready:
@@ -214,22 +225,24 @@ class HttpCase(TransactionCase):
             # process lines
             if '\n' in buf:
                 line, buf = buf.split('\n', 1)
-
                 line = str(line)
+
+                # relay everything from console.log, even 'ok' or 'error...' lines
+                _logger.info("phantomjs: %s", line)
+
                 if line == "ok":
                     break
                 if line.startswith("error"):
                     line_ = line[6:]
-                    try: line_ = json.loads(line_)
-                    except ValueError: pass
+                    # when error occurs the execution stack may be sent as as JSON
+                    try:
+                        line_ = json.loads(line_)
+                    except ValueError: 
+                        pass
                     self.fail(line_ or "phantomjs test failed")
 
-                try: line = json.loads(line)
-                except ValueError: pass
-                _logger.info("phantomjs: %s", line)
-
     def phantom_run(self, cmd, timeout):
-        _logger.debug('executing `%s`', ' '.join(cmd))
+        _logger.info('phantom_run executing %s', ' '.join(cmd))
         try:
             phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         except OSError:
@@ -240,6 +253,7 @@ class HttpCase(TransactionCase):
             # kill phantomjs if phantom.exit() wasn't called in the test
             if phantom.poll() is None:
                 phantom.terminate()
+            _logger.info("phantom_run execution finished")
 
     def phantom_jsfile(self, jsfile, timeout=30, **kw):
         options = {

@@ -23,8 +23,12 @@
 Some functions related to the os and os.path module
 """
 
+from contextlib import contextmanager
 import os
 from os.path import join as opj
+import shutil
+import tempfile
+import zipfile
 
 if os.name == 'nt':
     import ctypes
@@ -60,6 +64,30 @@ def walksymlinks(top, topdown=True, onerror=None):
 
         if not topdown:
             yield dirpath, dirnames, filenames
+
+@contextmanager
+def tempdir():
+    tmpdir = tempfile.mkdtemp()
+    try:
+        yield tmpdir
+    finally:
+        shutil.rmtree(tmpdir)
+
+def zip_dir(path, stream, include_dir=True):      # TODO add ignore list
+    path = os.path.normpath(path)
+    len_prefix = len(os.path.dirname(path)) if include_dir else len(path)
+    if len_prefix:
+        len_prefix += 1
+
+    with zipfile.ZipFile(stream, 'w', compression=zipfile.ZIP_DEFLATED, allowZip64=True) as zipf:
+        for dirpath, dirnames, filenames in os.walk(path):
+            for fname in filenames:
+                bname, ext = os.path.splitext(fname)
+                ext = ext or bname
+                if ext not in ['.pyc', '.pyo', '.swp', '.DS_Store']:
+                    path = os.path.normpath(os.path.join(dirpath, fname))
+                    if os.path.isfile(path):
+                        zipf.write(path, path[len_prefix:])
 
 
 if os.name != 'nt':

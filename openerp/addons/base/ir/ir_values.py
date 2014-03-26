@@ -394,17 +394,16 @@ class ir_values(osv.osv):
         for action in cr.dictfetchall():
             if not action['value']:
                 continue    # skip if undefined
-            action_model,id = action['value'].split(',')
-            fields = [
-                    field
-                    for field in self.pool[action_model]._all_columns
-                    if field not in EXCLUDED_FIELDS]
+            action_model_name, action_id = action['value'].split(',')
+            action_model = self.pool.get(action_model_name)
+            if not action_model:
+                continue    # unknow model? skip it
+            fields = [field for field in action_model._all_columns if field not in EXCLUDED_FIELDS]
             # FIXME: needs cleanup
             try:
-                action_def = self.pool[action_model].read(cr, uid, int(id), fields, context)
+                action_def = action_model.read(cr, uid, int(action_id), fields, context)
                 if action_def:
-                    if action_model in ('ir.actions.report.xml','ir.actions.act_window',
-                                        'ir.actions.wizard'):
+                    if action_model_name in ('ir.actions.report.xml', 'ir.actions.act_window'):
                         groups = action_def.get('groups_id')
                         if groups:
                             cr.execute('SELECT 1 FROM res_groups_users_rel WHERE gid IN %s AND uid=%s',
