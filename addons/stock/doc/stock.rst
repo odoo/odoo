@@ -228,7 +228,7 @@ To organize the whole chain of manufacturing and procurement, OpenERP bases ever
 
 To see a calculation of the lead times, take the example of the cabinet above. Suppose that the cabinet is assembled in two steps, using the two following bills of materials.
 
-Bill of Materials for 1 SHE100 Unit
+<!--Bill of Materials for 1 SHE100 Unit
 Product Code
 
 Quantity
@@ -319,7 +319,7 @@ Purchase WOOD002 (for SHE100): 21 January (=26 January – 5 days),
 
 Purchase WOOD002 (for SIDEPAN): 11 January (=16 January – 5 days).
 
-In this example, OpenERP will propose placing two orders with the supplier of product WOOD002. Each of these orders can be for a different planned date. Before confirming these orders, the purchasing manager could group (merge) these orders into a single order.
+In this example, OpenERP will propose placing two orders with the supplier of product WOOD002. Each of these orders can be for a different planned date. Before confirming these orders, the purchasing manager could group (merge) these orders into a single order.-->
 
 Security Days
 
@@ -392,10 +392,10 @@ The reason behind such a configuration is that in most situations, the routes fo
 How does the system choose the correct push rule
 ================================================
 
-Searching for a push rule is quite similar as for the pull rule.  It will however just search for all the rules in the routes of product and product categories and take the rule with the highest sequence.  (???)
+Searching for a push rule is quite similar as for the pull rule.  It will however just search for the routes in the product and product category and afterwards it will search among all the routes. (???)
 
 
-========================
+=======================
 Simple Warehouse config
 =======================
 
@@ -440,7 +440,7 @@ We need to consider the following when reserving stock:
 * Also in case of returned moves, the system will check if the stock was moved by the move it was returned from. 
 * When choosing the stock, we need to take into account the removal strategy.  
 
-The removal strategy determines the order in which the stock gets reserved.  By default the removal strategy is FIFO (First In First Out).  
+The removal strategy determines the order which stock gets reserved first.  By default the removal strategy is FIFO (First In First Out).  
 
 A different removal strategy can be defined by product category and location.  For example, for a certain category of products LIFO (Last In First Out) could be chosen when taking products from its stock location.  
 
@@ -497,40 +497,48 @@ Unreserving
 ============
 If we want to use a certain piece of stock on another picking instead of the picking selected, we can unreserve this piece of stock by clicking on the Unreserve button of the picking.  
 
-It is however possible that during the pack operations, the guy has chosen the stock from another location.  In that case, other quants need to be reserved also.  When processing this picking further on, the system will unreserve the stock and do the reserve process again, taking into account the created pack operations from the bar code scanner interface.  
+It is however possible that during the pack operations, the warehouse operator has chosen the stock from another location.  In that case, other quants need to be reserved also.  When processing this picking further on, the system will unreserve the stock and do the reserve process again, taking into account the created pack operations from the bar code scanner interface.  
 
 
+===============================================
+Bar code interface and checking pack operations
+===============================================
+
+A picking can be processed in the back-office interface by processing the moves, but then it will not be possible to do pack operations or change the locations.  
+
+If you choose in "Enter Transfer details" in the picking, the system will prepare the pack operations and you will be guided to the bar code interface.  
+
+Also in the Warehouse > All Operations, it is possible to change to the bar code interface and do all the pickings at once.  
+
+When using the bar code interface, the pack operations will be prepared as explained above.  In the bar code interface it is then possible to change the prepared pack operations to the effective operations the warehouse operator executed.  
+
+- The operator can filter the operations on product/pack/source location
+- The operator should fill in the quantity on the filtered line.  He should type enter to confirm.  If the quantity is correct, the line will become green.  
+- The operator might put the products in a new pack
+- Afterwards, the operator can process the products and mark as done.  That way they will get into operations done, instead of todo.  
+- The operator can also change source/destination location
+
+- If everything has been done, he can do "Create backorder", and then he needs to check if all the products have been done or not.  If only part has been done, OpenERP needs to create a backorder for it.  It is however more complicated than that.  The operator could have chosen other source/destination location or even create new pack operations with new products.  
+
+In order to manage all these possible changes, in the background, OpenERP is going to do a matching between the pack operations executed by the warehouse operator and the moves given as assignment beforehand.  
+It is also possible that the operator chooses other stock than was reserved at forehand.  In that case, OpenERP will need to redo the reservation of the stock.  
+
+The matching of the pack operations and stock moves will determine if extra moves need to be created or if some moves need to go (partially) into backorder.  
 
 
 6 Transferring
 ***************
-
-========================================================
-Recomputation of links between moves and pack operations
-========================================================
-
-
-We need to check if the pack operations cover all moves and opposite.  If there is more of a product transferred in a pack operation than in the moves, an extra move needs to be created in the picking and set to done.  When there is less product in the pack operation than in the move, a backorder needs to be created with those moves and the original move might be split with a part going into the backorder.  
-
-In order to do this matching, the system will try to match with stock reserved for a certain move.  It will loop through the pack operations and see if it can find the necessary stock it can match.  That way it will match quantities from the reserved stock move on the quant with the operation.  
-
-If not everything could be matched with the reserved stock (e.g. an incoming shipment, this is always the case for the entire picking) it will match the remaining quantities on the moves with those of the packing operations.  
-
-<< Need to tell about partial availability here? >>
-
-This function can also be used to check the effect of the current pack operations, but tell also if the reservation is actually used or not.  If not, when transferring, it will have to rereserve the quants.  (unreserve + reserve)
-
 
 
 =====================
 Actual transferring
 =====================
 
-If there are pack operations, it will look the matching, find the quants accordingly and move them.  
+If there are no pack operations, it will process the move as such. (with only the information from the move)  
 
-If not, it will find the quants based on the moves only. 
+In case of pack operations: 
 
-
+First it will check the matching between pack operations and moves and create the necessary extra moves or backorder.  After having split the moves and created the extra, it can be necessary to rereserve the quants and recompute the matching.  After having done that, it will process all the moves that need to be done.  It will look at the matchings between the move and the pack operations and take them into account.  That way it will take the correct quants from the pack operation and put it in the correct pack and destination location
 
 ======================
 Negative stocks
@@ -538,7 +546,9 @@ Negative stocks
 
 It is still possible that upon transferring for an internal shipment or delivery, the necessary quants or stock can not be found.  In that case, it will create negative stock (negative quants).    
 
-When later on, a move brings in some goods that correspond to this negative stock, the quant can be reconciled with it.  This will however not happen if this incoming quant has a chained move to another location.  It is only when you force assign a move with original moves that it can also take from the regular stock (so not coming from its original moves).  It will however not assign this stock before actually doing the transfer.  
+When later on, a move brings in some goods that correspond to this negative stock, the quant can be reconciled with it.  This will however not happen if this incoming quant has a chained move to another location.  
+
+Normally, chained moves have to take from their original moves.  Only when you do force assign a move with original moves it can also take from the regular stock that is not chained.  It will however not assign this stock before actually doing the transfer.  
 
 
 7 Returns and cancellation
@@ -548,7 +558,7 @@ When later on, a move brings in some goods that correspond to this negative stoc
 Returns
 ========================
 
-It is possible to create a return on a done picking.  This wizard will propose to return everything that is still in the destination location.   
+It is possible to create a return on a done picking.  This wizard will propose to return everything that is still in the destination location.  If it can't find stock from the original move, it will create negative quants.  
 
 
 ======================
@@ -563,11 +573,11 @@ This will happen only if the move has the attribute 'Propagate Cancel and Split'
 8 Inventory
 ***********
 
-When you start using OpenERP, you might have an inventory to start from.  (Starting Inventory)  You will enter all the products that are in the warehouse and OpenERP will put them in this position.  When you validate this inventory, OpenERP will create the necessary stock moves.  
+When you start using OpenERP, you might have an inventory to start from.  (Starting Inventory)  You will enter all the products that are in the warehouse and OpenERP will put them in this position.  When you validate this inventory, OpenERP will create the necessary stock moves that will go from Inventory Loss to these locations.  
 
-It is possible that operations in the warehouse are not well registered and the stock in OpenERP does not correspond exactly to the physical stock in the warehouse.  Of course, you do not want this to happen, but errors do happen and a way to solve these mistakes, is to check the inventory once and a while.  
+It is possible that operations in the warehouse are not well registered and the stock in OpenERP does not correspond exactly to the physical stock in the warehouse.  Of course, you do not want this to happen, but errors do happen and a way to solve these mistakes, is to check the inventory once and a while.  Most companies will do an entire inventory yearly.  
 
-You can decide to do a certain product or a certain location.  So, you are not required to do all the invento
+You can decide to do a certain product or a certain location.  So, you are not required to do all the inventory at once.  In a next step OpenERP will propose all the current stock in the system.  When you correct this stock, OpenERP will create the necessary moves in a second tab.  The inventory is done, when these moves are all transferred.  
 
 
 
