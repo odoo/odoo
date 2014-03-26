@@ -5018,7 +5018,7 @@ class BaseModel(object):
         origin = getattr(cls, name)
         method.origin = origin
         # propagate @returns from origin to method, and apply api decorator
-        wrapped = api.guess(api.returns(origin)(method))
+        wrapped = api.guess(api.propagate_returns(origin, method))
         wrapped.origin = origin
         setattr(cls, name, wrapped)
 

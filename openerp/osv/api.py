@@ -55,7 +55,7 @@ __all__ = [
     'model', 'multi', 'one',
     'cr', 'cr_context', 'cr_uid', 'cr_uid_context',
     'cr_uid_id', 'cr_uid_id_context', 'cr_uid_ids', 'cr_uid_ids_context',
-    'constrains', 'depends', 'returns',
+    'constrains', 'depends', 'returns', 'propagate_returns',
 ]
 
 from functools import update_wrapper
@@ -93,10 +93,8 @@ class Meta(type):
         for key, value in attrs.items():
             if not key.startswith('__') and callable(value):
                 # make the method inherit from @returns decorators
-                if not _returns(value) and _returns(getattr(parent, key, None)):
-                    value = returns(getattr(parent, key))(value)
-                    _logger.debug("Method %s.%s inherited @returns%r",
-                                  name, value.__name__, _returns(value))
+                if not get_returns(value):
+                    value = propagate_returns(getattr(parent, key, None), value)
 
                 # guess calling convention if none is given
                 if not hasattr(value, '_api'):
@@ -167,29 +165,31 @@ def returns(model, traditional=None):
         a decorated existing method will be decorated with the same
         ``@returns(model)``.
     """
-    if callable(model):
-        # model is a method, check its own @returns decoration
-        spec = _returns(model)
-        if not spec:
-            return lambda method: method
-    else:
-        spec = model, traditional
-
     def decorate(method):
         if hasattr(method, '_orig'):
             # decorate the original method, and re-apply the api decorator
             origin = method._orig
-            origin._returns = spec
+            origin._returns = model, traditional
             return origin._api(origin)
         else:
-            method._returns = spec
+            method._returns = model, traditional
             return method
 
     return decorate
 
 
-def _returns(method):
+def get_returns(method):
     return getattr(method, '_returns', None)
+
+
+def propagate_returns(from_method, to_method):
+    spec = get_returns(from_method)
+    if spec:
+        _logger.debug("Method %s.%s inherited @returns%r",
+                      to_method.__module__, to_method.__name__, spec)
+        return returns(*spec)(to_method)
+    else:
+        return to_method
 
 
 # constant converters
@@ -202,7 +202,7 @@ def _converter_to_old(method):
     """ Return a function `convert(self, value)` that adapts `value` from
         record-style to traditional-style returning convention of `method`.
     """
-    spec = _returns(method)
+    spec = get_returns(method)
     if spec:
         model, traditional = spec
         return traditional or _CONVERT_UNBROWSE
@@ -214,7 +214,7 @@ def _converter_to_new(method):
     """ Return a function `convert(self, value)` that adapts `value` from
         traditional-style to record-style returning convention of `method`.
     """
-    spec = _returns(method)
+    spec = get_returns(method)
     if spec:
         model, traditional = spec
         if model == 'self':
@@ -229,7 +229,7 @@ def _aggregator_one(method):
     """ Return a function `convert(self, value)` that aggregates record-style
         `value` for a method decorated with ``@one``.
     """
-    spec = _returns(method)
+    spec = get_returns(method)
     if spec:
         # value is a list of instances, concatenate them
         model, traditional = spec
