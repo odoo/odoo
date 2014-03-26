@@ -36,7 +36,7 @@ import common
 import openerp
 from openerp import SUPERUSER_ID
 from openerp.osv.fields import float as float_field, function as function_field, datetime as datetime_field
-from openerp.osv.scope import proxy as scope
+from openerp.osv.scope import Scope
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -161,7 +161,8 @@ class rml_parse(object):
         self.localcontext['lang'] = lang
         self.lang_dict_called = False
         # change the scope of self.objects
-        self.objects = self.objects.attach_scope(scope(self.cr, self.uid, self.localcontext))
+        scope = Scope(self.cr, self.uid, self.localcontext)
+        self.objects = self.objects.attach_scope(scope)
 
     def _get_lang_dict(self):
         pool_lang = self.pool['res.lang']

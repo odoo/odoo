@@ -653,21 +653,19 @@ class one2many(_column):
             context = dict(context or {})
             context.update(self._context)
 
-        with Scope(cr, user, context) as scope:
-            res = dict((id, []) for id in ids)
+        res = dict((id, []) for id in ids)
 
-            comodel = scope[self._obj]
-            inverse = self._fields_id
-            domain = self._domain
-            if callable(domain):
-                domain = domain(obj)
-            domain = domain + [(inverse, 'in', ids)]
+        comodel = obj.pool[self._obj].browse(cr, user, [], context)
+        inverse = self._fields_id
+        domain = self._domain(obj) if callable(self._domain) else self._domain
+        domain = domain + [(inverse, 'in', ids)]
 
-            for record in comodel.search(domain, limit=self._limit):
-                assert int(record[inverse]) in res
-                res[int(record[inverse])].append(record.id)
+        for record in comodel.search(domain, limit=self._limit):
+            # Note: record[inverse] can be a record or an integer!
+            assert int(record[inverse]) in res
+            res[int(record[inverse])].append(record.id)
 
-            return res
+        return res
 
     def set(self, cr, obj, id, field, values, user=None, context=None):
         result = []
@@ -1248,8 +1246,7 @@ class function(_column):
         if not self._fnct_search:
             #CHECKME: should raise an exception
             return []
-        with Scope(cr, uid, context):
-            return self._fnct_search(obj, cr, uid, obj, name, args, context=context)
+        return self._fnct_search(obj, cr, uid, obj, name, args, context=context)
 
     def postprocess(self, cr, uid, obj, field, value=None, context=None):
         if context is None:
@@ -1280,8 +1277,7 @@ class function(_column):
         return result
 
     def get(self, cr, obj, ids, name, uid=False, context=None, values=None):
-        with Scope(cr, uid, context):
-            result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
+        result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
         for id in ids:
             if self._multi and id in result:
                 for field, value in result[id].iteritems():
@@ -1295,8 +1291,7 @@ class function(_column):
         if not context:
             context = {}
         if self._fnct_inv:
-            with Scope(cr, user, context):
-                self._fnct_inv(obj, cr, user, id, name, value, self._fnct_inv_arg, context)
+            self._fnct_inv(obj, cr, user, id, name, value, self._fnct_inv_arg, context)
 
     @classmethod
     def _as_display_name(cls, field, cr, uid, obj, value, context=None):
@@ -1674,7 +1669,5 @@ class column_info(object):
             self.__class__.__name__, self.name, self.column,
             self.parent_model, self.parent_column, self.original_parent)
 
-
-from openerp.osv.scope import Scope
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

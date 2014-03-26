@@ -34,7 +34,7 @@ import werkzeug.wrappers
 import werkzeug.wsgi
 
 import openerp
-from openerp import SUPERUSER_ID, scope
+from openerp import SUPERUSER_ID
 from openerp.service import security, model as service_model
 import openerp.tools
 
@@ -1137,19 +1137,18 @@ class Root(object):
                 db = request.session.db
                 if db:
                     openerp.modules.registry.RegistryManager.check_registry_signaling(db)
-                    with scope(request.cr, request.uid or SUPERUSER_ID, request.context):
-                        try:
-                            with openerp.tools.mute_logger('openerp.sql_db'):
-                                ir_http = request.registry['ir.http']
-                        except psycopg2.OperationalError:
-                            # psycopg2 error. At this point, that means the
-                            # database probably does not exists anymore. Log the
-                            # user out and fall back to nodb
-                            request.session.logout()
-                            result = _dispatch_nodb()
-                        else:
-                            result = ir_http._dispatch()
-                            openerp.modules.registry.RegistryManager.signal_caches_change(db)
+                    try:
+                        with openerp.tools.mute_logger('openerp.sql_db'):
+                            ir_http = request.registry['ir.http']
+                    except psycopg2.OperationalError:
+                        # psycopg2 error. At this point, that means the
+                        # database probably does not exists anymore. Log the
+                        # user out and fall back to nodb
+                        request.session.logout()
+                        result = _dispatch_nodb()
+                    else:
+                        result = ir_http._dispatch()
+                        openerp.modules.registry.RegistryManager.signal_caches_change(db)
                 else:
                     result = _dispatch_nodb()
 

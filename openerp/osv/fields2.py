@@ -392,16 +392,15 @@ class Field(object):
             pass
 
         # cache miss, retrieve value
-        with record._scope as scope:
-            if record._id:
-                # normal record -> read or compute value for this field
-                self.determine_value(record[0])
-            elif record:
-                # new record -> compute default value for this field
-                record.add_default_value(self.name)
-            else:
-                # null record -> return the null value for this field
-                return self.null(scope)
+        if record._id:
+            # normal record -> read or compute value for this field
+            self.determine_value(record[0])
+        elif record:
+            # new record -> compute default value for this field
+            record.add_default_value(self.name)
+        else:
+            # null record -> return the null value for this field
+            return self.null(record._scope)
 
         # the result should be in cache now
         return record._cache[self]
@@ -412,32 +411,32 @@ class Field(object):
             raise Warning("Null record %s may not be assigned" % record)
 
         # only one record is updated
+        scope = record._scope
         record = record[0]
 
-        with record._scope as scope:
-            # adapt value to the cache level
-            value = self.convert_to_cache(value, scope)
+        # adapt value to the cache level
+        value = self.convert_to_cache(value, scope)
 
-            if scope.draft or not record._id:
-                # determine dependent fields
-                spec = self.modified_draft(record)
+        if scope.draft or not record._id:
+            # determine dependent fields
+            spec = self.modified_draft(record)
 
-                # set value in cache, inverse field, and mark record as dirty
-                record._cache[self] = value
-                if scope.draft:
-                    if self.inverse_field:
-                        self.inverse_field._update(value, record)
-                    record._dirty = True
+            # set value in cache, inverse field, and mark record as dirty
+            record._cache[self] = value
+            if scope.draft:
+                if self.inverse_field:
+                    self.inverse_field._update(value, record)
+                record._dirty = True
 
-                # determine more dependent fields, and invalidate them
-                if self.relational:
-                    spec += self.modified_draft(record)
-                scope.invalidate(spec)
+            # determine more dependent fields, and invalidate them
+            if self.relational:
+                spec += self.modified_draft(record)
+            scope.invalidate(spec)
 
-            else:
-                # simply write to the database, and update cache
-                record.write({self.name: self.convert_to_write(value)})
-                record._cache[self] = value
+        else:
+            # simply write to the database, and update cache
+            record.write({self.name: self.convert_to_write(value)})
+            record._cache[self] = value
 
     #
     # Computation of field values
@@ -521,16 +520,16 @@ class Field(object):
             invalidate.
         """
         scope = records._scope(user=SUPERUSER_ID, context={'active_test': False})
+        recomputation = scope.recomputation
 
         # invalidate the fields that depend on self, and prepare recomputation
         spec = [(self, records._ids)]
         for field, path in self._triggers:
             if field.store:
-                with scope:
-                    target = scope[field.model_name].search([(path, 'in', records._ids)])
+                target = scope[field.model_name].search([(path, 'in', records._ids)])
                 if target:
                     spec.append((field, target._ids))
-                    scope.recomputation[field] |= target
+                    recomputation[field] |= target
             else:
                 spec.append((field, None))
 
@@ -868,8 +867,7 @@ class Many2one(_Relational):
             # evaluate name_get() in sudo scope, because the visibility of a
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
-            with value._scope.sudo():
-                return value.name_get()[0]
+            return value.attach_scope(value._scope.sudo()).name_get()[0]
         else:
             return value.id
 

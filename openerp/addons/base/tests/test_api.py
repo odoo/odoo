@@ -1,6 +1,5 @@
 
 from openerp import BaseModel
-from openerp import SUPERUSER_ID, scope
 from openerp.tools import mute_logger
 from openerp.osv.orm import except_orm
 from openerp.tests import common
@@ -8,13 +7,6 @@ from openerp.tests import common
 
 class TestAPI(common.TransactionCase):
     """ test the new API of the ORM """
-
-    def setUp(self):
-        super(TestAPI, self).setUp()
-        self.res_partner = self.registry('res.partner')
-        self.res_users = self.registry('res.users')
-        self.Partner = scope['res.partner']
-        self.Users = scope['res.users']
 
     def assertIsRecordset(self, value, model):
         self.assertIsInstance(value, BaseModel)
@@ -32,8 +24,8 @@ class TestAPI(common.TransactionCase):
     def test_00_query(self):
         """ Build a recordset, and check its contents. """
         domain = [('name', 'ilike', 'j')]
-        ids = self.res_partner.search(self.cr, self.uid, domain)
-        partners = self.Partner.search(domain)
+        ids = self.registry('res.partner').search(self.cr, self.uid, domain)
+        partners = self.scope['res.partner'].search(domain)
 
         # partners is a collection of browse records corresponding to ids
         self.assertTrue(ids)
@@ -41,19 +33,19 @@ class TestAPI(common.TransactionCase):
 
         # partners and its contents are instance of the model, and share its ormcache
         self.assertIsRecordset(partners, 'res.partner')
-        self.assertIs(partners._ormcache, self.Partner._ormcache)
+        self.assertIs(partners._ormcache, self.scope['res.partner']._ormcache)
         for p in partners:
             self.assertIsRecord(p, 'res.partner')
-            self.assertIs(p._ormcache, self.Partner._ormcache)
+            self.assertIs(p._ormcache, self.scope['res.partner']._ormcache)
 
         self.assertEqual([p.id for p in partners], ids)
-        self.assertEqual(self.Partner.browse(ids), partners)
+        self.assertEqual(self.scope['res.partner'].browse(ids), partners)
 
     @mute_logger('openerp.osv.orm')
     def test_01_query_offset(self):
         """ Build a recordset with offset, and check equivalence. """
-        partners1 = self.Partner.search([], offset=10)
-        partners2 = self.Partner.search([])[10:]
+        partners1 = self.scope['res.partner'].search([], offset=10)
+        partners2 = self.scope['res.partner'].search([])[10:]
         self.assertIsRecordset(partners1, 'res.partner')
         self.assertIsRecordset(partners2, 'res.partner')
         self.assertEqual(list(partners1), list(partners2))
@@ -61,8 +53,8 @@ class TestAPI(common.TransactionCase):
     @mute_logger('openerp.osv.orm')
     def test_02_query_limit(self):
         """ Build a recordset with offset, and check equivalence. """
-        partners1 = self.Partner.search([], limit=10)
-        partners2 = self.Partner.search([])[:10]
+        partners1 = self.scope['res.partner'].search([], limit=10)
+        partners2 = self.scope['res.partner'].search([])[:10]
         self.assertIsRecordset(partners1, 'res.partner')
         self.assertIsRecordset(partners2, 'res.partner')
         self.assertEqual(list(partners1), list(partners2))
@@ -70,8 +62,8 @@ class TestAPI(common.TransactionCase):
     @mute_logger('openerp.osv.orm')
     def test_03_query_offset_limit(self):
         """ Build a recordset with offset and limit, and check equivalence. """
-        partners1 = self.Partner.search([], offset=3, limit=7)
-        partners2 = self.Partner.search([])[3:10]
+        partners1 = self.scope['res.partner'].search([], offset=3, limit=7)
+        partners2 = self.scope['res.partner'].search([])[3:10]
         self.assertIsRecordset(partners1, 'res.partner')
         self.assertIsRecordset(partners2, 'res.partner')
         self.assertEqual(list(partners1), list(partners2))
@@ -80,27 +72,27 @@ class TestAPI(common.TransactionCase):
     def test_05_immutable(self):
         """ Check that a recordset remains the same, even after updates. """
         domain = [('name', 'ilike', 'j')]
-        partners = self.Partner.search(domain)
+        partners = self.scope['res.partner'].search(domain)
         self.assertTrue(partners)
         ids = map(int, partners)
 
         # modify those partners, and check that partners has not changed
-        self.res_partner.write(self.cr, self.uid, ids, {'active': False})
+        self.registry('res.partner').write(self.cr, self.uid, ids, {'active': False})
         self.assertEqual(ids, map(int, partners))
 
         # redo the search, and check that the result is now empty
-        partners2 = self.Partner.search(domain)
+        partners2 = self.scope['res.partner'].search(domain)
         self.assertFalse(partners2)
 
     @mute_logger('openerp.osv.orm')
     def test_06_fields(self):
         """ Check that relation fields return records, recordsets or nulls. """
-        user = self.res_users.browse(self.cr, self.uid, self.uid)
+        user = self.registry('res.users').browse(self.cr, self.uid, self.uid)
         self.assertIsRecord(user, 'res.users')
         self.assertIsRecord(user.partner_id, 'res.partner')
         self.assertIsRecordset(user.groups_id, 'res.groups')
 
-        partners = self.Partner.search([])
+        partners = self.scope['res.partner'].search([])
         for name, cinfo in partners._all_columns.iteritems():
             if cinfo.column._type == 'many2one':
                 for p in partners:
@@ -117,7 +109,7 @@ class TestAPI(common.TransactionCase):
     def test_07_null(self):
         """ Check behavior of null instances. """
         # select a partner without a parent
-        partner = self.Partner.search([('parent_id', '=', False)])[0]
+        partner = self.scope['res.partner'].search([('parent_id', '=', False)])[0]
 
         # check partner and related null instances
         self.assertTrue(partner)
@@ -139,7 +131,7 @@ class TestAPI(common.TransactionCase):
     @mute_logger('openerp.osv.orm')
     def test_10_old_old(self):
         """ Call old-style methods in the old-fashioned way. """
-        partners = self.Partner.search([('name', 'ilike', 'j')])
+        partners = self.scope['res.partner'].search([('name', 'ilike', 'j')])
         self.assertTrue(partners)
         ids = map(int, partners)
 
@@ -151,7 +143,7 @@ class TestAPI(common.TransactionCase):
     @mute_logger('openerp.osv.orm')
     def test_20_old_new(self):
         """ Call old-style methods in the new API style. """
-        partners = self.Partner.search([('name', 'ilike', 'j')])
+        partners = self.scope['res.partner'].search([('name', 'ilike', 'j')])
         self.assertTrue(partners)
 
         # call method name_get on partners itself, and check its effect
@@ -162,7 +154,7 @@ class TestAPI(common.TransactionCase):
     @mute_logger('openerp.osv.orm')
     def test_25_old_new(self):
         """ Call old-style methods on records (new API style). """
-        partners = self.Partner.search([('name', 'ilike', 'j')])
+        partners = self.scope['res.partner'].search([('name', 'ilike', 'j')])
         self.assertTrue(partners)
 
         # call method name_get on partner records, and check its effect
@@ -175,7 +167,7 @@ class TestAPI(common.TransactionCase):
     @mute_logger('openerp.osv.orm')
     def test_30_new_old(self):
         """ Call new-style methods in the old-fashioned way. """
-        partners = self.Partner.search([('name', 'ilike', 'j')])
+        partners = self.scope['res.partner'].search([('name', 'ilike', 'j')])
         self.assertTrue(partners)
         ids = map(int, partners)
 
@@ -187,7 +179,7 @@ class TestAPI(common.TransactionCase):
     @mute_logger('openerp.osv.orm')
     def test_40_new_new(self):
         """ Call new-style methods in the new API style. """
-        partners = self.Partner.search([('name', 'ilike', 'j')])
+        partners = self.scope['res.partner'].search([('name', 'ilike', 'j')])
         self.assertTrue(partners)
 
         # call method write on partners itself, and check its effect
@@ -198,7 +190,7 @@ class TestAPI(common.TransactionCase):
     @mute_logger('openerp.osv.orm')
     def test_45_new_new(self):
         """ Call new-style methods on records (new API style). """
-        partners = self.Partner.search([('name', 'ilike', 'j')])
+        partners = self.scope['res.partner'].search([('name', 'ilike', 'j')])
         self.assertTrue(partners)
 
         # call method write on partner records, and check its effects
@@ -208,50 +200,57 @@ class TestAPI(common.TransactionCase):
             self.assertFalse(p.active)
 
     @mute_logger('openerp.osv.orm')
+    @mute_logger('openerp.addons.base.ir.ir_model')
     def test_50_scope(self):
-        """ Test scope nesting. """
-        # retrieve another user
-        user = self.Users.search([('id', '!=', self.uid)])[0]
-        self.assertNotEqual(user.id, self.uid)
+        """ Test scope on records. """
+        # partners and reachable records are attached to self.scope
+        partners = self.scope['res.partner'].search([('name', 'ilike', 'j')])
+        self.assertEqual(partners._scope, self.scope)
+        for x in (partners, partners[0], partners[0].company_id):
+            self.assertEqual(x._scope, self.scope)
+        for p in partners:
+            self.assertEqual(p._scope, self.scope)
 
-        scope0 = scope.current
-        self.assertEqual(scope.cr, self.cr)
-        self.assertEqual(scope.uid, self.uid)
+        # check that the current user can read and modify company data
+        partners[0].company_id.name
+        partners[0].company_id.write({'name': 'Fools'})
 
-        with scope(self.cr, self.uid, {}) as scope1:
-            self.assertEqual(scope.current, scope1)
-            self.assertEqual(scope.cr, self.cr)
-            self.assertEqual(scope.uid, self.uid)
+        # create a scope with the demo user
+        demo = self.scope['res.users'].search([('login', '=', 'demo')])[0]
+        demo_scope = self.scope(user=demo)
+        self.assertNotEqual(demo_scope, self.scope)
 
-            with self.assertRaises(Exception):
-                with scope(user=user, lang=user.lang) as scope2:
-                    self.assertNotEqual(scope.current, scope1)
-                    self.assertEqual(scope.cr, self.cr)
-                    self.assertEqual(scope.user, user)
-                    self.assertEqual(scope.context, {'lang': user.lang})
+        # partners and related records are still attached to self.scope
+        self.assertEqual(partners._scope, self.scope)
+        for x in (partners, partners[0], partners[0].company_id):
+            self.assertEqual(x._scope, self.scope)
+        for p in partners:
+            self.assertEqual(p._scope, self.scope)
 
-                    with scope.sudo():
-                        self.assertEqual(scope.uid, SUPERUSER_ID)
+        # create record instances attached to the inner scope
+        demo_partners = partners.attach_scope(demo_scope)
+        self.assertEqual(demo_partners._scope, demo_scope)
+        for x in (demo_partners, demo_partners[0], demo_partners[0].company_id):
+            self.assertEqual(x._scope, demo_scope)
+        for p in demo_partners:
+            self.assertEqual(p._scope, demo_scope)
 
-                    self.assertEqual(scope.current, scope2)
-                    self.assertEqual(scope.user, user)
+        # demo user can read but not modify company data
+        demo_partners[0].company_id.name
+        with self.assertRaises(except_orm):
+            demo_partners[0].company_id.write({'name': 'Pricks'})
 
-                    # root scope should be with self.uid
-                    self.assertEqual(scope.root.uid, self.uid)
+        # remove demo user from all groups
+        demo.write({'groups_id': [(5,)]})
 
-                    with scope.sudo():
-                        self.assertEqual(scope.uid, SUPERUSER_ID)
-                        raise Exception()       # exit scope with an exception
-
-                    self.fail("Unreachable statement")
-
-            self.assertEqual(scope.current, scope1)
-
-        self.assertEqual(scope.current, scope0)
+        # demo user can no longer access partner data
+        with self.assertRaises(except_orm):
+            demo_partners[0].company_id.name
 
     @mute_logger('openerp.osv.orm')
     def test_55_draft(self):
         """ Test draft mode nesting. """
+        scope = self.scope
         self.assertFalse(scope.draft)
         with scope.in_draft():
             self.assertTrue(scope.draft)
@@ -263,67 +262,10 @@ class TestAPI(common.TransactionCase):
             self.assertTrue(scope.draft)
         self.assertFalse(scope.draft)
 
-        self.assertIs(scope.draft, scope.current.draft)
-
-    @mute_logger('openerp.osv.orm')
-    @mute_logger('openerp.addons.base.ir.ir_model')
-    def test_55_scope(self):
-        """ Test scope on records. """
-        outer_scope = scope.current
-
-        # partners and reachable records are attached to the outer scope
-        partners = self.Partner.search([('name', 'ilike', 'j')])
-        self.assertEqual(partners._scope, outer_scope)
-        for x in (partners, partners[0], partners[0].company_id):
-            self.assertEqual(x._scope, outer_scope)
-        for p in partners:
-            self.assertEqual(p._scope, outer_scope)
-
-        # check that current user can read and modify company data
-        partners[0].company_id.name
-        partners[0].company_id.write({'name': 'Fools'})
-
-        # create a scope with the demo user
-        demo = self.Users.search([('login', '=', 'demo')])[0]
-
-        with scope(user=demo) as inner_scope:
-            self.assertNotEqual(inner_scope, outer_scope)
-
-            # partners and related records are still attached to outer_scope
-            self.assertEqual(partners._scope, outer_scope)
-            for x in (partners, partners[0], partners[0].company_id):
-                self.assertEqual(x._scope, outer_scope)
-            for p in partners:
-                self.assertEqual(p._scope, outer_scope)
-
-            # create record instances attached to the inner scope
-            demo_partners = partners.attach_scope(scope.current)
-            self.assertEqual(demo_partners._scope, inner_scope)
-            for x in (demo_partners, demo_partners[0], demo_partners[0].company_id):
-                self.assertEqual(x._scope, inner_scope)
-            for p in demo_partners:
-                self.assertEqual(p._scope, inner_scope)
-
-            # demo user cannot modify company data, whatever the scope of the record
-            with self.assertRaises(except_orm):
-                partners[0].company_id.write({'name': 'Pricks'})
-            with self.assertRaises(except_orm):
-                demo_partners[0].company_id.write({'name': 'Pricks'})
-
-            # remove demo user from all groups, such that it cannot read partner data
-            with scope.sudo():
-                demo.write({'groups_id': [(5,)]})
-
-            # demo user can no longer access partner data
-            with self.assertRaises(except_orm):
-                demo_partners[0].company_id.name
-            # but it can still read partner data from the outer scope
-            partners[0].company_id.name
-
     @mute_logger('openerp.osv.orm')
     def test_60_cache(self):
         """ Check the record cache behavior """
-        partners = self.Partner.search([('child_ids', '!=', False)])
+        partners = self.scope['res.partner'].search([('child_ids', '!=', False)])
         partner1, partner2 = partners[0], partners[1]
         children1, children2 = partner1.child_ids, partner2.child_ids
         self.assertTrue(children1)
@@ -338,11 +280,11 @@ class TestAPI(common.TransactionCase):
         # fetch data in the cache
         for p in partners:
             p.name, p.company_id.name, p.user_id.name, p.contact_address
-        scope.check_cache()
+        self.scope.check_cache()
 
         # change its parent
         child.write({'parent_id': partner2.id})
-        scope.check_cache()
+        self.scope.check_cache()
 
         # check recordsets
         self.assertEqual(child.parent_id, partner2)
@@ -350,38 +292,38 @@ class TestAPI(common.TransactionCase):
         self.assertIn(child, partner2.child_ids)
         self.assertEqual(set(partner1.child_ids + child), set(children1))
         self.assertEqual(set(partner2.child_ids), set(children2 + child))
-        scope.check_cache()
+        self.scope.check_cache()
 
         # delete it
         child.unlink()
-        scope.check_cache()
+        self.scope.check_cache()
 
         # check recordsets
         self.assertEqual(set(partner1.child_ids), set(children1) - set([child]))
         self.assertEqual(set(partner2.child_ids), set(children2))
-        scope.check_cache()
+        self.scope.check_cache()
 
     @mute_logger('openerp.osv.orm')
     def test_60_cache_prefetching(self):
         """ Check the record cache prefetching """
-        scope.invalidate_all()
+        self.scope.invalidate_all()
 
         # all the records of an instance already have an entry in cache
-        partners = self.Partner.search([])
-        partner_ids = scope.cache_ids['res.partner']
+        partners = self.scope['res.partner'].search([])
+        partner_ids = self.scope.cache_ids['res.partner']
         self.assertEqual(set(partners.unbrowse()), set(partner_ids))
 
         # countries have not been fetched yet; their cache must be empty
-        countries = scope['res.country'].browse()
-        self.assertFalse(scope.cache_ids['res.country'])
+        countries = self.scope['res.country'].browse()
+        self.assertFalse(self.scope.cache_ids['res.country'])
 
         # reading ONE partner should fetch them ALL
         countries |= partners[0].country_id
-        country_cache = scope.cache[partners._fields['country_id']]
+        country_cache = self.scope.cache[partners._fields['country_id']]
         self.assertLessEqual(set(partners._ids), set(country_cache))
 
         # read all partners, and check that the cache already contained them
-        country_ids = list(scope.cache_ids['res.country'])
+        country_ids = list(self.scope.cache_ids['res.country'])
         for p in partners:
             countries |= p.country_id
         self.assertLessEqual(set(countries.unbrowse()), set(country_ids))
@@ -390,7 +332,7 @@ class TestAPI(common.TransactionCase):
     def test_70_one(self):
         """ Check method one(). """
         # check with many records
-        ps = self.Partner.search([('name', 'ilike', 'a')])
+        ps = self.scope['res.partner'].search([('name', 'ilike', 'a')])
         self.assertTrue(len(ps) > 1)
         with self.assertRaises(except_orm): ps.one()
 
@@ -398,22 +340,22 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(len(p1), 1)
         self.assertEqual(p1.one(), p1)
 
-        p0 = self.Partner.browse()
+        p0 = self.scope['res.partner'].browse()
         self.assertEqual(len(p0), 0)
         with self.assertRaises(except_orm): p0.one()
 
     @mute_logger('openerp.osv.orm')
     def test_80_contains(self):
         """ Test membership on recordset. """
-        p1 = self.Partner.search([('name', 'ilike', 'a')], limit=1).one()
-        ps = self.Partner.search([('name', 'ilike', 'a')])
+        p1 = self.scope['res.partner'].search([('name', 'ilike', 'a')], limit=1).one()
+        ps = self.scope['res.partner'].search([('name', 'ilike', 'a')])
         self.assertTrue(p1 in ps)
 
     @mute_logger('openerp.osv.orm')
     def test_80_set_operations(self):
         """ Check set operations on recordsets. """
-        pa = self.Partner.search([('name', 'ilike', 'a')])
-        pb = self.Partner.search([('name', 'ilike', 'b')])
+        pa = self.scope['res.partner'].search([('name', 'ilike', 'a')])
+        pb = self.scope['res.partner'].search([('name', 'ilike', 'b')])
         self.assertTrue(pa)
         self.assertTrue(pb)
         self.assertTrue(set(pa) & set(pb))
@@ -441,7 +383,7 @@ class TestAPI(common.TransactionCase):
 
         # one cannot mix different models with set operations
         ps = pa
-        ms = scope['ir.ui.menu'].search([])
+        ms = self.scope['ir.ui.menu'].search([])
         self.assertNotEqual(ps._name, ms._name)
         self.assertNotEqual(ps, ms)
 

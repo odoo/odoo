@@ -15,7 +15,6 @@ import yaml
 import re
 from lxml import etree
 from openerp import SUPERUSER_ID
-from openerp.osv.scope import Scope
 
 # YAML import needs both safe and unsafe eval, but let's
 # default to /safe/.
@@ -879,8 +878,7 @@ class YamlInterpreter(object):
         for node in yaml.load(yaml_string):
             is_preceded_by_comment = self._log_node(node, is_preceded_by_comment)
             try:
-                with Scope(self.cr, self.uid, self.context):
-                    self._process_node(node)
+                self._process_node(node)
             except Exception, e:
                 _logger.exception(e)
                 raise

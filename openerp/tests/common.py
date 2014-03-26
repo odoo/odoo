@@ -16,7 +16,7 @@ import unittest2
 import xmlrpclib
 
 import openerp
-from openerp import scope
+from openerp import Scope
 
 _logger = logging.getLogger(__name__)
 
@@ -127,10 +127,9 @@ class TransactionCase(BaseCase):
         # and still access them
         TransactionCase.cr = cr = self.cursor()
         TransactionCase.uid = uid = openerp.SUPERUSER_ID
-        TransactionCase.scope = scope(cr, uid, None).__enter__()
+        TransactionCase.scope = Scope(cr, uid, {})
 
     def tearDown(self):
-        self.scope.__exit__(None, None, None)
         self.cr.rollback()
         self.cr.close()
 
@@ -145,11 +144,10 @@ class SingleTransactionCase(BaseCase):
     def setUpClass(cls):
         cls.cr = cls.cursor()
         cls.uid = openerp.SUPERUSER_ID
-        cls.scope = scope(cls.cr, cls.uid, None).__enter__()
+        cls.scope = Scope(cls.cr, cls.uid, {})
 
     @classmethod
     def tearDownClass(cls):
-        cls.scope.__exit__(None, None, None)
         cls.cr.rollback()
         cls.cr.close()
 

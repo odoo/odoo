@@ -135,23 +135,22 @@ class Registry(Mapping):
         models_to_load = [] # need to preserve loading order
         lazy_property.reset_all(self)
 
-        with openerp.osv.scope.Scope(cr, SUPERUSER_ID, None):
-            # call hook before adding stuff in the registry
-            for model in self.models.itervalues():
-                model._before_registry_update(cr, SUPERUSER_ID)
+        # call hook before adding stuff in the registry
+        for model in self.models.itervalues():
+            model._before_registry_update(cr, SUPERUSER_ID)
 
-            # Instantiate registered classes (via the MetaModel automatic discovery
-            # or via explicit constructor call), and add them to the pool.
-            for cls in openerp.osv.orm.MetaModel.module_to_models.get(module.name, []):
-                # models register themselves in self.models
-                model = cls._build_model(self, cr)
-                if model._name not in models_to_load:
-                    # avoid double-loading models whose declaration is split
-                    models_to_load.append(model._name)
+        # Instantiate registered classes (via the MetaModel automatic discovery
+        # or via explicit constructor call), and add them to the pool.
+        for cls in openerp.osv.orm.MetaModel.module_to_models.get(module.name, []):
+            # models register themselves in self.models
+            model = cls._build_model(self, cr)
+            if model._name not in models_to_load:
+                # avoid double-loading models whose declaration is split
+                models_to_load.append(model._name)
 
-            # call hook after models have been instantiated
-            for model in self.models.itervalues():
-                model._after_registry_update(cr, SUPERUSER_ID)
+        # call hook after models have been instantiated
+        for model in self.models.itervalues():
+            model._after_registry_update(cr, SUPERUSER_ID)
 
         return [self.models[m] for m in models_to_load]
 
@@ -265,36 +264,37 @@ class RegistryManager(object):
         """
         import openerp.modules
         with cls.registries_lock:
-            registry = Registry(db_name)
+            with openerp.Scope.manage():
+                registry = Registry(db_name)
 
-            # Initializing a registry will call general code which will in turn
-            # call registries.get (this object) to obtain the registry being
-            # initialized. Make it available in the registries dictionary then
-            # remove it if an exception is raised.
-            cls.delete(db_name)
-            cls.registries[db_name] = registry
-            try:
-                with registry.cursor() as cr:
-                    seq_registry, seq_cache = Registry.setup_multi_process_signaling(cr)
-                    registry.base_registry_signaling_sequence = seq_registry
-                    registry.base_cache_signaling_sequence = seq_cache
-                # This should be a method on Registry
-                openerp.modules.load_modules(registry.db, force_demo, status, update_module)
-            except Exception:
-                del cls.registries[db_name]
-                raise
+                # Initializing a registry will call general code which will in
+                # turn call registries.get (this object) to obtain the registry
+                # being initialized. Make it available in the registries
+                # dictionary then remove it if an exception is raised.
+                cls.delete(db_name)
+                cls.registries[db_name] = registry
+                try:
+                    with registry.cursor() as cr:
+                        seq_registry, seq_cache = Registry.setup_multi_process_signaling(cr)
+                        registry.base_registry_signaling_sequence = seq_registry
+                        registry.base_cache_signaling_sequence = seq_cache
+                    # This should be a method on Registry
+                    openerp.modules.load_modules(registry.db, force_demo, status, update_module)
+                except Exception:
+                    del cls.registries[db_name]
+                    raise
 
-            # load_modules() above can replace the registry by calling
-            # indirectly new() again (when modules have to be uninstalled).
-            # Yeah, crazy.
-            registry = cls.registries[db_name]
+                # load_modules() above can replace the registry by calling
+                # indirectly new() again (when modules have to be uninstalled).
+                # Yeah, crazy.
+                registry = cls.registries[db_name]
 
-            cr = registry.db.cursor()
-            try:
-                registry.do_parent_store(cr)
-                cr.commit()
-            finally:
-                cr.close()
+                cr = registry.db.cursor()
+                try:
+                    registry.do_parent_store(cr)
+                    cr.commit()
+                finally:
+                    cr.close()
 
         registry.ready = True
 

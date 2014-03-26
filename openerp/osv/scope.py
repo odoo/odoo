@@ -19,94 +19,15 @@
 #
 ##############################################################################
 
-""" This module provides the elements for managing execution environments or
-    "scopes". Scopes are nestable and provides convenient access to shared
-    objects. The object :obj:`proxy` is a proxy object to the current scope.
+""" This module provides the elements for managing an execution environment (or
+    "scope") for model instances.
 """
 
 from collections import defaultdict, MutableMapping
 from contextlib import contextmanager
 from pprint import pformat
+from weakref import WeakSet
 from werkzeug.local import Local, release_local
-
-
-class ScopeProxy(object):
-    """ This a proxy object to the current scope. """
-    def __init__(self):
-        self._local = Local()
-
-    def release(self):
-        """ release the werkzeug local variable """
-        release_local(self._local)
-
-    @property
-    def stack(self):
-        """ return the stack of scopes (as a list) """
-        try:
-            return self._local.stack
-        except AttributeError:
-            self._local.stack = stack = []
-            return stack
-
-    @property
-    def root(self):
-        stack = self.stack
-        return stack[0] if stack else None
-
-    @property
-    def current(self):
-        stack = self.stack
-        return stack[-1] if stack else None
-
-    def __getitem__(self, name):
-        return self.current[name]
-
-    def __getattr__(self, name):
-        return getattr(self.current, name)
-
-    def __call__(self, *args, **kwargs):
-        # apply current scope or instantiate one
-        return (self.current or Scope)(*args, **kwargs)
-
-    @property
-    def all_scopes(self):
-        """ return the list of known scopes """
-        try:
-            return self._local.scopes
-        except AttributeError:
-            self._local.scopes = scopes = []
-            return scopes
-
-    def invalidate(self, spec):
-        """ Invalidate some fields for some records in the caches.
-
-            :param spec: what to invalidate, a list of `(field, ids)` pair,
-                where `field` is a field object, and `ids` is a list of record
-                ids or ``None`` (to invalidate all records).
-        """
-        for scope in self.all_scopes:
-            scope.invalidate(spec)
-
-    def invalidate_all(self):
-        """ Invalidate the record caches in all scopes. """
-        for scope in self.all_scopes:
-            scope.invalidate_all()
-
-    def check_cache(self):
-        """ Check the record caches in all scopes. """
-        for scope in self.all_scopes:
-            scope.check_cache()
-
-    @property
-    def shared(self):
-        """ Return the shared object. """
-        try:
-            return self._local.shared
-        except AttributeError:
-            self._local.shared = shared = Shared()
-            return shared
-
-proxy = ScopeProxy()
 
 
 class Scope(object):
@@ -116,62 +37,41 @@ class Scope(object):
          - :attr:`uid`, the current user id;
          - :attr:`context`, the current context dictionary;
          - :attr:`args`, a tuple containing the three values above.
-
-        An execution environment is created by a statement ``with``::
-
-            with Scope(cr, uid, context):
-                # statements execute in given scope
-
-                # retrieve environment data
-                cr, uid, context = scope.args
-
-        The scope provides extra attributes:
-
-         - :attr:`registry`, the model registry of the current database,
-         - :attr:`cache`, the records cache for this scope,
-
-        The records cache is a set of nested dictionaries, indexed by model
-        name, record id, and field name (in that order).
     """
+    _local = Local()
+
+    @classmethod
+    @contextmanager
+    def manage(cls):
+        """ Context manager for a set of scopes. """
+        try:
+            assert not hasattr(cls._local, 'scopes')
+            cls._local.scopes = WeakSet()
+            yield
+        finally:
+            release_local(cls._local)
+
     def __new__(cls, cr, uid, context):
-        if context is None:
-            context = {}
+        assert context is not None
         args = (cr, uid, context)
 
         # if scope already exists, return it
-        scope_list = proxy.all_scopes
-        for scope in scope_list:
+        scope, scopes = None, cls._local.scopes
+        for scope in scopes:
             if scope.args == args:
                 return scope
 
-        # otherwise create scope, and add it in the list
-        scope = object.__new__(cls)
-        scope.cr, scope.uid, scope.context = scope.args = args
-        scope.registry = RegistryManager.get(cr.dbname)
-        scope.cache = defaultdict(dict)     # cache[field] = {id: value}
-        scope.cache_ids = defaultdict(set)  # cache_ids[model_name] = set(ids)
-        scope.dirty = set()                 # set of dirty records
-        scope.shared = proxy.shared         # shared state object
-        scope_list.append(scope)
-        return scope
-
-    def __eq__(self, other):
-        if isinstance(other, Scope):
-            other = other.args
-        return self.args == tuple(other)
-
-    def __ne__(self, other):
-        return not self == other
-
-    def __enter__(self):
-        proxy.stack.append(self)
+        # otherwise create scope, and add it in the set
+        self = object.__new__(cls)
+        self.cr, self.uid, self.context = self.args = args
+        self.registry = RegistryManager.get(cr.dbname)
+        self.cache = defaultdict(dict)     # cache[field] = {id: value}
+        self.cache_ids = defaultdict(set)  # cache_ids[model_name] = set(ids)
+        self.dirty = set()                 # set of dirty records
+        self.shared = scope.shared if scope else Shared()
+        self.all = scopes
+        scopes.add(self)
         return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        stack = proxy.stack
-        stack.pop()
-        if not stack:
-            proxy.release()
 
     def __getitem__(self, model_name):
         """ return a given model """
@@ -185,22 +85,10 @@ class Scope(object):
             :param context: optional context dictionary to change the current context
             :param kwargs: a set of key-value pairs to update the context
         """
-        # determine cr, uid, context
-        if cr is None:
-            cr = self.cr
-
-        if user is None:
-            uid = self.uid
-        elif isinstance(user, BaseModel):
-            assert user._name == 'res.users'
-            uid = user.id
-        else:
-            uid = user
-
-        if context == ():
-            context = self.context
+        cr = self.cr if cr is None else cr
+        uid = self.uid if user is None else int(user)
+        context = self.context if context == () else context
         context = dict(context or {}, **kwargs)
-
         return Scope(cr, uid, context)
 
     def sudo(self):
@@ -215,8 +103,7 @@ class Scope(object):
     @property
     def user(self):
         """ return the current user (as an instance) """
-        with proxy.sudo():
-            return self['res.users'].browse(self.uid)
+        return self.sudo()['res.users'].browse(self.uid)
 
     @property
     def lang(self):
@@ -265,6 +152,7 @@ class Scope(object):
                 where `field` is a field object, and `ids` is a list of record
                 ids or ``None`` (to invalidate all records).
         """
+        # invalidate spec in self
         for field, ids in spec:
             if ids is None:
                 self.cache.pop(field, None)
@@ -273,39 +161,43 @@ class Scope(object):
                 for id in ids:
                     field_cache.pop(id, None)
 
-    def invalidate_all(self):
-        """ Invalidate the cache. """
-        self.cache.clear()
-        self.cache_ids.clear()
-        self.dirty.clear()
+        # invalidate everything in the other scopes
+        self.invalidate_all(self)
+
+    def invalidate_all(self, other=None):
+        """ Invalidate the cache of all scopes, except `other`. """
+        for scope in list(self.all):
+            if scope is not other:
+                scope.cache.clear()
+                scope.cache_ids.clear()
+                scope.dirty.clear()
 
     def check_cache(self):
         """ Check the cache consistency. """
-        with self:
-            # make a full copy of the cache, and invalidate it
-            cache_dump = dict(
-                (field, dict(field_cache))
-                for field, field_cache in self.cache.iteritems()
-            )
-            self.invalidate_all()
+        # make a full copy of the cache, and invalidate it
+        cache_dump = dict(
+            (field, dict(field_cache))
+            for field, field_cache in self.cache.iteritems()
+        )
+        self.invalidate_all()
 
-            # re-fetch the records, and compare with their former cache
-            invalids = []
-            for field, field_dump in cache_dump.iteritems():
-                ids = filter(None, list(field_dump))
-                records = self[field.model_name].browse(ids)
-                for record in records:
-                    try:
-                        cached = field_dump[record._id]
-                        fetched = record[field.name]
-                        if fetched != cached:
-                            info = {'cached': cached, 'fetched': fetched}
-                            invalids.append((field, record, info))
-                    except (AccessError, MissingError):
-                        pass
+        # re-fetch the records, and compare with their former cache
+        invalids = []
+        for field, field_dump in cache_dump.iteritems():
+            ids = filter(None, list(field_dump))
+            records = self[field.model_name].browse(ids)
+            for record in records:
+                try:
+                    cached = field_dump[record._id]
+                    fetched = record[field.name]
+                    if fetched != cached:
+                        info = {'cached': cached, 'fetched': fetched}
+                        invalids.append((field, record, info))
+                except (AccessError, MissingError):
+                    pass
 
-            if invalids:
-                raise Warning('Invalid cache for fields\n' + pformat(invalids))
+        if invalids:
+            raise Warning('Invalid cache for fields\n' + pformat(invalids))
 
 
 class Shared(object):

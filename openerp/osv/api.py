@@ -39,12 +39,12 @@
 
     may also be written as::
 
-        with scope(cr, uid, context):       # cr, uid, context introduced once
-            model = scope[MODEL]            # scope proxies the current scope
-            recs = model.search(DOMAIN)     # search returns a recordset
-            for rec in recs:                # iterate over the records
-                print rec.name
-            recs.write(VALUES)              # update all records in recs
+        scope = Scope(cr, uid, context)     # cr, uid, context wrapped in scope
+        model = scope[MODEL]                # retrieve an instance of MODEL
+        recs = model.search(DOMAIN)         # search returns a recordset
+        for rec in recs:                    # iterate over the records
+            print rec.name
+        recs.write(VALUES)                  # update all records in recs
 
     Methods written in the "traditional" style are automatically decorated,
     following some heuristics based on parameter names.
@@ -77,7 +77,8 @@ _logger = logging.getLogger(__name__)
 #  - method._orig: original method
 #
 
-_WRAPPED_ATTRS = ('_api', '_constrains', '_depends', '_returns', 'clear_cache')
+_WRAPPED_ATTRS = ('__module__', '__name__', '__doc__',
+    '_api', '_constrains', '_depends', '_returns', 'clear_cache')
 
 
 class Meta(type):
@@ -137,18 +138,16 @@ def depends(*args):
     return decorate
 
 
-def returns(model, traditional=None):
+def returns(model, downgrade=None):
     """ Return a decorator for methods that return instances of `model`.
 
-        :param model: a model name, ``'self'`` for the current model, or a method
-            (in which case the model is taken from that method's decorator)
+        :param model: a model name, or ``'self'`` for the current model
 
-        :param traditional: a function `convert(self, value)` to convert the
-            record-style value to the traditional-style output
+        :param downgrade: a function `downgrade(value)` to convert the
+            record-style `value` to a traditional-style output
 
         The decorator adapts the method output to the api style: `id`, `ids` or
-        ``False`` for the traditional style, and record, recordset or null for
-        the record style::
+        ``False`` for the traditional style, and recordset for the record style::
 
             @model
             @returns('res.partner')
@@ -169,10 +168,10 @@ def returns(model, traditional=None):
         if hasattr(method, '_orig'):
             # decorate the original method, and re-apply the api decorator
             origin = method._orig
-            origin._returns = model, traditional
+            origin._returns = model, downgrade
             return origin._api(origin)
         else:
-            method._returns = model, traditional
+            method._returns = model, downgrade
             return method
 
     return decorate
@@ -192,157 +191,81 @@ def propagate_returns(from_method, to_method):
         return to_method
 
 
-# constant converters
-_CONVERT_PASS = lambda self, value: value
-_CONVERT_BROWSE = lambda self, value: self.browse(value)
-_CONVERT_UNBROWSE = lambda self, value: value.unbrowse()
+def make_wrapper(method, old_api, new_api):
+    """ Return a wrapper method for `method`. """
+    def wrapper(self, *args, **kwargs):
+        if hasattr(self, '_ids'):
+            return new_api(self, *args, **kwargs)
+        else:
+            return old_api(self, *args, **kwargs)
+
+    # propagate specific openerp attributes to wrapper
+    for attr in _WRAPPED_ATTRS:
+        if hasattr(method, attr):
+            setattr(wrapper, attr, getattr(method, attr))
+    wrapper._orig = method
+
+    return wrapper
 
 
-def _converter_to_old(method):
-    """ Return a function `convert(self, value)` that adapts `value` from
-        record-style to traditional-style returning convention of `method`.
+def get_downgrade(method):
+    """ Return a function `downgrade(value)` that adapts `value` from
+        record-style to traditional-style, following the convention of `method`.
     """
     spec = get_returns(method)
     if spec:
-        model, traditional = spec
-        return traditional or _CONVERT_UNBROWSE
+        model, downgrade = spec
+        return downgrade or (lambda value: value.unbrowse())
     else:
-        return _CONVERT_PASS
+        return lambda value: value
 
 
-def _converter_to_new(method):
-    """ Return a function `convert(self, value)` that adapts `value` from
-        traditional-style to record-style returning convention of `method`.
+def get_upgrade(method):
+    """ Return a function `upgrade(self, value)` that adapts `value` from
+        traditional-style to record-style, following the convention of `method`.
     """
     spec = get_returns(method)
     if spec:
-        model, traditional = spec
+        model, downgrade = spec
         if model == 'self':
-            return _CONVERT_BROWSE
+            return lambda self, value: self.browse(value)
         else:
             return lambda self, value: self._scope[model].browse(value)
     else:
-        return _CONVERT_PASS
+        return lambda self, value: value
 
 
-def _aggregator_one(method):
-    """ Return a function `convert(self, value)` that aggregates record-style
+def get_aggregate(method):
+    """ Return a function `aggregate(self, value)` that aggregates record-style
         `value` for a method decorated with ``@one``.
     """
     spec = get_returns(method)
     if spec:
         # value is a list of instances, concatenate them
-        model, traditional = spec
+        model, downgrade = spec
         if model == 'self':
             return lambda self, value: sum(value, self.browse())
         else:
             return lambda self, value: sum(value, self._scope[model].browse())
     else:
-        return _CONVERT_PASS
+        return lambda self, value: value
 
 
-def wraps(method):
-    """ Return a decorator for an api wrapper of `method`. """
-    def decorate(wrapper):
-        # propagate '__module__', '__name__', '__doc__' to wrapper
-        update_wrapper(wrapper, method)
-        # propagate specific openerp attributes to wrapper
-        for attr in _WRAPPED_ATTRS:
-            if hasattr(method, attr):
-                setattr(wrapper, attr, getattr(method, attr))
-        wrapper._orig = method
-        return wrapper
+def get_context_split(method):
+    """ Return a function `split` that extracts the context from a pair of
+        positional and keyword arguments::
 
-    return decorate
-
-
-def _cr_uid_context_splitter(method):
-    """ return a function that splits scope parameters from the other arguments """
-    names = getargspec(method).args[1:]
-    ctx_pos = len(names) + 2
+            context, args, kwargs = split(args, kwargs)
+    """
+    pos = len(getargspec(method).args) - 1
 
     def split(args, kwargs):
-        cr, uid = args[:2]
-        if ctx_pos < len(args):
-            return cr, uid, args[ctx_pos], args[2:ctx_pos], kwargs
+        if pos < len(args):
+            return args[pos], args[:pos], kwargs
         else:
-            return cr, uid, kwargs.pop('context', None), args[2:], kwargs
+            return kwargs.pop('context', None), args, kwargs
 
     return split
-
-
-def _cr_uid_ids_context_splitter(method):
-    """ return a function that splits scope parameters from the other arguments """
-    names = getargspec(method).args[1:]
-    ctx_pos = len(names) + 3
-
-    def split(args, kwargs):
-        cr, uid, ids = args[:3]
-        if ctx_pos < len(args):
-            return cr, uid, ids, args[ctx_pos], args[3:ctx_pos], kwargs
-        else:
-            return cr, uid, ids, kwargs.pop('context', None), args[3:], kwargs
-
-    return split
-
-
-def _scope_cr_getter(method):
-    """ return a function that makes the scope corresponding to parameters """
-    names = getargspec(method).args
-    cr_name = len(names) > 1 and names[1]
-
-    def get(args, kwargs):
-        cr = args[0] if args else kwargs[cr_name]
-        return Scope(cr, SUPERUSER_ID, None)
-
-    return get
-
-
-def _scope_cr_uid_getter(method):
-    """ return a function that makes the scope corresponding to parameters """
-    names = getargspec(method).args
-    cr_name = len(names) > 1 and names[1]
-    uid_name = len(names) > 2 and names[2]
-
-    def get(args, kwargs):
-        nargs = len(args)
-        cr = args[0] if nargs > 0 else kwargs[cr_name]
-        uid = args[1] if nargs > 1 else kwargs[uid_name]
-        return Scope(cr, uid, None)
-
-    return get
-
-
-def _scope_cr_context_getter(method):
-    """ return a function that makes the scope corresponding to parameters """
-    names = getargspec(method).args
-    cr_name = len(names) > 1 and names[1]
-    ctx_pos = names.index('context') - 1 if 'context' in names else 1024
-
-    def get(args, kwargs):
-        nargs = len(args)
-        cr = args[0] if nargs > 0 else kwargs[cr_name]
-        context = args[ctx_pos] if nargs > ctx_pos else kwargs.get('context')
-        return Scope(cr, SUPERUSER_ID, context)
-
-    return get
-
-
-def _scope_cr_uid_context_getter(method):
-    """ return a function that makes the scope corresponding to parameters """
-    names = getargspec(method).args
-    cr_name = len(names) > 1 and names[1]
-    uid_name = len(names) > 2 and names[2]
-    ctx_pos = names.index('context') - 1 if 'context' in names else 1024
-
-    def get(args, kwargs):
-        nargs = len(args)
-        cr = args[0] if nargs > 0 else kwargs[cr_name]
-        uid = args[1] if nargs > 1 else kwargs[uid_name]
-        context = args[ctx_pos] if nargs > ctx_pos else kwargs.get('context')
-        return Scope(cr, uid, context)
-
-    return get
 
 
 def model(method):
@@ -359,21 +282,16 @@ def model(method):
             model.method(cr, uid, args, context=context)
     """
     method._api = model
-    split_args = _cr_uid_context_splitter(method)
-    new_to_old = _converter_to_old(method)
+    split = get_context_split(method)
+    downgrade = get_downgrade(method)
 
-    @wraps(method)
-    def model_wrapper(self, *args, **kwargs):
-        if not hasattr(self, '_ids'):
-            cr, uid, context, args, kwargs = split_args(args, kwargs)
-            recs = self.browse(cr, uid, [], context)
-            with recs._scope:
-                value = method(recs, *args, **kwargs)
-                return new_to_old(recs, value)
-        else:
-            return method(self, *args, **kwargs)
+    def old_api(self, cr, uid, *args, **kwargs):
+        context, args, kwargs = split(args, kwargs)
+        recs = self.browse(cr, uid, [], context)
+        result = method(recs, *args, **kwargs)
+        return downgrade(result)
 
-    return model_wrapper
+    return make_wrapper(method, old_api, method)
 
 
 def multi(method):
@@ -393,21 +311,16 @@ def multi(method):
             model.method(cr, uid, ids, args, context=context)
     """
     method._api = multi
-    split_args = _cr_uid_ids_context_splitter(method)
-    new_to_old = _converter_to_old(method)
+    split = get_context_split(method)
+    downgrade = get_downgrade(method)
 
-    @wraps(method)
-    def multi_wrapper(self, *args, **kwargs):
-        if not hasattr(self, '_ids'):
-            cr, uid, ids, context, args, kwargs = split_args(args, kwargs)
-            recs = self.browse(cr, uid, ids, context)
-            with recs._scope:
-                value = method(recs, *args, **kwargs)
-                return new_to_old(recs, value)
-        else:
-            return method(self, *args, **kwargs)
+    def old_api(self, cr, uid, ids, *args, **kwargs):
+        context, args, kwargs = split(args, kwargs)
+        recs = self.browse(cr, uid, ids, context)
+        result = method(recs, *args, **kwargs)
+        return downgrade(result)
 
-    return multi_wrapper
+    return make_wrapper(method, old_api, method)
 
 
 def one(method):
@@ -429,23 +342,21 @@ def one(method):
             model.method(cr, uid, recs.unbrowse(), args, context=context)
     """
     method._api = one
-    split_args = _cr_uid_ids_context_splitter(method)
-    new_to_old = _converter_to_old(method)
-    aggregate = _aggregator_one(method)
+    split = get_context_split(method)
+    downgrade = get_downgrade(method)
+    aggregate = get_aggregate(method)
 
-    @wraps(method)
-    def one_wrapper(self, *args, **kwargs):
-        if not hasattr(self, '_ids'):
-            cr, uid, ids, context, args, kwargs = split_args(args, kwargs)
-            recs = self.browse(cr, uid, ids, context)
-            with recs._scope:
-                value = [method(rec, *args, **kwargs) for rec in recs]
-                return new_to_old(recs, aggregate(recs, value))
-        else:
-            value = [method(rec, *args, **kwargs) for rec in self]
-            return aggregate(self, value)
+    def old_api(self, cr, uid, ids, *args, **kwargs):
+        context, args, kwargs = split(args, kwargs)
+        recs = self.browse(cr, uid, ids, context)
+        result = new_api(recs, *args, **kwargs)
+        return downgrade(result)
 
-    return one_wrapper
+    def new_api(self, *args, **kwargs):
+        result = [method(rec, *args, **kwargs) for rec in self]
+        return aggregate(self, result)
+
+    return make_wrapper(method, old_api, new_api)
 
 
 def cr(method):
@@ -456,58 +367,41 @@ def cr(method):
             obj.method(cr, args)        # traditional style
     """
     method._api = cr
-    get_scope = _scope_cr_getter(method)
-    old_to_new = _converter_to_new(method)
+    upgrade = get_upgrade(method)
 
-    @wraps(method)
-    def cr_wrapper(self, *args, **kwargs):
-        if not hasattr(self, '_ids'):
-            with get_scope(args, kwargs):
-                return method(self, *args, **kwargs)
-        else:
-            value = method(self._model, scope.cr, *args, **kwargs)
-            return old_to_new(self, value)
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self._scope.args
+        result = method(self._model, cr, *args, **kwargs)
+        return upgrade(self, result)
 
-    return cr_wrapper
+    return make_wrapper(method, method, new_api)
 
 
 def cr_context(method):
     """ Decorate a traditional-style method that takes `cr`, `context` as parameters. """
     method._api = cr_context
-    get_scope = _scope_cr_context_getter(method)
-    old_to_new = _converter_to_new(method)
+    upgrade = get_upgrade(method)
 
-    @wraps(method)
-    def cr_context_wrapper(self, *args, **kwargs):
-        if not hasattr(self, '_ids'):
-            with get_scope(args, kwargs):
-                return method(self, *args, **kwargs)
-        else:
-            cr, _, context = scope.args
-            kwargs['context'] = context
-            value = method(self._model, cr, *args, **kwargs)
-            return old_to_new(self, value)
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self._scope.args
+        kwargs['context'] = context
+        result = method(self._model, cr, *args, **kwargs)
+        return upgrade(self, result)
 
-    return cr_context_wrapper
+    return make_wrapper(method, method, new_api)
 
 
 def cr_uid(method):
     """ Decorate a traditional-style method that takes `cr`, `uid` as parameters. """
     method._api = cr_uid
-    get_scope = _scope_cr_uid_getter(method)
-    old_to_new = _converter_to_new(method)
+    upgrade = get_upgrade(method)
 
-    @wraps(method)
-    def cr_uid_wrapper(self, *args, **kwargs):
-        if not hasattr(self, '_ids'):
-            with get_scope(args, kwargs):
-                return method(self, *args, **kwargs)
-        else:
-            cr, uid, _ = scope.args
-            value = method(self._model, cr, uid, *args, **kwargs)
-            return old_to_new(self, value)
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self._scope.args
+        result = method(self._model, cr, uid, *args, **kwargs)
+        return upgrade(self, result)
 
-    return cr_uid_wrapper
+    return make_wrapper(method, method, new_api)
 
 
 def cr_uid_context(method):
@@ -519,21 +413,15 @@ def cr_uid_context(method):
             obj.method(cr, uid, args, context=context)
     """
     method._api = cr_uid_context
-    get_scope = _scope_cr_uid_context_getter(method)
-    old_to_new = _converter_to_new(method)
+    upgrade = get_upgrade(method)
 
-    @wraps(method)
-    def cr_uid_context_wrapper(self, *args, **kwargs):
-        if not hasattr(self, '_ids'):
-            with get_scope(args, kwargs):
-                return method(self, *args, **kwargs)
-        else:
-            cr, uid, context = scope.args
-            kwargs['context'] = context
-            value = method(self._model, cr, uid, *args, **kwargs)
-            return old_to_new(self, value)
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self._scope.args
+        kwargs['context'] = context
+        result = method(self._model, cr, uid, *args, **kwargs)
+        return upgrade(self, result)
 
-    return cr_uid_context_wrapper
+    return make_wrapper(method, method, new_api)
 
 
 def cr_uid_id(method):
@@ -542,20 +430,14 @@ def cr_uid_id(method):
         styles. In the record style, the method automatically loops on records.
     """
     method._api = cr_uid_id
-    get_scope = _scope_cr_uid_getter(method)
-    old_to_new = _converter_to_new(method)
+    upgrade = get_upgrade(method)
 
-    @wraps(method)
-    def cr_uid_id_wrapper(self, *args, **kwargs):
-        if not hasattr(self, '_ids'):
-            with get_scope(args, kwargs):
-                return method(self, *args, **kwargs)
-        else:
-            cr, uid, _ = scope.args
-            value = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.unbrowse()]
-            return old_to_new(self, value)
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self._scope.args
+        result = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.unbrowse()]
+        return upgrade(self, result)
 
-    return cr_uid_id_wrapper
+    return make_wrapper(method, method, new_api)
 
 
 def cr_uid_id_context(method):
@@ -575,21 +457,15 @@ def cr_uid_id_context(method):
             model.method(cr, uid, id, args, context=context)
     """
     method._api = cr_uid_id_context
-    get_scope = _scope_cr_uid_context_getter(method)
-    old_to_new = _converter_to_new(method)
+    upgrade = get_upgrade(method)
 
-    @wraps(method)
-    def cr_uid_id_context_wrapper(self, *args, **kwargs):
-        if not hasattr(self, '_ids'):
-            with get_scope(args, kwargs):
-                return method(self, *args, **kwargs)
-        else:
-            cr, uid, context = scope.args
-            kwargs['context'] = context
-            value = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.unbrowse()]
-            return old_to_new(self, value)
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self._scope.args
+        kwargs['context'] = context
+        result = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.unbrowse()]
+        return upgrade(self, result)
 
-    return cr_uid_id_context_wrapper
+    return make_wrapper(method, method, new_api)
 
 
 def cr_uid_ids(method):
@@ -598,20 +474,14 @@ def cr_uid_ids(method):
         styles.
     """
     method._api = cr_uid_ids
-    get_scope = _scope_cr_uid_getter(method)
-    old_to_new = _converter_to_new(method)
+    upgrade = get_upgrade(method)
 
-    @wraps(method)
-    def cr_uid_ids_wrapper(self, *args, **kwargs):
-        if not hasattr(self, '_ids'):
-            with get_scope(args, kwargs):
-                return method(self, *args, **kwargs)
-        else:
-            cr, uid, _ = scope.args
-            value = method(self._model, cr, uid, self.unbrowse(), *args, **kwargs)
-            return old_to_new(self, value)
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self._scope.args
+        result = method(self._model, cr, uid, self.unbrowse(), *args, **kwargs)
+        return upgrade(self, result)
 
-    return cr_uid_ids_wrapper
+    return make_wrapper(method, method, new_api)
 
 
 def cr_uid_ids_context(method):
@@ -624,7 +494,7 @@ def cr_uid_ids_context(method):
 
         may be called in both record and traditional styles, like::
 
-            recs = model.browse(ids)
+            recs = model.browse(cr, uid, ids, context)
 
             # the following calls are equivalent
             recs.method(args)
@@ -633,31 +503,15 @@ def cr_uid_ids_context(method):
         It is generally not necessary, see :func:`guess`.
     """
     method._api = cr_uid_ids_context
-    get_scope = _scope_cr_uid_context_getter(method)
-    old_to_new = _converter_to_new(method)
+    upgrade = get_upgrade(method)
 
-    @wraps(method)
-    def cr_uid_ids_context_wrapper(self, *args, **kwargs):
-        if not hasattr(self, '_ids'):
-            with get_scope(args, kwargs):
-                return method(self, *args, **kwargs)
-        else:
-            cr, uid, context = scope.args
-            kwargs['context'] = context
-            value = method(self._model, cr, uid, self.unbrowse(), *args, **kwargs)
-            return old_to_new(self, value)
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self._scope.args
+        kwargs['context'] = context
+        result = method(self._model, cr, uid, self.unbrowse(), *args, **kwargs)
+        return upgrade(self, result)
 
-    return cr_uid_ids_context_wrapper
-
-
-def _make_wrapper(method, old_api, new_api):
-    @wraps(method)
-    def wrapper(self, *args, **kwargs):
-        if not hasattr(self, '_ids'):
-            return old_api(self, *args, **kwargs)
-        else:
-            return new_api(self, *args, **kwargs)
-    return wrapper
+    return make_wrapper(method, method, new_api)
 
 
 def old(method):
@@ -674,8 +528,8 @@ def old(method):
             def stuff(self):
                 ...
     """
-    wrapper = _make_wrapper(method, method, None)
-    wrapper.new = lambda new_api: _make_wrapper(method, method, new_api)
+    wrapper = make_wrapper(method, method, None)
+    wrapper.new = lambda new_api: make_wrapper(method, method, new_api)
     return wrapper
 
 
@@ -693,8 +547,8 @@ def new(method):
             def stuff(self, cr, uid, context=None):
                 ...
     """
-    wrapper = _make_wrapper(method, None, method)
-    wrapper.old = lambda old_api: _make_wrapper(method, old_api, method)
+    wrapper = make_wrapper(method, None, method)
+    wrapper.old = lambda old_api: make_wrapper(method, old_api, method)
     return wrapper
 
 
@@ -757,5 +611,5 @@ def expected(decorator, func):
 
 # keep those imports here in order to handle cyclic dependencies correctly
 from openerp import SUPERUSER_ID
-from openerp.osv.scope import Scope, proxy as scope
+from openerp.osv.scope import Scope
 from openerp.sql_db import Cursor

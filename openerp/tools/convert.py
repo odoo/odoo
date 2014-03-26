@@ -30,7 +30,6 @@ import sys
 # for eval context:
 import time
 
-from openerp.osv.scope import Scope
 import openerp
 import openerp.release
 import openerp.workflow
@@ -919,8 +918,7 @@ form: module.record_id""" % (xml_id,)
             for rec in n:
                 if rec.tag in self._tags:
                     try:
-                        with Scope(self.cr, self.uid, None):
-                            self._tags[rec.tag](self.cr, rec, n)
+                        self._tags[rec.tag](self.cr, rec, n)
                     except Exception, e:
                         self.cr.rollback()
                         exc_info = sys.exc_info()

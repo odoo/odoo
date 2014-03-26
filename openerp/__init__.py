@@ -87,7 +87,7 @@ from openerp.osv.orm import BaseModel, AbstractModel, Model, TransientModel
 from openerp.osv import fields2 as fields
 from openerp.osv import api
 from openerp.osv.api import model, multi, one, constrains, depends, returns
-from openerp.osv.scope import proxy as scope
+from openerp.osv.scope import Scope
 
 #----------------------------------------------------------
 # Other imports, which may require stuff from above

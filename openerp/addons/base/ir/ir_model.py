@@ -30,7 +30,6 @@ from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.osv.orm import BaseModel, Model, except_orm
-from openerp.osv.scope import proxy as scope
 from openerp.tools import config
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
@@ -202,8 +201,7 @@ class ir_model(osv.osv):
             _custom = True
         x_custom_model._name = model
         x_custom_model._module = False
-        with scope(cr, SUPERUSER_ID, None):
-            a = x_custom_model._build_model(self.pool, cr)
+        a = x_custom_model._build_model(self.pool, cr)
         if not a._columns:
             x_name = 'id'
         elif 'x_name' in a._columns.keys():

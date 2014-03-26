@@ -59,7 +59,7 @@ import psycopg2
 from lxml import etree
 
 import api
-from scope import proxy as scope_proxy
+from scope import Scope
 import fields
 import openerp
 import openerp.tools as tools
@@ -934,27 +934,26 @@ class BaseModel(object):
 
     def __export_xml_id(self):
         """ Return a valid xml_id for the record `self`. """
-        with scope_proxy.sudo() as scope:
-            ir_model_data = scope['ir.model.data']
-            data = ir_model_data.search([('model', '=', self._name), ('res_id', '=', self.id)])
-            if data:
-                if data.module:
-                    return '%s.%s' % (data.module, data.name)
-                else:
-                    return data.name
+        ir_model_data = self._scope.sudo()['ir.model.data']
+        data = ir_model_data.search([('model', '=', self._name), ('res_id', '=', self.id)])
+        if data:
+            if data.module:
+                return '%s.%s' % (data.module, data.name)
             else:
-                postfix = 0
-                name = '%s_%s' % (self._table, self.id)
-                while ir_model_data.search([('module', '=', '__export__'), ('name', '=', name)]):
-                    postfix += 1
-                    name = '%s_%s_%s' % (self._table, self.id, postfix)
-                ir_model_data.create({
-                    'model': self._name,
-                    'res_id': self.id,
-                    'module': '__export__',
-                    'name': name,
-                })
-                return '__export__.' + name
+                return data.name
+        else:
+            postfix = 0
+            name = '%s_%s' % (self._table, self.id)
+            while ir_model_data.search([('module', '=', '__export__'), ('name', '=', name)]):
+                postfix += 1
+                name = '%s_%s_%s' % (self._table, self.id, postfix)
+            ir_model_data.create({
+                'model': self._name,
+                'res_id': self.id,
+                'module': '__export__',
+                'name': name,
+            })
+            return '__export__.' + name
 
     @api.multi
     def __export_rows(self, fields):
@@ -1324,9 +1323,8 @@ class BaseModel(object):
         field_names = set(field_names)
 
         # old-style constraint methods
-        trans = scope_proxy['ir.translation']
-        cr, uid, context = scope_proxy.args
-        lang = scope_proxy.lang
+        trans = self._scope['ir.translation']
+        cr, uid, context = self._scope.args
         ids = self.unbrowse()
         errors = []
         for fun, msg, names in self._constraints:
@@ -1345,7 +1343,7 @@ class BaseModel(object):
                         template, params = res_msg
                         res_msg = template % params
                 else:
-                    res_msg = trans._get_source(self._name, 'constraint', lang, msg)
+                    res_msg = trans._get_source(self._name, 'constraint', self._scope.lang, msg)
                 if extra_error:
                     res_msg += "\n\n%s\n%s" % (_('Error details:'), extra_error)
                 errors.append(
@@ -1392,7 +1390,7 @@ class BaseModel(object):
             ``self[name] = value``.
         """
         assert not self._id, "Expected new record: %s" % self
-        cr, uid, context = scope_proxy.args
+        cr, uid, context = self._scope.args
         field = self._fields[name]
 
         # 1. look up context
@@ -1403,7 +1401,7 @@ class BaseModel(object):
 
         # 2. look up ir_values
         #    Note: performance is good, because get_defaults_dict is cached!
-        ir_values_dict = scope_proxy['ir.values'].get_defaults_dict(self._name)
+        ir_values_dict = self._scope['ir.values'].get_defaults_dict(self._name)
         if name in ir_values_dict:
             self[name] = ir_values_dict[name]
             return
@@ -1412,7 +1410,7 @@ class BaseModel(object):
         #    TODO: get rid of this one
         column = self._columns.get(name)
         if isinstance(column, fields.property):
-            self[name] = scope_proxy['ir.property'].get(name, self._name)
+            self[name] = self._scope['ir.property'].get(name, self._name)
             return
 
         # 4. look up _defaults
@@ -1752,7 +1750,7 @@ class BaseModel(object):
             :return: list of pairs ``(id, text_repr)`` for all records
         """
         result = []
-        for record in self.attach_scope(scope_proxy.current):
+        for record in self:
             try:
                 result.append((record.id, record.display_name))
             except MissingError:
@@ -2729,11 +2727,11 @@ class BaseModel(object):
             def func(cr):
                 _logger.info("Storing computed values of %s fields %s",
                     self._name, ', '.join(f.name for f in stored_fields))
-                ids = self.browse(cr, SUPERUSER_ID, [], context={'active_test': False})
-                recs = self.browse(cr, SUPERUSER_ID, ids)
+                recs = self.browse(cr, SUPERUSER_ID, [], {'active_test': False})
+                recs = recs.search([])
                 for f in stored_fields:
-                    scope_proxy.recomputation[f] |= recs
-                self.recompute()
+                    recs._scope.recomputation[f] |= recs
+                recs.recompute()
 
             todo_end.append((1000, func, ()))
 
@@ -3015,19 +3013,18 @@ class BaseModel(object):
         :raise AccessError: * if user has no create/write rights on the requested object
 
         """
-        if context is None:
-            context = {}
+        recs = self.browse(cr, user, [], context)
 
         res = {}
         for fname, field in self._fields.iteritems():
             if allfields and fname not in allfields:
                 continue
-            if field.groups and not self.user_has_groups(cr, user, field.groups, context=context):
+            if field.groups and not recs.user_has_groups(field.groups):
                 continue
-            res[fname] = field.get_description(scope_proxy.current)
+            res[fname] = field.get_description(recs._scope)
 
         # if user cannot create or modify records, make all fields readonly
-        has_access = functools.partial(self.check_access_rights, cr, user, raise_exception=False)
+        has_access = functools.partial(recs.check_access_rights, raise_exception=False)
         if not (has_access('write') or has_access('create')):
             for description in res.itervalues():
                 description['readonly'] = True
@@ -3126,8 +3123,7 @@ class BaseModel(object):
     @read.old
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         records = self.browse(cr, user, ids, context)
-        with records._scope:
-            result = BaseModel.read(records, fields, load=load)
+        result = BaseModel.read(records, fields, load=load)
         return result if isinstance(ids, list) else (bool(result) and result[0])
 
     @api.multi
@@ -3143,7 +3139,7 @@ class BaseModel(object):
         # Note: do not prefetch fields when self.pool._init is True, because
         # some columns may be missing from the database!
         column = self._columns[field_name]
-        if column._prefetch and not (self.pool._init or scope_proxy.draft):
+        if column._prefetch and not (self.pool._init or self._scope.draft):
             fnames = set(fname
                 for fname, fcolumn in self._columns.iteritems()
                 if fcolumn._prefetch)
@@ -3151,13 +3147,14 @@ class BaseModel(object):
             fnames = set((field_name,))
 
         # do not fetch the records/fields that have to be recomputed
-        if scope_proxy.recomputation:
+        recomputation = self._scope.recomputation
+        if recomputation:
             for fname in list(fnames):
-                recomp = scope_proxy.recomputation[self._fields[fname]]
-                if self & recomp:
+                recs_todo = recomputation[self._fields[fname]]
+                if self & recs_todo:
                     fnames.discard(fname)       # do not fetch that field
                 else:
-                    records -= recomp           # do not fetch those records
+                    records -= recs_todo        # do not fetch those records
 
         # fetch records with read()
         assert self in records and field_name in fnames
@@ -3181,12 +3178,13 @@ class BaseModel(object):
         """ Read the given fields of the records in `self` from the database,
             and store them in cache. Access errors are also stored in cache.
         """
-        cr, user, context = scope_proxy.args
+        scope = self._scope
+        cr, user, context = scope.args
 
         # Construct a clause for the security rules.
         # 'tables' holds the list of tables necessary for the SELECT, including
         # the ir.rule clauses, and contains at least self._table.
-        rule_clause, rule_params, tables = self._scope['ir.rule'].domain_get(self._name, 'read')
+        rule_clause, rule_params, tables = scope['ir.rule'].domain_get(self._name, 'read')
 
         # determine the fields that are stored as columns in self._table
         fields_pre = [f for f in field_names if self._columns[f]._classic_write]
@@ -3220,7 +3218,7 @@ class BaseModel(object):
         if ids:
             # translate the fields if necessary
             if context.get('lang'):
-                ir_translation = self._scope['ir.translation']
+                ir_translation = scope['ir.translation']
                 for f in fields_pre:
                     if self._columns[f].translate:
                         #TODO: optimize out of this loop
@@ -3618,7 +3616,7 @@ class BaseModel(object):
         if not self:
             return True
 
-        cr, uid, context = scope_proxy.args
+        cr, uid, context = self._scope.args
         self._check_concurrency(self._ids)
         self.check_access_rights('write')
 
@@ -3883,7 +3881,7 @@ class BaseModel(object):
     # TODO: Should set perm to user.xxx
     #
     @api.model
-    @api.returns('self', lambda self, value: value.id)
+    @api.returns('self', lambda value: value.id)
     def create(self, vals):
         """ Create a new record for the model.
 
@@ -4667,7 +4665,7 @@ class BaseModel(object):
                         record['value'] = new_record[field_name]
                     trans_obj.create(cr, uid, record, context=context)
 
-    @api.returns('self', lambda self, value: value.id)
+    @api.returns('self', lambda value: value.id)
     def copy(self, cr, uid, id, default=None, context=None):
         """
         Duplicate record with given id updating it with default values
@@ -5066,7 +5064,7 @@ class BaseModel(object):
         else:
             ids = (arg,) if arg else ()
         assert all(isinstance(id, IdType) for id in ids), "Browsing invalid ids: %s" % ids
-        return self._browse(scope_proxy.current, ids)
+        return self._browse(self._scope, ids)
 
     @browse.old
     def browse(self, cr, uid, arg=None, context=None):
@@ -5075,7 +5073,7 @@ class BaseModel(object):
         else:
             ids = (arg,) if arg else ()
         assert all(isinstance(id, IdType) for id in ids), "Browsing invalid ids: %s" % ids
-        return self._browse(scope_proxy(cr, uid, context), ids)
+        return self._browse(Scope(cr, uid, context or {}), ids)
 
     #
     # Internal properties, for manipulating the instance's implementation
@@ -5351,7 +5349,7 @@ class BaseModel(object):
         """ Return the records of model `self` in cache (for the current scope)
             that have no value for the field named `fname`.
         """
-        scope = scope_proxy.current
+        scope = self._scope
         field = self._fields[fname]
         ids = filter(None, scope.cache_ids[self._name] - set(scope.cache[field]))
         return self.browse(ids)
@@ -5375,7 +5373,7 @@ class BaseModel(object):
         """
         if fnames is None:
             if ids is None:
-                return scope_proxy.invalidate_all()
+                return self._scope.invalidate_all()
             fields = self._fields.values()
         else:
             fields = map(self._fields.__getitem__, fnames)
@@ -5383,7 +5381,7 @@ class BaseModel(object):
         # invalidate fields and inverse fields, too
         spec = [(f, ids) for f in fields] + \
                [(f.inverse_field, None) for f in fields if f.inverse_field]
-        scope_proxy.invalidate(spec)
+        self._scope.invalidate(spec)
 
     @api.multi
     def modified(self, fnames):
@@ -5402,13 +5400,14 @@ class BaseModel(object):
         # HACK: invalidate all non-stored fields.function
         spec += [(f, None) for f in self.pool.pure_function_fields]
 
-        scope_proxy.invalidate(spec)
+        self._scope.invalidate(spec)
 
+    @api.model
     def recompute(self):
         """ Recompute stored function fields. The fields and records to
             recompute have been determined by method :meth:`modified`.
         """
-        with scope_proxy.in_recomputation() as recomputation:
+        with self._scope.in_recomputation() as recomputation:
             while recomputation:
                 field, recs = next(recomputation.iteritems())
                 # To recompute field, simply evaluate it on recs.
@@ -5440,7 +5439,7 @@ class BaseModel(object):
             :param tocheck: list of (dot-separated) field names to check; use
                 this for secondary fields that are not keys of `values`
         """
-        scope = scope_proxy.current
+        scope = self._scope
 
         with scope.in_draft():
             # create a new record with the values, except field_name
