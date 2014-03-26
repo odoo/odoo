@@ -68,7 +68,7 @@
                         <t t-set="index" t-value="0"/>
                         <t t-set="for_all" t-value="True"/>
                         <tr id="agenda_th">
-                            <th t-attf-style="width:#{10}%;"> </th>
+                            <th t-attf-style="width:#{10}%;"><small title="Timezone" class="text-muted"> <t t-esc= "event.timezone_of_event"/>* </small></th>
                             <t t-foreach="room_list" t-as="room">
                                 <th t-attf-style="width: #{td_width}px;" class="active"><bold><t t-esc="room[1]"/></bold></th>
                             </t>
