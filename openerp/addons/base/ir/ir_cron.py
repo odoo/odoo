@@ -26,7 +26,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 import openerp
-from openerp import netsvc
+from openerp import SUPERUSER_ID, netsvc
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
@@ -176,7 +176,8 @@ class ir_cron(osv.osv):
                 addsql = ', active=False'
             cron_cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s",
                        (nextcall.strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
-            self.invalidate_cache(['nextcall', 'numbercall', 'active'], [job['id']])
+            self.invalidate_cache(cr, SUPERUSER_ID,
+                ['nextcall', 'numbercall', 'active'], [job['id']])
 
         finally:
             cr.commit()

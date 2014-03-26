@@ -749,7 +749,7 @@ class ir_model_access(osv.osv):
             pass
 
     def call_cache_clearing_methods(self, cr):
-        scope.invalidate_all()
+        self.invalidate_cache(cr, SUPERUSER_ID)
         self.check.clear_cache(self)    # clear the cache of check function
         for model, method in self.__cache_clearing_methods:
             if model in self.pool:
@@ -1053,7 +1053,7 @@ class ir_model_data(osv.osv):
             ir_values_obj.set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
         elif xml_id:
             cr.execute('UPDATE ir_values set value=%s WHERE model=%s and key=%s and name=%s'+where,(value, model, key, name))
-            ir_values_obj.invalidate_cache(['value'])
+            ir_values_obj.invalidate_cache(cr, uid, ['value'])
         return True
 
     def _module_data_uninstall(self, cr, uid, modules_to_remove, context=None):
@@ -1095,7 +1095,7 @@ class ir_model_data(osv.osv):
                 cr.execute('select res_type,res_id from wkf_instance where id IN (select inst_id from wkf_workitem where act_id=%s)', (res_id,))
                 wkf_todo.extend(cr.fetchall())
                 cr.execute("update wkf_transition set condition='True', group_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id,res_id))
-                self.pool.get('workflow.transition').invalidate_cache()
+                self.invalidate_cache(cr, uid, context=context)
 
         for model,res_id in wkf_todo:
             try:

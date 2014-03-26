@@ -251,7 +251,7 @@ class ir_sequence(openerp.osv.osv.osv):
         else:
             cr.execute("SELECT number_next FROM ir_sequence WHERE id=%s FOR UPDATE NOWAIT", (seq['id'],))
             cr.execute("UPDATE ir_sequence SET number_next=number_next+number_increment WHERE id=%s ", (seq['id'],))
-            self.invalidate_cache(['number_next'], [seq['id']])
+            self.invalidate_cache(cr, uid, ['number_next'], [seq['id']], context=context)
         d = self._interpolation_dict()
         try:
             interpolated_prefix = self._interpolate(seq['prefix'], d)

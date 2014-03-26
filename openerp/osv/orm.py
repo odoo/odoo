@@ -564,7 +564,7 @@ class BaseModel(object):
                                 vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['serialization_field_id'], vals['model'], vals['name']
                             ))
                         break
-        self.invalidate_cache()
+        self.invalidate_cache(cr, SUPERUSER_ID)
 
     @classmethod
     def _add_field(cls, name, field):
@@ -2260,7 +2260,7 @@ class BaseModel(object):
         cr.execute(query)
         for (root,) in cr.fetchall():
             pos = browse_rec(root, pos)
-        self.invalidate_cache(['parent_left', 'parent_right'])
+        self.invalidate_cache(cr, SUPERUSER_ID, ['parent_left', 'parent_right'])
         return True
 
     def _update_store(self, cr, f, k):
@@ -2370,7 +2370,7 @@ class BaseModel(object):
                     (SELECT id FROM ir_module_module WHERE name=%s),
                     (SELECT id FROM ir_model WHERE model=%s))""",
                        (relation_table, self._module, self._name))
-            self.invalidate_cache()
+            self.invalidate_cache(cr, SUPERUSER_ID)
 
     # checked version: for direct m2o starting from `self`
     def _m2o_add_foreign_key_checked(self, source_field, dest_model, ondelete):
@@ -3446,7 +3446,7 @@ class BaseModel(object):
         from openerp import workflow
         for res_id in ids:
             workflow.trg_create(uid, self._name, res_id, cr)
-        # self.invalidate_cache() ?
+        # self.invalidate_cache(cr, uid, context=context) ?
         return True
 
     def delete_workflow(self, cr, uid, ids, context=None):
@@ -3454,7 +3454,7 @@ class BaseModel(object):
         from openerp import workflow
         for res_id in ids:
             workflow.trg_delete(uid, self._name, res_id, cr)
-        self.invalidate_cache()
+        self.invalidate_cache(cr, uid, context=context)
         return True
 
     def step_workflow(self, cr, uid, ids, context=None):
@@ -3462,7 +3462,7 @@ class BaseModel(object):
         from openerp import workflow
         for res_id in ids:
             workflow.trg_write(uid, self._name, res_id, cr)
-        # self.invalidate_cache() ?
+        # self.invalidate_cache(cr, uid, context=context) ?
         return True
 
     def signal_workflow(self, cr, uid, ids, signal, context=None):
@@ -3471,7 +3471,7 @@ class BaseModel(object):
         result = {}
         for res_id in ids:
             result[res_id] = workflow.trg_validate(uid, self._name, res_id, signal, cr)
-        # self.invalidate_cache() ?
+        # self.invalidate_cache(cr, uid, context=context) ?
         return result
 
     def redirect_workflow(self, cr, uid, old_new_ids, context=None):
@@ -3481,7 +3481,7 @@ class BaseModel(object):
         from openerp import workflow
         for old_id, new_id in old_new_ids:
             workflow.trg_redirect(uid, self._name, old_id, new_id, cr)
-        self.invalidate_cache()
+        self.invalidate_cache(cr, uid, context=context)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
@@ -3554,7 +3554,7 @@ class BaseModel(object):
 
         # invalidate the *whole* cache, since the orm does not handle all
         # changes made in the database, like cascading delete!
-        self.invalidate_cache()
+        recs.invalidate_cache()
 
         for order, obj_name, store_ids, fields in result_store:
             if obj_name != self._name:
@@ -3853,7 +3853,7 @@ class BaseModel(object):
                         cr.execute('update '+self._table+' set parent_left=parent_left+%s where parent_left>=%s', (distance, position))
                         cr.execute('update '+self._table+' set parent_right=parent_right+%s where parent_right>=%s', (distance, position))
                         cr.execute('update '+self._table+' set parent_left=parent_left-%s, parent_right=parent_right-%s where parent_left>=%s and parent_left<%s', (pleft-position+distance, pleft-position+distance, pleft+distance, pright+distance))
-                    self.invalidate_cache(['parent_left', 'parent_right'])
+                    recs.invalidate_cache(['parent_left', 'parent_right'])
 
         result += self._store_get_values(cr, user, ids, vals.keys(), context)
         result.sort()
@@ -4071,6 +4071,7 @@ class BaseModel(object):
         )
 
         id_new, = cr.fetchone()
+        recs = self.browse(cr, user, id_new, context)
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
         if self._parent_store and not context.get('defer_parent_store_computation'):
@@ -4096,7 +4097,7 @@ class BaseModel(object):
                 cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1, pleft+2, id_new))
-                self.invalidate_cache(['parent_left', 'parent_right'])
+                recs.invalidate_cache(['parent_left', 'parent_right'])
 
         # default element in context must be remove when call a one2many or many2many
         rel_context = context.copy()
@@ -4109,7 +4110,6 @@ class BaseModel(object):
             result += self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context) or []
 
         # check Python constraints
-        recs = self.browse(cr, user, id_new, context)
         recs._validate_fields(vals)
 
         if not context.get('no_store_function', False):
@@ -5356,16 +5356,19 @@ class BaseModel(object):
         ids = filter(None, scope.cache_ids[self._name] - set(scope.cache[field]))
         return self.browse(ids)
 
+    @api.model
     def refresh(self):
         """ Clear the records cache.
 
             .. deprecated:: 8.0
                 The record cache is automatically invalidated.
         """
-        scope_proxy.invalidate_all()
+        self.invalidate_cache()
 
+    @api.model
     def invalidate_cache(self, fnames=None, ids=None):
         """ Invalidate the record caches after some records have been modified.
+            If both `fnames` and `ids` are ``None``, the whole cache is cleared.
 
             :param fnames: the list of modified fields, or ``None`` for all fields
             :param ids: the list of modified record ids, or ``None`` for all
