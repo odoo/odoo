@@ -249,7 +249,7 @@ class website(osv.osv):
             pmin = pmax - scope if pmax - scope > 0 else 1
 
         def get_url(page):
-            _url = "%spage/%s/" % (url, page) if page > 1 else url
+            _url = "%s/page/%s" % (url, page) if page > 1 else url
             if url_args:
                 _url = "%s?%s" % (_url, werkzeug.url_encode(url_args))
             return _url
