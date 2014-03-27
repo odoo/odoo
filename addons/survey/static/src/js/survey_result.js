@@ -154,6 +154,21 @@ $(document).ready(function () {
     $('.clear_survey_filter').click(function(){
         window.location.href = document.URL.substring(0,document.URL.indexOf("?"));
     });
+    $('li.filter-all').click(function(){
+        event.preventDefault();
+        if(document.URL.indexOf("finished") != -1){
+            window.location.href = document.URL.replace('?finished=1&','?').replace('&finished=1&','&').replace('?finished=1','').replace('&finished=1','');
+        }
+    });
+    $('.filter-finished').click(function(){
+        event.preventDefault();
+        if(document.URL.indexOf("?") == -1 && document.URL.indexOf("filter") == -1){
+            window.location.href = document.URL+'?'+encodeURI('finished=1');
+        }
+        else if (document.URL.indexOf("finished") == -1){
+        	window.location.href = document.URL+'&'+encodeURI('finished=1');
+        }
+    });
 
     console.debug("[survey] Survey Result JS loaded!");
 });

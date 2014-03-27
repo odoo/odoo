@@ -285,16 +285,22 @@ class WebsiteSurvey(http.Controller):
                 type='http', auth='user', multilang=True, website=True)
     def survey_reporting(self, survey, token=None, **post):
         '''Display survey Results & Statistics for given survey.'''
-        result_template, current_filters, filter_display_data = 'survey.result', [], []
+        result_template, current_filters, filter_display_data, filter_finish = 'survey.result', [], [], False
         if not survey.user_input_ids or not [input_id.id for input_id in survey.user_input_ids if input_id.state != 'new']:
             result_template = 'survey.no_result'
+        if post.get('finished'):
+            post.pop('finished')
+            filter_finish = True
         if post:
             current_filters, filter_display_data = self.filter_input_ids(post)
+        if filter_finish:
+            current_filters = self.get_finished_list(current_filters)
         return request.website.render(result_template,
                                       {'survey_dict': self.prepare_result_dict(survey, current_filters),
                                        'page_range': self.page_range,
                                        'current_filters': current_filters,
-                                       'filter_display_data': filter_display_data
+                                       'filter_display_data': filter_display_data,
+                                       'filter_finish': filter_finish
                                        })
 
     def prepare_result_dict(self,survey, current_filters=[]):
@@ -306,6 +312,15 @@ class WebsiteSurvey(http.Controller):
                 page_dict['question_ids'].append(question_dict)
             result['page_ids'].append(page_dict)
         return result
+
+    def get_finished_list(self, current_filters):
+        user_input,filtered_list = request.registry['survey.user_input'],[]
+        if not current_filters:
+            current_filters = user_input.search(request.cr, request.uid, [], context=request.context)
+        user_input_objs = user_input.browse(request.cr, request.uid, current_filters, context=request.context)
+        print 'user_input_objs',user_input_objs
+        filtered_list = [input.id for input in user_input_objs if input.state == 'done']
+        return filtered_list
 
     def filter_input_ids(self, filters):
         '''If user applies any filters, then this function returns list of
@@ -396,8 +411,8 @@ class WebsiteSurvey(http.Controller):
     @http.route(['/survey/results/graph/<int:question>'],
                 type='http', auth='user', multilang=True, website=True)
     def get_graph_data(self, question, **post):
-        question = request.registry.get('survey.question').browse(request.cr, request.uid, question)
         '''Returns appropriate formated data required by graph library on basis of filter'''
+        question = request.registry.get('survey.question').browse(request.cr, request.uid, question)
         current_filters = safe_eval(post.get('current_filters', '[]'))
         result = []
         if question.type == 'multiple_choice':
