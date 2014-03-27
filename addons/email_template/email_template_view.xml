@@ -18,8 +18,9 @@
                                     attrs="{'invisible':[('ref_ir_act_window','!=',False)]}" icon="fa-adn"
                                     help="Display an option on related documents to open a composition wizard with this template" widget="statinfo"/>
                             <button name="unlink_action" string="Remove context action" type="object" 
+                                    class="oe_stat_button" icon="fa-minus"
                                     attrs="{'invisible':[('ref_ir_act_window','=',False)]}"
-                                    help="Remove the contextual action to use this template on related documents"/>
+                                    help="Remove the contextual action to use this template on related documents" widget="statinfo"/>
                             <button class="oe_inline oe_stat_button" name="%(wizard_email_template_preview)d" icon="fa-search-plus" string="Preview"
                                     type="action" target="new"
                                     context="{'template_id':active_id}" widget="statinfo"/>

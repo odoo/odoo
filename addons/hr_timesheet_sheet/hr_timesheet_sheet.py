@@ -105,11 +105,10 @@ class hr_timesheet_sheet(osv.osv):
         return hr_employee.attendance_action_change(cr, uid, employee_ids, context=context)
     
     def _count_all(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,{'timesheet_count': 0, 'attendance_count': 0,}), ids))
+        res = dict(map(lambda x: (x,{'timesheet_activity_count': 0, 'attendance_count': 0,}), ids))
         try:
            for datas in self.browse(cr, uid, ids, context=context):
-                res[datas.id] = {'appraisal_count': len(datas.appraisal_ids),
-                'timesheet_count': len(datas.timesheet_ids),
+                res[datas.id] = {'timesheet_activity_count': len(datas.timesheet_activity_ids),
                 'attendance_count': len(datas.attendances_ids),
                 }
         except:
@@ -146,7 +145,8 @@ class hr_timesheet_sheet(osv.osv):
         'account_ids': fields.one2many('hr_timesheet_sheet.sheet.account', 'sheet_id', 'Analytic accounts', readonly=True),
         'company_id': fields.many2one('res.company', 'Company'),
         'department_id':fields.many2one('hr.department','Department'),
-        'timesheet_count': fields.function(_count_all, type='integer', string='Timesheet Activities', multi=True),
+        'timesheet_activity_ids': fields.one2many('hr.analytic.timesheet', 'sheet_id', 'Timesheet Activities'),
+        'timesheet_activity_count': fields.function(_count_all, type='integer', string='Timesheet Activities', multi=True),
         'attendance_count': fields.function(_count_all, type='integer', string="Attendances", multi=True),
     }
 

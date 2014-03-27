@@ -75,11 +75,13 @@
                             name="%(act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet)d"
                             class="oe_stat_button"
                             icon="fa-times">
-                            <field name="timesheet_count" widget="statinfo" string="Timesheet Activities"/>
+                            <field name="timesheet_activity_count" widget="statinfo" string="Timesheet Activities"/>
                         </button>
                         <button type="action" groups="base.group_hr_attendance"
-                            name="%(act_hr_timesheet_sheet_sheet_2_hr_attendance)d"
-                            string="Attendances" />
+                            class="oe_stat_button" icon="fa-users"
+                            name="%(act_hr_timesheet_sheet_sheet_2_hr_attendance)d">
+                            <field name="attendance_count" widget="statinfo" string="Attendances"/>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <label for="employee_id" class="oe_edit_only"/>
