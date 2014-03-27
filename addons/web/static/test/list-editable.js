@@ -329,9 +329,9 @@ openerp.testing.section('list.edition.onwrite', {
             throw new Error(JSON.stringify(_.toArray(arguments)));
         });
         mock('demo:search_read', function (args, kwargs) {
-            if (_.isEqual(args[0], [['id', '=', 1]])) {
+            if (_.isEqual(args[0], [['id', 'in', [1]]])) {
                 return [{id: 1, a: 'some value'}];
-            } else if (_.isEqual(args[0], [['id', '=', 42]])) {
+            } else if (_.isEqual(args[0], [['id', 'in', [42]]])) {
                 return [ {id: 42, a: 'foo'} ];
             }
             throw new Error(JSON.stringify(_.toArray(arguments)));

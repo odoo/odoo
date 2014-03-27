@@ -22,7 +22,8 @@ openerp.testing.section('list.buttons', {
             throw new Error(JSON.stringify(_.toArray(arguments)));
         });
         mock('demo:search_read', function (args, kwargs) {
-            if (_.isEqual(args[0], [['id', '=', 2]])) {
+            console.log(args);
+            if (_.isEqual(args[0], [['id', 'in', [2]]])) {
                 return [];
             }
             throw new Error(JSON.stringify(_.toArray(arguments)));
