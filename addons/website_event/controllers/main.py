@@ -26,13 +26,20 @@ from openerp.tools.translate import _
 from openerp.addons.website.controllers.main import Website as controllers
 controllers = controllers()
 
+import logging
+_logger = logging.getLogger(__name__)
 
 from datetime import datetime, timedelta
 import time
 from dateutil.relativedelta import relativedelta
 from openerp import tools
 import werkzeug.urls
-import GeoIP
+
+try:
+    import GeoIP
+except ImportError:
+    GeoIP = None
+    _logger.warn("Please install GeoIP python module to use events localisation.")
 
 class website_event(http.Controller):
     @http.route(['/event', '/event/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
