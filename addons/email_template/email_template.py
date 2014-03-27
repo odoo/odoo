@@ -24,6 +24,8 @@ import base64
 import datetime
 import dateutil.relativedelta as relativedelta
 import logging
+import lxml
+import urlparse
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -61,6 +63,15 @@ try:
         'quote': quote,
         'urlencode': urlencode,
         'datetime': datetime,
+        'len': len,
+        'abs': abs,
+        'min': min,
+        'max': max,
+        'sum': sum,
+        'filter': filter,
+        'reduce': reduce,
+        'map': map,
+        'round': round,
 
         # dateutil.relativedelta is an old-style class and cannot be directly
         # instanciated wihtin a jinja2 expression, so a lambda "proxy" is
@@ -69,6 +80,7 @@ try:
     })
 except ImportError:
     _logger.warning("jinja2 not available, templating features will not work!")
+
 
 class email_template(osv.osv):
     "Templates for sending email"
@@ -82,7 +94,48 @@ class email_template(osv.osv):
             res['model_id'] = self.pool['ir.model'].search(cr, uid, [('model', '=', res.pop('model'))], context=context)[0]
         return res
 
-    def render_template_batch(self, cr, uid, template, model, res_ids, context=None):
+    def _replace_local_links(self, cr, uid, html, context=None):
+        """ Post-processing of html content to replace local links to absolute
+        links, using web.base.url as base url. """
+        if not html:
+            return html
+
+        # form a tree
+        root = lxml.html.fromstring(html)
+        if not len(root) and root.text is None and root.tail is None:
+            html = '<div>%s</div>' % html
+            root = lxml.html.fromstring(html)
+
+        base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
+        (base_scheme, base_netloc, bpath, bparams, bquery, bfragment) = urlparse.urlparse(base_url)
+
+        def _process_link(url):
+            new_url = url
+            (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(url)
+            if not scheme and not netloc:
+                new_url = urlparse.urlunparse((base_scheme, base_netloc, path, params, query, fragment))
+            return new_url
+
+        # check all nodes, replace :
+        # - img src -> check URL
+        # - a href -> check URL
+        for node in root.iter():
+            if node.tag == 'a':
+                node.set('href', _process_link(node.get('href')))
+            elif node.tag == 'img' and not node.get('src', 'data').startswith('data'):
+                node.set('src', _process_link(node.get('src')))
+
+        html = lxml.html.tostring(root, pretty_print=False, method='html')
+        # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
+        if html.startswith('<div>') and html.endswith('</div>'):
+            html = html[5:-6]
+        return html
+
+    def render_post_process(self, cr, uid, html, context=None):
+        html = self._replace_local_links(cr, uid, html, context=context)
+        return html
+
+    def render_template_batch(self, cr, uid, template, model, res_ids, context=None, post_process=False):
         """Render the given template text, replace mako expressions ``${expr}``
            with the result of evaluating these expressions with
            an evaluation context containing:
@@ -125,6 +178,10 @@ class email_template(osv.osv):
             if render_result == u"False":
                 render_result = u""
             results[res_id] = render_result
+
+        if post_process:
+            for res_id, result in results.iteritems():
+                results[res_id] = self.render_post_process(cr, uid, result, context=context)
         return results
 
     def get_email_template_batch(self, cr, uid, template_id=False, res_ids=None, context=None):
@@ -183,7 +240,7 @@ class email_template(osv.osv):
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
                                           help="Optional preferred server for outgoing mails. If not set, the highest "
                                                "priority one will be used."),
-        'body_html': fields.html('Body', translate=True, help="Rich-text/HTML version of the message (placeholders may be used here)"),
+        'body_html': fields.html('Body', translate=True, sanitize=False, help="Rich-text/HTML version of the message (placeholders may be used here)"),
         'report_name': fields.char('Report Filename', translate=True,
                                    help="Name to use for the generated report file (may contain placeholders)\n"
                                         "The extension can be omitted and will then come from the report type."),
@@ -356,17 +413,20 @@ class email_template(osv.osv):
         results = dict()
         for template, template_res_ids in templates_to_res_ids.iteritems():
             # generate fields value for all res_ids linked to the current template
-            for field in ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to']:
-                generated_field_values = self.render_template_batch(cr, uid, getattr(template, field), template.model, template_res_ids, context=context)
+            for field in fields:
+                generated_field_values = self.render_template_batch(
+                    cr, uid, getattr(template, field), template.model, template_res_ids,
+                    post_process=(field == 'body_html'),
+                    context=context)
                 for res_id, field_value in generated_field_values.iteritems():
                     results.setdefault(res_id, dict())[field] = field_value
             # update values for all res_ids
             for res_id in template_res_ids:
                 values = results[res_id]
-                if template.user_signature:
+                if 'body_html' in fields and template.user_signature:
                     signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
                     values['body_html'] = tools.append_content_to_html(values['body_html'], signature)
-                if values['body_html']:
+                if values.get('body_html'):
                     values['body'] = tools.html_sanitize(values['body_html'])
                 values.update(
                     mail_server_id=template.mail_server_id.id or False,
@@ -389,7 +449,7 @@ class email_template(osv.osv):
                         ctx['lang'] = self.render_template_batch(cr, uid, template.lang, template.model, [res_id], context)[res_id]  # take 0 ?
 
                     if report.report_type in ['qweb-html', 'qweb-pdf']:
-                        result, format = self.pool['report'].get_pdf(report, res_id, context=ctx), 'pdf'
+                        result, format = self.pool['report'].get_pdf(cr, uid, [res_id], report_service, context=ctx), 'pdf'
                     else:
                         result, format = openerp.report.render_report(cr, uid, [res_id], report_service, {'model': template.model}, ctx)
 

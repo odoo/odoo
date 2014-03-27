@@ -37,7 +37,7 @@ e.g. To have an invoice generated automatically periodically:
       above. Specify the interval information and partner to be invoice.
     """,
     'author': 'OpenERP SA',
-    'depends': [],
+    'depends': ['base'],
     'data': ['security/subcription_security.xml', 'security/ir.model.access.csv', 'subscription_view.xml'],
     'demo': ['subscription_demo.xml',],
     'installable': True,

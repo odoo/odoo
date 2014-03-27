@@ -155,12 +155,19 @@ class purchase_order(osv.osv):
 
     def _get_picking_ids(self, cr, uid, ids, field_names, args, context=None):
         res = {}
-        for purchase_id in ids:
-            picking_ids = set()
-            move_ids = self.pool.get('stock.move').search(cr, uid, [('purchase_line_id.order_id', '=', purchase_id)], context=context)
-            for move in self.pool.get('stock.move').browse(cr, uid, move_ids, context=context):
-                picking_ids.add(move.picking_id.id)
-            res[purchase_id] = list(picking_ids)
+        query = """
+        SELECT picking_id, po.id FROM stock_picking p, stock_move m, purchase_order_line pol, purchase_order po
+            WHERE po.id in %s and po.id = pol.order_id and pol.id = m.purchase_line_id and m.picking_id = p.id
+            GROUP BY picking_id, po.id
+             
+        """
+        cr.execute(query, (tuple(ids), ))
+        picks = cr.fetchall()
+        for pick_id, po_id in picks:
+            if not res.get(po_id):
+                res[po_id] = [pick_id]
+            else:
+                res[po_id].append(pick_id)
         return res
 
     STATE_SELECTION = [
@@ -327,7 +334,6 @@ class purchase_order(osv.osv):
             value.update({'related_location_id': picktype.default_location_dest_id and picktype.default_location_dest_id.id or False})
         return {'value': value}
 
-
     def onchange_partner_id(self, cr, uid, ids, partner_id):
         partner = self.pool.get('res.partner')
         if not partner_id:
@@ -473,12 +479,7 @@ class purchase_order(osv.osv):
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
         self.signal_send_rfq(cr, uid, ids)
-        datas = {
-                 'model': 'purchase.order',
-                 'ids': ids,
-                 'form': self.read(cr, uid, ids[0], context=context),
-        }
-        return {'type': 'ir.actions.report.xml', 'report_name': 'purchase.quotation', 'datas': datas, 'nodestroy': True}
+        return self.pool['report'].get_action(cr, uid, ids, 'purchase.report_purchasequotation', context=context)
 
     #TODO: implement messages system
     def wkf_confirm_order(self, cr, uid, ids, context=None):
@@ -825,7 +826,6 @@ class purchase_order(osv.osv):
          @return: new purchase order id
 
         """
-
         #TOFIX: merged order line should be unlink
         def make_key(br, fields):
             list_key = []

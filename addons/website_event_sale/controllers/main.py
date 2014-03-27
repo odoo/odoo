@@ -78,7 +78,7 @@ class website_event(website_event):
             order_obj.write(request.cr, SUPERUSER_ID, [order.id], {'order_line': [(4, order_line_id)]}, context=request.context)
 
         if not _values:
-            return request.redirect("/event/%s/" % event_id)
+            return request.redirect("/event/%s" % event_id)
         return request.redirect("/shop/checkout")
 
     def _add_event(self, event_name="New Event", context={}, **kwargs):
