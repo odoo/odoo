@@ -238,7 +238,7 @@
                         <group>
                             <group>
                                 <field name="name"/>
-                                <field name="date" readonly="True"/>
+                                <field name="date" readonly="True" groups="mass_mailing.group_mass_mailing_campaign"/>
                                 <field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
                                 <label for="template_id"/>
                                 <div style="max-height: 200px; overflow: hidden !important;">
@@ -352,6 +352,12 @@
             <field name="res_model">mail.mass_mailing</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+<p class="oe_view_nocontent_create">
+    Click here to create a new mailing.
+</p><p>
+    Mass mailing allows you to to easily design and send mass mailings to your contacts, customers or leads using mailing lists.
+</p></field>
         </record>
 
         <record id="action_view_mass_mailings_from_campaign" model="ir.actions.act_window">
@@ -364,6 +370,12 @@
                 'default_mass_mailing_campaign_id': active_id,
             }
             </field>
+            <field name="help" type="html">
+<p class="oe_view_nocontent_create">
+    Click here to create a new mailing.
+</p><p>
+    Mass mailing allows you to to easily design and send mass mailings to your contacts, customers or leads using mailing lists.
+</p></field>
         </record>
 
         <menuitem name="Mass Mailings" id="menu_email_mass_mailings"
