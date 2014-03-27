@@ -99,8 +99,8 @@ class BlogPost(osv.Model):
             'res.users', 'Last Contributor',
             select=True, readonly=True,
         ),
-        'visits': fields.integer('No of Views'),
-        'ranking': fields.float('Ranking'),
+        'visits': fields.integer('No of Views', readonly=True),
+        'ranking': fields.float('Ranking', readonly=True),
         'author_image': fields.related('create_uid','partner_id', 'image_small', string='Author Photo', type='binary')
     }
     _defaults = {
