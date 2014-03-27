@@ -53,8 +53,7 @@ class account_period_close(osv.osv_memory):
 
                     cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
                     cr.execute('update account_period set state=%s where id=%s', (mode, id))
-                    journal_period_pool.invalidate_cache(['state'])
-                    period_pool.invalidate_cache(['state'], [id])
+                    self.invalidate_cache(cr, uid, context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 

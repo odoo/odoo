@@ -47,7 +47,7 @@ class account_bank_statement(osv.osv):
                 cr.execute("UPDATE account_bank_statement_line  \
                     SET state='confirm' WHERE id in %s ",
                     (tuple(line_ids),))
-                bank_statement_line_obj.invalidate_cache(['state'], line_ids)
+                bank_statement_line_obj.invalidate_cache(cr, uid, ['state'], line_ids, context=context)
         return True
 
     def button_cancel(self, cr, uid, ids, context=None):
@@ -59,7 +59,7 @@ class account_bank_statement(osv.osv):
                 cr.execute("UPDATE account_bank_statement_line  \
                     SET state='draft' WHERE id in %s ",
                     (tuple([line_ids]),))
-                bank_statement_line_obj.invalidate_cache(['state'], line_ids)
+                bank_statement_line_obj.invalidate_cache(cr, uid, ['state'], line_ids, context=context)
         return True
 
 

@@ -54,17 +54,17 @@ class mail_followers(osv.Model):
     #
     def create(self, cr, uid, vals, context=None):
         res = super(mail_followers, self).create(cr, uid, vals, context=context)
-        self.invalidate_cache()
+        self.invalidate_cache(cr, uid, context=context)
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(mail_followers, self).write(cr, uid, ids, vals, context=context)
-        self.invalidate_cache()
+        self.invalidate_cache(cr, uid, context=context)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(mail_followers, self).unlink(cr, uid, ids, context=context)
-        self.invalidate_cache()
+        self.invalidate_cache(cr, uid, context=context)
         return res
 
 

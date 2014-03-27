@@ -57,9 +57,7 @@ class account_fiscalyear_close_state(osv.osv_memory):
                     'WHERE fiscalyear_id = %s', ('done', fy_id))
             cr.execute('UPDATE account_fiscalyear ' \
                     'SET state = %s WHERE id = %s', ('done', fy_id))
-            journal_period_obj.invalidate_cache(['state'])
-            period_obj.invalidate_cache(['state'])
-            fiscalyear_obj.invalidate_cache(['state'], [fy_id])
+            self.invalidate_cache(cr, uid, context=context)
 
             return {'type': 'ir.actions.act_window_close'}
 

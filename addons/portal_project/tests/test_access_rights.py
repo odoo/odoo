@@ -134,7 +134,7 @@ class TestPortalProject(TestPortalProjectBase):
         # CASE2: portal project
         # ----------------------------------------
         self.project_project.write(cr, uid, [pigs_id], {'privacy_visibility': 'portal'})
-        self.project_project.invalidate_cache()
+        self.project_project.invalidate_cache(cr, uid)
 
         # Do: Alfred reads project -> ok (employee ok public)
         self.project_project.read(cr, self.user_projectuser_id, [pigs_id], ['state'])
@@ -172,7 +172,7 @@ class TestPortalProject(TestPortalProjectBase):
         # CASE3: employee project
         # ----------------------------------------
         self.project_project.write(cr, uid, [pigs_id], {'privacy_visibility': 'employees'})
-        self.project_project.invalidate_cache()
+        self.project_project.invalidate_cache(cr, uid)
 
         # Do: Alfred reads project -> ok (employee ok employee)
         self.project_project.read(cr, self.user_projectuser_id, [pigs_id], ['state'])
@@ -201,7 +201,7 @@ class TestPortalProject(TestPortalProjectBase):
         # CASE4: followers project
         # ----------------------------------------
         self.project_project.write(cr, uid, [pigs_id], {'privacy_visibility': 'followers'})
-        self.project_project.invalidate_cache()
+        self.project_project.invalidate_cache(cr, uid)
 
         # Do: Alfred reads project -> ko (employee ko followers)
         self.assertRaises(except_orm, self.project_project.read, cr, self.user_projectuser_id, [pigs_id], ['state'])

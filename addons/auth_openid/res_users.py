@@ -69,8 +69,8 @@ class res_users(osv.osv):
                                 SET login_date=now() AT TIME ZONE 'UTC'
                                 WHERE login=%s AND openid_key=%s AND active=%s RETURNING id""",
                            (tools.ustr(login), tools.ustr(password), True))
+                # beware: record cache may be invalid
                 res = cr.fetchone()
-                self.invalidate_cache(['login_date'])
                 cr.commit()
                 return res[0] if res else False
 

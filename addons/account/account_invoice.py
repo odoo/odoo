@@ -767,7 +767,7 @@ class account_invoice(osv.osv):
         ait_obj = self.pool.get('account.invoice.tax')
         for id in ids:
             cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s AND manual is False", (id,))
-            ait_obj.invalidate_cache()
+            self.invalidate_cache(cr, uid, context=context)
             partner = self.browse(cr, uid, id, context=ctx).partner_id
             if partner.lang:
                 ctx.update({'lang': partner.lang})
@@ -1143,9 +1143,7 @@ class account_invoice(osv.osv):
                     'WHERE account_move_line.move_id = %s ' \
                         'AND account_analytic_line.move_id = account_move_line.id',
                         (ref, move_id))
-            move_obj.invalidate_cache(['ref'])
-            move_line_obj.invalidate_cache(['ref'])
-            analytic_line_obj.invalidate_cache(['ref'])
+            self.invalidate_cache(cr, uid, context=context)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):

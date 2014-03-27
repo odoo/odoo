@@ -1028,15 +1028,14 @@ class account_period(osv.osv):
 
         return result
 
-    def action_draft(self, cr, uid, ids, *args):
+    def action_draft(self, cr, uid, ids, context=None):
         mode = 'draft'
         for period in self.browse(cr, uid, ids):
             if period.fiscalyear_id.state == 'done':
                 raise osv.except_osv(_('Warning!'), _('You can not re-open a period which belongs to closed fiscal year'))
         cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(ids),))
         cr.execute('update account_period set state=%s where id in %s', (mode, tuple(ids),))
-        self.pool.get('account.journal.period').invalidate_cache(['state'])
-        self.invalidate_cache(['state'], ids)
+        self.invalidate_cache(cr, uid, context=context)
         return True
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
@@ -1349,7 +1348,7 @@ class account_move(osv.osv):
                    'SET state=%s '\
                    'WHERE id IN %s',
                    ('posted', tuple(valid_moves),))
-        self.invalidate_cache(['state'], valid_moves)
+        self.invalidate_cache(cr, uid, context=context)
         return True
 
     def button_validate(self, cursor, user, ids, context=None):
@@ -1376,7 +1375,7 @@ class account_move(osv.osv):
             cr.execute('UPDATE account_move '\
                        'SET state=%s '\
                        'WHERE id IN %s', ('draft', tuple(ids),))
-            self.invalidate_cache(['state'], ids)
+            self.invalidate_cache(cr, uid, context=context)
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -1541,7 +1540,7 @@ class account_move(osv.osv):
         cr.execute('SELECT SUM(%s) FROM account_move_line WHERE move_id=%%s AND id!=%%s' % (mode,), (move.id, line_id2))
         result = cr.fetchone()[0] or 0.0
         cr.execute('update account_move_line set '+mode2+'=%s where id=%s', (result, line_id))
-        account_move_line_obj.invalidate_cache([mode2], [line_id])
+        account_move_line_obj.invalidate_cache(cr, uid, [mode2], [line_id], context=context)
 
         #adjust also the amount in currency if needed
         cr.execute("select currency_id, sum(amount_currency) as amount_currency from account_move_line where move_id = %s and currency_id is not null group by currency_id", (move.id,))
@@ -1554,7 +1553,7 @@ class account_move(osv.osv):
                 res = cr.fetchone()
                 if res:
                     cr.execute('update account_move_line set amount_currency=%s , account_id=%s where id=%s', (amount_currency, account_id, res[0]))
-                    account_move_line_obj.invalidate_cache(['amount_currency', 'account_id'], [res[0]])
+                    account_move_line_obj.invalidate_cache(cr, uid, ['amount_currency', 'account_id'], [res[0]], context=context)
                 else:
                     context.update({'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
                     line_id = account_move_line_obj.create(cr, uid, {

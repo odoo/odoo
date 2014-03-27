@@ -66,10 +66,9 @@ class purchase_order(osv.osv):
                     where
                         order_id=%s and
                         (date_planned=%s or date_planned<%s)""", (value,po.id,po.minimum_planned_date,value))
-                po_line_obj.invalidate_cache(['date_planned'])
             cr.execute("""update purchase_order set
                     minimum_planned_date=%s where id=%s""", (value, po.id))
-            self.invalidate_cache(['minimum_planned_date'], [po.id])
+        self.invalidate_cache(cr, uid, context=context)
         return True
 
     def _minimum_planned_date(self, cr, uid, ids, field_name, arg, context=None):
