@@ -14,19 +14,39 @@
             </field>
         </record>
 
-        <record id="email_template_form_minimal_mass_mailing" model="ir.ui.view">
-            <field name="name">email.template.form.minimal.mass.mailing</field>
+        <record model="ir.ui.view" id="email_template_form_minimal">
+            <field name="name">email.template.form.minimal</field>
             <field name="model">email.template</field>
-            <field name="inherit_id" ref="email_template.email_template_form_minimal"/>
+            <field name="priority">32</field>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='model_id']" position="after">
-                    <label for="use_in_mass_mailing"/>
-                    <div>
-                        <field name="use_in_mass_mailing"/>
-                        <p>Choosing this option makes the template available for use
-in the mailings. It will also appear in the 'Mail Templates' menu.</p>
-                    </div>
-                </xpath>
+                <form string="Templates" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" required="True"/>
+                                <field name="model_id" required="1" options="{'no_open': True, 'no_create': True}"
+                                    on_change="onchange_model_id(model_id)"
+                                    domain="[('model', 'in', ['res.partner', 'mail.mass_mailing.contact'])]"/>
+                                <field name="model" invisible="True"/>
+                                <field name="use_default_to" invisible="1"/>
+                                <field name="use_in_mass_mailing" invisible="1"/>
+                            </group>
+                            <group>
+                                <div class="oe_right oe_button_box" name="buttons">
+                                    <button name="%(email_template.wizard_email_template_preview)d" string="Preview"
+                                        type="action" target="new"
+                                        context="{'template_id':active_id}"/>
+                                </div>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Body">
+                                <field name="body_html" nolabel="1"/>
+                                <field name="attachment_ids" widget="many2many_binary"/>
+                            </page>
+                        </notebook>
+                       </sheet>
+                </form>
             </field>
         </record>
 
@@ -82,21 +102,23 @@ in the mailings. It will also appear in the 'Mail Templates' menu.</p>
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_email_template">
+        <record model="ir.actions.act_window" id="action_email_template_marketing">
             <field name="name">Templates</field>
             <field name="res_model">email.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="domain" eval="[('use_in_mass_mailing', '=', True)]"/>
             <field name="context">{
-    'search_default_use_in_mass_mailing': 1,
-    'form_view_ref': 'email_template.email_template_form_minimal',
+    'form_view_ref': 'mass_mailing.email_template_form_minimal',
+    'default_use_default_to': True,
+    'default_use_in_mass_mailing': True,
 }</field>
         </record>
 
         <!-- Add Templates in Marketing / Mass mailing menu -->
         <menuitem name="Mail Templates" id="menu_email_template"
             parent="mass_mailing_campaign" sequence="3"
-            action="action_email_template"/>
+            action="action_email_template_marketing"/>
 
     </data>
 </openerp>

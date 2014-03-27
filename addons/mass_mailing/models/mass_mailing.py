@@ -463,7 +463,7 @@ class MassMailing(osv.Model):
         ),
         # mailing options
         'email_from': fields.char('From'),
-        'email_to': fields.char('Test Emails'),
+        'test_email_to': fields.char('Test Emails'),
         'reply_to': fields.char('Reply To'),
         'mailing_model': fields.selection(_mailing_model, string='Type', required=True),
         'contact_list_ids': fields.many2many(
@@ -625,43 +625,6 @@ class MassMailing(osv.Model):
             'context': context,
         }
 
-    def action_template_new(self, cr, uid, ids, context=None):
-        mailing = self.browse(cr, uid, ids[0], context=context)
-        view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'email_template.email_template_form_minimal')
-        ctx = dict(
-            context,
-            default_model=mailing.mailing_model,
-            default_use_in_mass_mailing=True,
-            default_use_default_to=True,
-            default_name=mailing.name,
-        )
-        return {
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'email.template',
-            'view_id': view_id,
-            'context': ctx,
-        }
-
-    def action_template_copy(self, cr, uid, ids, context=None):
-        mailing = self.browse(cr, uid, ids[0], context=context)
-        if not mailing.template_id:
-            return False
-        new_tpl_id = self.pool['email.template'].copy(cr, uid, mailing.template_id.id, context=context)
-        self.write(cr, uid, [mailing.id], {'template_id': new_tpl_id}, context=context)
-        view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'email_template.email_template_form_minimal')
-        return {
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'email.template',
-            'res_id': new_tpl_id,
-            'view_id': view_id,
-            'target': 'new',
-            'context': context,
-        }
-
     #------------------------------------------------------
     # Email Sending
     #------------------------------------------------------
@@ -744,7 +707,7 @@ class MassMailing(osv.Model):
             if not mailing.template_id:
                 raise Warning('Please specifiy a template to use.')
             # res_ids = self._set_up_test_mailing(cr, uid, mailing.mailing_model, context=context)
-            test_emails = tools.email_split(mailing.email_to)
+            test_emails = tools.email_split(mailing.test_email_to)
             if not test_emails:
                 raise Warning('Please specifiy test email adresses.')
             mail_ids = []
