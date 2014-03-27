@@ -629,30 +629,45 @@
         },
 
         /**
-         * Creates a "hover" button for image and link edition
+         * Creates a "hover" button for link edition
          *
-         * @param {String} label the button's label
          * @param {Function} editfn edition function, called when clicking the button
-         * @param {String} [classes] additional classes to set on the button
          * @returns {jQuery}
          */
-        make_hover_button: function (label, editfn, classes, styleButton) {
-            var $div = $(openerp.qweb.render('website.editor.hoverbutton', {
-                label: label,
-                classes: classes,
-                styleButton: styleButton
-            })).hide().appendTo(document.body);
+        make_hover_button_link: function (editfn) {
+            return $(openerp.qweb.render('website.editor.hoverbutton.link', {}))
+                .hide()
+                .click(function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    editfn.call(this, e);
+                })
+                .appendTo(document.body);
+        },
 
-            $div.find("button.hover-edition-button").click(function (e) {
+        /**
+         * Creates a "hover" button for image
+         *
+         * @param {Function} editfn edition function, called when clicking the button
+         * @param {Function} stylefn edition style function, called when clicking the button
+         * @returns {jQuery}
+         */
+        make_hover_button_image: function (editfn, stylefn) {
+            var $div = $(openerp.qweb.render('website.editor.hoverbutton.image', {}))
+                .hide()
+                .appendTo(document.body);
+
+            $div.find('[data-toggle="dropdown"]').dropdown();
+            $div.find(".hover-edition-button").click(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 editfn.call(this, e);
             });
-            if (styleButton) {
-                $div.find("button.hover-style-button").click(function (e) {
+            if (stylefn) {
+                $div.find(".hover-style-button").click(function (e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    styleButton.call(this, e);
+                    stylefn.call(this, e);
                 });
             }
             return $div;
@@ -664,7 +679,7 @@
          */
         setup_hover_buttons: function () {
             var editor = this.rte.editor;
-            var $link_button = this.make_hover_button(_t("Change"), function () {
+            var $link_button = this.make_hover_button_link(function () {
                 var sel = new CKEDITOR.dom.element(previous);
                 editor.getSelection().selectElement(sel);
                 if(sel.hasClass('fa')) {
@@ -675,13 +690,13 @@
                 }
                 $link_button.hide();
                 previous = null;
-            }, 'btn-xs');
+            });
 
-            var $image_button = this.make_hover_button(_t("Change"), function () {
+            var $image_button = this.make_hover_button_image(function () {
                 image_dialog(editor, new CKEDITOR.dom.element(previous));
                 $image_button.hide();
                 previous = null;
-            }, 'btn-sm', function () {
+            }, function () {
                 var prev = previous;
                 var sel = new CKEDITOR.dom.element(prev);
                 var $sel = $(sel.$);
@@ -1329,9 +1344,10 @@
     });
 
     website.editor.Media = openerp.Widget.extend({
-        init: function (editor) {
+        init: function (editor, media) {
             this._super();
             this.editor = editor;
+            this.media = media;
         },
         save: function () {
         },
@@ -1349,13 +1365,33 @@
             this._super(editor);
         },
         start: function (editor, media) {
+            var self = this;
+            this.$preview = this.$(".preview-container");
+
             this.imageDialog = new website.editor.RTEImageDialog(this.editor, this.media);
             this.imageDialog.appendTo(this.$("#editor-media-image"));
             this.iconDialog = new website.editor.FontIconsDialog(this.editor, this.media);
             this.iconDialog.appendTo(this.$("#editor-media-icon"));
             this.videoDialog = null;
             //this.videoDialog.appendTo(this.$("#editor-media-video"));
+
+            this.preview(this.imageDialog);
+
+            $('a[data-toggle="tab"]').on('show.bs.tab', function (event) {
+                self.active.$preview.detach();
+                if ($(event.relatedTarget).is('[href="#editor-media-image"]'))
+                if ($(event.target).is('[href="#editor-media-image"]'))
+                event.target // activated tab
+                event.relatedTarget // previous tab
+                console.log(event);
+                console.log($(event.target).is('[href="#editor-media-image"]'));
+            })
+
             return this._super();
+        },
+        preview: function (active) {
+            this.active = active;
+            this.$preview.after(active.$preview);
         },
         save: function () {
             this.imageDialog.save();
@@ -1396,7 +1432,8 @@
         }),
 
         start: function () {
-            this.$('button.wait').text("Uploading…");
+            this.$preview = this.$('.preview-container').detach();
+
             var $options = this.$('.image-style').children();
             this.image_styles = $options.map(function () { return this.value; }).get();
 
@@ -1470,7 +1507,7 @@
             var image = this.$('input.url').val();
             if (!image) { loaded(); return; }
 
-            var $img = this.$('img.image-preview')
+            var $img = this.$preview.find('img.image-preview')
                 .attr('src', image)
                 .removeClass(this.image_styles.join(' '))
                 .addClass(this.$('select.image-style').val());

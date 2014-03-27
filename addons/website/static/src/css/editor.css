@@ -301,7 +301,16 @@ ul.oe_menu_editor .disclose {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1001;
+  z-index: 1000;
+}
+
+.preview-container {
+  height: 100px;
+}
+.preview-container > * {
+  max-height: 100px;
+  margin: 0 auto;
+  display: block;
 }
 
 .cke_editable .fa {

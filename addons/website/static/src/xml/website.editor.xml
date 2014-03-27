@@ -94,6 +94,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <div class="preview-container hidden"></div>
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#editor-media-image" data-toggle="tab">Image</a></li>
@@ -126,17 +127,16 @@
         </div>
     </t>
     <t t-name="website.editor.dialog.image">
-        <div class="row">
+        <div>
             <form method="POST" action="/website/attach"
                   enctype="multipart/form-data"
-                  target="fileframe"
-                  class="col-sm-8">
+                  target="fileframe">
                 <div class="text-center">
                     <input type="file" name="upload" accept="image/*" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
                     <button type="button" class="btn btn-primary btn-lg filepicker">
                         Upload an image from your computer
                     </button>
-                    <button type="button" class="btn btn-lg hidden wait" disabled="disabled"/>
+                    <button type="button" class="btn btn-lg hidden wait" disabled="disabled">Uploading...</button>
                     <p class="text-muted mt16">— or —</p>
                 </div>
                 <div class="well">
@@ -148,20 +148,16 @@
                 <input type="hidden" name="func"/>
                 <div class="help-block"/>
             </form>
-            <div class="col-sm-4 image-preview-container">
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAC0lEQVQIHWP4zwAAAgEBAMVfG14AAAAASUVORK5CYII%3D"
-                     class="pull-right img-rounded image-preview"
-                     width="100%"/>
-                <img src="/web/static/src/img/throbber-large.gif"
-                     class="pull-right img-rounded wait hidden"
-                     width="100%"/>
-                <select class="form-control image-style">
+            <div class="preview-container">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAC0lEQVQIHWP4zwAAAgEBAMVfG14AAAAASUVORK5CYII%3D" class="image-preview"/>
+                <img src="/web/static/src/img/throbber-large.gif" class="wait hidden"/>
+                <!--select class="form-control image-style">
                     <option value="">No styling</option>
                     <option value="img-rounded">Rounded corners</option>
                     <option value="img-thumbnail">Box</option>
                     <option value="img-circle">Circle</option>
                     <option value="shadow">Shadow</option>
-                </select>
+                </select-->
             </div>
         </div>
         <iframe src="about:blank" name="fileframe" class="hidden"/>
@@ -251,10 +247,17 @@
         </div>
     </t>
 
-    <t t-name="website.editor.hoverbutton">
-        <div contentEditable="false" class="hover-edition">
-            <button type="button" t-attf-class="btn btn-primary hover-edition-button #{classes or ''}"><t t-esc="label"/></button>
-            <button t-if="styleButton" type="button" t-attf-class="btn btn-primary hover-style-button #{classes or ''}">Style</button>
+    <t t-name="website.editor.hoverbutton.link">
+        <button contentEditable="false" type="button" class="btn btn-primary hover-edition-button btn-xs">Change</button>
+    </t>
+
+    <t t-name="website.editor.hoverbutton.image">
+        <div contentEditable="false" class="hover-edition dropdown">
+            <a class="btn btn-primary btn-sm" data-toggle="dropdown" href="#">Customize</a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                <li><a href="#" class="hover-edition-button">Change Media</a></li>
+                <li><a href="#" class="hover-style-button">Style</a></li>
+            </ul>
         </div>
     </t>
 
