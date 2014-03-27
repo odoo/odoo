@@ -164,7 +164,7 @@ class Field(object):
     def reset(self):
         """ Prepare `self` for a new setup. """
         self._setup_done = False
-        self._triggers = []
+        self._triggers = set()          # set of (field, path)
 
     def setup(self, scope):
         """ Complete the setup of `self` (dependencies, recomputation triggers,
@@ -255,17 +255,22 @@ class Field(object):
             field.setup(scope)
 
             _logger.debug("Add trigger on %s to recompute %s", field, self)
-            field._triggers.append((self, '.'.join(path0 or ['id'])))
+            field._triggers.add((self, '.'.join(path0 or ['id'])))
 
             # add trigger on inverse field, too
             if field.inverse_field:
                 _logger.debug("Add trigger on %s to recompute %s", field.inverse_field, self)
-                field.inverse_field._triggers.append((self, '.'.join(path0 + [head])))
+                field.inverse_field._triggers.add((self, '.'.join(path0 + [head])))
 
             # recursively traverse the dependency
             if tail:
                 comodel = scope[field.comodel_name]
                 self._setup_dependency(path0 + [head], comodel, tail)
+
+    @property
+    def dependents(self):
+        """ Return the computed fields that depend on `self`. """
+        return (field for field, path in self._triggers)
 
     #
     # Field description
@@ -548,6 +553,7 @@ class Field(object):
                 spec.append((field, target._ids))
 
         return spec
+
 
 class Boolean(Field):
     """ Boolean field. """

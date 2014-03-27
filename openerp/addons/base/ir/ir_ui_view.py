@@ -650,7 +650,7 @@ class view(osv.osv):
         for field, nodes in field_nodes.iteritems():
             # if any of the fields that depend on field is in arch, add
             # on_change="1" on the nodes referring to field
-            if any(dep in field_nodes for dep, path in field._triggers):
+            if any(dep in field_nodes for dep in field.dependents):
                 for node in nodes:
                     if not node.get('on_change'):
                         node.set('on_change', '1')
