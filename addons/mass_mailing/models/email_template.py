@@ -10,7 +10,7 @@ class EmailTemplate(osv.Model):
     _inherit = ['email.template']
 
     _columns = {
-        'use_in_mass_mailing': fields.boolean('Available for mass mailing campaigns'),
+        'use_in_mass_mailing': fields.boolean('Available for marketing and mailing'),
     }
 
     def action_new_mailing(self, cr, uid, ids, context=None):

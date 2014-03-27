@@ -20,7 +20,12 @@
             <field name="inherit_id" ref="email_template.email_template_form_minimal"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='model_id']" position="after">
-                    <field name="use_in_mass_mailing"/>
+                    <label for="use_in_mass_mailing"/>
+                    <div>
+                        <field name="use_in_mass_mailing"/>
+                        <p>Choosing this option makes the template available for use
+in the mailings. It will also appear in the 'Mail Templates' menu.</p>
+                    </div>
                 </xpath>
             </field>
         </record>
@@ -32,8 +37,8 @@
            <field name="arch" type="xml">
                 <xpath expr="//field[@name='model_id']" position="after">
                     <separator/>
-                    <filter string="Available for Mass Mailing" name="use_in_mass_mailing" domain="[('use_in_mass_mailing', '=', 1)]"
-                        help="Available for use in mass mailing campaigns"/>
+                    <filter string="Available for Marketing and Mailing" name="use_in_mass_mailing" domain="[('use_in_mass_mailing', '=', 1)]"
+                        help="Available for use in mass mailings"/>
                 </xpath>
            </field>
         </record>
