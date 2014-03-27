@@ -146,31 +146,29 @@ class Scope(object):
                 self.shared.recomputing = False
 
     def invalidate(self, spec):
-        """ Invalidate some fields for some records in the cache of `self`.
+        """ Invalidate some fields for some records in the cache of all scopes.
 
             :param spec: what to invalidate, a list of `(field, ids)` pair,
                 where `field` is a field object, and `ids` is a list of record
                 ids or ``None`` (to invalidate all records).
         """
-        # invalidate spec in self
-        for field, ids in spec:
-            if ids is None:
-                self.cache.pop(field, None)
-            else:
-                field_cache = self.cache[field]
-                for id in ids:
-                    field_cache.pop(id, None)
-
-        # invalidate everything in the other scopes
-        self.invalidate_all(self)
-
-    def invalidate_all(self, other=None):
-        """ Invalidate the cache of all scopes, except `other`. """
+        if not spec:
+            return
         for scope in list(self.all):
-            if scope is not other:
-                scope.cache.clear()
-                scope.cache_ids.clear()
-                scope.dirty.clear()
+            for field, ids in spec:
+                if ids is None:
+                    scope.cache.pop(field, None)
+                else:
+                    field_cache = scope.cache[field]
+                    for id in ids:
+                        field_cache.pop(id, None)
+
+    def invalidate_all(self):
+        """ Clear the cache of all scopes. """
+        for scope in list(self.all):
+            scope.cache.clear()
+            scope.cache_ids.clear()
+            scope.dirty.clear()
 
     def check_cache(self):
         """ Check the cache consistency. """
