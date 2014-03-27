@@ -17,7 +17,7 @@
                     <h1><span t-field="survey.title"></span> <span style="font-size:1.5em;" class="fa fa-bar-chart-o pull-right "/></h1>
                     <h2><span t-field="survey.description"></span></h2>
                 </div>
-                <div>
+                <div class="hidden-print">
                     <ul class="nav nav-pills">
                         <t t-if="filter_finish == True">
                             <li class="filter-all"><a href="#">All</a></li>
@@ -91,7 +91,7 @@
                             <td>
                                 <span t-field="user_input.value_free_text"></span><br/>
                                 <small><p t-field="user_input.date_create" class="fa fa-calendar oe_date text-muted"></p></small>
-                                <span class="pull-right">
+                                <span class="pull-right hidden-print">
                                     <a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"> <i class="fa fa-print"></i> Print respondent's answers</a><br/>
                                 </span>
                             </td>
@@ -100,7 +100,7 @@
                             <td>
                                 <span t-field="user_input.value_text"></span><br/>
                                 <small><p t-field="user_input.date_create" class="fa fa-calendar oe_date text-muted"></p>
-                                <span class="pull-right">
+                                <span class="pull-right hidden-print">
                                     <a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"> <i class="fa fa-print"></i> Print respondent's answers</a><br/>
                                 </span>
                                 </small>
@@ -109,7 +109,7 @@
                         <t t-if="question.type == 'datetime'">
                             <td>
                                 <span  class="oe_date" t-field="user_input.value_date"></span><br/>
-                                <span class="pull-right">
+                                <span class="pull-right hidden-print">
                                     <a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"> <i class="fa fa-print"></i> Print respondent's answers</a><br/>
                                 </span>
                             </td>
