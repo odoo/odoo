@@ -66,6 +66,7 @@ class email_template_preview(osv.osv_memory):
 
     _columns = {
         'res_id': fields.selection(_get_records, 'Sample Document'),
+        'partner_ids': fields.many2many('res.partner', string='Recipients'),
     }
 
     def on_change_res_id(self, cr, uid, ids, res_id, context=None):
@@ -80,7 +81,7 @@ class email_template_preview(osv.osv_memory):
 
         # generate and get template values
         mail_values = email_template.generate_email(cr, uid, template_id, res_id, context=context)
-        vals = dict((field, mail_values.get(field, False)) for field in ('email_from', 'email_to', 'email_cc', 'reply_to', 'subject', 'body_html', 'partner_to'))
+        vals = dict((field, mail_values.get(field, False)) for field in ('email_from', 'email_to', 'email_cc', 'reply_to', 'subject', 'body_html', 'partner_to', 'partner_ids', 'attachment_ids'))
         vals['name'] = template.name
         return {'value': vals}
 
