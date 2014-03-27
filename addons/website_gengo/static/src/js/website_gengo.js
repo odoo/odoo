@@ -15,6 +15,7 @@
             var self = this;
             var gengo_langs = ["ar_SA","id_ID","nl_NL","fr_CA","pl_PL","zh_TW","sv_SE","ko_KR","pt_PT","en_US","ja_JP","es_ES","zh_CN","de_DE","fr_FR","fr_BE","ru_RU","it_IT","pt_BR"];
             if (gengo_langs.indexOf(website.get_context()['lang']) != -1){   
+                self.$('.gengo_post,.gengo_wait,.gengo_inprogress,.gengo_info').remove();
                 self.$('button[data-action=save]')
                 .after(openerp.qweb.render('website.ButtonGengoTranslator'));
             }

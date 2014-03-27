@@ -26,6 +26,8 @@
     'description': """
 Website Gengo Translator
 ========================
+
+Translate you website in one click
 """,
     'author': 'OpenERP SA',
     'depends': [
