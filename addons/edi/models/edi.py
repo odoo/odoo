@@ -106,7 +106,7 @@ class edi(osv.AbstractModel):
         """
         edi_list = []
         for record in records:
-            record_model = self.pool[record._name]
+            record_model = record._model
             edi_list += record_model.edi_export(cr, uid, [record], context=context)
         return self.serialize(edi_list)
 
@@ -309,7 +309,8 @@ class EDIMixin(object):
             ['unique_external_id', 'Document Name']
         """
         edi_ext_id = self._edi_external_id(cr, uid, record, context=context)
-        name = record.name_get(cr, uid, [record.id], context=context)
+        relation_model = record._model
+        name = relation_model.name_get(cr, uid, [record.id], context=context)
         name = name and name[0][1] or False
         return [edi_ext_id, name]
 
@@ -333,7 +334,7 @@ class EDIMixin(object):
         """
         result = []
         for record in records:
-            result += record.edi_export(cr, uid, [record], edi_struct=edi_struct, context=context)
+            result += record._model.edi_export(cr, uid, [record], edi_struct=edi_struct, context=context)
         return result
 
     def edi_m2m(self, cr, uid, records, context=None):
