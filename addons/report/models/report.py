@@ -74,7 +74,7 @@ class Report(osv.Model):
     # Extension of ir_ui_view.render with arguments frequently used in reports
     #--------------------------------------------------------------------------
 
-    def _get_digits(self, cr, uid, obj=None, f=None, dp=None):
+    def _get_digits(self, cr=None, uid=None, obj=None, f=None, dp=None):
         d = DEFAULT_DIGITS = 2
         if dp:
             decimal_precision_obj = self.pool['decimal.precision']
@@ -117,6 +117,14 @@ class Report(osv.Model):
         """
         def get_date_length(date_format=DEFAULT_SERVER_DATE_FORMAT):
             return len((datetime.now()).strftime(date_format))
+
+        # In case we use formatLang on the model (and not in the rendering environment).
+        if not hasattr(self, 'land_ditct'):
+            self.localcontext = {}
+            self.lang_dict = {}
+            self.default_lang = {}
+            self._get_lang_dict(cr, uid)
+            self.lang_dict_called = True
 
         if digits is None:
             if dp:
@@ -212,7 +220,7 @@ class Report(osv.Model):
         values.update({
             'time': time,
             'formatLang': partial(self.formatLang, cr=cr, uid=uid),
-            'get_digits': self._get_digits,
+            'get_digits': partial(self._get_digits, cr=cr, uid=uid),
             'render_doc': render_doc,
             'editable': True,  # Will active inherit_branding
             'res_company': self.pool['res.users'].browse(cr, uid, uid).company_id,
@@ -377,7 +385,7 @@ class Report(osv.Model):
         )
         return pdf
 
-    def get_action(self, cr, uid, ids, report_name, datas=None, context=None):
+    def get_action(self, cr, uid, ids, report_name, data=None, context=None):
         """Return an action of type ir.actions.report.xml.
 
         :param report_name: Name of the template to generate an action for
@@ -386,8 +394,8 @@ class Report(osv.Model):
         if context is None:
             context = {}
 
-        if datas is None:
-            datas = {}
+        if data is None:
+            data = {}
 
         report_obj = self.pool.get('ir.actions.report.xml')
         idreport = report_obj.search(cr, uid, [('report_name', '=', report_name)], context=context)
@@ -405,8 +413,8 @@ class Report(osv.Model):
             'report_file': report.report_file,
         }
 
-        if datas:
-            action['datas'] = datas
+        if data:
+            action['datas'] = data
 
         return action
 
@@ -566,8 +574,8 @@ class Report(osv.Model):
             command_args.extend(['--page-size', paperformat.format])
 
         if paperformat.page_height and paperformat.page_width and paperformat.format == 'custom':
-            command_args.extend(['--page-width', str(paperformat.page_width) + 'in'])
-            command_args.extend(['--page-height', str(paperformat.page_height) + 'in'])
+            command_args.extend(['--page-width', str(paperformat.page_width) + 'mm'])
+            command_args.extend(['--page-height', str(paperformat.page_height) + 'mm'])
 
         if specific_paperformat_args and specific_paperformat_args['data-report-margin-top']:
             command_args.extend(['--margin-top',

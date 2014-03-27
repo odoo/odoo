@@ -143,12 +143,17 @@ class ReportController(Controller):
                 elif value.lower() == 'true':
                     param[key] = True
                 elif ',' in value:
-                    param[key] = [int(i) for i in value.split(',')]
+                    try:
+                        param[key] = [int(i) for i in value.split(',')]
+                    except ValueError:
+                        param[key] = value.split(',')
+                        if len(param[key]) == 1:
+                            param[key] = value
                 else:
                     try:
                         param[key] = int(value)
                     except (ValueError, TypeError):
-                        pass
+                        continue
         else:
             if isinstance(param, (str, unicode)):
                 param = [int(i) for i in param.split(',')]

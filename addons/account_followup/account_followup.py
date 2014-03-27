@@ -21,7 +21,7 @@
 
 from openerp.osv import fields, osv
 from lxml import etree
-
+import openerp.tools as tools
 from openerp.tools.translate import _
 
 class followup(osv.osv):
@@ -189,11 +189,7 @@ class res_partner(osv.osv):
              'model': 'account_followup.followup',
              'form': data
         }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'account_followup.followup.print',
-            'datas': datas,
-            }
+        return self.pool['report'].get_action(cr, uid, wizard_partner_ids, 'account_followup.report_followup', data=datas, context=context)
 
     def do_partner_mail(self, cr, uid, partner_ids, context=None):
         if context is None:
@@ -247,8 +243,7 @@ class res_partner(osv.osv):
         if partner.unreconciled_aml_ids:
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             current_date = fields.date.context_today(self, cr, uid, context=context)
-            rml_parse = account_followup_print.report_rappel(cr, uid, "followup_rml_parser")
-            final_res = rml_parse._lines_get_with_partner(partner, company.id)
+            final_res = self.pool['report.account_followup.report_followup']._lines_get_with_partner(partner, company.id, cr=cr, uid=uid)
 
             for currency_dict in final_res:
                 currency = currency_dict.get('line', [{'currency_id': company.currency_id}])[0]['currency_id']
@@ -274,7 +269,11 @@ class res_partner(osv.osv):
                         strbegin = "<TD><B>"
                         strend = "</B></TD>"
                     followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['name'] + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
-                total = rml_parse.formatLang(total, dp='Account', currency_obj=currency)
+
+                total = reduce(lambda x, y: x+y['balance'], currency_dict['line'], 0.00)
+
+                report_obj = self.pool.get('report')
+                total = report_obj.formatLang(total, dp='Account', currency_obj=currency, cr=cr, uid=uid)
                 followup_table += '''<tr> </tr>
                                 </table>
                                 <center>''' + _("Amount due") + ''' : %s </center>''' % (total)
