@@ -801,7 +801,7 @@ class test_mail(TestMail):
         # Do: post 2 message on group_pigs as admin, 3 messages as demo user
         for dummy in range(2):
             group_pigs.message_post(body='My Body', subtype='mt_comment')
-        raoul_pigs = group_pids.sudo(user=user_raoul)
+        raoul_pigs = group_pigs.sudo(user=user_raoul)
         for dummy in range(3):
             raoul_pigs.message_post(body='My Demo Body', subtype='mt_comment')
 
