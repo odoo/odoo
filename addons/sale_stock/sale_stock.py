@@ -440,6 +440,21 @@ class stock_location_route(osv.osv):
 class stock_picking(osv.osv):
     _inherit = "stock.picking"
 
+    def _get_sale_id(self, cr, uid, ids, name, args, context=None):
+        sale_obj = self.pool.get("sale.order")
+        res = {}
+        for picking in self.browse(cr, uid, ids, context=context):
+            if picking.group_id:
+                res[picking.id] = False
+                sale_ids = sale_obj.search(cr, uid, [('procurement_group_id', '=', picking.group_id.id)], context=context)
+                if sale_ids:
+                    res[picking.id] = sale_ids[0]
+        return res
+    
+    _columns = {
+        'sale_id': fields.function(_get_sale_id, type="many2one", relation="sale.order", string="Sale Order"),
+    }
+
     def _create_invoice_from_picking(self, cr, uid, picking, vals, context=None):
         sale_obj = self.pool.get('sale.order')
         sale_line_obj = self.pool.get('sale.order.line')

@@ -47,19 +47,6 @@
       {'active_ids': ship_ids, 'active_model': 'stock.picking'})
     self.create_invoice(cr, uid, [wiz_id], {"active_ids": ship_ids, "active_id": ship_ids[0]})
 -
-  I print a Delivery Order report.
--
-  !python {model: stock.picking}: |
-    import os
-    import openerp.report
-    from openerp import tools
-    sale = self.pool.get('sale.order')
-    sale_order = sale.browse(cr, uid, ref("sale_normal_delivery_charges"))
-    ship_ids = [x.id for x in sale_order.picking_ids]
-    data, format = openerp.report.render_report(cr, uid, ship_ids, 'sale.shipping', {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'delivery-shipping'+format), 'wb+').write(data)
--
   Create one more sale order with Free Delivery Charges
 - 
   !record {model: sale.order, id: sale_free_delivery_charges}:

@@ -808,23 +808,10 @@ class stock_picking(osv.osv):
         default['date_done'] = False
         return super(stock_picking, self).copy(cr, uid, id, default, context)
 
-    def do_print_delivery(self, cr, uid, ids, context=None):
-        '''This function prints the delivery order'''
-        assert len(ids) == 1, 'This option should only be used for a single id at a time'
-        datas = {
-            'model': 'stock.picking',
-            'ids': ids,
-        }
-        return {'type': 'ir.actions.report.xml', 'report_name': 'stock.picking.list', 'datas': datas, 'nodestroy': True}
 
     def do_print_picking(self, cr, uid, ids, context=None):
         '''This function prints the picking list'''
-        assert len(ids) == 1, 'This option should only be used for a single id at a time'
-        datas = {
-            'model': 'stock.picking',
-            'ids': ids,
-        }
-        return {'type': 'ir.actions.report.xml', 'report_name': 'stock.picking.list.internal', 'datas': datas, 'nodestroy': True}
+        return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_picking', context=context)
 
     def action_confirm(self, cr, uid, ids, context=None):
         todo = []
@@ -2381,6 +2368,12 @@ class stock_inventory(osv.osv):
             res_filter.append(('pack', _('A Pack')))
         return res_filter
 
+    def _get_total_qty(self, cr, uid, ids, field_name, args, context=None):
+        res = {}
+        for inv in self.browse(cr, uid, ids, context=context):
+            res[inv.id] = sum([x.product_qty for x in inv.line_ids])
+        return res
+
     _columns = {
         'name': fields.char('Inventory Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Name."),
         'date': fields.datetime('Inventory Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Create Date."),
@@ -2395,6 +2388,7 @@ class stock_inventory(osv.osv):
         'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number', readonly=True, states={'draft': [('readonly', False)]}, help="Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial Number."),
         'move_ids_exist': fields.function(_get_move_ids_exist, type='boolean', string=' Stock Move Exists?', help='technical field for attrs in view'),
         'filter': fields.selection(_get_available_filters, 'Selection Filter'),
+        'total_qty': fields.function(_get_total_qty, type="float"),
     }
 
     def _default_stock_location(self, cr, uid, context=None):
