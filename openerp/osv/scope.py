@@ -243,5 +243,4 @@ class Recomputation(MutableMapping):
 # keep those imports here in order to handle cyclic dependencies correctly
 from openerp import SUPERUSER_ID
 from openerp.exceptions import Warning, AccessError, MissingError
-from openerp.osv.orm import BaseModel
 from openerp.modules.registry import RegistryManager

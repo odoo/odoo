@@ -58,9 +58,9 @@ import dateutil.parser
 import psycopg2
 from lxml import etree
 
-import api
-from scope import Scope
-import fields
+from .scope import Scope
+from . import api
+from . import fields
 import openerp
 import openerp.tools as tools
 from openerp.exceptions import except_orm, AccessError, MissingError
@@ -5683,8 +5683,8 @@ PGERROR_TO_OE = defaultdict(
 
 
 # keep those imports here to avoid dependency cycle errors
-import expression
-import fields2
-from fields2 import Field, SpecialValue, FailedValue
+from . import expression
+from . import fields2
+from .fields2 import Field, SpecialValue, FailedValue
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

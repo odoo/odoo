@@ -27,12 +27,8 @@ from contextlib import contextmanager
 import logging
 import threading
 
+import openerp
 from openerp import SUPERUSER_ID
-import openerp.sql_db
-import openerp.osv.orm
-import openerp.tools
-import openerp.modules.db
-import openerp.tools.config
 from openerp.tools import assertion_report, lazy_property
 
 _logger = logging.getLogger(__name__)
