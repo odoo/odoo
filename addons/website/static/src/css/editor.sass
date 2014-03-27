@@ -150,7 +150,7 @@ ul.oe_menu_editor
     +user-select(auto)
     cursor: text !important
 
-.modal-dialog.select-image
+.modal-dialog.select-media
     width: 80%
 
 .modal .existing-attachments
@@ -232,6 +232,10 @@ $attachment-border-color: #848490
             border-top: none
             border-left: none
             +border-bottom-right-radius(8px)
+        &.media_selected
+            > i, > img 
+                border-width: 5px
+                border-color: rgb(0, 248, 248)
 
 // wrapper positioned relatively for drag&drop widget which is disabled below.
 // Breaks completely horribly crazy products listing page, so take it out.
@@ -264,14 +268,17 @@ $attachment-border-color: #848490
     position: absolute
     top: 0
     left: 0
-    // This z-index is due to .navbar of bootstrap
-    z-index: 1000
+    // This z-index is due to .navbar of bootstrap & jQuery-transfo
+    z-index: 1001
 .preview-container
+    text-align: center
+    line-height: 100px
     height: 100px
     > *
         max-height: 100px
+        line-height: 100px
         margin: 0 auto
-        display: block
+        display: inline-block
 
 // fontawesome
 .cke_editable .fa

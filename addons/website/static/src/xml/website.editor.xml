@@ -90,19 +90,34 @@
     </t>
     <t t-name="website.editor.dialog.media">
         <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog select-media">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <div class="preview-container hidden"></div>
-                        <!-- Nav tabs -->
+                        <h3 class="modal-title">Select a Media</h3>
+                    </div>
+                    <div class="modal-body">
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#editor-media-image" data-toggle="tab">Image</a></li>
                             <li><a href="#editor-media-icon" data-toggle="tab">Pictogram</a></li>
                             <li><a href="#editor-media-video" data-toggle="tab">Video</a></li>
+                            <li style="float: right;">
+                                <ul class="pager mb0 mt0">
+                                    <li class="previous disabled"><a href="#">← Previous</a></li>
+                                    <li class="next disabled"><a href="#">Next →</a></li>
+                                </ul>
+                            </li>
+                            <li style="float: right;">
+                                <form>
+                                    <div class="form-group font-icons fa fa-search mb0">
+                                        <input type="hidden" id="fa-icon" class="form-control"/>
+                                        <input type="hidden" id="fa-size" class="form-control"/>
+                                        <input type="search" class="form-control" id="icon-search"/>
+                                    </div>
+                                </form>
+                            </li>
                         </ul>
-                    </div>
-                    <div class="modal-body">
+
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div class="tab-pane fade in active" id="editor-media-image">
@@ -128,37 +143,27 @@
     </t>
     <t t-name="website.editor.dialog.image">
         <div>
-            <form method="POST" action="/website/attach"
+            <form method="POST"
+                  action="/website/attach"
                   enctype="multipart/form-data"
-                  target="fileframe">
-                <div class="text-center">
-                    <input type="file" name="upload" accept="image/*" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
-                    <button type="button" class="btn btn-primary btn-lg filepicker">
-                        Upload an image from your computer
-                    </button>
-                    <button type="button" class="btn btn-lg hidden wait" disabled="disabled">Uploading...</button>
-                    <p class="text-muted mt16">— or —</p>
-                </div>
+                  target="fileframe"
+                  class="form-inline">
                 <div class="well">
-                    <a href="#existing" class="pull-right">Browse existing images</a>
-                    <h3 class="list-group-item-heading">Image URL</h3>
-                    <input type="text" class="form-control url"
-                           placeholder="http://openerp.com"/>
+                    <div class="form-group">
+                        <input type="file" name="upload" accept="image/*" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
+                        <button type="button" class="btn btn-primary filepicker">Upload an image from your computer</button>
+                        <button type="button" class="btn hidden wait" disabled="disabled">Uploading...</button>
+                    </div>
+                    <span class="text-muted">— or —</span>
+                    <div class="form-group">
+                        <label for="iamgeurl">Image URL</label>
+                        <input type="text" name="url" class="form-control url" style="width: 300px;" id="iamgeurl" placeholder="http://openerp.com"/>
+                    </div>
                 </div>
                 <input type="hidden" name="func"/>
+                <div class="existing-attachments"/>
                 <div class="help-block"/>
             </form>
-            <div class="preview-container">
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAC0lEQVQIHWP4zwAAAgEBAMVfG14AAAAASUVORK5CYII%3D" class="image-preview"/>
-                <img src="/web/static/src/img/throbber-large.gif" class="wait hidden"/>
-                <!--select class="form-control image-style">
-                    <option value="">No styling</option>
-                    <option value="img-rounded">Rounded corners</option>
-                    <option value="img-thumbnail">Box</option>
-                    <option value="img-circle">Circle</option>
-                    <option value="shadow">Shadow</option>
-                </select-->
-            </div>
         </div>
         <iframe src="about:blank" name="fileframe" class="hidden"/>
     </t>
@@ -263,18 +268,18 @@
 
     <t t-name="website.editor.dialog.font-icons">
         <form>
-            <div class="form-group" id="fa-preview">
-
-            </div>
-            <div class="form-group font-icons fa fa-search">
+            <div class="form-group hidden font-icons fa fa-search">
                 <input type="hidden" id="fa-icon" class="form-control"/>
                 <input type="hidden" id="fa-size" class="form-control"/>
                 <input type="search" class="form-control" id="icon-search"/>
-                <div class="font-icons-icons">
-                    <t t-call="website.editor.dialog.font-icons.icons">
-                        <t t-set="icons" t-value="widget.icons"/>
-                    </t>
-                </div>
+            </div>
+            <div class="font-icons-icons">
+                <t t-call="website.editor.dialog.font-icons.icons">
+                    <t t-set="icons" t-value="widget.icons"/>
+                </t>
+            </div>
+            <div class="form-group mt32" id="fa-preview">
+
             </div>
             <div class="form-group">
                 <label for="fa-rotation">Rotation</label>

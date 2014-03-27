@@ -180,7 +180,7 @@ ul.oe_menu_editor .disclose {
   cursor: text !important;
 }
 
-.modal-dialog.select-image {
+.modal-dialog.select-media {
   width: 80%;
 }
 
@@ -271,6 +271,10 @@ ul.oe_menu_editor .disclose {
   -webkit-border-bottom-right-radius: 8px;
   border-bottom-right-radius: 8px;
 }
+.existing-attachments .existing-attachment-cell.media_selected > i, .existing-attachments .existing-attachment-cell.media_selected > img {
+  border-width: 5px;
+  border-color: #00f8f8;
+}
 
 .cke_widget_wrapper {
   position: static !important;
@@ -301,16 +305,19 @@ ul.oe_menu_editor .disclose {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 1001;
 }
 
 .preview-container {
+  text-align: center;
+  line-height: 100px;
   height: 100px;
 }
 .preview-container > * {
   max-height: 100px;
+  line-height: 100px;
   margin: 0 auto;
-  display: block;
+  display: inline-block;
 }
 
 .cke_editable .fa {
