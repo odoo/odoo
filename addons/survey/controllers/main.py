@@ -318,7 +318,6 @@ class WebsiteSurvey(http.Controller):
         if not current_filters:
             current_filters = user_input.search(request.cr, request.uid, [], context=request.context)
         user_input_objs = user_input.browse(request.cr, request.uid, current_filters, context=request.context)
-        print 'user_input_objs',user_input_objs
         filtered_list = [input.id for input in user_input_objs if input.state == 'done']
         return filtered_list
 
@@ -412,7 +411,7 @@ class WebsiteSurvey(http.Controller):
                 type='http', auth='user', multilang=True, website=True)
     def get_graph_data(self, question, **post):
         '''Returns appropriate formated data required by graph library on basis of filter'''
-        question = request.registry.get('survey.question').browse(request.cr, request.uid, question)
+        question = request.registry['survey.question'].browse(request.cr, request.uid, question)
         current_filters = safe_eval(post.get('current_filters', '[]'))
         result = []
         if question.type == 'multiple_choice':
