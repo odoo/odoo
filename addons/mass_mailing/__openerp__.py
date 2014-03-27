@@ -43,6 +43,7 @@ professional emails and reuse templates in a few clicks.
         'data/mass_mailing_data.xml',
         'wizard/mail_compose_message_view.xml',
         'wizard/create_template_view.xml',
+        'wizard/create_list_view.xml',
         'views/mass_mailing.xml',
         'views/res_config.xml',
         'views/res_partner.xml',

@@ -81,7 +81,8 @@ class MassMailingList(osv.Model):
         """Override default_get to handle active_domain coming from the list view. """
         res = super(MassMailingList, self).default_get(cr, uid, fields, context=context)
         if 'domain' in fields:
-            res['model'] = context.get('active_model', 'res.partner')
+            if not 'model' in res and context.get('active_model'):
+                res['model'] = context['active_model']
             if 'active_domain' in context:
                 res['domain'] = '%s' % context['active_domain']
             elif 'active_ids' in context:
@@ -572,12 +573,6 @@ class MassMailing(osv.Model):
             values['body_html'] = False
         return {'value': values}
 
-    def _get_model_to_list_action_id(self, cr, uid, model, context=None):
-        if model == 'res.partner':
-            return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_partner_to_mailing_list')
-        else:
-            return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_contact_to_mailing_list')
-
     def action_duplicate(self, cr, uid, ids, context=None):
         copy_id = None
         for mailing in self.browse(cr, uid, ids, context=context):
@@ -598,10 +593,16 @@ class MassMailing(osv.Model):
             }
         return False
 
+    def _get_model_to_list_action_id(self, cr, uid, model, context=None):
+        if model == 'res.partner':
+            return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_partner_to_mailing_list')
+        else:
+            return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_contact_to_mailing_list')
+
     def action_new_list(self, cr, uid, ids, context=None):
         wizard = self.browse(cr, uid, ids[0], context=context)
-        action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_partner_to_mailing_list')
-        ctx = dict(context, view_manager_highlight=[action_id], default_mass_mailing_id=ids[0])
+        action_id = self._get_model_to_list_action_id(cr, uid, wizard.mailing_model, context=context)
+        ctx = dict(context, view_manager_highlight=[action_id], default_mass_mailing_id=ids[0], default_model=wizard.mailing_model)
         return {
             'name': _('Choose Recipients'),
             'type': 'ir.actions.act_window',

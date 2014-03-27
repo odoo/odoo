@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <!-- Create a Mailing List from Partners-->
+        <!-- Create a Mailing List from Partners -->
         <act_window name="Create Mailing List"
             res_model="mail.mass_mailing.list"
             src_model="res.partner"
@@ -11,10 +11,10 @@
             target="current"
             key2="client_action_multi"
             id="action_partner_to_mailing_list"
-            view_id="mass_mailing.view_mail_mass_mailing_list_form_minimal"
             context="{
-    'default_mass_mailing_id': context.get('default_mass_mailing_id'),
-    'default_model': 'res.partner'}"/>
+'default_mass_mailing_id': context.get('default_mass_mailing_id'),
+'default_model': context.get('default_model', 'res.partner'),
+'default_name': context.get('default_name', False)}"/>
 
     </data>
 </openerp>

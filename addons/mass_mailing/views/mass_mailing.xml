@@ -68,11 +68,11 @@
             <field name="context">{'search_default_not_opt_out': 1}</field>
         </record>
 
-        <menuitem name="Contacts" id="menu_email_mass_mailing_contacts"
+        <menuitem name="Contacts" id="menu_email_mass_mailing_contacts" groups="base.group_no_one"
             parent="mass_mailing_list" sequence="50"
             action="action_view_mass_mailing_contacts"/>
 
-        <!-- Create a Mailing List from Contacts-->
+        <!-- Create a Mailing List from Contacts -->
         <act_window name="Create Mailing List"
             res_model="mail.mass_mailing.list"
             src_model="mail.mass_mailing.contact"
@@ -81,7 +81,10 @@
             target="current"
             key2="client_action_multi"
             id="action_contact_to_mailing_list"
-            context="{'default_mass_mailing_id': context.get('default_mass_mailing_id')}"/>
+            context="{
+'default_mass_mailing_id': context.get('default_mass_mailing_id'),
+'default_model': context.get('default_model', 'mail.mass_mailing.contact'),
+'default_name': context.get('default_name', False)}"/>
 
         <!--  MASS MAILING LIST !-->
         <record model="ir.ui.view" id="view_mail_mass_mailing_list_search">
@@ -108,10 +111,9 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_list_form_minimal">
-            <field name="name">mail.mass_mailing.list.form.minimal</field>
+        <record model="ir.ui.view" id="view_mail_mass_mailing_list_form">
+            <field name="name">mail.mass_mailing.list.form</field>
             <field name="model">mail.mass_mailing.list</field>
-            <field name="priority">20</field>
             <field name="arch" type="xml">
                 <form string="Contact List" version="7.0">
                     <header>
@@ -125,48 +127,15 @@
                             <label for="contact_nbr"/>
                             <div>
                                 <field name="contact_nbr" nolabel="1" class="oe_inline"/>
-                                <button name="action_see_records" type="object" class="oe_link" string="contacts"/>
+                                <field name="model" class="oe_inline"
+                                    on_change="on_change_model(model, context)" nolabel="1"/>
+                                <button string="See Recipients" class="oe_inline oe_link" style="margin-left: 8px;"
+                                    name="action_see_records" type="object"/>
                             </div>
-                            <field name="model" on_change="on_change_model(model, context)" invisible="1"/>
-                            <field name="contact_ids" invisible="1"/>
-                            <field name="filter_id" invisible="1"/>
-                            <field name="domain" on_change="on_change_domain(domain, model, context)" invisible="1"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_mail_mass_mailing_list_form">
-            <field name="name">mail.mass_mailing.list.form</field>
-            <field name="model">mail.mass_mailing.list</field>
-            <field name="arch" type="xml">
-                <form string="Contact List" version="7.0">
-                    <header>
-                        <button name="action_add_to_mailing" type="object"
-                            class="oe_highlight" string="Add to Mailing"
-                            invisible="not context.get('default_mass_mailing_id')"/>
-                    </header>
-                    <sheet>
-                        <group>
-                            <field name="name"/>
-                            <label for="contact_nbr"/>
-                            <div>
-                                <field name="contact_nbr" nolabel="1" class="oe_inline"/>
-                                <button name="action_see_records" type="object" class="oe_link" string="contacts"/>
-                            </div>
-                            <field name="model" on_change="on_change_model(model, context)"/>
-                            <field name="contact_ids"
-                                attrs="{'invisible': [('model', '!=', 'mail.mass_mailing.contact')]}">
-                                <tree editable='bottom'>
-                                    <field name="name"/>
-                                    <field name="email"/>
-                                </tree>
-                            </field>
-                            <field name="filter_id"
-                                on_change="on_change_filter_id(filter_id, context)"
-                                attrs="{'invisible': [('model', '=', 'mail.mass_mailing.contact')]}"/>
-                            <field name="domain" on_change="on_change_domain(domain, model, context)"/>
+                            <field name="filter_id" groups="base.group_no_one"
+                                on_change="on_change_filter_id(filter_id, context)"/>
+                            <field name="domain" groups="base.group_no_one"
+                                on_change="on_change_domain(domain, model, context)"/>
                         </group>
                     </sheet>
                 </form>
@@ -279,16 +248,18 @@
                             </div>
                             <label for="contact_list_ids" string="Recipients"/>
                             <div>
-                                <field name="contact_nbr" class="oe_inline" readonly="True"/>
-                                <field name="mailing_model" class="oe_inline"
-                                    on_change='on_change_mailing_model(mailing_model, context)'/>
-                                <span>selected</span>
-                                <button name="action_see_recipients" type="object" string="See Recipients" class="oe_link" style='margin-left: 8px;'/>
                                 <group>
+                                    <field name="mailing_model" string="Perform Mailing on" class="oe_inline" widget="radio"
+                                        on_change='on_change_mailing_model(mailing_model, context)'/>
                                     <label for="contact_list_ids" string="Selected Lists"/>
                                     <div>
                                         <field name="contact_list_ids" widget="many2many_tags" nolabel="1" options="{'no_create': True}"/>
                                         <button string='Create a New List' class="oe_inline oe_link" type='object' name='action_new_list'/>
+                                    </div>
+                                    <label for="contact_nbr" string="Contacts"/>
+                                    <div>
+                                        <field name="contact_nbr" nolabel="1" class="oe_inline" readonly="True"/> contacts selected
+                                        <button name="action_see_recipients" type="object" string="See Recipients" class="oe_link" style='margin-left: 8px;'/>
                                     </div>
                                 </group>
                             </div>
@@ -602,6 +573,12 @@
         <menuitem name="Mail Statistics" id="menu_email_statistics"
             parent="base.menu_email" sequence="50"
             action="action_view_mail_mail_statistics"/>
+
+        <!-- MISC -->
+        <!-- Mailing List Create Wizard -->
+        <menuitem name="Create a new List" id="menu_mail_mass_mailing_create"
+            parent="mass_mailing_list" sequence="10"
+            action="action_mail_mass_mailing_create"/>
 
     </data>
 </openerp>
