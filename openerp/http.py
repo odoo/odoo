@@ -36,6 +36,7 @@ import werkzeug.wsgi
 
 import openerp
 from openerp.service import security, model as service_model
+from openerp.tools.func import lazy_property
 
 _logger = logging.getLogger(__name__)
 
@@ -286,7 +287,7 @@ class WebRequest(object):
         def checked_call(___dbname, *a, **kw):
             # The decorator can call us more than once if there is an database error. In this
             # case, the request cursor is unusable. Rollback transaction to create a new one.
-            if self._cr:
+            if self._cr and not openerp.tools.config['test_enable']:
                 self._cr.rollback()
             return self.endpoint(*a, **kw)
 
@@ -1077,22 +1078,25 @@ class Root(object):
         path = openerp.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
         self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
+        self._loaded = False
 
-        # TODO should we move this to ir.http so that only configured modules are served ?
-        _logger.info("HTTP Configuring static files")
-        self.load_addons()
-
+    @lazy_property
+    def nodb_routing_map(self):
         _logger.info("Generating nondb routing")
-        self.nodb_routing_map = routing_map([''] + openerp.conf.server_wide_modules, True)
+        return routing_map([''] + openerp.conf.server_wide_modules, True)
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
         """
+        if not self._loaded:
+            self._loaded = True
+            self.load_addons()
         return self.dispatch(environ, start_response)
 
     def load_addons(self):
         """ Load all addons from addons patch containg static files and
         controllers and configure them.  """
+        # TODO should we move this to ir.http so that only configured modules are served ?
         statics = {}
 
         for addons_path in openerp.modules.module.ad_paths:
@@ -1106,12 +1110,16 @@ class Root(object):
                         _logger.debug("Loading %s", module)
                         if 'openerp.addons' in sys.modules:
                             m = __import__('openerp.addons.' + module)
+                        else:
+                            m = None
                         addons_module[module] = m
                         addons_manifest[module] = manifest
                         statics['/%s/static' % module] = path_static
 
-        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics)
-        self.dispatch = DisableCacheMiddleware(app)
+        if statics:
+            _logger.info("HTTP Configuring static files")
+            app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics)
+            self.dispatch = DisableCacheMiddleware(app)
 
     def setup_session(self, httprequest):
         # recover or create session
@@ -1284,11 +1292,8 @@ class CommonController(Controller):
         """ Method used by client APIs to contact OpenERP. """
         return dispatch_rpc(service, method, args)
 
-root = None
-
-def wsgi_postload():
-    global root
-    root = Root()
-    openerp.service.wsgi_server.register_wsgi_handler(root)
+# register main wsgi handler
+root = Root()
+openerp.service.wsgi_server.register_wsgi_handler(root)
 
 # vim:et:ts=4:sw=4:

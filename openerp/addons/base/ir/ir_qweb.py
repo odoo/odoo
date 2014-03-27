@@ -808,6 +808,38 @@ class RelativeDatetimeConverter(osv.AbstractModel):
         return babel.dates.format_timedelta(
             value - reference, add_direction=True, locale=locale)
 
+
+class Contact(orm.AbstractModel):
+    _name = 'ir.qweb.field.contact'
+    _inherit = 'ir.qweb.field.many2one'
+
+    def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
+        opf = options.get('fields') or ["name", "address", "phone", "mobile", "fax", "email"]
+
+        if not getattr(record, field_name):
+            return None
+
+        id = getattr(record, field_name).id
+        field_browse = self.pool[column._obj].browse(cr, openerp.SUPERUSER_ID, id, context={"show_address": True})
+        value = werkzeug.utils.escape( field_browse.name_get()[0][1] )
+
+        val = {
+            'name': value.split("\n")[0],
+            'address': werkzeug.utils.escape("\n".join(value.split("\n")[1:])),
+            'phone': field_browse.phone,
+            'mobile': field_browse.mobile,
+            'fax': field_browse.fax,
+            'city': field_browse.city,
+            'country_id': field_browse.country_id and field_browse.country_id.name_get()[0][1],
+            'email': field_browse.email,
+            'fields': opf,
+            'options': options
+        }
+
+        html = self.pool["ir.ui.view"].render(cr, uid, "base.contact", val, engine='ir.qweb', context=context).decode('utf8')
+
+        return HTMLSafe(html)
+
 class HTMLSafe(object):
     """ HTMLSafe string wrapper, Werkzeug's escape() has special handling for
     objects with a ``__html__`` methods but AFAIK does not provide any such
