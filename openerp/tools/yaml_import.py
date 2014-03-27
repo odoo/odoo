@@ -429,7 +429,8 @@ class YamlInterpreter(object):
                         # New-style on_change
                         # TODO: this call does not take into account subrecords
                         # (one2many and many2many fields)
-                        result = model.onchange(record_dict, field_name, [])
+                        recs = model.browse(self.cr, SUPERUSER_ID, [], self.context)
+                        result = recs.onchange(record_dict, field_name, [])
 
                     else:
                         match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'])
