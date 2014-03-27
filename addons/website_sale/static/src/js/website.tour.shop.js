@@ -140,5 +140,4 @@
             return this._super();
         }
     });
-
 }());
