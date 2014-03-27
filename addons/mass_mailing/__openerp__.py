@@ -21,12 +21,13 @@
 
 {
     'name': 'Mass Mailing Campaigns',
+    'summary': 'Design, send and track emails',
     'description': """
 Easily send mass mailing to your leads, opportunities or customers. Track
 marketing campaigns performance to improve conversion rates. Design
 professional emails and reuse templates in a few clicks.
     """,
-    'version': '1.0',
+    'version': '2.0',
     'author': 'OpenERP',
     'website': 'http://www.openerp.com',
     'category': 'Marketing',
