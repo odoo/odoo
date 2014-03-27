@@ -224,6 +224,8 @@ class website_event(http.Controller):
     
     @http.route('/event/get_country_event_list', type='http', auth='public', website=True)
     def get_country_events(self ,**post):
+        if not GeoIP:
+            return ""
         country_obj = request.registry['res.country']
         event_obj = request.registry['event.event']
         cr, uid, context,event_ids = request.cr, request.uid, request.context,[]
