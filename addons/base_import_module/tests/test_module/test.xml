@@ -2,16 +2,17 @@
 <openerp>
 <data>
     <!-- TODO: make test suite -->
-    <record id="base.main_company2" model="res.company">
-        <field name="name">Module Import Success</field>
+    <record id="base.main_company" model="res.company">
+        <field name="name">The base company is noupdate=1</field>
     </record>
+
     <record id="main_company2" model="res.company">
         <field name="name">Hagrid</field>
         <field name="rml_header1">Your Company Tagline</field>
         <field name="currency_id" ref="base.EUR"/>
     </record>
 
-    <template id="test" name="Test Page" page="True">
+    <template id="test_page" name="Test Page" page="True">
         <t t-call="website.layout">
             <h1>
                 This page comes from an imported module!
@@ -23,10 +24,21 @@
         </t>
     </template>
 
-    <template id="website.contactus" name="Test Import" page="True">
+    <template id="website.homepage">
         <t t-call="website.layout">
-            <h1>This page has been overwritten by an uploaded module</h1>
+            <div id="wrap" class="oe_structure oe_empty">
+                This homepage has been overwritten by an imported module !
+                <p>
+                    <a href="/page/test_module.test_page">Link to page added by imported module</a>
+                </p>
+            </div>
         </t>
+    </template>
+
+    <template id="contactus_test" name="Contact Form" inherit_id="website.contactus">
+        <xpath expr="//h1" position="replace">
+            <h1>This contact us title has been changed by an imported module</h1>
+        </xpath>
     </template>
 
 </data>
