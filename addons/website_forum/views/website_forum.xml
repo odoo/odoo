@@ -88,7 +88,7 @@
                         </div>
                         <div class="collapse navbar-collapse" id="oe-help-navbar-collapse">
                             <ul class="nav navbar-nav">
-                                <li t-att-class="filters in ('all', 'unanswered','followed','question') and 'active' or '' ">
+                                <li t-att-class="filters in ('all', 'unanswered','followed','question','tag') and 'active' or '' ">
                                     <a t-attf-href="/forum/#{ slug(forum) }">Questions</a>
                                 </li>
                                 <li t-att-class="searches.get('users') and 'active' or '' ">
@@ -160,11 +160,12 @@
                 <h1 class="page-header mt0">
                     <t t-esc="total_questions"/>
                     <span>Questions</span>
-                    <small class="dropdown" t-if="filters in ('all', 'unanswered','followed')">
+                    <small class="dropdown" t-if="filters in ('all', 'unanswered','followed', 'tag')">
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                           <t t-if="filters == 'all'">All</t>
                           <t t-if="filters == 'unanswered'">Unanswered</t>
                           <t t-if="filters == 'followed'">Followed</t>
+                          <t t-if="filters == 'tag'">Tag</t>
                           <t t-if="sorting == 'date'"> by activity date</t>
                           <t t-if="sorting == 'answered'"> by most answered</t>
                           <t t-if="sorting == 'vote'"> by most voted</t>
@@ -173,23 +174,26 @@
                       <ul class="dropdown-menu">
                           <li class="dropdown-header">Filter on</li>
                           <li t-att-class="filters == 'all' and 'active' or '' ">
-                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'sorting', filters='all') }}">All</a>
+                              <a t-att-href="url_for('') + '?' + keep_query( 'sorting', filters='all')">All</a>
                           </li>
                           <li t-att-class="filters == 'unanswered' and 'active' or '' ">
-                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'sorting', filters='unanswered') }}">Unanswered</a>
+                              <a t-att-href="url_for('') + '?' + keep_query( 'sorting', filters='unanswered')">Unanswered</a>
                           </li>
                           <li t-att-class="filters == 'followed' and 'active' or '' ">
-                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'sorting', filters='followed') }}">Followed</a>
+                              <a t-att-href="url_for('') + '?' + keep_query( 'sorting', filters='followed')">Followed</a>
+                          </li>
+                          <li t-if="tag" t-att-class="filters == 'tag' and 'active' or '' ">
+                              <a href=""><t t-esc="tag.name"/> Tag</a>
                           </li>
                           <li class="dropdown-header">Sort by</li>
                           <li t-att-class="sorting == 'date' and 'active' or '' ">
-                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'filters', sorting='date') }}">Last activity date</a>
+                              <a t-att-href="url_for('') + '?' + keep_query( 'filters', sorting='date')">Last activity date</a>
                           </li>
                           <li t-att-class="sorting == 'answered' and 'active' or '' ">
-                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'filters', sorting='answered') }}">Most answered</a>
+                              <a t-att-href="url_for('') + '?' + keep_query( 'filters', sorting='answered')">Most answered</a>
                           </li>
                           <li t-att-class="sorting == 'vote' and 'active' or '' ">
-                              <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'filters', sorting='vote') }}">Most voted</a>
+                              <a t-att-href="url_for('') + '?' + keep_query( 'filters', sorting='vote')">Most voted</a>
                           </li>
                       </ul>
                     </small>
@@ -514,7 +518,7 @@
                 </p>
                 <div class="row">
                     <div class="col-sm-3 mt16" t-foreach="tags" t-as="tag">
-                        <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }" class="badge">
+                        <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}" class="badge">
                             <span t-field="tag.name"/>
                         </a>
                         <span> 

@@ -67,8 +67,12 @@ class website_forum(http.Controller):
         user = request.registry['res.users'].browse(cr, uid, uid, context=context)
         return {"user": user, "notifications": notifications}
 
-    @http.route(['/forum/<model("website.forum"):forum>', '/forum/<model("website.forum"):forum>/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
-    def questions(self, forum, page=1, filters='', sorting='', **searches):
+    @http.route(['/forum/<model("website.forum"):forum>', 
+                 '/forum/<model("website.forum"):forum>/page/<int:page>',
+                 '/forum/<model("website.forum"):forum>/tag/<model("website.forum.tag"):tag>/questions'
+        ], type='http', auth="public", website=True, multilang=True)
+
+    def questions(self, forum, tag='', page=1, filters='', sorting='', **searches):
         cr, uid, context = request.cr, request.uid, request.context
         Forum = request.registry['website.forum.post']
         domain = [('forum_id', '=', forum.id), ('parent_id', '=', False)]
@@ -79,6 +83,11 @@ class website_forum(http.Controller):
             domain += ['|',
                 ('name', 'ilike', search),
                 ('content', 'ilike', search)]
+
+        #filter questions for tag.
+        if tag:
+            filters = 'tag'
+            domain += [ ('tags', '=', tag.id) ]
 
         if not filters:
             filters = 'all'
@@ -111,6 +120,7 @@ class website_forum(http.Controller):
             'notifications': self._get_notifications(),
             'forum': forum,
             'pager': pager,
+            'tag': tag,
             'filters': filters,
             'sorting': sorting,
             'searches': searches,
@@ -131,17 +141,6 @@ class website_forum(http.Controller):
             'notifications': self._get_notifications(),
         }
         return request.website.render("website_forum.faq", values)
-
-    @http.route(['/forum/<model("website.forum"):forum>/ask'], type='http', auth="public", website=True, multilang=True)
-    def question_ask(self, forum, **post):
-        if not request.session.uid:
-            return login_redirect()
-        values = {
-            'searches': {},
-            'forum': forum,
-            'notifications': self._get_notifications(),
-        }
-        return request.website.render("website_forum.ask_question", values)
 
     @http.route(['/forum/<model("website.forum"):forum>/question/<model("website.forum.post"):question>'], type='http', auth="public", website=True, multilang=True)
     def question(self, forum, question, **post):
@@ -260,6 +259,17 @@ class website_forum(http.Controller):
         }
         return request.website.render("website_forum.user_detail_full", values)
 
+    @http.route(['/forum/<model("website.forum"):forum>/ask'], type='http', auth="public", website=True, multilang=True)
+    def question_ask(self, forum, **post):
+        if not request.session.uid:
+            return login_redirect()
+        values = {
+            'searches': {},
+            'forum': forum,
+            'notifications': self._get_notifications(),
+        }
+        return request.website.render("website_forum.ask_question", values)
+
     @http.route('/forum/<model("website.forum"):forum>/question/ask/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def register_question(self, forum, **question):
         cr, uid, context = request.cr, request.uid, request.context
@@ -267,14 +277,12 @@ class website_forum(http.Controller):
 
         Tag = request.registry['website.forum.tag']
         tags = question.get('question_tags').strip('[]').replace('"','').split(",")
-
         question_tags = []
-        tag_ids = Tag.search(cr, uid, [('name', 'in', tags)], context=context)
-        for tag in tag_ids:
-            question_tags.append((4,tag))
-
         for tag in tags:
-            if not Tag.search(cr, uid, [('name', 'like', tag)], count=True, context=context):
+            tag_ids = Tag.search(cr, uid, [('name', 'like', tag)], context=context)
+            if tag_ids:
+                question_tags.append((4,tag_ids[0]))
+            else:
                 question_tags.append((0,0,{'name' : tag,'forum_id' : forum.id}))
 
         new_question_id = request.registry['website.forum.post'].create(
@@ -334,24 +342,6 @@ class website_forum(http.Controller):
                 'content': post.get('answer_content'),
             }, context=context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('post_id')))
-
-    @http.route(['/forum/<model("website.forum"):forum>/tag/<model("website.forum.tag"):tag>'], type='http', auth="public", website=True, multilang=True)
-    def tag_questions(self, forum, tag, page=1, **kwargs):
-        cr, uid, context = request.cr, request.uid, request.context
-        Post = request.registry['website.forum.post']
-        obj_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('tags', '=', tag.id)], context=context)
-        question_ids = Post.browse(cr, uid, obj_ids, context=context)
-        pager = request.website.pager(url="/forum/%s/tag" % slug(forum), total=len(obj_ids), page=page, step=10, scope=10)
-        kwargs['tags'] = 'True'
-
-        values = {
-            'question_ids': question_ids,
-            'notifications': self._get_notifications(),
-            'pager': pager,
-            'forum': forum,
-            'searches': kwargs
-        }
-        return request.website.render("website_forum.index", values)
 
     @http.route(['/forum/<model("website.forum"):forum>/tag'], type='http', auth="public", website=True, multilang=True)
     def tags(self, forum, page=1, **searches):
@@ -471,11 +461,12 @@ class website_forum(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         Tag = request.registry['website.forum.tag']
         tags = post.get('question_tag').strip('[]').replace('"','').split(",")
-        tag_ids = Tag.search(cr, uid, [('name', 'in', tags)], context=context)
-        question_tags = [(6, 0, tag_ids)]
-
+        question_tags = []
         for tag in tags:
-            if not Tag.search(cr, uid, [('name', 'like', tag)], count=True, context=context):
+            tag_ids = Tag.search(cr, uid, [('name', 'like', tag)], context=context)
+            if tag_ids:
+                question_tags.append((6, 0, tag_ids))
+            else:
                 question_tags.append((0,0,{'name' : tag,'forum_id' : forum.id}))
 
         request.registry['website.forum.post'].write(cr, uid, [int(post.get('post_id'))], {
