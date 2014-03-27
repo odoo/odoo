@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
+#    
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,23 +15,11 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
-from openerp.tools import config
-
-class documnet_ftp_setting(osv.osv_memory):
-    _name = 'knowledge.config.settings'
-    _inherit = 'knowledge.config.settings'
-    _columns = {
-        'document_ftp_url': fields.char('Browse Documents', size=128,
-            help ="""Click the url to browse the documents""", readonly=True),               
-    }
-
-    def get_default_ftp_config(self, cr, uid, fields, context=None):
-        action = self.pool.get('ir.model.data').get_object(cr, uid, 'document_ftp', 'action_document_browse')
-        return {'document_ftp_url': action.url}
+import controllers
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

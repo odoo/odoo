@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,11 +15,33 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import ftp_browse
-import ftp_configuration
 
+
+{
+    'name': 'PosBox Homepage',
+    'version': '1.0',
+    'category': 'Hardware Drivers',
+    'sequence': 6,
+    'summary': 'A homepage for the PosBox',
+    'description': """
+PosBox Homepage
+===============
+
+This module overrides openerp web interface to display a simple
+Homepage that explains what's the posbox and show the status,
+and where to find documentation.
+
+If you activate this module, you won't be able to access the 
+regular openerp interface anymore. 
+
+""",
+    'author': 'OpenERP SA',
+    'depends': ['hw_proxy'],
+    'installable': False,
+    'auto_install': False,
+}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
