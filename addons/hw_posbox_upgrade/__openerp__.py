@@ -21,35 +21,26 @@
 
 
 {
-    'name': 'Shared Repositories (FTP)',
-    'version': '1.99',
-    'category': 'Knowledge Management',
+    'name': 'PosBox Software Upgrader',
+    'version': '1.0',
+    'category': 'Hardware Drivers',
+    'sequence': 6,
+    'summary': 'Allows to remotely upgrade the PosBox software',
     'description': """
-This is a support FTP Interface with document management system.
-================================================================
+PosBox Software Upgrader
+========================
 
-With this module you would not only be able to access documents through OpenERP
-but you would also be able to connect with them through the file system using the
-FTP client.
+This module allows to remotely upgrade the PosBox software to a
+new version. This module is specific to the PosBox setup and environment
+and should not be installed on regular openerp servers.
+
 """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base', 'document'],
-    'data': [
-        'wizard/ftp_configuration_view.xml',
-        'wizard/ftp_browse_view.xml',
-        'security/ir.model.access.csv',
-        'res_config_view.xml',
-    ],
-    'demo': [],
+    'depends': ['hw_proxy'],
     'test': [
-        'test/document_ftp_test2.yml',
-        'test/document_ftp_test4.yml',
     ],
-    'installable': True,
+    'installable':  False,
     'auto_install': False,
-    'images': ['images/1_configure_ftp.jpeg','images/2_document_browse.jpeg','images/3_document_ftp.jpeg'],
-    'post_load': 'post_load',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
