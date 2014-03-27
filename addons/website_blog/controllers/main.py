@@ -19,19 +19,15 @@
 #
 ##############################################################################
 
+import random
+import werkzeug
+from datetime import datetime
+
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
-
-import werkzeug
-import random
-import json
-from datetime import datetime
-import random
-
 from openerp.tools import html2plaintext
-import email.utils
 
 class WebsiteBlog(http.Controller):
     _blog_post_per_page = 20
@@ -209,13 +205,25 @@ class WebsiteBlog(http.Controller):
     def _blog_post_message(self, user, blog_post_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
         blog_post = request.registry['blog.post']
+        partner_obj = request.registry['res.partner']
+        thread_obj = request.registry['mail.thread']
+        website = request.registry['website']
+
+        public_id = website.get_public_user(cr, uid, context)
+        if uid != public_id:
+            partner_ids = [user.partner_id.id]
+        else:
+            partner_ids = blog_post._find_partner_from_emails(
+                cr, SUPERUSER_ID, 0, [post.get('email')], context=context)
+            if not partner_ids or not partner_ids[0]:
+                partner_ids = [partner_obj.create(cr, SUPERUSER_ID, {'name': post.get('name'), 'email': post.get('email')}, context=context)]
+
         message_id = blog_post.message_post(
             cr, SUPERUSER_ID, int(blog_post_id),
             body=post.get('comment'),
             type='comment',
             subtype='mt_comment',
-            email_from = "%s <%s>" % (post.get('name'), post.get('email')),
-            author_id=user.partner_id.id if request.session.uid else False,
+            author_id=partner_ids[0],
             discussion=post.get('discussion'),
             context=dict(context, mail_create_nosubcribe=True))
         return message_id
@@ -237,8 +245,8 @@ class WebsiteBlog(http.Controller):
         for message in mail_obj.browse(cr, SUPERUSER_ID, ids, context=context):
             values.append({
                 "id": message.id,
-                "author_name": message.author_id and message.author_id.name or email.utils.parseaddr(message.email_from)[0],
-                "author_image": message.author_id and \
+                "author_name": message.author_id.name,
+                "author_image": message.author_id.image and \
                     ("data:image/png;base64,%s" % message.author_id.image) or \
                     '/website_blog/static/src/img/anonymous.png',
                 "date": message.date,

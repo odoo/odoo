@@ -101,7 +101,6 @@ class BlogPost(osv.Model):
         ),
         'visits': fields.integer('No of Views', readonly=True),
         'ranking': fields.float('Ranking', readonly=True),
-        'author_image': fields.related('create_uid','partner_id', 'image_small', string='Author Photo', type='binary')
     }
     _defaults = {
         'website_published': False,
