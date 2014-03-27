@@ -410,7 +410,7 @@ class email_template(osv.osv):
                 default_recipients = {}
             for res_id, recipients in default_recipients.iteritems():
                 results[res_id].pop('partner_to', None)
-                results[res_id].update(default_recipients)
+                results[res_id].update(recipients)
 
         for res_id, values in results.iteritems():
             partner_ids = values.get('partner_ids', list())
