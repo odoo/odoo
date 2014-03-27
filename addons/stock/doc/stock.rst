@@ -228,84 +228,41 @@ To organize the whole chain of manufacturing and procurement, OpenERP bases ever
 
 To see a calculation of the lead times, take the example of the cabinet above. Suppose that the cabinet is assembled in two steps, using the two following bills of materials.
 
-<!--Bill of Materials for 1 SHE100 Unit
-Product Code
+Bill of Materials for 1 SHE100 Unit
 
-Quantity
 
-Unit of Measure
-
-SIDEPAN
-
-2
-
-PCE
-
-WOOD002
-
-0.25
-
-m
-
-LIN040
-
-1
-
-m
-
-WOOD010
-
-0.249
-
-m
-
-METC000
-
-12
-
-PCE
++-------------+----------+------------
+| Product Code| Quantity | UoM       |
++====================================+
+|SIDEPAN      |        2 | PCE       |
++-------------+----------+-----------+
+|LIN040       |        1 | M         |
++-------------+----------+-----------+
+|WOOD010      |     0.249| M         |
++-------------+----------+-----------+
+|METC000      |        12| PCE       |
++-------------+----------+-----------+
 
 Bill of Materials for 2 SIDEPAN Units
-Product Code
 
-Quantity
 
-Unit of Measure
-
-WOOD002
-
-0.17
-
-m
++-------------+----------+------------
+| Product Code| Quantity | UoM       |
++====================================+
+| WOOD002     |      0.17| M         |
++-------------+----------+------------
 
 The SIDEPAN is made from an order using the workflow shown. The WOOD002 is purchased on order and the other products are all found in stock. An order for the product SHE100 will then generate two production orders (SHE100 and SIDEPAN) then produce two purchase orders for the product WOOD002. Product WOOD002 is used in the production of both SHE100 and SIDEPAN. Set the lead times on the product forms to the following:
 
-Lead Times
-Product Code
-
-Customer Lead Time
-
-Manufacturing Lead Time
-
-Supplier Lead Time
-
-SHE100
-
-30 days
-
-5 days
-
- 
-SIDEPAN
-
- 	
-10 days
-
- 
-WOOD002
-
- 	 	
-5 days
++-------------+-------------------+------------------------+---------------------+
+|Product Code |Customer Lead Time |Manufacturing Lead Time |Supplier Lead Time   |
++================================================================================+
+|SHE100       | 30 days           | 5 days                 |                     |
++-------------+-------------------+------------------------+---------------------+
+|SIDEPAN      |                   | 10 days                |                     |
++-------------+-------------------+------------------------+---------------------+
+|WOOD002      |                   |                        | 5 days              |
++-------------+-------------------+------------------------+---------------------+
 
 A customer order placed on the 1st January will set up the following operations and lead times:
 
@@ -319,7 +276,7 @@ Purchase WOOD002 (for SHE100): 21 January (=26 January – 5 days),
 
 Purchase WOOD002 (for SIDEPAN): 11 January (=16 January – 5 days).
 
-In this example, OpenERP will propose placing two orders with the supplier of product WOOD002. Each of these orders can be for a different planned date. Before confirming these orders, the purchasing manager could group (merge) these orders into a single order.-->
+In this example, OpenERP will propose placing two orders with the supplier of product WOOD002. Each of these orders can be for a different planned date. Before confirming these orders, the purchasing manager could group (merge) these orders into a single order.
 
 Security Days
 
@@ -331,11 +288,10 @@ Manufacturing Lead Time: number of additional days needed for manufacturing,
 
 Purchase Lead Time: additional days to include for all purchase orders with this supplier,
 
-Security Days: number of days to deduct from a system order to cope with any problems of procurement,
-
-<< Orderpoints will also create procurements and have a different effect on the dates >>
+Security Days: number of days to deduct from a system order to cope with any problems of procurement, 
 
 
+It is important to make a difference between production orders and purchase orders that are chained until the sale order (MTO) or when the chain is interrupted somewhere by an orderpoint.  When the scheduler creates the procurement of an orderpoint, the date is again today, so orders for an orderpoint need to be delivered faster, than in case of an MTO. 
 
 
 
