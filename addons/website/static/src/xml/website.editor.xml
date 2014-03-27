@@ -108,10 +108,8 @@
                                 </ul>
                             </li>
                             <li style="float: right;">
-                                <form>
+                                <form action="#">
                                     <div class="form-group font-icons fa fa-search mb0">
-                                        <input type="hidden" id="fa-icon" class="form-control"/>
-                                        <input type="hidden" id="fa-size" class="form-control"/>
                                         <input type="search" class="form-control" id="icon-search"/>
                                     </div>
                                 </form>
@@ -256,23 +254,29 @@
         <button contentEditable="false" type="button" class="btn btn-primary hover-edition-button btn-xs">Change</button>
     </t>
 
-    <t t-name="website.editor.hoverbutton.image">
+    <t t-name="website.editor.hoverbutton.media">
         <div contentEditable="false" class="hover-edition dropdown">
             <a class="btn btn-primary btn-sm" data-toggle="dropdown" href="#">Customize</a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                 <li><a href="#" class="hover-edition-button">Change Media</a></li>
                 <li><a href="#" class="hover-style-button">Style</a></li>
+                <li class="dropdown-submenu">
+                    <a href="#" tabindex="-1">Rotation</a>
+                    <ul class="dropdown-menu">
+                        <li data-value="fa-spin"><a>Spin</a></li>
+                        <li data-value="fa-flip-horizontal"><a>Horizontal flip</a></li>
+                        <li data-value="fa-flip-vertical"><a>Vertical flip</a></li>
+                    </ul>
+                </li>
+                <li><a href="#" data-value="fa-border">border</a></li>
             </ul>
         </div>
     </t>
 
     <t t-name="website.editor.dialog.font-icons">
         <form>
-            <div class="form-group hidden font-icons fa fa-search">
-                <input type="hidden" id="fa-icon" class="form-control"/>
-                <input type="hidden" id="fa-size" class="form-control"/>
-                <input type="search" class="form-control" id="icon-search"/>
-            </div>
+            <input type="hidden" id="fa-icon" class="form-control"/>
+            <input type="hidden" id="fa-size" class="form-control"/>
             <div class="font-icons-icons">
                 <t t-call="website.editor.dialog.font-icons.icons">
                     <t t-set="icons" t-value="widget.icons"/>
@@ -280,23 +284,6 @@
             </div>
             <div class="form-group mt32" id="fa-preview">
 
-            </div>
-            <div class="form-group">
-                <label for="fa-rotation">Rotation</label>
-                <select id="fa-rotation" class="form-control">
-                    <option value="">None</option>
-                    <option value="fa-spin">Spin</option>
-                    <option value="fa-rotate-90">Rotate 90º</option>
-                    <option value="fa-rotate-180">Rotate 180º</option>
-                    <option value="fa-rotate-270">Rotate 270º</option>
-                    <option value="fa-flip-horizontal">Horizontal flip</option>
-                    <option value="fa-flip-vertical">Vertical flip</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="fa-border"/> border
-                </label>
             </div>
         </form>
     </t>

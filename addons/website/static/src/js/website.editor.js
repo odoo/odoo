@@ -653,7 +653,7 @@
          * @returns {jQuery}
          */
         make_hover_button_image: function (editfn, stylefn) {
-            var $div = $(openerp.qweb.render('website.editor.hoverbutton.image', {}))
+            var $div = $(openerp.qweb.render('website.editor.hoverbutton.media', {}))
                 .hide()
                 .appendTo(document.body);
 
@@ -1344,14 +1344,17 @@
     });
 
     website.editor.Media = openerp.Widget.extend({
-        init: function (editor, media) {
+        init: function (parent, editor, media) {
             this._super();
+            this.parent = parent;
             this.editor = editor;
             this.media = media;
         },
         start: function () {
             this.$preview = this.$('.preview-container').detach();
             return this._super();
+        },
+        search: function (needle) {
         },
         save: function () {
         },
@@ -1362,6 +1365,9 @@
     });
     website.editor.MediaDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.media',
+        events : _.extend({}, website.editor.Dialog.prototype.events, {
+            'input input#icon-search': 'search',
+        }),
 
         init: function (editor, media) {
             this.media = media;
@@ -1371,9 +1377,9 @@
         },
         start: function (editor, media) {
             var self = this;
-            this.imageDialog = new website.editor.RTEImageDialog(this.editor, this.media);
+            this.imageDialog = new website.editor.RTEImageDialog(this, this.editor, this.media);
             this.imageDialog.appendTo(this.$("#editor-media-image"));
-            this.iconDialog = new website.editor.FontIconsDialog(this.editor, this.media);
+            this.iconDialog = new website.editor.FontIconsDialog(this, this.editor, this.media);
             this.iconDialog.appendTo(this.$("#editor-media-icon"));
             this.videoDialog = {};
             //this.videoDialog.appendTo(this.$("#editor-media-video"));
@@ -1401,11 +1407,23 @@
             return this._super();
         },
         save: function () {
-            if (this.active) {
-                this.active.save();
+            this.active.save();
+            if (this.active === this.imageDialog) {
+                this.media.$.className = this.media.$.className.replace(/(^|\s)fa[^\s]+/g, '');
+                $(this.media.$).addClass("img img-responsive");
+            }
+            if (this.active === this.iconDialog) {
+                this.media.$.className = this.media.$.className.replace(/(^|\s)img[^\s]+/g, '');
+            }
+            if (this.active === this.videoDialog) {
+                this.media.$.className = this.media.$.className.replace(/(^|\s)(img|fa)[^\s]+/g, '');
             }
             return this._super();
         },
+        search: function () {
+            var needle = this.$("input#icon-search").val();
+            this.active.search(needle || "");
+        }
     });
 
     /**
@@ -1612,8 +1630,8 @@
     });
 
     website.editor.RTEImageDialog = website.editor.ImageDialog.extend({
-        init: function (editor, media) {
-            this._super(editor, media);
+        init: function (parent, editor, media) {
+            this._super(parent, editor, media);
 
             this.on('start', this, this.proxy('started'));
             this.on('save', this, this.proxy('saved'));
@@ -1690,20 +1708,6 @@
                 this.$('#fa-size').val(e.target.getAttribute('data-size'));
                 this.update_preview();
             },
-            'input input#icon-search': function () {
-                var needle = this.$('#icon-search').val();
-                var icons = this.icons;
-                if (needle) {
-                    icons = _(icons).filter(function (icon) {
-                        return icon.id.substring(3).indexOf(needle) !== -1;
-                    });
-                }
-
-                this.$('div.font-icons-icons').html(
-                    openerp.qweb.render(
-                        'website.editor.dialog.font-icons.icons',
-                        {icons: icons}));
-            },
         }),
 
         // List of FontAwesome icons in 4.0.3, extracted from the cheatsheet.
@@ -1719,6 +1723,19 @@
          */
         start: function () {
             return this._super().then(this.proxy('load_data'));
+        },
+        search: function (needle) {
+            var icons = this.icons;
+            if (needle) {
+                icons = _(icons).filter(function (icon) {
+                    return icon.id.substring(3).indexOf(needle) !== -1;
+                });
+            }
+
+            this.$('div.font-icons-icons').html(
+                openerp.qweb.render(
+                    'website.editor.dialog.font-icons.icons',
+                    {icons: icons}));
         },
         /**
          * Removes existing FontAwesome classes on the bound element, and sets
@@ -1764,9 +1781,6 @@
                     if (!/^fa-/.test(cls)) { continue; }
                     this.$('#fa-icon').val(cls);
                 }
-            }
-            if (this.$('#fa-icon').val() === "") {
-                this.$('#fa-icon').val("fa-glass");
             }
             this.update_preview();
         },
