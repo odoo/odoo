@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Business Applications
-#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,15 +19,29 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
 
-class knowledge_config_settings(osv.osv_memory):
-    _name = 'knowledge.config.settings'
-    _inherit = 'res.config.settings'
-    _columns = {
-        'module_document': fields.boolean('Manage documents',
-            help='Document indexation, full text search of attachements.\n'
-                 '-This installs the module document.'),
-    }
+{
+    'name': 'PosBox Homepage',
+    'version': '1.0',
+    'category': 'Hardware Drivers',
+    'sequence': 6,
+    'summary': 'A homepage for the PosBox',
+    'description': """
+PosBox Homepage
+===============
+
+This module overrides openerp web interface to display a simple
+Homepage that explains what's the posbox and show the status,
+and where to find documentation.
+
+If you activate this module, you won't be able to access the 
+regular openerp interface anymore. 
+
+""",
+    'author': 'OpenERP SA',
+    'depends': ['hw_proxy'],
+    'installable': False,
+    'auto_install': False,
+}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
