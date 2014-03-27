@@ -131,6 +131,7 @@ class stock_location(osv.osv):
         'scrap_location': fields.boolean('Is a Scrap Location?', help='Check this box to allow using this location to put scrapped/damaged goods.'),
         'removal_strategy_ids': fields.one2many('product.removal', 'location_id', 'Removal Strategies'),
         'putaway_strategy_ids': fields.one2many('product.putaway', 'location_id', 'Put Away Strategies'),
+        'loc_barcode': fields.char('Location barcode'),
     }
     _defaults = {
         'active': True,
@@ -141,6 +142,12 @@ class stock_location(osv.osv):
         'posz': 0,
         'scrap_location': False,
     }
+    _sql_constraints = [('loc_barcode_company_uniq', 'unique (loc_barcode,company_id)', 'The barcode for a location must be unique per company !')]
+
+    def create(self, cr, uid, default, context=None):
+        if not default.get('loc_barcode', False):
+            default.update({'loc_barcode': default.get('complete_name', False)})
+        return super(stock_location,self).create(cr, uid, default, context=context)
 
     def get_putaway_strategy(self, cr, uid, location, product, context=None):
         pa = self.pool.get('product.putaway')
@@ -1062,6 +1069,14 @@ class stock_picking(osv.osv):
                 'product_uom_id': self.pool.get("product.product").browse(cr, uid, key[0], context=context).uom_id.id,
             })
         return vals
+    
+    def open_barcode_interface(self, cr, uid, picking_ids, context=None):
+        final_url="/barcode/web/#action=stock.ui&picking_id="+str(picking_ids[0])
+        return {'type': 'ir.actions.act_url', 'url':final_url, 'target': 'self',}
+
+    def do_partial_open_barcode(self, cr, uid, picking_ids, context=None):
+        self.do_prepare_partial(cr, uid, picking_ids, context=context)
+        return self.open_barcode_interface(cr, uid, picking_ids, context=context)
 
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
         context = context or {}
@@ -1325,50 +1340,83 @@ class stock_picking(osv.osv):
 
     def action_done_from_ui(self, cr, uid, picking_id, context=None):
         """ called when button 'done' is pushed in the barcode scanner UI """
+        #write qty_done into field product_qty for every package_operation before doing the transfer
+        pack_op_obj = self.pool.get('stock.pack.operation')
+        for operation in self.browse(cr, uid, picking_id, context=context).pack_operation_ids:
+            pack_op_obj.write(cr, uid, operation.id, {'product_qty': operation.qty_done}, context=context)
         self.do_transfer(cr, uid, [picking_id], context=context)
         #return id of next picking to work on
         return self.get_next_picking_for_ui(cr, uid, context=context)
 
-    def action_pack(self, cr, uid, picking_ids, context=None):
+    def action_pack(self, cr, uid, picking_ids, operation_filter_ids=None, context=None):
         """ Create a package with the current pack_operation_ids of the picking that aren't yet in a pack.
-        Used in the barcode scanner UI and the normal interface as well. """
+        Used in the barcode scanner UI and the normal interface as well. 
+        operation_filter_ids is used by barcode scanner interface to specify a subset of operation to pack"""
+        if operation_filter_ids == None:
+            operation_filter_ids = []
         stock_operation_obj = self.pool.get('stock.pack.operation')
         package_obj = self.pool.get('stock.quant.package')
         stock_move_obj = self.pool.get('stock.move')
         for picking_id in picking_ids:
-            operation_ids = stock_operation_obj.search(cr, uid, [('picking_id', '=', picking_id), ('result_package_id', '=', False)], context=context)
+            operation_search_domain = [('picking_id', '=', picking_id), ('result_package_id', '=', False)]
+            if operation_filter_ids != []:
+                operation_search_domain.append(('id', 'in', operation_filter_ids))
+            operation_ids = stock_operation_obj.search(cr, uid, operation_search_domain, context=context)
+            pack_operation_ids = []
             if operation_ids:
                 for operation in stock_operation_obj.browse(cr, uid, operation_ids, context=context):
-                    for record in operation.linked_move_operation_ids:
-                        stock_move_obj.check_tracking(cr, uid, record.move_id, operation.package_id.id or operation.lot_id.id, context=context)
+                    #If we haven't done all qty in operation, we have to split into 2 operation
+                    op = operation
+                    if (operation.qty_done < operation.product_qty):
+                        new_operation = stock_operation_obj.copy(cr, uid, operation.id, {'product_qty': operation.qty_done,'qty_done': operation.qty_done}, context=context)
+                        stock_operation_obj.write(cr, uid, operation.id, {'product_qty': operation.product_qty - operation.qty_done,'qty_done': 0}, context=context)
+                        op = stock_operation_obj.browse(cr, uid, new_operation, context=context)
+                    pack_operation_ids.append(op.id)
+                    for record in op.linked_move_operation_ids:
+                        stock_move_obj.check_tracking(cr, uid, record.move_id, op.package_id.id or op.lot_id.id, context=context)
                 package_id = package_obj.create(cr, uid, {}, context=context)
-                stock_operation_obj.write(cr, uid, operation_ids, {'result_package_id': package_id}, context=context)
+                stock_operation_obj.write(cr, uid, pack_operation_ids, {'result_package_id': package_id}, context=context)
         return True
 
-    def process_product_id_from_ui(self, cr, uid, picking_id, product_id, context=None):
-        return self.pool.get('stock.pack.operation')._search_and_increment(cr, uid, picking_id, [('product_id', '=', product_id)], context=context)
+    def process_product_id_from_ui(self, cr, uid, picking_id, product_id, op_id, increment=True, context=None):
+        return self.pool.get('stock.pack.operation')._search_and_increment(cr, uid, picking_id, [('product_id', '=', product_id),('id', '=', op_id)], increment=increment, context=context)
 
-    def process_barcode_from_ui(self, cr, uid, picking_id, barcode_str, context=None):
+    def process_barcode_from_ui(self, cr, uid, picking_id, barcode_str, visible_op_ids, context=None):
         '''This function is called each time there barcode scanner reads an input'''
         lot_obj = self.pool.get('stock.production.lot')
         package_obj = self.pool.get('stock.quant.package')
         product_obj = self.pool.get('product.product')
         stock_operation_obj = self.pool.get('stock.pack.operation')
+        stock_location_obj = self.pool.get('stock.location')
+        answer = {'filter_loc': False, 'operation_id': False}
+        #check if the barcode correspond to a location
+        matching_location_ids = stock_location_obj.search(cr, uid, [('loc_barcode', '=', barcode_str)], context=context)
+        if matching_location_ids:
+            #if we have a location, return immediatly with the location name
+            location = stock_location_obj.browse(cr, uid, matching_location_ids[0], context=None)
+            answer['filter_loc'] = stock_location_obj._name_get(cr, uid, location, context=None)
+            answer['filter_loc_id'] = matching_location_ids[0]
+            return answer
         #check if the barcode correspond to a product
         matching_product_ids = product_obj.search(cr, uid, ['|', ('ean13', '=', barcode_str), ('default_code', '=', barcode_str)], context=context)
         if matching_product_ids:
-            self.process_product_id_from_ui(cr, uid, picking_id, matching_product_ids[0], context=context)
-
+            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', matching_product_ids[0])], filter_visible=True, visible_op_ids=visible_op_ids, increment=True, context=context)
+            answer['operation_id'] = op_id
+            return answer
         #check if the barcode correspond to a lot
         matching_lot_ids = lot_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
         if matching_lot_ids:
             lot = lot_obj.browse(cr, uid, matching_lot_ids[0], context=context)
-            stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', lot.product_id.id), ('lot_id', '=', lot.id)], context=context)
-
+            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', lot.product_id.id), ('lot_id', '=', lot.id)], filter_visible=True, visible_op_ids=visible_op_ids, increment=True, context=context)
+            answer['operation_id'] = op_id
+            return answer
         #check if the barcode correspond to a package
         matching_package_ids = package_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
         if matching_package_ids:
-            stock_operation_obj._search_and_increment(cr, uid, picking_id, [('package_id', '=', matching_package_ids[0])], context=context)
+            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('package_id', '=', matching_package_ids[0])], filter_visible=True, visible_op_ids=visible_op_ids, increment=True, context=context)
+            answer['operation_id'] = op_id
+            return answer
+        return answer
 
 
 class stock_production_lot(osv.osv):
@@ -3616,6 +3664,7 @@ class stock_pack_operation(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', ondelete="CASCADE"),  # 1
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
+        'qty_done': fields.float('Quantity Processed', digits_compute=dp.get_precision('Product Unit of Measure')),
         'package_id': fields.many2one('stock.quant.package', 'Package'),  # 2
         'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number'),
         'result_package_id': fields.many2one('stock.quant.package', 'Container Package', help="If set, the operations are packed into this package", required=False, ondelete='cascade'),
@@ -3628,10 +3677,13 @@ class stock_pack_operation(osv.osv):
         'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Qty'),
         'location_id': fields.many2one('stock.location', 'Location From', required=True),
         'location_dest_id': fields.many2one('stock.location', 'Location To', required=True),
+        'processed': fields.selection([('true','Yes'), ('false','No')],'Has been processed?', required=True),
     }
 
     _defaults = {
         'date': fields.date.context_today,
+        'qty_done': 0,
+        'processed': lambda *a: 'false',
     }
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -3651,8 +3703,32 @@ class stock_pack_operation(osv.osv):
             self.pool.get("stock.picking").do_recompute_remaining_quantities(cr, uid, [vals['picking_id']], context=context)
         return res_id
 
+    def action_drop_down(self, cr, uid, ids, context=None):
+        ''' Used by barcode interface to say that pack_operation has been moved from src location 
+            to destination location, if qty_done is less than product_qty than we have to split the
+            operation in two to process the one with the qty moved
+        '''
+        processed_ids = []
+        for pack_op in self.browse(cr, uid, ids, context=None):
+            op = pack_op.id
+            if pack_op.qty_done < pack_op.product_qty:
+                # we split the operation in two
+                op = self.copy(cr, uid, pack_op.id, {'product_qty': pack_op.qty_done, 'qty_done': pack_op.qty_done}, context=context)
+                self.write(cr, uid, ids, {'product_qty': pack_op.product_qty - pack_op.qty_done, 'qty_done': 0}, context=context)
+            processed_ids.append(op)      
+        self.write(cr, uid, processed_ids, {'processed': 'true'}, context=context)
+
+    def create_and_assign_lot(self, cr, uid, id, context=None):
+        ''' Used by barcode interface to create a new lot and assign it to the operation
+        '''
+        obj = self.browse(cr,uid,id,context)
+        product_id = obj.product_id.id
+        if not obj.lot_id:
+            new_lot_id = self.pool.get('stock.production.lot').create(cr, uid, {'product_id': product_id}, context=context)
+            self.write(cr, uid, id, {'lot_id': new_lot_id}, context=context)
+
     #TODO: this function can be refactored
-    def _search_and_increment(self, cr, uid, picking_id, domain, context=None):
+    def _search_and_increment(self, cr, uid, picking_id, domain, filter_visible=False ,visible_op_ids=False, increment=True, context=None):
         '''Search for an operation with given 'domain' in a picking, if it exists increment the qty (+1) otherwise create it
 
         :param domain: list of tuple directly reusable as a domain
@@ -3670,16 +3746,32 @@ class stock_pack_operation(osv.osv):
         #if current_package_id is given in the context, we increase the number of items in this package
         package_clause = [('result_package_id', '=', context.get('current_package_id', False))]
         existing_operation_ids = self.search(cr, uid, [('picking_id', '=', picking_id)] + domain + package_clause, context=context)
+        todo_operation_ids = []
         if existing_operation_ids:
+            if filter_visible:
+                todo_operation_ids = [val for val in existing_operation_ids if val in visible_op_ids]
+            else:
+                todo_operation_ids = existing_operation_ids
+        if todo_operation_ids:
             #existing operation found for the given domain and picking => increment its quantity
-            operation_id = existing_operation_ids[0]
-            qty = self.browse(cr, uid, operation_id, context=context).product_qty + 1
-            self.write(cr, uid, [operation_id], {'product_qty': qty}, context=context)
+            operation_id = todo_operation_ids[0]
+            op_obj = self.browse(cr, uid, operation_id, context=context)
+            qty = op_obj.qty_done
+            if increment:
+                qty += 1
+            else:
+                qty -= 1 if qty >= 1 else 0
+                if qty == 0 and op_obj.product_qty == 0:
+                    #we have a line with 0 qty set, so delete it
+                    self.unlink(cr, uid, [operation_id], context=context)
+                    return False
+            self.write(cr, uid, [operation_id], {'qty_done': qty}, context=context)
         else:
             #no existing operation found for the given domain and picking => create a new one
             values = {
                 'picking_id': picking_id,
-                'product_qty': 1,
+                'product_qty': 0,
+                'qty_done': 1,
             }
             for key in domain:
                 var_name, dummy, value = key
@@ -3691,7 +3783,7 @@ class stock_pack_operation(osv.osv):
                     update_dict['product_uom_id'] = uom_id
                 values.update(update_dict)
             operation_id = self.create(cr, uid, values, context=context)
-        return True
+        return operation_id
 
 
 class stock_move_operation_link(osv.osv):
@@ -3856,6 +3948,11 @@ class stock_picking_type(osv.osv):
     _name = "stock.picking.type"
     _description = "The picking type determines the picking view"
     _order = 'sequence'
+
+    def open_barcode_interface(self, cr, uid, ids, context=None):
+        final_url="/barcode/web/#action=stock.ui&picking_type_id="+str(ids[0]) if len(ids) else '0'
+        return {'type': 'ir.actions.act_url', 'url':final_url, 'target': 'self',}
+
 
     def _get_tristate_values(self, cr, uid, ids, field_name, arg, context=None):
         picking_obj = self.pool.get('stock.picking')
