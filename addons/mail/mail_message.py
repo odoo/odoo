@@ -205,7 +205,7 @@ class mail_message(osv.Model):
             return '%s <%s@%s>' % (this.name, this.alias_name, this.alias_domain)
         elif this.email:
             return '%s <%s>' % (this.name, this.email)
-        return False
+        raise osv.except_osv(_('Invalid Action!'), _("Unable to send email, please configure the sender's email address or alias."))
 
     def _get_default_author(self, cr, uid, context=None):
         return self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
@@ -843,10 +843,9 @@ class mail_message(osv.Model):
             values['reply_to'] = self._get_reply_to(cr, uid, values, context=context)
 
         newid = super(mail_message, self).create(cr, uid, values, context)
-        if values['email_from']:
-            self._notify(cr, uid, newid, context=context,
-                     force_send=context.get('mail_notify_force_send', True),
-                     user_signature=context.get('mail_notify_user_signature', True))
+        self._notify(cr, uid, newid, context=context,
+                 force_send=context.get('mail_notify_force_send', True),
+                 user_signature=context.get('mail_notify_user_signature', True))
         # TDE FIXME: handle default_starred. Why not setting an inv on starred ?
         # Because starred will call set_message_starred, that looks for notifications.
         # When creating a new mail_message, it will create a notification to a message
