@@ -22,7 +22,7 @@
         },
         do_render: function(data) {
             var self = this;
-            if ($('#discussions_wrapper').length === 0) {
+            if ($('#discussions_wrapper').length === 0 && self.settings.content.length > 0) {
                 $('<div id="discussions_wrapper"></div>').appendTo($('#blog_content'));
             }
             // Attach a discussion to each paragraph.
@@ -36,8 +36,8 @@
                 }
                 if(!$(event.target).hasClass('discussion-link') && !$(event.target).parents('.popover').length){
                     if($('.move_discuss').length){
-                        $('.js_discuss').removeClass('move_discuss');
-                        $('.js_discuss').animate({
+                        $('.js_discuss').next().removeClass('move_discuss');
+                        $('.js_discuss').next().animate({
                             'marginLeft': "+=40%"
                         });
                         $('#discussions_wrapper').animate({
@@ -96,8 +96,8 @@
             a.delegate('a.discussion-link', "click", function(e) {
                 e.preventDefault();
                 if(!$('.move_discuss').length){
-                    $('.js_discuss').addClass('move_discuss');
-                    $('.js_discuss').animate({
+                    $('.js_discuss').next().addClass('move_discuss');
+                    $('.js_discuss').next().animate({
                         'marginLeft': "-=40%"
                     });
                     $('#discussions_wrapper').animate({

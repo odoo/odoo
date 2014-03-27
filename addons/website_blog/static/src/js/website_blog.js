@@ -23,7 +23,7 @@ $(document).ready(function() {
         });
     }
 
-    var content = $(".js_discuss #blog_content p");
+    var content = $(".js_discuss").next().find('p');
     if(content){
         openerp.jsonRpc("/blog/get_user/", 'call', {}).then(function(data){
             $('#discussions_wrapper').empty();

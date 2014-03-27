@@ -194,9 +194,7 @@
         </div>
     </div>
 
-    <div id="blog_content_container" class="mt32">
-        <div id="blog_content" t-field="blog_post.content"/>
-    </div>
+    <div id="blog_content" t-field="blog_post.content" class="mt32"/>
 
     <section id="comments" class="read_width" t-if="blog_post.website_message_ids">
         <hr/>
@@ -280,7 +278,7 @@
 <template id="opt_blog_post_select_to_tweet" name="Select to Tweet"
         inherit_option_id="website_blog.blog_post_complete">
     <xpath expr="//div[@id='blog_content']" position="attributes">
-        <attribute name="class">js_tweet</attribute>
+        <attribute name="class">js_tweet mt32</attribute>
     </xpath>
     <xpath expr="//div[@id='title']//div[@class='blog_title']" position="attributes">
         <attribute name="class">blog_title js_tweet</attribute>
@@ -290,8 +288,8 @@
 <!-- Options: Blog Post: user can add Inline Discussion -->
 <template id="opt_blog_post_inline_discussion" name="Allow comment in text"
         inherit_option_id="website_blog.blog_post_complete">
-    <xpath expr="//div[@id='blog_content_container']" position="attributes">
-        <attribute name="class">js_discuss mt32</attribute>
+    <xpath expr="//div[@id='blog_content']" position="before">
+        <div class="js_discuss"/>
     </xpath>
 </template>
 
