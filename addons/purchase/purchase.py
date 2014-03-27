@@ -155,12 +155,18 @@ class purchase_order(osv.osv):
 
     def _get_picking_ids(self, cr, uid, ids, field_names, args, context=None):
         res = {}
-        for purchase_id in ids:
-            picking_ids = set()
-            move_ids = self.pool.get('stock.move').search(cr, uid, [('purchase_line_id.order_id', '=', purchase_id)], context=context)
-            for move in self.pool.get('stock.move').browse(cr, uid, move_ids, context=context):
-                picking_ids.add(move.picking_id.id)
-            res[purchase_id] = list(picking_ids)
+        for po_id in ids:
+            res[po_id] = []
+        query = """
+        SELECT picking_id, po.id FROM stock_picking p, stock_move m, purchase_order_line pol, purchase_order po
+            WHERE po.id in %s and po.id = pol.order_id and pol.id = m.purchase_line_id and m.picking_id = p.id
+            GROUP BY picking_id, po.id
+             
+        """
+        cr.execute(query, (tuple(ids), ))
+        picks = cr.fetchall()
+        for pick_id, po_id in picks:
+            res[po_id].append(pick_id)
         return res
 
     STATE_SELECTION = [
@@ -327,7 +333,6 @@ class purchase_order(osv.osv):
             value.update({'related_location_id': picktype.default_location_dest_id and picktype.default_location_dest_id.id or False})
         return {'value': value}
 
-
     def onchange_partner_id(self, cr, uid, ids, partner_id):
         partner = self.pool.get('res.partner')
         if not partner_id:
@@ -473,12 +478,7 @@ class purchase_order(osv.osv):
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
         self.signal_send_rfq(cr, uid, ids)
-        datas = {
-                 'model': 'purchase.order',
-                 'ids': ids,
-                 'form': self.read(cr, uid, ids[0], context=context),
-        }
-        return {'type': 'ir.actions.report.xml', 'report_name': 'purchase.quotation', 'datas': datas, 'nodestroy': True}
+        return self.pool['report'].get_action(cr, uid, ids, 'purchase.report_purchasequotation', context=context)
 
     #TODO: implement messages system
     def wkf_confirm_order(self, cr, uid, ids, context=None):
@@ -784,7 +784,7 @@ class purchase_order(osv.osv):
 
     def action_picking_create(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids):
-            picking_id = self.pool.get('stock.picking').create(cr, uid, {'picking_type_id': order.picking_type_id.id, 'partner_id': order.partner_id.id}, context=context)
+            picking_id = self.pool.get('stock.picking').create(cr, uid, {'picking_type_id': order.picking_type_id.id, 'partner_id': order.dest_address_id.id or order.partner_id.id}, context=context)
             self._create_stock_moves(cr, uid, order, order.order_line, picking_id, context=context)
 
     def picking_done(self, cr, uid, ids, context=None):
@@ -825,7 +825,6 @@ class purchase_order(osv.osv):
          @return: new purchase order id
 
         """
-
         #TOFIX: merged order line should be unlink
         def make_key(br, fields):
             list_key = []
@@ -1281,7 +1280,7 @@ class procurement_order(osv.osv):
                 #look for any other draft PO for the same supplier, to attach the new line on instead of creating a new draft one
                 available_draft_po_ids = po_obj.search(cr, uid, [
                     ('partner_id', '=', partner.id), ('state', '=', 'draft'), ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),
-                    ('location_id', '=', procurement.location_id.id), ('company_id', '=', procurement.company_id.id)], context=context)
+                    ('location_id', '=', procurement.location_id.id), ('company_id', '=', procurement.company_id.id), ('dest_address_id', '=', procurement.partner_dest_id.id)], context=context)
                 if available_draft_po_ids:
                     po_id = available_draft_po_ids[0]
                     #look for any other PO line in the selected PO with same product and UoM to sum quantities instead of creating a new po line
@@ -1309,6 +1308,7 @@ class procurement_order(osv.osv):
                         'company_id': procurement.company_id.id,
                         'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,
                         'payment_term_id': partner.property_supplier_payment_term.id or False,
+                        'dest_address_id': procurement.partner_dest_id.id,
                     }
                     po_id = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=context)
                     po_line_id = po_obj.browse(cr, uid, po_id, context=context).order_line[0].id

@@ -12,7 +12,7 @@
 <!-- Layout add nav and footer -->
 <template id="header_footer_custom" inherit_id="website.layout" name="Footer News Blog Link">
     <xpath expr="//footer//div[@name='info']/ul" position="inside">
-        <li><a t-attf-href="/blog/%(website_blog.blog_blog_1)d/">News</a></li>
+        <li><a t-attf-href="/blog/%(website_blog.blog_blog_1)d">News</a></li>
     </xpath>
 </template>
 
@@ -155,7 +155,19 @@
 <template id="blog_post_complete" name="Blog Post">
     <t t-call="website_blog.index">
 
-    <div class="container" id="title">
+    <t t-call="website.publish_management">
+        <t t-set="object" t-value="blog_post"/>
+        <t t-set="publish_edit" t-value="True"/>
+        <t t-set="action" t-value="'website_blog.action_blog_post'"/>
+        <li>
+            <form class="duplicate hidden" action="/blogpost/duplicate">
+                <input name="blog_post_id" t-att-value="blog_post.id"/>
+            </form>
+            <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
+        </li>
+    </t>
+
+    <div id="title">
         <h1 class="text-center" t-field="blog_post.name"/>
         <p class="post-meta text-muted text-center" name="blog_post_data">
             <span class="fa fa-calendar oe_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
@@ -166,18 +178,6 @@
                 </a>
             </span>
         </p>
-    </div>
-    <div class="container">
-        <t t-call="website.publish_management">
-            <t t-set="object" t-value="blog_post"/>
-            <t t-set="publish_edit" t-value="True"/>
-            <li>
-                <form class="duplicate hidden" action="/blogpost/duplicate">
-                    <input name="blog_post_id" t-att-value="blog_post.id"/>
-                </form>
-                <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
-            </li>
-        </t>
     </div>
 
     <div t-field="blog_post.content"/>

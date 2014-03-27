@@ -26,33 +26,67 @@ from openerp.addons.web.http import request
 
 class WebsiteMail(http.Controller):
 
-    def _find_or_create_partner(self, email, context=None):
-        # TDE TODO: FIXME: use mail_thread method
+    @http.route(['/website_mail/follow'], type='json', auth="public", website=True)
+    def website_message_subscribe(self, id=0, object=None, message_is_follower="on", email=False, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+
         partner_obj = request.registry['res.partner']
         user_obj = request.registry['res.users']
-        partner_ids = []
-        if email and email != u'false':  # post contains stringified booleans
-            partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("email", "=", email)], context=request.context)
-            if not partner_ids:
-                partner_ids = [partner_obj.name_create(request.cr, SUPERUSER_ID, email, request.context)[0]]
-        else:
-            partner_ids = [user_obj.browse(request.cr, request.uid, request.uid, request.context).partner_id.id]
-        return partner_ids
+        website = request.registry['website']
 
-    @http.route(['/website_mail/follow/'], type='json', auth="public", website=True)
-    def website_message_subscribe(self, id=0, object=None, message_is_follower="on", email=False, **post):
         _id = int(id)
         _message_is_follower = message_is_follower == 'on'
         _object = request.registry[object]
-        partner_ids = self._find_or_create_partner(email, request.context)
 
-        if _message_is_follower:
-            _object.check_access_rule(request.cr, request.uid, [_id], 'read', request.context)
-            _object.message_unsubscribe(request.cr, SUPERUSER_ID, [_id], partner_ids, context=request.context)
+        # search partner_id
+        public_id = website.get_public_user(cr, uid, context)
+        if uid != public_id:
+            partner_ids = [user_obj.browse(cr, uid, uid, context).partner_id.id]
         else:
-            _object.check_access_rule(request.cr, request.uid, [_id], 'read', request.context)
-            _object.message_subscribe(request.cr, SUPERUSER_ID, [_id], partner_ids, context=request.context)
-        obj = _object.browse(request.cr, request.uid, _id)
-        follower_ids = [p.id for p in obj.message_follower_ids]
+            # mail_thread method
+            partner_ids = _object._find_partner_from_emails(
+                cr, SUPERUSER_ID, _id, [email], context=context, check_followers=True)
+            if not partner_ids or not partner_ids[0]:
+                partner_ids = [partner_obj.create(cr, SUPERUSER_ID, {'name': email, 'email': email}, context=context)]
 
-        return partner_ids[0] in follower_ids and 1 or 0
+        # add or remove follower
+        if _message_is_follower:
+            _object.check_access_rule(cr, uid, [_id], 'read', context)
+            _object.message_unsubscribe(cr, SUPERUSER_ID, [_id], partner_ids, context=context)
+            return False
+        else:
+            _object.check_access_rule(cr, uid, [_id], 'read', context)
+            # add partner to session
+            request.session['partner_id'] = partner_ids[0]
+            _object.message_subscribe(cr, SUPERUSER_ID, [_id], partner_ids, context=context)
+            return True
+
+    @http.route(['/website_mail/is_follower'], type='json', auth="public", website=True)
+    def call(self, model, id, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+
+        partner_obj = request.registry.get('res.partner')
+        users_obj = request.registry.get('res.users')
+        obj = request.registry.get(model)
+        website = request.registry['website']
+
+        partner_id = None
+        public_id = website.get_public_user(cr, uid, context)
+        if uid != public_id:
+            partner_id = users_obj.browse(cr, SUPERUSER_ID, uid, context).partner_id
+        elif request.session.get('partner_id'):
+            partner_id = partner_obj.browse(cr, SUPERUSER_ID, request.session.get('partner_id'), context)
+        
+        email = ""
+        is_follower = False
+        if partner_id:
+            email = partner_id and partner_id.email
+            is_follower = partner_id.id in [
+                fol.id for fol in obj.browse(cr, SUPERUSER_ID, id, context).message_follower_ids]
+
+        return {
+            'is_user': uid != public_id,
+            'email': email,
+            'is_follower': is_follower
+        }
+

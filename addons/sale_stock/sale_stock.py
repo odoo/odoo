@@ -67,7 +67,7 @@ class sale_order(osv.osv):
     def _get_orders_procurements(self, cr, uid, ids, context=None):
         res = set()
         for proc in self.pool.get('procurement.order').browse(cr, uid, ids, context=context):
-            if proc.sale_line_id:
+            if proc.state =='done' and proc.sale_line_id:
                 res.add(proc.sale_line_id.order_id.id)
         return list(res)
 
@@ -84,10 +84,10 @@ class sale_order(osv.osv):
         vals = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
         location_id = order.partner_shipping_id.property_stock_customer.id
         vals['location_id'] = location_id
-
         routes = line.route_id and [(4, line.route_id.id)] or []
         vals['route_ids'] = routes
         vals['warehouse_id'] = order.warehouse_id and order.warehouse_id.id or False
+        vals['partner_dest_id'] = order.partner_shipping_id.id
         return vals
 
     _columns = {
@@ -102,7 +102,6 @@ class sale_order(osv.osv):
             ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""On demand: A draft invoice can be created from the sales order when needed. \nOn delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \nBefore delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."""),
         'shipped': fields.function(_get_shipped, string='Delivered', type='boolean', store={
-                'stock.move': (_get_orders, ['state'], 10),
                 'procurement.order': (_get_orders_procurements, ['state'], 10)
             }),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),

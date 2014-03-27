@@ -27,3 +27,5 @@ import report
 import wizard
 import res_config
 
+import controllers
+

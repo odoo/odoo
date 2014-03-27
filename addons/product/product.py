@@ -22,8 +22,7 @@
 import math
 import re
 import time
-
-from _common import rounding
+from _common import ceiling
 
 from openerp import SUPERUSER_ID
 from openerp import tools
@@ -181,7 +180,7 @@ class product_uom(osv.osv):
         if to_unit:
             amount = amount * to_unit.factor
             if round:
-                amount = rounding(amount, to_unit.rounding)
+                amount = ceiling(amount, to_unit.rounding)
         return amount
 
     def _compute_price(self, cr, uid, from_uom_id, price, to_uom_id=False):
@@ -604,12 +603,13 @@ class product_product(osv.osv):
                     cr, uid, pricelist, operator='=', context=context, limit=1)
                 pricelist = pricelist_ids[0][0] if pricelist_ids else pricelist
 
-            products = self.browse(cr, uid, ids, context=context)
-            qtys = map(lambda x: (x, quantity, partner), products)
-            pl = plobj.browse(cr, uid, pricelist, context=context)
-            price = plobj._price_get_multi(cr,uid, pl, qtys, context=context)
-            for id in ids:
-                res[id] = price.get(id, 0.0)
+            if isinstance(pricelist, (int, long)):
+                products = self.browse(cr, uid, ids, context=context)
+                qtys = map(lambda x: (x, quantity, partner), products)
+                pl = plobj.browse(cr, uid, pricelist, context=context)
+                price = plobj._price_get_multi(cr,uid, pl, qtys, context=context)
+                for id in ids:
+                    res[id] = price.get(id, 0.0)
         for id in ids:
             res.setdefault(id, 0.0)
         return res
@@ -811,7 +811,9 @@ class product_product(osv.osv):
 
         result = []
         for product in self.browse(cr, SUPERUSER_ID, ids, context=context):
-            sellers = filter(lambda x: x.name.id == partner_id, product.seller_ids)
+            sellers = []
+            if partner_id:
+                sellers = filter(lambda x: x.name.id == partner_id, product.seller_ids)
             if sellers:
                 for s in sellers:
                     mydict = {

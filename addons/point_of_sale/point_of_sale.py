@@ -514,12 +514,16 @@ class pos_order(osv.osv):
     _order = "id desc"
 
     def create_from_ui(self, cr, uid, orders, context=None):
-        #_logger.info("orders: %r", orders)
+        # Keep only new orders
+        submitted_references = [o['data']['name'] for o in orders]
+        existing_orders = self.search_read(cr, uid, domain=[('pos_reference', 'in', submitted_references)], fields=['pos_reference'], context=context)
+        existing_references = set([o['pos_reference'] for o in existing_orders])
+        orders_to_save = [o for o in orders if o['data']['name'] not in existing_references]
+
         order_ids = []
-        for tmp_order in orders:
+        for tmp_order in orders_to_save:
             to_invoice = tmp_order['to_invoice']
             order = tmp_order['data']
-
 
             order_id = self.create(cr, uid, {
                 'name': order['name'],
@@ -542,7 +546,6 @@ class pos_order(osv.osv):
             if order['amount_return']:
                 session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
                 cash_journal = session.cash_journal_id
-                cash_statement = False
                 if not cash_journal:
                     cash_journal_ids = filter(lambda st: st.journal_id.type=='cash', session.statement_ids)
                     if not len(cash_journal_ids):
@@ -556,7 +559,11 @@ class pos_order(osv.osv):
                     'journal': cash_journal.id,
                 }, context=context)
             order_ids.append(order_id)
-            self.signal_paid(cr, uid, [order_id])
+
+            try:
+                self.signal_paid(cr, uid, [order_id])
+            except Exception as e:
+                _logger.error('Could not mark POS Order as Paid: %s', tools.ustr(e))
 
             if to_invoice:
                 self.action_invoice(cr, uid, [order_id], context)

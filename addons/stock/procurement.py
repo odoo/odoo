@@ -96,6 +96,7 @@ class procurement_order(osv.osv):
     _inherit = "procurement.order"
     _columns = {
         'location_id': fields.many2one('stock.location', 'Procurement Location'),  # not required because task may create procurements that aren't linked to a location with project_mrp
+        'partner_dest_id': fields.many2one('res.partner', 'Customer Address', help="In case of dropshipping, we need to know the destination address more precisely"),
         'move_ids': fields.one2many('stock.move', 'procurement_id', 'Moves', help="Moves created by the procurement"),
         'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Move which caused (created) the procurement"),
         'route_ids': fields.many2many('stock.location.route', 'stock_location_route_procurement', 'procurement_id', 'route_id', 'Preferred Routes', help="Preferred route to be followed by the procurement order. Usually copied from the generating document (SO) but could be set up manually."),
@@ -215,11 +216,22 @@ class procurement_order(osv.osv):
                 return False
             move_obj = self.pool.get('stock.move')
             move_dict = self._run_move_create(cr, uid, procurement, context=context)
-            move_id = move_obj.create(cr, uid, move_dict, context=context)
+            move_obj.create(cr, uid, move_dict, context=context)
             self.message_post(cr, uid, [procurement.id], body=_("Supply Move created"), context=context)
-            move_obj.action_confirm(cr, uid, [move_id], context=context)
             return True
-        return super(procurement_order, self)._run(cr, uid, procurement, context)
+        return super(procurement_order, self)._run(cr, uid, procurement, context=context)
+
+    def run(self, cr, uid, ids, context=None):
+        res = super(procurement_order, self).run(cr, uid, ids, context=context)
+        #after all the procurements are run, check if some created a draft stock move that needs to be confirmed
+        #(we do that in batch because it fasts the picking assignation and the picking state computation)
+        move_to_confirm_ids = []
+        for procurement in self.browse(cr, uid, ids, context=context):
+            if procurement.state == "running" and procurement.rule_id and procurement.rule_id.action == "move":
+                move_to_confirm_ids += [m.id for m in procurement.move_ids if m.state == 'draft']
+        if move_to_confirm_ids:
+            self.pool.get('stock.move').action_confirm(cr, uid, move_to_confirm_ids, context=context)
+        return res
 
     def _check(self, cr, uid, procurement, context=None):
         ''' Implement the procurement checking for rules of type 'move'. The procurement will be satisfied only if all related
