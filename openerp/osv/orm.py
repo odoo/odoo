@@ -3127,24 +3127,23 @@ class BaseModel(object):
         return result if isinstance(ids, list) else (bool(result) and result[0])
 
     @api.multi
-    def _prefetch_field(self, field_name):
-        """ Read from the database in order to fetch the given field for `self`
-            in the cache.
+    def _prefetch_field(self, field):
+        """ Read from the database in order to fetch `field` (:class:`Field`
+            instance) for `self` in cache.
         """
         # fetch the records of this model without field_name in their cache
-        self._in_cache()
-        records = self._in_cache_without(field_name)
+        records = self._in_cache_without(field)
 
         # prefetch all classic and many2one fields if column is one of them
         # Note: do not prefetch fields when self.pool._init is True, because
         # some columns may be missing from the database!
-        column = self._columns[field_name]
+        column = self._columns[field.name]
         if column._prefetch and not (self.pool._init or self._scope.draft):
             fnames = set(fname
                 for fname, fcolumn in self._columns.iteritems()
                 if fcolumn._prefetch)
         else:
-            fnames = set((field_name,))
+            fnames = set((field.name,))
 
         # do not fetch the records/fields that have to be recomputed
         recomputation = self._scope.recomputation
@@ -3157,20 +3156,19 @@ class BaseModel(object):
                     records -= recs_todo        # do not fetch those records
 
         # fetch records with read()
-        assert self in records and field_name in fnames
+        assert self in records and field.name in fnames
         try:
             result = records.read(list(fnames), load='_classic_write')
         except except_orm as e:
             result = []
 
         # check the cache, and update it if necessary
-        field = self._fields[field_name]
         if field not in self._cache:
             for values in result:
                 record = self.browse(values.pop('id'))
                 record._cache.update(record._convert_to_cache(values))
             if field not in self._cache:
-                e = AccessError("No value found for %s.%s" % (self, field_name))
+                e = AccessError("No value found for %s.%s" % (self, field.name))
                 self._cache[field] = FailedValue(e)
 
     @api.multi
@@ -5351,18 +5349,16 @@ class BaseModel(object):
         """ Return the cache of `self`, mapping field names to values. """
         return RecordCache(self)
 
-    def _in_cache(self):
-        """ Make sure `self` is introduced in the cache for prefetching. """
-        self._scope.cache_ids[self._name].update(self._ids)
-
     @api.model
-    def _in_cache_without(self, fname):
-        """ Return the records of model `self` in cache (for the current scope)
-            that have no value for the field named `fname`.
+    def _in_cache_without(self, field):
+        """ Make sure `self` is present in cache (for prefetching), and return
+            the records of model `self` in cache that have no value for `field`
+            (:class:`Field` instance).
         """
         scope = self._scope
-        field = self._fields[fname]
-        ids = filter(None, scope.cache_ids[self._name] - set(scope.cache[field]))
+        ids_in_cache = scope.cache_ids[self._name]
+        ids_in_cache.update(self._ids)
+        ids = filter(None, ids_in_cache - set(scope.cache[field]))
         return self.browse(ids)
 
     @api.model

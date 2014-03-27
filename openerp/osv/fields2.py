@@ -479,13 +479,12 @@ class Field(object):
                 # fields are written to the database
                 self.compute_value(recs_todo, check_exists=True)
             else:
-                record._prefetch_field(self.name)
+                record._prefetch_field(self)
         else:
             # execute the compute method in DRAFT mode, so that assigned fields
             # are not written to the database
             with scope.in_draft():
-                record._in_cache()
-                recs = record._in_cache_without(self.name)
+                recs = record._in_cache_without(self)
                 self.compute_value(recs, check_exists=True)
 
     def determine_default(self, record):
