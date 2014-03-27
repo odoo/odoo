@@ -47,6 +47,16 @@
                 </form>
             </field>
         </record>
+        <record id="product_manufacturer_search_form_view" model="ir.ui.view">
+            <field name="name">product.manufacturer.search.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="manufacturer" string="Manufacturer" filter_domain="['|', ('manufacturer', 'ilike', self), ('manufacturer_pname', 'ilike', self)]"/>
+                </field>
+            </field>
+        </record>
 
     </data>
 </openerp>
