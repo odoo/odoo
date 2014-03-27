@@ -28,6 +28,7 @@ from openerp.addons.web.http import request
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 from openerp.tools import html2plaintext
+from openerp import tools
 
 class WebsiteBlog(http.Controller):
     _blog_post_per_page = 20
@@ -38,7 +39,8 @@ class WebsiteBlog(http.Controller):
         groups = blog_post_obj.read_group(request.cr, request.uid, [], ['name', 'create_date'],
             groupby="create_date", orderby="create_date asc", context=request.context)
         for group in groups:
-            group['date'] = "%s_%s" % (group['__domain'][0][2], group['__domain'][1][2])
+            group['date_begin'] = str(datetime.date(datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATETIME_FORMAT)))
+            group['date_end'] = str(datetime.date(datetime.strptime( group['__domain'][1][2], tools.DEFAULT_SERVER_DATETIME_FORMAT)))
         return groups
 
     @http.route([
@@ -46,7 +48,6 @@ class WebsiteBlog(http.Controller):
         '/blog/page/<int:page>',
     ], type='http', auth="public", website=True, multilang=True)
     def blogs(self, page=1):
-        BYPAGE = 60
         cr, uid, context = request.cr, request.uid, request.context
         blog_obj = request.registry['blog.post']
         total = blog_obj.search(cr, uid, [], count=True, context=context)
@@ -54,9 +55,9 @@ class WebsiteBlog(http.Controller):
             url='/blog',
             total=total,
             page=page,
-            step=BYPAGE,
+            step=self._blog_post_per_page,
         )
-        bids = blog_obj.search(cr, uid, [], offset=pager['offset'], limit=BYPAGE, context=context)
+        bids = blog_obj.search(cr, uid, [], offset=pager['offset'], limit=self._blog_post_per_page, context=context)
         blogs = blog_obj.browse(cr, uid, bids, context=context)
         return request.website.render("website_blog.latest_blogs", {
             'blogs': blogs,
@@ -68,12 +69,12 @@ class WebsiteBlog(http.Controller):
         '/blog/<model("blog.blog"):blog>/page/<int:page>',
         '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>',
         '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/page/<int:page>',
-        '/blog/<model("blog.blog"):blog>/date/<string(length=21):date>',
-        '/blog/<model("blog.blog"):blog>/date/<string(length=21):date>/page/<int:page>',
-        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>',
-        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/page/<int:page>',
+        '/blog/<model("blog.blog"):blog>/date/<string(length=10):date_begin>/<string(length=10):date_end>',
+        '/blog/<model("blog.blog"):blog>/date/<string(length=10):date_begin>/<string(length=10):date_end>/page/<int:page>',
+        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/date/<string(length=10):date_begin>/<string(length=10):date_end>',
+        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/date/<string(length=10):date_begin>/<string(length=10):date_end>/page/<int:page>',
     ], type='http', auth="public", website=True, multilang=True)
-    def blog(self, blog=None, tag=None, date=None, page=1, **opt):
+    def blog(self, blog=None, tag=None, date_begin=None,date_end=None, page=1, **opt):
         """ Prepare all values to display the blog.
 
         :param blog: blog currently browsed.
@@ -102,14 +103,14 @@ class WebsiteBlog(http.Controller):
         path_filter = ""
         domain = []
         if blog:
-            path_filter += "%s/" % blog.id
+            path_filter += "%s" % blog.id
             domain += [("blog_id", "=", [blog.id])]
         if tag:
-            path_filter += 'tag/%s/' % tag.id
+            path_filter += 'tag/%s' % tag.id
             domain += [("tag_ids", "in", [tag.id])]
-        if date:
-            path_filter += "date/%s" % date
-            domain += [("create_date", ">=", date.split("_")[0]), ("create_date", "<=", date.split("_")[1])]
+        if date_begin and date_end:
+            path_filter += "date/%s/%s" % (date_begin,date_end)
+            domain += [("create_date", ">=", date_begin), ("create_date", "<=", date_end)]
 
         blog_post_count = blog_post_obj.search(cr, uid, domain, count=True, context=context)
         pager = request.website.pager(
@@ -135,7 +136,7 @@ class WebsiteBlog(http.Controller):
             'pager': pager,
             'nav_list': self.nav_list(),
             'path_filter': path_filter,
-            'date': date,
+            'date': date_begin,
         }
         response = request.website.render("website_blog.blog_post_short", values)
         return response
