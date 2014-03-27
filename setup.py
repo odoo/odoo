@@ -140,6 +140,7 @@ setuptools.setup(
           'pyyaml',
           'qrcode',
           'reportlab', # windows binary pypi.python.org/pypi/reportlab
+          'requests',
           'simplejson',
           'unittest2',
           'vatnumber',
