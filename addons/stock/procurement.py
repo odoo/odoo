@@ -66,7 +66,9 @@ class procurement_rule(osv.osv):
             help="Source location is action=move"),
         'route_id': fields.many2one('stock.location.route', 'Route',
             help="If route_id is False, the rule is global"),
-        'procure_method': fields.selection([('make_to_stock', 'Make to Stock'), ('make_to_order', 'Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
+        'procure_method': fields.selection([('make_to_stock', 'Take from stock'), ('make_to_order', 'Apply procurement rules again')], 'Procurement Method', required=True, 
+                                           help="""Determines the procurement method of the stock move that will be generated: whether it will need to 'take from the available stock' in its source location 
+                                           or needs to apply the procurement rules again. """),
         'route_sequence': fields.related('route_id', 'sequence', string='Route Sequence',
             store={
                 'stock.location.route': (_get_rules, ['sequence'], 10),
