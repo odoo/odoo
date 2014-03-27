@@ -1673,6 +1673,7 @@
                 </xpath>
                 <xpath expr="//field[@name='rule_id']" position="replace">
                     <field name="rule_id" domain="['|', ('location_id', '=', False), ('location_id', '=', location_id)]"/>
+                    <field name="partner_dest_id"/>
                 </xpath>
             </field>
         </record>

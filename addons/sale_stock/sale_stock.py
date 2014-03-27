@@ -84,10 +84,10 @@ class sale_order(osv.osv):
         vals = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
         location_id = order.partner_shipping_id.property_stock_customer.id
         vals['location_id'] = location_id
-
         routes = line.route_id and [(4, line.route_id.id)] or []
         vals['route_ids'] = routes
         vals['warehouse_id'] = order.warehouse_id and order.warehouse_id.id or False
+        vals['partner_dest_id'] = order.partner_shipping_id.id
         return vals
 
     _columns = {

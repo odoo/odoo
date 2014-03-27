@@ -784,7 +784,7 @@ class purchase_order(osv.osv):
 
     def action_picking_create(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids):
-            picking_id = self.pool.get('stock.picking').create(cr, uid, {'picking_type_id': order.picking_type_id.id, 'partner_id': order.partner_id.id}, context=context)
+            picking_id = self.pool.get('stock.picking').create(cr, uid, {'picking_type_id': order.picking_type_id.id, 'partner_id': order.dest_address_id.id or order.partner_id.id}, context=context)
             self._create_stock_moves(cr, uid, order, order.order_line, picking_id, context=context)
 
     def picking_done(self, cr, uid, ids, context=None):
@@ -1280,7 +1280,7 @@ class procurement_order(osv.osv):
                 #look for any other draft PO for the same supplier, to attach the new line on instead of creating a new draft one
                 available_draft_po_ids = po_obj.search(cr, uid, [
                     ('partner_id', '=', partner.id), ('state', '=', 'draft'), ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),
-                    ('location_id', '=', procurement.location_id.id), ('company_id', '=', procurement.company_id.id)], context=context)
+                    ('location_id', '=', procurement.location_id.id), ('company_id', '=', procurement.company_id.id), ('dest_address_id', '=', procurement.partner_dest_id.id)], context=context)
                 if available_draft_po_ids:
                     po_id = available_draft_po_ids[0]
                     #look for any other PO line in the selected PO with same product and UoM to sum quantities instead of creating a new po line
@@ -1308,6 +1308,7 @@ class procurement_order(osv.osv):
                         'company_id': procurement.company_id.id,
                         'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,
                         'payment_term_id': partner.property_supplier_payment_term.id or False,
+                        'dest_address_id': procurement.partner_dest_id.id,
                     }
                     po_id = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=context)
                     po_line_id = po_obj.browse(cr, uid, po_id, context=context).order_line[0].id
