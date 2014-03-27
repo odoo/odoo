@@ -118,6 +118,20 @@
             'hidden.bs.modal': 'destroy',
         }),
         template: 'website.GengoTranslatorStatisticDialog',
+        init:function(res){
+            var self = this;
+            this.inprogess =  0;
+            this.new_words =  0;
+            this.done =  res.done;
+            $('.oe_translatable_todo').each(function () {
+                self.new_words += $(this).text().trim().replace(/ +/g," ").split(" ").length;
+            });
+            $('.oe_translatable_inprogress').each(function () {
+                self.inprogess += $(this).text().trim().replace(/ +/g," ").split(" ").length;
+            });
+            this.total = this.done + this.inprogess;
+            return this._super.apply(this, arguments);
+        },
         start: function (res) {
             this.$el.modal(this.res);
         },
