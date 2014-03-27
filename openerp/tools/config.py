@@ -152,17 +152,9 @@ class configmanager(object):
         parser.add_option_group(group)
 
         # WEB
-        # TODO move to web addons after MetaOption merge
         group = optparse.OptionGroup(parser, "Web interface Configuration")
         group.add_option("--db-filter", dest="dbfilter", default='.*',
                          help="Filter listed database", metavar="REGEXP")
-        parser.add_option_group(group)
-
-        # Static HTTP
-        group = optparse.OptionGroup(parser, "Static HTTP service")
-        group.add_option("--static-http-enable", dest="static_http_enable", action="store_true", my_default=False, help="enable static HTTP service for serving plain HTML files")
-        group.add_option("--static-http-document-root", dest="static_http_document_root", help="specify the directory containing your static HTML files (e.g '/var/www/')")
-        group.add_option("--static-http-url-prefix", dest="static_http_url_prefix", help="specify the URL root prefix where you want web browsers to access your static HTML files (e.g '/')")
         parser.add_option_group(group)
 
         # Testing Group
@@ -394,7 +386,6 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path',
                 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
-                'static_http_enable', 'static_http_document_root', 'static_http_url_prefix',
                 'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level', 'log_db'
                 ]
 
