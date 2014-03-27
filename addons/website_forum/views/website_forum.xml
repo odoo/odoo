@@ -637,9 +637,8 @@
                         <!--Note: using website_description fiels instead of using commnt firld of partner-->
                         <label class="col-md-4 control-label mb16" for="user.partner_id.website_description">Biography</label>
                         <div class="col-md-7 mb16">
-                            <textarea name="description" style="min-height: 120px" required="True" class="form-control">
-                                <t t-esc="user.partner_id.website_description"/>
-                            </textarea>
+                            <textarea name="description" style="min-height: 120px" required="True" 
+                                class="form-control"><t t-esc="user.partner_id.website_description"/></textarea>
                         </div>
                         <div class="col-sm-offset-4 col-md-4 mb16">
                             <button class="btn btn-primary btn-lg">Update</button>

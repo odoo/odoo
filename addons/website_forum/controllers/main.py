@@ -46,8 +46,7 @@ class website_forum(http.Controller):
         Forum = request.registry['website.forum']
         obj_ids = Forum.search(cr, uid, [], context=context)
         forums = Forum.browse(cr, uid, obj_ids, context=context)
-        values = { 'forums': forums }
-        return request.website.render("website_forum.forum_index", values)
+        return request.website.render("website_forum.forum_index", { 'forums': forums })
 
     @http.route('/forum/add_forum/', type='http', auth="user", multilang=True, website=True)
     def add_forum(self, forum_name="New Forum", **kwargs):

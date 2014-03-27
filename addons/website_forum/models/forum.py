@@ -65,7 +65,11 @@ class Post(osv.Model):
 
     def _get_votes(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, False)
-        # TODO: implement this with a read_group call instead of browsing all records
+        # Note: read_group is not returning all fields which we passed in list.when it will work uncomment this code and remove remaining code 
+        #Vote = self.pool['website.forum.post.vote']
+        #data = Vote.read_group(cr, uid, [('post_id','in', ids), ('user_id', '=', uid)], [ "post_id", "vote"], groupby=["post_id"], context=context)
+        #for rec in data:
+        #    res[rec[post_id][0]] = rec['vote']
         for post in self.browse(cr, uid, ids, context=context):
             if post.vote_ids:
                 for vote in post.vote_ids:
@@ -195,7 +199,7 @@ class Post(osv.Model):
                 'post_id': post.id,
                 'content': post.content,
                 'name': post.name,
-                #'tags': [(6,0, [x.id for x in post.tags])],
+                'tags': [(6,0, [x.id for x in post.tags])],
                 'date': post.write_date or post.create_date,
                 'user_id': post.write_uid and post.write_uid.id or post.user_id.id
             }, context=context)
@@ -305,7 +309,7 @@ class PostHistory(osv.Model):
         'date': fields.datetime('Created on', select=True, readonly=True),
         'user_id': fields.many2one('res.users', 'Created by', select=True, readonly=True),
         'content': fields.html('Contents', help='Automatically sanitized HTML contents'),
-        'tags': fields.many2many('website.forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tag'),
+        'tags': fields.many2many('website.forum.tag', 'post_tag_rel', 'post_id', 'post_tag_id', 'Tag'),
     }
 
 class Vote(osv.Model):
