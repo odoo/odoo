@@ -24,7 +24,6 @@ from openerp.addons.mail.mail_thread import mail_thread
 from openerp.addons.mail.tests.common import TestMail
 from openerp.tools import mute_logger, email_split
 from openerp.tools.mail import html_sanitize
-from openerp import scope
 
 
 class test_mail(TestMail):
@@ -802,9 +801,9 @@ class test_mail(TestMail):
         # Do: post 2 message on group_pigs as admin, 3 messages as demo user
         for dummy in range(2):
             group_pigs.message_post(body='My Body', subtype='mt_comment')
+        raoul_pigs = group_pids.sudo(user=user_raoul)
         for dummy in range(3):
-            with scope(user=user_raoul):
-                group_pigs.message_post(body='My Demo Body', subtype='mt_comment')
+            raoul_pigs.message_post(body='My Demo Body', subtype='mt_comment')
 
         # Test: admin has 3 new notifications (from demo), and 3 new needaction
         notif_ids = self.mail_notification.search(cr, uid, [

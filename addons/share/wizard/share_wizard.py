@@ -26,7 +26,7 @@ from openerp import SUPERUSER_ID
 
 import simplejson
 
-from openerp import tools, scope
+from openerp import tools
 from openerp.osv import fields, osv
 from openerp.osv import expression
 from openerp.tools.translate import _
@@ -103,7 +103,7 @@ class share_wizard(osv.TransientModel):
         return result
 
     def _generate_embedded_code(self, wizard, options=None):
-        cr, uid, context = scope.args
+        cr, uid, context = self._scope.args
         if options is None:
             options = {}
 
