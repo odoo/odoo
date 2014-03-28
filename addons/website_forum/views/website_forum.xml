@@ -49,7 +49,7 @@
                         </div>
                     </div>
                     <t t-foreach="question.tags" t-as="tag">
-                        <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }" class="badge" t-field="tag.name"/>
+                        <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge" t-field="tag.name"/>
                     </t>
                 </div>
             </div>
@@ -208,10 +208,10 @@
                           <li t-att-class="filters == 'unanswered' and 'active' or '' ">
                               <a t-att-href="url_for('') + '?' + keep_query( 'sorting', filters='unanswered')">Unanswered</a>
                           </li>
-                          <li t-att-class="filters == 'followed' and 'active' or '' ">
+                          <li t-if="uid" t-att-class="filters == 'followed' and 'active' or '' ">
                               <a t-att-href="url_for('') + '?' + keep_query( 'sorting', filters='followed')">Followed</a>
                           </li>
-                          <li t-if="tag" t-att-class="filters == 'tag' and 'active' or '' ">
+                          <li t-if="tag" t-att-class="tag and 'active' or '' ">
                               <a href=""><t t-esc="tag.name"/> Tag</a>
                           </li>
                           <li class="dropdown-header">Sort by</li>
@@ -406,7 +406,7 @@
                             <div class="pull-right">
                                 <div class="text-right">
                                     <t t-foreach="question.tags" t-as="tag">
-                                        <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }" class="badge" t-field="tag.name"/>
+                                        <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge" t-field="tag.name"/>
                                     </t>
                                 </div>
                                 <ul class="list-inline">
@@ -751,7 +751,7 @@
                         <a href="#badges" data-toggle="tab">Badges</a>
                     </li>
                     <li>
-                        <a href="#followed_question" data-toggle="tab">Followed Question</a>
+                        <a href="#followed_question" data-toggle="tab"><t t-esc="len(followed)"/>Followed Question</a>
                     </li>
                     <li>
                         <a href="#votes" data-toggle="tab">Votes</a>

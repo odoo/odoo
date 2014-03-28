@@ -55,17 +55,6 @@ class website_forum(http.Controller):
         }, context=request.context)
         return request.redirect("/forum/%s" % forum_id)
 
-    def _get_notifications(self, **kwargs):
-        cr, uid, context = request.cr, request.uid, request.context
-        Message = request.registry['mail.message']
-        BadgeUser = request.registry['gamification.badge.user']
-        #notification to user.
-        badgeuser_ids = BadgeUser.search(cr, uid, [('user_id', '=', uid)], context=context)
-        notification_ids = Message.search(cr, uid, [('res_id', 'in', badgeuser_ids), ('model', '=', 'gamification.badge.user'), ('to_read', '=', True)], context=context)
-        notifications = Message.browse(cr, uid, notification_ids, context=context)
-        user = request.registry['res.users'].browse(cr, uid, uid, context=context)
-        return {"user": user, "notifications": notifications}
-
     @http.route(['/forum/<model("website.forum"):forum>', 
                  '/forum/<model("website.forum"):forum>/page/<int:page>',
                  '/forum/<model("website.forum"):forum>/tag/<model("website.forum.tag"):tag>/questions'
@@ -74,6 +63,7 @@ class website_forum(http.Controller):
     def questions(self, forum, tag='', page=1, filters='', sorting='', **searches):
         cr, uid, context = request.cr, request.uid, request.context
         Forum = request.registry['website.forum.post']
+        user = request.registry['res.users'].browse(cr, uid, uid, context=context)
         domain = [('forum_id', '=', forum.id), ('parent_id', '=', False)]
         order = "id desc"
 
@@ -85,16 +75,16 @@ class website_forum(http.Controller):
 
         #filter questions for tag.
         if tag:
-            filters = 'tag'
+            if not filters:
+                filters = 'tag'
             domain += [ ('tags', '=', tag.id) ]
 
         if not filters:
             filters = 'all'
         if filters == 'unanswered':
             domain += [ ('child_ids', '=', False) ]
-        #TODO: update domain to show followed questions of user
         if filters == 'followed':
-            domain += [ ('user_id', '=', uid) ]
+            domain += [ ('message_follower_ids', '=', user.partner_id.id) ]
 
         # Note: default sorting should be based on last activity
         if not sorting or sorting == 'date':
@@ -113,7 +103,7 @@ class website_forum(http.Controller):
         question_ids = Forum.browse(cr, uid, obj_ids, context=context)
 
         values = {
-            'uid': uid,
+            'uid': request.session.uid,
             'total_questions': question_count,
             'question_ids': question_ids,
             'notifications': self._get_notifications(),
@@ -126,6 +116,17 @@ class website_forum(http.Controller):
         }
 
         return request.website.render("website_forum.index", values)
+
+    def _get_notifications(self, **kwargs):
+        cr, uid, context = request.cr, request.uid, request.context
+        Message = request.registry['mail.message']
+        BadgeUser = request.registry['gamification.badge.user']
+        #notification to user.
+        badgeuser_ids = BadgeUser.search(cr, uid, [('user_id', '=', uid)], context=context)
+        notification_ids = Message.search(cr, uid, [('res_id', 'in', badgeuser_ids), ('model', '=', 'gamification.badge.user'), ('to_read', '=', True)], context=context)
+        notifications = Message.browse(cr, uid, notification_ids, context=context)
+        user = request.registry['res.users'].browse(cr, uid, uid, context=context)
+        return {"user": user, "notifications": notifications}
 
     @http.route('/forum/notification_read/', type='json', auth="user", multilang=True, methods=['POST'], website=True)
     def notification_read(self, **kwarg):
