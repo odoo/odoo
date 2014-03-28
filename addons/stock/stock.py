@@ -2378,7 +2378,7 @@ class stock_inventory(osv.osv):
 
     _columns = {
         'name': fields.char('Inventory Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Name."),
-        'date': fields.datetime('Inventory Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Create Date."),
+        'date': fields.datetime('Inventory Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="The date that will be used for the validation date of the stock move related to this inventory (and for the valuation accounting entries, if any)"),
         'line_ids': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=False, states={'done': [('readonly', True)]}, help="Inventory Lines."),
         'move_ids': fields.one2many('stock.move', 'inventory_id', 'Created Moves', help="Inventory Moves.", states={'done': [('readonly', True)]}),
         'state': fields.selection([('draft', 'Draft'), ('cancel', 'Cancelled'), ('confirm', 'In Progress'), ('done', 'Validated')], 'Status', readonly=True, select=True),
