@@ -79,7 +79,9 @@ class crm_lead(format_address, osv.osv):
             'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj.probability == 0 and obj.stage_id and obj.stage_id.fold and obj.stage_id.sequence > 1,
         },
     }
-
+    def schedule_meeting(self, cr, uid, id, context=None):
+        return self.pool.get('res.partner').schedule_meeting(cr, uid, id, context=context)
+    
     def get_empty_list_help(self, cr, uid, help, context=None):
         if context.get('default_type') == 'lead':
             context['empty_list_help_model'] = 'crm.case.section'
