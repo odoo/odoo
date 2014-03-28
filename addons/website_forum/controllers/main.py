@@ -158,16 +158,25 @@ class website_forum(http.Controller):
                 request.session[request.session_id].append(question.id)
                 post_obj._set_view_count(cr, SUPERUSER_ID, [question.id], 'views', 1, {}, context=context)
 
+        #Check that user have answered question or not.
         answer_done = False
         for answer in question.child_ids:
             if answer.user_id.id == request.uid:
                 answer_done = True
+
+        #Check that user is following question or not
+        partner_id = request.registry['res.users'].browse(cr, uid, request.uid, context=context).partner_id.id
+        message_follower_ids = [follower.id for follower in question.message_follower_ids]
+        following = True if partner_id in message_follower_ids else False
+
         filters = 'question'
         values = {
             'question': question,
+            'question_data': True,
             'notifications': self._get_notifications(),
             'searches': post,
             'filters': filters,
+            'following': following,
             'answer_done': answer_done,
             'reversed': reversed,
             'forum': forum,
@@ -205,29 +214,40 @@ class website_forum(http.Controller):
         Post = request.registry['website.forum.post']
         Vote = request.registry['website.forum.post.vote']
         Activity = request.registry['mail.message']
+        Followers = request.registry['mail.followers']
         Data = request.registry["ir.model.data"]
 
-        #questions asked by user.
-        question_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('user_id', '=', user.id), ('parent_id', '=', False),
+        #questions and answers by user.
+        user_questions, user_answers = [], []
+        user_post_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('user_id', '=', user.id),
                                              '|', ('active', '=', False), ('active', '=', True)], context=context)
-        user_questions = Post.browse(cr, uid, question_ids, context=context)
+        user_posts = Post.browse(cr, uid, user_post_ids, context=context)
+        for record in user_posts:
+            if record.parent_id:
+                user_answers.append(record)
+            else:
+                user_questions.append(record)
 
-        #showing questions in which user answered
-        obj_ids = Post.search(cr, uid, [('forum_id', '=', forum.id), ('user_id', '=', user.id), ('parent_id', '!=', False)], context=context)
-        user_answers = Post.browse(cr, uid, obj_ids, context=context)
-        answers = [answer.parent_id for answer in user_answers]
+        #showing questions which user following
+        obj_ids = Followers.search(cr, SUPERUSER_ID, [('res_model', '=', 'website.forum.post'),('partner_id' , '=' , user.partner_id.id)], context=context)
+        post_ids = [follower.res_id for follower in Followers.browse(cr, uid, obj_ids, context=context)]
+        que_ids = Post.search(cr, uid, [('id', 'in', post_ids), ('forum_id', '=', forum.id), ('parent_id', '=', False)], context=context)
+        followed = Post.browse(cr, uid, que_ids, context=context)
 
         #votes which given on users questions and answers.
-        total_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.user_id', '=', user.id)], count=True, context=context)
-        up_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.user_id', '=', user.id), ('vote', '=', '1')], count=True, context=context)
-        down_votes = Vote.search(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.user_id', '=', user.id), ('vote', '=', '-1')], count=True, context=context)
+        data = Vote.read_group(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.user_id', '=', user.id)], ["vote"], groupby=["vote"], context=context)
+        for rec in data:
+            if rec['vote'] == '1':
+                up_votes = rec['vote_count']
+            elif rec['vote'] == '-1':
+                down_votes = rec['vote_count']
+        total_votes = up_votes + down_votes
 
         #Votes which given by users on others questions and answers.
         post_votes = Vote.search(cr, uid, [('user_id', '=', user.id)], context=context)
         vote_ids = Vote.browse(cr, uid, post_votes, context=context)
 
         #activity by user.
-        user_post_ids = question_ids + obj_ids
         model, comment = Data.get_object_reference(cr, uid, 'mail', 'mt_comment')
         activity_ids = Activity.search(cr, uid, [('res_id', 'in', user_post_ids), ('model', '=', 'website.forum.post'), '|', ('subtype_id', '!=', comment), ('subtype_id', '=', False)], context=context)
         activities = Activity.browse(cr, uid, activity_ids, context=context)
@@ -248,6 +268,7 @@ class website_forum(http.Controller):
             'forum': forum,
             'questions': user_questions,
             'answers': user_answers,
+            'followed': followed,
             'total_votes': total_votes,
             'up_votes': up_votes,
             'down_votes': down_votes,
@@ -591,3 +612,23 @@ class website_forum(http.Controller):
         tags = request.registry['website.forum.tag'].search_read(request.cr, request.uid, [], ['name'], context=request.context)
         data = [tag['name'] for tag in tags]
         return simplejson.dumps(data)
+
+    @http.route('/forum/<model("website.forum"):forum>/question/<model("website.forum.post"):post>/subscribe', type='http', auth="public", multilang=True, website=True)
+    def subscribe(self, forum, post, **kwarg):
+        cr, uid, context = request.cr, request.uid, request.context
+        if not request.session.uid:
+            return login_redirect()
+        partner_id = request.registry['res.users'].browse(cr, uid, request.uid, context=context).partner_id.id
+        post_ids = [child.id for child in post.child_ids]
+        post_ids.append(post.id)
+        request.registry['website.forum.post'].message_subscribe( cr, uid, post_ids, [partner_id], context=context)
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.id))
+
+    @http.route('/forum/<model("website.forum"):forum>/question/<model("website.forum.post"):post>/unsubscribe', type='http', auth="user", multilang=True, website=True)
+    def unsubscribe(self, forum, post, **kwarg):
+        cr, uid, context = request.cr, request.uid, request.context
+        partner_id = request.registry['res.users'].browse(cr, uid, request.uid, context=context).partner_id.id
+        post_ids = [child.id for child in post.child_ids]
+        post_ids.append(post.id)
+        request.registry['website.forum.post'].message_unsubscribe( cr, uid, post_ids, [partner_id], context=context)
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.id))
