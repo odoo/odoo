@@ -22,6 +22,7 @@ PAPER_PART_CUT  = '\x1d\x56\x01' # Partial cut paper
 TXT_NORMAL      = '\x1b\x21\x00' # Normal text
 TXT_2HEIGHT     = '\x1b\x21\x10' # Double height text
 TXT_2WIDTH      = '\x1b\x21\x20' # Double width text
+TXT_DOUBLE      = '\x1b\x21\x30' # Double height & Width
 TXT_UNDERL_OFF  = '\x1b\x2d\x00' # Underline font OFF
 TXT_UNDERL_ON   = '\x1b\x2d\x01' # Underline font 1-dot ON
 TXT_UNDERL2_ON  = '\x1b\x2d\x02' # Underline font 2-dot ON
