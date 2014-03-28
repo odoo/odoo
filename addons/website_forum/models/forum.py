@@ -33,10 +33,26 @@ class Forum(osv.Model):
     _name = 'website.forum'
     _description = 'Forums'
     _inherit = ['mail.thread', 'website.seo.metadata']
+
+    def _get_right_column(self, cr, uid, ids, field_name, arg, context):
+        res = {}
+        for forum in self.browse(cr, uid, ids, context=context):
+            res[forum.id] = """<div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">About This Forum</h3>
+                </div>
+                <div class="panel-body">
+                    This community is for professionals and enthusiasts of our 
+                    products and services.<br/>
+                    <a href="/forum/%s/faq" class="fa fa-arrow-right"> Read Guidelines</a>
+                </div>
+            </div>""" % slug(forum)
+        return res
+
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'faq': fields.html('Guidelines'),
-        'right_column': fields.html('Right Column'),
+        'right_column':fields.function(_get_right_column, string="Right Column", type='html', store=True),
     }
     def _get_default_faq(self, cr, uid, context={}):
         fname = openerp.modules.get_module_resource('website_forum', 'data', 'forum_default_faq.html')
@@ -46,16 +62,6 @@ class Forum(osv.Model):
 
     _defaults = {
         'faq': _get_default_faq,
-        'right_column': """<div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">About This Forum</h3>
-                </div>
-                <div class="panel-body">
-                    This community is for professionals and enthusiasts of our 
-                    products and services.<br/>
-                    <a t-attf-href="/forum/1/faq" class="fa fa-arrow-right"> Read Guidelines</a>
-                </div>
-            </div>"""
     }
 
 class Post(osv.Model):

@@ -236,6 +236,7 @@ class website_forum(http.Controller):
 
         #votes which given on users questions and answers.
         data = Vote.read_group(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.user_id', '=', user.id)], ["vote"], groupby=["vote"], context=context)
+        up_votes, down_votes = 0, 0
         for rec in data:
             if rec['vote'] == '1':
                 up_votes = rec['vote_count']

@@ -849,7 +849,7 @@
                     <div t-esc="len(answer.vote_ids)"/>
                 </div>
                 <div class="question-name" style="margin-left: 32px;">
-                    <a style="font-size: 15px;" t-attf-href="/forum/#{ slug(forum) }/question/#{ answer.parent_id.id }/#answer-#{ answer.id }" t-esc="answer.name"/>
+                    <a style="font-size: 15px;" t-attf-href="/forum/#{ slug(forum) }/question/#{ answer.parent_id.id }/#answer-#{ answer.id }" t-esc="answer.parent_id.name"/>
                     <t t-if="len(answer.website_message_ids)&gt;0">
                         (<t t-esc="len(answer.website_message_ids)"/>
                         <t t-if="len(answer.website_message_ids)&gt;1">Comments</t>

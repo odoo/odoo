@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import copy
 import openerp
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
@@ -70,3 +71,16 @@ class Badge(osv.Model):
         'level': fields.selection([('bronze', 'bronze'), ('silver', 'silver'), ('gold', 'gold')], 'Forum Badge Level'),
     }
 
+class Users(osv.Model):
+    _inherit = 'res.users'
+
+    def _serialised_goals_summary(self, cr, uid, user_id, context=None):
+        """Do not show forum challenges in user inbox side panel."""
+        all_goals_info = super(Users, self)._serialised_goals_summary(cr, uid, user_id, context=context)
+        goals_info = copy.copy(all_goals_info)
+        challenge_obj = self.pool['gamification.challenge']
+        for goal in all_goals_info:
+            challenge = challenge_obj.browse(cr, uid, goal['id'], context=context)
+            if challenge.category == 'forum':
+                goals_info.remove(goal)
+        return goals_info
