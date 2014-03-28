@@ -133,7 +133,7 @@
                         class="mb4 mt4"/>
                       <p name='blog_post_data' class="mb0">
 
-                        <span t-field="blog_post.create_uid.name"/>
+                        <span t-field="blog_post.create_uid.partner_id.name"/>
                         &#5760; <span t-field="blog_post.create_date" t-field-options='{"format": "MMMM yyyy"}'/>
                         <span t-if="len(blog_post.message_ids) &gt; 0">
                             &#5760; <t t-esc="len(blog_post.message_ids)"/>
@@ -186,7 +186,7 @@
             <h2 t-field="blog_post.sub_title"/>
             <div>
                 <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.create_uid.partner_id.id)" style="width: 30px; margin-right: 10px;"/>
-                <small id="blog_author" t-field="blog_post.create_uid.name"/><br/>
+                <small id="blog_author" t-field="blog_post.create_uid.partner_id.name"/><br/>
             </div>
             <div t-if="blog_post.content_image" id="blog_angle_down">
                 <a href="#blog_content" class="fa fa-angle-down fa-2x fa-inverse mt32"/>
@@ -222,7 +222,7 @@
                 <h2 t-field="next_post.sub_title"/>
                 <div>
                     <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(next_post.create_uid.partner_id.id)" style="width: 30px; margin-right: 10px;"/>
-                    <small id="blog_author" t-field="next_post.create_uid.name"/>
+                    <small id="blog_author" t-field="next_post.create_uid.partner_id.name"/>
                 </div>
                 <p class="mt32">Read Next <span class="fa fa-long-arrow-right"/></p>
             </div>
