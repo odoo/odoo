@@ -214,7 +214,7 @@
                             <button name="return_action_to_open" 
                                 type="object"
                                 class="oe_stat_button"
-                                icon="fa-thumbs-o-up" 
+                                icon="fa-book" 
                                 context="{'xml_id':'fleet_vehicle_log_contract_act'}" 
                                 help="show the contract for this vehicle">
                                 <field name="contract_count" widget="statinfo" string="Contracts"/>
@@ -222,7 +222,7 @@
                             <button name="act_show_log_cost" 
                                 type="object"
                                 class="oe_stat_button"
-                                icon="fa-money" 
+                                icon="fa-usd" 
                                 help="show all the costs for this vehicle" 
                                 groups="fleet.group_fleet_manager">
                                 <field name="cost_count" widget="statinfo" string="Costs"/>
@@ -241,7 +241,7 @@
                                 icon="fa-flask" 
                                 context="{'xml_id':'fleet_vehicle_log_fuel_act'}" 
                                 help="show the fuel logs for this vehicle" >
-                                <field name="fuel_logs_count" widget="statinfo" string="Fuel Logs"/>
+                                <field name="fuel_logs_count" widget="statinfo" string="Fuel"/>
                             </button>
                             <button name="return_action_to_open" 
                                 type="object" 
@@ -249,7 +249,7 @@
                                 icon="fa-tachometer"
                                 context="{'xml_id':'fleet_vehicle_odometer_act'}" 
                                 help="show the odometer logs for this vehicle" >
-                                <field name="odometer_count" widget="statinfo" string="odometer Logs"/>
+                                <field name="odometer_count" widget="statinfo" string="Odometer"/>
                             </button>
                         </div> 
                         <group col="2" string="General Properties">

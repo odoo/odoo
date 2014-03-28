@@ -50,11 +50,11 @@
                             class="oe_stat_button"
                             icon="fa-truck"
                             states="approved">
-                            <field name="shipment_count" widget="statinfo" string="Incoming Shipments"/>
+                            <field name="shipment_count" widget="statinfo" string="In Shipments" help="Incoming Shipments"/>
                         </button>
                         <button type="object"  name="invoice_open"
                             class="oe_stat_button"
-                            icon="fa-file-o"
+                            icon="fa-pencil-square-o"
                             attrs="{'invisible': [('state', 'in', ['draft','sent'])]}">
                             <field name="invoice_count" widget="statinfo" string="Invoices"/>
                         </button> 

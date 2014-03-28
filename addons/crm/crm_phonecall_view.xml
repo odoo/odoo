@@ -66,12 +66,13 @@
                 <sheet string="Phone Call">
                     <div class="oe_right oe_button_box">
                         <button class="oe_inline oe_stat_button" type="object" name="action_button_convert2opportunity" 
-                            icon="fa fa-star fa-fw" string="Convert to Opportunity" 
-                            attrs="{'invisible':[ '|', ('opportunity_id','!=',False), ('state', 'not in', ('open', 'done'))]}" widget="statinfo"/>
+                            icon="fa-star" string="Opportunity" 
+                            attrs="{'invisible':[ '|', ('opportunity_id','!=',False), ('state', 'not in', ('open', 'done'))]}"
+                            help="Convert to Opportunity" widget="statinfo"/>
                         <button class="oe_inline oe_stat_button" type="action" 
-                            name="%(phonecall_to_phonecall_act)d" icon="fa-phone fa-fw" string="Schedule Other Call" widget="statinfo"/>
+                            name="%(phonecall_to_phonecall_act)d" icon="fa-phone" string="Other Call" widget="statinfo"/>
                         <button class="oe_inline oe_stat_button" name="action_make_meeting" type="object" icon="fa-calendar fa-fw">
-                              <field string="Schedule a Meeting" name="meeting_count" widget="statinfo" />
+                              <field string="Plan Meeting" name="meeting_count" widget="statinfo" />
                         </button>
                     </div>
                     <div class="oe_title">

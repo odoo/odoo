@@ -14,10 +14,10 @@
                         </div>
                         <div class="oe_right oe_button_box" name="buttons">
                             <field name="ref_ir_act_window" invisible="1"/>
-                            <button class="oe_inline oe_stat_button" name="create_action" string="Add context action" type="object"
-                                    attrs="{'invisible':[('ref_ir_act_window','!=',False)]}" icon="fa-adn"
+                            <button class="oe_inline oe_stat_button" name="create_action" string="Add action" type="object"
+                                    attrs="{'invisible':[('ref_ir_act_window','!=',False)]}" icon="fa-plus"
                                     help="Display an option on related documents to open a composition wizard with this template" widget="statinfo"/>
-                            <button name="unlink_action" string="Remove context action" type="object" 
+                            <button name="unlink_action" string="Drop action" type="object" 
                                     class="oe_stat_button" icon="fa-minus"
                                     attrs="{'invisible':[('ref_ir_act_window','=',False)]}"
                                     help="Remove the contextual action to use this template on related documents" widget="statinfo"/>
