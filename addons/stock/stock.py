@@ -2283,6 +2283,8 @@ class stock_move(osv.osv):
         """ Splits qty from move move into a new move
         :param move: browse record
         :param qty: float. quantity to split (given in product UoM)
+        :param restrict_lot_id: optional production lot that can be given in order to force the new move to restrict its choice of quants to this lot.
+        :param restrict_partner_id: optional partner that can be given in order to force the new move to restrict its choice of quants to the ones belonging to this partner.
         :param context: dictionay. can contains the special key 'source_location_id' in order to force the source location when copying the move
 
         returns the ID of the backorder move created
