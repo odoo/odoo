@@ -286,15 +286,16 @@ class WebsiteSurvey(http.Controller):
     def survey_reporting(self, survey, token=None, **post):
         '''Display survey Results & Statistics for given survey.'''
         result_template, current_filters, filter_display_data, filter_finish = 'survey.result', [], [], False
+        survey_obj = request.registry['survey.survey']
         if not survey.user_input_ids or not [input_id.id for input_id in survey.user_input_ids if input_id.state != 'new']:
             result_template = 'survey.no_result'
-        if post.get('finished'):
+        if 'finished' in post:
             post.pop('finished')
             filter_finish = True
-        if post:
-            current_filters, filter_display_data = self.filter_input_ids(post)
-        if filter_finish:
-            current_filters = self.get_finished_list(current_filters)
+        if post or filter_finish:
+            filter_data = self.get_filter_data(post)
+            current_filters = survey_obj.filter_input_ids(request.cr, request.uid, filter_data, filter_finish, context=request.context)
+            filter_display_data = survey_obj.get_filter_display_data(request.cr, request.uid, filter_data, context=request.context)
         return request.website.render(result_template,
                                       {'survey_dict': self.prepare_result_dict(survey, current_filters),
                                        'page_range': self.page_range,
@@ -313,48 +314,17 @@ class WebsiteSurvey(http.Controller):
             result['page_ids'].append(page_dict)
         return result
 
-    def get_finished_list(self, current_filters):
-        user_input,filtered_list = request.registry['survey.user_input'],[]
-        if not current_filters:
-            current_filters = user_input.search(request.cr, request.uid, [], context=request.context)
-        user_input_objs = user_input.browse(request.cr, request.uid, current_filters, context=request.context)
-        filtered_list = [input.id for input in user_input_objs if input.state == 'done']
-        return filtered_list
-
-    def filter_input_ids(self, filters):
-        '''If user applies any filters, then this function returns list of
-        filtered user_input_id and label's strings for display data in web'''
-        cr, uid, context = request.cr, request.uid, request.context
-        question_obj = request.registry['survey.question']
-        input_obj = request.registry['survey.user_input_line']
-        input_line_obj = request.registry['survey.user_input_line']
-        label_obj = request.registry['survey.label']
-        domain_filter, choice, filter_display_data = [], [], []
-
+    def get_filter_data(self, post):
+        filters = []
         #if user add some random data in query URI
         try:
-            for ids in filters:
+            for ids in post:
                 row_id, answer_id = ids.split(',')
-                question_id = filters[ids]
-                question = question_obj.browse(cr, uid, int(question_id), context=context)
-                if row_id == '0':
-                    choice.append(int(answer_id))
-                    labels = label_obj.browse(cr, uid, [int(answer_id)], context=context)
-                else:
-                    domain_filter.extend(['|', ('value_suggested_row.id', '=', int(row_id)), ('value_suggested.id', '=', int(answer_id))])
-                    labels = label_obj.browse(cr, uid, [int(row_id), int(answer_id)], context=context)
-                filter_display_data.append({'question_text': question.question, 'labels': [label.value for label in labels]})
-            if choice:
-                domain_filter.insert(0, ('value_suggested.id', 'in', choice))
-            else:
-                domain_filter = domain_filter[1:]
+                filters.append({'row_id': int(row_id), 'answer_id': int(answer_id)})
         except:
             #if user add some random data in query URI
-            return([], [])
-
-        line_ids = input_line_obj.search(cr, uid, domain_filter, context=context)
-        filtered_input_ids = [input.user_input_id.id for input in input_obj.browse(cr, uid, line_ids, context=context)]
-        return (filtered_input_ids, filter_display_data)
+            return []
+        return filters
 
     def page_range(self, total_record, limit):
         '''Returns number of pages required for pagination'''

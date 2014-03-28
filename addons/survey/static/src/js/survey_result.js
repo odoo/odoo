@@ -74,7 +74,7 @@ $(document).ready(function () {
         return nv.models.pieChart()
         .x(function(d) { return d.text; })
         .y(function(d) { return d.count; })
-        .showLabels(true);
+        .showLabels(false);
     }
 
     //load chart to svg element chart:initialized chart, response:AJAX response, quistion_id:if of survey question, tick_limit:text length limit
@@ -139,14 +139,13 @@ $(document).ready(function () {
     $('td.survey_answer').hover(function(){$(this).find('i.fa-filter').removeClass('invisible');},function(){$(this).find('i.fa-filter').addClass('invisible');});
     $('td.survey_answer i.fa-filter').click(function(){
         var cell=$(this);
-        var question_id = cell.attr('data-question_id');
         var row_id = cell.attr('data-row_id') | 0;
         var answer_id = cell.attr('data-answer_id');
         if(document.URL.indexOf("?") == -1){
-            window.location.href = document.URL+'?' + encodeURI(row_id + ','+answer_id + '=' + question_id);
+            window.location.href = document.URL+'?' + encodeURI(row_id + ','+answer_id);
         }
         else{
-            window.location.href = document.URL+'&' + encodeURI(row_id + ','+answer_id + '=' + question_id);
+            window.location.href = document.URL+'&' + encodeURI(row_id + ','+answer_id);
         }
     });
 
@@ -157,16 +156,16 @@ $(document).ready(function () {
     $('li.filter-all').click(function(){
         event.preventDefault();
         if(document.URL.indexOf("finished") != -1){
-            window.location.href = document.URL.replace('?finished=1&','?').replace('&finished=1&','&').replace('?finished=1','').replace('&finished=1','');
+            window.location.href = document.URL.replace('?finished&','?').replace('&finished&','&').replace('?finished','').replace('&finished','');
         }
     });
     $('.filter-finished').click(function(){
         event.preventDefault();
         if(document.URL.indexOf("?") == -1 && document.URL.indexOf("filter") == -1){
-            window.location.href = document.URL+'?'+encodeURI('finished=1');
+            window.location.href = document.URL+'?'+encodeURI('finished');
         }
         else if (document.URL.indexOf("finished") == -1){
-        	window.location.href = document.URL+'&'+encodeURI('finished=1');
+        	window.location.href = document.URL+'&'+encodeURI('finished');
         }
     });
 

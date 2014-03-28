@@ -125,7 +125,67 @@ class survey_survey(osv.Model):
         for survey in self.browse(cr, uid, ids, context=context):
             res[survey.id] = urljoin(base_url, "survey/results/%s" % slug(survey))
         return res
+    
+    def filter_input_ids(self, cr, uid, filters, finished=False, context=None):
+        '''If user applies any filters, then this function returns list of
+           filtered user_input_id and label's strings for display data in web.
+           :param filters: list of dictionary(having: row_id, ansewr_id)
+           :param finished: True for completely filled survey,Falser otherwise.
+           :returns list of filtered user_input_ids.
+        '''
+        if context is None:
+            context = {}
+        if filters:
+            input_line_obj = self.pool.get('survey.user_input_line')
+            label_obj = self.pool.get('survey.label')
+            domain_filter, choice, filter_display_data = [], [], []
+            for filter in filters:
+                row_id, answer_id = filter['row_id'], filter['answer_id']
+                if row_id == 0:
+                    choice.append(answer_id)
+                else:
+                    domain_filter.extend(['|', ('value_suggested_row.id', '=', row_id), ('value_suggested.id', '=', answer_id)])
+            if choice:
+                domain_filter.insert(0, ('value_suggested.id', 'in', choice))
+            else:
+                domain_filter = domain_filter[1:]
+            line_ids = input_line_obj.search(cr, uid, domain_filter, context=context)
+            filtered_input_ids = [input.user_input_id.id for input in input_line_obj.browse(cr, uid, line_ids, context=context)]
+        else:
+            filtered_input_ids,filter_display_data = [],[]
+        if finished:
+            final_ids = self.get_finished_survey_input_ids(cr, uid, filtered_input_ids, context=context)
+            return final_ids
+        return filtered_input_ids
 
+    def get_finished_survey_input_ids(self, cr, uid, current_filters, context):
+        user_input,filtered_list = self.pool.get('survey.user_input'),[]
+        if not current_filters:
+            current_filters = user_input.search(cr, uid, [], context=context)
+        user_input_objs = user_input.browse(cr, uid, current_filters, context=context)
+        filtered_list = [input.id for input in user_input_objs if input.state == 'done']
+        return filtered_list
+
+    def get_filter_display_data(self, cr, uid, filters, context):
+        '''Returns data to display current filters
+        :param filters: list of dictionary(having: row_id, ansewr_id)
+        :param finished: True for completely filled survey,Falser otherwise.
+        :returns list of dict having Data to display filters.
+        '''
+        filter_display_data = []
+        if filters:
+            question_obj = self.pool.get('survey.question')
+            label_obj = self.pool.get('survey.label')
+            for filter in filters:
+                row_id, answer_id = filter['row_id'], filter['answer_id']
+                question_id = label_obj.browse(cr, uid, answer_id, context=context).question_id.id
+                question = question_obj.browse(cr, uid, question_id, context=context)
+                if row_id == 0:
+                    labels = label_obj.browse(cr, uid, [answer_id], context=context)
+                else:
+                    labels = label_obj.browse(cr, uid, [row_id, answer_id], context=context)
+                filter_display_data.append({'question_text': question.question, 'labels': [label.value for label in labels]})
+        return filter_display_data
     # Model fields #
 
     _columns = {
