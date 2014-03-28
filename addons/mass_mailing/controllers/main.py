@@ -1,4 +1,6 @@
 
+import werkzeug
+
 from openerp import http, SUPERUSER_ID
 from openerp.http import request
 
@@ -6,12 +8,14 @@ from openerp.http import request
 class MassMailController(http.Controller):
 
     @http.route('/mail/track/<int:mail_id>/blank.gif', type='http', auth='none')
-    def track_mail_open(self, mail_id):
-        print 'tracking', mail_id
+    def track_mail_open(self, mail_id, **post):
         """ Email tracking. """
         mail_mail_stats = request.registry.get('mail.mail.statistics')
         mail_mail_stats.set_opened(request.cr, SUPERUSER_ID, mail_mail_ids=[mail_id])
-        return "data:image/gif;base64,R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+        response = werkzeug.wrappers.Response()
+        response.mimetype = 'image/gif'
+        response.set_data('R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='.decode('base64'))
+        return response
 
     @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', auth='none')
     def mailing(self, mailing_id, email=None, res_id=None, **post):
