@@ -444,8 +444,8 @@ class stock_picking(osv.osv):
         sale_obj = self.pool.get("sale.order")
         res = {}
         for picking in self.browse(cr, uid, ids, context=context):
+            res[picking.id] = False
             if picking.group_id:
-                res[picking.id] = False
                 sale_ids = sale_obj.search(cr, uid, [('procurement_group_id', '=', picking.group_id.id)], context=context)
                 if sale_ids:
                     res[picking.id] = sale_ids[0]
