@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import random
 import werkzeug
 from datetime import datetime
 
@@ -195,12 +194,13 @@ class WebsiteBlog(http.Controller):
         response = request.website.render("website_blog.blog_post_complete", values)
         response.set_cookie('visited_blogs', ','.join(map(str, visited_ids)))
 
-        # Increase counter and ranking ratio for order
-        d = datetime.now() - datetime.strptime(blog_post.create_date, "%Y-%m-%d %H:%M:%S")
-        blog_post_obj.write(cr, SUPERUSER_ID, [blog_post.id], {
-            'visits': blog_post.visits+1,
-            'ranking': blog_post.visits * (0.5+random.random()) / max(3, d.days)
-        },context=context)
+        request.session[request.session_id] = request.session.get(request.session_id, [])
+        if not (blog_post.id in request.session[request.session_id]):
+            request.session[request.session_id].append(blog_post.id)
+            # Increase counter
+            blog_post_obj.write(cr, SUPERUSER_ID, [blog_post.id], {
+                'visits': blog_post.visits+1,
+            },context=context)
         return response
 
     def _blog_post_message(self, user, blog_post_id=0, **post):

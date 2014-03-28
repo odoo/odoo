@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import random
+from datetime import datetime
 
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -58,6 +60,14 @@ class BlogPost(osv.Model):
     _description = "Blog Post"
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = 'id DESC'
+
+    def _compute_ranking(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for blog_post in self.browse(cr, uid, ids, context=context):
+            d = datetime.now() - datetime.strptime(blog_post.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            res[blog_post.id] = blog_post.visits * (0.5+random.random()) / max(3, d.days)
+        return res
+
     _columns = {
         'name': fields.char('Title', required=True, translate=True),
         'sub_title' : fields.char('Sub Title', translate=True),
@@ -100,7 +110,7 @@ class BlogPost(osv.Model):
             select=True, readonly=True,
         ),
         'visits': fields.integer('No of Views', readonly=True),
-        'ranking': fields.float('Ranking', readonly=True),
+        'ranking': fields.function(_compute_ranking, string='Ranking', type='float'),
     }
     _defaults = {
         'website_published': False,
