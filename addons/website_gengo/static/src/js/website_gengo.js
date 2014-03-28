@@ -74,6 +74,9 @@
                 }else{
                     var dialog = new website.GengoApiConfigDialog(res);
                     dialog.appendTo($(document.body));
+                    dialog.on('set_config', this, function () {
+                        dialog.$el.modal('hide');
+                    });
                 }
             });
             
@@ -139,6 +142,7 @@
     website.GengoApiConfigDialog = openerp.Widget.extend({
         events: _.extend({}, website.EditorBar.prototype.events, {
             'hidden.bs.modal': 'destroy',
+            'click button[data-action=set_config]': 'set_config'
         }),
         template: 'website.GengoApiConfigDialog',
         init:function(company_id){
@@ -148,6 +152,36 @@
         start: function (res) {
             this.$el.modal(this.res);
         },
+        set_config:function(ev){
+           var self = this;
+           var public_key = this.$el.find("#gengo_public_key")[0].value;
+           var private_key = this.$el.find("#gengo_private_key")[0].value;
+           var auto_approve = this.$el.find("#gengo_auto_approve")[0].checked;
+           var sandbox = this.$el.find("#gengo_sandbox")[0].checked;
+           var pub_el = this.$el.find(".gengo_group_public")[0];
+           var pri_el = this.$el.find(".gengo_group_private")[0];
+           if(! public_key){
+               $(pub_el).addClass("has-error");
+           }
+           else{
+               $(pub_el).removeClass("has-error");
+           }
+           if(! private_key){
+               $(pri_el).addClass("has-error");
+           }
+           else{
+               $(pri_el).removeClass("has-error");
+           }
+           if(public_key && private_key){
+               openerp.jsonRpc('/website/set_gengo_config', 'call', {
+                   'config': {'gengo_public_key':public_key,'gengo_private_key':private_key,'gengo_auto_approve':auto_approve,'gengo_sandbox':sandbox},
+               }).then(function () {
+                   self.trigger('set_config');
+               }).fail(function () {
+                   alert("Could not submit ! Try Again");
+               });
+           }
+        }
     });
 
 })();

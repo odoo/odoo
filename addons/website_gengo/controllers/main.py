@@ -12,11 +12,18 @@ class website_gengo(http.Controller):
         for trans in ir_translation_obj.browse(request.cr, request.uid, gengo_translation_ids):
             result['done'] += len(trans.source.split())
         return result
+    
     @http.route('/website/check_gengo_set', type='json', auth='user', website=True)
     def check_gengo_set(self):
-        ir_translation_obj = request.registry['res.users']
         user = request.registry['res.users'].browse(request.cr, request.uid, request.uid)
         company_flag = 0
         if not user.company_id.gengo_public_key or not user.company_id.gengo_private_key:
             company_flag = user.company_id.id
         return company_flag
+    
+    @http.route('/website/set_gengo_config', type='json', auth='user', website=True)
+    def set_gengo_config(self,config):
+        user = request.registry['res.users'].browse(request.cr, request.uid, request.uid)
+        if user.company_id:
+            request.registry['res.company'].write(request.cr, request.uid, user.company_id.id,config)
+        return True
