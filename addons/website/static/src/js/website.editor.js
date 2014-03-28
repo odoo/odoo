@@ -84,8 +84,13 @@
             init: function (editor) {
                 editor.on('doubleclick', function (evt) {
                     var element = evt.data.element;
-                    if (element.is('img') && is_editable_node(element)) {
+                    if ((element.is('img') || element.$.className.indexOf(' fa-') != -1) && is_editable_node(element)) {
                         image_dialog(editor, element);
+                        return;
+                    }
+                    var parent = new CKEDITOR.dom.element(element.$.parentNode);
+                    if (parent.$.className.indexOf('media_iframe_video') != -1 && is_editable_node(parent)) {
+                        image_dialog(editor, parent);
                         return;
                     }
 
@@ -692,31 +697,6 @@
                 previous = null;
             });
 
-            var $image_button = this.make_hover_button_image(function () {
-                image_dialog(editor, new CKEDITOR.dom.element(previous));
-                $image_button.hide();
-                previous = null;
-            }, function () {
-                var prev = previous;
-                var sel = new CKEDITOR.dom.element(prev);
-                var $sel = $(sel.$);
-                var $button = $(this);
-
-                if ($sel.data('transfo')) {
-                    $sel.transfo("destroy");
-                    $button.addClass("btn-primary").removeClass("btn-default");
-                } else {
-                    $sel.transfo();
-                    $sel.data('transfo').$markup
-                        .on("mouseover", function () {
-                            $sel.trigger("mouseover");
-                            $button.removeClass("btn-primary").addClass("btn-default");
-                            $image_button.show();
-                        });
-                    $sel.data('transfo').$markup.mouseover();
-                }
-            });
-
             function is_icons_widget(element) {
                 var w = editor.widgets.getByElement(element);
                 return w && w.name === 'icons';
@@ -727,7 +707,7 @@
             // -ish, because when moving to the button itself ``previous`` is
             // still set to the element having triggered showing the button.
             var previous;
-            $(editor.element.$).on('mouseover', 'a, img, .fa, .media_iframe_video', function () {
+            $(editor.element.$).on('mouseover', 'a', function () {
                 // Back from edit button -> ignore
                 if (previous && previous === this) { return; }
 
@@ -746,41 +726,18 @@
                 previous = this;
                 var $selected = $(this);
                 var position = $selected.offset();
-                if ($selected.is('img') || $selected.is('.fa') || $selected.is('.media_iframe_video')) {
-                    $link_button.hide();
-                    // center button on image
-                    $image_button.show().offset({
-                        top: $selected.outerHeight() / 2
-                                + position.top
-                                - $image_button.outerHeight() / 2,
-                        left: $selected.outerWidth() / 2
-                                + position.left
-                                - $image_button.outerWidth() / 2,
-                    });
-                } else {
-                    $image_button.hide();
-                    // put button below link, horizontally centered
-                    $link_button.show().offset({
-                        top: $selected.outerHeight()
-                                + position.top,
-                        left: $selected.outerWidth() / 2
-                                + position.left
-                                - $link_button.outerWidth() / 2
-                    })
-                }
-                
-                if ($selected.parents('[data-oe-field="image"]').length) {
-                    $image_button.find("button.hover-style-button").hide();
-                } else {
-                    $image_button.find("button.hover-style-button").show().addClass("btn-primary").removeClass("btn-default");
-                }
+                $link_button.show().offset({
+                    top: $selected.outerHeight()
+                            + position.top,
+                    left: $selected.outerWidth() / 2
+                            + position.left
+                            - $link_button.outerWidth() / 2
+                })
             }).on('mouseleave', 'a, img, .fa', function (e) {
                 var current = document.elementFromPoint(e.clientX, e.clientY);
-                if (current === $link_button[0] || $(current).parent()[0] === $link_button[0] ||
-                    current === $image_button[0] || $(current).parent()[0] === $image_button[0]) {
+                if (current === $link_button[0] || $(current).parent()[0] === $link_button[0]) {
                     return;
                 }
-                $image_button.add($link_button).hide();
                 previous = null;
             });
         }
@@ -1412,11 +1369,11 @@
         save: function () {
             this.active.save();
             if (this.active === this.imageDialog) {
-                this.media.$.className = this.media.$.className.replace(/(^|\s)fa[^\s]+/g, '');
+                this.media.$.className = this.media.$.className.replace(/(^|\s)(fa|media_iframe_video)[^\s]+/g, '');
                 $(this.media.$).addClass("img img-responsive");
             }
             if (this.active === this.iconDialog) {
-                this.media.$.className = this.media.$.className.replace(/(^|\s)img[^\s]+/g, '');
+                this.media.$.className = this.media.$.className.replace(/(^|\s)(img|media_iframe_video)[^\s]+/g, '');
             }
             if (this.active === this.videoDialog) {
                 this.media.$.className = this.media.$.className.replace(/(^|\s)(img|fa)[^\s]+/g, '');
@@ -1828,7 +1785,7 @@
     website.editor.VideoDialog = website.editor.Media.extend({
         template: 'website.editor.dialog.video',
         events : _.extend({}, website.editor.Dialog.prototype.events, {
-            'input input#urlvideo': 'get_video',
+            'blur input#urlvideo': 'get_video',
         }),
         start: function () {
             this.$iframe = this.$("iframe");
@@ -1866,7 +1823,8 @@
                 video_id = needle.match(/youtube\.[a-z]+\/([^\/?&]+)/i)[1];
             } else if (needle.indexOf("player.vimeo.") != -1 || needle.indexOf("//vimeo.") != -1) {
                 video_type = "vimeo";
-                video_id = needle.match(/vimeo\.[a-z]+\/([^\/?&]+)/i)[1];
+                video_id = needle.match(/vimeo\.[a-z]+\/(video\/)?([^?&]+)/i)[2];
+                console.log(video_id);
             } else if (needle.indexOf(".dailymotion.") != -1) {
                 video_type = "dailymotion";
                 video_id = needle.match(/dailymotion\.[a-z]+\/(embed\/)?(video\/)?([^\/?&]+)/i)[3];
@@ -1878,10 +1836,15 @@
             this.$iframe.attr("src", this.get_url());
         },
         save: function () {
-            $(this.media.$).replaceWith(
-                '<div class="media_iframe_video" data-type="'+video_type+'" data-type="'+video_id+'" data-src="'+this.get_url()+'">'+
+            var video_id = this.$("#video_id").val();
+            var video_type = this.$("#video_type").val();
+            var $iframe = $(
+                '<div class="media_iframe_video" data-src="'+this.get_url()+'">'+
+                    '<div class="css_editable_mode_display">&nbsp;</div>'+
                     '<iframe src="'+this.get_url()+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>'+
                 '</div>');
+            $iframe.attr("style", this.$(this.media.$).attr("style"));
+            $(this.media.$).replaceWith($iframe);
             this._super();
         },
     });

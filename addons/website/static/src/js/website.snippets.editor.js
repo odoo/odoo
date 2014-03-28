@@ -154,6 +154,7 @@
             this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
                   website.snippet.stop_animation();
+                  website.snippet.start_animation(true, $(".media_iframe_video"));
             });
 
             return this._super.apply(this, arguments);
@@ -265,7 +266,8 @@
                             '$el': $style,
                             'selector-siblings': $style.data('selector-siblings'),
                             'selector-children': $style.data('selector-children'),
-                            'selector-vertical-children': $style.data('selector-vertical-children')
+                            'selector-vertical-children': $style.data('selector-vertical-children'),
+                            'data': $style.data()
                         };
                         selector.push($style.data('selector'));
                     });
@@ -332,6 +334,7 @@
                 if (!$target.is(website.snippet.globalSelector)) {
                     $target = $target.parents(website.snippet.globalSelector).first();
                 }
+
                 if (!self.dom_filter($target).length) {
                     $target = false;
                 }
@@ -732,7 +735,9 @@
             this.$target.data("snippet-option-ids", styles);
             this.$overlay = this.$target.data('overlay');
             this['snippet-option-id'] = snippet_id;
-            this.$el = website.snippet.templateOptions[snippet_id].$el.find(">li").clone();
+            var $option = website.snippet.templateOptions[snippet_id].$el;
+            this.$el = $option.find(">li").clone();
+            this.data = $option.data();
 
             this.required = this.$el.data("required");
 
@@ -1425,6 +1430,43 @@
         }
     });
 
+    website.snippet.options.media = website.snippet.Option.extend({
+        start: function () {
+            var self = this;
+            this._super();
+            website.snippet.start_animation(true, this.$target);
+
+            this.$el.find('[data-toggle="dropdown"]').dropdown();
+            this.$el.find(".hover-edition-button").click(function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                self.element = new CKEDITOR.dom.element(self.$target[0]);
+                new website.editor.MediaDialog(self, self.element).appendTo(document.body);
+            });
+            this.$el.find(".hover-style-button").click(function (event) {
+                self.transfo(event);
+            });
+        },
+        transfo: function (event) {
+            var self = this;
+            var sel = new CKEDITOR.dom.element(this.$target[0]);
+            var $button = $(event.target);
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (this.$target.data('transfo')) {
+                this.$target.transfo("destroy");
+                $button.addClass("btn-primary").removeClass("btn-default");
+            } else {
+                this.$target.transfo();
+                this.$target.data('transfo').$markup
+                    .on("mouseover", function () { self.$target.trigger("mouseover"); })
+                    .mouseover()
+                    .click(function () { self.$target.transfo("destroy"); });
+            }
+        }
+    });
+
 
     website.snippet.Editor = openerp.Class.extend({
         init: function (BuildingBlock, dom) {
@@ -1434,6 +1476,7 @@
             this.snippet_id = this.$target.data("snippet-id");
             this._readXMLData();
             this.load_style_options();
+            this.get_phantom();
             this.get_parent_block();
             this.start();
         },
@@ -1569,6 +1612,23 @@
                 $styles.removeClass("hidden");
             }
             this.$overlay.find('[data-toggle="dropdown"]').dropdown();
+        },
+
+        get_phantom: function () {
+            var self = this;
+            var phantom = false;
+            for (var i in this.styles){
+                if (this.styles[i].data.phantom) {
+                    phantom = true;
+                    break;
+                }
+            }
+            if (false && phantom) {
+                var $parent = this.$target.parents(website.snippet.globalSelector).first();
+                setTimeout(function () {
+                    self.BuildingBlock.make_active($parent);
+                }, 0);
+            }
         },
 
         get_parent_block: function () {
