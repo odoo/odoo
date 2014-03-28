@@ -408,12 +408,16 @@ class MassMailing(osv.Model):
         for mid in ids:
             results[mid] = {
                 'total': Statistics.search(cr, uid, [('mass_mailing_id', '=', mid)], count=True, context=context),
+                'scheduled': Statistics.search(cr, uid, [('mass_mailing_id', '=', mid), ('scheduled', '!=', False), ('sent', '=', False)], count=True, context=context),
                 'sent': Statistics.search(cr, uid, [('mass_mailing_id', '=', mid), ('sent', '!=', False)], count=True, context=context),
                 'opened': Statistics.search(cr, uid, [('mass_mailing_id', '=', mid), ('opened', '!=', False)], count=True, context=context),
                 'replied': Statistics.search(cr, uid, [('mass_mailing_id', '=', mid), ('replied', '!=', False)], count=True, context=context),
                 'bounced': Statistics.search(cr, uid, [('mass_mailing_id', '=', mid), ('bounced', '!=', False)], count=True, context=context),
             }
             results[mid]['delivered'] = results[mid]['sent'] - results[mid]['bounced']
+            results[mid]['received_ratio'] = 100.0 * results[mid]['delivered'] / (results[mid]['sent'] or 1)
+            results[mid]['opened_ratio'] = 100.0 * results[mid]['opened'] / (results[mid]['sent'] or 1)
+            results[mid]['replied_ratio'] = 100.0 * results[mid]['replied'] / (results[mid]['sent'] or 1)
         return results
 
     def _get_contact_nbr(self, cr, uid, ids, name, arg, context=None):
@@ -479,12 +483,16 @@ class MassMailing(osv.Model):
             'Emails Statistics',
         ),
         'total': fields.function(
+            _get_statistics, string='Total',
+            type='integer', multi='_get_statistics',
+        ),
+        'scheduled': fields.function(
             _get_statistics, string='Scheduled',
-            type='integer', multi='_get_statistics'
+            type='integer', multi='_get_statistics',
         ),
         'sent': fields.function(
             _get_statistics, string='Sent',
-            type='integer', multi='_get_statistics'
+            type='integer', multi='_get_statistics',
         ),
         'delivered': fields.function(
             _get_statistics, string='Delivered',
@@ -496,13 +504,25 @@ class MassMailing(osv.Model):
         ),
         'replied': fields.function(
             _get_statistics, string='Replied',
-            type='integer', multi='_get_statistics'
+            type='integer', multi='_get_statistics',
         ),
         'bounced': fields.function(
             _get_statistics, string='Bounced',
-            type='integer', multi='_get_statistics'
+            type='integer', multi='_get_statistics',
         ),
-        # monthly ratio
+        'received_ratio': fields.function(
+            _get_statistics, string='Received Ratio',
+            type='integer', multi='_get_statistics',
+        ),
+        'opened_ratio': fields.function(
+            _get_statistics, string='Opened Ratio',
+            type='integer', multi='_get_statistics',
+        ),
+        'replied_ratio': fields.function(
+            _get_statistics, string='Replied Ratio',
+            type='integer', multi='_get_statistics',
+        ),
+        # dayly ratio
         'opened_dayly': fields.function(
             _get_daily_statistics, string='Opened',
             type='char', multi='_get_daily_statistics',
@@ -602,7 +622,7 @@ class MassMailing(osv.Model):
     def action_new_list(self, cr, uid, ids, context=None):
         wizard = self.browse(cr, uid, ids[0], context=context)
         action_id = self._get_model_to_list_action_id(cr, uid, wizard.mailing_model, context=context)
-        ctx = dict(context, view_manager_highlight=[action_id], default_mass_mailing_id=ids[0], default_model=wizard.mailing_model)
+        ctx = dict(context, search_default_not_opt_out=True, view_manager_highlight=[action_id], default_mass_mailing_id=ids[0], default_model=wizard.mailing_model)
         return {
             'name': _('Choose Recipients'),
             'type': 'ir.actions.act_window',
@@ -644,10 +664,10 @@ class MassMailing(osv.Model):
         url = urlparse.urljoin(
             base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
                 'mailing_id': mailing_id,
-                'params': urllib.urlencode({'res_id': res_id, 'email': email})
+                'params': urllib.urlencode({'db': cr.dbname, 'res_id': res_id, 'email': email})
             }
         )
-        return '<a href="%s">%s</a>' % (url, msg or 'Click to unsubscribe')
+        return '<small><a href="%s">%s</a></small>' % (url, msg or 'Click to unsubscribe')
 
     def send_mail(self, cr, uid, ids, context=None):
         author_id = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id.id
@@ -680,6 +700,8 @@ class MassMailing(osv.Model):
                     'reply_to': mailing.reply_to,
                     'subject': mailing.name,
                     'record_name': False,
+                    'model': mailing.mailing_model,
+                    'res_id': res_id,
                     'author_id': author_id,
                     'body_html': body,
                     'auto_delete': True,
@@ -746,15 +768,9 @@ class MailMailStats(osv.Model):
             help='ID of the related mail_mail. This field is an integer field because'
                  'the related mail_mail can be deleted separately from its statistics.'
         ),
-        'message_id': fields.char(
-            'Message-ID',
-        ),
-        'model': fields.char(
-            'Document model',
-        ),
-        'res_id': fields.integer(
-            'Document ID',
-        ),
+        'message_id': fields.char('Message-ID'),
+        'model': fields.char('Document model'),
+        'res_id': fields.integer('Document ID'),
         # campaign / wave data
         'mass_mailing_id': fields.many2one(
             'mail.mass_mailing', 'Mass Mailing',
@@ -775,47 +791,39 @@ class MailMailStats(osv.Model):
             store=True, readonly=True,
         ),
         # Bounce and tracking
-        'sent': fields.datetime(
-            'Sent',
-            help='Date the related email was sent'),
-        'opened': fields.datetime(
-            'Opened',
-            help='Date when this email has been opened for the first time.'),
-        'replied': fields.datetime(
-            'Replied',
-            help='Date when this email has been replied for the first time.'),
-        'bounced': fields.datetime(
-            'Bounced',
-            help='Date when this email has bounced.'
-        ),
+        'scheduled': fields.datetime('Scheduled', help='Date when the email has been created'),
+        'sent': fields.datetime('Sent', help='Date when the email has been sent'),
+        'opened': fields.datetime('Opened', help='Date when the email has been opened the first time'),
+        'replied': fields.datetime('Replied', help='Date when this email has been replied for the first time.'),
+        'bounced': fields.datetime('Bounced', help='Date when this email has bounced.'),
     }
 
-    def set_opened(self, cr, uid, ids=None, mail_mail_ids=None, mail_message_ids=None, context=None):
-        """ Set as opened """
+    _defaults = {
+        'scheduled': fields.datetime.now,
+    }
+
+    def _get_ids(self, cr, uid, ids=None, mail_mail_ids=None, mail_message_ids=None, domain=None, context=None):
         if not ids and mail_mail_ids:
-            ids = self.search(cr, uid, [('mail_mail_id', 'in', mail_mail_ids), ('opened', '=', False)], context=context)
+            base_domain = [('mail_mail_id', 'in', mail_mail_ids)]
         elif not ids and mail_message_ids:
-            ids = self.search(cr, uid, [('message_id', 'in', mail_message_ids), ('opened', '=', False)], context=context)
+            base_domain = [('message_id', 'in', mail_message_ids)]
         else:
-            ids = self.search(cr, uid, [('id', 'in', ids or []), ('opened', '=', False)], context=context)
-        return self.write(cr, uid, ids, {'opened': fields.datetime.now()}, context=context)
+            base_domain = [('id', 'in', ids or [])]
+        if domain:
+            base_domain = ['&'] + domain + base_domain
+        return self.search(cr, uid, base_domain, context=context)
+
+    def set_opened(self, cr, uid, ids=None, mail_mail_ids=None, mail_message_ids=None, context=None):
+        stat_ids = self._get_ids(cr, uid, ids, mail_mail_ids, mail_message_ids, [('opened', '=', False)], context)
+        self.write(cr, uid, stat_ids, {'opened': fields.datetime.now()}, context=context)
+        return stat_ids
 
     def set_replied(self, cr, uid, ids=None, mail_mail_ids=None, mail_message_ids=None, context=None):
-        """ Set as replied """
-        if not ids and mail_mail_ids:
-            ids = self.search(cr, uid, [('mail_mail_id', 'in', mail_mail_ids), ('replied', '=', False)], context=context)
-        elif not ids and mail_message_ids:
-            ids = self.search(cr, uid, [('message_id', 'in', mail_message_ids), ('replied', '=', False)], context=context)
-        else:
-            ids = self.search(cr, uid, [('id', 'in', ids or []), ('replied', '=', False)], context=context)
-        return self.write(cr, uid, ids, {'replied': fields.datetime.now()}, context=context)
+        stat_ids = self._get_ids(cr, uid, ids, mail_mail_ids, mail_message_ids, [('replied', '=', False)], context)
+        self.write(cr, uid, stat_ids, {'replied': fields.datetime.now()}, context=context)
+        return stat_ids
 
     def set_bounced(self, cr, uid, ids=None, mail_mail_ids=None, mail_message_ids=None, context=None):
-        """ Set as bounced """
-        if not ids and mail_mail_ids:
-            ids = self.search(cr, uid, [('mail_mail_id', 'in', mail_mail_ids), ('bounced', '=', False)], context=context)
-        elif not ids and mail_message_ids:
-            ids = self.search(cr, uid, [('message_id', 'in', mail_message_ids), ('bounced', '=', False)], context=context)
-        else:
-            ids = self.search(cr, uid, [('id', 'in', ids or []), ('bounced', '=', False)], context=context)
-        return self.write(cr, uid, ids, {'bounced': fields.datetime.now()}, context=context)
+        stat_ids = self._get_ids(cr, uid, ids, mail_mail_ids, mail_message_ids, [('bounced', '=', False)], context)
+        self.write(cr, uid, stat_ids, {'bounced': fields.datetime.now()}, context=context)
+        return stat_ids

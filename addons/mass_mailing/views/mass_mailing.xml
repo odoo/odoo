@@ -6,7 +6,7 @@
         <menuitem name="Mass Mailing" id="mass_mailing_campaign"
             parent="base.marketing_menu" sequence="1"/>
         <!-- Marketing / Mailing Lists -->
-        <menuitem name="Contacts" id="mass_mailing_list"
+        <menuitem name="Contact Lists" id="mass_mailing_list"
             parent="base.marketing_menu" sequence="2"/>
 
         <!--  MASS MAILING CONTACT !-->
@@ -208,6 +208,13 @@
                         <field name="state" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet>
+                        <div colspan="2" class="oe_form_box_info oe_text_center"
+                                attrs="{'invisible': [('scheduled', '=', 0)]}">
+                            <p>
+                                <strong><field name="scheduled" class="oe_inline"/>emails are in queue
+                                and will be sent soon.</strong>
+                            </p>
+                        </div>
                         <group>
                             <group>
                                 <field name="name"/>
@@ -222,20 +229,27 @@
                                         type='action' name='%(action_mailing_email_template)d'
                                         attrs="{'invisible': [('template_id', '!=', False)]}"
                                         context="{'default_mass_mailing_id': active_id}"/>
+                                    <div style="max-width: 300px !important;"> 
+                                        <field name="body_html" class="form_html_preview" nolabel="1"
+                                            attrs="{'invisible': [('template_id', '=', False)]}"/>
                                     <button string='Edit this Email' class='oe_inline oe_link oe_edit_only'
                                         type='action' name='%(action_mailing_email_template)d'
                                         attrs="{'invisible': [('template_id', '=', False)]}"
                                         context="{'default_mass_mailing_id': active_id, 'default_template_id': template_id}"/>
-                                    <div style="max-width: 300px !important;"> 
-                                        <field name="body_html" class="form_html_preview" nolabel="1"
-                                            attrs="{'invisible': [('template_id', '=', False)]}"/>
                                     </div>
                                 </div>
                                 <field name="email_from"/>
                                 <field name="reply_to"/>
                             </group>
                             <group>
-                                <p>Here be some graphs</p>
+                                <p colspan="2">Here be some pie charts</p>
+                                <field name="total"/>
+                                <field name="received_ratio" attrs="{'invisible': [('total', '=', 0)]}"/>
+                                <field name="opened_ratio" attrs="{'invisible': [('total', '=', 0)]}"/>
+                                <field name="replied_ratio" attrs="{'invisible': [('total', '=', 0)]}"/>
+                                <p colspan="2">Here be some bar charts</p>
+                                <field name="opened_dayly" attrs="{'invisible': [('total', '=', 0)]}"/>
+                                <field name="replied_dayly" attrs="{'invisible': [('total', '=', 0)]}"/>
                             </group>
                         </group>
                         <group>
