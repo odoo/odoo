@@ -116,4 +116,13 @@ $(document).ready(function () {
         });
     };
 
+    $('.change_question').change(function (ev) {
+        var $option = $(ev.currentTarget);
+        openerp.jsonRpc("/forum/change_question/", 'call', {
+            'option': $option.attr("id")})
+            .then(function (data) {
+            })
+        return true;
+    });
+
 });

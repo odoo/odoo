@@ -467,9 +467,13 @@ class website_forum(http.Controller):
 
     @http.route('/forum/<model("website.forum"):forum>/edit/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
     def edit_question(self, forum, post, **kwarg):
+        post_history_obj = request.registry['website.forum.post.history'];
         tags = ""
         for tag_name in post.tags:
             tags += tag_name.name + ","
+        
+        ids = post_history_obj.search(request.cr, request.uid, [('post_id','=', post.id)], context=request.context)
+        post_history = post_history_obj.browse(request.cr, request.uid, ids, context=request.context)
 
         values = {
             'post': post,
@@ -477,6 +481,7 @@ class website_forum(http.Controller):
             'forum': forum,
             'searches': kwarg,
             'notifications': self._get_notifications(),
+            'history': post_history,
         }
         return request.website.render("website_forum.edit_question", values)
 
@@ -637,3 +642,9 @@ class website_forum(http.Controller):
         post_ids.append(post.id)
         request.registry['website.forum.post'].message_unsubscribe( cr, uid, post_ids, [partner_id], context=context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.id))
+
+    @http.route('/forum/change_question/', type='json', auth="user", multilang=True, methods=['POST'], website=True)
+    def correct_answer(self, **kwarg):
+        cr, uid, context = request.cr, request.uid, request.context
+        return True
+

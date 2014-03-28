@@ -295,6 +295,11 @@
             <t t-call="website_forum.header">
                 <h3>Edit question</h3>
                 <form t-attf-action="/forum/#{ slug(forum) }/question/savequestion/" method="post" role="form" class="tag_text">
+                    <select class="form-control change_question" id="change_que">
+                        <t t-foreach="history" t-as="history_post">
+                            <option t-att-value="history_post.id"><t t-esc="history_post.name"/></option>
+                        </t>
+                     </select>
                     <input type="text" name="question_name" required="True" t-attf-value="#{post.name or ''}"
                         class="form-control" placeholder="Edit your Question"/>
                     <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>

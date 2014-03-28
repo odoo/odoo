@@ -227,9 +227,9 @@ class Post(osv.Model):
         return post_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        self.create_history(cr, uid, ids, vals, context=context)
         #NOTE: to avoid message post on write of last comment time
         if not vals.get('message_last_post'):
+            self.create_history(cr, uid, ids, vals, context=context)
             for post in self.browse(cr, uid, ids, context=context):
                 body, subtype = "Edited question", "website_forum.mt_question_edit"
                 if post.parent_id:
