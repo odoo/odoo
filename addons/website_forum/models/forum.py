@@ -349,6 +349,9 @@ class Vote(osv.Model):
         post = self.pool['website.forum.post'].browse(cr, uid, post_id, context=context)
         if post.user_id.id == uid:
             return {'error': 'own_post'}
+        user = self.pool['res.users'].browse(cr, uid, uid, context=None)
+        if (vote == '-1') and (user.karma <= 10):
+            return {'error': 'lessthen_10_karma'}
         vote_ids = self.search(cr, uid, [('post_id', '=', post_id), ('user_id','=',uid)], context=context)
         if vote_ids:
             #when user will click again on vote it should set it 0.

@@ -416,16 +416,16 @@
                                             comment
                                         </a>
                                     </li>
-                                    <li t-if="question.state != 'close' and uid">
+                                    <li t-if="question.state != 'close' and user.id == question.user_id.id and user.karma&gt;=100">
                                         <a class="text-muted fa fa-times" t-attf-href="/forum/#{ slug(forum) }/close/question/#{ question.id }">close</a>
                                     </li>
                                     <li t-if="question.state == 'close' and uid">
                                         <a class="text-muted fa fa-undo" t-attf-href="/forum/#{ slug(forum) }/reopen/question/#{ question.id }">reopen</a>
                                     </li>
-                                    <li t-if="uid">
+                                    <li t-if="user.id == question.user_id.id or user.karma&gt;=300">
                                         <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/edit/question/#{ question.id }">edit</a>
                                     </li>
-                                    <li t-if="question.active and uid == question.user_id.id">
+                                    <li t-if="question.active and user.id == question.user_id.id or user.karma&gt;=1000">
                                         <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/delete/question/#{ question.id }">delete</a>
                                     </li>
                                     <li t-if="uid == question.user_id.id and not question.active">
@@ -480,10 +480,10 @@
                                           t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }">comment
                                     </a>
                                 </li>
-                                <li t-if="uid">
+                                <li t-if="user.id == answer.user_id.id or user.karma&gt;=300">
                                     <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/answer/#{ question.id }/edit/#{ answer.id }">edit</a>
                                 </li>
-                                <li t-if="uid == answer.user_id.id">
+                                <li t-if="user.id == answer.user_id.id or user.karma&gt;=1000">
                                     <a class="text-muted delete fa fa-trash-o" href="" t-attf-id="#{answer.id}">delete</a>
                                 </li>
                                 <li t-if="uid">
@@ -516,7 +516,7 @@
                 <div class="col-sm-10 col-sm-offset-2">
                     <div t-foreach="reversed(object.website_message_ids)" t-as="message" id="comment" class="oe_grey" style="padding: 4px;">
                         <small class="text-muted">
-                            <button type="button" t-if="uid == message.create_uid.id" t-att-id="message.id" class="close comment_delete">&amp;times;</button>
+                            <button type="button" t-if="user.id == message.create_uid.id or user.karma&gt;=750" t-att-id="message.id" class="close comment_delete">&amp;times;</button>
                             <span t-field="message.body"/>
                             <a t-attf-href="/forum/#{ slug(forum) }/user/#{ message.create_uid.id }" t-field="message.create_uid"/>
                                 on <span t-field="message.date" t-field-options='{"format":"short"}'/>

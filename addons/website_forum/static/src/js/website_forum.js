@@ -21,6 +21,13 @@ $(document).ready(function () {
                             'Sorry, anonymous users cannot vote'+
                             '</div>');
                     }
+                    else if (data['error'] == 'lessthen_10_karma')
+                    {
+                        var $warning = $('<div class="alert alert-danger alert-dismissable" id="vote_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
+                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+                            '10 karma required to downvote'+
+                            '</div>');
+                    }
                     vote_alert = $link.parent().find("#vote_alert");
                     if (vote_alert.length == 0) {
                         $link.parent().append($warning);

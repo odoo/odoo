@@ -171,6 +171,7 @@ class website_forum(http.Controller):
         following = True if partner_id in message_follower_ids else False
 
         filters = 'question'
+        user = request.registry['res.users'].browse(cr, uid, uid, context=None)
         values = {
             'question': question,
             'question_data': True,
@@ -181,6 +182,7 @@ class website_forum(http.Controller):
             'answer_done': answer_done,
             'reversed': reversed,
             'forum': forum,
+            'user': user,
         }
         return request.website.render("website_forum.post_description_full", values)
 
@@ -514,7 +516,8 @@ class website_forum(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         Post = request.registry['website.forum.post']
         post = Post.browse(cr, uid, int(kwarg.get('post_id')), context=context)
-        if post.user_id.id == uid:
+        user = request.registry['res.users'].browse(cr, uid, uid, context=None)
+        if post.user_id.id == uid or user.karma >= 500:
             correct = False if post.correct else True
             #Note: only one answer can be right.
             for child in post.parent_id.child_ids:
@@ -525,7 +528,7 @@ class website_forum(http.Controller):
             Post.write( cr, uid, [post.id, post.parent_id.id], {
                 'correct': correct,
             }, context=context)
-        return correct
+            return correct
 
     @http.route('/forum/<model("website.forum"):forum>/close/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
     def close_question(self, forum, post, **kwarg):
