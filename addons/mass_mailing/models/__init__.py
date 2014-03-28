@@ -5,3 +5,4 @@ import mail_mail
 import mail_thread
 import email_template
 import res_config
+import mass_mailing_report
