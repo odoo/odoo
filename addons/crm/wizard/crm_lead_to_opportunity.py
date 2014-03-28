@@ -42,7 +42,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
     def onchange_action(self, cr, uid, ids, action, context=None):
         return {'value': {'partner_id': False if action != 'exist' else self._find_matching_partner(cr, uid, context=context)}}
 
-    def _get_duplicated_leads(self, cr, uid, partner_id, email, context=None):
+    def _get_duplicated_leads(self, cr, uid, partner_id, email, include_lost=False, context=None):
         """
         Search for opportunities that have the same partner and that arent done or cancelled
         """
@@ -56,8 +56,11 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             partner_match_domain.append(('partner_id', '=', partner_id))
         partner_match_domain = ['|'] * (len(partner_match_domain) - 1) + partner_match_domain
         if not partner_match_domain:
-            return []        
-        return lead_obj.search(cr, uid, partner_match_domain + final_stage_domain)
+            return []
+        domain = partner_match_domain
+        if not include_lost:
+            domain += final_stage_domain
+        return lead_obj.search(cr, uid, domain)
 
     def default_get(self, cr, uid, fields, context=None):
         """
@@ -75,7 +78,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             lead = lead_obj.browse(cr, uid, int(context['active_id']), context=context)
             email = lead.partner_id and lead.partner_id.email or lead.email_from
 
-            tomerge.extend(self._get_duplicated_leads(cr, uid, partner_id, email))
+            tomerge.extend(self._get_duplicated_leads(cr, uid, partner_id, email, include_lost=True, context=context))
             tomerge = list(set(tomerge))
 
             if 'action' in fields:
@@ -197,8 +200,7 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
                 ('each_exist_or_create', 'Use existing partner or create'),
                 ('nothing', 'Do not link to a customer')
             ], 'Related Customer', required=True),
-        # Uncomment me in trunk
-        # 'force_assignation': fields.boolean('Force assignation', help='If unchecked, this will leave the salesman of duplicated opportunities'),
+        'force_assignation': fields.boolean('Force assignation', help='If unchecked, this will leave the salesman of duplicated opportunities'),
     }
 
     _defaults = {
@@ -274,10 +276,7 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
             active_ids = active_ids.difference(merged_lead_ids)
             active_ids = active_ids.union(remaining_lead_ids)
             ctx['active_ids'] = list(active_ids)
-        # Remove me in trunk
-        ctx['no_force_assignation'] = ctx.get('no_force_assignation', True) 
-        # Uncomment me in trunk
-        # ctx['no_force_assignation'] = not data.force_assignation
+        ctx['no_force_assignation'] = not data.force_assignation
         return self.action_apply(cr, uid, ids, context=ctx)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -85,6 +85,7 @@
                             class="oe_link"
                             string="Search associated QWeb views"
                             name="associated_view"
+                            attrs="{'invisible':[('report_type', 'not in', ['qweb-pdf', 'qweb-html'])]}"
                         />
                     </xpath>
                 </data>
