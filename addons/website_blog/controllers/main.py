@@ -104,7 +104,7 @@ class WebsiteBlog(http.Controller):
         domain = []
         if blog:
             path_filter += "%s" % blog.id
-            domain += [("blog_id", "=", [blog.id])]
+            domain += [("blog_id", "in", [blog.id])]
         if tag:
             path_filter += 'tag/%s' % tag.id
             domain += [("tag_ids", "in", [tag.id])]
