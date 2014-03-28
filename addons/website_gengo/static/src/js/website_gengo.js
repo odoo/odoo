@@ -66,6 +66,7 @@
                             $('.oe_translatable_todo').addClass('oe_translatable_inprogress').removeClass('oe_translatable_todo');
                             self.$el.find('.gengo_wait').addClass("hidden");
                             self.$el.find('.gengo_inprogress,.gengo_discard').removeClass("hidden");
+                            openerp.jsonRpc('/website/post_gengo_jobs', 'call', {});
                             self.save();
                         }).fail(function () {
                             alert("Could not Post translation");

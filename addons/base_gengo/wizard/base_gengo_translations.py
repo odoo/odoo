@@ -48,8 +48,11 @@ class base_gengo_translations(osv.osv_memory):
                                        ('receive', 'Receive Translation'),
                                        ('both', 'Both')], "Sync Type"),
         'lang_id': fields.many2one('res.lang', 'Language', required=True),
+        'sync_limit': fields.integer("No. of terms to sync"),
     }
-    _defaults = {'sync_type' : 'both'}
+    _defaults = {'sync_type' : 'both',
+                 'sync_limit' : 20
+         }
     def gengo_authentication(self, cr, uid, context=None):
         ''' 
         This method tries to open a connection with Gengo. For that, it uses the Public and Private
@@ -94,10 +97,12 @@ class base_gengo_translations(osv.osv_memory):
 
             ctx = context.copy()
             ctx['gengo_language'] = wizard.lang_id.id
+            if wizard.sync_limit > 200 or wizard.sync_limit < 1:
+                raise osv.except_osv(_("Warning"), _('Sync limit should between 1 to 200 for Gengo translation services.'))
             if wizard.sync_type in ['send','both']:
-                self._sync_request(cr, uid, limit=GENGO_DEFAULT_LIMIT, context=ctx)
+                self._sync_request(cr, uid, wizard.sync_limit, context=ctx)
             if wizard.sync_type in ['receive','both']:
-                self._sync_response( cr, uid, limit=GENGO_DEFAULT_LIMIT, context=ctx)
+                self._sync_response( cr, uid, wizard.sync_limit, context=ctx)
         return {'type': 'ir.actions.act_window_close'}
 
     def _sync_response(self, cr, uid, limit=GENGO_DEFAULT_LIMIT, context=None):

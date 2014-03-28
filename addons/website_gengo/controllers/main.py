@@ -2,6 +2,9 @@
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
+
+GENGO_DEFAULT_LIMIT = 20
+
 class website_gengo(http.Controller):
 
     @http.route('/website/get_translated_length', type='json', auth='user', website=True)
@@ -26,4 +29,9 @@ class website_gengo(http.Controller):
         user = request.registry['res.users'].browse(request.cr, request.uid, request.uid)
         if user.company_id:
             request.registry['res.company'].write(request.cr, request.uid, user.company_id.id,config)
+        return True
+
+    @http.route('/website/post_gengo_jobs', type='json', auth='user', website=True)
+    def set_gengo_config(self):
+        request.registry['base.gengo.translations']._sync_request(request.cr, request.uid, limit=GENGO_DEFAULT_LIMIT, context=request.context)
         return True

@@ -10,7 +10,12 @@
                         <field name="lang_id"/>
                     </group>
                     <group>
-                            <field name="sync_type" widget="radio"/>
+	                    <group>
+	                            <field name="sync_type" widget="radio"/>
+	                    </group>
+	                    <group>
+	                            <field name="sync_limit" required="1"/>
+	                    </group>
                     </group>
                     <footer>
                         <button name="act_update" string="Send" type="object" class="oe_highlight"/> 
