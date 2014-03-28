@@ -1315,6 +1315,8 @@
         },
         save: function () {
         },
+        clear: function () {
+        },
         cancel: function () {
         },
         close: function () {
@@ -1367,17 +1369,20 @@
             return this._super();
         },
         save: function () {
+            this.media.$.innerHTML = "";
+            if (this.active !== this.imageDialog) {
+                this.imageDialog.clear();
+            }
+            if (this.active !== this.iconDialog) {
+                this.iconDialog.clear();
+            }
+            if (this.active !== this.videoDialog) {
+                this.videoDialog.clear();
+            }
             this.active.save();
-            if (this.active === this.imageDialog) {
-                this.media.$.className = this.media.$.className.replace(/(^|\s)(fa|media_iframe_video)[^\s]+/g, '');
-                $(this.media.$).addClass("img img-responsive");
-            }
-            if (this.active === this.iconDialog) {
-                this.media.$.className = this.media.$.className.replace(/(^|\s)(img|media_iframe_video)[^\s]+/g, '');
-            }
-            if (this.active === this.videoDialog) {
-                this.media.$.className = this.media.$.className.replace(/(^|\s)(img|fa)[^\s]+/g, '');
-            }
+
+            this.media.$.className = this.media.$.className.replace(/\s+/g, ' ');
+
             return this._super();
         },
         search: function () {
@@ -1457,6 +1462,9 @@
             this.media.renameNode("img");
             this.media.$.attributes.src = this.$('input.url').val();
             return this._super();
+        },
+        clear: function () {
+            this.media.$.className = this.media.$.className.replace(/(^|\s)(img(\s|$)|img-[^\s]*)/g, ' ');
         },
         cancel: function () {
             this.trigger('cancel');
@@ -1779,7 +1787,10 @@
                 }
                 $preview.prepend($p);
             }
-        }
+        },
+        clear: function () {
+            this.media.$.className = this.media.$.className.replace(/(^|\s)(fa(\s|$)|fa-[^\s]*)/g, ' ');
+        },
     });
 
     website.editor.VideoDialog = website.editor.Media.extend({
@@ -1846,6 +1857,10 @@
             $iframe.attr("style", this.$(this.media.$).attr("style"));
             $(this.media.$).replaceWith($iframe);
             this._super();
+        },
+        clear: function () {
+            delete this.media.$.dataset.src;
+            this.media.$.className = this.media.$.className.replace(/(^|\s)media_iframe_video(\s|$)/g, ' ');
         },
     });
 

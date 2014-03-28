@@ -742,7 +742,7 @@
             this.required = this.$el.data("required");
 
             this.set_active();
-            this.$el.find('li[data-value] a').on('mouseover mouseout click', _.bind(this._mouse, this));
+            this.$el.find('li[data-value] a').on('mouseenter mouseleave click', _.bind(this._mouse, this));
             this.$target.on('snippet-style-reset', _.bind(this.set_active, this));
 
             this.start();
@@ -750,7 +750,7 @@
         _mouse: function (event) {
             var self = this;
 
-            if (event.type === 'mouseout') {
+            if (event.type === 'mouseleave') {
                 if (!this.over) return;
                 this.over = false;
             } else if (event.type === 'click') {
@@ -760,7 +760,7 @@
             }
 
             var $prev, $next;
-            if (event.type === 'mouseout') {
+            if (event.type === 'mouseleave') {
                 $prev = $(event.currentTarget).parent();
                 $next = this.$el.find("li[data-value].active");
             } else {
@@ -842,7 +842,7 @@
             var self = this;
 
             // add or remove html class
-            if (np.$prev && this.required) {
+            if (np.$prev) {
                 this.$target.removeClass(np.$prev.data('value') || "");
             }
             if (np.$next) {
@@ -1437,14 +1437,17 @@
             website.snippet.start_animation(true, this.$target);
 
             this.$el.find('[data-toggle="dropdown"]').dropdown();
-            this.$el.find(".hover-edition-button").click(function (event) {
+            this.$el.find(".edition").click(function (event) {
                 event.preventDefault();
                 event.stopPropagation();
                 self.element = new CKEDITOR.dom.element(self.$target[0]);
                 new website.editor.MediaDialog(self, self.element).appendTo(document.body);
             });
-            this.$el.find(".hover-style-button").click(function (event) {
+            this.$el.find(".style").click(function (event) {
                 self.transfo(event);
+            });
+            this.$el.find(".clear-style").click(function (event) {
+                self.$target.removeClass("fa-spin").attr("style", null);
             });
         },
         transfo: function (event) {
@@ -1607,6 +1610,10 @@
             if (this.selector_vertical_children === "")
                 this.selector_vertical_children = false;
 
+            if (!this.selector_siblings && !this.selector_children && !this.selector_vertical_children) {
+                this.$overlay.find(".oe_snippet_move").addClass('hidden');
+            }
+
 
             if ($ul.find("li").length) {
                 $styles.removeClass("hidden");
@@ -1623,11 +1630,12 @@
                     break;
                 }
             }
-            if (false && phantom) {
-                var $parent = this.$target.parents(website.snippet.globalSelector).first();
-                setTimeout(function () {
-                    self.BuildingBlock.make_active($parent);
-                }, 0);
+            if (phantom) {
+                // var $parent = this.$target.parents(website.snippet.globalSelector).first();
+                // setTimeout(function () {
+                //     self.BuildingBlock.make_active($parent);
+                // }, 0);
+                this.$overlay.find('.oe_snippet_clone, .oe_snippet_remove, .oe_handles').addClass('hidden');
             }
         },
 
