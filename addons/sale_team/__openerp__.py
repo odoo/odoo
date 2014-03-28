@@ -18,9 +18,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
-
-
+{
+    'name' : 'Sale Team',
+    'version' : '1.0',
+    'author' : 'OpenERP SA',
+    'category': 'hidden',
+    'sequence': 10,
+    'summary': 'Sales Team',
+    'description': """ """,
+    'website': 'http://www.openerp.com',
+    'depends' : ['base','web_kanban','calendar'],
+    'data': ['sale_team.xml','sale_team_security.xml','res_config_view.xml','ir.model.access.csv'],
+    'demo': [],
+    'installable': True,
+    'auto_install': True,
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -51,6 +51,7 @@ Dashboard for CRM will include:
     'depends': [
         'base_action_rule',
         'base_setup',
+        'sale_team',
         'process',
         'mail',
         'email_template',
