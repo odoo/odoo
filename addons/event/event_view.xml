@@ -369,12 +369,11 @@
                                 <field name="name"/>
                                 <field name="phone"/>
                                 <label for="email"/>
-                                <div class="oe_button_box">
+                                <div>
                                     <field name="email" class="oe_inline"/>
-                                    <button class="oe_inline oe_right oe_stat_button" 
-                                        string="Send Email"
+                                    <button class="oe_inline oe_right" string="Send Email"
                                         name="%(mail.action_email_compose_message_wizard)d"
-                                        icon="fa-reply-all" context= '{"default_email_to":email}' type="action"/>
+                                        icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
                                 </div>
                             </group>
                             <group>
