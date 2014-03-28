@@ -345,8 +345,8 @@
         <h4>Archives</h4>
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="nav_list" t-as="months">
-            <li t-att-class="months['date_begin'] == date and 'active' or None">
-                <a t-ignore="True" t-attf-href="/blog/#{ slug(blog) }/#{ tag and 'tag/%s/' % slug(tag) or '' }date/#{ months['date_begin'] }/#{ months['date_end'] }"><t t-esc="months['create_date']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
+            <li t-att-class="months['date'] == date and 'active' or None">
+                <a t-ignore="True" t-attf-href="/blog/#{ slug(blog) }/#{ tag and 'tag/%s/' % slug(tag) or '' }date/#{ months['date'] }"><t t-esc="months['create_date']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
             </li>
             </t>
         </ul>
