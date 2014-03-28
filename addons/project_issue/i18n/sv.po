@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-03-27 17:24+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:30+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-03-28 06:44+0000\n"
+"X-Generator: Launchpad (build 16967)\n"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
 msgid "Deadly bug"
-msgstr ""
+msgstr "Showstopper"
 
 #. module: project_issue
 #: help:project.config.settings,fetchmail_issue:0
@@ -28,6 +28,8 @@ msgid ""
 "Allows you to configure your incoming mail server, and create issues from "
 "incoming emails."
 msgstr ""
+"Tillåter att du konfigurerar din e-postserver för inkommande meddelanden att "
+"skapa ärenden automatiskt"
 
 #. module: project_issue
 #: field:project.issue.report,delay_open:0
@@ -48,7 +50,7 @@ msgstr "Arbetstid för att öppna ärendet"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_started
 msgid "Issue started"
-msgstr ""
+msgstr "Ärende öppnat"
 
 #. module: project_issue
 #: field:project.issue,date_open:0
@@ -74,7 +76,7 @@ msgstr "Upparbetat (%)"
 #: view:project.issue:0
 #: field:project.issue,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Olästa meddelanden"
 
 #. module: project_issue
 #: field:project.issue,company_id:0
@@ -97,11 +99,16 @@ msgid ""
 " * Ready for next stage indicates the issue is ready to be pulled to the "
 "next stage"
 msgstr ""
+"Ett ärendes Kanban-tillstånd indikerar speciella situationer som påverkar "
+"det:\n"
+"  * Normal är standardläget\n"
+"  * Blockerad indikerar något hindrar utvecklingen av denna fråga\n"
+"  * Redo för nästa steg anger att frågan är klar att dras till nästa steg"
 
 #. module: project_issue
 #: help:project.issue,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Om ikryssad nya meddelanden som kräver din uppmärksamhet"
 
 #. module: project_issue
 #: help:account.analytic.account,use_issues:0
@@ -155,7 +162,7 @@ msgstr "Dagar sedan registrering"
 #: view:project.issue.report:0
 #: field:project.issue.report,task_id:0
 msgid "Task"
-msgstr "Ärende"
+msgstr "Uppgift"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
@@ -194,6 +201,14 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"             Klicka för att öppna ett nytt ärende.\n"
+"           </p>\n"
+"<p>             Med OpenERP ärendehantering kan du effektivt hantera saker\n"
+"             som interna förfrågningar, mjukvaruutvecklingsbuggar, kund-\n"
+"             klagomål, projektbekymmer, materialhaverier etc.\n"
+"           </p>\n"
+"        "
 
 #. module: project_issue
 #: selection:project.issue,state:0
@@ -204,7 +219,7 @@ msgstr "Avbruten"
 #. module: project_issue
 #: field:project.issue,description:0
 msgid "Private Note"
-msgstr ""
+msgstr "Privat notering"
 
 #. module: project_issue
 #: field:project.issue.report,date_closed:0
@@ -229,7 +244,7 @@ msgstr "Arbetstimmar innan problemet är öppnar i snitt"
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Objektkonto"
 
 #. module: project_issue
 #: help:project.issue,message_summary:0
@@ -237,6 +252,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Lagrar pladder-sammanfattning (antal meddelanden, ...). Denna sammanfattning "
+"presenteras i html-format för att kunna sättas in i kanban vyer."
 
 #. module: project_issue
 #: help:project.project,project_escalation_id:0
@@ -256,12 +273,12 @@ msgstr "Tilläggsinformation"
 #: code:addons/project_issue/project_issue.py:479
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Varning!"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Edit..."
-msgstr ""
+msgstr "Redigera..."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -272,7 +289,7 @@ msgstr "Ansvarig"
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
 msgid "Issue Blocked"
-msgstr ""
+msgstr "Ärende blockerat"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -282,13 +299,13 @@ msgstr "Statistik"
 #. module: project_issue
 #: field:project.issue,kanban_state:0
 msgid "Kanban State"
-msgstr ""
+msgstr "Kanbanstatus"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:366
 #, python-format
 msgid "Project issue <b>converted</b> to task."
-msgstr ""
+msgstr "Ärende <b>konverterat</b> till uppgift"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -309,7 +326,7 @@ msgstr "Version"
 #. module: project_issue
 #: field:project.issue,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Följare"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -321,7 +338,7 @@ msgstr "Ny"
 #. module: project_issue
 #: view:project.project:0
 msgid "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
-msgstr ""
+msgstr "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
 
 #. module: project_issue
 #: field:project.issue,email_from:0
@@ -344,7 +361,7 @@ msgstr "Lägsta"
 #: code:addons/project_issue/project_issue.py:388
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopia)"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -377,7 +394,7 @@ msgstr "project.issue.version"
 #. module: project_issue
 #: field:project.config.settings,fetchmail_issue:0
 msgid "Create issues from an incoming email account "
-msgstr ""
+msgstr "Skapa ett ärende från ett inkommande e-post,eddelande "
 
 #. module: project_issue
 #: view:project.issue:0
@@ -423,7 +440,7 @@ msgstr "Ärendeanalys"
 #: code:addons/project_issue/project_issue.py:516
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Inget ämne"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_view_my_project_issue_tree
@@ -441,7 +458,7 @@ msgstr "Kontakt"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Delete"
-msgstr ""
+msgstr "Ta bort"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:371
@@ -467,7 +484,7 @@ msgstr "december"
 #. module: project_issue
 #: field:project.issue,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Etiketter"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -477,12 +494,12 @@ msgstr "Ärendeuppföljningslista"
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_01
 msgid "Little problem"
-msgstr ""
+msgstr "Litet problem"
 
 #. module: project_issue
 #: view:project.project:0
 msgid "creates"
-msgstr ""
+msgstr "skapar"
 
 #. module: project_issue
 #: field:project.issue,write_date:0
@@ -492,7 +509,7 @@ msgstr "Uppdateringsdatum"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Project:"
-msgstr ""
+msgstr "Projekt:"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -508,7 +525,7 @@ msgstr "Nästa åtgärd"
 #: view:project.issue:0
 #: selection:project.issue,kanban_state:0
 msgid "Blocked"
-msgstr ""
+msgstr "Blockerad"
 
 #. module: project_issue
 #: field:project.issue,user_email:0
@@ -592,7 +609,7 @@ msgstr "Normal"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Category:"
-msgstr ""
+msgstr "Kategori:"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -602,7 +619,7 @@ msgstr "juni"
 #. module: project_issue
 #: help:project.issue,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Meddelande- och kommunikationshistorik"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -617,7 +634,7 @@ msgstr "Dagar i behandling"
 #. module: project_issue
 #: field:project.issue,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Är en följare"
 
 #. module: project_issue
 #: help:project.issue,state:0
@@ -644,7 +661,7 @@ msgstr "november"
 #: code:addons/project_issue/project_issue.py:499
 #, python-format
 msgid "Customer Email"
-msgstr ""
+msgstr "Kund-e-postmeddelande"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -679,7 +696,7 @@ msgstr "De här personerna kommer att ta emot e-post."
 #. module: project_issue
 #: field:project.issue,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Sammandrag"
 
 #. module: project_issue
 #: field:project.issue,date:0
@@ -696,12 +713,12 @@ msgstr "Tilldelad"
 #. module: project_issue
 #: view:project.config.settings:0
 msgid "Configure"
-msgstr ""
+msgstr "Konfigurera"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_closed
 msgid "Issue closed"
-msgstr ""
+msgstr "Ärende stängt"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -755,12 +772,12 @@ msgstr "Projektärenden"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Add an internal note..."
-msgstr ""
+msgstr "Lägg till intern notering"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Cancel Issue"
-msgstr ""
+msgstr "Avbryt ärende"
 
 #. module: project_issue
 #: help:project.issue,progress:0
@@ -770,13 +787,13 @@ msgstr "Beräknas som: nedlagd tid / total tid."
 #. module: project_issue
 #: field:project.project,issue_count:0
 msgid "Unclosed Issues"
-msgstr ""
+msgstr "Oavstängda ärenden"
 
 #. module: project_issue
 #: view:project.issue:0
 #: selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "Klar för nästa steg"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -806,7 +823,7 @@ msgstr "Ärende"
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_02
 msgid "PBCK"
-msgstr ""
+msgstr "SBS"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -831,13 +848,13 @@ msgstr "maj"
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_config_settings
 msgid "project.config.settings"
-msgstr ""
+msgstr "project.config.settings"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_closed
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_closed
 msgid "Issue Closed"
-msgstr ""
+msgstr "Ärende stängt"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -849,13 +866,13 @@ msgstr "# e-postmeddelanden"
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Created"
-msgstr ""
+msgstr "Ärende skapat"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:497
 #, python-format
 msgid "Customer"
-msgstr ""
+msgstr "Kund"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -866,7 +883,7 @@ msgstr "februari"
 #: model:mail.message.subtype,description:project_issue.mt_issue_stage
 #: model:mail.message.subtype,description:project_issue.mt_project_issue_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Steg ändrat"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -890,6 +907,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Klicka för att lägga till en ny version.\n"
+"               </p><p>\n"
+"                 Här definierar du de olika versionerna av dina produkter "
+"som du kan knyta ärenden till.\n"
+"               </p>\n"
+"            "
 
 #. module: project_issue
 #: help:project.issue,section_id:0
@@ -908,7 +932,7 @@ msgstr "Mina ärenden"
 #. module: project_issue
 #: help:project.issue.report,delay_open:0
 msgid "Number of Days to open the project issue."
-msgstr ""
+msgstr "Antal dagar innan ärendet öppnas"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -918,12 +942,12 @@ msgstr "april"
 #. module: project_issue
 #: view:project.issue:0
 msgid "⇒ Escalate"
-msgstr ""
+msgstr "⇒ Eskalera"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue created"
-msgstr ""
+msgstr "Ärende skapat"
 
 #. module: project_issue
 #: field:project.issue,working_hours_close:0
@@ -991,7 +1015,7 @@ msgstr "Varaktighet"
 #: model:mail.message.subtype,name:project_issue.mt_issue_started
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_started
 msgid "Issue Started"
-msgstr ""
+msgstr "Ärende startat"
 
 #~ msgid "Maintenance"
 #~ msgstr "Underhåll"
