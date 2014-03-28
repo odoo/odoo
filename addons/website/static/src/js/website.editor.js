@@ -727,7 +727,7 @@
             // -ish, because when moving to the button itself ``previous`` is
             // still set to the element having triggered showing the button.
             var previous;
-            $(editor.element.$).on('mouseover', 'a, img, .fa', function () {
+            $(editor.element.$).on('mouseover', 'a, img, .fa, .media_iframe_video', function () {
                 // Back from edit button -> ignore
                 if (previous && previous === this) { return; }
 
@@ -746,7 +746,7 @@
                 previous = this;
                 var $selected = $(this);
                 var position = $selected.offset();
-                if ($selected.is('img') || $selected.is('.fa')) {
+                if ($selected.is('img') || $selected.is('.fa') || $selected.is('.media_iframe_video')) {
                     $link_button.hide();
                     // center button on image
                     $image_button.show().offset({
@@ -1370,35 +1370,38 @@
         }),
 
         init: function (editor, media) {
-            this.media = media;
+            this._super(editor);
             this.editor = editor;
             this.page = 0;
-            this._super(editor);
+            this.media = media;
         },
-        start: function (editor, media) {
+        start: function () {
             var self = this;
             this.imageDialog = new website.editor.RTEImageDialog(this, this.editor, this.media);
             this.imageDialog.appendTo(this.$("#editor-media-image"));
             this.iconDialog = new website.editor.FontIconsDialog(this, this.editor, this.media);
             this.iconDialog.appendTo(this.$("#editor-media-icon"));
-            this.videoDialog = {};
-            //this.videoDialog.appendTo(this.$("#editor-media-video"));
+            this.videoDialog = new website.editor.VideoDialog(this, this.editor, this.media);
+            this.videoDialog.appendTo(this.$("#editor-media-video"));
 
             this.active = this.imageDialog;
 
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
                 if ($(event.target).is('[href="#editor-media-image"]')) {
                     self.active = self.imageDialog;
+                    self.$('.nav-tabs li.search').removeClass("hidden");
                 } else if ($(event.target).is('[href="#editor-media-icon"]')) {
                     self.active = self.iconDialog;
+                    self.$('.nav-tabs li.search').removeClass("hidden");
                 } else if ($(event.target).is('[href="#editor-media-video"]')) {
                     self.active = self.videoDialog;
+                    self.$('.nav-tabs li.search').addClass("hidden");
                 }
             });
 
             if (this.media.$.nodeName === "IMG") {
                 this.$('[href="#editor-media-image"]').tab('show');
-            } else if (this.media.$.nodeName === "IFRAME") {
+            } else if (this.media.$.className.match(/(^|\s)media_iframe_video($|\s)/)) {
                 this.$('[href="#editor-media-video"]').tab('show');
             } else if (this.media.$.className.match(/(^|\s)fa($|\s)/)) {
                 this.$('[href="#editor-media-icon"]').tab('show');
@@ -1474,9 +1477,9 @@
             'click .existing-attachment-remove': 'try_remove',
         }),
 
-        init: function (editor, media) {
+        init: function (parent, editor, media) {
             this.page = 0;
-            this._super(editor, media);
+            this._super(parent, editor, media);
         },
         start: function () {
             var res = this._super();
@@ -1820,6 +1823,67 @@
                 $preview.prepend($p);
             }
         }
+    });
+
+    website.editor.VideoDialog = website.editor.Media.extend({
+        template: 'website.editor.dialog.video',
+        events : _.extend({}, website.editor.Dialog.prototype.events, {
+            'input input#urlvideo': 'get_video',
+        }),
+        start: function () {
+            this.$iframe = this.$("iframe");
+            var $media = $(this.media.$);
+            if ($media.hasClass("media_iframe_video")) {
+                var src = $media.data('src');
+                this.$("input#urlvideo").val(src);
+                this.$("#autoplay").attr("checked", src.indexOf('autoplay=1') != -1);
+                this.get_video();
+            }
+            return this._super();
+        },
+        get_url: function () {
+            var video_id = this.$("#video_id").val();
+            var video_type = this.$("#video_type").val();
+            switch (video_type) {
+                case "youtube":
+                    return "//www.youtube.com/embed/" + video_id + "?autoplay=" + (this.$("#autoplay").is(":checked") ? 1 : 0);
+                case "vimeo":
+                    return "//player.vimeo.com/video/" + video_id + "?autoplay=" + (this.$("#autoplay").is(":checked") ? 1 : 0);
+                case "dailymotion":
+                    return "//www.dailymotion.com/embed/video/" + video_id + "?autoplay=" + (this.$("#autoplay").is(":checked") ? 1 : 0);
+            }
+        },
+        get_video: function () {
+            var needle = this.$("input#urlvideo").val();
+            var video_id;
+            var video_type;
+
+            if (needle.indexOf(".youtube.") != -1) {
+                video_type = "youtube";
+                video_id = needle.match(/\.youtube\.[a-z]+\/(embed\/|watch\?v=)?([^\/?&]+)/i)[2];
+            } else if (needle.indexOf("//youtu.") != -1) {
+                video_type = "youtube";
+                video_id = needle.match(/youtube\.[a-z]+\/([^\/?&]+)/i)[1];
+            } else if (needle.indexOf("player.vimeo.") != -1 || needle.indexOf("//vimeo.") != -1) {
+                video_type = "vimeo";
+                video_id = needle.match(/vimeo\.[a-z]+\/([^\/?&]+)/i)[1];
+            } else if (needle.indexOf(".dailymotion.") != -1) {
+                video_type = "dailymotion";
+                video_id = needle.match(/dailymotion\.[a-z]+\/(embed\/)?(video\/)?([^\/?&]+)/i)[3];
+            }
+
+            this.$("#video_id").val(video_id);
+            this.$("#video_type").val(video_type);
+
+            this.$iframe.attr("src", this.get_url());
+        },
+        save: function () {
+            $(this.media.$).replaceWith(
+                '<div class="media_iframe_video" data-type="'+video_type+'" data-type="'+video_id+'" data-src="'+this.get_url()+'">'+
+                    '<iframe src="'+this.get_url()+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>'+
+                '</div>');
+            this._super();
+        },
     });
 
     website.Observer = window.MutationObserver || window.WebkitMutationObserver || window.JsMutationObserver;

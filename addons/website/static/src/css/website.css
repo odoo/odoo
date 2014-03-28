@@ -1,3 +1,4 @@
+@charset "utf-8";
 /*       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY
  *
  * css for editor buttons, openerp widget included in the website and other
@@ -531,8 +532,15 @@ span[data-oe-type="monetary"] {
   margin: 40px auto;
 }
 
-.oe_website_overflow_ellipsis{
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+div.media_iframe_video {
+  height: 0;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 66.5%;
+}
+div.media_iframe_video iframe {
+  width: 100%;
+  height: 100%;
 }

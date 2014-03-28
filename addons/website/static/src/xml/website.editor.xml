@@ -101,13 +101,13 @@
                             <li class="active"><a href="#editor-media-image" data-toggle="tab">Image</a></li>
                             <li><a href="#editor-media-icon" data-toggle="tab">Pictogram</a></li>
                             <li><a href="#editor-media-video" data-toggle="tab">Video</a></li>
-                            <li style="float: right;">
+                            <li class="search" style="float: right;">
                                 <ul class="pager mb0 mt0">
                                     <li class="previous disabled"><a href="#">← Previous</a></li>
                                     <li class="next disabled"><a href="#">Next →</a></li>
                                 </ul>
                             </li>
-                            <li style="float: right;">
+                            <li class="search" style="float: right;">
                                 <form action="#">
                                     <div class="form-group font-icons fa fa-search mb0">
                                         <input type="search" class="form-control" id="icon-search"/>
@@ -274,9 +274,9 @@
     </t>
 
     <t t-name="website.editor.dialog.font-icons">
-        <form>
-            <input type="hidden" id="fa-icon" class="form-control"/>
-            <input type="hidden" id="fa-size" class="form-control"/>
+        <form action="#">
+            <input type="hidden" id="fa-icon"/>
+            <input type="hidden" id="fa-size"/>
             <div class="font-icons-icons">
                 <t t-call="website.editor.dialog.font-icons.icons">
                     <t t-set="icons" t-value="widget.icons"/>
@@ -293,6 +293,44 @@
               t-att-data-id="icon.id">
             <t t-esc="icon.text"/>
         </span>
+    </t>
+
+    <t t-name="website.editor.dialog.video">
+        <form action="#" class="form-inline">
+            <div class="well">
+                <div class="form-group">
+                    <label for="urlvideo">Viedo URL</label>
+                    <input type="text"
+                        name="url"
+                        class="form-control url"
+                        style="width: 400px;"
+                        id="urlvideo"
+                        placeholder="http://openerp.com"
+                        value="//www.youtube.com/embed/yws1tbgNV7k"/>
+                    <span class="text-muted">
+                        Youtube, Vimeo, Dailymotion
+                    </span>
+                </div>
+            </div>
+            
+            <div id="video-preview" style="width: 450px; margin: 0 auto;">
+                <div class="media_iframe_video">
+                    <iframe
+                        src="//www.youtube.com/embed/yws1tbgNV7k"
+                        frameborder="0"
+                        allowfullscreen="allowfullscreen"></iframe>
+                </div>
+            </div>
+
+            <input type="hidden" id="video_id" value="yws1tbgNV7k"/>
+            <input type="hidden" id="video_type" value="youtube"/>
+
+            <div class="text-center mt32">
+                <div class="checkbox">
+                    <label><input type="checkbox" id="autoplay"/> Autoplay</label>
+                </div>
+            </div>
+        </form>
     </t>
 
 </templates>

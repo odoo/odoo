@@ -148,4 +148,11 @@
             });
         },
     });
+
+    website.snippet.animationRegistry.media_video = website.snippet.Animation.extend({
+        selector: ".media_iframe_video",
+        start: function () {
+            this.$target.html('<iframe src="'+this.$target.data("src")+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');
+        },
+    });
 })();
