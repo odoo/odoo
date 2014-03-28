@@ -20,6 +20,7 @@
 ##############################################################################
 
 import random
+import difflib
 from datetime import datetime
 
 from openerp import tools
