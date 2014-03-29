@@ -88,10 +88,10 @@ class Scanner(Thread):
         }
 
     def lockedstart(self):
-        self.lock.acquire()
-        if not self.isAlive():
-            self.start()
-        self.lock.release()
+        with self.lock:
+            if not self.isAlive():
+                self.daemon = True
+                self.start()
 
     def set_status(self, status, message = None):
         if status == self.status['status']:
