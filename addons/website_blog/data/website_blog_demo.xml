@@ -236,6 +236,7 @@
         <record id="blog_post_3" model="blog.post">
             <field name="name">Touchscreen Point of Sale for 6.1</field>
             <field name="blog_id" ref="blog_blog_1"/>
+            <field name="create_date" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1'), ref('blog_tag_2')])]"/>
             <field name="website_meta_keywords">Point of Sale, Hardware, Interface, Payment Terminal, Store</field>
             <field name="website_meta_description">Point of Sale with no installation required that runs online and offline.</field>
