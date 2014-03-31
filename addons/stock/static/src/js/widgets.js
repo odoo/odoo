@@ -708,7 +708,6 @@ function openerp_picking_widgets(instance){
                     self.picking_editor.remove_blink();
                     self.picking_editor.renderElement();
                     if (!self.show_pack){
-                        console.log('hide pack button refresh');
                         self.$('.js_pick_pack').addClass('hidden');
                     }
                     if (self.picking.recompute_pack_op){
