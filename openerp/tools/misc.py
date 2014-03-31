@@ -1215,5 +1215,22 @@ def dumpstacks(sig, frame):
     _logger.info("\n".join(code))
 
 
+class frozendict(dict):
+    """ An implementation of an immutable dictionary. """
+    def __delitem__(self, key):
+        raise AttributeError('__delitem__')
+    def __setitem__(self, key, val):
+        raise AttributeError('__setitem__')
+    def clear(self):
+        raise AttributeError('clear')
+    def pop(self, key, default=None):
+        raise AttributeError('pop')
+    def popitem(self):
+        raise AttributeError('popitem')
+    def setdefault(self, key, default=None):
+        raise AttributeError('setdefault')
+    def update(self, *args, **kwargs):
+        raise AttributeError('update')
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
