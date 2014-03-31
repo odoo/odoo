@@ -1476,6 +1476,9 @@
                     self.$target.transfo({ hide: true });
                 });
         },
+        onFocus : function () {
+            this.$target.transfo({ hide: true });
+        },
         onBlur : function () {
             this.$target.transfo({ hide: true });
         },
