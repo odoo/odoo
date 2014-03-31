@@ -610,7 +610,6 @@ function openerp_picking_widgets(instance){
                     });
                 }).then(function(){
                     return new instance.web.Model('stock.picking').call('check_group_pack').then(function(result){
-                        console.log('show pack:' + result);
                         return self.show_pack = result;
                         
                     });
@@ -686,7 +685,6 @@ function openerp_picking_widgets(instance){
                     self.$('.js_reload_op').addClass('hidden');
                 }
                 if (!self.show_pack){
-                    console.log('hide pack button start');
                     self.$('.js_pick_pack').addClass('hidden');
                 }
 
