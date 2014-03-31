@@ -54,6 +54,7 @@ class MassMailingContact(osv.Model):
         'email': fields.char('Email', required=True),
         'list_id': fields.many2one(
             'mail.mass_mailing.list', string='Mailing List',
+            domain=[('model', '=', 'mail.mass_mailing.contact')],
             ondelete='cascade',
         ),
         'opt_out': fields.boolean('Opt Out', help='The contact has chosen not to receive news anymore from this mailing list'),
@@ -114,12 +115,6 @@ class MassMailingList(osv.Model):
             _get_contact_nbr, type='integer',
             string='Contact Number',
         ),
-        # contact-based list
-        'contact_ids': fields.one2many(
-            'mail.mass_mailing.contact', 'list_id', string='Contacts',
-            domain=[('opt_out', '=', False)],
-        ),
-        # filter-based list
         'model': fields.selection(
             _model_list, type='char', required=True,
             string='Applies To'
@@ -132,20 +127,13 @@ class MassMailingList(osv.Model):
     }
 
     def on_change_model(self, cr, uid, ids, model, context=None):
-        values = {}
-        if model == 'mail.mass_mailing.contact':
-            values.update(domain=False, filter_id=False, template_id=False)
-        else:
-            values.update(filter_id=False, template_id=False)
-        return {'value': values}
+        return {'value': {'filter_id': False}}
 
     def on_change_filter_id(self, cr, uid, ids, filter_id, context=None):
         values = {}
         if filter_id:
             ir_filter = self.pool['ir.filters'].browse(cr, uid, filter_id, context=context)
             values['domain'] = ir_filter.domain
-        else:
-            values['domain'] = False
         return {'value': values}
 
     def on_change_domain(self, cr, uid, ids, domain, model, context=None):
@@ -154,6 +142,17 @@ class MassMailingList(osv.Model):
         else:
             domain = eval(domain)
             return {'value': {'contact_nbr': self.pool[model].search(cr, uid, domain, context=context, count=True)}}
+
+    def create(self, cr, uid, values, context=None):
+        new_id = super(MassMailingList, self).create(cr, uid, values, context=context)
+        if values.get('model') == 'mail.mass_mailing.contact':
+            domain = values.get('domain')
+            if domain is None or domain is False:
+                return new_id
+            contact_ids = self.pool['mail.mass_mailing.contact'].search(cr, uid, eval(domain), context=context)
+            self.pool['mail.mass_mailing.contact'].write(cr, uid, contact_ids, {'list_id': new_id}, context=context)
+            self.pool['mail.mass_mailing.list'].write(cr, uid, [new_id], {'domain': [('list_id', '=', new_id)]}, context=context)
+        return new_id
 
     def action_see_records(self, cr, uid, ids, context=None):
         contact_list = self.browse(cr, uid, ids[0], context=context)
@@ -188,19 +187,15 @@ class MassMailingList(osv.Model):
         }
 
     def _get_domain(self, cr, uid, ids, context=None):
+        # todo: model-based method + check opt_out field exists
         domains = {}
         for contact_list in self.browse(cr, uid, ids, context=context):
             if contact_list.model == 'mail.mass_mailing.contact':
                 domain = [('list_id', '=', contact_list.id)]
-            elif not contact_list.domain:  # domain is a string like False or None -> void list
+            elif contact_list.domain is False or contact_list.domain is None:  # domain is a string like False or None -> void list
                 domain = [('id', '=', '0')]
             else:
                 domain = eval(contact_list.domain)
-            # force the addition of opt_out filter
-            if domain:
-                domain = ['&', ('opt_out', '=', False)] + domain
-            else:
-                domain = [('opt_out', '=', False)]
             domains[contact_list.id] = domain
         return domains
 
@@ -674,7 +669,7 @@ class MassMailing(osv.Model):
         Mail = self.pool['mail.mail']
         for mailing in self.browse(cr, uid, ids, context=context):
             if not mailing.template_id:
-                raise Warning('Please specifiy a template to use.')
+                raise Warning('Please specify a template to use.')
             if not mailing.contact_nbr:
                 raise Warning('Please select recipients.')
 
@@ -729,7 +724,6 @@ class MassMailing(osv.Model):
         for mailing in self.browse(cr, uid, ids, context=context):
             if not mailing.template_id:
                 raise Warning('Please specifiy a template to use.')
-            # res_ids = self._set_up_test_mailing(cr, uid, mailing.mailing_model, context=context)
             test_emails = tools.email_split(mailing.test_email_to)
             if not test_emails:
                 raise Warning('Please specifiy test email adresses.')
