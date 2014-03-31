@@ -350,6 +350,7 @@ class res_partner(osv.osv, format_address):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
+        default['user_ids'] = False
         name = self.read(cr, uid, [id], ['name'], context)[0]['name']
         default.update({'name': _('%s (copy)') % name})
         return super(res_partner, self).copy(cr, uid, id, default, context)

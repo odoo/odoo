@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#openerp.loggers.handlers. -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -76,9 +76,10 @@ class configmanager(object):
         }
 
         # Not exposed in the configuration file.
-        self.blacklist_for_save = set(
-            ['publisher_warranty_url', 'load_language', 'root_path',
-            'init', 'save', 'config', 'update', 'stop_after_init'])
+        self.blacklist_for_save = set([
+            'publisher_warranty_url', 'load_language', 'root_path',
+            'init', 'save', 'config', 'update', 'stop_after_init'
+        ])
 
         # dictionary mapping option destination (keys in self.options) to MyOptions.
         self.casts = {}
@@ -87,7 +88,10 @@ class configmanager(object):
         self.config_file = fname
         self.has_ssl = check_ssl()
 
-        self._LOGLEVELS = dict([(getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET')])
+        self._LOGLEVELS = dict([
+            (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) 
+            for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET')
+        ])
 
         version = "%s %s" % (release.description, release.version)
         self.parser = parser = optparse.OptionParser(version=version, option_class=MyOption)
@@ -148,17 +152,9 @@ class configmanager(object):
         parser.add_option_group(group)
 
         # WEB
-        # TODO move to web addons after MetaOption merge
         group = optparse.OptionGroup(parser, "Web interface Configuration")
         group.add_option("--db-filter", dest="dbfilter", default='.*',
                          help="Filter listed database", metavar="REGEXP")
-        parser.add_option_group(group)
-
-        # Static HTTP
-        group = optparse.OptionGroup(parser, "Static HTTP service")
-        group.add_option("--static-http-enable", dest="static_http_enable", action="store_true", my_default=False, help="enable static HTTP service for serving plain HTML files")
-        group.add_option("--static-http-document-root", dest="static_http_document_root", help="specify the directory containing your static HTML files (e.g '/var/www/')")
-        group.add_option("--static-http-url-prefix", dest="static_http_url_prefix", help="specify the URL root prefix where you want web browsers to access your static HTML files (e.g '/')")
         parser.add_option_group(group)
 
         # Testing Group
@@ -179,16 +175,20 @@ class configmanager(object):
         group.add_option("--logrotate", dest="logrotate", action="store_true", my_default=False, help="enable logfile rotation")
         group.add_option("--syslog", action="store_true", dest="syslog", my_default=False, help="Send the log to the syslog server")
         group.add_option('--log-handler', action="append", default=DEFAULT_LOG_HANDLER, my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
-        group.add_option('--log-request', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.request:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.request:DEBUG')
-        group.add_option('--log-response', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.response:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.response:DEBUG')
-        group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.addons.web.http:DEBUG", help='shortcut for --log-handler=openerp.addons.web.http:DEBUG')
+        group.add_option('--log-request', action="append_const", dest="log_handler", const="openerp.http.rpc.request:DEBUG", help='shortcut for --log-handler=openerp.http.rpc.request:DEBUG')
+        group.add_option('--log-response', action="append_const", dest="log_handler", const="openerp.http.rpc.response:DEBUG", help='shortcut for --log-handler=openerp.http.rpc.response:DEBUG')
+        group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.http:DEBUG", help='shortcut for --log-handler=openerp.http:DEBUG')
         group.add_option('--log-sql', action="append_const", dest="log_handler", const="openerp.sql_db:DEBUG", help='shortcut for --log-handler=openerp.sql_db:DEBUG')
+        group.add_option('--log-db', dest='log_db', help="Logging database", my_default=False)
         # For backward-compatibility, map the old log levels to something
         # quite close.
-        levels = ['info', 'debug_rpc', 'warn', 'test', 'critical',
-            'debug_sql', 'error', 'debug', 'debug_rpc_answer', 'notset']
-        group.add_option('--log-level', dest='log_level', type='choice', choices=levels,
-            my_default='info', help='specify the level of the logging. Accepted values: ' + str(levels) + ' (deprecated option).')
+        levels = [
+            'info', 'debug_rpc', 'warn', 'test', 'critical',
+            'debug_sql', 'error', 'debug', 'debug_rpc_answer', 'notset'
+        ]
+        group.add_option('--log-level', dest='log_level', type='choice',
+                         choices=levels, my_default='info',
+                         help='specify the level of the logging. Accepted values: %s (deprecated option).' % (levels,))
 
         parser.add_option_group(group)
 
@@ -305,9 +305,10 @@ class configmanager(object):
                     self.options[option.dest] = option.my_default
                     self.casts[option.dest] = option
 
-        self.parse_config(None, False)
+        # generate default config
+        self._parse_config()
 
-    def parse_config(self, args=None, complete=True):
+    def parse_config(self, args=None):
         """ Parse the configuration file (if any) and the command-line
         arguments.
 
@@ -321,10 +322,12 @@ class configmanager(object):
         Typical usage of this method:
 
             openerp.tools.config.parse_config(sys.argv[1:])
-
-        :param complete: this is a hack used in __init__(), leave it to True.
-
         """
+        self._parse_config(args)
+        openerp.netsvc.init_logger()
+        openerp.modules.module.initialize_sys_path()
+
+    def _parse_config(self, args=None):
         if args is None:
             args = []
         opt, args = self.parser.parse_args(args)
@@ -383,8 +386,7 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path',
                 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
-                'static_http_enable', 'static_http_document_root', 'static_http_url_prefix',
-                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level'
+                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level', 'log_db'
                 ]
 
         for arg in keys:
@@ -495,8 +497,6 @@ class configmanager(object):
             openerp.conf.server_wide_modules = map(lambda m: m.strip(), opt.server_wide_modules.split(','))
         else:
             openerp.conf.server_wide_modules = ['web','web_kanban']
-        if complete:
-            openerp.modules.module.initialize_sys_path()
 
     def _generate_pgpassfile(self):
         """
@@ -653,6 +653,9 @@ class configmanager(object):
         else:
             os.chmod(d, 0700)
         return d
+
+    def filestore(self, dbname):
+        return os.path.join(self['data_dir'], 'filestore', dbname)
 
 config = configmanager()
 
