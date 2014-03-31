@@ -181,7 +181,8 @@ class base_gengo_translations(osv.osv_memory):
                         'lc_src': 'en',
                         'lc_tgt': translation_pool._get_gengo_corresponding_language(term.lang),
                         'auto_approve': auto_approve,
-                        'comment': user.company_id.gengo_comment and "%s %s"%(user.company_id.gengo_comment,term.gengo_comment) or term.gengo_comment 
+                        'comment': user.company_id.gengo_comment and "%s %s"%(user.company_id.gengo_comment,term.gengo_comment) or term.gengo_comment, 
+                        'callback_url': self.pool.get('ir.config_parameter').get_param(cr, uid,'web.base.url') + '/website/gengo_callback/' + str(term.id)
                 }
         return {'jobs': jobs}
 
