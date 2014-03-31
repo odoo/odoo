@@ -2374,12 +2374,19 @@ class stock_inventory(osv.osv):
             res[inv.id] = sum([x.product_qty for x in inv.line_ids])
         return res
 
+    STATE_SELECTION = [
+        ('draft', 'Draft'),
+        ('cancel', 'Cancelled'),
+        ('confirm', 'In Progress'),
+        ('done', 'Validated')
+    ]
+
     _columns = {
         'name': fields.char('Inventory Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Name."),
         'date': fields.datetime('Inventory Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Create Date."),
         'line_ids': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=False, states={'done': [('readonly', True)]}, help="Inventory Lines."),
         'move_ids': fields.one2many('stock.move', 'inventory_id', 'Created Moves', help="Inventory Moves.", states={'done': [('readonly', True)]}),
-        'state': fields.selection([('draft', 'Draft'), ('cancel', 'Cancelled'), ('confirm', 'In Progress'), ('done', 'Validated')], 'Status', readonly=True, select=True),
+        'state': fields.selection(STATE_SELECTION, 'Status', readonly=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
         'location_id': fields.many2one('stock.location', 'Location', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'product_id': fields.many2one('product.product', 'Product', readonly=True, states={'draft': [('readonly', False)]}, help="Specify Product to focus your inventory on a particular Product."),
