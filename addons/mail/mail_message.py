@@ -835,8 +835,7 @@ class mail_message(osv.Model):
         return message_id
 
     def create(self, cr, uid, values, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         default_starred = context.pop('default_starred', False)
 
         if 'email_from' not in values:  # needed to compute reply_to
