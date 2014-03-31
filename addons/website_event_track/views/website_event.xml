@@ -15,10 +15,10 @@
                 <h2 class="text-center mb32">Our Sponsors</h2>
             </section>
             <div class="row">
-                <div t-attf-class="col-md-#{(len(event.sponsor_ids) > 6) and 2 or (12/ len(event.sponsor_ids))} text-center" t-foreach="event.sponsor_ids" t-as="sponsor">
+                <div t-attf-class="col-md-#{(len(event.sponsor_ids) > 6) and 2 or (12/ len(event.sponsor_ids))} text-center mb16" t-foreach="event.sponsor_ids" t-as="sponsor">
                     <t t-if="sponsor.url">
                         <a t-att-href="sponsor.url" style="position: relative; display: inline-block;">
-                            <span t-field="sponsor.partner_id.image"
+                            <span t-field="sponsor.image_medium"
                                 t-field-options='{"widget": "image", "class": "shadow"}'/>
                             <div class="ribbon-wrapper">
                                 <div t-field="sponsor.sponsor_type_id" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id.name}"/>
@@ -27,7 +27,7 @@
                     </t>
                     <t t-if="not sponsor.url">
                         <span style="position: relative; display: inline-block;">
-                            <span t-field="sponsor.partner_id.image"
+                            <span t-field="sponsor.image_medium"
                                 t-field-options='{"widget": "image", "class": "shadow"}'/>
                             <div class="ribbon-wrapper">
                                 <div t-field="sponsor.sponsor_type_id" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id.name}"/>
@@ -152,7 +152,7 @@
                                 <t t-esc="speaker.name"/>, 
                             </t>
                         </li>
-                        <li class="text-muted fa fa-calendar"> <span t-field="track.date"/></li>
+                        <li class="text-muted fa fa-calendar"> <span t-field="track.date" t-field-options='{"hide_seconds":"True"}'/></li>
                         <li class="text-muted fa fa-map-marker" t-if="track.location_id">
                             <span t-field="track.location_id"/>
                         </li>
@@ -174,7 +174,7 @@
 <template id="tracks_filter" inherit_id="website_event_track.tracks" inherit_option_id="website_event_track.tracks" name="Filter on Tags">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked">
-            <li t-att-class="'' if searches.get('tag') else 'active'"><a t-attf-href="/event/#{ slug(event) }/track/">All Tags</a></li>
+            <li t-att-class="'' if searches.get('tag') else 'active'"><a t-attf-href="/event/#{ slug(event) }/track">All Tags</a></li>
             <t t-foreach="tags" t-as="tag">
                 <li t-att-class="searches.get('tag') == tag.id and 'active' or ''">
                     <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag) }">
@@ -203,7 +203,8 @@
             <h2 t-field="track.name" class="text-center"/>
             <h3 t-field="event.name" class="text-center text-muted"/>
             <ul t-if="track.tag_ids" class="text-center text-muted list-inline">
-                <li t-foreach="track.tag_ids" t-as="tag_id" class="fa fa-tags">
+                <li t-foreach="track.tag_ids" t-as="tag_id">
+                    <span class="fa fa-tags"></span>
                     <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
                         <span t-field="tag_id.name"/>
                     </a>
@@ -235,7 +236,7 @@
                         </div>
                         <div class="panel-body">
                             <b>Date</b><br/>
-                            <span t-field="track.date"/><br/>
+                            <span t-field="track.date" t-field-options='{"hide_seconds":"True"}'/><br/>
                             <b>Duration</b><br/>
                             <span t-field="track.duration"/> minutes<br/>
                             <b>Location</b><br/>

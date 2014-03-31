@@ -24,7 +24,7 @@ $(document).ready(function () {
         var $input = $(this);
         var value = parseInt($input.val(), 10);
         if (isNaN(value)) value = 0;
-        openerp.jsonRpc("/shop/set_cart_json/", 'call', {'order_line_id': $input.data('id'), 'set_number': value})
+        openerp.jsonRpc("/shop/set_cart_json", 'call', {'order_line_id': $input.data('id'), 'set_number': value})
             .then(function (data) {
                 if (!data) {
                     location.reload();
@@ -46,7 +46,7 @@ $(document).ready(function () {
 
         var change_cart = href.match(/change_cart\/([0-9]+)/);
         var order_line_id = change_cart && +change_cart[1] || false;
-        openerp.jsonRpc("/shop/add_cart_json/", 'call', {
+        openerp.jsonRpc("/shop/add_cart_json", 'call', {
                 'product_id': product_id,
                 'order_line_id': order_line_id,
                 'remove': $link.is('[href*="remove"]')})
@@ -59,6 +59,10 @@ $(document).ready(function () {
                 $('#mycart_total').replaceWith(data[3]);
             });
         return false;
+    });
+
+    $('.a-submit').on('click', function () {
+        $(this).closest('form').submit();
     });
 
     // change price when they are variants
@@ -107,6 +111,10 @@ $(document).ready(function () {
                 $min.val( ui.values[ 0 ] );
                 $max.val( ui.values[ 1 ] );
                 $form.submit();
+            },
+            slide: function( event, ui ) {
+                $min.val( ui.values[ 0 ] );
+                $max.val( ui.values[ 1 ] );
             }
         });
         $min.val( $slider.slider( "values", 0 ) );

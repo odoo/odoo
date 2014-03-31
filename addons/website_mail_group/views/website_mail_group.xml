@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <template id="footer_mailing_list" inherit_id="website.layout" name="Footer Mailing List Link">
+        <xpath expr="//footer//div[@name='info']/ul" position="inside">
+            <li><a t-attf-href="/groups">Mailing List</a></li>
+        </xpath>
+    </template>
+    <template id="mail_groups" name="Mailing Lists">
+        <t t-call="website.layout">
+            <div class="container">
+                <h1>
+                    Our Mailing Lists
+                </h1>
+                <div class="row">
+                    <div class="col-sm-4" style="height: 140px" t-foreach="groups" t-as="group">
+                        <img t-att-src="'/website/image?model=mail.group&amp;field=image_small&amp;id='+str(group['id'])" class="pull-left"/>
+                        <div>
+                            <strong><a t-attf-href="/groups/#{ slug(group) }" t-esc="group.name"/></strong>
+                            <div t-esc="group.description" class="text-muted"/>
+                            <t t-call="website_mail.follow"><t t-set="object" t-value="group"/></t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="group_messages" name="Message Threads">
+        <t t-call="website.layout">
+            <section class="container">
+                <div class="row mt8">
+                    <div class="col-md-5 mt16">
+                        <ol class="breadcrumb">
+                            <li><a href="/groups">Mailing Lists</a></li>
+                            <li class="active" t-esc="group.name"/>
+                        </ol>
+                    </div>
+                    <div class="col-md-5 pull-right">
+                        <t t-call="website.pager"/>
+                    </div>
+                </div>
+                <h1 class="mt8 mb32">
+                    <span t-field="group.name"/>
+                    <small>List Archive</small>
+                </h1>
+                <div class="row">
+                    <div class="col-md-3">
+                        <ul class="nav nav-pills nav-stacked" id="group_mode">
+                            <li t-attf-class="#{mode=='thread' and 'active' or ''}">
+                                <a t-attf-href="/groups/#{ slug(group) }?mode=thread">By thread</a>
+                            </li>
+                            <li t-attf-class="#{mode=='date' and not date_begin and 'active' or ''}">
+                                <a t-attf-href="/groups/#{ slug(group) }?mode=date">By date</a>
+                                <ul class="nav nav-pills nav-stacked" style="margin-left: 8px;">
+                                    <t t-foreach="archives" t-as="month_archive">
+                                    <li t-att-class="month_archive['date_begin'] == date_begin and 'active' or None">
+                                        <a t-ignore="True" t-attf-href="/groups/#{ slug(group) }?mode=date&amp;date_begin=#{ month_archive['date_begin'] }&amp;date_end=#{month_archive['date_end']}">
+                                            <t t-esc="month_archive['date']"/>
+                                            <span class="pull-right badge" t-esc="month_archive['date_count']"/>
+                                        </a>
+                                    </li>
+                                    </t>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-9">
+                        <t t-call="website_mail_group.messages_short"/>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <template id="group_message">
+        <t t-call="website.layout">
+            <div class="container">
+                <div class="row mt8">
+                    <div class="col-md-5">
+                        <ol class="breadcrumb mb8">
+                            <li><a href="/groups">Mailing Lists</a></li>
+                            <li>
+                                <a t-attf-href="/groups/#{slug(group)}?mode=#{mode}&amp;date_begin=#{date_begin}&amp;date_end=#{date_end}">
+                                    <span t-field="group.name"/>
+                                </a>
+                            </li>
+                            <li class="active" t-esc="message.subject or 'Message'"/>
+                        </ol>
+                    </div>
+                </div>
+
+                <h1 t-field="message.subject"/>
+                <img class="img-rounded pull-left" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(message.id)" style="width : 30px"/>
+                <h4 class="mt0 mb32">
+                    <t t-if="message.author_id">
+                         <span t-field="message.author_id" style="display: inline-block;" t-field-options='{
+                                "widget": "contact",
+                                "fields": ["name"]
+                            }'/>
+                    </t>
+                    <t t-if="not message.author_id"><t t-esc="message.email_from"/></t>
+                    on <span t-field="message.date"/>
+                </h4>
+                <div t-raw="message.body"/>
+
+                <div class="row" t-if="message.attachment_ids">
+                    <h3 class="col-sm-12">Attachment(s):</h3>
+                    <div class="col-md-2 col-sm-3 text-center" t-foreach='message.attachment_ids' t-as='attachment'>
+                        <a t-att-href="'/mail/download_attachment?model=mail.message&amp;id='+str(message.id)+'&amp;method=download_attachment&amp;attachment_id='+str(attachment.id)" target="_blank">
+                            <t t-if="attachment.file_type == 'webimage'">
+                                <img t-att-src="'/web/binary/image?model=ir.attachment&amp;field=datas&amp;id=' + str(attachment.id) + '&amp;resize=100,80'"
+                                    class='oe_attachment_embedded'></img>
+                            </t>
+                            <t t-if="attachment.file_type != 'webimage'">
+                                <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type + '.png'"
+                                    class='oe_attachment_webimage'></img>
+                            </t>
+                            <div class='oe_attachment_name'><t t-raw='attachment.name' /></div>
+                        </a>
+                    </div>
+                </div>
+                <div t-if="message.child_ids">
+                    <h2 class="page-header">Follow ups</h2>
+                    <t t-set="messages" t-value="message.child_ids"/>
+                    <t t-call="website_mail_group.messages_short"/>
+                </div>
+                <div t-if="message.parent_id">
+                    <h2 class="page-header">Reference</h2>
+                    <t t-set="messages" t-value="[message.parent_id]"/>
+                    <t t-call="website_mail_group.messages_short"/>
+                </div>
+
+                <div class="jumbotron mt64">
+                    <h1>Join the discussion</h1>
+                    <p>
+                        Join this mailing list to follow or participate to this discussion.<br/>
+                        <span t-field="group.name"/>: <i t-field="group.description"/>
+                    </p>
+                    <t t-call="website_mail.follow"><t t-set="object" t-value="group"/></t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="messages_short">
+        <ul class="media-list">
+            <li t-foreach="messages" t-as="thread" class="media">
+                <img class="img-rounded pull-left mt0 media-object" style="height: 40px"
+                    t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(thread.id)"/>
+                <div class="media-body">
+                    <h4 class="media-heading">
+                        <a t-attf-href="/groups/#{slug(group)}/#{slug(thread)}?mode=#{mode}&amp;date_begin=#{date_begin}&amp;date_end=#{date_end}" t-esc="thread.description"/>
+                    </h4>
+                    <small>
+                        by
+                        <t t-if="thread.author_id">
+                            <span t-field="thread.author_id" style="display: inline-block;" t-field-options='{
+                                "widget": "contact",
+                                "fields": ["name"]
+                            }'/>
+                        </t>
+                        <t t-if="not thread.author_id"><t t-esc="thread.email_from"/></t>
+                        <span class="fa fa-comment-o">
+                            <t t-raw="len(thread.child_ids)"/> replies
+                        </span>
+                    </small>
+                </div>
+            </li>
+        </ul>
+    </template>
+
+</data>
+</openerp>

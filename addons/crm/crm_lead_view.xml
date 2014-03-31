@@ -95,7 +95,6 @@
             <form string="Leads Form" version="7.0">
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
-                            attrs="{'invisible': [('probability', '=', 100)]}"
                             help="Convert to Opportunity" class="oe_highlight"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
                             domain="['&amp;', '|', ('case_default', '=', True), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"
@@ -359,6 +358,7 @@
                         <filter string="Campaign" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
                         <filter string="Creation" domain="[]" context="{'group_by':'create_date'}"/>
+                        <filter string="Last Post (weekly)" name="group_message_last_post" domain="[]" context="{'group_by':'message_last_post:week'}"/>
                     </group>
                     <group string="Display">
                         <filter string="Show Countries" context="{'invisible_country': False}" help="Show Countries"/>
@@ -578,6 +578,7 @@
                         <filter string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
                         <filter string="Creation" domain="[]" context="{'group_by':'create_date'}"/>
                         <filter string="Last Update Month" domain="[]" context="{'group_by':'write_date'}"/>
+                        <filter string="Last Post (weekly)" name="group_message_last_post" domain="[]" context="{'group_by':'message_last_post:week'}"/>
                     </group>
                     <group string="Display">
                         <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team" groups="base.group_multi_salesteams"/>

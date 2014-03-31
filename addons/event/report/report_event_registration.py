@@ -52,7 +52,7 @@ class report_event_registration(osv.osv):
         # TOFIX this request won't select events that have no registration
         cr.execute(""" CREATE VIEW report_event_registration AS (
             SELECT
-                e.id::char || '/' || coalesce(r.id::char,'') AS id,
+                e.id::varchar || '/' || coalesce(r.id::varchar,'') AS id,
                 e.id AS event_id,
                 e.user_id AS user_id,
                 r.user_id AS user_id_registration,

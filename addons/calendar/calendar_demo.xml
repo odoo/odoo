@@ -20,7 +20,7 @@
         <record id="calendar_event_1" model="calendar.event">
             <field eval="1" name="active"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_1'),ref('base.res_partner_6')])]"/>
+            <field name="partner_ids" eval="[(6,0,[ref('base.res_partner_6')])]"/>
             <field name="name">Follow-up for Project proposal</field>
             <field name="description">Meeting to discuss project plan and hash out the details of implementation.</field>
             <field eval="time.strftime('%Y-%m-03 10:20:00')" name="date"/>
