@@ -1,8 +1,10 @@
+import os
+
 import openerp.tests
 
 inject = [
-    "./../../../website/static/src/js/website.tour.test.js",
-    "./../../../website_event_sale/static/src/js/website.tour.event_sale.js",
+    ("openerp.website.Tour", os.path.join(os.path.dirname(__file__), '../../website/static/src/js/website.tour.js')),
+    ("openerp.website.Tour.tours.event_buy_tickets", os.path.join(os.path.dirname(__file__), "../static/src/js/website.tour.event_sale.js")),
 ]
 
 @openerp.tests.common.at_install(False)

@@ -306,7 +306,7 @@ var T = website.Tour = {
             window.location.hash = "";
             T.saveState(state.id, state.mode, state.step_id);
         }
-        if (!state.id) {
+        if (!state.id || !T.tours[state.id]) {
             return;
         }
         state.tour = T.tours[state.id];
@@ -349,20 +349,21 @@ var T = website.Tour = {
         clearTimeout(T.testtimer);
         T.closePopover();
     },
+    testRunning: 0,
     running: function () {
-        var state = T.getState();
-        if (state) {
-            T.registerSteps(state.tour);
+        setTimeout(function () {
             if ($.ajaxBusy) {
                 $(document).ajaxStop(function() {
-                    setTimeout(function () {
-                        T.nextStep();
-                    },0);
+                    var state = T.getState();
+                    T.registerSteps(state.tour);
+                    T.nextStep();
                 });
             } else {
+                var state = T.getState();
+                T.registerSteps(state.tour);
                 T.nextStep();
             }
-        }
+        },0);
     },
     check: function (step) {
         return (step &&
