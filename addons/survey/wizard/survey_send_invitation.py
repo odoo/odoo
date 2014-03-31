@@ -128,23 +128,14 @@ Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'we
             for use in exist_user:
                 new_user.append(use.id)
         for id in survey_ref.browse(cr, uid, survey_ids):
-            report = self.create_report(cr, uid, [id.id], 'report.survey.form', id.title)
-            file = open(get_module_resource('survey', 'report') + id.title +".pdf")
-            file_data = ""
-            while 1:
-                line = file.readline()
-                file_data += line
-                if not line:
-                    break
-            file.close()
-            attachments[id.title +".pdf"] = file_data
-            os.remove(get_module_resource('survey', 'report') + id.title +".pdf")
+            result, format = openerp.report.render_report(cr, uid, [id.id], 'survey.form', {}, {})
+            attachments[id.title +".pdf"] = result
 
         for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids):
             if not partner.email:
                 skipped+= 1
                 continue
-            user = user_ref.search(cr, uid, [('login', "=", partner.email)])
+            user = user_ref.search(cr, uid, [('partner_id', "=", partner.id)])
             if user:
                 if user[0] not in new_user:
                     new_user.append(user[0])
@@ -185,6 +176,8 @@ Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'we
                 if ans:
                     res_data = {'name': partner.name or _('Unknown'),
                                 'login': partner.email,
+                                'email': partner.email,
+                                'partner_id': partner.id,
                                 'password': passwd,
                                 'address_id': partner.id,
                                 'groups_id': [[6, 0, [group_id]]],
