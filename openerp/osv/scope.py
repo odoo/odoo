@@ -44,6 +44,9 @@ class Context(Mapping):
     def __len__(self):
         return len(self._dict)
 
+    def has_key(self, key):
+        return key in self._dict
+
     def copy(self):
         return dict(self._dict)
 
