@@ -32,6 +32,6 @@ class website_gengo(http.Controller):
         return True
 
     @http.route('/website/post_gengo_jobs', type='json', auth='user', website=True)
-    def set_gengo_config(self):
+    def post_gengo_jobs(self):
         request.registry['base.gengo.translations']._sync_request(request.cr, request.uid, limit=GENGO_DEFAULT_LIMIT, context=request.context)
         return True

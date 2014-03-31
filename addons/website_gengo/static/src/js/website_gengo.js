@@ -13,7 +13,7 @@
             this.gengo_translate = true;
             this._super.apply(this, arguments);
             var self = this;
-            var gengo_langs = ["ar_SA","id_ID","nl_NL","fr_CA","pl_PL","zh_TW","sv_SE","ko_KR","pt_PT","en_US","ja_JP","es_ES","zh_CN","de_DE","fr_FR","fr_BE","ru_RU","it_IT","pt_BR"];
+            var gengo_langs = ["ar_SA","id_ID","nl_NL","fr_CA","pl_PL","zh_TW","sv_SE","ko_KR","pt_PT","en_US","ja_JP","es_ES","zh_CN","de_DE","fr_FR","fr_BE","ru_RU","it_IT","pt_BR","pt_BR","th_TH","nb_NO","ro_RO","tr_TR","bg_BG","da_DK","en_GB","el_GR","vi_VN","he_IL","hu_HU","fi_FI"];
             if (gengo_langs.indexOf(website.get_context()['lang']) != -1){   
                 self.$('.gengo_post,.gengo_wait,.gengo_inprogress,.gengo_info').remove();
                 self.$('button[data-action=save]')

@@ -74,7 +74,7 @@
             var source_attr = 'data-oe-source-id';
             var $editables = $('[data-oe-model="ir.ui.view"]')
                     .not('link, script')
-                    .not('.oe_snippets,.oe_snippet, .oe_snippet *')
+                    .not('.oe_snippets,.oe_snippet, .oe_snippet *, .navbar-toggle')
                     .not('[data-oe-type]');
 
             $editables.each(function () {

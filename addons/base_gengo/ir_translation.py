@@ -41,7 +41,19 @@ LANG_CODE_MAPPING = {
     'fr_BE': ('fr', 'French'),
     'ru_RU': ('ru', 'Russian'),
     'it_IT': ('it', 'Italian'),
-    'pt_BR': ('pt-br', 'Portuguese (Brazil)')
+    'pt_BR': ('pt-br', 'Portuguese (Brazil)'),
+    'th_TH': ('th', 'Thai'),
+    'nb_NO': ('no', 'Norwegian'),
+    'ro_RO': ('ro', 'Romanian'),
+    'tr_TR': ('tr', 'Turkish'),
+    'bg_BG': ('bg', 'Bulgarian'),
+    'da_DK': ('da', 'Danish'),
+    'en_GB': ('en-gb', 'English (British)'),
+    'el_GR': ('el', 'Greek'),
+    'vi_VN': ('vi', 'Vietnamese'),
+    'he_IL': ('he', 'Hebrew'),
+    'hu_HU': ('hu', 'Hungarian'),
+    'fi_FI': ('fi', 'Finnish')
 }
 
 class ir_translation(osv.Model):
