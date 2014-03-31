@@ -308,10 +308,20 @@ section, .carousel, .parallax, .row, .hr, .blockquote
             top: 50%
             position: absolute
             margin-top: -8px
-        &.left span
-            left: 10px
-        &.right span
-            right: 10px
+        &.left
+            left: -10px
+            *
+                position: absolute
+                top: 50%
+                z-index: 5
+                right: 50%
+        &.right
+            right: -10px
+            *
+                position: absolute
+                top: 50%
+                z-index: 5
+                left: 50%
 
 .quotecarousel
     padding-bottom: 16px

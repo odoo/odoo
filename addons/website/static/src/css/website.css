@@ -377,11 +377,23 @@ section, .carousel, .parallax, .row, .hr, .blockquote {
   position: absolute;
   margin-top: -8px;
 }
-.carousel .carousel-control.left span {
-  left: 10px;
+.carousel .carousel-control.left {
+  left: -10px;
 }
-.carousel .carousel-control.right span {
-  right: 10px;
+.carousel .carousel-control.left * {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  right: 50%;
+}
+.carousel .carousel-control.right {
+  right: -10px;
+}
+.carousel .carousel-control.right * {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  left: 50%;
 }
 
 .quotecarousel {
