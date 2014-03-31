@@ -295,10 +295,15 @@
             <t t-call="website_forum.header">
                 <h3>Edit question</h3>
                 <form t-attf-action="/forum/#{ slug(forum) }/question/savequestion/" method="post" role="form" class="tag_text">
-                    <input type="text" name="question_name" required="True" t-attf-value="#{post.name or ''}"
+                    <select class="form-control post_history">
+                        <t t-foreach="post_history" t-as="history">
+                            <option t-att-value="history.id"><t t-esc="history.name"/></option>
+                        </t>
+                     </select>
+                    <input type="text" name="question_name" id="question_name" required="True" t-attf-value="#{post.name or ''}"
                         class="form-control" placeholder="Edit your Question"/>
                     <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
-                    <textarea name="answer_content" required="True" value="content" class="form-control">
+                    <textarea name="content" required="True"  class="form-control">
                         <t t-esc="post.content"/>
                     </textarea>
                     <br/>
@@ -308,7 +313,7 @@
                     <button class="btn btn-primary btn-lg">Save</button>
                 </form>
                 <script type="text/javascript">
-                    CKEDITOR.replace("answer_content");
+                    CKEDITOR.replace("content");
                 </script>
             </t>
         </template>
@@ -360,7 +365,12 @@
             <t t-call="website_forum.header">
                 <h3>Edit answer</h3>
                 <form t-attf-action="/forum/#{ slug(forum) }/question/saveanswer/" method="post" role="form">
-                    <textarea name="answer_content" required="True" value="content" class="form-control">
+                    <select class="form-control post_history">
+                        <t t-foreach="post_history" t-as="history">
+                            <option t-att-value="history.id"><t t-esc="history.name"/></option>
+                        </t>
+                    </select>
+                    <textarea name="content" required="True" value="content" class="form-control">
                         <t t-esc="post_answer.content"/>
                     </textarea>
                     <input name="post_id" t-att-value="post.id" type="hidden"/>
@@ -368,7 +378,7 @@
                     <button class="btn btn-primary btn-lg">Save</button>
                 </form>
                 <script type="text/javascript">
-                    CKEDITOR.replace("answer_content");
+                    CKEDITOR.replace("content");
                 </script>
             </t>
         </template>

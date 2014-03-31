@@ -22,9 +22,11 @@
 import re
 
 import openerp
+from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+from datetime import date, datetime
 
 from openerp.addons.website.models.website import slug
 
@@ -198,16 +200,19 @@ class Post(osv.Model):
         'active': True,
     }
 
-    def create_history(self, cr, uid, ids, vals, context=None):
+    def create_history(self, cr, uid, ids, context=None):
         hist_obj = self.pool['website.forum.post.history']
         for post in self.browse(cr, uid, ids, context=context):
+            history_count = hist_obj.search(cr, uid, [('post_id','=', post.id)], count=True, context=context)
+            date = datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            name = "No.%s Revision" %(history_count+1) if history_count else "initial version"
             hist_obj.create(cr, uid, {
                 'post_id': post.id,
                 'content': post.content,
-                'name': post.name,
+                'name': '%s - (%s) %s' % (history_count+1, date, name),
+                'post_name': post.name,
                 'tags': [(6,0, [x.id for x in post.tags])],
-                'date': post.write_date or post.create_date,
-                'user_id': post.write_uid and post.write_uid.id or post.user_id.id
+                'user_id': post.write_uid and post.write_uid.id or post.user_id.id,
             }, context=context)
 
     def create(self, cr, uid, vals, context=None):
@@ -223,13 +228,15 @@ class Post(osv.Model):
             #add 2 karma to user when asks question.
             self.pool['res.users'].write(cr, SUPERUSER_ID, [vals.get('user_id')], {'karma': 2}, context=context)
         post_id = super(Post, self).create(cr, uid, vals, context=create_context)
+        self.create_history(cr, uid, [post_id], context=context)
         self.message_post(cr, uid, [post_id], body=_(body), subtype=subtype, context=context)
         return post_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        self.create_history(cr, uid, ids, vals, context=context)
+        super(Post, self).write(cr, uid, ids, vals, context=context)
         #NOTE: to avoid message post on write of last comment time
         if not vals.get('message_last_post'):
+            self.create_history(cr, uid, ids, context=context)
             for post in self.browse(cr, uid, ids, context=context):
                 body, subtype = "Edited question", "website_forum.mt_question_edit"
                 if post.parent_id:
@@ -243,7 +250,7 @@ class Post(osv.Model):
             elif vals.get('correct') == False:
                 value = -15 
             self.pool['res.users'].write(cr, SUPERUSER_ID, [post.user_id.id], {'karma': value}, context=context)
-        return super(Post, self).write(cr, uid, ids, vals, context=context)
+        return True
 
 class PostStatistics(osv.Model):
     _name = "website.forum.post.statistics"
@@ -310,11 +317,11 @@ class PostHistory(osv.Model):
     _description = 'Post History'
     _inherit = ['website.seo.metadata']
     _columns = {
-        'name': fields.char('Post Title'),
+        'name': fields.char('History Title'),
         'post_id': fields.many2one('website.forum.post', 'Post', ondelete='cascade'),
-        'date': fields.datetime('Created on', select=True, readonly=True),
+        'post_name': fields.char('Post Name'),
+        'content': fields.text('Content'),
         'user_id': fields.many2one('res.users', 'Created by', select=True, readonly=True),
-        'content': fields.html('Contents', help='Automatically sanitized HTML contents'),
         'tags': fields.many2many('website.forum.tag', 'post_tag_rel', 'post_id', 'post_tag_id', 'Tag'),
     }
 

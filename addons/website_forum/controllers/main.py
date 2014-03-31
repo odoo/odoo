@@ -341,18 +341,26 @@ class website_forum(http.Controller):
             }, context=create_context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post_id))
 
-    @http.route(['/forum/<model("website.forum"):forum>/question/<model("website.forum.post"):post>/editanswer'], type='http', auth="user", website=True, multilang=True)
-    def edit_answer(self, forum, post, **kwargs):
+    @http.route(['/forum/<model("website.forum"):forum>/question/<model("website.forum.post"):post>/editanswer',
+                 '/forum/<model("website.forum"):forum>/answer/<model("website.forum.post"):post>/edit/<model("website.forum.post"):answer>']
+                , type='http', auth="user", website=True, multilang=True)
+    def edit_answer(self, forum, post, answer='', **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         request.registry['res.users'].write(cr, SUPERUSER_ID, uid, {'forum': True}, context=context)
-        for answer in post.child_ids:
-            if answer.user_id.id == request.uid:
-                post_answer = answer
+        for record in post.child_ids:
+            if record.user_id.id == request.uid and not answer:
+                answer = record
+
+        history_obj = request.registry['website.forum.post.history']
+        history_ids = history_obj.search(cr, uid, [('post_id','=', answer.id)], order = "id desc", context=context)
+        post_history = history_obj.browse(cr, uid, history_ids, context=context)
+
         values = {
             'post': post,
-            'post_answer': post_answer,
+            'post_answer': answer,
             'notifications': self._get_notifications(),
             'forum': forum,
+            'post_history': post_history,
             'searches': kwargs
         }
         return request.website.render("website_forum.edit_answer", values)
@@ -363,7 +371,7 @@ class website_forum(http.Controller):
         request.registry['res.users'].write(cr, SUPERUSER_ID, uid, {'forum': True}, context=context)
         answer_id = int(post.get('answer_id'))
         new_question_id = request.registry['website.forum.post'].write( cr, uid, [answer_id], {
-                'content': post.get('answer_content'),
+                'content': post.get('content'),
             }, context=context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('post_id')))
 
@@ -467,6 +475,11 @@ class website_forum(http.Controller):
 
     @http.route('/forum/<model("website.forum"):forum>/edit/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
     def edit_question(self, forum, post, **kwarg):
+        cr, uid, context = request.cr, request.uid, request.context
+        history_obj = request.registry['website.forum.post.history']
+        history_ids = history_obj.search(cr, uid, [('post_id','=', post.id)], order = "id desc", context=context)
+        post_history = history_obj.browse(cr, uid, history_ids, context=context)
+
         tags = ""
         for tag_name in post.tags:
             tags += tag_name.name + ","
@@ -477,8 +490,23 @@ class website_forum(http.Controller):
             'forum': forum,
             'searches': kwarg,
             'notifications': self._get_notifications(),
+            'post_history': post_history,
         }
         return request.website.render("website_forum.edit_question", values)
+
+    @http.route('/forum/selecthistory', type='json', auth="user", multilang=True, methods=['POST'], website=True)
+    def post_history(self, **kwarg):
+        cr, uid, context = request.cr, request.uid, request.context
+        post_history = request.registry['website.forum.post.history'].browse(cr, uid, int(kwarg.get('history_id')), context=context)
+        tags = ""
+        for tag_name in post_history.tags:
+            tags += tag_name.name + ","
+        data = {
+            'name': post_history.post_name,
+            'content': post_history.content,
+            'tags': tags,
+        }
+        return data
 
     @http.route('/forum/<model("website.forum"):forum>/question/savequestion/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def save_edited_question(self, forum, **post):
@@ -494,22 +522,11 @@ class website_forum(http.Controller):
                 question_tags.append((0,0,{'name' : tag,'forum_id' : forum.id}))
 
         request.registry['website.forum.post'].write(cr, uid, [int(post.get('post_id'))], {
-            'content': post.get('answer_content'),
+            'content': post.get('content'),
             'name': post.get('question_name'),
             'tags' : question_tags,
         }, context=context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('post_id')))
-
-    @http.route('/forum/<model("website.forum"):forum>/answer/<model("website.forum.post"):post>/edit/<model("website.forum.post"):answer>', type='http', auth="user", multilang=True, website=True)
-    def edit_ans(self, forum, post, answer, **kwarg):
-        values = {
-            'post': post,
-            'post_answer': answer,
-            'forum': forum,
-            'searches': kwarg,
-            'notifications': self._get_notifications(),
-        }
-        return request.website.render("website_forum.edit_answer", values)
 
     @http.route('/forum/correct_answer/', type='json', auth="user", multilang=True, methods=['POST'], website=True)
     def correct_answer(self, **kwarg):
@@ -637,3 +654,4 @@ class website_forum(http.Controller):
         post_ids.append(post.id)
         request.registry['website.forum.post'].message_unsubscribe( cr, uid, post_ids, [partner_id], context=context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.id))
+
