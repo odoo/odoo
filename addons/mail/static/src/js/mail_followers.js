@@ -255,7 +255,13 @@ openerp_mail_followers = function(session, mail) {
                 dialog = true;
             } else {
                 var subtype_list_ul = this.$('.oe_subtype_list ul').empty();
-                if (! this.message_is_follower) return;
+                if (! this.message_is_follower) {
+                    this.$('.oe_subtype_list > .dropdown-toggle').attr('disabled', true);
+                    return;
+                }
+                else {
+                    this.$('.oe_subtype_list > .dropdown-toggle').attr('disabled', false);
+                }
             }
             var id = this.view.datarecord.id;
             this.ds_model.call('message_get_subscription_data', [[id], user_pid, new session.web.CompoundContext(this.build_context(), {})])
@@ -291,6 +297,7 @@ openerp_mail_followers = function(session, mail) {
 
         do_follow: function () {
             var context = new session.web.CompoundContext(this.build_context(), {});
+            this.$('.oe_subtype_list > .dropdown-toggle').attr('disabled', false);
             this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], undefined, context])
                 .then(this.proxy('read_value'));
 
@@ -306,6 +313,7 @@ openerp_mail_followers = function(session, mail) {
                     $(record).attr('checked',false);
                 });
             var action_unsubscribe = 'message_unsubscribe_users';
+            this.$('.oe_subtype_list > .dropdown-toggle').attr('disabled', true);
             var follower_ids = [this.session.uid];
             if (user_pid) {
                 action_unsubscribe = 'message_unsubscribe';
