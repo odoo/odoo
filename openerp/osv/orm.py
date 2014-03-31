@@ -52,6 +52,7 @@ import pytz
 import re
 import simplejson
 import time
+import traceback
 
 import babel.dates
 import dateutil.parser
@@ -5440,6 +5441,7 @@ class BaseModel(object):
                     except MissingError:
                         pass
                     except Exception:
+                        traceback.print_exc()
                         failed += rec
                 recomputation[field] -= recs
                 # check whether recomputation failed for some existing records
