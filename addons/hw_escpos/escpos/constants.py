@@ -22,6 +22,7 @@ PAPER_PART_CUT  = '\x1d\x56\x01' # Partial cut paper
 TXT_NORMAL      = '\x1b\x21\x00' # Normal text
 TXT_2HEIGHT     = '\x1b\x21\x10' # Double height text
 TXT_2WIDTH      = '\x1b\x21\x20' # Double width text
+TXT_DOUBLE      = '\x1b\x21\x30' # Double height & Width
 TXT_UNDERL_OFF  = '\x1b\x2d\x00' # Underline font OFF
 TXT_UNDERL_ON   = '\x1b\x2d\x01' # Underline font 1-dot ON
 TXT_UNDERL2_ON  = '\x1b\x2d\x02' # Underline font 2-dot ON
@@ -32,6 +33,8 @@ TXT_FONT_B      = '\x1b\x4d\x01' # Font type B
 TXT_ALIGN_LT    = '\x1b\x61\x00' # Left justification
 TXT_ALIGN_CT    = '\x1b\x61\x01' # Centering
 TXT_ALIGN_RT    = '\x1b\x61\x02' # Right justification
+TXT_COLOR_BLACK = '\x1b\x72\x00' # Default Color
+TXT_COLOR_RED   = '\x1b\x72\x01' # Alternative Color ( Usually Red )
 
 # Text Encoding
 

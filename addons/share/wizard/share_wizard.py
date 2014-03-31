@@ -258,7 +258,6 @@ class share_wizard(osv.TransientModel):
                         'name': new_user,
                         'email': new_user,
                         'groups_id': [(6,0,[group_id])],
-                        'share': True,
                         'company_id': current_user.company_id.id,
                         'company_ids': [(6, 0, [current_user.company_id.id])],
                 }, context)
@@ -276,7 +275,6 @@ class share_wizard(osv.TransientModel):
                 'password': new_pass,
                 'name': new_login,
                 'groups_id': [(6,0,[group_id])],
-                'share': True,
                 'company_id': current_user.company_id.id,
                 'company_ids': [(6, 0, [current_user.company_id.id])],
             }, context)
@@ -906,7 +904,7 @@ class share_result_line(osv.osv_memory):
         'login': fields.related('user_id', 'login', string='Login', type='char', size=64, required=True, readonly=True),
         'password': fields.char('Password', size=64, readonly=True),
         'share_url': fields.function(_share_url, string='Share URL', type='char', size=512),
-        'share_wizard_id': fields.many2one('share.wizard', 'Share Wizard', required=True),
+        'share_wizard_id': fields.many2one('share.wizard', 'Share Wizard', required=True, ondelete='cascade'),
         'newly_created': fields.boolean('Newly created', readonly=True),
     }
     _defaults = {
