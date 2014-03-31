@@ -136,7 +136,7 @@ class view(osv.osv):
 
             qcontext = dict(editable=False)
             qcontext.update(
-                context.copy(),
+                context,
                 website=request.website,
                 url_for=website.url_for,
                 slug=website.slug,
@@ -149,7 +149,7 @@ class view(osv.osv):
                 qcontext.update(values)
 
             # in edit mode ir.ui.view will tag nodes
-            context['inherit_branding'] = qcontext.get('editable', False)
+            context = dict(context, inherit_branding=qcontext.get('editable', False))
 
             view_obj = request.website.get_template(id_or_xml_id)
             if 'main_object' not in qcontext:

@@ -515,8 +515,7 @@ class purchase_order(osv.osv):
         :return: ID of created invoice.
         :rtype: int
         """
-        if context is None:
-            context = {}
+        context = dict(context or {})
         journal_obj = self.pool.get('account.journal')
         inv_obj = self.pool.get('account.invoice')
         inv_line_obj = self.pool.get('account.invoice.line')
