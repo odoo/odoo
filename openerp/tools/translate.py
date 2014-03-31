@@ -165,16 +165,14 @@ class GettextAlias(object):
             return sql_db.db_connect(db_name)
 
     def _get_cr(self, frame, allow_create=True):
-        # try, in order: cr, cursor, openerp.scope.cr, self.cr
+        # try, in order: cr, cursor, self._scope.cr, self.cr
         if 'cr' in frame.f_locals:
             return frame.f_locals['cr'], False
         if 'cursor' in frame.f_locals:
             return frame.f_locals['cursor'], False
-        try:
-            return openerp.scope.cr, False
-        except Exception:
-            pass
         s = frame.f_locals.get('self')
+        if hasattr(s, '_scope'):
+            return s._scope.cr, False
         if hasattr(s, 'cr'):
             return s.cr, False
         if allow_create:
@@ -185,24 +183,25 @@ class GettextAlias(object):
         return None, False
 
     def _get_uid(self, frame):
-        # try, in order: uid, user, openerp.scope.uid
-        uid = frame.f_locals.get('uid') or frame.f_locals.get('user') or openerp.scope.uid
-        # user may be a record, so take its id
-        return int(uid)
+        # try, in order: uid, user, self._scope.uid
+        if 'uid' in frame.f_locals:
+            return frame.f_locals['uid']
+        if 'user' in frame.f_locals:
+            return int(frame.f_locals['user'])      # user may be a record
+        s = frame.f_locals.get('self')
+        return s._scope.uid
 
     def _get_lang(self, frame):
-        # try, in order: context['lang'], kwargs['context']['lang'],
-        # openerp.scope.lang, self.localcontext.get('lang')
+        # try, in order: context.get('lang'), kwargs['context'].get('lang'),
+        # self._scope.lang, self.localcontext.get('lang')
         if 'context' in frame.f_locals:
             return frame.f_locals['context'].get('lang')
-        kwargs = frame.f_locals.get('kwargs')
-        if kwargs and 'context' in kwargs:
+        kwargs = frame.f_locals.get('kwargs', {})
+        if 'context' in kwargs:
             return kwargs['context'].get('lang')
-        try:
-            return openerp.scope.lang
-        except Exception:
-            pass
         s = frame.f_locals.get('self')
+        if hasattr(s, '_scope'):
+            return s._scope.lang
         if hasattr(s, 'localcontext'):
             return s.localcontext.get('lang')
         # Last resort: attempt to guess the language of the user
