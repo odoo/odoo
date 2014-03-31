@@ -37,7 +37,6 @@ class Blog(osv.Model):
         'name': fields.char('Blog Name', required=True),
         'subtitle': fields.char('Blog Subtitle'),
         'description': fields.text('Description'),
-        'image': fields.binary('Image'),
     }
 
 
