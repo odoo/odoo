@@ -289,8 +289,7 @@
 
 <template id="debugger" inherit_option_id="website.layout" name="Debugger &amp; Tests">
     <xpath expr='//t[@name="layout_head"]' position="after">
-        <script type="text/javascript" src="/website/static/src/js/website.tour.test.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.tour.test.admin.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
     </xpath>
 </template>
 
@@ -364,7 +363,7 @@
                 </li>
                 <t t-raw="0"/>
                 <li t-if="publish_edit">
-                    <a t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s' % (object._name, object.id)"
+                    <a t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}"
                     title='Edit in backend'>Edit</a>
                 </li>
             </ul>
@@ -596,16 +595,16 @@
         </head>
         <body>
             <div id="wrapwrap">
-                    <div class="navbar navbar-default navbar-static-top">
-                        <div class="container">
-                            <div class="collapse navbar-collapse navbar-top-collapse">
-                                <ul class="nav navbar-nav pull-right">
-                                    <li><a href="/">Home</a></li>
-                                    <li><a href="javascript: window.history.back()">Back</a></li>
-                                </ul>
-                            </div>
+                <div class="navbar navbar-default navbar-static-top">
+                    <div class="container">
+                        <div class="collapse navbar-collapse navbar-top-collapse">
+                            <ul class="nav navbar-nav pull-right">
+                                <li><a href="/">Home</a></li>
+                                <li><a href="javascript: window.history.back()">Back</a></li>
+                            </ul>
                         </div>
                     </div>
+                </div>
                 <div class="mb32">
                     <div class="oe_structure">
                         <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
@@ -758,24 +757,6 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             <div class="oe_structure"></div>
         </div>
     </t>
-</template>
-
-<template id="contact">
-    <address t-ignore="true" class="mb0" itemscope="itemscope" itemtype="http://schema.org/Organization">
-        <div t-att-class="'name' not in fields and 'css_non_editable_mode_hidden'"><span itemprop="name" t-esc="name"/></div>
-        <div itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
-            <div t-if="address and 'address' in fields" class='css_editable_mode_hidden'>
-                <i t-if="not options.get('no_marker')" class='fa fa-map-marker'/> <span itemprop="streetAddress" t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or ('&lt;br/&gt;%s' % ('' if options.get('no_marker') else '&amp;nbsp; &amp;nbsp; ')))"/>
-            </div>
-            <div t-if="city and 'city' in fields" class='css_editable_mode_hidden'>
-                <i t-if="not options.get('no_marker')" class='fa fa-map-marker'/> <span itemprop="addressLocality" t-raw="city"/>, <span itemprop="addressCountry" t-raw="country_id"/>
-            </div>
-            <div t-if="phone and 'phone' in fields" class='css_editable_mode_hidden'><i t-if="not options.get('no_marker')" class='fa fa-phone'/> <span itemprop="telephone" t-esc="phone"/></div>
-            <div t-if="mobile and 'mobile' in fields" class='css_editable_mode_hidden'><i t-if="not options.get('no_marker')" class='fa fa-mobile-phone'/> <span itemprop="telephone" t-esc="mobile"/></div>
-            <div t-if="fax and 'fax' in fields" class='css_editable_mode_hidden'><i t-if="not options.get('no_marker')" class='fa fa-file-text-o'/> <span itemprop="faxNumber" t-esc="fax"/></div>
-            <div t-if="email and 'email' in fields" class='css_editable_mode_hidden'><i t-if="not options.get('no_marker')" class='fa fa-envelope'/> <span itemprop="email" t-esc="email"/></div>
-        </div>
-    </address>
 </template>
 
      </data>

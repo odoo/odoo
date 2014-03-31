@@ -7,7 +7,6 @@
         id: 'shop_buy_product',
         name: "Try to buy products",
         path: '/shop',
-        testPath: '/shop',
         init: function () {
             var self = this;
             self.steps = [
@@ -22,11 +21,11 @@
                 {
                     title:     "click on add to cart",
                     waitFor:   'input[name="product_id"]:eq(1)[checked]',
-                    element:   'form[action="/shop/add_cart/"] .btn',
+                    element:   'form[action="/shop/add_cart"] .btn',
                 },
                 {
                     title:     "add suggested",
-                    element:   'form[action="/shop/add_cart/"] .btn-link:contains("Add to Cart")',
+                    element:   'form[action="/shop/add_cart"] .btn-link:contains("Add to Cart")',
                 },
                 {
                     title:     "add one more iPod",
@@ -47,19 +46,19 @@
                 {
                     title:     "go to checkout",
                     waitFor:   '#mycart_products input.js_quantity[value=1]',
-                    element:   'a[href="/shop/checkout/"]',
+                    element:   'a[href="/shop/checkout"]',
                 },
                 {
                     title:     "test with input error",
-                    element:   'form[action="/shop/confirm_order/"] .btn:contains("Confirm")',
+                    element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
                     onload: function (tour) {
                         $("input[name='phone']").val("");
                     },
                 },
                 {
                     title:     "test without input error",
-                    waitFor:   'form[action="/shop/confirm_order/"] .has-error',
-                    element:   'form[action="/shop/confirm_order/"] .btn:contains("Confirm")',
+                    waitFor:   'form[action="/shop/confirm_order"] .has-error',
+                    element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
                     onload: function (tour) {
                         if ($("input[name='name']").val() === "")
                             $("input[name='name']").val("website_sale-test-shoptest");

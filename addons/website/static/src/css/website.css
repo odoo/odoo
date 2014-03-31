@@ -102,6 +102,10 @@ header a.navbar-brand img {
   max-height: 50px;
 }
 
+#wrapwrap p:empty:after {
+  content: "\2060";
+}
+
 /* ----- Snippets Styles ----- */
 .readable {
   font-size: 120%;
@@ -116,9 +120,10 @@ header a.navbar-brand img {
 }
 
 /* ----- BOOTSTRAP FIX ----- */
-.container .container {
+.container .container, .readable .container {
   padding-left: 0;
   padding-right: 0;
+  width: auto;
 }
 
 /* ----- BOOTSTRAP HACK FOR HEADER NAV BAR ----- */
@@ -216,7 +221,6 @@ footer {
 /* -- Hack for removing double scrollbar from mobile preview -- */
 div#mobile-preview.modal {
   overflow: hidden;
-  overflow-y: hidden;
 }
 
 ul.nav-stacked > li > a {
@@ -236,7 +240,7 @@ ul.nav-stacked > li > a {
   display: none;
 }
 
-[data-publish='off'] {
+[data-publish='off'] > *:not(.css_options) {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
   opacity: 0.5;
 }
@@ -280,12 +284,16 @@ ul.nav-stacked > li > a {
   background-size: 100%;
 }
 
-[data-snippet-id], .colmd, .hr, .blockquote {
+section, .carousel, .parallax, .row, .hr, .blockquote {
+  min-height: 30px;
+}
+
+.carousel, .parallax, .blockquote {
   overflow: hidden;
 }
 
 @media (max-width: 400px) {
-  [data-snippet-id]:not([data-snippet-id="carousel"]) {
+  section, .parallax, .row, .hr, .blockquote {
     height: auto !important;
   }
 }
@@ -380,10 +388,10 @@ ul.nav-stacked > li > a {
 }
 
 /* Parallax Theme */
-div.carousel[data-snippet-id="slider"] .carousel-indicators li {
+div.carousel .carousel-indicators li {
   border: 1px solid grey;
 }
-div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
+div.carousel .carousel-indicators .active {
   background-color: grey;
 }
 
@@ -406,9 +414,6 @@ div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
 .oe_dark {
   background: #eff8f8;
   background: rgba(200, 200, 200, 0.14);
-  -webkit-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
-  -moz-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
-  box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
 }
 
 .oe_black {

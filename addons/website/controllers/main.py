@@ -296,7 +296,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     # Helpers
     #------------------------------------------------------
-    @http.route(['/website/kanban/'], type='http', auth="public", methods=['POST'], website=True)
+    @http.route(['/website/kanban'], type='http', auth="public", methods=['POST'], website=True)
     def kanban(self, **post):
         return request.website.kanban_col(**post)
 
@@ -314,6 +314,23 @@ class Website(openerp.addons.web.controllers.main.Home):
         '/website/image/<model>/<id>/<field>'
         ], auth="public", website=True)
     def website_image(self, model, id, field, max_width=maxint, max_height=maxint):
+        """ Fetches the requested field and ensures it does not go above
+        (max_width, max_height), resizing it if necessary.
+
+        Resizing is bypassed if the object provides a $field_big, which will
+        be interpreted as a pre-resized version of the base field.
+
+        If the record is not found or does not have the requested field,
+        returns a placeholder image via :meth:`~.placeholder`.
+
+        Sets and checks conditional response parameters:
+        * :mailheader:`ETag` is always set (and checked)
+        * :mailheader:`Last-Modified is set iif the record has a concurrency
+          field (``__last_update``)
+
+        The requested field is assumed to be base64-encoded image data in
+        all cases.
+        """
         Model = request.registry[model]
 
         response = werkzeug.wrappers.Response()
@@ -322,15 +339,17 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         ids = Model.search(request.cr, request.uid,
                            [('id', '=', id)], context=request.context) \
-            or Model.search(request.cr, openerp.SUPERUSER_ID,
-                            [('id', '=', id), ('website_published', '=', True)], context=request.context)
+           or Model.search(request.cr, openerp.SUPERUSER_ID,
+                           [('id', '=', id), ('website_published', '=', True)], context=request.context)
 
         if not ids:
             return self.placeholder(response)
 
+        presized = '%s_big' % field
         concurrency = '__last_update'
         [record] = Model.read(request.cr, openerp.SUPERUSER_ID, [id],
-                              [concurrency, field], context=request.context)
+                              [concurrency, field, presized],
+                              context=request.context)
 
         if concurrency in record:
             server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
@@ -354,25 +373,28 @@ class Website(openerp.addons.web.controllers.main.Home):
         if response.status_code == 304:
             return response
 
-        data = record[field].decode('base64')
-        fit = int(max_width), int(max_height)
+        data = (record.get(presized) or record[field]).decode('base64')
 
-        buf = cStringIO.StringIO(data)
-
-        image = Image.open(buf)
-        image.load()
+        image = Image.open(cStringIO.StringIO(data))
         response.mimetype = Image.MIME[image.format]
 
+        # record provides a pre-resized version of the base field, use that
+        # directly
+        if record.get(presized):
+            response.set_data(data)
+            return response
+
+        fit = int(max_width), int(max_height)
         w, h = image.size
         max_w, max_h = fit
 
         if w < max_w and h < max_h:
-            response.data = data
+            response.set_data(data)
         else:
             image.thumbnail(fit, Image.ANTIALIAS)
             image.save(response.stream, image.format)
-            # invalidate content-length computed by make_conditional as writing
-            # to response.stream does not do it (as of werkzeug 0.9.3)
+            # invalidate content-length computed by make_conditional as
+            # writing to response.stream does not do it (as of werkzeug 0.9.3)
             del response.headers['Content-Length']
 
         return response

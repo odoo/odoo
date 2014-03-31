@@ -38,7 +38,7 @@ class product_template(osv.Model):
         res = dict.fromkeys(ids, '')
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = "%s/shop/product/%s/" % (base_url, product.id)
+            res[product.id] = "%s/shop/product/%s" % (base_url, product.id)
         return res
 
     _columns = {
@@ -139,7 +139,7 @@ class product_product(osv.Model):
         res = {}
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = "%s/shop/product/%s/" % (base_url, product.product_tmpl_id.id)
+            res[product.id] = "%s/shop/product/%s" % (base_url, product.product_tmpl_id.id)
         return res
 
     _columns = {

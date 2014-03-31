@@ -41,6 +41,23 @@ class account_voucher(osv.osv):
         'number': fields.char('Number', size=32),
     }
 
+    def _amount_to_text(self, cr, uid, amount, currency_id, context=None):
+        # Currency complete name is not available in res.currency model
+        # Exceptions done here (EUR, USD, BRL) cover 75% of cases
+        # For other currencies, display the currency code
+        currency = self.pool['res.currency'].browse(cr, uid, currency_id, context=context)
+        if currency.name.upper() == 'EUR':
+            currency_name = 'Euro'
+        elif currency.name.upper() == 'USD':
+            currency_name = 'Dollars'
+        elif currency.name.upper() == 'BRL':
+            currency_name = 'reais'
+        else:
+            currency_name = currency.name
+        #TODO : generic amount_to_text is not ready yet, otherwise language (and country) and currency can be passed
+        #amount_in_word = amount_to_text(amount, context=context)
+        return amount_to_text(amount, currency=currency_name)
+
     def onchange_amount(self, cr, uid, ids, amount, rate, partner_id, journal_id, currency_id, ttype, date, payment_rate_currency_id, company_id, context=None):
         """ Inherited - add amount_in_word and allow_check_writting in returned value dictionary """
         if not context:
@@ -48,22 +65,7 @@ class account_voucher(osv.osv):
         default = super(account_voucher, self).onchange_amount(cr, uid, ids, amount, rate, partner_id, journal_id, currency_id, ttype, date, payment_rate_currency_id, company_id, context=context)
         if 'value' in default:
             amount = 'amount' in default['value'] and default['value']['amount'] or amount
-
-            # Currency complete name is not available in res.currency model
-            # Exceptions done here (EUR, USD, BRL) cover 75% of cases
-            # For other currencies, display the currency code
-            currency = self.pool['res.currency'].browse(cr, uid, currency_id, context=context)
-            if currency.name.upper() == 'EUR':
-                currency_name = 'Euro'
-            elif currency.name.upper() == 'USD':
-                currency_name = 'Dollars'
-            elif currency.name.upper() == 'BRL':
-                currency_name = 'reais'
-            else:
-                currency_name = currency.name
-            #TODO : generic amount_to_text is not ready yet, otherwise language (and country) and currency can be passed
-            #amount_in_word = amount_to_text(amount, context=context)
-            amount_in_word = amount_to_text(amount, currency=currency_name)
+            amount_in_word = self._amount_to_text(cr, uid, amount, currency_id, context=context)
             default['value'].update({'amount_in_word':amount_in_word})
             if journal_id:
                 allow_check_writing = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context).allow_check_writing
@@ -92,6 +94,19 @@ class account_voucher(osv.osv):
                 },
             'nodestroy': True
             }
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('amount') and vals.get('journal_id') and 'amount_in_word' not in vals:
+            vals['amount_in_word'] = self._amount_to_text(cr, uid, vals['amount'], vals.get('currency_id') or \
+                self.pool['account.journal'].browse(cr, uid, vals['journal_id'], context=context).currency.id or \
+                self.pool['res.company'].browse(cr, uid, vals['company_id']).currency_id.id, context=context)
+        return super(account_voucher, self).create(cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('amount') and vals.get('journal_id') and 'amount_in_word' not in vals:
+            vals['amount_in_word'] = self._amount_to_text(cr, uid, vals['amount'], vals.get('currency_id') or \
+                self.pool['account.journal'].browse(cr, uid, vals['journal_id'], context=context).currency.id or \
+                self.pool['res.company'].browse(cr, uid, vals['company_id']).currency_id.id, context=context)
+        return super(account_voucher, self).write(cr, uid, ids, vals, context=context)
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
         """
