@@ -731,6 +731,21 @@ class stock_picking(osv.osv):
                     continue
         return res
 
+    def check_group_pack(self, cr, uid, context=None):
+        """
+           This function will return true if we have the setting to use package activated
+        """
+        settings_obj = self.pool.get('stock.config.settings')
+        config_ids = settings_obj.search(cr, uid, [], limit=1, order='id DESC', context=context)
+        #If we don't have updated config until now, all fields are by default false and so should be not dipslayed
+        if not config_ids:
+            return False
+
+        stock_settings = settings_obj.browse(cr, uid, config_ids[0], context=context)
+        if stock_settings.group_stock_tracking_lot:
+            return True
+        return False
+
     def action_assign_owner(self, cr, uid, ids, context=None):
         for picking in self.browse(cr, uid, ids, context=context):
             packop_ids = [op.id for op in picking.pack_operation_ids]

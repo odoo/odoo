@@ -609,6 +609,13 @@ function openerp_picking_widgets(instance){
                         });
                     });
                 }).then(function(){
+                    return new instance.web.Model('stock.picking').call('check_group_pack').then(function(result){
+                        console.log('show pack:' + result);
+                        return self.show_pack = result;
+                        
+                    });
+
+                }).then(function(){
                     if (self.picking.pack_operation_exist === false){
                         self.picking.recompute_pack_op = false;
                         return new instance.web.Model('stock.picking').call('do_prepare_partial',[[self.picking.id]]);
@@ -678,6 +685,10 @@ function openerp_picking_widgets(instance){
                 else {
                     self.$('.js_reload_op').addClass('hidden');
                 }
+                if (!self.show_pack){
+                    console.log('hide pack button start');
+                    self.$('.js_pick_pack').addClass('hidden');
+                }
 
             }).fail(function(error) {console.log(error);});
 
@@ -698,7 +709,10 @@ function openerp_picking_widgets(instance){
                 .then(function(){
                     self.picking_editor.remove_blink();
                     self.picking_editor.renderElement();
-
+                    if (!self.show_pack){
+                        console.log('hide pack button refresh');
+                        self.$('.js_pick_pack').addClass('hidden');
+                    }
                     if (self.picking.recompute_pack_op){
                         self.$('.js_reload_op').removeClass('hidden');
                     }
