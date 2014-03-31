@@ -85,21 +85,25 @@ OTHER DEALINGS IN THE SOFTWARE.
             var transfo = {};
             $this.data('transfo', transfo);
 
-
             // generate all the controls markup
             var css = "box-sizing: border-box; position: absolute; background-color: #fff; border: 1px solid #ccc; width: 8px; height: 8px; margin-left: -4px; margin-top: -4px;";
             transfo.$markup = $(''
                 + '<div class="transfo-controls">'
-                +         '<div style="cursor: crosshair; position: absolute; background-color: #ccc; width: 16px; height: 16px; margin-left: -8px; margin-top: -8px; top: -15px; left: 50%; padding: 1px 0 0 1px;" class="transfo-rotator fa fa-repeat"></div>'
-                +         '<div style="' + css + 'top: 0%; left: 0%; cursor: nw-resize;" class="transfo-scaler-tl"></div>'
-                +         '<div style="' + css + 'top: 0%; left: 100%; cursor: ne-resize;" class="transfo-scaler-tr"></div>'
-                +         '<div style="' + css + 'top: 100%; left: 100%; cursor: se-resize;" class="transfo-scaler-br"></div>'
-                +         '<div style="' + css + 'top: 100%; left: 0%; cursor: sw-resize;" class="transfo-scaler-bl"></div>'
-                +         '<div style="' + css + 'top: 0%; left: 50%; cursor: n-resize;" class="transfo-scaler-tc"></div>'
-                +         '<div style="' + css + 'top: 100%; left: 50%; cursor: s-resize;" class="transfo-scaler-bc"></div>'
-                +         '<div style="' + css + 'top: 50%; left: 0%; cursor: w-resize;" class="transfo-scaler-ml"></div>'
-                +         '<div style="' + css + 'top: 50%; left: 100%; cursor: e-resize;" class="transfo-scaler-mr"></div>'
-                +         '<div style="' + css + 'border: 0; width: 0px; height: 0px; top: 50%; left: 50%;" class="transfo-scaler-mc"></div>'
+                +   '<div style="cursor: crosshair; position: absolute; margin: -18px; top: -12px; right: -12px; padding: 1px 0 0 1px;" class="transfo-rotator">'
+                +     '<span class="fa-stack fa-lg">'
+                +     '<i class="fa fa-circle fa-stack-2x"></i>'
+                +     '<i class="fa fa-repeat fa-stack-1x fa-inverse"></i>'
+                +     '</span>'
+                +   '</div>'
+                +   '<div style="' + css + 'top: 0%; left: 0%; cursor: nw-resize;" class="transfo-scaler-tl"></div>'
+                +   '<div style="' + css + 'top: 0%; left: 100%; cursor: ne-resize;" class="transfo-scaler-tr"></div>'
+                +   '<div style="' + css + 'top: 100%; left: 100%; cursor: se-resize;" class="transfo-scaler-br"></div>'
+                +   '<div style="' + css + 'top: 100%; left: 0%; cursor: sw-resize;" class="transfo-scaler-bl"></div>'
+                +   '<div style="' + css + 'top: 0%; left: 50%; cursor: n-resize;" class="transfo-scaler-tc"></div>'
+                +   '<div style="' + css + 'top: 100%; left: 50%; cursor: s-resize;" class="transfo-scaler-bc"></div>'
+                +   '<div style="' + css + 'top: 50%; left: 0%; cursor: w-resize;" class="transfo-scaler-ml"></div>'
+                +   '<div style="' + css + 'top: 50%; left: 100%; cursor: e-resize;" class="transfo-scaler-mr"></div>'
+                +   '<div style="' + css + 'border: 0; width: 0px; height: 0px; top: 50%; left: 50%;" class="transfo-scaler-mc"></div>'
                 + '</div>');
             transfo.$center = transfo.$markup.find(".transfo-scaler-mc");
 
@@ -149,27 +153,28 @@ OTHER DEALINGS IN THE SOFTWARE.
 
         function _bind ($this, transfo) {
             function mousedown (event) {
-                _mouseDown($this, transfo, event);
+                _mouseDown($this, this, transfo, event);
                 $(document).on("mousemove", mousemove).on("mouseup", mouseup);
             }
             function mousemove (event) {
-                _mouseMove($this, transfo, event);
+                _mouseMove($this, this, transfo, event);
             }
             function mouseup (event) {
-                _mouseUp($this, transfo, event);
+                _mouseUp($this, this, transfo, event);
                 $(document).off("mousemove", mousemove).off("mouseup", mouseup);
             }
 
             transfo.$markup.off().on("mousedown", mousedown);
-            transfo.$markup.find(".transfo-rotator, .transfo-scaler").off().on("mousedown", mousedown);
+            transfo.$markup.find(">:not(.transfo-scaler-mc)").off().on("mousedown", mousedown);
         }
 
-        function _mouseDown($this, transfo, event) {
+        function _mouseDown($this, div, transfo, event) {
             event.preventDefault();
             if (transfo.active || event.which !== 1) return;
 
-            var type = "position",
-                $e = $(event.srcElement);
+            console.log(div);
+
+            var type = "position", $e = $(div);
             if ($e.hasClass("transfo-rotator")) type = "rotator";
             else if ($e.hasClass("transfo-scaler-tl")) type = "tl";
             else if ($e.hasClass("transfo-scaler-tr")) type = "tr";
@@ -186,11 +191,11 @@ OTHER DEALINGS IN THE SOFTWARE.
                 "pageY": event.pageY,
             };
         }
-        function _mouseUp($this, transfo, event) {
+        function _mouseUp($this, div, transfo, event) {
             transfo.active = null;
         }
 
-        function _mouseMove($this, transfo, event) {
+        function _mouseMove($this, div, transfo, event) {
             event.preventDefault();
             if (!transfo.active) return;
             var settings = transfo.settings;
@@ -199,12 +204,15 @@ OTHER DEALINGS IN THE SOFTWARE.
             var cdy = center.top - event.pageY;
 
             if (transfo.active.type == "rotator") {
-                var ang;
-                if (center.top != event.pageY) ang = Math.atan(- cdx / cdy) / rad;
+                var ang, dang = Math.atan((settings.width * settings.scalex) / (settings.height * settings.scaley)) / rad;
+
+                if (cdy) ang = Math.atan(- cdx / cdy) / rad;
                 else ang = 0;
                 if (event.pageY >= center.top && event.pageX >= center.left) ang += 180;
                 else if (event.pageY >= center.top && event.pageX < center.left) ang += 180;
                 else if (event.pageY < center.top && event.pageX < center.left) ang += 360;
+                
+                ang -= dang;
 
                 if (!event.ctrlKey) {
                     settings.angle = Math.round(ang / transfo.settings.rotationStep) * transfo.settings.rotationStep;

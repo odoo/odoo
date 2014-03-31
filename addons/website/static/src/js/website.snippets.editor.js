@@ -1430,13 +1430,12 @@
         }
     });
 
-    website.snippet.options.media = website.snippet.Option.extend({
+    website.snippet.options.transform = website.snippet.Option.extend({
         start: function () {
             var self = this;
             this._super();
             website.snippet.start_animation(true, this.$target);
 
-            this.$el.find('[data-toggle="dropdown"]').dropdown();
             this.$el.find(".edition").click(function (event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -1455,29 +1454,27 @@
                         'top': pos.top,
                         'left': pos.left,
                         'position': 'absolute',
-                        'height': '20px',
-                        'width': '160px'
                     });
-                    self.$overlay.find('.oe_overlay_options').css({
-                        'position': 'static'
-                    });
+                    self.$overlay.find(".oe_overlay_options").attr("style", "width:0; left:0!important; top:0;");
+                    self.$overlay.find(".oe_overlay_options > .btn-group").attr("style", "width:160px; left:-80px;");
                 }});
             this.$target.data('transfo').$markup
                 .on("mouseover", function () {
                     self.$target.trigger("mouseover");
                 })
-                .mouseover()
-                .click(function () {
-                    self.$target.transfo({ hide: false });
-                });
+                .mouseover();
 
             this.$el.find(".style").click(function (event) {
                 var settings = self.$target.data("transfo").settings;
                 self.$target.transfo({ hide: (settings.hide = !settings.hide) });
             });
-        },
-        onFocus : function () {
-            this.$target.transfo({ hide: true });
+
+            this.$overlay.find('.oe_snippet_clone, .oe_handles').addClass('hidden');
+
+            this.$overlay.find('[data-toggle="dropdown"]')
+                .on("mousedown", function () {
+                    self.$target.transfo({ hide: true });
+                });
         },
         onBlur : function () {
             this.$target.transfo({ hide: true });
@@ -1493,7 +1490,6 @@
             this.snippet_id = this.$target.data("snippet-id");
             this._readXMLData();
             this.load_style_options();
-            this.get_transform();
             this.get_parent_block();
             this.start();
         },
@@ -1633,24 +1629,6 @@
                 $styles.removeClass("hidden");
             }
             this.$overlay.find('[data-toggle="dropdown"]').dropdown();
-        },
-
-        get_transform: function () {
-            var self = this;
-            var phantom = false;
-            for (var i in this.styles){
-                if (this.styles[i].data.phantom) {
-                    phantom = true;
-                    break;
-                }
-            }
-            if (phantom) {
-                // var $parent = this.$target.parents(website.snippet.globalSelector).first();
-                // setTimeout(function () {
-                //     self.BuildingBlock.make_active($parent);
-                // }, 0);
-                this.$overlay.find('.oe_snippet_clone, .oe_handles').addClass('hidden');
-            }
         },
 
         get_parent_block: function () {
