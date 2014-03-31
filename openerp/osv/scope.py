@@ -23,11 +23,29 @@
     "scope") for model instances.
 """
 
-from collections import defaultdict, MutableMapping
+from collections import defaultdict, Mapping, MutableMapping
 from contextlib import contextmanager
 from pprint import pformat
 from weakref import WeakSet
 from werkzeug.local import Local, release_local
+
+
+class Context(Mapping):
+    """ An immutable mapping for wrapping context dictionaries. """
+    def __init__(self, context):
+        self._dict = dict(context)
+
+    def __getitem__(self, key):
+        return self._dict[key]
+
+    def __iter__(self):
+        return iter(self._dict)
+
+    def __len__(self):
+        return len(self._dict)
+
+    def copy(self):
+        return dict(self._dict)
 
 
 class Scope(object):
@@ -53,7 +71,7 @@ class Scope(object):
 
     def __new__(cls, cr, uid, context):
         assert context is not None
-        args = (cr, uid, context)
+        args = (cr, uid, Context(context))
 
         # if scope already exists, return it
         scope, scopes = None, cls._local.scopes
