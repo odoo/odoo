@@ -593,6 +593,7 @@ class hr_payslip(osv.osv):
                 key = rule.code + '-' + str(contract.id)
                 localdict['result'] = None
                 localdict['result_qty'] = 1.0
+                localdict['result_rate'] = 100
                 #check if the rule can be applied
                 if obj_rule.satisfy_condition(cr, uid, rule.id, localdict, context=context) and rule.id not in blacklist:
                     #compute the amount of the rule
