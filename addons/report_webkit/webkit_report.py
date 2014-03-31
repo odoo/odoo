@@ -112,6 +112,7 @@ def webkit_report_extender(report_name):
         return fct
     return fct1
 
+
 class WebKitParser(report_sxw):
     """Custom class that use webkit to render HTML reports
        Code partially taken from report openoffice. Thanks guys :)
@@ -173,7 +174,7 @@ class WebKitParser(report_sxw):
                                  ),
                                 'w'
                             )
-            head_file.write(header.encode('utf-8'))
+            head_file.write(self._sanitize_html(header.encode('utf-8')))
             head_file.close()
             file_to_del.append(head_file.name)
             command.extend(['--header-html', head_file.name])
@@ -184,7 +185,7 @@ class WebKitParser(report_sxw):
                                  ),
                                 'w'
                             )
-            foot_file.write(footer.encode('utf-8'))
+            foot_file.write(self._sanitize_html(footer.encode('utf-8')))
             foot_file.close()
             file_to_del.append(foot_file.name)
             command.extend(['--footer-html', foot_file.name])
@@ -205,7 +206,7 @@ class WebKitParser(report_sxw):
         for html in html_list :
             html_file = file(os.path.join(tmp_dir, str(time.time()) + str(count) +'.body.html'), 'w')
             count += 1
-            html_file.write(html.encode('utf-8'))
+            html_file.write(self._sanitize_html(html.encode('utf-8')))
             html_file.close()
             file_to_del.append(html_file.name)
             command.append(html_file.name)
@@ -366,7 +367,6 @@ class WebKitParser(report_sxw):
         pdf = self.generate_pdf(bin, report_xml, head, foot, htmls)
         return (pdf, 'pdf')
 
-
     def create(self, cursor, uid, ids, data, context=None):
         """We override the create function in order to handle generator
            Code taken from report openoffice. Thanks guys :) """
@@ -377,13 +377,19 @@ class WebKitParser(report_sxw):
         if report_xml_ids:
             report_xml = ir_obj.browse(cursor, uid, report_xml_ids[0], context=context)
         else:
-            report_xml = None
+            return super(WebKitParser, self).create(cursor, uid, ids, data, context)
+        if report_xml.report_type != 'webkit':
+            return super(WebKitParser, self).create(cursor, uid, ids, data, context)
+        result = self.create_source_pdf(cursor, uid, ids, data, report_xml, context)
+        if not result:
+            return (False,False)
+        return result
 
-        if report_xml and report_xml.report_type == 'webkit' :
-            result = self.create_source_pdf(cursor, uid, ids, data, report_xml, context)
-            return result or (False,False)
-        
-        return super(WebKitParser, self).create(cursor, uid, ids, data, context)
-
+    def _sanitize_html(self, html):
+        """wkhtmltopdf expects the html page to declare a doctype.
+        """
+        if html and html[:9].upper() != "<!DOCTYPE":
+            html = "<!DOCTYPE html>\n" + html
+        return html
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

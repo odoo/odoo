@@ -32,13 +32,8 @@
         'views/website_mail.xml',
         'views/website_email_designer.xml',
         'views/email_template_view.xml',
+        'data/mail_groups.xml',
         'security/website_mail.xml',
-    ],
-    'css': [
-        'static/src/css/website_mail.css',
-    ],
-    'js': [
-        'static/src/js/website_mail.js',
     ],
     'qweb': [
         'static/src/xml/website_mail.xml'

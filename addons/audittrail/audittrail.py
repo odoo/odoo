@@ -463,14 +463,12 @@ def process_data(cr, uid, pool, res_ids, model, method, old_values=None, new_val
         # if at least one modification has been found
         for model_id, resource_id in lines:
             line_model = pool.get('ir.model').browse(cr, SUPERUSER_ID, model_id).model
-            name = pool.get(line_model).name_get(cr, uid, [resource_id])[0][1]
 
             vals = {
                 'method': method,
                 'object_id': model_id,
                 'user_id': uid,
                 'res_id': resource_id,
-                'name': name,
             }
             if (model_id, resource_id) not in old_values and method not in ('copy', 'read'):
                 # the resource was not existing so we are forcing the method to 'create'
@@ -481,7 +479,11 @@ def process_data(cr, uid, pool, res_ids, model, method, old_values=None, new_val
                 # the resource is not existing anymore so we are forcing the method to 'unlink'
                 # (because it could also come with the value 'write' if we are deleting the
                 #  record through a one2many field)
+                name = old_values[(model_id, resource_id)]['value'].get('name',False)
                 vals.update({'method': 'unlink'})
+            else :
+                name = pool[line_model].name_get(cr, uid, [resource_id])[0][1]
+            vals.update({'name': name})
             # create the audittrail log in super admin mode, only if a change has been detected
             if lines[(model_id, resource_id)]:
                 log_id = pool.get('audittrail.log').create(cr, SUPERUSER_ID, vals)
