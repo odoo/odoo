@@ -60,6 +60,7 @@ class StyleStack:
             'tabwidth':  2,
             'bullet':    ' - ',
             'line-ratio':0.5,
+            'color':    'black',
 
             'value-decimals':           2,
             'value-symbol':             '',
@@ -107,7 +108,11 @@ class StyleStack:
                 'double-height':    TXT_2HEIGHT,
                 'double-width':     TXT_2WIDTH,
                 'double':           TXT_DOUBLE,
-            }
+            },
+            'color': {
+                'black':    TXT_COLOR_BLACK,
+                'red':      TXT_COLOR_RED,
+            },
         }
 
         self.push(self.defaults) 
@@ -595,7 +600,7 @@ class Escpos:
                                               width=stylestack.get('value-width'),
                                               decimals_separator=stylestack.get('value-decimals-separator'),
                                               thousands_separator=stylestack.get('value-thousands-separator'),
-                                              autoint=(stylestack.get('autoint') == 'on'),
+                                              autoint=(stylestack.get('value-autoint') == 'on'),
                                               symbol=stylestack.get('value-symbol'),
                                               position=stylestack.get('value-symbol-position') 
                                             ))
