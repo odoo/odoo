@@ -678,10 +678,7 @@ class one2many(_column):
 
     def set(self, cr, obj, id, field, values, user=None, context=None):
         result = []
-        if not context:
-            context = {}
-        if self._context:
-            context = context.copy()
+        context = dict(context or {})
         context.update(self._context)
         context['no_store_function'] = True
         if not values:

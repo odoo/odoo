@@ -338,8 +338,7 @@ class report_sxw(report_rml, preprocess.report):
         return table_obj.browse(cr, uid, ids, context=context)
 
     def create(self, cr, uid, ids, data, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         if self.internal_header:
             context.update(internal_header=self.internal_header)
 
@@ -479,11 +478,9 @@ class report_sxw(report_rml, preprocess.report):
         return pdf, report_xml.report_type
 
     def create_single_odt(self, cr, uid, ids, data, report_xml, context=None):
-        if not context:
-            context={}
-        context = context.copy()
-        report_type = report_xml.report_type
+        context = dict(context or {})
         context['parents'] = sxw_parents
+        report_type = report_xml.report_type
         binary_report_content = report_xml.report_sxw_content
         if isinstance(report_xml.report_sxw_content, unicode):
             # if binary content was passed as unicode, we must
@@ -603,11 +600,9 @@ class report_sxw(report_rml, preprocess.report):
         return final_op, mime_type
 
     def create_single_html2html(self, cr, uid, ids, data, report_xml, context=None):
-        if not context:
-            context = {}
-        context = context.copy()
-        report_type = 'html'
+        context = dict(context or {})
         context['parents'] = html_parents
+        report_type = 'html'
 
         html = report_xml.report_rml_content
         html_parser = self.parser(cr, uid, self.name2, context=context)

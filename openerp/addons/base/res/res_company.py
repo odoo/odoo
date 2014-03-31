@@ -210,8 +210,7 @@ class res_company(osv.osv):
         return res
 
     def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         if context.pop('user_preference', None):
             # We browse as superuser. Otherwise, the user would be able to
             # select only the currently visible companies (according to rules,
