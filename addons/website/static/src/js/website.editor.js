@@ -1366,6 +1366,10 @@
                 this.$('[href="#editor-media-icon"]').tab('show');
             }
 
+            if ($(this.media.$).parent().data("oe-field") === "image") {
+                this.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
+            }
+
             return this._super();
         },
         save: function () {

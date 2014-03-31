@@ -1494,6 +1494,15 @@
                 new website.editor.MediaDialog(self, self.element).appendTo(document.body);
             });
         },
+        onFocus : function () {
+            var self = this;
+            if (this.$target.parent().data("oe-field") === "image") {
+                this.$overlay.addClass("hidden");
+                self.element = new CKEDITOR.dom.element(self.$target[0]);
+                new website.editor.MediaDialog(self, self.element).appendTo(document.body);
+                self.BuildingBlock.make_active(false);
+            }
+        },
     });
 
 
