@@ -299,7 +299,7 @@
         <form action="#" class="form-inline">
             <div class="well">
                 <div class="form-group">
-                    <label for="urlvideo">Video URL</label>
+                    <label for="urlvideo" style="width: 200px;">Video URL</label>
                     <input type="text"
                         name="url"
                         class="form-control url"
@@ -308,8 +308,17 @@
                         placeholder="http://openerp.com"
                         value="//www.youtube.com/embed/yws1tbgNV7k"/>
                     <span class="text-muted">
-                        Youtube, Vimeo, Dailymotion
+                        (Youtube, Vimeo, Dailymotion)
                     </span>
+                </div>
+                <div class="form-group">
+                    <label for="urlvideo" style="width: 200px;">Html Embed Video</label>
+                    <input type="text"
+                        name="embed"
+                        class="form-control url"
+                        style="width: 400px;"
+                        id="embedvideo"
+                        placeholder='&lt;iframe src="//www.youtube.com/embed/yws1tbgNV7k"&gt;&lt;/iframe&gt;'/>
                 </div>
             </div>
             

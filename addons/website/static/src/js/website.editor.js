@@ -1816,6 +1816,7 @@
         template: 'website.editor.dialog.video',
         events : _.extend({}, website.editor.Dialog.prototype.events, {
             'blur input#urlvideo': 'get_video',
+            'blur input#embedvideo': 'get_embed_video',
         }),
         start: function () {
             this.$iframe = this.$("iframe");
@@ -1838,7 +1839,14 @@
                     return "//player.vimeo.com/video/" + video_id + "?autoplay=" + (this.$("#autoplay").is(":checked") ? 1 : 0);
                 case "dailymotion":
                     return "//www.dailymotion.com/embed/video/" + video_id + "?autoplay=" + (this.$("#autoplay").is(":checked") ? 1 : 0);
+                default:
+                    return video_id;
             }
+        },
+        get_embed_video: function () {
+            var embedvideo = this.$("input#embedvideo").val().match(/src=["']?([^"']+)["' ]?/);
+            this.$("input#urlvideo").val(embedvideo ? embedvideo[1] : "");
+            this.get_video();
         },
         get_video: function () {
             var needle = this.$("input#urlvideo").val();
@@ -1857,6 +1865,9 @@
             } else if (needle.indexOf(".dailymotion.") != -1) {
                 video_type = "dailymotion";
                 video_id = needle.match(/dailymotion\.[a-z]+\/(embed\/)?(video\/)?([^\/?&]+)/i)[3];
+            } else {
+                video_type = "";
+                video_id = needle;
             }
 
             this.$("#video_id").val(video_id);
