@@ -1443,31 +1443,45 @@
                 self.element = new CKEDITOR.dom.element(self.$target[0]);
                 new website.editor.MediaDialog(self, self.element).appendTo(document.body);
             });
-            this.$el.find(".style").click(function (event) {
-                self.transfo(event);
-            });
             this.$el.find(".clear-style").click(function (event) {
                 self.$target.removeClass("fa-spin").attr("style", null);
             });
-        },
-        transfo: function (event) {
-            var self = this;
-            var sel = new CKEDITOR.dom.element(this.$target[0]);
-            var $button = $(event.target);
-            event.preventDefault();
-            event.stopPropagation();
 
-            if (this.$target.data('transfo')) {
-                this.$target.transfo("destroy");
-                $button.addClass("btn-primary").removeClass("btn-default");
-            } else {
-                this.$target.transfo();
-                this.$target.data('transfo').$markup
-                    .on("mouseover", function () { self.$target.trigger("mouseover"); })
-                    .mouseover()
-                    .click(function () { self.$target.transfo("destroy"); });
-            }
-        }
+            this.$target.transfo({
+                hide: true,
+                callback: function () {
+                    var pos = $(this).data("transfo").$center.offset();
+                    self.$overlay.css({
+                        'top': pos.top,
+                        'left': pos.left,
+                        'position': 'absolute',
+                        'height': '20px',
+                        'width': '160px'
+                    });
+                    self.$overlay.find('.oe_overlay_options').css({
+                        'position': 'static'
+                    });
+                }});
+            this.$target.data('transfo').$markup
+                .on("mouseover", function () {
+                    self.$target.trigger("mouseover");
+                })
+                .mouseover()
+                .click(function () {
+                    self.$target.transfo({ hide: false });
+                });
+
+            this.$el.find(".style").click(function (event) {
+                var settings = self.$target.data("transfo").settings;
+                self.$target.transfo({ hide: (settings.hide = !settings.hide) });
+            });
+        },
+        onFocus : function () {
+            this.$target.transfo({ hide: true });
+        },
+        onBlur : function () {
+            this.$target.transfo({ hide: true });
+        },
     });
 
 
@@ -1479,7 +1493,7 @@
             this.snippet_id = this.$target.data("snippet-id");
             this._readXMLData();
             this.load_style_options();
-            this.get_phantom();
+            this.get_transform();
             this.get_parent_block();
             this.start();
         },
@@ -1621,7 +1635,7 @@
             this.$overlay.find('[data-toggle="dropdown"]').dropdown();
         },
 
-        get_phantom: function () {
+        get_transform: function () {
             var self = this;
             var phantom = false;
             for (var i in this.styles){
@@ -1635,7 +1649,7 @@
                 // setTimeout(function () {
                 //     self.BuildingBlock.make_active($parent);
                 // }, 0);
-                this.$overlay.find('.oe_snippet_clone, .oe_snippet_remove, .oe_handles').addClass('hidden');
+                this.$overlay.find('.oe_snippet_clone, .oe_handles').addClass('hidden');
             }
         },
 

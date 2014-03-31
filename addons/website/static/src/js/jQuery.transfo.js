@@ -36,6 +36,7 @@ OTHER DEALINGS IN THE SOFTWARE.
                             _init($this, settings);
                         } else {
                             _overwriteOptions($this, transfo, settings);
+                            _targetCss($this, transfo);
                         }
                     });
                 },
@@ -106,11 +107,13 @@ OTHER DEALINGS IN THE SOFTWARE.
             _setOptions($this, transfo);
             _overwriteOptions ($this, transfo, settings);
 
-            // set transfo container and markup
-            _targetCss($this, transfo);
-
             // append controls to container
             $("body").append(transfo.$markup);
+
+            // set transfo container and markup
+            setTimeout(function () {
+                _targetCss($this, transfo);
+            },0);
 
             _bind($this, transfo);
         }
@@ -120,8 +123,8 @@ OTHER DEALINGS IN THE SOFTWARE.
         }
 
         function _setOptions ($this, transfo) {
-            var style = $this.attr("style");
-            var transform = (style||"").match(/transform\s*:([^;]+)/) ? style.match(/transform\s*:([^;]+)/)[1] : "";
+            var style = $this.attr("style") || "";
+            var transform = style.match(/transform\s*:([^;]+)/) ? style.match(/transform\s*:([^;]+)/)[1] : "";
 
             transfo.settings = {};
 
@@ -131,7 +134,7 @@ OTHER DEALINGS IN THE SOFTWARE.
             transfo.settings.scalex=     transform.indexOf('scaleX') != -1 ? parseFloat(transform.match(/scaleX\(([^)]+)\)/)[1]) : 1;
             transfo.settings.scaley=     transform.indexOf('scaleY') != -1 ? parseFloat(transform.match(/scaleY\(([^)]+)\)/)[1]) : 1;
 
-            transfo.settings.style = ($this.attr("style")||"").replace(/[^;]*transform[^;]+/g, '');
+            transfo.settings.style = style.replace(/[^;]*transform[^;]+/g, '').replace(/;+/g, ';');
             $this.attr("style", transfo.settings.style);
 
             transfo.settings.height = $this.innerHeight();
@@ -140,6 +143,7 @@ OTHER DEALINGS IN THE SOFTWARE.
             transfo.settings.pos = $this.offset();
 
             transfo.settings.rotationStep = 5;
+            transfo.settings.hide = false;
             transfo.settings.callback = function () {};
         }
 
@@ -327,9 +331,16 @@ OTHER DEALINGS IN THE SOFTWARE.
                 "left:" + left + "px;" +
                 "width:" + width + "px;" +
                 "height:" + height + "px;" +
-                "z-index: 1000;" +
+                "z-index:" + (transfo.settings.hide ? "-1" : "1000") + ";" +
                 "cursor: move;",
                 settings);
+
+            if (transfo.settings.hide) {
+                transfo.$markup.find(">").hide();
+                transfo.$markup.find(".transfo-scaler-mc").show();
+            } else {
+                transfo.$markup.find(">").show();
+            }
 
             transfo.settings.callback.call($this[0], $this);
         }
