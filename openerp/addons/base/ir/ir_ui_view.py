@@ -738,9 +738,26 @@ class view(osv.osv):
     def clear_cache(self):
         self.read_template.clear_cache(self)
 
+    def _contains_branded(self, node):
+        return node.tag == 't'\
+            or 't-raw' in node.attrib\
+            or any(self.is_node_branded(child) for child in node.iterdescendants())
+
+    def _pop_view_branding(self, element):
+        distributed_branding = dict(
+            (attribute, element.attrib.pop(attribute))
+            for attribute in MOVABLE_BRANDING
+            if element.get(attribute))
+        return distributed_branding
+
     def distribute_branding(self, e, branding=None, parent_xpath='',
                             index_map=misc.ConstantMapping(1)):
         if e.get('t-ignore') or e.tag == 'head':
+            # remove any view branding possibly injected by inheritance
+            attrs = set(MOVABLE_BRANDING)
+            for descendant in e.iterdescendants(tag=etree.Element):
+                if not attrs.intersection(descendant.attrib): continue
+                self._pop_view_branding(descendant)
             # TODO: find a better name and check if we have a string to boolean helper
             return
 
@@ -752,15 +769,15 @@ class view(osv.osv):
             e.set('data-oe-xpath', node_path)
         if not e.get('data-oe-model'): return
 
-        # if a branded element contains branded elements distribute own
-        # branding to children unless it's t-raw, then just remove branding
-        # on current element
-        if e.tag == 't' or 't-raw' in e.attrib or \
-                any(self.is_node_branded(child) for child in e.iterdescendants()):
-            distributed_branding = dict(
-                (attribute, e.attrib.pop(attribute))
-                for attribute in MOVABLE_BRANDING
-                if e.get(attribute))
+        if set(('t-esc', 't-escf', 't-raw', 't-rawf')).intersection(e.attrib):
+            # nodes which fully generate their content and have no reason to
+            # be branded because they can not sensibly be edited
+            self._pop_view_branding(e)
+        elif self._contains_branded(e):
+            # if a branded element contains branded elements distribute own
+            # branding to children unless it's t-raw, then just remove branding
+            # on current element
+            distributed_branding = self._pop_view_branding(e)
 
             if 't-raw' not in e.attrib:
                 # TODO: collections.Counter if remove p2.6 compat
@@ -770,11 +787,12 @@ class view(osv.osv):
                     if child.get('data-oe-xpath'):
                         # injected by view inheritance, skip otherwise
                         # generated xpath is incorrect
-                        continue
-                    indexes[child.tag] += 1
-                    self.distribute_branding(child, distributed_branding,
-                                             parent_xpath=node_path,
-                                             index_map=indexes)
+                        self.distribute_branding(child)
+                    else:
+                        indexes[child.tag] += 1
+                        self.distribute_branding(
+                            child, distributed_branding,
+                            parent_xpath=node_path, index_map=indexes)
 
     def is_node_branded(self, node):
         """ Finds out whether a node is branded or qweb-active (bears a

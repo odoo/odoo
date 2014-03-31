@@ -32,7 +32,7 @@ class QWebException(Exception):
 class QWebTemplateNotFound(QWebException):
     pass
 
-def convert_to_qweb_exception(etype=None, **kw):
+def raise_qweb_exception(etype=None, **kw):
     if etype is None:
         etype = QWebException
     orig_type, original, tb = sys.exc_info()
@@ -43,7 +43,7 @@ def convert_to_qweb_exception(etype=None, **kw):
             e.qweb[k] = v
         # Will use `raise foo from bar` in python 3 and rename cause to __cause__
         e.qweb['cause'] = original
-        return e
+        raise
 
 class QWebContext(dict):
     def __init__(self, cr, uid, data, loader=None, templates=None, context=None):
@@ -166,7 +166,7 @@ class QWeb(orm.AbstractModel):
             try:
                 xml_doc = qwebcontext.loader(name)
             except ValueError:
-                raise convert_to_qweb_exception(QWebTemplateNotFound, message="Loader could not find template %r" % name, template=origin_template)
+                raise_qweb_exception(QWebTemplateNotFound, message="Loader could not find template %r" % name, template=origin_template)
             self.load_document(xml_doc, qwebcontext=qwebcontext)
 
         if name in qwebcontext.templates:
@@ -179,7 +179,7 @@ class QWeb(orm.AbstractModel):
             return qwebcontext.safe_eval(expr)
         except Exception:
             template = qwebcontext.get('__template__')
-            raise convert_to_qweb_exception(message="Could not evaluate expression %r" % expr, expression=expr, template=template)
+            raise_qweb_exception(message="Could not evaluate expression %r" % expr, expression=expr, template=template)
 
     def eval_object(self, expr, qwebcontext):
         return self.eval(expr, qwebcontext)
@@ -207,7 +207,7 @@ class QWeb(orm.AbstractModel):
             return str(expr % qwebcontext)
         except Exception:
             template = qwebcontext.get('__template__')
-            raise convert_to_qweb_exception(message="Format error for expression %r" % expr, expression=expr, template=template)
+            raise_qweb_exception(message="Format error for expression %r" % expr, expression=expr, template=template)
 
     def eval_bool(self, expr, qwebcontext):
         return int(bool(self.eval(expr, qwebcontext)))
@@ -292,7 +292,7 @@ class QWeb(orm.AbstractModel):
                     raise
                 except Exception:
                     template = qwebcontext.get('__template__')
-                    raise convert_to_qweb_exception(message="Could not render element %r" % element.nodeName, node=element, template=template)
+                    raise_qweb_exception(message="Could not render element %r" % element.nodeName, node=element, template=template)
         name = str(element.nodeName)
         inner = "".join(g_inner)
         trim = template_attributes.get("trim", 0)
@@ -488,7 +488,6 @@ class FieldConverter(osv.AbstractModel):
         A default configuration key is ``widget`` which can override the
         field's own ``_type``.
         """
-        content = None
         try:
             content = self.record_to_html(
                 cr, uid, field_name, record,
@@ -503,12 +502,14 @@ class FieldConverter(osv.AbstractModel):
                             field_name, record._model._name, exc_info=True)
             content = None
 
-        g_att += ''.join(
-            ' %s="%s"' % (name, werkzeug.utils.escape(value))
-            for name, value in self.attributes(
-                cr, uid, field_name, record, options,
-                source_element, g_att, t_att, qweb_context)
-        )
+        if context and context.get('inherit_branding'):
+            # add branding attributes
+            g_att += ''.join(
+                ' %s="%s"' % (name, werkzeug.utils.escape(value))
+                for name, value in self.attributes(
+                    cr, uid, field_name, record, options,
+                    source_element, g_att, t_att, qweb_context)
+            )
 
         return self.render_element(cr, uid, source_element, t_att, g_att,
                                    qweb_context, content)
@@ -611,6 +612,9 @@ class DateTimeConverter(osv.AbstractModel):
             strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
             pattern = openerp.tools.posix_to_ldml(strftime_pattern, locale=locale)
 
+        if options and options.get('hide_seconds'):
+            pattern = pattern.replace(":ss", "").replace(":s", "")
+        
         return babel.dates.format_datetime(value, format=pattern, locale=locale)
 
 class TextConverter(osv.AbstractModel):
@@ -803,6 +807,38 @@ class RelativeDatetimeConverter(osv.AbstractModel):
 
         return babel.dates.format_timedelta(
             value - reference, add_direction=True, locale=locale)
+
+
+class Contact(orm.AbstractModel):
+    _name = 'ir.qweb.field.contact'
+    _inherit = 'ir.qweb.field.many2one'
+
+    def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
+        opf = options.get('fields') or ["name", "address", "phone", "mobile", "fax", "email"]
+
+        if not getattr(record, field_name):
+            return None
+
+        id = getattr(record, field_name).id
+        field_browse = self.pool[column._obj].browse(cr, openerp.SUPERUSER_ID, id, context={"show_address": True})
+        value = werkzeug.utils.escape( field_browse.name_get()[0][1] )
+
+        val = {
+            'name': value.split("\n")[0],
+            'address': werkzeug.utils.escape("\n".join(value.split("\n")[1:])),
+            'phone': field_browse.phone,
+            'mobile': field_browse.mobile,
+            'fax': field_browse.fax,
+            'city': field_browse.city,
+            'country_id': field_browse.country_id and field_browse.country_id.name_get()[0][1],
+            'email': field_browse.email,
+            'fields': opf,
+            'options': options
+        }
+
+        html = self.pool["ir.ui.view"].render(cr, uid, "base.contact", val, engine='ir.qweb', context=context).decode('utf8')
+
+        return HTMLSafe(html)
 
 class HTMLSafe(object):
     """ HTMLSafe string wrapper, Werkzeug's escape() has special handling for

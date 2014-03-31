@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -169,8 +169,9 @@ class res_users(osv.osv):
     }
 
     def on_change_login(self, cr, uid, ids, login, context=None):
-        v = {'email': login} if tools.single_email_re.match(login) else {}
-        return {'value': v}
+        if login and tools.single_email_re.match(login):
+            return {'value': {'email': login}}
+        return {}
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
@@ -585,7 +586,7 @@ class groups_implied(osv.osv):
         res = super(groups_implied, self).write(cr, uid, ids, values, context)
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
-            for g in self.browse(cr, uid, ids):
+            for g in self.browse(cr, uid, ids, context=context):
                 gids = map(int, g.trans_implied_ids)
                 vals = {'users': [(4, u.id) for u in g.users]}
                 super(groups_implied, self).write(cr, uid, gids, vals, context)
@@ -899,18 +900,22 @@ class change_password_wizard(osv.TransientModel):
             }))
         return {'user_ids': res}
 
-
     def change_password_button(self, cr, uid, id, context=None):
         wizard = self.browse(cr, uid, id, context=context)[0]
-        user_ids = []
-        for user in wizard.user_ids:
-            user_ids.append(user.id)
-        self.pool.get('change.password.user').change_password_button(cr, uid, user_ids, context=context)
+        need_reload = any(uid == user.user_id.id for user in wizard.user_ids)
+        line_ids = [user.id for user in wizard.user_ids]
+
+        self.pool.get('change.password.user').change_password_button(cr, uid, line_ids, context=context)
         # don't keep temporary password copies in the database longer than necessary
-        self.pool.get('change.password.user').unlink(cr, uid, user_ids)
-        return {
-            'type': 'ir.actions.act_window_close',
-        }
+        self.pool.get('change.password.user').write(cr, uid, line_ids, {'new_passwd': False}, context=context)
+
+        if need_reload:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'reload'
+            }
+
+        return {'type': 'ir.actions.act_window_close'}
 
 class change_password_user(osv.TransientModel):
     """

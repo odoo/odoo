@@ -23,6 +23,7 @@ import urlparse
 import warnings
 
 import babel.core
+import psutil
 import psycopg2
 import simplejson
 import werkzeug.contrib.sessions
@@ -35,7 +36,7 @@ import werkzeug.wsgi
 
 import openerp
 from openerp.service import security, model as service_model
-import openerp.tools
+from openerp.tools.func import lazy_property
 
 _logger = logging.getLogger(__name__)
 
@@ -49,6 +50,70 @@ request = _request_stack()
 """
     A global proxy that always redirect to the current request object.
 """
+
+def replace_request_password(args):
+    # password is always 3rd argument in a request, we replace it in RPC logs
+    # so it's easier to forward logs for diagnostics/debugging purposes...
+    if len(args) > 2:
+        args = list(args)
+        args[2] = '*'
+    return tuple(args)
+
+def dispatch_rpc(service_name, method, params):
+    """ Handle a RPC call.
+
+    This is pure Python code, the actual marshalling (from/to XML-RPC) is done
+    in a upper layer.
+    """
+    try:
+        rpc_request = logging.getLogger(__name__ + '.rpc.request')
+        rpc_response = logging.getLogger(__name__ + '.rpc.response')
+        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
+        rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
+        if rpc_request_flag or rpc_response_flag:
+            start_time = time.time()
+            start_rss, start_vms = 0, 0
+            start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
+            if rpc_request and rpc_response_flag:
+                openerp.netsvc.log(rpc_request, logging.DEBUG, '%s.%s' % (service_name, method), replace_request_password(params))
+
+        threading.current_thread().uid = None
+        threading.current_thread().dbname = None
+        if service_name == 'common':
+            dispatch = openerp.service.common.dispatch
+        elif service_name == 'db':
+            dispatch = openerp.service.db.dispatch
+        elif service_name == 'object':
+            dispatch = openerp.service.model.dispatch
+        elif service_name == 'report':
+            dispatch = openerp.service.report.dispatch
+        else:
+            dispatch = openerp.service.wsgi_server.rpc_handlers.get(service_name)
+        result = dispatch(method, params)
+
+        if rpc_request_flag or rpc_response_flag:
+            end_time = time.time()
+            end_rss, end_vms = 0, 0
+            end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
+            logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
+            if rpc_response_flag:
+                openerp.netsvc.log(rpc_response, logging.DEBUG, logline, result)
+            else:
+                openerp.netsvc.log(rpc_request, logging.DEBUG, logline, replace_request_password(params), depth=1)
+
+        return result
+    except (openerp.osv.orm.except_orm, openerp.exceptions.AccessError, \
+            openerp.exceptions.AccessDenied, openerp.exceptions.Warning, \
+            openerp.exceptions.RedirectWarning):
+        raise
+    except openerp.exceptions.DeferredException, e:
+        _logger.exception(openerp.tools.exception_to_unicode(e))
+        openerp.tools.debugger.post_mortem(openerp.tools.config, e.traceback)
+        raise
+    except Exception, e:
+        _logger.exception(openerp.tools.exception_to_unicode(e))
+        openerp.tools.debugger.post_mortem(openerp.tools.config, sys.exc_info())
+        raise
 
 def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=303):
     url = path
@@ -133,6 +198,10 @@ class WebRequest(object):
         self.auth_method = None
         self._cr_cm = None
         self._cr = None
+
+        # prevents transaction commit, use when you catch an exception during handling
+        self._failed = None
+
         # set db/uid trackers - they're cleaned up at the WSGI
         # dispatching phase in openerp.service.wsgi_server.application
         if self.db:
@@ -180,10 +249,13 @@ class WebRequest(object):
         _request_stack.pop()
 
         if self._cr:
-            # Dont commit test cursors
-            if not openerp.tests.common.release_test_cursor(self.session_id):
-                if exc_type is None:
+            # Dont close test cursors
+            if not openerp.tests.common.release_test_cursor(self._cr):
+                if exc_type is None and not self._failed:
                     self._cr.commit()
+                else:
+                    # just to be explicit - happens at close() anyway
+                    self._cr.rollback()
                 self._cr.close()
         # just to be sure no one tries to re-use the request
         self.disable_db = True
@@ -209,20 +281,19 @@ class WebRequest(object):
         # Backward for 7.0
         if self.endpoint.first_arg_is_req:
             args = (request,) + args
+
         # Correct exception handling and concurency retry
         @service_model.check
         def checked_call(___dbname, *a, **kw):
+            # The decorator can call us more than once if there is an database error. In this
+            # case, the request cursor is unusable. Rollback transaction to create a new one.
+            if self._cr and not openerp.tools.config['test_enable']:
+                self._cr.rollback()
             return self.endpoint(*a, **kw)
 
-        # FIXME: code and rollback management could be cleaned
-        try:
-            if self.db:
-                return checked_call(self.db, *args, **kwargs)
-            return self.endpoint(*args, **kwargs)
-        except Exception:
-            if self._cr:
-                self._cr.rollback()
-            raise
+        if self.db:
+            return checked_call(self.db, *args, **kwargs)
+        return self.endpoint(*args, **kwargs)
 
     @property
     def debug(self):
@@ -362,21 +433,25 @@ class JsonRequest(WebRequest):
             response['id'] = self.jsonrequest.get('id')
             response["result"] = self._call_function(**self.params)
         except AuthenticationError, e:
-            _logger.exception("Exception during JSON request handling.")
+            _logger.exception("JSON-RPC AuthenticationError in %s.", self.httprequest.path)
             se = serialize_exception(e)
             error = {
                 'code': 100,
                 'message': "OpenERP Session Invalid",
                 'data': se
             }
+            self._failed = e # prevent tx commit
         except Exception, e:
-            _logger.exception("Exception during JSON request handling.")
+            # Mute test cursor error for runbot
+            if not (openerp.tools.config['test_enable'] and isinstance(e, psycopg2.OperationalError)):
+                _logger.exception("JSON-RPC Exception in %s.", self.httprequest.path)
             se = serialize_exception(e)
             error = {
                 'code': 200,
                 'message': "OpenERP Server Error",
                 'data': se
             }
+            self._failed = e # prevent tx commit
         if error:
             response["error"] = error
 
@@ -618,7 +693,7 @@ class SessionExpiredException(Exception):
 class Service(object):
     """
         .. deprecated:: 8.0
-        Use ``openerp.netsvc.dispatch_rpc()`` instead.
+        Use ``dispatch_rpc()`` instead.
     """
     def __init__(self, session, service_name):
         self.session = session
@@ -626,7 +701,7 @@ class Service(object):
 
     def __getattr__(self, method):
         def proxy_method(*args):
-            result = openerp.netsvc.dispatch_rpc(self.service_name, method, args)
+            result = dispatch_rpc(self.service_name, method, args)
             return result
         return proxy_method
 
@@ -699,7 +774,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
                 HTTP_HOST=wsgienv['HTTP_HOST'],
                 REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
             )
-            uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, login, password, env])
+            uid = dispatch_rpc('common', 'authenticate', [db, login, password, env])
         else:
             security.check(db, uid, password)
         self.db = db
@@ -733,7 +808,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.setdefault("uid", None)
         self.setdefault("login", None)
         self.setdefault("password", None)
-        self.setdefault("context", {'tz': "UTC", "uid": None})
+        self.setdefault("context", {})
 
     def get_context(self):
         """
@@ -803,14 +878,14 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     def send(self, service_name, method, *args):
         """
         .. deprecated:: 8.0
-        Use ``openerp.netsvc.dispatch_rpc()`` instead.
+        Use ``dispatch_rpc()`` instead.
         """
-        return openerp.netsvc.dispatch_rpc(service_name, method, args)
+        return dispatch_rpc(service_name, method, args)
 
     def proxy(self, service):
         """
         .. deprecated:: 8.0
-        Use ``openerp.netsvc.dispatch_rpc()`` instead.
+        Use ``dispatch_rpc()`` instead.
         """
         return Service(self, service)
 
@@ -1003,22 +1078,25 @@ class Root(object):
         path = openerp.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
         self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
+        self._loaded = False
 
-        # TODO should we move this to ir.http so that only configured modules are served ?
-        _logger.info("HTTP Configuring static files")
-        self.load_addons()
-
+    @lazy_property
+    def nodb_routing_map(self):
         _logger.info("Generating nondb routing")
-        self.nodb_routing_map = routing_map([''] + openerp.conf.server_wide_modules, True)
+        return routing_map([''] + openerp.conf.server_wide_modules, True)
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
         """
+        if not self._loaded:
+            self._loaded = True
+            self.load_addons()
         return self.dispatch(environ, start_response)
 
     def load_addons(self):
-        """ Load all addons from addons patch containg static files and
+        """ Load all addons from addons path containing static files and
         controllers and configure them.  """
+        # TODO should we move this to ir.http so that only configured modules are served ?
         statics = {}
 
         for addons_path in openerp.modules.module.ad_paths:
@@ -1032,12 +1110,16 @@ class Root(object):
                         _logger.debug("Loading %s", module)
                         if 'openerp.addons' in sys.modules:
                             m = __import__('openerp.addons.' + module)
+                        else:
+                            m = None
                         addons_module[module] = m
                         addons_manifest[module] = manifest
                         statics['/%s/static' % module] = path_static
 
-        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics)
-        self.dispatch = DisableCacheMiddleware(app)
+        if statics:
+            _logger.info("HTTP Configuring static files")
+            app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics)
+            self.dispatch = DisableCacheMiddleware(app)
 
     def setup_session(self, httprequest):
         # recover or create session
@@ -1163,7 +1245,7 @@ class Root(object):
         return request.registry['ir.http'].routing_map()
 
 def db_list(force=False, httprequest=None):
-    dbs = openerp.netsvc.dispatch_rpc("db", "list", [force])
+    dbs = dispatch_rpc("db", "list", [force])
     return db_filter(dbs, httprequest=httprequest)
 
 def db_filter(dbs, httprequest=None):
@@ -1208,18 +1290,10 @@ class CommonController(Controller):
     @route('/jsonrpc', type='json', auth="none")
     def jsonrpc(self, service, method, args):
         """ Method used by client APIs to contact OpenERP. """
-        return openerp.netsvc.dispatch_rpc(service, method, args)
+        return dispatch_rpc(service, method, args)
 
-    @route('/gen_session_id', type='json', auth="none")
-    def gen_session_id(self):
-        nsession = root.session_store.new()
-        return nsession.sid
-
-root = None
-
-def wsgi_postload():
-    global root
-    root = Root()
-    openerp.service.wsgi_server.register_wsgi_handler(root)
+# register main wsgi handler
+root = Root()
+openerp.service.wsgi_server.register_wsgi_handler(root)
 
 # vim:et:ts=4:sw=4:
