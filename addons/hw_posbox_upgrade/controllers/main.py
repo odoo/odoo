@@ -32,7 +32,7 @@ upgrade_template = """
                         $('#upgrade').html('Upgrade Successful<br \\>Click to Restart the PosBox');
                         $('#upgrade').off('click');
                         $('#upgrade').click(function(){
-                            $.ajax({ url:'hw_proxy/perform_restart' })
+                            $.ajax({ url:'/hw_proxy/perform_restart' })
                             $('#upgrade').text('Restarting');
                             $('#upgrade').off('click');
                             setTimeout(function(){
