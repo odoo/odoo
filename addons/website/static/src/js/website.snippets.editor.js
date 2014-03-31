@@ -1176,6 +1176,7 @@
                         dy = dy - dy%resize;
                         if (dy <= 0) dy = resize;
                         self.$target.css("height", dy+"px");
+                        self.$target.css("overflow", "hidden");
                         self.on_resize(compass, null, dy);
                         self.BuildingBlock.cover_target(self.$overlay, self.$target);
                         return;
@@ -1216,6 +1217,7 @@
             });
             this.$overlay.find(".oe_handle.size .auto_size").on('click', function (event){
                 self.$target.css("height", "");
+                self.$target.css("overflow", "");
                 self.BuildingBlock.cover_target(self.$overlay, self.$target);
                 return false;
             });
