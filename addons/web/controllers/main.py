@@ -32,7 +32,7 @@ except ImportError:
 import openerp
 import openerp.modules.registry
 from openerp.tools.translate import _
-from openerp import http
+from openerp import http, tools
 
 from openerp.http import request, serialize_exception as _serialize_exception
 
@@ -1679,6 +1679,8 @@ class Export(http.Controller):
             for k, v in self.fields_info(model, export_fields).iteritems())
 
 class ExportFormat(object):
+    raw_data = True
+
     @property
     def content_type(self):
         """ Provides the format's content type """
@@ -1711,7 +1713,7 @@ class ExportFormat(object):
         ids = ids or Model.search(domain, 0, False, False, request.context)
 
         field_names = map(operator.itemgetter('name'), fields)
-        import_data = Model.export_data(ids, field_names, request.context).get('datas',[])
+        import_data = Model.export_data(ids, field_names, self.raw_data, context=request.context).get('datas',[])
 
         if import_compat:
             columns_headers = field_names
@@ -1764,6 +1766,8 @@ class CSVExport(ExportFormat, http.Controller):
         return data
 
 class ExcelExport(ExportFormat, http.Controller):
+    # Excel needs raw data to correctly handle numbers and date values
+    raw_data = True
 
     @http.route('/web/export/xls', type='http', auth="user")
     @serialize_exception
@@ -1785,14 +1789,20 @@ class ExcelExport(ExportFormat, http.Controller):
             worksheet.write(0, i, fieldname)
             worksheet.col(i).width = 8000 # around 220 pixels
 
-        style = xlwt.easyxf('align: wrap yes')
+        base_style = xlwt.easyxf('align: wrap yes')
+        date_style = xlwt.easyxf('align: wrap yes', num_format_str=tools.DEFAULT_SERVER_DATE_FORMAT)
+        datetime_style = xlwt.easyxf('align: wrap yes', num_format_str=tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
         for row_index, row in enumerate(rows):
             for cell_index, cell_value in enumerate(row):
+                cell_style = base_style
                 if isinstance(cell_value, basestring):
                     cell_value = re.sub("\r", " ", cell_value)
-                if cell_value is False: cell_value = None
-                worksheet.write(row_index + 1, cell_index, cell_value, style)
+                elif isinstance(cell_value, datetime.date):
+                    cell_style = date_style
+                elif isinstance(cell_value, datetime.datetime):
+                    cell_style = datetime_style
+                worksheet.write(row_index + 1, cell_index, cell_value, cell_style)
 
         fp = StringIO()
         workbook.save(fp)
