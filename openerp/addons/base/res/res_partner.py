@@ -353,7 +353,9 @@ class res_partner(osv.Model, format_address):
 
     @one
     def copy(self, default=None):
-        default = dict(default or {}, name=_('%s (copy)') % self.name)
+        default = dict(default or {})
+        default['user_ids'] = False
+        default['name'] = _('%s (copy)') % self.name
         return super(res_partner, self).copy(default)
 
     @multi

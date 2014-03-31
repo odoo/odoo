@@ -493,6 +493,10 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         return res
 
     def execute(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+
+        context = dict(context, active_test=False)
         if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
             raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
 
@@ -500,7 +504,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         ir_module = self.pool['ir.module.module']
         res_groups = self.pool['res.groups']
 
-        classified = self._get_classified_fields(cr, uid, context)
+        classified = self._get_classified_fields(cr, uid, context=context)
 
         config = self.browse(cr, uid, ids[0], context)
 

@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
-
-import base64
-import contextlib
+from contextlib import closing
+from functools import wraps
 import logging
 import os
+import shutil
 import threading
 import traceback
-from contextlib import contextmanager, closing
+import tempfile
+import zipfile
+
+import psycopg2
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -28,7 +31,8 @@ def _initialize_db(id, db_name, demo, lang, user_password):
         self_actions[id]['progress'] = 0
         db = openerp.sql_db.db_connect(db_name)
         with closing(db.cursor()) as cr:
-            openerp.modules.db.initialize(cr) # TODO this should be removed as it is done by RegistryManager.new().
+            # TODO this should be removed as it is done by RegistryManager.new().
+            openerp.modules.db.initialize(cr)
             openerp.tools.config['lang'] = lang
             cr.commit()
 
@@ -55,14 +59,13 @@ def _initialize_db(id, db_name, demo, lang, user_password):
         self_actions[id]['traceback'] = traceback.format_exc()
 
 def dispatch(method, params):
-    if method in [ 'create', 'get_progress', 'drop', 'dump',
-        'restore', 'rename',
-        'change_admin_password', 'migrate_databases',
-        'create_database', 'duplicate_database' ]:
+    if method in ['create', 'get_progress', 'drop', 'dump', 'restore', 'rename',
+                  'change_admin_password', 'migrate_databases',
+                  'create_database', 'duplicate_database']:
         passwd = params[0]
         params = params[1:]
         security.check_super(passwd)
-    elif method in [ 'db_exist', 'list', 'list_lang', 'server_version' ]:
+    elif method in ['db_exist', 'list', 'list_lang', 'server_version']:
         # params = params
         # No security check for these methods
         pass
@@ -78,9 +81,9 @@ def _create_empty_database(name):
         cr.execute("SELECT datname FROM pg_database WHERE datname = %s",
                    (name,))
         if cr.fetchall():
-            raise openerp.exceptions.Warning(" %s database already exists!" % name )
+            raise openerp.exceptions.Warning("database %r already exists!" % (name,))
         else:
-            cr.autocommit(True) # avoid transaction block
+            cr.autocommit(True)     # avoid transaction block
             cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (name, chosen_template))
 
 def exp_create(db_name, demo, lang, user_password='admin'):
@@ -96,7 +99,7 @@ def exp_create(db_name, demo, lang, user_password='admin'):
 
     _logger.info('CREATE DATABASE %s', db_name.lower())
     create_thread = threading.Thread(target=_initialize_db,
-            args=(id, db_name, demo, lang, user_password))
+                                     args=(id, db_name, demo, lang, user_password))
     create_thread.start()
     self_actions[id]['thread'] = create_thread
     return id
@@ -121,14 +124,19 @@ def exp_duplicate_database(db_original_name, db_name):
     openerp.sql_db.close_db(db_original_name)
     db = openerp.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
-        cr.autocommit(True) # avoid transaction block
+        cr.autocommit(True)     # avoid transaction block
         cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (db_name, db_original_name))
+
+    from_fs = openerp.tools.config.filestore(db_original_name)
+    to_fs = openerp.tools.config.filestore(db_name)
+    if os.path.exists(from_fs) and not os.path.exists(to_fs):
+        shutil.copy(from_fs, to_fs)
     return True
 
 def exp_get_progress(id):
     if self_actions[id]['thread'].isAlive():
 #       return openerp.modules.init_progress[db_name]
-        return min(self_actions[id].get('progress', 0),0.95), []
+        return min(self_actions[id].get('progress', 0), 0.95), []
     else:
         clean = self_actions[id]['clean']
         if clean:
@@ -140,9 +148,9 @@ def exp_get_progress(id):
             self_actions.pop(id)
             return 1.0, users
         else:
-            e = self_actions[id]['exception'] # TODO this seems wrong: actions[id]['traceback'] is set, but not 'exception'.
-            self_actions.pop(id)
-            raise Exception, e
+            a = self_actions.pop(id)
+            exc, tb = a['exception'], a['traceback']
+            raise Exception, exc, tb
 
 def exp_drop(db_name):
     if db_name not in exp_list(True):
@@ -152,18 +160,17 @@ def exp_drop(db_name):
 
     db = openerp.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
-        cr.autocommit(True) # avoid transaction block
+        cr.autocommit(True)     # avoid transaction block
         # Try to terminate all other connections that might prevent
         # dropping the database
         try:
-
             # PostgreSQL 9.2 renamed pg_stat_activity.procpid to pid:
             # http://www.postgresql.org/docs/9.2/static/release-9-2.html#AEN110389
             pid_col = 'pid' if cr._cnx.server_version >= 90200 else 'procpid'
 
             cr.execute("""SELECT pg_terminate_backend(%(pid_col)s)
                           FROM pg_stat_activity
-                          WHERE datname = %%s AND 
+                          WHERE datname = %%s AND
                                 %(pid_col)s != pg_backend_pid()""" % {'pid_col': pid_col},
                        (db_name,))
         except Exception:
@@ -176,96 +183,146 @@ def exp_drop(db_name):
             raise Exception("Couldn't drop database %s: %s" % (db_name, e))
         else:
             _logger.info('DROP DB: %s', db_name)
+
+    fs = openerp.tools.config.filestore(db_name)
+    if os.path.exists(fs):
+        shutil.rmtree(fs)
     return True
 
-@contextlib.contextmanager
-def _set_pg_password_in_environment():
+def _set_pg_password_in_environment(func):
     """ On systems where pg_restore/pg_dump require an explicit
     password (i.e. when not connecting via unix sockets, and most
     importantly on Windows), it is necessary to pass the PG user
     password in the environment or in a special .pgpass file.
 
-    This context management method handles setting
+    This decorator handles setting
     :envvar:`PGPASSWORD` if it is not already
     set, and removing it afterwards.
 
     See also http://www.postgresql.org/docs/8.4/static/libpq-envars.html
-    
+
     .. note:: This is not thread-safe, and should never be enabled for
          SaaS (giving SaaS users the super-admin password is not a good idea
          anyway)
     """
-    if os.environ.get('PGPASSWORD') or not openerp.tools.config['db_password']:
-        yield
-    else:
-        os.environ['PGPASSWORD'] = openerp.tools.config['db_password']
-        try:
-            yield
-        finally:
-            del os.environ['PGPASSWORD']
-
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if os.environ.get('PGPASSWORD') or not openerp.tools.config['db_password']:
+            return func(*args, **kwargs)
+        else:
+            os.environ['PGPASSWORD'] = openerp.tools.config['db_password']
+            try:
+                return func(*args, **kwargs)
+            finally:
+                del os.environ['PGPASSWORD']
+    return wrapper
 
 def exp_dump(db_name):
-    with _set_pg_password_in_environment():
-        cmd = ['pg_dump', '--format=c', '--no-owner']
+    with tempfile.TemporaryFile() as t:
+        dump_db(db_name, t)
+        t.seek(0)
+        return t.read().encode('base64')
+
+@_set_pg_password_in_environment
+def dump_db(db, stream):
+    """Dump database `db` into file-like object `stream`"""
+    with openerp.tools.osutil.tempdir() as dump_dir:
+        registry = openerp.modules.registry.RegistryManager.get(db)
+        with registry.cursor() as cr:
+            filestore = registry['ir.attachment']._filestore(cr, SUPERUSER_ID)
+            if os.path.exists(filestore):
+                shutil.copytree(filestore, os.path.join(dump_dir, 'filestore'))
+
+        dump_file = os.path.join(dump_dir, 'dump.sql')
+        cmd = ['pg_dump', '--format=p', '--no-owner', '--file=' + dump_file]
         if openerp.tools.config['db_user']:
             cmd.append('--username=' + openerp.tools.config['db_user'])
         if openerp.tools.config['db_host']:
             cmd.append('--host=' + openerp.tools.config['db_host'])
         if openerp.tools.config['db_port']:
             cmd.append('--port=' + str(openerp.tools.config['db_port']))
-        cmd.append(db_name)
+        cmd.append(db)
 
-        stdin, stdout = openerp.tools.exec_pg_command_pipe(*tuple(cmd))
-        stdin.close()
-        data = stdout.read()
-        res = stdout.close()
+        if openerp.tools.exec_pg_command(*cmd):
+            _logger.error('DUMP DB: %s failed! Please verify the configuration of the database '
+                          'password on the server. You may need to create a .pgpass file for '
+                          'authentication, or specify `db_password` in the server configuration '
+                          'file.', db)
+            raise Exception("Couldn't dump database")
 
-        if not data or res:
-            _logger.error(
-                    'DUMP DB: %s failed! Please verify the configuration of the database password on the server. '
-                    'You may need to create a .pgpass file for authentication, or specify `db_password` in the '
-                    'server configuration file.\n %s', db_name, data)
-            raise Exception, "Couldn't dump database"
-        _logger.info('DUMP DB successful: %s', db_name)
+        openerp.tools.osutil.zip_dir(dump_dir, stream, include_dir=False)
 
-        return base64.encodestring(data)
+    _logger.info('DUMP DB successful: %s', db)
 
-def exp_restore(db_name, data):
-    with _set_pg_password_in_environment():
-        if exp_db_exist(db_name):
-            _logger.warning('RESTORE DB: %s already exists', db_name)
-            raise Exception, "Database already exists"
+def exp_restore(db_name, data, copy=False):
+    data_file = tempfile.NamedTemporaryFile(delete=False)
+    try:
+        data_file.write(data.decode('base64'))
+        data_file.close()
+        restore_db(db_name, data_file.name, copy=copy)
+    finally:
+        os.unlink(data_file.name)
+    return True
 
-        _create_empty_database(db_name)
+@_set_pg_password_in_environment
+def restore_db(db, dump_file, copy=False):
+    assert isinstance(db, basestring)
+    if exp_db_exist(db):
+        _logger.warning('RESTORE DB: %s already exists', db)
+        raise Exception("Database already exists")
 
-        cmd = ['pg_restore', '--no-owner']
+    _create_empty_database(db)
+
+    filestore_path = None
+    with openerp.tools.osutil.tempdir() as dump_dir:
+        if zipfile.is_zipfile(dump_file):
+            # v8 format
+            with zipfile.ZipFile(dump_file, 'r') as z:
+                # only extract known members!
+                filestore = [m for m in z.namelist() if m.startswith('filestore/')]
+                z.extractall(dump_dir, ['dump.sql'] + filestore)
+
+                if filestore:
+                    filestore_path = os.path.join(dump_dir, 'filestore')
+
+            pg_cmd = 'psql'
+            pg_args = ['-q', '-f', os.path.join(dump_dir, 'dump.sql')]
+
+        else:
+            # <= 7.0 format (raw pg_dump output)
+            pg_cmd = 'pg_restore'
+            pg_args = ['--no-owner', dump_file]
+
+        args = []
         if openerp.tools.config['db_user']:
-            cmd.append('--username=' + openerp.tools.config['db_user'])
+            args.append('--username=' + openerp.tools.config['db_user'])
         if openerp.tools.config['db_host']:
-            cmd.append('--host=' + openerp.tools.config['db_host'])
+            args.append('--host=' + openerp.tools.config['db_host'])
         if openerp.tools.config['db_port']:
-            cmd.append('--port=' + str(openerp.tools.config['db_port']))
-        cmd.append('--dbname=' + db_name)
-        args2 = tuple(cmd)
+            args.append('--port=' + str(openerp.tools.config['db_port']))
+        args.append('--dbname=' + db)
+        pg_args = args + pg_args
 
-        buf=base64.decodestring(data)
-        if os.name == "nt":
-            tmpfile = (os.environ['TMP'] or 'C:\\') + os.tmpnam()
-            file(tmpfile, 'wb').write(buf)
-            args2=list(args2)
-            args2.append(tmpfile)
-            args2=tuple(args2)
-        stdin, stdout = openerp.tools.exec_pg_command_pipe(*args2)
-        if not os.name == "nt":
-            stdin.write(base64.decodestring(data))
-        stdin.close()
-        res = stdout.close()
-        if res:
-            raise Exception, "Couldn't restore database"
-        _logger.info('RESTORE DB: %s', db_name)
+        if openerp.tools.exec_pg_command(pg_cmd, *pg_args):
+            raise Exception("Couldn't restore database")
 
-        return True
+        registry = openerp.modules.registry.RegistryManager.new(db)
+        with registry.cursor() as cr:
+            if copy:
+                # if it's a copy of a database, force generation of a new dbuuid
+                registry['ir.config_parameter'].init(cr, force=True)
+            if filestore_path:
+                filestore_dest = registry['ir.attachment']._filestore(cr, SUPERUSER_ID)
+                shutil.move(filestore_path, filestore_dest)
+
+            if openerp.tools.config['unaccent']:
+                try:
+                    with cr.savepoint():
+                        cr.execute("CREATE EXTENSION unaccent")
+                except psycopg2.Error:
+                    pass
+
+    _logger.info('RESTORE DB: %s', db)
 
 def exp_rename(old_name, new_name):
     openerp.modules.registry.RegistryManager.delete(old_name)
@@ -273,15 +330,21 @@ def exp_rename(old_name, new_name):
 
     db = openerp.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
-        cr.autocommit(True) # avoid transaction block
+        cr.autocommit(True)     # avoid transaction block
         try:
             cr.execute('ALTER DATABASE "%s" RENAME TO "%s"' % (old_name, new_name))
             _logger.info('RENAME DB: %s -> %s', old_name, new_name)
         except Exception, e:
             _logger.error('RENAME DB: %s -> %s failed:\n%s', old_name, new_name, e)
             raise Exception("Couldn't rename database %s to %s: %s" % (old_name, new_name, e))
+
+    old_fs = openerp.tools.config.filestore(old_name)
+    new_fs = openerp.tools.config.filestore(new_name)
+    if os.path.exists(old_fs) and not os.path.exists(new_fs):
+        shutil.move(old_fs, new_fs)
     return True
 
+@openerp.tools.mute_logger('openerp.sql_db')
 def exp_db_exist(db_name):
     ## Not True: in fact, check if connection to database is possible. The database may exists
     return bool(openerp.sql_db.db_connect(db_name))

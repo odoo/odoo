@@ -76,7 +76,6 @@ def py2exe_options():
                     "optimize": 0, # keep the assert running, because the integrated tests rely on them.
                     "dist_dir": 'dist',
                     "packages": [
-                        "DAV",
                         "HTMLParser",
                         "PIL",
                         "asynchat",
@@ -173,6 +172,7 @@ setuptools.setup(
           'pyyaml',
           'qrcode',
           'reportlab', # windows binary pypi.python.org/pypi/reportlab
+          'requests',
           'simplejson',
           'unittest2',
           'vatnumber',
