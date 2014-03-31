@@ -1527,7 +1527,8 @@
         },
 
         fetch_existing: function (needle) {
-            var domain = [['res_model', '=', 'ir.ui.view']];
+            var domain = [['res_model', '=', 'ir.ui.view'], '|',
+                        ['mimetype', '=', false], ['mimetype', '=like', 'image/%']];
             if (needle && needle.length) {
                 domain.push('|', ['datas_fname', 'ilike', needle], ['name', 'ilike', needle]);
             }
