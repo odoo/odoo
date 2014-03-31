@@ -140,11 +140,20 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     // add groupby to the search view
     register_groupby: function(row_groupby, col_groupby) {
-        var query = this.search_view.query;
+        var query = this.search_view.query,
+            groupbys = this.get_groupbys_from_searchview(),
+            search_row_groupby = groupbys.group_by,
+            search_col_groupby = groupbys.col_group_by,
+            row_gb_changed = !_.isEqual(_.pluck(row_groupby, 'field'), search_row_groupby),
+            col_gb_changed = !_.isEqual(_.pluck(col_groupby, 'field'), search_col_groupby);
 
         if (!_.has(this.search_view, '_s_groupby')) { return; }
 
-        if (row_groupby.length && col_groupby.length) {
+        if (!row_gb_changed && !col_gb_changed) {
+            return;
+        }
+
+        if (row_gb_changed && col_gb_changed) {
             // when two changes to the search view will be done, the method do_search
             // will be called twice, once with the correct groupby and incorrect col_groupby,
             // and once with correct informations. This flag is necessary to prevent the 
@@ -152,26 +161,31 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.ignore_do_search = true;
         }
 
-        // add row groupbys
-        var row_facet = this.make_row_groupby_facets(row_groupby),
-            row_search_facet = query.findWhere({category:'GroupBy'});
+        if (row_gb_changed) {
+            // add row groupbys
+            var row_facet = this.make_row_groupby_facets(row_groupby),
+                row_search_facet = query.findWhere({category:'GroupBy'});
 
-        if (row_search_facet) {
-            row_search_facet.values.reset(row_facet.values);
-        } else {
-            if (row_groupby.length) {
-                query.add(row_facet);
+            if (row_search_facet) {
+                row_search_facet.values.reset(row_facet.values);
+            } else {
+                if (row_groupby.length) {
+                    query.add(row_facet);
+                }
             }
         }
-         // add col groupbys
-        var col_facet = this.make_col_groupby_facets(col_groupby),
-            col_search_facet = query.findWhere({category:'ColGroupBy'});
 
-        if (col_search_facet) {
-            col_search_facet.values.reset(col_facet.values);
-        } else {
-            if (col_groupby.length) {
-                query.add(col_facet);
+        if (col_gb_changed) {
+            // add col groupbys
+            var col_facet = this.make_col_groupby_facets(col_groupby),
+                col_search_facet = query.findWhere({category:'ColGroupBy'});
+
+            if (col_search_facet) {
+                col_search_facet.values.reset(col_facet.values);
+            } else {
+                if (col_groupby.length) {
+                    query.add(col_facet);
+                }
             }
         }
     },

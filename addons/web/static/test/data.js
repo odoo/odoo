@@ -1,3 +1,32 @@
+openerp.testing.section('data.dataset', {
+    rpc: 'mock',
+    dependencies: ['web.data'],
+}, function (test) {
+    test('read_ids', {asserts: 2}, function (instance, _, mock) {
+        var d = new instance.web.DataSet(null, 'foo');
+        mock('foo:read', function (args) {
+            var ids = args[0];
+            deepEqual(ids, [3, 1, 2]);
+            return [
+                {id: 1, a: 'bar'},
+                {id: 2, a: 'baz'},
+                {id: 3, a: 'foo'}
+            ];
+        });
+
+        return d.read_ids([3, 1, 2]).then(function (records) {
+            deepEqual(
+                records,
+                [
+                    {id: 3, a: 'foo'},
+                    {id: 1, a: 'bar'},
+                    {id: 2, a: 'baz'}
+                ]
+            )
+        });
+    })
+});
+
 openerp.testing.section('data.model.group_by', {
     rpc: 'mock',
     dependencies: ['web.data'],

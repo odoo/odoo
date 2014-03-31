@@ -157,10 +157,3 @@ class TestRunnerController(http.Controller):
                 # replace OS path separators (from join & normpath) by URI ones
                 yield path[len(root):].replace(os.path.sep, '/')
 
-    @http.route('/web/tests/set_session_value', type='json', auth="none")
-    def set_session_value(self, value):
-        request.session.some_test_value = value
-
-    @http.route('/web/tests/get_session_value', type='json', auth="none")
-    def get_session_value(self):
-        return request.session.some_test_value

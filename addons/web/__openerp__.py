@@ -11,7 +11,6 @@ This module provides the core of the OpenERP Web Client.
         """,
     'depends': ['base'],
     'auto_install': True,
-    'post_load': 'wsgi_postload',
     'data': [
         'views/webclient_templates.xml',
     ],
@@ -87,7 +86,6 @@ This module provides the core of the OpenERP Web Client.
         "static/test/data.js",
         "static/test/list-utils.js",
         "static/test/formats.js",
-        "static/test/jsonrpc.js",
         "static/test/rpc-misordered.js",
         "static/test/evals.js",
         "static/test/search.js",
