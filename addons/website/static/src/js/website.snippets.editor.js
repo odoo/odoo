@@ -1436,16 +1436,10 @@
         start: function () {
             var self = this;
             this._super();
-            website.snippet.start_animation(true, this.$target);
 
-            this.$el.find(".edition").click(function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                self.element = new CKEDITOR.dom.element(self.$target[0]);
-                new website.editor.MediaDialog(self, self.element).appendTo(document.body);
-            });
             this.$el.find(".clear-style").click(function (event) {
                 self.$target.removeClass("fa-spin").attr("style", null);
+                self.$target.transfo({ hide: true });
             });
 
             this.$target.transfo({
@@ -1483,6 +1477,22 @@
         },
         onBlur : function () {
             this.$target.transfo({ hide: true });
+        },
+    });
+
+    website.snippet.options.media = website.snippet.Option.extend({
+        start: function () {
+            var self = this;
+            this._super();
+
+            website.snippet.start_animation(true, this.$target);
+
+            this.$el.find(".edition").click(function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                self.element = new CKEDITOR.dom.element(self.$target[0]);
+                new website.editor.MediaDialog(self, self.element).appendTo(document.body);
+            });
         },
     });
 

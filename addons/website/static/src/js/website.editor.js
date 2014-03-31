@@ -1385,9 +1385,14 @@
 
             return this._super();
         },
+        searchTimer: null,
         search: function () {
+            var self = this;
             var needle = this.$("input#icon-search").val();
-            this.active.search(needle || "");
+            clearTimeout(this.searchTimer);
+            this.searchTimer = setTimeout(function () {
+                self.active.search(needle || "");
+            },250);
         }
     });
 
@@ -1470,6 +1475,13 @@
             this.trigger('cancel');
         },
 
+        search: function (needle) {
+            var self = this;
+            this.fetch_existing(needle).then(function () {
+                self.selected_existing(self.$('input.url').val());
+            });
+        },
+
         set_image: function (url, error) {
             var self = this;
             this.$('input.url').val(error ? null : url || '');
@@ -1483,7 +1495,6 @@
             var $form = this.$('form[action="/website/attach"]');
             if (!$form.find('input[name="upload"]').val().length) {
                 var url = $form.find('input[name="url"]').val();
-                console.log(url);
                 if (this.selected_existing(url).size()) {
                     event.preventDefault();
                     return false;
@@ -1515,14 +1526,18 @@
             this.set_image(url, error);
         },
 
-        fetch_existing: function () {
+        fetch_existing: function (needle) {
+            var domain = [['res_model', '=', 'ir.ui.view']];
+            if (needle && needle.length) {
+                domain.push('|', ['datas_fname', 'ilike', needle], ['name', 'ilike', needle]);
+            }
             return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'ir.attachment',
                 method: 'search_read',
                 args: [],
                 kwargs: {
                     fields: ['name', 'website_url'],
-                    domain: [['res_model', '=', 'ir.ui.view']],
+                    domain: domain,
                     order: 'id desc',
                     context: website.get_context(),
                 }
@@ -1552,7 +1567,6 @@
             this.$('.pager')
                 .find('li.previous').toggleClass('disabled', (from === 0)).end()
                 .find('li.next').toggleClass('disabled', (from + per_screen >= records.length));
-
         },
         select_existing: function (e) {
             var link = $(e.currentTarget).attr('src');
@@ -1835,7 +1849,6 @@
             } else if (needle.indexOf("player.vimeo.") != -1 || needle.indexOf("//vimeo.") != -1) {
                 video_type = "vimeo";
                 video_id = needle.match(/vimeo\.[a-z]+\/(video\/)?([^?&]+)/i)[2];
-                console.log(video_id);
             } else if (needle.indexOf(".dailymotion.") != -1) {
                 video_type = "dailymotion";
                 video_id = needle.match(/dailymotion\.[a-z]+\/(embed\/)?(video\/)?([^\/?&]+)/i)[3];

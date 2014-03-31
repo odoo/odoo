@@ -194,7 +194,7 @@
                 <div class="col-sm-2 existing-attachment-cell"
                      t-foreach="row" t-as="attachment">
                     <i class="fa fa-times existing-attachment-remove" t-att-data-id="attachment.id"/>
-                    <img t-att-src="attachment.website_url" t-att-alt="attachment.name" class="img img-responsive"/>
+                    <img t-att-src="attachment.website_url" t-att-alt="attachment.name" t-att-title="attachment.name" class="img img-responsive"/>
                 </div>
             </div>
         </div>
