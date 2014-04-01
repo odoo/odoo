@@ -21,6 +21,7 @@
 
 from datetime import datetime
 from dateutil import relativedelta
+import random
 import urllib
 import urlparse
 
@@ -68,9 +69,6 @@ class MassMailingContact(osv.Model):
             name = email
         rec_id = self.create(cr, uid, {'name': name, 'email': email}, context=context)
         return self.name_get(cr, uid, [rec_id], context)[0]
-
-    def name_get(self, cr, uid, ids, context=None):
-        return [(contact.id, '%s <%s>' % (contact.name, contact.email)) for contact in self.browse(cr, uid, ids, context=context)]
 
 
 class MassMailingList(osv.Model):
@@ -257,10 +255,11 @@ class MassMailingCampaign(osv.Model):
             'mail.mass_mailing', 'mass_mailing_campaign_id',
             'Mass Mailings',
         ),
-        'statistics_ids': fields.one2many(
-            'mail.mail.statistics', 'mass_mailing_campaign_id',
-            'Sent Emails',
-        ),
+        'ab_testing': fields.boolean(
+            'AB Testing',
+            help='If checked, recipients will be mailed only once, allowing to send'
+                 'various mailings in a single campaign to test the effectiveness'
+                 'of the mailings.'),
         'color': fields.integer('Color Index'),
         # stat fields
         'total': fields.function(
@@ -337,6 +336,23 @@ class MassMailingCampaign(osv.Model):
             'views': [(False, 'form')],
             'context': dict(context, default_mass_mailing_campaign_id=ids[0]),
         }
+
+    #------------------------------------------------------
+    # API
+    #------------------------------------------------------
+
+    def get_recipients(self, cr, uid, ids, model=None, context=None):
+        """Return the recipints of a mailing campaign. This is based on the statistics
+        build for each mailing. """
+        Statistics = self.pool['mail.mail.statistics']
+        res = dict.fromkeys(ids, False)
+        for cid in ids:
+            domain = [('mass_mailing_campaign_id', '=', cid)]
+            if model:
+                domain += [('model', '=', model)]
+            stat_ids = Statistics.search(cr, uid, domain, context=context)
+            res[cid] = set(stat.res_id for stat in Statistics.browse(cr, uid, stat_ids, context=context))
+        return res
 
 
 class MassMailing(osv.Model):
@@ -416,13 +432,18 @@ class MassMailing(osv.Model):
         return results
 
     def _get_contact_nbr(self, cr, uid, ids, name, arg, context=None):
-        res = dict.fromkeys(ids, 0)
+        res = dict.fromkeys(ids, False)
         for mailing in self.browse(cr, uid, ids, context=context):
-            res[mailing.id] = self.pool[mailing.mailing_model].search(
+            val = {'contact_nbr': 0, 'contact_ab_nbr': 0, 'contact_ab_done': 0}
+            val['contact_nbr'] = self.pool[mailing.mailing_model].search(
                 cr, uid,
                 self.pool['mail.mass_mailing.list'].get_global_domain(cr, uid, [c.id for c in mailing.contact_list_ids], context=context)[mailing.mailing_model],
                 count=True, context=context
             )
+            val['contact_ab_nbr'] = int(val['contact_nbr'] * mailing.contact_ab_pc / 100.0)
+            if mailing.mass_mailing_campaign_id and mailing.ab_testing:
+                val['contact_ab_done'] = len(self.pool['mail.mass_mailing.campaign'].get_recipients(cr, uid, [mailing.mass_mailing_campaign_id.id], context=context)[mailing.mass_mailing_campaign_id.id])
+            res[mailing.id] = val
         return res
 
     def _get_mailing_model(self, cr, uid, context=None):
@@ -457,6 +478,10 @@ class MassMailing(osv.Model):
             'mail.mass_mailing.campaign', 'Mass Mailing Campaign',
             ondelete='set null',
         ),
+        'ab_testing': fields.related(
+            'mass_mailing_campaign_id', 'ab_testing',
+            type='boolean', string='AB Testing'
+        ),
         'color': fields.related(
             'mass_mailing_campaign_id', 'color',
             type='integer', string='Color Index',
@@ -471,7 +496,22 @@ class MassMailing(osv.Model):
             string='Mailing Lists',
             domain="[('model', '=', mailing_model)]",
         ),
-        'contact_nbr': fields.function(_get_contact_nbr, type='integer', string='Contact Number'),
+        'contact_nbr': fields.function(
+            _get_contact_nbr, type='integer', multi='_get_contact_nbr',
+            string='Contact Number'
+        ),
+        'contact_ab_pc': fields.integer(
+            'AB Testing percentage',
+            help='Percentage of the contacts that will be mailed. Recipients will be taken randomly.'
+        ),
+        'contact_ab_nbr': fields.function(
+            _get_contact_nbr, type='integer', multi='_get_contact_nbr',
+            string='Contact Number in AB Testing'
+        ),
+        'contact_ab_done': fields.function(
+            _get_contact_nbr, type='integer', multi='_get_contact_nbr',
+            string='Number of already mailed contacts'
+        ),
         # statistics data
         'statistics_ids': fields.one2many(
             'mail.mail.statistics', 'mass_mailing_id',
@@ -535,6 +575,7 @@ class MassMailing(osv.Model):
         'date': fields.datetime.now,
         'email_from': lambda self, cr, uid, ctx=None: self.pool['mail.message']._get_default_from(cr, uid, context=ctx),
         'mailing_model': 'res.partner',
+        'contact_ab_pc': 100,
     }
 
     #------------------------------------------------------
@@ -654,6 +695,25 @@ class MassMailing(osv.Model):
             partners = self.pool['res.partner'].browse(cr, uid, res_ids, context=context)
             return dict((partner.id, {'partner_id': partner.id, 'name': partner.name, 'email': partner.email}) for partner in partners)
 
+    def get_recipients(self, cr, uid, mailing, context=None):
+        domain = self.pool['mail.mass_mailing.list'].get_global_domain(
+            cr, uid, [l.id for l in mailing.contact_list_ids], context=context
+        )[mailing.mailing_model]
+        res_ids = self.pool[mailing.mailing_model].search(cr, uid, domain, context=context)
+
+        # randomly choose a fragment
+        if mailing.contact_ab_pc != 100:
+            topick = mailing.contact_ab_nbr
+            if mailing.mass_mailing_campaign_id and mailing.ab_testing:
+                already_mailed = self.pool['mail.mass_mailing.campaign'].get_recipients(cr, uid, [mailing.mass_mailing_campaign_id.id], context=context)[mailing.mass_mailing_campaign_id.id]
+            else:
+                already_mailed = set([])
+            remaining = set(res_ids).difference(already_mailed)
+            if topick > len(remaining):
+                topick = len(remaining)
+            res_ids = random.sample(remaining, topick)
+        return res_ids
+
     def get_unsubscribe_url(self, cr, uid, mailing_id, res_id, email, msg=None, context=None):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         url = urlparse.urljoin(
@@ -674,10 +734,7 @@ class MassMailing(osv.Model):
                 raise Warning('Please select recipients.')
 
             # get mail and recipints data
-            domain = self.pool['mail.mass_mailing.list'].get_global_domain(
-                cr, uid, [l.id for l in mailing.contact_list_ids], context=context
-            )[mailing.mailing_model]
-            res_ids = self.pool[mailing.mailing_model].search(cr, uid, domain, context=context)
+            res_ids = self.get_recipients(cr, uid, mailing, context=context)
             template_values = self.pool['mail.compose.message'].generate_email_for_composer_batch(
                 cr, uid, mailing.template_id.id, res_ids,
                 context=context, fields=['body_html', 'attachment_ids', 'mail_server_id'])

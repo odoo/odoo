@@ -275,6 +275,14 @@
                                         <field name="contact_nbr" nolabel="1" class="oe_inline" readonly="True"/> contacts selected
                                         <button name="action_see_recipients" type="object" string="See Recipients" class="oe_link" style='margin-left: 8px;'/>
                                     </div>
+                                    <label for="contact_ab_pc" string="AB Testing"
+                                        groups="mass_mailing.group_mass_mailing_campaign"/>
+                                    <div groups="mass_mailing.group_mass_mailing_campaign">
+                                        <field name="ab_testing" invisible="1"/>
+                                        <field name="contact_ab_pc" class="oe_inline"/>%, <field name="contact_ab_nbr" class="oe_inline"/> contacts to mail<br />
+                                        <field name="contact_ab_done" class="oe_inline"
+                                            attrs="{'invisible': [('ab_testing', '=', False)]}"/> already mailed
+                                    </div>
                                 </group>
                             </div>
                         </group>
@@ -423,6 +431,7 @@
                                 <field name="name"/>
                                 <field name="user_id"/>
                                 <field name="category_id"/>
+                                <field name="ab_testing"/>
                             </group>
                             <group>
                                 here be some graphs
