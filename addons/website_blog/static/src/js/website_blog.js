@@ -14,6 +14,7 @@ $(document).ready(function() {
         });
     }
     function animate(event) {
+        event.preventDefault();
         event.stopImmediatePropagation();
         var target = $(this.hash);
         $('html, body').stop().animate({
