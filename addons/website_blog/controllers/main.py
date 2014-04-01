@@ -42,7 +42,7 @@ class WebsiteBlog(http.Controller):
 
     @http.route([
         '/blog',
-        '/blog/page/<int:page>/',
+        '/blog/page/<int:page>',
     ], type='http', auth="public", website=True, multilang=True)
     def blogs(self, page=1):
         BYPAGE = 60
@@ -50,7 +50,7 @@ class WebsiteBlog(http.Controller):
         blog_obj = request.registry['blog.post']
         total = blog_obj.search(cr, uid, [], count=True, context=context)
         pager = request.website.pager(
-            url='/blog/',
+            url='/blog',
             total=total,
             page=page,
             step=BYPAGE,
@@ -63,14 +63,14 @@ class WebsiteBlog(http.Controller):
         })
 
     @http.route([
-        '/blog/<model("blog.blog"):blog>/',
-        '/blog/<model("blog.blog"):blog>/page/<int:page>/',
-        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/',
-        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/page/<int:page>/',
-        '/blog/<model("blog.blog"):blog>/date/<string(length=21):date>/',
-        '/blog/<model("blog.blog"):blog>/date/<string(length=21):date>/page/<int:page>/',
-        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/',
-        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/page/<int:page>/',
+        '/blog/<model("blog.blog"):blog>',
+        '/blog/<model("blog.blog"):blog>/page/<int:page>',
+        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>',
+        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/page/<int:page>',
+        '/blog/<model("blog.blog"):blog>/date/<string(length=21):date>',
+        '/blog/<model("blog.blog"):blog>/date/<string(length=21):date>/page/<int:page>',
+        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>',
+        '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/page/<int:page>',
     ], type='http', auth="public", website=True, multilang=True)
     def blog(self, blog=None, tag=None, date=None, page=1, **opt):
         """ Prepare all values to display the blog.
@@ -99,23 +99,23 @@ class WebsiteBlog(http.Controller):
         blog_posts = None
 
         blog_obj = request.registry['blog.blog']
-        blog_ids = blog_obj.search(cr, uid, [], context=context)
+        blog_ids = blog_obj.search(cr, uid, [], order="create_date asc", context=context)
         blogs = blog_obj.browse(cr, uid, blog_ids, context=context)
 
         path_filter = ""
         domain = []
 
         if blog:
-            path_filter += "%s/" % blog.id
+            path_filter += "%s" % blog.id
             domain += [("id", "in", [post.id for post in blog.blog_post_ids])]
         if tag:
-            path_filter += 'tag/%s/' % tag.id
+            path_filter += 'tag/%s' % tag.id
             domain += [("id", "in", [post.id for post in tag.blog_post_ids])]
         if date:
-            path_filter += "date/%s/" % date
+            path_filter += "date/%s" % date
             domain += [("create_date", ">=", date.split("_")[0]), ("create_date", "<=", date.split("_")[1])]
 
-        blog_post_ids = blog_post_obj.search(cr, uid, domain, context=context)
+        blog_post_ids = blog_post_obj.search(cr, uid, domain, order="create_date asc", context=context)
         blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
 
         pager = request.website.pager(
@@ -147,7 +147,7 @@ class WebsiteBlog(http.Controller):
         return request.website.render("website_blog.blog_post_short", values)
 
     @http.route([
-        '/blogpost/<model("blog.post"):blog_post>/',
+        '/blogpost/<model("blog.post"):blog_post>',
     ], type='http', auth="public", website=True, multilang=True)
     def blog_post(self, blog_post, tag=None, date=None, page=1, enable_editor=None, **post):
         """ Prepare all values to display the blog.
@@ -245,7 +245,7 @@ class WebsiteBlog(http.Controller):
                 'content': '',
                 'website_published': False,
             }, context=create_context)
-        return werkzeug.utils.redirect("/blogpost/%s/?enable_editor=1" % new_blog_post_id)
+        return werkzeug.utils.redirect("/blogpost/%s?enable_editor=1" % new_blog_post_id)
 
     @http.route('/blogpost/duplicate', type='http', auth="public", website=True)
     def blog_post_copy(self, blog_post_id, **post):
@@ -258,4 +258,4 @@ class WebsiteBlog(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)
         new_blog_post_id = request.registry['blog.post'].copy(cr, uid, blog_post_id, {}, context=create_context)
-        return werkzeug.utils.redirect("/blogpost/%s/?enable_editor=1" % new_blog_post_id)
+        return werkzeug.utils.redirect("/blogpost/%s?enable_editor=1" % new_blog_post_id)

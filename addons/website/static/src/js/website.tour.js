@@ -1,11 +1,30 @@
 (function () {
     'use strict';
 
-var website = openerp.website;
+// raise an error in test mode if openerp don't exist
+if (typeof openerp === "undefined") {
+    var error = "openerp is undefined"
+                + "\nhref: " + window.location.href
+                + "\nreferrer: " + document.referrer
+                + "\nlocalStorage: " + JSON.stringify(window.localStorage);
+    if (typeof $ !== "undefined") {
+        error += '\n\n' + $("body").html();
+    }
+    throw new Error(error);
+}
+
+var website = window.openerp.website;
+
+// don't rewrite website.Tour in test mode
+if (typeof website.Tour !== "undefined") {
+    return;
+}
 
 // don't need template to use bootstrap Tour in automatic mode
-if (typeof QWeb2 !== "undefined")
-website.add_template_file('/website/static/src/xml/website.tour.xml');
+if (typeof QWeb2 !== "undefined") {
+    website.add_template_file('/website/static/src/xml/website.tour.xml');
+
+}
 
 // don't need to use bootstrap Tour to launch an automatic tour
 function bootstrap_tour_stub () {
@@ -19,27 +38,28 @@ function bootstrap_tour_stub () {
 
 
 
-if (website.EditorBar)
-website.EditorBar.include({
-    tours: [],
-    start: function () {
-        var self = this;
-        var menu = $('#help-menu');
-        _.each(this.tours, function (tour) {
-            var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
-            $menuItem.click(function () {
-                tour.reset();
-                tour.run();
+if (website.EditorBar) {
+    website.EditorBar.include({
+        tours: [],
+        start: function () {
+            var self = this;
+            var menu = $('#help-menu');
+            _.each(this.tours, function (tour) {
+                var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
+                $menuItem.click(function () {
+                    tour.reset();
+                    tour.run();
+                });
+                menu.append($menuItem);
             });
-            menu.append($menuItem);
-        });
-        return this._super();
-    },
-    registerTour: function (tour) {
-        website.Tour.add(tour);
-        this.tours.push(tour);
-    }
-});
+            return this._super();
+        },
+        registerTour: function (tour) {
+            website.Tour.add(tour);
+            this.tours.push(tour);
+        }
+    });
+}
 
 
 /////////////////////////////////////////////////
@@ -308,7 +328,8 @@ website.Tour = openerp.Class.extend({
                 self.timer = setTimeout(checkNext, self.defaultDelay);
             } else {
                 self.reset();
-                throw new Error("Time overlaps to arrive to step " + step.stepId + ": '" + step._title + "'"
+                throw new Error("Can't arrive to step " + step.stepId + ": '" + step._title + "'"
+                    + '\nhref: ' + window.location.href
                     + '\nelement: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden")))
                     + '\nwaitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size())
                     + '\nwaitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size())
@@ -363,12 +384,13 @@ website.Tour = openerp.Class.extend({
         }
     },
     endTour: function () {
-        if (parseInt(this.localStorage.getItem("tour-"+this.id+"-test"),10) >= this.steps.length-1) {
+        var test = parseInt(this.localStorage.getItem("tour-"+this.id+"-test"),10) >= this.steps.length-1;
+        this.reset();
+        if (test) {
             console.log('ok');
         } else {
             console.log('error');
         }
-        this.reset();
     },
     autoNextStep: function () {
         var self = this;
