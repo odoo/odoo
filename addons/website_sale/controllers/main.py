@@ -612,7 +612,7 @@ class Ecommerce(http.Controller):
             acquirer_ids = [tx.acquirer_id.id]
         else:
             acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True), '|', ('company_id', '=', order.company_id.id), ('company_id', '=', False)], context=context)
-        values['acquirers'] = payment_obj.browse(cr, uid, acquirer_ids, context=context)
+        values['acquirers'] = list(payment_obj.browse(cr, uid, acquirer_ids, context=context))
         render_ctx = dict(context, submit_class='btn btn-primary', submit_txt='Pay Now')
         for acquirer in values['acquirers']:
             render_ctx['tx_url'] = '/shop/payment/transaction/%s' % acquirer.id
