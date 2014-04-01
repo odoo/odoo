@@ -23,7 +23,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
 LANG_CODE_MAPPING = {
-    'ar_SA': ('ar', 'Arabic'),
+    'ar_SY': ('ar', 'Arabic'),
     'id_ID': ('id', 'Indonesian'),
     'nl_NL': ('nl', 'Dutch'),
     'fr_CA': ('fr-ca', 'French (Canada)'),
