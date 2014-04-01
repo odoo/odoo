@@ -236,20 +236,25 @@ class Post(osv.Model):
         super(Post, self).write(cr, uid, ids, vals, context=context)
         #NOTE: to avoid message post on write of last comment time
         if not vals.get('message_last_post'):
+            user = self.pool['res.users'].browse(cr, uid ,uid, context=context)
             self.create_history(cr, uid, ids, context=context)
             for post in self.browse(cr, uid, ids, context=context):
+                #just for precaution
+                if user.karma < 300 and post.user_id != uid:
+                    raise osv.except_osv(_('Error!'), _('You are not allowed to edit this post!'))
+
                 body, subtype = "Edited question", "website_forum.mt_question_edit"
                 if post.parent_id:
                     body, subtype = "Edited answer", "website_forum.mt_answer_edit"
                 self.message_post(cr, uid, [post.id], body=_(body), subtype=subtype, context=context)
-        #update karma of related user when any answer accepted.
-        for post in self.browse(cr, uid, ids, context=context):
-            value = 0
-            if vals.get('correct'):
-                value = 15
-            elif vals.get('correct') == False:
-                value = -15 
-            self.pool['res.users'].write(cr, SUPERUSER_ID, [post.user_id.id], {'karma': value}, context=context)
+
+                #update karma of related user when any answer accepted.
+                value = 0
+                if vals.get('correct'):
+                    value = 15
+                elif vals.get('correct') == False:
+                    value = -15 
+                self.pool['res.users'].write(cr, SUPERUSER_ID, [post.user_id.id], {'karma': value}, context=context)
         return True
 
 class PostStatistics(osv.Model):

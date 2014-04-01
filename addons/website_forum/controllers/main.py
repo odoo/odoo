@@ -604,16 +604,12 @@ class website_forum(http.Controller):
     @http.route('/forum/<model("website.forum"):forum>/save/profile/', type='http', auth="user", multilang=True, website=True)
     def save_edited_profile(self, forum, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        User = request.registry['res.users']
-        User.write(cr, SUPERUSER_ID, [int(post.get('user_id'))], {
+        user = request.registry['res.users'].browse(cr, uid, int(post.get('user_id')),context=context)
+        request.registry['res.partner'].write( cr, uid, [user.partner_id.id], {
             'name': post.get('name'),
-        }, context=context)
-        record_id = User.browse(cr, uid, int(post.get('user_id')),context=context).partner_id.id
-        request.registry['res.partner'].write( cr, uid, [record_id], {
             'website': post.get('website'),
             'city': post.get('city'),
-            'country_id':post.get('country'),
-            'birthdate':post.get('dob'),
+            'country_id': post.get('country'),
             'website_description': post.get('description'), 
         }, context=context)
         return werkzeug.utils.redirect("/forum/%s/user/%s" % (slug(forum),post.get('user_id')))
