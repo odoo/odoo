@@ -241,7 +241,7 @@ class QWeb(orm.AbstractModel):
                 if attribute_name == "groups":
                     cr = qwebcontext.get('request') and qwebcontext['request'].cr or None
                     uid = qwebcontext.get('request') and qwebcontext['request'].uid or None
-                    can_see = self.user_has_groups(cr, uid, groups=attribute_value)
+                    can_see = self.user_has_groups(cr, uid, groups=attribute_value) if cr and uid else False
                     if not can_see:
                         return ''
                     continue
