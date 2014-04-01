@@ -70,7 +70,7 @@
                     <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"/>
                     <script type="text/javascript">
                         CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
-                        ,['Outdent','Indent','Link','Unlink'],] ;
+                        ,['Outdent','Indent','Link','Unlink','Image'],] ;
                     </script>
                 </t>
                 <div class="container mt16">
@@ -277,8 +277,10 @@
                     <input type="text" name="question_name" required="True" t-attf-value="#{question_name or ''}"
                         class="form-control" placeholder="Enter your Question"/>
                     <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
-                    <textarea name="question_content" required="True" class="form-control"
-                        t-attf-value="#{question_content or ''}"/>
+                    <input type="hidden" name="karma" t-attf-value="#{user.karma or ''}" id="karma"/>
+                    <textarea name="content" required="True" class="form-control load_editor">
+                        <t t-esc="question_content"/>
+                    </textarea>
                     <br/>
                     <input type="text" name="question_tags" t-attf-value="#{question_tag or ''}" 
                         placeholder="Tags" class="form-control load_tags"/>
@@ -286,7 +288,7 @@
                     <button class="btn btn-primary" id="btn_ask_your_question">Post Your Question</button>
                 </form>
                 <script type="text/javascript">
-                    CKEDITOR.replace("question_content");
+                    CKEDITOR.replace("content");
                 </script>
             </t>
         </template>
@@ -303,7 +305,8 @@
                     <input type="text" name="question_name" id="question_name" required="True" t-attf-value="#{post.name or ''}"
                         class="form-control" placeholder="Edit your Question"/>
                     <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
-                    <textarea name="content" required="True"  class="form-control">
+                    <input type="hidden" name="karma" t-attf-value="#{user.karma or ''}" id="karma"/>
+                    <textarea name="content" required="True" class="form-control load_editor">
                         <t t-esc="post.content"/>
                     </textarea>
                     <br/>
@@ -351,13 +354,13 @@
                 - it really helps to select the best questions and answers!
             </p>
             <form t-attf-action="/forum/#{ slug(forum) }/question/postanswer/" method="post" role="form">
-                <textarea name="answer_content" t-attf-value="#{answer_content or ''}"
-                    class="form-control" required="True"/>
+                <input type="hidden" name="karma" t-attf-value="#{user.karma or ''}" id="karma"/>
+                <textarea name="content" class="form-control load_editor" required="True"/>
                 <input name="post_id" t-att-value="question.id" type="hidden"/>
                 <button class="btn btn-primary" id="btn_ask_your_question">Post Your Answer</button>
             </form>
             <script type="text/javascript">
-                CKEDITOR.replace("answer_content");
+                CKEDITOR.replace("content");
             </script>
         </template>
 
@@ -370,7 +373,8 @@
                             <option t-att-value="history.id"><t t-esc="history.name"/></option>
                         </t>
                     </select>
-                    <textarea name="content" required="True" value="content" class="form-control">
+                    <input type="hidden" name="karma" t-attf-value="#{user.karma or ''}" id="karma"/>
+                    <textarea name="content" required="true" class="form-control load_editor">
                         <t t-esc="post_answer.content"/>
                     </textarea>
                     <input name="post_id" t-att-value="post.id" type="hidden"/>

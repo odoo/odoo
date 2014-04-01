@@ -134,4 +134,25 @@ $(document).ready(function () {
         return true;
     });
 
+    if ($('textarea.load_editor').length) {
+        var editor = CKEDITOR.instances['content'];
+        editor.on('instanceReady', CKEDITORLoadComplete);
+    }
 });
+
+function IsKarmaValid(eventNumber,minKarma){
+    "use strict";
+    if(parseInt($("#karma").val()) >= minKarma){
+        CKEDITOR.tools.callFunction(eventNumber,this);
+        return false;
+    } else {
+        alert("Sorry you need more than 30 Karma.");
+    }
+}
+
+function CKEDITORLoadComplete(){
+    "use strict";
+    $('.cke_button__link').attr('onclick','IsKarmaValid(33,30)');
+    $('.cke_button__unlink').attr('onclick','IsKarmaValid(37,30)');
+    $('.cke_button__image').attr('onclick','IsKarmaValid(41,30)');
+}

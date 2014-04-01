@@ -287,9 +287,11 @@ class website_forum(http.Controller):
     def question_ask(self, forum, **post):
         if not request.session.uid:
             return login_redirect()
+        user = request.registry['res.users'].browse(request.cr, request.uid, request.uid, context=request.context)
         values = {
             'searches': {},
             'forum': forum,
+            'user': user,
             'notifications': self._get_notifications(),
         }
         return request.website.render("website_forum.ask_question", values)
@@ -314,7 +316,7 @@ class website_forum(http.Controller):
                 'user_id': uid,
                 'forum_id': forum.id,
                 'name': question.get('question_name'),
-                'content': question.get('question_content'),
+                'content': question.get('content'),
                 'tags' : question_tags,
                 'state': 'active',
                 'active': True,
@@ -335,7 +337,7 @@ class website_forum(http.Controller):
                 'forum_id': forum.id,
                 'user_id': uid,
                 'parent_id': post_id,
-                'content': question.get('answer_content'),
+                'content': question.get('content'),
                 'state': 'active',
                 'active': True,
             }, context=create_context)
@@ -347,6 +349,7 @@ class website_forum(http.Controller):
     def edit_answer(self, forum, post, answer='', **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         request.registry['res.users'].write(cr, SUPERUSER_ID, uid, {'forum': True}, context=context)
+        user = request.registry['res.users'].browse(cr, uid, uid, context=context)
         for record in post.child_ids:
             if record.user_id.id == request.uid and not answer:
                 answer = record
@@ -357,6 +360,7 @@ class website_forum(http.Controller):
 
         values = {
             'post': post,
+            'user': user,
             'post_answer': answer,
             'notifications': self._get_notifications(),
             'forum': forum,
@@ -473,27 +477,6 @@ class website_forum(http.Controller):
         request.registry['mail.message'].unlink(request.cr, SUPERUSER_ID, [int(kwarg.get('message_id'))], context=request.context)
         return True
 
-    @http.route('/forum/<model("website.forum"):forum>/edit/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
-    def edit_question(self, forum, post, **kwarg):
-        cr, uid, context = request.cr, request.uid, request.context
-        history_obj = request.registry['website.forum.post.history']
-        history_ids = history_obj.search(cr, uid, [('post_id','=', post.id)], order = "id desc", context=context)
-        post_history = history_obj.browse(cr, uid, history_ids, context=context)
-
-        tags = ""
-        for tag_name in post.tags:
-            tags += tag_name.name + ","
-
-        values = {
-            'post': post,
-            'tags': tags,
-            'forum': forum,
-            'searches': kwarg,
-            'notifications': self._get_notifications(),
-            'post_history': post_history,
-        }
-        return request.website.render("website_forum.edit_question", values)
-
     @http.route('/forum/selecthistory', type='json', auth="user", multilang=True, methods=['POST'], website=True)
     def post_history(self, **kwarg):
         cr, uid, context = request.cr, request.uid, request.context
@@ -507,6 +490,29 @@ class website_forum(http.Controller):
             'tags': tags,
         }
         return data
+
+    @http.route('/forum/<model("website.forum"):forum>/edit/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
+    def edit_question(self, forum, post, **kwarg):
+        cr, uid, context = request.cr, request.uid, request.context
+        user = request.registry['res.users'].browse(cr, uid, uid, context=context)
+        history_obj = request.registry['website.forum.post.history']
+        history_ids = history_obj.search(cr, uid, [('post_id','=', post.id)], order = "id desc", context=context)
+        post_history = history_obj.browse(cr, uid, history_ids, context=context)
+
+        tags = ""
+        for tag_name in post.tags:
+            tags += tag_name.name + ","
+
+        values = {
+            'post': post,
+            'user': user,
+            'tags': tags,
+            'forum': forum,
+            'searches': kwarg,
+            'notifications': self._get_notifications(),
+            'post_history': post_history,
+        }
+        return request.website.render("website_forum.edit_question", values)
 
     @http.route('/forum/<model("website.forum"):forum>/question/savequestion/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def save_edited_question(self, forum, **post):
