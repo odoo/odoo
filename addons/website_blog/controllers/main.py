@@ -99,7 +99,7 @@ class WebsiteBlog(http.Controller):
         blog_posts = None
 
         blog_obj = request.registry['blog.blog']
-        blog_ids = blog_obj.search(cr, uid, [], context=context)
+        blog_ids = blog_obj.search(cr, uid, [], order="create_date asc", context=context)
         blogs = blog_obj.browse(cr, uid, blog_ids, context=context)
 
         path_filter = ""
@@ -115,7 +115,7 @@ class WebsiteBlog(http.Controller):
             path_filter += "date/%s" % date
             domain += [("create_date", ">=", date.split("_")[0]), ("create_date", "<=", date.split("_")[1])]
 
-        blog_post_ids = blog_post_obj.search(cr, uid, domain, context=context)
+        blog_post_ids = blog_post_obj.search(cr, uid, domain, order="create_date asc", context=context)
         blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
 
         pager = request.website.pager(
