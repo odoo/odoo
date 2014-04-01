@@ -1006,6 +1006,17 @@ class mrp_production(osv.osv):
         #is 1 element long, so we can take the first.
         return stock_move.action_confirm(cr, uid, [move_id], context=context)[0]
 
+    def _get_raw_material_procure_method(self, cr, uid, product, context=None):
+        '''This method returns the procure_method to use when creating the stock move for the production raw materials'''
+        try:
+            mto_route = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'route_warehouse0_mto')[1]
+        except:
+            return "make_to_stock"
+        routes = product.route_ids + product.categ_id.total_route_ids
+        if mto_route in [x.id for x in routes]:
+            return "make_to_order"
+        return "make_to_stock"
+
     def _make_production_consume_line(self, cr, uid, production_line, parent_move_id, source_location_id=False, context=None):
         stock_move = self.pool.get('stock.move')
         production = production_line.production_id
@@ -1026,7 +1037,7 @@ class mrp_production(osv.osv):
             'location_id': source_location_id,
             'location_dest_id': destination_location_id,
             'company_id': production.company_id.id,
-            'procure_method': 'make_to_order',
+            'procure_method': self._get_raw_material_procure_method(cr, uid, production_line.product_id, context=context),
             'raw_material_production_id': production.id,
         })
         stock_move.action_confirm(cr, uid, [move_id], context=context)
