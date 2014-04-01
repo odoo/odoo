@@ -134,7 +134,7 @@ class WebsiteBlog(http.Controller):
         blog_posts = None
 
         blog_obj = request.registry['blog.blog']
-        blog_ids = blog_obj.search(cr, uid, [], context=context)
+        blog_ids = blog_obj.search(cr, uid, [], order="create_date asc", context=context)
         blogs = blog_obj.browse(cr, uid, blog_ids, context=context)
 
         domain = []
@@ -147,7 +147,7 @@ class WebsiteBlog(http.Controller):
             domain += [("create_date", ">=", date_begin), ("create_date", "<=", date_end)]
         current_url = QueryURL('', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end)
 
-        blog_post_ids = blog_post_obj.search(cr, uid, domain, context=context)
+        blog_post_ids = blog_post_obj.search(cr, uid, domain, order="create_date asc", context=context)
         blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
 
         pager = request.website.pager(
