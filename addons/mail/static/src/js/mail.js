@@ -76,8 +76,8 @@ openerp.mail = function (session) {
          */
         get_text2html: function (text) {
             return text
-                .replace(/[\n\r]/g,'<br/>')
                 .replace(/((?:https?|ftp):\/\/[\S]+)/g,'<a href="$1">$1</a> ')
+                .replace(/[\n\r]/g,'<br/>')                
         },
 
         /* Returns the complete domain with "&" 

@@ -7,7 +7,7 @@ from openerp.addons.web.http import request
 
 class WebsiteEmailDesigner(http.Controller):
 
-    @http.route('/website_mail/email_designer/<model("email.template"):template>/', type='http', auth="user", website=True, multilang=True)
+    @http.route('/website_mail/email_designer/<model("email.template"):template>', type='http', auth="user", website=True, multilang=True)
     def index(self, template, **kw):
         values = {
             'template': template,

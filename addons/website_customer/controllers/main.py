@@ -12,12 +12,12 @@ class WebsiteCustomer(http.Controller):
     _references_per_page = 20
 
     @http.route([
-        '/customers/',
-        '/customers/page/<int:page>/',
+        '/customers',
+        '/customers/page/<int:page>',
         '/customers/country/<int:country_id>',
         '/customers/country/<country_name>-<int:country_id>',
-        '/customers/country/<int:country_id>/page/<int:page>/',
-        '/customers/country/<country_name>-<int:country_id>/page/<int:page>/',
+        '/customers/country/<int:country_id>/page/<int:page>',
+        '/customers/country/<country_name>-<int:country_id>/page/<int:page>',
     ], type='http', auth="public", website=True, multilang=True)
     def customers(self, country_id=0, page=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -62,7 +62,7 @@ class WebsiteCustomer(http.Controller):
 
         # pager
         pager = request.website.pager(
-            url="/customers/", total=len(partner_ids), page=page, step=self._references_per_page,
+            url="/customers", total=len(partner_ids), page=page, step=self._references_per_page,
             scope=7, url_args=post
         )
 
@@ -83,7 +83,7 @@ class WebsiteCustomer(http.Controller):
         }
         return request.website.render("website_customer.index", values)
 
-    @http.route(['/customers/<int:partner_id>/', '/customers/<partner_name>-<int:partner_id>/'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/customers/<int:partner_id>', '/customers/<partner_name>-<int:partner_id>'], type='http', auth="public", website=True, multilang=True)
     def customer(self, partner_id, **post):
         partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
         values = website_partner.get_partner_template_value(partner)

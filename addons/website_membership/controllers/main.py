@@ -14,20 +14,20 @@ class WebsiteMembership(http.Controller):
     _references_per_page = 20
 
     @http.route([
-        '/members/',
-        '/members/page/<int:page>/',
-        '/members/association/<int:membership_id>/',
-        '/members/association/<int:membership_id>/page/<int:page>/',
+        '/members',
+        '/members/page/<int:page>',
+        '/members/association/<int:membership_id>',
+        '/members/association/<int:membership_id>/page/<int:page>',
 
         '/members/country/<int:country_id>',
         '/members/country/<country_name>-<int:country_id>',
-        '/members/country/<int:country_id>/page/<int:page>/',
-        '/members/country/<country_name>-<int:country_id>/page/<int:page>/',
+        '/members/country/<int:country_id>/page/<int:page>',
+        '/members/country/<country_name>-<int:country_id>/page/<int:page>',
 
         '/members/association/<int:membership_id>/country/<country_name>-<int:country_id>',
         '/members/association/<int:membership_id>/country/<int:country_id>',
-        '/members/association/<int:membership_id>/country/<country_name>-<int:country_id>/page/<int:page>/',
-        '/members/association/<int:membership_id>/country/<int:country_id>/page/<int:page>/',
+        '/members/association/<int:membership_id>/country/<country_name>-<int:country_id>/page/<int:page>',
+        '/members/association/<int:membership_id>/country/<int:country_id>/page/<int:page>',
     ], type='http', auth="public", website=True, multilang=True)
     def members(self, membership_id=None, country_name=None, country_id=0, page=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -88,7 +88,7 @@ class WebsiteMembership(http.Controller):
         memberships = product_obj.browse(cr, uid, membership_ids, context=context)
 
         # request pager for lines
-        pager = request.website.pager(url="/members/", total=len(membership_line_ids), page=page, step=self._references_per_page, scope=7, url_args=post)
+        pager = request.website.pager(url="/members", total=len(membership_line_ids), page=page, step=self._references_per_page, scope=7, url_args=post)
 
         values = {
             'partners_data': partners_data,
@@ -105,7 +105,7 @@ class WebsiteMembership(http.Controller):
         }
         return request.website.render("website_membership.index", values)
 
-    @http.route(['/members/<int:partner_id>/', '/members/<partner_name>-<int:partner_id>/'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/members/<int:partner_id>', '/members/<partner_name>-<int:partner_id>'], type='http', auth="public", website=True, multilang=True)
     def partners_ref(self, partner_id, **post):
         partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
         values = website_partner.get_partner_template_value(partner)
