@@ -283,6 +283,9 @@ class _rml_doc(object):
         from reportlab.pdfbase import pdfmetrics
         from reportlab.pdfbase.ttfonts import TTFont
 
+        if mode:
+            mode = mode.lower()
+
         if fontname not in pdfmetrics._fonts:
             pdfmetrics.registerFont(TTFont(fontname, filename))
         if mode == 'all':
@@ -290,14 +293,14 @@ class _rml_doc(object):
             addMapping(face, 0, 1, fontname)    #italic
             addMapping(face, 1, 0, fontname)    #bold
             addMapping(face, 1, 1, fontname)    #italic and bold
-        elif (mode== 'normal') or (mode == 'regular') or (mode == 'book'):
-            addMapping(face, 0, 0, fontname)    #normal
-        elif mode == 'italic':
+        elif mode in ['italic', 'oblique']:
             addMapping(face, 0, 1, fontname)    #italic
         elif mode == 'bold':
             addMapping(face, 1, 0, fontname)    #bold
-        elif mode == 'bolditalic':
+        elif mode in ('bolditalic', 'bold italic','boldoblique', 'bold oblique'):
             addMapping(face, 1, 1, fontname)    #italic and bold
+        else:
+            addMapping(face, 0, 0, fontname)    #normal
 
     def _textual_image(self, node):
         rc = ''
