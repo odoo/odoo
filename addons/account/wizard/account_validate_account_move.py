@@ -34,7 +34,7 @@ class validate_account_move(osv.osv_memory):
         if context is None:
             context = {}
         data = self.browse(cr, uid, ids, context=context)[0]
-        ids_move = obj_move.search(cr, uid, [('state','=','draft'),('journal_id','=',data.journal_id.id),('period_id','=',data.period_id.id)])
+        ids_move = obj_move.search(cr, uid, [('state','=','draft'),('journal_id','=',data.journal_id.id),('period_id','=',data.period_id.id)], order="date")
         if not ids_move:
             raise osv.except_osv(_('Warning!'), _('Specified journal does not have any account move entries in draft state for this period.'))
         obj_move.button_validate(cr, uid, ids_move, context=context)
