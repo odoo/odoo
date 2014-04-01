@@ -94,11 +94,11 @@ class WebsiteBlog(http.Controller):
         )
         post_ids = blog_obj.search(cr, uid, [], offset=(page-1)*self._blog_post_per_page, limit=self._blog_post_per_page, context=context)
         posts = blog_obj.browse(cr, uid, post_ids, context=context)
-        current_url = QueryURL('', ['blog', 'tag'])
+        blog_url = QueryURL('', ['blog', 'tag'])
         return request.website.render("website_blog.latest_blogs", {
             'posts': posts,
             'pager': pager,
-            'current_url': current_url,
+            'blog_url': blog_url,
         })
 
     @http.route([
@@ -145,13 +145,15 @@ class WebsiteBlog(http.Controller):
             domain += [("id", "in", [post.id for post in tag.blog_post_ids])]
         if date_begin and date_end:
             domain += [("create_date", ">=", date_begin), ("create_date", "<=", date_end)]
-        current_url = QueryURL('', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end)
+
+        blog_url = QueryURL('', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end)
+        post_url = QueryURL('', ['blogpost'], tag_id=tag and tag.id or None, date_begin=date_begin, date_end=date_end)
 
         blog_post_ids = blog_post_obj.search(cr, uid, domain, order="create_date asc", context=context)
         blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
 
         pager = request.website.pager(
-            url=current_url(),
+            url=blog_url(),
             total=len(blog_posts),
             page=page,
             step=self._blog_post_per_page,
@@ -172,7 +174,8 @@ class WebsiteBlog(http.Controller):
             'blog_posts': blog_posts,
             'pager': pager,
             'nav_list': self.nav_list(),
-            'current_url': current_url,
+            'blog_url': blog_url,
+            'post_url': post_url,
             'date': date_begin,
         }
         return request.website.render("website_blog.blog_post_short", values)
@@ -221,9 +224,9 @@ class WebsiteBlog(http.Controller):
 
         tag = None
         if tag_id:
-            tag = request.registry['blog.tag'].browse(request.cr, request.uid, tag_id, context=request.context)
-
-        current_url = QueryURL('', ['blogpost'], blogpost=blog_post, tag_id=tag_id, date_begin=date_begin, date_end=date_end)
+            tag = request.registry['blog.tag'].browse(request.cr, request.uid, int(tag_id), context=request.context)
+        post_url = QueryURL('', ['blogpost'], blogpost=blog_post, tag_id=tag_id, date_begin=date_begin, date_end=date_end)
+        blog_url = QueryURL('', ['blog', 'tag'], blog=blog_post.blog_id, tag=tag, date_begin=date_begin, date_end=date_end)
 
         cr, uid, context = request.cr, request.uid, request.context
         blog_obj = request.registry['blog.blog']
@@ -245,7 +248,8 @@ class WebsiteBlog(http.Controller):
             'nav_list': self.nav_list(),
             'enable_editor': enable_editor,
             'date': date_begin,
-            'current_url': current_url
+            'post_url': post_url,
+            'blog_url': blog_url,
         }
         return request.website.render("website_blog.blog_post_complete", values)
 
