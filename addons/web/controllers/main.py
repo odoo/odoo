@@ -1679,7 +1679,7 @@ class Export(http.Controller):
             for k, v in self.fields_info(model, export_fields).iteritems())
 
 class ExportFormat(object):
-    raw_data = True
+    raw_data = False
 
     @property
     def content_type(self):
@@ -1790,18 +1790,18 @@ class ExcelExport(ExportFormat, http.Controller):
             worksheet.col(i).width = 8000 # around 220 pixels
 
         base_style = xlwt.easyxf('align: wrap yes')
-        date_style = xlwt.easyxf('align: wrap yes', num_format_str=tools.DEFAULT_SERVER_DATE_FORMAT)
-        datetime_style = xlwt.easyxf('align: wrap yes', num_format_str=tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        date_style = xlwt.easyxf('align: wrap yes', num_format_str='YYYY-MM-DD')
+        datetime_style = xlwt.easyxf('align: wrap yes', num_format_str='YYYY-MM-DD HH:mm:SS')
 
         for row_index, row in enumerate(rows):
             for cell_index, cell_value in enumerate(row):
                 cell_style = base_style
                 if isinstance(cell_value, basestring):
                     cell_value = re.sub("\r", " ", cell_value)
-                elif isinstance(cell_value, datetime.date):
-                    cell_style = date_style
                 elif isinstance(cell_value, datetime.datetime):
                     cell_style = datetime_style
+                elif isinstance(cell_value, datetime.date):
+                    cell_style = date_style
                 worksheet.write(row_index + 1, cell_index, cell_value, cell_style)
 
         fp = StringIO()
