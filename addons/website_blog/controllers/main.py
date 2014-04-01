@@ -38,8 +38,7 @@ class QueryURL(object):
         self.path_args = set(path_args or [])
 
     def __call__(self, path=None, path_args=None, **kw):
-        if not path:
-            path = self.path
+        path = path or self.path
         for k, v in self.args.items():
             kw.setdefault(k, v)
         path_args = set(path_args or []).union(self.path_args)
@@ -55,9 +54,8 @@ class QueryURL(object):
                     fragments.append(werkzeug.url_encode([(key, item) for item in value]))
                 else:
                     fragments.append(werkzeug.url_encode([(key, value)]))
-        if paths:
-            for key, value in paths:
-                path += '/' + key + '/%s' % value
+        for key, value in paths:
+            path += '/' + key + '/%s' % value
         if fragments:
             path += '?' + '&'.join(fragments)
         return path
