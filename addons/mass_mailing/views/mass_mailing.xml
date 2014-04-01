@@ -242,14 +242,14 @@
                                 <field name="reply_to"/>
                             </group>
                             <group>
-                                <p colspan="2">Here be some pie charts</p>
+                                <!-- <p colspan="2">Here be some pie charts</p> -->
                                 <field name="total"/>
                                 <field name="received_ratio" attrs="{'invisible': [('total', '=', 0)]}"/>
                                 <field name="opened_ratio" attrs="{'invisible': [('total', '=', 0)]}"/>
                                 <field name="replied_ratio" attrs="{'invisible': [('total', '=', 0)]}"/>
-                                <p colspan="2">Here be some bar charts</p>
-                                <field name="opened_dayly" attrs="{'invisible': [('total', '=', 0)]}"/>
-                                <field name="replied_dayly" attrs="{'invisible': [('total', '=', 0)]}"/>
+                                <!-- <p colspan="2">Here be some bar charts</p> -->
+                                <!-- <field name="opened_dayly" attrs="{'invisible': [('total', '=', 0)]}"/>
+                                <field name="replied_dayly" attrs="{'invisible': [('total', '=', 0)]}"/> -->
                             </group>
                         </group>
                         <group>
@@ -286,18 +286,6 @@
                                 </group>
                             </div>
                         </group>
-<!--                         <group string="Email Statistics">
-                            <field name="statistics_ids" nolabel="1" colspan="2"/>
-                            <group>
-                                <field name="sent"/>
-                                <field name="opened"/>
-                                <field name="bounced"/>
-                            </group>
-                            <group>
-                                <field name="delivered"/>
-                                <field name="replied"/>
-                            </group>
-                        </group> -->
                     </sheet>
                 </form>
             </field>
@@ -434,7 +422,11 @@
                                 <field name="ab_testing"/>
                             </group>
                             <group>
-                                here be some graphs
+                                <!-- <p>Here be some graphs</p> -->
+                                <field name="total"/>
+                                <field name="sent" attrs="{'invisible': [('total', '=', 0)]}"/>
+                                <field name="opened" attrs="{'invisible': [('total', '=', 0)]}"/>
+                                <field name="replied" attrs="{'invisible': [('total', '=', 0)]}"/>
                             </group>
                         </group>
                         <group>

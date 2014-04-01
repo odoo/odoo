@@ -227,6 +227,7 @@ class MassMailingCampaign(osv.Model):
         for cid in ids:
             results[cid] = {
                 'total': Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid)], count=True, context=context),
+                'scheduled': Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid), ('scheduled', '!=', False), ('sent', '=', False)], count=True, context=context),
                 'sent': Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid), ('sent', '!=', False)], count=True, context=context),
                 'opened': Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid), ('opened', '!=', False)], count=True, context=context),
                 'replied': Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid), ('replied', '!=', False)], count=True, context=context),
@@ -263,7 +264,11 @@ class MassMailingCampaign(osv.Model):
         'color': fields.integer('Color Index'),
         # stat fields
         'total': fields.function(
-            _get_statistics, string='Scheduled',
+            _get_statistics, string='Total',
+            type='integer', multi='_get_statistics'
+        ),
+        'scheduled': fields.function(
+            _get_statistics, string='Total',
             type='integer', multi='_get_statistics'
         ),
         'sent': fields.function(
