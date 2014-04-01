@@ -1582,6 +1582,8 @@ class mail_message(osv.Model):
         return super(mail_message, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
     def _find_allowed_model_wise(self, cr, uid, doc_model, doc_dict, context=None):
+        if context is None:
+            context = {}
         if doc_model == 'calendar.event':
             order = context.get('order', self._order)
             for virtual_id in self.pool[doc_model].get_recurrent_ids(cr, uid, doc_dict.keys(), [], order=order, context=context):
