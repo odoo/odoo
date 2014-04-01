@@ -1100,7 +1100,7 @@ class BaseModel(object):
             self._rec_name = 'name'
 
 
-    def __export_row(self, cr, uid, row, fields, context=None):
+    def __export_row(self, cr, uid, row, fields, raw_data=False, context=None):
         if context is None:
             context = {}
 
@@ -1193,8 +1193,7 @@ class BaseModel(object):
                             break
 
                         for row2 in r:
-                            lines2 = row2._model.__export_row(cr, uid, row2, fields2,
-                                    context)
+                            lines2 = row2._model.__export_row(cr, uid, row2, fields2, context=context)
                             if first:
                                 for fpos2 in range(len(fields)):
                                     if lines2 and lines2[0][fpos2]:
@@ -1216,14 +1215,22 @@ class BaseModel(object):
                                 lines += lines2
                         break
                     i += 1
+
                 if i == len(f):
                     if isinstance(r, browse_record):
                         r = self.pool[r._table_name].name_get(cr, uid, [r.id], context=context)
                         r = r and r[0] and r[0][1] or ''
-                    data[fpos] = tools.ustr(r or '')
+                    if raw_data and cols and cols._type in ('integer', 'boolean', 'float'):
+                        data[fpos] = r
+                    elif raw_data and cols and cols._type == 'date':
+                        data[fpos] = datetime.datetime.strptime(r, tools.DEFAULT_SERVER_DATE_FORMAT).date()
+                    elif raw_data and cols and cols._type == 'datetime':
+                        data[fpos] = datetime.datetime.strptime(r, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                    else:
+                        data[fpos] = tools.ustr(r or '')
         return [data] + lines
 
-    def export_data(self, cr, uid, ids, fields_to_export, context=None):
+    def export_data(self, cr, uid, ids, fields_to_export, raw_data=False, context=None):
         """
         Export fields for selected objects
 
@@ -1231,6 +1238,7 @@ class BaseModel(object):
         :param uid: current user id
         :param ids: list of ids
         :param fields_to_export: list of fields
+        :param raw_data: True to return value in fields type, False for string values
         :param context: context arguments, like lang, time zone
         :rtype: dictionary with a *datas* matrix
 
@@ -1245,7 +1253,7 @@ class BaseModel(object):
         fields_to_export = map(fix_import_export_id_paths, fields_to_export)
         datas = []
         for row in self.browse(cr, uid, ids, context):
-            datas += self.__export_row(cr, uid, row, fields_to_export, context)
+            datas += self.__export_row(cr, uid, row, fields_to_export, raw_data=raw_data, context=context)
         return {'datas': datas}
 
     def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
