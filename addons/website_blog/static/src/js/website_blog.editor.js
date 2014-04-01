@@ -47,16 +47,16 @@
             return res;
         },
         clean_bg : function(vHeight) {
-            $('.js_header').css({"background-image":'none', 'min-height': vHeight});
+            $('.js_fullheight').css({"background-image":'none', 'min-height': vHeight});
         },
         change_bg : function(vHeight) {
             var self  = this;
             var editor  = new  website.editor.ImageDialog();
             editor.on('start', self, function (o) {
-                o.url = $('.js_header').length ? $('.js_header').css('background-image').replace(/url\(|\)|"|'/g,'') : ''; 
+                o.url = $('.js_fullheight').length ? $('.js_fullheight').css('background-image').replace(/url\(|\)|"|'/g,'') : ''; 
             });
             editor.on('save', self, function (o) {
-                $('.js_header').css({"background-image": o.url && o.url !== "" ? 'url(' + o.url + ')' : "", 'min-height': vHeight})
+                $('.js_fullheight').css({"background-image": o.url && o.url !== "" ? 'url(' + o.url + ')' : "", 'min-height': vHeight})
             });
             editor.appendTo('body');
         },
