@@ -20,14 +20,12 @@
 ##############################################################################
 
 import werkzeug
-from datetime import datetime
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 from openerp.tools import html2plaintext
-from openerp import tools
 
 class WebsiteBlog(http.Controller):
     _blog_post_per_page = 20

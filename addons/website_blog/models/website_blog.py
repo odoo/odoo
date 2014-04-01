@@ -24,7 +24,6 @@ import difflib
 from datetime import datetime
 
 from openerp import tools
-from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
