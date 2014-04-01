@@ -138,9 +138,9 @@ class WebsiteBlog(http.Controller):
         domain = []
 
         if blog:
-            domain += [("id", "in", [post.id for post in blog.blog_post_ids])]
+            domain += [('blog_id', '=', blog.id)]
         if tag:
-            domain += [("id", "in", [post.id for post in tag.blog_post_ids])]
+            domain += [('tag_ids', 'in', tag.id)]
         if date_begin and date_end:
             domain += [("create_date", ">=", date_begin), ("create_date", "<=", date_end)]
 
