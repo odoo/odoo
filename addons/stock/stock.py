@@ -808,23 +808,10 @@ class stock_picking(osv.osv):
         default['date_done'] = False
         return super(stock_picking, self).copy(cr, uid, id, default, context)
 
-    def do_print_delivery(self, cr, uid, ids, context=None):
-        '''This function prints the delivery order'''
-        assert len(ids) == 1, 'This option should only be used for a single id at a time'
-        datas = {
-            'model': 'stock.picking',
-            'ids': ids,
-        }
-        return {'type': 'ir.actions.report.xml', 'report_name': 'stock.picking.list', 'datas': datas, 'nodestroy': True}
 
     def do_print_picking(self, cr, uid, ids, context=None):
         '''This function prints the picking list'''
-        assert len(ids) == 1, 'This option should only be used for a single id at a time'
-        datas = {
-            'model': 'stock.picking',
-            'ids': ids,
-        }
-        return {'type': 'ir.actions.report.xml', 'report_name': 'stock.picking.list.internal', 'datas': datas, 'nodestroy': True}
+        return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_picking', context=context)
 
     def action_confirm(self, cr, uid, ids, context=None):
         todo = []
@@ -2296,6 +2283,8 @@ class stock_move(osv.osv):
         """ Splits qty from move move into a new move
         :param move: browse record
         :param qty: float. quantity to split (given in product UoM)
+        :param restrict_lot_id: optional production lot that can be given in order to force the new move to restrict its choice of quants to this lot.
+        :param restrict_partner_id: optional partner that can be given in order to force the new move to restrict its choice of quants to the ones belonging to this partner.
         :param context: dictionay. can contains the special key 'source_location_id' in order to force the source location when copying the move
 
         returns the ID of the backorder move created
@@ -2381,9 +2370,15 @@ class stock_inventory(osv.osv):
             res_filter.append(('pack', _('A Pack')))
         return res_filter
 
+    def _get_total_qty(self, cr, uid, ids, field_name, args, context=None):
+        res = {}
+        for inv in self.browse(cr, uid, ids, context=context):
+            res[inv.id] = sum([x.product_qty for x in inv.line_ids])
+        return res
+
     _columns = {
         'name': fields.char('Inventory Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Name."),
-        'date': fields.datetime('Inventory Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Create Date."),
+        'date': fields.datetime('Inventory Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="The date that will be used for the validation date of the stock move related to this inventory (and for the valuation accounting entries, if any)"),
         'line_ids': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=False, states={'done': [('readonly', True)]}, help="Inventory Lines."),
         'move_ids': fields.one2many('stock.move', 'inventory_id', 'Created Moves', help="Inventory Moves.", states={'done': [('readonly', True)]}),
         'state': fields.selection([('draft', 'Draft'), ('cancel', 'Cancelled'), ('confirm', 'In Progress'), ('done', 'Validated')], 'Status', readonly=True, select=True),
@@ -2395,6 +2390,7 @@ class stock_inventory(osv.osv):
         'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number', readonly=True, states={'draft': [('readonly', False)]}, help="Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial Number."),
         'move_ids_exist': fields.function(_get_move_ids_exist, type='boolean', string=' Stock Move Exists?', help='technical field for attrs in view'),
         'filter': fields.selection(_get_available_filters, 'Selection Filter'),
+        'total_qty': fields.function(_get_total_qty, type="float"),
     }
 
     def _default_stock_location(self, cr, uid, context=None):
