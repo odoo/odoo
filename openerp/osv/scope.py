@@ -46,12 +46,14 @@ class Scope(object):
     @contextmanager
     def manage(cls):
         """ Context manager for a set of scopes. """
-        try:
-            assert not hasattr(cls._local, 'scopes')
-            cls._local.scopes = WeakSet()
+        if hasattr(cls._local, 'scopes'):
             yield
-        finally:
-            release_local(cls._local)
+        else:
+            try:
+                cls._local.scopes = WeakSet()
+                yield
+            finally:
+                release_local(cls._local)
 
     def __new__(cls, cr, uid, context):
         assert context is not None
