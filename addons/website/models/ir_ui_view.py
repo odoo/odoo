@@ -61,7 +61,7 @@ class view(osv.osv):
             if call_view not in result:
                 result += self._views_get(cr, uid, call_view, options=options, context=context, stack_result=result)
 
-        todo = view.inherit_children_ids
+        todo = list(view.inherit_children_ids)
         if options:
             todo += filter(lambda x: not x.inherit_id, view.inherited_option_ids)
         # Keep options in a determinitic order whatever their enabled disabled status
