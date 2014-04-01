@@ -32,7 +32,7 @@ except ImportError:
 import openerp
 import openerp.modules.registry
 from openerp.tools.translate import _
-from openerp import http, tools
+from openerp import http
 
 from openerp.http import request, serialize_exception as _serialize_exception
 
