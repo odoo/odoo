@@ -1132,9 +1132,13 @@ class procurement_order(osv.osv):
 
     def propagate_cancel(self, cr, uid, procurement, context=None):
         if procurement.rule_id.action == 'buy' and procurement.purchase_line_id:
-            self.pool.get('purchase.order.line').action_cancel(cr, uid, [procurement.purchase_line_id.id], context=context)
+            purchase_line_obj = self.pool.get('purchase.order.line')
+            if procurement.purchase_line_id.product_qty > procurement.product_qty and procurement.purchase_line_id.order_id.state == 'draft':
+                purchase_line_obj.write(cr, uid, [procurement.purchase_line_id.id], {'product_qty': procurement.purchase_line_id.product_qty - procurement.product_qty}, context=context)
+            else:
+                purchase_line_obj.action_cancel(cr, uid, [procurement.purchase_line_id.id], context=context)
         return super(procurement_order, self).propagate_cancel(cr, uid, procurement, context=context)
-        
+
     def _run(self, cr, uid, procurement, context=None):
         if procurement.rule_id and procurement.rule_id.action == 'buy':
             #make a purchase order for the procurement

@@ -23,7 +23,7 @@
 {
     'name': 'Just In Time Scheduling',
     'version': '1.0',
-    'category': 'Manufacturing',
+    'category': 'Base',
     'description': """
 This module allows Just In Time computation of procurement orders.
 ==================================================================
@@ -42,8 +42,8 @@ In that case, you can not use priorities any more on the different picking.
     'depends': ['procurement'],
     'data': [],
     'demo': [],
-    'test': ['test/mrp_jit.yml'],
+    'test': ['test/procurement_jit.yml'],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
