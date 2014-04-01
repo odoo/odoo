@@ -448,8 +448,8 @@
                                     <li><a class="text-muted fa fa-share" href="">share</a></li>
                                 </ul>
                             </div>
-                            <t t-set="user" t-value="question.user_id"/>
                             <t t-call="website_forum.user_detail">
+                                <t t-set="user" t-value="question.user_id"/>
                                 <span class="text-muted">Asked on <span t-field="question.write_date"/></span>
                             </t>
                             <div class="alert alert-info" t-if="question.state == 'close'">
@@ -505,8 +505,8 @@
                                 </li>
                                 <li><a class="text-muted fa fa-share" t-attf-href="/forum/#{ slug(forum) }/question/#{ question.id }/#answer-#{ answer.id }">share</a></li>
                             </ul>
-                            <t t-set="user" t-value="answer.user_id"/>
                             <t t-call="website_forum.user_detail">
+                                <t t-set="user" t-value="answer.user_id"/>
                                 <span class="text-muted">Answered on <span t-field="answer.create_date"/></span>
                             </t>
                         </div>

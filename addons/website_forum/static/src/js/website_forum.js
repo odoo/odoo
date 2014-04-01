@@ -64,15 +64,30 @@ $(document).ready(function () {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         openerp.jsonRpc("/forum/correct_answer/", 'call', {
-              'post_id': $link.attr("id")})
-              .then(function (data) {
-                  par = $link.parents().find(".oe_answer_true")
-                  $link.parents().find(".oe_answer_true").removeClass("oe_answer_true").addClass('oe_answer_false')
-                  if (data) {
+            'post_id': $link.attr("id")})
+            .then(function (data) {
+                if (data['error']) {
+                    if (data['error'] == 'anonymous_user'){
+                        var $warning = $('<div class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
+                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+                            'Sorry, anonymous users cannot choose correct answer.'+
+                            '</div>');
+                    } else if (data['error'] == 'user'){
+                        var $warning = $('<div class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
+                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+                            'Sorry, You cannot choose correct answer.'+
+                            '</div>');
+                    }
+                    correct_answer_alert = $link.parent().find("#correct_answer_alert");
+                    if (correct_answer_alert.length == 0) {
+                        $link.parent().append($warning);
+                    }
+                } else {
+                    $link.parents().find(".oe_answer_true").removeClass("oe_answer_true").addClass('oe_answer_false');
                     $link.removeClass("oe_answer_false").addClass('oe_answer_true');
-                  }
-             });
-        return false;
+                }
+            });
+        return true;
     });
 
     $('.comment_delete').on('click', function (ev) {

@@ -534,24 +534,27 @@ class website_forum(http.Controller):
         }, context=context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('post_id')))
 
-    @http.route('/forum/correct_answer/', type='json', auth="user", multilang=True, methods=['POST'], website=True)
+    @http.route('/forum/correct_answer/', type='json', auth="public", multilang=True, methods=['POST'], website=True)
     def correct_answer(self, **kwarg):
         cr, uid, context = request.cr, request.uid, request.context
+        if not request.session.uid:
+            return {'error': 'anonymous_user'}
+
         Post = request.registry['website.forum.post']
         post = Post.browse(cr, uid, int(kwarg.get('post_id')), context=context)
         user = request.registry['res.users'].browse(cr, uid, uid, context=None)
-        if post.user_id.id == uid or user.karma >= 500:
-            correct = False if post.correct else True
-            #Note: only one answer can be right.
-            for child in post.parent_id.child_ids:
-                if child.correct and child.id != post.id:
-                    Post.write( cr, uid, [child.id], {
-                        'correct': False,
-                    }, context=context)
-            Post.write( cr, uid, [post.id, post.parent_id.id], {
-                'correct': correct,
-            }, context=context)
-            return correct
+
+        #if user have not access to accept answer then reise warning
+        if not (post.parent_id.user_id.id == uid or user.karma >= 500):
+            return {'error': 'user'}
+
+        #Note: only one answer can be right.
+        correct = False if post.correct else True
+        for child in post.parent_id.child_ids:
+            if child.correct and child.id != post.id:
+                Post.write( cr, uid, [child.id], { 'correct': False }, context=context)
+        Post.write( cr, uid, [post.id, post.parent_id.id], { 'correct': correct }, context=context)
+        return correct
 
     @http.route('/forum/<model("website.forum"):forum>/close/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
     def close_question(self, forum, post, **kwarg):

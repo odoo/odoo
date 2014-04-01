@@ -239,10 +239,6 @@ class Post(osv.Model):
             user = self.pool['res.users'].browse(cr, uid ,uid, context=context)
             self.create_history(cr, uid, ids, context=context)
             for post in self.browse(cr, uid, ids, context=context):
-                #just for precaution
-                if user.karma < 300 and post.user_id != uid:
-                    raise osv.except_osv(_('Error!'), _('You are not allowed to edit this post!'))
-
                 body, subtype = "Edited question", "website_forum.mt_question_edit"
                 if post.parent_id:
                     body, subtype = "Edited answer", "website_forum.mt_answer_edit"
