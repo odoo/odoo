@@ -1215,6 +1215,7 @@ class BaseModel(object):
                                 lines += lines2
                         break
                     i += 1
+
                 if i == len(f):
                     if isinstance(r, browse_record):
                         r = self.pool[r._table_name].name_get(cr, uid, [r.id], context=context)
@@ -1222,7 +1223,7 @@ class BaseModel(object):
                     if raw_data and cols and cols._type in ('integer', 'boolean', 'float'):
                         data[fpos] = r
                     elif raw_data and cols and cols._type == 'date':
-                        data[fpos] = datetime.datetime.strptime(r, tools.DEFAULT_SERVER_DATE_FORMAT)
+                        data[fpos] = datetime.datetime.strptime(r, tools.DEFAULT_SERVER_DATE_FORMAT).date()
                     elif raw_data and cols and cols._type == 'datetime':
                         data[fpos] = datetime.datetime.strptime(r, tools.DEFAULT_SERVER_DATETIME_FORMAT)
                     else:
