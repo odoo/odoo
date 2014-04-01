@@ -681,10 +681,10 @@ function openerp_picking_widgets(instance){
                     self.$('.js_pick_next').removeClass('disabled');
                 }
                 if (self.picking.recompute_pack_op){
-                    self.$('.js_reload_op').removeClass('hidden');
+                    self.$('.oe_reload_op').removeClass('hidden');
                 }
                 else {
-                    self.$('.js_reload_op').addClass('hidden');
+                    self.$('.oe_reload_op').addClass('hidden');
                 }
                 if (!self.show_pack){
                     self.$('.js_pick_pack').addClass('hidden');
@@ -719,10 +719,10 @@ function openerp_picking_widgets(instance){
                         self.$('.js_create_lot').addClass('hidden');
                     }
                     if (self.picking.recompute_pack_op){
-                        self.$('.js_reload_op').removeClass('hidden');
+                        self.$('.oe_reload_op').removeClass('hidden');
                     }
                     else {
-                        self.$('.js_reload_op').addClass('hidden');
+                        self.$('.oe_reload_op').addClass('hidden');
                     }
 
                     if( self.picking.id === self.pickings[0]){
