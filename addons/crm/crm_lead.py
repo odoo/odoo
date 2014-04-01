@@ -345,19 +345,12 @@ class crm_lead(format_address, osv.osv):
             section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
             if section_ids:
                 section_id = section_ids[0]
-        return {'value': {'section_id': section_id}}
-        
-    def on_change_user(self, cr, uid, ids, user_id, context=None):
-        """ Override of on change user_id on lead/opportunity; when having sale
-            the new logic is :
-            - use user.default_section_id
-            - or fallback on previous behavior """
-        if user_id:
+        else:
             user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
             if user.default_section_id and user.default_section_id.id:
                 return {'value': {'section_id': user.default_section_id.id}}
-        return super(sale_crm_lead, self).on_change_user(cr, uid, ids, user_id, context=context)
-    
+        return {'value': {'section_id': section_id}}
+        
     def stage_find(self, cr, uid, cases, section_id, domain=None, order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
