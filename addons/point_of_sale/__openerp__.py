@@ -65,7 +65,7 @@ Main Features
         'wizard/pos_payment.xml',
         'wizard/pos_box.xml',
         'wizard/pos_session_opening.xml',
-        #'point_of_sale_report.xml',
+        'point_of_sale_report.xml',
         'point_of_sale_view.xml',
         'point_of_sale_data.xml',
         'report/pos_order_report_view.xml',
@@ -84,7 +84,7 @@ Main Features
     'test': [
         'test/01_order_to_payment.yml',
         'test/02_order_to_invoice.yml',
-        'test/point_of_sale_report.yml'
+        #'test/point_of_sale_report.yml'
     ],
     'installable': True,
     'application': True,
