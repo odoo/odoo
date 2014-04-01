@@ -329,6 +329,9 @@ class stock_quant(osv.osv):
         #reserve quants
         if toreserve:
             self.write(cr, SUPERUSER_ID, toreserve, {'reservation_id': move.id}, context=context)
+            #if move has a picking_id, write on that picking that pack_operation might have changed and need to be recomputed
+            if move.picking_id:
+                self.pool.get('stock.picking').write(cr, uid, [move.picking_id.id], {'recompute_pack_op': True}, context=context)
         #check if move'state needs to be set as 'assigned'
         if reserved_availability == move.product_qty and move.state in ('confirmed', 'waiting'):
             self.pool.get('stock.move').write(cr, uid, [move.id], {'state': 'assigned'}, context=context)
@@ -534,6 +537,9 @@ class stock_quant(osv.osv):
     def quants_unreserve(self, cr, uid, move, context=None):
         related_quants = [x.id for x in move.reserved_quant_ids]
         if related_quants:
+            #if move has a picking_id, write on that picking that pack_operation might have changed and need to be recomputed
+            if move.picking_id:
+                self.pool.get('stock.picking').write(cr, uid, [move.picking_id.id], {'recompute_pack_op': True}, context=context)
             if move.partially_available:
                 self.pool.get("stock.move").write(cr, uid, [move.id], {'partially_available': False}, context=context)
             return self.write(cr, SUPERUSER_ID, related_quants, {'reservation_id': False}, context=context)
@@ -725,6 +731,26 @@ class stock_picking(osv.osv):
                     continue
         return res
 
+    def check_group_lot(self, cr, uid, context=None):
+        """ This function will return true if we have the setting to use lots activated. """
+        settings_obj = self.pool.get('stock.config.settings')
+        config_ids = settings_obj.search(cr, uid, [], limit=1, order='id DESC', context=context)
+        #If we don't have updated config until now, all fields are by default false and so should be not dipslayed
+        if not config_ids:
+            return False
+        stock_settings = settings_obj.browse(cr, uid, config_ids[0], context=context)
+        return stock_settings.group_stock_production_lot
+
+    def check_group_pack(self, cr, uid, context=None):
+        """ This function will return true if we have the setting to use package activated. """
+        settings_obj = self.pool.get('stock.config.settings')
+        config_ids = settings_obj.search(cr, uid, [], limit=1, order='id DESC', context=context)
+        #If we don't have updated config until now, all fields are by default false and so should be not dipslayed
+        if not config_ids:
+            return False
+        stock_settings = settings_obj.browse(cr, uid, config_ids[0], context=context)
+        return stock_settings.group_stock_tracking_lot
+
     def action_assign_owner(self, cr, uid, ids, context=None):
         for picking in self.browse(cr, uid, ids, context=context):
             packop_ids = [op.id for op in picking.pack_operation_ids]
@@ -774,6 +800,7 @@ class stock_picking(osv.osv):
         'owner_id': fields.many2one('res.partner', 'Owner', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, help="Default Owner"),
         # Used to search on pickings
         'product_id': fields.related('move_lines', 'product_id', type='many2one', relation='product.product', string='Product'),
+        'recompute_pack_op': fields.boolean('Recompute pack operation?', help='True if reserved quants changed, which mean we might need to recompute the package operations'),
         'location_id': fields.related('move_lines', 'location_id', type='many2one', relation='stock.location', string='Location', readonly=True),
         'location_dest_id': fields.related('move_lines', 'location_dest_id', type='many2one', relation='stock.location', string='Destination Location', readonly=True),
         'group_id': fields.related('move_lines', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group', readonly=True,
@@ -789,7 +816,8 @@ class stock_picking(osv.osv):
         'move_type': 'one',
         'priority': '1',  # normal
         'date': fields.datetime.now,
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c),
+        'recompute_pack_op': True,
     }
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -853,6 +881,8 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             move_ids = [x.id for x in pick.move_lines if x.state in ['confirmed', 'waiting']]
             self.pool.get('stock.move').force_assign(cr, uid, move_ids, context=context)
+        #pack_operation might have changed and need to be recomputed
+        self.write(cr, uid, ids, {'recompute_pack_op': True}, context=context)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -1056,7 +1086,7 @@ class stock_picking(osv.osv):
                 'product_uom_id': self.pool.get("product.product").browse(cr, uid, key[0], context=context).uom_id.id,
             })
         return vals
-    
+
     def open_barcode_interface(self, cr, uid, picking_ids, context=None):
         final_url="/barcode/web/#action=stock.ui&picking_id="+str(picking_ids[0])
         return {'type': 'ir.actions.act_url', 'url':final_url, 'target': 'self',}
@@ -1096,6 +1126,7 @@ class stock_picking(osv.osv):
                 pack_operation_obj.create(cr, uid, vals, context=ctx)
         #recompute the remaining quantities all at once
         self.do_recompute_remaining_quantities(cr, uid, picking_ids, context=context)
+        self.write(cr, uid, picking_ids, {'recompute_pack_op': False}, context=context)
 
     def do_unreserve(self, cr, uid, picking_ids, context=None):
         """
@@ -1716,6 +1747,7 @@ class stock_move(osv.osv):
         default['reserved_quant_ids'] = []
         default['returned_move_ids'] = []
         default['linked_move_operation_ids'] = []
+        default['partially_available'] = False
         if not default.get('origin_returned_move_id'):
             default['origin_returned_move_id'] = False
         default['state'] = 'draft'
@@ -2092,6 +2124,7 @@ class stock_move(osv.osv):
                         quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, qty, domain=domain, prefered_domain=[], fallback_domain=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                         quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)
         for move in todo_moves:
+            move.refresh()
             #then if the move isn't totally assigned, try to find quants without any specific domain
             if move.state != 'assigned':
                 qty_already_assigned = move.reserved_availability

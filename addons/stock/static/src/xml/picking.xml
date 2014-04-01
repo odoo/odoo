@@ -1,51 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <!-- <t t-name="TactileListWidget">
-        <div class='oe_tactlist js_width' t-att-style="'width:' + widget.get_width() + 'px'">
-            <div class='oe_tactlist_header'>
-                <t t-esc='widget.get_title()' />
-            </div>
-
-            <div class='oe_scrolltable js_height' t-att-style="'height:' + widget.get_height() + 'px'">
-                <div class='oe_scrolltable_scroll'>
-                    <div class='oe_scrolltable_header_container js_innerwidth' t-att-style="'width:' + widget.get_innerwidth() + 'px'">
-                        <table class='oe_scrolltable_header js_innerwidth' >
-                            <tbody>
-                                <tr>
-                                    <t t-foreach="widget.get_collumns()" t-as="col">
-                                        <td t-att-class="col.classes">
-                                            <t t-esc="col.header" />
-                                        </td>
-                                    </t>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <table class='oe_scrolltable_body js_innerwidth' t-att-style="'width:' + widget.get_innerwidth() + 'px'">
-                        <colgroup>
-                            <t t-foreach="widget.get_collumns()" t-as="col">
-                                <col t-att-class="col.classes"></col>
-                            </t>
-                        </colgroup>
-                        <tbody>
-                            <t t-foreach="widget.get_rows()" t-as="row">
-                                <tr t-att-class="row.classes">
-                                    <t t-foreach="row.cols" t-as="col">
-                                        <td><t t-esc="col" /></td> 
-                                    </t>
-                                </tr>
-                            </t>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class='oe_vresizer js_vresizer'>
-                <span class='oe_hresizer js_hresizer'>●</span>
-            </div>
-        </div>
-    </t> -->
-
     <t t-name='PickingEditorWidget'>
         
         <div class="modal fade" id="js_LocationChooseModal" tabindex="-1" role="dialog" aria-labelledby="LocationChooseModal" aria-hidden="true">
@@ -164,9 +119,9 @@
                                      <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
-                                        <!-- <t t-if="!row.cols.lot &amp;&amp; row.cols.product_id">
+                                        <t t-if="!row.cols.lot &amp;&amp; row.cols.product_id">
                                             <li><a class="js_create_lot" href="#">Create Lot</a></li>
-                                        </t> -->
+                                        </t>
                                         <t t-if="!row.cols.head_container &amp;&amp; !row.cols.container">
                                             <li><a class="js_change_src" href="#">Change source location</a></li>
                                             <li><a class="js_change_dst" href="#">Change destination location</a></li>
@@ -266,6 +221,9 @@
 
         <div class="container">
             <div class='oe_placeholder_picking_editor'/>
+            <div class="text-right small oe_reload_op">
+                The reserved stock changed. You might want to <button class="btn btn-default js_reload_op"> Recompute </button> the operations.
+            </div>
         </div>
     </t>
 
