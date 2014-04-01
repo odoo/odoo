@@ -611,9 +611,11 @@ function openerp_picking_widgets(instance){
                 }).then(function(){
                     return new instance.web.Model('stock.picking').call('check_group_pack').then(function(result){
                         return self.show_pack = result;
-                        
                     });
-
+                }).then(function(){
+                    return new instance.web.Model('stock.picking').call('check_group_lot').then(function(result){
+                        return self.show_lot = result;
+                    });
                 }).then(function(){
                     if (self.picking.pack_operation_exist === false){
                         self.picking.recompute_pack_op = false;
@@ -687,6 +689,9 @@ function openerp_picking_widgets(instance){
                 if (!self.show_pack){
                     self.$('.js_pick_pack').addClass('hidden');
                 }
+                if (!self.show_lot){
+                    self.$('.js_create_lot').addClass('hidden');
+                }
 
             }).fail(function(error) {console.log(error);});
 
@@ -709,6 +714,9 @@ function openerp_picking_widgets(instance){
                     self.picking_editor.renderElement();
                     if (!self.show_pack){
                         self.$('.js_pick_pack').addClass('hidden');
+                    }
+                    if (!self.show_lot){
+                        self.$('.js_create_lot').addClass('hidden');
                     }
                     if (self.picking.recompute_pack_op){
                         self.$('.js_reload_op').removeClass('hidden');
