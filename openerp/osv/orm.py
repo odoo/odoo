@@ -1219,11 +1219,11 @@ class BaseModel(object):
                     if isinstance(r, browse_record):
                         r = self.pool[r._table_name].name_get(cr, uid, [r.id], context=context)
                         r = r and r[0] and r[0][1] or ''
-                    if not raw_data or cols and cols._type in ('integer', 'boolean', 'float'):
+                    if raw_data and cols and cols._type in ('integer', 'boolean', 'float'):
                         data[fpos] = r
-                    elif not raw_data or cols and cols._type == 'date':
+                    elif raw_data and cols and cols._type == 'date':
                         data[fpos] = datetime.datetime.strptime(r, tools.DEFAULT_SERVER_DATE_FORMAT)
-                    elif not raw_data or cols and cols._type == 'datetime':
+                    elif raw_data and cols and cols._type == 'datetime':
                         data[fpos] = datetime.datetime.strptime(r, tools.DEFAULT_SERVER_DATETIME_FORMAT)
                     else:
                         data[fpos] = tools.ustr(r or '')
