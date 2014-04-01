@@ -233,7 +233,7 @@ class website_forum(http.Controller):
 
         #showing questions which user following
         obj_ids = Followers.search(cr, SUPERUSER_ID, [('res_model', '=', 'website.forum.post'),('partner_id' , '=' , user.partner_id.id)], context=context)
-        post_ids = [follower.res_id for follower in Followers.browse(cr, uid, obj_ids, context=context)]
+        post_ids = [follower.res_id for follower in Followers.browse(cr, SUPERUSER_ID, obj_ids, context=context)]
         que_ids = Post.search(cr, uid, [('id', 'in', post_ids), ('forum_id', '=', forum.id), ('parent_id', '=', False)], context=context)
         followed = Post.browse(cr, uid, que_ids, context=context)
 
