@@ -157,7 +157,7 @@ class DateTime(orm.AbstractModel):
             value = datetime.datetime.strptime(
                 value, DEFAULT_SERVER_DATETIME_FORMAT)
         if value:
-            value = column.context_timestamp(
+            value = fields.datetime.context_timestamp(
                 cr, uid, timestamp=value, context=context)
             value = value.strftime(openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
