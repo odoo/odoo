@@ -91,7 +91,7 @@ class WebsiteBlog(http.Controller):
         blog_post_obj = request.registry['blog.post']
 
         blog_obj = request.registry['blog.blog']
-        blog_ids = blog_obj.search(cr, uid, [], context=context)
+        blog_ids = blog_obj.search(cr, uid, [], order="create_date asc", context=context)
         blogs = blog_obj.browse(cr, uid, blog_ids, context=context)
 
         path_filter = ""
@@ -114,7 +114,7 @@ class WebsiteBlog(http.Controller):
             step=self._blog_post_per_page,
             scope=10
         )
-        blog_post_ids = blog_post_obj.search(cr, uid, domain, context=context, limit=self._blog_post_per_page, offset=pager['offset'])
+        blog_post_ids = blog_post_obj.search(cr, uid, domain, order="create_date asc", context=context)
         blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
 
         tag_obj = request.registry['blog.tag']
