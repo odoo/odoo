@@ -2947,6 +2947,7 @@ class stock_warehouse(osv.osv):
             'product_selectable': True,
             'product_categ_selectable': True,
             'active': warehouse.delivery_steps != 'ship_only' and warehouse.reception_steps != 'one_step',
+            'procure_method': 'make_to_order',
             'sequence': 20,
         }
 
