@@ -38,7 +38,7 @@ _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('openerp.tests')
 
 
-def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
+def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, report_type=None):
     """ Try to render a report <rname> with contents of ids
     
         This function should also check for common pitfalls of reports.
@@ -281,10 +281,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
             ids = datas.get('ids')
             if 'ids' in datas:
                 del datas['ids']
-            if action.get('report_type') in ['qweb-pdf', 'qweb-html']:
-                res = registry['report'].get_html(cr, uid, [], action.get('report_name'), data=datas, context=context)
-            else:
-                res = try_report(cr, uid, 'report.'+action['report_name'], ids, datas, context, our_module=our_module)
+            res = try_report(cr, uid, 'report.'+action['report_name'], ids, datas, context, our_module=our_module)
             return res
         else:
             raise Exception("Cannot handle action of type %s" % act_model)
