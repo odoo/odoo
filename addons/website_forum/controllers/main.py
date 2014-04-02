@@ -324,7 +324,7 @@ class website_forum(http.Controller):
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),new_question_id))
 
     @http.route('/forum/<model("website.forum"):forum>/question/postanswer/', type='http', auth="public", multilang=True, methods=['POST'], website=True)
-    def post_answer(self, forum ,post_id, **question):
+    def post_answer(self, forum , post_id, **question):
         if not request.session.uid:
             return login_redirect()
 
@@ -343,41 +343,68 @@ class website_forum(http.Controller):
             }, context=create_context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post_id))
 
-    @http.route(['/forum/<model("website.forum"):forum>/question/<model("website.forum.post"):post>/editanswer',
-                 '/forum/<model("website.forum"):forum>/answer/<model("website.forum.post"):post>/edit/<model("website.forum.post"):answer>']
+    @http.route(['/forum/<model("website.forum"):forum>/question/<model("website.forum.post"):question>/editanswer']
                 , type='http', auth="user", website=True, multilang=True)
-    def edit_answer(self, forum, post, answer='', **kwargs):
-        cr, uid, context = request.cr, request.uid, request.context
-        request.registry['res.users'].write(cr, SUPERUSER_ID, uid, {'forum': True}, context=context)
-        user = request.registry['res.users'].browse(cr, uid, uid, context=context)
-        for record in post.child_ids:
-            if record.user_id.id == request.uid and not answer:
+    def edit_answer(self, forum, question, **kwargs):
+        for record in question.child_ids:
+            if record.user_id.id == request.uid:
                 answer = record
+        return werkzeug.utils.redirect("/forum/%s/question/%s/edit/%s" % (slug(forum), question.id, answer.id))
+ 
+    @http.route(['/forum/<model("website.forum"):forum>/edit/question/<model("website.forum.post"):question>',
+                 '/forum/<model("website.forum"):forum>/question/<model("website.forum.post"):question>/edit/<model("website.forum.post"):answer>']
+                , type='http', auth="user", website=True, multilang=True)
+    def edit_post(self, forum, question, answer=None, **kwargs):
+        cr, uid, context = request.cr, request.uid, request.context
 
         history_obj = request.registry['website.forum.post.history']
-        history_ids = history_obj.search(cr, uid, [('post_id','=', answer.id)], order = "id desc", context=context)
+        User = request.registry['res.users']
+        User.write(cr, SUPERUSER_ID, uid, {'forum': True}, context=context)
+        user = User.browse(cr, uid, uid, context=context)
+
+        post_id = answer.id if answer else question.id
+        history_ids = history_obj.search(cr, uid, [('post_id', '=', post_id)], order = "id desc", context=context)
         post_history = history_obj.browse(cr, uid, history_ids, context=context)
 
+        tags = ""
+        for tag_name in question.tags:
+            tags += tag_name.name + ","
+
         values = {
-            'post': post,
+            'question': question,
             'user': user,
-            'post_answer': answer,
+            'tags': tags,
+            'answer': answer,
+            'is_answer': True if answer else False,
             'notifications': self._get_notifications(),
             'forum': forum,
             'post_history': post_history,
             'searches': kwargs
         }
-        return request.website.render("website_forum.edit_answer", values)
+        return request.website.render("website_forum.edit_post", values)
 
-    @http.route('/forum/<model("website.forum"):forum>/question/saveanswer/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
-    def save_edited_answer(self, forum, **post):
+    @http.route('/forum/<model("website.forum"):forum>/post/save', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    def save_edited_post(self, forum, **post):
         cr, uid, context = request.cr, request.uid, request.context
         request.registry['res.users'].write(cr, SUPERUSER_ID, uid, {'forum': True}, context=context)
-        answer_id = int(post.get('answer_id'))
-        new_question_id = request.registry['website.forum.post'].write( cr, uid, [answer_id], {
-                'content': post.get('content'),
-            }, context=context)
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('post_id')))
+        vals = {
+            'content': post.get('content'),
+        }
+        if post.get('question_tag'):
+            Tag = request.registry['website.forum.tag']
+            tags = post.get('question_tag').strip('[]').replace('"','').split(",")
+            question_tags = []
+            for tag in tags:
+                tag_ids = Tag.search(cr, uid, [('name', 'like', tag)], context=context)
+                if tag_ids:
+                    question_tags.append((6, 0, tag_ids))
+                else:
+                    question_tags.append((0,0,{'name' : tag,'forum_id' : forum.id}))
+            vals.update({'tags': question_tags, 'name': post.get('question_name')})
+
+        post_id = post.get('answer_id') if post.get('answer_id') else post.get('question_id')
+        new_question_id = request.registry['website.forum.post'].write( cr, uid, [int(post_id)], vals, context=context)
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('question_id')))
 
     @http.route(['/forum/<model("website.forum"):forum>/tag'], type='http', auth="public", website=True, multilang=True)
     def tags(self, forum, page=1, **searches):
@@ -490,49 +517,6 @@ class website_forum(http.Controller):
             'tags': tags,
         }
         return data
-
-    @http.route('/forum/<model("website.forum"):forum>/edit/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
-    def edit_question(self, forum, post, **kwarg):
-        cr, uid, context = request.cr, request.uid, request.context
-        user = request.registry['res.users'].browse(cr, uid, uid, context=context)
-        history_obj = request.registry['website.forum.post.history']
-        history_ids = history_obj.search(cr, uid, [('post_id','=', post.id)], order = "id desc", context=context)
-        post_history = history_obj.browse(cr, uid, history_ids, context=context)
-
-        tags = ""
-        for tag_name in post.tags:
-            tags += tag_name.name + ","
-
-        values = {
-            'post': post,
-            'user': user,
-            'tags': tags,
-            'forum': forum,
-            'searches': kwarg,
-            'notifications': self._get_notifications(),
-            'post_history': post_history,
-        }
-        return request.website.render("website_forum.edit_question", values)
-
-    @http.route('/forum/<model("website.forum"):forum>/question/savequestion/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
-    def save_edited_question(self, forum, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        Tag = request.registry['website.forum.tag']
-        tags = post.get('question_tag').strip('[]').replace('"','').split(",")
-        question_tags = []
-        for tag in tags:
-            tag_ids = Tag.search(cr, uid, [('name', 'like', tag)], context=context)
-            if tag_ids:
-                question_tags.append((6, 0, tag_ids))
-            else:
-                question_tags.append((0,0,{'name' : tag,'forum_id' : forum.id}))
-
-        request.registry['website.forum.post'].write(cr, uid, [int(post.get('post_id'))], {
-            'content': post.get('content'),
-            'name': post.get('question_name'),
-            'tags' : question_tags,
-        }, context=context)
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('post_id')))
 
     @http.route('/forum/correct_answer/', type='json', auth="public", multilang=True, methods=['POST'], website=True)
     def correct_answer(self, **kwarg):

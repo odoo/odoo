@@ -107,6 +107,8 @@ class Post(osv.Model):
         for post in self.browse(cr, uid, ids, context=context):
             if post.parent_id:
                 res[post.parent_id.id] = len(post.parent_id.child_ids)
+            else:
+                res[post.id] = len(post.child_ids)
         return res
 
     def _get_child(self, cr, uid, ids, context=None):

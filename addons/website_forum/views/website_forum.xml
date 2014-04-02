@@ -274,10 +274,10 @@
                     <li> be clear and concise, avoid unnecessary introductions (Hi, ... Thanks...) </li>
                 </ul>
                 <form t-attf-action="/forum/#{ slug(forum) }/question/ask/" method="post" role="form" class="tag_text">
-                    <input type="text" name="question_name" required="True" t-attf-value="#{question_name or ''}"
+                    <input type="text" name="question_name" required="True" t-attf-value="#{question_name}"
                         class="form-control" placeholder="Enter your Question"/>
                     <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
-                    <input type="hidden" name="karma" t-attf-value="#{user.karma or ''}" id="karma"/>
+                    <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
                     <textarea name="content" required="True" class="form-control load_editor">
                         <t t-esc="question_content"/>
                     </textarea>
@@ -293,26 +293,35 @@
             </t>
         </template>
 
-        <template id="edit_question">
+        <template id="edit_post">
             <t t-call="website_forum.header">
-                <h3>Edit question</h3>
-                <form t-attf-action="/forum/#{ slug(forum) }/question/savequestion/" method="post" role="form" class="tag_text">
+                <h3 t-if="not is_answer">Edit question</h3>
+                <h3 t-if="is_answer">Edit answer</h3>
+                <form t-attf-action="/forum/#{ slug(forum) }/post/save" method="post" role="form" class="tag_text">
                     <select class="form-control post_history">
                         <t t-foreach="post_history" t-as="history">
                             <option t-att-value="history.id"><t t-esc="history.name"/></option>
                         </t>
-                     </select>
-                    <input type="text" name="question_name" id="question_name" required="True" t-attf-value="#{post.name or ''}"
-                        class="form-control" placeholder="Edit your Question"/>
-                    <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
-                    <input type="hidden" name="karma" t-attf-value="#{user.karma or ''}" id="karma"/>
+                    </select>
+                    <div t-if="not is_answer">
+                        <input type="text" name="question_name" id="question_name" required="True"
+                            t-attf-value="#{question.name}" class="form-control" placeholder="Edit your Question"/>
+                        <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
+                        <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
+                    </div>
                     <textarea name="content" required="True" class="form-control load_editor">
-                        <t t-esc="post.content"/>
+                        <t t-if="is_answer"> <t t-esc="answer.content"/></t>
+                        <t t-if="not is_answer"><t t-esc="question.content"/></t>
                     </textarea>
-                    <br/>
-                    <input type="text" name="question_tag" class="form-control col-md-9 load_tags" placeholder="Tags" t-attf-value="#{tags or ''}"/>
-                    <br/>
-                    <input name="post_id" t-att-value="post.id" type="hidden"/>
+                    <input name="question_id" t-att-value="question.id" type="hidden"/>
+                    <div t-if="is_answer">
+                        <input name="answer_id" t-att-value="answer.id" type="hidden"/>
+                    </div>
+                    <div t-if="not is_answer">
+                        <br/>
+                        <input type="text" name="question_tag" class="form-control col-md-9 load_tags" placeholder="Tags" t-attf-value="#{tags}"/>
+                        <br/>
+                    </div>
                     <button class="btn btn-primary btn-lg">Save</button>
                 </form>
                 <script type="text/javascript">
@@ -354,7 +363,7 @@
                 - it really helps to select the best questions and answers!
             </p>
             <form t-attf-action="/forum/#{ slug(forum) }/question/postanswer/" method="post" role="form">
-                <input type="hidden" name="karma" t-attf-value="#{user.karma or ''}" id="karma"/>
+                <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
                 <textarea name="content" class="form-control load_editor" required="True"/>
                 <input name="post_id" t-att-value="question.id" type="hidden"/>
                 <button class="btn btn-primary" id="btn_ask_your_question">Post Your Answer</button>
@@ -362,29 +371,6 @@
             <script type="text/javascript">
                 CKEDITOR.replace("content");
             </script>
-        </template>
-
-        <template id="edit_answer">
-            <t t-call="website_forum.header">
-                <h3>Edit answer</h3>
-                <form t-attf-action="/forum/#{ slug(forum) }/question/saveanswer/" method="post" role="form">
-                    <select class="form-control post_history">
-                        <t t-foreach="post_history" t-as="history">
-                            <option t-att-value="history.id"><t t-esc="history.name"/></option>
-                        </t>
-                    </select>
-                    <input type="hidden" name="karma" t-attf-value="#{user.karma or ''}" id="karma"/>
-                    <textarea name="content" required="true" class="form-control load_editor">
-                        <t t-esc="post_answer.content"/>
-                    </textarea>
-                    <input name="post_id" t-att-value="post.id" type="hidden"/>
-                    <input name="answer_id" t-att-value="post_answer.id" type="hidden"/>
-                    <button class="btn btn-primary btn-lg">Save</button>
-                </form>
-                <script type="text/javascript">
-                    CKEDITOR.replace("content");
-                </script>
-            </t>
         </template>
 
         <template id="vote">
@@ -494,7 +480,7 @@
                                     </a>
                                 </li>
                                 <li t-if="user.id == answer.user_id.id or user.karma&gt;=300">
-                                    <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/answer/#{ question.id }/edit/#{ answer.id }">edit</a>
+                                    <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/question/#{ question.id }/edit/#{ answer.id }">edit</a>
                                 </li>
                                 <li t-if="user.id == answer.user_id.id or user.karma&gt;=1000">
                                     <a class="text-muted delete fa fa-trash-o" href="" t-attf-id="#{answer.id}">delete</a>
