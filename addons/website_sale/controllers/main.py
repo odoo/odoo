@@ -584,6 +584,7 @@ class Ecommerce(http.Controller):
         """
         cr, uid, context = request.cr, request.uid, request.context
         payment_obj = request.registry.get('payment.acquirer')
+        sale_order_obj = request.registry['sale.order']
 
         # if no sale order at this stage: back to checkout beginning
         order = self.get_order()
@@ -603,29 +604,31 @@ class Ecommerce(http.Controller):
                 shipping_partner_id = order.partner_invoice_id.id
 
         values = {
-            'order': request.registry['sale.order'].browse(cr, SUPERUSER_ID, order.id, context=context)
+            'order': sale_order_obj.browse(cr, SUPERUSER_ID, order.id, context=context)
         }
-        values.update(request.registry.get('sale.order')._get_website_data(cr, uid, order, context))
+        values['errors'] = sale_order_obj._get_errors(cr, uid, order, context=context)
+        values.update(sale_order_obj._get_website_data(cr, uid, order, context=context))
 
-        # fetch all registered payment means
-        if tx:
-            acquirer_ids = [tx.acquirer_id.id]
-        else:
-            acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True), '|', ('company_id', '=', order.company_id.id), ('company_id', '=', False)], context=context)
-        values['acquirers'] = payment_obj.browse(cr, uid, acquirer_ids, context=context)
-        render_ctx = dict(context, submit_class='btn btn-primary', submit_txt='Pay Now')
-        for acquirer in values['acquirers']:
-            render_ctx['tx_url'] = '/shop/payment/transaction/%s' % acquirer.id
-            acquirer.button = payment_obj.render(
-                cr, SUPERUSER_ID, acquirer.id,
-                order.name,
-                order.amount_total,
-                order.pricelist_id.currency_id.id,
-                partner_id=shipping_partner_id,
-                tx_values={
-                    'return_url': '/shop/payment/validate',
-                },
-                context=render_ctx)
+        if not values['errors']:
+            # fetch all registered payment means
+            if tx:
+                acquirer_ids = [tx.acquirer_id.id]
+            else:
+                acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True), '|', ('company_id', '=', order.company_id.id), ('company_id', '=', False)], context=context)
+            values['acquirers'] = payment_obj.browse(cr, uid, acquirer_ids, context=context)
+            render_ctx = dict(context, submit_class='btn btn-primary', submit_txt='Pay Now')
+            for acquirer in values['acquirers']:
+                render_ctx['tx_url'] = '/shop/payment/transaction/%s' % acquirer.id
+                acquirer.button = payment_obj.render(
+                    cr, SUPERUSER_ID, acquirer.id,
+                    order.name,
+                    order.amount_total,
+                    order.pricelist_id.currency_id.id,
+                    partner_id=shipping_partner_id,
+                    tx_values={
+                        'return_url': '/shop/payment/validate',
+                    },
+                    context=render_ctx)
 
         return request.website.render("website_sale.payment", values)
 

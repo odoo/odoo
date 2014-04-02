@@ -883,6 +883,12 @@
               <li class="text-muted">Confirmation<span class="chevron"></span></li>
           </ul>
           <h1 class="mb32">Validate Order</h1>
+          <t t-foreach="errors" t-as="error">
+            <div class="alert alert-danger" t-if="error">
+              <h3><t t-esc="error[0]"/></h3>
+              <t t-esc="error[1]"/>
+            </div>
+          </t>
           <div class="row">
           <div class="col-lg-8 col-sm-9 oe_mycart">
               <table class='table table-striped table-condensed' id="mycart_products" t-if="website_sale_order and website_sale_order.website_order_line">
@@ -970,7 +976,7 @@
                   </t>
               </div>
           </div>
-          <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
+          <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total and not errors" id="payment_method">
             <div class="col-lg-8 col-sm-8">
               <form target="_self" action="/shop/payment/validate/" method="post" class="pull-right">
                   <a style="width:100px;" class="btn btn-primary a-submit">
