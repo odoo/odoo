@@ -611,6 +611,7 @@ class website_forum(http.Controller):
         request.registry['res.partner'].write( cr, uid, [user.partner_id.id], {
             'name': post.get('name'),
             'website': post.get('website'),
+            'email': post.get('email'),
             'city': post.get('city'),
             'country_id': post.get('country'),
             'website_description': post.get('description'), 

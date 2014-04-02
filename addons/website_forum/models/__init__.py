@@ -21,3 +21,4 @@
 
 import gamification
 import forum
+import ir_http
