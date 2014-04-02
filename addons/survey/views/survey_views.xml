@@ -125,18 +125,15 @@
                     <sheet class="oe_survey">
                         <div class="oe_title">
                             <label for="title" class="oe_edit_only"/>
-                            <h1>
-                                <field name="title" attrs="{'readonly':[('state','in',['close','cancel'])]}"/>
-                            </h1>
+                            <h1><field name="title" /></h1>
                         </div>
-                        <group nolabel="1" col="4">
-                            <field name="visible_to_user" />
-                            <field name="auth_required" />
-                            <field name="public_url" widget="url" attrs="{'invisible': [('visible_to_user', '=', False)]}"/>
-                        </group>
-                        <field name="description" />
                         <notebook>
-                            <page string="Pages and questions">
+                            <page string="Share">
+                                <field name="visible_to_user" />
+                                <field name="auth_required" />
+                                <field name="public_url" widget="url" attrs="{'invisible': [('visible_to_user', '=', False)]}"/>
+                            </page>
+                            <page string="Edit Pages and Questions">
                                 <field name="page_ids" mode="tree" attrs="{'readonly':[('state','=','close')]}" context="{'default_survey_id': active_id}" nolabel="1">
                                     <tree>
                                         <field name="sequence" widget="handle"/>
@@ -145,16 +142,15 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Survey options">
+                            <page string="Select Options">
                                 <group nolabel="1" col="4">
                                     <field name="user_input_limit" attrs="{'readonly':[('state','=','close')]}"/>
                                     <label string="completed surveys" colspan="2"/>
                                     <field name="users_can_go_back" colspan="4" />
-                                    <field name="thank_you_message" colspan="4" />
                                     <field name="res_model" attrs="{'invisible': True}"/>
                                 </group>
                             </page>
-                            <page string="User inputs">
+<!--                             <page string="User inputs">
                                 <field name="user_input_ids" mode="tree">
                                     <tree>
                                         <field name="date_create"/>
@@ -167,8 +163,8 @@
                                         <field name="user_input_line_ids"/>
                                     </tree>
                                 </field>
-                            </page>
-                        </notebook>
+                            </page> -->
+                    </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
