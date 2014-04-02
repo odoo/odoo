@@ -392,7 +392,9 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
             .lazy(false)
             .group_by(groupbys)
             .then(function (groups) {
-                return groups.map(function (group) {
+                return groups.filter(function (group) {
+                    return group.attributes.length > 0;
+                }).map(function (group) {
                     var attrs = group.attributes,
                         grouped_on = attrs.grouped_on instanceof Array 
                             ? attrs.grouped_on : [attrs.grouped_on],
