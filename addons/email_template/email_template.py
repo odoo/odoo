@@ -449,7 +449,7 @@ class email_template(osv.osv):
                         ctx['lang'] = self.render_template_batch(cr, uid, template.lang, template.model, [res_id], context)[res_id]  # take 0 ?
 
                     if report.report_type in ['qweb-html', 'qweb-pdf']:
-                        result, format = self.pool['report'].get_pdf(report, res_id, context=ctx), 'pdf'
+                        result, format = self.pool['report'].get_pdf(cr, uid, [res_id], report_service, context=ctx), 'pdf'
                     else:
                         result, format = openerp.report.render_report(cr, uid, [res_id], report_service, {'model': template.model}, ctx)
 

@@ -1500,7 +1500,8 @@
                 args: [],
                 kwargs: {
                     fields: ['name', 'website_url'],
-                    domain: [['res_model', '=', 'ir.ui.view']],
+                    domain: [['res_model', '=', 'ir.ui.view'], '|',
+                        ['mimetype', '=', false], ['mimetype', '=like', 'image/%']],
                     order: 'id desc',
                     context: website.get_context(),
                 }
@@ -1789,6 +1790,9 @@
                 if (node.nodeName === 'BR' && node.getAttribute('type') === '_moz') {
                     // <br type="_moz"> appears when focusing RTE in FF, ignore
                     continue;
+                } else if (node.nodeName === 'DIV' && $(node).hasClass('oe_drop_zone')) {
+                    // ignore dropzone inserted by snippets
+                    continue
                 }
             }
 
