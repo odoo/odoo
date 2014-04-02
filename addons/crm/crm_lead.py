@@ -264,10 +264,10 @@ class crm_lead(base_stage, format_address, osv.osv):
         'opt_out': fields.boolean('Opt-Out', oldname='optout',
             help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
                     "Filter 'Available for Mass Mailing' allows users to filter the leads when performing mass mailing."),
-        'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
+        'type': fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', select=True, help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'stage_id': fields.many2one('crm.case.stage', 'Stage', track_visibility='onchange',
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', track_visibility='onchange', select=True,
                         domain="['&', '&', ('fold', '=', False), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
         'referred': fields.char('Referred By', size=64),
@@ -277,7 +277,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
-                selection=crm.AVAILABLE_STATES, string="Status", readonly=True,
+                selection=crm.AVAILABLE_STATES, string="Status", readonly=True, select=True,
                 help='The Status is set to \'Draft\', when a case is created. If the case is in progress the Status is set to \'Open\'. When the case is over, the Status is set to \'Done\'. If the case needs to be reviewed then the Status is  set to \'Pending\'.'),
 
         # Only used for type opportunity
