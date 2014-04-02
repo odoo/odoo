@@ -76,7 +76,7 @@ The analytic plan validates the minimum and maximum percentage at the time of cr
         'views/report_crossoveredanalyticplans.xml',
     ],
     'demo': [],
-    'test': [],
+    'test': ['test/acount_analytic_plans_report.yml'],
     'installable': True,
     'auto_install': False,
 }

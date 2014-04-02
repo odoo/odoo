@@ -84,8 +84,6 @@ class accounting_report(osv.osv_memory):
             if isinstance(data['form'][field], tuple):
                 data['form'][field] = data['form'][field][0]
         comparison_context = self._build_comparison_context(cr, uid, ids, data, context=context)
-        res['data'] = {}
-        res['data']['form'] = data['form']
         res['data']['form']['comparison_context'] = comparison_context
         return res
 

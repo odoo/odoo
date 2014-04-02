@@ -46,9 +46,7 @@ class account_analytic_inverted_balance(osv.osv_memory):
             'model': 'account.analytic.account',
             'form': data
         }
-
         datas['form']['active_ids'] = context.get('active_ids', False)
-
         return self.pool['report'].get_action(cr, uid, ids, 'account.report_invertedanalyticbalance', data=datas, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

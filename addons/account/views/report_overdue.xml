@@ -8,6 +8,7 @@
                 <div class="page">
                     <div class="row">
                         <div class="col-xs-4 col-xs-offset-6">
+                            <span t-field="partner.name"/><br/>
                             <span t-raw="addresses[partner.id].replace('\n\n', '\n').replace('\n', '&lt;br&gt;')"/>
                              <span t-field="partner.vat"/>
                          </div>

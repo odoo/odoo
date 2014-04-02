@@ -58,7 +58,6 @@ This module manages:
         'report/account_voucher_sales_receipt_view.xml',
         'security/account_voucher_security.xml',
         'account_voucher_data.xml',
-        'account_voucher_report.xml',
     ],
     'test' : [
         'test/account_voucher_users.yml',
@@ -73,7 +72,6 @@ This module manages:
         'test/case3_eur_eur.yml',
         'test/case4_cad_chf.yml',
         'test/case_eur_usd.yml',
-        'account_voucher_report.yml',
     ],
     'auto_install': False,
     'application': True,

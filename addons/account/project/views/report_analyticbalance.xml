@@ -22,28 +22,28 @@
                         <tr>
                             <td colspan="2">Total</td>
                             <td>
-                                <span t-esc="formatLang(sum_all(get_objects(empty_acc), date1, date2, 'debit'))"/>
+                                <span t-esc="formatLang(sum_all(get_objects(data['form']['empty_acc']), data['form']['date1'], data['form']['date2'], 'debit'))"/>
                             </td>
                             <td>
-                                <span t-esc="formatLang(sum_all(get_objects(empty_acc), date1, date2, 'credit'))"/>
+                                <span t-esc="formatLang(sum_all(get_objects(data['form']['empty_acc']), data['form']['date1'], data['form']['date2'], 'credit'))"/>
                             </td>
                             <td>
-                                <span t-esc="formatLang(sum_balance(get_objects(empty_acc), date1, date2),currency_obj=res_company.currency_id)"/>
+                                <span t-esc="formatLang(sum_balance(get_objects(data['form']['empty_acc']), data['form']['date1'], data['form']['date2']),currency_obj=res_company.currency_id)"/>
                             </td>
                             <td>
-                                <span t-esc="formatLang(sum_all(get_objects(empty_acc), date1, date2, 'quantity'))"/>
+                                <span t-esc="formatLang(sum_all(get_objects(data['form']['empty_acc']), data['form']['date1'], data['form']['date2'], 'quantity'))"/>
                             </td>
                         </tr>
-                        <t t-foreach="get_objects(empty_acc)" t-as="o">
+                        <t t-foreach="get_objects(data['form']['empty_acc'])" t-as="o">
                             <tr>
                                 <td><span t-esc="o['code']"/></td>
                                 <td><span t-esc="o['complete_name']"/></td>
-                                <td><span t-esc="formatLang(move_sum(o['id'], date1, date2, 'debit'))"/></td>
-                                <td><span t-esc="formatLang(move_sum(o['id'], date1, date2, 'credit'))"/></td>
-                                <td><span t-esc="formatLang(move_sum_balance(o['id'], date1, date2), currency_obj=res_company.currency_id)"/></td>
-                                <td><span t-esc="formatLang(move_sum(o['id'], date1, date2, 'quantity'))"/></td>
+                                <td><span t-esc="formatLang(move_sum(o['id'], data['form']['date1'], data['form']['date2'], 'debit'))"/></td>
+                                <td><span t-esc="formatLang(move_sum(o['id'], data['form']['date1'], data['form']['date2'], 'credit'))"/></td>
+                                <td><span t-esc="formatLang(move_sum_balance(o['id'], data['form']['date1'], data['form']['date2']), currency_obj=res_company.currency_id)"/></td>
+                                <td><span t-esc="formatLang(move_sum(o['id'], data['form']['date1'], data['form']['date2'], 'quantity'))"/></td>
                             </tr>
-                            <tr t-foreach="lines_g(o['id'], date1, date2)" t-as="move_g">
+                            <tr t-foreach="lines_g(o['id'], data['form']['date1'], data['form']['date2'])" t-as="move_g">
                                 <td><span t-esc="move_g['code']"/></td>
                                 <td><span t-esc="move_g['name']"/></td>
                                 <td><span t-esc="formatLang(move_g['debit'])"/></td>

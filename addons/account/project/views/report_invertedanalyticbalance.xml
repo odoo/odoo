@@ -22,14 +22,14 @@
                         <tr>
                             <td><strong>Total</strong></td>
                             <td></td>
-                            <td><strong t-esc="formatLang(sum_debit(docs, date1, date2))"/></td>
-                            <td><strong t-esc="formatLang(sum_credit(docs, date1, date2))"/></td>
+                            <td><strong t-esc="formatLang(sum_debit(docs, data['form']['date1'], data['form']['date2']))"/></td>
+                            <td><strong t-esc="formatLang(sum_credit(docs, data['form']['date1'], data['form']['date2']))"/></td>
                             <td>
-                                <strong t-esc="formatLang(sum_balance(docs, date1, date2), currency_obj=res_company.currency_id)"/>
+                                <strong t-esc="formatLang(sum_balance(docs, data['form']['date1'], data['form']['date2']), currency_obj=res_company.currency_id)"/>
                             </td>
-                            <td><strong><span t-esc="formatLang(sum_quantity(docs, date1, date2))"/></strong></td>
+                            <td><strong><span t-esc="formatLang(sum_quantity(docs, data['form']['date1'], data['form']['date2']))"/></strong></td>
                         </tr>
-                        <t t-foreach="lines_g(docs, date1, date2)" t-as="move_g">
+                        <t t-foreach="lines_g(docs, data['form']['date1'], data['form']['date2'])" t-as="move_g">
                             <tr>
                                 <td>
                                     <strong t-esc="move_g['code']"/>
@@ -58,7 +58,7 @@
                                     </strong>
                                 </td>
                             </tr>
-                            <t t-foreach="lines_a(docs, move_g['id'], date1, date2)" t-as="move_a">
+                            <t t-foreach="lines_a(docs, move_g['id'], data['form']['date1'], data['form']['date2'])" t-as="move_a">
                                 <tr>
                                     <td>
                                         <span t-esc="move_a['code']"/>

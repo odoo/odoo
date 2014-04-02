@@ -52,11 +52,11 @@
                                 <span t-if="data['form']['direction_selection'] == 'future'">Due</span>
                                 <span t-if="data['form']['direction_selection'] != 'future'">Not due</span>
                             </th>
-                            <th class="text-right"><span t-esc="data['form']['4[name]']"/></th>
-                            <th class="text-right"><span t-esc="data['form']['3[name]']"/></th>
-                            <th class="text-right"><span t-esc="data['form']['2[name]']"/></th>
-                            <th class="text-right"><span t-esc="data['form']['1[name]']"/></th>
-                            <th class="text-right">+<span t-esc="data['form']['0[name]']"/></th>
+                            <th class="text-right"><span t-esc="data['form']['4']['name']"/></th>
+                            <th class="text-right"><span t-esc="data['form']['3']['name']"/></th>
+                            <th class="text-right"><span t-esc="data['form']['2']['name']"/></th>
+                            <th class="text-right"><span t-esc="data['form']['1']['name']"/></th>
+                            <th class="text-right"><span t-esc="data['form']['0']['name']"/></th>
                             <th class="text-right">Total</th>
                         </tr>
                         <tr t-if="get_lines(data['form']) or get_lines_with_out_partner(data['form'])">
