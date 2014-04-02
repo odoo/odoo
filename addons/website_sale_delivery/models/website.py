@@ -21,6 +21,7 @@ class Website(orm.Model):
 
     def _check_carrier_quotation(self, cr, uid, order, force_carrier_id=None, context=None):
         # check to add or remove carrier_id
+        carrier_obj = self.pool.get('delivery.carrier')
         carrier_id = False
         for line in order.website_order_line:
             if line.product_id.type != "service":
@@ -36,7 +37,13 @@ class Website(orm.Model):
                 self.pool['sale.order']._delivery_unset(cr, SUPERUSER_ID, order, context=context)
 
             carrier_ids = self.pool.get('delivery.carrier').search(cr, uid, [('website_published','=',True)], context=context)
-            carrier_id = force_carrier_id or (carrier_ids and carrier_ids[0])
+            if force_carrier_id:
+                carrier_ids.insert(0, force_carrier_id)
+            for delivery_id in set(carrier_ids):
+                grid_id = carrier_obj.grid_get(cr, uid, [delivery_id], order.partner_shipping_id.id)
+                if grid_id:
+                    carrier_id = delivery_id
+                    break
             order.write({'carrier_id': carrier_id}, context=context)
             #If carrier_id have no grid, we don't have delivery !
             if carrier_id:

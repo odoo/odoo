@@ -10,10 +10,11 @@ class Ecommerce(Ecommerce):
     @http.route(['/shop/payment/'], type='http', auth="public", website=True, multilang=True)
     def payment(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
+        carrier_obj = request.registry.get('delivery.carrier')
         order = self.get_order()
         carrier_id = post.get('carrier_id')
 
-        if order and carrier_id:
+        if order and carrier_id or not carrier_obj.grid_get(cr, uid, [order.carrier_id.id], order.partner_shipping_id.id):
             # recompute delivery costs            
             request.registry['website']._check_carrier_quotation(cr,uid,order,carrier_id,context=context)
             return request.redirect("/shop/payment/")

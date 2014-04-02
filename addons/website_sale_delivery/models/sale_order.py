@@ -69,6 +69,14 @@ class SaleOrder(orm.Model):
 
         delivery_ctx = dict(context, order_id=order.id)
         DeliveryCarrier = self.pool.get('delivery.carrier')
+        carrier_obj = self.pool.get('delivery.carrier')
         delivery_ids = DeliveryCarrier.search(cr, uid, [('website_published','=',True)], context=context)
+        # Following loop is done to avoid displaying delivery methods who are not available for this order
+        # This can surely be done in a more efficient way, but at the moment, it mimics the way it's
+        # done in delivery_set method of sale.py, from delivery module
+        for delivery_id in delivery_ids:
+            grid_id = carrier_obj.grid_get(cr, uid, [delivery_id], order.partner_shipping_id.id)
+            if not grid_id:
+                delivery_ids.remove(delivery_id)
         values['deliveries'] = DeliveryCarrier.browse(cr, SUPERUSER_ID, delivery_ids, context=delivery_ctx)
         return values
