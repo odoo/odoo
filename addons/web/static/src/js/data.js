@@ -463,7 +463,7 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
         if (options.check_access_rule === true){
             method = 'search_read';
             ids_arg = [['id', 'in', ids]];
-            context.active_test = false;
+            context = new instance.web.CompoundContext(context, {active_test: false});
         }
         return this._model.call(method,
                 [ids_arg, fields || false],
