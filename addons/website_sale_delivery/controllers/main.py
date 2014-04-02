@@ -14,10 +14,10 @@ class Ecommerce(Ecommerce):
         carrier_id = post.get('carrier_id')
         if carrier_id:
             carrier_id = int(carrier_id)
-
-        request.registry['sale.order']._check_carrier_quotation(cr, uid, order, force_carrier_id=carrier_id, context=context)
-        if order and carrier_id:
-            return request.redirect("/shop/payment/")
+        if order:
+            request.registry['sale.order']._check_carrier_quotation(cr, uid, order, force_carrier_id=carrier_id, context=context)
+            if carrier_id:
+                return request.redirect("/shop/payment/")
 
         res = super(Ecommerce, self).payment(**post)
         return res
