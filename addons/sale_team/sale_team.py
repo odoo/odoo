@@ -36,7 +36,6 @@ class crm_case_section(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Sales Teams"
     _order = "complete_name"
-    # number of periods for lead/opportunities/... tracking in salesteam kanban dashboard/kanban view
     _period_number = 5
 
     def get_full_name(self, cr, uid, ids, field_name, arg, context=None):
@@ -87,7 +86,6 @@ class crm_case_section(osv.osv):
         'resource_calendar_id': fields.many2one('resource.calendar', "Working Time", help="Used to compute open days"),
         'note': fields.text('Description'),
         'working_hours': fields.float('Working Hours', digits=(16, 2)),
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True, help="The email address associated with this team. New emails received will automatically ""create new leads assigned to the team."),
         'color': fields.integer('Color Index'),
            }
    
@@ -117,23 +115,6 @@ class crm_case_section(osv.osv):
             if record['parent_id']:
                 name = record['parent_id'][1] + ' / ' + name
             res.append((record['id'], name))
-        return res
-        
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        create_context = dict(context, alias_model_name=self._name, alias_parent_model_name=self._name)
-        section_id = super(crm_case_section, self).create(cr, uid, vals, context=create_context)
-        section = self.browse(cr, uid, section_id, context=context)
-        self.pool.get('mail.alias').write(cr, uid, [section.alias_id.id], {'alias_parent_thread_id': section_id, 'alias_defaults': {'section_id': section_id, 'type': 'lead'}}, context=context)
-        return section_id
-
-    def unlink(self, cr, uid, ids, context=None):
-        # Cascade-delete mail aliases as well, as they should not exist without the sales team.
-        mail_alias = self.pool.get('mail.alias')
-        alias_ids = [team.alias_id.id for team in self.browse(cr, uid, ids, context=context) if team.alias_id]
-        res = super(crm_case_section, self).unlink(cr, uid, ids, context=context)
-        mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res
         
 class res_users(osv.Model):

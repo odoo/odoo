@@ -90,6 +90,8 @@ class crm_case_stage(osv.osv):
 
 class crm_case_section(osv.osv):
     """ Model for sales teams. """
+    _name = "crm.case.section"
+    _inherits = {'mail.alias': 'alias_id'}
     _inherit = 'crm.case.section'
     _description = "Sales Teams"
 
@@ -118,6 +120,8 @@ class crm_case_section(osv.osv):
         return res
 
     _columns = {
+    
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True, help="The email address associated with this team. New emails received will automatically ""create new leads assigned to the team."),
         'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
         'use_leads': fields.boolean('Leads',
             help="The first contact you get with a potential customer is a lead you qualify before converting it into a real business opportunity. Check this box to manage leads in this sales team."),
@@ -138,7 +142,23 @@ class crm_case_section(osv.osv):
         'stage_ids': _get_stage_common,
         'use_leads': True,
     }
+    
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        create_context = dict(context, alias_model_name='crm.lead', alias_parent_model_name=self._name)
+        section_id = super(crm_case_section, self).create(cr, uid, vals, context=create_context)
+        section = self.browse(cr, uid, section_id, context=context)
+        self.pool.get('mail.alias').write(cr, uid, [section.alias_id.id], {'alias_parent_thread_id': section_id, 'alias_defaults': {'section_id': section_id, 'type': 'lead'}}, context=context)
+        return section_id
 
+    def unlink(self, cr, uid, ids, context=None):
+        # Cascade-delete mail aliases as well, as they should not exist without the sales team.
+        mail_alias = self.pool.get('mail.alias')
+        alias_ids = [team.alias_id.id for team in self.browse(cr, uid, ids, context=context) if team.alias_id]
+        res = super(crm_case_section, self).unlink(cr, uid, ids, context=context)
+        mail_alias.unlink(cr, uid, alias_ids, context=context)
+        return res
  
 class crm_case_categ(osv.osv):
     """ Category of Case """
