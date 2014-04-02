@@ -223,7 +223,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
             data = data.slice(other_gbs.length + 1, data.length);
             _.each(data, function (data_pt) {
                 self.make_headers_and_cell(
-                    data_pt, header.root.headers, other_root.headers, 1, header.path);
+                    data_pt, header.root.headers, other_root.headers, 1, header.path, true);
             });
             header.expanded = true;
             header.children.forEach(function (child) {
@@ -271,12 +271,15 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
         });
     },
 
-    make_headers_and_cell: function (data_pts, row_headers, col_headers, index, prefix) {
+    make_headers_and_cell: function (data_pts, row_headers, col_headers, index, prefix, expand) {
         var self = this;
         data_pts.forEach(function (data_pt) {
             var row_value = (prefix || []).concat(data_pt.attributes.value.slice(0,index));
             var col_value = data_pt.attributes.value.slice(index);
             
+            if (expand && !_.find(col_headers, function (hdr) {return _.isEqual(col_value, hdr.path);})) {
+                return;
+            }          
             var row = self.find_or_create_header(row_headers, row_value, data_pt);
             var col = self.find_or_create_header(col_headers, col_value, data_pt);
 
