@@ -1032,17 +1032,18 @@ class expression(object):
                         sql_operator = sql_operator[4:] if sql_operator[:3] == 'not' else '='
                         inselect_operator = 'not inselect'
 
-                    if sql_operator == 'in':
-                        right = tuple(right)
+                    trans_left = 'value'
+                    left = '"%s"' % (left,)
+                    instr = '%s'
 
                     if self.has_unaccent and sql_operator.endswith('like'):
+                        assert isinstance(right, basestring)
                         trans_left = 'unaccent(value)'
                         left = 'unaccent("%s")' % (left,)
                         instr = 'unaccent(%s)'
-                    else:
-                        trans_left = 'value'
-                        left = '"%s"' % (left,)
-                        instr = '%s'
+                    elif sql_operator == 'in':
+                        # params will be flatten by to_sql() => expand the placeholders
+                        instr = '(%s)' % ', '.join(['%s'] * len(right))
 
                     subselect = """(SELECT res_id
                                       FROM ir_translation
@@ -1058,12 +1059,13 @@ class expression(object):
                                 """.format(trans_left=trans_left, operator=sql_operator,
                                            right=instr, table=working_model._table, left=left)
 
-                    params = [working_model._name + ',' + field,
-                              context.get('lang', False) or 'en_US',
-                              'model',
-                              right,
-                              right,
-                              ]
+                    params = (
+                        working_model._name + ',' + field,
+                        context.get('lang') or 'en_US',
+                        'model',
+                        right,
+                        right,
+                    )
                     push(create_substitution_leaf(leaf, ('id', inselect_operator, (subselect, params)), working_model))
 
                 else:
