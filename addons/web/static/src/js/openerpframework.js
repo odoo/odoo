@@ -1477,6 +1477,26 @@ openerp.time_to_str = function(obj) {
          + lpad(obj.getSeconds(),2);
 };
 
+openerp.load_script = function (url) {
+    var def = $.Deferred();
+    if (document.getElementById(url)) {
+        def.resolve();
+    } else {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = script.id = url;
+        script.onload = function () {
+            def.resolve();
+        };
+        script.onerror = function () {
+            console.error("Error loading file", url);
+            def.reject();
+        };
+        document.head.appendChild(script);
+    }
+    return def;
+};
+
 openerp.declare = declare;
 
 return openerp;
