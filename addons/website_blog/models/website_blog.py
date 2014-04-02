@@ -19,28 +19,23 @@
 #
 ##############################################################################
 
+import random
+import difflib
+from datetime import datetime
 
 from openerp import tools
-from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
-
-import difflib
-
 
 class Blog(osv.Model):
     _name = 'blog.blog'
     _description = 'Blogs'
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = 'name'
-
     _columns = {
-        'name': fields.char('Name', required=True),
+        'name': fields.char('Blog Name', required=True),
+        'subtitle': fields.char('Blog Subtitle'),
         'description': fields.text('Description'),
-        'blog_post_ids': fields.one2many(
-            'blog.post', 'blog_id',
-            'Blogs',
-        ),
     }
 
 
@@ -49,49 +44,32 @@ class BlogTag(osv.Model):
     _description = 'Blog Tag'
     _inherit = ['website.seo.metadata']
     _order = 'name'
-
     _columns = {
         'name': fields.char('Name', required=True),
-        'blog_post_ids': fields.many2many(
-            'blog.post', string='Posts',
-        ),
     }
 
+class MailMessage(osv.Model):
+    _inherit = 'mail.message'
+    _columns = {
+        'discussion': fields.char('Discussion Unique Name'),
+    }
 
 class BlogPost(osv.Model):
     _name = "blog.post"
     _description = "Blog Post"
     _inherit = ['mail.thread', 'website.seo.metadata']
-    _order = 'write_date DESC'
-    # maximum number of characters to display in summary
-    _shorten_max_char = 250
+    _order = 'id DESC'
 
-    def get_shortened_content(self, cr, uid, ids, name, arg, context=None):
+    def _compute_ranking(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for page in self.browse(cr, uid, ids, context=context):
-            try:
-                body_short = tools.html_email_clean(
-                    page.content,
-                    remove=True,
-                    shorten=True,
-                    max_length=self._shorten_max_char,
-                    expand_options={
-                        'oe_expand_container_tag': 'div',
-                        'oe_expand_container_class': 'oe_mail_expand text-center',
-                        'oe_expand_container_content': '',
-                        'oe_expand_a_href': '/blogpost/%d' % page.id,
-                        'oe_expand_a_class': 'oe_mail_expand btn btn-info',
-                        'oe_expand_separator_node': 'br',
-                    },
-                    protect_sections=True,
-                )
-            except Exception:
-                body_short = False
-            res[page.id] = body_short
+        for blog_post in self.browse(cr, uid, ids, context=context):
+            d = datetime.now() - datetime.strptime(blog_post.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            res[blog_post.id] = blog_post.visits * (0.5+random.random()) / max(3, d.days)
         return res
 
     _columns = {
         'name': fields.char('Title', required=True, translate=True),
+        'sub_title' : fields.char('Sub Title', translate=True),
         'content_image': fields.binary('Background Image'),
         'blog_id': fields.many2one(
             'blog.blog', 'Blog',
@@ -101,32 +79,22 @@ class BlogPost(osv.Model):
             'blog.tag', string='Tags',
         ),
         'content': fields.html('Content', translate=True),
-        'shortened_content': fields.function(
-            get_shortened_content,
-            type='html',
-            string='Shortened Content',
-            help="Shortened content of the page that serves as a summary"
-        ),
         # website control
         'website_published': fields.boolean(
             'Publish', help="Publish on the website"
         ),
-        'website_published_datetime': fields.datetime(
-            'Publish Date'
-        ),
-        # TDE TODO FIXME: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [
-                '&', ('model', '=', self._name), ('type', '=', 'comment')
+                '&', '&', ('model', '=', self._name), ('type', '=', 'comment') , ('discussion', '=', False)
             ],
             string='Website Messages',
             help="Website communication history",
         ),
-        # technical stuff: history, menu (to keep ?)
         'history_ids': fields.one2many(
             'blog.post.history', 'post_id',
-            'History', help='Last post modifications'
+            'History', help='Last post modifications',
+            deprecated= 'Will be removed in v9.'
         ),
         # creation / update stuff
         'create_date': fields.datetime(
@@ -145,9 +113,13 @@ class BlogPost(osv.Model):
             'res.users', 'Last Contributor',
             select=True, readonly=True,
         ),
+        'visits': fields.integer('No of Views', readonly=True),
+        'ranking': fields.function(_compute_ranking, string='Ranking', type='float'),
     }
     _defaults = {
-        'website_published': False
+        'website_published': False,
+        'visits': 0,
+        'ranking': 0
     }
 
     def create_history(self, cr, uid, ids, vals, context=None):
@@ -183,11 +155,6 @@ class BlogPost(osv.Model):
         })
         return super(BlogPost, self).copy(cr, uid, id, default=default, context=context)
 
-    def img(self, cr, uid, ids, field='image_small', context=None):
-        post = self.browse(cr, SUPERUSER_ID, ids[0], context=context)
-        return "/website/image?model=%s&field=%s&id=%s" % ('res.users', field, post.create_uid.id)
-
-
 class BlogPostHistory(osv.Model):
     _name = "blog.post.history"
     _description = "Blog Post History"
@@ -216,4 +183,3 @@ class BlogPostHistory(osv.Model):
         diff = difflib.HtmlDiff()
         return diff.make_table(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=True)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

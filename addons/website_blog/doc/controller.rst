@@ -1,18 +1,4 @@
-.. _changelog:
-
-Changelog
-=========
-
-`trunk (saas-3)`
-----------------
-
- - created ``website_blog`` menu, build on defunct document_page module.
- - added new feature ``Inline Discussion`` , that will allow a user to comment
-   on every paragraph on blog post
- - added new feature ``Select to Tweet``, that will alllow a user tweet a selected
-   text from blog to post , directly on twitter.
-
-
+.. _controller:
 
 WebsiteBlog(controller)
 =======================
