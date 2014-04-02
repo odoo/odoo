@@ -2417,9 +2417,12 @@ class BaseModel(object):
 
         result = map(format_result, data)
         
-        for gb in groupby_fields:
-            if gb in self._group_by_full:
-                result = self._read_group_fill_results(cr, uid, domain, gb, groupby[len(annotated_groupbys):],
+        if lazy and groupby_fields[0] in self._group_by_full:
+            # Right now, read_group only fill results in lazy mode (by default).
+            # If you need to have the empty groups in 'eager' mode, then the
+            # method _read_group_fill_results need to be completely reimplemented
+            # in a sane way 
+            result = self._read_group_fill_results(cr, uid, domain, groupby_fields[0], groupby[len(annotated_groupbys):],
                                                        aggregated_fields, result, read_group_order=order,
                                                        context=context)
         return result
