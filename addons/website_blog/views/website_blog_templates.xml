@@ -89,8 +89,7 @@
     </t>
 </template>
 
-
-<!-- Blog Post Summary -->
+<!-- Blog Post List: Displaying a list of Blog Posts -->
 <template id="blog_post_short" name="Blog Posts">
     <t t-call="website_blog.index">
         <div class="oe_structure">
@@ -124,7 +123,7 @@
                 <div t-foreach="blog_posts" t-as="blog_post" class="mb32">
 
                   <img class="img-circle pull-right mt16"
-                    t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.create_uid.partner_id.id)"
+                    t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.author_id.id)"
                     style="width: 50px;"/>
 
                   <a t-attf-href="/blog/#{ slug(blog_post.blog_id) }/post/#{ slug(blog_post) }">
@@ -133,11 +132,13 @@
 
                   <div class="text-muted">
                       <h4
-                        t-field="blog_post.sub_title"
+                        t-field="blog_post.subtitle"
                         class="mb4 mt4"/>
-                      <p name='blog_post_data' class="mb0">
-
-                        <span t-field="blog_post.create_uid.partner_id.name"/>
+                    <div name='blog_post_data' class='mb0'>
+                         <span t-field="blog_post.author_id" style="display: inline-block;" t-field-options='{
+                                "widget": "contact",
+                                "fields": ["name"]
+                            }'/>
                         &#5760; <span t-field="blog_post.create_date" t-field-options='{"format": "MMMM yyyy"}'/>
                         <span t-if="len(blog_post.message_ids) &gt; 0">
                             &#5760; <t t-esc="len(blog_post.message_ids)"/>
@@ -146,7 +147,7 @@
                         </span>
 
                         <span t-if="not blog_post.website_published" class="label label-danger">not published</span>
-                      </p>
+                    </div>
                   </div>
 
                 </div>
@@ -158,10 +159,10 @@
     </t>
 </template>
 
-<!-- Option: Blog Post Summary: show tags -->
+<!-- Option: Blog Post List: show tags -->
 <template id="opt_blog_post_short_tags" name="Tags"
         inherit_option_id="website_blog.blog_post_short" inherit_id="website_blog.blog_post_short">
-    <xpath expr="//p[@name='blog_post_data']" position="after">
+    <xpath expr="//div[@name='blog_post_data']" position="inside">
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
             <t t-foreach="blog_post.tag_ids" t-as="tag">
@@ -175,7 +176,7 @@
 <template id="blog_post_complete" name="Blog Post">
   <t t-call="website_blog.index">
 
-    <div class="cover js_fullheight" id="title" t-attf-style="background-image: url(#{blog_post.content_image})" t-ignore="True">
+    <div class="cover js_fullheight" id="title" t-attf-style="background-image: url(#{blog_post.background_image})" t-ignore="True">
         <div class="container">
           <div class="container text-right mt16">
             <div class="btn-group css_non_editable_mode_hidden">
@@ -200,13 +201,16 @@
         </div>
         <div class="blog_title">
             <h1 t-field="blog_post.name" id="blog_post_name" t-att-data-blog-id="blog_post.id"/>
-            <h2 t-field="blog_post.sub_title"/>
+            <h2 t-field="blog_post.subtitle"/>
             <p class="post-meta text-muted text-center" name="blog_post_data"/>
             <div>
-                <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.create_uid.partner_id.id)" style="width: 30px; margin-right: 10px;"/>
-                <small id="blog_author" t-field="blog_post.create_uid.partner_id.name"/><br/>
+                <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.author_id.id)" style="width: 30px; margin-right: 10px;"/>
+                <span t-field="blog_post.author_id" style="display: inline-block;" t-field-options='{
+                    "widget": "contact",
+                    "fields": ["name"]
+                }'/>
             </div>
-            <div t-if="blog_post.content_image" id="blog_angle_down">
+            <div t-if="blog_post.background_image" id="blog_angle_down">
                 <strong><a href="#blog_content" class="fa fa-angle-down fa-3x fa-inverse mt32"/></strong>
             </div>
         </div>
@@ -225,7 +229,12 @@
                     <t t-call="website.publish_short">
                         <t t-set="object" t-value="message"/>
                     </t>
-                    <strong t-field="message.author_id"/> <span class="text-muted">on <span t-field="message.date"/></span>
+                    <!-- <strong t-field="message.author_id"/> -->
+                    <span t-field="message.author_id" style="display: inline-block;" t-field-options='{
+                            "widget": "contact",
+                            "fields": ["name"]
+                        }'/>
+                    <span class="text-muted">on <span t-field="message.date"/></span>
                     <div t-field="message.body"/>
                 </div>
             </li>
@@ -233,14 +242,17 @@
     </section>
 
     <t t-if="next_post">
-        <div class="cover cover_footer mb0 text-center" t-attf-style="background-image: url(#{next_post.content_image})" t-ignore="True">
+        <div class="cover cover_footer mb0 text-center" t-attf-style="background-image: url(#{next_post.background_image})" t-ignore="True">
             <div class="blog_title">
                 <a class="hidden js_next" t-attf-href="/blog/#{ slug(next_post.blog_id) }/post/#{ slug(next_post) }/#wrap"/>
                 <h1 t-field="next_post.name"/>
-                <h2 t-field="next_post.sub_title"/>
+                <h2 t-field="next_post.subtitle"/>
                 <div>
-                    <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(next_post.create_uid.partner_id.id)" style="width: 30px; margin-right: 10px;"/>
-                    <small id="blog_author" t-field="next_post.create_uid.partner_id.name"/>
+                    <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(next_post.author_id.id)" style="width: 30px; margin-right: 10px;"/>
+                    <span t-field="next_post.author_id" style="display: inline-block;" t-field-options='{
+                            "widget": "contact",
+                            "fields": ["name"]
+                        }'/>
                 </div>
                 <p class="mt32">Read Next <span class="fa fa-long-arrow-right"/></p>
             </div>
@@ -250,6 +262,7 @@
   </t>
 </template>
 
+<!-- Options: Blog Post: breadcrumb -->
 <template id="blog_breadcrumb" name="Breadcrumb"
         inherit_option_id="website_blog.blog_post_complete">
     <xpath expr="//div[@id='title']" position="before">

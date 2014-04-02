@@ -49,6 +49,7 @@ class BlogPost(osv.Model):
     _columns = {
         'name': fields.char('Title', required=True, translate=True),
         'subtitle': fields.char('Sub Title', translate=True),
+        'author_id': fields.many2one('res.partner', 'Author'),
         'background_image': fields.binary('Background Image'),
         'blog_id': fields.many2one(
             'blog.blog', 'Blog',
@@ -99,6 +100,7 @@ class BlogPost(osv.Model):
     _defaults = {
         'name': _('Blog Post Title'),
         'subtitle': _('Subtitle'),
+        'author_id': lambda self, cr, uid, ctx=None: self.pool['res.users'].browse(cr, uid, uid, context=ctx).partner_id.id,
     }
 
     def create_history(self, cr, uid, ids, vals, context=None):

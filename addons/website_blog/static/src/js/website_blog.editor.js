@@ -38,8 +38,8 @@
         },
         save : function() {
             var res = this._super();
-            if ($('.cover').length){
-                openerp.jsonRpc("/blogpsot/change_background", 'call', {
+            if ($('.cover').length) {
+                openerp.jsonRpc("/blogpost/change_background", 'call', {
                     'post_id' : $('#blog_post_name').attr('data-oe-id'),
                     'image' : $('.cover').css('background-image').replace(/url\(|\)|"|'/g,''),
                 });

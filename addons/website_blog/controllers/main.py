@@ -1,23 +1,4 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 import datetime
 import werkzeug
@@ -68,7 +49,8 @@ class WebsiteBlog(http.Controller):
 
     def nav_list(self):
         blog_post_obj = request.registry['blog.post']
-        groups = blog_post_obj.read_group(request.cr, request.uid, [], ['name', 'create_date'],
+        groups = blog_post_obj.read_group(
+            request.cr, request.uid, [], ['name', 'create_date'],
             groupby="create_date", orderby="create_date asc", context=request.context)
         for group in groups:
             begin_date = datetime.datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
@@ -109,21 +91,16 @@ class WebsiteBlog(http.Controller):
     def blog(self, blog=None, tag=None, page=1, **opt):
         """ Prepare all values to display the blog.
 
-        :param blog: blog currently browsed.
-        :param tag: tag that is currently used to filter blog posts
-        :param integer page: current page of the pager. Can be the blog or
-                            post pager.
-        :param date: date currently used to filter blog posts (dateBegin_dateEnd)
-
         :return dict values: values for the templates, containing
 
-         - 'blog_posts': list of browse records that are the posts to display
-                         in a given blog, if not blog_post_id
-         - 'blog': browse of the current blog, if blog_id
-         - 'blogs': list of browse records of blogs
-         - 'pager': the pager to display posts pager in a blog
-         - 'tag': current tag, if tag_id
+         - 'blog': current blog
+         - 'blogs': all blogs for navigation
+         - 'pager': pager of posts
+         - 'tag': current tag
+         - 'tags': all tags, for navigation
          - 'nav_list': a dict [year][month] for archives navigation
+         - 'date': date_begin optional parameter, used in archives navigation
+         - 'blog_url': help object to create URLs
         """
         date_begin, date_end = opt.get('date_begin'), opt.get('date_end')
 
@@ -183,28 +160,20 @@ class WebsiteBlog(http.Controller):
     def blog_post(self, blog, blog_post, tag_id=None, page=1, enable_editor=None, **post):
         """ Prepare all values to display the blog.
 
-        :param blog_post: blog post currently browsed. If not set, the user is
-                          browsing the blog and a post pager is calculated.
-                          If set the user is reading the blog post and a
-                          comments pager is calculated.
-        :param blog: blog currently browsed.
-        :param tag: tag that is currently used to filter blog posts
-        :param integer page: current page of the pager. Can be the blog or
-                            post pager.
-        :param date: date currently used to filter blog posts (dateBegin_dateEnd)
-
-         - 'enable_editor': editor control
-
         :return dict values: values for the templates, containing
 
-         - 'blog_post': browse of the current post, if blog_post_id
-         - 'blog': browse of the current blog, if blog_id
+         - 'blog_post': browse of the current post
+         - 'blog': browse of the current blog
          - 'blogs': list of browse records of blogs
-         - 'pager': the pager to display comments pager in a blog post
-         - 'tag': current tag, if tag_id
+         - 'tag': current tag, if tag_id in parameters
+         - 'tags': all tags, for tag-based navigation
+         - 'pager': a pager on the comments
          - 'nav_list': a dict [year][month] for archives navigation
-         - 'next_blog': next blog post , display in footer
+         - 'next_post': next blog post, to direct the user towards the next interesting post
         """
+        cr, uid, context = request.cr, request.uid, request.context
+        tag_obj = request.registry['blog.tag']
+        blog_post_obj = request.registry['blog.post']
         date_begin, date_end = post.get('date_begin'), post.get('date_end')
 
         pager_url = "/blogpost/%s" % blog_post.id
@@ -226,18 +195,10 @@ class WebsiteBlog(http.Controller):
         post_url = QueryURL('', ['blogpost'], blogpost=blog_post, tag_id=tag_id, date_begin=date_begin, date_end=date_end)
         blog_url = QueryURL('', ['blog', 'tag'], blog=blog_post.blog_id, tag=tag, date_begin=date_begin, date_end=date_end)
 
-        cr, uid, context = request.cr, request.uid, request.context
-        if not blog_post.blog_id.id==blog.id:
+        if not blog_post.blog_id.id == blog.id:
             return request.redirect("/blog/%s/post/%s" % (blog_post.blog_id.id, blog_post.id))
-        blog_post_obj = request.registry.get('blog.post')
 
-        blog_obj = request.registry['blog.blog']
-        blog_ids = blog_obj.search(cr, uid, [], context=context)
-        blogs = blog_obj.browse(cr, uid, blog_ids, context=context)
-
-        tag_obj = request.registry['blog.tag']
-        tag_ids = tag_obj.search(cr, uid, [], context=context)
-        tags = tag_obj.browse(cr, uid, tag_ids, context=context)
+        tags = tag_obj.browse(cr, uid, tag_obj.search(cr, uid, [], context=context), context=context)
 
         # Find next Post
         visited_blogs = request.httprequest.cookies.get('visited_blogs') or ''
@@ -247,19 +208,19 @@ class WebsiteBlog(http.Controller):
             visited_ids.append(blog_post.id)
         next_post_id = blog_post_obj.search(cr, uid, [
             ('id', 'not in', visited_ids),
-            ], order='ranking desc', limit=1, context=context)
+        ], order='ranking desc', limit=1, context=context)
         next_post = next_post_id and blog_post_obj.browse(cr, uid, next_post_id[0], context=context) or False
+        print next_post
 
         values = {
-            'blog': blog,
-            'blogs': blogs,
             'tags': tags,
             'tag': tag,
+            'blog': blog,
             'blog_post': blog_post,
             'main_object': blog_post,
             'nav_list': self.nav_list(),
             'enable_editor': enable_editor,
-            'next_post' : next_post,
+            'next_post': next_post,
             'date': date_begin,
             'post_url': post_url,
             'blog_url': blog_url,
@@ -369,7 +330,7 @@ class WebsiteBlog(http.Controller):
     def discussion(self, post_id=0, discussion=None, count=False, **post):
         cr, uid, context = request.cr, request.uid, request.context
         mail_obj = request.registry.get('mail.message')
-        domain = [('res_id', '=', int(post_id)) ,('model','=','blog.post'), ('discussion', '=', discussion)]
+        domain = [('res_id', '=', int(post_id)) ,('model','=','blog.post'), ('discussion_key', '=', discussion)]
         #check current user belongs to website publisher group
         publish = request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher')
         if not publish:
@@ -379,13 +340,11 @@ class WebsiteBlog(http.Controller):
             return ids
         return self._get_discussion_detail(ids, publish, **post)
 
-    @http.route('/blogpsot/change_background', type='json', auth="public", website=True)
+    @http.route('/blogpost/change_background', type='json', auth="public", website=True)
     def change_bg(self, post_id=0, image=None, **post):
-        post_obj = request.registry.get('blog.post')
-        values = {'content_image' : image}
-
-        ids = post_obj.write(request.cr, request.uid, [int(post_id)], values, request.context)
-        return []
+        if not post_id:
+            return False
+        return request.registry['blog.post'].write(request.cr, request.uid, [int(post_id)], {'background_image': image}, request.context)
 
     @http.route('/blog/get_user/', type='json', auth="public", website=True)
     def get_user(self, **post):
