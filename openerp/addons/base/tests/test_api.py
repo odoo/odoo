@@ -310,12 +310,12 @@ class TestAPI(common.TransactionCase):
 
         # all the records of an instance already have an entry in cache
         partners = self.env['res.partner'].search([])
-        partner_ids = self.env.cache_ids['res.partner']
+        partner_ids = self.env.prefetch['res.partner']
         self.assertEqual(set(partners.unbrowse()), set(partner_ids))
 
         # countries have not been fetched yet; their cache must be empty
         countries = self.env['res.country'].browse()
-        self.assertFalse(self.env.cache_ids['res.country'])
+        self.assertFalse(self.env.prefetch['res.country'])
 
         # reading ONE partner should fetch them ALL
         countries |= partners[0].country_id
@@ -323,7 +323,7 @@ class TestAPI(common.TransactionCase):
         self.assertLessEqual(set(partners._ids), set(country_cache))
 
         # read all partners, and check that the cache already contained them
-        country_ids = list(self.env.cache_ids['res.country'])
+        country_ids = list(self.env.prefetch['res.country'])
         for p in partners:
             countries |= p.country_id
         self.assertLessEqual(set(countries.unbrowse()), set(country_ids))

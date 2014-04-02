@@ -69,9 +69,9 @@ class Environment(object):
         self = object.__new__(cls)
         self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
         self.registry = RegistryManager.get(cr.dbname)
-        self.cache = defaultdict(dict)     # cache[field] = {id: value}
-        self.cache_ids = defaultdict(set)  # cache_ids[model_name] = set(ids)
-        self.dirty = set()                 # set of dirty records
+        self.cache = defaultdict(dict)      # cache[field] = {id: value, ...}
+        self.prefetch = defaultdict(set)    # prefetch[model_name] = set(ids)
+        self.dirty = set()                  # set of dirty records
         self.shared = env.shared if env else Shared()
         self.all = envs
         envs.add(self)
@@ -168,7 +168,7 @@ class Environment(object):
         """ Clear the cache of all environments. """
         for env in list(self.all):
             env.cache.clear()
-            env.cache_ids.clear()
+            env.prefetch.clear()
             env.dirty.clear()
 
     def check_cache(self):

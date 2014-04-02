@@ -5064,7 +5064,7 @@ class BaseModel(object):
         records = object.__new__(cls)
         records._env = env
         records._ids = ids
-        env.cache_ids[cls._name].update(ids)
+        env.prefetch[cls._name].update(ids)
         return records
 
     @api.new
@@ -5372,9 +5372,9 @@ class BaseModel(object):
             (:class:`Field` instance).
         """
         env = self._env
-        ids_in_cache = env.cache_ids[self._name]
-        ids_in_cache.update(self._ids)
-        ids = filter(None, ids_in_cache - set(env.cache[field]))
+        prefetch_ids = env.prefetch[self._name]
+        prefetch_ids.update(self._ids)
+        ids = filter(None, prefetch_ids - set(env.cache[field]))
         return self.browse(ids)
 
     @api.model
