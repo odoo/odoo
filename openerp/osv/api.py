@@ -25,9 +25,8 @@
     In the "traditional" style, parameters like the database cursor, user id,
     context dictionary and record ids (usually denoted as ``cr``, ``uid``,
     ``context``, ``ids``) are passed explicitly to all methods. In the "record"
-    style, those parameters are hidden in an execution environment (a "scope")
-    and the methods only refer to model instances, which gives it a more object-
-    oriented feel.
+    style, those parameters are hidden into model instances, which gives it a
+    more object-oriented feel.
 
     For instance, the statements::
 
@@ -40,8 +39,8 @@
     may also be written as::
 
         scope = Scope(cr, uid, context)     # cr, uid, context wrapped in scope
-        model = scope[MODEL]                # retrieve an instance of MODEL
-        recs = model.search(DOMAIN)         # search returns a recordset
+        recs = scope[MODEL]                 # retrieve an instance of MODEL
+        recs = recs.search(DOMAIN)          # search returns a recordset
         for rec in recs:                    # iterate over the records
             print rec.name
         recs.write(VALUES)                  # update all records in recs
@@ -155,7 +154,9 @@ def returns(model, downgrade=None):
 
             # output depends on call style: traditional vs record style
             partner_id = model.find_partner(cr, uid, arg, context=context)
-            partner_record = model.find_partner(arg)
+
+            # recs = model.browse(cr, uid, ids, context)
+            partner_record = recs.find_partner(arg)
 
         Note that the decorated method must satisfy that convention.
 
@@ -268,8 +269,8 @@ def get_context_split(method):
 
 
 def model(method):
-    """ Decorate a record-style method where `self` is any instance with scope
-        (model, record or recordset). Such a method::
+    """ Decorate a record-style method where `self` is a recordset. Such a
+        method::
 
             @api.model
             def method(self, args):
@@ -277,7 +278,9 @@ def model(method):
 
         may be called in both record and traditional styles, like::
 
-            model.method(args)
+            # recs = model.browse(cr, uid, ids, context)
+            recs.method(args)
+
             model.method(cr, uid, args, context=context)
     """
     method._api = model
@@ -303,10 +306,9 @@ def multi(method):
 
         may be called in both record and traditional styles, like::
 
-            recs = model.browse(ids)
-
-            # the following calls are equivalent
+            # recs = model.browse(cr, uid, ids, context)
             recs.method(args)
+
             model.method(cr, uid, ids, args, context=context)
     """
     method._api = multi
@@ -334,11 +336,10 @@ def one(method):
 
         may be called in both record and traditional styles, like::
 
-            recs = model.browse(ids)
+            # recs = model.browse(cr, uid, ids, context)
+            names = recs.method(args)
 
-            # the following calls are equivalent and return a list of names
-            recs.method(args)
-            model.method(cr, uid, recs.unbrowse(), args, context=context)
+            names = model.method(cr, uid, ids, args, context=context)
     """
     method._api = one
     split = get_context_split(method)
@@ -362,8 +363,10 @@ def cr(method):
     """ Decorate a traditional-style method that takes `cr` as a parameter.
         Such a method may be called in both record and traditional styles, like::
 
-            obj.method(args)            # record style
-            obj.method(cr, args)        # traditional style
+            # recs = model.browse(cr, uid, ids, context)
+            recs.method(args)
+
+            model.method(cr, args)
     """
     method._api = cr
     upgrade = get_upgrade(method)
@@ -408,8 +411,10 @@ def cr_uid_context(method):
         parameters. Such a method may be called in both record and traditional
         styles, like::
 
-            obj.method(args)
-            obj.method(cr, uid, args, context=context)
+            # recs = model.browse(cr, uid, ids, context)
+            recs.method(args)
+
+            model.method(cr, uid, args, context=context)
     """
     method._api = cr_uid_context
     upgrade = get_upgrade(method)
@@ -449,10 +454,9 @@ def cr_uid_id_context(method):
 
         may be called in both record and traditional styles, like::
 
-            rec = model.browse(id)
-
-            # the following calls are equivalent
+            # rec = model.browse(cr, uid, id, context)
             rec.method(args)
+
             model.method(cr, uid, id, args, context=context)
     """
     method._api = cr_uid_id_context
@@ -493,10 +497,9 @@ def cr_uid_ids_context(method):
 
         may be called in both record and traditional styles, like::
 
-            recs = model.browse(cr, uid, ids, context)
-
-            # the following calls are equivalent
+            # recs = model.browse(cr, uid, ids, context)
             recs.method(args)
+
             model.method(cr, uid, ids, args, context=context)
 
         It is generally not necessary, see :func:`guess`.
