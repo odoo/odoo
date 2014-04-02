@@ -19,9 +19,7 @@
 #
 ##############################################################################
 
-""" This module provides the elements for managing an execution environment (or
-    "scope") for model instances.
-"""
+""" This module provides execution environments for ORM records. """
 
 from collections import defaultdict, MutableMapping
 from contextlib import contextmanager
@@ -32,25 +30,27 @@ from werkzeug.local import Local, release_local
 from openerp.tools import frozendict
 
 
-class Scope(object):
-    """ A scope wraps environment data for the ORM instances:
+class Environment(object):
+    """ An environment wraps data for ORM records:
 
          - :attr:`cr`, the current database cursor;
          - :attr:`uid`, the current user id;
-         - :attr:`context`, the current context dictionary;
-         - :attr:`args`, a tuple containing the three values above.
+         - :attr:`context`, the current context dictionary.
+
+        It also provides access to the registry, a cache for records, and a data
+        structure to manage recomputations.
     """
     _local = Local()
 
     @classmethod
     @contextmanager
     def manage(cls):
-        """ Context manager for a set of scopes. """
-        if hasattr(cls._local, 'scopes'):
+        """ Context manager for a set of environments. """
+        if hasattr(cls._local, 'environments'):
             yield
         else:
             try:
-                cls._local.scopes = WeakSet()
+                cls._local.environments = WeakSet()
                 yield
             finally:
                 release_local(cls._local)
@@ -59,22 +59,22 @@ class Scope(object):
         assert context is not None
         args = (cr, uid, context)
 
-        # if scope already exists, return it
-        scope, scopes = None, cls._local.scopes
-        for scope in scopes:
-            if scope.args == args:
-                return scope
+        # if env already exists, return it
+        env, envs = None, cls._local.environments
+        for env in envs:
+            if env.args == args:
+                return env
 
-        # otherwise create scope, and add it in the set
+        # otherwise create environment, and add it in the set
         self = object.__new__(cls)
         self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
         self.registry = RegistryManager.get(cr.dbname)
         self.cache = defaultdict(dict)     # cache[field] = {id: value}
         self.cache_ids = defaultdict(set)  # cache_ids[model_name] = set(ids)
         self.dirty = set()                 # set of dirty records
-        self.shared = scope.shared if scope else Shared()
-        self.all = scopes
-        scopes.add(self)
+        self.shared = env.shared if env else Shared()
+        self.all = envs
+        envs.add(self)
         return self
 
     def __getitem__(self, model_name):
@@ -82,7 +82,7 @@ class Scope(object):
         return self.registry[model_name]._browse(self, ())
 
     def __call__(self, cr=None, user=None, context=(), **kwargs):
-        """ Return a scope based on `self` with modified parameters.
+        """ Return an environment based on `self` with modified parameters.
 
             :param cr: optional database cursor to change the current cursor
             :param user: optional user/user id to change the current user
@@ -93,7 +93,7 @@ class Scope(object):
         uid = self.uid if user is None else int(user)
         context = self.context if context == () else context
         context = dict(context or {}, **kwargs)
-        return Scope(cr, uid, context)
+        return Environment(cr, uid, context)
 
     def ref(self, xml_id):
         """ return the record corresponding to the given `xml_id` """
@@ -146,7 +146,8 @@ class Scope(object):
                 self.shared.recomputing = False
 
     def invalidate(self, spec):
-        """ Invalidate some fields for some records in the cache of all scopes.
+        """ Invalidate some fields for some records in the cache of all
+            environments.
 
             :param spec: what to invalidate, a list of `(field, ids)` pair,
                 where `field` is a field object, and `ids` is a list of record
@@ -154,21 +155,21 @@ class Scope(object):
         """
         if not spec:
             return
-        for scope in list(self.all):
+        for env in list(self.all):
             for field, ids in spec:
                 if ids is None:
-                    scope.cache.pop(field, None)
+                    env.cache.pop(field, None)
                 else:
-                    field_cache = scope.cache[field]
+                    field_cache = env.cache[field]
                     for id in ids:
                         field_cache.pop(id, None)
 
     def invalidate_all(self):
-        """ Clear the cache of all scopes. """
-        for scope in list(self.all):
-            scope.cache.clear()
-            scope.cache_ids.clear()
-            scope.dirty.clear()
+        """ Clear the cache of all environments. """
+        for env in list(self.all):
+            env.cache.clear()
+            env.cache_ids.clear()
+            env.dirty.clear()
 
     def check_cache(self):
         """ Check the cache consistency. """
@@ -199,7 +200,7 @@ class Scope(object):
 
 
 class Shared(object):
-    """ An object shared by all scopes in a thread/request. """
+    """ An object shared by all environments in a thread/request. """
 
     def __init__(self):
         self.draft = False
@@ -210,13 +211,13 @@ class Shared(object):
 class Recomputation(MutableMapping):
     """ Proxy object mapping `field` to `records` to recompute. """
 
-    def __init__(self, scope):
-        self._scope = scope
-        self._todo = scope.shared.todo
+    def __init__(self, env):
+        self._env = env
+        self._todo = env.shared.todo
 
     def __getitem__(self, field):
         """ Return the records to recompute for `field` (may be empty). """
-        return self._todo.get(field) or self._scope[field.model_name]
+        return self._todo.get(field) or self._env[field.model_name]
 
     def __setitem__(self, field, records):
         """ Set the records to recompute for `field`. It automatically discards

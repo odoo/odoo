@@ -159,7 +159,7 @@ class rml_parse(object):
     def setLang(self, lang):
         self.localcontext['lang'] = lang
         self.lang_dict_called = False
-        # change the scope of self.objects
+        # re-evaluate self.objects in a different environment
         self.objects = self.objects.sudo(self.cr, self.uid, self.localcontext)
 
     def _get_lang_dict(self):

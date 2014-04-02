@@ -21,7 +21,7 @@
 
 import api
 import osv
-import scope
+import env
 import fields
 import fields2
 

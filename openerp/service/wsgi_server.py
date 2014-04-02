@@ -194,7 +194,7 @@ def application_unproxied(environ, start_response):
     if hasattr(threading.current_thread(), 'dbname'):
         del threading.current_thread().dbname
 
-    with openerp.Scope.manage():
+    with openerp.Environment.manage():
         # Try all handlers until one returns some result (i.e. not None).
         wsgi_handlers = [wsgi_xmlrpc]
         wsgi_handlers += module_handlers

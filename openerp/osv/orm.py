@@ -59,7 +59,7 @@ import dateutil.parser
 import psycopg2
 from lxml import etree
 
-from .scope import Scope
+from .env import Environment
 from . import api
 from . import fields
 import openerp
@@ -935,7 +935,7 @@ class BaseModel(object):
 
     def __export_xml_id(self):
         """ Return a valid xml_id for the record `self`. """
-        ir_model_data = self.sudo()._scope['ir.model.data']
+        ir_model_data = self.sudo()._env['ir.model.data']
         data = ir_model_data.search([('model', '=', self._name), ('res_id', '=', self.id)])
         if data:
             if data.module:
@@ -992,7 +992,7 @@ class BaseModel(object):
                     # this part could be simpler, but it has to be done this way
                     # in order to reproduce the former behavior
                     if not isinstance(value, BaseModel):
-                        current[i] = field.convert_to_export(value, self._scope)
+                        current[i] = field.convert_to_export(value, self._env)
                     else:
                         primary_done.append(name)
 
@@ -1324,8 +1324,8 @@ class BaseModel(object):
         field_names = set(field_names)
 
         # old-style constraint methods
-        trans = self._scope['ir.translation']
-        cr, uid, context = self._scope.args
+        trans = self._env['ir.translation']
+        cr, uid, context = self._env.args
         ids = self.unbrowse()
         errors = []
         for fun, msg, names in self._constraints:
@@ -1344,7 +1344,7 @@ class BaseModel(object):
                         template, params = res_msg
                         res_msg = template % params
                 else:
-                    res_msg = trans._get_source(self._name, 'constraint', self._scope.lang, msg)
+                    res_msg = trans._get_source(self._name, 'constraint', self._env.lang, msg)
                 if extra_error:
                     res_msg += "\n\n%s\n%s" % (_('Error details:'), extra_error)
                 errors.append(
@@ -1391,7 +1391,7 @@ class BaseModel(object):
             ``self[name] = value``.
         """
         assert not self._id, "Expected new record: %s" % self
-        cr, uid, context = self._scope.args
+        cr, uid, context = self._env.args
         field = self._fields[name]
 
         # 1. look up context
@@ -1402,7 +1402,7 @@ class BaseModel(object):
 
         # 2. look up ir_values
         #    Note: performance is good, because get_defaults_dict is cached!
-        ir_values_dict = self._scope['ir.values'].get_defaults_dict(self._name)
+        ir_values_dict = self._env['ir.values'].get_defaults_dict(self._name)
         if name in ir_values_dict:
             self[name] = ir_values_dict[name]
             return
@@ -1411,7 +1411,7 @@ class BaseModel(object):
         #    TODO: get rid of this one
         column = self._columns.get(name)
         if isinstance(column, fields.property):
-            self[name] = self._scope['ir.property'].get(name, self._name)
+            self[name] = self._env['ir.property'].get(name, self._name)
             return
 
         # 4. look up _defaults
@@ -2746,7 +2746,7 @@ class BaseModel(object):
                 recs = self.browse(cr, SUPERUSER_ID, [], {'active_test': False})
                 recs = recs.search([])
                 for f in stored_fields:
-                    recs._scope.recomputation[f] |= recs
+                    recs._env.recomputation[f] |= recs
                 recs.recompute()
 
             todo_end.append((1000, func, ()))
@@ -3012,7 +3012,7 @@ class BaseModel(object):
         """ method called on all models after updating the registry """
         # complete the initialization of all fields
         for field in self._fields.itervalues():
-            field.setup(self._scope)
+            field.setup(self._env)
 
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
         """ Return the definition of each field.
@@ -3037,7 +3037,7 @@ class BaseModel(object):
                 continue
             if field.groups and not recs.user_has_groups(field.groups):
                 continue
-            res[fname] = field.get_description(recs._scope)
+            res[fname] = field.get_description(recs._env)
 
         # if user cannot create or modify records, make all fields readonly
         has_access = functools.partial(recs.check_access_rights, raise_exception=False)
@@ -3154,7 +3154,7 @@ class BaseModel(object):
         # Note: do not prefetch fields when self.pool._init is True, because
         # some columns may be missing from the database!
         column = self._columns[field.name]
-        if column._prefetch and not (self.pool._init or self._scope.draft):
+        if column._prefetch and not (self.pool._init or self._env.draft):
             fnames = set(fname
                 for fname, fcolumn in self._columns.iteritems()
                 if fcolumn._prefetch)
@@ -3162,7 +3162,7 @@ class BaseModel(object):
             fnames = set((field.name,))
 
         # do not fetch the records/fields that have to be recomputed
-        recomputation = self._scope.recomputation
+        recomputation = self._env.recomputation
         if recomputation:
             for fname in list(fnames):
                 recs_todo = recomputation[self._fields[fname]]
@@ -3192,13 +3192,13 @@ class BaseModel(object):
         """ Read the given fields of the records in `self` from the database,
             and store them in cache. Access errors are also stored in cache.
         """
-        scope = self._scope
-        cr, user, context = scope.args
+        env = self._env
+        cr, user, context = env.args
 
         # Construct a clause for the security rules.
         # 'tables' holds the list of tables necessary for the SELECT, including
         # the ir.rule clauses, and contains at least self._table.
-        rule_clause, rule_params, tables = scope['ir.rule'].domain_get(self._name, 'read')
+        rule_clause, rule_params, tables = env['ir.rule'].domain_get(self._name, 'read')
 
         # determine the fields that are stored as columns in self._table
         fields_pre = [f for f in field_names if self._columns[f]._classic_write]
@@ -3232,7 +3232,7 @@ class BaseModel(object):
         if ids:
             # translate the fields if necessary
             if context.get('lang'):
-                ir_translation = scope['ir.translation']
+                ir_translation = env['ir.translation']
                 for f in fields_pre:
                     if self._columns[f].translate:
                         #TODO: optimize out of this loop
@@ -3630,7 +3630,7 @@ class BaseModel(object):
         if not self:
             return True
 
-        cr, uid, context = self._scope.args
+        cr, uid, context = self._env.args
         self._check_concurrency(self._ids)
         self.check_access_rights('write')
 
@@ -5045,10 +5045,10 @@ class BaseModel(object):
     #
     # Instance creation
     #
-    # An instance represents an ordered collection of records in a given scope.
-    # The instance object refers to the scope, and the records themselves are
-    # represented by their cache dictionary. The 'id' of each record is found in
-    # its corresponding cache dictionary.
+    # An instance represents an ordered collection of records in a given
+    # execution environment. The instance object refers to the environment, and
+    # the records themselves are represented by their cache dictionary. The 'id'
+    # of each record is found in its corresponding cache dictionary.
     #
     # This design has the following advantages:
     #  - cache access is direct and thus fast;
@@ -5057,28 +5057,27 @@ class BaseModel(object):
     #
 
     @classmethod
-    def _browse(cls, scope, ids):
-        """ Create an instance attached to `scope`; `ids` is a tuple of record
+    def _browse(cls, env, ids):
+        """ Create an instance attached to `env`; `ids` is a tuple of record
             ids.
         """
         records = object.__new__(cls)
-        records._scope = scope
+        records._env = env
         records._ids = ids
-        scope.cache_ids[cls._name].update(ids)
+        env.cache_ids[cls._name].update(ids)
         return records
 
     @api.new
     def browse(self, arg=None):
-        """ Return an instance corresponding to `arg` and attached to the
-            current scope. The parameter `arg` is either a record id, or a
-            collection of record ids.
+        """ Return an instance corresponding to `arg` and attached to
+            `self._env`; `arg` is either a record id, or a collection of record ids.
         """
         if isinstance(arg, Iterable) and not isinstance(arg, basestring):
             ids = tuple(arg)
         else:
             ids = (arg,) if arg else ()
         assert all(isinstance(id, IdType) for id in ids), "Browsing invalid ids: %s" % ids
-        return self._browse(self._scope, ids)
+        return self._browse(self._env, ids)
 
     @browse.old
     def browse(self, cr, uid, arg=None, context=None):
@@ -5087,7 +5086,7 @@ class BaseModel(object):
         else:
             ids = (arg,) if arg else ()
         assert all(isinstance(id, IdType) for id in ids), "Browsing invalid ids: %s" % ids
-        return self._browse(Scope(cr, uid, context or {}), ids)
+        return self._browse(Environment(cr, uid, context or {}), ids)
 
     #
     # Internal properties, for manipulating the instance's implementation
@@ -5099,9 +5098,9 @@ class BaseModel(object):
         return bool(self._ids) and self._ids[0]
 
     # backward-compatibility with former browse records
-    _cr = property(lambda self: self._scope.cr)
-    _uid = property(lambda self: self._scope.uid)
-    _context = property(lambda self: self._scope.context)
+    _cr = property(lambda self: self._env.cr)
+    _uid = property(lambda self: self._env.uid)
+    _context = property(lambda self: self._env.context)
 
     #
     # Conversion methods
@@ -5115,22 +5114,22 @@ class BaseModel(object):
             return self
         raise except_orm("ValueError", "Expected singleton: %s" % self)
 
-    def attach_scope(self, scope):
-        """ Return an instance equivalent to `self` attached to `scope`.
+    def attach_env(self, env):
+        """ Return an instance equivalent to `self` attached to `env`.
         """
-        return self._browse(scope, self._ids)
+        return self._browse(env, self._ids)
 
     @api.new
     def sudo(self, cr=None, user=SUPERUSER_ID, context=(), **kwargs):
-        """ Return an instance equivalent to `self` attached to a scope based on
-            `self`'s scope and modified by parameters.
+        """ Return an instance equivalent to `self` attached to an environment
+            based on `self._env` and modified by parameters.
 
             :param cr: an optional cursor object
             :param user: a user record or id, by default the superuser
             :param context: an optional context dictionary
             :param kwargs: key-value pairs to modify the context
         """
-        return self.attach_scope(self._scope(cr, user, context, **kwargs))
+        return self.attach_env(self._env(cr, user, context, **kwargs))
 
     def unbrowse(self):
         """ Return the list of record ids of this instance. """
@@ -5138,16 +5137,16 @@ class BaseModel(object):
 
     def _convert_to_cache(self, values):
         """ Convert the `values` dictionary into cached values. """
-        scope = self._scope
         return dict(
-            (name, self._fields[name].convert_to_cache(value, scope))
+            (name, self._fields[name].convert_to_cache(value, self._env))
             for name, value in values.iteritems()
         )
 
     def _convert_to_write(self, values):
         """ Convert the `values` dictionary into the format of :meth:`write`. """
+        fields = self._fields
         return dict(
-            (name, self._fields[name].convert_to_write(value))
+            (name, fields[name].convert_to_write(value))
             for name, value in values.iteritems()
         )
 
@@ -5160,24 +5159,24 @@ class BaseModel(object):
 
             :param field_name: a dot-separated sequence of field names
         """
-        recs, scope = self, self._scope
+        recs, env = self, self._env
         for name in field_name.split('.'):
             vals = [rec[name] for rec in recs]
             field = recs._fields[name]
             if field.relational:
-                recs = reduce(operator.or_, vals, field.null(scope))
+                recs = reduce(operator.or_, vals, field.null(env))
             else:
                 recs = set(filter(None, vals))
         return recs
 
     def _map_cache(self, field_name):
         """ Same as `~.map`, but use cached values only. """
-        recs, scope = self, self._scope
+        recs, env = self, self._env
         for name in field_name.split('.'):
             field = recs._fields[name]
             vals = filter(None, [rec._cache.get(field) for rec in recs])
             if field.relational:
-                recs = reduce(operator.or_, vals, field.null(scope))
+                recs = reduce(operator.or_, vals, field.null(env))
             else:
                 recs = set(vals)
         return recs
@@ -5194,7 +5193,7 @@ class BaseModel(object):
 
     @api.model
     def new(self, values={}):
-        """ Return a new record instance attached to the current scope, and
+        """ Return a new record instance attached to `self._env`, and
             initialized with the `values` dictionary. Such a record does not
             exist in the database.
         """
@@ -5203,7 +5202,7 @@ class BaseModel(object):
         record = self.browse([new_id])
         record._cache.update(self._convert_to_cache(values))
 
-        if record._scope.draft:
+        if record._env.draft:
             # The cache update does not set inverse fields, so do it manually.
             # This is useful for computing a function field on secondary
             # records, if that field depends on the main record.
@@ -5221,16 +5220,16 @@ class BaseModel(object):
     @property
     def _dirty(self):
         """ Return whether any record in `self` is dirty. """
-        dirty = self._scope.dirty
+        dirty = self._env.dirty
         return any(record in dirty for record in self)
 
     @_dirty.setter
     def _dirty(self, value):
         """ Mark the records in `self` as dirty. """
         if value:
-            map(self._scope.dirty.add, self)
+            map(self._env.dirty.add, self)
         else:
-            map(self._scope.dirty.discard, self)
+            map(self._env.dirty.discard, self)
 
     #
     # "Dunder" methods
@@ -5247,7 +5246,7 @@ class BaseModel(object):
     def __iter__(self):
         """ Return an iterator over `self`. """
         for id in self._ids:
-            yield self._browse(self._scope, (id,))
+            yield self._browse(self._env, (id,))
 
     def __contains__(self, item):
         """ Test whether `item` is a subset of `self` or a field name. """
@@ -5333,7 +5332,7 @@ class BaseModel(object):
 
     def __getitem__(self, key):
         """ If `key` is an integer or a slice, return the corresponding record
-            selection as an instance (attached to the same scope as `self`).
+            selection as an instance (attached to `self._env`).
             Otherwise read the field `key` of the first record in `self`.
 
             Examples::
@@ -5347,9 +5346,9 @@ class BaseModel(object):
             # important: one must call the field's getter
             return self._fields[key].__get__(self, type(self))
         elif isinstance(key, slice):
-            return self._browse(self._scope, self._ids[key])
+            return self._browse(self._env, self._ids[key])
         else:
-            return self._browse(self._scope, (self._ids[key],))
+            return self._browse(self._env, (self._ids[key],))
 
     def __setitem__(self, key, value):
         """ Assign the field `key` to `value` in record `self`. """
@@ -5371,10 +5370,10 @@ class BaseModel(object):
             the records of model `self` in cache that have no value for `field`
             (:class:`Field` instance).
         """
-        scope = self._scope
-        ids_in_cache = scope.cache_ids[self._name]
+        env = self._env
+        ids_in_cache = env.cache_ids[self._name]
         ids_in_cache.update(self._ids)
-        ids = filter(None, ids_in_cache - set(scope.cache[field]))
+        ids = filter(None, ids_in_cache - set(env.cache[field]))
         return self.browse(ids)
 
     @api.model
@@ -5396,7 +5395,7 @@ class BaseModel(object):
         """
         if fnames is None:
             if ids is None:
-                return self._scope.invalidate_all()
+                return self._env.invalidate_all()
             fields = self._fields.values()
         else:
             fields = map(self._fields.__getitem__, fnames)
@@ -5404,7 +5403,7 @@ class BaseModel(object):
         # invalidate fields and inverse fields, too
         spec = [(f, ids) for f in fields] + \
                [(f.inverse_field, None) for f in fields if f.inverse_field]
-        self._scope.invalidate(spec)
+        self._env.invalidate(spec)
 
     @api.multi
     def modified(self, fnames):
@@ -5423,14 +5422,14 @@ class BaseModel(object):
         # HACK: invalidate all non-stored fields.function
         spec += [(f, None) for f in self.pool.pure_function_fields]
 
-        self._scope.invalidate(spec)
+        self._env.invalidate(spec)
 
     @api.model
     def recompute(self):
         """ Recompute stored function fields. The fields and records to
             recompute have been determined by method :meth:`modified`.
         """
-        with self._scope.in_recomputation() as recomputation:
+        with self._env.in_recomputation() as recomputation:
             while recomputation:
                 field, recs = next(recomputation.iteritems())
                 # To recompute field, simply evaluate it on recs.
@@ -5463,9 +5462,9 @@ class BaseModel(object):
             :param tocheck: list of (dot-separated) field names to check; use
                 this for secondary fields that are not keys of `values`
         """
-        scope = self._scope
+        env = self._env
 
-        with scope.in_draft():
+        with env.in_draft():
             # create a new record with the values, except field_name
             record = self.new(values)
             record_values = dict(record._cache)
@@ -5481,9 +5480,9 @@ class BaseModel(object):
                             rec[name]
 
         # at this point, the cache should be clean
-        assert not scope.dirty
+        assert not env.dirty
 
-        with scope.in_draft():
+        with env.in_draft():
             # check for a field-specific onchange method
             method = getattr(record, 'onchange_' + field_name, None)
             if method is None:
@@ -5530,13 +5529,13 @@ class RecordCache(MutableMapping):
         """ Return whether `records[0]` has a value for `field` in cache. """
         if isinstance(field, basestring):
             field = self._recs._fields[field]
-        return self._recs._id in self._recs._scope.cache[field]
+        return self._recs._id in self._recs._env.cache[field]
 
     def __getitem__(self, field):
         """ Return the cached value of `field` for `records[0]`. """
         if isinstance(field, basestring):
             field = self._recs._fields[field]
-        value = self._recs._scope.cache[field][self._recs._id]
+        value = self._recs._env.cache[field][self._recs._id]
         return value.get() if isinstance(value, SpecialValue) else value
 
     def __setitem__(self, field, value):
@@ -5544,7 +5543,7 @@ class RecordCache(MutableMapping):
         if isinstance(field, basestring):
             field = self._recs._fields[field]
         values = dict.fromkeys(self._recs._ids, value)
-        self._recs._scope.cache[field].update(values)
+        self._recs._env.cache[field].update(values)
 
     def update(self, *args, **kwargs):
         """ Update the cache of all records in `records`. If the argument is a
@@ -5554,7 +5553,7 @@ class RecordCache(MutableMapping):
             values = dict.fromkeys(self._recs._ids, args[0])
             for name, field in self._recs._fields.iteritems():
                 if name not in MAGIC_COLUMNS:
-                    self._recs._scope.cache[field].update(values)
+                    self._recs._env.cache[field].update(values)
         else:
             return super(RecordCache, self).update(*args, **kwargs)
 
@@ -5562,13 +5561,13 @@ class RecordCache(MutableMapping):
         """ Remove the cached value of `field` for all `records`. """
         if isinstance(field, basestring):
             field = self._recs._fields[field]
-        field_cache = self._recs._scope.cache[field]
+        field_cache = self._recs._env.cache[field]
         for id in self._recs._ids:
             field_cache.pop(id, None)
 
     def __iter__(self):
         """ Iterate over the field names with a regular value in cache. """
-        cache, id = self._recs._scope.cache, self._recs._id
+        cache, id = self._recs._env.cache, self._recs._id
         dummy = SpecialValue(None)
         for name, field in self._recs._fields.iteritems():
             if name not in MAGIC_COLUMNS and \

@@ -12,7 +12,7 @@ class TestNewFields(common.TransactionCase):
     def test_00_basics(self):
         """ test accessing new fields """
         # find a discussion
-        discussion = self.scope.ref('test_new_api.discussion_0')
+        discussion = self.env.ref('test_new_api.discussion_0')
 
         # read field as a record attribute or as a record item
         self.assertIsInstance(discussion.name, basestring)
@@ -26,7 +26,7 @@ class TestNewFields(common.TransactionCase):
     def test_10_non_stored(self):
         """ test non-stored fields """
         # find messages
-        for message in self.scope['test_new_api.message'].search([]):
+        for message in self.env['test_new_api.message'].search([]):
             # check definition of field
             self.assertEqual(message.size, len(message.body or ''))
 
@@ -38,7 +38,7 @@ class TestNewFields(common.TransactionCase):
     def test_11_stored(self):
         """ test stored fields """
         # find the demo discussion
-        discussion = self.scope.ref('test_new_api.discussion_0')
+        discussion = self.env.ref('test_new_api.discussion_0')
         self.assertTrue(len(discussion.messages) > 0)
 
         # check messages
@@ -61,7 +61,7 @@ class TestNewFields(common.TransactionCase):
 
     def test_12_recursive(self):
         """ test recursively dependent fields """
-        Category = self.scope['test_new_api.category']
+        Category = self.env['test_new_api.category']
         abel = Category.create({'name': 'Abel'})
         beth = Category.create({'name': 'Bethany'})
         cath = Category.create({'name': 'Catherine'})
@@ -87,7 +87,7 @@ class TestNewFields(common.TransactionCase):
 
     def test_13_inverse(self):
         """ test inverse computation of fields """
-        Category = self.scope['test_new_api.category']
+        Category = self.env['test_new_api.category']
         abel = Category.create({'name': 'Abel'})
         beth = Category.create({'name': 'Bethany'})
         cath = Category.create({'name': 'Catherine'})
@@ -106,17 +106,17 @@ class TestNewFields(common.TransactionCase):
 
     def test_14_search(self):
         """ test search on computed fields """
-        discussion = self.scope.ref('test_new_api.discussion_0')
+        discussion = self.env.ref('test_new_api.discussion_0')
 
         # determine message sizes
         sizes = set(message.size for message in discussion.messages)
 
         # search for messages based on their size
         for size in sizes:
-            messages0 = self.scope['test_new_api.message'].search(
+            messages0 = self.env['test_new_api.message'].search(
                 [('discussion', '=', discussion.id), ('size', '<=', size)])
 
-            messages1 = self.scope['test_new_api.message'].browse()
+            messages1 = self.env['test_new_api.message'].browse()
             for message in discussion.messages:
                 if message.size <= size:
                     messages1 += message
@@ -125,22 +125,22 @@ class TestNewFields(common.TransactionCase):
 
     def test_15_constraint(self):
         """ test new-style Python constraints """
-        discussion = self.scope.ref('test_new_api.discussion_0')
+        discussion = self.env.ref('test_new_api.discussion_0')
 
         # remove oneself from discussion participants: we can no longer create
         # messages in discussion
-        discussion.participants -= self.scope.user
+        discussion.participants -= self.env.user
         with self.assertRaises(Exception):
-            self.scope['test_new_api.message'].create({'discussion': discussion.id, 'body': 'Whatever'})
+            self.env['test_new_api.message'].create({'discussion': discussion.id, 'body': 'Whatever'})
 
         # put back oneself into discussion participants: now we can create
         # messages in discussion
-        discussion.participants += self.scope.user
-        self.scope['test_new_api.message'].create({'discussion': discussion.id, 'body': 'Whatever'})
+        discussion.participants += self.env.user
+        self.env['test_new_api.message'].create({'discussion': discussion.id, 'body': 'Whatever'})
 
     def test_20_float(self):
         """ test float fields """
-        record = self.scope['test_new_api.mixed'].create({})
+        record = self.env['test_new_api.mixed'].create({})
 
         # assign value, and expect rounding
         record.write({'number': 2.4999999999999996})
@@ -152,7 +152,7 @@ class TestNewFields(common.TransactionCase):
 
     def test_21_date(self):
         """ test date fields """
-        record = self.scope['test_new_api.mixed'].create({})
+        record = self.env['test_new_api.mixed'].create({})
 
         # one may assign False or None
         record.date = None
@@ -174,70 +174,66 @@ class TestNewFields(common.TransactionCase):
 
     def test_22_selection(self):
         """ test selection fields """
-        record = self.scope['test_new_api.mixed'].create({})
+        record = self.env['test_new_api.mixed'].create({})
 
         # one may assign False or None
         record.lang = None
         self.assertFalse(record.lang)
 
         # one may assign a value, and it must be checked
-        for language in self.scope['res.lang'].search([]):
+        for language in self.env['res.lang'].search([]):
             record.lang = language.code
         with self.assertRaises(ValueError):
             record.lang = 'zz_ZZ'
 
     def test_23_relation(self):
         """ test relation fields """
-        demo = self.scope.ref('base.user_demo')
-        message = self.scope.ref('test_new_api.message_0_0')
+        demo = self.env.ref('base.user_demo')
+        message = self.env.ref('test_new_api.message_0_0')
 
-        # check scope of record and related records
-        self.assertEqual(message._scope, self.scope)
-        self.assertEqual(message.discussion._scope, self.scope)
+        # check environment of record and related records
+        self.assertEqual(message._env, self.env)
+        self.assertEqual(message.discussion._env, self.env)
 
-        demo_scope = self.scope(user=demo)
-        self.assertNotEqual(demo_scope, self.scope)
+        demo_env = self.env(user=demo)
+        self.assertNotEqual(demo_env, self.env)
 
-        # check scope of record and related records
-        self.assertEqual(message._scope, self.scope)
-        self.assertEqual(message.discussion._scope, self.scope)
+        # check environment of record and related records
+        self.assertEqual(message._env, self.env)
+        self.assertEqual(message.discussion._env, self.env)
 
-        # migrate message into the current scope, and check again
+        # "migrate" message into demo_env, and check again
         demo_message = message.sudo(user=demo)
-        self.assertEqual(demo_message._scope, demo_scope)
-        self.assertEqual(demo_message.discussion._scope, demo_scope)
+        self.assertEqual(demo_message._env, demo_env)
+        self.assertEqual(demo_message.discussion._env, demo_env)
 
-        # assign record's parent to a record in demo_scope
+        # assign record's parent to a record in demo_env
         message.discussion = message.discussion.copy({'name': 'Copy'})
 
-        # both message and its parent field must be in self.scope
-        self.assertEqual(message._scope, self.scope)
-        self.assertEqual(message.discussion._scope, self.scope)
-
-        # migrate message into the current scope, and check again
-        self.assertEqual(demo_message._scope, demo_scope)
-        self.assertEqual(demo_message.discussion._scope, demo_scope)
+        # both message and its parent field must be in self.env
+        self.assertEqual(message._env, self.env)
+        self.assertEqual(message.discussion._env, self.env)
 
     def test_24_reference(self):
         """ test reference fields. """
-        record = self.scope['test_new_api.mixed'].create({})
+        record = self.env['test_new_api.mixed'].create({})
 
         # one may assign False or None
         record.reference = None
         self.assertFalse(record.reference)
 
         # one may assign a user or a partner...
-        record.reference = self.scope.user
-        self.assertEqual(record.reference, self.scope.user)
-        record.reference = self.scope.user.partner_id
-        self.assertEqual(record.reference, self.scope.user.partner_id)
+        record.reference = self.env.user
+        self.assertEqual(record.reference, self.env.user)
+        record.reference = self.env.user.partner_id
+        self.assertEqual(record.reference, self.env.user.partner_id)
         # ... but no record from a model that starts with 'ir.'
         with self.assertRaises(ValueError):
-            record.reference = self.scope['ir.model'].search([], limit=1)
+            record.reference = self.env['ir.model'].search([], limit=1)
 
     def test_25_related(self):
         """ test related fields. """
-        message = self.scope.ref('test_new_api.message_0_0')
+        message = self.env.ref('test_new_api.message_0_0')
         discussion = message.discussion
 
         # check value of related field
@@ -253,8 +249,8 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(message.discussion_name, 'Bar')
 
         # search on related field, and check result
-        search_on_related = self.scope['test_new_api.message'].search([('discussion_name', '=', 'Bar')])
-        search_on_regular = self.scope['test_new_api.message'].search([('discussion.name', '=', 'Bar')])
+        search_on_related = self.env['test_new_api.message'].search([('discussion_name', '=', 'Bar')])
+        search_on_regular = self.env['test_new_api.message'].search([('discussion.name', '=', 'Bar')])
         self.assertEqual(search_on_related, search_on_regular)
 
         # check that field attributes are copied
@@ -265,7 +261,7 @@ class TestNewFields(common.TransactionCase):
     def test_26_inherited(self):
         """ test inherited fields. """
         # a bunch of fields are inherited from res_partner
-        for user in self.scope['res.users'].search([]):
+        for user in self.env['res.users'].search([]):
             partner = user.partner_id
             for field in ('is_company', 'name', 'email', 'country_id'):
                 self.assertEqual(getattr(user, field), getattr(partner, field))
@@ -273,7 +269,7 @@ class TestNewFields(common.TransactionCase):
 
     def test_30_read(self):
         """ test computed fields as returned by read(). """
-        discussion = self.scope.ref('test_new_api.discussion_0')
+        discussion = self.env.ref('test_new_api.discussion_0')
 
         for message in discussion.messages:
             display_name = message.display_name
@@ -285,10 +281,10 @@ class TestNewFields(common.TransactionCase):
 
     def test_40_new(self):
         """ test new records. """
-        discussion = self.scope.ref('test_new_api.discussion_0')
+        discussion = self.env.ref('test_new_api.discussion_0')
 
         # create a new message
-        message = self.scope['test_new_api.message'].new()
+        message = self.env['test_new_api.message'].new()
         self.assertFalse(message.id)
 
         # assign some fields; should have no side effect
@@ -300,7 +296,7 @@ class TestNewFields(common.TransactionCase):
         self.assertNotIn(message, discussion.messages)
 
         # check computed values of fields
-        user = self.scope.user
+        user = self.env.user
         self.assertEqual(message.author, user)
         self.assertEqual(message.name, "[%s] %s" % (discussion.name, user.name))
         self.assertEqual(message.size, len(BODY))
@@ -308,27 +304,27 @@ class TestNewFields(common.TransactionCase):
     def test_41_defaults(self):
         """ test default values. """
         fields = ['discussion', 'body', 'author', 'size']
-        defaults = self.scope['test_new_api.message'].default_get(fields)
+        defaults = self.env['test_new_api.message'].default_get(fields)
 
         self.assertFalse(defaults.get('discussion'))
         self.assertFalse(defaults.get('body'))
-        self.assertEqual(defaults['author'], self.scope.uid)
+        self.assertEqual(defaults['author'], self.env.uid)
         self.assertEqual(defaults['size'], 0)
 
 
 class TestMagicFields(common.TransactionCase):
 
     def test_write_date(self):
-        record = self.scope['test_new_api.discussion'].create({'name': 'Booba'})
-        self.assertEqual(record.create_uid, self.scope.user)
-        self.assertEqual(record.write_uid, self.scope.user)
+        record = self.env['test_new_api.discussion'].create({'name': 'Booba'})
+        self.assertEqual(record.create_uid, self.env.user)
+        self.assertEqual(record.write_uid, self.env.user)
 
 
 class TestInherits(common.TransactionCase):
 
     def test_inherits(self):
         """ Check that a many2one field with delegate=True adds an entry in _inherits """
-        Talk = self.scope['test_new_api.talk']
+        Talk = self.env['test_new_api.talk']
         self.assertEqual(Talk._inherits, {'test_new_api.discussion': 'parent'})
         self.assertIn('name', Talk._fields)
         self.assertEqual(Talk._fields['name'].related, ('parent', 'name'))

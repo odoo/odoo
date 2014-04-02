@@ -26,7 +26,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 import openerp
-from openerp import SUPERUSER_ID, netsvc, Scope
+from openerp import SUPERUSER_ID, netsvc, Environment
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
@@ -158,7 +158,7 @@ class ir_cron(osv.osv):
             must not be committed/rolled back!
         """
         try:
-            with Scope.manage():
+            with Environment.manage():
                 now = datetime.now() 
                 nextcall = datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT)
                 numbercall = job['numbercall']

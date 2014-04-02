@@ -166,38 +166,38 @@ class Field(object):
         self._setup_done = False
         self._triggers = set()          # set of (field, path)
 
-    def setup(self, scope):
+    def setup(self, env):
         """ Complete the setup of `self` (dependencies, recomputation triggers,
             and other properties). This method is idempotent: it has no effect
             if `self` has already been set up.
         """
         if not self._setup_done:
             self._setup_done = True
-            self._setup(scope)
+            self._setup(env)
 
-    def _setup(self, scope):
+    def _setup(self, env):
         """ Do the actual setup of `self`. """
         if self.related:
-            self._setup_related(scope)
+            self._setup_related(env)
         else:
-            self._setup_regular(scope)
+            self._setup_regular(env)
 
         # put invalidation/recomputation triggers on dependencies
         for path in self.depends:
-            self._setup_dependency([], scope[self.model_name], path.split('.'))
+            self._setup_dependency([], env[self.model_name], path.split('.'))
 
-    def _setup_related(self, scope):
+    def _setup_related(self, env):
         """ Setup the attributes of a related field. """
         # fix the type of self.related if necessary
         if isinstance(self.related, basestring):
             self.related = tuple(self.related.split('.'))
 
         # determine the related field, and make sure it is set up
-        recs = scope[self.model_name]
+        recs = env[self.model_name]
         for name in self.related[:-1]:
             recs = recs[name]
         field = self.related_field = recs._fields[self.related[-1]]
-        field.setup(scope)
+        field.setup(env)
 
         # check type consistency
         if self.type != field.type:
@@ -226,23 +226,23 @@ class Field(object):
     _related_states = property(attrgetter('states'))
     _related_groups = property(attrgetter('groups'))
 
-    def _setup_regular(self, scope):
+    def _setup_regular(self, env):
         """ Setup the attributes of a non-related field. """
         # retrieve dependencies from compute method
         method = self.compute
         if isinstance(method, basestring):
-            method = getattr(scope[self.model_name], method)
+            method = getattr(env[self.model_name], method)
 
         self.depends = getattr(method, '_depends', ())
         if callable(self.depends):
-            self.depends = self.depends(scope[self.model_name])
+            self.depends = self.depends(env[self.model_name])
 
     def _setup_dependency(self, path0, model, path1):
         """ Make `self` depend on `model`; `path0 + path1` is a dependency of
             `self`, and `path0` is the sequence of field names from `self.model`
             to `model`.
         """
-        scope = model._scope
+        env = model._env
         head, tail = path1[0], path1[1:]
 
         if head == '*':
@@ -252,7 +252,7 @@ class Field(object):
             fields = [model._fields[head]]
 
         for field in fields:
-            field.setup(scope)
+            field.setup(env)
 
             _logger.debug("Add trigger on %s to recompute %s", field, self)
             field._triggers.add((self, '.'.join(path0 or ['id'])))
@@ -264,7 +264,7 @@ class Field(object):
 
             # recursively traverse the dependency
             if tail:
-                comodel = scope[field.comodel_name]
+                comodel = env[field.comodel_name]
                 self._setup_dependency(path0 + [head], comodel, tail)
 
     @property
@@ -276,14 +276,14 @@ class Field(object):
     # Field description
     #
 
-    def get_description(self, scope):
+    def get_description(self, env):
         """ Return a dictionary that describes the field `self`. """
         desc = {'type': self.type, 'store': self.store}
         for attr in dir(self):
             if attr.startswith('_description_'):
                 value = getattr(self, attr)
                 if callable(value):
-                    value = value(scope)
+                    value = value(env)
                 if value:
                     desc[attr[13:]] = value
         return desc
@@ -296,17 +296,17 @@ class Field(object):
     _description_states = property(attrgetter('states'))
     _description_groups = property(attrgetter('groups'))
 
-    def _description_string(self, scope):
-        if self.string and scope.lang:
+    def _description_string(self, env):
+        if self.string and env.lang:
             name = "%s,%s" % (self.model_name, self.name)
-            trans = scope['ir.translation']._get_source(name, 'field', scope.lang)
+            trans = env['ir.translation']._get_source(name, 'field', env.lang)
             return trans or self.string
         return self.string
 
-    def _description_help(self, scope):
-        if self.help and scope.lang:
+    def _description_help(self, env):
+        if self.help and env.lang:
             name = "%s,%s" % (self.model_name, self.name)
-            trans = scope['ir.translation']._get_source(name, 'help', scope.lang)
+            trans = env['ir.translation']._get_source(name, 'help', env.lang)
             return trans or self.help
         return self.help
 
@@ -340,12 +340,12 @@ class Field(object):
     # Conversion of values
     #
 
-    def null(self, scope):
-        """ return the null value for this field in the given scope """
+    def null(self, env):
+        """ return the null value for this field in the given environment """
         return False
 
-    def convert_to_cache(self, value, scope):
-        """ convert `value` to the cache level in `scope`; `value` may come from
+    def convert_to_cache(self, value, env):
+        """ convert `value` to the cache level in `env`; `value` may come from
             an assignment, or have the format of methods :meth:`BaseModel.read`
             or :meth:`BaseModel.write`
         """
@@ -367,9 +367,9 @@ class Field(object):
         """
         return self.convert_to_read(value)
 
-    def convert_to_export(self, value, scope):
+    def convert_to_export(self, value, env):
         """ convert `value` from the cache to a valid value for export. The
-            parameter `scope` is given for managing translations.
+            parameter `env` is given for managing translations.
         """
         return bool(value) and ustr(value)
 
@@ -400,7 +400,7 @@ class Field(object):
             record.add_default_value(self.name)
         else:
             # null record -> return the null value for this field
-            return self.null(record._scope)
+            return self.null(record._env)
 
         # the result should be in cache now
         return record._cache[self]
@@ -411,19 +411,19 @@ class Field(object):
             raise Warning("Null record %s may not be assigned" % record)
 
         # only one record is updated
-        scope = record._scope
+        env = record._env
         record = record[0]
 
         # adapt value to the cache level
-        value = self.convert_to_cache(value, scope)
+        value = self.convert_to_cache(value, env)
 
-        if scope.draft or not record._id:
+        if env.draft or not record._id:
             # determine dependent fields
             spec = self.modified_draft(record)
 
             # set value in cache, inverse field, and mark record as dirty
             record._cache[self] = value
-            if scope.draft:
+            if env.draft:
                 if self.inverse_field:
                     self.inverse_field._update(value, record)
                 record._dirty = True
@@ -431,7 +431,7 @@ class Field(object):
             # determine more dependent fields, and invalidate them
             if self.relational:
                 spec += self.modified_draft(record)
-            scope.invalidate(spec)
+            env.invalidate(spec)
 
         else:
             # simply write to the database, and update cache
@@ -470,10 +470,10 @@ class Field(object):
 
     def determine_value(self, record):
         """ Determine the value of `self` for `record`. """
-        scope = record._scope
-        if self.store and not (self.compute and scope.draft):
+        env = record._env
+        if self.store and not (self.compute and env.draft):
             # recompute field on record if required
-            recs_todo = scope.recomputation[self]
+            recs_todo = env.recomputation[self]
             if record in recs_todo:
                 # execute the compute method in NON-DRAFT mode, so that assigned
                 # fields are written to the database
@@ -483,13 +483,13 @@ class Field(object):
         else:
             # execute the compute method in DRAFT mode, so that assigned fields
             # are not written to the database
-            with scope.in_draft():
+            with env.in_draft():
                 recs = record._in_cache_without(self)
                 self.compute_value(recs, check_exists=True)
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
-        record._cache[self] = SpecialValue(self.null(record._scope))
+        record._cache[self] = SpecialValue(self.null(record._env))
         if self.compute:
             self.compute_value(record)
 
@@ -518,14 +518,14 @@ class Field(object):
             fields/records to recompute, and return a spec indicating what to
             invalidate.
         """
-        scope = records._scope(user=SUPERUSER_ID, context={'active_test': False})
-        recomputation = scope.recomputation
+        env = records._env(user=SUPERUSER_ID, context={'active_test': False})
+        recomputation = env.recomputation
 
         # invalidate the fields that depend on self, and prepare recomputation
         spec = [(self, records._ids)]
         for field, path in self._triggers:
             if field.store:
-                target = scope[field.model_name].search([(path, 'in', records._ids)])
+                target = env[field.model_name].search([(path, 'in', records._ids)])
                 if target:
                     spec.append((field, target._ids))
                     recomputation[field] |= target
@@ -536,7 +536,7 @@ class Field(object):
 
     def modified_draft(self, records):
         """ Same as :meth:`modified`, but in draft mode. """
-        scope = records._scope
+        env = records._env
 
         # invalidate the fields on the records in cache that depend on `records`
         spec = []
@@ -544,8 +544,8 @@ class Field(object):
             if path == 'id':
                 target = records
             else:
-                target = scope[field.model_name]
-                for record in target.browse(scope.cache[field]):
+                target = env[field.model_name]
+                for record in target.browse(env.cache[field]):
                     if record._map_cache(path) & records:
                         target += record
             if target:
@@ -558,10 +558,10 @@ class Boolean(Field):
     """ Boolean field. """
     type = 'boolean'
 
-    def convert_to_cache(self, value, scope):
+    def convert_to_cache(self, value, env):
         return bool(value)
 
-    def convert_to_export(self, value, scope):
+    def convert_to_export(self, value, env):
         return ustr(value)
 
 
@@ -569,7 +569,7 @@ class Integer(Field):
     """ Integer field. """
     type = 'integer'
 
-    def convert_to_cache(self, value, scope):
+    def convert_to_cache(self, value, env):
         return int(value or 0)
 
 
@@ -581,9 +581,9 @@ class Float(Field):
     def __init__(self, string=None, digits=None, **kwargs):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
 
-    def _setup_regular(self, scope):
-        super(Float, self)._setup_regular(scope)
-        self.digits = self._digits(scope.cr) if callable(self._digits) else self._digits
+    def _setup_regular(self, env):
+        super(Float, self)._setup_regular(env)
+        self.digits = self._digits(env.cr) if callable(self._digits) else self._digits
 
     _related_digits = property(attrgetter('digits'))
 
@@ -592,7 +592,7 @@ class Float(Field):
     _column_digits = property(lambda self: not callable(self._digits) and self._digits)
     _column_digits_compute = property(lambda self: callable(self._digits) and self._digits)
 
-    def convert_to_cache(self, value, scope):
+    def convert_to_cache(self, value, env):
         # apply rounding here, otherwise value in cache may be wrong!
         if self.digits:
             return float_round(float(value or 0.0), precision_digits=self.digits[1])
@@ -618,7 +618,7 @@ class Char(_String):
     _related_size = property(attrgetter('size'))
     _description_size = property(attrgetter('size'))
 
-    def convert_to_cache(self, value, scope):
+    def convert_to_cache(self, value, env):
         return bool(value) and ustr(value)[:self.size]
 
 
@@ -626,7 +626,7 @@ class Text(_String):
     """ Text field. """
     type = 'text'
 
-    def convert_to_cache(self, value, scope):
+    def convert_to_cache(self, value, env):
         return bool(value) and ustr(value)
 
 
@@ -634,7 +634,7 @@ class Html(_String):
     """ Html field. """
     type = 'html'
 
-    def convert_to_cache(self, value, scope):
+    def convert_to_cache(self, value, env):
         return bool(value) and html_sanitize(value)
 
 
@@ -642,7 +642,7 @@ class Date(Field):
     """ Date field. """
     type = 'date'
 
-    def convert_to_cache(self, value, scope):
+    def convert_to_cache(self, value, env):
         if isinstance(value, (date, datetime)):
             value = value.strftime(DATE_FORMAT)
         elif value:
@@ -656,7 +656,7 @@ class Datetime(Field):
     """ Datetime field. """
     type = 'datetime'
 
-    def convert_to_cache(self, value, scope):
+    def convert_to_cache(self, value, env):
         if isinstance(value, (date, datetime)):
             value = value.strftime(DATETIME_FORMAT)
         elif value:
@@ -690,27 +690,27 @@ class Selection(Field):
             selection = api.expected(api.model, selection)
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
 
-    def _setup_related(self, scope):
-        super(Selection, self)._setup_related(scope)
+    def _setup_related(self, env):
+        super(Selection, self)._setup_related(env)
         # selection must be computed on related field
         field = self.related_field
-        self.selection = lambda model: field._description_selection(model._scope)
+        self.selection = lambda model: field._description_selection(model._env)
 
-    def _description_selection(self, scope):
+    def _description_selection(self, env):
         """ return the selection list (pairs (value, label)); labels are
             translated according to context language
         """
         selection = self.selection
         if isinstance(selection, basestring):
-            return getattr(scope[self.model_name], selection)()
+            return getattr(env[self.model_name], selection)()
         if callable(selection):
-            return selection(scope[self.model_name])
+            return selection(env[self.model_name])
 
         # translate selection labels
-        if scope.lang:
+        if env.lang:
             name = "%s,%s" % (self.model_name, self.name)
             translate = partial(
-                scope['ir.translation']._get_source, name, 'selection', scope.lang)
+                env['ir.translation']._get_source, name, 'selection', env.lang)
             return [(value, translate(label)) for value, label in selection]
         else:
             return selection
@@ -723,27 +723,27 @@ class Selection(Field):
         else:
             return self.selection
 
-    def get_values(self, scope):
+    def get_values(self, env):
         """ return a list of the possible values """
         selection = self.selection
         if isinstance(selection, basestring):
-            selection = getattr(scope[self.model_name], selection)()
+            selection = getattr(env[self.model_name], selection)()
         elif callable(selection):
-            selection = selection(scope[self.model_name])
+            selection = selection(env[self.model_name])
         return [value for value, label in selection]
 
-    def convert_to_cache(self, value, scope):
-        if value in self.get_values(scope):
+    def convert_to_cache(self, value, env):
+        if value in self.get_values(env):
             return value
         elif not value:
             return False
         raise ValueError("Wrong value for %s: %r" % (self, value))
 
-    def convert_to_export(self, value, scope):
+    def convert_to_export(self, value, env):
         if not isinstance(self.selection, list):
             # FIXME: this reproduces an existing buggy behavior!
             return value
-        for item in self._description_selection(scope):
+        for item in self._description_selection(env):
             if item[0] == value:
                 return item[1]
         return False
@@ -767,13 +767,13 @@ class Reference(Selection):
 
     _column_size = property(attrgetter('size'))
 
-    def convert_to_cache(self, value, scope):
+    def convert_to_cache(self, value, env):
         if isinstance(value, BaseModel):
-            if value._name in self.get_values(scope) and len(value) <= 1:
-                return value.attach_scope(scope) or False
+            if value._name in self.get_values(env) and len(value) <= 1:
+                return value.attach_env(env) or False
         elif isinstance(value, basestring):
             res_model, res_id = value.split(',')
-            return scope[res_model].browse(int(res_id))
+            return env[res_model].browse(int(res_id))
         elif not value:
             return False
         raise ValueError("Wrong value for %s: %r" % (self, value))
@@ -781,7 +781,7 @@ class Reference(Selection):
     def convert_to_read(self, value, use_name_get=True):
         return "%s,%s" % (value._name, value.id) if value else False
 
-    def convert_to_export(self, value, scope):
+    def convert_to_export(self, value, env):
         return bool(value) and value.name_get()[0][1]
 
     def convert_to_display_name(self, value):
@@ -800,15 +800,15 @@ class _Relational(Field):
     _description_relation = property(attrgetter('comodel_name'))
     _description_context = property(attrgetter('context'))
 
-    def _description_domain(self, scope):
-        return self.domain(scope[self.model_name]) if callable(self.domain) else self.domain
+    def _description_domain(self, env):
+        return self.domain(env[self.model_name]) if callable(self.domain) else self.domain
 
     _column_obj = property(attrgetter('comodel_name'))
     _column_domain = property(attrgetter('domain'))
     _column_context = property(attrgetter('context'))
 
-    def null(self, scope):
-        return scope[self.comodel_name]
+    def null(self, env):
+        return env[self.comodel_name]
 
     def modified(self, records):
         # Invalidate cache for self.inverse_field, too. Note that recomputation
@@ -830,18 +830,18 @@ class Many2one(_Relational):
     def __init__(self, comodel_name, string=None, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
 
-    def _setup_regular(self, scope):
-        super(Many2one, self)._setup_regular(scope)
+    def _setup_regular(self, env):
+        super(Many2one, self)._setup_regular(env)
 
         # determine self.inverse_field
-        for field in scope[self.comodel_name]._fields.itervalues():
-            field.setup(scope)
+        for field in env[self.comodel_name]._fields.itervalues():
+            field.setup(env)
             if isinstance(field, One2many) and field.inverse_field == self:
                 self.inverse_field = field
                 break
 
         # determine self.delegate
-        self.delegate = self.name in scope[self.model_name]._inherits.values()
+        self.delegate = self.name in env[self.model_name]._inherits.values()
 
     _column_ondelete = property(attrgetter('ondelete'))
     _column_auto_join = property(attrgetter('auto_join'))
@@ -850,21 +850,21 @@ class Many2one(_Relational):
         """ Update the cached value of `self` for `records` with `value`. """
         records._cache[self] = value
 
-    def convert_to_cache(self, value, scope):
+    def convert_to_cache(self, value, env):
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name and len(value) <= 1:
-                return value.attach_scope(scope)
+                return value.attach_env(env)
             raise ValueError("Wrong value for %s: %r" % (self, value))
         elif isinstance(value, tuple):
-            return scope[self.comodel_name].browse(value[0])
+            return env[self.comodel_name].browse(value[0])
         elif isinstance(value, dict):
-            return scope[self.comodel_name].new(value)
+            return env[self.comodel_name].new(value)
         else:
-            return scope[self.comodel_name].browse(value)
+            return env[self.comodel_name].browse(value)
 
     def convert_to_read(self, value, use_name_get=True):
         if use_name_get and value:
-            # evaluate name_get() in sudo scope, because the visibility of a
+            # evaluate name_get() as superuser, because the visibility of a
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
             return value.sudo().name_get()[0]
@@ -874,7 +874,7 @@ class Many2one(_Relational):
     def convert_to_write(self, value, target=None, fnames=None):
         return bool(value) and (value.id or value._convert_to_write(value._cache))
 
-    def convert_to_export(self, value, scope):
+    def convert_to_export(self, value, env):
         return bool(value) and value.name_get()[0][1]
 
     def convert_to_display_name(self, value):
@@ -887,7 +887,7 @@ class Many2one(_Relational):
             value = record[self.name]
             if not value:
                 # the default value cannot be null, use a new record instead
-                record[self.name] = record._scope[self.comodel_name].new()
+                record[self.name] = record._env[self.comodel_name].new()
 
 
 class _RelationalMulti(_Relational):
@@ -898,13 +898,13 @@ class _RelationalMulti(_Relational):
         for record in records:
             record._cache[self] = record[self.name] | value
 
-    def convert_to_cache(self, value, scope):
+    def convert_to_cache(self, value, env):
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name:
-                return value.attach_scope(scope)
+                return value.attach_env(env)
         elif isinstance(value, list):
             # value is a list of record ids or commands
-            result = scope[self.comodel_name]
+            result = env[self.comodel_name]
             for command in value:
                 if isinstance(command, (tuple, list)):
                     if command[0] == 0:
@@ -929,7 +929,7 @@ class _RelationalMulti(_Relational):
                     result += result.browse(command)
             return result
         elif not value:
-            return self.null(scope)
+            return self.null(env)
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
     def convert_to_read(self, value, use_name_get=True):
@@ -963,7 +963,7 @@ class _RelationalMulti(_Relational):
 
         return result
 
-    def convert_to_export(self, value, scope):
+    def convert_to_export(self, value, env):
         return bool(value) and ','.join(name for id, name in value.name_get())
 
     def convert_to_display_name(self, value):
@@ -981,10 +981,10 @@ class One2many(_RelationalMulti):
         super(One2many, self).__init__(
             comodel_name=comodel_name, inverse_name=inverse_name, string=string, **kwargs)
 
-    def _setup_regular(self, scope):
-        super(One2many, self)._setup_regular(scope)
+    def _setup_regular(self, env):
+        super(One2many, self)._setup_regular(env)
         if self.inverse_name:
-            self.inverse_field = scope[self.comodel_name]._fields[self.inverse_name]
+            self.inverse_field = env[self.comodel_name]._fields[self.inverse_name]
 
     _description_relation_field = property(attrgetter('inverse_name'))
 
@@ -1006,19 +1006,19 @@ class Many2many(_RelationalMulti):
         super(Many2many, self).__init__(comodel_name=comodel_name, relation=relation,
             column1=column1, column2=column2, string=string, **kwargs)
 
-    def _setup_regular(self, scope):
-        super(Many2many, self)._setup_regular(scope)
+    def _setup_regular(self, env):
+        super(Many2many, self)._setup_regular(env)
 
         if self.store and not self.relation:
-            model = scope[self.model_name]
+            model = env[self.model_name]
             column = model._columns[self.name]
             if not isinstance(column, fields.function):
                 self.relation, self.column1, self.column2 = column._sql_names(model)
 
         if self.relation:
             expected = (self.relation, self.column2, self.column1)
-            for field in scope[self.comodel_name]._fields.itervalues():
-                field.setup(scope)
+            for field in env[self.comodel_name]._fields.itervalues():
+                field.setup(env)
                 if isinstance(field, Many2many) and \
                         (field.relation, field.column1, field.column2) == expected:
                     self.inverse_field = field

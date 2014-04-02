@@ -106,7 +106,7 @@ class Message(Model):
 
     @one
     def _default_author(self):
-        self.author = self._scope.user
+        self.author = self._env.user
 
     @one
     @constrains('author', 'discussion')
@@ -136,8 +136,8 @@ class Message(Model):
         # retrieve all the messages that match with a specific SQL query
         query = """SELECT id FROM "%s" WHERE char_length("body") %s %%s""" % \
                 (self._table, operator)
-        self._scope.cr.execute(query, (value,))
-        ids = [t[0] for t in self._scope.cr.fetchall()]
+        self._env.cr.execute(query, (value,))
+        ids = [t[0] for t in self._env.cr.fetchall()]
         return [('id', 'in', ids)]
 
 
@@ -157,12 +157,12 @@ class MixedModel(Model):
 
     @model
     def _get_lang(self):
-        langs = self._scope['res.lang'].search([])
+        langs = self._env['res.lang'].search([])
         return [(lang.code, lang.name) for lang in langs]
 
     @model
     def _reference_models(self):
-        models = self._scope['ir.model'].search([('state', '!=', 'manual')])
+        models = self._env['ir.model'].search([('state', '!=', 'manual')])
         return [(model.model, model.name)
                 for model in models
                 if not model.model.startswith('ir.')]

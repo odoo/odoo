@@ -20,7 +20,7 @@ from datetime import datetime, timedelta
 import werkzeug
 
 import openerp
-from openerp import Scope
+from openerp import Environment
 
 _logger = logging.getLogger(__name__)
 
@@ -130,7 +130,7 @@ class TransactionCase(BaseCase):
         # and still access them
         TransactionCase.cr = cr = self.cursor()
         TransactionCase.uid = uid = openerp.SUPERUSER_ID
-        TransactionCase.scope = Scope(cr, uid, {})
+        TransactionCase.env = Environment(cr, uid, {})
 
     def tearDown(self):
         self.cr.rollback()
@@ -147,7 +147,7 @@ class SingleTransactionCase(BaseCase):
     def setUpClass(cls):
         cls.cr = cls.cursor()
         cls.uid = openerp.SUPERUSER_ID
-        cls.scope = Scope(cls.cr, cls.uid, {})
+        cls.env = Environment(cls.cr, cls.uid, {})
 
     @classmethod
     def tearDownClass(cls):

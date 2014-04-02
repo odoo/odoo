@@ -81,13 +81,13 @@ import tools
 import workflow
 
 #----------------------------------------------------------
-# Model classes, fields, api decorators, and scope
+# Model classes, fields, api decorators, and environment
 #----------------------------------------------------------
 from openerp.osv.orm import BaseModel, AbstractModel, Model, TransientModel
 from openerp.osv import fields2 as fields
 from openerp.osv import api
 from openerp.osv.api import model, multi, one, constrains, depends, returns
-from openerp.osv.scope import Scope
+from openerp.osv.env import Environment
 
 #----------------------------------------------------------
 # Other imports, which may require stuff from above
