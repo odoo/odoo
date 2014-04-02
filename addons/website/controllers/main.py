@@ -339,9 +339,10 @@ class Website(openerp.addons.web.controllers.main.Home):
         id = int(id)
 
         ids = Model.search(request.cr, request.uid,
-                           [('id', '=', id)], context=request.context) \
-           or Model.search(request.cr, openerp.SUPERUSER_ID,
-                           [('id', '=', id), ('website_published', '=', True)], context=request.context)
+                           [('id', '=', id)], context=request.context)
+        if not ids and 'website_published' in Model._all_columns:
+            ids = Model.search(request.cr, openerp.SUPERUSER_ID,
+                               [('id', '=', id), ('website_published', '=', True)], context=request.context)
 
         if not ids:
             return self.placeholder(response)
