@@ -1,37 +1,20 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
-import random
-import difflib
 from datetime import datetime
+import difflib
+import random
 
 from openerp import tools
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+
 
 class Blog(osv.Model):
     _name = 'blog.blog'
     _description = 'Blogs'
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = 'name'
+
     _columns = {
         'name': fields.char('Blog Name', required=True),
         'subtitle': fields.char('Blog Subtitle'),
@@ -44,15 +27,11 @@ class BlogTag(osv.Model):
     _description = 'Blog Tag'
     _inherit = ['website.seo.metadata']
     _order = 'name'
+
     _columns = {
         'name': fields.char('Name', required=True),
     }
 
-class MailMessage(osv.Model):
-    _inherit = 'mail.message'
-    _columns = {
-        'discussion': fields.char('Discussion Unique Name'),
-    }
 
 class BlogPost(osv.Model):
     _name = "blog.post"
@@ -63,14 +42,14 @@ class BlogPost(osv.Model):
     def _compute_ranking(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for blog_post in self.browse(cr, uid, ids, context=context):
-            d = datetime.now() - datetime.strptime(blog_post.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            res[blog_post.id] = blog_post.visits * (0.5+random.random()) / max(3, d.days)
+            age = datetime.now() - datetime.strptime(blog_post.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            res[blog_post.id] = blog_post.visits * (0.5+random.random()) / max(3, age.days)
         return res
 
     _columns = {
         'name': fields.char('Title', required=True, translate=True),
-        'sub_title' : fields.char('Sub Title', translate=True),
-        'content_image': fields.binary('Background Image'),
+        'subtitle': fields.char('Sub Title', translate=True),
+        'background_image': fields.binary('Background Image'),
         'blog_id': fields.many2one(
             'blog.blog', 'Blog',
             required=True, ondelete='cascade',
@@ -86,7 +65,7 @@ class BlogPost(osv.Model):
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [
-                '&', '&', ('model', '=', self._name), ('type', '=', 'comment') , ('discussion', '=', False)
+                '&', '&', ('model', '=', self._name), ('type', '=', 'comment'), ('discussion_key', '=', False)
             ],
             string='Website Messages',
             help="Website communication history",
@@ -94,7 +73,7 @@ class BlogPost(osv.Model):
         'history_ids': fields.one2many(
             'blog.post.history', 'post_id',
             'History', help='Last post modifications',
-            deprecated= 'Will be removed in v9.'
+            deprecated='This field will be removed for OpenERP v9.'
         ),
         # creation / update stuff
         'create_date': fields.datetime(
@@ -113,13 +92,13 @@ class BlogPost(osv.Model):
             'res.users', 'Last Contributor',
             select=True, readonly=True,
         ),
-        'visits': fields.integer('No of Views', readonly=True),
+        'visits': fields.integer('No of Views'),
         'ranking': fields.function(_compute_ranking, string='Ranking', type='float'),
     }
+
     _defaults = {
-        'website_published': False,
-        'visits': 0,
-        'ranking': 0
+        'name': _('Blog Post Title'),
+        'subtitle': _('Subtitle'),
     }
 
     def create_history(self, cr, uid, ids, vals, context=None):
@@ -155,6 +134,7 @@ class BlogPost(osv.Model):
         })
         return super(BlogPost, self).copy(cr, uid, id, default=default, context=context)
 
+
 class BlogPostHistory(osv.Model):
     _name = "blog.post.history"
     _description = "Blog Post History"
@@ -182,4 +162,3 @@ class BlogPostHistory(osv.Model):
             raise osv.except_osv(_('Warning!'), _('There are no changes in revisions.'))
         diff = difflib.HtmlDiff()
         return diff.make_table(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=True)
-
