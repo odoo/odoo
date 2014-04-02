@@ -2115,7 +2115,7 @@ class BaseModel(object):
             pass
 
 
-    def _read_group_fill_results(self, cr, uid, domain, groupby, groupby_list, aggregated_fields,
+    def _read_group_fill_results(self, cr, uid, domain, groupby, remaining_groupbys, aggregated_fields,
                                  read_group_result, read_group_order=None, context=None):
         """Helper method for filling in empty groups for all possible values of
            the field being grouped by"""
@@ -2135,8 +2135,8 @@ class BaseModel(object):
 
         result_template = dict.fromkeys(aggregated_fields, False)
         result_template[groupby + '_count'] = 0
-        if groupby_list and len(groupby_list) > 1:
-            result_template['__context'] = {'group_by': groupby_list[1:]}
+        if remaining_groupbys:
+            result_template['__context'] = {'group_by': remaining_groupbys}
 
         # Merge the left_side (current results as dicts) with the right_side (all
         # possible values as m2o pairs). Both lists are supposed to be using the
@@ -2396,10 +2396,9 @@ class BaseModel(object):
 
         def format_result (fromquery):
             domain_group = [dom for gb in annotated_groupbys for dom in get_domain(gb, fromquery[gb['field']])]
-            result = {
-                '__domain': domain_group + domain,
-                '__context': {'group_by': groupby[len(annotated_groupbys):]}
-            }
+            result = { '__domain': domain_group + domain }
+            if len(groupby) - len(annotated_groupbys) >= 1:
+                result['__context'] = { 'group_by': groupby[len(annotated_groupbys):]}
             result.update(fromquery)
             for k,v in result.iteritems():
                 gb = groupby_dict.get(k)
@@ -2408,16 +2407,13 @@ class BaseModel(object):
             del result['id']
             return result
 
+        result = map(format_result, data)
+        
         for gb in groupby_fields:
             if gb in self._group_by_full:
-                print "DING"
-        result = map(format_result, data)
-
-        # TO DO!!!!!!!!!!!!
-        # if first_groupby in self._group_by_full:
-        #     result = self._read_group_fill_results(cr, uid, domain, first_groupby, groupby,
-        #                                            aggregated_fields, result, read_group_order=order,
-        #                                            context=context)
+                result = self._read_group_fill_results(cr, uid, domain, gb, groupby[len(annotated_groupbys):],
+                                                       aggregated_fields, result, read_group_order=order,
+                                                       context=context)
         return result
 
     def _inherits_join_add(self, current_model, parent_model_name, query):
