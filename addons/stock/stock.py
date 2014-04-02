@@ -2947,7 +2947,6 @@ class stock_warehouse(osv.osv):
             'product_selectable': True,
             'product_categ_selectable': True,
             'active': warehouse.delivery_steps != 'ship_only' and warehouse.reception_steps != 'one_step',
-            'procure_method': 'make_to_order',
             'sequence': 20,
         }
 
@@ -2991,6 +2990,8 @@ class stock_warehouse(osv.osv):
         wh_route_ids.append((4, crossdock_route_id))
         dummy, pull_rules_list = self._get_push_pull_rules(cr, uid, warehouse, warehouse.delivery_steps != 'ship_only' and warehouse.reception_steps != 'one_step', values, crossdock_route_id, context=context)
         for pull_rule in pull_rules_list:
+            # Fixed cross-dock is logically mto
+            pull_rule['procure_method'] = 'make_to_order'
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
 
         #create route selectable on the product to resupply the warehouse from another one
