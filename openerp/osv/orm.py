@@ -935,7 +935,7 @@ class BaseModel(object):
 
     def __export_xml_id(self):
         """ Return a valid xml_id for the record `self`. """
-        ir_model_data = self._scope.sudo()['ir.model.data']
+        ir_model_data = self.sudo()._scope['ir.model.data']
         data = ir_model_data.search([('model', '=', self._name), ('res_id', '=', self.id)])
         if data:
             if data.module:

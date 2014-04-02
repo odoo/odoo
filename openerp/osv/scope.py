@@ -95,10 +95,6 @@ class Scope(object):
         context = dict(context or {}, **kwargs)
         return Scope(cr, uid, context)
 
-    def sudo(self):
-        """ Return a scope based on `self`, with the superuser. """
-        return self(user=SUPERUSER_ID)
-
     def ref(self, xml_id):
         """ return the record corresponding to the given `xml_id` """
         module, name = xml_id.split('.')
@@ -107,7 +103,7 @@ class Scope(object):
     @property
     def user(self):
         """ return the current user (as an instance) """
-        return self.sudo()['res.users'].browse(self.uid)
+        return self(user=SUPERUSER_ID)['res.users'].browse(self.uid)
 
     @property
     def lang(self):
