@@ -387,21 +387,27 @@
             </t>
         </template>
 
+        <template id="vote">
+            <div t-attf-class="box oe_grey">
+                <a t-attf-class="fa fa-thumbs-up #{post.user_vote == 1 and 'text-success' or ''}" 
+                    t-attf-id="#{post.id}" t-attf-value="1"/>
+                <span id="vote_count" t-esc="post.vote_count"/>
+                <a t-attf-class="fa fa-thumbs-down #{post.user_vote == -1 and 'text-warning' or ''}" 
+                    t-attf-id="#{post.id}" t-attf-value="-1"/>
+                <div>
+                    votes
+                </div>
+            </div>
+        </template>
+
         <template id="post_description_full" name="Question Navigation">
             <t t-call="website_forum.header">
 
                 <div t-attf-class="question #{not question.active and 'alert alert-danger' or ''}">
                     <div class="text-center pull-left">
-                        <div t-attf-class="box oe_grey">
-                            <a t-attf-class="fa fa-thumbs-up #{question.user_vote == 1 and 'text-success' or ''}" 
-                                t-attf-id="#{question.id}" t-attf-value="1"/>
-                            <span id="vote_count" t-esc="question.vote_count"/>
-                            <a t-attf-class="fa fa-thumbs-down #{question.user_vote == -1 and 'text-warning' or ''}" 
-                                t-attf-id="#{question.id}" t-attf-value="-1"/>
-                            <div>
-                                votes
-                            </div>
-                        </div>
+                        <t t-call="website_forum.vote">
+                            <t t-set="post" t-value="question"/>
+                        </t>
                         <div class="text-muted">
                             <span t-esc="question.child_count"/>
                             <span t-if="question.child_count&gt;1">Answers</span>
@@ -470,16 +476,9 @@
                 <div t-foreach="question.child_ids" t-as="answer" class="mt16 mb32" id="answer">
                     <a t-attf-id="answer-#{str(answer.id)}"/>
                     <div class="text-center pull-left">
-                        <div t-attf-class="box oe_grey">
-                            <a t-attf-class="fa fa-thumbs-up #{answer.user_vote == 1 and 'text-success' or ''}" 
-                                t-attf-id="#{answer.id}" t-attf-value="1"/>
-                            <span id="vote_count" t-esc="answer.vote_count"/>
-                            <a t-attf-class="fa fa-thumbs-down #{answer.user_vote == -1 and 'text-warning' or ''}" 
-                                t-attf-id="#{answer.id}" t-attf-value="-1"/>
-                            <div>
-                                votes
-                            </div>
-                        </div>
+                        <t t-call="website_forum.vote">
+                            <t t-set="post" t-value="answer"/>
+                        </t>
                         <div class="text-muted">
                             <a t-attf-id="#{answer.id}" t-if="answer.correct" class="fa fa-2x fa-check oe_answer_true"/>
                             <a t-attf-id="#{answer.id}" t-if="not answer.correct" class="fa fa-2x fa-check oe_answer_false"/>
