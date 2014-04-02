@@ -422,10 +422,10 @@
                                             comment
                                         </a>
                                     </li>
-                                    <li t-if="question.state != 'close' and user.id == question.user_id.id and user.karma&gt;=100">
+                                    <li t-if="question.state != 'close' and (user.id == question.user_id.id or user.karma&gt;=100)">
                                         <a class="text-muted fa fa-times" t-attf-href="/forum/#{ slug(forum) }/close/question/#{ question.id }">close</a>
                                     </li>
-                                    <li t-if="question.state == 'close' and uid">
+                                    <li t-if="question.state == 'close' and user.karma&gt;=500">
                                         <a class="text-muted fa fa-undo" t-attf-href="/forum/#{ slug(forum) }/reopen/question/#{ question.id }">reopen</a>
                                     </li>
                                     <li t-if="user.id == question.user_id.id or user.karma&gt;=300">
