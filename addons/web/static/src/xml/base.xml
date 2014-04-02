@@ -1373,7 +1373,8 @@
         <span t-if="widget.string and !widget.is_stat_button"><t t-esc="widget.string"/></span>
         <div t-if="widget.string and widget.is_stat_button"><t t-esc="widget.string"/></div>
     </button>
-</t><t t-name="WidgetButton.tooltip" t-extend="WidgetLabel.tooltip">
+</t>
+<t t-name="WidgetButton.tooltip" t-extend="WidgetLabel.tooltip">
     <t t-jquery="div.oe_tooltip_string" t-operation="replace">
         <div class="oe_tooltip_string" t-if="debug || widget.string">
             <t t-if="debug">
