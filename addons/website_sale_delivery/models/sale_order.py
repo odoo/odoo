@@ -74,7 +74,7 @@ class SaleOrder(orm.Model):
                 if force_carrier_id:
                     carrier_ids.insert(0, force_carrier_id)
                 for delivery_id in carrier_ids:
-                    grid_id = carrier_obj.grid_get(cr, uid, [delivery_id], order.partner_shipping_id.id)
+                    grid_id = carrier_obj.grid_get(cr, SUPERUSER_ID, [delivery_id], order.partner_shipping_id.id)
                     if grid_id:
                         carrier_id = delivery_id
                         break
@@ -91,7 +91,7 @@ class SaleOrder(orm.Model):
         # This can surely be done in a more efficient way, but at the moment, it mimics the way it's
         # done in delivery_set method of sale.py, from delivery module
         for delivery_id in list(delivery_ids):
-            grid_id = carrier_obj.grid_get(cr, uid, [delivery_id], order.partner_shipping_id.id)
+            grid_id = carrier_obj.grid_get(cr, SUPERUSER_ID, [delivery_id], order.partner_shipping_id.id)
             if not grid_id:
                 delivery_ids.remove(delivery_id)
         return delivery_ids
