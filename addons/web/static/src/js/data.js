@@ -27,6 +27,7 @@ instance.web.Query = instance.web.Class.extend({
         this._fields = fields;
         this._filter = [];
         this._context = {};
+        this._lazy = true;
         this._limit = false;
         this._offset = 0;
         this._order_by = [];
@@ -36,6 +37,7 @@ instance.web.Query = instance.web.Class.extend({
         var q = new instance.web.Query(this._model, this._fields);
         q._context = this._context;
         q._filter = this._filter;
+        q._lazy = this._lazy;
         q._limit = this._limit;
         q._offset = this._offset;
         q._order_by = this._order_by;
@@ -51,6 +53,7 @@ instance.web.Query = instance.web.Class.extend({
                 q._context = new instance.web.CompoundContext(
                         q._context, to_set.context);
                 break;
+            case 'lazy':
             case 'limit':
             case 'offset':
             case 'order_by':
@@ -140,6 +143,7 @@ instance.web.Query = instance.web.Class.extend({
             domain: this._model.domain(this._filter),
             context: ctx,
             offset: this._offset,
+            lazy: this._lazy,
             limit: this._limit,
             orderby: instance.web.serialize_sort(this._order_by) || false
         }).then(function (results) {
@@ -148,8 +152,9 @@ instance.web.Query = instance.web.Class.extend({
                 result.__context = result.__context || {};
                 result.__context.group_by = result.__context.group_by || [];
                 _.defaults(result.__context, ctx);
+                var grouping_fields = self._lazy ? [grouping[0]] : grouping;
                 return new instance.web.QueryGroup(
-                    self._model.name, grouping[0], result);
+                    self._model.name, grouping_fields, result);
             });
         });
     },
@@ -174,6 +179,18 @@ instance.web.Query = instance.web.Class.extend({
     filter: function (domain) {
         if (!domain) { return this; }
         return this.clone({filter: domain});
+    },
+    /**
+     * Creates a new query with the provided parameter lazy replacing the current
+     * query's own.
+     *
+     * @param {Boolean} lazy indicates if the read_group should return only the 
+     * first level of groupby records, or should return the records grouped by
+     * all levels at once (so, it makes only 1 db request).
+     * @returns {openerp.web.Query}
+     */
+    lazy: function (lazy) {
+        return this.clone({lazy: lazy});
     },
     /**
      * Creates a new query with the provided limit replacing the current
@@ -213,7 +230,7 @@ instance.web.Query = instance.web.Class.extend({
 });
 
 instance.web.QueryGroup = instance.web.Class.extend({
-    init: function (model, grouping_field, read_group_group) {
+    init: function (model, grouping_fields, read_group_group) {
         // In cases where group_by_no_leaf and no group_by, the result of
         // read_group has aggregate fields but no __context or __domain.
         // Create default (empty) values for those so that things don't break
@@ -221,29 +238,40 @@ instance.web.QueryGroup = instance.web.Class.extend({
             {__context: {group_by: []}, __domain: []},
             read_group_group);
 
-        var raw_field = grouping_field && grouping_field.split(':')[0];
+        var raw_fields = _.map(grouping_fields, function (field) {
+            return field && field.split(':')[0];
+        });
+
+
         var aggregates = {};
         _(fixed_group).each(function (value, key) {
             if (key.indexOf('__') === 0
-                    || key === raw_field
-                    || key === raw_field + '_count') {
+                    || _.contains(raw_fields, key)
+                    || (key === raw_fields[0] + '_count')) {
                 return;
             }
             aggregates[key] = value || 0;
         });
 
+
         this.model = new instance.web.Model(
             model, fixed_group.__context, fixed_group.__domain);
 
-        var group_size = fixed_group[raw_field + '_count'] || fixed_group.__count || 0;
+        var group_size = fixed_group[raw_fields[0] + '_count'] || fixed_group.__count || 0;
         var leaf_group = fixed_group.__context.group_by.length === 0;
 
+        var value = (grouping_fields.length === 1) 
+                ? fixed_group[raw_fields[0]]
+                : _.map(raw_fields, function (field) { return fixed_group[field]; });
+        var grouped_on = (grouping_fields.length === 1) 
+                ? grouping_fields[0] 
+                : grouping_fields;
         this.attributes = {
             folded: !!(fixed_group.__fold),
-            grouped_on: grouping_field,
+            grouped_on: grouped_on,
             // if terminal group (or no group) and group_by_no_leaf => use group.__count
             length: group_size,
-            value: fixed_group[raw_field],
+            value: value,
             // A group is open-able if it's not a leaf in group_by_no_leaf mode
             has_children: !(leaf_group && fixed_group.__context['group_by_no_leaf']),
 
