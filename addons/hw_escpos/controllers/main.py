@@ -288,6 +288,7 @@ class EscposDriver(Thread):
                     +' '+ str(receipt['date']['hour']).zfill(2)
                     +':'+ str(receipt['date']['minute']).zfill(2) )
 
+
 driver = EscposDriver()
 
 driver.push_task('printstatus')

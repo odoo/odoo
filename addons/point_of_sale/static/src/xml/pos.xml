@@ -400,7 +400,7 @@
             <t t-set='taxincluded' t-value='Math.abs(receipt.subtotal - receipt.total_with_tax) &lt;= 0.000001' />
             <t t-if='!taxincluded'>
                 <line><right>--------</right></line>
-                <line><left>Subtotal</left><right> <value>receipt.subtotal</value></right></line>
+                <line><left>Subtotal</left><right> <value><t t-esc="receipt.subtotal" /></value></right></line>
                 <t t-foreach='receipt.tax_details' t-as='tax'>
                     <line>
                         <left><t t-esc='tax.name' /></left>
@@ -411,7 +411,7 @@
 
             <!-- Total -->
 
-            <line><right>-------</right></line>
+            <line><right>--------</right></line>
             <line size='double-height'>
                 <left><pre>        TOTAL</pre></left>
                 <right><value><t t-esc='receipt.total_with_tax' /></value></right>
