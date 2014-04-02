@@ -169,13 +169,15 @@ def get_module_icon(module):
         return ('/' + module + '/') + '/'.join(iconpath)
     return '/base/'  + '/'.join(iconpath)
 
-def load_information_from_description_file(module):
+def load_information_from_description_file(module, mod_path=None):
     """
     :param module: The name of the module (sale, purchase, ...)
+    :param mod_path: Physical path of module, if not providedThe name of the module (sale, purchase, ...)
     """
 
-    terp_file = get_module_resource(module, '__openerp__.py')
-    mod_path = get_module_path(module)
+    if not mod_path:
+        mod_path = get_module_path(module)
+    terp_file = opj(mod_path, '__openerp__.py')
     if terp_file:
         info = {}
         if os.path.isfile(terp_file):
@@ -356,30 +358,6 @@ class TestStream(object):
 
 current_test = None
 
-def run_unit_tests(module_name, dbname):
-    """
-    :returns: ``True`` if all of ``module_name``'s tests succeeded, ``False``
-              if any of them failed.
-    :rtype: bool
-    """
-    global current_test
-    current_test = module_name
-    mods = get_test_modules(module_name)
-    r = True
-    for m in mods:
-        tests = unwrap_suite(unittest2.TestLoader().loadTestsFromModule(m))
-        suite = unittest2.TestSuite(itertools.ifilter(runs_at_install, tests))
-        _logger.info('running %s tests.', m.__name__)
-
-        result = unittest2.TextTestRunner(verbosity=2, stream=TestStream(m.__name__)).run(suite)
-
-        if not result.wasSuccessful():
-            r = False
-            _logger.error("Module %s: %d failures, %d errors",
-                          module_name, len(result.failures), len(result.errors))
-    current_test = None
-    return r
-
 def runs_at(test, hook, default):
     # by default, tests do not run post install
     test_runs = getattr(test, hook, default)
@@ -395,6 +373,30 @@ def runs_at(test, hook, default):
 
 runs_at_install = functools.partial(runs_at, hook='at_install', default=True)
 runs_post_install = functools.partial(runs_at, hook='post_install', default=False)
+
+def run_unit_tests(module_name, dbname, position=runs_at_install):
+    """
+    :returns: ``True`` if all of ``module_name``'s tests succeeded, ``False``
+              if any of them failed.
+    :rtype: bool
+    """
+    global current_test
+    current_test = module_name
+    mods = get_test_modules(module_name)
+    r = True
+    for m in mods:
+        tests = unwrap_suite(unittest2.TestLoader().loadTestsFromModule(m))
+        suite = unittest2.TestSuite(itertools.ifilter(position, tests))
+        _logger.info('running %s tests.', m.__name__)
+
+        result = unittest2.TextTestRunner(verbosity=2, stream=TestStream(m.__name__)).run(suite)
+
+        if not result.wasSuccessful():
+            r = False
+            _logger.error("Module %s: %d failures, %d errors",
+                          module_name, len(result.failures), len(result.errors))
+    current_test = None
+    return r
 
 def unwrap_suite(test):
     """

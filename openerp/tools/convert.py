@@ -857,12 +857,12 @@ form: module.record_id""" % (xml_id,)
     def _tag_template(self, cr, el, data_node=None):
         # This helper transforms a <template> element into a <record> and forwards it
         tpl_id = el.get('id', el.get('t-name', '')).encode('ascii')
-        module = self.module
-        if '.' in tpl_id:
-            module, tpl_id = tpl_id.split('.', 1)
+        full_tpl_id = tpl_id
+        if '.' not in full_tpl_id:
+            full_tpl_id = '%s.%s' % (self.module, tpl_id)
         # set the full template name for qweb <module>.<id>
         if not (el.get('inherit_id') or el.get('inherit_option_id')):
-            el.set('t-name', '%s.%s' % (module, tpl_id))
+            el.set('t-name', full_tpl_id)
             el.tag = 't'
         else:
             el.tag = 'data'
@@ -952,8 +952,9 @@ form: module.record_id""" % (xml_id,)
             'url': self._tag_url
         }
 
-def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, report=None):
-    pathname = os.path.join(module, filename)
+def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, report=None, pathname=None):
+    if pathname is None:
+        pathname = os.path.join(module, filename)
     fp = misc.file_open(pathname)
     ext = os.path.splitext(filename)[1].lower()
     try:

@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010, 2014 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,10 +20,38 @@
 #
 ##############################################################################
 
-__all__ = ['synchronized']
+__all__ = ['synchronized', 'lazy_property']
 
 from functools import wraps
 from inspect import getsourcefile
+
+
+class lazy_property(object):
+    """ Decorator for a lazy property of an object, i.e., an object attribute
+        that is determined by the result of a method call evaluated once. To
+        reevaluate the property, simply delete the attribute on the object, and
+        get it again.
+    """
+    def __init__(self, fget):
+        self.fget = fget
+        self.name = fget.__name__
+
+    def __get__(self, obj, cls):
+        if obj is None:
+            return self
+        value = self.fget(obj)
+        setattr(obj, self.name, value)
+        return value
+
+    @staticmethod
+    def reset_all(obj):
+        """ Reset all lazy properties on the instance `obj`. """
+        cls = type(obj)
+        obj_dict = obj.__dict__
+        for name in obj_dict.keys():
+            if isinstance(getattr(cls, name, None), lazy_property):
+                obj_dict.pop(name)
+
 
 def synchronized(lock_attr='_lock'):
     def decorator(func):
