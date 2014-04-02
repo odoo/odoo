@@ -5154,25 +5154,26 @@ class BaseModel(object):
     # Record traversal and update
     #
 
-    def map(self, field_name):
-        """ Return the union of `rec[field_name]` for all `rec` in `self`.
+    def _map_field(self, field_seq):
+        """ Return the union of `rec[f1]...[fn]` for all `rec` in `self`, where
+            `field_seq` is the dotted concatenation of `f1`, ..., `fn`.
 
-            :param field_name: a dot-separated sequence of field names
+            :param field_seq: a dot-separated sequence of field names
         """
         recs, env = self, self._env
-        for name in field_name.split('.'):
-            vals = [rec[name] for rec in recs]
+        for name in field_seq.split('.'):
             field = recs._fields[name]
+            vals = filter(None, [rec[name] for rec in recs])
             if field.relational:
                 recs = reduce(operator.or_, vals, field.null(env))
             else:
-                recs = set(filter(None, vals))
+                recs = set(vals)
         return recs
 
-    def _map_cache(self, field_name):
-        """ Same as `~.map`, but use cached values only. """
+    def _map_cache(self, field_seq):
+        """ Same as `~._map_field`, but use cached values only. """
         recs, env = self, self._env
-        for name in field_name.split('.'):
+        for name in field_seq.split('.'):
             field = recs._fields[name]
             vals = filter(None, [rec._cache.get(field) for rec in recs])
             if field.relational:
@@ -5496,7 +5497,7 @@ class BaseModel(object):
 
             # compute function fields on secondary records (one2many, many2many)
             for field_seq in (tocheck or ()):
-                record.map(field_seq)
+                record._map_field(field_seq)
 
             # map fields to the corresponding set of subfields to consider
             subfields = defaultdict(set)
