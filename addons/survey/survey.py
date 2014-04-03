@@ -155,17 +155,14 @@ class survey_survey(osv.Model):
         else:
             filtered_input_ids,filter_display_data = [],[]
         if finished:
-            final_ids = self.get_finished_survey_input_ids(cr, uid, filtered_input_ids, context=context)
-            return final_ids
+            user_input = self.pool.get('survey.user_input')
+            if not filtered_input_ids:
+                current_filters = user_input.search(cr, uid, [], context=context)
+                user_input_objs = user_input.browse(cr, uid, current_filters, context=context)
+            else:
+                user_input_objs = user_input.browse(cr, uid, filtered_input_ids, context=context)
+            return [input.id for input in user_input_objs if input.state == 'done']
         return filtered_input_ids
-
-    def get_finished_survey_input_ids(self, cr, uid, current_filters, context):
-        user_input,filtered_list = self.pool.get('survey.user_input'),[]
-        if not current_filters:
-            current_filters = user_input.search(cr, uid, [], context=context)
-        user_input_objs = user_input.browse(cr, uid, current_filters, context=context)
-        filtered_list = [input.id for input in user_input_objs if input.state == 'done']
-        return filtered_list
 
     def get_filter_display_data(self, cr, uid, filters, context):
         '''Returns data to display current filters

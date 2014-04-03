@@ -317,14 +317,14 @@ class WebsiteSurvey(http.Controller):
     def get_filter_data(self, post):
         """Returns data used for filtering the result"""
         filters = []
-        #if user add some random data in query URI
-        try:
-            for ids in post:
+        for ids in post:
+            #if user add some random data in query URI
+            try:
                 row_id, answer_id = ids.split(',')
                 filters.append({'row_id': int(row_id), 'answer_id': int(answer_id)})
-        except:
-            #if user add some random data in query URI
-            return []
+            except:
+                #if user add some random data in query URI
+                return filters
         return filters
 
     def page_range(self, total_record, limit):
