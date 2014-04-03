@@ -22,6 +22,7 @@
 from openerp.osv import osv
 from openerp.tools import config
 from openerp.tools.translate import _
+from openerp.addons.web.http import request
 
 import os
 import time
@@ -121,18 +122,28 @@ class Report(osv.Model):
             if ctx.get('translatable') is True:
                 qcontext['o'] = doc
             else:
-                ctx['lang'] = doc.partner_id.lang
-                qcontext['o'] = self.pool[model].browse(cr, uid, doc_id, context=ctx)
+                # Guessing the lang we want to translate the doc into
+                newlang = None
+                if hasattr(doc, 'partner_id'):
+                    newlang = doc.partner_id.lang
+                elif hasattr(doc, 'lang'):
+                    newlang = doc.lang
+                if newlang:
+                    ctx['lang'] = newlang
+                    qcontext['o'] = self.pool[model].browse(cr, uid, doc_id, context=ctx)
             return view_obj.render(cr, uid, template, qcontext, context=ctx)
 
         user = self.pool['res.users'].browse(cr, uid, uid)
+        website = None
+        if request and hasattr(request, 'website'):
+            website = request.website
         values.update({
             'time': time,
             'render_doc': render_doc,
             'editable': True,  # Will active inherit_branding
             'user': user,
             'res_company': user.company_id,
-            'website': False,  # Will be overidden by ir.ui.view if the request has website enabled
+            'website': website,
         })
         return view_obj.render(cr, uid, template, values, context=context)
 
@@ -325,7 +336,6 @@ class Report(osv.Model):
 
         # Passing the cookie to wkhtmltopdf in order to resolve URL.
         try:
-            from openerp.addons.web.http import request
             if request:
                 command_args.extend(['--cookie', 'session_id', request.session.sid])
         except AttributeError:
