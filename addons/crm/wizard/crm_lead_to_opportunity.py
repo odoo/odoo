@@ -42,7 +42,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
     def onchange_action(self, cr, uid, ids, action, context=None):
         return {'value': {'partner_id': False if action != 'exist' else self._find_matching_partner(cr, uid, context=context)}}
 
-    def _get_duplicated_leads(self, cr, uid, partner_id, email, context=None):
+    def _get_duplicated_leads(self, cr, uid, partner_id, email, include_lost=False, context=None):
         """
         Search for opportunities that have the same partner and that arent done or cancelled
         """
@@ -56,8 +56,11 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             partner_match_domain.append(('partner_id', '=', partner_id))
         partner_match_domain = ['|'] * (len(partner_match_domain) - 1) + partner_match_domain
         if not partner_match_domain:
-            return []        
-        return lead_obj.search(cr, uid, partner_match_domain + final_stage_domain)
+            return []
+        domain = partner_match_domain
+        if not include_lost:
+            domain += final_stage_domain
+        return lead_obj.search(cr, uid, domain)
 
     def default_get(self, cr, uid, fields, context=None):
         """
@@ -75,7 +78,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             lead = lead_obj.browse(cr, uid, int(context['active_id']), context=context)
             email = lead.partner_id and lead.partner_id.email or lead.email_from
 
-            tomerge.extend(self._get_duplicated_leads(cr, uid, partner_id, email))
+            tomerge.extend(self._get_duplicated_leads(cr, uid, partner_id, email, include_lost=True, context=context))
             tomerge = list(set(tomerge))
 
             if 'action' in fields:

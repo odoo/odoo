@@ -41,13 +41,13 @@ class website_event(http.Controller):
         return request.website.render("website_event_track.track_view", values)
 
     # TODO: not implemented
-    @http.route(['/event/<model("event.event"):event>/agenda/'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/event/<model("event.event"):event>/agenda'], type='http', auth="public", website=True, multilang=True)
     def event_agenda(self, event, tag=None, **post):
         values =  request.registry.get('event.track').get_sorted_tracks(request.cr, openerp.SUPERUSER_ID, event, context=request.context)
         return request.website.render("website_event_track.agenda", values)
 
     @http.route([
-        '/event/<model("event.event"):event>/track/',
+        '/event/<model("event.event"):event>/track',
         '/event/<model("event.event"):event>/track/tag/<model("event.track.tag"):tag>'
         ], type='http', auth="public", website=True, multilang=True)
     def event_tracks(self, event, tag=None, **post):
@@ -73,7 +73,7 @@ class website_event(http.Controller):
         }
         return request.website.render("website_event_track.tracks", values)
 
-    @http.route(['/event/<model("event.event"):event>/track_proposal/'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/event/<model("event.event"):event>/track_proposal'], type='http', auth="public", website=True, multilang=True)
     def event_track_proposal(self, event, **post):
         values = { 'event': event }
         return request.website.render("website_event_track.event_track_proposal", values)

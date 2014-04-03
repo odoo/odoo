@@ -50,7 +50,7 @@
                         <li t-foreach="event_ids" t-as="event" class="media">
                             <div itemscope="itemscope" itemtype="http://schema.org/Event" class="media-body">
                                 <h4 class="media-heading">
-                                    <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register/' or ''}"><span itemprop="name" t-field="event.name"> </span></a>
+                                    <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register' or ''}"><span itemprop="name" t-field="event.name"> </span></a>
                                     <small t-if="not event.website_published" class="label label-danger">not published</small>
                                 </h4>
                                 <div>
@@ -117,6 +117,23 @@
     </xpath>
 </template>
 
+<template id="event_right_country_event" inherit_option_id="website_event.index" name="Country Events">
+    <xpath expr="//div[@id='right_column']" position="inside">
+        <div class="row">
+            <div class="col-md-12 mb16 mt16 country_events">
+                <div class="country_events_list">
+                    <div class="text-muted text-center">
+                        <h1>
+                            <i class="fa fa-flag fa-5x"></i>
+                        </h1>
+                        <h1>Events from Your Country</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </xpath>
+</template>
+
 <template id="event_left_column" inherit_option_id="website_event.index" inherit_id="website_event.index" name="Filters">
     <xpath expr="//div[@id='middle_column']" position="attributes">
         <attribute name="class">col-md-6</attribute>
@@ -126,7 +143,7 @@
             <ul class="nav nav-pills nav-stacked">
                 <t t-foreach="dates" t-as="date">
                     <li t-att-class="searches.get('date') == date[0] and 'active' or ''" t-if="date[3] or (date[0] in ('old','all'))">
-                        <a t-attf-href="/event/?{{ keep_query('country', 'type', date=date[0]) }}"><t t-esc="date[1]"/>
+                        <a t-attf-href="/event?{{ keep_query('country', 'type', date=date[0]) }}"><t t-esc="date[1]"/>
                             <span t-if="date[3]" class="badge pull-right"><t t-esc="date[3]"/></span>
                         </a>
                     </li>
@@ -141,7 +158,7 @@
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="types">
                 <li t-if="type" t-att-class="searches.get('type') == str(type and type[0]) and 'active' or ''">
-                    <a t-attf-href="/event/?{{ keep_query('country', 'date', type=type[0]) }}"><t t-esc="type[1]"/>
+                    <a t-attf-href="/event?{{ keep_query('country', 'date', type=type[0]) }}"><t t-esc="type[1]"/>
                         <span class="badge pull-right"><t t-esc="type_count"/></span>
                     </a>
                 </li>
@@ -155,7 +172,7 @@
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="countries">
                 <li t-if="country_id" t-att-class="searches.get('country') == str(country_id and country_id[0]) and 'active' or ''">
-                    <a t-attf-href="/event/?{{ keep_query('type', 'data', country=country_id[0]) }}"><t t-esc="country_id[1]"/>
+                    <a t-attf-href="/event?{{ keep_query('type', 'data', country=country_id[0]) }}"><t t-esc="country_id[1]"/>
                         <span class="badge pull-right"><t t-esc="country_id_count"/></span>
                     </a>
                 </li>
@@ -248,7 +265,7 @@
                 <div class="container">
                     <h1 class="mt32">Event not found!</h1>
                     <p>Sorry, the requested event is not available anymore.</p>
-                    <p><a t-attf-href="/event/">Return to the event list.</a></p>
+                    <p><a t-attf-href="/event">Return to the event list.</a></p>
                 </div>
             </div>
         </div>
@@ -333,6 +350,82 @@
                 </div>
             </div>
         </div>
+    </t>
+</template>
+
+<template id="event_script" name="Country Events Snippet Script" inherit_id="website.layout">
+    <xpath expr="//head" position="inside">
+        <script type="text/javascript" src="/website_event/static/src/js/website_geolocation.js"></script>
+    </xpath>
+</template>
+
+<template id="country_events" name="Country Events" inherit_id="website.snippets">
+    <xpath expr="//div[@id='snippet_content']" position="inside">
+        <div>
+            <div class="oe_snippet_thumbnail">
+                <div style="background: white;box-shadow:none;-webkit-box-shadow:none;" class="oe_snippet_thumbnail_img" >
+                    <i class="fa fa-flag fa-5x text-muted"></i>
+                </div>
+                <span class="oe_snippet_thumbnail_title">Local Events</span>
+            </div>
+            <div class="oe_snippet_body oe_country_events mb16 mt16">
+                <div class="country_events_list">
+                    <div class="text-muted text-left">
+                        <div>
+                            <img style="max-height:10em;" class="img-rounded img-responsive" src="/website_event/static/src/img/world_map.jpg"></img>
+                        </div>
+                        <div>Events in visitor's country</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </xpath>
+    <xpath expr="//div[@id='snippet_options']" position="inside">
+        <div data-snippet-option-id='content'
+            data-selector=".oe_country_events"
+            data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
+            data-selector-children=".content"
+           >
+        </div>
+    </xpath>
+</template>
+
+<template id="country_events_list" name="Country">
+    <t t-ignore="true">
+        <t t-if="events">
+            <div class="country_events_list">
+                <div>
+                    <t t-if="country">
+                        <img style="max-height:10em;" class="img-rounded img-responsive" t-att-src="'/website/image?model=res.country&amp;field=image&amp;id='+str(country.id)"></img>
+                        <h4><b>Events in <span t-esc="country.name"></span></b></h4>
+                    </t>
+                    <t t-if="not country">
+                        <img style="max-height:10em;" class="img-rounded img-responsive" src="/website_event/static/src/img/world_map.jpg"></img>
+                        <h4><b>Upcoming Events</b></h4>
+                    </t>
+                    <div t-foreach="events[:5]" t-as="event_dict" class="oe_website_overflow_ellipsis mb8">
+                        <t t-if="not event_dict['event'].website_published">
+                            <span class="label label-danger"><i class="fa fa-ban"></i></span>
+                        </t>
+                        <t t-if="event_dict['event'].address_id">
+                            <i class="fa fa-map-marker"></i>
+                        </t>
+                        <t t-if="not event_dict['event'].address_id">
+                            <i class="fa fa-cloud"></i>
+                        </t>
+                        <b><span t-esc="event_dict['date']"/>: <span><a t-att-href="event_dict['url']"><t t-esc="event_dict['event'].name"/></a></span></b>
+                    </div>
+                    <t t-if="len(events) > 5">
+                        <div t-if="country">
+                            <b><a t-att-href="'/event?country='+str(country.id)">See all events from <span t-esc="country.name"></span></a></b>
+                        </div>
+                        <div t-if="not country">
+                            <b><a href="/event"> See all upcoming events </a></b>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
     </t>
 </template>
 </data>
