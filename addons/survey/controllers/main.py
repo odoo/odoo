@@ -22,9 +22,7 @@
 import json
 import logging
 import werkzeug
-from collections import Counter
 from datetime import datetime
-from itertools import product
 from math import ceil
 
 from openerp import SUPERUSER_ID
@@ -305,16 +303,19 @@ class WebsiteSurvey(http.Controller):
                                        })
 
     def prepare_result_dict(self,survey, current_filters=[]):
+        """Returns dictionary having values for rendering template"""
+        survey_obj = request.registry['survey.survey']
         result = {'survey':survey, 'page_ids': []}
         for page in survey.page_ids:
             page_dict = {'page': page, 'question_ids': []}
             for question in page.question_ids:
-                question_dict = { 'question':question, 'input_summary':self.get_input_summary(question, current_filters),'prepare_result':self.prepare_result(question, current_filters)}
+                question_dict = { 'question':question, 'input_summary':survey_obj.get_input_summary(request.cr, request.uid, question, current_filters, context=request.context),'prepare_result':survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)}
                 page_dict['question_ids'].append(question_dict)
             result['page_ids'].append(page_dict)
         return result
 
     def get_filter_data(self, post):
+        """Returns data used for filtering the result"""
         filters = []
         #if user add some random data in query URI
         try:
@@ -331,66 +332,21 @@ class WebsiteSurvey(http.Controller):
         total = ceil(total_record / float(limit))
         return range(1, int(total + 1))
 
-    def prepare_result(self, question, current_filters=[]):
-        '''Prepare statistical data for questions by counting number of vote per choice on basis of filter'''
-
-        #Calculate and return statistics for choice
-        if question.type in ['simple_choice', 'multiple_choice']:
-            result_summary = {}
-            [result_summary.update({label.id: {'text': label.value, 'count': 0, 'answer_id': label.id}}) for label in question.labels_ids]
-            for input_line in question.user_input_line_ids:
-                if result_summary.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
-                    result_summary[input_line.value_suggested.id]['count'] += 1
-            result_summary = result_summary.values()
-
-        #Calculate and return statistics for matrix
-        if question.type == 'matrix':
-            rows, answers, res = {}, {}, {}
-            [rows.update({label.id: label.value}) for label in question.labels_ids_2]
-            [answers.update({label.id: label.value}) for label in question.labels_ids]
-            for cell in product(rows.keys(), answers.keys()):
-                res[cell] = 0
-            for input_line in question.user_input_line_ids:
-                if not(current_filters) or input_line.user_input_id.id in current_filters:
-                    res[(input_line.value_suggested_row.id, input_line.value_suggested.id)] += 1
-            result_summary = {'answers': answers, 'rows': rows, 'result': res}
-
-        #Calculate and return statistics for free_text, textbox, datetime
-        if question.type in ['free_text', 'textbox', 'datetime']:
-            result_summary = []
-            for input_line in question.user_input_line_ids:
-                if not(current_filters) or input_line.user_input_id.id in current_filters:
-                    result_summary.append(input_line)
-
-        #Calculate and return statistics for numerical_box
-        if question.type == 'numerical_box':
-            result_summary = {'input_lines': []}
-            all_inputs = []
-            for input_line in question.user_input_line_ids:
-                if not(current_filters) or input_line.user_input_id.id in current_filters:
-                    all_inputs.append(input_line.value_number)
-                    result_summary['input_lines'].append(input_line)
-            result_summary.update({'average': round(sum(all_inputs) / len(all_inputs), 2),
-                                   'max': round(max(all_inputs), 2),
-                                   'min': round(min(all_inputs), 2),
-                                   'most_comman': Counter(all_inputs).most_common(5)})
-
-        return result_summary
-
     @http.route(['/survey/results/graph/<int:question>'],
                 type='http', auth='user', multilang=True, website=True)
     def get_graph_data(self, question, **post):
         '''Returns appropriate formated data required by graph library on basis of filter'''
         question = request.registry['survey.question'].browse(request.cr, request.uid, question)
+        survey_obj = request.registry['survey.survey']
         current_filters = safe_eval(post.get('current_filters', '[]'))
         result = []
         if question.type == 'multiple_choice':
             result.append({'key': str(question.question),
-                           'values': self.prepare_result(question, current_filters)})
+                           'values': survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)})
         if question.type == 'simple_choice':
-            result = self.prepare_result(question, current_filters)
+            result = survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)
         if question.type == 'matrix':
-            data = self.prepare_result(question, current_filters)
+            data = survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)
             for answer in data['answers']:
                 values = []
                 for res in data['result']:
@@ -398,21 +354,6 @@ class WebsiteSurvey(http.Controller):
                         values.append({'text': data['rows'][res[0]], 'count': data['result'][res]})
                 result.append({'key': data['answers'].get(answer), 'values': values})
         return json.dumps(result)
-
-    def get_input_summary(self, question, current_filters=[]):
-        '''Returns overall summary of question e.g. answered, skipped, total_inputs on basis of filter'''
-        result = {}
-        if question.survey_id.user_input_ids:
-            total_input_ids = current_filters or [input_id.id for input_id in question.survey_id.user_input_ids if input_id.state != 'new']
-            result['total_inputs'] = len(total_input_ids)
-            question_input_ids = []
-            for user_input in question.user_input_line_ids:
-                if not user_input.skipped:
-                    question_input_ids.append(user_input.user_input_id.id)
-            result['answered'] = len(set(question_input_ids) & set(total_input_ids))
-            result['skipped'] = result['total_inputs'] - result['answered']
-        return result
-
 
 def dict_soft_update(dictionary, key, value):
     ''' Insert the pair <key>: <value> into the <dictionary>. If <key> is

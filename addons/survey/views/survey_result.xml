@@ -29,12 +29,12 @@
                                 </span>
                             </t>
                             <t t-if="filter_finish == False">
-	                            <span class="label label-primary only_left_radius filter-all">
-	                                All surveys
-	                            </span>
-	                            <span class="label label-default only_right_radius filter-finished">
-	                                Finished surveys
-	                            </span>
+                                <span class="label label-primary only_left_radius filter-all">
+                                    All surveys
+                                </span>
+                                <span class="label label-default only_right_radius filter-finished">
+                                    Finished surveys
+                                </span>
                             </t>
                         </small>
                         <small t-if="filter_display_data" class="pull-right clear_survey_filter"> <i class="fa fa-times"></i> Clear All Filters</small></h3>
@@ -62,20 +62,25 @@
                                 <span class="label label-danger"><span t-esc="input_summary['skipped']"></span> Skipped</span>
                             </span>
                         </h4>
-                        <t t-if="question.description">
-                            <h5><span class="text-muted" t-field="question.description"></span></h5>
+                        <t t-if="input_summary['answered'] != 0">
+                            <t t-if="question.description">
+                                <h5><span class="text-muted" t-field="question.description"></span></h5>
+                            </t>
+                            <t t-if="question.type in ['textbox', 'free_text', 'datetime']">
+                                <t t-call="survey.result_text"></t>
+                            </t>
+                            <t t-if="question.type in ['simple_choice', 'multiple_choice']">
+                                <t t-call="survey.result_choice"></t>
+                            </t>
+                            <t t-if="question.type == 'matrix'">
+                                <t t-call="survey.result_matrix"></t>
+                            </t>
+                            <t t-if="question.type == 'numerical_box'">
+                                <t t-call="survey.result_number"></t>
+                            </t>
                         </t>
-                        <t t-if="question.type in ['textbox', 'free_text', 'datetime']">
-                            <t t-call="survey.result_text"></t>
-                        </t>
-                        <t t-if="question.type in ['simple_choice', 'multiple_choice']">
-                            <t t-call="survey.result_choice"></t>
-                        </t>
-                        <t t-if="question.type == 'matrix'">
-                            <t t-call="survey.result_matrix"></t>
-                        </t>
-                        <t t-if="question.type == 'numerical_box'">
-                            <t t-call="survey.result_number"></t>
+                        <t t-if="input_summary['answered'] == 0">
+                            <h2 style="padding-top:30px;padding-bottom:30px;text-align:center;" class="text-muted">Sorry, No one answered this question.</h2>
                         </t>
                     </div>
                 </div>
@@ -86,41 +91,36 @@
 
     <!-- Result for free_text,textbox and datetime -->
     <template id="result_text" name="Text Result">
-        <t t-if="input_summary['answered'] != 0">
-            <table class="table table-hover table-condensed" t-att-id="'table_question_%d' % question.id">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>User Responses</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <t t-set="text_result" t-value="prepare_result"/>
-                    <tr class="hidden" t-foreach="text_result" t-as="user_input">
-                        <td><a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index+1"></t></a></td>
-                        <t t-if="question.type == 'free_text'">
-                            <td>
-                                <span t-field="user_input.value_free_text"></span><br/>
-                            </td>
-                        </t>
-                        <t t-if="question.type == 'textbox'">
-                            <td>
-                                <span t-field="user_input.value_text"></span><br/>
-                            </td>
-                        </t>
-                        <t t-if="question.type == 'datetime'">
-                            <td>
-                                <span  class="oe_date" t-field="user_input.value_date"></span><br/>
-                            </td>
-                        </t>
-                    </tr>
-                </tbody>
-            </table>
-            <t t-call="survey.pagination" />
-        </t>
-        <t t-if="input_summary['answered'] == 0">
-            <h2 style="padding-top:30px;padding-bottom:30px;text-align:center;" class="text-muted">Sorry, No one answered this question.</h2>
-        </t>
+        <table class="table table-hover table-condensed" t-att-id="'table_question_%d' % question.id">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>User Responses</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-set="text_result" t-value="prepare_result"/>
+                <tr class="hidden" t-foreach="text_result" t-as="user_input">
+                    <td><a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index+1"></t></a></td>
+                    <t t-if="question.type == 'free_text'">
+                        <td>
+                            <span t-field="user_input.value_free_text"></span><br/>
+                        </td>
+                    </t>
+                    <t t-if="question.type == 'textbox'">
+                        <td>
+                            <span t-field="user_input.value_text"></span><br/>
+                        </td>
+                    </t>
+                    <t t-if="question.type == 'datetime'">
+                        <td>
+                            <span  class="oe_date" t-field="user_input.value_date"></span><br/>
+                        </td>
+                    </t>
+                </tr>
+            </tbody>
+        </table>
+        <t t-call="survey.pagination" />
     </template>
 
     <!-- Result for simple_choice and multiple_choice -->

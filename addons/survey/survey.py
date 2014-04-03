@@ -24,6 +24,8 @@ from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DF
 from openerp.addons.website.models.website import slug
 from urlparse import urljoin
+from itertools import product
+from collections import Counter
 
 import datetime
 import logging
@@ -185,6 +187,74 @@ class survey_survey(osv.Model):
                     labels = label_obj.browse(cr, uid, [row_id, answer_id], context=context)
                 filter_display_data.append({'question_text': question.question, 'labels': [label.value for label in labels]})
         return filter_display_data
+
+    def prepare_result(self, cr, uid, question, current_filters=[], context=None):
+        '''Prepare statistical data for questions by counting number of vote per choice on basis of filter
+        :param question: browsed record of survey.question
+        '''
+        if context is None:
+            context = {}
+        #Calculate and return statistics for choice
+        if question.type in ['simple_choice', 'multiple_choice']:
+            result_summary = {}
+            [result_summary.update({label.id: {'text': label.value, 'count': 0, 'answer_id': label.id}}) for label in question.labels_ids]
+            for input_line in question.user_input_line_ids:
+                if result_summary.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    result_summary[input_line.value_suggested.id]['count'] += 1
+            result_summary = result_summary.values()
+
+        #Calculate and return statistics for matrix
+        if question.type == 'matrix':
+            rows, answers, res = {}, {}, {}
+            [rows.update({label.id: label.value}) for label in question.labels_ids_2]
+            [answers.update({label.id: label.value}) for label in question.labels_ids]
+            for cell in product(rows.keys(), answers.keys()):
+                res[cell] = 0
+            for input_line in question.user_input_line_ids:
+                if not(current_filters) or input_line.user_input_id.id in current_filters:
+                    res[(input_line.value_suggested_row.id, input_line.value_suggested.id)] += 1
+            result_summary = {'answers': answers, 'rows': rows, 'result': res}
+
+        #Calculate and return statistics for free_text, textbox, datetime
+        if question.type in ['free_text', 'textbox', 'datetime']:
+            result_summary = []
+            for input_line in question.user_input_line_ids:
+                if not(current_filters) or input_line.user_input_id.id in current_filters:
+                    result_summary.append(input_line)
+
+        #Calculate and return statistics for numerical_box
+        if question.type == 'numerical_box':
+            result_summary = {'input_lines': []}
+            all_inputs = []
+            for input_line in question.user_input_line_ids:
+                if not(current_filters) or input_line.user_input_id.id in current_filters:
+                    all_inputs.append(input_line.value_number)
+                    result_summary['input_lines'].append(input_line)
+            if all_inputs:
+                result_summary.update({'average': round(sum(all_inputs) / len(all_inputs), 2),
+                                       'max': round(max(all_inputs), 2),
+                                       'min': round(min(all_inputs), 2),
+                                       'most_comman': Counter(all_inputs).most_common(5)})
+        return result_summary
+
+    def get_input_summary(self, cr, uid, question, current_filters=[], context=None):
+        '''Returns overall summary of question e.g. answered, skipped, total_inputs on basis of filter
+        :param question: browsed record of survey.question
+        '''
+        if context is None:
+            context = {}
+        result = {}
+        if question.survey_id.user_input_ids:
+            total_input_ids = current_filters or [input_id.id for input_id in question.survey_id.user_input_ids if input_id.state != 'new']
+            result['total_inputs'] = len(total_input_ids)
+            question_input_ids = []
+            for user_input in question.user_input_line_ids:
+                if not user_input.skipped:
+                    question_input_ids.append(user_input.user_input_id.id)
+            result['answered'] = len(set(question_input_ids) & set(total_input_ids))
+            result['skipped'] = result['total_inputs'] - result['answered']
+        return result
+
     # Model fields #
 
     _columns = {
