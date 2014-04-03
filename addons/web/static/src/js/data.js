@@ -238,31 +238,26 @@ instance.web.QueryGroup = instance.web.Class.extend({
             {__context: {group_by: []}, __domain: []},
             read_group_group);
 
-        var raw_fields = _.map(grouping_fields, function (field) {
-            return field && field.split(':')[0];
-        });
-
-
+        var count_key = (grouping_fields[0] && grouping_fields[0].split(':')[0]) + '_count';
         var aggregates = {};
         _(fixed_group).each(function (value, key) {
             if (key.indexOf('__') === 0
-                    || _.contains(raw_fields, key)
-                    || (key === raw_fields[0] + '_count')) {
+                    || _.contains(grouping_fields, key)
+                    || (key === count_key)) {
                 return;
             }
             aggregates[key] = value || 0;
         });
 
-
         this.model = new instance.web.Model(
             model, fixed_group.__context, fixed_group.__domain);
 
-        var group_size = fixed_group[raw_fields[0] + '_count'] || fixed_group.__count || 0;
+        var group_size = fixed_group[count_key] || fixed_group.__count || 0;
         var leaf_group = fixed_group.__context.group_by.length === 0;
 
         var value = (grouping_fields.length === 1) 
-                ? fixed_group[raw_fields[0]]
-                : _.map(raw_fields, function (field) { return fixed_group[field]; });
+                ? fixed_group[grouping_fields[0]]
+                : _.map(grouping_fields, function (field) { return fixed_group[field]; });
         var grouped_on = (grouping_fields.length === 1) 
                 ? grouping_fields[0] 
                 : grouping_fields;
