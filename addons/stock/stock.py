@@ -3861,15 +3861,17 @@ class stock_warehouse_orderpoint(osv.osv):
     _name = "stock.warehouse.orderpoint"
     _description = "Minimum Inventory Rule"
 
-    def get_draft_procurements(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        if not isinstance(ids, list):
-            ids = [ids]
-        procurement_obj = self.pool.get('procurement.order')
-        for orderpoint in self.browse(cr, uid, ids, context=context):
-            procurement_ids = procurement_obj.search(cr, uid, [('state', 'not in', ('cancel', 'done')), ('product_id', '=', orderpoint.product_id.id), ('location_id', '=', orderpoint.location_id.id)], context=context)            
-        return list(set(procurement_ids))
+    def subtract_procurements(self, cr, uid, orderpoint, context=None):
+        '''This function returns quantity of product that needs to be deducted from the orderpoint computed quantity because there's already a procurement created with aim to fulfill it.
+        '''
+        qty = 0
+        for procurement in orderpoint.procurement_ids:
+            if procurement in ('cancel', 'done'):
+                continue
+            for move in procurement.move_ids:
+                if move.state not in ('draft', 'cancel'):
+                    qty += move.product_qty
+        return qty
 
     def _check_product_uom(self, cr, uid, ids, context=None):
         '''
@@ -3884,16 +3886,16 @@ class stock_warehouse_orderpoint(osv.osv):
 
         return True
 
-    def action_view_proc_to_process(self, cr, uid, ids, context=None):        
+    def action_view_proc_to_process(self, cr, uid, ids, context=None):
         act_obj = self.pool.get('ir.actions.act_window')
         mod_obj = self.pool.get('ir.model.data')
-        draft_ids = self.get_draft_procurements(cr, uid, ids, context=context)
+        proc_ids = self.pool.get('procurement.order').search(cr, uid, [('orderpoint_id', 'in', ids), ('state', 'not in', ('done', 'cancel'))], context=context)
         result = mod_obj.get_object_reference(cr, uid, 'procurement', 'do_view_procurements')
         if not result:
             return False
- 
+
         result = act_obj.read(cr, uid, [result[1]], context=context)[0]
-        result['domain'] = "[('id', 'in', [" + ','.join(map(str, draft_ids)) + "])]"
+        result['domain'] = "[('id', 'in', [" + ','.join(map(str, proc_ids)) + "])]"
         return result
 
     _columns = {
@@ -3912,8 +3914,8 @@ class stock_warehouse_orderpoint(osv.osv):
             "a procurement to bring the forecasted quantity to the Quantity specified as Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The procurement quantity will be rounded up to this multiple."),
-        'procurement_id': fields.many2one('procurement.order', 'Latest procurement', ondelete="set null"),
-        'company_id': fields.many2one('res.company', 'Company', required=True)        
+        'procurement_ids': fields.one2many('procurement.order', 'orderpoint_id', 'Created Procurements'),
+        'company_id': fields.many2one('res.company', 'Company', required=True)
     }
     _defaults = {
         'active': lambda *a: 1,

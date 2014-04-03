@@ -102,6 +102,7 @@ class procurement_order(osv.osv):
         'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Move which caused (created) the procurement"),
         'route_ids': fields.many2many('stock.location.route', 'stock_location_route_procurement', 'procurement_id', 'route_id', 'Preferred Routes', help="Preferred route to be followed by the procurement order. Usually copied from the generating document (SO) but could be set up manually."),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', help="Warehouse to consider for the route selection"),
+        'orderpoint_id': fields.many2one('stock.warehouse.orderpoint', 'Minimum Stock Rule'),
     }
 
     def propagate_cancel(self, cr, uid, procurement, context=None):
@@ -329,15 +330,18 @@ class procurement_order(osv.osv):
         return date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
     def _prepare_orderpoint_procurement(self, cr, uid, orderpoint, product_qty, context=None):
-        return {'name': orderpoint.name,
-                'date_planned': self._get_orderpoint_date_planned(cr, uid, orderpoint, datetime.today(), context=context),
-                'product_id': orderpoint.product_id.id,
-                'product_qty': product_qty,
-                'company_id': orderpoint.company_id.id,
-                'product_uom': orderpoint.product_uom.id,
-                'location_id': orderpoint.location_id.id,
-                'origin': orderpoint.name,
-                'warehouse_id': orderpoint.warehouse_id.id}
+        return {
+            'name': orderpoint.name,
+            'date_planned': self._get_orderpoint_date_planned(cr, uid, orderpoint, datetime.today(), context=context),
+            'product_id': orderpoint.product_id.id,
+            'product_qty': product_qty,
+            'company_id': orderpoint.company_id.id,
+            'product_uom': orderpoint.product_uom.id,
+            'location_id': orderpoint.location_id.id,
+            'origin': orderpoint.name,
+            'warehouse_id': orderpoint.warehouse_id.id,
+            'orderpoint_id': orderpoint.id,
+        }
 
     def _product_virtual_get(self, cr, uid, order_point):
         product_obj = self.pool.get('product.product')
@@ -378,28 +382,14 @@ class procurement_order(osv.osv):
                     if qty <= 0:
                         continue
                     if op.product_id.type not in ('consu'):
-                        procurement_draft_ids = orderpoint_obj.get_draft_procurements(cr, uid, op. id, context=context)
-                        if procurement_draft_ids:
-                            # Check draft procurement related to this order point
-                            procure_datas = procurement_obj.read(
-                                cr, uid, procurement_draft_ids, ['id', 'product_qty'], context=context)
-                            to_generate = qty
-                            for proc_data in procure_datas:
-                                if to_generate >= proc_data['product_qty']:
-                                    self.signal_button_confirm(cr, uid, [proc_data['id']])
-                                    procurement_obj.write(cr, uid, [proc_data['id']],  {'origin': op.name}, context=context)
-                                    to_generate -= proc_data['product_qty']
-                                if not to_generate:
-                                    break
-                            qty = to_generate
+                        qty -= orderpoint_obj.subtract_procurements(cr, uid, op, context=context)
 
-                    if qty:
+                    if qty > 0:
                         proc_id = procurement_obj.create(cr, uid,
                                                          self._prepare_orderpoint_procurement(cr, uid, op, qty, context=context),
                                                          context=context)
                         self.check(cr, uid, [proc_id])
                         self.run(cr, uid, [proc_id])
-                        orderpoint_obj.write(cr, uid, [op.id], {'procurement_id': proc_id}, context=context)
             offset += len(ids)
             if use_new_cursor:
                 cr.commit()
