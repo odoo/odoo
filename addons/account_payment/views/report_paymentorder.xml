@@ -10,8 +10,13 @@
 
                     <div class="row">
                         <div class="col-xs-4 col-xs-offset-8">
-                            <div t-field="o.mode.bank_id.bank"
-                                t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+                            <span t-raw="'%s &lt;br&gt;' % o.mode.bank_id.bank.name if o.mode.bank_id.bank.name else ''"/>
+                            <span t-raw="'%s &lt;br&gt;' % o.mode.bank_id.bank.street if o.mode.bank_id.bank.street else ''"/>
+                            <span t-raw="'%s &lt;br&gt;' % o.mode.bank_id.bank.street2 if o.mode.bank_id.bank.street2 else ''"/>
+                            <span t-raw="'%s &lt;br&gt;' % o.mode.bank_id.bank.zip if o.mode.bank_id.bank.zip else ''"/>
+                            <span t-raw="'%s &lt;br&gt;' % o.mode.bank_id.bank.city if o.mode.bank_id.bank.city else ''"/>
+                            <span t-raw="'%s &lt;br&gt;' % o.mode.bank_id.bank.state.name if o.mode.bank_id.bank.state.name else ''"/>
+                            <span t-raw="'%s &lt;br&gt;' % o.mode.bank_id.bank.country.name if o.mode.bank_id.bank.country.name else ''"/>
                         </div>
                     </div>
 
