@@ -2760,16 +2760,6 @@ class stock_warehouse(osv.osv):
             inter_wh_loc = False
         return inter_wh_loc
 
-    def _get_all_products_to_resupply(self, cr, uid, warehouse, context=None):
-        return self.pool.get('product.product').search(cr, uid, [], context=context)
-
-    def _assign_route_on_products(self, cr, uid, warehouse, inter_wh_route_id, context=None):
-        product_ids = self._get_all_products_to_resupply(cr, uid, warehouse, context=context)
-        self.pool.get('product.product').write(cr, uid, product_ids, {'route_ids': [(4, inter_wh_route_id)]}, context=context)
-
-    def _unassign_route_on_products(self, cr, uid, warehouse, inter_wh_route_id, context=None):
-        product_ids = self._get_all_products_to_resupply(cr, uid, warehouse, context=context)
-        self.pool.get('product.product').write(cr, uid, product_ids, {'route_ids': [(3, inter_wh_route_id)]}, context=context)
 
     def _get_inter_wh_route(self, cr, uid, warehouse, wh, context=None):
         return {
@@ -2802,11 +2792,9 @@ class stock_warehouse(osv.osv):
                 pull_rules_list = self._get_supply_pull_rules(cr, uid, warehouse, values, inter_wh_route_id, context=context)
                 for pull_rule in pull_rules_list:
                     pull_obj.create(cr, uid, vals=pull_rule, context=context)
-                #if the warehouse is also set as default resupply method, assign this route automatically to all product
+                #if the warehouse is also set as default resupply method, assign this route automatically to the warehouse
                 if default_resupply_wh and default_resupply_wh.id == wh.id:
-                    self._assign_route_on_products(cr, uid, warehouse, inter_wh_route_id, context=context)
-                #finally, save the route on the warehouse
-                self.write(cr, uid, [warehouse.id], {'route_ids': [(4, inter_wh_route_id)]}, context=context)
+                    self.write(cr, uid, [warehouse.id], {'route_ids': [(4, inter_wh_route_id)]}, context=context)
 
     def _default_stock_id(self, cr, uid, context=None):
         #lot_input_stock = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
@@ -3293,15 +3281,15 @@ class stock_warehouse(osv.osv):
             if vals.get('default_resupply_wh_id') == warehouse.id:
                 raise osv.except_osv(_('Warning'),_('The default resupply warehouse should be different than the warehouse itself!'))
             if warehouse.default_resupply_wh_id:
-                #remove the existing resupplying route on all products
+                #remove the existing resupplying route on the warehouse
                 to_remove_route_ids = route_obj.search(cr, uid, [('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', '=', warehouse.default_resupply_wh_id.id)], context=context)
                 for inter_wh_route_id in to_remove_route_ids:
-                    self._unassign_route_on_products(cr, uid, warehouse, inter_wh_route_id, context=context)
+                    self.write(cr, uid, [warehouse.id], {'route_ids': [(3, inter_wh_route_id)]})
             if vals.get('default_resupply_wh_id'):
                 #assign the new resupplying route on all products
                 to_assign_route_ids = route_obj.search(cr, uid, [('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', '=', vals.get('default_resupply_wh_id'))], context=context)
                 for inter_wh_route_id in to_assign_route_ids:
-                    self._assign_route_on_products(cr, uid, warehouse, inter_wh_route_id, context=context)
+                    self.write(cr, uid, [warehouse.id], {'route_ids': [(4, inter_wh_route_id)]})
 
         return super(stock_warehouse, self).write(cr, uid, ids, vals=vals, context=context)
 
@@ -3310,7 +3298,9 @@ class stock_warehouse(osv.osv):
         return super(stock_warehouse, self).unlink(cr, uid, ids, context=context)
 
     def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
+        route_obj = self.pool.get("stock.location.route")
         all_routes = [route.id for route in warehouse.route_ids]
+        all_routes += route_obj.search(cr, uid, [('supplied_wh_id', '=', warehouse.id)], context=context)
         all_routes += [warehouse.mto_pull_id.route_id.id]
         return all_routes
 
