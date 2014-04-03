@@ -1277,6 +1277,9 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         var defs = [];
         _.each(this.to_replace, function(el) {
             defs.push(el[0].replace(el[1]));
+            if (el[1].children().length) {
+                el[0].$el.append(el[1].children());
+            }
         });
         this.to_replace = [];
         return $.when.apply($, defs);
@@ -1304,7 +1307,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         var tagname = $tag[0].nodeName.toLowerCase();
         if (this.tags_registry.contains(tagname)) {
             this.tags_to_init.push($tag);
-            return $tag;
+            return (tagname === 'button') ? this.process_button($tag) : $tag;
         }
         var fn = self['process_' + tagname];
         if (fn) {
@@ -1320,6 +1323,13 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             $tag.removeAttr("modifiers");
             return $tag;
         }
+    },
+    process_button: function ($button) {
+        var self = this;
+        $button.children().each(function() {
+            self.process($(this));
+        });
+        return $button;
     },
     process_widget: function($widget) {
         this.widgets_to_init.push($widget);
@@ -1906,6 +1916,8 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     template: 'WidgetButton',
     init: function(field_manager, node) {
         node.attrs.type = node.attrs['data-button-type'];
+        this.is_stat_button = /\boe_stat_button\b/.test(node.attrs['class']);
+        this.icon = node.attrs.icon && "<span class=\"fa " + node.attrs.icon + " fa-fw\"></span>";
         this._super(field_manager, node);
         this.force_disabled = false;
         this.string = (this.node.attrs.string || '').replace(/_/g, '');
@@ -1976,7 +1988,6 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
         var self = this;
 
         var context = this.build_context();
-
         return this.view.do_execute_action(
             _.extend({}, this.node.attrs, {context: context}),
             this.view.dataset, this.view.datarecord.id, function () {
@@ -2804,6 +2815,50 @@ instance.web.form.FieldProgressBar = instance.web.form.AbstractField.extend({
         this.$('span').html(formatted_value + '%');
     }
 });
+
+/**
+    The PercentPie field expect a float from 0 to 100.
+*/
+instance.web.form.FieldPercentPie = instance.web.form.AbstractField.extend({
+    template: 'FieldPercentPie',
+
+    render_value: function() {
+        var value = this.get('value'),
+            formatted_value = Math.round(value || 0) + '%',
+            svg = this.$('svg')[0];
+
+        svg.innerHTML = "";
+        nv.addGraph(function() {
+            var size=43;
+            var chart = nv.models.pieChart()
+                .width(size)
+                .height(size)
+                .margin({top: 0, right: 0, bottom: 0, left: 0})
+                .donut(true) 
+                .showLegend(false)
+                .showLabels(false)
+                .tooltips(false)
+                .color(['#7C7BAD','#DDD'])
+                .donutRatio(0.62);
+   
+            d3.select(svg)
+                .datum([{'x': 'value', 'y': value}, {'x': 'complement', 'y': 100 - value}])
+                .transition()
+                .call(chart)
+                .attr({width:size, height:size});
+
+            d3.select(svg)
+                .append("text")
+                .attr({x: size/2, y: size/2 + 3, 'text-anchor': 'middle'})
+                .style({"font-size": "10px", "font-weight": "bold"})
+                .text(formatted_value);
+
+            return chart;
+        });
+   
+    }
+});
+
 
 
 instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
@@ -5852,6 +5907,26 @@ instance.web.form.X2ManyCounter = instance.web.form.AbstractField.extend(instanc
 });
 
 /**
+    This widget is intended to be used on stat button numeric fields.  It will display
+    the value   many2many and one2many. It is a read-only field that will 
+    display a simple string "<value of field> <label of the field>"
+*/
+instance.web.form.StatInfo = instance.web.form.AbstractField.extend({
+    init: function() {
+        this._super.apply(this, arguments);
+        this.set("value", 0);
+    },
+    render_value: function() {
+        var options = {
+            value: this.get("value") || 0,
+            text: this.string,
+        };
+        this.$el.html(QWeb.render("StatInfo", options));
+    },
+
+});
+
+/**
  * Registry of form fields, called by :js:`instance.web.FormView`.
  *
  * All referenced classes must implement FieldInterface. Those represent the classes whose instances
@@ -5878,6 +5953,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'reference' : 'instance.web.form.FieldReference',
     'boolean' : 'instance.web.form.FieldBoolean',
     'float' : 'instance.web.form.FieldFloat',
+    'percentpie': 'instance.web.form.FieldPercentPie',
     'integer': 'instance.web.form.FieldFloat',
     'float_time': 'instance.web.form.FieldFloat',
     'progressbar': 'instance.web.form.FieldProgressBar',
@@ -5888,6 +5964,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'monetary': 'instance.web.form.FieldMonetary',
     'many2many_checkboxes': 'instance.web.form.FieldMany2ManyCheckBoxes',
     'x2many_counter': 'instance.web.form.X2ManyCounter',
+    'statinfo': 'instance.web.form.StatInfo',
 });
 
 /**
