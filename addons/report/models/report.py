@@ -233,6 +233,14 @@ class Report(osv.Model):
 
                 body = lxml.html.tostring(node)
                 reportcontent = self.MINIMAL_HTML_PAGE.format(css=css, subst='', body=body, base_url=base_url)
+
+                # FIXME: imo the best way to extract record id from html reports is by using the
+                # qweb branding. As website editor is not yet splitted in a module independant from
+                # website, when we print a unique report we can use the id passed in argument to
+                # identify it.
+                if len(ids) == 1:
+                    reportid = ids[0]
+
                 contenthtml.append(tuple([reportid, reportcontent]))
 
         except lxml.etree.XMLSyntaxError:
