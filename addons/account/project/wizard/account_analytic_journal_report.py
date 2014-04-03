@@ -54,7 +54,10 @@ class account_analytic_journal_report(osv.osv_memory):
             'model': 'account.analytic.journal',
             'form': data
         }
-        return self.pool['report'].get_action(cr, uid, ids, 'account.report_analyticjournal', data=datas, context=context)
+        context2 = context.copy()
+        context2['active_model'] = 'account.analytic.journal'
+        context2['active_ids'] = ids_list
+        return self.pool['report'].get_action(cr, uid, ids, 'account.report_analyticjournal', data=datas, context=context2)
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None:

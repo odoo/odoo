@@ -51,7 +51,7 @@ class AbstractReport(osv.AbstractModel):
 
         # Generate the old style report
         wrapped_report = self._wrapped_report_class(cr, uid, '',  context=context)
-        wrapped_report.set_context(objects, data, ids)
+        wrapped_report.set_context(objects, data, context['active_ids'])
 
         # Rendering self._template with the wrapped report instance localcontext as
         # rendering environment
