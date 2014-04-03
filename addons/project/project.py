@@ -223,7 +223,7 @@ class project(osv.osv):
             'res_model': 'ir.attachment',
             'type': 'ir.actions.act_window',
             'view_id': False,
-            'view_mode': 'tree,form',
+            'view_mode': 'kanban,form',
             'view_type': 'form',
             'limit': 80,
             'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
@@ -1183,8 +1183,8 @@ class account_analytic_account(osv.osv):
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
     }
 
-    def on_change_template(self, cr, uid, ids, template_id, context=None):
-        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+    def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, date_start=date_start, context=context)
         if template_id and 'value' in res:
             template = self.browse(cr, uid, template_id, context=context)
             res['value']['use_tasks'] = template.use_tasks
