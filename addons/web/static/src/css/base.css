@@ -368,6 +368,7 @@
 .openerp .oe_left {
   float: left;
   margin-right: 8px;
+  width: 305px;
 }
 .openerp .oe_right {
   float: right;
@@ -456,11 +457,46 @@
   background: #ed6f6a;
 }
 .openerp .oe_button_box {
-  width: 270px;
-  text-align: right;
+  width: 400px;
+  text-align: left;
 }
-.openerp .oe_button_box button {
-  margin: 4px;
+.openerp .oe_button_box .oe_stat_button:hover {
+  background: #7c7bad;
+  color: white;
+}
+.openerp .oe_button_box .oe_stat_button:hover .fa {
+  color: white;
+}
+.openerp .oe_button_box .oe_stat_button {
+  font-weight: normal;
+  display: inline-table;
+  width: 33% !important;
+  height: 42px;
+  margin: 0px -1px -1px 0px;
+  padding: 0;
+  color: #666666;
+  border: 1px solid #dddddd;
+  border-radius: 0;
+  box-shadow: none;
+  background: white;
+}
+.openerp .oe_button_box .oe_stat_button > div {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: left;
+  padding: 0;
+  line-height: 120%;
+}
+.openerp .oe_button_box .oe_stat_button .stat_button_icon {
+  color: #7c7bad;
+  font-size: 24px;
+  padding: 0px 3px;
+  width: 37px;
+  text-align: center;
+}
+.openerp .oe_button_box .oe_stat_button svg {
+  width: 38px;
+  height: 38px;
 }
 .openerp .oe_avatar > img {
   max-height: 90px;
