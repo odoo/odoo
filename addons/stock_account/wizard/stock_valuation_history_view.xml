@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Choose your date" version="7.0">
                     <p class="oe_gray" attrs="{'invisible': [('choose_date', '=', False)]}">
-                        Choose the date for wich you want to get the stock valuation of your products.
+                        Choose the date for which you want to get the stock valuation of your products.
 
                         This will filter the stock operation that weren't done at the selected date, to retreive the quantity
                         you had, and gives you the inventory value according to the standard price used at that time.
@@ -49,7 +49,7 @@
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="date"/>
                 <field name="quantity" sum="# of Products "/>
-                <field name="inventory_value"/>
+                <field name="inventory_value" sum="Total Value"/>
            </tree>
         </field>
     </record>

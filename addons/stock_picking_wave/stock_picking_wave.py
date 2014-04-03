@@ -31,22 +31,16 @@ class stock_picking_wave(osv.osv):
         '''
         This function print the report for all picking_ids associated to the picking wave
         '''
+        if context is None:
+            context = {}
         picking_ids = []
         for wave in self.browse(cr, uid, ids, context=context):
             picking_ids += [picking.id for picking in wave.picking_ids]
         if not picking_ids:
             raise osv.except_osv(_('Error!'), _('Nothing to print.'))
-        datas = {
-            'ids': picking_ids,
-            'model': 'stock.picking',
-            'form': self.read(cr, uid, picking_ids, context=context)
-        }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': context.get('report', 'stock.picking.list'),
-            'datas': datas,
-            'nodestroy': True
-        }
+        context['active_ids'] = picking_ids
+        context['active_model'] = 'stock.picking'
+        return self.pool.get("report").get_action(cr, uid, [], 'stock.report_picking', context=context)
 
     def create(self, cr, uid, vals, context=None):
         if vals.get('name', '/') == '/':

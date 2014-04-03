@@ -84,10 +84,10 @@ class sale_order(osv.osv):
         vals = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
         location_id = order.partner_shipping_id.property_stock_customer.id
         vals['location_id'] = location_id
-
         routes = line.route_id and [(4, line.route_id.id)] or []
         vals['route_ids'] = routes
         vals['warehouse_id'] = order.warehouse_id and order.warehouse_id.id or False
+        vals['partner_dest_id'] = order.partner_shipping_id.id
         return vals
 
     _columns = {
@@ -176,12 +176,6 @@ class sale_order(osv.osv):
                     raise osv.except_osv(
                         _('Cannot cancel sales order!'),
                         _('You must first cancel all delivery order(s) attached to this sales order.'))
-                 # FP Note: not sure we need this
-                 #if pick.state == 'cancel':
-                 #    for mov in pick.move_lines:
-                 #        proc_ids = proc_obj.search(cr, uid, [('move_id', '=', mov.id)])
-                 #        if proc_ids:
-                 #            proc_obj.signal_button_check(cr, uid, proc_ids)
             stock_obj.signal_button_cancel(cr, uid, [p.id for p in sale.picking_ids])
         return super(sale_order, self).action_cancel(cr, uid, ids, context=context)
 
@@ -439,6 +433,21 @@ class stock_location_route(osv.osv):
 
 class stock_picking(osv.osv):
     _inherit = "stock.picking"
+
+    def _get_sale_id(self, cr, uid, ids, name, args, context=None):
+        sale_obj = self.pool.get("sale.order")
+        res = {}
+        for picking in self.browse(cr, uid, ids, context=context):
+            res[picking.id] = False
+            if picking.group_id:
+                sale_ids = sale_obj.search(cr, uid, [('procurement_group_id', '=', picking.group_id.id)], context=context)
+                if sale_ids:
+                    res[picking.id] = sale_ids[0]
+        return res
+    
+    _columns = {
+        'sale_id': fields.function(_get_sale_id, type="many2one", relation="sale.order", string="Sale Order"),
+    }
 
     def _create_invoice_from_picking(self, cr, uid, picking, vals, context=None):
         sale_obj = self.pool.get('sale.order')

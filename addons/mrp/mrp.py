@@ -20,14 +20,12 @@
 ##############################################################################
 
 import time
-from datetime import datetime
 import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv, orm
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools import float_compare
 from openerp.tools.translate import _
 from openerp import tools, SUPERUSER_ID
-from openerp import SUPERUSER_ID
 from openerp.addons.product import _common
 
 
@@ -194,25 +192,6 @@ class mrp_bom(osv.osv):
 
         return result
 
-    def _compute_type(self, cr, uid, ids, field_name, arg, context=None):
-        """ Sets particular method for the selected bom type.
-        @param field_name: Name of the field
-        @param arg: User defined argument
-        @return:  Dictionary of values
-        """
-        res = dict.fromkeys(ids, False)
-        for line in self.browse(cr, uid, ids, context=context):
-            if line.type == 'phantom' and not line.bom_id:
-                res[line.id] = 'set'
-                continue
-            if line.bom_lines or line.type == 'phantom':
-                continue
-            if line.product_id.procure_method == 'make_to_stock':
-                res[line.id] = 'stock'
-            else:
-                res[line.id] = 'order'
-        return res
-
     _columns = {
         'name': fields.char('Name', size=64),
         'code': fields.char('Reference', size=16),
@@ -221,7 +200,6 @@ class mrp_bom(osv.osv):
                                  help= "If a by-product is used in several products, it can be useful to create its own BoM. "\
                                  "Though if you don't want separated production orders for this by-product, select Set/Phantom as BoM type. "\
                                  "If a Phantom BoM is used for a root product, it will be sold and shipped as a set of components, instead of being produced."),
-        'method': fields.function(_compute_type, string='Method', type='selection', selection=[('', ''), ('stock', 'On Stock'), ('order', 'On Order'), ('set', 'Set / Pack')]),
         'date_start': fields.date('Valid From', help="Validity of this BoM or component. Keep empty if it's always valid."),
         'date_stop': fields.date('Valid Until', help="Validity of this BoM or component. Keep empty if it's always valid."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bills of material."),
@@ -603,7 +581,7 @@ class mrp_production(osv.osv):
                 'product_uom': False,
                 'bom_id': False,
                 'routing_id': False,
-                'product_uos_qty': 0, 
+                'product_uos_qty': 0,
                 'product_uos': False
             }}
         bom_obj = self.pool.get('mrp.bom')
@@ -614,7 +592,6 @@ class mrp_production(osv.osv):
             bom_point = bom_obj.browse(cr, uid, bom_id, context=context)
             routing_id = bom_point.routing_id.id or False
         product_uom_id = product.uom_id and product.uom_id.id or False
-        product_uos_id = product.uos_id and product.uos_id.id or False
         result['value'] = {'product_uos_qty': 0, 'product_uos': False, 'product_uom': product_uom_id, 'bom_id': bom_id, 'routing_id': routing_id}
         if product.uos_id.id:
             result['value']['product_uos_qty'] = product_qty * product.uos_coeff
@@ -643,7 +620,7 @@ class mrp_production(osv.osv):
         """
         self.write(cr, uid, ids, {'state': 'picking_except'})
         return True
-    
+
     def _action_compute_lines(self, cr, uid, ids, properties=None, context=None):
         """ Compute product_lines and workcenter_lines from BoM structure
         @return: product_lines
@@ -999,10 +976,9 @@ class mrp_production(osv.osv):
                     'product_uos_qty': production_line.product_uos and production_line.product_qty or False,
                     'product_uos': production_line.product_uos and production_line.product_uos.id or False,
                     'location_id': location_id,
-                    'procure_method': production_line.product_id.procure_method,
                     'move_id': shipment_move_id,
                     'company_id': production.company_id.id,
-                })
+        })
         procurement_order.signal_button_confirm(cr, uid, [procurement_id])
         return procurement_id
 
@@ -1030,6 +1006,17 @@ class mrp_production(osv.osv):
         #is 1 element long, so we can take the first.
         return stock_move.action_confirm(cr, uid, [move_id], context=context)[0]
 
+    def _get_raw_material_procure_method(self, cr, uid, product, context=None):
+        '''This method returns the procure_method to use when creating the stock move for the production raw materials'''
+        try:
+            mto_route = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'route_warehouse0_mto')[1]
+        except:
+            return "make_to_stock"
+        routes = product.route_ids + product.categ_id.total_route_ids
+        if mto_route in [x.id for x in routes]:
+            return "make_to_order"
+        return "make_to_stock"
+
     def _make_production_consume_line(self, cr, uid, production_line, parent_move_id, source_location_id=False, context=None):
         stock_move = self.pool.get('stock.move')
         production = production_line.production_id
@@ -1050,11 +1037,12 @@ class mrp_production(osv.osv):
             'location_id': source_location_id,
             'location_dest_id': destination_location_id,
             'company_id': production.company_id.id,
-            'procure_method': 'make_to_order',
+            'procure_method': self._get_raw_material_procure_method(cr, uid, production_line.product_id, context=context),
             'raw_material_production_id': production.id,
+            #this saves us a browse in create()
+            'price_unit': production_line.product_id.standard_price,
         })
-        stock_move.action_confirm(cr, uid, [move_id], context=context)
-        return True
+        return move_id
 
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms production order.
@@ -1070,8 +1058,12 @@ class mrp_production(osv.osv):
             if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
                 source_location_id = production.bom_id.routing_id.location_id.id
 
+            stock_moves = []
             for line in production.product_lines:
-                self._make_production_consume_line(cr, uid, line, produce_move_id, source_location_id=source_location_id, context=context)
+                stock_move_id = self._make_production_consume_line(cr, uid, line, produce_move_id, source_location_id=source_location_id, context=context)
+                if stock_move_id:
+                    stock_moves.append(stock_move_id)
+            self.pool.get('stock.move').action_confirm(cr, uid, stock_moves, context=context)
             production.write({'state': 'confirmed'}, context=context)
         return 0
 

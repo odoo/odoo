@@ -436,7 +436,7 @@ class resource_calendar(osv.osv):
 
             working_intervals = self.get_working_intervals_of_day(cr, uid, id, **call_args)
 
-            if id is None and not working_interval:  # no calendar -> consider working 8 hours
+            if id is None and not working_intervals:  # no calendar -> consider working 8 hours
                 remaining_hours -= 8.0
             elif working_intervals:
                 if backwards:

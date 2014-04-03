@@ -189,7 +189,7 @@
                                     <field name="time_stop" widget="float_time"/>
                                 </group>
                                 <group string="Costing Information">
-                                    <field name="product_id" on_change="on_change_product_cost(product_id)" context="{'default_supply_method':'produce'}"/>
+                                    <field name="product_id" on_change="on_change_product_cost(product_id)"/>
                                     <field name="costs_hour"/>
                                     <field name="costs_hour_account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="costs_cycle"/>
@@ -347,7 +347,7 @@
                 <form string="Bill of Material" version="7.0">
                     <group>
                         <group>
-                            <field name="product_id" on_change="onchange_product_id(product_id, name, product_qty, context)" context="{'default_supply_method':'produce'}" class="oe_inline"/>
+                            <field name="product_id" on_change="onchange_product_id(product_id, name, product_qty, context)" class="oe_inline"/>
                             <label for="product_qty" string="Quantity"/>
                             <div>
                                 <field name="product_qty" class="oe_inline" on_change="onchange_product_id(product_id, name, product_qty, context)"/>
@@ -519,7 +519,7 @@
              <field name="arch" type="xml">
                  <xpath expr="//filter[@string='Consumable']" position="after">
                      <separator/>
-                    <filter string="Components" name="components" icon="terp-accessories-archiver" domain="[('bom_ids','not in',[]),('bom_ids.bom_id','!=',False)]" invisible="not context.get('search_default_filter_supply_method_produce', False)"/>
+                    <filter string="Components" name="components" icon="terp-accessories-archiver" domain="[('bom_ids','not in',[]),('bom_ids.bom_id','!=',False)]"/>
                  </xpath>
              </field>
         </record>

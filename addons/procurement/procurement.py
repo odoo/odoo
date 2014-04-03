@@ -21,9 +21,7 @@
 
 import time
 
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
@@ -31,7 +29,7 @@ import openerp
 
 class procurement_group(osv.osv):
     '''
-    The procurement requirement class is used to group products together
+    The procurement group class is used to group products together
     when computing procurements. (tasks, physical products, ...)
 
     The goal is that when you have one sale order of several products
@@ -56,12 +54,11 @@ class procurement_group(osv.osv):
     _description = 'Procurement Requisition'
     _order = "id desc"
     _columns = {
-        'name': fields.char('Reference', required=True), 
+        'name': fields.char('Reference', required=True),
         'move_type': fields.selection([
             ('direct', 'Partial'), ('one', 'All at once')],
             'Delivery Method', required=True),
-        'partner_id': fields.many2one('res.partner', string = 'Partner'), #Sale should pass it here 
-        'procurement_ids': fields.one2many('procurement.order', 'group_id', 'Procurements'), 
+        'procurement_ids': fields.one2many('procurement.order', 'group_id', 'Procurements'),
     }
     _defaults = {
         'name': lambda self, cr, uid, c: self.pool.get('ir.sequence').get(cr, uid, 'procurement.group') or '',
@@ -195,7 +192,11 @@ class procurement_order(osv.osv):
         return self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
 
     def run(self, cr, uid, ids, context=None):
-        for procurement in self.browse(cr, uid, ids, context=context):
+        for procurement_id in ids:
+            #we intentionnaly do the browse under the for loop to avoid caching all ids which would be ressource greedy
+            #and useless as we'll make a refresh later that will invalidate all the cache (and thus the next iteration
+            #will fetch all the ids again) 
+            procurement = self.browse(cr, uid, procurement_id, context=context)
             if procurement.state not in ("running", "done"):
                 if self._assign(cr, uid, procurement, context=context):
                     procurement.refresh()
@@ -266,7 +267,8 @@ class procurement_order(osv.osv):
     #
     def run_scheduler(self, cr, uid, use_new_cursor=False, context=None):
         '''
-        Call the scheduler to check the procurement order
+        Call the scheduler to check the procurement order. This is intented to be done for all existing companies at
+        the same time, so we're running all the methods as SUPERUSER to avoid intercompany and access rights issues.
 
         @param self: The object pointer
         @param cr: The current row, from the database cursor,
@@ -282,25 +284,22 @@ class procurement_order(osv.osv):
             if use_new_cursor:
                 cr = openerp.registry(use_new_cursor).db.cursor()
 
-            company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
-            maxdate = (datetime.today() + relativedelta(days=company.schedule_range)).strftime('%Y-%m-%d %H:%M:%S')
-
             # Run confirmed procurements
             while True:
-                ids = self.search(cr, uid, [('state', '=', 'confirmed'), ('date_planned', '<=', maxdate)], context=context)
+                ids = self.search(cr, SUPERUSER_ID, [('state', '=', 'confirmed')], context=context)
                 if not ids:
                     break
-                self.run(cr, uid, ids, context=context)
+                self.run(cr, SUPERUSER_ID, ids, context=context)
                 if use_new_cursor:
                     cr.commit()
 
             # Check if running procurements are done
             offset = 0
             while True:
-                ids = self.search(cr, uid, [('state', '=', 'running'), ('date_planned', '<=', maxdate)], offset=offset, context=context)
+                ids = self.search(cr, SUPERUSER_ID, [('state', '=', 'running')], offset=offset, context=context)
                 if not ids:
                     break
-                done = self.check(cr, uid, ids, context=context)
+                done = self.check(cr, SUPERUSER_ID, ids, context=context)
                 offset += len(ids) - len(done)
                 if use_new_cursor:
                     cr.commit()
