@@ -7,6 +7,7 @@ class MailMessage(osv.Model):
     _inherit = 'mail.message'
 
     _columns = {
-        'discussion_key': fields.char('Discussion Key',
-            help='Used in Blogs to display messages in a group based on their discussion key.'),
+        'path': fields.char(
+            'Discussion Path', select=1,
+            help='Used to display messages in a paragraph-based chatter using a unique path;'),
     }

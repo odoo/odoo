@@ -11,7 +11,6 @@
             var self = this ;
             self.discus_identifier;
             var defaults = {
-                identifier: 'name',
                 position: 'right',
                 post_id: $('#blog_post_name').attr('data-blog-id'),
                 content : false,
@@ -23,7 +22,7 @@
         do_render: function(data) {
             var self = this;
             if ($('#discussions_wrapper').length === 0 && self.settings.content.length > 0) {
-                $('<div id="discussions_wrapper"></div>').appendTo($('#blog_content'));
+                $('<div id="discussions_wrapper"></div>').insertAfter($('#blog_content'));
             }
             // Attach a discussion to each paragraph.
             $(self.settings.content).each(function(i) {
@@ -36,8 +35,8 @@
                 }
                 if(!$(event.target).hasClass('discussion-link') && !$(event.target).parents('.popover').length){
                     if($('.move_discuss').length){
-                        $('.js_discuss').next().removeClass('move_discuss');
-                        $('.js_discuss').next().animate({
+                        $('[enable_chatter_discuss=True]').removeClass('move_discuss');
+                        $('[enable_chatter_discuss=True]').animate({
                             'marginLeft': "+=40%"
                         });
                         $('#discussions_wrapper').animate({
@@ -47,30 +46,22 @@
                 }
             });
         },
-        prepare_data : function(identifier,comment_count) {
+        prepare_data : function(identifier, comment_count) {
             var self = this;
             return openerp.jsonRpc("/blogpost/get_discussion/", 'call', {
                 'post_id': self.settings.post_id,
-                'discussion':identifier,
-                'count' : comment_count, //if true only get length of total comment, display on discussion thread.
+                'path': identifier,
+                'count': comment_count, //if true only get length of total comment, display on discussion thread.
             })
         },
         discussion_handler : function(i, node) {
             var self = this;
-            var identifier;
-            // You can force a specific identifier by adding an attribute to the paragraph.
-            if (node.attr('data-discus-identifier')) {
-                identifier = node.attr('data-discus-identifier');
+            var identifier = node.attr('data-chatter-id');
+            if (identifier) {
+                self.prepare_data(identifier, true).then( function (data) {
+                    self.prepare_discuss_link(data, identifier, node);
+                });
             }
-            else {
-                while ($('[data-discus-identifier="' + self.settings.identifier + '-' + i + '"]').length > 0) {
-                    i++;
-                }
-                identifier = self.settings.identifier + '-' + i;
-            }
-            self.prepare_data(identifier,true).then(function(data){
-                self.prepare_discuss_link(data,identifier,node)
-            });
         },
         prepare_discuss_link :  function(data, identifier, node) {
             var self = this;
@@ -79,7 +70,7 @@
                 .attr('data-discus-identifier', identifier)
                 .attr('data-discus-position', self.settings.position)
                 .text(data > 0 ? data : '+')
-                .attr('data-contentwrapper','.mycontent')
+                .attr('data-contentwrapper', '.mycontent')
                 .wrap('<div class="discussion" />')
                 .parent()
                 .appendTo('#discussions_wrapper');
@@ -87,7 +78,8 @@
                 'top': node.offset().top,
                 'left': self.settings.position == 'right' ? node.outerWidth() + node.offset().left: node.offset().left - a.outerWidth()
             });
-            node.attr('data-discus-identifier', identifier).mouseover(function() {
+            // node.attr('data-discus-identifier', identifier)
+            node.mouseover(function() {
                 a.addClass("hovered");
             }).mouseout(function() {
                 a.removeClass("hovered");
@@ -96,8 +88,8 @@
             a.delegate('a.discussion-link', "click", function(e) {
                 e.preventDefault();
                 if(!$('.move_discuss').length){
-                    $('.js_discuss').next().addClass('move_discuss');
-                    $('.js_discuss').next().animate({
+                    $('[enable_chatter_discuss=True]').addClass('move_discuss');
+                    $('[enable_chatter_discuss=True]').animate({
                         'marginLeft': "-=40%"
                     });
                     $('#discussions_wrapper').animate({
@@ -185,7 +177,7 @@
             if(!val) return
             openerp.jsonRpc("/blogpost/post_discussion", 'call', {
                 'blog_post_id': self.settings.post_id,
-                'discussion': self.discus_identifier,
+                'path': self.discus_identifier,
                 'comment': val[0],
                 'name' : val[1],
                 'email': val[2],

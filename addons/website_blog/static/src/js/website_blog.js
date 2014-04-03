@@ -24,8 +24,8 @@ $(document).ready(function() {
         });
     }
 
-    var content = $(".js_discuss").next().find('p');
-    if(content){
+    var content = $("div[enable_chatter_discuss='True']").find('p[data-chatter-id]');
+    if (content) {
         openerp.jsonRpc("/blog/get_user/", 'call', {}).then(function(data){
             $('#discussions_wrapper').empty();
             new openerp.website.blog_discussion({'content' : content, 'public_user':data[0]});

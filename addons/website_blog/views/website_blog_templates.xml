@@ -318,8 +318,8 @@
 <!-- Options: Blog Post: user can add Inline Discussion -->
 <template id="opt_blog_post_inline_discussion" name="Allow comment in text"
         inherit_option_id="website_blog.blog_post_complete">
-    <xpath expr="//div[@id='blog_content']" position="before">
-        <div class="js_discuss"/>
+    <xpath expr="//div[@id='blog_content']" position="attributes">
+        <attribute name="enable_chatter_discuss">True</attribute>
     </xpath>
 </template>
 

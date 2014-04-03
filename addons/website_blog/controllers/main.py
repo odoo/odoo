@@ -210,7 +210,6 @@ class WebsiteBlog(http.Controller):
             ('id', 'not in', visited_ids),
         ], order='ranking desc', limit=1, context=context)
         next_post = next_post_id and blog_post_obj.browse(cr, uid, next_post_id[0], context=context) or False
-        print next_post
 
         values = {
             'tags': tags,
@@ -259,7 +258,7 @@ class WebsiteBlog(http.Controller):
             type='comment',
             subtype='mt_comment',
             author_id=partner_ids[0],
-            discussion=post.get('discussion'),
+            path=post.get('path', False),
             context=dict(context, mail_create_nosubcribe=True))
         return message_id
 
@@ -327,10 +326,10 @@ class WebsiteBlog(http.Controller):
         return werkzeug.utils.redirect("/blog/%s/post/%s/?enable_editor=1" % (post.blog_id.id, nid))
 
     @http.route('/blogpost/get_discussion/', type='json', auth="public", website=True)
-    def discussion(self, post_id=0, discussion=None, count=False, **post):
+    def discussion(self, post_id=0, path=None, count=False, **post):
         cr, uid, context = request.cr, request.uid, request.context
         mail_obj = request.registry.get('mail.message')
-        domain = [('res_id', '=', int(post_id)) ,('model','=','blog.post'), ('discussion_key', '=', discussion)]
+        domain = [('res_id', '=', int(post_id)), ('model', '=', 'blog.post'), ('path', '=', path)]
         #check current user belongs to website publisher group
         publish = request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher')
         if not publish:

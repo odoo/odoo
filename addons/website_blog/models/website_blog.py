@@ -2,9 +2,11 @@
 
 from datetime import datetime
 import difflib
+import lxml
 import random
 
 from openerp import tools
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
@@ -66,7 +68,7 @@ class BlogPost(osv.Model):
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [
-                '&', '&', ('model', '=', self._name), ('type', '=', 'comment'), ('discussion_key', '=', False)
+                '&', '&', ('model', '=', self._name), ('type', '=', 'comment'), ('path', '=', False)
             ],
             string='Website Messages',
             help="Website communication history",
@@ -103,6 +105,59 @@ class BlogPost(osv.Model):
         'author_id': lambda self, cr, uid, ctx=None: self.pool['res.users'].browse(cr, uid, uid, context=ctx).partner_id.id,
     }
 
+    def html_tag_nodes(self, html, attribute=None, tags=None, context=None):
+        """ Processing of html content to tag paragraphs and set them an unique
+        ID.
+        :return result: (html, mappin), where html is the updated html with ID
+                        and mapping is a list of (old_ID, new_ID), where old_ID
+                        is None is the paragraph is a new one. """
+        mapping = []
+        if not html:
+            return html, mapping
+        if tags is None:
+            tags = ['p']
+        if attribute is None:
+            attribute = 'data-unique-id'
+        counter = 0
+
+        # form a tree
+        root = lxml.html.fragment_fromstring(html, create_parent='div')
+        if not len(root) and root.text is None and root.tail is None:
+            return html, mapping
+
+        # check all nodes, replace :
+        # - img src -> check URL
+        # - a href -> check URL
+        for node in root.iter():
+            if not node.tag in tags:
+                continue
+            ancestor_tags = [parent.tag for parent in node.iterancestors()]
+            ancestor_tags.pop()
+            new_attribute = '/'.join(reversed(ancestor_tags))
+            old_attribute = node.get(attribute)
+            node.set(attribute, new_attribute)
+            mapping.append((old_attribute, counter))
+            counter += 1
+
+        html = lxml.html.tostring(root, pretty_print=False, method='html')
+        # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
+        if html.startswith('<div>') and html.endswith('</div>'):
+            html = html[5:-6]
+        return html, mapping
+
+    def _postproces_content(self, cr, uid, id, content=None, context=None):
+        if content is None:
+            content = self.browse(cr, uid, id, context=context).content
+        if content is False:
+            return content
+        content, mapping = self.html_tag_nodes(content, attribute='data-chatter-id', tags=['p'], context=context)
+        for old_attribute, new_attribute in mapping:
+            if not old_attribute:
+                continue
+            msg_ids = self.pool['mail.message'].search(cr, SUPERUSER_ID, [('path', '=', old_attribute)], context=context)
+            self.pool['mail.message'].write(cr, SUPERUSER_ID, msg_ids, {'path': new_attribute}, context=context)
+        return content
+
     def create_history(self, cr, uid, ids, vals, context=None):
         for i in ids:
             history = self.pool.get('blog.post.history')
@@ -116,12 +171,16 @@ class BlogPost(osv.Model):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
+        if 'content' in vals:
+            vals['content'] = self._postproces_content(cr, uid, None, vals['content'], context=context)
         create_context = dict(context, mail_create_nolog=True)
         post_id = super(BlogPost, self).create(cr, uid, vals, context=create_context)
         self.create_history(cr, uid, [post_id], vals, context)
         return post_id
 
     def write(self, cr, uid, ids, vals, context=None):
+        if 'content' in vals:
+            vals['content'] = self._postproces_content(cr, uid, None, vals['content'], context=context)
         result = super(BlogPost, self).write(cr, uid, ids, vals, context)
         self.create_history(cr, uid, ids, vals, context)
         return result
