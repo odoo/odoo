@@ -140,6 +140,13 @@ class event_track(osv.osv):
     }
     @staticmethod
     def calculate_slots(new_start_date, new_end_date, new_schedule):
+        '''
+        params:
+        new_start_date,new_end_date: datetime object
+        new_schedule:list of start date and end date
+        
+        rtype: list
+        '''
         if not new_schedule:
             new_schedule.append([new_start_date, new_end_date])
             return new_schedule
@@ -159,34 +166,34 @@ class event_track(osv.osv):
                         break
             return new_schedule
     
-        #totally outter
+        #scenario 1: when 9:00 to 10:00 present and 8:00 to 11:00 to insert, result [(8-9),(9-10),(10-11)].
         if first_start_date >= new_start_date and new_end_date >= last_end_date:
             if not new_start_date == first_start_date: new_schedule.insert(0, [new_start_date, first_start_date])
             if not last_end_date ==  new_end_date: new_schedule.append([last_end_date, new_end_date])
             return new_schedule
         
-        #lower outer
+        #scenario 2: when 9:00 to 10:00 present and 8:00 to 8:30 to insert, result [(8-8:30),(8:30-9),(9-10)]
         if first_start_date >= new_end_date:
             new_schedule.insert(0, [new_start_date, new_end_date])
             if not new_end_date == first_start_date: new_schedule.insert(1, [new_end_date, first_start_date])
             return new_schedule
         
-        # upper outer
+        #scenario 3: when 9:00 to 10:00 present and 10:30 to 11:30 to insert, result [(9-10),(10-10:30),(10:30-11)]
         if new_start_date >= last_end_date:
             if not last_end_date == new_start_date: new_schedule.append([last_end_date, new_start_date])
             new_schedule.append([new_start_date, new_end_date])
             return new_schedule
         
-        #When inner time
+        #scenario 4: when 9:00 to 10:00 present and 9:15 to 9:30 to insert, result [(9-9:15), (9:15-9:30), (9:30-10)].
         if first_start_date <= new_start_date and last_end_date >= new_end_date:
             return insert_time([new_start_date, new_end_date], new_schedule)
         
-        #when start date is more and end date in range
+        #scenario 5: when 9:00 to 10:00 present and 8:15 to 9:30 to insert, result [(8:15-9), (9-9:30), (9:30-10)].
         if first_start_date > new_start_date and last_end_date >= new_end_date:
             new_schedule.insert(0, [new_start_date, first_start_date])
             return insert_time([new_end_date], new_schedule)
         
-        #when end date is more and start date in range
+        #scenario 6: when 9:00 to 10:00 present and 9:15 to 10:30 to insert, result [(9-9:15), (9:15-10), (10-10:30)].
         if new_end_date > last_end_date and new_start_date >= first_start_date:
              new_schedule = insert_time([new_start_date], new_schedule)
              new_schedule.append([last_end_date, new_end_date])
@@ -194,12 +201,27 @@ class event_track(osv.osv):
              
     @staticmethod
     def convert_time(time, duration, local_tz):
+        '''
+        Params:
+        time: string
+        duration: Interger
+        local_tz: TimeZone Name
+        
+        rtype: start time, end time and string
+        '''
         local_dt = (datetime.datetime.strptime(time, tools.DEFAULT_SERVER_DATETIME_FORMAT)).replace(tzinfo=pytz.utc).astimezone(local_tz)
         local_tz.normalize(local_dt)
         return local_dt, local_dt + datetime.timedelta(minutes = duration), local_dt.strftime('%m-%d-%y') 
 
     @staticmethod
     def generate_slots(date_and_durations, timezone):
+        '''
+        Params:
+        date_and_duration: List containing list of date and duration.
+        timeznoe: Name of Timezone
+        
+        rtype:dict, dict
+        '''
         local_tz = pytz.timezone(timezone or 'UTC')
         got_slots = {}
         sort_track = {}
@@ -216,6 +238,15 @@ class event_track(osv.osv):
         return got_slots, sort_track
     
     def make_tracks(self,cr, uid, only_slots={}, sort_tracks={}, event_tracks=[], timezone='UTC', context=None):
+        '''
+        Params:
+        only_slots:  Dictionary containing {day : [(start_time1, end_time1),(start_time2, end_time2)]}
+        sort_tracks:  Dictionary containing {day : {slot1: [], slot2: []}}
+        event_tracks: List of tracks
+        timezone: Timezone Name
+        
+        rtype: Dictionary(sort_tracks)
+        '''
         def get_speaker_name(ids):
             speaker_names = res_partner.name_get(cr, uid, ids, context=context)
             string = "By "
@@ -246,6 +277,15 @@ class event_track(osv.osv):
     
     @staticmethod
     def calculate_and_sort(sort_tracks):
+        '''
+        Params:
+        sort_tracks: Dictionary containing {day : {slot1: [tracks], slot2: [tracks]}} 
+        
+        rtype:
+        row_skip_td: Dictionary containing {day: {location_1: [timeslots], location_2: [timeslots] }}
+        sort_tracks: Dictionary containing {day : {slot1: [tracks], slot2: [tracks]}}
+        talks: Dictionary containing {day1: integer, day2: interger}
+        '''
         row_skip_td = {}
         talks = {}
         for track_day in sort_tracks.keys():
@@ -270,6 +310,11 @@ class event_track(osv.osv):
         return row_skip_td, sort_tracks, talks
         
     def get_location(self, cr, uid, location_list):
+        '''
+        Params:
+        location list: List
+        rtype:List of location with name
+        '''
         location_object = self.pool.get('event.track.location')
         locations = []
         for location_id in location_list:
@@ -277,6 +322,18 @@ class event_track(osv.osv):
         return locations
 
     def get_sorted_tracks(self, cr, uid, event, context=None):
+        '''
+        Params:
+        event: Event module's browse object.
+        
+        rtype: Dictionary containing
+            event: event object
+            room_list: list of locations
+            days: dictionary containing track, time_slot and day.
+            talks: dictionary containing day and number of track.
+            row_skip_td: dictionary containing day, location and time slot
+            format_date: list of string of datetime.
+        '''
         #Fetch all tracks
         domain = [('event_id','=',event.id),('date','!=',False),('duration','!=',False),('duration','!=',0)]
         fields = ['id', 'duration', 'location_id', 'name', 'date', 'color', 'speaker_ids', 'website_published']
