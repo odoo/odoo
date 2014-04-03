@@ -6066,7 +6066,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'many2many_checkboxes': 'instance.web.form.FieldMany2ManyCheckBoxes',
     'x2many_counter': 'instance.web.form.X2ManyCounter',
     'priority':'instance.web.form.Priority',
-    'dropdown_selection':'instance.web.form.DropdownSelection'
+    'dropdown_selection':'instance.web.form.DropdownSelection',
     'statinfo': 'instance.web.form.StatInfo',
 });
 
