@@ -1586,7 +1586,6 @@
                                 <field name="qty_multiple" string="Quantity Multiple"/>
                             </group>
                             <group string="Misc">
-                                <field name="procurement_id" readonly="1"/>
                                 <field name="active" />
                             </group>
                         </group>                        
@@ -1615,14 +1614,6 @@
             name="Reordering Rules"
             res_model="stock.warehouse.orderpoint"
             src_model="stock.warehouse"
-            groups="stock.group_stock_user"/>
-
-        <act_window
-            context="{'product_uom': locals().has_key('uom_id') and uom_id, 'default_procurement_id': active_id}"
-            id="act_procurement_2_stock_warehouse_orderpoint"
-            name="Reordering Rules"
-            res_model="stock.warehouse.orderpoint"
-            src_model="procurement.order"
             groups="stock.group_stock_user"/>
 
         <!-- Procurements -->
