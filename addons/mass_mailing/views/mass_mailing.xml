@@ -74,11 +74,11 @@
 
         <!-- Create a Mailing List from Contacts -->
         <act_window name="Create Mailing List"
-            res_model="mail.mass_mailing.list"
+            res_model="mail.mass_mailing.list.confirm"
             src_model="mail.mass_mailing.contact"
             view_mode="form"
             multi="True"
-            target="current"
+            target="new"
             key2="client_action_multi"
             id="action_contact_to_mailing_list"
             context="{
@@ -222,6 +222,8 @@
                                 <field name="name"/>
                                 <field name="date" readonly="True" groups="mass_mailing.group_mass_mailing_campaign"/>
                                 <field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
+                                <field name="mailing_model" string="Perform Mailing on" class="oe_inline" widget="radio"
+                                        on_change='on_change_mailing_model(mailing_model, context)'/>
                                 <label for="template_id"/>
                                 <div style="max-height: 200px; overflow: hidden !important;">
                                     <field name="template_id" string="Select Template" nolabel="1"
@@ -244,11 +246,24 @@
                                 <field name="reply_to"/>
                             </group>
                             <group>
-                                <!-- <p colspan="2">Here be some pie charts</p> -->
                                 <field name="total"/>
-                                <field name="received_ratio" attrs="{'invisible': [('total', '=', 0)]}"/>
-                                <field name="opened_ratio" attrs="{'invisible': [('total', '=', 0)]}"/>
-                                <field name="replied_ratio" attrs="{'invisible': [('total', '=', 0)]}"/>
+                                <div class="oe_right oe_button_box" name="buttons">
+                                    <button name="%(action_mail_mass_mailing_report_graph)d"
+                                        type="action" class="oe_stat_button oe_inline">
+                                        <field name="received_ratio" widget="percentpie"/>
+                                        <span>Received</span>
+                                    </button>
+                                    <button name="%(action_mail_mass_mailing_report_graph)d"
+                                        type="action" class="oe_stat_button oe_inline">
+                                        <field name="opened_ratio" widget="percentpie"/>
+                                        <span>Opened</span>
+                                    </button>
+                                    <button name="%(action_mail_mass_mailing_report_graph)d"
+                                        type="action" class="oe_stat_button oe_inline">
+                                        <field name="replied_ratio" widget="percentpie"/>
+                                        <span>Replied</span>
+                                    </button>
+                                </div>
                                 <!-- <p colspan="2">Here be some bar charts</p> -->
                                 <!-- <field name="opened_dayly" attrs="{'invisible': [('total', '=', 0)]}"/>
                                 <field name="replied_dayly" attrs="{'invisible': [('total', '=', 0)]}"/> -->
@@ -258,12 +273,13 @@
                             <label for="contact_list_ids" string="Recipients"/>
                             <div>
                                 <group>
-                                    <field name="mailing_model" string="Perform Mailing on" class="oe_inline" widget="radio"
-                                        on_change='on_change_mailing_model(mailing_model, context)'/>
-                                    <label for="contact_list_ids" string="Selected Lists"/>
+                                    <label for="contact_list_choice" string="Mailing List"/>
                                     <div>
-                                        <field name="contact_list_ids" widget="many2many_tags" nolabel="1" options="{'no_create': True}"/>
-                                        <button string='Create a New List' class="oe_inline oe_link" type='object' name='action_new_list'/>
+                                        <field name="contact_list_choice" widget="radio"/>
+                                        <field name="contact_list_ids" widget="many2many_tags" options="{'no_create': True}"
+                                            attrs="{'invisible': [('contact_list_choice', '=', 'new')]}"/>
+                                        <button string='Create a New List' class="oe_inline oe_link" type='object' name='action_new_list'
+                                            attrs="{'invisible': [('contact_list_choice', '=', 'existing')]}"/>
                                     </div>
                                     <label for="contact_nbr" string="Contacts"/>
                                     <div>

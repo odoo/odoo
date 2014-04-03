@@ -143,7 +143,7 @@ class MassMailingList(osv.Model):
 
     def create(self, cr, uid, values, context=None):
         new_id = super(MassMailingList, self).create(cr, uid, values, context=context)
-        if values.get('model') == 'mail.mass_mailing.contact':
+        if values.get('model') == 'mail.mass_mailing.contact' and (not context or not context.get('no_contact_to_list')):
             domain = values.get('domain')
             if domain is None or domain is False:
                 return new_id
@@ -175,7 +175,7 @@ class MassMailingList(osv.Model):
             return False
         self.pool['mail.mass_mailing'].write(cr, uid, [mass_mailing_id], {'contact_list_ids': [(4, list_id) for list_id in ids]}, context=context)
         return {
-            'name': _('New Mass Mailing'),
+            'name': _('Mass Mailing'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
@@ -185,12 +185,9 @@ class MassMailingList(osv.Model):
         }
 
     def _get_domain(self, cr, uid, ids, context=None):
-        # todo: model-based method + check opt_out field exists
         domains = {}
         for contact_list in self.browse(cr, uid, ids, context=context):
-            if contact_list.model == 'mail.mass_mailing.contact':
-                domain = [('list_id', '=', contact_list.id)]
-            elif contact_list.domain is False or contact_list.domain is None:  # domain is a string like False or None -> void list
+            if contact_list.domain is False or contact_list.domain is None:  # domain is a string like False or None -> void list
                 domain = [('id', '=', '0')]
             else:
                 domain = eval(contact_list.domain)
@@ -495,6 +492,10 @@ class MassMailing(osv.Model):
         'email_from': fields.char('From'),
         'reply_to': fields.char('Reply To'),
         'mailing_model': fields.selection(_mailing_model, string='Type', required=True),
+        'contact_list_choice': fields.selection(
+            [('existing', 'Use existing lists'), ('new', 'Create a new list')],
+            string='Contact List Choice', required=True
+        ),
         'contact_list_ids': fields.many2many(
             'mail.mass_mailing.list', 'mail_mass_mailing_list_rel',
             string='Mailing Lists',
@@ -579,12 +580,25 @@ class MassMailing(osv.Model):
         'date': fields.datetime.now,
         'email_from': lambda self, cr, uid, ctx=None: self.pool['mail.message']._get_default_from(cr, uid, context=ctx),
         'mailing_model': 'res.partner',
+        'contact_list_choice': 'existing',
         'contact_ab_pc': 100,
     }
 
     #------------------------------------------------------
     # Technical stuff
     #------------------------------------------------------
+
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        mailing = self.browse(cr, uid, id, context=context)
+        default.update({
+            'state': 'draft',
+            'statistics_ids': [],
+            'state': 'draft',
+            'name': _('%s (duplicate)') % mailing.name,
+        })
+        return super(MassMailing, self).copy_data(cr, uid, id, default, context=context)
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         """ Override read_group to always display all states. """
@@ -635,13 +649,8 @@ class MassMailing(osv.Model):
 
     def action_duplicate(self, cr, uid, ids, context=None):
         copy_id = None
-        for mailing in self.browse(cr, uid, ids, context=context):
-            copy_id = self.copy(
-                cr, uid, mailing.id, default={
-                    'statistics_ids': [],
-                    'state': 'draft',
-                    'name': _('%s (duplicate)') % mailing.name,
-                }, context=context)
+        for mid in ids:
+            copy_id = self.copy(cr, uid, mid, context=context)
         if copy_id:
             return {
                 'type': 'ir.actions.act_window',
@@ -660,15 +669,20 @@ class MassMailing(osv.Model):
             return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_contact_to_mailing_list')
 
     def action_new_list(self, cr, uid, ids, context=None):
-        wizard = self.browse(cr, uid, ids[0], context=context)
-        action_id = self._get_model_to_list_action_id(cr, uid, wizard.mailing_model, context=context)
-        ctx = dict(context, search_default_not_opt_out=True, view_manager_highlight=[action_id], default_mass_mailing_id=ids[0], default_model=wizard.mailing_model)
+        mailing = self.browse(cr, uid, ids[0], context=context)
+        action_id = self._get_model_to_list_action_id(cr, uid, mailing.mailing_model, context=context)
+        ctx = dict(context,
+                   search_default_not_opt_out=True,
+                   view_manager_highlight=[action_id],
+                   default_name=mailing.name,
+                   default_mass_mailing_id=ids[0],
+                   default_model=mailing.mailing_model)
         return {
             'name': _('Choose Recipients'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'tree,form',
-            'res_model': wizard.mailing_model,
+            'res_model': mailing.mailing_model,
             'context': ctx,
         }
 
@@ -676,7 +690,7 @@ class MassMailing(osv.Model):
         mailing = self.browse(cr, uid, ids[0], context=context)
         domain = self.pool['mail.mass_mailing.list'].get_global_domain(cr, uid, [c.id for c in mailing.contact_list_ids], context=context)[mailing.mailing_model]
         return {
-            'name': _('Mailing Recipients'),
+            'name': _('See Recipients'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'tree,form',

@@ -4,11 +4,11 @@
 
         <!-- Create a Mailing List from Partners -->
         <act_window name="Create Mailing List"
-            res_model="mail.mass_mailing.list"
+            res_model="mail.mass_mailing.list.confirm"
             src_model="res.partner"
             view_mode="form"
             multi="True"
-            target="current"
+            target="new"
             key2="client_action_multi"
             id="action_partner_to_mailing_list"
             context="{
