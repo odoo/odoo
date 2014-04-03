@@ -132,7 +132,9 @@ class BlogPost(osv.Model):
             if not node.tag in tags:
                 continue
             ancestor_tags = [parent.tag for parent in node.iterancestors()]
-            ancestor_tags.pop()
+            if ancestor_tags:
+                ancestor_tags.pop()
+            ancestor_tags.append('counter_%s' % counter)
             new_attribute = '/'.join(reversed(ancestor_tags))
             old_attribute = node.get(attribute)
             node.set(attribute, new_attribute)
