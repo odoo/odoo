@@ -2337,7 +2337,7 @@ class BaseModel(object):
 
         groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, annotated_groupbys, query, fget)
         from_clause, where_clause, where_clause_params = query.get_sql()
-        count_field = groupby_fields[0] if (len(groupby_fields) == 1 and context.get('group_by_no_leaf')) else '_'
+        count_field = groupby_fields[0] if lazy and (len(groupby_fields) >= 2 or not context.get('group_by_no_leaf')) else '_'
 
         prefix_terms = lambda prefix, terms: (prefix + " " + ",".join(terms)) if terms else ''
         prefix_term = lambda prefix, term: ('%s %s' % (prefix, term)) if term else ''
