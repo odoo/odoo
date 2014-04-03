@@ -695,6 +695,7 @@ class purchase_order(osv.osv):
             'procurement_id': False,
             'origin': order.name,
             'route_ids': order.picking_type_id.warehouse_id and [(6, 0, [x.id for x in order.picking_type_id.warehouse_id.route_ids])] or [],
+            'warehouse_id':order.picking_type_id.warehouse_id.id,
         }
 
         diff_quantity = order_line.product_qty

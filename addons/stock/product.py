@@ -136,7 +136,6 @@ class product_product(osv.osv):
 
         moves_in = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_in))
         moves_out = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_out))
-
         res = {}
         for id in ids:
             res[id] = {

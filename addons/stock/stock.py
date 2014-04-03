@@ -1794,18 +1794,26 @@ class stock_move(osv.osv):
             #   to receive goods without triggering the push rules again (which would duplicate chained operations)
             if not move.move_dest_id and not move.origin_returned_move_id:
                 domain = [('location_from_id', '=', move.location_dest_id.id)]
-                if move.warehouse_id:
-                    domain += ['|', ('warehouse_id', '=', move.warehouse_id.id), ('warehouse_id', '=', False)]
+                
                 #priority goes to the route defined on the product and product category
                 route_ids = [x.id for x in move.product_id.route_ids + move.product_id.categ_id.total_route_ids]
                 rules = push_obj.search(cr, uid, domain + [('route_id', 'in', route_ids)], order='route_sequence, sequence', context=context)
                 if not rules:
-                    #but if there's no rule matching, we try without filtering on routes
-                    rules = push_obj.search(cr, uid, domain, order='route_sequence, sequence', context=context)
+                    route_ids = []
+                    if move.warehouse_id:
+                        route_ids = [x.id for x in move.warehouse_id.route_ids]
+                    elif move.picking_type_id and move.picking_type_id.warehouse_id:
+                        route_ids = [x.id for x in move.picking_type_id.warehouse_id.route_ids]
+                    if route_ids:
+                        rules = push_obj.search(cr, uid, domain + [('route_id', 'in', route_ids)], order='route_sequence, sequence', context=context)
+                    if not rules:
+                        #but if there's no rule matching, we try without filtering on routes
+                        rules = push_obj.search(cr, uid, domain, order='route_sequence, sequence', context=context)
                 if rules:
                     rule = push_obj.browse(cr, uid, rules[0], context=context)
                     push_obj._apply(cr, uid, rule, move, context=context)
         return True
+    
 
     def _create_procurement(self, cr, uid, move, context=None):
         """ This will create a procurement order """
