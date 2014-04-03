@@ -43,7 +43,7 @@
                     </div>
                     <div class="text-muted">
                         by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.user_id.id }" t-field="question.user_id"/>, 
-                        on <span t-field="question.write_date"/>
+                        on <span t-field="question.write_date" t-field-options='{"format":"short"}'/>
                         <div t-if="question.vote_count">
                             <strong>with <span t-esc="question.vote_count"/> votes</strong>
                         </div>
@@ -442,13 +442,13 @@
                             </div>
                             <t t-call="website_forum.user_detail">
                                 <t t-set="user" t-value="question.user_id"/>
-                                <span class="text-muted">Asked on <span t-field="question.write_date"/></span>
+                                <span class="text-muted">Asked on <span t-field="question.write_date" t-field-options='{"format":"short"}'/></span>
                             </t>
                             <div class="alert alert-info" t-if="question.state == 'close'">
                                 <p class="mt32 mb32 text-center">
                                     <b>The question has been closed for the following reason "<span t-field="question.reason_id.name"/>"
                                     <i>by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ slug(question.closed_by) }" t-field="question.closed_by.name"/> </i>
-                                     <br/>close date <span t-field="question.closed_date"/></b>
+                                    <br/>close date <span t-field="question.closed_date"/></b>
                                 </p>
                             </div>
                         </div>
@@ -492,7 +492,7 @@
                             </ul>
                             <t t-call="website_forum.user_detail">
                                 <t t-set="user" t-value="answer.user_id"/>
-                                <span class="text-muted">Answered on <span t-field="answer.create_date"/></span>
+                                <span class="text-muted">Answered on <span t-field="answer.create_date" t-field-options='{"format":"short"}'/></span>
                             </t>
                         </div>
                         <t t-call="website_forum.comments">
@@ -747,14 +747,14 @@
                     <li>
                         <a href="#answers" data-toggle="tab"><t t-esc="len(answers)"/> Answers</a>
                     </li>
-                    <li>
+                    <li t-if="uid == user.id">
                         <a href="#activity" data-toggle="tab">Activity</a>
                     </li>
                     <li>
                         <a href="#badges" data-toggle="tab">Badges</a>
                     </li>
-                    <li>
-                        <a href="#followed_question" data-toggle="tab"><t t-esc="len(followed)"/>Followed Question</a>
+                    <li t-if="uid == user.id">
+                        <a href="#followed_question" data-toggle="tab"><t t-esc="len(followed)"/> Followed Question</a>
                     </li>
                     <li>
                         <a href="#votes" data-toggle="tab">Votes</a>
