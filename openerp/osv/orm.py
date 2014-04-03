@@ -1903,7 +1903,7 @@ class BaseModel(object):
         return result
 
     def _view_look_dom_arch(self, cr, uid, node, view_id, context=None):
-        return self['ir.ui.view'].postprocess_and_fields(
+        return self.pool['ir.ui.view'].postprocess_and_fields(
             cr, uid, self._name, node, view_id, context=context)
 
     def search_count(self, cr, user, args, context=None):
