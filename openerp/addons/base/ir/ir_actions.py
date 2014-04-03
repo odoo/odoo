@@ -935,6 +935,7 @@ class ir_actions_server(osv.osv):
             'uid': uid,
             'user': user,
             'context': context,
+            'Warning': openerp.exceptions.Warning,
         }
         return eval_context
 
