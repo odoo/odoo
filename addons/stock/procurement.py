@@ -23,6 +23,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp import SUPERUSER_ID
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 import openerp
@@ -216,7 +217,8 @@ class procurement_order(osv.osv):
                 return False
             move_obj = self.pool.get('stock.move')
             move_dict = self._run_move_create(cr, uid, procurement, context=context)
-            move_obj.create(cr, uid, move_dict, context=context)
+            #create the move as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
+            move_obj.create(cr, SUPERUSER_ID, move_dict, context=context)
             self.message_post(cr, uid, [procurement.id], body=_("Supply Move created"), context=context)
             return True
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
@@ -278,15 +280,11 @@ class procurement_order(osv.osv):
         result['domain'] = "[('group_id','in',[" + ','.join(map(str, list(group_ids))) + "])]"
         return result
 
-    #
-    # Scheduler
-    # When stock is installed, it should also check for the different confirmed stock moves
-    # if they can not be installed
-    #
-    #
     def run_scheduler(self, cr, uid, use_new_cursor=False, context=None):
         '''
-        Call the scheduler in order to 
+        Call the scheduler in order to check the running procurements (super method), to check the minimum stock rules
+        and the availability of moves. This function is intended to be run for all the companies at the same time, so
+        we run functions as SUPERUSER to avoid intercompanies and access rights issues.
 
         @param self: The object pointer
         @param cr: The current row, from the database cursor,
@@ -296,7 +294,6 @@ class procurement_order(osv.osv):
         @param context: A standard dictionary for contextual values
         @return:  Dictionary of values
         '''
-
         super(procurement_order, self).run_scheduler(cr, uid, use_new_cursor=use_new_cursor, context=context)
         if context is None:
             context = {}
@@ -304,19 +301,19 @@ class procurement_order(osv.osv):
             if use_new_cursor:
                 cr = openerp.registry(use_new_cursor).db.cursor()
 
-            company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             move_obj = self.pool.get('stock.move')
+
             #Minimum stock rules
-            self. _procure_orderpoint_confirm(cr, uid, use_new_cursor=False, context=context, user_id=False)
+            company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
+            self._procure_orderpoint_confirm(cr, SUPERUSER_ID, use_new_cursor=False, company_id=company.id, context=context)
 
             #Search all confirmed stock_moves and try to assign them
-            confirmed_ids = move_obj.search(cr, uid, [('state', '=', 'confirmed'), ('company_id','=', company.id)], limit=None, order='picking_priority desc, date_expected asc', context=context)
+            confirmed_ids = move_obj.search(cr, uid, [('state', '=', 'confirmed')], limit=None, order='picking_priority desc, date_expected asc', context=context)
             for x in xrange(0, len(confirmed_ids), 100):
-                move_obj.action_assign(cr, uid, confirmed_ids[x:x+100], context=context)
+                move_obj.action_assign(cr, uid, confirmed_ids[x:x + 100], context=context)
                 if use_new_cursor:
                     cr.commit()
-            
-            
+
             if use_new_cursor:
                 cr.commit()
         finally:
@@ -326,7 +323,6 @@ class procurement_order(osv.osv):
                 except Exception:
                     pass
         return {}
-
 
     def _get_orderpoint_date_planned(self, cr, uid, orderpoint, start_date, context=None):
         date_planned = start_date
@@ -349,17 +345,11 @@ class procurement_order(osv.osv):
                 [order_point.product_id.id],
                 {'location': order_point.location_id.id})[order_point.product_id.id]['virtual_available']
 
-    def _procure_orderpoint_confirm(self, cr, uid, \
-            use_new_cursor=False, context=None, user_id=False):
+    def _procure_orderpoint_confirm(self, cr, uid, use_new_cursor=False, company_id=False, context=None):
         '''
         Create procurement based on Orderpoint
         use_new_cursor: False or the dbname
 
-        @param self: The object pointer
-        @param cr: The current row, from the database cursor,
-        @param user_id: The current user ID for security checks
-        @param context: A standard dictionary for contextual values
-        @param param: False or the dbname
         @return:  Dictionary of values
         """
         '''
@@ -368,18 +358,18 @@ class procurement_order(osv.osv):
         if use_new_cursor:
             cr = openerp.registry(use_new_cursor).db.cursor()
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
-        
+
         procurement_obj = self.pool.get('procurement.order')
         offset = 0
         ids = [1]
         while ids:
-            ids = orderpoint_obj.search(cr, uid, [], offset=offset, limit=100)
+            ids = orderpoint_obj.search(cr, uid, [('company_id', '=', company_id)], offset=offset, limit=100)
             for op in orderpoint_obj.browse(cr, uid, ids, context=context):
                 prods = self._product_virtual_get(cr, uid, op)
                 if prods is None:
                     continue
                 if prods < op.product_min_qty:
-                    qty = max(op.product_min_qty, op.product_max_qty)-prods
+                    qty = max(op.product_min_qty, op.product_max_qty) - prods
 
                     reste = qty % op.qty_multiple
                     if reste > 0:
@@ -409,8 +399,7 @@ class procurement_order(osv.osv):
                                                          context=context)
                         self.check(cr, uid, [proc_id])
                         self.run(cr, uid, [proc_id])
-                        orderpoint_obj.write(cr, uid, [op.id],
-                                {'procurement_id': proc_id}, context=context)
+                        orderpoint_obj.write(cr, uid, [op.id], {'procurement_id': proc_id}, context=context)
             offset += len(ids)
             if use_new_cursor:
                 cr.commit()

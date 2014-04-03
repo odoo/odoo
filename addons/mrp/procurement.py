@@ -21,9 +21,9 @@
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from openerp.osv import fields
-from openerp.osv import osv
+from openerp.osv import osv, fields
 from openerp.tools.translate import _
+from openerp import SUPERUSER_ID
 
 class procurement_rule(osv.osv):
     _inherit = 'procurement.rule'
@@ -75,7 +75,6 @@ class procurement_order(osv.osv):
         company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
         production_obj = self.pool.get('mrp.production')
         bom_obj = self.pool.get('mrp.bom')
-        move_obj = self.pool.get('stock.move')
         procurement_obj = self.pool.get('procurement.order')
         for procurement in procurement_obj.browse(cr, uid, ids, context=context):
             if self.check_bom_exists(cr, uid, [procurement.id], context=context):
@@ -91,7 +90,8 @@ class procurement_order(osv.osv):
                 res_id = procurement.move_dest_id and procurement.move_dest_id.id or False
                 newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.product_id.produce_delay or 0.0)
                 newdate = newdate - relativedelta(days=company.manufacturing_lead)
-                produce_id = production_obj.create(cr, uid, {
+                #create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
+                produce_id = production_obj.create(cr, SUPERUSER_ID, {
                     'origin': procurement.origin,
                     'product_id': procurement.product_id.id,
                     'product_qty': procurement.product_qty,

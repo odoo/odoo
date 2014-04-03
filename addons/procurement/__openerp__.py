@@ -49,7 +49,6 @@ depending on the product's configuration.
         'procurement_data.xml',
         'wizard/schedulers_all_view.xml',
         'procurement_view.xml',
-        'company_view.xml',
     ],
     'demo': [],
     'test': ['test/procurement.yml'],
