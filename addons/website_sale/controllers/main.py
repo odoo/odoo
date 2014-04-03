@@ -275,6 +275,7 @@ class Ecommerce(http.Controller):
                 all_categories.add(parent)
                 parent = parent.parent_id
         categories = list(all_categories)
+        categories.sort(key=lambda x: x.sequence)
 
         values = {
             'products': products,
