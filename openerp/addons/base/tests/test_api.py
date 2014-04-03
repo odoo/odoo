@@ -252,11 +252,11 @@ class TestAPI(common.TransactionCase):
         """ Test draft mode nesting. """
         env = self.env
         self.assertFalse(env.draft)
-        with env.in_draft():
+        with env.do_in_draft():
             self.assertTrue(env.draft)
-            with env.in_draft():
+            with env.do_in_draft():
                 self.assertTrue(env.draft)
-                with env.in_draft():
+                with env.do_in_draft():
                     self.assertTrue(env.draft)
                 self.assertTrue(env.draft)
             self.assertTrue(env.draft)

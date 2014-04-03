@@ -5470,7 +5470,7 @@ class BaseModel(object):
         """
         env = self._env
 
-        with env.in_draft():
+        with env.do_in_draft():
             # create a new record with the values, except field_name
             record = self.new(values)
             record_values = dict(record._cache)
@@ -5488,7 +5488,7 @@ class BaseModel(object):
         # at this point, the cache should be clean
         assert not env.dirty
 
-        with env.in_draft():
+        with env.do_in_draft():
             # check for a field-specific onchange method
             method = getattr(record, 'onchange_' + field_name, None)
             if method is None:

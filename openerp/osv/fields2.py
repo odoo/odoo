@@ -485,7 +485,7 @@ class Field(object):
         else:
             # execute the compute method in DRAFT mode, so that assigned fields
             # are not written to the database
-            with env.in_draft():
+            with env.do_in_draft():
                 recs = record._in_cache_without(self)
                 self.compute_value(recs, check_exists=True)
 

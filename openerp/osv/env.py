@@ -73,7 +73,7 @@ class Environment(object):
         self.prefetch = defaultdict(set)    # prefetch[model_name] = set(ids)
         self.dirty = set()                  # set of dirty records
         self.todo = {}                      # todo[field] = recs to recompute
-        self.shared = env.shared if env else Shared()
+        self.draft = env.draft if env else Draft()
         self.all = envs
         envs.add(self)
         return self
@@ -111,22 +111,17 @@ class Environment(object):
         """ return the current language code """
         return self.context.get('lang')
 
-    @property
-    def draft(self):
-        """ Return whether we are in draft mode. """
-        return self.shared.draft
-
     @contextmanager
-    def in_draft(self):
+    def do_in_draft(self):
         """ Context-switch to draft mode. """
-        if self.shared.draft:
+        if self.draft:
             yield
         else:
             try:
-                self.shared.draft = True
+                self.draft.set(True)
                 yield
             finally:
-                self.shared.draft = False
+                self.draft.set(False)
                 self.dirty.clear()
 
     def invalidate(self, spec):
@@ -183,11 +178,15 @@ class Environment(object):
             raise Warning('Invalid cache for fields\n' + pformat(invalids))
 
 
-class Shared(object):
-    """ An object shared by all environments in a thread/request. """
+class Draft(object):
+    """ A boolean flag shared among environments. """
+    _state = False
 
-    def __init__(self):
-        self.draft = False
+    def __nonzero__(self):
+        return self._state
+
+    def set(self, value):
+        self._state = bool(value)
 
 
 # keep those imports here in order to handle cyclic dependencies correctly
