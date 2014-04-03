@@ -219,8 +219,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
             header.root.groupby.push(groupby);
         }
         return this.perform_requests(this_gb, other_gbs, header.domain).then(function () {
-            var data = Array.prototype.slice.call(arguments);
-            data = data.slice(other_gbs.length + 1, data.length);
+            var data = Array.prototype.slice.call(arguments).slice(other_gbs.length + 1);
             _.each(data, function (data_pt) {
                 self.make_headers_and_cell(
                     data_pt, header.root.headers, other_root.headers, 1, header.path, true);
@@ -369,6 +368,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
                 }
                 if (corresponding_header && (!header.expanded)) {
                     corresponding_header.expanded = false;
+                    corresponding_header.children = [];
                 }
             });
             var updated_headers = _.filter(new_headers, function (header) {
