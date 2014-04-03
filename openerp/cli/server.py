@@ -107,8 +107,15 @@ def run_test_file(dbname, test_file):
         registry = openerp.modules.registry.RegistryManager.new(dbname, update_module=config['init'] or config['update'])
         cr = registry.db.cursor()
         _logger.info('loading test file %s', test_file)
-        openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'test', True)
-        cr.rollback()
+        openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'init')
+
+        if config['test_commit']:
+            _logger.info('test %s has been commited', test_file)
+            cr.commit()
+        else:
+            _logger.info('test %s has been rollbacked', test_file)
+            cr.rollback()
+
         cr.close()
     except Exception:
         _logger.exception('Failed to initialize database `%s` and run test file `%s`.', dbname, test_file)

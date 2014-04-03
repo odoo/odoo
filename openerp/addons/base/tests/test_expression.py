@@ -439,5 +439,18 @@ class test_expression(common.TransactionCase):
         partner_parent_id_col._auto_join = False
         state_country_id_col._auto_join = False
 
+    def test_translate_search(self):
+        Country = self.registry('res.country')
+        be = self.ref('base.be')
+        domains = [
+            [('name', '=', 'Belgium')],
+            [('name', 'ilike', 'Belgi')],
+            [('name', 'in', ['Belgium', 'Care Bears'])],
+        ]
+
+        for domain in domains:
+            ids = Country.search(self.cr, self.uid, domain)
+            self.assertListEqual([be], ids)
+
 if __name__ == '__main__':
     unittest2.main()
