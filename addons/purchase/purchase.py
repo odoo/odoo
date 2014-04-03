@@ -1329,12 +1329,6 @@ class procurement_order(osv.osv):
             self.message_post(cr, uid, sum_po_line_ids, body=_("Quantity added in existing Purchase Order Line"), context=context)
         return res
 
-    def _product_virtual_get(self, cr, uid, order_point):
-        procurement = order_point.procurement_id
-        if procurement and procurement.state != 'exception' and procurement.purchase_line_id and procurement.purchase_line_id.order_id.state in ('draft', 'confirmed'):
-            return None
-        return super(procurement_order, self)._product_virtual_get(cr, uid, order_point)
-
 
 class mail_mail(osv.Model):
     _name = 'mail.mail'
