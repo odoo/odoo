@@ -124,9 +124,9 @@ class Report(osv.Model):
             else:
                 # Guessing the lang we want to translate the doc into
                 newlang = None
-                if hasattr(doc, 'partner_id'):
+                if doc._model._all_columns.get('partner_id'):
                     newlang = doc.partner_id.lang
-                elif hasattr(doc, 'lang'):
+                elif doc._model._all_columns.get('lang'):
                     newlang = doc.lang
                 if newlang:
                     ctx['lang'] = newlang
