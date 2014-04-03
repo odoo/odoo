@@ -72,6 +72,7 @@ class Environment(object):
         self.cache = defaultdict(dict)      # cache[field] = {id: value, ...}
         self.prefetch = defaultdict(set)    # prefetch[model_name] = set(ids)
         self.dirty = set()                  # set of dirty records
+        self.todo = {}                      # todo[field] = recs to recompute
         self.shared = env.shared if env else Shared()
         self.all = envs
         envs.add(self)
@@ -127,23 +128,6 @@ class Environment(object):
             finally:
                 self.shared.draft = False
                 self.dirty.clear()
-
-    @property
-    def recomputation(self):
-        """ Return the recomputation object. """
-        return Recomputation(self)
-
-    @contextmanager
-    def in_recomputation(self):
-        """ Context-switch to recomputation mode. """
-        if self.shared.recomputing:
-            yield {}
-        else:
-            try:
-                self.shared.recomputing = True
-                yield self.recomputation
-            finally:
-                self.shared.recomputing = False
 
     def invalidate(self, spec):
         """ Invalidate some fields for some records in the cache of all
@@ -204,39 +188,6 @@ class Shared(object):
 
     def __init__(self):
         self.draft = False
-        self.recomputing = False
-        self.todo = {}
-
-
-class Recomputation(MutableMapping):
-    """ Proxy object mapping `field` to `records` to recompute. """
-
-    def __init__(self, env):
-        self._env = env
-        self._todo = env.shared.todo
-
-    def __getitem__(self, field):
-        """ Return the records to recompute for `field` (may be empty). """
-        return self._todo.get(field) or self._env[field.model_name]
-
-    def __setitem__(self, field, records):
-        """ Set the records to recompute for `field`. It automatically discards
-            the item if `records` is empty.
-        """
-        if records:
-            self._todo[field] = records
-        else:
-            self._todo.pop(field, None)
-
-    def __delitem__(self, field):
-        """ Empty the records to recompute for `field`. """
-        self._todo.pop(field, None)
-
-    def __iter__(self):
-        return iter(self._todo)
-
-    def __len__(self):
-        return len(self._todo)
 
 
 # keep those imports here in order to handle cyclic dependencies correctly

@@ -473,13 +473,15 @@ class Field(object):
         env = record._env
         if self.store and not (self.compute and env.draft):
             # recompute field on record if required
-            recs_todo = env.recomputation[self]
-            if record in recs_todo:
+            recs_todo = record._recompute_check(self)
+            if recs_todo:
                 # execute the compute method in NON-DRAFT mode, so that assigned
                 # fields are written to the database
+                recs_todo._recompute_done(self)
                 self.compute_value(recs_todo, check_exists=True)
-            else:
-                record._prefetch_field(self)
+                if self in record._cache:
+                    return
+            record._prefetch_field(self)
         else:
             # execute the compute method in DRAFT mode, so that assigned fields
             # are not written to the database
@@ -519,7 +521,6 @@ class Field(object):
             invalidate.
         """
         env = records._env(user=SUPERUSER_ID, context={'active_test': False})
-        recomputation = env.recomputation
 
         # invalidate the fields that depend on self, and prepare recomputation
         spec = [(self, records._ids)]
@@ -528,7 +529,7 @@ class Field(object):
                 target = env[field.model_name].search([(path, 'in', records._ids)])
                 if target:
                     spec.append((field, target._ids))
-                    recomputation[field] |= target
+                    target._recompute_todo(field)
             else:
                 spec.append((field, None))
 

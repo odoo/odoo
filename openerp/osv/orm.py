@@ -2745,9 +2745,9 @@ class BaseModel(object):
                     self._name, ', '.join(f.name for f in stored_fields))
                 recs = self.browse(cr, SUPERUSER_ID, [], {'active_test': False})
                 recs = recs.search([])
-                for f in stored_fields:
-                    recs._env.recomputation[f] |= recs
-                recs.recompute()
+                if recs:
+                    map(recs._recompute_todo, stored_fields)
+                    recs.recompute()
 
             todo_end.append((1000, func, ()))
 
@@ -3150,26 +3150,23 @@ class BaseModel(object):
         # fetch the records of this model without field_name in their cache
         records = self._in_cache_without(field)
 
-        # prefetch all classic and many2one fields if column is one of them
-        # Note: do not prefetch fields when self.pool._init is True, because
-        # some columns may be missing from the database!
-        column = self._columns[field.name]
-        if column._prefetch and not (self.pool._init or self._env.draft):
+        # by default, simply fetch field
+        fnames = set((field.name,))
+
+        if self.pool._init:
+            # columns may be missing from database, do not prefetch other fields
+            pass
+        elif self._env.draft:
+            # we may be doing an onchange, do not prefetch other fields
+            pass
+        elif field in self._env.todo:
+            # field must be recomputed, do not prefetch records to recompute
+            records -= self._env.todo[field]
+        elif self._columns[field.name]._prefetch:
+            # here we can optimize: prefetch all classic and many2one fields
             fnames = set(fname
                 for fname, fcolumn in self._columns.iteritems()
                 if fcolumn._prefetch)
-        else:
-            fnames = set((field.name,))
-
-        # do not fetch the records/fields that have to be recomputed
-        recomputation = self._env.recomputation
-        if recomputation:
-            for fname in list(fnames):
-                recs_todo = recomputation[self._fields[fname]]
-                if self & recs_todo:
-                    fnames.discard(fname)       # do not fetch that field
-                else:
-                    records -= recs_todo        # do not fetch those records
 
         # fetch records with read()
         assert self in records and field.name in fnames
@@ -5425,29 +5422,37 @@ class BaseModel(object):
 
         self._env.invalidate(spec)
 
+    @api.new
+    def _recompute_check(self, field):
+        """ If `field` must be recomputed on some record in `self`, return the
+            corresponding records that must be recomputed.
+        """
+        for env in [self._env] + list(self._env.all):
+            if env.todo.get(field) and env.todo[field] & self:
+                return env.todo[field]
+
+    @api.new
+    def _recompute_todo(self, field):
+        """ Mark `field` to be recomputed. """
+        todo = self._env.todo
+        todo[field] = (todo.get(field) or self.browse()) | self
+
+    @api.new
+    def _recompute_done(self, field):
+        """ Mark `field` as being recomputed. """
+        recs = self._env.todo.pop(field) - self
+        if recs:
+            self._env.todo[field] = recs
+
     @api.model
     def recompute(self):
         """ Recompute stored function fields. The fields and records to
             recompute have been determined by method :meth:`modified`.
         """
-        with self._env.in_recomputation() as recomputation:
-            while recomputation:
-                field, recs = next(recomputation.iteritems())
-                # To recompute field, simply evaluate it on recs.
-                failed = recs.browse()
-                for rec in recs:
-                    try:
-                        rec[field.name]
-                    except MissingError:
-                        pass
-                    except Exception:
-                        traceback.print_exc()
-                        failed += rec
-                recomputation[field] -= recs
-                # check whether recomputation failed for some existing records
-                if failed:
-                    raise except_orm("Error",
-                        "Recomputation of %s failed for %s" % (field, failed))
+        for env in list(self._env.all):
+            while env.todo:
+                field, recs = env.todo.popitem()
+                field.compute_value(recs, check_exists=True)
 
     #
     # Generic onchange method
