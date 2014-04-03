@@ -33,8 +33,8 @@ openerp.report = function(instance) {
                         report_url += "/" + action.context.active_ids.join(',');
                     }
                 } else {
-                    report_url += "?options=" + encodeURI(JSON.stringify(action.data));
-                    report_url += "&context=" + encodeURI(JSON.stringify(action.context));
+                    report_url += "?options=" + encodeURIComponent(JSON.stringify(action.data));
+                    report_url += "&context=" + encodeURIComponent(JSON.stringify(action.context));
                 }
 
                 if (action.report_type == 'qweb-html') {
