@@ -153,13 +153,13 @@ $(document).ready(function () {
     $('.clear_survey_filter').click(function(){
         window.location.href = document.URL.substring(0,document.URL.indexOf("?"));
     });
-    $('li.filter-all').click(function(){
+    $('span.filter-all').click(function(){
         event.preventDefault();
         if(document.URL.indexOf("finished") != -1){
             window.location.href = document.URL.replace('?finished&','?').replace('&finished&','&').replace('?finished','').replace('&finished','');
         }
     });
-    $('.filter-finished').click(function(){
+    $('span.filter-finished').click(function(){
         event.preventDefault();
         if(document.URL.indexOf("?") == -1 && document.URL.indexOf("filter") == -1){
             window.location.href = document.URL+'?'+encodeURI('finished');

@@ -17,20 +17,28 @@
                     <h1><span t-field="survey.title"></span> <span style="font-size:1.5em;" class="fa fa-bar-chart-o pull-right "/></h1>
                     <h2><span t-field="survey.description"></span></h2>
                 </div>
-                <div class="hidden-print">
-                    <ul class="nav nav-pills">
-                        <t t-if="filter_finish == True">
-                            <li class="filter-all"><a href="#">All surveys</a></li>
-                            <li class="active filter-finished"><a href="#">Finished surveys</a></li>
-                        </t>
-                        <t t-if="filter_finish == False">
-                            <li class="active filter-all"><a href="#">All surveys</a></li>
-                            <li class="filter-finished"><a href="#">Finished surveys</a></li>
-                        </t>
-                    </ul>
-                </div>
-                <div t-if="filter_display_data" class="filteres">
-                    <span><h3><span class="fa fa-filter"></span> Filters <small class="pull-right clear_survey_filter"> <i class="fa fa-times"></i> Clear All Filters</small></h3></span>
+                <div class="filteres hidden-print">
+                    <span><h3><span class="fa fa-filter"></span> Filters 
+                        <small>
+                            <t t-if="filter_finish == True">
+                                <span class="label label-default only_left_radius filter-all">
+                                    All surveys
+                                </span>
+                                <span class="label label-primary only_right_radius filter-finished">
+                                    Finished surveys
+                                </span>
+                            </t>
+                            <t t-if="filter_finish == False">
+	                            <span class="label label-primary only_left_radius filter-all">
+	                                All surveys
+	                            </span>
+	                            <span class="label label-default only_right_radius filter-finished">
+	                                Finished surveys
+	                            </span>
+                            </t>
+                        </small>
+                        <small t-if="filter_display_data" class="pull-right clear_survey_filter"> <i class="fa fa-times"></i> Clear All Filters</small></h3>
+                    </span>
                     <span t-foreach="filter_display_data" t-as="filter_data">
                         <span class="label label-primary only_left_radius"><i class="fa fa-filter"></i></span><span class="label label-primary no_radius" t-esc="filter_data['question_text']"></span><span class="label label-success only_right_radius" t-esc="' > '.join(filter_data['labels'])"></span>
                     </span>
@@ -46,6 +54,9 @@
                         <h4>
                             <b>Question </b>
                             <span t-field='question.question'></span>
+                            <t t-if="question.type == 'matrix'">
+                                <small><span t-field='question.type' class="label label-default"></span></small>
+                            </t>
                             <span class="pull-right">
                                 <span class="label label-success"><span t-esc="input_summary['answered']"></span> Answered</span>
                                 <span class="label label-danger"><span t-esc="input_summary['skipped']"></span> Skipped</span>
@@ -86,32 +97,20 @@
                 <tbody>
                     <t t-set="text_result" t-value="prepare_result"/>
                     <tr class="hidden" t-foreach="text_result" t-as="user_input">
-                        <td><t t-esc="user_input_index+1"></t></td>
+                        <td><a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index+1"></t></a></td>
                         <t t-if="question.type == 'free_text'">
                             <td>
                                 <span t-field="user_input.value_free_text"></span><br/>
-                                <small><p t-field="user_input.date_create" class="fa fa-calendar oe_date text-muted"></p></small>
-                                <span class="pull-right hidden-print">
-                                    <a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"> <i class="fa fa-print"></i> Print respondent's answers</a><br/>
-                                </span>
                             </td>
                         </t>
                         <t t-if="question.type == 'textbox'">
                             <td>
                                 <span t-field="user_input.value_text"></span><br/>
-                                <small><p t-field="user_input.date_create" class="fa fa-calendar oe_date text-muted"></p>
-                                <span class="pull-right hidden-print">
-                                    <a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"> <i class="fa fa-print"></i> Print respondent's answers</a><br/>
-                                </span>
-                                </small>
                             </td>
                         </t>
                         <t t-if="question.type == 'datetime'">
                             <td>
                                 <span  class="oe_date" t-field="user_input.value_date"></span><br/>
-                                <span class="pull-right hidden-print">
-                                    <a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"> <i class="fa fa-print"></i> Print respondent's answers</a><br/>
-                                </span>
                             </td>
                         </t>
                     </tr>

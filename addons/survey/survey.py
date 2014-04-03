@@ -137,7 +137,6 @@ class survey_survey(osv.Model):
             context = {}
         if filters:
             input_line_obj = self.pool.get('survey.user_input_line')
-            label_obj = self.pool.get('survey.label')
             domain_filter, choice, filter_display_data = [], [], []
             for filter in filters:
                 row_id, answer_id = filter['row_id'], filter['answer_id']
