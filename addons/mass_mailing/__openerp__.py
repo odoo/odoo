@@ -45,11 +45,11 @@ professional emails and reuse templates in a few clicks.
         'wizard/create_template_view.xml',
         'wizard/test_mailing.xml',
         'wizard/mailing_list_confirm.xml',
+        'views/mass_mailing_report.xml',
         'views/mass_mailing.xml',
         'views/res_config.xml',
         'views/res_partner.xml',
         'views/email_template.xml',
-        'views/mass_mailing_report.xml',
         'security/ir.model.access.csv',
     ],
     'js': [

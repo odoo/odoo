@@ -38,14 +38,14 @@
         </record>
 
         <!-- Actions and Menuitems -->
-       <record model="ir.actions.act_window" id="action_mail_mass_mailing_report">
+       <record id="action_mail_mass_mailing_report" model="ir.actions.act_window">
            <field name="name">Mass Mailing Analysis</field>
            <field name="res_model">mail.mass_mailing.report</field>
            <field name="view_type">form</field>
            <field name="view_mode">graph</field>
            <field name="help">Mass Mailing Analysis allows you to check different mailing related information like the opened ratio or the mailing performances. You can sort out your analysis by different groups to get accurate grained analysis.</field>
        </record>
-       <record model="ir.actions.act_window.view" id="action_mail_mass_mailing_report_graph">
+       <record id="action_mail_mass_mailing_report_graph" model="ir.actions.act_window.view">
             <field name="view_mode">graph</field>
             <field name="view_id" ref="view_mail_mass_mailing_report_graph"/>
             <field name="act_window_id" ref="action_mail_mass_mailing_report"/>
