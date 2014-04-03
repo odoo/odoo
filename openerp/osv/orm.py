@@ -2207,7 +2207,7 @@ class BaseModel(object):
         """
         orderby_terms = []
         groupby_terms = [gb['qualified_field'] for gb in annotated_groupbys]
-        groupby_fields = [gb['field'] for gb in annotated_groupbys]
+        groupby_fields = [gb['groupby'] for gb in annotated_groupbys]
         if not orderby:
             return groupby_terms, orderby_terms    
 
@@ -2217,13 +2217,13 @@ class BaseModel(object):
             order_field = order_split[0]
             if order_field in groupby_fields:
 
-                if fget[order_field]['type'] == 'many2one':
+                if fget[order_field.split(':')[0]]['type'] == 'many2one':
                     order_clause = self._generate_order_by(order_part, query).replace('ORDER BY ', '')
                     if order_clause:
                         orderby_terms.append(order_clause)
                         groupby_terms += [order_term.split()[0] for order_term in order_clause.split(',')]
                 else:
-                    orderby_terms.append(order_part)
+                    orderby_terms.append('"%s"' % order_part)
             elif order_field in aggregated_fields:
                 orderby_terms.append(order_part)
             else:
@@ -2299,7 +2299,8 @@ class BaseModel(object):
             if field_type == 'boolean':
                 qualified_field = "coalesce(%s,false)" % qualified_field
             return {
-                'field': split[0], 
+                'field': split[0],
+                'groupby': gb,
                 'type': field_type, 
                 'display_format': display_formats[gb_function or 'month'] if temporal else None,
                 'interval': time_intervals[gb_function or 'month'] if temporal else None,                
@@ -2309,8 +2310,8 @@ class BaseModel(object):
 
         annotated_groupbys = map(process_groupby, groupby[:1] if lazy else groupby)
         groupby_fields = [g['field'] for g in annotated_groupbys]
-        order = orderby or ','.join(groupby_fields)
-        groupby_dict = {gb['field']: gb for gb in annotated_groupbys}
+        order = orderby or ','.join([g['groupby'] for g in annotated_groupbys])
+        groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
 
         self._apply_ir_rules(cr, uid, query, 'read', context=context)
         for gb in groupby_fields:
@@ -2333,7 +2334,7 @@ class BaseModel(object):
         select_terms = ["%s(%s) AS %s" % field_formatter(f) for f in aggregated_fields]
 
         for gb in annotated_groupbys:
-            select_terms.append("%s as %s " % (gb['qualified_field'], gb['field']))
+            select_terms.append('%s as "%s" ' % (gb['qualified_field'], gb['groupby']))
 
         groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, annotated_groupbys, query, fget)
         from_clause, where_clause, where_clause_params = query.get_sql()
@@ -2404,7 +2405,7 @@ class BaseModel(object):
             return [(gb['field'], '=', value)]
 
         def format_result (fromquery):
-            domain_group = [dom for gb in annotated_groupbys for dom in get_domain(gb, fromquery[gb['field']])]
+            domain_group = [dom for gb in annotated_groupbys for dom in get_domain(gb, fromquery[gb['groupby']])]
             result = { '__domain': domain_group + domain }
             if len(groupby) - len(annotated_groupbys) >= 1:
                 result['__context'] = { 'group_by': groupby[len(annotated_groupbys):]}
@@ -4421,7 +4422,7 @@ class BaseModel(object):
         return Query(tables, where_clause, where_params)
 
     def _check_qorder(self, word):
-        if not regex_order.match(word):
+        if not regex_order.match(word.split(':')[0]):
             raise except_orm(_('AccessError'), _('Invalid "order" specified. A valid "order" specification is a comma-separated list of valid field names (optionally followed by asc/desc for the direction)'))
         return True
 
