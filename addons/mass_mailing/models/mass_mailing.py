@@ -493,7 +493,6 @@ class MassMailing(osv.Model):
         ),
         # mailing options
         'email_from': fields.char('From'),
-        'test_email_to': fields.char('Test Emails'),
         'reply_to': fields.char('Reply To'),
         'mailing_model': fields.selection(_mailing_model, string='Type', required=True),
         'contact_list_ids': fields.many2many(
@@ -687,6 +686,17 @@ class MassMailing(osv.Model):
             'context': context,
         }
 
+    def action_test_mailing(self, cr, uid, ids, context=None):
+        ctx = dict(context, default_mass_mailing_id=ids[0])
+        return {
+            'name': _('Test Mailing'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.mass_mailing.test',
+            'target': 'new',
+            'context': ctx,
+        }
+
     #------------------------------------------------------
     # Email Sending
     #------------------------------------------------------
@@ -779,31 +789,6 @@ class MassMailing(osv.Model):
                 mail_values['attachment_ids'] = m2m_attachment_ids
 
                 Mail.create(cr, uid, mail_values, context=context)
-        return True
-
-    def send_mail_test(self, cr, uid, ids, context=None):
-        Mail = self.pool['mail.mail']
-        for mailing in self.browse(cr, uid, ids, context=context):
-            if not mailing.template_id:
-                raise Warning('Please specifiy a template to use.')
-            test_emails = tools.email_split(mailing.test_email_to)
-            if not test_emails:
-                raise Warning('Please specifiy test email adresses.')
-            mail_ids = []
-            for test_mail in test_emails:
-                body = mailing.template_id.body_html
-                unsubscribe_url = self.get_unsubscribe_url(cr, uid, mailing.id, 0, email=test_mail, context=context)
-                body = tools.append_content_to_html(body, unsubscribe_url, plaintext=False, container_tag='p')
-                mail_values = {
-                    'email_from': mailing.email_from,
-                    'reply_to': mailing.reply_to,
-                    'email_to': test_mail,
-                    'subject': mailing.name,
-                    'body_html': body,
-                    'auto_delete': True,
-                }
-                mail_ids.append(Mail.create(cr, uid, mail_values, context=context))
-            Mail.send(cr, uid, mail_ids, context=context)
         return True
 
 

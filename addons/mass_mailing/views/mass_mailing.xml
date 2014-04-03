@@ -203,6 +203,8 @@
             <field name="arch" type="xml">
                 <form string="Mass Mailing" version="7.0">
                     <header>
+                        <button name="action_test_mailing" type="object"
+                            class="oe_highlight" string="Test Mailing"/>
                         <button name="send_mail" type="object"
                             class="oe_highlight" string="Send to All"/>
                         <field name="state" widget="statusbar" clickable="True"/>
@@ -253,13 +255,6 @@
                             </group>
                         </group>
                         <group>
-                            <label for="test_email_to"/>
-                            <div>
-                                <field name="test_email_to" nolabel="1" clcass="oe_inline"/>
-                                <span class="oe_grey">Comma-separated email addresses for testing purpose.</span>
-                                <button string='Test Mailing' class='oe_inline oe_link' style='margin-left: 8px;'
-                                    type='object' name='send_mail_test'/>
-                            </div>
                             <label for="contact_list_ids" string="Recipients"/>
                             <div>
                                 <group>
