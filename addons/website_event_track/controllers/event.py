@@ -43,7 +43,7 @@ class website_event(http.Controller):
     # TODO: not implemented
     @http.route(['/event/<model("event.event"):event>/agenda/'], type='http', auth="public", website=True, multilang=True)
     def event_agenda(self, event, tag=None, **post):
-        values =  request.registry.get('event.track').get_tracks_schedulre_details(request.cr, openerp.SUPERUSER_ID, event, context=request.context)
+        values =  request.registry.get('event.track').get_sorted_tracks(request.cr, openerp.SUPERUSER_ID, event, context=request.context)
         return request.website.render("website_event_track.agenda", values)
 
     @http.route([
