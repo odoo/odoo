@@ -1039,9 +1039,10 @@ class mrp_production(osv.osv):
             'company_id': production.company_id.id,
             'procure_method': self._get_raw_material_procure_method(cr, uid, production_line.product_id, context=context),
             'raw_material_production_id': production.id,
+            #this saves us a browse in create()
+            'price_unit': production_line.product_id.standard_price,
         })
-        stock_move.action_confirm(cr, uid, [move_id], context=context)
-        return True
+        return move_id
 
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms production order.
@@ -1057,8 +1058,12 @@ class mrp_production(osv.osv):
             if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
                 source_location_id = production.bom_id.routing_id.location_id.id
 
+            stock_moves = []
             for line in production.product_lines:
-                self._make_production_consume_line(cr, uid, line, produce_move_id, source_location_id=source_location_id, context=context)
+                stock_move_id = self._make_production_consume_line(cr, uid, line, produce_move_id, source_location_id=source_location_id, context=context)
+                if stock_move_id:
+                    stock_moves.append(stock_move_id)
+            self.pool.get('stock.move').action_confirm(cr, uid, stock_moves, context=context)
             production.write({'state': 'confirmed'}, context=context)
         return 0
 
