@@ -19,6 +19,7 @@
 #
 ##############################################################################
 from openerp.osv import fields, osv
+from openerp import SUPERUSER_ID
 
 class res_groups(osv.osv):
     _name = "res.groups"
@@ -27,6 +28,10 @@ class res_groups(osv.osv):
         'share': fields.boolean('Share Group', readonly=True,
                     help="Group created to set access rights for sharing data with some users.")
     }
+
+    def init(self, cr):
+        # force re-generation of the user groups view without the shared groups
+        self.update_user_groups_view(cr, SUPERUSER_ID)
 
     def get_application_groups(self, cr, uid, domain=None, context=None):
         if domain is None:
