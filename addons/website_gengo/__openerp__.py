@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2013-Today OpenERP S.A. (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,19 +19,24 @@
 #
 ##############################################################################
 
-from openerp.osv import osv,fields
+{
+    'name': 'Website Gengo Translator',
+    'category': 'Website',
+    'version': '1.0',
+    'description': """
+Website Gengo Translator
+========================
 
-class company(osv.osv):
-    _inherit = 'res.company'
-    _columns = {
-        'schedule_range': fields.float('Scheduler Range Days', required=True,
-            help="This is the time frame analysed by the scheduler when "\
-            "computing procurements. All procurements that are not between "\
-            "today and today+range are skipped for future computation."),
-    }
-    _defaults = {
-        'schedule_range': 730.0,
-    }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+Translate you website in one click
+""",
+    'author': 'OpenERP SA',
+    'depends': [
+        'website',
+        'base_gengo'
+    ],
+    'data': [
+        'views/website_gengo.xml',
+    ],
+    'qweb': [],
+    'installable': True,
+}

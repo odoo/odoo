@@ -37,7 +37,7 @@ This is a complete document management system.
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['knowledge'],
+    'depends': ['knowledge', 'mail'],
     'data': [
         'security/document_security.xml',
         'document_view.xml',

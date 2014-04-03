@@ -176,12 +176,6 @@ class sale_order(osv.osv):
                     raise osv.except_osv(
                         _('Cannot cancel sales order!'),
                         _('You must first cancel all delivery order(s) attached to this sales order.'))
-                 # FP Note: not sure we need this
-                 #if pick.state == 'cancel':
-                 #    for mov in pick.move_lines:
-                 #        proc_ids = proc_obj.search(cr, uid, [('move_id', '=', mov.id)])
-                 #        if proc_ids:
-                 #            proc_obj.signal_button_check(cr, uid, proc_ids)
             stock_obj.signal_button_cancel(cr, uid, [p.id for p in sale.picking_ids])
         return super(sale_order, self).action_cancel(cr, uid, ids, context=context)
 

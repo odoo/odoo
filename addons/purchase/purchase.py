@@ -1262,8 +1262,10 @@ class procurement_order(osv.osv):
         }
 
     def make_po(self, cr, uid, ids, context=None):
-        """ Make purchase order from procurement
-        @return: New created Purchase Orders procurement wise
+        """ Resolve the purchase from procurement, which may result in a new PO creation, a new PO line creation or a quantity change on existing PO line.
+        Note that some operations (as the PO creation) are made as SUPERUSER because the current user may not have rights to do it (mto product launched by a sale for example)
+
+        @return: dictionary giving for each procurement its related resolving PO line.
         """
         res = {}
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
@@ -1291,12 +1293,12 @@ class procurement_order(osv.osv):
                     available_po_line_ids = po_line_obj.search(cr, uid, [('order_id', '=', po_id), ('product_id', '=', line_vals['product_id']), ('product_uom', '=', line_vals['product_uom'])], context=context)
                     if available_po_line_ids:
                         po_line = po_line_obj.browse(cr, uid, available_po_line_ids[0], context=context)
-                        po_line_obj.write(cr, uid, po_line.id, {'product_qty': po_line.product_qty + line_vals['product_qty']}, context=context)
+                        po_line_obj.write(cr, SUPERUSER_ID, po_line.id, {'product_qty': po_line.product_qty + line_vals['product_qty']}, context=context)
                         po_line_id = po_line.id
                         sum_po_line_ids.append(procurement.id)
                     else:
                         line_vals.update(order_id=po_id)
-                        po_line_id = po_line_obj.create(cr, uid, line_vals, context=context)
+                        po_line_id = po_line_obj.create(cr, SUPERUSER_ID, line_vals, context=context)
                         linked_po_ids.append(procurement.id)
                 else:
                     purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context)
@@ -1314,7 +1316,7 @@ class procurement_order(osv.osv):
                         'payment_term_id': partner.property_supplier_payment_term.id or False,
                         'dest_address_id': procurement.partner_dest_id.id,
                     }
-                    po_id = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=context)
+                    po_id = self.create_procurement_purchase_order(cr, SUPERUSER_ID, procurement, po_vals, line_vals, context=context)
                     po_line_id = po_obj.browse(cr, uid, po_id, context=context).order_line[0].id
                     pass_ids.append(procurement.id)
                 res[procurement.id] = po_line_id

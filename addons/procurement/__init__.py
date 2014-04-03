@@ -21,5 +21,4 @@
 
 import procurement
 import wizard
-import company
 

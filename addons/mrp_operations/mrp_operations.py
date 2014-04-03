@@ -279,7 +279,8 @@ class mrp_production(osv.osv):
                     i = self.pool.get('resource.calendar').interval_get(
                         cr,
                         uid,
-                        wc.workcenter_id.calendar_id and wc.workcenter_id.calendar_id.id or False,
+                        #passing False makes resource_resource._schedule_hours run 1000 iterations doing nothing
+                        wc.workcenter_id.calendar_id and wc.workcenter_id.calendar_id.id or None,
                         dt,
                         wc.hour or 0.0
                     )
