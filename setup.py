@@ -39,7 +39,7 @@ def data():
         # but this will work fine (especially since we don't use the ZIP file
         # approach).
         r["babel/localedata"] = glob.glob(os.path.join(os.path.dirname(babel.__file__), "localedata", '*'))
-        others = ['global.dat', 'numbers.py', 'support.py']
+        others = ['global.dat', 'numbers.py', 'support.py', 'plural.py']
         r["babel"] = map(lambda f: os.path.join(os.path.dirname(babel.__file__), f), others)
         others = ['frontend.py', 'mofile.py']
         r["babel/messages"] = map(lambda f: os.path.join(os.path.dirname(babel.__file__), "messages", f), others)
@@ -75,7 +75,42 @@ def py2exe_options():
                     "skip_archive": 1,
                     "optimize": 0, # keep the assert running, because the integrated tests rely on them.
                     "dist_dir": 'dist',
-                    "packages": ["HTMLParser", "PIL", "asynchat", "asyncore", "commands", "dateutil", "decimal", "docutils", "email", "encodings", "imaplib", "jinja2", "lxml", "lxml._elementpath", "lxml.builder", "lxml.etree", "lxml.objectify", "mako", "openerp", "poplib", "pychart", "pydot", "pyparsing", "pytz", "reportlab", "select", "simplejson", "smtplib", "uuid", "vatnumber", "vobject", "xml", "xml.dom", "yaml", ],
+                    "packages": [
+                        "HTMLParser",
+                        "PIL",
+                        "asynchat", "asyncore",
+                        "commands",
+                        "dateutil",
+                        "decimal",
+                        "docutils",
+                        "email",
+                        "encodings",
+                        "imaplib",
+                        "jinja2",
+                        "lxml", "lxml._elementpath", "lxml.builder", "lxml.etree", "lxml.objectify",
+                        "mako",
+                        "markupsafe",   # dependence of jinja2 and mako
+                        "mock",
+                        "openerp",
+                        "poplib",
+                        "psutil", 
+                        "pychart",
+                        "pydot",
+                        "pyparsing",
+                        "pytz",
+                        "reportlab",
+                        "requests",
+                        "select",
+                        "simplejson",
+                        "smtplib",
+                        "uuid",
+                        "vatnumber",
+                        "vobject",
+                        "win32service", "win32serviceutil",
+                        "xlwt",
+                        "xml", "xml.dom",
+                        "yaml",
+                    ],
                     "excludes" : ["Tkconstants","Tkinter","tcl"],
                 }
             }
@@ -151,7 +186,7 @@ setuptools.setup(
       extras_require = {
           'SSL' : ['pyopenssl'],
       },
-      tests_require = ['unittest2'],
+      tests_require = ['unittest2', 'mock'],
       **py2exe_options()
 )
 

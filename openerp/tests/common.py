@@ -255,7 +255,7 @@ class HttpCase(TransactionCase):
                 phantom.terminate()
             _logger.info("phantom_run execution finished")
 
-    def phantom_jsfile(self, jsfile, timeout=30, **kw):
+    def phantom_jsfile(self, jsfile, timeout=60, **kw):
         options = {
             'timeout' : timeout,
             'port': PORT,
@@ -269,7 +269,7 @@ class HttpCase(TransactionCase):
         cmd = ['phantomjs', jsfile, phantomtest, json.dumps(options)]
         self.phantom_run(cmd, timeout)
 
-    def phantom_js(self, url_path, code, ready="window", login=None, timeout=30, **kw):
+    def phantom_js(self, url_path, code, ready="window", login=None, timeout=60, **kw):
         """ Test js code running in the browser
         - optionnally log as 'login'
         - load page given by url_path
