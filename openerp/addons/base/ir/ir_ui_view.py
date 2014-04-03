@@ -64,6 +64,11 @@ class view_custom(osv.osv):
         'arch': fields.text('View Architecture', required=True),
     }
 
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        return [(rec.id, rec.user_id.name) for rec in self.browse(cr, uid, ids, context=context)]
+
     def _auto_init(self, cr, context=None):
         super(view_custom, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_custom_user_id_ref_id\'')

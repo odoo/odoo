@@ -1051,7 +1051,9 @@ Launch Manually Once: after having been launched manually, it sets automatically
     _order="sequence,id"
 
     def name_get(self, cr, uid, ids, context=None):
-        return [(action["id"], "%s" % (action['action_id'][1])) for action in self.read(cr, uid, ids, ['action_id'], context=context)]
+        if not ids:
+            return []
+        return [(rec.id, rec.action_id.name) for rec in self.browse(cr, uid, ids, context=context)]
 
     def action_launch(self, cr, uid, ids, context=None):
         """ Launch Action of Wizard"""

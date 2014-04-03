@@ -53,7 +53,7 @@ class ir_config_parameter(osv.osv):
     ]
 
     def name_get(self, cr, uid, ids, context=None):
-        return [(sys_para["id"], "%s" % (sys_para['key'])) for sys_para in self.read(cr, uid, ids, ['key'], context=context)]
+        return [(sys_para.id, "%s" % (sys_para.key)) for sys_para in self.browse(cr, uid, ids, context=context)]
 
     def init(self, cr, force=False):
         """
