@@ -1039,7 +1039,7 @@ class expression(object):
                     if self.has_unaccent and sql_operator.endswith('like'):
                         assert isinstance(right, basestring)
                         trans_left = 'unaccent(value)'
-                        left = 'unaccent("%s")' % (left,)
+                        left = 'unaccent(%s)' % (left,)
                         instr = 'unaccent(%s)'
                     elif sql_operator == 'in':
                         # params will be flatten by to_sql() => expand the placeholders
