@@ -2382,6 +2382,7 @@ class BaseModel(object):
         many2onefields = [gb['field'] for gb in annotated_groupbys if gb['type'] == 'many2one']
         if many2onefields:
             data_ids = [r['id'] for r in fetched_data]
+            many2onefields = list(set(many2onefields))
             data_dict = {d['id']: d for d in self.read(cr, uid, data_ids, many2onefields, context=context)} 
             for d in fetched_data:
                 d.update(data_dict[d['id']])
@@ -2416,7 +2417,7 @@ class BaseModel(object):
             return result
 
         result = map(format_result, data)
-        
+
         if lazy and groupby_fields[0] in self._group_by_full:
             # Right now, read_group only fill results in lazy mode (by default).
             # If you need to have the empty groups in 'eager' mode, then the
