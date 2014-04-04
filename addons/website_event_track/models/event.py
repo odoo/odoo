@@ -210,7 +210,7 @@ class event_track(osv.osv):
         return local_dt, local_dt + datetime.timedelta(minutes = duration), local_dt.strftime('%m-%d-%y') 
 
     @staticmethod
-    def generate_slots(date_and_durations, timezone):
+    def generate_slots(date_and_durations, local_tz):
         '''
         Params:
         date_and_duration: List containing list of date and duration.
@@ -218,7 +218,6 @@ class event_track(osv.osv):
         
         rtype:dict, dict
         '''
-        local_tz = pytz.timezone(timezone or 'UTC')
         got_slots = {}
         sort_track = {}
         for record in date_and_durations:
@@ -233,7 +232,7 @@ class event_track(osv.osv):
                 sort_track[day][time] = []
         return got_slots, sort_track
     
-    def make_tracks(self,cr, uid, only_slots={}, sort_tracks={}, event_tracks=[], timezone='UTC', context=None):
+    def make_tracks(self,cr, uid, only_slots={}, sort_tracks={}, event_tracks=[], local_tz=None, context=None):
         '''
         Params:
         only_slots:  Dictionary containing {day : [(start_time1, end_time1),(start_time2, end_time2)]}
@@ -252,7 +251,6 @@ class event_track(osv.osv):
             return string
 
         res_partner = self.pool.get('res.partner')
-        local_tz = pytz.timezone(timezone)
         
         for track in event_tracks:
             start_time, end_time, key = event_track.convert_time(track['date'], track['duration'], local_tz)
@@ -331,11 +329,12 @@ class event_track(osv.osv):
             format_date: list of string of datetime.
         '''
         #Fetch all tracks
+        local_tz = pytz.timezone(event.timezone_of_event or 'UTC')
         domain = [('event_id','=',event.id),('date','!=',False),('duration','!=',False),('duration','!=',0)]
         fields = ['id', 'duration', 'location_id', 'name', 'date', 'color', 'speaker_ids', 'website_published']
         event_tracks = self.search_read(cr, uid, domain, fields, context=context)
-        only_slots, sort_tracks = event_track.generate_slots([(track['date'], track['duration']) for track in event_tracks], event.timezone_of_event)
-        sort_tracks = self.make_tracks(cr, uid, only_slots, sort_tracks, event_tracks, event.timezone_of_event, context=context)
+        only_slots, sort_tracks = event_track.generate_slots([(track['date'], track['duration']) for track in event_tracks], local_tz)
+        sort_tracks = self.make_tracks(cr, uid, only_slots, sort_tracks, event_tracks, local_tz, context=context)
         row_skip_td, sort_tracks, talks = event_track.calculate_and_sort(sort_tracks)
         return  {
             'event': event,
