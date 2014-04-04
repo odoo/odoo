@@ -460,45 +460,47 @@
                 </div>
                 <hr/>
 
-                <div t-foreach="question.child_ids" t-as="answer" class="mt16 mb32" id="answer">
+                <div t-foreach="question.child_ids" t-as="answer" class="mt16 mb32">
                     <a t-attf-id="answer-#{str(answer.id)}"/>
-                    <div class="text-center pull-left">
-                        <t t-call="website_forum.vote">
-                            <t t-set="post" t-value="answer"/>
-                        </t>
-                        <div class="text-muted">
-                            <a t-attf-id="#{answer.id}" t-if="answer.correct" class="accept_answer fa fa-2x fa-check-circle oe_answer_true"/>
-                            <a t-attf-id="#{answer.id}" t-if="not answer.correct" class="accept_answer fa fa-2x fa-check-circle oe_answer_false"/>
+                    <div t-attf-class="#{answer.correct and 'alert alert-info answer_correct' or ''}" t-attf-id="answer_#{answer.id}" >
+                        <div class="text-center pull-left">
+                            <t t-call="website_forum.vote">
+                                <t t-set="post" t-value="answer"/>
+                            </t>
+                            <div class="text-muted">
+                                <a t-attf-id="#{answer.id}" t-if="answer.correct" class="accept_answer fa fa-2x fa-check-circle oe_answer_true"/>
+                                <a t-attf-id="#{answer.id}" t-if="not answer.correct" class="accept_answer fa fa-2x fa-check-circle oe_answer_false"/>
+                            </div>
                         </div>
-                    </div>
-                    <div style="margin-left: 95px;" class="clearfix">
-                        <t t-raw="answer.content"/>
-                        <div class="mt16">
-                            <ul class="list-inline pull-right">
-                                <li>
-                                    <a style="cursor: pointer" data-toggle="collapse" class="text-muted fa fa-comment-o"
-                                          t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }">comment
-                                    </a>
-                                </li>
-                                <li t-if="user.id == answer.user_id.id or user.karma&gt;=300">
-                                    <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/question/#{ question.id }/edit/#{ answer.id }">edit</a>
-                                </li>
-                                <li t-if="user.id == answer.user_id.id or user.karma&gt;=1000">
-                                    <a class="text-muted delete fa fa-trash-o" href="" t-attf-id="#{answer.id}">delete</a>
-                                </li>
-                                <li t-if="uid">
-                                    <a class="text-muted fa fa-magic" t-attf-href="/forum/#{ slug(forum) }/post/#{ answer.id }/converttocomment">Convert as a comment</a>
-                                </li>
-                                <li><a class="text-muted fa fa-share" t-attf-href="/forum/#{ slug(forum) }/question/#{ question.id }/#answer-#{ answer.id }">share</a></li>
-                            </ul>
-                            <t t-call="website_forum.user_detail">
-                                <t t-set="user" t-value="answer.user_id"/>
-                                <span class="text-muted">Answered on <span t-field="answer.create_date" t-field-options='{"format":"short"}'/></span>
+                        <div style="margin-left: 95px;" class="clearfix">
+                            <t t-raw="answer.content"/>
+                            <div class="mt16">
+                                <ul class="list-inline pull-right">
+                                    <li>
+                                        <a style="cursor: pointer" data-toggle="collapse" class="text-muted fa fa-comment-o"
+                                              t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }">comment
+                                        </a>
+                                    </li>
+                                    <li t-if="user.id == answer.user_id.id or user.karma&gt;=300">
+                                        <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/question/#{ question.id }/edit/#{ answer.id }">edit</a>
+                                    </li>
+                                    <li t-if="user.id == answer.user_id.id or user.karma&gt;=1000">
+                                        <a class="text-muted delete fa fa-trash-o" href="" t-attf-id="#{answer.id}">delete</a>
+                                    </li>
+                                    <li t-if="uid">
+                                        <a class="text-muted fa fa-magic" t-attf-href="/forum/#{ slug(forum) }/post/#{ answer.id }/converttocomment">Convert as a comment</a>
+                                    </li>
+                                    <li><a class="text-muted fa fa-share" t-attf-href="/forum/#{ slug(forum) }/question/#{ question.id }/#answer-#{ answer.id }">share</a></li>
+                                </ul>
+                                <t t-call="website_forum.user_detail">
+                                    <t t-set="user" t-value="answer.user_id"/>
+                                    <span class="text-muted">Answered on <span t-field="answer.create_date" t-field-options='{"format":"short"}'/></span>
+                                </t>
+                            </div>
+                            <t t-call="website_forum.comments">
+                                <t t-set="object" t-value="answer"/>
                             </t>
                         </div>
-                        <t t-call="website_forum.comments">
-                            <t t-set="object" t-value="answer"/>
-                        </t>
                     </div>
                 </div>
                 <div t-if="not answer_done">

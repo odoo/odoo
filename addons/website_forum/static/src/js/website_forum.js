@@ -55,7 +55,7 @@ $(document).ready(function () {
         openerp.jsonRpc("/forum/post_delete", 'call', {
             'post_id': $link.attr("id")})
             .then(function (data) {
-                $link.parents('#answer').remove();
+                $("div#answer_" + $link.attr('id')).remove();
             });
         return false;
     });
@@ -83,10 +83,12 @@ $(document).ready(function () {
                         $link.parent().append($warning);
                     }
                 } else {
+                    $link.parents().find(".oe_answer_true").removeClass("oe_answer_true alert alert-info").addClass('oe_answer_false');
+                    $link.parents().find(".answer_correct").removeClass("answer_correct alert alert-info")
                     if (data) {
-                        $link.parents().find(".oe_answer_false").removeClass("oe_answer_false").addClass('oe_answer_true');
-                    } else {
-                        $link.parents().find(".oe_answer_true").removeClass("oe_answer_true").addClass('oe_answer_false');
+                        $link.removeClass("oe_answer_false").addClass('oe_answer_true');
+                        $("div#answer_" + $link.attr('id')).addClass("answer_correct alert alert-info");
+                        console.log("aaaaa",$("div#answer_" + $link.attr('id')))
                     }
                 }
             });
