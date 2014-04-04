@@ -79,7 +79,7 @@ class SaleLayoutCategory(osv.Model):
 class AccountInvoice(osv.Model):
     _inherit = 'account.invoice'
 
-    def sale_layout_lines(self, cr, uid, ids, context, invoice_id, *args, **kwargs):
+    def sale_layout_lines(self, cr, uid, ids, invoice_id=None, context=None):
         """
         Returns invoice lines from a specified invoice ordered by
         sale_layout_category sequence. Used in sale_layout module.
@@ -110,7 +110,7 @@ class AccountInvoiceLine(osv.Model):
 class SaleOrder(osv.Model):
     _inherit = 'sale.order'
 
-    def sale_layout_lines(self, cr, uid, ids, context, order_id, *args, **kwargs):
+    def sale_layout_lines(self, cr, uid, ids, order_id=None, context=None):
         """
         Returns order lines from a specified sale ordered by
         sale_layout_category sequence. Used in sale_layout module.
