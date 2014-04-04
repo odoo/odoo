@@ -111,7 +111,7 @@ class event_track(osv.osv):
 
     def _check_if_track_overlap(self, cr, uid, ids, context=None):
         check = False
-        string = "This track is overlapping by "
+        string = "This track is overlapping by following"
         for track in self.browse(cr, uid, ids, context=context):
             #if duration and start date enter check overlapping.
             if track.date and track.duration:
