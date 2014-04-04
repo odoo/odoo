@@ -436,7 +436,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     },
 
     make_cell: function (row, col, value, index, raw) {
-        var formatted_value = raw ? value : openerp.web.format_value(value, {type:this.pivot.measures[index].type}),
+        var formatted_value = raw && !_.isUndefined(value) ? value : openerp.web.format_value(value, {type:this.pivot.measures[index].type}),
             cell = {value:formatted_value};
 
         if (this.heatmap_mode === 'none') { return cell; }
