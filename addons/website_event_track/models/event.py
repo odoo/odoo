@@ -110,21 +110,30 @@ class event_track(osv.osv):
     }
 
     def _check_if_track_overlap(self, cr, uid, ids, context=None):
+        check = False
+        string = "This track is overlapping by "
         for track in self.browse(cr, uid, ids, context=context):
             #if duration and start date enter check overlapping.
             if track.date and track.duration:
                 if track.location_id:
-                    cr.execute("SELECT (date, (duration || 'minutes')::INTERVAL) OVERLAPS (%s, (%s || 'minutes')::INTERVAL) from event_track where id!= %s and event_id=%s and (location_id=%s or location_id IS Null)", (track.date, track.duration, track.id, track.event_id.id, track.location_id.id or None))
+                    cr.execute("SELECT name, (date, (duration || 'minutes')::INTERVAL) OVERLAPS (%s, (%s || 'minutes')::INTERVAL) from event_track where id!= %s and event_id=%s and (location_id=%s or location_id IS Null)", (track.date, track.duration, track.id, track.event_id.id, track.location_id.id or None))
                 else:
-                    cr.execute("SELECT (date, (duration || 'minutes')::INTERVAL) OVERLAPS (%s, (%s || 'minutes')::INTERVAL) from event_track where id!= %s and event_id=%s", (track.date, track.duration, track.id, track.event_id.id))
+                    cr.execute("SELECT name, (date, (duration || 'minutes')::INTERVAL) OVERLAPS (%s, (%s || 'minutes')::INTERVAL) from event_track where id!= %s and event_id=%s", (track.date, track.duration, track.id, track.event_id.id))
                 result = cr.fetchall()
+                if not check: check = not not len([res[1] for res in result if res[1]])
                 for res in result:
-                    if(res[0]):
-                        return False
+                    if res[1]:string = string + ", " + res[0]
+        if check and context is None: return False
+        elif check and context.get('show_message'): return string
         return True
+    
+    def _construct_constraint_msg(self, cr, uid, ids, context):
+        if context is None:context = {}
+        context['show_message'] = True
+        return self._check_if_track_overlap(cr, uid, ids, context=context)
 
     _constraints = [
-        (_check_if_track_overlap, 'This track is overlapping', ['This track is overlapping']),
+        (_check_if_track_overlap, _construct_constraint_msg,['date, duration, location_id']),
     ]
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         stage_obj = self.pool.get('event.track.stage')
