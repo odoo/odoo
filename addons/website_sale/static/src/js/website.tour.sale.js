@@ -73,7 +73,7 @@
                 },
                 {
                     title:     "select payment",
-                    element:   '#payment_method label:has(img[title="Transfer"]) input',
+                    element:   '#payment_method label:has(img[title="Wire Transfer"]) input',
                 },
                 {
                     title:     "Pay Now",
