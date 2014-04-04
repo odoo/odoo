@@ -278,26 +278,26 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
             
             if (expand && !_.find(col_headers, function (hdr) {return _.isEqual(col_value, hdr.path);})) {
                 return;
-            }          
+            }
             var row = self.find_or_create_header(row_headers, row_value, data_pt);
             var col = self.find_or_create_header(col_headers, col_value, data_pt);
 
-            var cell_value = _.map(self.measures, function (m) { 
+            var cell_value = _.map(self.measures, function (m) {
                 return data_pt.attributes.aggregates[m.field];
             });
             self.cells.push({
-                x: Math.min(row.id, col.id), 
-                y: Math.max(row.id, col.id), 
+                x: Math.min(row.id, col.id),
+                y: Math.max(row.id, col.id),
                 values: cell_value
-            });            
+            });
         });
     },
 
     make_header: function (values) {
         return _.extend({
-            children: [], 
-            domain: this.domain, 
-            expanded: undefined, 
+            children: [],
+            domain: this.domain,
+            expanded: undefined,
             id: _.uniqueId(),
             path: [],
             root: undefined,
@@ -306,7 +306,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
     },
 
     find_or_create_header: function (headers, path, data_pt) {
-        var hdr = _.find(headers, function (header) { 
+        var hdr = _.find(headers, function (header) {
             return _.isEqual(path, header.path);
         });
         if (hdr) {
@@ -318,11 +318,11 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
             return hdr;
         }
         hdr = this.make_header({
-            path:path, 
+            path:path,
             domain:data_pt.model._domain,
             title: _t(_.last(path))
         });
-        parent = _.find(headers, function (header) {
+        var parent = _.find(headers, function (header) {
             return _.isEqual(header.path, _.initial(path, 1));
         });
 
@@ -399,26 +399,27 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
                     return group.attributes.length > 0;
                 }).map(function (group) {
                     var attrs = group.attributes,
-                        grouped_on = attrs.grouped_on instanceof Array 
-                            ? attrs.grouped_on : [attrs.grouped_on],
+                        grouped_on = attrs.grouped_on instanceof Array ? attrs.grouped_on : [attrs.grouped_on],
                         raw_grouped_on = grouped_on.map(function (f) {
                             return self.raw_field(f);
                         });
-                    if (grouped_on.length === 1) { attrs.value = [attrs.value]}
+                    if (grouped_on.length === 1) {
+                        attrs.value = [attrs.value];
+                    }
                     attrs.value = _.range(grouped_on.length).map(function (i) {
-                        if (attrs.value[i] === false) { 
+                        if (attrs.value[i] === false) {
                             return _t('Undefined');
                         } else if (attrs.value[i] instanceof Array) {
                             return attrs.value[i][1];
                         }
-                        return attrs.value[i]
+                        return attrs.value[i];
                     });
                     attrs.aggregates.__count = group.attributes.length;
                     attrs.grouped_on = raw_grouped_on;
                     return group;
                 });
             });
-    },  
+    },
 
     // if field is a fieldname, returns field, if field is field_id:interval, retuns field_id
     raw_field: function (field) {
