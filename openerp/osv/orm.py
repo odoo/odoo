@@ -2234,8 +2234,6 @@ class BaseModel(object):
         return groupby_terms, orderby_terms
 
     def _read_group_process_groupby(self, gb, fget, query):
-        print "==="*20
-        print gb
         split = gb.split(':')
         field_type = fget[split[0]]['type'] 
         gb_function = split[1] if len(split) == 2 else None
@@ -2243,6 +2241,20 @@ class BaseModel(object):
         tz_convert = field_type == 'datetime' and context.get('tz') in pytz.all_timezones
         qualified_field = self._inherits_join_calc(split[0], query)
         if temporal:
+            display_formats = {
+                'day': 'dd MMM YYYY', 
+                'week': "'W'w YYYY", 
+                'month': 'MMMM YYYY', 
+                'quarter': 'QQQ YYYY', 
+                'year': 'YYYY'
+            }
+            time_intervals = {
+                'day': dateutil.relativedelta.relativedelta(months=3),
+                'week': datetime.timedelta(days=7),
+                'month': dateutil.relativedelta.relativedelta(months=1),
+                'quarter': dateutil.relativedelta.relativedelta(months=3),
+                'year': dateutil.relativedelta.relativedelta(years=1)
+            }
             if tz_convert:
                 qualified_field = "timezone('%s', timezone('UTC',%s))" % (context.get('tz', 'UTC'), qualified_field)
             qualified_field = "date_trunc('%s', %s)" % (gb_function or 'month', qualified_field)
@@ -2257,6 +2269,58 @@ class BaseModel(object):
             'tz_convert': tz_convert,
             'qualified_field': qualified_field
         }
+
+    def _read_group_prepare_data(self, key, value, groupby_dict):
+        """
+            Helper method to sanitize the data received by read_group. The None
+            values are converted to False, and the date/datetime are formatted,
+            and corrected according to the timezones.
+        """
+        value = False if value is None else value
+        gb = groupby_dict.get(key)
+        if gb and gb['type'] in ('date', 'datetime') and value:
+            if isinstance(value, basestring):
+                dt_format = DEFAULT_SERVER_DATETIME_FORMAT if gb['type'] == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
+                value = datetime.datetime.strptime(value, dt_format)
+            if gb['tz_convert']:
+                value =  pytz.timezone(context['tz']).localize(value)
+        return value
+
+    def _read_group_get_domain(self, groupby, value):
+        """
+            Helper method to construct the domain corresponding to a groupby and 
+            a given value. This is mostly relevant for date/datetime.
+        """
+        if groupby['type'] in ('date', 'datetime') and value:
+            dt_format = DEFAULT_SERVER_DATETIME_FORMAT if groupby['type'] == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
+            domain_dt_begin = value
+            domain_dt_end = value + groupby['interval']
+            if groupby['tz_convert']:
+                domain_dt_begin = domain_dt_begin.astimezone(pytz.utc)
+                domain_dt_end = domain_dt_end.astimezone(pytz.utc)
+            return [(groupby['field'], '>=', domain_dt_begin.strftime(dt_format)),
+                   (groupby['field'], '<', domain_dt_end.strftime(dt_format))]
+        if groupby['type'] == 'many2one' and value:
+                value = value[0]
+        return [(groupby['field'], '=', value)]
+
+    def _read_group_format_result(self, data, annotated_groupbys, groupby, groupby_dict, domain, context):
+        """
+            Helper method to format the data contained in the dictianary data by 
+            adding the domain corresponding to its values, the groupbys in the 
+            context and by properly formatting the date/datetime values. 
+        """
+        domain_group = [dom for gb in annotated_groupbys for dom in self._read_group_get_domain(gb, data[gb['groupby']])]
+        result = { '__domain': domain_group + domain }
+        if len(groupby) - len(annotated_groupbys) >= 1:
+            result['__context'] = { 'group_by': groupby[len(annotated_groupbys):]}
+        result.update(data)
+        for k,v in result.iteritems():
+            gb = groupby_dict.get(k)
+            if gb and gb['type'] in ('date', 'datetime') and v:
+                result[k] = babel.dates.format_date(v, format=gb['display_format'], locale=context.get('lang', 'en_US'))
+        del result['id']
+        return result
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context={}, orderby=False, lazy=True):
         """
@@ -2296,21 +2360,6 @@ class BaseModel(object):
         fields = fields or self._columns.keys()
         fget = self.fields_get(cr, uid, fields)
         groupby = [groupby] if isinstance(groupby, basestring) else groupby
-        display_formats = {
-            'day': 'dd MMM YYYY', 
-            'week': "'W'w YYYY", 
-            'month': 'MMMM YYYY', 
-            'quarter': 'QQQ YYYY', 
-            'year': 'YYYY'
-        }
-        time_intervals = {
-            'day': dateutil.relativedelta.relativedelta(months=3),
-            'week': datetime.timedelta(days=7),
-            'month': dateutil.relativedelta.relativedelta(months=1),
-            'quarter': dateutil.relativedelta.relativedelta(months=3),
-            'year': dateutil.relativedelta.relativedelta(years=1)
-        }
-
         groupby_list = groupby[:1] if lazy else groupby
         annotated_groupbys = [self._read_group_process_groupby(gb, fget, query) 
                                     for gb in groupby_list]
@@ -2371,22 +2420,10 @@ class BaseModel(object):
             'offset': prefix_term('OFFSET', int(offset) if limit else None),
         }
         cr.execute(query, where_clause_params)
+        fetched_data = cr.dictfetchall()
 
         if not groupby_fields:
-            return {r.pop('id'): r for r in cr.dictfetchall() }
-
-        def prepare_data(key, value):
-            value = False if value is None else value
-            gb = groupby_dict.get(key)
-            if gb and gb['type'] in ('date', 'datetime') and value:
-                if isinstance(value, basestring):
-                    dt_format = DEFAULT_SERVER_DATETIME_FORMAT if gb['type'] == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
-                    value = datetime.datetime.strptime(value, dt_format)
-                if gb['tz_convert']:
-                    value =  pytz.timezone(context['tz']).localize(value)
-            return value
-
-        fetched_data = cr.dictfetchall()
+            return {r.pop('id'): r for r in fetched_data}
 
         many2onefields = [gb['field'] for gb in annotated_groupbys if gb['type'] == 'many2one']
         if many2onefields:
@@ -2396,37 +2433,8 @@ class BaseModel(object):
             for d in fetched_data:
                 d.update(data_dict[d['id']])
 
-        data = map(lambda r: {k: prepare_data(k,v) for k,v in r.iteritems()}, fetched_data)
-
-        def get_domain(gb, value):
-            if gb['type'] in ('date', 'datetime') and value:
-                dt_format = DEFAULT_SERVER_DATETIME_FORMAT if gb['type'] == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
-                domain_dt_begin = value
-                domain_dt_end = value + gb['interval']
-                if gb['tz_convert']:
-                    domain_dt_begin = domain_dt_begin.astimezone(pytz.utc)
-                    domain_dt_end = domain_dt_end.astimezone(pytz.utc)
-                return [(gb['field'], '>=', domain_dt_begin.strftime(dt_format)),
-                       (gb['field'], '<', domain_dt_end.strftime(dt_format))]
-            if gb['type'] == 'many2one' and value:
-                    value = value[0]
-            return [(gb['field'], '=', value)]
-
-        def format_result (fromquery):
-            domain_group = [dom for gb in annotated_groupbys for dom in get_domain(gb, fromquery[gb['groupby']])]
-            result = { '__domain': domain_group + domain }
-            if len(groupby) - len(annotated_groupbys) >= 1:
-                result['__context'] = { 'group_by': groupby[len(annotated_groupbys):]}
-            result.update(fromquery)
-            for k,v in result.iteritems():
-                gb = groupby_dict.get(k)
-                if gb and gb['type'] in ('date', 'datetime') and v:
-                    result[k] = babel.dates.format_date(v, format=gb['display_format'], locale=context.get('lang', 'en_US'))
-            del result['id']
-            return result
-
-        result = map(format_result, data)
-
+        data = map(lambda r: {k: self._read_group_prepare_data(k,v, groupby_dict) for k,v in r.iteritems()}, fetched_data)
+        result = [self._read_group_format_result(d, annotated_groupbys, groupby, groupby_dict, domain, context) for d in data]
         if lazy and groupby_fields[0] in self._group_by_full:
             # Right now, read_group only fill results in lazy mode (by default).
             # If you need to have the empty groups in 'eager' mode, then the
