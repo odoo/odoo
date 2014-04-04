@@ -604,9 +604,8 @@ class Ecommerce(http.Controller):
             else:
                 shipping_partner_id = order.partner_invoice_id.id
 
-        values = {
-            'order': sale_order_obj.browse(cr, SUPERUSER_ID, order.id, context=context)
-        }
+        values = {}
+        values['website_sale_order'] = values['order'] = sale_order_obj.browse(cr, SUPERUSER_ID, order.id, context=context)
         values['errors'] = sale_order_obj._get_errors(cr, uid, order, context=context)
         values.update(sale_order_obj._get_website_data(cr, uid, order, context=context))
 

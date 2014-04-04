@@ -64,15 +64,16 @@ class SaleOrder(orm.Model):
             return False
         if all(line.product_id.type == "service" for line in order.website_order_line):
             order.write({'carrier_id': None}, context=context)
-            self.pool['sale.order']._delivery_unset(cr, SUPERUSER_ID, order, context=context)
+            self.pool['sale.order']._delivery_unset(cr, SUPERUSER_ID, [order.id], context=context)
             return True
         else: 
             carrier_id = force_carrier_id or order.carrier_id.id
-            if force_carrier_id or not carrier_id or not carrier_id in self._get_delivery_methods(cr, uid, order, context=context):
-                self.pool['sale.order']._delivery_unset(cr, SUPERUSER_ID, order, context=context)
-                carrier_ids = self.pool.get('delivery.carrier').search(cr, uid, [('website_published','=',True)], context=context)
-                if force_carrier_id:
-                    carrier_ids.insert(0, force_carrier_id)
+            carrier_ids = self._get_delivery_methods(cr, uid, order, context=context)
+            if carrier_id not in carrier_ids:
+                carrier_id = False
+            else:
+                carrier_ids.insert(0, carrier_ids.pop(carrier_id))
+            if force_carrier_id or not carrier_id or not carrier_id in carrier_ids:
                 for delivery_id in carrier_ids:
                     grid_id = carrier_obj.grid_get(cr, SUPERUSER_ID, [delivery_id], order.partner_shipping_id.id)
                     if grid_id:
@@ -81,6 +82,8 @@ class SaleOrder(orm.Model):
                 order.write({'carrier_id': carrier_id}, context=context)
                 if carrier_id:
                     order.delivery_set(context=context)
+                else:
+                    order._delivery_unset(context=context)                    
 
         return bool(carrier_id)
 

@@ -885,7 +885,7 @@
           <h1 class="mb32">Validate Order</h1>
           <t t-foreach="errors" t-as="error">
             <div class="alert alert-danger" t-if="error">
-              <h3><t t-esc="error[0]"/></h3>
+              <h4><t t-esc="error[0]"/></h4>
               <t t-esc="error[1]"/>
             </div>
           </t>
