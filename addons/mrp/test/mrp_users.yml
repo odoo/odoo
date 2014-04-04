@@ -1,0 +1,20 @@
+-
+   Create a user as 'MRP Manager'
+-
+  !record {model: res.users, id: res_users_mrp_manager}:
+    company_id: base.main_company
+    name: MRP Manager
+    login: mam
+    password: mam
+    groups_id:
+      - mrp.group_mrp_manager
+-
+   Create a user as 'MRP User'
+-
+  !record {model: res.users, id: res_users_mrp_user}:
+    company_id: base.main_company
+    name: MRP User
+    login: mau
+    password: mau
+    groups_id:
+      - mrp.group_mrp_user
