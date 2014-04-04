@@ -1012,10 +1012,10 @@ class expression(object):
 
             else:
                 if field._type == 'datetime' and right and len(right) == 10:
-                    if operator in ('>', '>=', '='):
-                        right += ' 00:00:00'
-                    elif operator in ('<', '<='):
+                    if operator in ('>', '<='):
                         right += ' 23:59:59'
+                    else:
+                        right += ' 00:00:00'
                     push(create_substitution_leaf(leaf, (left, operator, right), working_model))
 
                 elif field.translate and right:
