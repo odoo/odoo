@@ -169,6 +169,8 @@
                     <field name="mass_mailing_campaign_id"/>
                     <field name="template_id"/>
                     <group expand="0" string="Group By...">
+                        <filter string="State" name="group_state"
+                            context="{'group_by': 'state'}"/>
                         <filter string="Campaign" name="group_mass_mailing_campaign_id"
                             groups="mass_mailing.group_mass_mailing_campaign"
                             context="{'group_by': 'mass_mailing_campaign_id'}"/>
@@ -326,14 +328,14 @@
                                         <t t-if="record.mass_mailing_campaign_id.raw_value" groups="mass_mailing.group_mass_mailing_campaign"> - </t><field name="date"/>
                                     </div>
                                     <div>
-                                    <div style="display: inline-block">
-                                        <field name="delivered" widget="gauge" style="width:120px; height: 90px;"
-                                            options="{'max_field': 'total'}"/>
-                                    </div>
-                                    <div style="display: inline-block; vertical-align: top;">
-                                        <strong>Opened</strong> <field name="opened_ratio"/> %<br />
-                                        <strong>Replied</strong> <field name="replied_ratio"/> %
-                                    </div>
+                                        <div style="display: inline-block">
+                                            <field name="delivered" widget="gauge" style="width:120px; height: 90px;"
+                                                options="{'max_field': 'total'}"/>
+                                        </div>
+                                        <div style="display: inline-block; vertical-align: top;">
+                                            <strong>Opened</strong> <field name="opened_ratio"/> %<br />
+                                            <strong>Replied</strong> <field name="replied_ratio"/> %
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="oe_clear"></div>
@@ -389,6 +391,8 @@
                     <field name="category_id"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By...">
+                        <filter string="Stage" name="group_stage_id"
+                            context="{'group_by': 'stage_id'}"/>
                         <filter string="Responsible" name="group_user_id"
                             context="{'group_by': 'user_id'}"/>
                         <filter string="Category" name="group_category_id"
@@ -406,7 +410,7 @@
                 <tree string="Mass Mailing Campaigns">
                     <field name="name"/>
                     <field name="user_id"/>
-                    <field name="state"/>
+                    <field name="stage_id"/>
                     <field name="category_id"/>
                 </tree>
             </field>
@@ -419,7 +423,7 @@
                 <form string="Mass Mailing Campaign" version="7.0">
                     <header>
                         <button name="action_new_mailing" type="object" class="oe_highlight" string="New Mailing"/>
-                        <field name="state" widget="statusbar" clickable="True"/>
+                        <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet>
                         <group>
@@ -430,27 +434,40 @@
                                 <field name="ab_testing"/>
                             </group>
                             <group>
-                                <!-- <p>Here be some graphs</p> -->
-                                <field name="total"/>
-                                <field name="sent" attrs="{'invisible': [('total', '=', 0)]}"/>
-                                <field name="opened" attrs="{'invisible': [('total', '=', 0)]}"/>
-                                <field name="replied" attrs="{'invisible': [('total', '=', 0)]}"/>
+                                <field name="total" invisible="1"/>
+                                <div class="oe_right oe_button_box" name="buttons"
+                                    attrs="{'invisible': [('total', '=', 0)]}">
+                                    <button name="%(action_mail_mass_mailing_report)d"
+                                        type="action" class="oe_stat_button oe_inline">
+                                        <field name="received_ratio" widget="percentpie"/>
+                                        <span>Received</span>
+                                    </button>
+                                    <button name="%(action_mail_mass_mailing_report)d"
+                                        type="action" class="oe_stat_button oe_inline">
+                                        <field name="opened_ratio" widget="percentpie"/>
+                                        <span>Opened</span>
+                                    </button>
+                                    <button name="%(action_mail_mass_mailing_report)d"
+                                        type="action" class="oe_stat_button oe_inline">
+                                        <field name="replied_ratio" widget="percentpie"/>
+                                        <span>Replied</span>
+                                    </button>
+                                </div>
                             </group>
                         </group>
-                        <group>
-                            <field name="mass_mailing_ids" readonly="1" string="Related Mailing(s)">
-                                <tree>
-                                    <field name="name"/>
-                                    <field name="date"/>
-                                    <field name="state"/>
-                                    <field name="delivered"/>
-                                    <field name="opened"/>
-                                    <field name="replied"/>
-                                    <field name="bounced"/>
-                                    <button name="action_duplicate" type="object" string="Duplicate"/>
-                                </tree>
-                            </field>
-                        </group>
+                        <strong>Related Mailing(s)</strong>
+                        <field name="mass_mailing_ids" readonly="1" string="Related Mailing(s)">
+                            <tree>
+                                <field name="name"/>
+                                <field name="date"/>
+                                <field name="state"/>
+                                <field name="delivered"/>
+                                <field name="opened"/>
+                                <field name="replied"/>
+                                <field name="bounced"/>
+                                <button name="action_duplicate" type="object" string="Duplicate"/>
+                            </tree>
+                        </field>
                     </sheet>
                 </form>
             </field>
@@ -460,7 +477,7 @@
             <field name="name">mail.mass_mailing.campaign.kanban</field>
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
-                <kanban default_group_by='state'>
+                <kanban default_group_by='stage_id'>
                     <field name='total'/>
                     <field name='color'/>
                     <field name='user_id'/>
@@ -483,7 +500,7 @@
                                  <div class="oe_kanban_content">
                                     <div>
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)"
-                                            t-att-title="record.user_id.value" width="48" height="48o" class="oe_kanban_avatar oe_kanban_header_right"/>
+                                            t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar oe_kanban_header_right"/>
                                         <h3 style="margin-bottom: 8px;"><field name="name"/></h3>
                                         <span class="oe_tag"><field name="category_id"/></span>
                                         <a name="%(action_view_mass_mailings_from_campaign)d" type="action"
@@ -493,16 +510,14 @@
                                     </div>
                                     <div class="oe_clear"></div>
                                     <div>
-                                        <field name="total" widget="gauge" style="width:160px; height: 120px;"
-                                            options="{'max_field': 'total'}"/>
-                                        <field name="delivered" widget="gauge" style="width:160px; height: 120px;"
-                                            options="{'max_field': 'total'}"/>
-                                    </div>
-                                    <div>
-                                        <field name="opened" widget="gauge" style="width:160px; height: 120px;"
-                                            options="{'max_field': 'total'}"/>
-                                        <field name="replied" widget="gauge" style="width:160px; height: 120px;"
-                                            options="{'max_field': 'total'}"/>
+                                        <div style="display: inline-block">
+                                            <field name="delivered" widget="gauge" style="width:120px; height: 90px;"
+                                                options="{'max_field': 'total'}"/>
+                                        </div>
+                                        <div style="display: inline-block; vertical-align: top;">
+                                            <strong>Opened</strong> <field name="opened_ratio"/> %<br />
+                                            <strong>Replied</strong> <field name="replied_ratio"/> %
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="oe_clear"></div>

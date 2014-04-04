@@ -19,5 +19,19 @@
             <field name="category_id" ref="base.module_category_hidden"/>
         </record>
 
+        <!-- Default stages of mass mailing campaigns -->
+        <record id="campaign_stage_1" model="mail.mass_mailing.stage">
+            <field name="name">Schedule</field>
+            <field name="sequence">10</field>
+        </record>
+        <record id="campaign_stage_2" model="mail.mass_mailing.stage">
+            <field name="name">Design</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="campaign_stage_3" model="mail.mass_mailing.stage">
+            <field name="name">Sent</field>
+            <field name="sequence">30</field>
+        </record>
+
     </data>
 </openerp>

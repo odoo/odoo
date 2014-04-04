@@ -210,6 +210,22 @@ class MassMailingList(osv.Model):
         return model_to_domains
 
 
+class MassMailingStage(osv.Model):
+    """Stage for mass mailing campaigns. """
+    _name = 'mail.mass_mailing.stage'
+    _description = 'Mass Mailing Campaign Stage'
+    _order = 'sequence ASC'
+
+    _columns = {
+        'name': fields.char('Name', required=True),
+        'sequence': fields.integer('Sequence'),
+    }
+
+    _defaults = {
+        'sequence': 0,
+    }
+
+
 class MassMailingCampaign(osv.Model):
     """Model of mass mailing campaigns. """
     _name = "mail.mass_mailing.campaign"
@@ -231,17 +247,14 @@ class MassMailingCampaign(osv.Model):
                 'bounced': Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid), ('bounced', '!=', False)], count=True, context=context),
             }
             results[cid]['delivered'] = results[cid]['sent'] - results[cid]['bounced']
+            results[cid]['received_ratio'] = 100.0 * results[cid]['delivered'] / (results[cid]['sent'] or 1)
+            results[cid]['opened_ratio'] = 100.0 * results[cid]['opened'] / (results[cid]['sent'] or 1)
+            results[cid]['replied_ratio'] = 100.0 * results[cid]['replied'] / (results[cid]['sent'] or 1)
         return results
-
-    def _get_state_list(self, cr, uid, context=None):
-        return [('draft', 'Schedule'), ('design', 'Design'), ('done', 'Sent')]
-
-    # indirections for inheritance
-    _state = lambda self, *args, **kwargs: self._get_state_list(*args, **kwargs)
 
     _columns = {
         'name': fields.char('Name', required=True),
-        'state': fields.selection(_state, string='Status', required=True),
+        'stage_id': fields.many2one('mail.mass_mailing.stage', 'Stage', required=True),
         'user_id': fields.many2one(
             'res.users', 'Responsible',
             required=True,
@@ -288,41 +301,28 @@ class MassMailingCampaign(osv.Model):
             _get_statistics, string='Bounced',
             type='integer', multi='_get_statistics'
         ),
+        'received_ratio': fields.function(
+            _get_statistics, string='Received Ratio',
+            type='integer', multi='_get_statistics',
+        ),
+        'opened_ratio': fields.function(
+            _get_statistics, string='Opened Ratio',
+            type='integer', multi='_get_statistics',
+        ),
+        'replied_ratio': fields.function(
+            _get_statistics, string='Replied Ratio',
+            type='integer', multi='_get_statistics',
+        ),
     }
+
+    def _get_default_stage_id(self, cr, uid, context=None):
+        stage_ids = self.pool['mail.mass_mailing.stage'].search(cr, uid, [], limit=1, context=context)
+        return stage_ids and stage_ids[0]
 
     _defaults = {
         'user_id': lambda self, cr, uid, ctx=None: uid,
-        'state': 'draft',
+        'stage_id': lambda self, cr, uid, ctx=None: self._get_default_stage_id(cr, uid, context=ctx),
     }
-
-    #------------------------------------------------------
-    # Technical stuff
-    #------------------------------------------------------
-
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
-        """ Override read_group to always display all states. """
-        if groupby and groupby[0] == "state":
-            # Default result structure
-            states = self._get_state_list(cr, uid, context=context)
-            read_group_all_states = [{
-                '__context': {'group_by': groupby[1:]},
-                '__domain': domain + [('state', '=', state_value)],
-                'state': state_value,
-                'state_count': 0,
-            } for state_value, state_name in states]
-            # Get standard results
-            read_group_res = super(MassMailingCampaign, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
-            # Update standard results with default results
-            result = []
-            for state_value, state_name in states:
-                res = filter(lambda x: x['state'] == state_value, read_group_res)
-                if not res:
-                    res = filter(lambda x: x['state'] == state_value, read_group_all_states)
-                res[0]['state'] = [state_value, state_name]
-                result.append(res[0])
-            return result
-        else:
-            return super(MassMailingCampaign, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
 
     #------------------------------------------------------
     # Actions
