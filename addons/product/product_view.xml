@@ -171,8 +171,8 @@
                                             attrs="{'readonly': [('is_only_child', '=', False)]}"/>
                                     </group>
                                 </group>
-                                <field name="packaging" groups="product.group_stock_packaging"
-                                        attrs="{'readonly': [('is_only_child', '=', False)]}">
+                                <separator string="Packages" groups="product.group_stock_packaging"/>
+                                <field name="packaging" groups="product.group_stock_packaging" attrs="{'readonly': [('is_only_child', '=', False)]}">
                                     <form string="Packaging" version="7.0">
                                         <group col="4">
                                             <field name="ean"/>
@@ -180,15 +180,11 @@
                                             <newline/>
                                             <field name="qty"/>
                                             <field name="ul"/>
-                                            <field name="weight_ul"/>
                                             <separator colspan="4" string="Palletization"/>
                                             <field name="ul_qty"/>
+                                            <field name="ul_container" domain="[('type', '=', 'pallet')]" context="{'default_type': 'pallet'}"/>
                                             <field name="rows"/>
                                             <field name="weight"/>
-                                            <separator colspan="4" string="Pallet Dimension"/>
-                                            <field name="height"/>
-                                            <field name="width"/>
-                                            <field name="length"/>
                                         </group>
                                         <separator colspan="4" string="Description"/>
                                         <field name="name"/>
@@ -579,10 +575,16 @@
             <field name="name">product.ul.form.view</field>
             <field name="model">product.ul</field>
             <field name="arch" type="xml">
-                <form string="Packaging" version="7.0">
+                <form string="Logistic Units" version="7.0">
                     <group>
                         <field name="name"/>
                         <field name="type"/>
+                    </group>
+                    <group>
+                        <field name="height"/>
+                        <field name="width"/>
+                        <field name="length"/>
+                        <field name="weight"/>
                     </group>
                 </form>
             </field>
@@ -591,25 +593,25 @@
             <field name="name">product.ul.tree</field>
             <field name="model">product.ul</field>
             <field name="arch" type="xml">
-                <tree string="Packaging">
+                <tree string="Logistic Units">
                     <field name="name"/>
                     <field name="type"/>
                 </tree>
             </field>
         </record>
         <record id="product_ul_form_action" model="ir.actions.act_window">
-            <field name="name">Packaging</field>
+            <field name="name">Logistic Units</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.ul</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to add a new packaging type.
+                Click to add a new Logistic Unit
               </p><p>
-                The packaging type define the dimensions as well as the number
-                of products per package. This will ensure salesperson sell the
-                right number of products according to the package selected.
+                The logistic unit defines the container used for the package.  
+                It has a type (e.g. pallet, box, ...) and you can specify its 
+                size. 
               </p>
             </field>
         </record>
@@ -625,6 +627,7 @@
                     <field name="ean"/>
                     <field name="qty"/>
                     <field name="ul"/>
+                    <field name="ul_container"/>
                 </tree>
             </field>
         </record>
@@ -642,15 +645,11 @@
                         <newline/>
                         <field name="qty"/>
                         <field name="ul"/>
-                        <field name="weight_ul"/>
                         <separator colspan="4" string="Palletization"/>
                         <field name="ul_qty"/>
                         <field name="rows"/>
+                        <field name="ul_container"/>
                         <field name="weight"/>
-                        <separator colspan="4" string="Pallet Dimension"/>
-                        <field name="height"/>
-                        <field name="width"/>
-                        <field name="length"/>
                         <separator colspan="4" string="Other Info"/>
                         <field colspan="4" name="name"/>
                     </group>

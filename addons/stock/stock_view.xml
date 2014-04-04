@@ -1716,8 +1716,8 @@
                        <filter string='Owner' context="{'group_by' : 'owner_id'}" groups="stock.group_tracking_owner"/>
                        <filter string='Lot' context="{'group_by' : 'lot_id'}" groups="stock.group_production_lot"/>
                        <filter name="locationgroup" string='Location' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'location_id'}"/>
-                       <filter string='Packaging' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'package_id'}" groups="stock.group_tracking_lot"/>
-                       <filter string='Packaging Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'packaging_type_id'}" groups="stock.group_tracking_lot"/>
+                       <filter string='Package' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'package_id'}" groups="stock.group_tracking_lot"/>
+                       <filter string='Packaging' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'packaging_type_id'}" groups="stock.group_tracking_lot"/>
                        <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
                    </group>
                 </search>
@@ -1933,7 +1933,8 @@
                         </div>
                         <group>
                             <group>
-                            <field name="packaging_id"/>
+                               <field name="ul_id"/>
+                               <field name="packaging_id"/>
                                <field name='company_id' groups="base.group_multi_company"/>
                                <field name='owner_id' groups="stock.group_tracking_owner"/>
                             </group>
@@ -1941,7 +1942,6 @@
                             <field name="location_id"/>
                             <field name="parent_id"/>
                             </group>
-                            
                         </group>
                         <notebook>
                             <page string="Content">
@@ -1962,6 +1962,7 @@
                                 <field name="children_ids">
                                     <tree string="Contained Packages">
                                         <field name="complete_name"/>
+                                        <field name="ul_id"/>
                                         <field name="packaging_id"/>
                                         <field name="location_id"/>
                                     </tree>
@@ -1969,7 +1970,6 @@
                             </page>
                         </notebook> 
                     </sheet>
-
                 </form>
             </field>
         </record>
@@ -1982,6 +1982,7 @@
             <field name="arch" type="xml">
                 <tree string="Package">
                     <field name="complete_name"/>
+                    <field name="ul_id"/>
                     <field name="packaging_id"/>
                     <field name="location_id"/>
                     <field name="company_id"/>
@@ -1991,11 +1992,12 @@
         <record id="quant_package_search_view" model="ir.ui.view">
             <field name="name">stock.quant.package.search</field>
             <field name="model">stock.quant.package</field>
-            <field eval="10" name="priority"/>            
+            <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Package">
                     <field name="name" string="Package Name"/>
                     <field name="location_id"/>
+                    <field name="ul_id"/>
                     <field name="packaging_id"/>
                     <group  expand='0' string='Group by...'>
                        <filter string='Location' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'location_id'}"/>
