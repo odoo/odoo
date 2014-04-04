@@ -10,7 +10,7 @@
                     <separator string="Select your Point of Sale" colspan="4" attrs="{'invisible' : [('show_config', '=', False)]}" />
                     <group attrs="{'invisible' : [('show_config', '=', False)]}">
                         <field name="pos_config_id" on_change="on_change_config(pos_config_id)"
-                            widget="selection" domain="[('state','=','active')]"
+                            options="{'no_create': True}" domain="[('state','=','active')]"
                             class="oe_inline"/>
                         <field name="pos_state" invisible="1" />
                     </group>

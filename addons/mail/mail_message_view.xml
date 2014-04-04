@@ -89,5 +89,36 @@
         <!-- Add menu entry in Settings/Email -->
         <menuitem name="Messages" id="menu_mail_message" parent="base.menu_email" action="action_view_mail_message"/>
 
+        <record model="ir.ui.view" id="view_document_file_kanban">
+            <field name="name">ir.attachment kanban</field>
+            <field name="model">ir.attachment</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="file_type_icon"/>
+                    <field name="url"/>
+                    <field name="name"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div t-attf-class="oe_attachment" t-if="record.file_type_icon.value != 'webimage'">
+                                    <img t-att-src="'/mail/static/src/img/mimetypes/' + record.file_type_icon.value + '.png'"></img>
+                                    <div class='oe_name'><t t-raw='record.name.value' />bb</div>
+                                </div>
+                                <div t-attf-class="oe_attachment oe_preview" t-if="record.file_type_icon.value == 'webimage'">
+                                    <img t-att-src="kanban_image('ir.attachment', 'datas', record.id.value)" class="oe_kanban_image"/>
+                                    <div class='oe_name'><t t-raw='record.name.value' />aa</div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="base.action_attachment" model="ir.actions.act_window">
+            <field name="view_mode">kanban,form</field>
+        </record>
+
+
+
     </data>
 </openerp>

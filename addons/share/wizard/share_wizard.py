@@ -258,7 +258,6 @@ class share_wizard(osv.TransientModel):
                         'name': new_user,
                         'email': new_user,
                         'groups_id': [(6,0,[group_id])],
-                        'share': True,
                         'company_id': current_user.company_id.id,
                         'company_ids': [(6, 0, [current_user.company_id.id])],
                 }, context)
@@ -276,7 +275,6 @@ class share_wizard(osv.TransientModel):
                 'password': new_pass,
                 'name': new_login,
                 'groups_id': [(6,0,[group_id])],
-                'share': True,
                 'company_id': current_user.company_id.id,
                 'company_ids': [(6, 0, [current_user.company_id.id])],
             }, context)
