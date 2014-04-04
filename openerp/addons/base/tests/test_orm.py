@@ -134,7 +134,7 @@ class TestORM(common.TransactionCase):
             rg = self.partner.read_group(self.cr, self.uid, domain, ['date'], 'date' + ':' + interval)
             result = {}
             for r in rg:
-                result[r['date']] = set(self.partner.search(self.cr, self.uid, r['__domain']))
+                result[r['date:' + interval]] = set(self.partner.search(self.cr, self.uid, r['__domain']))
             return result
 
         self.assertEqual(len(read_group('day')), len(partners_by_day))

@@ -2223,7 +2223,8 @@ class BaseModel(object):
                         orderby_terms.append(order_clause)
                         groupby_terms += [order_term.split()[0] for order_term in order_clause.split(',')]
                 else:
-                    orderby_terms.append('"%s"' % order_part)
+                    order = '"%s" %s' % (order_field, '' if len(order_split) == 1 else order_split[1])
+                    orderby_terms.append(order)
             elif order_field in aggregated_fields:
                 orderby_terms.append(order_part)
             else:
