@@ -54,7 +54,7 @@
                         <th class="text-right">Amount</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="invoice_tbody">
                     <tr t-foreach="o.invoice_line" t-as="l">
                         <td><span t-field="l.name"/></td>
                         <td><span t-field="l.quantity"/></td>
